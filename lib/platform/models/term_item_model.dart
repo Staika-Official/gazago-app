@@ -5,11 +5,13 @@ part 'term_item_model.g.dart';
 @JsonSerializable()
 class TermItemModel {
   String title;
+  String termType;
   bool isChecked;
   bool isRequired;
 
   TermItemModel({
     required this.title,
+    required this.termType,
     this.isChecked = false,
     this.isRequired = false,
   });
