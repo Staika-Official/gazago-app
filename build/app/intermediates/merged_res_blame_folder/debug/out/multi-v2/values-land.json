@@ -1,0 +1,36 @@
+{
+    "logs": [
+        {
+            "outputFile": "kr.co.eztechfin.stepGo.app-mergeDebugResources-27:/values-land/values-land.xml",
+            "map": [
+                {
+                    "source": "/Users/kangjihwan/.gradle/caches/transforms-3/e720fcf25f2e84573bb982fcbc9cea43/transformed/appcompat-1.2.0/res/values-land/values-land.xml",
+                    "from": {
+                        "startLines": "2,3,4",
+                        "startColumns": "4,4,4",
+                        "startOffsets": "55,125,196",
+                        "endColumns": "69,70,67",
+                        "endOffsets": "120,191,259"
+                    }
+                },
+                {
+                    "source": "/Users/kangjihwan/.gradle/caches/transforms-3/57b6d7fa24528b9881008c7baebf6184/transformed/jetified-firebase-inappmessaging-display-20.1.2/res/values-land/values-land.xml",
+                    "from": {
+                        "startLines": "2,3,4,5",
+                        "startColumns": "4,4,4,4",
+                        "startOffsets": "55,131,203,276",
+                        "endColumns": "75,71,72,71",
+                        "endOffsets": "126,198,271,343"
+                    },
+                    "to": {
+                        "startLines": "5,6,7,8",
+                        "startColumns": "4,4,4,4",
+                        "startOffsets": "264,340,412,485",
+                        "endColumns": "75,71,72,71",
+                        "endOffsets": "335,407,480,552"
+                    }
+                }
+            ]
+        }
+    ]
+}

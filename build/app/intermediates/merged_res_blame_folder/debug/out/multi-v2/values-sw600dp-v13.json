@@ -1,0 +1,36 @@
+{
+    "logs": [
+        {
+            "outputFile": "kr.co.eztechfin.stepGo.app-mergeDebugResources-27:/values-sw600dp-v13/values-sw600dp-v13.xml",
+            "map": [
+                {
+                    "source": "/Users/kangjihwan/.gradle/caches/transforms-3/57b6d7fa24528b9881008c7baebf6184/transformed/jetified-firebase-inappmessaging-display-20.1.2/res/values-sw600dp-v13/values-sw600dp-v13.xml",
+                    "from": {
+                        "startLines": "2,3",
+                        "startColumns": "4,4",
+                        "startOffsets": "55,128",
+                        "endColumns": "72,71",
+                        "endOffsets": "123,195"
+                    },
+                    "to": {
+                        "startLines": "10,11",
+                        "startColumns": "4,4",
+                        "startOffsets": "611,684",
+                        "endColumns": "72,71",
+                        "endOffsets": "679,751"
+                    }
+                },
+                {
+                    "source": "/Users/kangjihwan/.gradle/caches/transforms-3/e720fcf25f2e84573bb982fcbc9cea43/transformed/appcompat-1.2.0/res/values-sw600dp-v13/values-sw600dp-v13.xml",
+                    "from": {
+                        "startLines": "2,3,4,5,6,7,8,9",
+                        "startColumns": "4,4,4,4,4,4,4,4",
+                        "startOffsets": "55,124,193,263,337,413,472,543",
+                        "endColumns": "68,68,69,73,75,58,70,67",
+                        "endOffsets": "119,188,258,332,408,467,538,606"
+                    }
+                }
+            ]
+        }
+    ]
+}
