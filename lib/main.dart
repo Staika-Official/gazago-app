@@ -53,7 +53,7 @@ class MyApp extends StatelessWidget {
         primarySwatch: Colors.blue,
       ),
       navigatorObservers: <NavigatorObserver>[observer],
-      initialRoute: Routes.login,
+      initialRoute: Routes.home,
       getPages: [...Routes.pages],
     );
   }

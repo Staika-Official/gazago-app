@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 
 class DefaultContainer extends StatelessWidget {
   final Widget child;
-  final Color backgroundColor;
+  final Color? backgroundColor;
   final bool disableSafeArea;
   final Widget? customHeader;
 
