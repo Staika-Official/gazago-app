@@ -16,7 +16,7 @@ class Home extends StatelessWidget {
         bottomNavigationBar: NavigationBar(
           onDestinationSelected: (index) => controller.selectMenu(index),
           selectedIndex: controller.selectedIndex.value,
-          destinations: [
+          destinations: const [
             NavigationDestination(
               icon: Icon(
                 Icons.assignment,
