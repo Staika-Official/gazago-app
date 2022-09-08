@@ -9,38 +9,41 @@ class ArchiveHome extends StatelessWidget {
   List<Widget> renderArchiveList(ArchiveController controller) {
     return controller.archiveList
         .map(
-          (archive) => Card(
-            color: Colors.blueGrey,
-            child: Padding(
-              padding: const EdgeInsets.all(10.0),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Row(
-                    children: [
-                      Icon(
-                        archive.activityType == ActivityType.climbing
-                            ? Icons.nordic_walking
-                            : Icons.directions_walk,
-                      ),
-                      Padding(
-                        padding: EdgeInsets.only(
-                          left: 10,
+          (archive) => InkWell(
+            onTap: () => controller.toDetail(archive.id),
+            child: Card(
+              color: Colors.blueGrey,
+              child: Padding(
+                padding: const EdgeInsets.all(10.0),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Row(
+                      children: [
+                        Icon(
+                          archive.activityType == ActivityType.climbing
+                              ? Icons.nordic_walking
+                              : Icons.directions_walk,
                         ),
-                        child: Text(
-                          archive.startTime,
-                        ),
-                      )
-                    ],
-                  ),
-                  Divider(
-                    color: Colors.grey,
-                    thickness: 1,
-                  ),
-                  Text(
-                    '${archive.startLocation} \u00B7 ${archive.activityDuration} \u00B7 ${archive.activityDistance}km \u00B7 ${archive.acquiredGo}GO',
-                  ),
-                ],
+                        Padding(
+                          padding: EdgeInsets.only(
+                            left: 10,
+                          ),
+                          child: Text(
+                            archive.startTime,
+                          ),
+                        )
+                      ],
+                    ),
+                    Divider(
+                      color: Colors.grey,
+                      thickness: 1,
+                    ),
+                    Text(
+                      '${archive.startLocation} \u00B7 ${archive.activityDuration} \u00B7 ${archive.activityDistance}km \u00B7 ${archive.acquiredGo}GO',
+                    ),
+                  ],
+                ),
               ),
             ),
           ),

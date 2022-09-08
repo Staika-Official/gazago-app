@@ -1,9 +1,27 @@
 import 'package:get/get.dart';
 import 'package:step_go/constants/enums.dart';
+import 'package:step_go/constants/routes.dart';
 import 'package:step_go/platform/models/archive_item_model.dart';
 
 class ArchiveController extends GetxController {
   RxList<ArchiveItemModel> archiveList = RxList.empty();
+  Rx<ArchiveItemModel> selectedItem = Rx(ArchiveItemModel(
+    id: 1,
+    activityType: ActivityType.climbing,
+    startTime: '2022.08.12 09:04:34',
+    endTime: '2022.08.12 09:55:11',
+    startLocation: '만월산',
+    startLocationFull: '만월산 등산로 입구',
+    acquiredBadge: '만월산 등정 뱃지',
+    activityDuration: '02:01:01',
+    activityDistance: 4.02,
+    stepCount: 50,
+    avgSpeed: 4.2,
+    highestClimbed: 140.0,
+    acquiredGo: 50,
+    staminaUsed: 70,
+    durabilityConsumed: 10,
+  ));
 
   @override
   void onInit() {
@@ -14,6 +32,7 @@ class ArchiveController extends GetxController {
   void getArchiveList() {
     archiveList.value = [
       ArchiveItemModel(
+        id: 1,
         activityType: ActivityType.climbing,
         startTime: '2022.08.12 09:04:34',
         endTime: '2022.08.12 09:55:11',
@@ -30,6 +49,7 @@ class ArchiveController extends GetxController {
         durabilityConsumed: 10,
       ),
       ArchiveItemModel(
+        id: 1,
         activityType: ActivityType.climbing,
         startTime: '2022.08.12 09:04:34',
         endTime: '2022.08.12 09:55:11',
@@ -46,6 +66,7 @@ class ArchiveController extends GetxController {
         durabilityConsumed: 10,
       ),
       ArchiveItemModel(
+        id: 1,
         activityType: ActivityType.climbing,
         startTime: '2022.08.12 09:04:34',
         endTime: '2022.08.12 09:55:11',
@@ -62,6 +83,7 @@ class ArchiveController extends GetxController {
         durabilityConsumed: 10,
       ),
       ArchiveItemModel(
+        id: 1,
         activityType: ActivityType.climbing,
         startTime: '2022.08.12 09:04:34',
         endTime: '2022.08.12 09:55:11',
@@ -78,6 +100,7 @@ class ArchiveController extends GetxController {
         durabilityConsumed: 10,
       ),
       ArchiveItemModel(
+        id: 1,
         activityType: ActivityType.climbing,
         startTime: '2022.08.12 09:04:34',
         endTime: '2022.08.12 09:55:11',
@@ -94,6 +117,7 @@ class ArchiveController extends GetxController {
         durabilityConsumed: 10,
       ),
       ArchiveItemModel(
+        id: 1,
         activityType: ActivityType.climbing,
         startTime: '2022.08.12 09:04:34',
         endTime: '2022.08.12 09:55:11',
@@ -110,6 +134,7 @@ class ArchiveController extends GetxController {
         durabilityConsumed: 10,
       ),
       ArchiveItemModel(
+        id: 1,
         activityType: ActivityType.climbing,
         startTime: '2022.08.12 09:04:34',
         endTime: '2022.08.12 09:55:11',
@@ -126,6 +151,7 @@ class ArchiveController extends GetxController {
         durabilityConsumed: 10,
       ),
       ArchiveItemModel(
+        id: 1,
         activityType: ActivityType.climbing,
         startTime: '2022.08.12 09:04:34',
         endTime: '2022.08.12 09:55:11',
@@ -142,5 +168,10 @@ class ArchiveController extends GetxController {
         durabilityConsumed: 10,
       ),
     ];
+  }
+
+  void toDetail(int id) {
+    selectedItem.value = archiveList.firstWhere((archive) => archive.id == id);
+    Get.toNamed(Routes.archiveDetail);
   }
 }

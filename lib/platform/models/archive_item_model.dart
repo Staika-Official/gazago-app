@@ -5,6 +5,7 @@ part 'archive_item_model.g.dart';
 
 @JsonSerializable()
 class ArchiveItemModel {
+  int id;
   ActivityType activityType;
   String startTime;
   String endTime;
@@ -21,6 +22,7 @@ class ArchiveItemModel {
   double durabilityConsumed;
 
   ArchiveItemModel({
+    required this.id,
     required this.activityType,
     required this.startTime,
     required this.endTime,
