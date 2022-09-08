@@ -1,0 +1,21 @@
+// GENERATED CODE - DO NOT MODIFY BY HAND
+
+part of 'wallet_item_model.dart';
+
+// **************************************************************************
+// JsonSerializableGenerator
+// **************************************************************************
+
+WalletItemModel _$WalletItemModelFromJson(Map<String, dynamic> json) =>
+    WalletItemModel(
+      name: json['name'] as String,
+      balance: (json['balance'] as num).toDouble(),
+      tokenImageUrl: json['tokenImageUrl'] as String,
+    );
+
+Map<String, dynamic> _$WalletItemModelToJson(WalletItemModel instance) =>
+    <String, dynamic>{
+      'name': instance.name,
+      'balance': instance.balance,
+      'tokenImageUrl': instance.tokenImageUrl,
+    };

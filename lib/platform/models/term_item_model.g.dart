@@ -9,6 +9,7 @@ part of 'term_item_model.dart';
 TermItemModel _$TermItemModelFromJson(Map<String, dynamic> json) =>
     TermItemModel(
       title: json['title'] as String,
+      termType: json['termType'] as String,
       isChecked: json['isChecked'] as bool? ?? false,
       isRequired: json['isRequired'] as bool? ?? false,
     );
@@ -16,6 +17,7 @@ TermItemModel _$TermItemModelFromJson(Map<String, dynamic> json) =>
 Map<String, dynamic> _$TermItemModelToJson(TermItemModel instance) =>
     <String, dynamic>{
       'title': instance.title,
+      'termType': instance.termType,
       'isChecked': instance.isChecked,
       'isRequired': instance.isRequired,
     };
