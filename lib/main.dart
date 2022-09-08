@@ -38,7 +38,8 @@ class MyApp extends StatelessWidget {
   const MyApp({super.key});
 
   static FirebaseAnalytics analytics = FirebaseAnalytics.instance;
-  static FirebaseAnalyticsObserver observer = FirebaseAnalyticsObserver(analytics: analytics);
+  static FirebaseAnalyticsObserver observer =
+      FirebaseAnalyticsObserver(analytics: analytics);
 
   @override
   Widget build(BuildContext context) {
@@ -46,7 +47,9 @@ class MyApp extends StatelessWidget {
       title: 'Flutter Demo',
       builder: (context, child) {
         // 시스템 폰트 크기 무시
-        return MediaQuery(data: MediaQuery.of(context).copyWith(textScaleFactor: 1), child: child!);
+        return MediaQuery(
+            data: MediaQuery.of(context).copyWith(textScaleFactor: 1),
+            child: child!);
       },
       theme: ThemeData(
         fontFamily: 'Pretendard',
