@@ -22,7 +22,7 @@ class ActivityHome extends StatelessWidget {
                     value: stat.currentStat / 100,
                   ),
                 ),
-                IconButton(
+                const IconButton(
                   onPressed: null,
                   icon: Icon(Icons.add_circle),
                 ),
@@ -71,16 +71,16 @@ class ActivityHome extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.center,
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                CircleAvatar(
+                const CircleAvatar(
                   radius: 20,
                   foregroundImage: NetworkImage('https://placeimg.com/20/20/any'),
                 ),
                 Padding(
                   padding: const EdgeInsets.only(left: 10.0),
                   child: Column(
-                    children: [
+                    children: const [
                       Padding(
-                        padding: const EdgeInsets.only(top: 8.0),
+                        padding: EdgeInsets.only(top: 8.0),
                         child: Text(
                           '${'2,000.00'} GO',
                           style: TextStyle(
@@ -92,7 +92,7 @@ class ActivityHome extends StatelessWidget {
                         ),
                       ),
                       Padding(
-                        padding: const EdgeInsets.only(top: 8.0),
+                        padding: EdgeInsets.only(top: 8.0),
                         child: Text(
                           '내가 획득한 STEP',
                           style: TextStyle(
@@ -138,7 +138,7 @@ class ActivityHome extends StatelessWidget {
                     color: Colors.blue,
                     height: 100,
                     minWidth: 100,
-                    child: Text('Go'),
+                    child: const Text('Go'),
                   ),
                 ),
                 Positioned(
@@ -146,7 +146,7 @@ class ActivityHome extends StatelessWidget {
                   right: 10,
                   child: ElevatedButton(
                     onPressed: () => null,
-                    child: Icon(Icons.terrain),
+                    child: const Icon(Icons.terrain),
                   ),
                 )
               ],

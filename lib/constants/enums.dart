@@ -3,3 +3,5 @@ enum LoginType {
   google,
   apple,
 }
+
+enum ActivityType { climbing }
