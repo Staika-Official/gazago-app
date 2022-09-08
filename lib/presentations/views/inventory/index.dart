@@ -1,14 +1,199 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
+import 'package:get/get.dart';
+import 'package:step_go/platform/controllers/inventory/inventory_home_controller.dart';
+import 'package:step_go/presentations/views/inventory/inventory_badge.dart';
+import 'package:step_go/presentations/views/inventory/inventory_item.dart';
 
 class InventoryHome extends StatelessWidget {
   const InventoryHome({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
+    InventoryHomeController _controller = Get.put(InventoryHomeController());
     return Container(
       child: Center(
-        child: Text('inventory'),
+        child: Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 20),
+          child: Column(
+            mainAxisSize: MainAxisSize.max,
+            children: [
+              Container(
+                child: Padding(
+                  padding: const EdgeInsets.all(10.0),
+                  child: Column(
+                    children: [
+                      Padding(
+                        padding: const EdgeInsets.only(top: 10, bottom: 10),
+                        child: Text('[장착 중인 아이템]'),
+                      ),
+                      StaggeredGrid.count(
+                        crossAxisCount: 4,
+                        mainAxisSpacing: 4,
+                        crossAxisSpacing: 4,
+                        children: [
+                          StaggeredGridTile.count(
+                            crossAxisCellCount: 2,
+                            mainAxisCellCount: 2,
+                            child: Tile(
+                              index: 0,
+                              imageUrl: 'assets/images/@temp_shoe.png',
+                            ),
+                          ),
+                          StaggeredGridTile.count(
+                            crossAxisCellCount: 2,
+                            mainAxisCellCount: 2,
+                            child: Tile(
+                              index: 1,
+                              imageUrl: 'assets/images/@temp_shoe.png',
+                            ),
+                          ),
+                          StaggeredGridTile.count(
+                            crossAxisCellCount: 1,
+                            mainAxisCellCount: 1,
+                            child: Tile(
+                              index: 2,
+                              imageUrl: 'assets/images/@temp_shoe.png',
+                            ),
+                          ),
+                          StaggeredGridTile.count(
+                            crossAxisCellCount: 1,
+                            mainAxisCellCount: 1,
+                            child: Tile(
+                              index: 3,
+                              imageUrl: 'assets/images/@temp_shoe.png',
+                            ),
+                          ),
+                          StaggeredGridTile.count(
+                            crossAxisCellCount: 1,
+                            mainAxisCellCount: 1,
+                            child: Tile(
+                              index: 4,
+                              imageUrl: 'assets/images/@temp_shoe.png',
+                            ),
+                          ),
+                          StaggeredGridTile.count(
+                            crossAxisCellCount: 1,
+                            mainAxisCellCount: 1,
+                            child: Tile(
+                              index: 5,
+                              imageUrl: 'assets/images/@temp_shoe.png',
+                            ),
+                          ),
+                        ],
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+              Container(
+                child: Column(
+                  children: [
+                    Padding(
+                      padding: const EdgeInsets.only(top: 10, bottom: 5),
+                      child:
+                          Row(children: [Text('아이템마모율'), Spacer(), Text('2%')]),
+                    ),
+                    LinearProgressIndicator(
+                      value: 0.02,
+                      minHeight: 10,
+                      backgroundColor: const Color(0xffb74093),
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.only(top: 10, bottom: 5),
+                      /**/
+                      child: Row(
+                          children: [Text('이동 보상율'), Spacer(), Text('15%')]),
+                    ),
+                    LinearProgressIndicator(
+                      value: 0.15,
+                      minHeight: 10,
+                      backgroundColor: const Color(0xffb74093),
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.only(top: 10, bottom: 5),
+                      child: Row(
+                          children: [Text('체력 감소율'), Spacer(), Text('85%')]),
+                    ),
+                    LinearProgressIndicator(
+                      value: 0.85,
+                      minHeight: 10,
+                      backgroundColor: const Color(0xffb74093),
+                    ),
+                  ],
+                ),
+              ),
+              TabBar(
+                controller: _controller.tabController,
+                tabs: <Widget>[
+                  Tab(
+                    child: Text(
+                      '메뉴1',
+                      style: TextStyle(color: Colors.black),
+                    ),
+                  ),
+                  Tab(
+                    child: Text(
+                      '메뉴2',
+                      style: TextStyle(color: Colors.black),
+                    ),
+                  ),
+                ],
+              ),
+              Expanded(
+                child: TabBarView(
+                  controller: _controller.tabController,
+                  children: [
+                    InventoryItem(),
+                    InventoryBadge(),
+                  ],
+                ),
+              ),
+            ],
+          ),
+        ),
       ),
+    );
+  }
+}
+
+const _defaultColor = Color(0xFF34568B);
+
+class Tile extends StatelessWidget {
+  const Tile({
+    Key? key,
+    required this.index,
+    required this.imageUrl,
+    this.extent,
+    this.backgroundColor,
+    this.bottomSpace,
+  }) : super(key: key);
+
+  final int index;
+  final String imageUrl;
+  final double? extent;
+  final double? bottomSpace;
+  final Color? backgroundColor;
+
+  @override
+  Widget build(BuildContext context) {
+    final child = Container(
+      color: Colors.transparent,
+      height: extent,
+      child: Image(
+        image: AssetImage(imageUrl),
+        fit: BoxFit.cover,
+      ),
+    );
+
+    if (bottomSpace == null) {
+      return child;
+    }
+
+    return Column(
+      children: [
+        Expanded(child: child),
+      ],
     );
   }
 }
