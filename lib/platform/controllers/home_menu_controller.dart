@@ -5,7 +5,7 @@ import 'package:step_go/presentations/components/main_appbar.dart';
 import 'package:step_go/presentations/components/secondary_appbar.dart';
 import 'package:step_go/presentations/views/activity/index.dart';
 import 'package:step_go/presentations/views/archive/index.dart';
-import 'package:step_go/presentations/views/inventory/inventory_item_detail.dart';
+import 'package:step_go/presentations/views/inventory/inventory_badge_detail.dart';
 import 'package:step_go/presentations/views/leaderboard/index.dart';
 import 'package:step_go/presentations/views/shop/index.dart';
 
@@ -21,7 +21,8 @@ class HomeMenuController extends GetxController {
   final List<Widget> mainViewWidgetList = [
     ArchiveHome(),
     // InventoryHome(),
-    InventoryItemDetail(),
+    // InventoryItemDetail(),
+    InventoryBadgeDetail(),
     ActivityHome(),
     ShopHome(),
     LeaderboardHome(),

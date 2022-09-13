@@ -91,8 +91,7 @@ class InventoryHome extends StatelessWidget {
                   children: [
                     Padding(
                       padding: const EdgeInsets.only(top: 10, bottom: 5),
-                      child:
-                          Row(children: [Text('아이템마모율'), Spacer(), Text('2%')]),
+                      child: Row(children: [Text('아이템마모율'), Spacer(), Text('2%')]),
                     ),
                     LinearProgressIndicator(
                       value: 0.02,
@@ -102,8 +101,7 @@ class InventoryHome extends StatelessWidget {
                     Padding(
                       padding: const EdgeInsets.only(top: 10, bottom: 5),
                       /**/
-                      child: Row(
-                          children: [Text('이동 보상율'), Spacer(), Text('15%')]),
+                      child: Row(children: [Text('이동 보상율'), Spacer(), Text('15%')]),
                     ),
                     LinearProgressIndicator(
                       value: 0.15,
@@ -112,8 +110,7 @@ class InventoryHome extends StatelessWidget {
                     ),
                     Padding(
                       padding: const EdgeInsets.only(top: 10, bottom: 5),
-                      child: Row(
-                          children: [Text('체력 감소율'), Spacer(), Text('85%')]),
+                      child: Row(children: [Text('체력 감소율'), Spacer(), Text('85%')]),
                     ),
                     LinearProgressIndicator(
                       value: 0.85,
@@ -128,13 +125,13 @@ class InventoryHome extends StatelessWidget {
                 tabs: <Widget>[
                   Tab(
                     child: Text(
-                      '메뉴1',
+                      '아이템',
                       style: TextStyle(color: Colors.black),
                     ),
                   ),
                   Tab(
                     child: Text(
-                      '메뉴2',
+                      '뱃지',
                       style: TextStyle(color: Colors.black),
                     ),
                   ),
