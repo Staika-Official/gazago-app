@@ -4,6 +4,7 @@ import 'package:step_go/presentations/views/home.dart';
 import 'package:step_go/presentations/views/join/join_terms.dart';
 import 'package:step_go/presentations/views/login.dart';
 import 'package:step_go/presentations/views/on_boarding.dart';
+import 'package:step_go/presentations/views/preferences/edit_biometrics.dart';
 import 'package:step_go/presentations/views/preferences/my_page.dart';
 import 'package:step_go/presentations/views/preferences/notification_alert.dart';
 import 'package:step_go/presentations/views/preferences/preference_board.dart';
@@ -23,6 +24,7 @@ class Routes {
   static const preferenceNotification = '/preferences/notification';
   static const verification = '/verification';
   static const myPage = '/my_page';
+  static const editBiometrics = '/my_page/edit_biometrics';
 
   static List<GetPage> pages = [
     GetPage(name: Routes.login, page: () => const Login()),
@@ -48,5 +50,6 @@ class Routes {
     ),
     GetPage(name: Routes.verification, page: () => const Verification()),
     GetPage(name: Routes.myPage, page: () => const MyPage()),
+    GetPage(name: Routes.editBiometrics, page: () => const EditBiometrics()),
   ];
 }

@@ -62,4 +62,14 @@ class MyPageController extends GetxController {
       profile!.nickname = nickname;
     });
   }
+
+  void selectGender(String gender) {
+    profile.update((profile) {
+      profile!.gender = gender;
+    });
+  }
+
+  void updateBiometrics() {
+    Get.back();
+  }
 }
