@@ -115,17 +115,19 @@ class ActivityHome extends StatelessWidget {
               ],
             );
           }),
-          GridView.count(
-            childAspectRatio: 1 / .4,
-            shrinkWrap: true,
-            primary: false,
-            crossAxisCount: 2,
-            crossAxisSpacing: 5,
-            mainAxisSpacing: 5,
-            children: [
-              ...renderActivitySumList(controller),
-            ],
-          ),
+          Obx(() {
+            return GridView.count(
+              childAspectRatio: 1 / .4,
+              shrinkWrap: true,
+              primary: false,
+              crossAxisCount: 2,
+              crossAxisSpacing: 5,
+              mainAxisSpacing: 5,
+              children: [
+                ...renderActivitySumList(controller),
+              ],
+            );
+          }),
           Expanded(
             child: Stack(
               children: [
