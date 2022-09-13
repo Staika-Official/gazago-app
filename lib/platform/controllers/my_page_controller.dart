@@ -1,4 +1,6 @@
+import 'package:flutter/cupertino.dart';
 import 'package:get/get.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:step_go/platform/models/profile_model.dart';
 
 class MyPageController extends GetxController {
@@ -16,6 +18,11 @@ class MyPageController extends GetxController {
       height: 0.0,
     ),
   );
+  final ImagePicker _picker = ImagePicker();
+  final Rx<XFile?> pickedImage = Rx(null);
+  final RxBool isEditMode = RxBool(false);
+  final TextEditingController nicknameTextController = TextEditingController();
+  final int maxNickNameLength = 20;
 
   @override
   void onInit() {
@@ -36,5 +43,23 @@ class MyPageController extends GetxController {
       weight: 70.4,
       height: 177.3,
     );
+  }
+
+  void toggleEditMode() {
+    nicknameTextController.text = profile.value.nickname;
+    isEditMode.value = !isEditMode.value;
+  }
+
+  void pickImage() async {
+    pickedImage.value = await _picker.pickImage(
+      source: ImageSource.gallery,
+      imageQuality: 50,
+    );
+  }
+
+  void updateNickName(nickname) {
+    profile.update((profile) {
+      profile!.nickname = nickname;
+    });
   }
 }
