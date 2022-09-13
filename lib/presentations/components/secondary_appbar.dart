@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:step_go/constants/routes.dart';
 import 'package:step_go/platform/controllers/home_menu_controller.dart';
 
 class SecondaryAppbar extends StatelessWidget implements PreferredSizeWidget {
@@ -19,7 +20,7 @@ class SecondaryAppbar extends StatelessWidget implements PreferredSizeWidget {
               padding: const EdgeInsets.only(left: 4),
               child: Text(
                 wallet.balance.toString(),
-                style: TextStyle(color: Colors.black, fontSize: 12),
+                style: const TextStyle(color: Colors.black, fontSize: 12),
               ),
             ),
           ],
@@ -41,13 +42,16 @@ class SecondaryAppbar extends StatelessWidget implements PreferredSizeWidget {
       title: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
-          IconButton(onPressed: null, icon: Icon(Icons.person)),
+          IconButton(
+            onPressed: () => Get.toNamed(Routes.preferences),
+            icon: const Icon(Icons.person, color: Colors.grey),
+          ),
           Obx(() {
             return Row(
               mainAxisSize: MainAxisSize.min,
               children: [
                 ...renderWalletItems(controller),
-                IconButton(
+                const IconButton(
                   onPressed: null,
                   icon: Icon(
                     Icons.wallet,

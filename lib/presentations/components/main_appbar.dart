@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
+import 'package:step_go/constants/routes.dart';
 
 class MainAppbar extends StatelessWidget implements PreferredSizeWidget {
   const MainAppbar({Key? key}) : super(key: key);
@@ -13,15 +15,21 @@ class MainAppbar extends StatelessWidget implements PreferredSizeWidget {
       automaticallyImplyLeading: false,
       title: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: const [
-          IconButton(onPressed: null, icon: Icon(Icons.person)),
-          Text(
+        children: [
+          IconButton(
+            onPressed: () => Get.toNamed(Routes.preferences),
+            icon: const Icon(
+              Icons.person,
+              color: Colors.grey,
+            ),
+          ),
+          const Text(
             'StepGo',
             style: TextStyle(
               color: Colors.black,
             ),
           ),
-          IconButton(onPressed: null, icon: Icon(Icons.wallet)),
+          const IconButton(onPressed: null, icon: Icon(Icons.wallet)),
         ],
       ),
     );
