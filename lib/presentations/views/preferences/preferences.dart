@@ -17,7 +17,7 @@ class Preferences extends StatelessWidget {
         children: [
           Obx(() {
             return InkWell(
-              onTap: () => null,
+              onTap: () => Get.toNamed(Routes.myPage),
               child: Padding(
                 padding: const EdgeInsets.all(8.0),
                 child: Row(
