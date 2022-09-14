@@ -57,8 +57,7 @@ class MyPage extends StatelessWidget {
                     child: controller.isEditMode.value
                         ? TextField(
                             controller: controller.nicknameTextController,
-                            onChanged: (nickName) =>
-                                controller.updateNickName(nickName),
+                            onChanged: (nickName) => controller.updateNickName(nickName),
                             cursorColor: Colors.black,
                             textAlign: TextAlign.center,
                             style: const TextStyle(
@@ -97,9 +96,7 @@ class MyPage extends StatelessWidget {
                                     ),
                                     children: [
                                       TextSpan(
-                                        text: controller
-                                            .profile.value.nickname.length
-                                            .toString(),
+                                        text: controller.profile.value.nickname.length.toString(),
                                         style: const TextStyle(
                                           color: Colors.black,
                                           fontSize: 13,
@@ -108,9 +105,7 @@ class MyPage extends StatelessWidget {
                                       const TextSpan(
                                         text: ' / ',
                                       ),
-                                      TextSpan(
-                                          text: controller.maxNickNameLength
-                                              .toString()),
+                                      TextSpan(text: controller.maxNickNameLength.toString()),
                                     ],
                                   ),
                                 ),
@@ -156,8 +151,7 @@ class MyPage extends StatelessWidget {
                           Column(
                             children: [
                               Row(
-                                mainAxisAlignment:
-                                    MainAxisAlignment.spaceBetween,
+                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                 children: [
                                   Text('지갑주소'),
                                   TextButton(
@@ -166,8 +160,7 @@ class MyPage extends StatelessWidget {
                                       children: [
                                         Icon(Icons.copy),
                                         Padding(
-                                          padding:
-                                              const EdgeInsets.only(left: 8.0),
+                                          padding: const EdgeInsets.only(left: 8.0),
                                           child: Text('주소복사'),
                                         )
                                       ],
@@ -186,17 +179,11 @@ class MyPage extends StatelessWidget {
                           ),
                           Row(
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              Text('SNS 로그인'),
-                              Text(controller.profile.value.socialAccounts)
-                            ],
+                            children: [Text('SNS 로그인'), Text(controller.profile.value.socialAccounts)],
                           ),
                           Row(
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              Text('이메일 주소'),
-                              Text(controller.profile.value.email)
-                            ],
+                            children: [Text('이메일 주소'), Text(controller.profile.value.email)],
                           ),
                           InkWell(
                             onTap: () => Get.toNamed(Routes.editBiometrics),
@@ -213,37 +200,24 @@ class MyPage extends StatelessWidget {
                             children: [
                               Text('성별'),
                               Text(
-                                controller.profile.value.gender == 'MALE'
-                                    ? '남자'
-                                    : '여자',
+                                controller.profile.value.gender == 'MALE' ? '남자' : '여자',
                               )
                             ],
                           ),
                           Row(
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              Text('나이'),
-                              Text(controller.profile.value.age.toString())
-                            ],
+                            children: [Text('나이'), Text(controller.profile.value.age.toString())],
                           ),
                           Row(
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              Text('몸무게'),
-                              Text(
-                                  '${controller.profile.value.weight.toString()}kg')
-                            ],
+                            children: [Text('몸무게'), Text('${controller.profile.value.weight.toString()}kg')],
                           ),
                           Row(
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              Text('키'),
-                              Text(
-                                  '${controller.profile.value.height.toString()}cm')
-                            ],
+                            children: [Text('키'), Text('${controller.profile.value.height.toString()}cm')],
                           ),
                           InkWell(
-                            onTap: () => null,
+                            onTap: () => Get.toNamed(Routes.withdrawConfirm),
                             child: Row(
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               children: [

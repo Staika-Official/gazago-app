@@ -9,6 +9,8 @@ import 'package:step_go/presentations/views/preferences/my_page.dart';
 import 'package:step_go/presentations/views/preferences/notification_alert.dart';
 import 'package:step_go/presentations/views/preferences/preference_board.dart';
 import 'package:step_go/presentations/views/preferences/preferences.dart';
+import 'package:step_go/presentations/views/preferences/withdraw_completed.dart';
+import 'package:step_go/presentations/views/preferences/withdraw_confirm.dart';
 import 'package:step_go/presentations/views/term.dart';
 import 'package:step_go/presentations/views/verification/index.dart';
 
@@ -25,6 +27,8 @@ class Routes {
   static const verification = '/verification';
   static const myPage = '/my_page';
   static const editBiometrics = '/my_page/edit_biometrics';
+  static const withdrawConfirm = '/my_page/withdraw';
+  static const withdrawCompleted = '/my_page/withdraw_completed';
 
   static List<GetPage> pages = [
     GetPage(name: Routes.login, page: () => const Login()),
@@ -44,12 +48,11 @@ class Routes {
       transitionDuration: Duration(milliseconds: 200),
     ),
     GetPage(name: Routes.preferenceBoard, page: () => const PreferenceBoard()),
-    GetPage(
-      name: Routes.preferenceNotification,
-      page: () => const NotificationAlert(),
-    ),
+    GetPage(name: Routes.preferenceNotification, page: () => const NotificationAlert()),
     GetPage(name: Routes.verification, page: () => const Verification()),
     GetPage(name: Routes.myPage, page: () => const MyPage()),
     GetPage(name: Routes.editBiometrics, page: () => const EditBiometrics()),
+    GetPage(name: Routes.withdrawConfirm, page: () => const WithdrawConfirm()),
+    GetPage(name: Routes.withdrawCompleted, page: () => const WithdrawCompleted()),
   ];
 }
