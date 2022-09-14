@@ -1,5 +1,5 @@
-import 'package:step_go/presentations/components/default_header.dart';
 import 'package:flutter/material.dart';
+import 'package:step_go/presentations/components/default_header.dart';
 
 class DefaultContainer extends StatelessWidget {
   final Widget child;
@@ -11,6 +11,7 @@ class DefaultContainer extends StatelessWidget {
   final bool isLeadingShow;
   final Widget? trailingChild;
   final String? titleText;
+  final Function? onBackButtonTap;
   final Color? headerBackgroundColor;
 
   const DefaultContainer({
@@ -23,6 +24,7 @@ class DefaultContainer extends StatelessWidget {
     this.trailingChild,
     this.titleText,
     this.headerBackgroundColor,
+    this.onBackButtonTap,
   }) : super(key: key);
 
   @override
@@ -39,6 +41,7 @@ class DefaultContainer extends StatelessWidget {
               isLeadingShow: isLeadingShow,
               trailingChild: trailingChild,
               titleText: titleText,
+              onBackButtonTap: onBackButtonTap,
             ),
       ),
       body: disableSafeArea

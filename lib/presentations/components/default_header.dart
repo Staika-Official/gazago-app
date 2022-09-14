@@ -6,12 +6,14 @@ class DefaultHeader extends StatelessWidget {
   final bool? isLeadingShow;
   final Widget? trailingChild;
   final String? titleText;
+  final Function? onBackButtonTap;
 
   const DefaultHeader({
     Key? key,
     this.isLeadingShow,
     this.trailingChild,
     this.titleText,
+    this.onBackButtonTap,
   }) : super(key: key);
 
   @override
@@ -32,7 +34,7 @@ class DefaultHeader extends StatelessWidget {
                 child: InkWell(
                   borderRadius: const BorderRadius.all(Radius.circular(30)),
                   onTap: () {
-                    Get.back();
+                    onBackButtonTap ?? Get.back();
                   },
                   child: SvgPicture.asset(
                     fit: BoxFit.contain,

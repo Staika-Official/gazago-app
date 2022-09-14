@@ -13,6 +13,9 @@ import 'package:step_go/presentations/views/preferences/withdraw_completed.dart'
 import 'package:step_go/presentations/views/preferences/withdraw_confirm.dart';
 import 'package:step_go/presentations/views/term.dart';
 import 'package:step_go/presentations/views/verification/index.dart';
+import 'package:step_go/presentations/views/wallet/wallet_actions.dart';
+import 'package:step_go/presentations/views/wallet/wallet_detail.dart';
+import 'package:step_go/presentations/views/wallet/wallet_home.dart';
 
 class Routes {
   static const login = '/login';
@@ -29,6 +32,9 @@ class Routes {
   static const editBiometrics = '/my_page/edit_biometrics';
   static const withdrawConfirm = '/my_page/withdraw';
   static const withdrawCompleted = '/my_page/withdraw_completed';
+  static const wallet = '/wallet';
+  static const walletDetail = '/wallet/detail';
+  static const walletActions = '/wallet/action';
 
   static List<GetPage> pages = [
     GetPage(name: Routes.login, page: () => const Login()),
@@ -45,7 +51,7 @@ class Routes {
       name: Routes.preferences,
       page: () => const Preferences(),
       transition: Transition.leftToRight,
-      transitionDuration: Duration(milliseconds: 200),
+      transitionDuration: const Duration(milliseconds: 200),
     ),
     GetPage(name: Routes.preferenceBoard, page: () => const PreferenceBoard()),
     GetPage(name: Routes.preferenceNotification, page: () => const NotificationAlert()),
@@ -54,5 +60,8 @@ class Routes {
     GetPage(name: Routes.editBiometrics, page: () => const EditBiometrics()),
     GetPage(name: Routes.withdrawConfirm, page: () => const WithdrawConfirm()),
     GetPage(name: Routes.withdrawCompleted, page: () => const WithdrawCompleted()),
+    GetPage(name: Routes.wallet, page: () => const WalletHome()),
+    GetPage(name: Routes.walletDetail, page: () => const WalletDetail()),
+    GetPage(name: Routes.walletActions, page: () => const WalletActions()),
   ];
 }

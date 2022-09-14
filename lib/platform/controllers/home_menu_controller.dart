@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:step_go/platform/models/wallet_item_model.dart';
+import 'package:step_go/platform/models/asset_item_coin_model.dart';
 import 'package:step_go/presentations/components/main_appbar.dart';
 import 'package:step_go/presentations/components/secondary_appbar.dart';
 import 'package:step_go/presentations/views/activity/index.dart';
@@ -10,7 +10,7 @@ import 'package:step_go/presentations/views/leaderboard/index.dart';
 import 'package:step_go/presentations/views/shop/index.dart';
 
 class HomeMenuController extends GetxController {
-  final RxList<WalletItemModel> walletList = RxList.empty();
+  final RxList<AssetItemCoinModel> walletList = RxList.empty();
   final RxInt selectedIndex = RxInt(2);
 
   final List<PreferredSizeWidget> appbarList = [
@@ -40,9 +40,9 @@ class HomeMenuController extends GetxController {
 
   void getWalletList() {
     walletList.value = [
-      WalletItemModel(name: 'solana', balance: 100.00, tokenImageUrl: 'https://placeimg.com/20/20/any'),
-      WalletItemModel(name: 'staika', balance: 10.00, tokenImageUrl: 'https://placeimg.com/20/20/any'),
-      WalletItemModel(name: 'taika', balance: 1000.00, tokenImageUrl: 'https://placeimg.com/20/20/any'),
+      AssetItemCoinModel(name: 'solana', balance: 100.00, tokenImageUrl: 'https://placeimg.com/20/20/any'),
+      AssetItemCoinModel(name: 'staika', balance: 10.00, tokenImageUrl: 'https://placeimg.com/20/20/any'),
+      AssetItemCoinModel(name: 'taika', balance: 1000.00, tokenImageUrl: 'https://placeimg.com/20/20/any'),
     ];
   }
 

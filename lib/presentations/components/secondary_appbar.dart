@@ -44,17 +44,21 @@ class SecondaryAppbar extends StatelessWidget implements PreferredSizeWidget {
         children: [
           IconButton(
             onPressed: () => Get.toNamed(Routes.preferences),
-            icon: const Icon(Icons.person, color: Colors.grey),
+            icon: const Icon(
+              Icons.person,
+              color: Colors.grey,
+            ),
           ),
           Obx(() {
             return Row(
               mainAxisSize: MainAxisSize.min,
               children: [
                 ...renderWalletItems(controller),
-                const IconButton(
-                  onPressed: null,
-                  icon: Icon(
+                IconButton(
+                  onPressed: () => Get.toNamed(Routes.wallet),
+                  icon: const Icon(
                     Icons.wallet,
+                    color: Colors.grey,
                   ),
                 )
               ],

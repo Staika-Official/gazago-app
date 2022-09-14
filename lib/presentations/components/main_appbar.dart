@@ -29,7 +29,13 @@ class MainAppbar extends StatelessWidget implements PreferredSizeWidget {
               color: Colors.black,
             ),
           ),
-          const IconButton(onPressed: null, icon: Icon(Icons.wallet)),
+          IconButton(
+            onPressed: () => Get.toNamed(Routes.wallet),
+            icon: const Icon(
+              Icons.wallet,
+              color: Colors.grey,
+            ),
+          ),
         ],
       ),
     );
