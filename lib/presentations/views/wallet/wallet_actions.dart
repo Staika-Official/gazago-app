@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:step_go/constants/enums.dart';
 import 'package:step_go/platform/controllers/wallet_actions_controller.dart';
 import 'package:step_go/presentations/components/default_container.dart';
 
@@ -12,22 +13,98 @@ class WalletActions extends StatelessWidget {
 
     return Obx(() {
       return DefaultContainer(
-        titleText: controller.actionType.value.name,
+        titleText: controller.pageHeader.value,
         child: Column(
+          mainAxisSize: MainAxisSize.min,
           children: [
-            Text('From'),
-            Row(
+            Column(
+              crossAxisAlignment: CrossAxisAlignment.center,
               children: [
-                TextField(),
-                Text('STIK'),
+                Text('From'),
+                Row(
+                  children: [
+                    Expanded(child: TextField()),
+                    Text('STIK'),
+                  ],
+                ),
+                Align(
+                  alignment: Alignment.centerRight,
+                  child: Row(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      Text('보유: ${100.00.toString()}'),
+                      TextButton(
+                        onPressed: () => null,
+                        child: Text('All'),
+                      ),
+                    ],
+                  ),
+                ),
               ],
             ),
-            Text('To'),
-            Row(
+            Padding(
+              padding: EdgeInsets.symmetric(vertical: 30),
+              child: Icon(
+                Icons.keyboard_double_arrow_down,
+              ),
+            ),
+            Column(
+              crossAxisAlignment: CrossAxisAlignment.center,
               children: [
-                TextField(),
-                Text('TIK'),
+                Text('To'),
+                Row(
+                  children: [
+                    Expanded(child: TextField()),
+                    Text('TIK'),
+                  ],
+                ),
+                Align(
+                  alignment: Alignment.centerRight,
+                  child: Text('보유: ${100.00.toString()}'),
+                ),
               ],
+            ),
+            Padding(
+              padding: EdgeInsets.only(
+                top: 10,
+              ),
+              child: Column(
+                children: [
+                  if (controller.actionType.value == WalletActionType.recharge)
+                    Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Text('교환 비용'),
+                          Text(
+                            '1 STIK \u2248 100 TIK',
+                          )
+                        ],
+                      ),
+                    ),
+                  Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Text('예상 수수료'),
+                        Text(
+                          '${0.005.toString()} STIK',
+                        )
+                      ],
+                    ),
+                  ),
+                ],
+              ),
+            ),
+            Container(
+              width: double.infinity,
+              padding: EdgeInsets.all(8),
+              child: ElevatedButton(
+                onPressed: () => null,
+                child: Text(controller.actionType.value == WalletActionType.recharge ? '충전하기' : '보내기'),
+              ),
             ),
           ],
         ),
