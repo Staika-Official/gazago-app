@@ -6,6 +6,7 @@ class InventoryController extends GetxController {
   final RxList<StatModel> statList = RxList.empty();
   RxList<InventoryBadgeModel> badgeList = RxList.empty();
   final RxBool isShoe = RxBool(true);
+
   @override
   void onInit() {
     initStats();

@@ -21,9 +21,7 @@ class ArchiveHome extends StatelessWidget {
                     Row(
                       children: [
                         Icon(
-                          archive.activityType == ActivityType.climbing
-                              ? Icons.nordic_walking
-                              : Icons.directions_walk,
+                          archive.activityType == ActivityType.climbing ? Icons.nordic_walking : Icons.directions_walk,
                         ),
                         Padding(
                           padding: EdgeInsets.only(

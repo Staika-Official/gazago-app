@@ -5,17 +5,17 @@ import 'package:step_go/presentations/views/join/join_terms.dart';
 import 'package:step_go/presentations/views/login.dart';
 import 'package:step_go/presentations/views/on_boarding.dart';
 import 'package:step_go/presentations/views/preferences/edit_biometrics.dart';
+import 'package:step_go/presentations/views/preferences/index.dart';
 import 'package:step_go/presentations/views/preferences/my_page.dart';
 import 'package:step_go/presentations/views/preferences/notification_alert.dart';
 import 'package:step_go/presentations/views/preferences/preference_board.dart';
-import 'package:step_go/presentations/views/preferences/preferences.dart';
 import 'package:step_go/presentations/views/preferences/withdraw_completed.dart';
 import 'package:step_go/presentations/views/preferences/withdraw_confirm.dart';
 import 'package:step_go/presentations/views/term.dart';
 import 'package:step_go/presentations/views/verification/index.dart';
+import 'package:step_go/presentations/views/wallet/index.dart';
 import 'package:step_go/presentations/views/wallet/wallet_actions.dart';
 import 'package:step_go/presentations/views/wallet/wallet_detail.dart';
-import 'package:step_go/presentations/views/wallet/wallet_home.dart';
 
 class Routes {
   static const login = '/login';
@@ -42,7 +42,7 @@ class Routes {
     GetPage(name: Routes.joinTerms, page: () => const JoinTerms()),
     GetPage(
       name: Routes.home,
-      page: () => const Home(),
+      page: () => Home(),
       transition: Transition.noTransition,
     ),
     GetPage(name: Routes.term, page: () => const Term()),

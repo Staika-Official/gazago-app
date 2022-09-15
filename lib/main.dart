@@ -1,7 +1,5 @@
 import 'dart:async';
 
-import 'package:step_go/platform/firebase/core.dart';
-import 'package:step_go/platform/firebase/crashlytics.dart';
 import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
@@ -9,6 +7,8 @@ import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:hive/hive.dart';
 import 'package:hive_flutter/adapters.dart';
+import 'package:step_go/platform/firebase/core.dart';
+import 'package:step_go/platform/firebase/crashlytics.dart';
 
 import 'constants/routes.dart';
 
@@ -38,17 +38,15 @@ class MyApp extends StatelessWidget {
   const MyApp({super.key});
 
   static FirebaseAnalytics analytics = FirebaseAnalytics.instance;
-  static FirebaseAnalyticsObserver observer =
-      FirebaseAnalyticsObserver(analytics: analytics);
+  static FirebaseAnalyticsObserver observer = FirebaseAnalyticsObserver(analytics: analytics);
 
   @override
   Widget build(BuildContext context) {
     return GetMaterialApp(
-      title: 'Flutter Demo',
       builder: (context, child) {
         // 시스템 폰트 크기 무시
         return MediaQuery(
-            data: MediaQuery.of(context).copyWith(textScaleFactor: 1),
+            data: MediaQuery.of(context).copyWith(textScaleFactor: 1), //텍스트가 시스템 설정에 영향받지 않음
             child: child!);
       },
       theme: ThemeData(

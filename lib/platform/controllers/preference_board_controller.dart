@@ -6,9 +6,9 @@ class PreferenceBoardController extends GetxController {
   RxList<BoardItemModel> boardList = RxList.empty();
   RxString get boardName {
     if (boardType.value == 'NOTICE') {
-      return '공지사항'.obs;
+      return RxString('공지사항');
     } else {
-      return 'FAQ'.obs;
+      return RxString('FAQ');
     }
   }
 
@@ -21,36 +21,11 @@ class PreferenceBoardController extends GetxController {
 
   void getPostList() {
     boardList.value = [
-      BoardItemModel(
-          id: 1,
-          boardType: 'NOTICE',
-          title: 'test',
-          content: 'testset',
-          lastModifiedDate: '20221023'),
-      BoardItemModel(
-          id: 1,
-          boardType: 'NOTICE',
-          title: 'test',
-          content: 'testset',
-          lastModifiedDate: '20221023'),
-      BoardItemModel(
-          id: 1,
-          boardType: 'NOTICE',
-          title: 'test',
-          content: 'testset',
-          lastModifiedDate: '20221023'),
-      BoardItemModel(
-          id: 1,
-          boardType: 'NOTICE',
-          title: 'test',
-          content: 'testset',
-          lastModifiedDate: '20221023'),
-      BoardItemModel(
-          id: 1,
-          boardType: 'NOTICE',
-          title: 'test',
-          content: 'testset',
-          lastModifiedDate: '20221023'),
+      BoardItemModel(id: 1, boardType: 'NOTICE', title: 'test', content: 'testset', lastModifiedDate: '20221023'),
+      BoardItemModel(id: 1, boardType: 'NOTICE', title: 'test', content: 'testset', lastModifiedDate: '20221023'),
+      BoardItemModel(id: 1, boardType: 'NOTICE', title: 'test', content: 'testset', lastModifiedDate: '20221023'),
+      BoardItemModel(id: 1, boardType: 'NOTICE', title: 'test', content: 'testset', lastModifiedDate: '20221023'),
+      BoardItemModel(id: 1, boardType: 'NOTICE', title: 'test', content: 'testset', lastModifiedDate: '20221023'),
     ];
   }
 }

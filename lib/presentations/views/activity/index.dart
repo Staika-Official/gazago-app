@@ -18,8 +18,12 @@ class ActivityHome extends StatelessWidget {
             Row(
               children: [
                 Expanded(
-                  child: LinearProgressIndicator(
-                    value: stat.currentStat / 100,
+                  child: ClipRRect(
+                    borderRadius: BorderRadius.circular(5),
+                    child: LinearProgressIndicator(
+                      minHeight: 20,
+                      value: stat.currentStat / 100,
+                    ),
                   ),
                 ),
                 const IconButton(

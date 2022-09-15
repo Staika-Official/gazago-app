@@ -1,36 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:step_go/platform/models/asset_item_coin_model.dart';
-import 'package:step_go/presentations/components/main_appbar.dart';
-import 'package:step_go/presentations/components/secondary_appbar.dart';
-import 'package:step_go/presentations/views/activity/index.dart';
-import 'package:step_go/presentations/views/archive/index.dart';
-import 'package:step_go/presentations/views/inventory/index.dart';
-import 'package:step_go/presentations/views/leaderboard/index.dart';
-import 'package:step_go/presentations/views/shop/index.dart';
 
 class HomeMenuController extends GetxController {
   final RxList<AssetItemCoinModel> walletList = RxList.empty();
   final RxInt selectedIndex = RxInt(2);
-
-  final List<PreferredSizeWidget> appbarList = [
-    MainAppbar(),
-    SecondaryAppbar(),
-  ];
-
-  final List<Widget> mainViewWidgetList = [
-    ArchiveHome(),
-    InventoryHome(),
-    // InventoryItemDetail(),
-    // InventoryBadgeDetail(),
-    ActivityHome(),
-    ShopHome(),
-    LeaderboardHome(),
-  ];
-
-  PreferredSizeWidget get appbar {
-    return selectedIndex.value == 2 ? appbarList.first : appbarList.last;
-  }
 
   @override
   void onInit() {
@@ -48,5 +22,9 @@ class HomeMenuController extends GetxController {
 
   void selectMenu(int index) {
     selectedIndex.value = index;
+  }
+
+  PreferredSizeWidget getAppbar(List<PreferredSizeWidget> appbarList) {
+    return selectedIndex.value == 2 ? appbarList.first : appbarList.last;
   }
 }
