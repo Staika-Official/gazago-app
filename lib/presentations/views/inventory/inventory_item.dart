@@ -8,13 +8,14 @@ class InventoryItem extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     InventoryHomeController _controller = Get.put(InventoryHomeController());
-    return Container(
-      child: Column(
+    return Scaffold(
+      body: Column(
         mainAxisSize: MainAxisSize.max,
         children: [
           TabBar(
             padding: const EdgeInsets.only(top: 20, bottom: 5),
             controller: _controller.subTabController,
+            isScrollable: true,
             tabs: <Widget>[
               Tab(
                 child: Text(
@@ -47,6 +48,157 @@ class InventoryItem extends StatelessWidget {
                 ),
               ),
             ],
+          ),
+          Expanded(
+            child: TabBarView(
+              controller: _controller.subTabController,
+              children: [
+                GridView.count(
+                  primary: false,
+                  padding: const EdgeInsets.all(20),
+                  crossAxisSpacing: 10,
+                  mainAxisSpacing: 10,
+                  crossAxisCount: 3,
+                  children: <Widget>[
+                    Container(
+                      padding: const EdgeInsets.all(8),
+                      color: Colors.teal[100],
+                      child: const Text("He'd have you all unravel at the"),
+                    ),
+                    Container(
+                      padding: const EdgeInsets.all(8),
+                      color: Colors.teal[200],
+                      child: const Text('Heed not the rabble'),
+                    ),
+                    Container(
+                      padding: const EdgeInsets.all(8),
+                      color: Colors.teal[300],
+                      child: const Text('Sound of screams but the'),
+                    ),
+                    Container(
+                      padding: const EdgeInsets.all(8),
+                      color: Colors.teal[400],
+                      child: const Text('Who scream'),
+                    ),
+                    Container(
+                      padding: const EdgeInsets.all(8),
+                      color: Colors.teal[500],
+                      child: const Text('Revolution is coming...'),
+                    ),
+                    Container(
+                      padding: const EdgeInsets.all(8),
+                      color: Colors.teal[600],
+                      child: const Text('Revolution, they...'),
+                    ),
+                    Container(
+                      padding: const EdgeInsets.all(8),
+                      color: Colors.teal[400],
+                      child: const Text('Who scream'),
+                    ),
+                    Container(
+                      padding: const EdgeInsets.all(8),
+                      color: Colors.teal[500],
+                      child: const Text('Revolution is coming...'),
+                    ),
+                    Container(
+                      padding: const EdgeInsets.all(8),
+                      color: Colors.teal[600],
+                      child: const Text('Revolution, they...'),
+                    ),
+                    Container(
+                      padding: const EdgeInsets.all(8),
+                      color: Colors.teal[400],
+                      child: const Text('Who scream'),
+                    ),
+                    Container(
+                      padding: const EdgeInsets.all(8),
+                      color: Colors.teal[500],
+                      child: const Text('Revolution is coming...'),
+                    ),
+                    Container(
+                      padding: const EdgeInsets.all(8),
+                      color: Colors.teal[600],
+                      child: const Text('Revolution, they...'),
+                    ),
+                  ],
+                ),
+                GridView.count(
+                  primary: false,
+                  padding: const EdgeInsets.all(20),
+                  crossAxisSpacing: 10,
+                  mainAxisSpacing: 10,
+                  crossAxisCount: 2,
+                  children: <Widget>[
+                    Container(
+                      padding: const EdgeInsets.all(8),
+                      color: Colors.teal[100],
+                      child: const Text("He'd have you all unravel at the"),
+                    ),
+                    Container(
+                      padding: const EdgeInsets.all(8),
+                      color: Colors.teal[200],
+                      child: const Text('Heed not the rabble'),
+                    ),
+                    Container(
+                      padding: const EdgeInsets.all(8),
+                      color: Colors.teal[300],
+                      child: const Text('Sound of screams but the'),
+                    ),
+                    Container(
+                      padding: const EdgeInsets.all(8),
+                      color: Colors.teal[400],
+                      child: const Text('Who scream'),
+                    ),
+                    Container(
+                      padding: const EdgeInsets.all(8),
+                      color: Colors.teal[500],
+                      child: const Text('Revolution is coming...'),
+                    ),
+                    Container(
+                      padding: const EdgeInsets.all(8),
+                      color: Colors.teal[600],
+                      child: const Text('Revolution, they...'),
+                    ),
+                  ],
+                ),
+                Container(
+                  child: Row(
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      Expanded(child: Text('1111111111111')),
+                      Expanded(child: Text('2222222222222')),
+                      Expanded(child: Text('3333333333')),
+                      Expanded(child: Text('4444444444444')),
+                      Expanded(child: Text('555555555555')),
+                    ],
+                  ),
+                ),
+                Container(
+                  child: Row(
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      Expanded(child: Text('1111111111111')),
+                      Expanded(child: Text('2222222222222')),
+                      Expanded(child: Text('3333333333')),
+                      Expanded(child: Text('4444444444444')),
+                      Expanded(child: Text('555555555555')),
+                    ],
+                  ),
+                ),
+                Container(
+                  child: Row(
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      Expanded(child: Text('1111111111111')),
+                      Expanded(child: Text('2222222222222')),
+                      Expanded(child: Text('3333333333')),
+                      Expanded(child: Text('4444444444444')),
+                      Expanded(child: Text('555555555555')),
+                    ],
+                  ),
+                ),
+              ],
+            ),
           ),
         ],
       ),
