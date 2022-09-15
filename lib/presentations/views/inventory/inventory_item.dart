@@ -61,9 +61,23 @@ class InventoryItem extends StatelessWidget {
                   crossAxisCount: 3,
                   children: <Widget>[
                     Container(
-                      padding: const EdgeInsets.all(8),
                       color: Colors.teal[100],
-                      child: const Text("He'd have you all unravel at the"),
+                      child: SizedBox(
+                        child: Stack(
+                          alignment: Alignment.bottomCenter,
+                          children: [
+                            Image(
+                              image: AssetImage('assets/images/@temp_shoe.png'),
+                              fit: BoxFit.fill,
+                              width: double.infinity,
+                            ),
+                            Padding(
+                              padding: const EdgeInsets.only(bottom: 5),
+                              child: Text("#50812052"),
+                            ),
+                          ],
+                        ),
+                      ),
                     ),
                     Container(
                       padding: const EdgeInsets.all(8),
