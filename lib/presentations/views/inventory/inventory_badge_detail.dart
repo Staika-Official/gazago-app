@@ -72,14 +72,14 @@ class InventoryBadgeDetail extends StatelessWidget {
                             child: Text('#58795008'),
                           ),
                           SizedBox(
-                            width: 200,
-                            height: 200,
+                            width: 100,
+                            height: 100,
                             child: Stack(
                               alignment: Alignment.bottomCenter,
                               children: [
                                 new Container(
-                                  width: 200,
-                                  height: 200,
+                                  width: 100,
+                                  height: 100,
                                   decoration: new BoxDecoration(
                                     shape: BoxShape.circle,
                                     image: new DecorationImage(

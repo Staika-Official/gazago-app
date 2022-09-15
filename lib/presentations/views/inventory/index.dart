@@ -11,8 +11,10 @@ class InventoryHome extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     InventoryHomeController _controller = Get.put(InventoryHomeController());
-    return Container(
-      child: Center(
+
+    return SingleChildScrollView(
+      child: ConstrainedBox(
+        constraints: BoxConstraints(maxHeight: MediaQuery.of(context).size.height),
         child: Padding(
           padding: const EdgeInsets.symmetric(horizontal: 20),
           child: Column(
@@ -37,6 +39,7 @@ class InventoryHome extends StatelessWidget {
                             mainAxisCellCount: 2,
                             child: Tile(
                               index: 0,
+                              stat: 1,
                               imageUrl: 'assets/images/@temp_shoe.png',
                             ),
                           ),
@@ -121,6 +124,7 @@ class InventoryHome extends StatelessWidget {
                 ),
               ),
               TabBar(
+                padding: const EdgeInsets.only(top: 20, bottom: 5),
                 controller: _controller.tabController,
                 tabs: <Widget>[
                   Tab(
@@ -164,9 +168,11 @@ class Tile extends StatelessWidget {
     this.extent,
     this.backgroundColor,
     this.bottomSpace,
+    this.stat,
   }) : super(key: key);
 
   final int index;
+  final int? stat;
   final String imageUrl;
   final double? extent;
   final double? bottomSpace;
@@ -177,9 +183,24 @@ class Tile extends StatelessWidget {
     final child = Container(
       color: Colors.transparent,
       height: extent,
-      child: Image(
-        image: AssetImage(imageUrl),
-        fit: BoxFit.cover,
+      child: SizedBox(
+        child: Stack(
+          alignment: Alignment.bottomCenter,
+          children: [
+            Image(
+              image: AssetImage(imageUrl),
+              fit: BoxFit.fill,
+              width: double.infinity,
+            ),
+            stat != null
+                ? LinearProgressIndicator(
+                    value: 0.80,
+                    minHeight: 10,
+                    backgroundColor: const Color(0xffb74093),
+                  )
+                : Container(),
+          ],
+        ),
       ),
     );
 
