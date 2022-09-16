@@ -1,6 +1,6 @@
 import 'package:get/get.dart';
-import 'package:step_go/constants/enums.dart';
-import 'package:step_go/constants/routes.dart';
+import 'package:gaza_go/constants/enums.dart';
+import 'package:gaza_go/constants/routes.dart';
 
 class WalletMixin {
   void moveToWalletDetail({required dynamic asset, required WalletType walletType, required AssetType assetType}) {

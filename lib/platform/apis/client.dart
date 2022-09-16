@@ -1,7 +1,6 @@
-import 'package:step_go/constants/base_urls.dart';
-import 'package:step_go/platform/models/term_item_model.dart';
 import 'package:dio/dio.dart';
 import 'package:logger/logger.dart';
+import 'package:gaza_go/constants/base_urls.dart';
 
 class ApiClient {
   static final Logger _logger = Logger(printer: PrettyPrinter(colors: true, printEmojis: true));

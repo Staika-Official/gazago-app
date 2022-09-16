@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:step_go/platform/controllers/home_menu_controller.dart';
+import 'package:gaza_go/platform/controllers/home_menu_controller.dart';
 
 class Home extends StatelessWidget {
   const Home({Key? key}) : super(key: key);

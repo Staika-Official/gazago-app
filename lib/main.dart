@@ -7,8 +7,8 @@ import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:hive/hive.dart';
 import 'package:hive_flutter/adapters.dart';
-import 'package:step_go/platform/firebase/core.dart';
-import 'package:step_go/platform/firebase/crashlytics.dart';
+import 'package:gaza_go/platform/firebase/core.dart';
+import 'package:gaza_go/platform/firebase/crashlytics.dart';
 
 import 'constants/routes.dart';
 

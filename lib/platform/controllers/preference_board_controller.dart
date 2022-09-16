@@ -1,5 +1,5 @@
 import 'package:get/get.dart';
-import 'package:step_go/platform/models/board_item_model.dart';
+import 'package:gaza_go/platform/models/board_item_model.dart';
 
 class PreferenceBoardController extends GetxController {
   RxString boardType = RxString('');

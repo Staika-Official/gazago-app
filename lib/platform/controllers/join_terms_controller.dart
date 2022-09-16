@@ -1,5 +1,5 @@
 import 'package:get/get.dart';
-import 'package:step_go/platform/models/term_item_model.dart';
+import 'package:gaza_go/platform/models/term_item_model.dart';
 
 class JoinTermsController extends GetxController {
   final RxList<TermItemModel> termsList = RxList.empty();

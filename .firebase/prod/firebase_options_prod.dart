@@ -51,7 +51,7 @@ class DefaultFirebaseOptions {
 
   static const FirebaseOptions android = FirebaseOptions(
     apiKey: 'AIzaSyBHmS0LwPeoXpiZqW42qDFZ5iOth-VovAo',
-    appId: '1:321889905131:android:9b8d9a4e071330970a11ae',
+    appId: '1:321889905131:android:28f83939b947b3880a11ae',
     messagingSenderId: '321889905131',
     projectId: 'app-step-prod',
     storageBucket: 'app-step-prod.appspot.com',
@@ -59,11 +59,12 @@ class DefaultFirebaseOptions {
 
   static const FirebaseOptions ios = FirebaseOptions(
     apiKey: 'AIzaSyA0fw8oOZhK1DIRpQMCFaWvBA4D8L-bXIc',
-    appId: '1:321889905131:ios:f0fd202aacca13710a11ae',
+    appId: '1:321889905131:ios:fcd56d852edb7bc40a11ae',
     messagingSenderId: '321889905131',
     projectId: 'app-step-prod',
     storageBucket: 'app-step-prod.appspot.com',
-    iosClientId: '321889905131-t6ogauus8q46qccni08r1jn3ki2ocjbv.apps.googleusercontent.com',
-    iosBundleId: 'kr.co.eztechfin.stepGo',
+    androidClientId: '321889905131-9u07qsaeagsd41481iqbi90rn5m3cbgm.apps.googleusercontent.com',
+    iosClientId: '321889905131-22r952df5n2g5i3qehb6dgcg5o4188dt.apps.googleusercontent.com',
+    iosBundleId: 'kr.co.eztechfin.gazaGo',
   );
 }

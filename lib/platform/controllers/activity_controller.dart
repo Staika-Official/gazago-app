@@ -1,5 +1,5 @@
 import 'package:get/get.dart';
-import 'package:step_go/platform/models/stat_model.dart';
+import 'package:gaza_go/platform/models/stat_model.dart';
 
 class ActivityController extends GetxController {
   final RxList<StatModel> statList = RxList.empty();

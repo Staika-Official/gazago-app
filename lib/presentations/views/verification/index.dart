@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:step_go/presentations/components/default_container.dart';
+import 'package:gaza_go/presentations/components/default_container.dart';
 
 class Verification extends StatelessWidget {
   const Verification({Key? key}) : super(key: key);

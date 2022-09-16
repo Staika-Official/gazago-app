@@ -1,9 +1,9 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
+import 'package:gaza_go/constants/routes.dart';
+import 'package:gaza_go/platform/controllers/preference_controller.dart';
+import 'package:gaza_go/presentations/components/default_container.dart';
 import 'package:get/get.dart';
-import 'package:step_go/constants/routes.dart';
-import 'package:step_go/platform/controllers/preference_controller.dart';
-import 'package:step_go/presentations/components/default_container.dart';
 
 class Preferences extends StatelessWidget {
   const Preferences({Key? key}) : super(key: key);
@@ -60,28 +60,23 @@ class Preferences extends StatelessWidget {
           ),
           PreferenceItem(
             title: '공지사항',
-            onTap: () => Get.toNamed(Routes.preferenceBoard,
-                arguments: {'boardType': 'NOTICE'}),
+            onTap: () => Get.toNamed(Routes.preferenceBoard, arguments: {'boardType': 'NOTICE'}),
           ),
           PreferenceItem(
             title: 'FAQ',
-            onTap: () => Get.toNamed(Routes.preferenceBoard,
-                arguments: {'boardType': 'FAQ'}),
+            onTap: () => Get.toNamed(Routes.preferenceBoard, arguments: {'boardType': 'FAQ'}),
           ),
           PreferenceItem(
             title: '이용약관',
-            onTap: () =>
-                Get.toNamed(Routes.term, arguments: {'termType': 'TERMS'}),
+            onTap: () => Get.toNamed(Routes.term, arguments: {'termType': 'TERMS'}),
           ),
           PreferenceItem(
             title: '개인정보 처리방침',
-            onTap: () =>
-                Get.toNamed(Routes.term, arguments: {'termType': 'PRIVACY'}),
+            onTap: () => Get.toNamed(Routes.term, arguments: {'termType': 'PRIVACY'}),
           ),
           PreferenceItem(
             title: '마케팅 동의',
-            onTap: () =>
-                Get.toNamed(Routes.term, arguments: {'termType': 'MARKETING'}),
+            onTap: () => Get.toNamed(Routes.term, arguments: {'termType': 'MARKETING'}),
           ),
           PreferenceItem(
             title: '로그아웃',
@@ -108,13 +103,7 @@ class PreferenceItem extends StatelessWidget {
   final VoidCallback? onTap;
   final String? description;
 
-  const PreferenceItem(
-      {Key? key,
-      required this.title,
-      this.type = ItemType.functional,
-      this.onTap,
-      this.description})
-      : super(key: key);
+  const PreferenceItem({Key? key, required this.title, this.type = ItemType.functional, this.onTap, this.description}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {

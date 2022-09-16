@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:step_go/platform/models/ranker_model.dart';
+import 'package:gaza_go/platform/models/ranker_model.dart';
 
 class LeaderboardController extends GetxController {
   RxList<RankerModel> rankerList = RxList.empty();

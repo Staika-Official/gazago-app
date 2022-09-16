@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:step_go/constants/routes.dart';
-import 'package:step_go/platform/controllers/home_menu_controller.dart';
+import 'package:gaza_go/constants/routes.dart';
+import 'package:gaza_go/platform/controllers/home_menu_controller.dart';
 
 class SecondaryAppbar extends StatelessWidget implements PreferredSizeWidget {
   SecondaryAppbar({Key? key}) : super(key: key);

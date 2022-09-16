@@ -1,6 +1,6 @@
 import 'package:get/get.dart';
 import 'package:package_info_plus/package_info_plus.dart';
-import 'package:step_go/platform/models/profile_model.dart';
+import 'package:gaza_go/platform/models/profile_model.dart';
 
 class PreferenceController extends GetxController {
   final Rx<ProfileModel> profile = Rx(
@@ -33,7 +33,7 @@ class PreferenceController extends GetxController {
       profileImageUrl: 'https://placeimg.com/20/20/any',
       walletAddress: 'soifje2039jf09acj092w3jc0a923r',
       socialAccounts: 'GOOGLE',
-      email: 'hello@stepgo.io',
+      email: 'hello@gazaGo.io',
       gender: 'MALE',
       age: 21,
       weight: 70.4,

@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:step_go/platform/controllers/my_page_controller.dart';
-import 'package:step_go/presentations/components/default_container.dart';
+import 'package:gaza_go/platform/controllers/my_page_controller.dart';
+import 'package:gaza_go/presentations/components/default_container.dart';
 
 class EditBiometrics extends StatelessWidget {
   const EditBiometrics({Key? key}) : super(key: key);

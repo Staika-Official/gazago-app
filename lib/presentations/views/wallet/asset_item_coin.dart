@@ -1,6 +1,6 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
-import 'package:step_go/platform/models/asset_item_coin_model.dart';
+import 'package:gaza_go/platform/models/asset_item_coin_model.dart';
 
 class AssetItemCoin extends StatelessWidget {
   final AssetItemCoinModel asset;

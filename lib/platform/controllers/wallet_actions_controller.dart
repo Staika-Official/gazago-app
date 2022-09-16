@@ -1,5 +1,5 @@
 import 'package:get/get.dart';
-import 'package:step_go/constants/enums.dart';
+import 'package:gaza_go/constants/enums.dart';
 
 class WalletActionsController extends GetxController {
   final Rx<WalletActionType> actionType = Rx(WalletActionType.recharge);

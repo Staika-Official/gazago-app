@@ -1,7 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:step_go/platform/models/profile_model.dart';
+import 'package:gaza_go/platform/models/profile_model.dart';
 
 class MyPageController extends GetxController {
   final Rx<ProfileModel> profile = Rx(
@@ -37,7 +37,7 @@ class MyPageController extends GetxController {
       profileImageUrl: 'https://placeimg.com/20/20/any',
       walletAddress: 'soifje2039jf09acj092w3jc0a923r',
       socialAccounts: 'GOOGLE',
-      email: 'hello@stepgo.io',
+      email: 'hello@gazaGo.io',
       gender: 'MALE',
       age: 21,
       weight: 70.4,

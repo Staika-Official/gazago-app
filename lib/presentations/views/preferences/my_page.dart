@@ -3,9 +3,9 @@ import 'dart:io';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:step_go/constants/routes.dart';
-import 'package:step_go/platform/controllers/my_page_controller.dart';
-import 'package:step_go/presentations/components/default_container.dart';
+import 'package:gaza_go/constants/routes.dart';
+import 'package:gaza_go/platform/controllers/my_page_controller.dart';
+import 'package:gaza_go/presentations/components/default_container.dart';
 
 class MyPage extends StatelessWidget {
   const MyPage({Key? key}) : super(key: key);
