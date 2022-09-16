@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:gaza_go/platform/controllers/preference_board_controller.dart';
+import 'package:gaza_go/presentations/components/default_container.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
-import 'package:step_go/platform/controllers/preference_board_controller.dart';
-import 'package:step_go/presentations/components/default_container.dart';
 
 class PreferenceBoard extends StatelessWidget {
   const PreferenceBoard({Key? key}) : super(key: key);
@@ -42,8 +42,7 @@ class PreferenceBoard extends StatelessWidget {
                     ),
                   ),
                   subtitle: Text(
-                    DateFormat('yyyy.MM.dd').format(DateTime.parse(
-                        controller.boardList[index].lastModifiedDate)),
+                    DateFormat('yyyy.MM.dd').format(DateTime.parse(controller.boardList[index].lastModifiedDate)),
                     style: const TextStyle(
                       color: Color(0xffb7b7b7),
                       fontSize: 12,

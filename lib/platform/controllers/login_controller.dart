@@ -1,7 +1,7 @@
-import 'package:step_go/constants/enums.dart';
-import 'package:step_go/constants/routes.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:gaza_go/constants/enums.dart';
+import 'package:gaza_go/constants/routes.dart';
 
 class LoginController extends GetxController {
   void login(LoginType loginType) async {

@@ -2,5 +2,5 @@
 
 FLUTTER_TARGET=lib/main_stage.dart
 ASSET_PREFIX=stage
-BUNDLE_NAME=StepGo-stage
-BUNDLE_DISPLAY_NAME=StepGo-stage
+BUNDLE_NAME=gazaGO-stage
+BUNDLE_DISPLAY_NAME=gazaGO-stage

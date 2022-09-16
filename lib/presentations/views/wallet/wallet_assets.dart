@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:step_go/constants/enums.dart';
-import 'package:step_go/platform/controllers/wallet_asset_controller.dart';
-import 'package:step_go/presentations/views/wallet/asset_item_coin.dart';
-import 'package:step_go/presentations/views/wallet/asset_item_nft.dart';
+import 'package:gaza_go/constants/enums.dart';
+import 'package:gaza_go/platform/controllers/wallet_asset_controller.dart';
+import 'package:gaza_go/presentations/views/wallet/asset_item_coin.dart';
+import 'package:gaza_go/presentations/views/wallet/asset_item_nft.dart';
 
 class WalletAssets extends StatelessWidget {
   const WalletAssets({Key? key}) : super(key: key);

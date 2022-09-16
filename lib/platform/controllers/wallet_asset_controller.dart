@@ -1,7 +1,7 @@
 import 'package:get/get.dart';
-import 'package:step_go/platform/helpers/wallet_mixin.dart';
-import 'package:step_go/platform/models/asset_item_coin_model.dart';
-import 'package:step_go/platform/models/asset_item_nft_model.dart';
+import 'package:gaza_go/platform/helpers/wallet_mixin.dart';
+import 'package:gaza_go/platform/models/asset_item_coin_model.dart';
+import 'package:gaza_go/platform/models/asset_item_nft_model.dart';
 
 class WalletAssetController extends GetxController with WalletMixin {
   final RxList<AssetItemCoinModel> coinAssetList = RxList.empty();

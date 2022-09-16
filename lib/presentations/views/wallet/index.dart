@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:step_go/presentations/components/default_container.dart';
-import 'package:step_go/presentations/views/wallet/wallet_assets.dart';
-import 'package:step_go/presentations/views/wallet/wallet_inventory.dart';
+import 'package:gaza_go/presentations/components/default_container.dart';
+import 'package:gaza_go/presentations/views/wallet/wallet_assets.dart';
+import 'package:gaza_go/presentations/views/wallet/wallet_inventory.dart';
 
 class WalletHome extends StatefulWidget {
   const WalletHome({Key? key}) : super(key: key);

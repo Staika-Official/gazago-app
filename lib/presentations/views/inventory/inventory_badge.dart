@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:step_go/platform/controllers/inventory_controller.dart';
+import 'package:gaza_go/platform/controllers/inventory_controller.dart';
 
 class InventoryBadge extends StatelessWidget {
   const InventoryBadge({Key? key}) : super(key: key);

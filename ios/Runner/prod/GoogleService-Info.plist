@@ -3,9 +3,11 @@
 <plist version="1.0">
 <dict>
 	<key>CLIENT_ID</key>
-	<string>321889905131-t6ogauus8q46qccni08r1jn3ki2ocjbv.apps.googleusercontent.com</string>
+	<string>321889905131-22r952df5n2g5i3qehb6dgcg5o4188dt.apps.googleusercontent.com</string>
 	<key>REVERSED_CLIENT_ID</key>
-	<string>com.googleusercontent.apps.321889905131-t6ogauus8q46qccni08r1jn3ki2ocjbv</string>
+	<string>com.googleusercontent.apps.321889905131-22r952df5n2g5i3qehb6dgcg5o4188dt</string>
+	<key>ANDROID_CLIENT_ID</key>
+	<string>321889905131-5q4hne8soo1v8lebda6drl4vp9tv8grd.apps.googleusercontent.com</string>
 	<key>API_KEY</key>
 	<string>AIzaSyA0fw8oOZhK1DIRpQMCFaWvBA4D8L-bXIc</string>
 	<key>GCM_SENDER_ID</key>
@@ -13,7 +15,7 @@
 	<key>PLIST_VERSION</key>
 	<string>1</string>
 	<key>BUNDLE_ID</key>
-	<string>kr.co.eztechfin.stepGo</string>
+	<string>kr.co.eztechfin.gazaGo</string>
 	<key>PROJECT_ID</key>
 	<string>app-step-prod</string>
 	<key>STORAGE_BUCKET</key>
@@ -29,6 +31,6 @@
 	<key>IS_SIGNIN_ENABLED</key>
 	<true></true>
 	<key>GOOGLE_APP_ID</key>
-	<string>1:321889905131:ios:f0fd202aacca13710a11ae</string>
+	<string>1:321889905131:ios:fcd56d852edb7bc40a11ae</string>
 </dict>
 </plist>

@@ -1,9 +1,9 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:step_go/constants/enums.dart';
-import 'package:step_go/platform/controllers/wallet_detail_controller.dart';
-import 'package:step_go/presentations/components/default_container.dart';
+import 'package:gaza_go/constants/enums.dart';
+import 'package:gaza_go/platform/controllers/wallet_detail_controller.dart';
+import 'package:gaza_go/presentations/components/default_container.dart';
 
 class WalletDetail extends StatelessWidget {
   const WalletDetail({Key? key}) : super(key: key);

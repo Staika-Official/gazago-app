@@ -1,7 +1,7 @@
-import 'package:step_go/constants/enums.dart';
-import 'package:step_go/platform/controllers/login_controller.dart';
-import 'package:step_go/presentations/components/default_container.dart';
 import 'package:flutter/material.dart';
+import 'package:gaza_go/constants/enums.dart';
+import 'package:gaza_go/platform/controllers/login_controller.dart';
+import 'package:gaza_go/presentations/components/default_container.dart';
 
 class Login extends StatelessWidget {
   const Login({Key? key}) : super(key: key);
@@ -30,7 +30,7 @@ class Login extends StatelessWidget {
         children: [
           const Expanded(
             child: Center(
-              child: Text('StepGo'),
+              child: Text('gazaGo'),
             ),
           ),
           ...renderLoginButtons(controller),

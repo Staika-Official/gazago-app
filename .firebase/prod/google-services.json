@@ -7,12 +7,20 @@
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:321889905131:android:9b8d9a4e071330970a11ae",
+        "mobilesdk_app_id": "1:321889905131:android:28f83939b947b3880a11ae",
         "android_client_info": {
-          "package_name": "kr.co.eztechfin.stepGo"
+          "package_name": "kr.co.eztechfin.gazaGo"
         }
       },
       "oauth_client": [
+        {
+          "client_id": "321889905131-5q4hne8soo1v8lebda6drl4vp9tv8grd.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "kr.co.eztechfin.gazaGo",
+            "certificate_hash": "7caed55f2435244de64e88a8642f3cf278781cde"
+          }
+        },
         {
           "client_id": "321889905131-9u6fi7vnrvv000skm2pe0uggpn7b8tvs.apps.googleusercontent.com",
           "client_type": 3
@@ -29,6 +37,13 @@
             {
               "client_id": "321889905131-9u6fi7vnrvv000skm2pe0uggpn7b8tvs.apps.googleusercontent.com",
               "client_type": 3
+            },
+            {
+              "client_id": "321889905131-22r952df5n2g5i3qehb6dgcg5o4188dt.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "kr.co.eztechfin.gazaGo"
+              }
             }
           ]
         }

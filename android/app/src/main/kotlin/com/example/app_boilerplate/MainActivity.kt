@@ -1,4 +1,4 @@
-package kr.co.eztechfin.stepGo
+package kr.co.eztechfin.gazaGo
 
 import io.flutter.embedding.android.FlutterActivity
 

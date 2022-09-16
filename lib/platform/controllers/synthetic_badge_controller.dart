@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:gaza_go/platform/models/inventory_badge_model.dart';
 import 'package:get/get.dart';
-import 'package:step_go/platform/models/inventory_badge_model.dart';
 
 class SyntheticBadgeController extends GetxController {
   RxList<InventoryBadgeModel> selectedBadgeList = RxList.empty();

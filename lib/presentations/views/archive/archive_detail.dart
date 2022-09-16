@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:gaza_go/constants/enums.dart';
+import 'package:gaza_go/platform/controllers/archive_controller.dart';
+import 'package:gaza_go/presentations/components/default_container.dart';
 import 'package:get/get.dart';
-import 'package:step_go/constants/enums.dart';
-import 'package:step_go/platform/controllers/archive_controller.dart';
-import 'package:step_go/presentations/components/default_container.dart';
 
 class ArchiveDetail extends StatelessWidget {
   const ArchiveDetail({Key? key}) : super(key: key);
@@ -23,10 +23,7 @@ class ArchiveDetail extends StatelessWidget {
                   mainAxisSize: MainAxisSize.min,
                   children: [
                     Icon(
-                      controller.selectedItem.value.activityType ==
-                              ActivityType.climbing
-                          ? Icons.nordic_walking
-                          : Icons.directions_walk,
+                      controller.selectedItem.value.activityType == ActivityType.climbing ? Icons.nordic_walking : Icons.directions_walk,
                     ),
                     Text(
                       controller.selectedItem.value.startTime,

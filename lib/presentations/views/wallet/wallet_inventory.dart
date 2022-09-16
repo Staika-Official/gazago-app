@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:step_go/constants/enums.dart';
-import 'package:step_go/platform/controllers/wallet_inventory_controller.dart';
-import 'package:step_go/presentations/views/wallet/asset_item_coin.dart';
+import 'package:gaza_go/constants/enums.dart';
+import 'package:gaza_go/platform/controllers/wallet_inventory_controller.dart';
+import 'package:gaza_go/presentations/views/wallet/asset_item_coin.dart';
 
 class WalletInventory extends StatelessWidget {
   const WalletInventory({Key? key}) : super(key: key);

@@ -1,5 +1,5 @@
+import 'package:gaza_go/constants/enums.dart';
 import 'package:json_annotation/json_annotation.dart';
-import 'package:step_go/constants/enums.dart';
 
 part 'archive_item_model.g.dart';
 
@@ -39,8 +39,7 @@ class ArchiveItemModel {
     required this.durabilityConsumed,
   });
 
-  factory ArchiveItemModel.fromJson(Map<String, dynamic> json) =>
-      _$ArchiveItemModelFromJson(json);
+  factory ArchiveItemModel.fromJson(Map<String, dynamic> json) => _$ArchiveItemModelFromJson(json);
 
   Map<String, dynamic> toJson() => _$ArchiveItemModelToJson(this);
 }

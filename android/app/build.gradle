@@ -38,18 +38,18 @@ android {
     productFlavors {
         dev {
             dimension "flavor-type"
-            applicationId "kr.co.eztechfin.stepGo.dev"
-            resValue "string", "app_name", "StepGo-dev"
+            applicationId "kr.co.eztechfin.gazaGo.dev"
+            resValue "string", "app_name", "gazaGO-dev"
         }
         stage {
             dimension "flavor-type"
-            applicationId "kr.co.eztechfin.stepGo.dev"
-            resValue "string", "app_name", "StepGo-stage"
+            applicationId "kr.co.eztechfin.gazaGo.dev"
+            resValue "string", "app_name", "gazaGO-stage"
         }
         prod {
             dimension "flavor-type"
-            applicationId "kr.co.eztechfin.stepGo"
-            resValue "string", "app_name", "StepGo"
+            applicationId "kr.co.eztechfin.gazaGo"
+            resValue "string", "app_name", "gazaGO"
         }
     }
 
@@ -73,7 +73,7 @@ android {
 
     defaultConfig {
         // TODO: Specify your own unique Application ID (https://developer.android.com/studio/build/application-id.html).
-        applicationId "kr.co.eztechfin.stepGo"
+        applicationId "kr.co.eztechfin.gazaGo"
         // You can update the following values to match your application needs.
         // For more information, see: https://docs.flutter.dev/deployment/android#reviewing-the-build-configuration.
         minSdkVersion 21

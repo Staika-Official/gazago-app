@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 import 'package:get/get.dart';
-import 'package:step_go/platform/controllers/inventory/inventory_home_controller.dart';
-import 'package:step_go/presentations/views/inventory/inventory_badge.dart';
-import 'package:step_go/presentations/views/inventory/inventory_item.dart';
+import 'package:gaza_go/platform/controllers/inventory/inventory_home_controller.dart';
+import 'package:gaza_go/presentations/views/inventory/inventory_badge.dart';
+import 'package:gaza_go/presentations/views/inventory/inventory_item.dart';
 
 class InventoryHome extends StatelessWidget {
   const InventoryHome({Key? key}) : super(key: key);

@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:step_go/constants/routes.dart';
+import 'package:gaza_go/constants/routes.dart';
 
 class MainAppbar extends StatelessWidget implements PreferredSizeWidget {
   const MainAppbar({Key? key}) : super(key: key);
@@ -24,7 +24,7 @@ class MainAppbar extends StatelessWidget implements PreferredSizeWidget {
             ),
           ),
           const Text(
-            'StepGo',
+            'gazaGo',
             style: TextStyle(
               color: Colors.black,
             ),

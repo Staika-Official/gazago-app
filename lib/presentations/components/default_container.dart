@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:step_go/presentations/components/default_header.dart';
+import 'package:gaza_go/presentations/components/default_header.dart';
 
 class DefaultContainer extends StatelessWidget {
   final Widget child;

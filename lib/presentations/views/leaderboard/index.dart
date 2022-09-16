@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:step_go/platform/controllers/leaderboard_controller.dart';
+import 'package:gaza_go/platform/controllers/leaderboard_controller.dart';
 
 class LeaderboardHome extends StatelessWidget {
   const LeaderboardHome({Key? key}) : super(key: key);

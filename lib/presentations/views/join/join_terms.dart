@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:gaza_go/constants/routes.dart';
+import 'package:gaza_go/platform/controllers/join_terms_controller.dart';
+import 'package:gaza_go/presentations/components/default_container.dart';
 import 'package:get/get.dart';
-import 'package:step_go/constants/routes.dart';
-import 'package:step_go/platform/controllers/join_terms_controller.dart';
-import 'package:step_go/presentations/components/default_container.dart';
 
 class JoinTerms extends StatelessWidget {
   const JoinTerms({Key? key}) : super(key: key);
@@ -45,7 +45,7 @@ class JoinTerms extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            const Text('안녕하세요!\nStepGo입니다.'),
+            const Text('안녕하세요!\ngazaGO입니다.'),
             const Padding(
               padding: EdgeInsets.only(top: 20.0),
               child: Text('서비스 이용을 위해\n필수 약관에 동의해주세요'),
