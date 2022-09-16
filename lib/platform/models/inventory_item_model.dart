@@ -5,6 +5,8 @@ part 'inventory_item_model.g.dart';
 @JsonSerializable()
 class InventoryItemModel {
   String name;
+  String itemName;
+  String itemImageUrl;
   double currentStat;
   bool isShoe;
 
@@ -12,6 +14,8 @@ class InventoryItemModel {
     required this.name,
     required this.currentStat,
     this.isShoe = false,
+    required this.itemName,
+    required this.itemImageUrl,
   });
 
   factory InventoryItemModel.fromJson(Map<String, dynamic> json) => _$InventoryItemModelFromJson(json);
