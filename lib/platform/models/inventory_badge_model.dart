@@ -10,6 +10,8 @@ class InventoryBadgeModel {
   int effect;
   String getDate;
   int level;
+  int moveCompensationRate;
+  int luckyRate;
 
   InventoryBadgeModel({
     required this.id,
@@ -18,6 +20,8 @@ class InventoryBadgeModel {
     required this.effect,
     required this.getDate,
     required this.level,
+    required this.moveCompensationRate,
+    required this.luckyRate,
   });
 
   factory InventoryBadgeModel.fromJson(Map<String, dynamic> json) => _$InventoryBadgeModelFromJson(json);

@@ -8,8 +8,8 @@ class InventoryItem extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     InventoryHomeController _controller = Get.put(InventoryHomeController());
-    return Scaffold(
-      body: Column(
+    return Container(
+      child: Column(
         mainAxisSize: MainAxisSize.max,
         children: [
           TabBar(
