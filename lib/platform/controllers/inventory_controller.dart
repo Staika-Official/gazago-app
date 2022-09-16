@@ -8,7 +8,7 @@ class InventoryController extends GetxController {
   RxList<InventoryBadgeModel> syntheticBadgeList = RxList.empty();
   RxList<InventoryBadgeModel> myBadgeList = RxList.empty();
   final RxBool isShoe = RxBool(true);
-
+  RxInt count = 0.obs;
   Rx<InventoryBadgeModel> selectedBadge = Rx(InventoryBadgeModel(
     id: 1,
     badgeImageUrl: 'assets/images/@temp_badge.png',
@@ -22,6 +22,7 @@ class InventoryController extends GetxController {
 
   @override
   void onInit() {
+    once(count, (_) => print('한번만 호출'));
     initStats();
     getSyntheticBadgeList();
     getMyBadgeList();

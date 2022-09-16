@@ -2,6 +2,7 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:step_go/platform/controllers/home_menu_controller.dart';
+import 'package:step_go/platform/controllers/inventory_controller.dart';
 import 'package:step_go/platform/controllers/synthetic_badge_controller.dart';
 
 class SyntheticBadge extends StatelessWidget {
@@ -10,6 +11,7 @@ class SyntheticBadge extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     HomeMenuController homeMenuController = Get.find();
+    InventoryController controller = Get.find();
     SyntheticBadgeController _controller = Get.put(SyntheticBadgeController());
 
     return Scaffold(
@@ -31,7 +33,7 @@ class SyntheticBadge extends StatelessWidget {
                           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                           children: [
                             GestureDetector(
-                              onTap: () => _controller.showSelectBadgePopup(),
+                              onTap: () => _controller.showSelectBadgePopup(controller.myBadgeList.value),
                               child: CircleAvatar(
                                 backgroundImage: AssetImage('assets/images/@temp_badge.png'),
                                 foregroundImage: CachedNetworkImageProvider('https://placeimg.com/60/60/any'),
