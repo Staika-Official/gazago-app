@@ -12,4 +12,6 @@ class InventoryHomeController extends GetxController with GetTickerProviderState
     subTabController = TabController(length: 5, vsync: this);
     super.onInit();
   }
+
+  getMyHatList() {}
 }

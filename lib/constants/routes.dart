@@ -3,6 +3,8 @@ import 'package:get/get_navigation/get_navigation.dart';
 import 'package:step_go/flavors.dart';
 import 'package:step_go/presentations/views/archive/archive_detail.dart';
 import 'package:step_go/presentations/views/home.dart';
+import 'package:step_go/presentations/views/inventory/inventory_badge_detail.dart';
+import 'package:step_go/presentations/views/inventory/synthetic_badge.dart';
 import 'package:step_go/presentations/views/join/join_terms.dart';
 import 'package:step_go/presentations/views/login.dart';
 import 'package:step_go/presentations/views/on_boarding.dart';
@@ -37,6 +39,8 @@ class Routes {
   static const wallet = '/wallet';
   static const walletDetail = '/wallet/detail';
   static const walletActions = '/wallet/action';
+  static const badgeDetail = '/inventory/detail';
+  static const syntheticBadge = '/inventory/synthetic_badge';
 
   static List<GetPage> pages = [
     stepPage(name: Routes.login, page: const Login()),
@@ -65,6 +69,8 @@ class Routes {
     stepPage(name: Routes.wallet, page: const WalletHome()),
     stepPage(name: Routes.walletDetail, page: const WalletDetail()),
     stepPage(name: Routes.walletActions, page: const WalletActions()),
+    stepPage(name: Routes.badgeDetail, page: const InventoryBadgeDetail()),
+    stepPage(name: Routes.syntheticBadge, page: const SyntheticBadge()),
   ];
 }
 

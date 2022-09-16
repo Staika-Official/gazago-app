@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:step_go/constants/routes.dart';
 import 'package:step_go/platform/models/asset_item_coin_model.dart';
 import 'package:step_go/presentations/components/main_appbar.dart';
 import 'package:step_go/presentations/components/secondary_appbar.dart';
@@ -44,6 +45,10 @@ class HomeMenuController extends GetxController {
       AssetItemCoinModel(name: 'staika', balance: 10.00, tokenImageUrl: 'https://placeimg.com/20/20/any'),
       AssetItemCoinModel(name: 'taika', balance: 1000.00, tokenImageUrl: 'https://placeimg.com/20/20/any'),
     ];
+  }
+
+  bool isBackButton() {
+    return Get.currentRoute == Routes.syntheticBadge;
   }
 
   void selectMenu(int index) {

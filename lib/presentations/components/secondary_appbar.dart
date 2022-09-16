@@ -39,18 +39,26 @@ class SecondaryAppbar extends StatelessWidget implements PreferredSizeWidget {
     return AppBar(
       backgroundColor: Colors.white,
       automaticallyImplyLeading: false,
-      title: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: [
-          IconButton(
-            onPressed: () => Get.toNamed(Routes.preferences),
-            icon: const Icon(
-              Icons.person,
-              color: Colors.grey,
-            ),
-          ),
-          Obx(() {
-            return Row(
+      title: Obx(() {
+        return Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            controller.isBackButton()
+                ? IconButton(
+                    onPressed: () => Get.back(),
+                    icon: const Icon(
+                      Icons.chevron_left,
+                      color: Colors.grey,
+                    ),
+                  )
+                : IconButton(
+                    onPressed: () => Get.toNamed(Routes.preferences),
+                    icon: const Icon(
+                      Icons.person,
+                      color: Colors.grey,
+                    ),
+                  ),
+            Row(
               mainAxisSize: MainAxisSize.min,
               children: [
                 ...renderWalletItems(controller),
@@ -62,10 +70,10 @@ class SecondaryAppbar extends StatelessWidget implements PreferredSizeWidget {
                   ),
                 )
               ],
-            );
-          })
-        ],
-      ),
+            ),
+          ],
+        );
+      }),
     );
   }
 }
