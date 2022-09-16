@@ -1,4 +1,6 @@
+import 'package:flutter/material.dart';
 import 'package:get/get_navigation/get_navigation.dart';
+import 'package:step_go/flavors.dart';
 import 'package:step_go/presentations/views/archive/archive_detail.dart';
 import 'package:step_go/presentations/views/home.dart';
 import 'package:step_go/presentations/views/join/join_terms.dart';
@@ -37,31 +39,52 @@ class Routes {
   static const walletActions = '/wallet/action';
 
   static List<GetPage> pages = [
-    GetPage(name: Routes.login, page: () => const Login()),
-    GetPage(name: Routes.onBoarding, page: () => const OnBoarding()),
-    GetPage(name: Routes.joinTerms, page: () => const JoinTerms()),
-    GetPage(
+    stepPage(name: Routes.login, page: const Login()),
+    stepPage(name: Routes.onBoarding, page: const OnBoarding()),
+    stepPage(name: Routes.joinTerms, page: const JoinTerms()),
+    stepPage(
       name: Routes.home,
-      page: () => Home(),
+      page: Home(),
       transition: Transition.noTransition,
     ),
-    GetPage(name: Routes.term, page: () => const Term()),
-    GetPage(name: Routes.archiveDetail, page: () => const ArchiveDetail()),
-    GetPage(
+    stepPage(name: Routes.term, page: const Term()),
+    stepPage(name: Routes.archiveDetail, page: const ArchiveDetail()),
+    stepPage(
       name: Routes.preferences,
-      page: () => const Preferences(),
+      page: const Preferences(),
       transition: Transition.leftToRight,
       transitionDuration: const Duration(milliseconds: 200),
     ),
-    GetPage(name: Routes.preferenceBoard, page: () => const PreferenceBoard()),
-    GetPage(name: Routes.preferenceNotification, page: () => const NotificationAlert()),
-    GetPage(name: Routes.verification, page: () => const Verification()),
-    GetPage(name: Routes.myPage, page: () => const MyPage()),
-    GetPage(name: Routes.editBiometrics, page: () => const EditBiometrics()),
-    GetPage(name: Routes.withdrawConfirm, page: () => const WithdrawConfirm()),
-    GetPage(name: Routes.withdrawCompleted, page: () => const WithdrawCompleted()),
-    GetPage(name: Routes.wallet, page: () => const WalletHome()),
-    GetPage(name: Routes.walletDetail, page: () => const WalletDetail()),
-    GetPage(name: Routes.walletActions, page: () => const WalletActions()),
+    stepPage(name: Routes.preferenceBoard, page: const PreferenceBoard()),
+    stepPage(name: Routes.preferenceNotification, page: const NotificationAlert()),
+    stepPage(name: Routes.verification, page: const Verification()),
+    stepPage(name: Routes.myPage, page: const MyPage()),
+    stepPage(name: Routes.editBiometrics, page: const EditBiometrics()),
+    stepPage(name: Routes.withdrawConfirm, page: const WithdrawConfirm()),
+    stepPage(name: Routes.withdrawCompleted, page: const WithdrawCompleted()),
+    stepPage(name: Routes.wallet, page: const WalletHome()),
+    stepPage(name: Routes.walletDetail, page: const WalletDetail()),
+    stepPage(name: Routes.walletActions, page: const WalletActions()),
   ];
 }
+
+GetPage stepPage({required String name, required Widget page, Transition? transition, Duration? transitionDuration}) {
+  return GetPage(name: name, page: () => _flavorBanner(child: page, show: F.name != 'prod'), transition: transition, transitionDuration: transitionDuration);
+}
+
+Widget _flavorBanner({
+  required Widget child,
+  bool show = true,
+}) =>
+    show
+        ? Banner(
+            child: child,
+            location: BannerLocation.topStart,
+            message: F.name,
+            color: Colors.green.withOpacity(0.6),
+            textStyle: TextStyle(fontWeight: FontWeight.w700, fontSize: 12.0, letterSpacing: 1.0),
+            textDirection: TextDirection.ltr,
+          )
+        : Container(
+            child: child,
+          );

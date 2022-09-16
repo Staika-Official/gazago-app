@@ -1,0 +1,6 @@
+#include "Generated.xcconfig"
+
+FLUTTER_TARGET=lib/main_stage.dart
+ASSET_PREFIX=stage
+BUNDLE_NAME=StepGo-stage
+BUNDLE_DISPLAY_NAME=StepGo-stage

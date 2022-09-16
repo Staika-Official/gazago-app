@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "321889905131",
+    "project_id": "app-step-prod",
+    "storage_bucket": "app-step-prod.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:321889905131:android:9b8d9a4e071330970a11ae",
+        "android_client_info": {
+          "package_name": "kr.co.eztechfin.stepGo"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "321889905131-9u6fi7vnrvv000skm2pe0uggpn7b8tvs.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBHmS0LwPeoXpiZqW42qDFZ5iOth-VovAo"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "321889905131-9u6fi7vnrvv000skm2pe0uggpn7b8tvs.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

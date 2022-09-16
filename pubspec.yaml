@@ -65,6 +65,7 @@ dependencies:
   cached_network_image: ^3.2.2
   image_picker: ^0.8.5+3
   flutter_gallery_assets: ^1.0.2
+  flutter_flavorizr: ^2.1.4
 
 dev_dependencies:
   flutter_test:
@@ -142,3 +143,46 @@ flutter:
           weight: 900
   # For details regarding fonts from package dependencies,
   # see https://flutter.dev/custom-fonts/#from-packages
+
+flavorizr:
+  app:
+    android:
+      flavorDimensions: "flavor-type"
+    ios:
+
+  flavors:
+    dev:
+      app:
+        name: "StepGo-dev"
+
+      android:
+        applicationId: "kr.co.eztechfin.stepGo.dev"
+        firebase:
+          config: ".firebase/dev/google-services.json"
+      ios:
+        bundleId: "kr.co.eztechfin.stepGo.dev"
+        firebase:
+          config: ".firebase/dev/GoogleService-Info.plist"
+    stage:
+      app:
+        name: "StepGo-stage"
+      android:
+        applicationId: "kr.co.eztechfin.stepGo.dev"
+        firebase:
+          config: ".firebase/dev/google-services.json"
+      ios:
+        bundleId: "kr.co.eztechfin.stepGo.dev"
+        firebase:
+          config: ".firebase/dev/GoogleService-Info.plist"
+    prod:
+      app:
+        name: "StepGo"
+
+      android:
+        applicationId: "kr.co.eztechfin.stepGo"
+        firebase:
+          config: ".firebase/prod/google-services.json"
+      ios:
+        bundleId: "kr.co.eztechfin.stepGo"
+        firebase:
+          config: ".firebase/prod/GoogleService-Info.plist"

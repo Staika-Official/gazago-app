@@ -1,0 +1,82 @@
+{
+  "project_info": {
+    "project_number": "232716676384",
+    "project_id": "app-step-dev",
+    "storage_bucket": "app-step-dev.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:232716676384:android:4f23d26acd93b8746f7b45",
+        "android_client_info": {
+          "package_name": "kr.co.eztechfin.StepGo.dev"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "232716676384-va1t6lsui4aoafmdoa61g269qg20r429.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDMz-7VGwfPTUHcTeJa8C-HL94DsyjELG8"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "232716676384-va1t6lsui4aoafmdoa61g269qg20r429.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "232716676384-tnmh7db3i70opd3g1hfs86g73b2shlo1.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "kr.co.eztechfin.stepGo"
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:232716676384:android:68a38cb21a8819906f7b45",
+        "android_client_info": {
+          "package_name": "kr.co.eztechfin.stepGo.dev"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "232716676384-va1t6lsui4aoafmdoa61g269qg20r429.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDMz-7VGwfPTUHcTeJa8C-HL94DsyjELG8"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "232716676384-va1t6lsui4aoafmdoa61g269qg20r429.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "232716676384-tnmh7db3i70opd3g1hfs86g73b2shlo1.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "kr.co.eztechfin.stepGo"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
