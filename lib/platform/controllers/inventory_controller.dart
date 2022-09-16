@@ -8,6 +8,7 @@ class InventoryController extends GetxController {
   RxList<InventoryBadgeModel> syntheticBadgeList = RxList.empty();
   RxList<InventoryBadgeModel> myBadgeList = RxList.empty();
   final RxBool isShoe = RxBool(true);
+
   Rx<InventoryBadgeModel> selectedBadge = Rx(InventoryBadgeModel(
     id: 1,
     badgeImageUrl: 'assets/images/@temp_badge.png',
@@ -15,6 +16,8 @@ class InventoryController extends GetxController {
     effect: 3,
     getDate: '2022.08.29',
     level: 1,
+    moveCompensationRate: 15,
+    luckyRate: 20,
   ));
 
   @override
@@ -34,6 +37,8 @@ class InventoryController extends GetxController {
         effect: 3,
         getDate: '2022.08.29',
         level: 1,
+        moveCompensationRate: 15,
+        luckyRate: 20,
       ),
       InventoryBadgeModel(
         id: 2,
@@ -42,6 +47,8 @@ class InventoryController extends GetxController {
         effect: 3,
         getDate: '2022.08.29',
         level: 1,
+        moveCompensationRate: 15,
+        luckyRate: 20,
       ),
     ];
   }
@@ -55,14 +62,18 @@ class InventoryController extends GetxController {
         effect: 3,
         getDate: '2022.08.29',
         level: 1,
+        moveCompensationRate: 15,
+        luckyRate: 20,
       ),
       InventoryBadgeModel(
         id: 2,
         badgeImageUrl: 'assets/images/@temp_badge.png',
-        badgeName: '소래산 등정 뱃지',
+        badgeName: '소래산 등정 뱃지2',
         effect: 3,
         getDate: '2022.08.29',
         level: 1,
+        moveCompensationRate: 25,
+        luckyRate: 30,
       ),
     ];
   }
