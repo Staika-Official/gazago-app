@@ -1,11 +1,80 @@
+import 'dart:developer';
+
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:get/get.dart';
 import 'package:gaza_go/constants/enums.dart';
 import 'package:gaza_go/constants/routes.dart';
+import 'package:get/get.dart';
+import 'package:google_sign_in/google_sign_in.dart';
+import 'package:sign_in_with_apple/sign_in_with_apple.dart';
 
 class LoginController extends GetxController {
+  final GoogleSignIn _googleSignIn = GoogleSignIn(
+    scopes: [
+      'email',
+      'https://www.googleapis.com/auth/contacts.readonly',
+    ],
+  );
+
   void login(LoginType loginType) async {
-    showDuplicateLoginWarning();
+    // showDuplicateLoginWarning();
+    switch (loginType) {
+      case LoginType.google:
+        signInWithGoogle();
+        break;
+      case LoginType.apple:
+        signInWithApple();
+        break;
+      case LoginType.kakao:
+        break;
+      default:
+        signInWithGoogle();
+        break;
+    }
+  }
+
+  Future<UserCredential> signInWithGoogle() async {
+    // Trigger the authentication flow
+    final GoogleSignInAccount? googleUser = await GoogleSignIn(scopes: [
+      'email',
+      'profile',
+    ]).signIn();
+
+    // Obtain the auth details from the request
+    final GoogleSignInAuthentication? googleAuth = await googleUser?.authentication;
+
+    // Create a new credential
+    final credential = GoogleAuthProvider.credential(
+      accessToken: googleAuth?.accessToken,
+      idToken: googleAuth?.idToken,
+    );
+
+    inspect(credential);
+    print(credential.accessToken);
+    print(credential.idToken);
+
+    // Once signed in, return the UserCredential
+    return await FirebaseAuth.instance.signInWithCredential(credential);
+  }
+
+  Future<UserCredential> signInWithApple() async {
+    final appleCredential = await SignInWithApple.getAppleIDCredential(
+      scopes: [
+        AppleIDAuthorizationScopes.email,
+        AppleIDAuthorizationScopes.fullName,
+      ],
+    );
+
+    final credential = OAuthProvider("apple.com").credential(
+      idToken: appleCredential.identityToken,
+      accessToken: appleCredential.authorizationCode,
+    );
+
+    inspect(credential);
+    print(credential.accessToken);
+    print(credential.idToken);
+
+    return await FirebaseAuth.instance.signInWithCredential(credential);
   }
 
   void showDuplicateLoginWarning() {

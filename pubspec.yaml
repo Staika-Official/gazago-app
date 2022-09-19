@@ -67,6 +67,9 @@ dependencies:
   flutter_gallery_assets: ^1.0.2
   flutter_flavorizr: ^2.1.4
   google_sign_in: ^5.4.1
+  sign_in_with_apple: ^4.1.0
+  uuid: ^3.0.6
+  kakao_flutter_sdk: ^1.2.2
 
 dev_dependencies:
   flutter_test:
