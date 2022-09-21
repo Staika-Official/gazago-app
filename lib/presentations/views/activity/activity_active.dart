@@ -52,8 +52,22 @@ class ActivityActive extends StatelessWidget {
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  Text(controller.currentLocation.value.latitude.toString()),
-                  Text(controller.currentLocation.value.longitude.toString()),
+                  Text('latitude ' + controller.currentLocation.value.latitude.toString()),
+                  Text('longitude ' + controller.currentLocation.value.longitude.toString()),
+                ],
+              ),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Text('step ' + controller.steps.value.toString()),
+                  Text('status ' + controller.pedestrianStatus.value),
+                ],
+              ),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Text('speed ' + controller.speed.value.toString()),
+                  Text('altitude ' + controller.altitude.value.toString()),
                 ],
               )
             ],
