@@ -1,0 +1,47 @@
+import 'package:flutter/material.dart';
+import 'package:gaza_go/platform/controllers/activity_controller.dart';
+import 'package:gaza_go/presentations/components/default_container.dart';
+import 'package:get/get.dart';
+
+class ActivitySelect extends StatelessWidget {
+  const ActivitySelect({Key? key}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    ActivityController controller = Get.find();
+
+    return DefaultContainer(
+      child: Column(
+        children: [
+          Expanded(
+            child: InkWell(
+              onTap: () => controller.loadActivity(),
+              child: Card(
+                child: Center(
+                  child: Text('등산'),
+                ),
+              ),
+            ),
+          ),
+          Expanded(
+            child: InkWell(
+              onTap: () => controller.loadActivity(),
+              child: Card(
+                child: Center(
+                  child: Text('일반'),
+                ),
+              ),
+            ),
+          ),
+          Padding(
+            padding: EdgeInsets.all(20),
+            child: ElevatedButton(
+              onPressed: () => Get.back(),
+              child: Text('취소'),
+            ),
+          )
+        ],
+      ),
+    );
+  }
+}

@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:get/get.dart';
 import 'package:gaza_go/platform/controllers/activity_controller.dart';
+import 'package:get/get.dart';
 
 class ActivityHome extends StatelessWidget {
   ActivityHome({Key? key}) : super(key: key);
@@ -137,7 +137,7 @@ class ActivityHome extends StatelessWidget {
               children: [
                 Center(
                   child: MaterialButton(
-                    onPressed: () => null,
+                    onPressed: () => controller.startActivity(),
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(100),
                     ),

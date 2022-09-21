@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:get/get_navigation/get_navigation.dart';
 import 'package:gaza_go/flavors.dart';
+import 'package:gaza_go/presentations/views/activity/activity_active.dart';
+import 'package:gaza_go/presentations/views/activity/activity_loading.dart';
+import 'package:gaza_go/presentations/views/activity/activity_select.dart';
 import 'package:gaza_go/presentations/views/archive/archive_detail.dart';
 import 'package:gaza_go/presentations/views/home.dart';
 import 'package:gaza_go/presentations/views/inventory/inventory_badge_detail.dart';
@@ -20,6 +22,7 @@ import 'package:gaza_go/presentations/views/verification/index.dart';
 import 'package:gaza_go/presentations/views/wallet/index.dart';
 import 'package:gaza_go/presentations/views/wallet/wallet_actions.dart';
 import 'package:gaza_go/presentations/views/wallet/wallet_detail.dart';
+import 'package:get/get_navigation/get_navigation.dart';
 
 class Routes {
   static const login = '/login';
@@ -28,6 +31,9 @@ class Routes {
   static const home = '/home';
   static const term = '/term/:termType';
   static const archiveDetail = '/archive/detail';
+  static const activitySelect = '/activity/select';
+  static const activityLoading = '/activity/loading';
+  static const activityActive = '/activity/active';
   static const preferences = '/preferences';
   static const preferenceBoard = '/preferences/board';
   static const preferenceNotification = '/preferences/notification';
@@ -53,6 +59,9 @@ class Routes {
     ),
     stepPage(name: Routes.term, page: const Term()),
     stepPage(name: Routes.archiveDetail, page: const ArchiveDetail()),
+    stepPage(name: Routes.activitySelect, page: const ActivitySelect()),
+    stepPage(name: Routes.activityLoading, page: const ActivityLoading()),
+    stepPage(name: Routes.activityActive, page: const ActivityActive()),
     stepPage(
       name: Routes.preferences,
       page: const Preferences(),
