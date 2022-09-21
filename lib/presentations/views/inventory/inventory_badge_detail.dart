@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:get/get.dart';
 import 'package:gaza_go/platform/controllers/inventory_controller.dart';
 import 'package:gaza_go/presentations/components/default_container.dart';
+import 'package:get/get.dart';
 
 class InventoryBadgeDetail extends StatelessWidget {
   const InventoryBadgeDetail({Key? key}) : super(key: key);
@@ -17,14 +17,14 @@ class InventoryBadgeDetail extends StatelessWidget {
                   child: Row(children: [
                     Container(
                       child: Image(
-                        image: AssetImage(badge.badgeImageUrl),
+                        image: AssetImage(badge.badge.imageUrl),
                         width: 30,
                         height: 30,
                       ),
                     ),
                     Container(
                       padding: const EdgeInsets.only(left: 10),
-                      child: Text(badge.badgeName),
+                      child: Text(badge.badge.description),
                     ),
                     Container(
                       padding: const EdgeInsets.only(left: 5),
@@ -32,15 +32,15 @@ class InventoryBadgeDetail extends StatelessWidget {
                     ),
                     Container(
                       padding: const EdgeInsets.only(left: 5),
-                      child: Text('LV${badge.level}'),
+                      child: Text('LV${badge.badge.level}'),
                     ),
                     Container(
                       padding: const EdgeInsets.only(left: 5),
-                      child: Text('(${badge.getDate})'),
+                      child: Text('(${badge.badge.createdDate})'),
                     ),
                     Container(
                       padding: const EdgeInsets.only(left: 5),
-                      child: Text('+${badge.effect}%'),
+                      child: Text('+${badge.badge.luckRate}%'),
                     )
                   ]),
                 ),
@@ -70,7 +70,7 @@ class InventoryBadgeDetail extends StatelessWidget {
                     children: [
                       Padding(
                         padding: const EdgeInsets.only(top: 10, bottom: 10),
-                        child: Text(controller.selectedBadge.value.badgeName),
+                        child: Text(controller.selectedBadge.value.badge.description),
                       ),
                       SizedBox(
                         width: 100,
@@ -84,7 +84,7 @@ class InventoryBadgeDetail extends StatelessWidget {
                               decoration: new BoxDecoration(
                                 shape: BoxShape.circle,
                                 image: new DecorationImage(
-                                  image: AssetImage(controller.selectedBadge.value.badgeImageUrl),
+                                  image: AssetImage(controller.selectedBadge.value.badge.imageUrl),
                                   fit: BoxFit.fill,
                                 ),
                               ),
@@ -94,7 +94,7 @@ class InventoryBadgeDetail extends StatelessWidget {
                       ),
                       Padding(
                         padding: const EdgeInsets.only(top: 10, bottom: 10),
-                        child: Text(controller.selectedBadge.value.badgeName),
+                        child: Text(controller.selectedBadge.value.badge.description),
                       ),
                     ],
                   ),

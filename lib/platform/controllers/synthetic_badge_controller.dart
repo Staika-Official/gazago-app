@@ -1,50 +1,97 @@
-import 'dart:convert';
 import 'dart:developer' as developer;
 
 import 'package:flutter/material.dart';
+import 'package:gaza_go/platform/controllers/inventory_controller.dart';
+import 'package:gaza_go/platform/models/inventory_badge_item_model.dart';
 import 'package:gaza_go/platform/models/inventory_badge_model.dart';
 import 'package:get/get.dart';
 
 class SyntheticBadgeController extends GetxController {
+  InventoryController controller = Get.find();
   RxList<InventoryBadgeModel> selectedBadgeList = RxList.empty();
   RxList<InventoryBadgeModel> myBadgeList = RxList.empty();
+  RxList<String> get selectedBadgeImages {
+    RxList<String> images = RxList.empty();
+    for (int i = 0; i < 5; i++) {
+      if (selectedBadgeList.length > i) {
+        images.add(selectedBadgeList[i].badge.imageUrl);
+      } else {
+        images.add('');
+      }
+    }
+    return images;
+  }
 
-  Rx<InventoryBadgeModel> selectedBadge = Rx(InventoryBadgeModel(
-    id: 1,
-    badgeImageUrl: 'assets/images/@temp_badge.png',
-    badgeName: '소래산 등정 뱃지',
-    effect: 3,
-    getDate: '2022.08.29',
-    level: 1,
-    moveCompensationRate: 15,
-    luckyRate: 20,
-  ));
-  final RxInt selectBadgeIndex = RxInt(0);
+  Rx<InventoryBadgeModel> selectedBadge = Rx(
+    InventoryBadgeModel(
+        id: -1,
+        userId: -1,
+        state: '',
+        createdBy: '',
+        createdDate: '',
+        lastModifiedBy: '',
+        lastModifiedDate: '',
+        badge: InventoryBadgeItemModel(
+            id: -1,
+            level: 0,
+            rewardRate: 0.0,
+            luckRate: 0.0,
+            source: '',
+            issueType: '',
+            issueState: '',
+            issueStartedTime: '',
+            issueEndedTime: '',
+            description: '',
+            state: '',
+            address: '',
+            imageUrl: 'imageUrl',
+            createdBy: 'createdBy',
+            createdDate: 'createdDate',
+            lastModifiedBy: 'lastModifiedBy',
+            lastModifiedDate: 'lastModifiedDate')),
+  );
+  final RxInt selectBadgeId = RxInt(0);
 
   @override
   void onInit() {
+    developer.inspect(selectedBadge.value);
+    selectedBadgeList.value.add(selectedBadge.value);
     super.onInit();
   }
 
   List<Widget> _getListWidgets(List<InventoryBadgeModel> list) {
     return list
+        .asMap()
+        .entries
         .map(
           (badge) => InkWell(
-            onTap: () => null,
-            child: Image(
-              image: AssetImage(badge.badgeImageUrl),
-              fit: BoxFit.fill,
-              width: double.infinity,
+            onTap: () => selectItem(badge.value, badge.value.id),
+            child: Container(
+              child: Stack(
+                children: [
+                  Image(
+                    image: AssetImage(badge.value.badge.imageUrl),
+                    fit: BoxFit.fill,
+                    width: double.infinity,
+                  ),
+                  if (selectedBadge.value.id == badge.value.id)
+                    Positioned(
+                      left: 0,
+                      top: 0,
+                      child: Icon(Icons.check, size: 20),
+                    ),
+                ],
+              ),
             ),
           ),
         )
         .toList();
   }
 
-  void showSelectBadgePopup(List<InventoryBadgeModel> badgeItems) {
+  void showSelectBadgePopup(List<InventoryBadgeModel> badgeItems, index) {
     selectedBadge.value = List<InventoryBadgeModel>.from(badgeItems).first;
     myBadgeList.value = List<InventoryBadgeModel>.from(badgeItems);
-    developer.log(jsonEncode(selectedBadge));
+    developer.log(index.toString());
     Get.dialog(
       AlertDialog(
         title: Row(
@@ -53,55 +100,54 @@ class SyntheticBadgeController extends GetxController {
             Text('뱃지 선택'),
           ],
         ),
-        content: Container(
-          child: Column(
-            children: [
-              Center(child: Image.asset(selectedBadge.value.badgeImageUrl)),
-              SizedBox(
-                width: 200,
-                height: 400,
-                child: Obx(() {
-                  return GridView.count(
-                    primary: false,
-                    padding: const EdgeInsets.all(20),
-                    crossAxisSpacing: 10,
-                    mainAxisSpacing: 10,
-                    crossAxisCount: 4,
-                    children: [..._getListWidgets(myBadgeList)],
-                  );
-                }),
-              ),
-            ],
-          ),
-        ),
-        // child: GridView.count(
-        //   primary: false,
-        //   padding: const EdgeInsets.all(20),
-        //   crossAxisSpacing: 10,
-        //   mainAxisSpacing: 10,
-        //   crossAxisCount: 4,
-        //   children: <Widget>[
-        //     SingleChildScrollView(
-        //       physics: ClampingScrollPhysics(),
-        //       child: Column(
-        //         mainAxisSize: MainAxisSize.min,
-        //         children: [..._getListWidgets(myBadgeList)],
-        //       ),
-        //     ),
-        //   ],
-        // ),
-
+        content: Obx(() {
+          return Container(
+            child: Column(
+              children: [
+                Center(child: Image.asset(selectedBadge.value.badge.imageUrl)),
+                SizedBox(
+                  width: 200,
+                  height: 400,
+                  child: Obx(() {
+                    return GridView.count(
+                      primary: false,
+                      padding: const EdgeInsets.all(20),
+                      crossAxisSpacing: 10,
+                      mainAxisSpacing: 10,
+                      crossAxisCount: 4,
+                      children: [..._getListWidgets(myBadgeList)],
+                    );
+                  }),
+                ),
+              ],
+            ),
+          );
+        }),
         actions: [
-          ElevatedButton(onPressed: () => Get.back(), child: const Text('취소')),
-          ElevatedButton(onPressed: () => Get.back(), child: const Text('확인')),
+          ElevatedButton(onPressed: () => closeSelectBadge(), child: const Text('취소')),
+          ElevatedButton(onPressed: () => selectedItemAddedList(), child: const Text('확인')),
         ],
       ),
     );
   }
 
-  void selectItem(InventoryBadgeModel badge) {
+  void selectItem(InventoryBadgeModel badge, badgeId) {
     selectedBadge.value = badge;
-    selectedBadgeList.add(myBadgeList.firstWhere((element) => element.id == badge.id));
-    myBadgeList.removeWhere((element) => element.id == badge.id);
+    selectBadgeId.value = badgeId;
+
+    print(selectedBadge.value);
+    // myBadgeList.removeWhere((element) => element.id == badge.id);
+  }
+
+  void selectedItemAddedList() {
+    selectedBadgeList.add(selectedBadge.value);
+    myBadgeList.removeWhere((element) => element.id == selectBadgeId);
+    Get.back();
+    print(selectedBadgeList);
+  }
+
+  void closeSelectBadge() {
+    selectedBadgeList.value = [];
+    Get.back();
   }
 }

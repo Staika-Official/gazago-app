@@ -1,4 +1,3 @@
-import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:gaza_go/platform/controllers/home_menu_controller.dart';
 import 'package:gaza_go/platform/controllers/inventory_controller.dart';
@@ -13,7 +12,7 @@ class SyntheticBadge extends StatelessWidget {
     HomeMenuController homeMenuController = Get.find();
     InventoryController controller = Get.find();
     SyntheticBadgeController _controller = Get.put(SyntheticBadgeController());
-
+    const levelOneImageFolderLength = 5;
     return Scaffold(
       appBar: homeMenuController.appbarList[1],
       body: Container(
@@ -26,47 +25,66 @@ class SyntheticBadge extends StatelessWidget {
                 child: Padding(
                   padding: const EdgeInsets.all(10.0),
                   child: Center(
-                    child: Column(
-                      mainAxisSize: MainAxisSize.min,
+                    child: Wrap(
+                      runSpacing: 25.0,
+                      //between line
+                      spacing: 50.0,
+                      alignment: WrapAlignment.center,
+                      crossAxisAlignment: WrapCrossAlignment.start,
+
                       children: [
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                          children: [
-                            GestureDetector(
-                              onTap: () => _controller.showSelectBadgePopup(controller.myBadgeList.value),
+                        // if (_controller.selectedBadgeList.length > 0)
+                        for (int i = 0; i < levelOneImageFolderLength; i++)
+                          Obx(() {
+                            return GestureDetector(
+                              onTap: () => _controller.showSelectBadgePopup(controller.userBadgesList.value, i),
                               child: CircleAvatar(
-                                backgroundImage: AssetImage('assets/images/@temp_badge.png'),
-                                foregroundImage: CachedNetworkImageProvider('https://placeimg.com/60/60/any'),
+                                backgroundImage: AssetImage('assets/images/@temp_img_empty.png'),
+                                foregroundImage: AssetImage(_controller.selectedBadgeImages[i]),
                                 radius: 30,
                               ),
-                            ),
-                            CircleAvatar(
-                              backgroundImage: AssetImage('assets/images/@temp_badge.png'),
-                              foregroundImage: CachedNetworkImageProvider('https://placeimg.com/60/60/any'),
-                              radius: 30,
-                            ),
-                            CircleAvatar(
-                              backgroundImage: AssetImage('assets/images/@temp_badge.png'),
-                              foregroundImage: CachedNetworkImageProvider('https://placeimg.com/60/60/any'),
-                              radius: 30,
-                            ),
-                          ],
-                        ),
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                          children: [
-                            CircleAvatar(
-                              backgroundImage: AssetImage('assets/images/@temp_badge.png'),
-                              foregroundImage: CachedNetworkImageProvider('https://placeimg.com/60/60/any'),
-                              radius: 30,
-                            ),
-                            CircleAvatar(
-                              backgroundImage: AssetImage('assets/images/@temp_badge.png'),
-                              foregroundImage: CachedNetworkImageProvider('https://placeimg.com/60/60/any'),
-                              radius: 30,
-                            ),
-                          ],
-                        ),
+                            );
+                          })
+                        // GestureDetector(
+                        //   onTap: () => _controller.showSelectBadgePopup(controller.myBadgeList.value),
+                        //   child: CircleAvatar(
+                        //     backgroundImage: AssetImage('assets/images/@temp_img_empty.png'),
+                        //     // foregroundImage: CachedNetworkImageProvider('https://placeimg.com/60/60/any'),
+                        //     radius: 30,
+                        //   ),
+                        // ),
+                        // GestureDetector(
+                        //   onTap: () => _controller.showSelectBadgePopup(controller.myBadgeList.value),
+                        //   child: CircleAvatar(
+                        //     backgroundImage: AssetImage('assets/images/@temp_img_empty.png'),
+                        //     // foregroundImage: CachedNetworkImageProvider('https://placeimg.com/60/60/any'),
+                        //     radius: 30,
+                        //   ),
+                        // ),
+                        // GestureDetector(
+                        //   onTap: () => _controller.showSelectBadgePopup(controller.myBadgeList.value),
+                        //   child: CircleAvatar(
+                        //     backgroundImage: AssetImage('assets/images/@temp_img_empty.png'),
+                        //     // foregroundImage: CachedNetworkImageProvider('https://placeimg.com/60/60/any'),
+                        //     radius: 30,
+                        //   ),
+                        // ),
+                        // GestureDetector(
+                        //   onTap: () => _controller.showSelectBadgePopup(controller.myBadgeList.value),
+                        //   child: CircleAvatar(
+                        //     backgroundImage: AssetImage('assets/images/@temp_img_empty.png'),
+                        //     // foregroundImage: CachedNetworkImageProvider('https://placeimg.com/60/60/any'),
+                        //     radius: 30,
+                        //   ),
+                        // ),
+                        // GestureDetector(
+                        //   onTap: () => _controller.showSelectBadgePopup(controller.myBadgeList.value),
+                        //   child: CircleAvatar(
+                        //     backgroundImage: AssetImage('assets/images/@temp_img_empty.png'),
+                        //     // foregroundImage: CachedNetworkImageProvider('https://placeimg.com/60/60/any'),
+                        //     radius: 30,
+                        //   ),
+                        // ),
                       ],
                     ),
                   ),
