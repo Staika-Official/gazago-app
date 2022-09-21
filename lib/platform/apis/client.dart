@@ -29,8 +29,9 @@ class Api {
   }
 
   static _requestInterceptor(RequestOptions options, RequestInterceptorHandler handler) {
-    _logger.d(
+    _logger.i(
       '------------->'
+      '\nREQUEST'
       '\nMethods: ${options.method}'
       '\nHeader Authorization: ${options.headers['Authorization']}'
       '\nPath: ${options.baseUrl + options.path}'
@@ -42,6 +43,7 @@ class Api {
   static _responseInterceptor(Response response, ResponseInterceptorHandler handler) {
     _logger.d(
       '------------->'
+      '\nRESPONSE'
       '\nResponse: ${response.data}',
     );
     return handler.next(response);
@@ -51,6 +53,7 @@ class Api {
     // TODO. 액세스토큰 만료시 리프레시 토큰으로 재요청하는 로직 필요. 만약 다른 디바이스에서 로그인 했다면 로그인 페이지로 이동.
     _logger.e(
       '------------->'
+      '\nERROR'
       '\nError Response: ${e.response}',
     );
 
@@ -62,8 +65,42 @@ class Api {
           TokenModel newToken = TokenModel.fromJson(res.data);
           HiveStore.save(key: HiveKey.accessToken.name, value: newToken.accessToken);
           HiveStore.save(key: HiveKey.refreshToken.name, value: newToken.refreshToken);
+
+          _retryFailedRequest(e, handler, newToken.accessToken);
         });
+    } else {
+      return handler.next(e);
     }
-    return handler.next(e);
+  }
+
+  static _retryFailedRequest(DioError e, ErrorInterceptorHandler handler, String newAccessToken) {
+    Dio dio = Dio();
+    e.requestOptions.headers['Authorization'] = 'Bearer $newAccessToken';
+    dio
+        .request(
+      e.requestOptions.baseUrl + e.requestOptions.path,
+      options: Options(
+        method: e.requestOptions.method,
+        headers: e.requestOptions.headers,
+      ),
+      data: e.requestOptions.data,
+      queryParameters: e.requestOptions.queryParameters,
+    )
+        .then(
+      (response) => handler.resolve(
+        response,
+      ),
+      onError: (e) {
+        if (e is DioError) {
+          final Response? res = e.response;
+          _logger.e(
+            '------------->'
+            '\nRETRY ERROR'
+            '\n${e.response}',
+          );
+          handler.next(e);
+        }
+      },
+    );
   }
 }
