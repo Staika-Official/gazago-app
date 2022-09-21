@@ -1,8 +1,4 @@
-enum LoginType {
-  kakao,
-  google,
-  apple,
-}
+enum LoginType { kakao, google, apple, email }
 
 enum ActivityType {
   climbing,
@@ -26,3 +22,5 @@ enum WalletActionType {
   sendToInventory,
   sendOutside,
 }
+
+enum HiveKey { accessToken, refreshToken }

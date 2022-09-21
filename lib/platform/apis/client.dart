@@ -1,23 +1,34 @@
 import 'package:dio/dio.dart';
-import 'package:gaza_go/constants/base_urls.dart';
+import 'package:gaza_go/flavors.dart';
+import 'package:gaza_go/platform/stores/hive_store.dart';
 import 'package:logger/logger.dart';
 
 class Api {
   static final Logger _logger = Logger(printer: PrettyPrinter(colors: true, printEmojis: true));
-  static final Dio client = Dio(
-    BaseOptions(baseUrl: BaseUrl.dev, headers: {
-      'Authorization':
-          'Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJhZG1pbiIsImF1dGgiOiJST0xFX0FETUlOLFJPTEVfU1VQRVJfQURNSU4sUk9MRV9VU0VSIiwiZXhwIjoxNjYzNjc0ODg2LCJ1c2VySWQiOiIzIn0.kW9259SdrZEcnyr2kVfiucIXse6_4CX5KoD_LgJYyllJM-n5ETDrJQ9kar7zPQ9l9g_arIU-_v4v_O82a9x2nw'
-    }),
-  )..interceptors.add(InterceptorsWrapper(
-      onRequest: (RequestOptions options, RequestInterceptorHandler handler) => _requestInterceptor(options, handler),
-      onResponse: (Response response, ResponseInterceptorHandler handler) => _responseInterceptor(response, handler),
-      onError: (DioError e, ErrorInterceptorHandler handler) => _onErrorInterceptor(e, handler)));
+  static final Dio _dio = Dio()
+    ..interceptors.add(
+      InterceptorsWrapper(
+        onRequest: (RequestOptions options, RequestInterceptorHandler handler) => _requestInterceptor(options, handler),
+        onResponse: (Response response, ResponseInterceptorHandler handler) => _responseInterceptor(response, handler),
+        onError: (DioError e, ErrorInterceptorHandler handler) => _onErrorInterceptor(e, handler),
+      ),
+    );
+
+  static Dio client({required String serviceUrl, bool needsToken = true}) {
+    _dio.options.baseUrl = '${F.baseUrl}$serviceUrl';
+
+    if (needsToken) {
+      String? accessToken = HiveStore.loadString(key: 'accessToken');
+
+      _dio.options.headers = {'Authorization': 'Bearer ${accessToken!}'};
+    }
+    return _dio;
+  }
 
   static _requestInterceptor(RequestOptions options, RequestInterceptorHandler handler) {
     _logger.d('------------->'
         '\nMethods: ${options.method}'
-        '\nPath: ${options.path}'
+        '\nPath: ${options.baseUrl + options.path}'
         '\nData: ${options.data}');
     return handler.next(options);
   }

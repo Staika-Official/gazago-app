@@ -1,16 +1,18 @@
 import 'package:hive/hive.dart';
 
-class HivesStore {
-  Future<void> save({required String key, required String value}) async {
-    final Box box = await Hive.openBox('gazaGo');
-    await box.put(key, value);
-    await box.close();
+class HiveStore {
+  static Future<void> openBox() async {
+    await Hive.openBox('gazaGo');
   }
 
-  Future<String?> load({required String key}) async {
-    final Box box = await Hive.openBox('gazaGo');
-    String? loadData = await box.get(key);
-    await box.close();
+  static void save({required String key, required String value}) {
+    final Box box = Hive.box('gazaGo');
+    box.put(key, value);
+  }
+
+  static String? loadString({required String key}) {
+    final Box box = Hive.box('gazaGo');
+    String? loadData = box.get(key);
     return loadData;
   }
 }

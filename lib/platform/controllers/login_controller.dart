@@ -4,18 +4,14 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:gaza_go/constants/enums.dart';
 import 'package:gaza_go/constants/routes.dart';
+import 'package:gaza_go/platform/models/token_model.dart';
+import 'package:gaza_go/platform/services/uaa_service.dart';
+import 'package:gaza_go/platform/stores/hive_store.dart';
 import 'package:get/get.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:sign_in_with_apple/sign_in_with_apple.dart';
 
 class LoginController extends GetxController {
-  final GoogleSignIn _googleSignIn = GoogleSignIn(
-    scopes: [
-      'email',
-      'https://www.googleapis.com/auth/contacts.readonly',
-    ],
-  );
-
   void login(LoginType loginType) async {
     // showDuplicateLoginWarning();
     switch (loginType) {
@@ -28,9 +24,16 @@ class LoginController extends GetxController {
       case LoginType.kakao:
         break;
       default:
-        signInWithGoogle();
+        emailLogin();
         break;
     }
+  }
+
+  void emailLogin() async {
+    TokenModel token = await UaaService.emailLogin();
+    HiveStore.save(key: HiveKey.accessToken.name, value: token.accessToken);
+    HiveStore.save(key: HiveKey.refreshToken.name, value: token.refreshToken);
+    Get.toNamed(Routes.home);
   }
 
   Future<UserCredential> signInWithGoogle() async {
