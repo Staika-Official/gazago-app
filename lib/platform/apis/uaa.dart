@@ -10,7 +10,7 @@ class UaaApi {
     return loginApi.post('/sign-in/email', data: {
       "username": "admin",
       "password": "admin",
-      "clientId": "BO",
+      "clientId": "GAZAGO",
     });
   }
 }
