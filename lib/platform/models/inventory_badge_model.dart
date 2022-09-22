@@ -8,20 +8,20 @@ class InventoryBadgeModel {
   int id;
   int userId;
   String state;
-  String createdBy;
-  String createdDate;
-  String lastModifiedBy;
-  String lastModifiedDate;
+  String? createdBy;
+  String? createdDate;
+  String? lastModifiedBy;
+  String? lastModifiedDate;
   InventoryBadgeItemModel badge;
 
   InventoryBadgeModel({
     required this.id,
     required this.userId,
     required this.state,
-    required this.createdBy,
-    required this.createdDate,
-    required this.lastModifiedBy,
-    required this.lastModifiedDate,
+    this.createdBy,
+    this.createdDate,
+    this.lastModifiedBy,
+    this.lastModifiedDate,
     required this.badge,
   });
 

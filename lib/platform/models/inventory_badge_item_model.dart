@@ -13,14 +13,14 @@ class InventoryBadgeItemModel {
   String issueState;
   String issueStartedTime;
   String issueEndedTime;
-  String description;
+  String? description;
   String state;
-  String address;
+  String? address;
   String imageUrl;
-  String createdBy;
-  String createdDate;
-  String lastModifiedBy;
-  String lastModifiedDate;
+  String? createdBy;
+  String? createdDate;
+  String? lastModifiedBy;
+  String? lastModifiedDate;
 
   InventoryBadgeItemModel({
     required this.id,
@@ -32,14 +32,14 @@ class InventoryBadgeItemModel {
     required this.issueState,
     required this.issueStartedTime,
     required this.issueEndedTime,
-    required this.description,
+    this.description,
     required this.state,
-    required this.address,
+    this.address,
     required this.imageUrl,
-    required this.createdBy,
-    required this.createdDate,
-    required this.lastModifiedBy,
-    required this.lastModifiedDate,
+    this.createdBy,
+    this.createdDate,
+    this.lastModifiedBy,
+    this.lastModifiedDate,
   });
 
   factory InventoryBadgeItemModel.fromJson(Map<String, dynamic> json) => _$InventoryBadgeItemModelFromJson(json);

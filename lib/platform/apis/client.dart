@@ -8,6 +8,7 @@ import 'package:logger/logger.dart';
 
 class Api {
   static final Logger _logger = Logger(printer: PrettyPrinter(colors: true, printEmojis: true));
+
   static final Dio _dio = Dio()
     ..interceptors.add(
       InterceptorsWrapper(

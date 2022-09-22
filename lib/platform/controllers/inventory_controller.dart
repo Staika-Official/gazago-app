@@ -1,16 +1,18 @@
 import 'package:gaza_go/constants/routes.dart';
 import 'package:gaza_go/platform/apis/badge.dart';
+import 'package:gaza_go/platform/helpers/linear_progress_mixin.dart';
 import 'package:gaza_go/platform/models/inventory_badge_item_model.dart';
 import 'package:gaza_go/platform/models/inventory_badge_model.dart';
 import 'package:gaza_go/platform/models/stat_model.dart';
 import 'package:get/get.dart';
 
-class InventoryController extends GetxController {
+class InventoryController extends GetxController with LinearProgressMixin {
   final RxList<StatModel> statList = RxList.empty();
   RxList<InventoryBadgeModel> syntheticBadgeList = RxList.empty();
   RxList<InventoryBadgeModel> userBadgesList = RxList.empty();
   final RxBool isShoe = RxBool(true);
   RxInt count = 0.obs;
+  RxString getBadgeDate = RxString('');
   Rx<InventoryBadgeModel> selectedBadge = Rx(
     InventoryBadgeModel(
       id: -1,
@@ -34,10 +36,10 @@ class InventoryController extends GetxController {
         state: '',
         address: '',
         imageUrl: 'imageUrl',
-        createdBy: 'createdBy',
-        createdDate: 'createdDate',
-        lastModifiedBy: 'lastModifiedBy',
-        lastModifiedDate: 'lastModifiedDate',
+        createdBy: '',
+        createdDate: '',
+        lastModifiedBy: '',
+        lastModifiedDate: '',
       ),
     ),
   );
@@ -71,7 +73,17 @@ class InventoryController extends GetxController {
 
   void toBadgeDetail(int id) {
     selectedBadge.value = userBadgesList.firstWhere((item) => item.badge.id == id);
+    if (selectedBadge.value.createdBy != null) {
+      setGetBadgeDate(id);
+    }
+
     Get.toNamed(Routes.badgeDetail);
+  }
+
+  void setGetBadgeDate(int id) {
+    getBadgeDate.value = userBadgesList.firstWhere((item) => item.badge.id == id).createdBy!;
+
+    print(getBadgeDate);
   }
 
   void toSyntheticBadgeDetail(int id) {

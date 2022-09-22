@@ -24,7 +24,7 @@ class InventoryBadgeDetail extends StatelessWidget {
                     ),
                     Container(
                       padding: const EdgeInsets.only(left: 10),
-                      child: Text(badge.badge.description),
+                      child: Text(badge.badge.description!),
                     ),
                     Container(
                       padding: const EdgeInsets.only(left: 5),
@@ -68,10 +68,10 @@ class InventoryBadgeDetail extends StatelessWidget {
                   padding: const EdgeInsets.all(10.0),
                   child: Column(
                     children: [
-                      Padding(
-                        padding: const EdgeInsets.only(top: 10, bottom: 10),
-                        child: Text(controller.selectedBadge.value.badge.description),
-                      ),
+                      // Padding(
+                      //   padding: const EdgeInsets.only(top: 10, bottom: 10),
+                      //   child: Text(controller.selectedBadge.value.badge.description!),
+                      // ),
                       SizedBox(
                         width: 100,
                         height: 100,
@@ -84,7 +84,7 @@ class InventoryBadgeDetail extends StatelessWidget {
                               decoration: new BoxDecoration(
                                 shape: BoxShape.circle,
                                 image: new DecorationImage(
-                                  image: AssetImage(controller.selectedBadge.value.badge.imageUrl),
+                                  image: NetworkImage(controller.selectedBadge.value.badge.imageUrl),
                                   fit: BoxFit.fill,
                                 ),
                               ),
@@ -92,10 +92,11 @@ class InventoryBadgeDetail extends StatelessWidget {
                           ],
                         ),
                       ),
-                      Padding(
-                        padding: const EdgeInsets.only(top: 10, bottom: 10),
-                        child: Text(controller.selectedBadge.value.badge.description),
-                      ),
+                      if (controller.selectedBadge.value.badge.description != null)
+                        Padding(
+                          padding: const EdgeInsets.only(top: 10, bottom: 10),
+                          child: Text(controller.selectedBadge.value.badge.description!),
+                        ),
                     ],
                   ),
                 ),
@@ -106,53 +107,51 @@ class InventoryBadgeDetail extends StatelessWidget {
                     Padding(
                       padding: const EdgeInsets.only(top: 10, bottom: 5),
                       /**/
-                      child: Row(children: [Text('이동 보상율'), Spacer(), Text('15%')]),
+                      child: Row(children: [Text('이동 보상율'), Spacer(), Text('${controller.selectedBadge.value.badge.rewardRate}%')]),
                     ),
                     LinearProgressIndicator(
-                      value: 0.15,
+                      value: controller.calculateProgress(controller.selectedBadge.value.badge.rewardRate),
                       minHeight: 10,
                       backgroundColor: const Color(0xffb74093),
                     ),
                     Padding(
                       padding: const EdgeInsets.only(top: 10, bottom: 5),
-                      child: Row(children: [Text('행운지수율'), Spacer(), Text('85%')]),
+                      child: Row(children: [Text('행운 지수율'), Spacer(), Text('${controller.selectedBadge.value.badge.luckRate}%')]),
                     ),
                     LinearProgressIndicator(
-                      value: 0.85,
+                      value: controller.calculateProgress(controller.selectedBadge.value.badge.luckRate),
                       minHeight: 10,
                       backgroundColor: const Color(0xffb74093),
                     ),
                   ],
                 ),
               ),
-              Column(
-                children: [
-                  Padding(
-                    padding: const EdgeInsets.only(top: 30, bottom: 5),
-                    child: Row(children: [Text('획득 정보')]),
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.only(top: 5, bottom: 5),
-                    child: Row(children: [
-                      Container(
-                        child: Text('합성'),
-                      ),
-                      Container(
-                        padding: EdgeInsets.only(left: 5),
-                        child: Text('·'),
-                      ),
-                      Container(
-                        padding: EdgeInsets.only(left: 5),
-                        child: Text('2022.08.29'),
-                      ),
-                      Container(
-                        padding: EdgeInsets.only(left: 5),
-                        child: Text('12:00:00'),
-                      )
-                    ]),
-                  ),
-                ],
-              ),
+              Obx(() {
+                return Column(
+                  children: [
+                    Padding(
+                      padding: const EdgeInsets.only(top: 30, bottom: 5),
+                      child: Row(children: [Text('획득 정보')]),
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.only(top: 5, bottom: 5),
+                      child: Row(children: [
+                        Container(
+                          child: Text('합성'),
+                        ),
+                        Container(
+                          padding: EdgeInsets.only(left: 5),
+                          child: Text('·'),
+                        ),
+                        Container(
+                          padding: EdgeInsets.only(left: 5),
+                          child: Text(controller.getBadgeDate.toString()),
+                        ),
+                      ]),
+                    ),
+                  ],
+                );
+              }),
               SizedBox(
                 height: 200,
                 child: Padding(
