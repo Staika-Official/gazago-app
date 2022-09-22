@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_naver_map/flutter_naver_map.dart';
 import 'package:get/get.dart';
 import 'package:location/location.dart';
+import 'package:pedometer/pedometer.dart';
 
 class ActivityActiveController extends GetxController {
   final updateInterval = 10000;
@@ -12,13 +13,49 @@ class ActivityActiveController extends GetxController {
   late final Timer updateTimer;
   RxList<LatLng> coordinates = RxList.empty();
   Completer<NaverMapController> _controllerMap = Completer();
+  Stream<StepCount> _stepCountStream = Pedometer.stepCountStream;
+  Stream<PedestrianStatus> _pedestrianStatusStream = Pedometer.pedestrianStatusStream;
+  RxInt steps = RxInt(0);
+  RxString pedestrianStatus = RxString('');
+
+  RxDouble get speed {
+    return RxDouble(currentLocation.value.speed ?? 0);
+  }
+
+  RxDouble get altitude {
+    return RxDouble(currentLocation.value.altitude ?? 0);
+  }
 
   @override
   void onInit() {
     getCurrentLocation();
-    addLocationListener();
+    initStream();
     updateTimer = updateActivityRecord();
     super.onInit();
+  }
+
+  initStream() {
+    _stepCountStream.listen(onStepCount).onError(onStepCountError);
+    _pedestrianStatusStream.listen(onPedestrianStatusChanged).onError(onPedestrianStatusError);
+    addLocationListener();
+  }
+
+  void onStepCount(StepCount event) {
+    steps.value = event.steps;
+  }
+
+  void onStepCountError(error) {
+    /// Handle the error
+    print(error);
+  }
+
+  void onPedestrianStatusChanged(PedestrianStatus event) {
+    pedestrianStatus.value = event.status;
+  }
+
+  void onPedestrianStatusError(error) {
+    /// Handle the error
+    print(error);
   }
 
   void getCurrentLocation() async {
@@ -29,6 +66,7 @@ class ActivityActiveController extends GetxController {
   void addLocationListener() {
     location.onLocationChanged.listen((LocationData location) {
       currentLocation.value = location;
+
       addLocation(location);
     });
   }

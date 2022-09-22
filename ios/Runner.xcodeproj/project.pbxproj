@@ -285,7 +285,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "if [ \"$CONFIGURATION\" == \"Debug-dev\" ] || [ \"$CONFIGURATION\" == \"Release-dev\" ]; then\n\"$PODS_ROOT/FirebaseCrashlytics/upload-symbols\" --flutter-project \"Runner/dev/firebase_app_id_file.json\" \nelif [ \"$CONFIGURATION\" == \"Debug-stage\" ] || [ \"$CONFIGURATION\" == \"Release-stage\" ]; then\n\"$PODS_ROOT/FirebaseCrashlytics/upload-symbols\" --flutter-project \"Runner/stage/firebase_app_id_file.json\" \nelif [ \"$CONFIGURATION\" == \"Debug-prod\" ] || [ \"$CONFIGURATION\" == \"Release-prod\" ]; then\n\"$PODS_ROOT/FirebaseCrashlytics/upload-symbols\" --flutter-project \"Runner/prod/firebase_app_id_file.json\" \nfi\n";
+			shellScript = "if [ \"$CONFIGURATION\" == \"Debug-dev\" ] || [ \"$CONFIGURATION\" == \"Release-dev\" ]; then\n\"$PODS_ROOT/FirebaseCrashlytics/upload-symbols\" --build-phase -ai \"1:232716676384:ios:c851d637fa6d71246f7b45\"\nelif [ \"$CONFIGURATION\" == \"Debug-stage\" ] || [ \"$CONFIGURATION\" == \"Release-stage\" ]; then\n\"$PODS_ROOT/FirebaseCrashlytics/upload-symbols\" --build-phase -ai \"1:232716676384:ios:c851d637fa6d71246f7b45\" \nelif [ \"$CONFIGURATION\" == \"Debug-prod\" ] || [ \"$CONFIGURATION\" == \"Release-prod\" ]; then\n\"$PODS_ROOT/FirebaseCrashlytics/upload-symbols\" --build-phase -ai \"1:321889905131:ios:fcd56d852edb7bc40a11ae\" \nfi\n";
 		};
 		932DEF09E84CC9033DC04F64 /* [CP] Embed Pods Frameworks */ = {
 			isa = PBXShellScriptBuildPhase;
