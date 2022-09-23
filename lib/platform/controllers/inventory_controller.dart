@@ -13,6 +13,7 @@ class InventoryController extends GetxController with LinearProgressMixin {
   final RxBool isShoe = RxBool(true);
   RxInt count = 0.obs;
   RxString getBadgeDate = RxString('');
+
   Rx<InventoryBadgeModel> selectedBadge = Rx(
     InventoryBadgeModel(
       id: -1,
@@ -61,7 +62,6 @@ class InventoryController extends GetxController with LinearProgressMixin {
   void getUserBadgesList() async {
     List<InventoryBadgeModel> badges = await BadgeService.getUserBadgesList(3);
     userBadgesList.value = badges;
-    print(userBadgesList.length);
   }
 
   void initStats() {
@@ -73,17 +73,15 @@ class InventoryController extends GetxController with LinearProgressMixin {
 
   void toBadgeDetail(int id) {
     selectedBadge.value = userBadgesList.firstWhere((item) => item.badge.id == id);
-    if (selectedBadge.value.createdBy != null) {
-      setGetBadgeDate(id);
-    }
 
+    setGetBadgeDate(id);
     Get.toNamed(Routes.badgeDetail);
   }
 
-  void setGetBadgeDate(int id) {
-    getBadgeDate.value = userBadgesList.firstWhere((item) => item.badge.id == id).createdBy!;
+  void fetchEquipBadge(int id) {}
 
-    print(getBadgeDate);
+  void setGetBadgeDate(int id) {
+    getBadgeDate.value = userBadgesList.firstWhere((item) => item.badge.id == id).badge.issueEndedTime;
   }
 
   void toSyntheticBadgeDetail(int id) {

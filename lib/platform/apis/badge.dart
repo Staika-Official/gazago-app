@@ -10,4 +10,28 @@ class BadgeService {
     res.data.forEach((item) => badges.add(InventoryBadgeModel.fromJson(item)));
     return badges;
   }
+
+  static Future<List<InventoryBadgeModel>> fetchUserEquipBadge(userId) async {
+    Response res = await Api.client(serviceUrl: ServiceUrl.badgeService).put('/users/${userId}/equip');
+    // List<InventoryBadgeModel> badges = [];
+    // res.data.forEach((item) => badges.add(InventoryBadgeModel.fromJson(item)));
+    // return badges;
+    return res.data;
+  }
+
+  static Future<List<InventoryBadgeModel>> fetchUserIssuanceBadge(userId) async {
+    Response res = await Api.client(serviceUrl: ServiceUrl.badgeService).put('/users/${userId}/issues/hiking');
+    // List<InventoryBadgeModel> badges = [];
+    // res.data.forEach((item) => badges.add(InventoryBadgeModel.fromJson(item)));
+    // return badges;
+    return res.data;
+  }
+
+  static Future<List<InventoryBadgeModel>> fetchUserSyntheticBadge(userId) async {
+    Response res = await Api.client(serviceUrl: ServiceUrl.badgeService).put('/users/${userId}/issues/compose');
+    // List<InventoryBadgeModel> badges = [];
+    // res.data.forEach((item) => badges.add(InventoryBadgeModel.fromJson(item)));
+    // return badges;
+    return res.data;
+  }
 }

@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:get/get.dart';
 import 'package:gaza_go/platform/models/ranker_model.dart';
+import 'package:get/get.dart';
 
 class LeaderboardController extends GetxController {
   RxList<RankerModel> rankerList = RxList.empty();
@@ -13,10 +13,10 @@ class LeaderboardController extends GetxController {
 
   void getRankerList() {
     rankerList.value = [
-      RankerModel(place: '1', nickname: '하이루', profileImageUrl: 'https://placeimg.com/20/20/any', goBalance: 5600, tikBalance: 200),
-      RankerModel(place: '2', nickname: '하이루2', profileImageUrl: 'https://placeimg.com/20/20/any', goBalance: 3000, tikBalance: 120),
-      RankerModel(place: '3', nickname: '하이루3', profileImageUrl: 'https://placeimg.com/20/20/any', goBalance: 2400, tikBalance: 30),
-      RankerModel(place: '4', nickname: '하이루4', profileImageUrl: 'https://placeimg.com/20/20/any', goBalance: 1100, tikBalance: 1),
+      RankerModel(nickname: '하이루', profileImageUrl: 'https://placeimg.com/20/20/any', rewardGo: 5600, rewardTik: 200, date: '2022-09-09'),
+      RankerModel(nickname: '하이루2', profileImageUrl: 'https://placeimg.com/20/20/any', rewardGo: 3000, rewardTik: 120, date: '2022-09-09'),
+      RankerModel(nickname: '하이루3', profileImageUrl: 'https://placeimg.com/20/20/any', rewardGo: 2400, rewardTik: 30, date: '2022-09-09'),
+      RankerModel(nickname: '하이루4', profileImageUrl: 'https://placeimg.com/20/20/any', rewardGo: 1100, rewardTik: 1, date: '2022-09-09'),
     ];
   }
 

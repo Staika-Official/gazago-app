@@ -4,18 +4,30 @@ part 'ranker_model.g.dart';
 
 @JsonSerializable()
 class RankerModel {
-  String place;
-  String nickname;
+  int? id;
+  int? userId;
   String profileImageUrl;
-  double goBalance;
-  double tikBalance;
+  String nickname;
+  double rewardGo;
+  double rewardTik;
+  String date;
+  String? createdBy;
+  String? createdDate;
+  String? lastModifiedBy;
+  String? lastModifiedDate;
 
   RankerModel({
-    required this.place,
-    required this.nickname,
+    this.id,
+    this.userId,
     required this.profileImageUrl,
-    required this.goBalance,
-    required this.tikBalance,
+    required this.nickname,
+    required this.rewardGo,
+    required this.rewardTik,
+    required this.date,
+    this.createdBy,
+    this.createdDate,
+    this.lastModifiedBy,
+    this.lastModifiedDate,
   });
 
   factory RankerModel.fromJson(Map<String, dynamic> json) => _$RankerModelFromJson(json);

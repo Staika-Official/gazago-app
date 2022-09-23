@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:gaza_go/platform/controllers/inventory_controller.dart';
+import 'package:gaza_go/platform/controllers/synthetic_badge_controller.dart';
 import 'package:gaza_go/presentations/components/default_container.dart';
 import 'package:get/get.dart';
 
@@ -54,7 +55,7 @@ class InventoryBadgeDetail extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     InventoryController controller = Get.find();
-
+    SyntheticBadgeController _controller = Get.put(SyntheticBadgeController());
     return DefaultContainer(
       titleText: '상세',
       child: SingleChildScrollView(
@@ -137,7 +138,7 @@ class InventoryBadgeDetail extends StatelessWidget {
                       padding: const EdgeInsets.only(top: 5, bottom: 5),
                       child: Row(children: [
                         Container(
-                          child: Text('합성'),
+                          child: Text(_controller.badgeType.value),
                         ),
                         Container(
                           padding: EdgeInsets.only(left: 5),
@@ -145,7 +146,7 @@ class InventoryBadgeDetail extends StatelessWidget {
                         ),
                         Container(
                           padding: EdgeInsets.only(left: 5),
-                          child: Text(controller.getBadgeDate.toString()),
+                          child: Text(controller.getBadgeDate.value),
                         ),
                       ]),
                     ),

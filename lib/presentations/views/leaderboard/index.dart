@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:get/get.dart';
 import 'package:gaza_go/platform/controllers/leaderboard_controller.dart';
+import 'package:get/get.dart';
 
 class LeaderboardHome extends StatelessWidget {
   const LeaderboardHome({Key? key}) : super(key: key);
@@ -13,13 +13,13 @@ class LeaderboardHome extends StatelessWidget {
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                Expanded(
-                  flex: 1,
-                  child: Text(
-                    ranker.place,
-                    textAlign: TextAlign.center,
-                  ),
-                ),
+                // Expanded(
+                //   flex: 1,
+                //   child: Text(
+                //     ranker.place,
+                //     textAlign: TextAlign.center,
+                //   ),
+                // ),
                 Expanded(
                   flex: 3,
                   child: Row(
@@ -38,14 +38,14 @@ class LeaderboardHome extends StatelessWidget {
                 Expanded(
                   flex: 1,
                   child: Text(
-                    ranker.goBalance.toString(),
+                    ranker.rewardGo.toString(),
                     textAlign: TextAlign.center,
                   ),
                 ),
                 Expanded(
                   flex: 1,
                   child: Text(
-                    ranker.tikBalance.toString(),
+                    ranker.rewardTik.toString(),
                     textAlign: TextAlign.center,
                   ),
                 ),

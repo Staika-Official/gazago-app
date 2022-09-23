@@ -1,5 +1,3 @@
-import 'dart:developer' as developer;
-
 import 'package:flutter/material.dart';
 import 'package:gaza_go/platform/controllers/inventory_controller.dart';
 import 'package:gaza_go/platform/models/inventory_badge_item_model.dart';
@@ -8,18 +6,33 @@ import 'package:get/get.dart';
 
 class SyntheticBadgeController extends GetxController {
   InventoryController controller = Get.find();
+
   RxList<InventoryBadgeModel> selectedBadgeList = RxList.empty();
   RxList<InventoryBadgeModel> myBadgeList = RxList.empty();
+  RxString selectedBadgeType = RxString('');
   RxList<String> get selectedBadgeImages {
     RxList<String> images = RxList.empty();
     for (int i = 0; i < 5; i++) {
       if (selectedBadgeList.length > i) {
         images.add(selectedBadgeList[i].badge.imageUrl);
+        print(selectedBadgeList[i].badge.imageUrl);
       } else {
         images.add('');
       }
     }
     return images;
+  }
+
+  RxString get badgeType {
+    switch (selectedBadgeType.value) {
+      case 'HIKING':
+        return RxString('등산');
+      case 'MISSION':
+        return RxString('미션');
+      case 'COMPOSE':
+        return RxString('합성');
+    }
+    return RxString('');
   }
 
   Rx<InventoryBadgeModel> selectedBadge = Rx(
@@ -54,8 +67,9 @@ class SyntheticBadgeController extends GetxController {
 
   @override
   void onInit() {
-    developer.inspect(selectedBadge.value);
-    selectedBadgeList.value.add(selectedBadge.value);
+    selectedBadgeType.value = controller.selectedBadge.value.badge.issueType;
+    selectedBadgeList.add(selectedBadge.value);
+    // inspect(selectedBadge.value);
     super.onInit();
   }
 
@@ -91,7 +105,7 @@ class SyntheticBadgeController extends GetxController {
   void showSelectBadgePopup(List<InventoryBadgeModel> badgeItems, index) {
     selectedBadge.value = List<InventoryBadgeModel>.from(badgeItems).first;
     myBadgeList.value = List<InventoryBadgeModel>.from(badgeItems);
-    developer.log(index.toString());
+
     Get.dialog(
       AlertDialog(
         title: Row(
@@ -135,7 +149,7 @@ class SyntheticBadgeController extends GetxController {
     selectedBadge.value = badge;
     selectBadgeId.value = badgeId;
 
-    print(selectedBadge.value);
+    // inspect(selectedBadge.value);
     // myBadgeList.removeWhere((element) => element.id == badge.id);
   }
 
@@ -143,7 +157,6 @@ class SyntheticBadgeController extends GetxController {
     selectedBadgeList.add(selectedBadge.value);
     myBadgeList.removeWhere((element) => element.id == selectBadgeId);
     Get.back();
-    print(selectedBadgeList);
   }
 
   void closeSelectBadge() {

@@ -1,3 +1,4 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:gaza_go/platform/controllers/home_menu_controller.dart';
 import 'package:gaza_go/platform/controllers/inventory_controller.dart';
@@ -40,7 +41,7 @@ class SyntheticBadge extends StatelessWidget {
                               onTap: () => _controller.showSelectBadgePopup(controller.userBadgesList.value, i),
                               child: CircleAvatar(
                                 backgroundImage: AssetImage('assets/images/@temp_img_empty.png'),
-                                foregroundImage: AssetImage(_controller.selectedBadgeImages[i]),
+                                foregroundImage: CachedNetworkImageProvider(_controller.selectedBadgeImages[i]),
                                 radius: 30,
                               ),
                             );

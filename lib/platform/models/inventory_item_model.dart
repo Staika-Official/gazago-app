@@ -5,44 +5,30 @@ part 'inventory_item_model.g.dart';
 @JsonSerializable()
 class InventoryItemModel {
   int id;
-  String name;
   String serialNumber;
-  String itemType;
+  String itemName;
   String itemCategory;
-  String itemImageUrl;
-  bool availableTrade;
+  double durability;
   double abrasionRate;
   double rewardRate;
   double staminaReduceRate;
-  double price;
-  double recoveryRate;
+  String itemImageUrl;
+  bool equipped;
   int listOrder;
-  String description;
-  String createdBy;
-  String createdDate;
-  String lastModifiedBy;
-  String lastModifiedDate;
   bool isShoe;
 
   InventoryItemModel({
     required this.id,
-    required this.name,
     required this.serialNumber,
-    required this.itemType,
+    required this.itemName,
     required this.itemCategory,
-    required this.availableTrade,
-    required this.itemImageUrl,
+    required this.durability,
     required this.abrasionRate,
     required this.rewardRate,
     required this.staminaReduceRate,
-    required this.price,
-    required this.recoveryRate,
+    required this.itemImageUrl,
+    required this.equipped,
     required this.listOrder,
-    required this.description,
-    required this.createdBy,
-    required this.createdDate,
-    required this.lastModifiedBy,
-    required this.lastModifiedDate,
     this.isShoe = false,
   });
 

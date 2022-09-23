@@ -1,5 +1,3 @@
-import 'dart:developer';
-
 import 'package:flutter/material.dart';
 import 'package:gaza_go/platform/apis/item.dart';
 import 'package:gaza_go/platform/models/inventory_item_model.dart';
@@ -11,10 +9,6 @@ class InventoryHomeController extends GetxController with GetTickerProviderState
   late TabController tabController;
   late TabController subTabController;
   final RxBool isShoe = RxBool(true);
-  RxString get staminaReduceRate {
-    InventoryItemModel badge = statList.firstWhere((element) => element.itemType == 'BADGE');
-    return RxString(badge.staminaReduceRate.toString());
-  }
 
   @override
   void onInit() {
@@ -26,8 +20,8 @@ class InventoryHomeController extends GetxController with GetTickerProviderState
 
   void getEquipmentMyItemsList() async {
     const userId = 3;
-    List<InventoryItemModel> items = await ExampleService.getMyEquipmentItemsList(userId);
+    List<InventoryItemModel> items = await ItemService.getMyEquipmentItemsList(userId);
     // myEquipmentItems.add(items);
-    inspect(items);
+    // inspect(items);
   }
 }
