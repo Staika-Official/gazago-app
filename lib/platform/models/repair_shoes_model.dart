@@ -4,14 +4,14 @@ part 'repair_shoes_model.g.dart';
 
 @JsonSerializable()
 class RepairShoesModel {
-  int id;
-  int durability;
-  int tik;
+  int? id;
+  int? durability;
+  int? tik;
 
   RepairShoesModel({
-    required this.id,
-    required this.durability,
-    required this.tik,
+    this.id,
+    this.durability,
+    this.tik,
   });
 
   factory RepairShoesModel.fromJson(Map<String, dynamic> json) => _$RepairShoesModelFromJson(json);

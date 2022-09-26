@@ -111,7 +111,8 @@ class InventoryController extends GetxController with LinearProgressMixin {
   void onInit() {
     once(count, (_) => print('한번만 호출'));
     initStats();
-    getUserAllItems();
+    //Todo api -> service 연동
+    // getUserAllItems();
     getUserEquippedItems();
     getSyntheticBadgeList();
     getUserBadgesList();
@@ -141,8 +142,9 @@ class InventoryController extends GetxController with LinearProgressMixin {
   }
 
   void getUserAllItems() async {
-    List<InventoryItemModel> allItems = await ItemService.getAllMyItems(3);
-    myAllItems.value = allItems;
+    //Todo api -> service 연동
+    // List<InventoryItemModel> allItems = await ItemService.getAllMyItems(3);
+    // myAllItems.value = allItems;
   }
 
   void getUserEquippedItems() async {
