@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:get/get.dart';
 import 'package:gaza_go/platform/controllers/inventory/inventory_home_controller.dart';
+import 'package:gaza_go/platform/controllers/inventory_controller.dart';
+import 'package:get/get.dart';
 
 class InventoryItem extends StatelessWidget {
   const InventoryItem({Key? key}) : super(key: key);
@@ -8,6 +9,7 @@ class InventoryItem extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     InventoryHomeController _controller = Get.put(InventoryHomeController());
+    InventoryController inventoryController = Get.find();
     return Container(
       child: Column(
         mainAxisSize: MainAxisSize.max,
@@ -49,171 +51,150 @@ class InventoryItem extends StatelessWidget {
               ),
             ],
           ),
-          Expanded(
-            child: TabBarView(
-              controller: _controller.subTabController,
-              children: [
-                GridView.count(
-                  primary: false,
-                  padding: const EdgeInsets.all(20),
-                  crossAxisSpacing: 10,
-                  mainAxisSpacing: 10,
-                  crossAxisCount: 3,
-                  children: <Widget>[
-                    Container(
-                      color: Colors.teal[100],
-                      child: SizedBox(
-                        child: Stack(
-                          alignment: Alignment.bottomCenter,
-                          children: [
-                            Image(
-                              image: AssetImage('assets/images/@temp_shoe.png'),
-                              fit: BoxFit.fill,
-                              width: double.infinity,
-                            ),
-                            Padding(
-                              padding: const EdgeInsets.only(bottom: 5),
-                              child: Text("#50812052"),
-                            ),
-                          ],
+          Obx(() {
+            return Expanded(
+              child: TabBarView(
+                controller: _controller.subTabController,
+                children: [
+                  GridView.count(
+                    primary: false,
+                    padding: const EdgeInsets.all(20),
+                    crossAxisSpacing: 10,
+                    mainAxisSpacing: 10,
+                    crossAxisCount: 3,
+                    children: [
+                      ...inventoryController.allItems['hats']!.map(
+                        (shoe) => SizedBox(
+                          child: Stack(
+                            alignment: Alignment.bottomCenter,
+                            children: [
+                              Image(
+                                image: NetworkImage(shoe.itemImageUrl),
+                                fit: BoxFit.fill,
+                                width: double.infinity,
+                              ),
+                              Padding(
+                                padding: const EdgeInsets.only(bottom: 5),
+                                child: Text(shoe.itemName),
+                              ),
+                            ],
+                          ),
                         ),
                       ),
-                    ),
-                    Container(
-                      padding: const EdgeInsets.all(8),
-                      color: Colors.teal[200],
-                      child: const Text('Heed not the rabble'),
-                    ),
-                    Container(
-                      padding: const EdgeInsets.all(8),
-                      color: Colors.teal[300],
-                      child: const Text('Sound of screams but the'),
-                    ),
-                    Container(
-                      padding: const EdgeInsets.all(8),
-                      color: Colors.teal[400],
-                      child: const Text('Who scream'),
-                    ),
-                    Container(
-                      padding: const EdgeInsets.all(8),
-                      color: Colors.teal[500],
-                      child: const Text('Revolution is coming...'),
-                    ),
-                    Container(
-                      padding: const EdgeInsets.all(8),
-                      color: Colors.teal[600],
-                      child: const Text('Revolution, they...'),
-                    ),
-                    Container(
-                      padding: const EdgeInsets.all(8),
-                      color: Colors.teal[400],
-                      child: const Text('Who scream'),
-                    ),
-                    Container(
-                      padding: const EdgeInsets.all(8),
-                      color: Colors.teal[500],
-                      child: const Text('Revolution is coming...'),
-                    ),
-                    Container(
-                      padding: const EdgeInsets.all(8),
-                      color: Colors.teal[600],
-                      child: const Text('Revolution, they...'),
-                    ),
-                    Container(
-                      padding: const EdgeInsets.all(8),
-                      color: Colors.teal[400],
-                      child: const Text('Who scream'),
-                    ),
-                    Container(
-                      padding: const EdgeInsets.all(8),
-                      color: Colors.teal[500],
-                      child: const Text('Revolution is coming...'),
-                    ),
-                    Container(
-                      padding: const EdgeInsets.all(8),
-                      color: Colors.teal[600],
-                      child: const Text('Revolution, they...'),
-                    ),
-                  ],
-                ),
-                GridView.count(
-                  primary: false,
-                  padding: const EdgeInsets.all(20),
-                  crossAxisSpacing: 10,
-                  mainAxisSpacing: 10,
-                  crossAxisCount: 2,
-                  children: <Widget>[
-                    Container(
-                      padding: const EdgeInsets.all(8),
-                      color: Colors.teal[100],
-                      child: const Text("He'd have you all unravel at the"),
-                    ),
-                    Container(
-                      padding: const EdgeInsets.all(8),
-                      color: Colors.teal[200],
-                      child: const Text('Heed not the rabble'),
-                    ),
-                    Container(
-                      padding: const EdgeInsets.all(8),
-                      color: Colors.teal[300],
-                      child: const Text('Sound of screams but the'),
-                    ),
-                    Container(
-                      padding: const EdgeInsets.all(8),
-                      color: Colors.teal[400],
-                      child: const Text('Who scream'),
-                    ),
-                    Container(
-                      padding: const EdgeInsets.all(8),
-                      color: Colors.teal[500],
-                      child: const Text('Revolution is coming...'),
-                    ),
-                    Container(
-                      padding: const EdgeInsets.all(8),
-                      color: Colors.teal[600],
-                      child: const Text('Revolution, they...'),
-                    ),
-                  ],
-                ),
-                Container(
-                  child: Row(
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    children: [
-                      Expanded(child: Text('1111111111111')),
-                      Expanded(child: Text('2222222222222')),
-                      Expanded(child: Text('3333333333')),
-                      Expanded(child: Text('4444444444444')),
-                      Expanded(child: Text('555555555555')),
                     ],
                   ),
-                ),
-                Container(
-                  child: Row(
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    children: [
-                      Expanded(child: Text('1111111111111')),
-                      Expanded(child: Text('2222222222222')),
-                      Expanded(child: Text('3333333333')),
-                      Expanded(child: Text('4444444444444')),
-                      Expanded(child: Text('555555555555')),
+                  GridView.count(
+                    primary: false,
+                    padding: const EdgeInsets.all(20),
+                    crossAxisSpacing: 10,
+                    mainAxisSpacing: 10,
+                    crossAxisCount: 3,
+                    children: <Widget>[
+                      ...inventoryController.allItems['outers']!.map(
+                        (shoe) => SizedBox(
+                          child: Stack(
+                            alignment: Alignment.bottomCenter,
+                            children: [
+                              Image(
+                                image: NetworkImage(shoe.itemImageUrl),
+                                fit: BoxFit.fill,
+                                width: double.infinity,
+                              ),
+                              Padding(
+                                padding: const EdgeInsets.only(bottom: 5),
+                                child: Text(shoe.itemName),
+                              ),
+                            ],
+                          ),
+                        ),
+                      ),
                     ],
                   ),
-                ),
-                Container(
-                  child: Row(
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    children: [
-                      Expanded(child: Text('1111111111111')),
-                      Expanded(child: Text('2222222222222')),
-                      Expanded(child: Text('3333333333')),
-                      Expanded(child: Text('4444444444444')),
-                      Expanded(child: Text('555555555555')),
+                  GridView.count(
+                    primary: false,
+                    padding: const EdgeInsets.all(20),
+                    crossAxisSpacing: 10,
+                    mainAxisSpacing: 10,
+                    crossAxisCount: 3,
+                    children: <Widget>[
+                      ...inventoryController.allItems['bottoms']!.map(
+                        (shoe) => SizedBox(
+                          child: Stack(
+                            alignment: Alignment.bottomCenter,
+                            children: [
+                              Image(
+                                image: NetworkImage(shoe.itemImageUrl),
+                                fit: BoxFit.fill,
+                                width: double.infinity,
+                              ),
+                              Padding(
+                                padding: const EdgeInsets.only(bottom: 5),
+                                child: Text(shoe.itemName),
+                              ),
+                            ],
+                          ),
+                        ),
+                      ),
                     ],
                   ),
-                ),
-              ],
-            ),
-          ),
+                  GridView.count(
+                    primary: false,
+                    padding: const EdgeInsets.all(20),
+                    crossAxisSpacing: 10,
+                    mainAxisSpacing: 10,
+                    crossAxisCount: 3,
+                    children: <Widget>[
+                      ...inventoryController.allItems['shoes']!.map(
+                        (shoe) => SizedBox(
+                          child: Stack(
+                            alignment: Alignment.bottomCenter,
+                            children: [
+                              Image(
+                                image: NetworkImage(shoe.itemImageUrl),
+                                fit: BoxFit.fill,
+                                width: double.infinity,
+                              ),
+                              Padding(
+                                padding: const EdgeInsets.only(bottom: 5),
+                                child: Text(shoe.itemName),
+                              ),
+                            ],
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                  GridView.count(
+                    primary: false,
+                    padding: const EdgeInsets.all(20),
+                    crossAxisSpacing: 10,
+                    mainAxisSpacing: 10,
+                    crossAxisCount: 3,
+                    children: <Widget>[
+                      ...inventoryController.allItems['accessories']!.map(
+                        (shoe) => SizedBox(
+                          child: Stack(
+                            alignment: Alignment.bottomCenter,
+                            children: [
+                              Image(
+                                image: NetworkImage(shoe.itemImageUrl),
+                                fit: BoxFit.fill,
+                                width: double.infinity,
+                              ),
+                              Padding(
+                                padding: const EdgeInsets.only(bottom: 5),
+                                child: Text(shoe.itemName),
+                              ),
+                            ],
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                ],
+              ),
+            );
+          }),
         ],
       ),
     );

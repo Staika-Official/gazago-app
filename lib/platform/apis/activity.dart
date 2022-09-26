@@ -13,10 +13,11 @@ class ActivityApi {
     return await Api.client(serviceUrl: ServiceUrl.activityService).get('/users/$userId');
   }
 
-  static Future<EquippedItemModel> getUserEquippedItem(String userId) async {
-    Response res = await Api.client(serviceUrl: ServiceUrl.activityService).get('/users/$userId/equipped');
+  static Future<EquippedItemModel> getUserEquippedItem(userId) async {
+    Response res = await Api.client(serviceUrl: ServiceUrl.activityService).get('/users/${userId}/equipped');
+    print(res.data);
 
-    return res.data;
+    return EquippedItemModel.fromJson(res.data);
   }
 
   static Future<Response> fetchStartUserExercises(String userId, UserExerciseModel exerciseInfo) async {

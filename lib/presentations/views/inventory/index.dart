@@ -31,62 +31,64 @@ class InventoryHome extends StatelessWidget {
                         padding: const EdgeInsets.only(top: 10, bottom: 10),
                         child: Text('[장착 중인 아이템]'),
                       ),
-                      StaggeredGrid.count(
-                        crossAxisCount: 4,
-                        mainAxisSpacing: 4,
-                        crossAxisSpacing: 4,
-                        children: [
-                          StaggeredGridTile.count(
-                            crossAxisCellCount: 2,
-                            mainAxisCellCount: 2,
-                            child: Tile(
-                              index: 0,
-                              stat: 1,
-                              imageUrl: 'assets/images/@temp_shoe.png',
+                      Obx(() {
+                        return StaggeredGrid.count(
+                          crossAxisCount: 4,
+                          mainAxisSpacing: 4,
+                          crossAxisSpacing: 4,
+                          children: [
+                            StaggeredGridTile.count(
+                              crossAxisCellCount: 2,
+                              mainAxisCellCount: 2,
+                              child: Tile(
+                                index: 0,
+                                durability: controller.equippedShoe.value.durability,
+                                imageUrl: controller.equippedShoe.value.itemImageUrl,
+                              ),
                             ),
-                          ),
-                          StaggeredGridTile.count(
-                            crossAxisCellCount: 2,
-                            mainAxisCellCount: 2,
-                            child: Tile(
-                              index: 1,
-                              imageUrl: 'assets/images/@temp_shoe.png',
+                            StaggeredGridTile.count(
+                              crossAxisCellCount: 2,
+                              mainAxisCellCount: 2,
+                              child: Tile(
+                                index: 1,
+                                imageUrl: controller.equippedAccessory.value.itemImageUrl,
+                              ),
                             ),
-                          ),
-                          StaggeredGridTile.count(
-                            crossAxisCellCount: 1,
-                            mainAxisCellCount: 1,
-                            child: Tile(
-                              index: 2,
-                              imageUrl: 'assets/images/@temp_shoe.png',
+                            StaggeredGridTile.count(
+                              crossAxisCellCount: 1,
+                              mainAxisCellCount: 1,
+                              child: Tile(
+                                index: 2,
+                                imageUrl: controller.equippedAccessory.value.itemImageUrl,
+                              ),
                             ),
-                          ),
-                          StaggeredGridTile.count(
-                            crossAxisCellCount: 1,
-                            mainAxisCellCount: 1,
-                            child: Tile(
-                              index: 3,
-                              imageUrl: 'assets/images/@temp_shoe.png',
+                            StaggeredGridTile.count(
+                              crossAxisCellCount: 1,
+                              mainAxisCellCount: 1,
+                              child: Tile(
+                                index: 3,
+                                imageUrl: controller.equippedAccessory.value.itemImageUrl,
+                              ),
                             ),
-                          ),
-                          StaggeredGridTile.count(
-                            crossAxisCellCount: 1,
-                            mainAxisCellCount: 1,
-                            child: Tile(
-                              index: 4,
-                              imageUrl: 'assets/images/@temp_shoe.png',
+                            StaggeredGridTile.count(
+                              crossAxisCellCount: 1,
+                              mainAxisCellCount: 1,
+                              child: Tile(
+                                index: 4,
+                                imageUrl: controller.equippedAccessory.value.itemImageUrl,
+                              ),
                             ),
-                          ),
-                          StaggeredGridTile.count(
-                            crossAxisCellCount: 1,
-                            mainAxisCellCount: 1,
-                            child: Tile(
-                              index: 5,
-                              imageUrl: 'assets/images/@temp_shoe.png',
+                            StaggeredGridTile.count(
+                              crossAxisCellCount: 1,
+                              mainAxisCellCount: 1,
+                              child: Tile(
+                                index: 5,
+                                imageUrl: controller.equippedAccessory.value.itemImageUrl,
+                              ),
                             ),
-                          ),
-                        ],
-                      ),
+                          ],
+                        );
+                      }),
                     ],
                   ),
                 ),
@@ -170,11 +172,11 @@ class Tile extends StatelessWidget {
     this.extent,
     this.backgroundColor,
     this.bottomSpace,
-    this.stat,
+    this.durability,
   }) : super(key: key);
 
   final int index;
-  final int? stat;
+  final double? durability;
   final String imageUrl;
   final double? extent;
   final double? bottomSpace;
@@ -182,6 +184,7 @@ class Tile extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    InventoryController controller = Get.find();
     final child = Container(
       color: Colors.transparent,
       height: extent,
@@ -190,13 +193,13 @@ class Tile extends StatelessWidget {
           alignment: Alignment.bottomCenter,
           children: [
             Image(
-              image: AssetImage(imageUrl),
+              image: NetworkImage(imageUrl),
               fit: BoxFit.fill,
               width: double.infinity,
             ),
-            stat != null
+            durability != null
                 ? LinearProgressIndicator(
-                    value: 0.80,
+                    value: controller.calculateProgress(durability),
                     minHeight: 10,
                     backgroundColor: const Color(0xffb74093),
                   )

@@ -1,12 +1,14 @@
 import 'package:dio/dio.dart';
 import 'package:gaza_go/constants/base_urls.dart';
 import 'package:gaza_go/platform/apis/client.dart';
-import 'package:gaza_go/platform/models/inventory_item_model.dart';
+import 'package:gaza_go/platform/models/ranker_model.dart';
 
 class DashboardService {
-  static Future<List<InventoryItemModel>> getDailyRankingList(userId) async {
-    Response res = await Api.client(serviceUrl: ServiceUrl.dashboardService).get('');
-    // List<InventoryItemModel> items = res.data.map((item) => InventoryItemModel.fromJson(item));
-    return res.data;
+  static Future<List<RankerModel>> getDailyRankingList(date) async {
+    Response res = await Api.client(serviceUrl: ServiceUrl.dashboardService, queryParams: {'date.equals': date}).get('');
+    List<RankerModel> rankerList = [];
+
+    res.data.forEach((item) => rankerList.add(RankerModel.fromJson(item)));
+    return rankerList;
   }
 }

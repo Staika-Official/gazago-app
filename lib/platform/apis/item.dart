@@ -10,6 +10,14 @@ class ItemService {
     return items;
   }
 
+  static Future<List<InventoryItemModel>> getAllMyItems(userId) async {
+    Response res = await Api.client(serviceUrl: ServiceUrl.itemService).get('/users/${userId}');
+    List<InventoryItemModel> allItems = [];
+    res.data.forEach((item) => allItems.add(InventoryItemModel.fromJson(item)));
+    // List<InventoryItemModel> items = res.data.map((item) => InventoryItemModel.fromJson(item));
+    return allItems;
+  }
+
   static Future<List<InventoryItemModel>> getMyItemByCategory(userId) async {
     Response res = await Api.client(serviceUrl: ServiceUrl.itemService).get('/users/${userId}/categories');
     List<InventoryItemModel> items = res.data.map((item) => InventoryItemModel.fromJson(item));

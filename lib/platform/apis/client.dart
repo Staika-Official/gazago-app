@@ -19,7 +19,7 @@ class Api {
       ),
     );
 
-  static Dio client({required String serviceUrl, bool needsToken = true}) {
+  static Dio client({required String serviceUrl, bool needsToken = true, Map<String, dynamic>? queryParams}) {
     _dio.options.baseUrl = '${F.baseUrl}$serviceUrl';
 
     if (needsToken) {
@@ -28,6 +28,9 @@ class Api {
       _dio.options.headers = {'Authorization': 'Bearer ${accessToken!}'};
     } else {
       _dio.options.headers = {'Authorization': ''};
+    }
+    if (queryParams != null) {
+      _dio.options.queryParameters = queryParams;
     }
     return _dio;
   }
