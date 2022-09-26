@@ -55,7 +55,7 @@ class InventoryBadgeDetail extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     InventoryController controller = Get.find();
-    SyntheticBadgeController syntheticBadgeController = Get.put(SyntheticBadgeController());
+    SyntheticBadgeController syntheticBadgeController = Get.put(SyntheticBadgeController(controller.selectedBadge));
 
     return DefaultContainer(
       titleText: '상세',
@@ -128,32 +128,30 @@ class InventoryBadgeDetail extends StatelessWidget {
                   ],
                 ),
               ),
-              Obx(() {
-                return Column(
-                  children: [
-                    Padding(
-                      padding: const EdgeInsets.only(top: 30, bottom: 5),
-                      child: Row(children: [Text('획득 정보')]),
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.only(top: 5, bottom: 5),
-                      child: Row(children: [
-                        Container(
-                          child: Text(syntheticBadgeController.badgeType.value),
-                        ),
-                        Container(
-                          padding: EdgeInsets.only(left: 5),
-                          child: Text('·'),
-                        ),
-                        Container(
-                          padding: EdgeInsets.only(left: 5),
-                          child: Text(controller.getBadgeDate.value),
-                        ),
-                      ]),
-                    ),
-                  ],
-                );
-              }),
+              Column(
+                children: [
+                  Padding(
+                    padding: const EdgeInsets.only(top: 30, bottom: 5),
+                    child: Row(children: [Text('획득 정보')]),
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.only(top: 5, bottom: 5),
+                    child: Row(children: [
+                      Container(
+                        child: Text(syntheticBadgeController.badgeType.value),
+                      ),
+                      Container(
+                        padding: EdgeInsets.only(left: 5),
+                        child: Text('·'),
+                      ),
+                      Container(
+                        padding: EdgeInsets.only(left: 5),
+                        child: Text(controller.getBadgeDate.value),
+                      ),
+                    ]),
+                  ),
+                ],
+              ),
               SizedBox(
                 height: 200,
                 child: Padding(

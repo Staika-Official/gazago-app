@@ -23,4 +23,12 @@ class ItemService {
     List<InventoryItemModel> items = res.data.map((item) => InventoryItemModel.fromJson(item));
     return items;
   }
+
+  static Future<Response> getUserEquippedItem(userId) async {
+    return await Api.client(serviceUrl: ServiceUrl.activityService).get('/users/${userId}/equipped');
+  }
+
+  static Future<Response> fetchRepairItemShoes(userId, itemId) async {
+    return await Api.client(serviceUrl: ServiceUrl.itemService).get('/users/${userId}/repair/${itemId}');
+  }
 }

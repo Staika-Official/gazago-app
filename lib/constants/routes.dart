@@ -7,6 +7,7 @@ import 'package:gaza_go/presentations/views/activity/activity_select.dart';
 import 'package:gaza_go/presentations/views/archive/archive_detail.dart';
 import 'package:gaza_go/presentations/views/home.dart';
 import 'package:gaza_go/presentations/views/inventory/inventory_badge_detail.dart';
+import 'package:gaza_go/presentations/views/inventory/inventory_item_detail.dart';
 import 'package:gaza_go/presentations/views/inventory/synthetic_badge.dart';
 import 'package:gaza_go/presentations/views/join/join_terms.dart';
 import 'package:gaza_go/presentations/views/login.dart';
@@ -46,7 +47,8 @@ class Routes {
   static const wallet = '/wallet';
   static const walletDetail = '/wallet/detail';
   static const walletActions = '/wallet/action';
-  static const badgeDetail = '/inventory/detail';
+  static const itemDetail = '/inventory/item/detail';
+  static const badgeDetail = '/inventory/badge/detail';
   static const syntheticBadge = '/inventory/synthetic_badge';
 
   static List<GetPage> pages = [
@@ -79,6 +81,7 @@ class Routes {
     stepPage(name: Routes.wallet, page: const WalletHome()),
     stepPage(name: Routes.walletDetail, page: const WalletDetail()),
     stepPage(name: Routes.walletActions, page: const WalletActions()),
+    stepPage(name: Routes.itemDetail, page: const InventoryItemDetail()),
     stepPage(name: Routes.badgeDetail, page: const InventoryBadgeDetail()),
     stepPage(name: Routes.syntheticBadge, page: const SyntheticBadge()),
   ];

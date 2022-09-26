@@ -1,12 +1,12 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
-import 'package:gaza_go/platform/controllers/inventory_controller.dart';
 import 'package:gaza_go/platform/models/inventory_badge_item_model.dart';
 import 'package:gaza_go/platform/models/inventory_badge_model.dart';
 import 'package:get/get.dart';
 
 class SyntheticBadgeController extends GetxController {
-  InventoryController controller = Get.find();
+  Rx<InventoryBadgeModel> selectedBadgePrev;
+  SyntheticBadgeController(this.selectedBadgePrev);
 
   RxList<InventoryBadgeModel> selectedBadgeList = RxList.empty();
   RxList<InventoryBadgeModel> myBadgeList = RxList.empty();
@@ -67,8 +67,8 @@ class SyntheticBadgeController extends GetxController {
 
   @override
   void onInit() {
-    selectedBadgeType.value = controller.selectedBadge.value.badge.issueType;
-    selectedBadgeList.add(controller.selectedBadge.value);
+    selectedBadgeType.value = selectedBadgePrev.value.badge.issueType;
+    selectedBadgeList.add(selectedBadgePrev.value);
 
     super.onInit();
   }

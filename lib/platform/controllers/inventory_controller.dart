@@ -1,3 +1,4 @@
+import 'package:flutter/material.dart';
 import 'package:gaza_go/constants/routes.dart';
 import 'package:gaza_go/platform/apis/badge.dart';
 import 'package:gaza_go/platform/apis/item.dart';
@@ -18,7 +19,24 @@ class InventoryController extends GetxController with LinearProgressMixin {
   final RxBool isShoe = RxBool(true);
   RxInt count = 0.obs;
   RxString getBadgeDate = RxString('');
+  double _minSliderValue = 0;
+  double _currentSliderValue = 20;
   RxList<InventoryItemModel> equippedItemList = RxList.empty();
+  Rx<InventoryItemModel> selectedItem = Rx(
+    InventoryItemModel(
+      id: -1,
+      serialNumber: '',
+      itemName: '',
+      itemCategory: '',
+      durability: 0.0,
+      abrasionRate: 0.0,
+      rewardRate: 0.0,
+      staminaReduceRate: 0.0,
+      itemImageUrl: '',
+      equipped: false,
+      listOrder: -1,
+    ),
+  );
   Rx<InventoryBadgeModel> selectedBadge = Rx(
     InventoryBadgeModel(
       id: -1,
@@ -128,6 +146,7 @@ class InventoryController extends GetxController with LinearProgressMixin {
   void getUserEquippedItems() async {
     EquippedItemModel equippedItems = await ActivityService.getUserEquippedItem();
     equippedItemList.value = equippedItems.items;
+    _minSliderValue = equippedItems.items.firstWhere((element) => element.itemCategory == 'SHOES').durability;
   }
 
   void fetchEquipBadge(int id) {}
@@ -136,8 +155,44 @@ class InventoryController extends GetxController with LinearProgressMixin {
     getBadgeDate.value = userBadgesList.firstWhere((item) => item.badge.id == id).badge.issueEndedTime;
   }
 
+  void toItemDetail(int id) {
+    selectedItem.value = myAllItems.firstWhere((item) => item.id == id);
+    print(selectedItem);
+    Get.toNamed(Routes.itemDetail);
+  }
+
   void toSyntheticBadgeDetail(int id) {
     selectedBadge.value = userBadgesList.firstWhere((item) => item.badge.id == id);
     Get.toNamed(Routes.syntheticBadge);
+  }
+
+  void fetchRepairShoes() {}
+
+  void showShoesRepairPopup() {
+    Get.dialog(
+      AlertDialog(
+        title: const Text('내구도 충전'),
+        content: Slider(
+          value: _currentSliderValue,
+          max: 100,
+          min: 0,
+          divisions: 100,
+          label: _currentSliderValue.round().toString(),
+          onChanged: (double value) {
+            if (value > _minSliderValue) {
+              _currentSliderValue = value;
+            }
+          },
+        ),
+        actions: [
+          ElevatedButton(onPressed: () => closeRepairPopup(), child: const Text('아니요')),
+          ElevatedButton(onPressed: () => fetchRepairShoes(), child: const Text('네')),
+        ],
+      ),
+    );
+  }
+
+  void closeRepairPopup() {
+    Get.back();
   }
 }
