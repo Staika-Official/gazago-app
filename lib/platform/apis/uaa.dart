@@ -13,4 +13,8 @@ class UaaApi {
       "clientId": "GAZAGO",
     });
   }
+
+  static Future<Response> getAccountInfo() {
+    return uaaApi.get('/account');
+  }
 }
