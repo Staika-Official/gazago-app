@@ -15,4 +15,19 @@ class HiveStore {
     String? loadData = box.get(key);
     return loadData;
   }
+
+  static void deleteKey({required String key}) {
+    final Box box = Hive.box('gazaGo');
+    box.delete(key);
+  }
+
+  static void deleteMultipleKeys({required List<String> keys}) {
+    final Box box = Hive.box('gazaGo');
+    box.deleteAll(keys);
+  }
+
+  static void clear() {
+    final Box box = Hive.box('gazaGo');
+    box.clear();
+  }
 }

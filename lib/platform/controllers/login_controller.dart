@@ -16,20 +16,22 @@ class LoginController extends GetxController {
     // showDuplicateLoginWarning();
     switch (loginType) {
       case LoginType.google:
-        signInWithGoogle();
+        await signInWithGoogle();
         break;
       case LoginType.apple:
-        signInWithApple();
+        await signInWithApple();
         break;
       case LoginType.kakao:
         break;
       default:
-        emailLogin();
+        await emailLogin();
         break;
     }
+
+    await getUserInfo();
   }
 
-  void emailLogin() async {
+  Future<void> emailLogin() async {
     TokenModel token = await UaaService.emailLogin();
     HiveStore.save(key: HiveKey.accessToken.name, value: token.accessToken);
     HiveStore.save(key: HiveKey.refreshToken.name, value: token.refreshToken);
@@ -78,6 +80,10 @@ class LoginController extends GetxController {
     print(credential.idToken);
 
     return await FirebaseAuth.instance.signInWithCredential(credential);
+  }
+
+  Future<void> getUserInfo() async {
+    print(await UaaService.getAccountInfo());
   }
 
   void showDuplicateLoginWarning() {

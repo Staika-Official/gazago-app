@@ -1,9 +1,10 @@
 import 'package:dio/dio.dart';
-import 'package:gaza_go/constants/base_urls.dart';
 import 'package:gaza_go/constants/enums.dart';
+import 'package:gaza_go/constants/routes.dart';
 import 'package:gaza_go/flavors.dart';
 import 'package:gaza_go/platform/models/token_model.dart';
 import 'package:gaza_go/platform/stores/hive_store.dart';
+import 'package:get/get.dart' as getx;
 import 'package:logger/logger.dart';
 
 class Api {
@@ -25,6 +26,8 @@ class Api {
       String? accessToken = HiveStore.loadString(key: 'accessToken');
 
       _dio.options.headers = {'Authorization': 'Bearer ${accessToken!}'};
+    } else {
+      _dio.options.headers = {'Authorization': ''};
     }
     return _dio;
   }
@@ -60,14 +63,21 @@ class Api {
 
     if (e.response!.statusCode == ResponseStatus.unauthorized.code) {
       final String? refreshToken = HiveStore.loadString(key: HiveKey.refreshToken.name);
-      Api.client(serviceUrl: ServiceUrl.uaaService, needsToken: false)
+      Dio refreshDio = Dio();
+      refreshDio
         ..options.headers['Authorization'] = 'Bearer $refreshToken'
-        ..post('/sign-in/token', data: {'clientId': 'GAZAGO'}).then((Response res) {
+        ..post('${F.baseUrl}/services/uaa/api/sign-in/token', data: {'clientId': 'GAZAGO'}).then((Response res) {
           TokenModel newToken = TokenModel.fromJson(res.data);
           HiveStore.save(key: HiveKey.accessToken.name, value: newToken.accessToken);
           HiveStore.save(key: HiveKey.refreshToken.name, value: newToken.refreshToken);
 
           _retryFailedRequest(e, handler, newToken.accessToken);
+        }).catchError((e) {
+          HiveStore.deleteMultipleKeys(keys: [
+            HiveKey.accessToken.name,
+            HiveKey.refreshToken.name,
+          ]);
+          getx.Get.offAllNamed(Routes.login);
         });
     } else {
       return handler.next(e);
