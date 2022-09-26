@@ -15,6 +15,7 @@ class InventoryItemModel {
   String itemImageUrl;
   bool equipped;
   int listOrder;
+  int tik;
   bool isShoe;
 
   InventoryItemModel({
@@ -29,6 +30,7 @@ class InventoryItemModel {
     required this.itemImageUrl,
     required this.equipped,
     required this.listOrder,
+    this.tik = 0,
     this.isShoe = false,
   });
 

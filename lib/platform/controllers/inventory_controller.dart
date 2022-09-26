@@ -1,14 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:gaza_go/constants/routes.dart';
 import 'package:gaza_go/platform/apis/badge.dart';
-import 'package:gaza_go/platform/apis/item.dart';
 import 'package:gaza_go/platform/helpers/linear_progress_mixin.dart';
 import 'package:gaza_go/platform/models/equipped_item_model.dart';
 import 'package:gaza_go/platform/models/inventory_badge_item_model.dart';
 import 'package:gaza_go/platform/models/inventory_badge_model.dart';
 import 'package:gaza_go/platform/models/inventory_item_model.dart';
+import 'package:gaza_go/platform/models/repair_shoes_model.dart';
 import 'package:gaza_go/platform/models/stat_model.dart';
 import 'package:gaza_go/platform/services/activity_service.dart';
+import 'package:gaza_go/platform/services/item_service.dart';
 import 'package:get/get.dart';
 
 class InventoryController extends GetxController with LinearProgressMixin {
@@ -22,6 +23,7 @@ class InventoryController extends GetxController with LinearProgressMixin {
   double _minSliderValue = 0;
   double _currentSliderValue = 20;
   RxList<InventoryItemModel> equippedItemList = RxList.empty();
+  final Rx<RepairShoesModel> shoesDurability = Rx(RepairShoesModel());
   Rx<InventoryItemModel> selectedItem = Rx(
     InventoryItemModel(
       id: -1,
@@ -166,7 +168,16 @@ class InventoryController extends GetxController with LinearProgressMixin {
     Get.toNamed(Routes.syntheticBadge);
   }
 
-  void fetchRepairShoes() {}
+  void fetchRepairShoes() async {
+    RepairShoesModel repairModel = await ItemService.fetchRepairItemShoes(
+      RepairShoesModel(
+        id: selectedItem.value.id,
+        durability: 100 - _minSliderValue.toInt(),
+        tik: 0,
+      ),
+    );
+    shoesDurability.value = repairModel;
+  }
 
   void showShoesRepairPopup() {
     Get.dialog(
