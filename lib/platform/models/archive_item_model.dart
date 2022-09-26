@@ -5,38 +5,54 @@ part 'archive_item_model.g.dart';
 
 @JsonSerializable()
 class ArchiveItemModel {
-  int id;
-  ActivityType activityType;
-  String startTime;
-  String endTime;
-  String startLocation;
-  String startLocationFull;
-  String acquiredBadge;
-  String activityDuration;
-  double activityDistance;
-  int stepCount;
-  double avgSpeed;
-  double highestClimbed;
-  double acquiredGo;
-  double staminaUsed;
-  double durabilityConsumed;
+  int? id;
+  int? userId;
+  int? steps;
+  double? speed;
+  double? distance;
+  double? altitude;
+  int? time;
+  String? startPoint;
+  double? rewardGo;
+  double? rewardDistance;
+  double? spendStamina;
+  double? spendDurability;
+  String? startedDate;
+  String? endedDate;
+  String? locations;
+  int? badgeIssueId;
+  int? challengeId;
+  String? state;
+  bool? deleted;
+  String? createdBy;
+  String? createdDate;
+  String? lastModifiedBy;
+  String? lastModifiedDate;
 
   ArchiveItemModel({
-    required this.id,
-    required this.activityType,
-    required this.startTime,
-    required this.endTime,
-    required this.startLocation,
-    required this.startLocationFull,
-    required this.acquiredBadge,
-    required this.activityDuration,
-    required this.activityDistance,
-    required this.stepCount,
-    required this.avgSpeed,
-    required this.highestClimbed,
-    required this.acquiredGo,
-    required this.staminaUsed,
-    required this.durabilityConsumed,
+    this.id,
+    this.userId,
+    this.steps,
+    this.speed,
+    this.distance,
+    this.altitude,
+    this.time,
+    this.startPoint,
+    this.rewardGo,
+    this.rewardDistance,
+    this.spendStamina,
+    this.spendDurability,
+    this.startedDate,
+    this.endedDate,
+    this.locations,
+    this.badgeIssueId,
+    this.challengeId,
+    this.state,
+    this.deleted,
+    this.createdBy,
+    this.createdDate,
+    this.lastModifiedBy,
+    this.lastModifiedDate,
   });
 
   factory ArchiveItemModel.fromJson(Map<String, dynamic> json) => _$ArchiveItemModelFromJson(json);

@@ -1,27 +1,24 @@
-import 'package:get/get.dart';
-import 'package:gaza_go/constants/enums.dart';
 import 'package:gaza_go/constants/routes.dart';
 import 'package:gaza_go/platform/models/archive_item_model.dart';
+import 'package:gaza_go/platform/services/archive_service.dart';
+import 'package:get/get.dart';
 
 class ArchiveController extends GetxController {
   RxList<ArchiveItemModel> archiveList = RxList.empty();
-  Rx<ArchiveItemModel> selectedItem = Rx(ArchiveItemModel(
-    id: 1,
-    activityType: ActivityType.climbing,
-    startTime: '2022.08.12 09:04:34',
-    endTime: '2022.08.12 09:55:11',
-    startLocation: '만월산',
-    startLocationFull: '만월산 등산로 입구',
-    acquiredBadge: '만월산 등정 뱃지',
-    activityDuration: '02:01:01',
-    activityDistance: 4.02,
-    stepCount: 50,
-    avgSpeed: 4.2,
-    highestClimbed: 140.0,
-    acquiredGo: 50,
-    staminaUsed: 70,
-    durabilityConsumed: 10,
-  ));
+  Rx<ArchiveItemModel> selectedItem = Rx(ArchiveItemModel());
+  // Rx<List<LatLng>> get locations {
+  //   if (selectedItem.value.locations != null) {
+  //     List<String> locationsArray = selectedItem.value.locations!.split(',');
+  //     List<LatLng> parsedList = List.empty(growable: true);
+  //     locationsArray.forEach((locationString) {
+  //       List<String> coordinates = locationString.split(',');
+  //       parsedList.add(LatLng(double.parse(coordinates[0]), double.parse(coordinates[1])));
+  //     });
+  //     return Rx(parsedList);
+  //   } else {
+  //     return Rx(List.empty());
+  //   }
+  // }
 
   @override
   void onInit() {
@@ -29,145 +26,8 @@ class ArchiveController extends GetxController {
     super.onInit();
   }
 
-  void getArchiveList() {
-    archiveList.value = [
-      ArchiveItemModel(
-        id: 1,
-        activityType: ActivityType.climbing,
-        startTime: '2022.08.12 09:04:34',
-        endTime: '2022.08.12 09:55:11',
-        startLocation: '만월산',
-        startLocationFull: '만월산 등산로 입구',
-        acquiredBadge: '만월산 등정 뱃지',
-        activityDuration: '02:01:01',
-        activityDistance: 4.02,
-        stepCount: 50,
-        avgSpeed: 4.2,
-        highestClimbed: 140.0,
-        acquiredGo: 50,
-        staminaUsed: 70,
-        durabilityConsumed: 10,
-      ),
-      ArchiveItemModel(
-        id: 1,
-        activityType: ActivityType.climbing,
-        startTime: '2022.08.12 09:04:34',
-        endTime: '2022.08.12 09:55:11',
-        startLocation: '만월산',
-        startLocationFull: '만월산 등산로 입구',
-        acquiredBadge: '만월산 등정 뱃지',
-        activityDuration: '02:01:01',
-        activityDistance: 4.02,
-        stepCount: 50,
-        avgSpeed: 4.2,
-        highestClimbed: 140.0,
-        acquiredGo: 50,
-        staminaUsed: 70,
-        durabilityConsumed: 10,
-      ),
-      ArchiveItemModel(
-        id: 1,
-        activityType: ActivityType.climbing,
-        startTime: '2022.08.12 09:04:34',
-        endTime: '2022.08.12 09:55:11',
-        startLocation: '만월산',
-        startLocationFull: '만월산 등산로 입구',
-        acquiredBadge: '만월산 등정 뱃지',
-        activityDuration: '02:01:01',
-        activityDistance: 4.02,
-        stepCount: 50,
-        avgSpeed: 4.2,
-        highestClimbed: 140.0,
-        acquiredGo: 50,
-        staminaUsed: 70,
-        durabilityConsumed: 10,
-      ),
-      ArchiveItemModel(
-        id: 1,
-        activityType: ActivityType.climbing,
-        startTime: '2022.08.12 09:04:34',
-        endTime: '2022.08.12 09:55:11',
-        startLocation: '만월산',
-        startLocationFull: '만월산 등산로 입구',
-        acquiredBadge: '만월산 등정 뱃지',
-        activityDuration: '02:01:01',
-        activityDistance: 4.02,
-        stepCount: 50,
-        avgSpeed: 4.2,
-        highestClimbed: 140.0,
-        acquiredGo: 50,
-        staminaUsed: 70,
-        durabilityConsumed: 10,
-      ),
-      ArchiveItemModel(
-        id: 1,
-        activityType: ActivityType.climbing,
-        startTime: '2022.08.12 09:04:34',
-        endTime: '2022.08.12 09:55:11',
-        startLocation: '만월산',
-        startLocationFull: '만월산 등산로 입구',
-        acquiredBadge: '만월산 등정 뱃지',
-        activityDuration: '02:01:01',
-        activityDistance: 4.02,
-        stepCount: 50,
-        avgSpeed: 4.2,
-        highestClimbed: 140.0,
-        acquiredGo: 50,
-        staminaUsed: 70,
-        durabilityConsumed: 10,
-      ),
-      ArchiveItemModel(
-        id: 1,
-        activityType: ActivityType.climbing,
-        startTime: '2022.08.12 09:04:34',
-        endTime: '2022.08.12 09:55:11',
-        startLocation: '만월산',
-        startLocationFull: '만월산 등산로 입구',
-        acquiredBadge: '만월산 등정 뱃지',
-        activityDuration: '02:01:01',
-        activityDistance: 4.02,
-        stepCount: 50,
-        avgSpeed: 4.2,
-        highestClimbed: 140.0,
-        acquiredGo: 50,
-        staminaUsed: 70,
-        durabilityConsumed: 10,
-      ),
-      ArchiveItemModel(
-        id: 1,
-        activityType: ActivityType.climbing,
-        startTime: '2022.08.12 09:04:34',
-        endTime: '2022.08.12 09:55:11',
-        startLocation: '만월산',
-        startLocationFull: '만월산 등산로 입구',
-        acquiredBadge: '만월산 등정 뱃지',
-        activityDuration: '02:01:01',
-        activityDistance: 4.02,
-        stepCount: 50,
-        avgSpeed: 4.2,
-        highestClimbed: 140.0,
-        acquiredGo: 50,
-        staminaUsed: 70,
-        durabilityConsumed: 10,
-      ),
-      ArchiveItemModel(
-        id: 1,
-        activityType: ActivityType.climbing,
-        startTime: '2022.08.12 09:04:34',
-        endTime: '2022.08.12 09:55:11',
-        startLocation: '만월산',
-        startLocationFull: '만월산 등산로 입구',
-        acquiredBadge: '만월산 등정 뱃지',
-        activityDuration: '02:01:01',
-        activityDistance: 4.02,
-        stepCount: 50,
-        avgSpeed: 4.2,
-        highestClimbed: 140.0,
-        acquiredGo: 50,
-        staminaUsed: 70,
-        durabilityConsumed: 10,
-      ),
-    ];
+  void getArchiveList() async {
+    archiveList.value = await ArchiveService.getArchiveList();
   }
 
   void toDetail(int id) {

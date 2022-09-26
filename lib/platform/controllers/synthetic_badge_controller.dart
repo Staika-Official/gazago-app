@@ -5,8 +5,10 @@ import 'package:gaza_go/platform/models/inventory_badge_model.dart';
 import 'package:get/get.dart';
 
 class SyntheticBadgeController extends GetxController {
+
   Rx<InventoryBadgeModel> selectedBadgePrev;
   SyntheticBadgeController(this.selectedBadgePrev);
+
 
   RxList<InventoryBadgeModel> selectedBadgeList = RxList.empty();
   RxList<InventoryBadgeModel> myBadgeList = RxList.empty();
@@ -66,11 +68,13 @@ class SyntheticBadgeController extends GetxController {
   final RxInt selectBadgeId = RxInt(0);
 
   @override
+
   void onInit() {
     selectedBadgeType.value = selectedBadgePrev.value.badge.issueType;
     selectedBadgeList.add(selectedBadgePrev.value);
 
     super.onInit();
+
   }
 
   List<Widget> _getListWidgets(List<InventoryBadgeModel> list) {

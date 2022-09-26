@@ -55,7 +55,9 @@ class InventoryBadgeDetail extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     InventoryController controller = Get.find();
+
     SyntheticBadgeController syntheticBadgeController = Get.put(SyntheticBadgeController(controller.selectedBadge));
+
 
     return DefaultContainer(
       titleText: '상세',

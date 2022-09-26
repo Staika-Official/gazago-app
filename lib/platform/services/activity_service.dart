@@ -12,7 +12,7 @@ class ActivityService {
 
   static Future<List<ChallengeModel>> getChallenges() async {
     Response res = await ActivityApi.getChallenges();
-    List<ChallengeModel> challengeList = List.empty();
+    List<ChallengeModel> challengeList = List.empty(growable: true);
     res.data.forEach((challenge) {
       challengeList.add(ChallengeModel.fromJson(challenge));
     });

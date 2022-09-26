@@ -1,4 +1,5 @@
 import 'package:gaza_go/platform/firebase/remote_config.dart';
+import 'package:intl/intl.dart';
 import 'package:package_info_plus/package_info_plus.dart';
 
 Future<bool> isUpdateTarget() async {
@@ -23,4 +24,12 @@ Future<bool> isUpdateTarget() async {
     }
   }
   return isUnderMinVersion;
+}
+
+String formatDate(String? isoDateString) {
+  if (isoDateString != null) {
+    return DateFormat("yyyy-MM-dd hh:mm:ss").format(DateTime.parse(isoDateString));
+  } else {
+    return '';
+  }
 }
