@@ -1,3 +1,4 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:gaza_go/platform/controllers/inventory_controller.dart';
 import 'package:gaza_go/platform/models/inventory_badge_item_model.dart';
@@ -15,7 +16,6 @@ class SyntheticBadgeController extends GetxController {
     for (int i = 0; i < 5; i++) {
       if (selectedBadgeList.length > i) {
         images.add(selectedBadgeList[i].badge.imageUrl);
-        print(selectedBadgeList[i].badge.imageUrl);
       } else {
         images.add('');
       }
@@ -68,8 +68,8 @@ class SyntheticBadgeController extends GetxController {
   @override
   void onInit() {
     selectedBadgeType.value = controller.selectedBadge.value.badge.issueType;
-    selectedBadgeList.add(selectedBadge.value);
-    // inspect(selectedBadge.value);
+    selectedBadgeList.add(controller.selectedBadge.value);
+
     super.onInit();
   }
 
@@ -84,7 +84,7 @@ class SyntheticBadgeController extends GetxController {
               child: Stack(
                 children: [
                   Image(
-                    image: AssetImage(badge.value.badge.imageUrl),
+                    image: CachedNetworkImageProvider(badge.value.badge.imageUrl),
                     fit: BoxFit.fill,
                     width: double.infinity,
                   ),
@@ -118,7 +118,10 @@ class SyntheticBadgeController extends GetxController {
           return Container(
             child: Column(
               children: [
-                Center(child: Image.asset(selectedBadge.value.badge.imageUrl)),
+                Center(
+                    child: Image(
+                  image: CachedNetworkImageProvider(selectedBadge.value.badge.imageUrl),
+                )),
                 SizedBox(
                   width: 200,
                   height: 400,
@@ -149,7 +152,6 @@ class SyntheticBadgeController extends GetxController {
     selectedBadge.value = badge;
     selectBadgeId.value = badgeId;
 
-    // inspect(selectedBadge.value);
     // myBadgeList.removeWhere((element) => element.id == badge.id);
   }
 
@@ -159,8 +161,9 @@ class SyntheticBadgeController extends GetxController {
     Get.back();
   }
 
+  void syntheticBadgeConfirm() {}
+
   void closeSelectBadge() {
-    selectedBadgeList.value = [];
     Get.back();
   }
 }

@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
-import 'package:get/get.dart';
 import 'package:gaza_go/platform/controllers/inventory/inventory_home_controller.dart';
+import 'package:gaza_go/platform/controllers/inventory_controller.dart';
 import 'package:gaza_go/presentations/views/inventory/inventory_badge.dart';
 import 'package:gaza_go/presentations/views/inventory/inventory_item.dart';
+import 'package:get/get.dart';
 
 class InventoryHome extends StatelessWidget {
   const InventoryHome({Key? key}) : super(key: key);
@@ -11,6 +12,7 @@ class InventoryHome extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     InventoryHomeController _controller = Get.put(InventoryHomeController());
+    InventoryController controller = Get.put(InventoryController());
 
     return SingleChildScrollView(
       child: ConstrainedBox(

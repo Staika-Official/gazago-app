@@ -1,8 +1,13 @@
+import 'dart:developer';
+
 import 'package:gaza_go/constants/routes.dart';
+import 'package:gaza_go/platform/apis/activity.dart';
 import 'package:gaza_go/platform/apis/badge.dart';
 import 'package:gaza_go/platform/helpers/linear_progress_mixin.dart';
+import 'package:gaza_go/platform/models/equipped_item_model.dart';
 import 'package:gaza_go/platform/models/inventory_badge_item_model.dart';
 import 'package:gaza_go/platform/models/inventory_badge_model.dart';
+import 'package:gaza_go/platform/models/inventory_item_model.dart';
 import 'package:gaza_go/platform/models/stat_model.dart';
 import 'package:get/get.dart';
 
@@ -13,7 +18,7 @@ class InventoryController extends GetxController with LinearProgressMixin {
   final RxBool isShoe = RxBool(true);
   RxInt count = 0.obs;
   RxString getBadgeDate = RxString('');
-
+  RxList<InventoryItemModel> equippedItemList = RxList.empty();
   Rx<InventoryBadgeModel> selectedBadge = Rx(
     InventoryBadgeModel(
       id: -1,
@@ -49,7 +54,7 @@ class InventoryController extends GetxController with LinearProgressMixin {
   void onInit() {
     once(count, (_) => print('한번만 호출'));
     initStats();
-
+    getUserEquippedItems();
     getSyntheticBadgeList();
     getUserBadgesList();
     super.onInit();
@@ -76,6 +81,12 @@ class InventoryController extends GetxController with LinearProgressMixin {
 
     setGetBadgeDate(id);
     Get.toNamed(Routes.badgeDetail);
+  }
+
+  void getUserEquippedItems() async {
+    EquippedItemModel equippedItems = await ActivityService.getUserEquippedItem(3);
+    // equippedItemList.value = equippedItems;
+    inspect('asd${equippedItems}');
   }
 
   void fetchEquipBadge(int id) {}

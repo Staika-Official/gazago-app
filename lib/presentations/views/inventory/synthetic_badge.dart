@@ -38,7 +38,7 @@ class SyntheticBadge extends StatelessWidget {
                         for (int i = 0; i < levelOneImageFolderLength; i++)
                           Obx(() {
                             return GestureDetector(
-                              onTap: () => _controller.showSelectBadgePopup(controller.userBadgesList.value, i),
+                              onTap: () => i != 0 ? _controller.showSelectBadgePopup(controller.userBadgesList.value, i) : null,
                               child: CircleAvatar(
                                 backgroundImage: AssetImage('assets/images/@temp_img_empty.png'),
                                 foregroundImage: CachedNetworkImageProvider(_controller.selectedBadgeImages[i]),
@@ -94,7 +94,7 @@ class SyntheticBadge extends StatelessWidget {
               SizedBox(
                 width: double.infinity,
                 child: ElevatedButton(
-                  onPressed: () => null,
+                  onPressed: _controller.selectedBadgeList.length == 5 ? () => _controller.syntheticBadgeConfirm() : null,
                   child: const Text('합성'),
                 ),
               ),
