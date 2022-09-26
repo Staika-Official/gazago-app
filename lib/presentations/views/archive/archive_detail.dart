@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:gaza_go/constants/enums.dart';
+import 'package:flutter_naver_map/flutter_naver_map.dart';
 import 'package:gaza_go/platform/controllers/archive_controller.dart';
+import 'package:gaza_go/platform/helpers/base_helper.dart';
 import 'package:gaza_go/presentations/components/default_container.dart';
 import 'package:get/get.dart';
 
@@ -22,11 +23,11 @@ class ArchiveDetail extends StatelessWidget {
                 Row(
                   mainAxisSize: MainAxisSize.min,
                   children: [
-                    Icon(
-                      controller.selectedItem.value.activityType == ActivityType.climbing ? Icons.nordic_walking : Icons.directions_walk,
-                    ),
+                    // Icon(
+                    //   controller.selectedItem.value.activityType == ActivityType.climbing ? Icons.nordic_walking : Icons.directions_walk,
+                    // ),
                     Text(
-                      controller.selectedItem.value.startTime,
+                      formatDate(controller.selectedItem.value.startedDate!),
                     )
                   ],
                 ),
@@ -44,20 +45,24 @@ class ArchiveDetail extends StatelessWidget {
             width: double.infinity,
             height: 400,
             color: Colors.grey,
-            child: Text('Map'),
+            child: NaverMap(
+                // initialCameraPosition: CameraPosition(
+                //   target: controller.locations.value.first,
+                // ),
+                ),
           ),
-          Text('시작 시간: ${controller.selectedItem.value.startTime}'),
-          Text('종료 시간: ${controller.selectedItem.value.endTime}'),
-          Text('시작점: ${controller.selectedItem.value.startLocationFull}'),
-          Text('획득 뱃지: ${controller.selectedItem.value.acquiredBadge}'),
-          Text('운동 시간: ${controller.selectedItem.value.activityDuration}'),
-          Text('운동 거리: ${controller.selectedItem.value.activityDistance}'),
-          Text('걸음 수: ${controller.selectedItem.value.stepCount}'),
-          Text('평균 속도: ${controller.selectedItem.value.avgSpeed}'),
-          Text('최고 고도: ${controller.selectedItem.value.highestClimbed}'),
-          Text('획득 STEP: ${controller.selectedItem.value.acquiredGo}'),
-          Text('소비 체력: ${controller.selectedItem.value.staminaUsed}'),
-          Text('소비 내구도: ${controller.selectedItem.value.durabilityConsumed}'),
+          Text('시작 시간: ${formatDate(controller.selectedItem.value.startedDate!)}'),
+          Text('종료 시간: ${formatDate(controller.selectedItem.value.endedDate)}'),
+          Text('시작점: ${controller.selectedItem.value.startPoint}'),
+          Text('획득 뱃지: ${controller.selectedItem.value.badgeIssueId}'), //TODO. 뱃지 네임 필요
+          Text('운동 시간: ${controller.selectedItem.value.time}'),
+          Text('운동 거리: ${controller.selectedItem.value.distance}'),
+          Text('걸음 수: ${controller.selectedItem.value.steps}'),
+          Text('평균 속도: ${controller.selectedItem.value.speed}'),
+          Text('최고 고도: ${controller.selectedItem.value.altitude}'),
+          Text('획득 STEP: ${controller.selectedItem.value.rewardGo}'),
+          Text('소비 체력: ${controller.selectedItem.value.spendStamina}'),
+          Text('소비 내구도: ${controller.selectedItem.value.spendDurability}'),
         ],
       ),
     );

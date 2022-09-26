@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:get/get.dart';
-import 'package:gaza_go/constants/enums.dart';
 import 'package:gaza_go/platform/controllers/archive_controller.dart';
+import 'package:gaza_go/platform/helpers/base_helper.dart';
+import 'package:get/get.dart';
 
 class ArchiveHome extends StatelessWidget {
   const ArchiveHome({Key? key}) : super(key: key);
@@ -10,7 +10,7 @@ class ArchiveHome extends StatelessWidget {
     return controller.archiveList
         .map(
           (archive) => InkWell(
-            onTap: () => controller.toDetail(archive.id),
+            onTap: () => controller.toDetail(archive.id!),
             child: Card(
               color: Colors.blueGrey,
               child: Padding(
@@ -20,15 +20,16 @@ class ArchiveHome extends StatelessWidget {
                   children: [
                     Row(
                       children: [
-                        Icon(
-                          archive.activityType == ActivityType.climbing ? Icons.nordic_walking : Icons.directions_walk,
-                        ),
+                        // TODO. api에서 운동타임 추가 필요.
+                        // Icon(
+                        //   archive.activityType == ActivityType.climbing ? Icons.nordic_walking : Icons.directions_walk,
+                        // ),
                         Padding(
                           padding: EdgeInsets.only(
                             left: 10,
                           ),
                           child: Text(
-                            archive.startTime,
+                            formatDate(archive.startedDate!),
                           ),
                         )
                       ],
@@ -38,7 +39,7 @@ class ArchiveHome extends StatelessWidget {
                       thickness: 1,
                     ),
                     Text(
-                      '${archive.startLocation} \u00B7 ${archive.activityDuration} \u00B7 ${archive.activityDistance}km \u00B7 ${archive.acquiredGo}GO',
+                      '${archive.startPoint} \u00B7 ${archive.time} \u00B7 ${archive.distance}km \u00B7 ${archive.rewardGo}GO',
                     ),
                   ],
                 ),
