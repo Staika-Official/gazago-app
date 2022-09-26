@@ -84,7 +84,7 @@ class InventoryController extends GetxController with LinearProgressMixin {
   }
 
   void getUserEquippedItems() async {
-    EquippedItemModel equippedItems = await ActivityService.getUserEquippedItem(3);
+    EquippedItemModel equippedItems = await ActivityApi.getUserEquippedItem('3');
     // equippedItemList.value = equippedItems;
     inspect('asd${equippedItems}');
   }

@@ -11,7 +11,7 @@ class DefaultContainer extends StatelessWidget {
   final bool isLeadingShow;
   final Widget? trailingChild;
   final String? titleText;
-  final Function? onBackButtonTap;
+  final VoidCallback? onBackButtonTap;
   final Color? headerBackgroundColor;
 
   const DefaultContainer({

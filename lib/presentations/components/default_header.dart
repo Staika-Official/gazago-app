@@ -6,7 +6,7 @@ class DefaultHeader extends StatelessWidget {
   final bool? isLeadingShow;
   final Widget? trailingChild;
   final String? titleText;
-  final Function? onBackButtonTap;
+  final VoidCallback? onBackButtonTap;
 
   const DefaultHeader({
     Key? key,
@@ -33,9 +33,10 @@ class DefaultHeader extends StatelessWidget {
                 visible: isLeadingShow ?? true,
                 child: InkWell(
                   borderRadius: const BorderRadius.all(Radius.circular(30)),
-                  onTap: () {
-                    onBackButtonTap ?? Get.back();
-                  },
+                  onTap: onBackButtonTap ??
+                      () {
+                        Get.back();
+                      },
                   child: SvgPicture.asset(
                     fit: BoxFit.contain,
                     'assets/images/icons/icon_chevron_left_black.svg',

@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:gaza_go/constants/enums.dart';
 import 'package:gaza_go/constants/routes.dart';
 import 'package:gaza_go/platform/models/token_model.dart';
+import 'package:gaza_go/platform/models/user_account_model.dart';
 import 'package:gaza_go/platform/services/uaa_service.dart';
 import 'package:gaza_go/platform/stores/hive_store.dart';
 import 'package:get/get.dart';
@@ -83,7 +84,10 @@ class LoginController extends GetxController {
   }
 
   Future<void> getUserInfo() async {
-    print(await UaaService.getAccountInfo());
+    UserAccountModel user = await UaaService.getAccountInfo();
+    HiveStore.save(key: HiveKey.userId.name, value: user.id.toString());
+    HiveStore.save(key: HiveKey.profileImageUrl.name, value: user.profileImageUrl);
+    HiveStore.save(key: HiveKey.nickname.name, value: user.nickname);
   }
 
   void showDuplicateLoginWarning() {

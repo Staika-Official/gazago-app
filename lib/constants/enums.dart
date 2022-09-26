@@ -31,6 +31,9 @@ enum WalletActionType {
 enum HiveKey {
   accessToken,
   refreshToken,
+  userId,
+  profileImageUrl,
+  nickname,
 }
 
 enum ResponseStatus {

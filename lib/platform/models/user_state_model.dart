@@ -6,8 +6,8 @@ part 'user_state_model.g.dart';
 class UserStateModel {
   int id;
   int userId;
-  int stamina;
-  int dailyGoReward;
+  double stamina;
+  double dailyGoReward;
   String createdBy;
   String createdDate;
   String lastModifiedBy;

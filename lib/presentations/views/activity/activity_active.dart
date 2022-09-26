@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_naver_map/flutter_naver_map.dart';
-import 'package:gaza_go/platform/controllers/activity_active_controller.dart';
+import 'package:gaza_go/constants/routes.dart';
+import 'package:gaza_go/platform/controllers/activity_controller.dart';
 import 'package:gaza_go/presentations/components/default_container.dart';
 import 'package:get/get.dart';
 
@@ -9,9 +10,12 @@ class ActivityActive extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    ActivityActiveController controller = Get.put(ActivityActiveController());
+    ActivityController controller = Get.find();
 
     return DefaultContainer(
+      onBackButtonTap: () {
+        Get.offNamed(Routes.home);
+      },
       child: Center(
         child: Obx(() {
           return Column(

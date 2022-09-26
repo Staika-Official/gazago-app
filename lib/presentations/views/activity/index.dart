@@ -66,6 +66,7 @@ class ActivityHome extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     ActivityController controller = Get.put(ActivityController());
+
     return Container(
       child: Column(
         children: [
@@ -136,16 +137,39 @@ class ActivityHome extends StatelessWidget {
             child: Stack(
               children: [
                 Center(
-                  child: MaterialButton(
-                    onPressed: () => controller.startActivity(),
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(100),
-                    ),
-                    color: Colors.blue,
-                    height: 100,
-                    minWidth: 100,
-                    child: const Text('Go'),
-                  ),
+                  child: Obx(() {
+                    return Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        controller.userState.value.exercise != null
+                            ? Padding(
+                                padding: const EdgeInsets.only(right: 8.0),
+                                child: MaterialButton(
+                                  onPressed: null,
+                                  onLongPress: () => controller.endActivity(),
+                                  shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(100),
+                                  ),
+                                  color: Colors.blue,
+                                  height: 100,
+                                  minWidth: 100,
+                                  child: Text('Stop'),
+                                ),
+                              )
+                            : Container(),
+                        MaterialButton(
+                          onPressed: () => controller.startActivity(),
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(100),
+                          ),
+                          color: Colors.blue,
+                          height: 100,
+                          minWidth: 100,
+                          child: Text(controller.userState.value.exercise != null ? 'Continue' : 'Go'),
+                        ),
+                      ],
+                    );
+                  }),
                 ),
                 Positioned(
                   bottom: 10,
