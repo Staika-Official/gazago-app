@@ -21,8 +21,9 @@ class ActivityService {
 
   static Future<EquippedItemModel> getUserEquippedItem(userId) async {
     Response res = await Api.client(serviceUrl: ServiceUrl.activityService).get('/users/${userId}/equipped');
+    print(res.data);
 
-    return res.data;
+    return EquippedItemModel.fromJson(res.data);
   }
 
   static Future<List<InventoryBadgeModel>> fetchStartUserExercises(userId) async {

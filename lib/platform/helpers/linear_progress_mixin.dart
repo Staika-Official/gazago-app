@@ -1,5 +1,5 @@
 class LinearProgressMixin {
-  double calculateProgress(double progress) {
-    return progress / 100;
+  double calculateProgress(progress) {
+    return progress.round() / 100;
   }
 }

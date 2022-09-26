@@ -1,8 +1,7 @@
-import 'dart:developer';
-
 import 'package:gaza_go/constants/routes.dart';
 import 'package:gaza_go/platform/apis/activity.dart';
 import 'package:gaza_go/platform/apis/badge.dart';
+import 'package:gaza_go/platform/apis/item.dart';
 import 'package:gaza_go/platform/helpers/linear_progress_mixin.dart';
 import 'package:gaza_go/platform/models/equipped_item_model.dart';
 import 'package:gaza_go/platform/models/inventory_badge_item_model.dart';
@@ -13,6 +12,7 @@ import 'package:get/get.dart';
 
 class InventoryController extends GetxController with LinearProgressMixin {
   final RxList<StatModel> statList = RxList.empty();
+  final RxList<InventoryItemModel> myAllItems = RxList.empty();
   RxList<InventoryBadgeModel> syntheticBadgeList = RxList.empty();
   RxList<InventoryBadgeModel> userBadgesList = RxList.empty();
   final RxBool isShoe = RxBool(true);
@@ -50,10 +50,48 @@ class InventoryController extends GetxController with LinearProgressMixin {
     ),
   );
 
+  Rx<InventoryItemModel> get equippedOuter {
+    return Rx(equippedItemList.firstWhere((element) => element.itemCategory == 'OUTER'));
+  }
+
+  Rx<InventoryItemModel> get equippedShoe {
+    return Rx(equippedItemList.firstWhere((element) => element.itemCategory == 'SHOES'));
+  }
+
+  Rx<InventoryItemModel> get equippedDrink {
+    return Rx(equippedItemList.firstWhere((element) => element.itemCategory == 'DRINK'));
+  }
+
+  Rx<InventoryItemModel> get equippedAccessory {
+    return Rx(equippedItemList.firstWhere((element) => element.itemCategory == 'ACCESSORY'));
+  }
+
+  Rx<InventoryItemModel> get equippedBottom {
+    return Rx(equippedItemList.firstWhere((element) => element.itemCategory == 'BOTTOM'));
+  }
+
+  Rx<InventoryItemModel> get equippedHat {
+    return Rx(equippedItemList.firstWhere((element) => element.itemCategory == 'HAT'));
+  }
+
+  RxMap<String, List<InventoryItemModel>> get allItems {
+    return RxMap(
+      {
+        'outers': myAllItems.where((item) => item.itemCategory == 'OUTER').toList(),
+        'shoes': myAllItems.where((item) => item.itemCategory == 'SHOES').toList(),
+        'accessories': myAllItems.where((item) => item.itemCategory == 'ACCESSORY').toList(),
+        'drinks': myAllItems.where((item) => item.itemCategory == 'DRINK').toList(),
+        'bottoms': myAllItems.where((item) => item.itemCategory == 'BOTTOM').toList(),
+        'hats': myAllItems.where((item) => item.itemCategory == 'HAT').toList(),
+      },
+    );
+  }
+
   @override
   void onInit() {
     once(count, (_) => print('한번만 호출'));
     initStats();
+    getUserAllItems();
     getUserEquippedItems();
     getSyntheticBadgeList();
     getUserBadgesList();
@@ -78,15 +116,18 @@ class InventoryController extends GetxController with LinearProgressMixin {
 
   void toBadgeDetail(int id) {
     selectedBadge.value = userBadgesList.firstWhere((item) => item.badge.id == id);
-
     setGetBadgeDate(id);
     Get.toNamed(Routes.badgeDetail);
   }
 
+  void getUserAllItems() async {
+    List<InventoryItemModel> allItems = await ItemService.getAllMyItems(3);
+    myAllItems.value = allItems;
+  }
+
   void getUserEquippedItems() async {
     EquippedItemModel equippedItems = await ActivityService.getUserEquippedItem(3);
-    // equippedItemList.value = equippedItems;
-    inspect('asd${equippedItems}');
+    equippedItemList.value = equippedItems.items;
   }
 
   void fetchEquipBadge(int id) {}

@@ -8,10 +8,10 @@ class InventoryBadge extends StatelessWidget {
   List<Widget> renderUserBadgesList(InventoryController controller) {
     return controller.userBadgesList
         .map(
-          (badge) => InkWell(
-            onTap: () => controller.toBadgeDetail(badge.id),
+          (item) => InkWell(
+            onTap: () => controller.toBadgeDetail(item.badge.id),
             child: Image(
-              image: AssetImage('assets/images/@temp_badge.png'),
+              image: NetworkImage(item.badge.imageUrl),
               fit: BoxFit.fill,
               width: double.infinity,
             ),
