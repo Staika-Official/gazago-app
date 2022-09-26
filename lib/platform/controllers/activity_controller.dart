@@ -186,17 +186,18 @@ class ActivityController extends GetxController {
   initStream() async {
     UserExerciseModel exerciseModel = await ActivityService.fetchStartUserExercises(
       UserExerciseModel(
-          userId: int.parse(
-            HiveStore.loadString(
-              key: HiveKey.userId.name,
-            )!,
-          ),
-          steps: 0,
-          speed: 0.0,
-          distance: 0.0,
-          altitude: currentLocation.value.altitude,
-          time: 0,
-          startPoint: '${currentLocation.value.longitude}, ${currentLocation.value.latitude}'),
+        userId: int.parse(
+          HiveStore.loadString(
+            key: HiveKey.userId.name,
+          )!,
+        ),
+        steps: 0,
+        speed: 0.0,
+        distance: 0.0,
+        altitude: currentLocation.value.altitude,
+        time: 0,
+        startPoint: '${currentLocation.value.longitude}, ${currentLocation.value.latitude}',
+      ),
     );
     userState.value.exercise = exerciseModel;
     _stepCountStream.listen(onStepCount).onError(onStepCountError);

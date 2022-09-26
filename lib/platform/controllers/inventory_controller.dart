@@ -1,5 +1,4 @@
 import 'package:gaza_go/constants/routes.dart';
-import 'package:gaza_go/platform/apis/activity.dart';
 import 'package:gaza_go/platform/apis/badge.dart';
 import 'package:gaza_go/platform/apis/item.dart';
 import 'package:gaza_go/platform/helpers/linear_progress_mixin.dart';
@@ -8,6 +7,7 @@ import 'package:gaza_go/platform/models/inventory_badge_item_model.dart';
 import 'package:gaza_go/platform/models/inventory_badge_model.dart';
 import 'package:gaza_go/platform/models/inventory_item_model.dart';
 import 'package:gaza_go/platform/models/stat_model.dart';
+import 'package:gaza_go/platform/services/activity_service.dart';
 import 'package:get/get.dart';
 
 class InventoryController extends GetxController with LinearProgressMixin {
@@ -126,7 +126,7 @@ class InventoryController extends GetxController with LinearProgressMixin {
   }
 
   void getUserEquippedItems() async {
-    EquippedItemModel equippedItems = await ActivityApi.getUserEquippedItem(3);
+    EquippedItemModel equippedItems = await ActivityService.getUserEquippedItem();
     equippedItemList.value = equippedItems.items;
   }
 

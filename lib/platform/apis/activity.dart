@@ -1,7 +1,6 @@
 import 'package:dio/dio.dart';
 import 'package:gaza_go/constants/base_urls.dart';
 import 'package:gaza_go/platform/apis/client.dart';
-import 'package:gaza_go/platform/models/equipped_item_model.dart';
 import 'package:gaza_go/platform/models/user_exercise_model.dart';
 
 class ActivityApi {
@@ -13,11 +12,8 @@ class ActivityApi {
     return await Api.client(serviceUrl: ServiceUrl.activityService).get('/users/$userId');
   }
 
-  static Future<EquippedItemModel> getUserEquippedItem(userId) async {
-    Response res = await Api.client(serviceUrl: ServiceUrl.activityService).get('/users/${userId}/equipped');
-    print(res.data);
-
-    return EquippedItemModel.fromJson(res.data);
+  static Future<Response> getUserEquippedItem(userId) async {
+    return await Api.client(serviceUrl: ServiceUrl.activityService).get('/users/${userId}/equipped');
   }
 
   static Future<Response> fetchStartUserExercises(String userId, UserExerciseModel exerciseInfo) async {

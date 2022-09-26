@@ -3,6 +3,7 @@ import 'package:gaza_go/constants/enums.dart';
 import 'package:gaza_go/platform/apis/activity.dart';
 import 'package:gaza_go/platform/models/challenge_model.dart';
 import 'package:gaza_go/platform/models/current_user_state_model.dart';
+import 'package:gaza_go/platform/models/equipped_item_model.dart';
 import 'package:gaza_go/platform/models/user_exercise_model.dart';
 import 'package:gaza_go/platform/stores/hive_store.dart';
 
@@ -22,6 +23,12 @@ class ActivityService {
     Response res = await ActivityApi.getCurrentUserState(userId!);
     CurrentUserStateModel userState = CurrentUserStateModel.fromJson(res.data);
     return userState;
+  }
+
+  static Future<EquippedItemModel> getUserEquippedItem() async {
+    Response res = await ActivityApi.getUserEquippedItem(userId!);
+
+    return EquippedItemModel.fromJson(res.data);
   }
 
   static Future<UserExerciseModel> fetchStartUserExercises(UserExerciseModel exerciseInfo) async {

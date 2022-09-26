@@ -11,7 +11,7 @@ class InventoryHome extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    InventoryHomeController _controller = Get.put(InventoryHomeController());
+    InventoryHomeController inventoryMenuController = Get.put(InventoryHomeController());
     InventoryController controller = Get.put(InventoryController());
 
     return SingleChildScrollView(
@@ -32,61 +32,64 @@ class InventoryHome extends StatelessWidget {
                         child: Text('[장착 중인 아이템]'),
                       ),
                       Obx(() {
-                        return StaggeredGrid.count(
-                          crossAxisCount: 4,
-                          mainAxisSpacing: 4,
-                          crossAxisSpacing: 4,
-                          children: [
-                            StaggeredGridTile.count(
-                              crossAxisCellCount: 2,
-                              mainAxisCellCount: 2,
-                              child: Tile(
-                                index: 0,
-                                durability: controller.equippedShoe.value.durability,
-                                imageUrl: controller.equippedShoe.value.itemImageUrl,
+                        return SizedBox(
+                          height: 300,
+                          child: StaggeredGrid.count(
+                            crossAxisCount: 4,
+                            mainAxisSpacing: 4,
+                            crossAxisSpacing: 4,
+                            children: [
+                              StaggeredGridTile.count(
+                                crossAxisCellCount: 2,
+                                mainAxisCellCount: 2,
+                                child: Tile(
+                                  index: 0,
+                                  durability: controller.equippedShoe.value.durability,
+                                  imageUrl: controller.equippedShoe.value.itemImageUrl,
+                                ),
                               ),
-                            ),
-                            StaggeredGridTile.count(
-                              crossAxisCellCount: 2,
-                              mainAxisCellCount: 2,
-                              child: Tile(
-                                index: 1,
-                                imageUrl: controller.equippedAccessory.value.itemImageUrl,
+                              StaggeredGridTile.count(
+                                crossAxisCellCount: 2,
+                                mainAxisCellCount: 2,
+                                child: Tile(
+                                  index: 1,
+                                  imageUrl: controller.equippedAccessory.value.itemImageUrl,
+                                ),
                               ),
-                            ),
-                            StaggeredGridTile.count(
-                              crossAxisCellCount: 1,
-                              mainAxisCellCount: 1,
-                              child: Tile(
-                                index: 2,
-                                imageUrl: controller.equippedAccessory.value.itemImageUrl,
+                              StaggeredGridTile.count(
+                                crossAxisCellCount: 1,
+                                mainAxisCellCount: 1,
+                                child: Tile(
+                                  index: 2,
+                                  imageUrl: controller.equippedAccessory.value.itemImageUrl,
+                                ),
                               ),
-                            ),
-                            StaggeredGridTile.count(
-                              crossAxisCellCount: 1,
-                              mainAxisCellCount: 1,
-                              child: Tile(
-                                index: 3,
-                                imageUrl: controller.equippedAccessory.value.itemImageUrl,
+                              StaggeredGridTile.count(
+                                crossAxisCellCount: 1,
+                                mainAxisCellCount: 1,
+                                child: Tile(
+                                  index: 3,
+                                  imageUrl: controller.equippedAccessory.value.itemImageUrl,
+                                ),
                               ),
-                            ),
-                            StaggeredGridTile.count(
-                              crossAxisCellCount: 1,
-                              mainAxisCellCount: 1,
-                              child: Tile(
-                                index: 4,
-                                imageUrl: controller.equippedAccessory.value.itemImageUrl,
+                              StaggeredGridTile.count(
+                                crossAxisCellCount: 1,
+                                mainAxisCellCount: 1,
+                                child: Tile(
+                                  index: 4,
+                                  imageUrl: controller.equippedAccessory.value.itemImageUrl,
+                                ),
                               ),
-                            ),
-                            StaggeredGridTile.count(
-                              crossAxisCellCount: 1,
-                              mainAxisCellCount: 1,
-                              child: Tile(
-                                index: 5,
-                                imageUrl: controller.equippedAccessory.value.itemImageUrl,
+                              StaggeredGridTile.count(
+                                crossAxisCellCount: 1,
+                                mainAxisCellCount: 1,
+                                child: Tile(
+                                  index: 5,
+                                  imageUrl: controller.equippedAccessory.value.itemImageUrl,
+                                ),
                               ),
-                            ),
-                          ],
+                            ],
+                          ),
                         );
                       }),
                     ],
@@ -129,7 +132,7 @@ class InventoryHome extends StatelessWidget {
               ),
               TabBar(
                 padding: const EdgeInsets.only(top: 20, bottom: 5),
-                controller: _controller.tabController,
+                controller: inventoryMenuController.tabController,
                 tabs: <Widget>[
                   Tab(
                     child: Text(
@@ -147,7 +150,7 @@ class InventoryHome extends StatelessWidget {
               ),
               Expanded(
                 child: TabBarView(
-                  controller: _controller.tabController,
+                  controller: inventoryMenuController.tabController,
                   children: [
                     InventoryItem(),
                     InventoryBadge(),

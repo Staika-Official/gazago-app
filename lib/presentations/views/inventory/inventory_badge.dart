@@ -28,6 +28,7 @@ class InventoryBadge extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     InventoryController controller = Get.put(InventoryController());
+
     return Obx(() {
       return GridView.count(
         primary: false,

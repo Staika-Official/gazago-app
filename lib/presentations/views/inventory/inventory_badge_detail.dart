@@ -55,7 +55,8 @@ class InventoryBadgeDetail extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     InventoryController controller = Get.find();
-    SyntheticBadgeController _controller = Get.put(SyntheticBadgeController());
+    SyntheticBadgeController syntheticBadgeController = Get.put(SyntheticBadgeController());
+
     return DefaultContainer(
       titleText: '상세',
       child: SingleChildScrollView(
@@ -138,7 +139,7 @@ class InventoryBadgeDetail extends StatelessWidget {
                       padding: const EdgeInsets.only(top: 5, bottom: 5),
                       child: Row(children: [
                         Container(
-                          child: Text(_controller.badgeType.value),
+                          child: Text(syntheticBadgeController.badgeType.value),
                         ),
                         Container(
                           padding: EdgeInsets.only(left: 5),
