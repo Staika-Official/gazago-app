@@ -12,7 +12,9 @@ class SyntheticBadge extends StatelessWidget {
   Widget build(BuildContext context) {
     HomeMenuController homeMenuController = Get.find();
     InventoryController controller = Get.find();
-    SyntheticBadgeController _controller = Get.put(SyntheticBadgeController(controller.selectedBadge.value));
+
+    SyntheticBadgeController _controller = Get.put(SyntheticBadgeController(controller.selectedBadge));
+
     const levelOneImageFolderLength = 5;
     return Scaffold(
       appBar: homeMenuController.appbarList[1],

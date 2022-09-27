@@ -1,13 +1,15 @@
+import 'package:flutter/material.dart';
 import 'package:gaza_go/constants/routes.dart';
 import 'package:gaza_go/platform/apis/badge.dart';
-import 'package:gaza_go/platform/apis/item.dart';
 import 'package:gaza_go/platform/helpers/linear_progress_mixin.dart';
 import 'package:gaza_go/platform/models/equipped_item_model.dart';
 import 'package:gaza_go/platform/models/inventory_badge_item_model.dart';
 import 'package:gaza_go/platform/models/inventory_badge_model.dart';
 import 'package:gaza_go/platform/models/inventory_item_model.dart';
+import 'package:gaza_go/platform/models/repair_shoes_model.dart';
 import 'package:gaza_go/platform/models/stat_model.dart';
 import 'package:gaza_go/platform/services/activity_service.dart';
+import 'package:gaza_go/platform/services/item_service.dart';
 import 'package:get/get.dart';
 
 class InventoryController extends GetxController with LinearProgressMixin {
@@ -18,7 +20,25 @@ class InventoryController extends GetxController with LinearProgressMixin {
   final RxBool isShoe = RxBool(true);
   RxInt count = 0.obs;
   RxString getBadgeDate = RxString('');
+  double _minSliderValue = 0;
+  double _currentSliderValue = 20;
   RxList<InventoryItemModel> equippedItemList = RxList.empty();
+  final Rx<RepairShoesModel> shoesDurability = Rx(RepairShoesModel());
+  Rx<InventoryItemModel> selectedItem = Rx(
+    InventoryItemModel(
+      id: -1,
+      serialNumber: '',
+      itemName: '',
+      itemCategory: '',
+      durability: 0.0,
+      abrasionRate: 0.0,
+      rewardRate: 0.0,
+      staminaReduceRate: 0.0,
+      itemImageUrl: '',
+      equipped: false,
+      listOrder: -1,
+    ),
+  );
   Rx<InventoryBadgeModel> selectedBadge = Rx(
     InventoryBadgeModel(
       id: -1,
@@ -91,7 +111,8 @@ class InventoryController extends GetxController with LinearProgressMixin {
   void onInit() {
     once(count, (_) => print('한번만 호출'));
     initStats();
-    getUserAllItems();
+    //Todo api -> service 연동
+    // getUserAllItems();
     getUserEquippedItems();
     getSyntheticBadgeList();
     getUserBadgesList();
@@ -121,13 +142,15 @@ class InventoryController extends GetxController with LinearProgressMixin {
   }
 
   void getUserAllItems() async {
-    List<InventoryItemModel> allItems = await ItemService.getAllMyItems(3);
-    myAllItems.value = allItems;
+    //Todo api -> service 연동
+    // List<InventoryItemModel> allItems = await ItemService.getAllMyItems(3);
+    // myAllItems.value = allItems;
   }
 
   void getUserEquippedItems() async {
     EquippedItemModel equippedItems = await ActivityService.getUserEquippedItem();
     equippedItemList.value = equippedItems.items;
+    _minSliderValue = equippedItems.items.firstWhere((element) => element.itemCategory == 'SHOES').durability;
   }
 
   void fetchEquipBadge(int id) {}
@@ -136,8 +159,53 @@ class InventoryController extends GetxController with LinearProgressMixin {
     getBadgeDate.value = userBadgesList.firstWhere((item) => item.badge.id == id).badge.issueEndedTime;
   }
 
+  void toItemDetail(int id) {
+    selectedItem.value = myAllItems.firstWhere((item) => item.id == id);
+    print(selectedItem);
+    Get.toNamed(Routes.itemDetail);
+  }
+
   void toSyntheticBadgeDetail(int id) {
     selectedBadge.value = userBadgesList.firstWhere((item) => item.badge.id == id);
     Get.toNamed(Routes.syntheticBadge);
+  }
+
+  void fetchRepairShoes() async {
+    RepairShoesModel repairModel = await ItemService.fetchRepairItemShoes(
+      RepairShoesModel(
+        id: selectedItem.value.id,
+        durability: 100 - _minSliderValue.toInt(),
+        tik: 0,
+      ),
+    );
+    shoesDurability.value = repairModel;
+  }
+
+  void showShoesRepairPopup() {
+    Get.dialog(
+      AlertDialog(
+        title: const Text('내구도 충전'),
+        content: Slider(
+          value: _currentSliderValue,
+          max: 100,
+          min: 0,
+          divisions: 100,
+          label: _currentSliderValue.round().toString(),
+          onChanged: (double value) {
+            if (value > _minSliderValue) {
+              _currentSliderValue = value;
+            }
+          },
+        ),
+        actions: [
+          ElevatedButton(onPressed: () => closeRepairPopup(), child: const Text('아니요')),
+          ElevatedButton(onPressed: () => fetchRepairShoes(), child: const Text('네')),
+        ],
+      ),
+    );
+  }
+
+  void closeRepairPopup() {
+    Get.back();
   }
 }

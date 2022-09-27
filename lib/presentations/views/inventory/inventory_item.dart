@@ -65,19 +65,22 @@ class InventoryItem extends StatelessWidget {
                     children: [
                       ...inventoryController.allItems['hats']!.map(
                         (shoe) => SizedBox(
-                          child: Stack(
-                            alignment: Alignment.bottomCenter,
-                            children: [
-                              Image(
-                                image: NetworkImage(shoe.itemImageUrl),
-                                fit: BoxFit.fill,
-                                width: double.infinity,
-                              ),
-                              Padding(
-                                padding: const EdgeInsets.only(bottom: 5),
-                                child: Text(shoe.itemName),
-                              ),
-                            ],
+                          child: InkWell(
+                            onTap: () => null,
+                            child: Stack(
+                              alignment: Alignment.bottomCenter,
+                              children: [
+                                Image(
+                                  image: NetworkImage(shoe.itemImageUrl),
+                                  fit: BoxFit.fill,
+                                  width: double.infinity,
+                                ),
+                                Padding(
+                                  padding: const EdgeInsets.only(bottom: 5),
+                                  child: Text(shoe.itemName),
+                                ),
+                              ],
+                            ),
                           ),
                         ),
                       ),
@@ -146,19 +149,22 @@ class InventoryItem extends StatelessWidget {
                     children: <Widget>[
                       ...inventoryController.allItems['shoes']!.map(
                         (shoe) => SizedBox(
-                          child: Stack(
-                            alignment: Alignment.bottomCenter,
-                            children: [
-                              Image(
-                                image: NetworkImage(shoe.itemImageUrl),
-                                fit: BoxFit.fill,
-                                width: double.infinity,
-                              ),
-                              Padding(
-                                padding: const EdgeInsets.only(bottom: 5),
-                                child: Text(shoe.itemName),
-                              ),
-                            ],
+                          child: InkWell(
+                            onTap: () => inventoryController.toItemDetail(shoe.id),
+                            child: Stack(
+                              alignment: Alignment.bottomCenter,
+                              children: [
+                                Image(
+                                  image: NetworkImage(shoe.itemImageUrl),
+                                  fit: BoxFit.fill,
+                                  width: double.infinity,
+                                ),
+                                Padding(
+                                  padding: const EdgeInsets.only(bottom: 5),
+                                  child: Text(shoe.itemName),
+                                ),
+                              ],
+                            ),
                           ),
                         ),
                       ),
