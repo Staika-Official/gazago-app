@@ -64,23 +64,21 @@ class InventoryItem extends StatelessWidget {
                     crossAxisCount: 3,
                     children: [
                       ...inventoryController.allItems['hats']!.map(
-                        (shoe) => SizedBox(
-                          child: InkWell(
-                            onTap: () => null,
-                            child: Stack(
-                              alignment: Alignment.bottomCenter,
-                              children: [
-                                Image(
-                                  image: NetworkImage(shoe.itemImageUrl),
-                                  fit: BoxFit.fill,
-                                  width: double.infinity,
-                                ),
-                                Padding(
-                                  padding: const EdgeInsets.only(bottom: 5),
-                                  child: Text(shoe.itemName),
-                                ),
-                              ],
-                            ),
+                        (hat) => InkWell(
+                          onTap: () => inventoryController.toItemDetail(hat.id),
+                          child: Stack(
+                            alignment: Alignment.bottomCenter,
+                            children: [
+                              Image(
+                                image: NetworkImage(hat.itemImageUrl),
+                                fit: BoxFit.fill,
+                                width: double.infinity,
+                              ),
+                              Padding(
+                                padding: const EdgeInsets.only(bottom: 5),
+                                child: Text(hat.itemName),
+                              ),
+                            ],
                           ),
                         ),
                       ),
@@ -94,18 +92,19 @@ class InventoryItem extends StatelessWidget {
                     crossAxisCount: 3,
                     children: <Widget>[
                       ...inventoryController.allItems['outers']!.map(
-                        (shoe) => SizedBox(
+                        (outer) => InkWell(
+                          onTap: () => inventoryController.toItemDetail(outer.id),
                           child: Stack(
                             alignment: Alignment.bottomCenter,
                             children: [
                               Image(
-                                image: NetworkImage(shoe.itemImageUrl),
+                                image: NetworkImage(outer.itemImageUrl),
                                 fit: BoxFit.fill,
                                 width: double.infinity,
                               ),
                               Padding(
                                 padding: const EdgeInsets.only(bottom: 5),
-                                child: Text(shoe.itemName),
+                                child: Text(outer.itemName),
                               ),
                             ],
                           ),
@@ -121,7 +120,36 @@ class InventoryItem extends StatelessWidget {
                     crossAxisCount: 3,
                     children: <Widget>[
                       ...inventoryController.allItems['bottoms']!.map(
-                        (shoe) => SizedBox(
+                        (bottom) => InkWell(
+                          onTap: () => inventoryController.toItemDetail(bottom.id),
+                          child: Stack(
+                            alignment: Alignment.bottomCenter,
+                            children: [
+                              Image(
+                                image: NetworkImage(bottom.itemImageUrl),
+                                fit: BoxFit.fill,
+                                width: double.infinity,
+                              ),
+                              Padding(
+                                padding: const EdgeInsets.only(bottom: 5),
+                                child: Text(bottom.itemName),
+                              ),
+                            ],
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                  GridView.count(
+                    primary: false,
+                    padding: const EdgeInsets.all(20),
+                    crossAxisSpacing: 10,
+                    mainAxisSpacing: 10,
+                    crossAxisCount: 3,
+                    children: <Widget>[
+                      ...inventoryController.allItems['shoes']!.map(
+                        (shoe) => InkWell(
+                          onTap: () => inventoryController.toItemDetail(shoe.id),
                           child: Stack(
                             alignment: Alignment.bottomCenter,
                             children: [
@@ -147,49 +175,20 @@ class InventoryItem extends StatelessWidget {
                     mainAxisSpacing: 10,
                     crossAxisCount: 3,
                     children: <Widget>[
-                      ...inventoryController.allItems['shoes']!.map(
-                        (shoe) => SizedBox(
-                          child: InkWell(
-                            onTap: () => inventoryController.toItemDetail(shoe.id),
-                            child: Stack(
-                              alignment: Alignment.bottomCenter,
-                              children: [
-                                Image(
-                                  image: NetworkImage(shoe.itemImageUrl),
-                                  fit: BoxFit.fill,
-                                  width: double.infinity,
-                                ),
-                                Padding(
-                                  padding: const EdgeInsets.only(bottom: 5),
-                                  child: Text(shoe.itemName),
-                                ),
-                              ],
-                            ),
-                          ),
-                        ),
-                      ),
-                    ],
-                  ),
-                  GridView.count(
-                    primary: false,
-                    padding: const EdgeInsets.all(20),
-                    crossAxisSpacing: 10,
-                    mainAxisSpacing: 10,
-                    crossAxisCount: 3,
-                    children: <Widget>[
                       ...inventoryController.allItems['accessories']!.map(
-                        (shoe) => SizedBox(
+                        (accessory) => InkWell(
+                          onTap: () => inventoryController.toItemDetail(accessory.id),
                           child: Stack(
                             alignment: Alignment.bottomCenter,
                             children: [
                               Image(
-                                image: NetworkImage(shoe.itemImageUrl),
+                                image: NetworkImage(accessory.itemImageUrl),
                                 fit: BoxFit.fill,
                                 width: double.infinity,
                               ),
                               Padding(
                                 padding: const EdgeInsets.only(bottom: 5),
-                                child: Text(shoe.itemName),
+                                child: Text(accessory.itemName),
                               ),
                             ],
                           ),
