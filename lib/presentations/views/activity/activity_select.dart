@@ -15,7 +15,7 @@ class ActivitySelect extends StatelessWidget {
         children: [
           Expanded(
             child: InkWell(
-              onTap: () => controller.loadActivity(),
+              onTap: () => controller.loadExercise(),
               child: Card(
                 child: Center(
                   child: Text('등산'),
@@ -25,7 +25,7 @@ class ActivitySelect extends StatelessWidget {
           ),
           Expanded(
             child: InkWell(
-              onTap: () => controller.loadActivity(),
+              onTap: () => controller.loadExercise(),
               child: Card(
                 child: Center(
                   child: Text('일반'),

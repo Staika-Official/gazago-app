@@ -1,10 +1,11 @@
 import 'dart:async';
-import 'dart:developer';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_naver_map/flutter_naver_map.dart';
 import 'package:gaza_go/constants/enums.dart';
 import 'package:gaza_go/constants/routes.dart';
+import 'package:gaza_go/platform/helpers/base_helper.dart';
+import 'package:gaza_go/platform/helpers/map_mixin.dart';
 import 'package:gaza_go/platform/models/challenge_model.dart';
 import 'package:gaza_go/platform/models/current_user_state_model.dart';
 import 'package:gaza_go/platform/models/stat_model.dart';
@@ -26,7 +27,7 @@ class Permissions {
   });
 }
 
-class ActivityController extends GetxController {
+class ActivityController extends GetxController with MapMixin {
   //index.dart
   final RxList<StatModel> statList = RxList.empty();
   final RxInt stepCount = RxInt(0);
@@ -46,11 +47,12 @@ class ActivityController extends GetxController {
   final Location location = Location();
   final Rx<LocationData> currentLocation = Rx(LocationData.fromMap({}));
   final RxList<ChallengeModel> challengeList = RxList.empty();
-  late final Timer? updateTimer;
+  Timer? updateTimer;
   final RxList<LatLng> coordinates = RxList.empty();
-  Completer<NaverMapController> _controllerMap = Completer();
-  Stream<StepCount> _stepCountStream = Pedometer.stepCountStream;
-  Stream<PedestrianStatus> _pedestrianStatusStream = Pedometer.pedestrianStatusStream;
+  Completer<NaverMapController> mapCompleter = Completer();
+  StreamSubscription<LocationData>? locationSubscription;
+  StreamSubscription<StepCount>? stepSubscription;
+  StreamSubscription<PedestrianStatus>? pedestrianStatusSubscription;
   final RxInt steps = RxInt(0);
   final RxString pedestrianStatus = RxString('');
 
@@ -73,6 +75,9 @@ class ActivityController extends GetxController {
   @override
   void onClose() {
     updateTimer!.cancel();
+    stepSubscription!.cancel();
+    locationSubscription!.cancel();
+    pedestrianStatusSubscription!.cancel();
     super.onClose();
   }
 
@@ -85,44 +90,59 @@ class ActivityController extends GetxController {
 
   void getExerciseStatus() async {
     userState.value = await ActivityService.getCurrentUserState();
-    inspect(userState.value);
   }
 
-  void startActivity() async {
-    bool isGpsAvailable = await checkGpsAvailability();
+  void initExercise() async {
+    bool isGpsAvailable = await checkGpsSensor();
+    if (!isGpsAvailable) return;
+
+    bool hasPermission = await checkLocationPermission();
+    if (hasPermission) getActivityRoute();
+  }
+
+  Future<bool> checkGpsSensor() async {
+    bool isGpsAvailable = await Geolocator.isLocationServiceEnabled();
     if (!isGpsAvailable) {
       Get.dialog(
         AlertDialog(
           title: const Text('알림'),
           content: const Text('운동을 시작하기 위해서 GPS를 켜주세요.'),
           actions: [
-            ElevatedButton(onPressed: () => Get.back(), child: const Text('확인')),
+            ElevatedButton(
+              onPressed: () {
+                Get.back();
+              },
+              child: const Text('확인'),
+            ),
           ],
         ),
       );
-
-      return;
     }
 
+    return isGpsAvailable;
+  }
+
+  Future<bool> checkLocationPermission() async {
     Permissions permissions = await checkPermissions();
-    if ((permissions.locationPermission != LocationPermission.always && permissions.locationPermission != LocationPermission.whileInUse) ||
-        permissions.locationAccuracyStatus != LocationAccuracyStatus.precise) {
+    bool hasPermission = (permissions.locationPermission == LocationPermission.always || permissions.locationPermission == LocationPermission.whileInUse) &&
+        permissions.locationAccuracyStatus == LocationAccuracyStatus.precise;
+    if (!hasPermission) {
       Get.dialog(
         AlertDialog(
           title: const Text('알림'),
           content: const Text('원활한 채굴을 위하여\n"항상", "정확한" 위치공유를\n할 수 있도록 설정해주시기 바랍니다.'),
           actions: [
             ElevatedButton(onPressed: () => requestPermission(permissions), child: const Text('확인')),
-            ElevatedButton(onPressed: () => selectActivity(), child: const Text('무시')),
+            ElevatedButton(onPressed: () => getActivityRoute(), child: const Text('무시')),
           ],
         ),
       );
-    } else {
-      selectActivity();
     }
+
+    return hasPermission;
   }
 
-  void selectActivity() {
+  void getActivityRoute() {
     if (userState.value.exercise != null) {
       Get.toNamed(Routes.activityActive);
     } else {
@@ -130,63 +150,7 @@ class ActivityController extends GetxController {
     }
   }
 
-  void startExercise() {
-    getChallengeList();
-    initStream();
-    updateTimer = updateActivityRecord();
-  }
-
-  void endActivity() async {
-    CurrentUserStateModel newUserState = await ActivityService.fetchEndUserExercises(
-      UserExerciseModel(
-        id: userState.value.exercise!.id,
-        steps: userState.value.exercise!.steps,
-        speed: userState.value.exercise!.speed,
-        distance: userState.value.exercise!.distance,
-        altitude: userState.value.exercise!.altitude,
-        time: userState.value.exercise!.time,
-        locations: userState.value.exercise!.locations,
-      ),
-    );
-    if (newUserState.exercise!.state == 'ENDED') {
-      userState.value = newUserState;
-      userState.value.exercise = null;
-      updateTimer!.cancel();
-    }
-  }
-
-  void loadActivity() {
-    Get.toNamed(Routes.activityLoading);
-    Timer(
-      Duration(seconds: 3),
-      () {
-        Get.offNamed(Routes.activityActive);
-        startExercise();
-      },
-    );
-  }
-
-  Future<bool> checkGpsAvailability() async {
-    return await Geolocator.isLocationServiceEnabled();
-  }
-
-  Future<Permissions> checkPermissions() async {
-    LocationPermission permission = await Geolocator.checkPermission();
-    LocationAccuracyStatus accuracyStatus = await Geolocator.getLocationAccuracy();
-
-    return Permissions(locationPermission: permission, locationAccuracyStatus: accuracyStatus);
-  }
-
-  Future<void> requestPermission(Permissions permissions) async {
-    LocationPermission permission = await Geolocator.requestPermission();
-    if (permission != LocationPermission.always) {
-      await Geolocator.openAppSettings();
-    }
-  }
-
-  //activtiy active method
-
-  initStream() async {
+  void startExercise() async {
     UserExerciseModel exerciseModel = await ActivityService.fetchStartUserExercises(
       UserExerciseModel(
         userId: int.parse(
@@ -203,41 +167,96 @@ class ActivityController extends GetxController {
       ),
     );
     userState.value.exercise = exerciseModel;
-    _stepCountStream.listen(onStepCount).onError(onStepCountError);
-    _pedestrianStatusStream.listen(onPedestrianStatusChanged).onError(onPedestrianStatusError);
-    addLocationListener();
+
+    getChallengeList();
+    initStream();
+    updateTimer = updateActivityRecord();
   }
 
-  void onStepCount(StepCount event) {
-    steps.value = event.steps;
-    userState.value.exercise!.steps = event.steps;
+  void endExercise() async {
+    CurrentUserStateModel newUserState = await ActivityService.fetchEndUserExercises(
+      UserExerciseModel(
+        id: userState.value.exercise!.id,
+        steps: userState.value.exercise!.steps,
+        speed: userState.value.exercise!.speed,
+        distance: userState.value.exercise!.distance,
+        altitude: userState.value.exercise!.altitude,
+        time: userState.value.exercise!.time,
+        locations: coordinatesToString(coordinates),,
+      ),
+    );
+
+    if (newUserState.exercise!.state == 'ENDED') {
+      userState.value = newUserState;
+      userState.value.exercise = null;
+      updateTimer!.cancel();
+      stepSubscription!.cancel();
+      locationSubscription!.cancel();
+      pedestrianStatusSubscription!.cancel();
+    }
   }
 
-  void onStepCountError(error) {
-    /// Handle the error
-    print(error);
+  void loadExercise() {
+    Get.toNamed(Routes.activityLoading);
+    Timer(
+      Duration(seconds: 3),
+      () {
+        Get.offNamed(Routes.activityActive);
+        startExercise();
+      },
+    );
   }
 
-  void onPedestrianStatusChanged(PedestrianStatus event) {
-    pedestrianStatus.value = event.status;
+  Future<Permissions> checkPermissions() async {
+    LocationPermission permission = await Geolocator.checkPermission();
+    LocationAccuracyStatus accuracyStatus = await Geolocator.getLocationAccuracy();
+
+    return Permissions(locationPermission: permission, locationAccuracyStatus: accuracyStatus);
   }
 
-  void onPedestrianStatusError(error) {
-    /// Handle the error
-    print(error);
+  Future<void> requestPermission(Permissions permissions) async {
+    LocationPermission permission = await Geolocator.requestPermission();
+    if (permission != LocationPermission.always) {
+      await Geolocator.openAppSettings();
+    }
   }
 
-  void getCurrentLocation() async {
-    await location.enableBackgroundMode(enable: true);
-    currentLocation.value = await location.getLocation();
+  void initStream() {
+    initStepStream();
+    initPedestrianStatusStream();
+    initLocationStream();
   }
 
-  void addLocationListener() {
+  void initStepStream() {
+    stepSubscription = Pedometer.stepCountStream.listen((StepCount event) {
+      steps.value = event.steps;
+      userState.value.exercise!.steps = event.steps;
+    });
+    stepSubscription!.onError((error) {
+      print(error);
+    });
+  }
+
+  void initPedestrianStatusStream() {
+    pedestrianStatusSubscription = Pedometer.pedestrianStatusStream.listen((PedestrianStatus event) {
+      pedestrianStatus.value = event.status;
+    });
+    stepSubscription!.onError((error) {
+      print(error);
+    });
+  }
+
+  void initLocationStream() {
     location.onLocationChanged.listen((LocationData location) {
       currentLocation.value = location;
 
       addLocation(location);
     });
+  }
+
+  void getCurrentLocation() async {
+    await location.enableBackgroundMode(enable: true);
+    currentLocation.value = await location.getLocation();
   }
 
   Timer updateActivityRecord() {
@@ -252,7 +271,7 @@ class ActivityController extends GetxController {
             distance: userState.value.exercise!.distance,
             altitude: currentLocation.value.altitude,
             time: userState.value.exercise!.time,
-            locations: userState.value.exercise!.locations,
+            locations: coordinatesToString(coordinates),
           ),
         );
         userState.value = newUserState;
@@ -266,75 +285,5 @@ class ActivityController extends GetxController {
 
   void getChallengeList() async {
     challengeList.value = await ActivityService.getChallenges();
-  }
-
-  void onMapCreated(NaverMapController controller) {
-    if (_controllerMap.isCompleted) _controllerMap = Completer();
-    _controllerMap.complete(controller);
-  }
-
-  onMapTap(LatLng position) async {
-    Get.showSnackbar(GetSnackBar(
-      messageText: Text(
-        '[onTap] lat: ${position.latitude}, lon: ${position.longitude}',
-        style: TextStyle(color: Colors.white),
-      ),
-      duration: Duration(milliseconds: 2000),
-      backgroundColor: Colors.black,
-    ));
-  }
-
-  onMapLongTap(LatLng position) {
-    Get.showSnackbar(GetSnackBar(
-      messageText: Text(
-        '[onLongTap] lat: ${position.latitude}, lon: ${position.longitude}',
-        style: TextStyle(color: Colors.white),
-      ),
-      duration: Duration(milliseconds: 2000),
-      backgroundColor: Colors.black,
-    ));
-  }
-
-  onMapDoubleTap(LatLng position) {
-    Get.showSnackbar(GetSnackBar(
-      messageText: Text(
-        '[onDoubleTap] lat: ${position.latitude}, lon: ${position.longitude}',
-        style: TextStyle(color: Colors.white),
-      ),
-      duration: Duration(milliseconds: 2000),
-      backgroundColor: Colors.black,
-    ));
-  }
-
-  onMapTwoFingerTap(LatLng position) {
-    Get.showSnackbar(GetSnackBar(
-      messageText: Text(
-        '[onTwoFingerTap] lat: ${position.latitude}, lon: ${position.longitude}',
-        style: TextStyle(color: Colors.white),
-      ),
-      duration: Duration(milliseconds: 2000),
-      backgroundColor: Colors.black,
-    ));
-  }
-
-  onSymbolTap(LatLng? position, String? caption) {
-    Get.showSnackbar(GetSnackBar(
-      messageText: Text(
-        '[onSymbolTap] caption: $caption, lat: ${position!.latitude}, lon: ${position!.longitude}',
-        style: TextStyle(color: Colors.white),
-      ),
-      duration: Duration(milliseconds: 2000),
-      backgroundColor: Colors.black,
-    ));
-  }
-
-  void onCameraChange(LatLng? latLng, CameraChangeReason? reason, bool? isAnimated) {
-    print('카메라 움직임 >>> 위치 : ${latLng!.latitude}, ${latLng!.longitude}'
-        '\n원인: $reason'
-        '\n에니메이션 여부: $isAnimated');
-  }
-
-  void onCameraIdle() {
-    print('카메라 움직임 멈춤');
   }
 }

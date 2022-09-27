@@ -1,3 +1,4 @@
+import 'package:flutter_naver_map/flutter_naver_map.dart';
 import 'package:gaza_go/platform/firebase/remote_config.dart';
 import 'package:intl/intl.dart';
 import 'package:package_info_plus/package_info_plus.dart';
@@ -32,4 +33,23 @@ String formatDate(String? isoDateString) {
   } else {
     return '';
   }
+}
+
+String coordinatesToString(List<LatLng> coordinates) {
+  List<List<String>> coordinateStringList = List.empty(growable: true);
+  for (LatLng coordinate in coordinates) {
+    coordinateStringList.add([coordinate.latitude.toString(), coordinate.longitude.toString()]);
+  }
+  return coordinateStringList.toString();
+}
+
+List<LatLng> locationStringToLatLng(String locationString) {
+  List<LatLng> coordinates = List.empty(growable: true);
+  List<String> locationArray = locationString.split(',');
+  for (String location in locationArray) {
+    List<String> locationCoordinates = location.split(',');
+    LatLng coordination = LatLng(double.parse(locationCoordinates[0]), double.parse(locationCoordinates[1]));
+    coordinates.add(coordination);
+  }
+  return coordinates;
 }

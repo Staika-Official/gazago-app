@@ -55,7 +55,7 @@ class ActivityActive extends StatelessWidget {
                   locationButtonEnable: true,
                   onCameraChange: controller.onCameraChange,
                   onCameraIdle: controller.onCameraIdle,
-                  onMapCreated: controller.onMapCreated,
+                  onMapCreated: (NaverMapController mapController) => controller.onMapCreated(mapController, controller.mapCompleter),
                   onMapTap: controller.onMapTap,
                   onMapLongTap: controller.onMapLongTap,
                   onMapDoubleTap: controller.onMapDoubleTap,

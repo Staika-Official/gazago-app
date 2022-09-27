@@ -146,7 +146,7 @@ class ActivityHome extends StatelessWidget {
                                 padding: const EdgeInsets.only(right: 8.0),
                                 child: MaterialButton(
                                   onPressed: null,
-                                  onLongPress: () => controller.endActivity(),
+                                  onLongPress: () => controller.endExercise(),
                                   shape: RoundedRectangleBorder(
                                     borderRadius: BorderRadius.circular(100),
                                   ),
@@ -158,7 +158,7 @@ class ActivityHome extends StatelessWidget {
                               )
                             : Container(),
                         MaterialButton(
-                          onPressed: () => controller.startActivity(),
+                          onPressed: () => controller.initExercise(),
                           shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(100),
                           ),
