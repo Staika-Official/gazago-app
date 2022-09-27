@@ -17,7 +17,7 @@ class InventoryController extends GetxController with LinearProgressMixin {
   final RxList<InventoryItemModel> myAllItems = RxList.empty();
   RxList<InventoryBadgeModel> syntheticBadgeList = RxList.empty();
   RxList<InventoryBadgeModel> userBadgesList = RxList.empty();
-  final RxBool isShoe = RxBool(true);
+  final RxBool isShoe = RxBool(false);
   RxInt count = 0.obs;
   RxString getBadgeDate = RxString('');
   double _minSliderValue = 0;
@@ -162,6 +162,7 @@ class InventoryController extends GetxController with LinearProgressMixin {
   void toItemDetail(int id) {
     selectedItem.value = myAllItems.firstWhere((item) => item.id == id);
     print(selectedItem);
+    isShoe.value = selectedItem.value.itemCategory == 'SHOES';
     Get.toNamed(Routes.itemDetail);
   }
 

@@ -182,7 +182,7 @@ class ActivityController extends GetxController with MapMixin {
         distance: userState.value.exercise!.distance,
         altitude: userState.value.exercise!.altitude,
         time: userState.value.exercise!.time,
-        locations: coordinatesToString(coordinates),,
+        locations: coordinatesToString(coordinates),
       ),
     );
 
