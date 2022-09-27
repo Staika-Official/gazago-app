@@ -25,6 +25,10 @@ class ItemApi {
     return await Api.client(serviceUrl: ServiceUrl.activityService).get('/users/${userId}/equipped');
   }
 
+  static Future<Response> fetchEquippedBadge(String userId, int badgeId) async {
+    return await Api.client(serviceUrl: ServiceUrl.badgeService).put('/users/${userId}/equip', data: {'badgeId': badgeId});
+  }
+
   static Future<Response> fetchRepairItemShoes(String userId, RepairShoesModel repairInfo) async {
     return await Api.client(serviceUrl: ServiceUrl.itemService).patch('/users/${userId}/repair/${repairInfo.id}');
   }
