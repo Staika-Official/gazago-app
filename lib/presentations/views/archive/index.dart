@@ -53,6 +53,7 @@ class ArchiveHome extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     ArchiveController controller = Get.put(ArchiveController());
+
     return Container(
       child: Obx(() {
         return Column(

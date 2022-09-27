@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:flutter_naver_map/flutter_naver_map.dart';
 import 'package:gaza_go/platform/firebase/remote_config.dart';
 import 'package:intl/intl.dart';
@@ -45,10 +47,11 @@ String coordinatesToString(List<LatLng> coordinates) {
 
 List<LatLng> locationStringToLatLng(String locationString) {
   List<LatLng> coordinates = List.empty(growable: true);
-  List<String> locationArray = locationString.split(',');
-  for (String location in locationArray) {
-    List<String> locationCoordinates = location.split(',');
-    LatLng coordination = LatLng(double.parse(locationCoordinates[0]), double.parse(locationCoordinates[1]));
+  List<dynamic> locationArray = json.decode(locationString);
+  print(locationArray);
+  for (List location in locationArray) {
+    print(location);
+    LatLng coordination = LatLng(location[0], location[1]);
     coordinates.add(coordination);
   }
   return coordinates;

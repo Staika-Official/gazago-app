@@ -8,6 +8,10 @@ import 'package:get/get.dart';
 class ArchiveDetail extends StatelessWidget {
   const ArchiveDetail({Key? key}) : super(key: key);
 
+  PathOverlay renderPaths(ArchiveController controller) {
+    return PathOverlay(PathOverlayId('Detail Path'), controller.locations);
+  }
+
   @override
   Widget build(BuildContext context) {
     ArchiveController controller = Get.find();
@@ -46,10 +50,19 @@ class ArchiveDetail extends StatelessWidget {
             height: 400,
             color: Colors.grey,
             child: NaverMap(
-                // initialCameraPosition: CameraPosition(
-                //   target: controller.locations.value.first,
-                // ),
-                ),
+              initialCameraPosition: CameraPosition(
+                target: controller.locations.value.first,
+              ),
+              pathOverlays: {
+                PathOverlay(
+                  PathOverlayId('path'),
+                  controller.locations,
+                  width: 3,
+                  color: Colors.red,
+                  outlineColor: Colors.white,
+                )
+              },
+            ),
           ),
           Text('시작 시간: ${formatDate(controller.selectedItem.value.startedDate!)}'),
           Text('종료 시간: ${formatDate(controller.selectedItem.value.endedDate)}'),
