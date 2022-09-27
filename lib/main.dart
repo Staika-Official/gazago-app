@@ -23,7 +23,7 @@ void main() async {
   await runZonedGuarded(() async {
     WidgetsFlutterBinding.ensureInitialized(); // async로 할 때 반드시 호출
     await Hive.initFlutter();
-    HiveStore.openBox();
+    await HiveStore.openBox();
     await initFirebase();
     await initFirebasePackages();
     FirebaseMessaging.onBackgroundMessage(_firebaseMessagingBackgroundHandler);
