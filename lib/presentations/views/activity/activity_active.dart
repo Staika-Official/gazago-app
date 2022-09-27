@@ -28,6 +28,19 @@ class ActivityActive extends StatelessWidget {
                   ),
                   initLocationTrackingMode: LocationTrackingMode.Follow,
                   mapType: MapType.Basic,
+                  circles: [
+                    CircleOverlay(
+                      radius: 20,
+                      overlayId: 'challengeStartId',
+                      center: LatLng(
+                        37.5819,
+                        126.8871,
+                      ),
+                      color: Colors.transparent,
+                      outlineColor: Colors.blue[100],
+                      outlineWidth: 3,
+                    ),
+                  ],
                   pathOverlays: (controller.coordinates.length < 10)
                       ? null
                       : {

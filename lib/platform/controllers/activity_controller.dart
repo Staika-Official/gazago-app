@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_naver_map/flutter_naver_map.dart';
 import 'package:gaza_go/constants/enums.dart';
 import 'package:gaza_go/constants/routes.dart';
+import 'package:gaza_go/platform/models/challenge_model.dart';
 import 'package:gaza_go/platform/models/current_user_state_model.dart';
 import 'package:gaza_go/platform/models/stat_model.dart';
 import 'package:gaza_go/platform/models/user_exercise_model.dart';
@@ -44,6 +45,7 @@ class ActivityController extends GetxController {
   final updateInterval = 3000;
   final Location location = Location();
   final Rx<LocationData> currentLocation = Rx(LocationData.fromMap({}));
+  final RxList<ChallengeModel> challengeList = RxList.empty();
   late final Timer? updateTimer;
   final RxList<LatLng> coordinates = RxList.empty();
   Completer<NaverMapController> _controllerMap = Completer();
@@ -129,6 +131,7 @@ class ActivityController extends GetxController {
   }
 
   void startExercise() {
+    getChallengeList();
     initStream();
     updateTimer = updateActivityRecord();
   }
@@ -259,6 +262,10 @@ class ActivityController extends GetxController {
 
   void addLocation(LocationData location) {
     coordinates.add(LatLng(location.latitude!, location.longitude!));
+  }
+
+  void getChallengeList() async {
+    challengeList.value = await ActivityService.getChallenges();
   }
 
   void onMapCreated(NaverMapController controller) {
