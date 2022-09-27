@@ -13,13 +13,13 @@ class LeaderboardHome extends StatelessWidget {
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                // Expanded(
-                //   flex: 1,
-                //   child: Text(
-                //     ranker.place,
-                //     textAlign: TextAlign.center,
-                //   ),
-                // ),
+                Expanded(
+                  flex: 1,
+                  child: Text(
+                    ranker.id!.toString(), // TODO. 추후 orderby로 변경
+                    textAlign: TextAlign.center,
+                  ),
+                ),
                 Expanded(
                   flex: 3,
                   child: Row(
@@ -89,54 +89,58 @@ class LeaderboardHome extends StatelessWidget {
           '리더보드',
           textAlign: TextAlign.left,
         ),
-        InkWell(
-          onTap: () => controller.showCalendar(context),
-          child: Row(
-            mainAxisSize: MainAxisSize.min,
-            children: const [Icon(Icons.calendar_month), Text('2022.12.33')],
-          ),
-        ),
+        Obx(() {
+          return InkWell(
+            onTap: () => controller.showCalendar(context),
+            child: Row(
+              mainAxisSize: MainAxisSize.min,
+              children: [Icon(Icons.calendar_month), Text(controller.selectedDate.value)],
+            ),
+          );
+        }),
         Expanded(
           child: Container(
             child: SingleChildScrollView(
-              child: Column(
-                children: [
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: const [
-                      Expanded(
-                        flex: 1,
-                        child: Text(
-                          '#',
-                          textAlign: TextAlign.center,
+              child: Obx(() {
+                return Column(
+                  children: [
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: const [
+                        Expanded(
+                          flex: 1,
+                          child: Text(
+                            '#',
+                            textAlign: TextAlign.center,
+                          ),
                         ),
-                      ),
-                      Expanded(
-                        flex: 3,
-                        child: Text(
-                          '닉네임',
-                          textAlign: TextAlign.center,
+                        Expanded(
+                          flex: 3,
+                          child: Text(
+                            '닉네임',
+                            textAlign: TextAlign.center,
+                          ),
                         ),
-                      ),
-                      Expanded(
-                        flex: 1,
-                        child: Text(
-                          'GO',
-                          textAlign: TextAlign.center,
+                        Expanded(
+                          flex: 1,
+                          child: Text(
+                            'GO',
+                            textAlign: TextAlign.center,
+                          ),
                         ),
-                      ),
-                      Expanded(
-                        flex: 1,
-                        child: Text(
-                          'TIK',
-                          textAlign: TextAlign.center,
+                        Expanded(
+                          flex: 1,
+                          child: Text(
+                            'TIK',
+                            textAlign: TextAlign.center,
+                          ),
                         ),
-                      ),
-                    ],
-                  ),
-                  ...renderRankerList(controller),
-                ],
-              ),
+                      ],
+                    ),
+                    ...renderRankerList(controller),
+                  ],
+                );
+              }),
             ),
           ),
         )

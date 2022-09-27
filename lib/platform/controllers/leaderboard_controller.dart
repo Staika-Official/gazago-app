@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:gaza_go/platform/apis/dashboard.dart';
 import 'package:gaza_go/platform/models/ranker_model.dart';
+import 'package:gaza_go/platform/services/dashboard_service.dart';
 import 'package:get/get.dart';
 
 class LeaderboardController extends GetxController {
@@ -14,8 +14,7 @@ class LeaderboardController extends GetxController {
   }
 
   void getRankerList() async {
-    rankerList.value = await DashboardService.getDailyRankingList(selectedDate);
-    print(rankerList);
+    rankerList.value = await DashboardService.getDailyRankingList(selectedDate.value);
   }
 
   //TODO. 콜백 가능한 방법 찾아서 적용할 것 => https://pub.dev/packages/syncfusion_flutter_datepicker 참고해볼만한 것으로 생각됨.
