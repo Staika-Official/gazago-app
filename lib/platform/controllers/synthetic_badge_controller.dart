@@ -10,6 +10,10 @@ class SyntheticBadgeController extends GetxController {
 
   RxList<InventoryBadgeModel> selectedBadgeList = RxList.empty();
   RxList<InventoryBadgeModel> myBadgeList = RxList.empty();
+  // RxInt get selectedBadgeLevel {
+  //   return selectedBadge.value.badge.level == 1 ? 5 : 2;
+  // }
+
   RxString selectedBadgeType = RxString('');
   RxList<String> get selectedBadgeImages {
     RxList<String> images = RxList.empty();
@@ -105,7 +109,7 @@ class SyntheticBadgeController extends GetxController {
   void showSelectBadgePopup(List<InventoryBadgeModel> badgeItems, index) {
     selectedBadge.value = List<InventoryBadgeModel>.from(badgeItems).first;
     myBadgeList.value = List<InventoryBadgeModel>.from(badgeItems);
-
+    // selectedBadgeLevel.value = selectedBadge.value.badge.level;
     Get.dialog(
       AlertDialog(
         title: Row(
@@ -115,29 +119,27 @@ class SyntheticBadgeController extends GetxController {
           ],
         ),
         content: Obx(() {
-          return Container(
-            child: Column(
-              children: [
-                Center(
-                    child: Image(
-                  image: CachedNetworkImageProvider(selectedBadge.value.badge.imageUrl),
-                )),
-                SizedBox(
-                  width: 200,
-                  height: 400,
-                  child: Obx(() {
-                    return GridView.count(
-                      primary: false,
-                      padding: const EdgeInsets.all(20),
-                      crossAxisSpacing: 10,
-                      mainAxisSpacing: 10,
-                      crossAxisCount: 4,
-                      children: [..._getListWidgets(myBadgeList)],
-                    );
-                  }),
-                ),
-              ],
-            ),
+          return Column(
+            children: [
+              Center(
+                  child: Image(
+                image: CachedNetworkImageProvider(selectedBadge.value.badge.imageUrl),
+              )),
+              SizedBox(
+                width: 200,
+                height: 400,
+                child: Obx(() {
+                  return GridView.count(
+                    primary: false,
+                    padding: const EdgeInsets.all(20),
+                    crossAxisSpacing: 10,
+                    mainAxisSpacing: 10,
+                    crossAxisCount: 4,
+                    children: [..._getListWidgets(myBadgeList)],
+                  );
+                }),
+              ),
+            ],
           );
         }),
         actions: [

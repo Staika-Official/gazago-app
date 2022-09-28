@@ -21,6 +21,7 @@ class InventoryController extends GetxController with LinearProgressMixin {
   RxInt count = 0.obs;
   RxString getBadgeDate = RxString('');
   RxInt remainDurability = RxInt(0);
+  RxInt repairDurability = RxInt(0);
   RxInt costTik = RxInt(0);
 
   final RxDouble _currentSliderValue = RxDouble(0);
@@ -67,8 +68,6 @@ class InventoryController extends GetxController with LinearProgressMixin {
       rewardRate: 0.0,
       staminaReduceRate: 0.0,
       itemImageUrl: '',
-      equipped: false,
-      listOrder: -1,
     ),
   );
   Rx<InventoryBadgeModel> selectedBadge = Rx(
@@ -167,6 +166,14 @@ class InventoryController extends GetxController with LinearProgressMixin {
     ];
   }
 
+  void toItemDetail(int itemId) async {
+    InventoryItemModel item = await ItemService.getItemDetailInfo(itemId);
+    selectedItem.value = item;
+    print(item);
+    isShoe.value = selectedItem.value.itemCategory == 'SHOES';
+    Get.toNamed(Routes.itemDetail);
+  }
+
   void toBadgeDetail(int id) {
     selectedBadge.value = userBadgesList.firstWhere((item) => item.badge.id == id);
     setGetBadgeDate(id);
@@ -186,17 +193,12 @@ class InventoryController extends GetxController with LinearProgressMixin {
 
   void fetchEquipBadge(int badgeId) async {
     InventoryBadgeModel equippedBadgeItem = await ItemService.fetchEquippedBadge(badgeId);
+    equippedBadge.value = equippedBadgeItem;
     print(equippedBadgeItem);
   }
 
   void setGetBadgeDate(int id) {
     getBadgeDate.value = userBadgesList.firstWhere((item) => item.badge.id == id).badge.issueEndedTime;
-  }
-
-  void toItemDetail(int id) {
-    selectedItem.value = myAllItems.firstWhere((item) => item.id == id);
-    isShoe.value = selectedItem.value.itemCategory == 'SHOES';
-    Get.toNamed(Routes.itemDetail);
   }
 
   void toSyntheticBadgeDetail(int id) {
@@ -205,14 +207,23 @@ class InventoryController extends GetxController with LinearProgressMixin {
   }
 
   void fetchRepairShoes() async {
-    RepairShoesModel repairModel = await ItemService.fetchRepairItemShoes(
+    print(repairDurability.value);
+    InventoryItemModel repairModel = await ItemService.fetchRepairItemShoes(
       RepairShoesModel(
         id: selectedItem.value.id,
-        durability: 100 - remainDurability.value,
+        durability: repairDurability.value,
         tik: costTik.toInt(),
       ),
     );
-    shoesDurability.value = repairModel;
+    print(repairModel);
+    costTik.value = 0;
+    selectedItem.value = repairModel;
+    remainDurability.value = repairModel.durability.toInt();
+    closeRepairPopup();
+  }
+
+  void initRepairInfo() {
+    costTik.value = 0;
   }
 
   void showShoesRepairPopup() {
@@ -223,7 +234,9 @@ class InventoryController extends GetxController with LinearProgressMixin {
         content: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
-            Text('Durability ${_currentSliderValue.value}/100'),
+            Obx(() {
+              return Text('Durability ${_currentSliderValue.value.toStringAsFixed(0)}/100');
+            }),
             Obx(() {
               return Slider(
                 value: _currentSliderValue.value,
@@ -234,6 +247,8 @@ class InventoryController extends GetxController with LinearProgressMixin {
                 onChanged: (double value) {
                   if (value >= selectedItem.value.durability.toInt().floor()) {
                     _currentSliderValue.value = value;
+                    repairDurability.value = value.toInt();
+                    print(remainDurability.value);
                     costTik.value = (value.toInt() - remainDurability.value).abs() * 100;
                   }
                 },
@@ -253,6 +268,7 @@ class InventoryController extends GetxController with LinearProgressMixin {
   }
 
   void closeRepairPopup() {
+    initRepairInfo();
     Get.back();
   }
 }

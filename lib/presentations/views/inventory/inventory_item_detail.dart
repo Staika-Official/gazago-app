@@ -65,7 +65,7 @@ class InventoryItemDetail extends StatelessWidget {
                                     children: [
                                       Padding(
                                         padding: const EdgeInsets.only(top: 10, bottom: 5),
-                                        child: Row(children: [Text('아이템마모율'), Spacer(), Text(controller.selectedItem.value.abrasionRate.toString())]),
+                                        child: Row(children: [Text('아이템마모율'), Spacer(), Text('${controller.selectedItem.value.abrasionRate.floor().toString()}%')]),
                                       ),
                                       LinearProgressIndicator(
                                         value: controller.calculateProgress(controller.selectedItem.value.abrasionRate),
@@ -79,7 +79,7 @@ class InventoryItemDetail extends StatelessWidget {
                           Padding(
                             padding: const EdgeInsets.only(top: 10, bottom: 5),
                             /**/
-                            child: Row(children: [Text('이동 보상율'), Spacer(), Text(controller.selectedItem.value.rewardRate.toString())]),
+                            child: Row(children: [Text('이동 보상율'), Spacer(), Text('${controller.selectedItem.value.rewardRate.floor().toString()}%')]),
                           ),
                           LinearProgressIndicator(
                             value: controller.calculateProgress(controller.selectedItem.value.rewardRate),
@@ -88,7 +88,7 @@ class InventoryItemDetail extends StatelessWidget {
                           ),
                           Padding(
                             padding: const EdgeInsets.only(top: 10, bottom: 5),
-                            child: Row(children: [Text('체력 감소율'), Spacer(), Text(controller.selectedItem.value.staminaReduceRate.toString())]),
+                            child: Row(children: [Text('체력 감소율'), Spacer(), Text('${controller.selectedItem.value.staminaReduceRate.floor().toString()}%')]),
                           ),
                           LinearProgressIndicator(
                             value: controller.calculateProgress(controller.selectedItem.value.staminaReduceRate),
@@ -102,12 +102,15 @@ class InventoryItemDetail extends StatelessWidget {
                       child: Padding(
                         padding: const EdgeInsets.only(top: 30, bottom: 5),
                         child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             Padding(
                               padding: const EdgeInsets.only(bottom: 5),
                               child: Row(children: [Text('제품 설명')]),
                             ),
-                            Text('2023년 SS 시즌을 위해 새롭게 탄생한 스테디셀러의 귀환! 4계절 부담없이 착용 가능하고 방수 기능이 탁월한 고어텍스 소재의 신발입니다. 가격에 비해 체력 감소율을 낮은 잇 아이템! 실물 제품은 전국 블랙야크 매장에서 만나 보실 수 있습니다.'),
+                            Text(
+                              controller.selectedItem.value.description.toString(),
+                            ),
                           ],
                         ),
                       ),

@@ -5,6 +5,7 @@ part 'inventory_item_model.g.dart';
 @JsonSerializable()
 class InventoryItemModel {
   int id;
+  int? userId;
   String serialNumber;
   String itemName;
   String itemCategory;
@@ -13,13 +14,15 @@ class InventoryItemModel {
   double rewardRate;
   double staminaReduceRate;
   String itemImageUrl;
-  bool equipped;
-  int listOrder;
-  int tik;
-  bool isShoe;
+  String? description;
+  bool? equipped;
+  int? listOrder;
+  int? tik;
+  bool? isShoe;
 
   InventoryItemModel({
     required this.id,
+    this.userId,
     required this.serialNumber,
     required this.itemName,
     required this.itemCategory,
@@ -28,8 +31,9 @@ class InventoryItemModel {
     required this.rewardRate,
     required this.staminaReduceRate,
     required this.itemImageUrl,
-    required this.equipped,
-    required this.listOrder,
+    this.description,
+    this.equipped,
+    this.listOrder,
     this.tik = 0,
     this.isShoe = false,
   });

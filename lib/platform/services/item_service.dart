@@ -18,9 +18,15 @@ class ItemService {
     return userItems;
   }
 
-  static Future<RepairShoesModel> fetchRepairItemShoes(RepairShoesModel repairInfo) async {
+  static Future<InventoryItemModel> getItemDetailInfo(int itemId) async {
+    Response res = await ItemApi.getItemDetailInfo(userId!, itemId);
+    InventoryItemModel itemDetailInfo = InventoryItemModel.fromJson(res.data);
+    return itemDetailInfo;
+  }
+
+  static Future<InventoryItemModel> fetchRepairItemShoes(RepairShoesModel repairInfo) async {
     Response res = await ItemApi.fetchRepairItemShoes(userId!, repairInfo);
-    RepairShoesModel repairItemInfo = RepairShoesModel.fromJson(res.data);
+    InventoryItemModel repairItemInfo = InventoryItemModel.fromJson(res.data);
     return repairItemInfo;
   }
 

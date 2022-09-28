@@ -21,6 +21,10 @@ class ItemApi {
     return items;
   }
 
+  static Future<Response> getItemDetailInfo(String userId, int itemId) async {
+    return await Api.client(serviceUrl: ServiceUrl.itemService).get('/users/${userId}/${itemId}');
+  }
+
   static Future<Response> getUserEquippedItem(userId) async {
     return await Api.client(serviceUrl: ServiceUrl.activityService).get('/users/${userId}/equipped');
   }
@@ -30,6 +34,6 @@ class ItemApi {
   }
 
   static Future<Response> fetchRepairItemShoes(String userId, RepairShoesModel repairInfo) async {
-    return await Api.client(serviceUrl: ServiceUrl.itemService).patch('/users/${userId}/repair/${repairInfo.id}');
+    return await Api.client(serviceUrl: ServiceUrl.itemService).patch('/users/${userId}/repair/${repairInfo.id}', data: repairInfo);
   }
 }
