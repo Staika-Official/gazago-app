@@ -10,6 +10,7 @@ class InventoryBadge extends StatelessWidget {
         .map(
           (item) => InkWell(
             onTap: () => controller.toBadgeDetail(item.badge.id),
+            onLongPress: () => controller.fetchEquipBadge(item.badge.id),
             child: Image(
               image: NetworkImage(item.badge.imageUrl),
               fit: BoxFit.fill,

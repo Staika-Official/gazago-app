@@ -20,9 +20,41 @@ class InventoryController extends GetxController with LinearProgressMixin {
   final RxBool isShoe = RxBool(false);
   RxInt count = 0.obs;
   RxString getBadgeDate = RxString('');
-  double _minSliderValue = 0;
-  double _currentSliderValue = 20;
+  RxInt remainDurability = RxInt(0);
+  RxInt costTik = RxInt(0);
+
+  final RxDouble _currentSliderValue = RxDouble(0);
   RxList<InventoryItemModel> equippedItemList = RxList.empty();
+  Rx<InventoryBadgeModel> equippedBadge = Rx(
+    InventoryBadgeModel(
+      id: -1,
+      userId: -1,
+      state: '',
+      createdBy: '',
+      createdDate: '',
+      lastModifiedBy: '',
+      lastModifiedDate: '',
+      badge: InventoryBadgeItemModel(
+        id: -1,
+        level: 0,
+        rewardRate: 0.0,
+        luckRate: 0.0,
+        source: '',
+        issueType: '',
+        issueState: '',
+        issueStartedTime: '',
+        issueEndedTime: '',
+        description: '',
+        state: '',
+        address: '',
+        imageUrl: 'imageUrl',
+        createdBy: '',
+        createdDate: '',
+        lastModifiedBy: '',
+        lastModifiedDate: '',
+      ),
+    ),
+  );
   final Rx<RepairShoesModel> shoesDurability = Rx(RepairShoesModel());
   Rx<InventoryItemModel> selectedItem = Rx(
     InventoryItemModel(
@@ -111,7 +143,6 @@ class InventoryController extends GetxController with LinearProgressMixin {
   void onInit() {
     once(count, (_) => print('한번만 호출'));
     initStats();
-    //Todo api -> service 연동
     getUserAllItems();
     getUserEquippedItems();
     getSyntheticBadgeList();
@@ -126,6 +157,7 @@ class InventoryController extends GetxController with LinearProgressMixin {
   void getUserBadgesList() async {
     List<InventoryBadgeModel> badges = await BadgeApi.getUserBadgesList(3);
     userBadgesList.value = badges;
+    equippedBadge.value = userBadgesList.firstWhere((item) => item.state == 'EQUIPPED');
   }
 
   void initStats() {
@@ -142,7 +174,6 @@ class InventoryController extends GetxController with LinearProgressMixin {
   }
 
   void getUserAllItems() async {
-    //Todo api -> service 연동
     List<InventoryItemModel> allItems = await ItemService.getAllMyItems();
     myAllItems.value = allItems;
   }
@@ -150,10 +181,13 @@ class InventoryController extends GetxController with LinearProgressMixin {
   void getUserEquippedItems() async {
     EquippedItemModel equippedItems = await ActivityService.getUserEquippedItem();
     equippedItemList.value = equippedItems.items;
-    _minSliderValue = equippedItems.items.firstWhere((element) => element.itemCategory == 'SHOES').durability;
+    remainDurability.value = equippedItems.items.firstWhere((element) => element.itemCategory == 'SHOES').durability.floor();
   }
 
-  void fetchEquipBadge(int id) {}
+  void fetchEquipBadge(int badgeId) async {
+    InventoryBadgeModel equippedBadgeItem = await ItemService.fetchEquippedBadge(badgeId);
+    print(equippedBadgeItem);
+  }
 
   void setGetBadgeDate(int id) {
     getBadgeDate.value = userBadgesList.firstWhere((item) => item.badge.id == id).badge.issueEndedTime;
@@ -161,7 +195,6 @@ class InventoryController extends GetxController with LinearProgressMixin {
 
   void toItemDetail(int id) {
     selectedItem.value = myAllItems.firstWhere((item) => item.id == id);
-    print(selectedItem);
     isShoe.value = selectedItem.value.itemCategory == 'SHOES';
     Get.toNamed(Routes.itemDetail);
   }
@@ -175,28 +208,41 @@ class InventoryController extends GetxController with LinearProgressMixin {
     RepairShoesModel repairModel = await ItemService.fetchRepairItemShoes(
       RepairShoesModel(
         id: selectedItem.value.id,
-        durability: 100 - _minSliderValue.toInt(),
-        tik: 0,
+        durability: 100 - remainDurability.value,
+        tik: costTik.toInt(),
       ),
     );
     shoesDurability.value = repairModel;
   }
 
   void showShoesRepairPopup() {
+    _currentSliderValue.value = selectedItem.value.durability.toInt().floor().toDouble();
     Get.dialog(
       AlertDialog(
         title: const Text('내구도 충전'),
-        content: Slider(
-          value: _currentSliderValue,
-          max: 100,
-          min: 0,
-          divisions: 100,
-          label: _currentSliderValue.round().toString(),
-          onChanged: (double value) {
-            if (value > _minSliderValue) {
-              _currentSliderValue = value;
-            }
-          },
+        content: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Text('Durability ${_currentSliderValue.value}/100'),
+            Obx(() {
+              return Slider(
+                value: _currentSliderValue.value,
+                max: 100,
+                min: 0,
+                divisions: 100,
+                label: _currentSliderValue.round().toString(),
+                onChanged: (double value) {
+                  if (value >= selectedItem.value.durability.toInt().floor()) {
+                    _currentSliderValue.value = value;
+                    costTik.value = (value.toInt() - remainDurability.value).abs() * 100;
+                  }
+                },
+              );
+            }),
+            Obx(() {
+              return Text('비용: ${costTik.value} TIK');
+            }),
+          ],
         ),
         actions: [
           ElevatedButton(onPressed: () => closeRepairPopup(), child: const Text('아니요')),

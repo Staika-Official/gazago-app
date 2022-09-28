@@ -51,7 +51,7 @@ class InventoryHome extends StatelessWidget {
                               mainAxisCellCount: 2,
                               child: Tile(
                                 index: 1,
-                                imageUrl: controller.equippedAccessory.value.itemImageUrl,
+                                imageUrl: controller.equippedBadge.value.badge.imageUrl,
                               ),
                             ),
                             StaggeredGridTile.count(
