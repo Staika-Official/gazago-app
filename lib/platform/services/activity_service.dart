@@ -5,6 +5,8 @@ import 'package:gaza_go/platform/models/challenge_model.dart';
 import 'package:gaza_go/platform/models/current_user_state_model.dart';
 import 'package:gaza_go/platform/models/equipped_item_model.dart';
 import 'package:gaza_go/platform/models/user_exercise_model.dart';
+import 'package:gaza_go/platform/models/user_stamina_recharge_model.dart';
+import 'package:gaza_go/platform/models/user_state_model.dart';
 import 'package:gaza_go/platform/stores/hive_store.dart';
 import 'package:location/location.dart';
 
@@ -56,6 +58,12 @@ class ActivityService {
   static Future<CurrentUserStateModel> fetchEndUserExercises(UserExerciseModel exerciseInfo) async {
     Response res = await ActivityApi.fetchEndUserExercises(userId!, exerciseInfo);
     CurrentUserStateModel userState = CurrentUserStateModel.fromJson(res.data);
+    return userState;
+  }
+
+  static Future<UserStateModel> fetchUserStaminaRecharge(UserStaminaRechargeModel rechargeInfo) async {
+    Response res = await ActivityApi.fetchUserStaminaRecharge(userId!, rechargeInfo);
+    UserStateModel userState = UserStateModel.fromJson(res.data);
     return userState;
   }
 }

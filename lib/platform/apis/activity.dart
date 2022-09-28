@@ -2,6 +2,7 @@ import 'package:dio/dio.dart';
 import 'package:gaza_go/constants/base_urls.dart';
 import 'package:gaza_go/platform/apis/client.dart';
 import 'package:gaza_go/platform/models/user_exercise_model.dart';
+import 'package:gaza_go/platform/models/user_stamina_recharge_model.dart';
 import 'package:location/location.dart';
 
 class ActivityApi {
@@ -34,5 +35,9 @@ class ActivityApi {
   static Future<Response> fetchEndUserExercises(String userId, UserExerciseModel exerciseInfo) async {
     exerciseInfo.state = 'ENDED';
     return await Api.client(serviceUrl: ServiceUrl.exerciseService).put('/users/$userId', data: exerciseInfo);
+  }
+
+  static Future<Response> fetchUserStaminaRecharge(String userId, UserStaminaRechargeModel rechargeInfo) async {
+    return await Api.client(serviceUrl: ServiceUrl.staminaService).post('/users/$userId', data: rechargeInfo);
   }
 }
