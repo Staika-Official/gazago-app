@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:gaza_go/constants/enums.dart';
@@ -11,6 +12,7 @@ import 'package:gaza_go/platform/services/activity_service.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:get/get.dart';
 import 'package:location/location.dart';
+import 'package:permission_handler/permission_handler.dart' as PH;
 
 class Permissions {
   final LocationPermission locationPermission;
@@ -42,7 +44,6 @@ class ActivityController extends GetxController with MapMixin, ActivityMixin, Ch
     await getCurrentLocation();
     getNearByChallengeList(currentLocation.value);
     initLocationStream();
-    getChallengeList();
     await setMarkerImages();
     super.onInit();
   }
@@ -75,6 +76,8 @@ class ActivityController extends GetxController with MapMixin, ActivityMixin, Ch
 
     bool hasPermission = await checkLocationPermission();
     if (hasPermission) getActivityRoute();
+
+    requestActivityPermission();
   }
 
   Future<bool> checkGpsSensor() async {
@@ -133,7 +136,7 @@ class ActivityController extends GetxController with MapMixin, ActivityMixin, Ch
       Duration(seconds: 3),
       () {
         Get.offNamed(Routes.activityActive);
-        startExercise(exerciseType);
+        startExercise(exerciseType, doableChallenges);
       },
     );
   }
@@ -145,9 +148,23 @@ class ActivityController extends GetxController with MapMixin, ActivityMixin, Ch
     return Permissions(locationPermission: permission, locationAccuracyStatus: accuracyStatus);
   }
 
+  Future<PH.PermissionStatus?> checkActivityPermission() async {
+    if (Platform.isAndroid) {
+      return await PH.Permission.activityRecognition.status;
+    }
+    return null;
+  }
+
+  Future<PH.PermissionStatus?> requestActivityPermission() async {
+    if (Platform.isAndroid) {
+      return await PH.Permission.activityRecognition.request();
+    }
+    return null;
+  }
+
   Future<void> requestPermission(Permissions permissions) async {
     LocationPermission permission = await Geolocator.requestPermission();
-    if (permission != LocationPermission.always) {
+    if (permission != LocationPermission.always || permission != LocationPermission.whileInUse) {
       await Geolocator.openAppSettings();
     }
   }
@@ -157,6 +174,7 @@ class ActivityController extends GetxController with MapMixin, ActivityMixin, Ch
       currentLocation.value = location;
       detectChallengeZone(location);
       locations.add(location);
+      autoFinishChallenge(userState.value);
     });
   }
 
