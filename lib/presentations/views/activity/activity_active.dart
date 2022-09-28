@@ -8,6 +8,67 @@ import 'package:get/get.dart';
 class ActivityActive extends StatelessWidget {
   const ActivityActive({Key? key}) : super(key: key);
 
+  List<CircleOverlay> renderStartPoint(ActivityController controller) {
+    return controller.challengeList
+        .map(
+          (challenge) => CircleOverlay(
+            overlayId: 'ChallengeStart' + challenge.id!.toString(),
+            center: LatLng(challenge.startLat!, challenge.startLon!),
+            radius: challenge.startRadius!,
+            color: Colors.transparent,
+            outlineColor: Colors.blue[300],
+            outlineWidth: 3,
+          ),
+        )
+        .toList();
+  }
+
+  List<CircleOverlay> renderEndPoint(ActivityController controller) {
+    return controller.challengeList
+        .map(
+          (challenge) => CircleOverlay(
+            overlayId: 'ChallengeEnd' + challenge.id!.toString(),
+            center: LatLng(challenge.endLat!, challenge.endLon!),
+            // radius: challenge.endRadius!,
+            radius: 10,
+            color: Colors.transparent,
+            outlineColor: Colors.red[300],
+            outlineWidth: 3,
+          ),
+        )
+        .toList();
+  }
+
+  List<Marker> renderStartMarker(ActivityController controller) {
+    return controller.challengeList
+        .map(
+          (challenge) => Marker(
+            markerId: 'StartMarker' + challenge.id!.toString(),
+            position: LatLng(challenge.startLat!, challenge.startLon!),
+            captionText: challenge.firstName! + ' 시작점',
+            // icon: controller.startMarkerImage.value,
+            // width: 10,
+            // height: 10,
+          ),
+        )
+        .toList();
+  }
+
+  List<Marker> renderEndMarker(ActivityController controller) {
+    return controller.challengeList
+        .map(
+          (challenge) => Marker(
+            markerId: 'FinishMarker' + challenge.id!.toString(),
+            position: LatLng(challenge.endLat!, challenge.endLon!),
+            captionText: challenge.firstName! + ' 도착점',
+            // icon: controller.finishMarkerImage.value,
+            // width: 10,
+            // height: 10,
+          ),
+        )
+        .toList();
+  }
+
   @override
   Widget build(BuildContext context) {
     ActivityController controller = Get.find();
@@ -29,17 +90,12 @@ class ActivityActive extends StatelessWidget {
                   initLocationTrackingMode: LocationTrackingMode.Follow,
                   mapType: MapType.Basic,
                   circles: [
-                    CircleOverlay(
-                      radius: 20,
-                      overlayId: 'challengeStartId',
-                      center: LatLng(
-                        37.5819,
-                        126.8871,
-                      ),
-                      color: Colors.transparent,
-                      outlineColor: Colors.blue[100],
-                      outlineWidth: 3,
-                    ),
+                    ...renderStartPoint(controller),
+                    ...renderEndPoint(controller),
+                  ],
+                  markers: [
+                    ...renderStartMarker(controller),
+                    ...renderEndMarker(controller),
                   ],
                   pathOverlays: (controller.coordinates.length < 10)
                       ? null
@@ -85,6 +141,13 @@ class ActivityActive extends StatelessWidget {
                 children: [
                   Text('speed ' + controller.speed.value.toString()),
                   Text('altitude ' + controller.altitude.value.toString()),
+                ],
+              ),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Text('time ' + controller.exerciseTime.value.toString()),
+                  Text('distance ' + controller.totalDistance.value.toString()),
                 ],
               )
             ],

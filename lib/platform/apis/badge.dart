@@ -3,7 +3,7 @@ import 'package:gaza_go/constants/base_urls.dart';
 import 'package:gaza_go/platform/apis/client.dart';
 import 'package:gaza_go/platform/models/inventory_badge_model.dart';
 
-class BadgeService {
+class BadgeApi {
   static Future<List<InventoryBadgeModel>> getUserBadgesList(userId) async {
     Response res = await Api.client(serviceUrl: ServiceUrl.badgeService).get('/users/${userId}');
     List<InventoryBadgeModel> badges = [];
@@ -19,12 +19,8 @@ class BadgeService {
     return res.data;
   }
 
-  static Future<List<InventoryBadgeModel>> fetchUserIssuanceBadge(userId) async {
-    Response res = await Api.client(serviceUrl: ServiceUrl.badgeService).put('/users/${userId}/issues/hiking');
-    // List<InventoryBadgeModel> badges = [];
-    // res.data.forEach((item) => badges.add(InventoryBadgeModel.fromJson(item)));
-    // return badges;
-    return res.data;
+  static Future<Response> fetchUserIssuanceBadge(userId) async {
+    return await Api.client(serviceUrl: ServiceUrl.badgeService).put('/users/${userId}/issues/hiking');
   }
 
   static Future<List<InventoryBadgeModel>> fetchUserSyntheticBadge(userId) async {

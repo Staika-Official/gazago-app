@@ -26,6 +26,11 @@ class UserExerciseModel {
   String? createdDate;
   String? lastModifiedBy;
   String? lastModifiedDate;
+  //운동 시작할때만 필요한 파라미터
+  String? type;
+  String? userProfileImageUrl;
+  String? userNickname;
+  int? challengeId;
 
   UserExerciseModel({
     this.id,
@@ -50,6 +55,10 @@ class UserExerciseModel {
     this.createdDate,
     this.lastModifiedBy,
     this.lastModifiedDate,
+    this.type,
+    this.userProfileImageUrl,
+    this.userNickname,
+    this.challengeId,
   });
 
   factory UserExerciseModel.fromJson(Map<String, dynamic> json) => _$UserExerciseModelFromJson(json);
