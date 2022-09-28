@@ -11,11 +11,7 @@ class ActivityApi {
 
   static Future<Response> getNearByChallenges(LocationData currentLocation) async {
     return await Api.client(serviceUrl: '/services/gazago/api').get(
-      '/challenges/geolocation',
-      queryParameters: {
-        "currentLat": currentLocation.latitude,
-        "currentLon": currentLocation.longitude,
-      },
+      '/challenges/geolocation/lat/${currentLocation.latitude}/lon/${currentLocation.longitude}',
     );
   }
 

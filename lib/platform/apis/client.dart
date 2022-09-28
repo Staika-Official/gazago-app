@@ -1,5 +1,4 @@
 import 'dart:convert';
-import 'dart:developer';
 
 import 'package:dio/dio.dart';
 import 'package:gaza_go/constants/enums.dart';
@@ -48,7 +47,6 @@ class Api {
       '\nData: ${jsonEncode(options.data)}'
       '\nQueries: ${(options.queryParameters)}',
     );
-    inspect(options.data);
     return handler.next(options);
   }
 
