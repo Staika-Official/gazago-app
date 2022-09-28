@@ -5,8 +5,20 @@ enum LoginType {
   email,
 }
 
-enum ActivityType {
-  climbing,
+enum ExerciseType {
+  hiking,
+  walking,
+}
+
+extension ExerciseTypeValue on ExerciseType {
+  String get value {
+    switch (this) {
+      case ExerciseType.hiking:
+        return 'HIKING';
+      case ExerciseType.walking:
+        return 'WALKING';
+    }
+  }
 }
 
 enum WalletType {
@@ -34,6 +46,7 @@ enum HiveKey {
   userId,
   profileImageUrl,
   nickname,
+  locationData,
 }
 
 enum ResponseStatus {

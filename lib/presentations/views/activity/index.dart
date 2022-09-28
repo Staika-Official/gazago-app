@@ -83,23 +83,25 @@ class ActivityHome extends StatelessWidget {
                 Padding(
                   padding: const EdgeInsets.only(left: 10.0),
                   child: Column(
-                    children: const [
+                    children: [
                       Padding(
                         padding: EdgeInsets.only(top: 8.0),
-                        child: Text(
-                          '${'2,000.00'} GO',
-                          style: TextStyle(
-                            color: Colors.black,
-                            fontSize: 30,
-                            fontWeight: FontWeight.w500,
-                            height: 1,
-                          ),
-                        ),
+                        child: Obx(() {
+                          return Text(
+                            '${controller.userState.value.state != null ? controller.userState.value.state!.dailyGoReward.toString() : 0} GO',
+                            style: TextStyle(
+                              color: Colors.black,
+                              fontSize: 30,
+                              fontWeight: FontWeight.w500,
+                              height: 1,
+                            ),
+                          );
+                        }),
                       ),
                       Padding(
                         padding: EdgeInsets.only(top: 8.0),
                         child: Text(
-                          '내가 획득한 STEP',
+                          '내가 오늘 획득한 STEP',
                           style: TextStyle(
                             color: Colors.grey,
                             fontSize: 14,
@@ -158,7 +160,7 @@ class ActivityHome extends StatelessWidget {
                               )
                             : Container(),
                         MaterialButton(
-                          onPressed: () => controller.initExercise(),
+                          onPressed: () => controller.checkAvailabilities(),
                           shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(100),
                           ),

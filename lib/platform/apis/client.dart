@@ -1,3 +1,6 @@
+import 'dart:convert';
+import 'dart:developer';
+
 import 'package:dio/dio.dart';
 import 'package:gaza_go/constants/enums.dart';
 import 'package:gaza_go/constants/routes.dart';
@@ -42,8 +45,10 @@ class Api {
       '\nMethods: ${options.method}'
       '\nHeader Authorization: ${options.headers['Authorization']}'
       '\nPath: ${options.baseUrl + options.path}'
-      '\nData: ${options.data}',
+      '\nData: ${jsonEncode(options.data)}'
+      '\nQueries: ${(options.queryParameters)}',
     );
+    inspect(options.data);
     return handler.next(options);
   }
 
@@ -57,14 +62,15 @@ class Api {
   }
 
   static _onErrorInterceptor(DioError e, ErrorInterceptorHandler handler) {
-    // TODO. 액세스토큰 만료시 리프레시 토큰으로 재요청하는 로직 필요. 만약 다른 디바이스에서 로그인 했다면 로그인 페이지로 이동.
     _logger.e(
       '------------->'
       '\nERROR'
-      '\nError Response: ${e.response}',
+      '\nError: ${e.error}'
+      '\nError ResponseCode: ${e.response?.statusCode}'
+      '\nError ResponseMessage: ${e.response?.statusMessage}',
     );
 
-    if (e.response!.statusCode == ResponseStatus.unauthorized.code) {
+    if (e.response?.statusCode == ResponseStatus.unauthorized.code) {
       final String? refreshToken = HiveStore.loadString(key: HiveKey.refreshToken.name);
       Dio refreshDio = Dio();
       refreshDio

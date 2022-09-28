@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:gaza_go/constants/enums.dart';
 import 'package:gaza_go/platform/controllers/activity_controller.dart';
 import 'package:gaza_go/presentations/components/default_container.dart';
 import 'package:get/get.dart';
@@ -15,7 +16,7 @@ class ActivitySelect extends StatelessWidget {
         children: [
           Expanded(
             child: InkWell(
-              onTap: () => controller.loadExercise(),
+              onTap: () => controller.loadExercise(ExerciseType.hiking),
               child: Card(
                 child: Center(
                   child: Text('등산'),
@@ -25,7 +26,7 @@ class ActivitySelect extends StatelessWidget {
           ),
           Expanded(
             child: InkWell(
-              onTap: () => controller.loadExercise(),
+              onTap: () => controller.loadExercise(ExerciseType.walking),
               child: Card(
                 child: Center(
                   child: Text('일반'),

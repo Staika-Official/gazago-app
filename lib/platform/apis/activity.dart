@@ -2,10 +2,21 @@ import 'package:dio/dio.dart';
 import 'package:gaza_go/constants/base_urls.dart';
 import 'package:gaza_go/platform/apis/client.dart';
 import 'package:gaza_go/platform/models/user_exercise_model.dart';
+import 'package:location/location.dart';
 
 class ActivityApi {
   static Future<Response> getChallenges() async {
     return await Api.client(serviceUrl: '/services/gazago/api').get('/challenges');
+  }
+
+  static Future<Response> getNearByChallenges(LocationData currentLocation) async {
+    return await Api.client(serviceUrl: '/services/gazago/api').get(
+      '/challenges/geolocation',
+      queryParameters: {
+        "currentLat": currentLocation.latitude,
+        "currentLon": currentLocation.longitude,
+      },
+    );
   }
 
   static Future<Response> getCurrentUserState(String userId) async {

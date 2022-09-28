@@ -48,9 +48,7 @@ String coordinatesToString(List<LatLng> coordinates) {
 List<LatLng> locationStringToLatLng(String locationString) {
   List<LatLng> coordinates = List.empty(growable: true);
   List<dynamic> locationArray = json.decode(locationString);
-  print(locationArray);
   for (List location in locationArray) {
-    print(location);
     LatLng coordination = LatLng(location[0], location[1]);
     coordinates.add(coordination);
   }

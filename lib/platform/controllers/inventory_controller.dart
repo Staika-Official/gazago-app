@@ -154,7 +154,7 @@ class InventoryController extends GetxController with LinearProgressMixin {
   }
 
   void getUserBadgesList() async {
-    List<InventoryBadgeModel> badges = await BadgeService.getUserBadgesList(3);
+    List<InventoryBadgeModel> badges = await BadgeApi.getUserBadgesList(3);
     userBadgesList.value = badges;
     equippedBadge.value = userBadgesList.firstWhere((item) => item.state == 'EQUIPPED');
   }

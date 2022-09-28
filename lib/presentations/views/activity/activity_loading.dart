@@ -9,6 +9,7 @@ class ActivityLoading extends StatelessWidget {
     return DefaultContainer(
       child: Center(
         child: Column(
+          mainAxisSize: MainAxisSize.max,
           children: [
             CircularProgressIndicator(),
             Text('로딩중'),
