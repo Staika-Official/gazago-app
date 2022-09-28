@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:developer';
 import 'dart:io';
 
 import 'package:flutter/material.dart';
@@ -8,6 +9,8 @@ import 'package:gaza_go/platform/helpers/activity_mixin.dart';
 import 'package:gaza_go/platform/helpers/challenge_mixin.dart';
 import 'package:gaza_go/platform/helpers/map_mixin.dart';
 import 'package:gaza_go/platform/models/stat_model.dart';
+import 'package:gaza_go/platform/models/user_stamina_recharge_model.dart';
+import 'package:gaza_go/platform/models/user_state_model.dart';
 import 'package:gaza_go/platform/services/activity_service.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:get/get.dart';
@@ -27,6 +30,7 @@ class Permissions {
 class ActivityController extends GetxController with MapMixin, ActivityMixin, ChallengeMixin {
   //index.dart
   final RxList<StatModel> statList = RxList.empty();
+
   RxList<Map> get activitySumList {
     return RxList([
       {'title': '총 운동 시간', 'content': '1일 ${'03:15:12'}'},
@@ -34,6 +38,91 @@ class ActivityController extends GetxController with MapMixin, ActivityMixin, Ch
       {'title': '총 걸음 수', 'content': '${12682.toString()}'},
       {'title': '총 획득 Taika', 'content': '${200.toString()}'},
     ]);
+  }
+
+  final RxDouble _currentSliderValue = RxDouble(0);
+  RxInt costTik = RxInt(0);
+
+  void onClickRepairStat(stat) {
+    _currentSliderValue.value = stat.currentStat;
+    inspect(stat);
+    switch (stat.type) {
+      case 'STAMINA':
+        handleShowStaminaPopup(stat);
+        break;
+      case 'DURABILITY':
+        break;
+    }
+  }
+
+  void handleShowStaminaPopup(stat) {
+    Get.dialog(
+      AlertDialog(
+        title: const Text(
+          '체력 충전 하기',
+          textAlign: TextAlign.center,
+        ),
+        content: Column(
+          mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            Text(
+              '체력 ${stat.currentStat}/100',
+              textAlign: TextAlign.center,
+            ),
+            Obx(() {
+              return Slider(
+                value: _currentSliderValue.value > 100 ? 100 : double.parse(_currentSliderValue.value.toStringAsFixed(0)),
+                max: 100,
+                min: 0,
+                divisions: 10,
+                label: _currentSliderValue.value.floor().toString(),
+                onChanged: (double value) {
+                  print(value);
+                  _currentSliderValue.value = double.parse(value.toStringAsFixed(0));
+                  costTik.value = _currentSliderValue.value.toInt() * 100;
+                  // if (value >= selectedItem.value.durability.toInt().floor()) {
+                  //   _currentSliderValue.value = value;
+                  //   repairDurability.value = value.toInt();
+                  //   print(remainDurability.value);
+                  //   costTik.value = (value.toInt() - remainDurability.value).abs() * 100;
+                  // }
+                },
+              );
+            }),
+            Obx(() {
+              return Text('비용: ${costTik.value} TIK');
+            }),
+          ],
+        ),
+        actions: [
+          ElevatedButton(onPressed: () => Get.back(), child: const Text('아니요')),
+          ElevatedButton(onPressed: () => fetchRechargeStamina(stat.type), child: const Text('네')),
+        ],
+      ),
+    );
+  }
+
+  void fetchRechargeStamina(type) async {
+    UserStateModel userState = await ActivityService.fetchUserStaminaRecharge(
+      UserStaminaRechargeModel(
+        type: type,
+        stat: _currentSliderValue.value.toInt(),
+        feeTik: costTik.value,
+      ),
+    );
+    print(userState);
+    closeRepairPopup();
+  }
+
+  void initRepairInfo() {
+    _currentSliderValue.value = 0;
+    costTik.value = 0;
+  }
+
+  void closeRepairPopup() {
+    initRepairInfo();
+    Get.back();
   }
 
   //activity active
@@ -61,8 +150,8 @@ class ActivityController extends GetxController with MapMixin, ActivityMixin, Ch
   void getUserState() async {
     userState.value = await ActivityService.getCurrentUserState();
     statList.value = [
-      StatModel(name: '체력', currentStat: userState.value.state!.stamina),
-      StatModel(name: '내구도', currentStat: userState.value.shoes!.durability!),
+      StatModel(name: '체력', currentStat: userState.value.state!.stamina, type: 'STAMINA'),
+      StatModel(name: '내구도', currentStat: userState.value.shoes!.durability!, type: 'DURABILITY'),
     ];
 
     if (userState.value.exercise != null && userState.value.exercise!.state == 'ONGOING') {

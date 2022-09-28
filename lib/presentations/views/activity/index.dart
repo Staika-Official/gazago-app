@@ -26,9 +26,9 @@ class ActivityHome extends StatelessWidget {
                     ),
                   ),
                 ),
-                const IconButton(
-                  onPressed: null,
+                IconButton(
                   icon: Icon(Icons.add_circle),
+                  onPressed: () => {controller.onClickRepairStat(stat)},
                 ),
               ],
             )

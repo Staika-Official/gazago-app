@@ -6,10 +6,12 @@ part 'stat_model.g.dart';
 class StatModel {
   String name;
   double currentStat;
+  String? type;
 
   StatModel({
     required this.name,
     required this.currentStat,
+    this.type,
   });
 
   factory StatModel.fromJson(Map<String, dynamic> json) => _$StatModelFromJson(json);

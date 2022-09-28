@@ -215,6 +215,7 @@ class InventoryController extends GetxController with LinearProgressMixin {
         tik: costTik.toInt(),
       ),
     );
+
     print(repairModel);
     costTik.value = 0;
     selectedItem.value = repairModel;
@@ -239,7 +240,7 @@ class InventoryController extends GetxController with LinearProgressMixin {
             }),
             Obx(() {
               return Slider(
-                value: _currentSliderValue.value,
+                value: _currentSliderValue.value < 0 ? 0 : _currentSliderValue.value,
                 max: 100,
                 min: 0,
                 divisions: 100,

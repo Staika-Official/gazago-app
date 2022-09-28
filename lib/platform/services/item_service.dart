@@ -15,6 +15,7 @@ class ItemService {
     res.data.forEach((challenge) {
       userItems.add(InventoryItemModel.fromJson(challenge));
     });
+
     return userItems;
   }
 
