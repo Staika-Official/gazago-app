@@ -39,7 +39,7 @@ class ActivityController extends GetxController with MapMixin, ActivityMixin, Ch
   @override
   void onInit() async {
     getUserState();
-    getCurrentLocation();
+    await getCurrentLocation();
     getNearByChallengeList(currentLocation.value);
     initLocationStream();
     getChallengeList();
@@ -160,7 +160,7 @@ class ActivityController extends GetxController with MapMixin, ActivityMixin, Ch
     });
   }
 
-  void getCurrentLocation() async {
+  Future<void> getCurrentLocation() async {
     await location.enableBackgroundMode(enable: true);
     currentLocation.value = await location.getLocation();
   }
