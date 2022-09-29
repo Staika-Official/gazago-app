@@ -3,12 +3,14 @@ import 'dart:developer';
 import 'dart:io';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_naver_map/flutter_naver_map.dart';
 import 'package:gaza_go/constants/enums.dart';
 import 'package:gaza_go/constants/routes.dart';
 import 'package:gaza_go/platform/helpers/activity_mixin.dart';
 import 'package:gaza_go/platform/helpers/challenge_mixin.dart';
 import 'package:gaza_go/platform/helpers/map_mixin.dart';
 import 'package:gaza_go/platform/models/stat_model.dart';
+import 'package:gaza_go/platform/models/user_exercise_model.dart';
 import 'package:gaza_go/platform/models/user_stamina_recharge_model.dart';
 import 'package:gaza_go/platform/models/user_state_model.dart';
 import 'package:gaza_go/platform/services/activity_service.dart';
@@ -141,9 +143,9 @@ class ActivityController extends GetxController with MapMixin, ActivityMixin, Ch
   void onClose() {
     updateTimer?.cancel();
     exerciseTimer?.cancel();
-    stepSubscription!.cancel();
-    locationSubscription!.cancel();
-    pedestrianStatusSubscription!.cancel();
+    stepSubscription?.cancel();
+    locationSubscription?.cancel();
+    pedestrianStatusSubscription?.cancel();
     super.onClose();
   }
 
@@ -261,8 +263,12 @@ class ActivityController extends GetxController with MapMixin, ActivityMixin, Ch
   void initLocationStream() {
     location.onLocationChanged.listen((LocationData location) {
       currentLocation.value = location;
+      exerciseData.add(UserExerciseModel(
+        altitude: location.altitude,
+        speed: location.speed,
+      ));
+      coordinates.add(LatLng(location.latitude!, location.longitude!));
       detectChallengeZone(location);
-      locations.add(location);
       autoFinishChallenge(userState.value);
     });
   }

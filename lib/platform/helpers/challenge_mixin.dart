@@ -1,7 +1,9 @@
 import 'package:gaza_go/platform/helpers/activity_helper.dart';
 import 'package:gaza_go/platform/models/challenge_model.dart';
 import 'package:gaza_go/platform/models/current_user_state_model.dart';
+import 'package:gaza_go/platform/models/inventory_badge_model.dart';
 import 'package:gaza_go/platform/services/activity_service.dart';
+import 'package:gaza_go/platform/services/badge_service.dart';
 import 'package:get/get.dart';
 import 'package:location/location.dart';
 
@@ -30,14 +32,15 @@ class ChallengeMixin {
     }).toList();
   }
 
-  void autoFinishChallenge(CurrentUserStateModel userState) {
+  void autoFinishChallenge(CurrentUserStateModel userState) async {
     if (achievableChallenges.isNotEmpty && userState.exercise != null) {
       bool hasArrived = achievableChallenges.any((challenge) {
         return challenge.id == userState.exercise!.challengeId;
       });
 
       if (hasArrived && userState.exercise!.badgeIssueId == null) {
-        print('request badge issuance');
+        InventoryBadgeModel badge = await BadgeService.fetchUserIssuanceBadge(userState.exercise!.id!);
+        userState.exercise!.badgeIssueId = badge.id;
       }
     }
   }

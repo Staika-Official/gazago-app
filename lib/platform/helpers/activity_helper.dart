@@ -1,16 +1,16 @@
 import 'dart:math';
 
-double calculateAvgSpeed(List<double> speeds) {
-  if (speeds.length > 0) {
-    double sumSpeed = speeds.fold(0, (summedValue, speed) => summedValue + speed);
-    return (sumSpeed / speeds.length / 1000) / (1 / 3600);
+double calculateAvgSpeed(List<double> speedList) {
+  if (speedList.length > 0) {
+    double sumSpeed = speedList.fold(0, (summedValue, speed) => summedValue + speed);
+    return (sumSpeed / speedList.length / 1000) / (1 / 3600);
   } else {
     return 0.0;
   }
 }
 
-double calculateTotalDistance(List<double> distances) {
-  return distances.fold(0, (summedValue, distance) => summedValue + distance);
+double calculateTotalDistance(List<double> distanceList) {
+  return distanceList.fold(0, (summedValue, distance) => summedValue + distance);
 }
 
 double calculateDistance(lat1, lon1, lat2, lon2) {
@@ -19,6 +19,6 @@ double calculateDistance(lat1, lon1, lat2, lon2) {
   return 12742 * asin(sqrt(a));
 }
 
-double highestClimbed(List<double> altitudes) {
-  return altitudes.fold(0, max);
+double highestClimbed(List<double> altitudeList) {
+  return altitudeList.fold(0, max);
 }

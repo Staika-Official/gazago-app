@@ -18,8 +18,10 @@ class ActivityMixin {
   final updateInterval = 10000;
   final Location location = Location();
   final Rx<LocationData> currentLocation = Rx(LocationData.fromMap({}));
-  final RxList<LocationData> locations = RxList.empty();
+  final RxList<UserExerciseModel> exerciseData = RxList.empty();
+  final RxList<LatLng> coordinates = RxList.empty();
   final RxString pedestrianStatus = RxString('');
+  final Rx<ExerciseState> exerciseState = Rx(ExerciseState.init);
   Timer? exerciseTimer;
   Timer? updateTimer;
   Completer<NaverMapController> mapCompleter = Completer();
@@ -35,53 +37,39 @@ class ActivityMixin {
     return RxInt(userState.value.exercise?.time ?? 0);
   }
 
-  RxDouble get speed {
-    return RxDouble(currentLocation.value.speed ?? 0);
+  RxDouble get realTimeSpeed {
+    double speed = currentLocation.value.speed ?? 0;
+    return RxDouble(speed <= 0 ? 0 : currentLocation.value.speed!);
   }
 
-  RxDouble get altitude {
-    return RxDouble(currentLocation.value.altitude ?? 0);
-  }
-
-  RxList<LatLng> get coordinates {
-    if (userState.value.exercise?.locations != null) {
-      List<LatLng> locations = locationStringToLatLng(userState.value.exercise!.locations!);
-      return RxList(locations.map((location) => LatLng(location.latitude, location.longitude)).toList());
-    } else {
-      return RxList.empty();
-    }
-  }
-
-  RxList<double> get speeds {
-    return RxList(locations.where((location) => location.speed! > 0.2).map((filteredLocation) => filteredLocation.speed!).toList());
-  }
-
-  RxList<double> get distances {
-    if (userState.value.exercise!.locations != null) {
-      List<LatLng> coordinates = locationStringToLatLng(userState.value.exercise!.locations!);
-      List<double> distanceList = List.empty(growable: true);
-      for (int i = 0; i < coordinates.length - 1; i++) {
-        distanceList.add(
-          calculateDistance(
-            coordinates[i].latitude,
-            coordinates[i].longitude,
-            coordinates[i + 1].latitude,
-            coordinates[i + 1].longitude,
-          ),
-        );
-      }
-      return RxList(distanceList);
-    } else {
-      return RxList.empty();
-    }
+  RxDouble get avgSpeed {
+    List<double> speedList = exerciseData.where((data) => data.speed! > 0.2).map((filteredLocation) => filteredLocation.speed!).toList();
+    return RxDouble(calculateAvgSpeed(speedList));
   }
 
   RxDouble get totalDistance {
-    return RxDouble(calculateTotalDistance(distances));
+    List<double> distanceList = List.empty(growable: true);
+
+    for (int i = 0; i < coordinates.length - 1; i++) {
+      distanceList.add(
+        calculateDistance(
+          coordinates[i].latitude,
+          coordinates[i].longitude,
+          coordinates[i + 1].latitude,
+          coordinates[i + 1].longitude,
+        ),
+      );
+    }
+    return coordinates.isNotEmpty ? RxDouble(calculateTotalDistance(distanceList)) : RxDouble(0);
   }
 
   RxList<double> get altitudes {
-    return RxList(locations.map((location) => location.altitude!).toList());
+    return RxList(exerciseData.map((location) => location.altitude!).toList());
+  }
+
+  RxDouble get highestAltitude {
+    List<double> altitudeList = exerciseData.map((location) => location.altitude!).toList();
+    return RxDouble(highestClimbed(altitudeList));
   }
 
   late final Rx<OverlayImage?> startMarkerImage = Rx(null);
@@ -94,7 +82,7 @@ class ActivityMixin {
   }
 
   void initExerciseStats() {
-    locations.value = List.empty(growable: true);
+    exerciseData.value = List.empty(growable: true);
     userState.update((state) {
       state?.exercise!.steps = 0;
       state?.exercise!.time = 0;
@@ -116,17 +104,9 @@ class ActivityMixin {
 
   void initStepStream() {
     stepSubscription = Pedometer.stepCountStream.listen((StepCount event) {
-      print('================');
-      print('================');
-      print('================');
-      print(event.steps);
-      print('================');
-      print('================');
-      print(userState.value.exercise?.steps);
-      print('================');
-      print('================');
-      userState.update((state) => state?.exercise!.steps = event.steps);
-      print(userState.value.exercise?.steps);
+      if (userState.value.exercise != null) {
+        userState.update((state) => state?.exercise!.steps = state.exercise!.steps! + 1);
+      }
     });
     stepSubscription!.onError((error) {
       print(error);
@@ -161,21 +141,29 @@ class ActivityMixin {
         distance: 0,
         altitude: currentLocation.value.altitude,
         time: 0,
-        startPoint: '${currentLocation.value.longitude}, ${currentLocation.value.latitude}',
-        challengeId: challengeId, // TODO. 현위치랑 가까운 곳에 있는 챌린지를 처음 앱실행할때 가져오도록 수정필요
+        startPoint: challengeId != null ? doableChallengeList.first.firstName : '${currentLocation.value.longitude}, ${currentLocation.value.latitude}',
+        challengeId: challengeId,
       ),
     );
     userState.update((state) => state!.exercise = exerciseModel);
+    exerciseState.value = ExerciseState.ongoing;
     initExerciseStats();
     initStream();
     startPeriodicUpdate();
   }
 
   void continueExercise() {
-    locations.value = List.empty(growable: true);
+    exerciseData.value = List.empty(growable: true);
+    exerciseState.value = ExerciseState.ongoing;
+    exerciseData.add(userState.value.exercise!);
+    coordinates.addAll(parseCoordinates());
     initStream();
     updateExercise();
     startPeriodicUpdate();
+  }
+
+  RxList<LatLng> parseCoordinates() {
+    return RxList(locationStringToLatLng(userState.value.exercise!.locations!));
   }
 
   void updateExercise() async {
@@ -183,9 +171,9 @@ class ActivityMixin {
       UserExerciseModel(
         id: userState.value.exercise!.id,
         steps: userState.value.exercise!.steps,
-        speed: calculateAvgSpeed(speeds),
-        distance: calculateTotalDistance(distances),
-        altitude: highestClimbed(altitudes),
+        speed: avgSpeed.value,
+        distance: totalDistance.value,
+        altitude: highestAltitude.value,
         time: userState.value.exercise!.time,
         locations: coordinatesToString(coordinates),
       ),
@@ -207,15 +195,16 @@ class ActivityMixin {
       UserExerciseModel(
         id: userState.value.exercise!.id,
         steps: userState.value.exercise!.steps,
-        speed: calculateAvgSpeed(speeds),
-        distance: calculateTotalDistance(distances),
-        altitude: highestClimbed(altitudes),
+        speed: avgSpeed.value,
+        distance: totalDistance.value,
+        altitude: highestAltitude.value,
         time: userState.value.exercise!.time,
         locations: coordinatesToString(coordinates),
       ),
     );
 
     if (newUserState.exercise!.state == 'ENDED') {
+      exerciseState.value = ExerciseState.finished;
       userState.update((state) {
         state = newUserState;
         userState.value.exercise = null;

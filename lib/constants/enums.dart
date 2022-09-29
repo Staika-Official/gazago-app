@@ -70,3 +70,5 @@ extension ResponseStatusCode on ResponseStatus {
     }
   }
 }
+
+enum ExerciseState { init, ongoing, paused, finished }

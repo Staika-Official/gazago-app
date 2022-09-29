@@ -139,8 +139,8 @@ class ActivityActive extends StatelessWidget {
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  Text('speed ' + controller.speed.value.toString()),
-                  Text('altitude ' + controller.altitude.value.toString()),
+                  Text('speed ' + controller.realTimeSpeed.value.toString()),
+                  Text('avgSpeed ' + controller.avgSpeed.value.toString()),
                 ],
               ),
               Row(

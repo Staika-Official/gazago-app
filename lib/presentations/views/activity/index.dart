@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:gaza_go/constants/enums.dart';
 import 'package:gaza_go/platform/controllers/activity_controller.dart';
 import 'package:get/get.dart';
 
@@ -143,7 +144,7 @@ class ActivityHome extends StatelessWidget {
                     return Row(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
-                        controller.userState.value.exercise != null
+                        [ExerciseState.ongoing, ExerciseState.paused].any((state) => controller.exerciseState.value == state)
                             ? Padding(
                                 padding: const EdgeInsets.only(right: 8.0),
                                 child: MaterialButton(
@@ -167,7 +168,7 @@ class ActivityHome extends StatelessWidget {
                           color: Colors.blue,
                           height: 100,
                           minWidth: 100,
-                          child: Text(controller.userState.value.exercise != null ? 'Continue' : 'Go'),
+                          child: Text([ExerciseState.ongoing, ExerciseState.paused].any((state) => controller.exerciseState.value == state) ? 'Continue' : 'Go'),
                         ),
                       ],
                     );

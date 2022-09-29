@@ -10,14 +10,14 @@ class UserAccountModel {
   String nickname;
   String profileImageUrl;
   String? phone;
-  String userCode;
-  String provider;
-  bool marketingChecked;
-  bool alarmTransaction;
-  bool alarmEvent;
-  bool activated;
+  String? userCode;
+  String? provider;
+  bool? marketingChecked;
+  bool? alarmTransaction;
+  bool? alarmEvent;
+  bool? activated;
   String? createdDate;
-  List<String> authorities;
+  List<String>? authorities;
   String? terminationDate;
 
   UserAccountModel({
@@ -27,14 +27,14 @@ class UserAccountModel {
     required this.nickname,
     required this.profileImageUrl,
     this.phone,
-    required this.userCode,
-    required this.provider,
-    required this.marketingChecked,
-    required this.alarmTransaction,
-    required this.alarmEvent,
-    required this.activated,
+    this.userCode,
+    this.provider,
+    this.marketingChecked,
+    this.alarmTransaction,
+    this.alarmEvent,
+    this.activated,
     this.createdDate,
-    required this.authorities,
+    this.authorities,
     this.terminationDate,
   });
 
