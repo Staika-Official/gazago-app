@@ -19,7 +19,7 @@ class UserExerciseModel {
   String? startedDate;
   String? endedDate;
   String? locations;
-  String? badgeIssueId;
+  int? badgeIssueId;
   String? state;
   bool? deleted;
   String? createdBy;
