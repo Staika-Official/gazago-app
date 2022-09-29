@@ -3,11 +3,8 @@ import 'package:gaza_go/constants/base_urls.dart';
 import 'package:gaza_go/platform/apis/client.dart';
 
 class UaaApi {
-  static final Dio loginApi = Api.client(serviceUrl: ServiceUrl.uaaService, needsToken: false);
-  static final Dio uaaApi = Api.client(serviceUrl: ServiceUrl.uaaService);
-
   static Future<Response> emailLogin() async {
-    return await loginApi.post('/sign-in/email', data: {
+    return await Api.client(serviceUrl: ServiceUrl.uaaService, needsToken: false).post('/sign-in/email', data: {
       "username": "admin",
       "password": "admin",
       "clientId": "GAZAGO",
@@ -15,7 +12,7 @@ class UaaApi {
   }
 
   static Future<Response> getAccountInfo() async {
-    return await uaaApi.get('/account');
+    return await Api.client(serviceUrl: ServiceUrl.uaaService).get('/account');
   }
 
   static Future<Response> checkLoginStatus() async {
