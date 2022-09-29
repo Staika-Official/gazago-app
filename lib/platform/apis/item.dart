@@ -26,7 +26,7 @@ class ItemApi {
   }
 
   static Future<Response> getUserEquippedItem(userId) async {
-    return await Api.client(serviceUrl: ServiceUrl.activityService).get('/users/${userId}/equipped');
+    return await Api.client(serviceUrl: ServiceUrl.stateService).get('/users/${userId}/equipped');
   }
 
   static Future<Response> fetchEquippedBadge(String userId, int badgeId) async {

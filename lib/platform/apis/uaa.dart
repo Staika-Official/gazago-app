@@ -6,15 +6,15 @@ class UaaApi {
   static final Dio loginApi = Api.client(serviceUrl: ServiceUrl.uaaService, needsToken: false);
   static final Dio uaaApi = Api.client(serviceUrl: ServiceUrl.uaaService);
 
-  static Future<Response> emailLogin() {
-    return loginApi.post('/sign-in/email', data: {
+  static Future<Response> emailLogin() async {
+    return await loginApi.post('/sign-in/email', data: {
       "username": "admin",
       "password": "admin",
       "clientId": "GAZAGO",
     });
   }
 
-  static Future<Response> getAccountInfo() {
-    return uaaApi.get('/account');
+  static Future<Response> getAccountInfo() async {
+    return await uaaApi.get('/account');
   }
 }

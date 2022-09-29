@@ -10,7 +10,7 @@ class ServiceUrl {
   static const String itemService = '/services/gazago/api/user-items';
   static const String badgeService = '/services/gazago/api/user-badges';
   static const String memberService = '';
-  static const String activityService = '/services/gazago/api/user-states';
+  static const String stateService = '/services/gazago/api/user-states';
   static const String exerciseService = '/services/gazago/api/user-exercises';
   static const String staminaService = '/services/gazago/api/user-state-recoveries';
   static const String dashboardService = '/services/gazago/api/dash-board-reward-dailies';
