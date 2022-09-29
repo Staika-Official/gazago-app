@@ -4,7 +4,7 @@ import 'package:dio/dio.dart';
 import 'package:gaza_go/constants/enums.dart';
 import 'package:gaza_go/constants/routes.dart';
 import 'package:gaza_go/flavors.dart';
-import 'package:gaza_go/platform/models/token_model.dart';
+import 'package:gaza_go/platform/models/access_token_model.dart';
 import 'package:gaza_go/platform/stores/hive_store.dart';
 import 'package:get/get.dart' as getx;
 import 'package:logger/logger.dart';
@@ -75,7 +75,7 @@ class Api {
       refreshDio
         ..options.headers['Authorization'] = 'Bearer $refreshToken'
         ..post('${F.baseUrl}/services/uaa/api/sign-in/token', data: {'clientId': 'GAZAGO'}).then((Response res) {
-          TokenModel newToken = TokenModel.fromJson(res.data);
+          AccessTokenModel newToken = AccessTokenModel.fromJson(res.data);
           HiveStore.save(key: HiveKey.accessToken.name, value: newToken.accessToken);
           HiveStore.save(key: HiveKey.refreshToken.name, value: newToken.refreshToken);
 

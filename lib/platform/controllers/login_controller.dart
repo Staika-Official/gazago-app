@@ -4,10 +4,11 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:gaza_go/constants/enums.dart';
 import 'package:gaza_go/constants/routes.dart';
-import 'package:gaza_go/platform/models/token_model.dart';
+import 'package:gaza_go/platform/models/access_token_model.dart';
 import 'package:gaza_go/platform/models/user_account_model.dart';
 import 'package:gaza_go/platform/services/member_service.dart';
 import 'package:gaza_go/platform/services/uaa_service.dart';
+import 'package:gaza_go/platform/services/wallet_service.dart';
 import 'package:gaza_go/platform/stores/hive_store.dart';
 import 'package:get/get.dart';
 import 'package:google_sign_in/google_sign_in.dart';
@@ -30,12 +31,12 @@ class LoginController extends GetxController {
         break;
     }
 
-    await getUserInfo();
+    await initUserInfo();
     Get.toNamed(Routes.home);
   }
 
   Future<void> emailLogin() async {
-    TokenModel token = await UaaService.emailLogin();
+    AccessTokenModel token = await UaaService.emailLogin();
     HiveStore.save(key: HiveKey.accessToken.name, value: token.accessToken);
     HiveStore.save(key: HiveKey.refreshToken.name, value: token.refreshToken);
   }
@@ -84,13 +85,14 @@ class LoginController extends GetxController {
     return await FirebaseAuth.instance.signInWithCredential(credential);
   }
 
-  Future<void> getUserInfo() async {
+  Future<void> initUserInfo() async {
     UserAccountModel user = await UaaService.getAccountInfo();
     HiveStore.save(key: HiveKey.userId.name, value: user.id.toString());
     HiveStore.save(key: HiveKey.profileImageUrl.name, value: user.profileImageUrl);
     HiveStore.save(key: HiveKey.nickname.name, value: user.nickname);
 
     await MemberService.initializeUserData();
+    await WalletService.generateSpendingWallet();
   }
 
   void showDuplicateLoginWarning() {

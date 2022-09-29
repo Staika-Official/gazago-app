@@ -1,14 +1,14 @@
 import 'package:flutter/material.dart';
-import 'package:get/get.dart';
 import 'package:gaza_go/constants/enums.dart';
 import 'package:gaza_go/platform/controllers/wallet_asset_controller.dart';
 import 'package:gaza_go/presentations/views/wallet/asset_item_coin.dart';
 import 'package:gaza_go/presentations/views/wallet/asset_item_nft.dart';
+import 'package:get/get.dart';
 
-class WalletAssets extends StatelessWidget {
-  const WalletAssets({Key? key}) : super(key: key);
+class AssetWallet extends StatelessWidget {
+  const AssetWallet({Key? key}) : super(key: key);
 
-  List<Widget> renderCoinAssetList(WalletAssetController controller) {
+  List<Widget> renderCoinAssetList(AssetWalletController controller) {
     return controller.coinAssetList
         .map(
           (asset) => AssetItemCoin(
@@ -19,7 +19,7 @@ class WalletAssets extends StatelessWidget {
         .toList();
   }
 
-  List<Widget> renderNftAssetList(WalletAssetController controller) {
+  List<Widget> renderNftAssetList(AssetWalletController controller) {
     return controller.nftAssetList
         .map(
           (asset) => AssetItemNft(
@@ -32,7 +32,7 @@ class WalletAssets extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    WalletAssetController controller = Get.put(WalletAssetController());
+    AssetWalletController controller = Get.put(AssetWalletController());
 
     return SingleChildScrollView(
       physics: const ClampingScrollPhysics(),

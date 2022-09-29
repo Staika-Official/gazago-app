@@ -84,3 +84,78 @@ enum RoundType {
   ceil,
   floor,
 }
+
+enum PaymentPurpose {
+  rechargeStamina,
+  rechargeDurability,
+  repairItem,
+  buyItem,
+  badgeSynthesize,
+  buyBadge,
+  rechargeTik,
+}
+
+extension PaymentPurposeLabel on PaymentPurpose {
+  String get label {
+    switch (this) {
+      case PaymentPurpose.rechargeStamina:
+        return '체력충전';
+      case PaymentPurpose.rechargeDurability:
+        return '내구도충전';
+      case PaymentPurpose.repairItem:
+        return '아이템수리';
+      case PaymentPurpose.buyItem:
+        return '아이템구매';
+      case PaymentPurpose.badgeSynthesize:
+        return '배지합성';
+      case PaymentPurpose.buyBadge:
+        return '배지구매';
+      case PaymentPurpose.rechargeTik:
+        return 'TIK충전';
+    }
+  }
+}
+
+enum Token {
+  taika,
+  staika,
+}
+
+extension TokenMint on Token {
+  int get mint {
+    switch (this) {
+      case Token.taika:
+        return 1;
+      case Token.staika:
+        return 2;
+    }
+  }
+}
+
+enum TransactionConfirmationStatus {
+  processed,
+  confirmed,
+  finalized,
+}
+
+enum TransactionType {
+  inbound,
+  outbound,
+  fee,
+  unknown,
+}
+
+extension TransactionTypeLabel on TransactionType {
+  String get label {
+    switch (this) {
+      case TransactionType.inbound:
+        return 'IN'; //입금
+      case TransactionType.outbound:
+        return 'OUT'; //출금
+      case TransactionType.fee:
+        return 'FEE'; //수수료출금
+      case TransactionType.unknown:
+        return 'UNKNOWN'; //알수 없음
+    }
+  }
+}

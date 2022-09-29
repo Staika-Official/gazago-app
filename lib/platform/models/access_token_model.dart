@@ -1,20 +1,20 @@
 import 'package:json_annotation/json_annotation.dart';
 
-part 'token_model.g.dart';
+part 'access_token_model.g.dart';
 
 @JsonSerializable()
-class TokenModel {
+class AccessTokenModel {
   String accessToken;
   String refreshToken;
   String? accountStatus;
 
-  TokenModel({
+  AccessTokenModel({
     required this.accessToken,
     required this.refreshToken,
     required this.accountStatus,
   });
 
-  factory TokenModel.fromJson(Map<String, dynamic> json) => _$TokenModelFromJson(json);
+  factory AccessTokenModel.fromJson(Map<String, dynamic> json) => _$AccessTokenModelFromJson(json);
 
-  Map<String, dynamic> toJson() => _$TokenModelToJson(this);
+  Map<String, dynamic> toJson() => _$AccessTokenModelToJson(this);
 }

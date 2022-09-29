@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:gaza_go/presentations/components/default_container.dart';
-import 'package:gaza_go/presentations/views/wallet/wallet_assets.dart';
-import 'package:gaza_go/presentations/views/wallet/wallet_inventory.dart';
+import 'package:gaza_go/presentations/views/wallet/asset_wallet.dart';
+import 'package:gaza_go/presentations/views/wallet/spending_wallet.dart';
 
 class WalletHome extends StatefulWidget {
   const WalletHome({Key? key}) : super(key: key);
@@ -64,8 +64,8 @@ class _WalletHomeState extends State<WalletHome> with SingleTickerProviderStateM
             child: TabBarView(
               controller: _tabController,
               children: [
-                WalletInventory(),
-                WalletAssets(),
+                SpendingWallet(),
+                AssetWallet(),
               ],
             ),
           ),

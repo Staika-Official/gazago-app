@@ -1,9 +1,10 @@
-import 'package:get/get.dart';
 import 'package:gaza_go/platform/helpers/wallet_mixin.dart';
-import 'package:gaza_go/platform/models/asset_item_coin_model.dart';
+import 'package:gaza_go/platform/models/asset_token_balance_model.dart';
+import 'package:gaza_go/platform/models/dummy_token_model.dart';
+import 'package:get/get.dart';
 
-class WalletInventoryController extends GetxController with WalletMixin {
-  final RxList<AssetItemCoinModel> inventoryList = RxList.empty();
+class SpendingWalletController extends GetxController with WalletMixin {
+  final RxList<DummyTokenModel> inventoryList = RxList.empty();
 
   @override
   void onInit() {
@@ -13,9 +14,9 @@ class WalletInventoryController extends GetxController with WalletMixin {
 
   void getInventoryList() {
     inventoryList.value = [
-      AssetItemCoinModel(name: 'solana', balance: 100.00, tokenImageUrl: 'https://placeimg.com/20/20/any'),
-      AssetItemCoinModel(name: 'staika', balance: 10.00, tokenImageUrl: 'https://placeimg.com/20/20/any'),
-      AssetItemCoinModel(name: 'taika', balance: 1000.00, tokenImageUrl: 'https://placeimg.com/20/20/any'),
+      DummyTokenModel(name: 'solana', balance: 100.00, tokenImageUrl: 'https://placeimg.com/20/20/any'),
+      DummyTokenModel(name: 'staika', balance: 10.00, tokenImageUrl: 'https://placeimg.com/20/20/any'),
+      DummyTokenModel(name: 'taika', balance: 1000.00, tokenImageUrl: 'https://placeimg.com/20/20/any'),
     ];
   }
 }

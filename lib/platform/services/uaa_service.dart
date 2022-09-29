@@ -1,12 +1,12 @@
 import 'package:dio/dio.dart';
 import 'package:gaza_go/platform/apis/uaa.dart';
-import 'package:gaza_go/platform/models/token_model.dart';
+import 'package:gaza_go/platform/models/access_token_model.dart';
 import 'package:gaza_go/platform/models/user_account_model.dart';
 
 class UaaService {
-  static Future<TokenModel> emailLogin() async {
+  static Future<AccessTokenModel> emailLogin() async {
     Response res = await UaaApi.emailLogin();
-    TokenModel token = TokenModel.fromJson(res.data);
+    AccessTokenModel token = AccessTokenModel.fromJson(res.data);
     return token;
   }
 

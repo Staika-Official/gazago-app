@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:gaza_go/constants/routes.dart';
-import 'package:gaza_go/platform/models/asset_item_coin_model.dart';
+import 'package:gaza_go/platform/models/dummy_token_model.dart';
 import 'package:gaza_go/platform/services/uaa_service.dart';
 import 'package:gaza_go/presentations/components/main_appbar.dart';
 import 'package:gaza_go/presentations/components/secondary_appbar.dart';
@@ -12,7 +12,7 @@ import 'package:gaza_go/presentations/views/shop/index.dart';
 import 'package:get/get.dart';
 
 class HomeMenuController extends GetxController {
-  final RxList<AssetItemCoinModel> walletList = RxList.empty();
+  final RxList<DummyTokenModel> walletList = RxList.empty();
   final RxInt selectedIndex = RxInt(2);
 
   final List<PreferredSizeWidget> appbarList = [
@@ -43,9 +43,9 @@ class HomeMenuController extends GetxController {
 
   void getWalletList() {
     walletList.value = [
-      AssetItemCoinModel(name: 'solana', balance: 100.00, tokenImageUrl: 'https://placeimg.com/20/20/any'),
-      AssetItemCoinModel(name: 'staika', balance: 10.00, tokenImageUrl: 'https://placeimg.com/20/20/any'),
-      AssetItemCoinModel(name: 'taika', balance: 1000.00, tokenImageUrl: 'https://placeimg.com/20/20/any'),
+      DummyTokenModel(name: 'solana', balance: 100.00, tokenImageUrl: 'https://placeimg.com/20/20/any'),
+      DummyTokenModel(name: 'staika', balance: 10.00, tokenImageUrl: 'https://placeimg.com/20/20/any'),
+      DummyTokenModel(name: 'taika', balance: 1000.00, tokenImageUrl: 'https://placeimg.com/20/20/any'),
     ];
   }
 
