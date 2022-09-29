@@ -1,5 +1,4 @@
 import 'dart:async';
-import 'dart:developer';
 
 import 'package:flutter/material.dart';
 import 'package:gaza_go/constants/enums.dart';
@@ -7,10 +6,13 @@ import 'package:gaza_go/constants/routes.dart';
 import 'package:gaza_go/platform/helpers/activity_mixin.dart';
 import 'package:gaza_go/platform/helpers/challenge_mixin.dart';
 import 'package:gaza_go/platform/helpers/map_mixin.dart';
+import 'package:gaza_go/platform/models/inventory_item_model.dart';
+import 'package:gaza_go/platform/models/repair_shoes_model.dart';
 import 'package:gaza_go/platform/models/stat_model.dart';
 import 'package:gaza_go/platform/models/user_stamina_recharge_model.dart';
 import 'package:gaza_go/platform/models/user_state_model.dart';
 import 'package:gaza_go/platform/services/activity_service.dart';
+import 'package:gaza_go/platform/services/item_service.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:get/get.dart';
 import 'package:location/location.dart';
@@ -27,7 +29,12 @@ class Permissions {
 
 class ActivityController extends GetxController with MapMixin, ActivityMixin, ChallengeMixin {
   //index.dart
-  final RxList<StatModel> statList = RxList.empty();
+  RxList<StatModel> get statList {
+    return RxList([
+      StatModel(name: '체력', currentStat: userState.value.state != null ? userState.value.state!.stamina : 0, type: 'STAMINA'),
+      StatModel(name: '내구도', currentStat: userState.value.shoes != null ? userState.value.shoes!.durability! : 0, type: 'DURABILITY'),
+    ]);
+  }
 
   RxList<Map> get activitySumList {
     return RxList([
@@ -39,27 +46,30 @@ class ActivityController extends GetxController with MapMixin, ActivityMixin, Ch
   }
 
   final RxDouble _currentSliderValue = RxDouble(0);
+  RxInt remainDurability = RxInt(0);
+  RxInt repairDurability = RxInt(0);
   RxInt costTik = RxInt(0);
 
   void onClickRepairStat(stat) {
-    _currentSliderValue.value = stat.currentStat;
-    inspect(stat);
-    switch (stat.type) {
-      case 'STAMINA':
-        handleShowStaminaPopup(stat);
-        break;
-      case 'DURABILITY':
-        break;
+    if (stat.type == 'DURABILITY') {
+      _currentSliderValue.value = stat.currentStat;
+      remainDurability.value = stat.currentStat.toInt();
     }
+    handleShowStaminaPopup(stat);
   }
 
   void handleShowStaminaPopup(stat) {
     Get.dialog(
       AlertDialog(
-        title: const Text(
-          '체력 충전 하기',
-          textAlign: TextAlign.center,
-        ),
+        title: stat.type == 'STAMINA'
+            ? const Text(
+                '체력 충전 하기',
+                textAlign: TextAlign.center,
+              )
+            : const Text(
+                '내구도 수리 하기',
+                textAlign: TextAlign.center,
+              ),
         content: Column(
           mainAxisSize: MainAxisSize.min,
           crossAxisAlignment: CrossAxisAlignment.center,
@@ -73,18 +83,19 @@ class ActivityController extends GetxController with MapMixin, ActivityMixin, Ch
                 value: _currentSliderValue.value > 100 ? 100 : double.parse(_currentSliderValue.value.toStringAsFixed(0)),
                 max: 100,
                 min: 0,
-                divisions: 10,
+                divisions: stat.type == 'STAMINA' ? 10 : 100,
                 label: _currentSliderValue.value.floor().toString(),
                 onChanged: (double value) {
-                  print(value);
-                  _currentSliderValue.value = double.parse(value.toStringAsFixed(0));
-                  costTik.value = _currentSliderValue.value.toInt() * 100;
-                  // if (value >= selectedItem.value.durability.toInt().floor()) {
-                  //   _currentSliderValue.value = value;
-                  //   repairDurability.value = value.toInt();
-                  //   print(remainDurability.value);
-                  //   costTik.value = (value.toInt() - remainDurability.value).abs() * 100;
-                  // }
+                  if (stat.type == 'STAMINA') {
+                    _currentSliderValue.value = double.parse(value.toStringAsFixed(0));
+                    costTik.value = _currentSliderValue.value.toInt() * 100;
+                  } else {
+                    if (value >= stat.currentStat.toInt().floor()) {
+                      _currentSliderValue.value = value;
+                      repairDurability.value = value.toInt();
+                      costTik.value = (value.toInt() - remainDurability.value).abs() * 100;
+                    }
+                  }
                 },
               );
             }),
@@ -94,26 +105,46 @@ class ActivityController extends GetxController with MapMixin, ActivityMixin, Ch
           ],
         ),
         actions: [
-          ElevatedButton(onPressed: () => Get.back(), child: const Text('아니요')),
-          ElevatedButton(onPressed: () => fetchRechargeStamina(stat.type), child: const Text('네')),
+          ElevatedButton(onPressed: () => closeRepairPopup(), child: const Text('아니요')),
+          ElevatedButton(onPressed: () => stat.type == 'STAMINA' ? fetchRechargeStamina(stat.type) : fetchRepairShoes(), child: const Text('네')),
         ],
       ),
     );
   }
 
   void fetchRechargeStamina(type) async {
-    UserStateModel userState = await ActivityService.fetchUserStaminaRecharge(
+    UserStateModel newUserState = await ActivityService.fetchUserStaminaRecharge(
       UserStaminaRechargeModel(
         type: type,
         stat: _currentSliderValue.value.toInt(),
         feeTik: costTik.value,
       ),
     );
-    print(userState);
+    userState.update((state) {
+      state!.state = newUserState;
+    });
+
+    closeRepairPopup();
+  }
+
+  void fetchRepairShoes() async {
+    InventoryItemModel repairModel = await ItemService.fetchRepairItemShoes(
+      RepairShoesModel(
+        id: userState.value.shoes!.id,
+        durability: repairDurability.value,
+        tik: costTik.toInt(),
+      ),
+    );
+    userState.update((state) {
+      state!.shoes!.durability = repairModel.durability;
+    });
+
     closeRepairPopup();
   }
 
   void initRepairInfo() {
+    repairDurability.value = 0;
+    remainDurability.value = 0;
     _currentSliderValue.value = 0;
     costTik.value = 0;
   }
@@ -148,10 +179,6 @@ class ActivityController extends GetxController with MapMixin, ActivityMixin, Ch
 
   void getUserState() async {
     userState.value = await ActivityService.getCurrentUserState();
-    statList.value = [
-      StatModel(name: '체력', currentStat: userState.value.state!.stamina, type: 'STAMINA'),
-      StatModel(name: '내구도', currentStat: userState.value.shoes!.durability!, type: 'DURABILITY'),
-    ];
 
     if (userState.value.exercise != null && userState.value.exercise!.state == 'ONGOING') {
       continueExercise();
