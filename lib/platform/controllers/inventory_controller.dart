@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:gaza_go/constants/routes.dart';
-import 'package:gaza_go/platform/apis/badge.dart';
 import 'package:gaza_go/platform/helpers/linear_progress_mixin.dart';
 import 'package:gaza_go/platform/models/equipped_item_model.dart';
 import 'package:gaza_go/platform/models/inventory_badge_item_model.dart';
@@ -9,6 +8,7 @@ import 'package:gaza_go/platform/models/inventory_item_model.dart';
 import 'package:gaza_go/platform/models/repair_shoes_model.dart';
 import 'package:gaza_go/platform/models/stat_model.dart';
 import 'package:gaza_go/platform/services/activity_service.dart';
+import 'package:gaza_go/platform/services/badge_service.dart';
 import 'package:gaza_go/platform/services/item_service.dart';
 import 'package:get/get.dart';
 
@@ -154,7 +154,7 @@ class InventoryController extends GetxController with LinearProgressMixin {
   }
 
   void getUserBadgesList() async {
-    List<InventoryBadgeModel> badges = await BadgeApi.getUserBadgesList(3);
+    List<InventoryBadgeModel> badges = await BadgeService.getUserBadgesList();
     userBadgesList.value = badges;
     equippedBadge.value = userBadgesList.firstWhere((item) => item.state == 'EQUIPPED');
   }
