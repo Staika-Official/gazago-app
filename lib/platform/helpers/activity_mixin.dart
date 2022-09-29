@@ -156,7 +156,9 @@ class ActivityMixin {
     exerciseData.value = List.empty(growable: true);
     exerciseState.value = ExerciseState.ongoing;
     exerciseData.add(userState.value.exercise!);
-    coordinates.addAll(parseCoordinates());
+    if (userState.value.exercise!.locations != null) {
+      coordinates.addAll(parseCoordinates());
+    }
     initStream();
     updateExercise();
     startPeriodicUpdate();

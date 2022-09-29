@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:gaza_go/constants/enums.dart';
 import 'package:gaza_go/platform/controllers/archive_controller.dart';
 import 'package:gaza_go/platform/helpers/base_helper.dart';
 import 'package:get/get.dart';
@@ -20,10 +21,9 @@ class ArchiveHome extends StatelessWidget {
                   children: [
                     Row(
                       children: [
-                        // TODO. api에서 운동타임 추가 필요.
-                        // Icon(
-                        //   archive.activityType == ActivityType.climbing ? Icons.nordic_walking : Icons.directions_walk,
-                        // ),
+                        Icon(
+                          archive.type == ExerciseType.hiking.name.toUpperCase() ? Icons.nordic_walking : Icons.directions_walk,
+                        ),
                         Padding(
                           padding: EdgeInsets.only(
                             left: 10,
@@ -39,7 +39,7 @@ class ArchiveHome extends StatelessWidget {
                       thickness: 1,
                     ),
                     Text(
-                      '${archive.startPoint} \u00B7 ${archive.time} \u00B7 ${archive.distance}km \u00B7 ${archive.rewardGo}GO',
+                      '${archive.time} \u00B7 ${archive.distance}km \u00B7 ${archive.rewardGo}GO',
                     ),
                   ],
                 ),

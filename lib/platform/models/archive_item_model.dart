@@ -1,4 +1,3 @@
-import 'package:gaza_go/constants/enums.dart';
 import 'package:json_annotation/json_annotation.dart';
 
 part 'archive_item_model.g.dart';
@@ -7,52 +6,36 @@ part 'archive_item_model.g.dart';
 class ArchiveItemModel {
   int? id;
   int? userId;
+  String? type;
   int? steps;
   double? speed;
   double? distance;
-  double? altitude;
   int? time;
-  String? startPoint;
-  double? rewardGo;
-  double? rewardDistance;
-  double? spendStamina;
-  double? spendDurability;
   String? startedDate;
   String? endedDate;
-  String? locations;
+  double? rewardGo;
+  String? state;
   int? badgeIssueId;
   int? challengeId;
-  String? state;
-  bool? deleted;
-  String? createdBy;
-  String? createdDate;
-  String? lastModifiedBy;
-  String? lastModifiedDate;
+  String? badgeDescription;
+  String? challengeName;
 
   ArchiveItemModel({
     this.id,
     this.userId,
+    this.type,
     this.steps,
     this.speed,
     this.distance,
-    this.altitude,
     this.time,
-    this.startPoint,
-    this.rewardGo,
-    this.rewardDistance,
-    this.spendStamina,
-    this.spendDurability,
     this.startedDate,
     this.endedDate,
-    this.locations,
+    this.rewardGo,
+    this.state,
     this.badgeIssueId,
     this.challengeId,
-    this.state,
-    this.deleted,
-    this.createdBy,
-    this.createdDate,
-    this.lastModifiedBy,
-    this.lastModifiedDate,
+    this.badgeDescription,
+    this.challengeName,
   });
 
   factory ArchiveItemModel.fromJson(Map<String, dynamic> json) => _$ArchiveItemModelFromJson(json);

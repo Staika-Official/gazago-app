@@ -1,5 +1,4 @@
 import 'package:gaza_go/platform/helpers/wallet_mixin.dart';
-import 'package:gaza_go/platform/models/asset_token_balance_model.dart';
 import 'package:gaza_go/platform/models/dummy_token_model.dart';
 import 'package:get/get.dart';
 
@@ -14,9 +13,8 @@ class SpendingWalletController extends GetxController with WalletMixin {
 
   void getInventoryList() {
     inventoryList.value = [
-      DummyTokenModel(name: 'solana', balance: 100.00, tokenImageUrl: 'https://placeimg.com/20/20/any'),
-      DummyTokenModel(name: 'staika', balance: 10.00, tokenImageUrl: 'https://placeimg.com/20/20/any'),
       DummyTokenModel(name: 'taika', balance: 1000.00, tokenImageUrl: 'https://placeimg.com/20/20/any'),
+      DummyTokenModel(name: 'staika', balance: 10.00, tokenImageUrl: 'https://placeimg.com/20/20/any'),
     ];
   }
 }
