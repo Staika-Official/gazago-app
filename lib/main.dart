@@ -13,6 +13,7 @@ import 'package:hive_flutter/adapters.dart';
 import 'package:permission_handler/permission_handler.dart';
 
 import 'constants/routes.dart';
+import 'platform/controllers/wallet_master_controller.dart';
 
 Future<void> _firebaseMessagingBackgroundHandler(RemoteMessage message) async {
   await initFirebase();
@@ -49,6 +50,7 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    Get.put(WalletMasterController());
     return GetMaterialApp(
       builder: (context, child) {
         // 시스템 폰트 크기 무시

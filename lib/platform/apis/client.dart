@@ -44,8 +44,8 @@ class Api {
       '\nMethods: ${options.method}'
       '\nHeader Authorization: ${options.headers['Authorization']}'
       '\nPath: ${options.baseUrl + options.path}'
-      '\nData: ${jsonEncode(options.data)}'
-      '\nQueries: ${(options.queryParameters)}',
+      '\nQueries: ${(options.queryParameters)}'
+      '\nData: ${jsonEncode(options.data)}',
     );
     return handler.next(options);
   }
@@ -54,6 +54,8 @@ class Api {
     _logger.d(
       '------------->'
       '\nRESPONSE'
+      '\nPath: ${response.requestOptions.baseUrl + response.requestOptions.path}'
+      '\nQueries: ${response.requestOptions.queryParameters}'
       '\nResponse: ${response.data}',
     );
     return handler.next(response);
@@ -65,6 +67,7 @@ class Api {
       '\nERROR'
       '\nError: ${e.error}'
       '\nErrorPath: ${e.response?.requestOptions.baseUrl}${e.response?.requestOptions.path}'
+      '\nErrorQuery: ${e.response?.requestOptions.queryParameters}'
       '\nError ResponseCode: ${e.response?.statusCode}'
       '\nError ResponseMessage: ${e.response?.statusMessage}',
     );
