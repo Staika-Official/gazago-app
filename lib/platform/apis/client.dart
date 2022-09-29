@@ -64,6 +64,7 @@ class Api {
       '------------->'
       '\nERROR'
       '\nError: ${e.error}'
+      '\nErrorPath: ${e.response?.requestOptions.baseUrl}${e.response?.requestOptions.path}'
       '\nError ResponseCode: ${e.response?.statusCode}'
       '\nError ResponseMessage: ${e.response?.statusMessage}',
     );
