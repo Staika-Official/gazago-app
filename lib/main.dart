@@ -10,6 +10,7 @@ import 'package:gaza_go/platform/stores/hive_store.dart';
 import 'package:get/get.dart';
 import 'package:hive/hive.dart';
 import 'package:hive_flutter/adapters.dart';
+import 'package:permission_handler/permission_handler.dart';
 
 import 'constants/routes.dart';
 
@@ -17,6 +18,10 @@ Future<void> _firebaseMessagingBackgroundHandler(RemoteMessage message) async {
   await initFirebase();
 
   //TODO. message 처리 필요
+}
+
+Future<PermissionStatus> requestNotificationPermission() async {
+  return await Permission.notification.request();
 }
 
 void main() async {

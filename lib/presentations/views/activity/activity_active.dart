@@ -146,7 +146,7 @@ class ActivityActive extends StatelessWidget {
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  Text('time ' + controller.exerciseTime.value.toString()),
+                  Text('time ' + controller.time.value.toString()),
                   Text('distance ' + controller.totalDistance.value.toString()),
                 ],
               )

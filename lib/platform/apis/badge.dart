@@ -20,7 +20,7 @@ class BadgeApi {
   }
 
   static Future<Response> fetchUserIssuanceBadge(userId) async {
-    return await Api.client(serviceUrl: ServiceUrl.badgeService).put('/users/${userId}/issues/hiking');
+    return await Api.client(serviceUrl: ServiceUrl.badgeService).post('/users/${userId}/issues/hiking');
   }
 
   static Future<List<InventoryBadgeModel>> fetchUserSyntheticBadge(userId) async {

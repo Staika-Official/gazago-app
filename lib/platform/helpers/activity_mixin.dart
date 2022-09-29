@@ -4,6 +4,7 @@ import 'package:flutter_naver_map/flutter_naver_map.dart';
 import 'package:gaza_go/constants/enums.dart';
 import 'package:gaza_go/platform/helpers/activity_helper.dart';
 import 'package:gaza_go/platform/helpers/base_helper.dart';
+import 'package:gaza_go/platform/models/challenge_model.dart';
 import 'package:gaza_go/platform/models/current_user_state_model.dart';
 import 'package:gaza_go/platform/models/user_exercise_model.dart';
 import 'package:gaza_go/platform/services/activity_service.dart';
@@ -19,7 +20,6 @@ class ActivityMixin {
   final Rx<LocationData> currentLocation = Rx(LocationData.fromMap({}));
   final RxList<LocationData> locations = RxList.empty();
   final RxString pedestrianStatus = RxString('');
-  final RxInt exerciseTime = RxInt(0);
   Timer? exerciseTimer;
   Timer? updateTimer;
   Completer<NaverMapController> mapCompleter = Completer();
@@ -29,6 +29,10 @@ class ActivityMixin {
 
   RxInt get steps {
     return RxInt(userState.value.exercise?.steps ?? 0);
+  }
+
+  RxInt get time {
+    return RxInt(userState.value.exercise?.time ?? 0);
   }
 
   RxDouble get speed {
@@ -91,26 +95,38 @@ class ActivityMixin {
 
   void initExerciseStats() {
     locations.value = List.empty(growable: true);
-    userState.value.exercise!.steps = 0;
-    userState.value.exercise!.time = 0;
+    userState.update((state) {
+      state?.exercise!.steps = 0;
+      state?.exercise!.time = 0;
+    });
     pedestrianStatus.value = '';
   }
 
   void initExerciseTimer() {
-    if (userState.value.exercise!.time == null) userState.value.exercise!.time = 0;
-    exerciseTime.value = userState.value.exercise!.time!;
+    if (userState.value.exercise!.time == null) userState.update((state) => state?.exercise!.time = 0);
 
     exerciseTimer = Timer.periodic(Duration(seconds: 1), (timer) {
       if (userState.value.exercise?.time != null) {
-        userState.value.exercise!.time = userState.value.exercise!.time! + 1;
-        exerciseTime.value++;
+        userState.update((state) {
+          state?.exercise!.time = state.exercise!.time! + 1;
+        });
       }
     });
   }
 
   void initStepStream() {
     stepSubscription = Pedometer.stepCountStream.listen((StepCount event) {
-      userState.value.exercise!.steps = event.steps;
+      print('================');
+      print('================');
+      print('================');
+      print(event.steps);
+      print('================');
+      print('================');
+      print(userState.value.exercise?.steps);
+      print('================');
+      print('================');
+      userState.update((state) => state?.exercise!.steps = event.steps);
+      print(userState.value.exercise?.steps);
     });
     stepSubscription!.onError((error) {
       print(error);
@@ -126,7 +142,10 @@ class ActivityMixin {
     });
   }
 
-  void startExercise(ExerciseType exerciseType) async {
+  void startExercise(ExerciseType exerciseType, List<ChallengeModel> doableChallengeList) async {
+    int? challengeId;
+    if (exerciseType == ExerciseType.hiking && doableChallengeList.isNotEmpty) challengeId = doableChallengeList.first.id!;
+
     UserExerciseModel exerciseModel = await ActivityService.fetchStartUserExercises(
       UserExerciseModel(
         userId: int.parse(
@@ -143,10 +162,10 @@ class ActivityMixin {
         altitude: currentLocation.value.altitude,
         time: 0,
         startPoint: '${currentLocation.value.longitude}, ${currentLocation.value.latitude}',
-        challengeId: null, // TODO. 현위치랑 가까운 곳에 있는 챌린지를 처음 앱실행할때 가져오도록 수정필요
+        challengeId: challengeId, // TODO. 현위치랑 가까운 곳에 있는 챌린지를 처음 앱실행할때 가져오도록 수정필요
       ),
     );
-    userState.value.exercise = exerciseModel;
+    userState.update((state) => state!.exercise = exerciseModel);
     initExerciseStats();
     initStream();
     startPeriodicUpdate();
@@ -197,8 +216,10 @@ class ActivityMixin {
     );
 
     if (newUserState.exercise!.state == 'ENDED') {
-      userState.value = newUserState;
-      userState.value.exercise = null;
+      userState.update((state) {
+        state = newUserState;
+        userState.value.exercise = null;
+      });
       updateTimer!.cancel();
       exerciseTimer!.cancel();
       stepSubscription!.cancel();

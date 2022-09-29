@@ -30,13 +30,13 @@ class LoginController extends GetxController {
     }
 
     await getUserInfo();
+    Get.toNamed(Routes.home);
   }
 
   Future<void> emailLogin() async {
     TokenModel token = await UaaService.emailLogin();
     HiveStore.save(key: HiveKey.accessToken.name, value: token.accessToken);
     HiveStore.save(key: HiveKey.refreshToken.name, value: token.refreshToken);
-    Get.toNamed(Routes.home);
   }
 
   Future<UserCredential> signInWithGoogle() async {
