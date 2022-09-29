@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:get/get.dart';
 import 'package:gaza_go/constants/routes.dart';
 import 'package:gaza_go/platform/models/asset_item_coin_model.dart';
+import 'package:gaza_go/platform/services/uaa_service.dart';
 import 'package:gaza_go/presentations/components/main_appbar.dart';
 import 'package:gaza_go/presentations/components/secondary_appbar.dart';
 import 'package:gaza_go/presentations/views/activity/index.dart';
@@ -9,6 +9,7 @@ import 'package:gaza_go/presentations/views/archive/index.dart';
 import 'package:gaza_go/presentations/views/inventory/index.dart';
 import 'package:gaza_go/presentations/views/leaderboard/index.dart';
 import 'package:gaza_go/presentations/views/shop/index.dart';
+import 'package:get/get.dart';
 
 class HomeMenuController extends GetxController {
   final RxList<AssetItemCoinModel> walletList = RxList.empty();
@@ -34,7 +35,8 @@ class HomeMenuController extends GetxController {
   }
 
   @override
-  void onInit() {
+  void onInit() async {
+    await checkLoginStatus();
     getWalletList();
     super.onInit();
   }
@@ -53,5 +55,10 @@ class HomeMenuController extends GetxController {
 
   void selectMenu(int index) {
     selectedIndex.value = index;
+  }
+
+  Future<void> checkLoginStatus() async {
+    int statusCode = await UaaService.checkLoginStatus();
+    if (statusCode != 200) Get.offAll(Routes.login);
   }
 }

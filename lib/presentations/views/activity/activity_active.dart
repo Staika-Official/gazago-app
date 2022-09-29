@@ -29,8 +29,7 @@ class ActivityActive extends StatelessWidget {
           (challenge) => CircleOverlay(
             overlayId: 'ChallengeEnd' + challenge.id!.toString(),
             center: LatLng(challenge.endLat!, challenge.endLon!),
-            // radius: challenge.endRadius!,
-            radius: 10,
+            radius: challenge.endRadius!,
             color: Colors.transparent,
             outlineColor: Colors.red[300],
             outlineWidth: 3,

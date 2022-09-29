@@ -18,7 +18,7 @@ class UaaApi {
     return await uaaApi.get('/account');
   }
 
-  static Future<Response> checkLoginState() async {
+  static Future<Response> checkLoginStatus() async {
     return await Api.client(serviceUrl: '/services/gazago').get('/api/ping');
   }
 }

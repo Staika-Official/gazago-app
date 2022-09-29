@@ -15,4 +15,9 @@ class UaaService {
     UserAccountModel user = UserAccountModel.fromJson(res.data);
     return user;
   }
+
+  static Future<int> checkLoginStatus() async {
+    Response res = await UaaApi.checkLoginStatus();
+    return res.statusCode!;
+  }
 }
