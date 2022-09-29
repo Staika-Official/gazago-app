@@ -12,11 +12,11 @@ class ChallengeMixin {
   final RxList<ChallengeModel> doableChallenges = RxList.empty();
   final RxList<ChallengeModel> achievableChallenges = RxList.empty();
 
-  void getChallengeList() async {
+  Future<void> getChallengeList() async {
     challengeList.value = await ActivityService.getChallenges();
   }
 
-  void getNearByChallengeList(LocationData currentLocation) async {
+  Future<void> getNearByChallengeList(LocationData currentLocation) async {
     challengeList.value = await ActivityService.getNearByChallenges(currentLocation);
   }
 

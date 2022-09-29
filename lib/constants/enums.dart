@@ -71,4 +71,16 @@ extension ResponseStatusCode on ResponseStatus {
   }
 }
 
-enum ExerciseState { init, ongoing, paused, finished }
+enum ExerciseState {
+  init,
+  ready,
+  ongoing,
+  paused,
+  finished,
+}
+
+enum RoundType {
+  round,
+  ceil,
+  floor,
+}

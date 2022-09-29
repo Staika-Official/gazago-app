@@ -164,9 +164,9 @@ class ActivityController extends GetxController with MapMixin, ActivityMixin, Ch
   void onInit() async {
     getUserState();
     await getCurrentLocation();
-    getNearByChallengeList(currentLocation.value);
-    initLocationStream();
+    await getNearByChallengeList(currentLocation.value);
     await setMarkerImages();
+    initLocationStream();
     super.onInit();
   }
 
@@ -182,8 +182,10 @@ class ActivityController extends GetxController with MapMixin, ActivityMixin, Ch
 
   void getUserState() async {
     userState.value = await ActivityService.getCurrentUserState();
+    exerciseState.value = ExerciseState.ready;
 
     if (userState.value.exercise != null && userState.value.exercise!.state == 'ONGOING') {
+      exerciseState.value = ExerciseState.ongoing;
       continueExercise();
     }
   }

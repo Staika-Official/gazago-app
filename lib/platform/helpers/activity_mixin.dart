@@ -204,7 +204,7 @@ class ActivityMixin {
     );
 
     if (newUserState.exercise!.state == 'ENDED') {
-      exerciseState.value = ExerciseState.finished;
+      exerciseState.value = ExerciseState.ready;
       userState.update((state) {
         state = newUserState;
         userState.value.exercise = null;

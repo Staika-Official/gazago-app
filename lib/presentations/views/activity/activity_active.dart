@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_naver_map/flutter_naver_map.dart';
 import 'package:gaza_go/constants/routes.dart';
 import 'package:gaza_go/platform/controllers/activity_controller.dart';
+import 'package:gaza_go/platform/helpers/base_helper.dart';
 import 'package:gaza_go/presentations/components/default_container.dart';
 import 'package:get/get.dart';
 
@@ -138,15 +139,15 @@ class ActivityActive extends StatelessWidget {
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  Text('speed ' + controller.realTimeSpeed.value.toString()),
-                  Text('avgSpeed ' + controller.avgSpeed.value.toString()),
+                  Text('speed ' + formatDecimalPlaces(controller.realTimeSpeed.value, 1) + 'km/h'),
+                  Text('avgSpeed ' + formatDecimalPlaces(controller.avgSpeed.value, 1) + 'km/h'),
                 ],
               ),
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  Text('time ' + controller.time.value.toString()),
-                  Text('distance ' + controller.totalDistance.value.toString()),
+                  Text('time ' + formatSeconds(controller.time.value)),
+                  Text('distance ' + formatDecimalPlaces(controller.totalDistance.value, 2) + 'm'),
                 ],
               )
             ],

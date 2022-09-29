@@ -3,10 +3,14 @@ import 'dart:math';
 double calculateAvgSpeed(List<double> speedList) {
   if (speedList.length > 0) {
     double sumSpeed = speedList.fold(0, (summedValue, speed) => summedValue + speed);
-    return (sumSpeed / speedList.length / 1000) / (1 / 3600);
+    return convertMStoKMH(sumSpeed / speedList.length);
   } else {
     return 0.0;
   }
+}
+
+double convertMStoKMH(double avgSpeedMS) {
+  return (avgSpeedMS * 3600 / 1000);
 }
 
 double calculateTotalDistance(List<double> distanceList) {

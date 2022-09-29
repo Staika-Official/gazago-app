@@ -1,6 +1,8 @@
 import 'dart:convert';
+import 'dart:math';
 
 import 'package:flutter_naver_map/flutter_naver_map.dart';
+import 'package:gaza_go/constants/enums.dart';
 import 'package:gaza_go/platform/firebase/remote_config.dart';
 import 'package:intl/intl.dart';
 import 'package:package_info_plus/package_info_plus.dart';
@@ -53,4 +55,29 @@ List<LatLng> locationStringToLatLng(String locationString) {
     coordinates.add(coordination);
   }
   return coordinates;
+}
+
+String formatDecimalPlaces(double val, int decimalPlaces, {RoundType roundType = RoundType.round}) {
+  num mod = pow(10.0, decimalPlaces);
+  double? formattedNumber;
+  switch (roundType) {
+    case RoundType.round:
+      formattedNumber = ((val * mod).round().toDouble() / mod);
+      break;
+    case RoundType.ceil:
+      formattedNumber = ((val * mod).ceilToDouble() / mod);
+      break;
+    case RoundType.floor:
+      formattedNumber = ((val * mod).floorToDouble() / mod);
+      break;
+  }
+
+  NumberFormat formatter = NumberFormat('#,###.${"#" * decimalPlaces}');
+
+  return formatter.format(formattedNumber);
+}
+
+String formatSeconds(int time) {
+  Duration seconds = Duration(seconds: time);
+  return seconds.toString().split('.').first.padLeft(8, "0");
 }
