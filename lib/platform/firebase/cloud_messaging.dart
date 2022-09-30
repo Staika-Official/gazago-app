@@ -1,6 +1,7 @@
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/foundation.dart' show defaultTargetPlatform, TargetPlatform;
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
+import 'package:gaza_go/constants/enums.dart';
 import 'package:gaza_go/platform/stores/hive_store.dart';
 import 'package:logger/logger.dart';
 
@@ -10,15 +11,15 @@ late FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin;
 Future<void> initFcm() async {
   await requestPermission();
 
-  await FirebaseMessaging.instance.getToken().then((value) async {
-    if (value != null && value.isNotEmpty) {
-      HiveStore.save(key: 'fcmToken', value: value);
+  await FirebaseMessaging.instance.getToken().then((fcmToken) async {
+    if (fcmToken != null && fcmToken.isNotEmpty) {
+      HiveStore.save(key: HiveKey.fcmToken.name, value: fcmToken);
     }
   });
 
   FirebaseMessaging.instance.onTokenRefresh.listen((fcmToken) async {
     if (fcmToken.isNotEmpty) {
-      HiveStore.save(key: 'fcmToken', value: fcmToken);
+      HiveStore.save(key: HiveKey.fcmToken.name, value: fcmToken);
     }
     Logger().i('refresh fcmToken : $fcmToken');
     // Note: 이 콜백은 매번 앱이 실행되거나 새로운 토큰이 생성되었을 때 실행된다.

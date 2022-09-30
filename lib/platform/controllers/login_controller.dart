@@ -1,10 +1,12 @@
 import 'dart:developer';
+import 'dart:io';
 
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:gaza_go/constants/enums.dart';
 import 'package:gaza_go/constants/routes.dart';
 import 'package:gaza_go/platform/models/access_token_model.dart';
+import 'package:gaza_go/platform/models/social_login_info_model.dart';
 import 'package:gaza_go/platform/models/user_account_model.dart';
 import 'package:gaza_go/platform/services/member_service.dart';
 import 'package:gaza_go/platform/services/uaa_service.dart';
@@ -12,6 +14,7 @@ import 'package:gaza_go/platform/services/wallet_service.dart';
 import 'package:gaza_go/platform/stores/hive_store.dart';
 import 'package:get/get.dart';
 import 'package:google_sign_in/google_sign_in.dart';
+import 'package:package_info_plus/package_info_plus.dart';
 import 'package:sign_in_with_apple/sign_in_with_apple.dart';
 
 class LoginController extends GetxController {
@@ -41,7 +44,7 @@ class LoginController extends GetxController {
     HiveStore.save(key: HiveKey.refreshToken.name, value: token.refreshToken);
   }
 
-  Future<UserCredential> signInWithGoogle() async {
+  Future<void> signInWithGoogle() async {
     // Trigger the authentication flow
     final GoogleSignInAccount? googleUser = await GoogleSignIn(scopes: [
       'email',
@@ -61,11 +64,13 @@ class LoginController extends GetxController {
     print(credential.accessToken);
     print(credential.idToken);
 
+    await requestLogin(LoginType.google, credential.idToken!);
+
     // Once signed in, return the UserCredential
-    return await FirebaseAuth.instance.signInWithCredential(credential);
+    // return await FirebaseAuth.instance.signInWithCredential(credential);
   }
 
-  Future<UserCredential> signInWithApple() async {
+  Future<void> signInWithApple() async {
     final appleCredential = await SignInWithApple.getAppleIDCredential(
       scopes: [
         AppleIDAuthorizationScopes.email,
@@ -74,15 +79,17 @@ class LoginController extends GetxController {
     );
 
     final credential = OAuthProvider("apple.com").credential(
-      idToken: appleCredential.identityToken,
       accessToken: appleCredential.authorizationCode,
+      idToken: appleCredential.identityToken,
     );
 
     inspect(credential);
     print(credential.accessToken);
     print(credential.idToken);
 
-    return await FirebaseAuth.instance.signInWithCredential(credential);
+    await requestLogin(LoginType.apple, credential.idToken!);
+
+    // return await FirebaseAuth.instance.signInWithCredential(credential);
   }
 
   Future<void> initUserInfo() async {
@@ -93,6 +100,27 @@ class LoginController extends GetxController {
 
     await MemberService.initializeUserData();
     await WalletService.generateSpendingWallet();
+  }
+
+  Future<void> requestLogin(LoginType loginType, String accessToken) async {
+    String deviceId = HiveStore.loadString(key: HiveKey.uuid.name)!;
+    String fcmToken = HiveStore.loadString(key: HiveKey.fcmToken.name)!;
+    String appVersion = await PackageInfo.fromPlatform().then((info) => info.version);
+    String platform = Platform.operatingSystem;
+    SocialLoginInfoModel loginInfo = SocialLoginInfoModel(
+      provider: loginType.name.toUpperCase(),
+      deviceId: deviceId,
+      fcmToken: fcmToken,
+      token: accessToken,
+      appVersion: appVersion,
+      platform: platform,
+      clientId: 'GAZAGO',
+      forceLogin: true,
+    );
+
+    AccessTokenModel token = await UaaService.socialLogin(loginInfo);
+    HiveStore.save(key: HiveKey.accessToken.name, value: token.accessToken);
+    HiveStore.save(key: HiveKey.refreshToken.name, value: token.refreshToken);
   }
 
   void showDuplicateLoginWarning() {

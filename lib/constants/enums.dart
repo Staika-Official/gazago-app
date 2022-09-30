@@ -41,6 +41,8 @@ enum WalletActionType {
 }
 
 enum HiveKey {
+  uuid,
+  fcmToken,
   accessToken,
   refreshToken,
   userId,

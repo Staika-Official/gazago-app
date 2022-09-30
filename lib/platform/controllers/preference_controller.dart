@@ -1,3 +1,4 @@
+import 'package:gaza_go/constants/enums.dart';
 import 'package:gaza_go/constants/routes.dart';
 import 'package:gaza_go/platform/models/profile_model.dart';
 import 'package:gaza_go/platform/stores/hive_store.dart';
@@ -48,9 +49,12 @@ class PreferenceController extends GetxController {
     appVersion.value = packageInfo.version;
   }
 
-  void showLogoutConfirmation() async {
+  void showLogoutConfirmation() {
     print('logout!');
-    await HiveStore.clear();
+    HiveStore.deleteMultipleKeys(keys: [
+      HiveKey.accessToken.name,
+      HiveKey.refreshToken.name,
+    ]);
     Get.toNamed(Routes.login);
   }
 }

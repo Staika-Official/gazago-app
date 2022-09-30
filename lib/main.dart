@@ -4,6 +4,7 @@ import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:gaza_go/constants/enums.dart';
 import 'package:gaza_go/platform/firebase/core.dart';
 import 'package:gaza_go/platform/firebase/crashlytics.dart';
 import 'package:gaza_go/platform/stores/hive_store.dart';
@@ -11,9 +12,9 @@ import 'package:get/get.dart';
 import 'package:hive/hive.dart';
 import 'package:hive_flutter/adapters.dart';
 import 'package:permission_handler/permission_handler.dart';
+import 'package:uuid/uuid.dart';
 
 import 'constants/routes.dart';
-import 'platform/controllers/wallet_master_controller.dart';
 
 Future<void> _firebaseMessagingBackgroundHandler(RemoteMessage message) async {
   await initFirebase();
@@ -36,6 +37,11 @@ void main() async {
 
     SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp]);
 
+    String? uuid = HiveStore.loadString(key: HiveKey.uuid.name);
+    if (uuid == null || uuid.isEmpty) {
+      HiveStore.save(key: HiveKey.uuid.name, value: Uuid().v4());
+    }
+
     runApp(MyApp());
   }, (error, stack) {
     recordCrashlyticsError(error, stack);
@@ -50,7 +56,6 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    Get.put(WalletMasterController());
     return GetMaterialApp(
       builder: (context, child) {
         // 시스템 폰트 크기 무시
