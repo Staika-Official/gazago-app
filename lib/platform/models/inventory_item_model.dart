@@ -9,6 +9,7 @@ class InventoryItemModel {
   String serialNumber;
   String itemName;
   String itemCategory;
+  String itemGrade;
   double durability;
   double abrasionRate;
   double rewardRate;
@@ -24,6 +25,7 @@ class InventoryItemModel {
     required this.id,
     this.userId,
     required this.serialNumber,
+    required this.itemGrade,
     required this.itemName,
     required this.itemCategory,
     required this.durability,

@@ -58,7 +58,6 @@ class InventoryBadgeDetail extends StatelessWidget {
 
     SyntheticBadgeController syntheticBadgeController = Get.put(SyntheticBadgeController(controller.selectedBadge));
 
-
     return DefaultContainer(
       titleText: '상세',
       child: SingleChildScrollView(
@@ -96,11 +95,20 @@ class InventoryBadgeDetail extends StatelessWidget {
                           ],
                         ),
                       ),
+
                       if (controller.selectedBadge.value.badge.description != null)
                         Padding(
                           padding: const EdgeInsets.only(top: 10, bottom: 10),
                           child: Text(controller.selectedBadge.value.badge.description!),
                         ),
+                      Padding(
+                        padding: const EdgeInsets.only(top: 10, bottom: 10),
+                        child: Text('LV.${controller.selectedBadge.value.badge.level.toString()} '),
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.only(top: 10, bottom: 10),
+                        child: Text('#${controller.selectedBadge.value.badge.id.toString()}'),
+                      ),
                     ],
                   ),
                 ),

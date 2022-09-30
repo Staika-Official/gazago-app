@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:gaza_go/constants/routes.dart';
+import 'package:gaza_go/platform/helpers/inventory_mixin.dart';
 import 'package:gaza_go/platform/helpers/linear_progress_mixin.dart';
 import 'package:gaza_go/platform/models/equipped_item_model.dart';
 import 'package:gaza_go/platform/models/inventory_badge_item_model.dart';
@@ -8,15 +9,14 @@ import 'package:gaza_go/platform/models/inventory_item_model.dart';
 import 'package:gaza_go/platform/models/repair_shoes_model.dart';
 import 'package:gaza_go/platform/models/stat_model.dart';
 import 'package:gaza_go/platform/services/activity_service.dart';
-import 'package:gaza_go/platform/services/badge_service.dart';
 import 'package:gaza_go/platform/services/item_service.dart';
 import 'package:get/get.dart';
 
-class InventoryController extends GetxController with LinearProgressMixin {
+class InventoryController extends GetxController with LinearProgressMixin, InventoryMixin {
   final RxList<StatModel> statList = RxList.empty();
   final RxList<InventoryItemModel> myAllItems = RxList.empty();
   RxList<InventoryBadgeModel> syntheticBadgeList = RxList.empty();
-  RxList<InventoryBadgeModel> userBadgesList = RxList.empty();
+
   final RxBool isShoe = RxBool(false);
   RxInt count = 0.obs;
   RxString getBadgeDate = RxString('');
@@ -26,6 +26,7 @@ class InventoryController extends GetxController with LinearProgressMixin {
 
   final RxDouble _currentSliderValue = RxDouble(0);
   RxList<InventoryItemModel> equippedItemList = RxList.empty();
+
   Rx<InventoryBadgeModel> equippedBadge = Rx(
     InventoryBadgeModel(
       id: -1,
@@ -61,6 +62,7 @@ class InventoryController extends GetxController with LinearProgressMixin {
     InventoryItemModel(
       id: -1,
       serialNumber: '',
+      itemGrade: '',
       itemName: '',
       itemCategory: '',
       durability: 0.0,
@@ -146,17 +148,12 @@ class InventoryController extends GetxController with LinearProgressMixin {
     getUserEquippedItems();
     getSyntheticBadgeList();
     getUserBadgesList();
+
     super.onInit();
   }
 
   void getSyntheticBadgeList() {
     syntheticBadgeList.value = [];
-  }
-
-  void getUserBadgesList() async {
-    List<InventoryBadgeModel> badges = await BadgeService.getUserBadgesList();
-    userBadgesList.value = badges;
-    equippedBadge.value = userBadgesList.firstWhere((item) => item.state == 'EQUIPPED');
   }
 
   void initStats() {
@@ -169,7 +166,6 @@ class InventoryController extends GetxController with LinearProgressMixin {
   void toItemDetail(int itemId) async {
     InventoryItemModel item = await ItemService.getItemDetailInfo(itemId);
     selectedItem.value = item;
-    print(item);
     isShoe.value = selectedItem.value.itemCategory == 'SHOES';
     Get.toNamed(Routes.itemDetail);
   }
@@ -188,13 +184,15 @@ class InventoryController extends GetxController with LinearProgressMixin {
   void getUserEquippedItems() async {
     EquippedItemModel equippedItems = await ActivityService.getUserEquippedItem();
     equippedItemList.value = equippedItems.items;
+    equippedBadge.update((state) {
+      state!.badge.imageUrl = equippedItems.badge!.imageUrl;
+    });
     remainDurability.value = equippedItems.items.firstWhere((element) => element.itemCategory == 'SHOES').durability.floor();
   }
 
   void fetchEquipBadge(int badgeId) async {
     InventoryBadgeModel equippedBadgeItem = await ItemService.fetchEquippedBadge(badgeId);
     equippedBadge.value = equippedBadgeItem;
-    print(equippedBadgeItem);
   }
 
   void setGetBadgeDate(int id) {

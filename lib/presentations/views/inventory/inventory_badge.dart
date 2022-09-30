@@ -11,10 +11,15 @@ class InventoryBadge extends StatelessWidget {
           (item) => InkWell(
             onTap: () => controller.toBadgeDetail(item.badge.id),
             onLongPress: () => controller.fetchEquipBadge(item.badge.id),
-            child: Image(
-              image: NetworkImage(item.badge.imageUrl),
-              fit: BoxFit.fill,
-              width: double.infinity,
+            child: SizedBox(
+              child: Stack(alignment: Alignment.bottomCenter, children: [
+                Image(
+                  image: NetworkImage(item.badge.imageUrl),
+                  fit: BoxFit.fill,
+                  width: double.infinity,
+                ),
+                Text('LV.${item.badge.level.toString()}'),
+              ]),
             ),
           ),
         )

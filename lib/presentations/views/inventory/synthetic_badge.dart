@@ -1,4 +1,3 @@
-import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:gaza_go/platform/controllers/home_menu_controller.dart';
 import 'package:gaza_go/platform/controllers/inventory_controller.dart';
@@ -15,7 +14,6 @@ class SyntheticBadge extends StatelessWidget {
 
     SyntheticBadgeController _controller = Get.put(SyntheticBadgeController(controller.selectedBadge));
 
-    const levelOneImageFolderLength = 5;
     return Scaffold(
       appBar: homeMenuController.appbarList[1],
       body: Container(
@@ -37,13 +35,13 @@ class SyntheticBadge extends StatelessWidget {
 
                       children: [
                         // if (_controller.selectedBadgeList.length > 0)
-                        for (int i = 0; i < levelOneImageFolderLength; i++)
+                        for (int i = 0; i < _controller.selectedBadgeLevel.value; i++)
                           Obx(() {
                             return GestureDetector(
-                              onTap: () => i != 0 ? _controller.showSelectBadgePopup(controller.userBadgesList.value, i) : null,
+                              onTap: () => i != 0 ? _controller.showSelectBadgePopup(controller.userBadgesList.value, controller.selectedBadge.value, i) : null,
                               child: CircleAvatar(
                                 backgroundImage: AssetImage('assets/images/@temp_img_empty.png'),
-                                foregroundImage: CachedNetworkImageProvider(_controller.selectedBadgeImages[i]),
+                                foregroundImage: NetworkImage(_controller.selectedBadgeList[i] != null ? _controller.selectedBadgeList[i]!.badge.imageUrl ?? '' : ''),
                                 radius: 30,
                               ),
                             );
@@ -93,13 +91,15 @@ class SyntheticBadge extends StatelessWidget {
                   ),
                 ),
               ),
-              SizedBox(
-                width: double.infinity,
-                child: ElevatedButton(
-                  onPressed: _controller.selectedBadgeList.length == 5 ? () => _controller.syntheticBadgeConfirm() : null,
-                  child: const Text('합성'),
-                ),
-              ),
+              Obx(() {
+                return SizedBox(
+                  width: double.infinity,
+                  child: ElevatedButton(
+                    onPressed: _controller.selectedBadgeList.length == _controller.selectedBadgeLevel.value ? () => _controller.handleOpenSyntheticBadgeConfirmPopup() : null,
+                    child: const Text('합성'),
+                  ),
+                );
+              }),
             ],
           ),
         ),

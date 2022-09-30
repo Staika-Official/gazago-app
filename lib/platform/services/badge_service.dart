@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:dio/dio.dart';
 import 'package:gaza_go/constants/enums.dart';
 import 'package:gaza_go/platform/apis/badge.dart';
@@ -24,8 +26,9 @@ class BadgeService {
     return InventoryBadgeModel.fromJson(res.data);
   }
 
-  static Future<List<InventoryBadgeModel>> fetchUserSyntheticBadge() async {
-    Response res = await BadgeApi.fetchUserSyntheticBadge(userId!);
-    return res.data;
+  static Future<InventoryBadgeModel> fetchUserSyntheticBadge(composeData) async {
+    inspect(composeData);
+    Response res = await BadgeApi.fetchUserSyntheticBadge(userId!, composeData);
+    return InventoryBadgeModel.fromJson(res.data);
   }
 }

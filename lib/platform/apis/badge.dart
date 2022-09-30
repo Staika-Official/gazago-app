@@ -17,7 +17,7 @@ class BadgeApi {
     });
   }
 
-  static Future<Response> fetchUserSyntheticBadge(String userId) async {
-    return await Api.client(serviceUrl: ServiceUrl.badgeService).put('/users/$userId/issues/compose');
+  static Future<Response> fetchUserSyntheticBadge(String userId, Map composeData) async {
+    return await Api.client(serviceUrl: ServiceUrl.badgeService).post('/users/$userId/issues/compose', data: composeData);
   }
 }
