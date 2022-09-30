@@ -1,13 +1,14 @@
 import 'package:flutter/material.dart';
-import 'package:get/get.dart';
 import 'package:gaza_go/constants/routes.dart';
 import 'package:gaza_go/platform/controllers/home_menu_controller.dart';
+import 'package:gaza_go/platform/controllers/wallet_master_controller.dart';
+import 'package:get/get.dart';
 
 class SecondaryAppbar extends StatelessWidget implements PreferredSizeWidget {
   SecondaryAppbar({Key? key}) : super(key: key);
 
-  List<Widget> renderWalletItems(HomeMenuController controller) {
-    return controller.walletList.map((wallet) {
+  List<Widget> renderWalletItems(WalletMasterController walletMasterController) {
+    return walletMasterController.walletList.map((wallet) {
       return Padding(
         padding: const EdgeInsets.only(left: 10),
         child: Row(
@@ -35,6 +36,7 @@ class SecondaryAppbar extends StatelessWidget implements PreferredSizeWidget {
   @override
   Widget build(BuildContext context) {
     HomeMenuController controller = Get.find();
+    WalletMasterController walletMasterController = Get.find();
 
     return AppBar(
       backgroundColor: Colors.white,
@@ -61,7 +63,7 @@ class SecondaryAppbar extends StatelessWidget implements PreferredSizeWidget {
             Row(
               mainAxisSize: MainAxisSize.min,
               children: [
-                ...renderWalletItems(controller),
+                ...renderWalletItems(walletMasterController),
                 IconButton(
                   onPressed: () => Get.toNamed(Routes.wallet),
                   icon: const Icon(

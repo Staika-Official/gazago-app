@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:gaza_go/platform/controllers/home_menu_controller.dart';
+import 'package:gaza_go/platform/controllers/wallet_master_controller.dart';
 import 'package:get/get.dart';
 
 class Home extends StatelessWidget {
@@ -8,6 +9,7 @@ class Home extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     HomeMenuController controller = Get.put(HomeMenuController());
+    Get.put(WalletMasterController());
 
     return Obx(() {
       return Scaffold(
