@@ -1,8 +1,8 @@
 import 'package:dio/dio.dart';
-import 'package:gaza_go/constants/enums.dart';
 import 'package:gaza_go/platform/apis/wallet.dart';
 import 'package:gaza_go/platform/models/asset_detail_model.dart';
 import 'package:gaza_go/platform/models/asset_token_balance_list_model.dart';
+import 'package:gaza_go/platform/models/pay_info_model.dart';
 
 class WalletService {
   static Future<void> generateSpendingWallet() async {
@@ -24,7 +24,7 @@ class WalletService {
   }
 
   //mint(토큰): TIK = 1 , STIK = 2
-  static Future<dynamic> payWithToken({int? recipientId, required double tikAmount, required PaymentPurpose purpose}) async {
-    return await WalletApi.payWithToken(recipientId: recipientId, tikAmount: tikAmount, purpose: purpose);
+  static Future<dynamic> payWithToken(PayInfoModel payInfo) async {
+    return await WalletApi.payWithToken(payInfo);
   }
 }
