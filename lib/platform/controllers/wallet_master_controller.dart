@@ -13,8 +13,8 @@ class WalletMasterController extends GetxService {
   @override
   void onInit() {
     getWalletList();
-    getSpendingWalletBalances();
-    getSpendingWalletTransactions();
+    // getSpendingWalletBalances();
+    // getSpendingWalletTransactions();
     super.onInit();
   }
 
