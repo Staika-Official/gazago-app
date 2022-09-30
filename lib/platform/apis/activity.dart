@@ -6,12 +6,6 @@ import 'package:gaza_go/platform/models/user_stamina_recharge_model.dart';
 import 'package:location/location.dart';
 
 class ActivityApi {
-  // static final Dio stateApi = case RoundType.round:
-  // formattedNumber = ((val * mod).round().toDouble() / mod);
-  // break;
-  static final Dio exerciseApi = Api.client(serviceUrl: ServiceUrl.exerciseService);
-  static final Dio staminaApi = Api.client(serviceUrl: ServiceUrl.staminaService);
-
   static Future<Response> getChallenges() async {
     return await Api.client(serviceUrl: '/services/gazago/api').get('/challenges');
   }
