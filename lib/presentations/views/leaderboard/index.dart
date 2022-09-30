@@ -94,7 +94,7 @@ class LeaderboardHome extends StatelessWidget {
             onTap: () => controller.showCalendar(context),
             child: Row(
               mainAxisSize: MainAxisSize.min,
-              children: [Icon(Icons.calendar_month), Text(controller.selectedDate.value)],
+              children: [Icon(Icons.calendar_month), Text(controller.formattedDate.value)],
             ),
           );
         }),
