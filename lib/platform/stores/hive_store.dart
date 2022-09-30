@@ -26,8 +26,8 @@ class HiveStore {
     box.deleteAll(keys);
   }
 
-  static void clear() {
+  static Future<void> clear() async {
     final Box box = Hive.box('gazaGo');
-    box.clear();
+    await box.clear();
   }
 }

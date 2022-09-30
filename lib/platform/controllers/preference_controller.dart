@@ -1,6 +1,8 @@
+import 'package:gaza_go/constants/routes.dart';
+import 'package:gaza_go/platform/models/profile_model.dart';
+import 'package:gaza_go/platform/stores/hive_store.dart';
 import 'package:get/get.dart';
 import 'package:package_info_plus/package_info_plus.dart';
-import 'package:gaza_go/platform/models/profile_model.dart';
 
 class PreferenceController extends GetxController {
   final Rx<ProfileModel> profile = Rx(
@@ -46,7 +48,9 @@ class PreferenceController extends GetxController {
     appVersion.value = packageInfo.version;
   }
 
-  void showLogoutConfirmation() {
+  void showLogoutConfirmation() async {
     print('logout!');
+    await HiveStore.clear();
+    Get.toNamed(Routes.login);
   }
 }
