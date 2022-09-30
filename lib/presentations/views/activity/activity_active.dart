@@ -81,7 +81,8 @@ class ActivityActive extends StatelessWidget {
         child: Obx(() {
           return Column(
             children: [
-              Expanded(
+              Flexible(
+                flex: 3,
                 child: NaverMap(
                   initialCameraPosition: CameraPosition(
                     target: LatLng(controller.currentLocation.value.latitude ?? 0, controller.currentLocation.value.longitude ?? 0),
@@ -122,34 +123,77 @@ class ActivityActive extends StatelessWidget {
                   minZoom: 15,
                 ),
               ),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Text('latitude ' + controller.currentLocation.value.latitude.toString()),
-                  Text('longitude ' + controller.currentLocation.value.longitude.toString()),
-                ],
+              Flexible(
+                flex: 2,
+                child: Column(
+                  children: [
+                    Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 20.0, vertical: 10),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Text(
+                            '획득한 STEP ' + (controller.userState.value.exercise != null ? controller.userState.value.exercise!.rewardGo : 0).toString() + 'GO',
+                            style: TextStyle(fontSize: 25),
+                          ),
+                        ],
+                      ),
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 20.0, vertical: 10),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Text(
+                            '체력: ' + controller.userState.value.state!.stamina.toString(),
+                            style: TextStyle(fontSize: 16),
+                          ),
+                          Text(
+                            '내구도: ' + controller.userState.value.shoes!.durability.toString(),
+                            style: TextStyle(fontSize: 16),
+                          ),
+                        ],
+                      ),
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 20.0, vertical: 10),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Text(
+                            '속도: ' + formatDecimalPlaces(controller.realTimeSpeed.value, 1) + 'km/h',
+                            style: TextStyle(fontSize: 16),
+                          ),
+                          Text(
+                            '평균속도: ' + formatDecimalPlaces(controller.avgSpeed.value, 1) + 'km/h',
+                            style: TextStyle(fontSize: 16),
+                          ),
+                          Text(
+                            '걸음수: ' + controller.exerciseSteps.value.toString(),
+                            style: TextStyle(fontSize: 16),
+                          ),
+                        ],
+                      ),
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 20.0, vertical: 10),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Text(
+                            '운동시간: ' + formatSeconds(controller.exerciseTime.value),
+                            style: TextStyle(fontSize: 16),
+                          ),
+                          Text(
+                            '이동거리: ' + formatDecimalPlaces(controller.totalDistance.value, 2) + 'm',
+                            style: TextStyle(fontSize: 16),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ],
+                ),
               ),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Text('step ' + controller.steps.value.toString()),
-                  Text('status ' + controller.pedestrianStatus.value),
-                ],
-              ),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Text('speed ' + formatDecimalPlaces(controller.realTimeSpeed.value, 1) + 'km/h'),
-                  Text('avgSpeed ' + formatDecimalPlaces(controller.avgSpeed.value, 1) + 'km/h'),
-                ],
-              ),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Text('time ' + formatSeconds(controller.time.value)),
-                  Text('distance ' + formatDecimalPlaces(controller.totalDistance.value, 2) + 'm'),
-                ],
-              )
             ],
           );
         }),

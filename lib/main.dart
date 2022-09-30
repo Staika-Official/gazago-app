@@ -42,6 +42,8 @@ void main() async {
       HiveStore.save(key: HiveKey.uuid.name, value: Uuid().v4());
     }
 
+    await requestNotificationPermission();
+
     runApp(MyApp());
   }, (error, stack) {
     recordCrashlyticsError(error, stack);

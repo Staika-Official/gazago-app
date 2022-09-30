@@ -21,16 +21,6 @@ import 'package:get/get.dart';
 import 'package:location/location.dart';
 import 'package:permission_handler/permission_handler.dart' as PH;
 
-class Permissions {
-  final LocationPermission locationPermission;
-  final LocationAccuracyStatus locationAccuracyStatus;
-
-  Permissions({
-    required this.locationPermission,
-    required this.locationAccuracyStatus,
-  });
-}
-
 class ActivityController extends GetxController with MapMixin, ActivityMixin, ChallengeMixin {
   //index.dart
   RxList<StatModel> get statList {
@@ -50,9 +40,10 @@ class ActivityController extends GetxController with MapMixin, ActivityMixin, Ch
   }
 
   final RxDouble _currentSliderValue = RxDouble(0);
-  RxInt remainDurability = RxInt(0);
-  RxInt repairDurability = RxInt(0);
-  RxInt costTik = RxInt(0);
+  final RxInt remainDurability = RxInt(0);
+  final RxInt repairDurability = RxInt(0);
+  final RxInt costTik = RxInt(0);
+  final RxBool isListeningToLocation = RxBool(false);
 
   void onClickRepairStat(stat) {
     if (stat.type == 'DURABILITY') {
@@ -162,11 +153,8 @@ class ActivityController extends GetxController with MapMixin, ActivityMixin, Ch
 
   @override
   void onInit() async {
+    await initializeActivity();
     getUserState();
-    await getCurrentLocation();
-    await getNearByChallengeList(currentLocation.value);
-    await setMarkerImages();
-    initLocationStream();
     super.onInit();
   }
 
@@ -194,10 +182,35 @@ class ActivityController extends GetxController with MapMixin, ActivityMixin, Ch
     bool isGpsAvailable = await checkGpsSensor();
     if (!isGpsAvailable) return;
 
-    bool hasPermission = await checkLocationPermission();
-    if (hasPermission) getActivityRoute();
+    if (Platform.isAndroid) {
+      bool hasActivityPermission = await checkActivityPermission();
+      if (!hasActivityPermission) return;
+    }
 
-    requestActivityPermission();
+    bool hasPermission = await checkLocationPermission();
+
+    bool isAccurate = false;
+    if (hasPermission) {
+      isAccurate = await checkLocationPermission();
+    }
+
+    if (!hasPermission && !isAccurate) {
+      Get.dialog(
+        AlertDialog(
+          title: const Text('알림'),
+          content: const Text('원활한 채굴을 위하여\n"항상", "정확한" 위치공유를\n할 수 있도록 설정해주시기 바랍니다.'),
+          actions: [
+            ElevatedButton(onPressed: () => requestLocationPermission(), child: const Text('확인')),
+          ],
+        ),
+      );
+    } else {
+      getActivityRoute();
+    }
+
+    if (!isListeningToLocation.value) {
+      initializeActivity();
+    }
   }
 
   Future<bool> checkGpsSensor() async {
@@ -223,27 +236,56 @@ class ActivityController extends GetxController with MapMixin, ActivityMixin, Ch
   }
 
   Future<bool> checkLocationPermission() async {
-    Permissions permissions = await checkPermissions();
-    bool hasPermission = (permissions.locationPermission == LocationPermission.always || permissions.locationPermission == LocationPermission.whileInUse) &&
-        permissions.locationAccuracyStatus == LocationAccuracyStatus.precise;
-    if (!hasPermission) {
-      Get.dialog(
-        AlertDialog(
-          title: const Text('알림'),
-          content: const Text('원활한 채굴을 위하여\n"항상", "정확한" 위치공유를\n할 수 있도록 설정해주시기 바랍니다.'),
-          actions: [
-            ElevatedButton(onPressed: () => requestPermission(permissions), child: const Text('확인')),
-            ElevatedButton(onPressed: () => getActivityRoute(), child: const Text('무시')),
-          ],
-        ),
-      );
-    }
+    LocationPermission locationPermission = await Geolocator.checkPermission();
+    bool hasPermission = [LocationPermission.always, LocationPermission.whileInUse].any((permission) => permission == locationPermission);
 
     return hasPermission;
   }
 
+  Future<bool> checkLocationAccuracy() async {
+    LocationAccuracyStatus accuracyStatus = await Geolocator.getLocationAccuracy();
+    return accuracyStatus == LocationAccuracyStatus.precise;
+  }
+
+  Future<bool> checkActivityPermission() async {
+    bool hasActivityPermission = PH.PermissionStatus.granted == await PH.Permission.activityRecognition.status;
+    if (!hasActivityPermission) {
+      Get.dialog(
+        AlertDialog(
+          title: const Text('알림'),
+          content: const Text('정확한 운동기록을 위해서 신체활동 권한을 허용해주세요'),
+          actions: [
+            ElevatedButton(
+              onPressed: () {
+                requestActivityPermission();
+                Get.back();
+              },
+              child: const Text('확인'),
+            ),
+          ],
+        ),
+      );
+    }
+    return hasActivityPermission;
+  }
+
+  Future<void> requestActivityPermission() async {
+    bool permissionGranted = PH.PermissionStatus.granted == await PH.Permission.activityRecognition.request();
+    if (!permissionGranted) {
+      Geolocator.openAppSettings();
+    }
+  }
+
+  Future<void> requestLocationPermission() async {
+    LocationPermission locationPermission = await Geolocator.requestPermission();
+    bool gotPermission = [LocationPermission.always, LocationPermission.whileInUse].any((permission) => permission == locationPermission);
+    if (!gotPermission) {
+      await Geolocator.openAppSettings();
+    }
+  }
+
   void getActivityRoute() {
-    if (userState.value.exercise != null) {
+    if (exerciseState.value == ExerciseState.ongoing) {
       Get.toNamed(Routes.activityActive);
     } else {
       Get.toNamed(Routes.activitySelect);
@@ -261,34 +303,6 @@ class ActivityController extends GetxController with MapMixin, ActivityMixin, Ch
     );
   }
 
-  Future<Permissions> checkPermissions() async {
-    LocationPermission permission = await Geolocator.checkPermission();
-    LocationAccuracyStatus accuracyStatus = await Geolocator.getLocationAccuracy();
-
-    return Permissions(locationPermission: permission, locationAccuracyStatus: accuracyStatus);
-  }
-
-  Future<PH.PermissionStatus?> checkActivityPermission() async {
-    if (Platform.isAndroid) {
-      return await PH.Permission.activityRecognition.status;
-    }
-    return null;
-  }
-
-  Future<PH.PermissionStatus?> requestActivityPermission() async {
-    if (Platform.isAndroid) {
-      return await PH.Permission.activityRecognition.request();
-    }
-    return null;
-  }
-
-  Future<void> requestPermission(Permissions permissions) async {
-    LocationPermission permission = await Geolocator.requestPermission();
-    if (permission != LocationPermission.always || permission != LocationPermission.whileInUse) {
-      await Geolocator.openAppSettings();
-    }
-  }
-
   void initLocationStream() {
     location.onLocationChanged.listen((LocationData location) {
       currentLocation.value = location;
@@ -303,7 +317,19 @@ class ActivityController extends GetxController with MapMixin, ActivityMixin, Ch
   }
 
   Future<void> getCurrentLocation() async {
-    await location.enableBackgroundMode(enable: true);
+    // TODO. 백그라운드 허용
+    // bool isBackgroundAllowed = await location.enableBackgroundMode(enable: true);
+
     currentLocation.value = await location.getLocation();
+    if (currentLocation.value.latitude != null && currentLocation.value.longitude != null) {
+      isListeningToLocation.value = true;
+    }
+  }
+
+  Future<void> initializeActivity() async {
+    await getCurrentLocation();
+    initLocationStream();
+    await getNearByChallengeList(currentLocation.value);
+    await setMarkerImages();
   }
 }

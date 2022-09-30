@@ -39,7 +39,7 @@ class ArchiveHome extends StatelessWidget {
                       thickness: 1,
                     ),
                     Text(
-                      '${archive.time} \u00B7 ${archive.distance}km \u00B7 ${archive.rewardGo}GO',
+                      '${formatSeconds(archive.time!)} \u00B7 ${archive.distance}m \u00B7 ${archive.rewardGo}GO',
                     ),
                   ],
                 ),

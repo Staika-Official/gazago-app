@@ -14,22 +14,24 @@ class ActivitySelect extends StatelessWidget {
     return DefaultContainer(
       child: Column(
         children: [
-          Expanded(
-            child: InkWell(
-              onTap: controller.doableChallenges.isNotEmpty ? () => controller.loadExercise(ExerciseType.hiking) : null,
-              child: Card(
-                child: Center(
-                  child: Column(
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      Text('등산'),
-                      controller.doableChallenges.isEmpty ? Text('챌린지 시작 존으로 이동해주세요') : Container(),
-                    ],
+          Obx(() {
+            return Expanded(
+              child: InkWell(
+                onTap: controller.doableChallenges.isNotEmpty ? () => controller.loadExercise(ExerciseType.hiking) : null,
+                child: Card(
+                  child: Center(
+                    child: Column(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        Text('등산'),
+                        controller.doableChallenges.isEmpty ? Text('챌린지 시작 존으로 이동해주세요') : Container(),
+                      ],
+                    ),
                   ),
                 ),
               ),
-            ),
-          ),
+            );
+          }),
           Expanded(
             child: InkWell(
               onTap: () => controller.loadExercise(ExerciseType.walking),

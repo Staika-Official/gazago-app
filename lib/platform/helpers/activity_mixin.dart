@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:convert';
 
 import 'package:flutter_naver_map/flutter_naver_map.dart';
 import 'package:gaza_go/constants/enums.dart';
@@ -20,7 +21,9 @@ class ActivityMixin {
   final Rx<LocationData> currentLocation = Rx(LocationData.fromMap({}));
   final RxList<UserExerciseModel> exerciseData = RxList.empty();
   final RxList<LatLng> coordinates = RxList.empty();
-  final RxString pedestrianStatus = RxString('');
+  final RxInt exerciseTime = RxInt(0);
+  final RxInt exerciseSteps = RxInt(0);
+  final RxString pedestrianStatus = RxString('STOPPED');
   final Rx<ExerciseState> exerciseState = Rx(ExerciseState.init);
   Timer? exerciseTimer;
   Timer? updateTimer;
@@ -29,21 +32,15 @@ class ActivityMixin {
   StreamSubscription<StepCount>? stepSubscription;
   StreamSubscription<PedestrianStatus>? pedestrianStatusSubscription;
 
-  RxInt get steps {
-    return RxInt(userState.value.exercise?.steps ?? 0);
-  }
-
-  RxInt get time {
-    return RxInt(userState.value.exercise?.time ?? 0);
-  }
-
   RxDouble get realTimeSpeed {
     double speed = currentLocation.value.speed ?? 0;
     return RxDouble(speed <= 0 ? 0 : currentLocation.value.speed!);
   }
 
   RxDouble get avgSpeed {
-    List<double> speedList = exerciseData.where((data) => data.speed! > 0.2).map((filteredLocation) => filteredLocation.speed!).toList();
+    //보통사람의 걷기 속도는 평균 3~4.5kmH이다. 따라서 3 = 0.8333 m/s 4.5 = 1.25m/s
+    // List<double> speedList = exerciseData.where((data) => data.speed! > 0.833).map((filteredLocation) => filteredLocation.speed!).toList();
+    List<double> speedList = exerciseData.where((data) => data.speed! > 0).map((filteredLocation) => filteredLocation.speed!).toList();
     return RxDouble(calculateAvgSpeed(speedList));
   }
 
@@ -83,30 +80,21 @@ class ActivityMixin {
 
   void initExerciseStats() {
     exerciseData.value = List.empty(growable: true);
-    userState.update((state) {
-      state?.exercise!.steps = 0;
-      state?.exercise!.time = 0;
-    });
-    pedestrianStatus.value = '';
+    coordinates.value = List.empty(growable: true);
+    exerciseSteps.value = 0;
+    exerciseTime.value = 0;
+    pedestrianStatus.value = 'STOPPED';
   }
 
   void initExerciseTimer() {
-    if (userState.value.exercise!.time == null) userState.update((state) => state?.exercise!.time = 0);
-
     exerciseTimer = Timer.periodic(Duration(seconds: 1), (timer) {
-      if (userState.value.exercise?.time != null) {
-        userState.update((state) {
-          state?.exercise!.time = state.exercise!.time! + 1;
-        });
-      }
+      exerciseTime.value++;
     });
   }
 
   void initStepStream() {
     stepSubscription = Pedometer.stepCountStream.listen((StepCount event) {
-      if (userState.value.exercise != null) {
-        userState.update((state) => state?.exercise!.steps = state.exercise!.steps! + 1);
-      }
+      exerciseSteps.value++;
     });
     stepSubscription!.onError((error) {
       print(error);
@@ -115,7 +103,7 @@ class ActivityMixin {
 
   void initPedestrianStatusStream() {
     pedestrianStatusSubscription = Pedometer.pedestrianStatusStream.listen((PedestrianStatus event) {
-      pedestrianStatus.value = event.status;
+      pedestrianStatus.value = event.status.toUpperCase();
     });
     stepSubscription!.onError((error) {
       print(error);
@@ -146,6 +134,13 @@ class ActivityMixin {
       ),
     );
     userState.update((state) => state!.exercise = exerciseModel);
+    print('===================================');
+    print('===================================');
+    print('===================================');
+    print(jsonEncode(exerciseModel));
+    print('===================================');
+    print('===================================');
+    print('===================================');
     exerciseState.value = ExerciseState.ongoing;
     initExerciseStats();
     initStream();
@@ -156,9 +151,12 @@ class ActivityMixin {
     exerciseData.value = List.empty(growable: true);
     exerciseState.value = ExerciseState.ongoing;
     exerciseData.add(userState.value.exercise!);
+    exerciseTime.value = userState.value.exercise!.time!;
+    exerciseSteps.value = userState.value.exercise!.steps!;
     if (userState.value.exercise!.locations != null) {
       coordinates.addAll(parseCoordinates());
     }
+
     initStream();
     updateExercise();
     startPeriodicUpdate();
@@ -172,11 +170,11 @@ class ActivityMixin {
     CurrentUserStateModel newUserState = await ActivityService.fetchUpdateUserExercises(
       UserExerciseModel(
         id: userState.value.exercise!.id,
-        steps: userState.value.exercise!.steps,
+        steps: exerciseSteps.value,
         speed: avgSpeed.value,
         distance: totalDistance.value,
         altitude: highestAltitude.value,
-        time: userState.value.exercise!.time,
+        time: exerciseTime.value,
         locations: coordinatesToString(coordinates),
       ),
     );
@@ -196,11 +194,11 @@ class ActivityMixin {
     CurrentUserStateModel newUserState = await ActivityService.fetchEndUserExercises(
       UserExerciseModel(
         id: userState.value.exercise!.id,
-        steps: userState.value.exercise!.steps,
+        steps: exerciseSteps.value,
         speed: avgSpeed.value,
         distance: totalDistance.value,
         altitude: highestAltitude.value,
-        time: userState.value.exercise!.time,
+        time: exerciseTime.value,
         locations: coordinatesToString(coordinates),
       ),
     );
@@ -209,7 +207,6 @@ class ActivityMixin {
       exerciseState.value = ExerciseState.ready;
       userState.update((state) {
         state = newUserState;
-        userState.value.exercise = null;
       });
       updateTimer!.cancel();
       exerciseTimer!.cancel();

@@ -2,6 +2,10 @@ import 'dart:math';
 
 double calculateAvgSpeed(List<double> speedList) {
   if (speedList.length > 0) {
+    for (double speed in speedList) {
+      print(speedList.length.toString() + ': ' + speed.toString() + 'm/s');
+      print(speedList.length.toString() + ': ' + convertMStoKMH(speed).toString() + 'km/h');
+    }
     double sumSpeed = speedList.fold(0, (summedValue, speed) => summedValue + speed);
     return convertMStoKMH(sumSpeed / speedList.length);
   } else {
