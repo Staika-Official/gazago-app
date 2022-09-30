@@ -33,6 +33,8 @@ class Api {
     }
     if (queryParams != null) {
       _dio.options.queryParameters = queryParams;
+    } else {
+      _dio.options.queryParameters = {};
     }
     return _dio;
   }
