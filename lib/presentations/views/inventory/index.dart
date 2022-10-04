@@ -1,3 +1,4 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 import 'package:gaza_go/platform/controllers/inventory/inventory_home_controller.dart';
@@ -194,10 +195,12 @@ class Tile extends StatelessWidget {
         child: Stack(
           alignment: Alignment.bottomCenter,
           children: [
-            Image(
-              image: NetworkImage(imageUrl),
+            CachedNetworkImage(
+              imageUrl: imageUrl,
               fit: BoxFit.fill,
               width: double.infinity,
+              placeholder: (context, url) => CircularProgressIndicator(),
+              errorWidget: (context, url, error) => Image.asset("assets/images/@temp_badge.png"),
             ),
             durability != null
                 ? LinearProgressIndicator(

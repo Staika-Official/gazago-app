@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
 import 'package:gaza_go/constants/routes.dart';
 import 'package:gaza_go/platform/helpers/inventory_mixin.dart';
@@ -184,9 +186,16 @@ class InventoryController extends GetxController with LinearProgressMixin, Inven
   void getUserEquippedItems() async {
     EquippedItemModel equippedItems = await ActivityService.getUserEquippedItem();
     equippedItemList.value = equippedItems.items;
-    equippedBadge.update((state) {
-      state!.badge.imageUrl = equippedItems.badge!.imageUrl;
-    });
+    if (equippedItems.badge != null) {
+      equippedBadge.update((state) {
+        state!.badge.imageUrl = equippedItems.badge!.imageUrl;
+      });
+    } else {
+      equippedBadge.update((state) {
+        state!.badge.imageUrl = 'assets/images/@temp_badge.png';
+      });
+    }
+
     remainDurability.value = equippedItems.items.firstWhere((element) => element.itemCategory == 'SHOES').durability.floor();
   }
 
@@ -200,25 +209,31 @@ class InventoryController extends GetxController with LinearProgressMixin, Inven
   }
 
   void toSyntheticBadgeDetail(int id) {
+    print(id);
+    inspect(userBadgesList);
     selectedBadge.value = userBadgesList.firstWhere((item) => item.badge.id == id);
     Get.toNamed(Routes.syntheticBadge);
   }
 
   void fetchRepairShoes() async {
     print(repairDurability.value);
-    InventoryItemModel repairModel = await ItemService.fetchRepairItemShoes(
-      RepairShoesModel(
-        id: selectedItem.value.id,
-        durability: repairDurability.value,
-        tik: costTik.toInt(),
-      ),
-    );
+    if (costTik.value > 0) {
+      InventoryItemModel repairModel = await ItemService.fetchRepairItemShoes(
+        RepairShoesModel(
+          id: selectedItem.value.id,
+          durability: repairDurability.value,
+          tik: costTik.toInt(),
+        ),
+      );
 
-    print(repairModel);
-    costTik.value = 0;
-    selectedItem.value = repairModel;
-    remainDurability.value = repairModel.durability.toInt();
-    closeRepairPopup();
+      print(repairModel);
+      costTik.value = 0;
+      selectedItem.value = repairModel;
+      remainDurability.value = repairModel.durability.toInt();
+      closeRepairPopup();
+    } else {
+      print('수리할 내구도가 없습니다.');
+    }
   }
 
   void initRepairInfo() {

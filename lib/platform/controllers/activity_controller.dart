@@ -123,18 +123,22 @@ class ActivityController extends GetxController with MapMixin, ActivityMixin, Ch
   }
 
   void fetchRepairShoes() async {
-    InventoryItemModel repairModel = await ItemService.fetchRepairItemShoes(
-      RepairShoesModel(
-        id: userState.value.shoes!.id,
-        durability: repairDurability.value,
-        tik: costTik.toInt(),
-      ),
-    );
-    userState.update((state) {
-      state!.shoes!.durability = repairModel.durability;
-    });
+    if (costTik.value > 0) {
+      InventoryItemModel repairModel = await ItemService.fetchRepairItemShoes(
+        RepairShoesModel(
+          id: userState.value.shoes!.id,
+          durability: repairDurability.value,
+          tik: costTik.toInt(),
+        ),
+      );
+      userState.update((state) {
+        state!.shoes!.durability = repairModel.durability;
+      });
 
-    closeRepairPopup();
+      closeRepairPopup();
+    } else {
+      print('수리할 내구도가 없습니다.');
+    }
   }
 
   void initRepairInfo() {

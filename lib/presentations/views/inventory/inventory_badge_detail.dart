@@ -1,3 +1,4 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:gaza_go/platform/controllers/inventory_controller.dart';
 import 'package:gaza_go/platform/controllers/synthetic_badge_controller.dart';
@@ -81,17 +82,12 @@ class InventoryBadgeDetail extends StatelessWidget {
                         child: Stack(
                           alignment: Alignment.bottomCenter,
                           children: [
-                            new Container(
-                              width: 100,
-                              height: 100,
-                              decoration: new BoxDecoration(
-                                shape: BoxShape.circle,
-                                image: new DecorationImage(
-                                  image: NetworkImage(controller.selectedBadge.value.badge.imageUrl),
-                                  fit: BoxFit.fill,
-                                ),
-                              ),
-                            ),
+                            CachedNetworkImage(
+                              imageUrl: controller.selectedBadge.value.badge.imageUrl,
+                              fit: BoxFit.fill,
+                              placeholder: (context, url) => const CircularProgressIndicator(),
+                              // errorWidget: (context, url, error) => Image.asset("assets/images/@temp_badge.png"),
+                            )
                           ],
                         ),
                       ),
@@ -177,7 +173,7 @@ class InventoryBadgeDetail extends StatelessWidget {
               SizedBox(
                 width: double.infinity,
                 child: ElevatedButton(
-                  onPressed: () => controller.toSyntheticBadgeDetail(controller.selectedBadge.value.id),
+                  onPressed: () => controller.toSyntheticBadgeDetail(controller.selectedBadge.value.badge.id),
                   child: const Text('합성'),
                 ),
               ),
