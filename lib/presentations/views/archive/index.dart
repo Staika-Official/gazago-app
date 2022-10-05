@@ -67,13 +67,16 @@ class ArchiveHome extends StatelessWidget {
               ),
             ),
             Expanded(
-              child: SingleChildScrollView(
-                physics: ClampingScrollPhysics(),
-                child: Column(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    ...renderArchiveList(controller),
-                  ],
+              child: RefreshIndicator(
+                onRefresh: () async => await controller.getArchiveList(),
+                child: SingleChildScrollView(
+                  physics: ClampingScrollPhysics(),
+                  child: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      ...renderArchiveList(controller),
+                    ],
+                  ),
                 ),
               ),
             ),

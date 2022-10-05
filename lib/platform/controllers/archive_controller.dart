@@ -20,8 +20,9 @@ class ArchiveController extends GetxController {
     super.onInit();
   }
 
-  void getArchiveList() async {
+  Future<void> getArchiveList() async {
     archiveList.value = await ArchiveService.getArchiveList();
+    return Future(() => null);
   }
 
   void toDetail(int id) {
