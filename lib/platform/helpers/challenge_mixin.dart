@@ -1,3 +1,4 @@
+import 'package:flutter/material.dart';
 import 'package:gaza_go/platform/helpers/activity_helper.dart';
 import 'package:gaza_go/platform/models/challenge_model.dart';
 import 'package:gaza_go/platform/models/current_user_state_model.dart';
@@ -41,7 +42,11 @@ class ChallengeMixin {
       });
 
       if (hasArrived && userState.exercise!.badgeIssueId == null) {
-        InventoryBadgeModel badge = await BadgeService.fetchUserIssuanceBadge(userState.exercise!.id!);
+        VoidCallback successCallback = () {
+          Get.showSnackbar(GetSnackBar(title: '뱃지가 발급되었습니다.'));
+        };
+
+        InventoryBadgeModel badge = await BadgeService.fetchUserIssuanceBadge(userState.exercise!.id!, successCallback);
         userState.exercise!.badgeIssueId = badge.id;
       }
     }
