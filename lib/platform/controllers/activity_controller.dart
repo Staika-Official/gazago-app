@@ -18,7 +18,6 @@ import 'package:gaza_go/platform/services/activity_service.dart';
 import 'package:gaza_go/platform/services/item_service.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:get/get.dart';
-import 'package:location/location.dart';
 import 'package:permission_handler/permission_handler.dart' as PH;
 
 class ActivityController extends GetxController with MapMixin, ActivityMixin, ChallengeMixin {
@@ -46,6 +45,7 @@ class ActivityController extends GetxController with MapMixin, ActivityMixin, Ch
   final RxBool isListeningToLocation = RxBool(false);
   final Rx<LocationPermission> _locationPermission = Rx(LocationPermission.unableToDetermine);
   final Rx<LocationAccuracyStatus> _locationAccuracyStatus = Rx(LocationAccuracyStatus.unknown);
+  StreamSubscription<ServiceStatus>? _serviceStatusStream;
 
   void onClickRepairStat(stat) {
     if (stat.type == 'DURABILITY') {
@@ -172,6 +172,7 @@ class ActivityController extends GetxController with MapMixin, ActivityMixin, Ch
     stepSubscription?.cancel();
     locationSubscription?.cancel();
     pedestrianStatusSubscription?.cancel();
+    _serviceStatusStream?.cancel();
     super.onClose();
   }
 
@@ -261,9 +262,15 @@ class ActivityController extends GetxController with MapMixin, ActivityMixin, Ch
           title: const Text('알림'),
           content: const Text('원활한 채굴을 위하여\n"항상", "정확한" 위치공유를\n할 수 있도록 설정해주시기 바랍니다.'),
           actions: [
-            ElevatedButton(onPressed: () async => await requestLocationPermission(), child: const Text('확인')),
+            ElevatedButton(
+                onPressed: () async {
+                  await requestLocationPermission();
+                  Get.back();
+                },
+                child: const Text('확인')),
           ],
         ),
+        barrierDismissible: false,
       );
     }
 
@@ -277,7 +284,6 @@ class ActivityController extends GetxController with MapMixin, ActivityMixin, Ch
     } else if (Platform.isIOS) {
       hasActivityPermission = PH.PermissionStatus.granted == await PH.Permission.sensors.status;
     }
-    print('hasActivityPermission: ' + hasActivityPermission.toString());
     if (!hasActivityPermission) {
       await Get.dialog(
         AlertDialog(
@@ -286,13 +292,14 @@ class ActivityController extends GetxController with MapMixin, ActivityMixin, Ch
           actions: [
             ElevatedButton(
               onPressed: () async {
-                await requestActivityPermission();
+                hasActivityPermission = await requestActivityPermission();
                 Get.back();
               },
               child: const Text('확인'),
             ),
           ],
         ),
+        barrierDismissible: false,
       );
     }
     return hasActivityPermission;
@@ -340,31 +347,82 @@ class ActivityController extends GetxController with MapMixin, ActivityMixin, Ch
   }
 
   void initLocationStream() {
-    location.onLocationChanged.listen((LocationData location) {
-      currentLocation.value = location;
+    // location.onLocationChanged.listen((LocationData location) {
+    //   currentLocation.value = location;
+    //   exerciseData.add(UserExerciseModel(
+    //     altitude: location.altitude,
+    //     speed: location.speed,
+    //   ));
+    //   coordinates.add(LatLng(location.latitude!, location.longitude!));
+    //   detectChallengeZone(location);
+    //   autoFinishChallenge(userState.value);
+    // });
+
+    late LocationSettings locationSettings;
+
+    if (Platform.isAndroid) {
+      locationSettings = AndroidSettings(
+          accuracy: LocationAccuracy.bestForNavigation,
+          distanceFilter: 1,
+          forceLocationManager: false,
+          intervalDuration: const Duration(seconds: 5),
+          useMSLAltitude: true,
+          //(Optional) Set foreground notification config to keep the app alive
+          //when going to the background
+          foregroundNotificationConfig: ForegroundNotificationConfig(
+            notificationText: "운동 기록을 측정중",
+            notificationTitle: "위치 기록 중",
+            enableWakeLock: true,
+          ));
+    } else if (Platform.isIOS) {
+      locationSettings = AppleSettings(
+        accuracy: LocationAccuracy.bestForNavigation,
+        activityType: ActivityType.fitness,
+        distanceFilter: 1,
+        pauseLocationUpdatesAutomatically: false,
+        // Only set to true if our app will be started up in the background.
+        showBackgroundLocationIndicator: false,
+      );
+    }
+
+    locationSubscription = Geolocator.getPositionStream(locationSettings: locationSettings).listen((Position position) {
+      currentLocation.value = position;
       exerciseData.add(UserExerciseModel(
-        altitude: location.altitude,
-        speed: location.speed,
+        altitude: position.altitude,
+        speed: position.speed,
       ));
-      coordinates.add(LatLng(location.latitude!, location.longitude!));
-      detectChallengeZone(location);
+      coordinates.add(LatLng(position.latitude, position.longitude));
+      detectChallengeZone(position);
       autoFinishChallenge(userState.value);
     });
   }
 
-  Future<void> getCurrentLocation() async {
-    bool isBackgroundAllowed = await location.isBackgroundModeEnabled();
-    bool hasBackgroundPermission = false;
-    if (Platform.isAndroid && _locationPermission.value == LocationPermission.always) {
-      hasBackgroundPermission = true;
-    } else if (Platform.isIOS && [LocationPermission.always, LocationPermission.whileInUse].any((permission) => permission == _locationPermission.value)) {
-      hasBackgroundPermission = true;
-    }
-    if (hasBackgroundPermission && !isBackgroundAllowed) {
-      await location.enableBackgroundMode();
-    }
+  initGpsServiceStream() {
+    _serviceStatusStream = Geolocator.getServiceStatusStream().listen((ServiceStatus status) {
+      if (status == ServiceStatus.disabled) {
+        Get.dialog(AlertDialog(
+          title: Text('경고'),
+          content: Text('위치 기능이 꺼져있습니다. 서비스를 정상적으로 이용하기 위해서 다시 활성화해주세요.'),
+        ));
+      }
+    });
+  }
 
-    currentLocation.value = await location.getLocation();
+  Future<void> getCurrentLocation() async {
+    // bool isBackgroundAllowed = await location.isBackgroundModeEnabled();
+    // bool hasBackgroundPermission = false;
+    // if (Platform.isAndroid && _locationPermission.value == LocationPermission.always) {
+    //   hasBackgroundPermission = true;
+    // } else if (Platform.isIOS && [LocationPermission.always, LocationPermission.whileInUse].any((permission) => permission == _locationPermission.value)) {
+    //   hasBackgroundPermission = true;
+    // }
+    // if (hasBackgroundPermission && !isBackgroundAllowed) {
+    //   await location.enableBackgroundMode();
+    // }
+
+    // currentLocation.value = await location.getLocation();
+
+    currentLocation.value = await Geolocator.getCurrentPosition(desiredAccuracy: LocationAccuracy.bestForNavigation);
     if (currentLocation.value.latitude != null && currentLocation.value.longitude != null) {
       isListeningToLocation.value = true;
     }
@@ -373,6 +431,7 @@ class ActivityController extends GetxController with MapMixin, ActivityMixin, Ch
   Future<void> initializeActivity() async {
     await getCurrentLocation();
     initLocationStream();
+    initGpsServiceStream();
     if (currentLocation.value.latitude != null && currentLocation.value.longitude != null) {
       await getNearByChallengeList(currentLocation.value);
     } else {

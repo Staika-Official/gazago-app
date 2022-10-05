@@ -4,8 +4,8 @@ import 'package:gaza_go/platform/models/current_user_state_model.dart';
 import 'package:gaza_go/platform/models/inventory_badge_model.dart';
 import 'package:gaza_go/platform/services/activity_service.dart';
 import 'package:gaza_go/platform/services/badge_service.dart';
+import 'package:geolocator/geolocator.dart';
 import 'package:get/get.dart';
-import 'package:location/location.dart';
 
 class ChallengeMixin {
   final RxList<ChallengeModel> challengeList = RxList.empty();
@@ -16,11 +16,13 @@ class ChallengeMixin {
     challengeList.value = await ActivityService.getChallenges();
   }
 
-  Future<void> getNearByChallengeList(LocationData currentLocation) async {
+  // Future<void> getNearByChallengeList(LocationData currentLocation) async {
+  Future<void> getNearByChallengeList(Position currentLocation) async {
     challengeList.value = await ActivityService.getNearByChallenges(currentLocation);
   }
 
-  void detectChallengeZone(LocationData location) {
+  // void detectChallengeZone(LocationData location) {
+  void detectChallengeZone(Position location) {
     doableChallenges.value = challengeList.where((challenge) {
       double distance = calculateDistance(location.latitude, location.longitude, challenge.startLat, challenge.startLon);
       return distance <= challenge.startRadius!;

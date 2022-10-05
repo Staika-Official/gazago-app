@@ -3,14 +3,15 @@ import 'package:gaza_go/constants/base_urls.dart';
 import 'package:gaza_go/platform/apis/client.dart';
 import 'package:gaza_go/platform/models/user_exercise_model.dart';
 import 'package:gaza_go/platform/models/user_stamina_recharge_model.dart';
-import 'package:location/location.dart';
+import 'package:geolocator/geolocator.dart';
 
 class ActivityApi {
   static Future<Response> getChallenges() async {
     return await Api.client(serviceUrl: '/services/gazago/api').get('/challenges');
   }
 
-  static Future<Response> getNearByChallenges(LocationData currentLocation) async {
+  // static Future<Response> getNearByChallenges(LocationData currentLocation) async {
+  static Future<Response> getNearByChallenges(Position currentLocation) async {
     return await Api.client(serviceUrl: '/services/gazago/api').get(
       '/challenges/geolocation/lat/${currentLocation.latitude}/lon/${currentLocation.longitude}',
     );

@@ -42,8 +42,15 @@
 	<true/>
 	<key>NMFClientId</key>
 	<string>p7rc49dszh</string>
-	<key>NSLocationWhenInUseUsageDescription</key>
+	<key>NSLocationAlwaysAndWhenInUseUsageDescription</key>
 	<string>앱을 사용하기 위해서 위치추적 권한을 허용해주세요.</string>
+	<key>NSLocationTemporaryUsageDescriptionDictionary</key>
+	<dict>
+		<key>challenge</key>
+		<string>현재 위치 근처의 챌린지 정보를 실시간으로 검색합니다.</string>
+		<key>fitness</key>
+		<string>정확한 운동 상태를 기록하기 위해 사용됩니다.</string>
+	</dict>
 	<key>NSMotionUsageDescription</key>
 	<string>이 앱은 유저의 움직임을 측정합니다.</string>
 	<key>NSPhotoLibraryUsageDescription</key>

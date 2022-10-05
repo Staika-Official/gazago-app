@@ -9,15 +9,16 @@ import 'package:gaza_go/platform/models/current_user_state_model.dart';
 import 'package:gaza_go/platform/models/user_exercise_model.dart';
 import 'package:gaza_go/platform/services/activity_service.dart';
 import 'package:gaza_go/platform/stores/hive_store.dart';
+import 'package:geolocator/geolocator.dart';
 import 'package:get/get.dart';
-import 'package:location/location.dart';
 import 'package:pedometer/pedometer.dart';
 
 class ActivityMixin {
   final Rx<CurrentUserStateModel> userState = Rx(CurrentUserStateModel());
   final updateInterval = 10000;
-  final Location location = Location();
-  final Rx<LocationData> currentLocation = Rx(LocationData.fromMap({}));
+  // final Location location = Location();
+  // final Rx<LocationData> currentLocation = Rx(LocationData.fromMap({}));
+  final Rx<Position> currentLocation = Rx(Position(speed: 0, altitude: 0, accuracy: 0, heading: 0, latitude: 0, longitude: 0, speedAccuracy: 0, timestamp: DateTime.now()));
   final RxList<UserExerciseModel> exerciseData = RxList.empty();
   final RxList<LatLng> coordinates = RxList.empty();
   final RxInt exerciseTime = RxInt(0);
@@ -27,7 +28,8 @@ class ActivityMixin {
   Timer? exerciseTimer;
   Timer? updateTimer;
   Completer<NaverMapController> mapCompleter = Completer();
-  StreamSubscription<LocationData>? locationSubscription;
+  // StreamSubscription<LocationData>? locationSubscription;
+  StreamSubscription<Position>? locationSubscription;
   StreamSubscription<StepCount>? stepSubscription;
   StreamSubscription<PedestrianStatus>? pedestrianStatusSubscription;
 
