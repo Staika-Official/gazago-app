@@ -1,5 +1,4 @@
 import 'dart:async';
-import 'dart:convert';
 
 import 'package:flutter_naver_map/flutter_naver_map.dart';
 import 'package:gaza_go/constants/enums.dart';
@@ -40,6 +39,7 @@ class ActivityMixin {
   RxDouble get avgSpeed {
     //보통사람의 걷기 속도는 평균 3~4.5kmH이다. 따라서 3 = 0.8333 m/s 4.5 = 1.25m/s
     // List<double> speedList = exerciseData.where((data) => data.speed! > 0.833).map((filteredLocation) => filteredLocation.speed!).toList();
+
     List<double> speedList = exerciseData.where((data) => data.speed! > 0).map((filteredLocation) => filteredLocation.speed!).toList();
     return RxDouble(calculateAvgSpeed(speedList));
   }
@@ -57,6 +57,11 @@ class ActivityMixin {
         ),
       );
     }
+    print('coordinate length: ' + coordinates.length.toString());
+    for (double distance in distanceList) {
+      print('distance: ' + distance.toString());
+    }
+    print('totalDist. : ' + calculateTotalDistance(distanceList).toString());
     return coordinates.isNotEmpty ? RxDouble(calculateTotalDistance(distanceList)) : RxDouble(0);
   }
 
@@ -134,13 +139,6 @@ class ActivityMixin {
       ),
     );
     userState.update((state) => state!.exercise = exerciseModel);
-    print('===================================');
-    print('===================================');
-    print('===================================');
-    print(jsonEncode(exerciseModel));
-    print('===================================');
-    print('===================================');
-    print('===================================');
     exerciseState.value = ExerciseState.ongoing;
     initExerciseStats();
     initStream();
@@ -153,6 +151,8 @@ class ActivityMixin {
     exerciseData.add(userState.value.exercise!);
     exerciseTime.value = userState.value.exercise!.time!;
     exerciseSteps.value = userState.value.exercise!.steps!;
+
+    coordinates.value = List.empty(growable: true);
     if (userState.value.exercise!.locations != null) {
       coordinates.addAll(parseCoordinates());
     }

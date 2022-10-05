@@ -162,7 +162,7 @@ class ActivityHome extends StatelessWidget {
                             : Container(),
                         MaterialButton(
                           onPressed: [ExerciseState.ongoing, ExerciseState.paused, ExerciseState.ready].any((state) => controller.exerciseState.value == state)
-                              ? () => controller.checkAvailabilities()
+                              ? () => controller.requestExerciseInitialization()
                               : null,
                           shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(100),

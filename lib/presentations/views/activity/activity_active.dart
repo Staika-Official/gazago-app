@@ -86,7 +86,7 @@ class ActivityActive extends StatelessWidget {
                 child: NaverMap(
                   initialCameraPosition: CameraPosition(
                     target: LatLng(controller.currentLocation.value.latitude ?? 0, controller.currentLocation.value.longitude ?? 0),
-                    zoom: 10,
+                    zoom: 15,
                   ),
                   initLocationTrackingMode: LocationTrackingMode.Follow,
                   mapType: MapType.Basic,
@@ -119,8 +119,8 @@ class ActivityActive extends StatelessWidget {
                   onMapTwoFingerTap: controller.onMapTwoFingerTap,
                   onSymbolTap: controller.onSymbolTap,
                   indoorEnable: true,
-                  maxZoom: 17,
-                  minZoom: 15,
+                  maxZoom: 20,
+                  minZoom: 8,
                 ),
               ),
               Flexible(
@@ -185,7 +185,7 @@ class ActivityActive extends StatelessWidget {
                             style: TextStyle(fontSize: 16),
                           ),
                           Text(
-                            '이동거리: ' + formatDecimalPlaces(controller.totalDistance.value, 2) + 'm',
+                            '이동거리: ' + formatDecimalPlaces(controller.totalDistance.value, 2) + 'km',
                             style: TextStyle(fontSize: 16),
                           ),
                         ],
