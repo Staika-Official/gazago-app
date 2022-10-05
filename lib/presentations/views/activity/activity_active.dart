@@ -11,6 +11,7 @@ class ActivityActive extends StatelessWidget {
 
   List<CircleOverlay> renderStartPoint(ActivityController controller) {
     return controller.challengeList
+        .where((challenge) => challenge.id == controller.userState.value.exercise!.challengeId)
         .map(
           (challenge) => CircleOverlay(
             overlayId: 'ChallengeStart' + challenge.id!.toString(),
@@ -26,6 +27,7 @@ class ActivityActive extends StatelessWidget {
 
   List<CircleOverlay> renderEndPoint(ActivityController controller) {
     return controller.challengeList
+        .where((challenge) => challenge.id == controller.userState.value.exercise!.challengeId)
         .map(
           (challenge) => CircleOverlay(
             overlayId: 'ChallengeEnd' + challenge.id!.toString(),
@@ -41,6 +43,7 @@ class ActivityActive extends StatelessWidget {
 
   List<Marker> renderStartMarker(ActivityController controller) {
     return controller.challengeList
+        .where((challenge) => challenge.id == controller.userState.value.exercise!.challengeId)
         .map(
           (challenge) => Marker(
             markerId: 'StartMarker' + challenge.id!.toString(),
@@ -56,6 +59,7 @@ class ActivityActive extends StatelessWidget {
 
   List<Marker> renderEndMarker(ActivityController controller) {
     return controller.challengeList
+        .where((challenge) => challenge.id == controller.userState.value.exercise!.challengeId)
         .map(
           (challenge) => Marker(
             markerId: 'FinishMarker' + challenge.id!.toString(),
