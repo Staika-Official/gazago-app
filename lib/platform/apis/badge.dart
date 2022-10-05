@@ -12,7 +12,7 @@ class BadgeApi {
   }
 
   static Future<Response> fetchUserIssuanceBadge(String userId, int exerciseId) async {
-    return await Api.client(serviceUrl: ServiceUrl.badgeService).post('/users/$userId/issues/hiking', data: {
+    return await Api.client(serviceUrl: ServiceUrl.badgeService).post('/users/$userId/issues/challenge', data: {
       'userExerciseId': exerciseId,
     });
   }
