@@ -40,7 +40,7 @@ class SyntheticBadge extends StatelessWidget {
                             return GestureDetector(
                               onTap: () => i != 0 ? _controller.showSelectBadgePopup(controller.userBadgesList.value, controller.selectedBadge.value, i) : null,
                               child: CircleAvatar(
-                                backgroundImage: AssetImage('assets/images/@temp_img_empty.png'),
+                                backgroundImage: const AssetImage('assets/images/@temp_img_empty.png'),
                                 foregroundImage: NetworkImage(_controller.selectedBadgeList[i] != null ? _controller.selectedBadgeList[i]!.badge.imageUrl ?? '' : ''),
                                 radius: 30,
                               ),

@@ -1,3 +1,4 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:gaza_go/platform/controllers/inventory/inventory_home_controller.dart';
 import 'package:gaza_go/platform/controllers/inventory_controller.dart';
@@ -18,7 +19,7 @@ class InventoryItem extends StatelessWidget {
             padding: const EdgeInsets.only(top: 20, bottom: 5),
             controller: _controller.subTabController,
             isScrollable: true,
-            tabs: <Widget>[
+            tabs: const <Widget>[
               Tab(
                 child: Text(
                   '모자',
@@ -69,10 +70,11 @@ class InventoryItem extends StatelessWidget {
                           child: Stack(
                             alignment: Alignment.bottomCenter,
                             children: [
-                              Image(
-                                image: NetworkImage(hat.itemImageUrl),
+                              CachedNetworkImage(
+                                imageUrl: hat.itemImageUrl,
                                 fit: BoxFit.fill,
-                                width: double.infinity,
+                                placeholder: (context, url) => const CircularProgressIndicator(),
+                                errorWidget: (context, url, error) => Image.asset("assets/images/@temp_badge.png"),
                               ),
                               Padding(
                                 padding: const EdgeInsets.only(bottom: 5),
@@ -97,10 +99,11 @@ class InventoryItem extends StatelessWidget {
                           child: Stack(
                             alignment: Alignment.bottomCenter,
                             children: [
-                              Image(
-                                image: NetworkImage(outer.itemImageUrl),
+                              CachedNetworkImage(
+                                imageUrl: outer.itemImageUrl,
                                 fit: BoxFit.fill,
-                                width: double.infinity,
+                                placeholder: (context, url) => const CircularProgressIndicator(),
+                                errorWidget: (context, url, error) => Image.asset("assets/images/@temp_badge.png"),
                               ),
                               Padding(
                                 padding: const EdgeInsets.only(bottom: 5),
@@ -125,10 +128,11 @@ class InventoryItem extends StatelessWidget {
                           child: Stack(
                             alignment: Alignment.bottomCenter,
                             children: [
-                              Image(
-                                image: NetworkImage(bottom.itemImageUrl),
+                              CachedNetworkImage(
+                                imageUrl: bottom.itemImageUrl,
                                 fit: BoxFit.fill,
-                                width: double.infinity,
+                                placeholder: (context, url) => const CircularProgressIndicator(),
+                                errorWidget: (context, url, error) => Image.asset("assets/images/@temp_badge.png"),
                               ),
                               Padding(
                                 padding: const EdgeInsets.only(bottom: 5),
@@ -153,10 +157,11 @@ class InventoryItem extends StatelessWidget {
                           child: Stack(
                             alignment: Alignment.bottomCenter,
                             children: [
-                              Image(
-                                image: NetworkImage(shoe.itemImageUrl),
+                              CachedNetworkImage(
+                                imageUrl: shoe.itemImageUrl,
                                 fit: BoxFit.fill,
-                                width: double.infinity,
+                                placeholder: (context, url) => const CircularProgressIndicator(),
+                                errorWidget: (context, url, error) => Image.asset("assets/images/@temp_badge.png"),
                               ),
                               Padding(
                                 padding: const EdgeInsets.only(bottom: 5),
@@ -181,10 +186,11 @@ class InventoryItem extends StatelessWidget {
                           child: Stack(
                             alignment: Alignment.bottomCenter,
                             children: [
-                              Image(
-                                image: NetworkImage(accessory.itemImageUrl),
+                              CachedNetworkImage(
+                                imageUrl: accessory.itemImageUrl,
                                 fit: BoxFit.fill,
-                                width: double.infinity,
+                                placeholder: (context, url) => const CircularProgressIndicator(),
+                                errorWidget: (context, url, error) => Image.asset("assets/images/@temp_badge.png"),
                               ),
                               Padding(
                                 padding: const EdgeInsets.only(bottom: 5),

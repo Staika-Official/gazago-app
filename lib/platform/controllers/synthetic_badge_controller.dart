@@ -109,13 +109,8 @@ class SyntheticBadgeController extends GetxController with InventoryMixin {
               child: Stack(
                 children: [
                   Text(badge.value.badge.id.toString()),
-                  // Image(
-                  //   image: CachedNetworkImageProvider(selectBadge.value.badge.imageUrl),
-                  //   fit: BoxFit.fill,
-                  //   width: double.infinity,
-                  // ),
                   if (selectBadge.value.id == badge.value.id)
-                    Positioned(
+                    const Positioned(
                       left: 0,
                       top: 0,
                       child: Icon(Icons.check, size: 20),
@@ -153,9 +148,13 @@ class SyntheticBadgeController extends GetxController with InventoryMixin {
           return Column(
             children: [
               Center(
-                  child: Image(
-                image: CachedNetworkImageProvider(selectBadge.value.badge.imageUrl),
-              )),
+                child: CachedNetworkImage(
+                  imageUrl: selectBadge.value.badge.imageUrl,
+                  fit: BoxFit.fill,
+                  placeholder: (context, url) => const CircularProgressIndicator(),
+                  errorWidget: (context, url, error) => Image.asset("assets/images/@temp_badge.png"),
+                ),
+              ),
               SizedBox(
                 width: 200,
                 height: 400,
@@ -187,18 +186,14 @@ class SyntheticBadgeController extends GetxController with InventoryMixin {
   }
 
   void selectedItemAddedList(int index) {
+    if (selectedBadgeList[index] != null) {
+      userBadgesList.add(selectedBadgeList[index]!);
+      selectedBadgeList[index] = null;
+    }
     selectedBadgeList[index] = selectBadge.value;
-    userBadgesList.removeWhere((element) => element.id == selectBadgeId.value);
+    userBadgesList.removeWhere((element) => element.badge.id == selectBadgeId.value);
     selectedBadgeIdList.add(selectBadge.value.badge.id);
 
-    // if (selectedBadgeList.length == selectedBadgeLevel.value) {
-    //   userBadgesList.add(selectedBadgeList[index]!);
-    // } else {}
-    // if (selectedBadgeList.length > selectedBadgeLevel.value) {
-    //   userBadgesList.add(selectedBadgeList.firstWhere((element) => element.id == selectBadgeId.value));
-    // }
-
-    print(selectedBadgeIdList);
     Get.back();
   }
 

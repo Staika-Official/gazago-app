@@ -1,3 +1,4 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:gaza_go/platform/controllers/inventory_controller.dart';
 import 'package:get/get.dart';
@@ -13,10 +14,11 @@ class InventoryBadge extends StatelessWidget {
             onLongPress: () => controller.fetchEquipBadge(item.badge.id),
             child: SizedBox(
               child: Stack(alignment: Alignment.bottomCenter, children: [
-                Image(
-                  image: NetworkImage(item.badge.imageUrl),
+                CachedNetworkImage(
+                  imageUrl: item.badge.imageUrl,
                   fit: BoxFit.fill,
-                  width: double.infinity,
+                  placeholder: (context, url) => const CircularProgressIndicator(),
+                  errorWidget: (context, url, error) => Image.asset("assets/images/@temp_badge.png"),
                 ),
                 Text('LV.${item.badge.level.toString()}'),
               ]),
