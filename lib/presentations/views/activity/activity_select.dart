@@ -17,7 +17,7 @@ class ActivitySelect extends StatelessWidget {
           Obx(() {
             return Expanded(
               child: InkWell(
-                onTap: controller.doableChallenges.isNotEmpty ? () => controller.loadExercise(ExerciseType.hiking) : null,
+                onTap: controller.doableChallenges.isNotEmpty ? () => controller.moveToChallangeSelection() : null,
                 child: Card(
                   child: Center(
                     child: Column(

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:gaza_go/flavors.dart';
 import 'package:gaza_go/platform/middleware/router_middleware.dart';
 import 'package:gaza_go/presentations/views/activity/activity_active.dart';
+import 'package:gaza_go/presentations/views/activity/activity_challenges.dart';
 import 'package:gaza_go/presentations/views/activity/activity_loading.dart';
 import 'package:gaza_go/presentations/views/activity/activity_select.dart';
 import 'package:gaza_go/presentations/views/archive/archive_detail.dart';
@@ -35,6 +36,7 @@ class Routes {
   static const term = '/term/:termType';
   static const archiveDetail = '/archive/detail';
   static const activitySelect = '/activity/select';
+  static const activityChallenges = '/activity/challenges';
   static const activityLoading = '/activity/loading';
   static const activityActive = '/activity/active';
   static const preferences = '/preferences';
@@ -65,6 +67,7 @@ class Routes {
     stepPage(name: Routes.term, page: const Term()),
     stepPage(name: Routes.archiveDetail, page: const ArchiveDetail()),
     stepPage(name: Routes.activitySelect, page: const ActivitySelect()),
+    stepPage(name: Routes.activityChallenges, page: const ActivityChallenges()),
     stepPage(name: Routes.activityLoading, page: const ActivityLoading()),
     stepPage(name: Routes.activityActive, page: const ActivityActive()),
     stepPage(

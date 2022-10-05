@@ -8,6 +8,7 @@ import 'package:gaza_go/constants/routes.dart';
 import 'package:gaza_go/platform/helpers/activity_mixin.dart';
 import 'package:gaza_go/platform/helpers/challenge_mixin.dart';
 import 'package:gaza_go/platform/helpers/map_mixin.dart';
+import 'package:gaza_go/platform/models/challenge_model.dart';
 import 'package:gaza_go/platform/models/inventory_item_model.dart';
 import 'package:gaza_go/platform/models/repair_shoes_model.dart';
 import 'package:gaza_go/platform/models/stat_model.dart';
@@ -335,15 +336,19 @@ class ActivityController extends GetxController with MapMixin, ActivityMixin, Ch
     }
   }
 
-  void loadExercise(ExerciseType exerciseType) {
+  void loadExercise(ExerciseType exerciseType, [ChallengeModel? challenge]) {
     Get.toNamed(Routes.activityLoading);
     Timer(
       Duration(seconds: 3),
       () {
         Get.offNamed(Routes.activityActive);
-        startExercise(exerciseType, doableChallenges);
+        startExercise(exerciseType, challenge);
       },
     );
+  }
+
+  void moveToChallangeSelection() {
+    Get.toNamed(Routes.activityChallenges);
   }
 
   void initLocationStream() {

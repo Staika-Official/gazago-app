@@ -117,10 +117,7 @@ class ActivityMixin {
     });
   }
 
-  void startExercise(ExerciseType exerciseType, List<ChallengeModel> doableChallengeList) async {
-    int? challengeId;
-    if (exerciseType == ExerciseType.hiking && doableChallengeList.isNotEmpty) challengeId = doableChallengeList.first.id!;
-
+  void startExercise(ExerciseType exerciseType, ChallengeModel? challenge) async {
     UserExerciseModel exerciseModel = await ActivityService.fetchStartUserExercises(
       UserExerciseModel(
         userId: int.parse(
@@ -136,8 +133,8 @@ class ActivityMixin {
         distance: 0,
         altitude: currentLocation.value.altitude,
         time: 0,
-        startPoint: challengeId != null ? doableChallengeList.first.firstName : '${currentLocation.value.longitude}, ${currentLocation.value.latitude}',
-        challengeId: challengeId,
+        startPoint: challenge != null ? challenge.firstName : '${currentLocation.value.longitude}, ${currentLocation.value.latitude}',
+        challengeId: challenge?.id,
       ),
     );
     userState.update((state) => state!.exercise = exerciseModel);
