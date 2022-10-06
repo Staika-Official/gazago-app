@@ -11,7 +11,7 @@ class ActivityActive extends StatelessWidget {
 
   List<CircleOverlay> renderStartPoint(ActivityController controller) {
     return controller.challengeList
-        .where((challenge) => challenge.id == controller.userState.value.exercise!.challengeId)
+        .where((challenge) => challenge.id == controller.userState.value.exercise?.challengeId)
         .map(
           (challenge) => CircleOverlay(
             overlayId: 'ChallengeStart' + challenge.id!.toString(),

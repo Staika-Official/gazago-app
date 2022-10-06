@@ -8,10 +8,6 @@ import 'package:get/get.dart';
 class ArchiveDetail extends StatelessWidget {
   const ArchiveDetail({Key? key}) : super(key: key);
 
-  // PathOverlay renderPaths(ArchiveController controller) {
-  //   return PathOverlay(PathOverlayId('Detail Path'), controller.locations);
-  // }
-
   @override
   Widget build(BuildContext context) {
     ArchiveController controller = Get.find();
@@ -27,9 +23,6 @@ class ArchiveDetail extends StatelessWidget {
                 Row(
                   mainAxisSize: MainAxisSize.min,
                   children: [
-                    // Icon(
-                    //   controller.selectedItem.value.activityType == ActivityType.climbing ? Icons.nordic_walking : Icons.directions_walk,
-                    // ),
                     Text(
                       formatDate(controller.selectedItem.value.startedDate!),
                     )
@@ -50,32 +43,56 @@ class ArchiveDetail extends StatelessWidget {
             height: 400,
             color: Colors.grey,
             child: NaverMap(
-                // initialCameraPosition: CameraPosition(
-                //   target: controller.locations.value.first,
-                // ),
-                // pathOverlays: {
-                //   PathOverlay(
-                //     PathOverlayId('path'),
-                //     controller.locations,
-                //     width: 3,
-                //     color: Colors.red,
-                //     outlineColor: Colors.white,
-                //   )
-                // },
-                ),
+              initialCameraPosition: CameraPosition(
+                target: controller.locations.first,
+              ),
+              pathOverlays: {
+                PathOverlay(
+                  PathOverlayId('detail path'),
+                  controller.locations.length > 1 ? controller.locations : [controller.locations.first, controller.locations.first],
+                  width: 3,
+                  color: Colors.red,
+                  outlineColor: Colors.white,
+                )
+              },
+            ),
           ),
-          Text('시작 시간: ${formatDate(controller.selectedItem.value.startedDate!)}'),
-          Text('종료 시간: ${formatDate(controller.selectedItem.value.endedDate)}'),
-          // Text('시작점: ${controller.selectedItem.value.startPoint}'),
-          Text('획득 뱃지: ${controller.selectedItem.value.badgeIssueId}'), //TODO. 뱃지 네임 필요
-          Text('운동 시간: ${controller.selectedItem.value.time}'),
-          Text('운동 거리: ${controller.selectedItem.value.distance}'),
-          Text('걸음 수: ${controller.selectedItem.value.steps}'),
-          Text('평균 속도: ${controller.selectedItem.value.speed}'),
-          // Text('최고 고도: ${controller.selectedItem.value.altitude}'),
-          Text('획득 STEP: ${controller.selectedItem.value.rewardGo}'),
-          // Text('소비 체력: ${controller.selectedItem.value.spendStamina}'),
-          // Text('소비 내구도: ${controller.selectedItem.value.spendDurability}'),
+          Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: Text('시작 시간: ${formatDate(controller.selectedItem.value.startedDate!)}'),
+          ),
+          controller.selectedItem.value.challengeTitle != null
+              ? Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: Text('도전한 첼린지: ${controller.selectedItem.value.challengeTitle}'),
+                )
+              : Container(),
+          controller.selectedItem.value.badgeName != null
+              ? Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: Text('획득 뱃지: ${controller.selectedItem.value.badgeName}'),
+                )
+              : Container(),
+          Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: Text('운동 시간: ${formatSeconds(controller.selectedItem.value.time!)}'),
+          ),
+          Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: Text('운동 거리: ${controller.selectedItem.value.distance}km'),
+          ),
+          Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: Text('걸음 수: ${controller.selectedItem.value.steps}'),
+          ),
+          Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: Text('평균 속도: ${controller.selectedItem.value.speed}km/h'),
+          ),
+          Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: Text('획득 STEP: ${controller.selectedItem.value.rewardGo}GO'),
+          ),
         ],
       ),
     );
