@@ -68,6 +68,24 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         fontFamily: 'Pretendard',
         primarySwatch: Colors.blue,
+        navigationBarTheme: NavigationBarThemeData(
+          indicatorColor: Colors.transparent,
+          labelTextStyle: MaterialStateProperty.resolveWith((states) {
+            if (states.contains(MaterialState.selected)) {
+              return const TextStyle(
+                color: Color(0xFF0EE6F3),
+                fontSize: 10,
+                fontWeight: FontWeight.w600,
+              );
+            } else {
+              return const TextStyle(
+                color: Color(0xFF7A7A7A),
+                fontSize: 10,
+                fontWeight: FontWeight.w600,
+              );
+            }
+          }),
+        ),
       ),
       navigatorObservers: <NavigatorObserver>[observer],
       initialRoute: Routes.login,

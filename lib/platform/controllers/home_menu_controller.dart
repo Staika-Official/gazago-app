@@ -7,7 +7,6 @@ import 'package:gaza_go/presentations/views/activity/index.dart';
 import 'package:gaza_go/presentations/views/archive/index.dart';
 import 'package:gaza_go/presentations/views/inventory/index.dart';
 import 'package:gaza_go/presentations/views/leaderboard/index.dart';
-import 'package:gaza_go/presentations/views/shop/index.dart';
 import 'package:get/get.dart';
 
 class HomeMenuController extends GetxController {
@@ -19,12 +18,10 @@ class HomeMenuController extends GetxController {
   ];
 
   final List<Widget> mainViewWidgetList = [
+    ActivityHome(),
     ArchiveHome(),
     InventoryHome(),
-    // InventoryItemDetail(),
-    // InventoryBadgeDetail(),
-    ActivityHome(),
-    ShopHome(),
+    // ShopHome(),
     LeaderboardHome(),
   ];
 

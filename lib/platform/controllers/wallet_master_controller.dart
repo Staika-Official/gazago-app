@@ -20,9 +20,9 @@ class WalletMasterController extends GetxService {
 
   void getWalletList() {
     walletList.value = [
-      DummyTokenModel(name: 'solana', balance: 100.00, tokenImageUrl: 'https://placeimg.com/20/20/any'),
-      DummyTokenModel(name: 'staika', balance: 10.00, tokenImageUrl: 'https://placeimg.com/20/20/any'),
-      DummyTokenModel(name: 'taika', balance: 1000.00, tokenImageUrl: 'https://placeimg.com/20/20/any'),
+      DummyTokenModel(name: 'go', balance: 100.00, tokenImageUrl: 'assets/images/ico_token_go.svg'),
+      DummyTokenModel(name: 'tik', balance: 10.00, tokenImageUrl: 'assets/images/ico_token_tik.svg'),
+      DummyTokenModel(name: 'staika', balance: 1000.00, tokenImageUrl: 'assets/images/ico_token_staika.svg'),
     ];
   }
 

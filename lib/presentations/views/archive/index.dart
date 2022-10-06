@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:gaza_go/constants/enums.dart';
 import 'package:gaza_go/platform/controllers/archive_controller.dart';
 import 'package:gaza_go/platform/helpers/base_helper.dart';
+import 'package:gaza_go/presentations/styles/icons.dart';
+import 'package:gaza_go/presentations/styles/styled_text.dart';
 import 'package:get/get.dart';
 
 class ArchiveHome extends StatelessWidget {
@@ -13,35 +15,101 @@ class ArchiveHome extends StatelessWidget {
           (archive) => InkWell(
             onTap: () => controller.toDetail(archive.id!),
             child: Card(
-              color: Colors.blueGrey,
-              child: Padding(
-                padding: const EdgeInsets.all(10.0),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Row(
-                      children: [
-                        Icon(
-                          archive.type == ExerciseType.hiking.name.toUpperCase() ? Icons.nordic_walking : Icons.directions_walk,
-                        ),
-                        Padding(
-                          padding: EdgeInsets.only(
-                            left: 10,
-                          ),
-                          child: Text(
-                            formatDate(archive.startedDate!),
-                          ),
-                        )
-                      ],
-                    ),
-                    Divider(
-                      color: Colors.grey,
-                      thickness: 1,
-                    ),
-                    Text(
-                      '${formatSeconds(archive.time!)} \u00B7 ${archive.distance}m \u00B7 ${archive.rewardGo}GO',
+              margin: EdgeInsets.only(bottom: 15),
+              elevation: 0,
+              color: const Color(0xFF363841),
+              child: Container(
+                decoration: const BoxDecoration(
+                  color: Color(0xFF363841),
+                  borderRadius: BorderRadius.only(topLeft: Radius.circular(10), topRight: Radius.circular(10), bottomLeft: Radius.circular(10), bottomRight: Radius.circular(10)),
+                  boxShadow: [
+                    BoxShadow(
+                      color: Color(0xFF000000),
+                      spreadRadius: 0,
+                      blurRadius: 0,
+                      offset: Offset(0, 4), // changes position of shadow
                     ),
                   ],
+                ),
+                child: Padding(
+                  padding: const EdgeInsets.symmetric(vertical: 15.0, horizontal: 15.0),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children: [
+                          Icon(
+                            archive.type == ExerciseType.hiking.name.toUpperCase() ? Icons.nordic_walking : Icons.directions_walk,
+                          ),
+                          Padding(
+                            padding: const EdgeInsets.only(
+                              left: 10,
+                            ),
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                StyledText(formatDate(archive.startedDate!), fontSize: 16, fontWeight: 500),
+                                if (archive.challengeName != null) StyledText(archive.challengeName!, fontSize: 12, lineHeight: 20, color: const Color(0xFF949494), fontWeight: 500),
+                              ],
+                            ),
+                          )
+                        ],
+                      ),
+                      const Divider(
+                        color: Color(0xFF28292C),
+                        thickness: 1,
+                      ),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Padding(
+                            padding: const EdgeInsets.only(left: 6.0),
+                            child: Row(
+                              children: [
+                                Padding(
+                                  padding: const EdgeInsets.only(right: 5.2),
+                                  child: iconArchiveClock,
+                                ),
+                                StyledText(
+                                  formatSeconds(archive.time!),
+                                  fontWeight: 600,
+                                )
+                              ],
+                            ),
+                          ),
+                          Row(
+                            children: [
+                              Padding(
+                                padding: const EdgeInsets.only(right: 5.2),
+                                child: iconArchiveDistance,
+                              ),
+                              StyledText(
+                                '${archive.distance} km',
+                                fontWeight: 600,
+                              ),
+                            ],
+                          ),
+                          Padding(
+                            padding: const EdgeInsets.only(right: 6.0),
+                            child: Row(
+                              children: [
+                                Padding(
+                                  padding: const EdgeInsets.only(right: 5.2),
+                                  child: iconArchiveSteps,
+                                ),
+                                StyledText(
+                                  '${archive.steps}',
+                                  fontWeight: 600,
+                                ),
+                              ],
+                            ),
+                          ),
+                        ],
+                      )
+                    ],
+                  ),
                 ),
               ),
             ),
@@ -55,32 +123,47 @@ class ArchiveHome extends StatelessWidget {
     ArchiveController controller = Get.put(ArchiveController());
 
     return Container(
+      color: const Color(0xFF1D1D26),
       child: Obx(() {
-        return Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            Align(
-              alignment: Alignment.centerRight,
-              child: IconButton(
-                icon: Icon(Icons.sort),
-                onPressed: null,
+        return Padding(
+          padding: const EdgeInsets.symmetric(vertical: 25.0, horizontal: 20.0),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Padding(
+                padding: const EdgeInsets.only(bottom: 15.0),
+                child: StyledText(
+                  '운동 기록',
+                  fontSize: 20,
+                  fontWeight: 500,
+                ),
               ),
-            ),
-            Expanded(
-              child: RefreshIndicator(
-                onRefresh: () async => await controller.getArchiveList(),
-                child: SingleChildScrollView(
-                  physics: ClampingScrollPhysics(),
-                  child: Column(
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      ...renderArchiveList(controller),
-                    ],
+
+              // Align(
+              //   alignment: Alignment.centerRight,
+              //   child: IconButton(
+              //     icon: Icon(Icons.sort),
+              //     onPressed: null,
+              //   ),
+              // ),
+
+              Expanded(
+                child: RefreshIndicator(
+                  onRefresh: () async => await controller.getArchiveList(),
+                  child: SingleChildScrollView(
+                    physics: ClampingScrollPhysics(),
+                    child: Column(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        ...renderArchiveList(controller),
+                      ],
+                    ),
                   ),
                 ),
               ),
-            ),
-          ],
+            ],
+          ),
         );
       }),
     );
