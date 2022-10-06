@@ -4,7 +4,7 @@ import 'package:json_annotation/json_annotation.dart';
 
 part 'nft_meta_model.g.dart';
 
-@JsonSerializable()
+@JsonSerializable(explicitToJson: true)
 class NftMetaModel {
   String name;
   String symbol;

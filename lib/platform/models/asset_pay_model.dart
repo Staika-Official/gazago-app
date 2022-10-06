@@ -2,7 +2,7 @@ import 'package:json_annotation/json_annotation.dart';
 
 part 'asset_pay_model.g.dart';
 
-@JsonSerializable()
+@JsonSerializable(explicitToJson: true)
 class AssetPayModel {
   int? recipient;
   AssetPayModel amount;

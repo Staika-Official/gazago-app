@@ -3,7 +3,7 @@ import 'package:json_annotation/json_annotation.dart';
 
 part 'asset_token_balance_list_model.g.dart';
 
-@JsonSerializable()
+@JsonSerializable(explicitToJson: true)
 class AssetTokenBalanceListModel {
   List<AssetTokenBalanceModel> tokens;
 

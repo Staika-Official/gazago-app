@@ -2,7 +2,7 @@ import 'package:json_annotation/json_annotation.dart';
 
 part 'inventory_item_model.g.dart';
 
-@JsonSerializable()
+@JsonSerializable(explicitToJson: true)
 class InventoryItemModel {
   int id;
   int? userId;

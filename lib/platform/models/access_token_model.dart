@@ -2,7 +2,7 @@ import 'package:json_annotation/json_annotation.dart';
 
 part 'access_token_model.g.dart';
 
-@JsonSerializable()
+@JsonSerializable(explicitToJson: true)
 class AccessTokenModel {
   String accessToken;
   String refreshToken;

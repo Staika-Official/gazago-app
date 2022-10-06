@@ -2,7 +2,7 @@ import 'package:json_annotation/json_annotation.dart';
 
 part 'equipped_badge_item_model.g.dart';
 
-@JsonSerializable()
+@JsonSerializable(explicitToJson: true)
 class EquippedBadgeItemModel {
   int id;
   int badgeId;

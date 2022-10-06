@@ -2,7 +2,7 @@ import 'package:json_annotation/json_annotation.dart';
 
 part 'asset_address_model.g.dart';
 
-@JsonSerializable()
+@JsonSerializable(explicitToJson: true)
 class AssetAddressModel {
   String publicKey;
   String owner;

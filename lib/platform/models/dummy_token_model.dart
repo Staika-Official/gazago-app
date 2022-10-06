@@ -2,7 +2,7 @@ import 'package:json_annotation/json_annotation.dart';
 
 part 'dummy_token_model.g.dart';
 
-@JsonSerializable()
+@JsonSerializable(explicitToJson: true)
 class DummyTokenModel {
   String name;
   double balance;

@@ -2,7 +2,7 @@ import 'package:json_annotation/json_annotation.dart';
 
 part 'challenge_model.g.dart';
 
-@JsonSerializable()
+@JsonSerializable(explicitToJson: true)
 class ChallengeModel {
   int? id;
   String? type;

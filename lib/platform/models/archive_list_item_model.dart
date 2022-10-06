@@ -1,9 +1,9 @@
 import 'package:json_annotation/json_annotation.dart';
 
-part 'archive_item_model.g.dart';
+part 'archive_list_item_model.g.dart';
 
-@JsonSerializable()
-class ArchiveItemModel {
+@JsonSerializable(explicitToJson: true)
+class ArchiveListItemModel {
   int? id;
   int? userId;
   String? type;
@@ -20,7 +20,7 @@ class ArchiveItemModel {
   String? badgeDescription;
   String? challengeName;
 
-  ArchiveItemModel({
+  ArchiveListItemModel({
     this.id,
     this.userId,
     this.type,
@@ -38,7 +38,7 @@ class ArchiveItemModel {
     this.challengeName,
   });
 
-  factory ArchiveItemModel.fromJson(Map<String, dynamic> json) => _$ArchiveItemModelFromJson(json);
+  factory ArchiveListItemModel.fromJson(Map<String, dynamic> json) => _$ArchiveListItemModelFromJson(json);
 
-  Map<String, dynamic> toJson() => _$ArchiveItemModelToJson(this);
+  Map<String, dynamic> toJson() => _$ArchiveListItemModelToJson(this);
 }

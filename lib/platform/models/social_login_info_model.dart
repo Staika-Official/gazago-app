@@ -2,7 +2,7 @@ import 'package:json_annotation/json_annotation.dart';
 
 part 'social_login_info_model.g.dart';
 
-@JsonSerializable()
+@JsonSerializable(explicitToJson: true)
 class SocialLoginInfoModel {
   String provider;
   String deviceId;

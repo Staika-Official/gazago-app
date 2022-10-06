@@ -5,7 +5,7 @@ import 'package:json_annotation/json_annotation.dart';
 
 part 'current_user_state_model.g.dart';
 
-@JsonSerializable()
+@JsonSerializable(explicitToJson: true)
 class CurrentUserStateModel {
   UserStateModel? state;
   UserExerciseModel? exercise;

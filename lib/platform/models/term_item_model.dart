@@ -2,7 +2,7 @@ import 'package:json_annotation/json_annotation.dart';
 
 part 'term_item_model.g.dart';
 
-@JsonSerializable()
+@JsonSerializable(explicitToJson: true)
 class TermItemModel {
   String title;
   String termType;

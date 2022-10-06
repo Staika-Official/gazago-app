@@ -2,7 +2,7 @@ import 'package:json_annotation/json_annotation.dart';
 
 part 'nft_attribute_model.g.dart';
 
-@JsonSerializable()
+@JsonSerializable(explicitToJson: true)
 class NftAttributeModel {
   String trait_type;
   String value;

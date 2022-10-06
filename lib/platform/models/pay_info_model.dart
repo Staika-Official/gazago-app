@@ -3,7 +3,7 @@ import 'package:json_annotation/json_annotation.dart';
 
 part 'pay_info_model.g.dart';
 
-@JsonSerializable()
+@JsonSerializable(explicitToJson: true)
 class PayInfoModel {
   int? recipient; //결제 대금을 받을 사용자의 user id (회사가 받는다면, null)
   AssetShortAmountModel amount;

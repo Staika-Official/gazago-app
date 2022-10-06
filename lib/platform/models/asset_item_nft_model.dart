@@ -2,7 +2,7 @@ import 'package:json_annotation/json_annotation.dart';
 
 part 'asset_item_nft_model.g.dart';
 
-@JsonSerializable()
+@JsonSerializable(explicitToJson: true)
 class AssetItemNftModel {
   String name;
   double balance;

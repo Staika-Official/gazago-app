@@ -2,7 +2,7 @@ import 'package:json_annotation/json_annotation.dart';
 
 part 'repair_shoes_model.g.dart';
 
-@JsonSerializable()
+@JsonSerializable(explicitToJson: true)
 class RepairShoesModel {
   int? id;
   int? durability;

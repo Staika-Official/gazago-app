@@ -3,7 +3,7 @@ import 'package:json_annotation/json_annotation.dart';
 
 part 'nft_info_model.g.dart';
 
-@JsonSerializable()
+@JsonSerializable(explicitToJson: true)
 class NftInfoModel {
   String mint;
   String updateAuthority;

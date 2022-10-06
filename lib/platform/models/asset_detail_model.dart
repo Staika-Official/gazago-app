@@ -4,7 +4,7 @@ import 'package:json_annotation/json_annotation.dart';
 
 part 'asset_detail_model.g.dart';
 
-@JsonSerializable()
+@JsonSerializable(explicitToJson: true)
 class AssetDetailModel {
   AssetTokenBalanceModel balance;
   List<AssetTokenTransactionModel> transactions;

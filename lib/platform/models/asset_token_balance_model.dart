@@ -2,7 +2,7 @@ import 'package:json_annotation/json_annotation.dart';
 
 part 'asset_token_balance_model.g.dart';
 
-@JsonSerializable()
+@JsonSerializable(explicitToJson: true)
 class AssetTokenBalanceModel {
   String? publicKey;
   String? mint;

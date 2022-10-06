@@ -5,7 +5,7 @@ import 'package:json_annotation/json_annotation.dart';
 
 part 'asset_token_transaction_model.g.dart';
 
-@JsonSerializable()
+@JsonSerializable(explicitToJson: true)
 class AssetTokenTransactionModel {
   String? signature;
   String? timestamp;

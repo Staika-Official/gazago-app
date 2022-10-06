@@ -2,7 +2,7 @@ import 'package:json_annotation/json_annotation.dart';
 
 part 'board_item_model.g.dart';
 
-@JsonSerializable()
+@JsonSerializable(explicitToJson: true)
 class BoardItemModel {
   int id;
   String boardType;
@@ -50,8 +50,7 @@ class BoardItemModel {
     required this.lastModifiedDate,
   });
 
-  factory BoardItemModel.fromJson(Map<String, dynamic> json) =>
-      _$BoardItemModelFromJson(json);
+  factory BoardItemModel.fromJson(Map<String, dynamic> json) => _$BoardItemModelFromJson(json);
 
   Map<String, dynamic> toJson() => _$BoardItemModelToJson(this);
 }

@@ -4,7 +4,7 @@ import 'package:json_annotation/json_annotation.dart';
 
 part 'equipped_item_model.g.dart';
 
-@JsonSerializable()
+@JsonSerializable(explicitToJson: true)
 class EquippedItemModel {
   List<InventoryItemModel> items;
   EquippedBadgeItemModel? badge;
