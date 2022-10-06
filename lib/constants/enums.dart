@@ -94,26 +94,23 @@ enum PaymentPurpose {
   buyItem,
   badgeSynthesize,
   buyBadge,
-  rechargeTik,
 }
 
 extension PaymentPurposeLabel on PaymentPurpose {
   String get label {
     switch (this) {
       case PaymentPurpose.rechargeStamina:
-        return '체력충전';
+        return 'RECHARGE_STAMINA'; // '체력충전';
       case PaymentPurpose.rechargeDurability:
-        return '내구도충전';
+        return 'RECHARGE_DURABILITY'; // '내구도충전';
       case PaymentPurpose.repairItem:
-        return '아이템수리';
+        return 'REPAIR_ITEM'; // '아이템수리';
       case PaymentPurpose.buyItem:
-        return '아이템구매';
+        return 'BUY_BADGE'; // '아이템구매';
       case PaymentPurpose.badgeSynthesize:
-        return '배지합성';
+        return 'BUY_ITEM'; // '배지합성';
       case PaymentPurpose.buyBadge:
-        return '배지구매';
-      case PaymentPurpose.rechargeTik:
-        return 'TIK충전';
+        return 'COMPOSE_BADGE'; // '배지구매';
     }
   }
 }

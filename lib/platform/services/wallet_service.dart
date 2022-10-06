@@ -2,7 +2,10 @@ import 'package:dio/dio.dart';
 import 'package:gaza_go/platform/apis/wallet.dart';
 import 'package:gaza_go/platform/models/asset_detail_model.dart';
 import 'package:gaza_go/platform/models/asset_token_balance_list_model.dart';
+import 'package:gaza_go/platform/models/buy_tik_response_model.dart';
 import 'package:gaza_go/platform/models/pay_info_model.dart';
+import 'package:gaza_go/platform/models/pay_response_model.dart';
+import 'package:gaza_go/platform/models/token_info_model.dart';
 
 class WalletService {
   static Future<void> generateSpendingWallet() async {
@@ -19,12 +22,19 @@ class WalletService {
     return AssetDetailModel.fromJson(res.data);
   }
 
-  static Future<void> buyTik(double tikAmount) async {
-    await WalletApi.buyTik(tikAmount);
+  static Future<BuyTikResponseModel> buyTik(double tikAmount) async {
+    Response res = await WalletApi.buyTik(tikAmount);
+    return BuyTikResponseModel.fromJson(res.data);
   }
 
   //mint(토큰): TIK = 1 , STIK = 2
-  static Future<dynamic> payWithToken(PayInfoModel payInfo) async {
-    return await WalletApi.payWithToken(payInfo);
+  static Future<PayResponseModel> payWithToken(PayInfoModel payInfo) async {
+    Response res = await WalletApi.payWithToken(payInfo);
+    return PayResponseModel.fromJson(res.data);
+  }
+
+  static Future<TokenInfoModel> getSpendingMetaData(String mint) async {
+    Response res = await WalletApi.getSpendingMetaData(mint);
+    return TokenInfoModel.fromJson(res.data);
   }
 }

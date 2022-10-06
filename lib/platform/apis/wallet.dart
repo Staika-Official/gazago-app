@@ -24,12 +24,15 @@ class WalletApi {
   }
 
   static Future<Response> buyTik(double tikAmount) async {
-    return await Api.client(serviceUrl: ServiceUrl.spendingWalletService).post('/wallet/buy-tik', data: {
-      "amountStik": tikAmount,
-      "amountTik": tikAmount,
-    }, queryParameters: {
-      'clientId': 'GAZAGO',
-    });
+    return await Api.client(serviceUrl: ServiceUrl.spendingWalletService).post(
+      '/wallet/buy-tik',
+      data: {
+        "tikUiAmount": tikAmount,
+      },
+      queryParameters: {
+        'clientId': 'GAZAGO',
+      },
+    );
   }
 
   //mint(토큰): TIK = 1 , STIK = 2
@@ -39,11 +42,17 @@ class WalletApi {
     });
   }
 
+  static Future<Response> getSpendingMetaData(String mint) async {
+    return await Api.client(serviceUrl: ServiceUrl.spendingWalletService).get('/token/$mint', queryParameters: {
+      'clientId': 'GAZAGO',
+    });
+  }
+
   static Future<Response> getTokenMetaData(String publicKey) async {
-    return await Api.client(serviceUrl: '/api/solana').get('/token/$publicKey');
+    return await Api.client(serviceUrl: '/services/gazago-wallet/api/solana').get('/token/$publicKey');
   }
 
   static Future<Response> getNftMetaData(String publicKey) async {
-    return await Api.client(serviceUrl: '/api/solana').get('/nft/$publicKey');
+    return await Api.client(serviceUrl: '/services/gazago-wallet/api/solana').get('/nft/$publicKey');
   }
 }
