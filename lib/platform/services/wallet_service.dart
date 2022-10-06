@@ -22,7 +22,7 @@ class WalletService {
     return AssetDetailModel.fromJson(res.data);
   }
 
-  static Future<BuyTikResponseModel> buyTik(double tikAmount) async {
+  static Future<BuyTikResponseModel> buyTik(int tikAmount) async {
     Response res = await WalletApi.buyTik(tikAmount);
     return BuyTikResponseModel.fromJson(res.data);
   }

@@ -1,20 +1,27 @@
+import 'package:gaza_go/constants/enums.dart';
+import 'package:gaza_go/constants/routes.dart';
 import 'package:gaza_go/platform/models/asset_detail_model.dart';
 import 'package:gaza_go/platform/models/asset_token_balance_list_model.dart';
 import 'package:gaza_go/platform/models/asset_token_balance_model.dart';
+import 'package:gaza_go/platform/models/asset_token_balance_ui_model.dart';
 import 'package:gaza_go/platform/models/dummy_token_model.dart';
+import 'package:gaza_go/platform/models/pay_info_model.dart';
+import 'package:gaza_go/platform/models/token_info_model.dart';
 import 'package:gaza_go/platform/services/wallet_service.dart';
 import 'package:get/get.dart';
 
 class WalletMasterController extends GetxService {
   final RxList<DummyTokenModel> walletList = RxList.empty();
+  final RxList<AssetTokenBalanceUiModel> spendingTokenUiList = RxList.empty();
   final Rx<AssetTokenBalanceListModel> spendingTokens = Rx(AssetTokenBalanceListModel(tokens: []));
+  final Rx<AssetTokenBalanceUiModel> selectedAsset = Rx(AssetTokenBalanceUiModel());
   final Rx<AssetDetailModel> assetDetail = Rx(AssetDetailModel(balance: AssetTokenBalanceModel(), transactions: []));
 
   @override
-  void onInit() {
+  void onInit() async {
     getWalletList();
-    // getSpendingWalletBalances();
-    // getSpendingWalletTransactions();
+    await getSpendingWalletBalances();
+    await getSpendingMetaData();
     super.onInit();
   }
 
@@ -26,13 +33,42 @@ class WalletMasterController extends GetxService {
     ];
   }
 
-  void getSpendingWalletBalances() async {
+  Future<void> getSpendingWalletBalances() async {
     spendingTokens.value = await WalletService.getSpendingWalletBalance();
-    print(spendingTokens.value);
+    for (AssetTokenBalanceModel token in spendingTokens.value.tokens) {
+      AssetTokenBalanceUiModel uiModel = AssetTokenBalanceUiModel.fromJson(token.toJson());
+      spendingTokenUiList.add(uiModel);
+    }
   }
 
-  void getSpendingWalletTransactions() async {
-    assetDetail.value = await WalletService.getSpendingWalletTransactions('13');
-    print(assetDetail.value);
+  Future<void> getSpendingWalletTransactions(AssetTokenBalanceUiModel asset) async {
+    selectedAsset.value = asset;
+    assetDetail.value = await WalletService.getSpendingWalletTransactions(asset.publicKey!);
+  }
+
+  Future<void> getSpendingMetaData() async {
+    for (AssetTokenBalanceUiModel token in spendingTokenUiList) {
+      TokenInfoModel tokenMetaData = await WalletService.getSpendingMetaData(token.mint!);
+      token.meta = tokenMetaData.meta;
+      token.price = tokenMetaData.price;
+      print(token.toJson());
+    }
+  }
+
+  Future<void> buyTik(int tikAmount) async {
+    await WalletService.buyTik(tikAmount);
+  }
+
+  Future<void> payWithToken(PayInfoModel payInfo) async {
+    await WalletService.payWithToken(payInfo);
+  }
+
+  void moveToWalletDetail({required AssetTokenBalanceUiModel asset, required WalletType walletType, required AssetType assetType}) async {
+    await getSpendingWalletTransactions(asset);
+    Get.toNamed(Routes.walletDetail, arguments: {'asset': asset, 'walletType': walletType, 'assetType': assetType});
+  }
+
+  void toBuyTik() {
+    print('buy tik');
   }
 }

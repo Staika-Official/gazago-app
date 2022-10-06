@@ -16,7 +16,9 @@ class AssetTokenTransactionModel {
   AssetAddressModel? destination;
   List<String>? type; // enum TransactionType.label
   String? description;
+  String? memo;
   String? mint;
+  String? symbol;
   int? decimals;
   double? amount;
   String? uiAmountString;
@@ -34,7 +36,9 @@ class AssetTokenTransactionModel {
     this.destination,
     this.type,
     this.description,
+    this.memo,
     this.mint,
+    this.symbol,
     this.decimals,
     this.amount,
     this.uiAmountString,

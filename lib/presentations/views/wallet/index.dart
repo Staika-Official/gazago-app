@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:gaza_go/presentations/components/default_container.dart';
-import 'package:gaza_go/presentations/views/wallet/asset_wallet.dart';
 import 'package:gaza_go/presentations/views/wallet/spending_wallet.dart';
 
 class WalletHome extends StatefulWidget {
@@ -28,20 +27,9 @@ class _WalletHomeState extends State<WalletHome> with SingleTickerProviderStateM
   @override
   Widget build(BuildContext context) {
     return DefaultContainer(
+      titleText: 'gazaGo 지갑',
       child: Column(
         children: [
-          TabBar(
-            controller: _tabController,
-            labelColor: Colors.black,
-            tabs: [
-              Tab(
-                text: '인벤토리',
-              ),
-              Tab(
-                text: '지갑',
-              ),
-            ],
-          ),
           SizedBox(
             width: double.infinity,
             child: Row(
@@ -60,17 +48,52 @@ class _WalletHomeState extends State<WalletHome> with SingleTickerProviderStateM
               ],
             ),
           ),
-          Expanded(
-            child: TabBarView(
-              controller: _tabController,
-              children: [
-                SpendingWallet(),
-                AssetWallet(),
-              ],
-            ),
-          ),
+          SpendingWallet(),
         ],
       ),
+      // child: Column(
+      //   children: [
+      //     TabBar(
+      //       controller: _tabController,
+      //       labelColor: Colors.black,
+      //       tabs: [
+      //         Tab(
+      //           text: '인벤토리',
+      //         ),
+      //         Tab(
+      //           text: '지갑',
+      //         ),
+      //       ],
+      //     ),
+      //     SizedBox(
+      //       width: double.infinity,
+      //       child: Row(
+      //         mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      //         children: [
+      //           Text('디지털 자산'),
+      //           Row(
+      //             children: [
+      //               Icon(Icons.change_circle),
+      //               Padding(
+      //                 padding: const EdgeInsets.only(left: 8.0),
+      //                 child: Text('KRW'),
+      //               )
+      //             ],
+      //           )
+      //         ],
+      //       ),
+      //     ),
+      //     Expanded(
+      //       child: TabBarView(
+      //         controller: _tabController,
+      //         children: [
+      //           SpendingWallet(),
+      //           AssetWallet(),
+      //         ],
+      //       ),
+      //     ),
+      //   ],
+      // ),
     );
   }
 }

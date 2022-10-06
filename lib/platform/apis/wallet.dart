@@ -23,7 +23,7 @@ class WalletApi {
     });
   }
 
-  static Future<Response> buyTik(double tikAmount) async {
+  static Future<Response> buyTik(int tikAmount) async {
     return await Api.client(serviceUrl: ServiceUrl.spendingWalletService).post(
       '/wallet/buy-tik',
       data: {

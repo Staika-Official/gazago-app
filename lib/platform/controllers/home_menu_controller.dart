@@ -10,7 +10,7 @@ import 'package:gaza_go/presentations/views/leaderboard/index.dart';
 import 'package:get/get.dart';
 
 class HomeMenuController extends GetxController {
-  final RxInt selectedIndex = RxInt(2);
+  final RxInt selectedIndex = RxInt(0);
 
   final List<PreferredSizeWidget> appbarList = [
     MainAppbar(),
@@ -26,7 +26,7 @@ class HomeMenuController extends GetxController {
   ];
 
   PreferredSizeWidget get appbar {
-    return selectedIndex.value == 2 ? appbarList.first : appbarList.last;
+    return selectedIndex.value == 0 ? appbarList.first : appbarList.last;
   }
 
   @override
