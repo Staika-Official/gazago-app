@@ -23,6 +23,7 @@ import 'package:gaza_go/presentations/views/preferences/withdraw_completed.dart'
 import 'package:gaza_go/presentations/views/preferences/withdraw_confirm.dart';
 import 'package:gaza_go/presentations/views/term.dart';
 import 'package:gaza_go/presentations/views/verification/index.dart';
+import 'package:gaza_go/presentations/views/wallet/buy_tik.dart';
 import 'package:gaza_go/presentations/views/wallet/index.dart';
 import 'package:gaza_go/presentations/views/wallet/wallet_actions.dart';
 import 'package:gaza_go/presentations/views/wallet/wallet_detail.dart';
@@ -48,6 +49,7 @@ class Routes {
   static const withdrawConfirm = '/my_page/withdraw';
   static const withdrawCompleted = '/my_page/withdraw_completed';
   static const wallet = '/wallet';
+  static const buyTik = '/wallet/buy_tik';
   static const walletDetail = '/wallet/detail';
   static const walletActions = '/wallet/action';
   static const inventory = '/inventory';
@@ -85,6 +87,7 @@ class Routes {
     stepPage(name: Routes.withdrawCompleted, page: const WithdrawCompleted()),
     stepPage(name: Routes.wallet, page: const WalletHome()),
     stepPage(name: Routes.walletDetail, page: const WalletDetail()),
+    stepPage(name: Routes.buyTik, page: BuyTik()),
     stepPage(name: Routes.walletActions, page: const WalletActions()),
     stepPage(name: Routes.inventory, page: const InventoryHome()),
     stepPage(name: Routes.itemDetail, page: const InventoryItemDetail()),

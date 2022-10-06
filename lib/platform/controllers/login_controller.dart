@@ -35,7 +35,7 @@ class LoginController extends GetxController {
     }
 
     await initUserInfo();
-    Get.toNamed(Routes.home);
+    Get.offNamed(Routes.home);
   }
 
   Future<void> emailLogin() async {

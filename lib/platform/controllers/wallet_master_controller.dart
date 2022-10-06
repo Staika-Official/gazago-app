@@ -1,9 +1,11 @@
+import 'package:flutter/cupertino.dart';
 import 'package:gaza_go/constants/enums.dart';
 import 'package:gaza_go/constants/routes.dart';
 import 'package:gaza_go/platform/models/asset_detail_model.dart';
 import 'package:gaza_go/platform/models/asset_token_balance_list_model.dart';
 import 'package:gaza_go/platform/models/asset_token_balance_model.dart';
 import 'package:gaza_go/platform/models/asset_token_balance_ui_model.dart';
+import 'package:gaza_go/platform/models/buy_tik_response_model.dart';
 import 'package:gaza_go/platform/models/dummy_token_model.dart';
 import 'package:gaza_go/platform/models/pay_info_model.dart';
 import 'package:gaza_go/platform/models/token_info_model.dart';
@@ -12,10 +14,22 @@ import 'package:get/get.dart';
 
 class WalletMasterController extends GetxService {
   final RxList<DummyTokenModel> walletList = RxList.empty();
-  final RxList<AssetTokenBalanceUiModel> spendingTokenUiList = RxList.empty();
   final Rx<AssetTokenBalanceListModel> spendingTokens = Rx(AssetTokenBalanceListModel(tokens: []));
+  final RxList<TokenInfoModel> spendingTokenInfoList = RxList.empty();
   final Rx<AssetTokenBalanceUiModel> selectedAsset = Rx(AssetTokenBalanceUiModel());
   final Rx<AssetDetailModel> assetDetail = Rx(AssetDetailModel(balance: AssetTokenBalanceModel(), transactions: []));
+  final RxString buyTikAmount = RxString('0');
+  final Rx<BuyTikResponseModel> buyTikResult = Rx(BuyTikResponseModel());
+  RxList<AssetTokenBalanceUiModel> get spendingTokenUiList {
+    List<AssetTokenBalanceUiModel> balanceUiList = List.empty(growable: true);
+    for (int i = 0; i < spendingTokens.value.tokens.length; i++) {
+      AssetTokenBalanceUiModel tokenUi = AssetTokenBalanceUiModel.fromJson(spendingTokens.value.tokens[i].toJson());
+      tokenUi.meta = spendingTokenInfoList[i].meta;
+      tokenUi.price = spendingTokenInfoList[i].price;
+      balanceUiList.add(tokenUi);
+    }
+    return RxList(balanceUiList);
+  }
 
   @override
   void onInit() async {
@@ -35,10 +49,6 @@ class WalletMasterController extends GetxService {
 
   Future<void> getSpendingWalletBalances() async {
     spendingTokens.value = await WalletService.getSpendingWalletBalance();
-    for (AssetTokenBalanceModel token in spendingTokens.value.tokens) {
-      AssetTokenBalanceUiModel uiModel = AssetTokenBalanceUiModel.fromJson(token.toJson());
-      spendingTokenUiList.add(uiModel);
-    }
   }
 
   Future<void> getSpendingWalletTransactions(AssetTokenBalanceUiModel asset) async {
@@ -47,16 +57,24 @@ class WalletMasterController extends GetxService {
   }
 
   Future<void> getSpendingMetaData() async {
-    for (AssetTokenBalanceUiModel token in spendingTokenUiList) {
+    List<TokenInfoModel> tokenInfoList = List.empty(growable: true);
+    for (AssetTokenBalanceModel token in spendingTokens.value.tokens) {
       TokenInfoModel tokenMetaData = await WalletService.getSpendingMetaData(token.mint!);
-      token.meta = tokenMetaData.meta;
-      token.price = tokenMetaData.price;
-      print(token.toJson());
+      tokenInfoList.add(tokenMetaData);
     }
+
+    spendingTokenInfoList.value = tokenInfoList;
   }
 
   Future<void> buyTik(int tikAmount) async {
-    await WalletService.buyTik(tikAmount);
+    buyTikResult.value = await WalletService.buyTik(tikAmount);
+    await getSpendingWalletBalances();
+    await getSpendingMetaData();
+    Get.snackbar(
+      '충전 완료',
+      '$tikAmount Tik이 충전되었습니다.',
+    );
+    Get.until((route) => route.settings.name == Routes.wallet);
   }
 
   Future<void> payWithToken(PayInfoModel payInfo) async {
@@ -69,6 +87,21 @@ class WalletMasterController extends GetxService {
   }
 
   void toBuyTik() {
-    print('buy tik');
+    Get.toNamed(Routes.buyTik);
+    buyTikAmount.value = '0';
+    // buyTikAmountController.text = buyTikAmount.value;
+  }
+
+  void enterBuyTikAmount(String tikAmount) {
+    // buyTikAmountController.text = tikAmount;
+    buyTikAmount.value = tikAmount;
+  }
+
+  void showBuyConfirmation(Widget confirmationBottomSheet) {
+    Get.bottomSheet(
+      confirmationBottomSheet,
+      isDismissible: false,
+      enableDrag: false,
+    );
   }
 }
