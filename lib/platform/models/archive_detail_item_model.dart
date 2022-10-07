@@ -10,6 +10,7 @@ class ArchiveDetailItemModel {
   int? steps;
   double? speed;
   double? distance;
+  double? altitude;
   int? time;
   String? startedDate;
   String? endedDate;
@@ -20,6 +21,8 @@ class ArchiveDetailItemModel {
   String? badgeName;
   String? challengeTitle;
   String? locations;
+  double? spendDurability;
+  double? spendStamina;
 
   ArchiveDetailItemModel({
     this.id,
@@ -28,6 +31,7 @@ class ArchiveDetailItemModel {
     this.steps,
     this.speed,
     this.distance,
+    this.altitude,
     this.time,
     this.startedDate,
     this.endedDate,
@@ -38,6 +42,8 @@ class ArchiveDetailItemModel {
     this.badgeName,
     this.challengeTitle,
     this.locations,
+    this.spendDurability,
+    this.spendStamina,
   });
 
   factory ArchiveDetailItemModel.fromJson(Map<String, dynamic> json) => _$ArchiveDetailItemModelFromJson(json);

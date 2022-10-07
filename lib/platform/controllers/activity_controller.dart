@@ -150,6 +150,7 @@ class ActivityController extends GetxController with MapMixin, ActivityMixin, Ch
 
   void fetchRepairShoes() async {
     if (costTik.value > 0) {
+      print(userState.value.shoes!.id);
       InventoryItemModel repairModel = await ItemService.fetchRepairItemShoes(
         RepairShoesModel(
           id: userState.value.shoes!.id,

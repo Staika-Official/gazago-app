@@ -10,8 +10,9 @@ class ArchiveController extends GetxController {
   RxList<ArchiveListItemModel> archiveList = RxList.empty();
   Rx<ArchiveDetailItemModel> selectedItem = Rx(ArchiveDetailItemModel());
   RxList<LatLng> get locations {
-    if (selectedItem.value.locations != null) {
-      return RxList(locationStringToLatLng(selectedItem.value.locations!));
+    List<LatLng> locations = locationStringToLatLng(selectedItem.value.locations!);
+    if (selectedItem.value.locations != null && locations.length > 1) {
+      return RxList(locations);
     } else {
       return RxList.empty();
     }

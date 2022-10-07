@@ -40,6 +40,7 @@ class DefaultHeader extends StatelessWidget {
                   child: SvgPicture.asset(
                     fit: BoxFit.contain,
                     'assets/images/icons/icon_chevron_left_black.svg',
+                    color: Colors.white,
                   ),
                 ),
               ),
@@ -48,8 +49,8 @@ class DefaultHeader extends StatelessWidget {
           Text(
             titleText ?? '',
             style: const TextStyle(
-              color: Colors.black,
-              fontSize: 16,
+              color: Colors.white,
+              fontSize: 18,
               fontWeight: FontWeight.w500,
               letterSpacing: -0.5,
               height: 1,

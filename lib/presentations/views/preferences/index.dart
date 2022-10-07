@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:gaza_go/constants/routes.dart';
 import 'package:gaza_go/platform/controllers/preference_controller.dart';
 import 'package:gaza_go/presentations/components/default_container.dart';
+import 'package:gaza_go/presentations/styles/styled_text.dart';
 import 'package:get/get.dart';
 
 class Preferences extends StatelessWidget {
@@ -13,6 +14,8 @@ class Preferences extends StatelessWidget {
     PreferenceController controller = Get.put(PreferenceController());
 
     return DefaultContainer(
+      titleText: '설정',
+      backgroundColor: const Color(0xFF1D1D26),
       child: Column(
         children: [
           Obx(() {
@@ -20,32 +23,21 @@ class Preferences extends StatelessWidget {
               onTap: () => Get.toNamed(Routes.myPage),
               child: Padding(
                 padding: const EdgeInsets.all(8.0),
-                child: Row(
-                  mainAxisSize: MainAxisSize.max,
-                  children: [
-                    CircleAvatar(
-                      foregroundImage: CachedNetworkImageProvider(
-                        controller.profile.value.profileImageUrl,
-                      ),
-                    ),
-                    Expanded(
-                      child: Padding(
-                        padding: const EdgeInsets.symmetric(horizontal: 8.0),
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          mainAxisSize: MainAxisSize.min,
-                          children: [
-                            Text(controller.profile.value.nickname),
-                            Padding(
-                              padding: const EdgeInsets.only(top: 8.0),
-                              child: Text('계정정보'),
-                            ),
-                          ],
+                child: Center(
+                  child: Column(
+                    mainAxisSize: MainAxisSize.max,
+                    children: [
+                      CircleAvatar(
+                        foregroundImage: CachedNetworkImageProvider(
+                          controller.profile.value.profileImageUrl,
                         ),
                       ),
-                    ),
-                    Icon(Icons.chevron_right),
-                  ],
+                      Padding(
+                        padding: const EdgeInsets.only(top: 8.0),
+                        child: StyledText('아이디뭐냐구'),
+                      ),
+                    ],
+                  ),
                 ),
               ),
             );

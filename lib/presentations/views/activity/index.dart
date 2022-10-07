@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:gaza_go/constants/enums.dart';
 import 'package:gaza_go/platform/controllers/activity_controller.dart';
+import 'package:gaza_go/presentations/styles/icons.dart';
+import 'package:gaza_go/presentations/styles/styled_text.dart';
 import 'package:get/get.dart';
 
 class ActivityHome extends StatelessWidget {
@@ -71,47 +73,86 @@ class ActivityHome extends StatelessWidget {
     return Column(
       children: [
         Padding(
-          padding: const EdgeInsets.all(40.0),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.center,
+          padding: const EdgeInsets.all(20.0),
+          child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              const CircleAvatar(
-                radius: 20,
-                foregroundImage: NetworkImage('https://placeimg.com/20/20/any'),
+              StyledText(
+                '가자고와 함께 \n등산하고 뱃지를 받아보자고-!',
+                color: const Color(0xFF0EE6F3),
+                fontWeight: 700,
+                fontSize: 24,
+                lineHeight: 32,
               ),
-              Padding(
-                padding: const EdgeInsets.only(left: 10.0),
-                child: Column(
-                  children: [
-                    Padding(
-                      padding: EdgeInsets.only(top: 8.0),
-                      child: Obx(() {
-                        return Text(
-                          '${controller.userState.value.state != null ? controller.userState.value.state!.dailyGoReward.toString() : 0} GO',
-                          style: TextStyle(
-                            color: Colors.black,
-                            fontSize: 30,
-                            fontWeight: FontWeight.w500,
-                            height: 1,
-                          ),
-                        );
-                      }),
-                    ),
-                    Padding(
-                      padding: EdgeInsets.only(top: 8.0),
-                      child: Text(
-                        '내가 오늘 획득한 STEP',
-                        style: TextStyle(
-                          color: Colors.grey,
-                          fontSize: 14,
-                          fontWeight: FontWeight.w500,
-                        ),
-                      ),
+              Container(
+                margin: const EdgeInsets.only(top: 25),
+                decoration: BoxDecoration(
+                  color: const Color(0xFF0EE6F3),
+                  border: Border.all(
+                    width: 1,
+                    color: Colors.black,
+                  ),
+                  borderRadius: const BorderRadius.all(
+                    Radius.circular(15),
+                  ),
+                  boxShadow: const [
+                    BoxShadow(
+                      color: Color(0xFF000000),
+                      spreadRadius: 0,
+                      blurRadius: 0,
+                      offset: Offset(0, 4), // changes position of shadow
                     ),
                   ],
                 ),
-              )
+                child: Padding(
+                  padding: const EdgeInsets.all(20.0),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      iconActivityTokenGo,
+                      Padding(
+                        padding: const EdgeInsets.only(left: 10.0),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            StyledText(
+                              'Today',
+                              color: Colors.black,
+                              fontWeight: 500,
+                              fontSize: 13,
+                              lineHeight: 13,
+                            ),
+                            Obx(() {
+                              return Row(
+                                children: [
+                                  StyledText(
+                                    '${controller.userState.value.state != null ? controller.userState.value.state!.dailyGoReward.toString() : 0}',
+                                    color: Colors.black,
+                                    fontWeight: 600,
+                                    fontSize: 30,
+                                    lineHeight: 34,
+                                  ),
+                                  Padding(
+                                    padding: const EdgeInsets.only(left: 2.0),
+                                    child: StyledText(
+                                      'GO',
+                                      color: Colors.black,
+                                      fontWeight: 500,
+                                      fontSize: 18,
+                                      lineHeight: 20,
+                                    ),
+                                  ),
+                                ],
+                              );
+                            }),
+                          ],
+                        ),
+                      )
+                    ],
+                  ),
+                ),
+              ),
             ],
           ),
         ),

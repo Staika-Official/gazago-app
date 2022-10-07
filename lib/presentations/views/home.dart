@@ -14,11 +14,10 @@ class Home extends StatelessWidget {
             width: 2,
             color: Colors.black,
           ),
-          borderRadius: BorderRadius.only(topLeft: Radius.circular(16), topRight: Radius.circular(16))),
+          borderRadius: const BorderRadius.only(topLeft: Radius.circular(16), topRight: Radius.circular(16))),
       child: ClipRRect(
-        borderRadius: BorderRadius.only(topLeft: Radius.circular(15), topRight: Radius.circular(15)),
+        borderRadius: const BorderRadius.only(topLeft: Radius.circular(15), topRight: Radius.circular(15)),
         child: NavigationBar(
-          surfaceTintColor: Colors.red,
           backgroundColor: const Color(0xFF363841),
           onDestinationSelected: (index) => controller.selectMenu(index),
           selectedIndex: controller.selectedIndex.value,
