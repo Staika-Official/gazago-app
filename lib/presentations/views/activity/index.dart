@@ -7,10 +7,18 @@ import 'package:gaza_go/presentations/styles/styled_text.dart';
 import 'package:get/get.dart';
 import 'package:percent_indicator/percent_indicator.dart';
 
-class ActivityHome extends StatelessWidget {
-  ActivityHome({Key? key}) : super(key: key);
+class ActivityHome extends StatefulWidget {
+  const ActivityHome({Key? key}) : super(key: key);
 
-  List<Widget> renderStatList(ActivityController controller) {
+  @override
+  State<ActivityHome> createState() => _ActivityHomeState();
+}
+
+class _ActivityHomeState extends State<ActivityHome> {
+  static WalletMasterController walletMasterController = Get.find();
+  ActivityController controller = Get.put(ActivityController(walletMasterController));
+
+  List<Widget> renderStatList() {
     return controller.statList.map((stat) {
       return Padding(
         padding: const EdgeInsets.symmetric(horizontal: 20.0, vertical: 6.0),
@@ -99,7 +107,7 @@ class ActivityHome extends StatelessWidget {
     }).toList();
   }
 
-  List<Widget> renderActivitySumList(ActivityController controller) {
+  List<Widget> renderActivitySumList() {
     return controller.activitySumList
         .map(
           (activitySum) => Card(
@@ -125,10 +133,13 @@ class ActivityHome extends StatelessWidget {
   }
 
   @override
-  Widget build(BuildContext context) {
-    WalletMasterController walletMasterController = Get.find();
-    ActivityController controller = Get.put(ActivityController(walletMasterController));
+  void initState() {
+    controller.initController();
+    super.initState();
+  }
 
+  @override
+  Widget build(BuildContext context) {
     return Column(
       children: [
         Padding(
@@ -218,7 +229,7 @@ class ActivityHome extends StatelessWidget {
         Obx(() {
           return Column(
             children: [
-              ...renderStatList(controller),
+              ...renderStatList(),
             ],
           );
         }),
@@ -231,7 +242,7 @@ class ActivityHome extends StatelessWidget {
             crossAxisSpacing: 5,
             mainAxisSpacing: 5,
             children: [
-              ...renderActivitySumList(controller),
+              ...renderActivitySumList(),
             ],
           );
         }),

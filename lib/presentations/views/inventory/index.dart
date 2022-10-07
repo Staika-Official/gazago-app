@@ -8,14 +8,25 @@ import 'package:gaza_go/presentations/views/inventory/inventory_badge.dart';
 import 'package:gaza_go/presentations/views/inventory/inventory_item.dart';
 import 'package:get/get.dart';
 
-class InventoryHome extends StatelessWidget {
+class InventoryHome extends StatefulWidget {
   const InventoryHome({Key? key}) : super(key: key);
 
   @override
-  Widget build(BuildContext context) {
-    InventoryHomeController inventoryMenuController = Get.put(InventoryHomeController());
-    InventoryController controller = Get.put(InventoryController());
+  State<InventoryHome> createState() => _InventoryHomeState();
+}
 
+class _InventoryHomeState extends State<InventoryHome> {
+  InventoryHomeController inventoryMenuController = Get.put(InventoryHomeController());
+  InventoryController controller = Get.put(InventoryController());
+
+  @override
+  void initState() {
+    controller.initController();
+    super.initState();
+  }
+
+  @override
+  Widget build(BuildContext context) {
     return SingleChildScrollView(
       child: ConstrainedBox(
         constraints: BoxConstraints(maxHeight: MediaQuery.of(context).size.height),
@@ -161,8 +172,6 @@ class InventoryHome extends StatelessWidget {
     );
   }
 }
-
-const _defaultColor = Color(0xFF34568B);
 
 class Tile extends StatelessWidget {
   const Tile({

@@ -11,9 +11,12 @@ class InventoryHomeController extends GetxController with GetTickerProviderState
 
   @override
   void onInit() {
+    initController();
+    super.onInit();
+  }
+
+  void initController() {
     tabController = TabController(length: 2, vsync: this);
     subTabController = TabController(length: 5, vsync: this);
-
-    super.onInit();
   }
 }

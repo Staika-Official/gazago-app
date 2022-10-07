@@ -343,7 +343,7 @@ class ActivityController extends GetxController with MapMixin, ActivityMixin, Ch
   }
 
   void loadExercise(ExerciseType exerciseType, [ChallengeModel? challenge]) {
-    Get.toNamed(Routes.activityLoading);
+    Get.offNamed(Routes.activityLoading);
     Timer(
       Duration(seconds: 3),
       () {
@@ -443,11 +443,11 @@ class ActivityController extends GetxController with MapMixin, ActivityMixin, Ch
     await getCurrentLocation();
     initLocationStream();
     initGpsServiceStream();
-    // if (currentLocation.value.latitude != null && currentLocation.value.longitude != null) {
-    //   await getNearByChallengeList(currentLocation.value);
-    // } else {
-    //   await getChallengeList();
-    // }
+    if (currentLocation.value.latitude != null && currentLocation.value.longitude != null) {
+      await getNearByChallengeList(currentLocation.value);
+    } else {
+      await getChallengeList();
+    }
     await setMarkerImages();
   }
 }

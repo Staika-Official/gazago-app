@@ -45,6 +45,6 @@ class HomeMenuController extends GetxController {
 
   Future<void> checkLoginStatus() async {
     int statusCode = await UaaService.checkLoginStatus();
-    if (statusCode != 200) Get.offAll(Routes.login);
+    if (statusCode != 200) Get.offAllNamed(Routes.login);
   }
 }
