@@ -5,6 +5,7 @@ import 'package:gaza_go/platform/controllers/wallet_master_controller.dart';
 import 'package:gaza_go/presentations/styles/icons.dart';
 import 'package:gaza_go/presentations/styles/styled_text.dart';
 import 'package:get/get.dart';
+import 'package:percent_indicator/percent_indicator.dart';
 
 class ActivityHome extends StatelessWidget {
   ActivityHome({Key? key}) : super(key: key);
@@ -12,30 +13,86 @@ class ActivityHome extends StatelessWidget {
   List<Widget> renderStatList(ActivityController controller) {
     return controller.statList.map((stat) {
       return Padding(
-        padding: const EdgeInsets.all(8.0),
+        padding: const EdgeInsets.symmetric(horizontal: 20.0, vertical: 6.0),
         child: Column(
+          crossAxisAlignment: CrossAxisAlignment.center,
           children: [
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [Text(stat.name), Text('${stat.currentStat.toString()}/100')],
-            ),
-            Row(
-              children: [
-                Expanded(
-                  child: ClipRRect(
-                    borderRadius: BorderRadius.circular(5),
-                    child: LinearProgressIndicator(
-                      minHeight: 20,
-                      value: stat.currentStat / 100,
-                    ),
+            SizedBox(
+              height: 34,
+              child: Stack(
+                children: [
+                  Row(
+                    children: [
+                      Expanded(
+                        child: ClipRRect(
+                          child: stat.type == 'STAMINA'
+                              ? LinearPercentIndicator(
+                                  progressColor: const Color(0xFFCDFF41),
+                                  backgroundColor: Color(0xFF606167),
+                                  lineHeight: 34,
+                                  animation: true,
+                                  percent: stat.currentStat / 100,
+                                  barRadius: const Radius.circular(50),
+                                  padding: const EdgeInsets.all(0),
+                                )
+                              : LinearPercentIndicator(
+                                  progressColor: const Color(0xFFB85DFF),
+                                  backgroundColor: Color(0xFF606167),
+                                  lineHeight: 34,
+                                  percent: stat.currentStat / 100,
+                                  barRadius: const Radius.circular(50),
+                                  padding: const EdgeInsets.all(0),
+                                ),
+                        ),
+                      ),
+                    ],
                   ),
-                ),
-                IconButton(
-                  icon: Icon(Icons.add_circle),
-                  onPressed: () => {controller.onClickRepairStat(stat)},
-                ),
-              ],
-            )
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      Row(
+                        children: [
+                          StyledText(
+                            stat.name,
+                            fontWeight: 600,
+                            fontSize: 14,
+                            color: Colors.black,
+                          ),
+                          Padding(
+                            padding: const EdgeInsets.only(left: 5.0),
+                            child: StyledText(
+                              stat.currentStat.toString(),
+                              fontWeight: 600,
+                              fontSize: 14,
+                              color: Colors.black,
+                            ),
+                          ),
+                        ],
+                      ),
+                      Row(
+                        children: [
+                          StyledText('100'),
+                          stat.type == 'STAMINA'
+                              ? IconButton(
+                                  padding: EdgeInsets.all(0),
+                                  icon: Icon(Icons.add_circle),
+                                  color: Color(0xFFCDFF41),
+                                  onPressed: () => {controller.onClickRepairStat(stat)},
+                                )
+                              : IconButton(
+                                  padding: EdgeInsets.all(0),
+                                  icon: Icon(Icons.add_circle),
+                                  color: Color(0xFFB85DFF),
+                                  onPressed: () => {controller.onClickRepairStat(stat)},
+                                ),
+                        ],
+                      )
+                    ],
+                  ),
+                ],
+              ),
+            ),
           ],
         ),
       );
