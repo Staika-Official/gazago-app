@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 import 'package:gaza_go/platform/controllers/inventory/inventory_home_controller.dart';
 import 'package:gaza_go/platform/controllers/inventory_controller.dart';
+import 'package:gaza_go/presentations/styles/styled_text.dart';
 import 'package:gaza_go/presentations/views/inventory/inventory_badge.dart';
 import 'package:gaza_go/presentations/views/inventory/inventory_item.dart';
 import 'package:get/get.dart';
@@ -23,77 +24,75 @@ class InventoryHome extends StatelessWidget {
           child: Column(
             mainAxisSize: MainAxisSize.max,
             children: [
-              Container(
-                child: Padding(
-                  padding: const EdgeInsets.all(10.0),
-                  child: Column(
-                    children: [
-                      Padding(
-                        padding: const EdgeInsets.only(top: 10, bottom: 10),
-                        child: Text('[장착 중인 아이템]'),
-                      ),
-                      Obx(() {
-                        return StaggeredGrid.count(
-                          crossAxisCount: 4,
-                          mainAxisSpacing: 4,
-                          crossAxisSpacing: 4,
-                          children: [
-                            if (controller.equippedItemList.isNotEmpty) ...[
-                              StaggeredGridTile.count(
-                                crossAxisCellCount: 2,
-                                mainAxisCellCount: 2,
-                                child: Tile(
-                                  index: 0,
-                                  durability: controller.equippedShoe.value.durability,
-                                  imageUrl: controller.equippedShoe.value.itemImageUrl,
-                                ),
+              Padding(
+                padding: const EdgeInsets.all(10.0),
+                child: Column(
+                  children: [
+                    Padding(
+                      padding: const EdgeInsets.only(top: 10, bottom: 10),
+                      child: StyledText('[장착 중인 아이템]'),
+                    ),
+                    Obx(() {
+                      return StaggeredGrid.count(
+                        crossAxisCount: 4,
+                        mainAxisSpacing: 4,
+                        crossAxisSpacing: 4,
+                        children: [
+                          if (controller.equippedItemList.isNotEmpty) ...[
+                            StaggeredGridTile.count(
+                              crossAxisCellCount: 2,
+                              mainAxisCellCount: 2,
+                              child: Tile(
+                                index: 0,
+                                durability: controller.equippedShoe.value.durability,
+                                imageUrl: controller.equippedShoe.value.itemImageUrl,
                               ),
-                              StaggeredGridTile.count(
-                                crossAxisCellCount: 2,
-                                mainAxisCellCount: 2,
-                                child: Tile(
-                                  index: 1,
-                                  imageUrl: controller.equippedBadge.value.badge.imageUrl,
-                                ),
+                            ),
+                            StaggeredGridTile.count(
+                              crossAxisCellCount: 2,
+                              mainAxisCellCount: 2,
+                              child: Tile(
+                                index: 1,
+                                imageUrl: controller.equippedBadge.value.badge.imageUrl,
                               ),
-                              StaggeredGridTile.count(
-                                crossAxisCellCount: 1,
-                                mainAxisCellCount: 1,
-                                child: Tile(
-                                  index: 2,
-                                  imageUrl: controller.equippedAccessory.value.itemImageUrl,
-                                ),
+                            ),
+                            StaggeredGridTile.count(
+                              crossAxisCellCount: 1,
+                              mainAxisCellCount: 1,
+                              child: Tile(
+                                index: 2,
+                                imageUrl: controller.equippedAccessory.value.itemImageUrl,
                               ),
-                              StaggeredGridTile.count(
-                                crossAxisCellCount: 1,
-                                mainAxisCellCount: 1,
-                                child: Tile(
-                                  index: 3,
-                                  imageUrl: controller.equippedAccessory.value.itemImageUrl,
-                                ),
+                            ),
+                            StaggeredGridTile.count(
+                              crossAxisCellCount: 1,
+                              mainAxisCellCount: 1,
+                              child: Tile(
+                                index: 3,
+                                imageUrl: controller.equippedAccessory.value.itemImageUrl,
                               ),
-                              StaggeredGridTile.count(
-                                crossAxisCellCount: 1,
-                                mainAxisCellCount: 1,
-                                child: Tile(
-                                  index: 4,
-                                  imageUrl: controller.equippedAccessory.value.itemImageUrl,
-                                ),
+                            ),
+                            StaggeredGridTile.count(
+                              crossAxisCellCount: 1,
+                              mainAxisCellCount: 1,
+                              child: Tile(
+                                index: 4,
+                                imageUrl: controller.equippedAccessory.value.itemImageUrl,
                               ),
-                              StaggeredGridTile.count(
-                                crossAxisCellCount: 1,
-                                mainAxisCellCount: 1,
-                                child: Tile(
-                                  index: 5,
-                                  imageUrl: controller.equippedAccessory.value.itemImageUrl,
-                                ),
+                            ),
+                            StaggeredGridTile.count(
+                              crossAxisCellCount: 1,
+                              mainAxisCellCount: 1,
+                              child: Tile(
+                                index: 5,
+                                imageUrl: controller.equippedAccessory.value.itemImageUrl,
                               ),
-                            ]
-                          ],
-                        );
-                      }),
-                    ],
-                  ),
+                            ),
+                          ]
+                        ],
+                      );
+                    }),
+                  ],
                 ),
               ),
               Container(
@@ -101,29 +100,29 @@ class InventoryHome extends StatelessWidget {
                   children: [
                     Padding(
                       padding: const EdgeInsets.only(top: 10, bottom: 5),
-                      child: Row(children: [Text('아이템마모율'), Spacer(), Text('2%')]),
+                      child: Row(children: [StyledText('아이템마모율'), Spacer(), StyledText('${controller.equippedAbrasionRate}%')]),
                     ),
                     LinearProgressIndicator(
-                      value: 0.02,
+                      value: controller.calculateProgress(controller.equippedAbrasionRate),
                       minHeight: 10,
                       backgroundColor: const Color(0xffb74093),
                     ),
                     Padding(
                       padding: const EdgeInsets.only(top: 10, bottom: 5),
                       /**/
-                      child: Row(children: [Text('이동 보상율'), Spacer(), Text('15%')]),
+                      child: Row(children: [StyledText('이동 보상율'), Spacer(), StyledText('${controller.equippedRewardRate}%')]),
                     ),
                     LinearProgressIndicator(
-                      value: 0.15,
+                      value: controller.calculateProgress(controller.equippedRewardRate),
                       minHeight: 10,
                       backgroundColor: const Color(0xffb74093),
                     ),
                     Padding(
                       padding: const EdgeInsets.only(top: 10, bottom: 5),
-                      child: Row(children: [Text('체력 감소율'), Spacer(), Text('85%')]),
+                      child: Row(children: [StyledText('체력 감소율'), Spacer(), StyledText('${controller.equippedStaminaReduceRate}%')]),
                     ),
                     LinearProgressIndicator(
-                      value: 0.85,
+                      value: controller.calculateProgress(controller.equippedStaminaReduceRate),
                       minHeight: 10,
                       backgroundColor: const Color(0xffb74093),
                     ),
@@ -135,15 +134,13 @@ class InventoryHome extends StatelessWidget {
                 controller: inventoryMenuController.tabController,
                 tabs: <Widget>[
                   Tab(
-                    child: Text(
+                    child: StyledText(
                       '아이템',
-                      style: TextStyle(color: Colors.black),
                     ),
                   ),
                   Tab(
-                    child: Text(
+                    child: StyledText(
                       '뱃지',
-                      style: TextStyle(color: Colors.black),
                     ),
                   ),
                 ],

@@ -3,6 +3,8 @@ import 'package:flutter_naver_map/flutter_naver_map.dart';
 import 'package:gaza_go/platform/controllers/archive_controller.dart';
 import 'package:gaza_go/platform/helpers/base_helper.dart';
 import 'package:gaza_go/presentations/components/default_container.dart';
+import 'package:gaza_go/presentations/styles/icons.dart';
+import 'package:gaza_go/presentations/styles/styled_text.dart';
 import 'package:get/get.dart';
 
 class ArchiveDetail extends StatelessWidget {
@@ -13,87 +15,341 @@ class ArchiveDetail extends StatelessWidget {
     ArchiveController controller = Get.find();
 
     return DefaultContainer(
-      child: Column(
-        children: [
-          SizedBox(
-            width: double.infinity,
-            child: Stack(
-              alignment: Alignment.center,
-              children: [
-                Row(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    Text(
-                      formatDate(controller.selectedItem.value.startedDate!),
-                    )
-                  ],
-                ),
-                Positioned(
-                  right: 0,
-                  child: IconButton(
-                    onPressed: null,
-                    icon: Icon(Icons.restore_from_trash),
+      titleText: '${formatDateUntilDay(controller.selectedItem.value.startedDate)} 기록',
+      trailingChild: InkWell(
+        child: IconButton(
+          onPressed: null,
+          icon: iconWasteBasket,
+          constraints: const BoxConstraints(
+            minWidth: 20,
+          ),
+        ),
+      ),
+      backgroundColor: const Color(0xFF1D1D26),
+      child: SingleChildScrollView(
+        child: Column(
+          children: [
+            Padding(
+              padding: const EdgeInsets.symmetric(vertical: 15.0, horizontal: 20.0),
+              child: Row(
+                mainAxisSize: MainAxisSize.max,
+                crossAxisAlignment: CrossAxisAlignment.center,
+                mainAxisAlignment: MainAxisAlignment.start,
+                children: [
+                  Column(
+                    children: [
+                      Padding(
+                        padding: const EdgeInsets.only(right: 15.0),
+                        child: Stack(
+                          children: [
+                            CircleAvatar(
+                              radius: 21,
+                              child: ClipRRect(
+                                borderRadius: BorderRadius.circular(25.0),
+                              ),
+                            ),
+                            Positioned(
+                              right: 0,
+                              bottom: 0,
+                              child: iconArchiveDetailBadge,
+                            ),
+                          ],
+                        ),
+                      ),
+                    ],
                   ),
-                )
-              ],
-            ),
-          ),
-          Container(
-            width: double.infinity,
-            height: 400,
-            color: Colors.grey,
-            child: NaverMap(
-              initialCameraPosition: CameraPosition(
-                target: controller.locations.first,
+                  Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      controller.selectedItem.value.challengeTitle != null
+                          ? StyledText(
+                              controller.selectedItem.value.challengeTitle!,
+                              fontSize: 18,
+                              lineHeight: 20,
+                              fontWeight: 500,
+                              color: const Color(0xFF949494),
+                            )
+                          : Container(),
+                      StyledText(
+                        formatDate(controller.selectedItem.value.startedDate),
+                        fontSize: 14,
+                        lineHeight: 20,
+                        fontWeight: 500,
+                      ),
+                    ],
+                  )
+                ],
               ),
-              pathOverlays: {
-                PathOverlay(
-                  PathOverlayId('detail path'),
-                  controller.locations.length > 1 ? controller.locations : [controller.locations.first, controller.locations.first],
-                  width: 3,
-                  color: Colors.red,
-                  outlineColor: Colors.white,
-                )
-              },
             ),
-          ),
-          Padding(
-            padding: const EdgeInsets.all(8.0),
-            child: Text('시작 시간: ${formatDate(controller.selectedItem.value.startedDate!)}'),
-          ),
-          controller.selectedItem.value.challengeTitle != null
-              ? Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: Text('도전한 첼린지: ${controller.selectedItem.value.challengeTitle}'),
-                )
-              : Container(),
-          controller.selectedItem.value.badgeName != null
-              ? Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: Text('획득 뱃지: ${controller.selectedItem.value.badgeName}'),
-                )
-              : Container(),
-          Padding(
-            padding: const EdgeInsets.all(8.0),
-            child: Text('운동 시간: ${formatSeconds(controller.selectedItem.value.time!)}'),
-          ),
-          Padding(
-            padding: const EdgeInsets.all(8.0),
-            child: Text('운동 거리: ${controller.selectedItem.value.distance}km'),
-          ),
-          Padding(
-            padding: const EdgeInsets.all(8.0),
-            child: Text('걸음 수: ${controller.selectedItem.value.steps}'),
-          ),
-          Padding(
-            padding: const EdgeInsets.all(8.0),
-            child: Text('평균 속도: ${controller.selectedItem.value.speed}km/h'),
-          ),
-          Padding(
-            padding: const EdgeInsets.all(8.0),
-            child: Text('획득 STEP: ${controller.selectedItem.value.rewardGo}GO'),
-          ),
-        ],
+            const Divider(
+              height: 2,
+              thickness: 2.0,
+              color: Color(0xFF2C2C35),
+            ),
+            Padding(
+              padding: const EdgeInsets.symmetric(vertical: 20.0, horizontal: 20.0),
+              child: Row(
+                mainAxisSize: MainAxisSize.max,
+                crossAxisAlignment: CrossAxisAlignment.end,
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Expanded(
+                    child: Column(
+                      children: [
+                        Padding(
+                          padding: const EdgeInsets.only(right: 5.2, bottom: 3),
+                          child: iconArchiveClock,
+                        ),
+                        StyledText(
+                          formatSeconds(controller.selectedItem.value.time!),
+                          fontSize: 16,
+                          lineHeight: 20,
+                          fontWeight: 600,
+                        )
+                      ],
+                    ),
+                  ),
+                  Expanded(
+                    child: Column(
+                      children: [
+                        Padding(
+                          padding: const EdgeInsets.only(right: 5.2, bottom: 5),
+                          child: iconArchiveDistance,
+                        ),
+                        StyledText(
+                          '${controller.selectedItem.value.distance} km',
+                          fontSize: 16,
+                          lineHeight: 20,
+                          fontWeight: 600,
+                        ),
+                      ],
+                    ),
+                  ),
+                  Expanded(
+                    child: Column(
+                      children: [
+                        Padding(
+                          padding: const EdgeInsets.only(right: 5.2, bottom: 3),
+                          child: iconArchiveSteps,
+                        ),
+                        StyledText(
+                          '${controller.selectedItem.value.steps}',
+                          fontSize: 16,
+                          lineHeight: 20,
+                          fontWeight: 600,
+                        ),
+                      ],
+                    ),
+                  )
+                ],
+              ),
+            ),
+            Padding(
+              padding: const EdgeInsets.only(left: 20.0, right: 20.0, top: 0.0, bottom: 15.0),
+              child: Container(
+                width: double.infinity,
+                height: 220,
+                color: Colors.grey,
+                child: NaverMap(
+                  nightModeEnable: true,
+                  mapType: MapType.Navi,
+                  initialCameraPosition: CameraPosition(
+                    target: controller.locations.first,
+                  ),
+                  pathOverlays: {
+                    PathOverlay(
+                      PathOverlayId('detail path'),
+                      controller.locations.length > 1 ? controller.locations : [controller.locations.first, controller.locations.first],
+                      width: 3,
+                      color: Colors.red,
+                      outlineColor: Colors.white,
+                    )
+                  },
+                ),
+              ),
+            ),
+            Padding(
+              padding: const EdgeInsets.symmetric(vertical: 10.0, horizontal: 20.0),
+              child: Row(
+                children: [
+                  StyledText(
+                    '획득 GO',
+                    fontWeight: 600,
+                    fontSize: 16,
+                  ),
+                  const Spacer(),
+                  StyledText(
+                    '${controller.selectedItem.value.rewardGo.toString()} GO',
+                    fontWeight: 500,
+                    fontSize: 16,
+                    color: const Color(0xFF7D7D84),
+                  ),
+                ],
+              ),
+            ),
+            controller.selectedItem.value.badgeName != null
+                ? Padding(
+                    padding: const EdgeInsets.symmetric(vertical: 10.0, horizontal: 20.0),
+                    child: Row(
+                      children: [
+                        StyledText(
+                          '획득 뱃지',
+                          fontWeight: 600,
+                          fontSize: 16,
+                        ),
+                        const Spacer(),
+                        StyledText(
+                          controller.selectedItem.value.badgeName!,
+                          fontWeight: 500,
+                          fontSize: 16,
+                          color: const Color(0xFF7D7D84),
+                        ),
+                      ],
+                    ),
+                  )
+                : Container(),
+            const Padding(
+              padding: EdgeInsets.symmetric(vertical: 10.0, horizontal: 20.0),
+              child: Divider(
+                height: 2,
+                thickness: 2.0,
+                color: Color(0xFF2C2C35),
+              ),
+            ),
+            Padding(
+              padding: const EdgeInsets.symmetric(vertical: 10.0, horizontal: 20.0),
+              child: Row(
+                children: [
+                  StyledText(
+                    '시작 시간',
+                    fontWeight: 600,
+                    fontSize: 16,
+                  ),
+                  const Spacer(),
+                  StyledText(
+                    formatDate(controller.selectedItem.value.startedDate!),
+                    fontWeight: 500,
+                    fontSize: 16,
+                    color: const Color(0xFF7D7D84),
+                  ),
+                ],
+              ),
+            ),
+            controller.selectedItem.value.endedDate != null
+                ? Padding(
+                    padding: const EdgeInsets.symmetric(vertical: 10.0, horizontal: 20.0),
+                    child: Row(
+                      children: [
+                        StyledText(
+                          '종료 시간',
+                          fontWeight: 600,
+                          fontSize: 16,
+                        ),
+                        const Spacer(),
+                        StyledText(
+                          formatDate(controller.selectedItem.value.endedDate!),
+                          fontWeight: 500,
+                          fontSize: 16,
+                          color: const Color(0xFF7D7D84),
+                        ),
+                      ],
+                    ),
+                  )
+                : Container(),
+            const Padding(
+              padding: EdgeInsets.symmetric(vertical: 10.0, horizontal: 20.0),
+              child: Divider(
+                height: 2,
+                thickness: 2.0,
+                color: Color(0xFF2C2C35),
+              ),
+            ),
+            controller.selectedItem.value.speed != null
+                ? Padding(
+                    padding: const EdgeInsets.symmetric(vertical: 10.0, horizontal: 20.0),
+                    child: Row(
+                      children: [
+                        StyledText(
+                          '평균 속도',
+                          fontWeight: 600,
+                          fontSize: 16,
+                        ),
+                        const Spacer(),
+                        StyledText(
+                          '${controller.selectedItem.value.speed!.toString()} km/h',
+                          fontWeight: 500,
+                          fontSize: 16,
+                          color: const Color(0xFF7D7D84),
+                        ),
+                      ],
+                    ),
+                  )
+                : Container(),
+            controller.selectedItem.value.altitude != null
+                ? Padding(
+                    padding: const EdgeInsets.symmetric(vertical: 10.0, horizontal: 20.0),
+                    child: Row(
+                      children: [
+                        StyledText(
+                          '최고 고도',
+                          fontWeight: 600,
+                          fontSize: 16,
+                        ),
+                        const Spacer(),
+                        StyledText(
+                          '${controller.selectedItem.value.altitude!.toString()} m',
+                          fontWeight: 500,
+                          fontSize: 16,
+                          color: const Color(0xFF7D7D84),
+                        ),
+                      ],
+                    ),
+                  )
+                : Container(),
+            controller.selectedItem.value.spendStamina != null
+                ? Padding(
+                    padding: const EdgeInsets.symmetric(vertical: 10.0, horizontal: 20.0),
+                    child: Row(
+                      children: [
+                        StyledText(
+                          '소비 체력',
+                          fontWeight: 600,
+                          fontSize: 16,
+                        ),
+                        const Spacer(),
+                        StyledText(
+                          controller.selectedItem.value.spendStamina!.toString(),
+                          fontWeight: 500,
+                          fontSize: 16,
+                          color: const Color(0xFF7D7D84),
+                        ),
+                      ],
+                    ),
+                  )
+                : Container(),
+            controller.selectedItem.value.spendDurability != null
+                ? Padding(
+                    padding: const EdgeInsets.symmetric(vertical: 10.0, horizontal: 20.0),
+                    child: Row(
+                      children: [
+                        StyledText(
+                          '소비 내구도',
+                          fontWeight: 600,
+                          fontSize: 16,
+                        ),
+                        const Spacer(),
+                        StyledText(
+                          controller.selectedItem.value.spendDurability!.toString(),
+                          fontWeight: 500,
+                          fontSize: 16,
+                          color: const Color(0xFF7D7D84),
+                        ),
+                      ],
+                    ),
+                  )
+                : Container(),
+          ],
+        ),
       ),
     );
   }

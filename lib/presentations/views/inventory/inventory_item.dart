@@ -2,6 +2,7 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:gaza_go/platform/controllers/inventory/inventory_home_controller.dart';
 import 'package:gaza_go/platform/controllers/inventory_controller.dart';
+import 'package:gaza_go/presentations/styles/styled_text.dart';
 import 'package:get/get.dart';
 
 class InventoryItem extends StatelessWidget {
@@ -19,35 +20,30 @@ class InventoryItem extends StatelessWidget {
             padding: const EdgeInsets.only(top: 20, bottom: 5),
             controller: _controller.subTabController,
             isScrollable: true,
-            tabs: const <Widget>[
+            tabs: [
               Tab(
-                child: Text(
+                child: StyledText(
                   '모자',
-                  style: TextStyle(color: Colors.black),
                 ),
               ),
               Tab(
-                child: Text(
+                child: StyledText(
                   '상의',
-                  style: TextStyle(color: Colors.black),
                 ),
               ),
               Tab(
-                child: Text(
+                child: StyledText(
                   '하의',
-                  style: TextStyle(color: Colors.black),
                 ),
               ),
               Tab(
-                child: Text(
+                child: StyledText(
                   '신발',
-                  style: TextStyle(color: Colors.black),
                 ),
               ),
               Tab(
-                child: Text(
+                child: StyledText(
                   '액세서리',
-                  style: TextStyle(color: Colors.black),
                 ),
               ),
             ],

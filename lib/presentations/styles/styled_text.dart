@@ -5,9 +5,18 @@ class StyledText extends StatelessWidget {
   String text;
   double fontSize;
   Color color;
+  Color backgroundColor;
   int fontWeight;
   double lineHeight;
-  StyledText(this.text, {Key? key, this.fontSize = 12, this.lineHeight = 12, this.color = Colors.white, this.fontWeight = 400}) : super(key: key);
+  StyledText(
+    this.text, {
+    Key? key,
+    this.fontSize = 12,
+    this.lineHeight = 12,
+    this.color = Colors.white,
+    this.fontWeight = 400,
+    this.backgroundColor = Colors.transparent,
+  }) : super(key: key);
 
   Rx<FontWeight> get getFontWeight {
     switch (fontWeight) {
@@ -39,7 +48,7 @@ class StyledText extends StatelessWidget {
   Widget build(BuildContext context) {
     return Text(
       text,
-      style: TextStyle(fontSize: fontSize, color: color, fontWeight: getFontWeight.value, height: getLineHeight),
+      style: TextStyle(fontSize: fontSize, color: color, fontWeight: getFontWeight.value, height: getLineHeight, backgroundColor: backgroundColor),
     );
   }
 }

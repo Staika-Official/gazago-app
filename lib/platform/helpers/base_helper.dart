@@ -39,6 +39,14 @@ String formatDate(String? isoDateString) {
   }
 }
 
+String formatDateUntilDay(String? isoDateString) {
+  if (isoDateString != null) {
+    return DateFormat("yyyy-MM-dd").format(DateTime.parse(isoDateString).toLocal());
+  } else {
+    return '';
+  }
+}
+
 String coordinatesToString(List<LatLng> coordinates) {
   List<List<String>> coordinateStringList = List.empty(growable: true);
   for (LatLng coordinate in coordinates) {

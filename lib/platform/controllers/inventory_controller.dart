@@ -142,6 +142,18 @@ class InventoryController extends GetxController with LinearProgressMixin, Inven
     );
   }
 
+  double get equippedAbrasionRate {
+    return equippedItemList.fold(0.0, (summedValue, element) => summedValue + element.abrasionRate);
+  }
+
+  double get equippedRewardRate {
+    return equippedItemList.fold(0.0, (summedValue, element) => summedValue + element.rewardRate);
+  }
+
+  double get equippedStaminaReduceRate {
+    return equippedItemList.fold(0.0, (summedValue, element) => summedValue + element.staminaReduceRate);
+  }
+
   @override
   void onInit() {
     once(count, (_) => print('한번만 호출'));

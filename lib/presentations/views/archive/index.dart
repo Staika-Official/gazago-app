@@ -14,25 +14,29 @@ class ArchiveHome extends StatelessWidget {
         .map(
           (archive) => InkWell(
             onTap: () => controller.toDetail(archive.id!),
-            child: Card(
-              margin: EdgeInsets.only(bottom: 15),
-              elevation: 0,
-              color: const Color(0xFF363841),
-              child: Container(
-                decoration: const BoxDecoration(
-                  color: Color(0xFF363841),
-                  borderRadius: BorderRadius.only(topLeft: Radius.circular(10), topRight: Radius.circular(10), bottomLeft: Radius.circular(10), bottomRight: Radius.circular(10)),
-                  boxShadow: [
-                    BoxShadow(
-                      color: Color(0xFF000000),
-                      spreadRadius: 0,
-                      blurRadius: 0,
-                      offset: Offset(0, 4), // changes position of shadow
-                    ),
-                  ],
+            child: Container(
+              margin: const EdgeInsets.only(bottom: 15),
+              decoration: BoxDecoration(
+                color: const Color(0xFF363841),
+                border: Border.all(
+                  width: 1,
+                  color: Colors.black,
                 ),
+                borderRadius: const BorderRadius.only(topLeft: Radius.circular(10), topRight: Radius.circular(10), bottomLeft: Radius.circular(10), bottomRight: Radius.circular(10)),
+                boxShadow: const [
+                  BoxShadow(
+                    color: Color(0xFF000000),
+                    spreadRadius: 0,
+                    blurRadius: 0,
+                    offset: Offset(0, 4), // changes position of shadow
+                  ),
+                ],
+              ),
+              child: Card(
+                elevation: 0,
+                color: const Color(0xFF363841),
                 child: Padding(
-                  padding: const EdgeInsets.symmetric(vertical: 15.0, horizontal: 15.0),
+                  padding: const EdgeInsets.only(top: 15.0, left: 15.0, right: 15.0, bottom: 10.0),
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [

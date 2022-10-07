@@ -88,12 +88,13 @@ class ActivityActive extends StatelessWidget {
               Flexible(
                 flex: 3,
                 child: NaverMap(
+                  nightModeEnable: true,
+                  mapType: MapType.Navi,
                   initialCameraPosition: CameraPosition(
                     target: LatLng(controller.currentLocation.value.latitude ?? 0, controller.currentLocation.value.longitude ?? 0),
                     zoom: 15,
                   ),
                   initLocationTrackingMode: LocationTrackingMode.Follow,
-                  mapType: MapType.Basic,
                   circles: [
                     ...renderStartPoint(controller),
                     ...renderEndPoint(controller),
