@@ -10,7 +10,7 @@ class RankerModel {
   String nickname;
   double rewardGo;
   double rewardTik;
-  String date;
+  String aggregatedDate;
   String? createdBy;
   String? createdDate;
   String? lastModifiedBy;
@@ -23,7 +23,7 @@ class RankerModel {
     required this.nickname,
     required this.rewardGo,
     required this.rewardTik,
-    required this.date,
+    required this.aggregatedDate,
     this.createdBy,
     this.createdDate,
     this.lastModifiedBy,
