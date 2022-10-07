@@ -4,30 +4,18 @@ part 'token_price_model.g.dart';
 
 @JsonSerializable(explicitToJson: true)
 class TokenPriceModel {
-  String currency;
-  double price;
-  double volume24h;
-  double volumeChange24h;
-  double percentChange1h;
-  double percentChange24h;
-  double percentChange7d;
-  double marketCap;
-  double marketCapDominance;
-  double fullyDilutedMarketCap;
-  String lastUpdated;
+  double? price;
+  double? percentChange1h;
+  double? percentChange24h;
+  double? percentChange7d;
+  String? lastUpdated;
 
   TokenPriceModel({
-    required this.currency,
-    required this.price,
-    required this.volume24h,
-    required this.volumeChange24h,
-    required this.percentChange1h,
-    required this.percentChange24h,
-    required this.percentChange7d,
-    required this.marketCap,
-    required this.marketCapDominance,
-    required this.fullyDilutedMarketCap,
-    required this.lastUpdated,
+    this.price,
+    this.percentChange1h,
+    this.percentChange24h,
+    this.percentChange7d,
+    this.lastUpdated,
   });
 
   factory TokenPriceModel.fromJson(Map<String, dynamic> json) => _$TokenPriceModelFromJson(json);

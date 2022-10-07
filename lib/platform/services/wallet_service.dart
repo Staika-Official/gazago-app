@@ -2,6 +2,7 @@ import 'package:dio/dio.dart';
 import 'package:gaza_go/platform/apis/wallet.dart';
 import 'package:gaza_go/platform/models/asset_detail_model.dart';
 import 'package:gaza_go/platform/models/asset_token_balance_list_model.dart';
+import 'package:gaza_go/platform/models/asset_token_balance_model.dart';
 import 'package:gaza_go/platform/models/buy_tik_response_model.dart';
 import 'package:gaza_go/platform/models/pay_info_model.dart';
 import 'package:gaza_go/platform/models/pay_response_model.dart';
@@ -20,6 +21,11 @@ class WalletService {
   static Future<AssetDetailModel> getSpendingWalletTransactions(String publicKey, [int size = 10]) async {
     Response res = await WalletApi.getSpendingWalletTransactions(publicKey, size);
     return AssetDetailModel.fromJson(res.data);
+  }
+
+  static Future<AssetTokenBalanceModel> getBuyTikCommission() async {
+    Response res = await WalletApi.getBuyTikCommission();
+    return AssetTokenBalanceModel.fromJson(res.data);
   }
 
   static Future<BuyTikResponseModel> buyTik(int tikAmount) async {

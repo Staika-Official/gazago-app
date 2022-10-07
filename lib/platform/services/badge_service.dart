@@ -1,4 +1,3 @@
-import 'dart:developer';
 import 'dart:ui';
 
 import 'package:dio/dio.dart';
@@ -31,7 +30,6 @@ class BadgeService {
   }
 
   static Future<InventoryBadgeModel> fetchUserSyntheticBadge(composeData) async {
-    inspect(composeData);
     Response res = await BadgeApi.fetchUserSyntheticBadge(userId!, composeData);
     return InventoryBadgeModel.fromJson(res.data);
   }

@@ -1,6 +1,6 @@
 import 'package:dio/dio.dart';
 import 'package:gaza_go/constants/base_urls.dart';
-import 'package:gaza_go/platform/apis/client.dart';
+import 'package:gaza_go/platform/middleware/dio_middleware.dart';
 import 'package:gaza_go/platform/models/pay_info_model.dart';
 
 class WalletApi {
@@ -23,6 +23,12 @@ class WalletApi {
     });
   }
 
+  static Future<Response> getBuyTikCommission() async {
+    return await Api.client(serviceUrl: ServiceUrl.spendingWalletService).get('/wallet/buy-tik/fee', queryParameters: {
+      'clientId': 'GAZAGO',
+    });
+  }
+
   static Future<Response> buyTik(int tikAmount) async {
     return await Api.client(serviceUrl: ServiceUrl.spendingWalletService).post(
       '/wallet/buy-tik',
@@ -37,7 +43,7 @@ class WalletApi {
 
   //mint(토큰): TIK = 1 , STIK = 2
   static Future<Response> payWithToken(PayInfoModel payInfo) async {
-    return await Api.client(serviceUrl: ServiceUrl.spendingWalletService).post('/wallet/buy-tik', data: payInfo, queryParameters: {
+    return await Api.client(serviceUrl: ServiceUrl.spendingWalletService).post('/wallet/pay', data: payInfo, queryParameters: {
       'clientId': 'GAZAGO',
     });
   }

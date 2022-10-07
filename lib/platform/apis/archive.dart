@@ -1,6 +1,6 @@
 import 'package:dio/dio.dart';
 import 'package:gaza_go/constants/base_urls.dart';
-import 'package:gaza_go/platform/apis/client.dart';
+import 'package:gaza_go/platform/middleware/dio_middleware.dart';
 
 class ArchiveApi {
   static Future<Response> getArchiveList(String userId) async {

@@ -43,7 +43,10 @@ class ChallengeMixin {
 
       if (hasArrived && userState.exercise!.badgeIssueId == null) {
         VoidCallback successCallback = () {
-          Get.showSnackbar(GetSnackBar(title: '뱃지가 발급되었습니다.'));
+          Get.snackbar(
+            '뱃지 발급',
+            '뱃지가 발급되었습니다.',
+          );
         };
 
         InventoryBadgeModel badge = await BadgeService.fetchUserIssuanceBadge(userState.exercise!.id!, successCallback);

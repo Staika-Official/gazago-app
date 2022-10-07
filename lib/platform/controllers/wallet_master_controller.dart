@@ -6,18 +6,17 @@ import 'package:gaza_go/platform/models/asset_token_balance_list_model.dart';
 import 'package:gaza_go/platform/models/asset_token_balance_model.dart';
 import 'package:gaza_go/platform/models/asset_token_balance_ui_model.dart';
 import 'package:gaza_go/platform/models/buy_tik_response_model.dart';
-import 'package:gaza_go/platform/models/dummy_token_model.dart';
 import 'package:gaza_go/platform/models/pay_info_model.dart';
 import 'package:gaza_go/platform/models/token_info_model.dart';
 import 'package:gaza_go/platform/services/wallet_service.dart';
 import 'package:get/get.dart';
 
 class WalletMasterController extends GetxService {
-  final RxList<DummyTokenModel> walletList = RxList.empty();
   final Rx<AssetTokenBalanceListModel> spendingTokens = Rx(AssetTokenBalanceListModel(tokens: []));
   final RxList<TokenInfoModel> spendingTokenInfoList = RxList.empty();
   final Rx<AssetTokenBalanceUiModel> selectedAsset = Rx(AssetTokenBalanceUiModel());
   final Rx<AssetDetailModel> assetDetail = Rx(AssetDetailModel(balance: AssetTokenBalanceModel(), transactions: []));
+  final Rx<AssetTokenBalanceModel> buyTikCommission = Rx(AssetTokenBalanceModel());
   final RxString buyTikAmount = RxString('0');
   final Rx<BuyTikResponseModel> buyTikResult = Rx(BuyTikResponseModel());
   RxList<AssetTokenBalanceUiModel> get spendingTokenUiList {
@@ -33,18 +32,10 @@ class WalletMasterController extends GetxService {
 
   @override
   void onInit() async {
-    getWalletList();
     await getSpendingWalletBalances();
     await getSpendingMetaData();
+    await getBuyTikCommission();
     super.onInit();
-  }
-
-  void getWalletList() {
-    walletList.value = [
-      DummyTokenModel(name: 'go', balance: 100.00, tokenImageUrl: 'assets/images/common/ico_token_go.svg'),
-      DummyTokenModel(name: 'tik', balance: 10.00, tokenImageUrl: 'assets/images/common/ico_token_tik.svg'),
-      DummyTokenModel(name: 'staika', balance: 1000.00, tokenImageUrl: 'assets/images/common/ico_token_staika.svg'),
-    ];
   }
 
   Future<void> getSpendingWalletBalances() async {
@@ -64,6 +55,10 @@ class WalletMasterController extends GetxService {
     }
 
     spendingTokenInfoList.value = tokenInfoList;
+  }
+
+  Future<void> getBuyTikCommission() async {
+    buyTikCommission.value = await WalletService.getBuyTikCommission();
   }
 
   Future<void> buyTik(int tikAmount) async {

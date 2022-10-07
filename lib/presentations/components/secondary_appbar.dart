@@ -1,5 +1,6 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/flutter_svg.dart';
+import 'package:flutter_svg_provider/flutter_svg_provider.dart' as SP;
 import 'package:gaza_go/constants/routes.dart';
 import 'package:gaza_go/platform/controllers/home_menu_controller.dart';
 import 'package:gaza_go/platform/controllers/wallet_master_controller.dart';
@@ -11,22 +12,19 @@ class SecondaryAppbar extends StatelessWidget implements PreferredSizeWidget {
   SecondaryAppbar({Key? key}) : super(key: key);
 
   List<Widget> renderWalletItems(WalletMasterController walletMasterController) {
-    return walletMasterController.walletList.map((wallet) {
+    return walletMasterController.spendingTokenUiList.map((token) {
       return Padding(
         padding: const EdgeInsets.symmetric(horizontal: 6),
         child: Row(
           children: [
             CircleAvatar(
               radius: 11,
-              child: ClipRRect(
-                borderRadius: BorderRadius.circular(10.0),
-                child: SvgPicture.asset(wallet.tokenImageUrl, width: 22, height: 22),
-              ),
+              foregroundImage: token.meta?.logoUrl != '' ? CachedNetworkImageProvider(token.meta!.logoUrl) : SP.Svg('assets/images/ico_token_tik.svg') as ImageProvider,
             ),
             Padding(
               padding: const EdgeInsets.only(left: 4),
               child: StyledText(
-                wallet.balance.toString(),
+                token.uiAmountString!,
                 color: Colors.white,
                 fontSize: 12,
                 fontWeight: 600,

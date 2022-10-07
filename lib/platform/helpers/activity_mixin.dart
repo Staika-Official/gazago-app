@@ -59,11 +59,11 @@ class ActivityMixin {
         ),
       );
     }
-    print('coordinate length: ' + coordinates.length.toString());
-    for (double distance in distanceList) {
-      print('distance: ' + distance.toString());
-    }
-    print('totalDist. : ' + calculateTotalDistance(distanceList).toString());
+    // print('coordinate length: ' + coordinates.length.toString());
+    // for (double distance in distanceList) {
+    //   print('distance: ' + distance.toString());
+    // }
+    // print('totalDist. : ' + calculateTotalDistance(distanceList).toString());
     return coordinates.isNotEmpty ? RxDouble(calculateTotalDistance(distanceList)) : RxDouble(0);
   }
 

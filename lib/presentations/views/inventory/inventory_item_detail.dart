@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:gaza_go/platform/controllers/inventory_controller.dart';
+import 'package:gaza_go/platform/controllers/wallet_master_controller.dart';
 import 'package:gaza_go/presentations/components/default_container.dart';
 import 'package:get/get.dart';
 
@@ -8,7 +9,8 @@ class InventoryItemDetail extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    InventoryController controller = Get.put(InventoryController());
+    WalletMasterController walletMasterController = Get.find();
+    InventoryController controller = Get.put(InventoryController(walletMasterController));
     return DefaultContainer(
       titleText: '상세',
       child: SingleChildScrollView(

@@ -12,7 +12,7 @@ class AssetTokenBalanceUiModel {
   double? amount;
   String? uiAmountString;
   TokenMetaModel? meta;
-  List<TokenPriceModel>? price;
+  Map<String, TokenPriceModel>? price;
 
   AssetTokenBalanceUiModel({
     this.publicKey,

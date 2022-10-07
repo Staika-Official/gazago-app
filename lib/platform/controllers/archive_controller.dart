@@ -19,9 +19,13 @@ class ArchiveController extends GetxController {
   }
 
   @override
-  void onInit() {
-    getArchiveList();
+  void onInit() async {
+    await initController();
     super.onInit();
+  }
+
+  Future<void> initController() async {
+    await getArchiveList();
   }
 
   Future<void> getArchiveList() async {

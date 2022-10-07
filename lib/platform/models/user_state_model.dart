@@ -6,22 +6,23 @@ part 'user_state_model.g.dart';
 class UserStateModel {
   int id;
   int userId;
-  double stamina;
-  double dailyGoReward;
-  String createdBy;
-  String createdDate;
-  String lastModifiedBy;
-  String lastModifiedDate;
+  double? stamina;
+  String? badgeCoolDown;
+  double? dailyGoReward;
+  String? createdBy;
+  String? createdDate;
+  String? lastModifiedBy;
+  String? lastModifiedDate;
 
   UserStateModel({
     required this.id,
     required this.userId,
-    required this.stamina,
-    required this.dailyGoReward,
-    required this.createdBy,
-    required this.createdDate,
-    required this.lastModifiedBy,
-    required this.lastModifiedDate,
+    this.stamina,
+    this.dailyGoReward,
+    this.createdBy,
+    this.createdDate,
+    this.lastModifiedBy,
+    this.lastModifiedDate,
   });
 
   factory UserStateModel.fromJson(Map<String, dynamic> json) => _$UserStateModelFromJson(json);
