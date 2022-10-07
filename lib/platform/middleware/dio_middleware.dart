@@ -94,9 +94,8 @@ class Api {
           getx.Get.offAllNamed(Routes.login);
         });
     } else {
-      handler.next(e);
+      handler.resolve(e.response!);
     }
-    handler.resolve(e.response!);
   }
 
   static _retryFailedRequest(DioError e, ErrorInterceptorHandler handler, String newAccessToken) {
@@ -124,7 +123,7 @@ class Api {
             '\nRETRY ERROR'
             '\n${e.response}',
           );
-          handler.next(e);
+          handler.resolve(e.response!);
         }
       },
     );
