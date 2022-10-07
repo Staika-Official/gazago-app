@@ -443,11 +443,11 @@ class ActivityController extends GetxController with MapMixin, ActivityMixin, Ch
     await getCurrentLocation();
     initLocationStream();
     initGpsServiceStream();
-    if (currentLocation.value.latitude != null && currentLocation.value.longitude != null) {
-      await getNearByChallengeList(currentLocation.value);
-    } else {
-      await getChallengeList();
-    }
+    // if (currentLocation.value.latitude != null && currentLocation.value.longitude != null) {
+    //   await getNearByChallengeList(currentLocation.value);
+    // } else {
+    //   await getChallengeList();
+    // }
     await setMarkerImages();
   }
 }
