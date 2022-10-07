@@ -2,15 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:gaza_go/platform/controllers/leaderboard_controller.dart';
 import 'package:get/get.dart';
 
-class LeaderboardHome extends StatefulWidget {
+class LeaderboardHome extends StatelessWidget {
   const LeaderboardHome({Key? key}) : super(key: key);
-
-  @override
-  State<LeaderboardHome> createState() => _LeaderboardHomeState();
-}
-
-class _LeaderboardHomeState extends State<LeaderboardHome> {
-  LeaderboardController controller = Get.put(LeaderboardController());
 
   List<Widget> renderRankerList(LeaderboardController controller) {
     return controller.rankerList
@@ -64,13 +57,11 @@ class _LeaderboardHomeState extends State<LeaderboardHome> {
   }
 
   @override
-  void initState() {
-    controller.initController();
-    super.initState();
-  }
-
-  @override
   Widget build(BuildContext context) {
+    LeaderboardController controller = Get.put(LeaderboardController());
+
+    controller.initController();
+
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [

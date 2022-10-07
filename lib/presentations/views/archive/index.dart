@@ -6,17 +6,10 @@ import 'package:gaza_go/presentations/styles/icons.dart';
 import 'package:gaza_go/presentations/styles/styled_text.dart';
 import 'package:get/get.dart';
 
-class ArchiveHome extends StatefulWidget {
+class ArchiveHome extends StatelessWidget {
   const ArchiveHome({Key? key}) : super(key: key);
 
-  @override
-  State<ArchiveHome> createState() => _ArchiveHomeState();
-}
-
-class _ArchiveHomeState extends State<ArchiveHome> {
-  ArchiveController controller = Get.put(ArchiveController());
-
-  List<Widget> renderArchiveList() {
+  List<Widget> renderArchiveList(ArchiveController controller) {
     return controller.archiveList
         .map(
           (archive) => InkWell(
@@ -130,13 +123,11 @@ class _ArchiveHomeState extends State<ArchiveHome> {
   }
 
   @override
-  void initState() {
-    controller.initController();
-    super.initState();
-  }
-
-  @override
   Widget build(BuildContext context) {
+    ArchiveController controller = Get.put(ArchiveController());
+
+    controller.initController();
+
     return Container(
       color: const Color(0xFF1D1D26),
       child: Obx(() {
@@ -171,7 +162,7 @@ class _ArchiveHomeState extends State<ArchiveHome> {
                     child: Column(
                       mainAxisSize: MainAxisSize.min,
                       children: [
-                        ...renderArchiveList(),
+                        ...renderArchiveList(controller),
                       ],
                     ),
                   ),
