@@ -52,6 +52,29 @@ class ActivityController extends GetxController with MapMixin, ActivityMixin, Ch
   final Rx<LocationAccuracyStatus> _locationAccuracyStatus = Rx(LocationAccuracyStatus.unknown);
   StreamSubscription<ServiceStatus>? _serviceStatusStream;
 
+  @override
+  void onInit() async {
+    await initController();
+    super.onInit();
+  }
+
+  @override
+  void onClose() {
+    updateTimer?.cancel();
+    exerciseTimer?.cancel();
+    stepSubscription?.cancel();
+    locationSubscription?.cancel();
+    pedestrianStatusSubscription?.cancel();
+    _serviceStatusStream?.cancel();
+    super.onClose();
+  }
+
+  Future<void> initController() async {
+    await checkAvailabilities();
+    await initializeActivity();
+    getUserState();
+  }
+
   void initRepairInfo() {
     repairDurability.value = 0;
     remainDurability.value = 0;
@@ -62,13 +85,6 @@ class ActivityController extends GetxController with MapMixin, ActivityMixin, Ch
   void closeRepairPopup() {
     initRepairInfo();
     Get.back();
-  }
-
-  Future<void> initController() async {
-    repairDurability.value = 0;
-    remainDurability.value = 0;
-    _currentSliderValue.value = 0;
-    costTik.value = 0;
   }
 
   void onClickRepairStat(stat) {
@@ -150,7 +166,6 @@ class ActivityController extends GetxController with MapMixin, ActivityMixin, Ch
 
   void fetchRepairShoes() async {
     if (costTik.value > 0) {
-      print(userState.value.shoes!.id);
       InventoryItemModel repairModel = await ItemService.fetchRepairItemShoes(
         RepairShoesModel(
           id: userState.value.shoes!.id,
@@ -166,27 +181,6 @@ class ActivityController extends GetxController with MapMixin, ActivityMixin, Ch
     } else {
       print('수리할 내구도가 없습니다.');
     }
-  }
-
-  //activity active
-
-  @override
-  void onInit() async {
-    await checkAvailabilities();
-    await initializeActivity();
-    getUserState();
-    super.onInit();
-  }
-
-  @override
-  void onClose() {
-    updateTimer?.cancel();
-    exerciseTimer?.cancel();
-    stepSubscription?.cancel();
-    locationSubscription?.cancel();
-    pedestrianStatusSubscription?.cancel();
-    _serviceStatusStream?.cancel();
-    super.onClose();
   }
 
   void getUserState() async {

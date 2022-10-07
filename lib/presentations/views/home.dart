@@ -56,8 +56,8 @@ class Home extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    HomeMenuController controller = Get.put(HomeMenuController());
     Get.put(WalletMasterController());
+    HomeMenuController controller = Get.put(HomeMenuController());
 
     return Obx(() {
       return Scaffold(

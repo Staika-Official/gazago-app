@@ -13,8 +13,12 @@ class LeaderboardController extends GetxController {
 
   @override
   void onInit() {
-    getRankerList();
+    initController();
     super.onInit();
+  }
+
+  Future<void> initController() async {
+    getRankerList();
   }
 
   void getRankerList() async {

@@ -162,13 +162,17 @@ class InventoryController extends GetxController with LinearProgressMixin, Inven
   @override
   void onInit() {
     once(count, (_) => print('한번만 호출'));
+    initController();
+
+    super.onInit();
+  }
+
+  Future<void> initController() async {
     initStats();
     getUserAllItems();
     getUserEquippedItems();
     getSyntheticBadgeList();
     getUserBadgesList();
-
-    super.onInit();
   }
 
   void getSyntheticBadgeList() {
