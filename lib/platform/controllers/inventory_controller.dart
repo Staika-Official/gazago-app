@@ -2,6 +2,7 @@ import 'dart:developer';
 
 import 'package:flutter/material.dart';
 import 'package:gaza_go/constants/routes.dart';
+import 'package:gaza_go/platform/controllers/wallet_master_controller.dart';
 import 'package:gaza_go/platform/helpers/inventory_mixin.dart';
 import 'package:gaza_go/platform/helpers/linear_progress_mixin.dart';
 import 'package:gaza_go/platform/models/equipped_item_model.dart';
@@ -15,6 +16,10 @@ import 'package:gaza_go/platform/services/item_service.dart';
 import 'package:get/get.dart';
 
 class InventoryController extends GetxController with LinearProgressMixin, InventoryMixin {
+  final WalletMasterController? walletMasterController;
+
+  InventoryController([this.walletMasterController]);
+
   final RxList<StatModel> statList = RxList.empty();
   final RxList<InventoryItemModel> myAllItems = RxList.empty();
   RxList<InventoryBadgeModel> syntheticBadgeList = RxList.empty();
@@ -222,7 +227,7 @@ class InventoryController extends GetxController with LinearProgressMixin, Inven
         RepairShoesModel(
           id: selectedItem.value.id,
           durability: repairDurability.value,
-          tik: costTik.toInt(),
+          feeTik: costTik.value.toInt(),
         ),
       );
 

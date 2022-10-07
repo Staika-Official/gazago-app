@@ -6,12 +6,12 @@ part 'repair_shoes_model.g.dart';
 class RepairShoesModel {
   int? id;
   int? durability;
-  int? tik;
+  int? feeTik;
 
   RepairShoesModel({
     this.id,
     this.durability,
-    this.tik,
+    this.feeTik,
   });
 
   factory RepairShoesModel.fromJson(Map<String, dynamic> json) => _$RepairShoesModelFromJson(json);

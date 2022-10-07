@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_naver_map/flutter_naver_map.dart';
 import 'package:gaza_go/constants/enums.dart';
 import 'package:gaza_go/constants/routes.dart';
+import 'package:gaza_go/platform/controllers/wallet_master_controller.dart';
 import 'package:gaza_go/platform/helpers/activity_mixin.dart';
 import 'package:gaza_go/platform/helpers/challenge_mixin.dart';
 import 'package:gaza_go/platform/helpers/map_mixin.dart';
@@ -22,10 +23,13 @@ import 'package:get/get.dart';
 import 'package:permission_handler/permission_handler.dart' as PH;
 
 class ActivityController extends GetxController with MapMixin, ActivityMixin, ChallengeMixin {
+  final WalletMasterController walletMasterController;
+
+  ActivityController(this.walletMasterController);
   //index.dart
   RxList<StatModel> get statList {
     return RxList([
-      StatModel(name: '체력', currentStat: userState.value.state != null ? userState.value.state!.stamina : 0, type: 'STAMINA'),
+      StatModel(name: '체력', currentStat: userState.value.state != null ? userState.value.state!.stamina! : 0, type: 'STAMINA'),
       StatModel(name: '내구도', currentStat: userState.value.shoes != null ? userState.value.shoes!.durability! : 0, type: 'DURABILITY'),
     ]);
   }
@@ -47,6 +51,25 @@ class ActivityController extends GetxController with MapMixin, ActivityMixin, Ch
   final Rx<LocationPermission> _locationPermission = Rx(LocationPermission.unableToDetermine);
   final Rx<LocationAccuracyStatus> _locationAccuracyStatus = Rx(LocationAccuracyStatus.unknown);
   StreamSubscription<ServiceStatus>? _serviceStatusStream;
+
+  void initRepairInfo() {
+    repairDurability.value = 0;
+    remainDurability.value = 0;
+    _currentSliderValue.value = 0;
+    costTik.value = 0;
+  }
+
+  void closeRepairPopup() {
+    initRepairInfo();
+    Get.back();
+  }
+
+  Future<void> initController() async {
+    repairDurability.value = 0;
+    remainDurability.value = 0;
+    _currentSliderValue.value = 0;
+    costTik.value = 0;
+  }
 
   void onClickRepairStat(stat) {
     if (stat.type == 'DURABILITY') {
@@ -131,7 +154,7 @@ class ActivityController extends GetxController with MapMixin, ActivityMixin, Ch
         RepairShoesModel(
           id: userState.value.shoes!.id,
           durability: repairDurability.value,
-          tik: costTik.toInt(),
+          feeTik: costTik.value.toInt(),
         ),
       );
       userState.update((state) {
@@ -142,18 +165,6 @@ class ActivityController extends GetxController with MapMixin, ActivityMixin, Ch
     } else {
       print('수리할 내구도가 없습니다.');
     }
-  }
-
-  void initRepairInfo() {
-    repairDurability.value = 0;
-    remainDurability.value = 0;
-    _currentSliderValue.value = 0;
-    costTik.value = 0;
-  }
-
-  void closeRepairPopup() {
-    initRepairInfo();
-    Get.back();
   }
 
   //activity active
