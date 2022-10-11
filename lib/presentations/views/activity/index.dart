@@ -8,7 +8,7 @@ import 'package:get/get.dart';
 import 'package:smooth_page_indicator/smooth_page_indicator.dart';
 
 class ActivityHome extends StatelessWidget {
-  const ActivityHome({Key? key}) : super(key: key);
+  ActivityHome({Key? key}) : super(key: key);
 
   List<Widget> renderStatList(ActivityController controller, context) {
     return controller.statList.map((stat) {
@@ -332,14 +332,12 @@ class ActivityHome extends StatelessWidget {
     WalletMasterController walletMasterController = Get.find();
     ActivityController controller = Get.put(ActivityController(walletMasterController));
     final slideController = PageController(viewportFraction: 1, keepPage: true);
-
     controller.initController();
     return Container(
       decoration: const BoxDecoration(
         image: DecorationImage(
           image: AssetImage('assets/images/bg_activity_road.png'),
           alignment: Alignment(100, 1.5),
-          // This align it Center Left + a little bit up
         ),
       ),
       child: Padding(

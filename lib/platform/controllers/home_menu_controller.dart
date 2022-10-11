@@ -1,5 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:gaza_go/constants/routes.dart';
+import 'package:gaza_go/platform/controllers/activity_controller.dart';
+import 'package:gaza_go/platform/controllers/archive_controller.dart';
+import 'package:gaza_go/platform/controllers/inventory_controller.dart';
+import 'package:gaza_go/platform/controllers/leaderboard_controller.dart';
 import 'package:gaza_go/platform/services/uaa_service.dart';
 import 'package:gaza_go/presentations/components/main_appbar.dart';
 import 'package:gaza_go/presentations/components/secondary_appbar.dart';
@@ -41,6 +45,25 @@ class HomeMenuController extends GetxController {
 
   void selectMenu(int index) {
     selectedIndex.value = index;
+    ActivityController activityController = Get.find();
+    ArchiveController archiveController = Get.find();
+    InventoryController inventoryController = Get.find();
+    LeaderboardController leaderboardController = Get.find();
+
+    switch (index) {
+      case 0:
+        activityController.initController();
+        break;
+      case 1:
+        archiveController.initController();
+        break;
+      case 2:
+        inventoryController.initController();
+        break;
+      case 3:
+        leaderboardController.initController();
+        break;
+    }
   }
 
   Future<void> checkLoginStatus() async {
