@@ -44,8 +44,9 @@ class ArchiveHome extends StatelessWidget {
                         mainAxisAlignment: MainAxisAlignment.start,
                         crossAxisAlignment: CrossAxisAlignment.center,
                         children: [
-                          Icon(
-                            archive.type == ExerciseType.hiking.name.toUpperCase() ? Icons.nordic_walking : Icons.directions_walk,
+                          CircleAvatar(
+                            radius: 21,
+                            child: archive.type == ExerciseType.hiking.name.toUpperCase() ? iconArchiveHiking : iconArchiveWalking,
                           ),
                           Padding(
                             padding: const EdgeInsets.only(
