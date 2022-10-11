@@ -8,7 +8,7 @@ import 'package:get/get.dart';
 import 'package:percent_indicator/percent_indicator.dart';
 
 class ActivityHome extends StatelessWidget {
-  const ActivityHome({Key? key}) : super(key: key);
+  ActivityHome({Key? key}) : super(key: key);
 
   List<Widget> renderStatList(ActivityController controller) {
     return controller.statList.map((stat) {
@@ -128,8 +128,6 @@ class ActivityHome extends StatelessWidget {
   Widget build(BuildContext context) {
     WalletMasterController walletMasterController = Get.find();
     ActivityController controller = Get.put(ActivityController(walletMasterController));
-
-    controller.initController();
 
     return Column(
       children: [

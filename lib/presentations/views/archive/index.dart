@@ -126,8 +126,6 @@ class ArchiveHome extends StatelessWidget {
   Widget build(BuildContext context) {
     ArchiveController controller = Get.put(ArchiveController());
 
-    controller.initController();
-
     return Container(
       color: const Color(0xFF1D1D26),
       child: Obx(() {

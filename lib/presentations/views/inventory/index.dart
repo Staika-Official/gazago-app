@@ -16,8 +16,6 @@ class InventoryHome extends StatelessWidget {
     InventoryHomeController inventoryMenuController = Get.put(InventoryHomeController());
     InventoryController controller = Get.put(InventoryController());
 
-    controller.initController();
-
     return SingleChildScrollView(
       child: ConstrainedBox(
         constraints: BoxConstraints(maxHeight: MediaQuery.of(context).size.height),

@@ -60,8 +60,6 @@ class LeaderboardHome extends StatelessWidget {
   Widget build(BuildContext context) {
     LeaderboardController controller = Get.put(LeaderboardController());
 
-    controller.initController();
-
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
