@@ -50,9 +50,10 @@ class ActivityService {
     return userState;
   }
 
-  static Future<CurrentUserStateModel> fetchUpdateUserExercises(UserExerciseModel exerciseInfo) async {
+  static Future<CurrentUserStateModel> fetchUpdateUserExercises(UserExerciseModel exerciseInfo, {onError}) async {
     Response res = await ActivityApi.fetchUpdateUserExercises(userId!, exerciseInfo);
     CurrentUserStateModel userState = CurrentUserStateModel.fromJson(res.data);
+    if (res.statusCode == 404) onError();
     return userState;
   }
 

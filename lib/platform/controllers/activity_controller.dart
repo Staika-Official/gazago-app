@@ -18,6 +18,7 @@ import 'package:gaza_go/platform/models/user_stamina_recharge_model.dart';
 import 'package:gaza_go/platform/models/user_state_model.dart';
 import 'package:gaza_go/platform/services/activity_service.dart';
 import 'package:gaza_go/platform/services/item_service.dart';
+import 'package:gaza_go/presentations/views/activity/activity_select.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:get/get.dart';
 import 'package:permission_handler/permission_handler.dart' as PH;
@@ -61,11 +62,17 @@ class ActivityController extends GetxController with MapMixin, ActivityMixin, Ch
   @override
   void onClose() {
     updateTimer?.cancel();
+    updateTimer = null;
     exerciseTimer?.cancel();
+    exerciseTimer = null;
     stepSubscription?.cancel();
+    stepSubscription = null;
     locationSubscription?.cancel();
+    locationSubscription = null;
     pedestrianStatusSubscription?.cancel();
+    pedestrianStatusSubscription = null;
     _serviceStatusStream?.cancel();
+    _serviceStatusStream = null;
     super.onClose();
   }
 
@@ -338,7 +345,7 @@ class ActivityController extends GetxController with MapMixin, ActivityMixin, Ch
     if (exerciseState.value == ExerciseState.ongoing) {
       Get.toNamed(Routes.activityActive);
     } else {
-      Get.toNamed(Routes.activitySelect);
+      Get.dialog(const ActivitySelect(), barrierDismissible: false, barrierColor: Color.fromRGBO(0, 0, 0, 0.85));
     }
   }
 
@@ -396,7 +403,7 @@ class ActivityController extends GetxController with MapMixin, ActivityMixin, Ch
       );
     }
 
-    locationSubscription = Geolocator.getPositionStream(locationSettings: locationSettings).listen((Position position) {
+    locationSubscription ??= Geolocator.getPositionStream(locationSettings: locationSettings).listen((Position position) {
       currentLocation.value = position;
       exerciseData.add(UserExerciseModel(
         altitude: position.altitude,
@@ -409,7 +416,7 @@ class ActivityController extends GetxController with MapMixin, ActivityMixin, Ch
   }
 
   initGpsServiceStream() {
-    _serviceStatusStream = Geolocator.getServiceStatusStream().listen((ServiceStatus status) {
+    _serviceStatusStream ??= Geolocator.getServiceStatusStream().listen((ServiceStatus status) {
       if (status == ServiceStatus.disabled) {
         Get.dialog(AlertDialog(
           title: Text('경고'),
