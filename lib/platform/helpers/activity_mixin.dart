@@ -94,13 +94,13 @@ class ActivityMixin {
   }
 
   void initExerciseTimer() {
-    exerciseTimer = Timer.periodic(Duration(seconds: 1), (timer) {
+    exerciseTimer ??= Timer.periodic(Duration(seconds: 1), (timer) {
       exerciseTime.value++;
     });
   }
 
   void initStepStream() {
-    stepSubscription = Pedometer.stepCountStream.listen((StepCount event) {
+    stepSubscription ??= Pedometer.stepCountStream.listen((StepCount event) {
       exerciseSteps.value++;
     });
     stepSubscription!.onError((error) {
@@ -109,7 +109,7 @@ class ActivityMixin {
   }
 
   void initPedestrianStatusStream() {
-    pedestrianStatusSubscription = Pedometer.pedestrianStatusStream.listen((PedestrianStatus event) {
+    pedestrianStatusSubscription ??= Pedometer.pedestrianStatusStream.listen((PedestrianStatus event) {
       pedestrianStatus.value = event.status.toUpperCase();
     });
     stepSubscription!.onError((error) {
@@ -166,21 +166,29 @@ class ActivityMixin {
   }
 
   void updateExercise() async {
+    void errorHandler() {
+      updateTimer?.cancel();
+      updateTimer = null;
+    }
+
     CurrentUserStateModel newUserState = await ActivityService.fetchUpdateUserExercises(
-      UserExerciseModel(
-        id: userState.value.exercise!.id,
-        steps: exerciseSteps.value,
-        speed: avgSpeed.value,
-        distance: totalDistance.value,
-        altitude: highestAltitude.value,
-        time: exerciseTime.value,
-        locations: coordinatesToString(coordinates),
-      ),
-    );
+        UserExerciseModel(
+          id: userState.value.exercise!.id,
+          steps: exerciseSteps.value,
+          speed: avgSpeed.value,
+          distance: totalDistance.value,
+          altitude: highestAltitude.value,
+          time: exerciseTime.value,
+          locations: coordinatesToString(coordinates),
+        ),
+        onError: errorHandler);
     userState.value = newUserState;
   }
 
   void startPeriodicUpdate() {
+    if (updateTimer != null) {
+      updateTimer = null;
+    }
     updateTimer = Timer.periodic(
       Duration(milliseconds: updateInterval),
       (timer) {
@@ -208,9 +216,13 @@ class ActivityMixin {
         state = newUserState;
       });
       updateTimer!.cancel();
+      updateTimer = null;
       exerciseTimer!.cancel();
+      exerciseTimer = null;
       stepSubscription!.cancel();
+      stepSubscription = null;
       pedestrianStatusSubscription!.cancel();
+      pedestrianStatusSubscription = null;
     }
   }
 

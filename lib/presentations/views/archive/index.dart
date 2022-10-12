@@ -44,8 +44,9 @@ class ArchiveHome extends StatelessWidget {
                         mainAxisAlignment: MainAxisAlignment.start,
                         crossAxisAlignment: CrossAxisAlignment.center,
                         children: [
-                          Icon(
-                            archive.type == ExerciseType.hiking.name.toUpperCase() ? Icons.nordic_walking : Icons.directions_walk,
+                          CircleAvatar(
+                            radius: 21,
+                            child: archive.type == ExerciseType.hiking.name.toUpperCase() ? iconArchiveHiking : iconArchiveWalking,
                           ),
                           Padding(
                             padding: const EdgeInsets.only(
@@ -125,8 +126,6 @@ class ArchiveHome extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     ArchiveController controller = Get.put(ArchiveController());
-
-    controller.initController();
 
     return Container(
       color: const Color(0xFF1D1D26),

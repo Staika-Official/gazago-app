@@ -126,6 +126,7 @@ class ActivityActive extends StatelessWidget {
                   indoorEnable: true,
                   maxZoom: 20,
                   minZoom: 8,
+                  tiltGestureEnable: false,
                 ),
               ),
               Flexible(

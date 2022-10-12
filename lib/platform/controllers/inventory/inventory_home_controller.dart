@@ -8,6 +8,32 @@ class InventoryHomeController extends GetxController with GetTickerProviderState
   late TabController tabController;
   late TabController subTabController;
   final RxBool isShoe = RxBool(true);
+  List itemSubTabList = [
+    {
+      'title': '전체',
+      'itemType': 'all',
+    },
+    {
+      'title': '전체',
+      'itemType': 'hats',
+    },
+    {
+      'title': '상의',
+      'itemType': 'outers',
+    },
+    {
+      'title': '하의',
+      'itemType': 'bottoms',
+    },
+    {
+      'title': '신발',
+      'itemType': 'shoes',
+    },
+    {
+      'title': '액세서리',
+      'itemType': 'accessories',
+    },
+  ];
 
   @override
   void onInit() {
@@ -17,6 +43,6 @@ class InventoryHomeController extends GetxController with GetTickerProviderState
 
   void initController() {
     tabController = TabController(length: 2, vsync: this);
-    subTabController = TabController(length: 5, vsync: this);
+    subTabController = TabController(length: 6, vsync: this);
   }
 }

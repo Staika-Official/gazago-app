@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_naver_map/flutter_naver_map.dart';
 import 'package:gaza_go/platform/helpers/activity_helper.dart';
 import 'package:gaza_go/platform/models/challenge_model.dart';
 import 'package:gaza_go/platform/models/current_user_state_model.dart';
@@ -12,17 +13,32 @@ class ChallengeMixin {
   final RxList<ChallengeModel> challengeList = RxList.empty();
   final RxList<ChallengeModel> doableChallenges = RxList.empty();
   final RxList<ChallengeModel> achievableChallenges = RxList.empty();
+  final Rx<ChallengeModel> selectedChallenge = Rx(ChallengeModel());
+  late NaverMapController _challengeMapController;
 
   Future<void> getChallengeList() async {
     challengeList.value = await ActivityService.getChallenges();
   }
 
-  // Future<void> getNearByChallengeList(LocationData currentLocation) async {
   Future<void> getNearByChallengeList(Position currentLocation) async {
     challengeList.value = await ActivityService.getNearByChallenges(currentLocation);
   }
 
-  // void detectChallengeZone(LocationData location) {
+  void onChallengeMapCreated(NaverMapController controller) {
+    _challengeMapController = controller;
+  }
+
+  void selectChallenge(ChallengeModel challenge) {
+    selectedChallenge.value = challenge;
+    _challengeMapController.moveCamera(
+      CameraUpdate.toCameraPosition(
+        CameraPosition(
+          target: LatLng(challenge.startLat!, challenge.startLon!),
+        ),
+      ),
+    );
+  }
+
   void detectChallengeZone(Position location) {
     doableChallenges.value = challengeList.where((challenge) {
       double distance = calculateDistance(location.latitude, location.longitude, challenge.startLat, challenge.startLon);

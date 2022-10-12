@@ -110,16 +110,12 @@ class InventoryController extends GetxController with LinearProgressMixin, Inven
     ),
   );
 
-  Rx<InventoryItemModel> get equippedOuter {
-    return Rx(equippedItemList.firstWhere((element) => element.itemCategory == 'OUTER'));
+  Rx<InventoryItemModel> get equippedTop {
+    return Rx(equippedItemList.firstWhere((element) => element.itemCategory == 'TOP'));
   }
 
   Rx<InventoryItemModel> get equippedShoe {
     return Rx(equippedItemList.firstWhere((element) => element.itemCategory == 'SHOES'));
-  }
-
-  Rx<InventoryItemModel> get equippedDrink {
-    return Rx(equippedItemList.firstWhere((element) => element.itemCategory == 'DRINK'));
   }
 
   Rx<InventoryItemModel> get equippedAccessory {
@@ -137,6 +133,7 @@ class InventoryController extends GetxController with LinearProgressMixin, Inven
   RxMap<String, List<InventoryItemModel>> get allItems {
     return RxMap(
       {
+        'all': myAllItems,
         'outers': myAllItems.where((item) => item.itemCategory == 'OUTER').toList(),
         'shoes': myAllItems.where((item) => item.itemCategory == 'SHOES').toList(),
         'accessories': myAllItems.where((item) => item.itemCategory == 'ACCESSORY').toList(),
@@ -216,8 +213,12 @@ class InventoryController extends GetxController with LinearProgressMixin, Inven
         state!.badge.imageUrl = 'assets/images/@temp_badge.png';
       });
     }
-
     remainDurability.value = equippedItems.items.firstWhere((element) => element.itemCategory == 'SHOES').durability.floor();
+  }
+
+  void fetchEquipItem(int itemId) async {
+    InventoryItemModel equippedItem = await ItemService.fetchEquippedItem(itemId);
+    print(equippedItem);
   }
 
   void fetchEquipBadge(int badgeId) async {
