@@ -13,40 +13,50 @@ class InventoryItem extends StatelessWidget {
     InventoryHomeController _controller = Get.put(InventoryHomeController());
     InventoryController inventoryController = Get.find();
     return Container(
+      color: Color(0xFF363841),
       child: Column(
         mainAxisSize: MainAxisSize.max,
         children: [
-          TabBar(
-            padding: const EdgeInsets.only(top: 20, bottom: 5),
-            controller: _controller.subTabController,
-            isScrollable: true,
-            tabs: [
-              Tab(
-                child: StyledText(
-                  '모자',
+          Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: Align(
+              alignment: Alignment.centerLeft,
+              child: TabBar(
+                controller: _controller.subTabController,
+                isScrollable: true,
+                indicator: BoxDecoration(
+                  borderRadius: BorderRadius.circular(80.0),
+                  color: Color(0xFFECECEC),
                 ),
+                tabs: [
+                  Tab(
+                    child: StyledText(
+                      '모자',
+                    ),
+                  ),
+                  Tab(
+                    child: StyledText(
+                      '상의',
+                    ),
+                  ),
+                  Tab(
+                    child: StyledText(
+                      '하의',
+                    ),
+                  ),
+                  Tab(
+                    child: StyledText(
+                      '신발',
+                    ),
+                  ),
+                  Tab(
+                    child: StyledText(
+                      '액세서리',
+                    ),
+                  ),
+                ],
               ),
-              Tab(
-                child: StyledText(
-                  '상의',
-                ),
-              ),
-              Tab(
-                child: StyledText(
-                  '하의',
-                ),
-              ),
-              Tab(
-                child: StyledText(
-                  '신발',
-                ),
-              ),
-              Tab(
-                child: StyledText(
-                  '액세서리',
-                ),
-              ),
-            ],
+            ),
           ),
           Obx(() {
             return Expanded(

@@ -37,17 +37,20 @@ class InventoryBadge extends StatelessWidget {
   Widget build(BuildContext context) {
     InventoryController controller = Get.put(InventoryController());
 
-    return Obx(() {
-      return GridView.count(
-        primary: false,
-        padding: const EdgeInsets.all(20),
-        crossAxisSpacing: 10,
-        mainAxisSpacing: 10,
-        crossAxisCount: 4,
-        children: <Widget>[
-          ...renderUserBadgesList(controller),
-        ],
-      );
-    });
+    return Container(
+      color: Color(0xFF363841),
+      child: Obx(() {
+        return GridView.count(
+          primary: false,
+          padding: const EdgeInsets.all(20),
+          crossAxisSpacing: 10,
+          mainAxisSpacing: 10,
+          crossAxisCount: 4,
+          children: <Widget>[
+            ...renderUserBadgesList(controller),
+          ],
+        );
+      }),
+    );
   }
 }

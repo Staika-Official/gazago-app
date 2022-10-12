@@ -1,4 +1,5 @@
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:custom_rounded_rectangle_border/custom_rounded_rectangle_border.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 import 'package:gaza_go/platform/controllers/inventory/inventory_home_controller.dart';
@@ -90,69 +91,205 @@ class InventoryHome extends StatelessWidget {
                 ],
               ),
             ),
-            Row(
-              children: [
-                Column(
-                  children: [
-                    Row(
+            Padding(
+              padding: const EdgeInsets.all(20.0),
+              child: Row(
+                mainAxisSize: MainAxisSize.max,
+                crossAxisAlignment: CrossAxisAlignment.center,
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 25.0),
+                    child: Column(
                       children: [
-                        StyledText('${controller.equippedAbrasionRate.toInt()}'),
-                        StyledText('%'),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            StyledText(
+                              '${controller.equippedAbrasionRate.toInt()}',
+                              fontSize: 28,
+                              fontWeight: 500,
+                            ),
+                            StyledText(
+                              '%',
+                              fontSize: 16,
+                              fontWeight: 500,
+                            ),
+                          ],
+                        ),
+                        Padding(
+                          padding: const EdgeInsets.only(top: 12.0),
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              Padding(
+                                padding: const EdgeInsets.only(top: 3.0, right: 2.0),
+                                child: iconGoReward,
+                              ),
+                              StyledText(
+                                'GO 보상율',
+                                color: Color(0xFF8A8A8A),
+                                fontSize: 11,
+                                lineHeight: 12,
+                                fontWeight: 500,
+                              ),
+                            ],
+                          ),
+                        ),
                       ],
                     ),
-                    Row(
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 25.0),
+                    child: Column(
                       children: [
-                        iconGoReward,
-                        StyledText('GO 보상율'),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            StyledText(
+                              '${controller.equippedRewardRate.toInt()}',
+                              fontSize: 28,
+                              fontWeight: 500,
+                            ),
+                            StyledText(
+                              '%',
+                              fontSize: 16,
+                              fontWeight: 500,
+                            ),
+                          ],
+                        ),
+                        Padding(
+                          padding: const EdgeInsets.only(top: 12.0),
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            crossAxisAlignment: CrossAxisAlignment.center,
+                            children: [
+                              Padding(
+                                padding: const EdgeInsets.only(top: 1.0, right: 3.0),
+                                child: iconItemAbrasion,
+                              ),
+                              StyledText(
+                                '아이템 마모율',
+                                color: Color(0xFF8A8A8A),
+                                fontSize: 11,
+                                lineHeight: 12,
+                                fontWeight: 500,
+                              ),
+                            ],
+                          ),
+                        ),
                       ],
                     ),
-                  ],
-                )
-                // Padding(
-                //   padding: const EdgeInsets.only(top: 10, bottom: 5),
-                //   child: Row(children: [StyledText('아이템마모율'), Spacer(), StyledText('${controller.equippedAbrasionRate}%')]),
-                // ),
-                // LinearProgressIndicator(
-                //   value: controller.calculateProgress(controller.equippedAbrasionRate),
-                //   minHeight: 10,
-                //   backgroundColor: const Color(0xffb74093),
-                // ),
-                // Padding(
-                //   padding: const EdgeInsets.only(top: 10, bottom: 5),
-                //   /**/
-                //   child: Row(children: [StyledText('이동 보상율'), Spacer(), StyledText('${controller.equippedRewardRate}%')]),
-                // ),
-                // LinearProgressIndicator(
-                //   value: controller.calculateProgress(controller.equippedRewardRate),
-                //   minHeight: 10,
-                //   backgroundColor: const Color(0xffb74093),
-                // ),
-                // Padding(
-                //   padding: const EdgeInsets.only(top: 10, bottom: 5),
-                //   child: Row(children: [StyledText('체력 감소율'), Spacer(), StyledText('${controller.equippedStaminaReduceRate}%')]),
-                // ),
-                // LinearProgressIndicator(
-                //   value: controller.calculateProgress(controller.equippedStaminaReduceRate),
-                //   minHeight: 10,
-                //   backgroundColor: const Color(0xffb74093),
-                // ),
-              ],
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 25.0),
+                    child: Column(
+                      children: [
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            StyledText(
+                              '${controller.equippedStaminaReduceRate.toInt()}',
+                              fontSize: 28,
+                              fontWeight: 500,
+                            ),
+                            StyledText(
+                              '%',
+                              fontSize: 16,
+                              fontWeight: 500,
+                            ),
+                          ],
+                        ),
+                        Padding(
+                          padding: const EdgeInsets.only(top: 12.0),
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              Padding(
+                                padding: const EdgeInsets.only(top: 1.0, right: 3.0),
+                                child: iconStaminaReduce,
+                              ),
+                              StyledText(
+                                '체력 감소율',
+                                color: Color(0xFF8A8A8A),
+                                fontSize: 11,
+                                lineHeight: 12,
+                                fontWeight: 500,
+                              ),
+                            ],
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ],
+              ),
             ),
-            TabBar(
-              padding: const EdgeInsets.only(top: 20, bottom: 5),
-              controller: inventoryMenuController.tabController,
-              tabs: <Widget>[
-                Tab(
-                  child: StyledText(
-                    '아이템',
+            Padding(
+              padding: const EdgeInsets.only(top: 10),
+              child: TabBar(
+                controller: inventoryMenuController.tabController,
+                labelColor: Colors.white,
+                labelStyle: TextStyle(fontSize: 16, fontWeight: FontWeight.w500),
+                unselectedLabelColor: const Color(0xFF8A8A8A),
+                indicatorWeight: 0.1,
+                labelPadding: EdgeInsets.all(0),
+                indicator: const BoxDecoration(
+                  color: Color(0xFF363841),
+                  borderRadius: BorderRadius.only(
+                    topRight: Radius.circular(15),
+                    topLeft: Radius.circular(15),
                   ),
                 ),
-                Tab(
-                  child: StyledText(
-                    '뱃지',
+                tabs: <Widget>[
+                  Tab(
+                    child: Container(
+                      width: double.infinity,
+                      height: double.infinity,
+                      decoration: const ShapeDecoration(
+                        shape: CustomRoundedRectangleBorder(
+                          borderRadius: BorderRadius.only(topLeft: Radius.circular(10), topRight: Radius.circular(10)),
+                          leftSide: BorderSide(color: Colors.black, width: 2),
+                          topLeftCornerSide: BorderSide(color: Colors.black, width: 2),
+                          rightSide: BorderSide(color: Colors.black, width: 1),
+                          topRightCornerSide: BorderSide(color: Colors.black, width: 2),
+                          topSide: BorderSide(color: Colors.black, width: 2),
+                        ),
+                      ),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children: const [
+                          Text('아이템'),
+                        ],
+                      ),
+                    ),
                   ),
-                ),
-              ],
+                  Tab(
+                    child: Container(
+                      width: double.infinity,
+                      height: double.infinity,
+                      decoration: const ShapeDecoration(
+                        shape: CustomRoundedRectangleBorder(
+                          borderRadius: BorderRadius.only(topLeft: Radius.circular(10), topRight: Radius.circular(10)),
+                          leftSide: BorderSide(color: Colors.black, width: 1),
+                          topLeftCornerSide: BorderSide(color: Colors.black, width: 2),
+                          rightSide: BorderSide(color: Colors.black, width: 2),
+                          topRightCornerSide: BorderSide(color: Colors.black, width: 2),
+                          topSide: BorderSide(color: Colors.black, width: 2),
+                        ),
+                      ),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children: const [
+                          Text('뱃지'),
+                        ],
+                      ),
+                    ),
+                  ),
+                ],
+              ),
             ),
             Expanded(
               child: TabBarView(
