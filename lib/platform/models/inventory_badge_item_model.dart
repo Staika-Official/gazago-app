@@ -9,6 +9,7 @@ class InventoryBadgeItemModel {
   double rewardRate;
   double luckRate;
   String? source;
+  String? name;
   String issueType;
   String issueState;
   String issueStartedTime;
@@ -28,6 +29,7 @@ class InventoryBadgeItemModel {
     required this.rewardRate,
     required this.luckRate,
     this.source,
+    this.name,
     required this.issueType,
     required this.issueState,
     required this.issueStartedTime,

@@ -31,6 +31,12 @@ class ItemService {
     return repairItemInfo;
   }
 
+  static Future<InventoryItemModel> fetchEquippedItem(int itemId) async {
+    Response res = await ItemApi.fetchEquippedItem(userId!, itemId);
+    InventoryItemModel equippedItem = InventoryItemModel.fromJson(res.data);
+    return equippedItem;
+  }
+
   static Future<InventoryBadgeModel> fetchEquippedBadge(int badgeId) async {
     Response res = await ItemApi.fetchEquippedBadge(userId!, badgeId);
     InventoryBadgeModel equippedBadge = InventoryBadgeModel.fromJson(res.data);

@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 import 'package:gaza_go/platform/controllers/inventory/inventory_home_controller.dart';
 import 'package:gaza_go/platform/controllers/inventory_controller.dart';
+import 'package:gaza_go/platform/helpers/inventory_helper.dart';
 import 'package:gaza_go/presentations/styles/icons.dart';
 import 'package:gaza_go/presentations/styles/styled_text.dart';
 import 'package:gaza_go/presentations/views/inventory/inventory_badge.dart';
@@ -40,6 +41,7 @@ class InventoryHome extends StatelessWidget {
                             mainAxisCellCount: 2,
                             child: Tile(
                               index: 0,
+                              itemGrade: controller.equippedShoe.value.itemGrade,
                               durability: controller.equippedShoe.value.durability,
                               imageUrl: controller.equippedShoe.value.itemImageUrl,
                             ),
@@ -57,7 +59,8 @@ class InventoryHome extends StatelessWidget {
                             mainAxisCellCount: 1,
                             child: Tile(
                               index: 2,
-                              imageUrl: controller.equippedAccessory.value.itemImageUrl,
+                              itemGrade: controller.equippedHat.value.itemGrade,
+                              imageUrl: controller.equippedHat.value.itemImageUrl,
                             ),
                           ),
                           StaggeredGridTile.count(
@@ -65,7 +68,8 @@ class InventoryHome extends StatelessWidget {
                             mainAxisCellCount: 1,
                             child: Tile(
                               index: 3,
-                              imageUrl: controller.equippedAccessory.value.itemImageUrl,
+                              itemGrade: controller.equippedTop.value.itemGrade,
+                              imageUrl: controller.equippedTop.value.itemImageUrl,
                             ),
                           ),
                           StaggeredGridTile.count(
@@ -73,7 +77,8 @@ class InventoryHome extends StatelessWidget {
                             mainAxisCellCount: 1,
                             child: Tile(
                               index: 4,
-                              imageUrl: controller.equippedAccessory.value.itemImageUrl,
+                              itemGrade: controller.equippedBottom.value.itemGrade,
+                              imageUrl: controller.equippedBottom.value.itemImageUrl,
                             ),
                           ),
                           StaggeredGridTile.count(
@@ -81,6 +86,7 @@ class InventoryHome extends StatelessWidget {
                             mainAxisCellCount: 1,
                             child: Tile(
                               index: 5,
+                              itemGrade: controller.equippedAccessory.value.itemGrade,
                               imageUrl: controller.equippedAccessory.value.itemImageUrl,
                             ),
                           ),
@@ -316,11 +322,13 @@ class Tile extends StatelessWidget {
     this.backgroundColor,
     this.bottomSpace,
     this.durability,
+    this.itemGrade,
   }) : super(key: key);
 
   final int index;
   final double? durability;
   final String imageUrl;
+  final String? itemGrade;
   final double? extent;
   final double? bottomSpace;
   final Color? backgroundColor;
@@ -482,6 +490,22 @@ class Tile extends StatelessWidget {
                             ),
                           ),
                         ],
+                      ),
+                    ),
+                  )
+                : Container(),
+            itemGrade != null
+                ? Positioned(
+                    right: index > 1 ? 6 : 10,
+                    top: index > 1 ? 6 : 10,
+                    child: CircleAvatar(
+                      backgroundColor: getItemGradeColor(itemGrade!),
+                      radius: 10,
+                      child: StyledText(
+                        itemGrade![0],
+                        fontWeight: 600,
+                        fontFamily: 'Montserrat',
+                        color: itemGrade == 'POOR' ? Color(0xFFffffff).withOpacity(0.6) : Color(0xFF000000).withOpacity(0.6),
                       ),
                     ),
                   )
