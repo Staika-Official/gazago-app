@@ -25,3 +25,8 @@ SvgPicture iconActivityTokenGo = SvgPicture.asset('assets/images/activity/ico_ac
 // archive
 SvgPicture iconArchiveDetailBadge = SvgPicture.asset('assets/images/archive/ico_archive_detail_badge.svg', width: 15, height: 20);
 SvgPicture iconWasteBasket = SvgPicture.asset('assets/images/common/ico_wastebasket.svg', width: 15, height: 20);
+
+//leaderboard
+SvgPicture iconStatisticsTokenGo = SvgPicture.asset('assets/images/activity/ico_activity_token_go.svg', width: 25.27, height: 27.62);
+SvgPicture iconCalendarStatisticsTokenTik = SvgPicture.asset('assets/images/leaderboard/ico_token_tik.svg', width: 17.54, height: 19.18);
+SvgPicture iconLeaderboardRightArrow = SvgPicture.asset('assets/images/leaderboard/ico_right_arrow.svg');

@@ -12,6 +12,7 @@ import 'package:gaza_go/presentations/views/inventory/inventory_badge_detail.dar
 import 'package:gaza_go/presentations/views/inventory/inventory_item_detail.dart';
 import 'package:gaza_go/presentations/views/inventory/synthetic_badge.dart';
 import 'package:gaza_go/presentations/views/join/join_terms.dart';
+import 'package:gaza_go/presentations/views/leaderboard/calendar_statistics.dart';
 import 'package:gaza_go/presentations/views/login.dart';
 import 'package:gaza_go/presentations/views/on_boarding.dart';
 import 'package:gaza_go/presentations/views/preferences/edit_biometrics.dart';
@@ -56,6 +57,7 @@ class Routes {
   static const itemDetail = '/inventory/item/detail';
   static const badgeDetail = '/inventory/badge/detail';
   static const syntheticBadge = '/inventory/synthetic_badge';
+  static const calendarStatistics = '/leaderboard/calendar_statistics';
 
   static List<GetPage> pages = [
     stepPage(name: Routes.login, page: const Login()),
@@ -93,6 +95,7 @@ class Routes {
     stepPage(name: Routes.itemDetail, page: const InventoryItemDetail()),
     stepPage(name: Routes.badgeDetail, page: const InventoryBadgeDetail()),
     stepPage(name: Routes.syntheticBadge, page: const SyntheticBadge()),
+    stepPage(name: Routes.calendarStatistics, page: const CalendarStatistics()),
   ];
 }
 

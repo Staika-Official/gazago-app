@@ -11,6 +11,7 @@ import 'package:gaza_go/platform/stores/hive_store.dart';
 import 'package:get/get.dart';
 import 'package:hive/hive.dart';
 import 'package:hive_flutter/adapters.dart';
+import 'package:intl/date_symbol_data_local.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:uuid/uuid.dart';
 
@@ -41,7 +42,7 @@ void main() async {
     if (uuid == null || uuid.isEmpty) {
       HiveStore.save(key: HiveKey.uuid.name, value: Uuid().v4());
     }
-
+    await initializeDateFormatting();
     await requestNotificationPermission();
 
     runApp(MyApp());
