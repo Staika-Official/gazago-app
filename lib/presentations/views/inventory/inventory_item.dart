@@ -10,7 +10,7 @@ class InventoryItem extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    InventoryHomeController _controller = Get.put(InventoryHomeController());
+    InventoryHomeController _controller = Get.find();
     InventoryController inventoryController = Get.find();
     return Container(
       color: Color(0xFF363841),
