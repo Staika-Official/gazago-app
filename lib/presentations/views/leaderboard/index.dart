@@ -23,13 +23,16 @@ class LeaderboardHome extends StatelessWidget {
           firstDay: controller.firstDay.value!,
           lastDay: controller.lastDay.value!,
           focusedDay: controller.selectedDate.value!,
-          selectedDayPredicate: (day) =>isSameDay(day, controller.selectedDate.value!),
+          selectedDayPredicate: (day) => isSameDay(day, controller.selectedDate.value!),
           headerStyle: const HeaderStyle(
             titleTextStyle: TextStyle(fontSize: 18, color: Colors.white, fontWeight: FontWeight.w500),
             titleCentered: true,
             formatButtonVisible: false,
             leftChevronIcon: Icon(Icons.chevron_left, color: Colors.white),
-            rightChevronIcon: Icon(Icons.chevron_right, color: Colors.white,),
+            rightChevronIcon: Icon(
+              Icons.chevron_right,
+              color: Colors.white,
+            ),
             leftChevronPadding: EdgeInsets.only(left: 60, top: 10, bottom: 10),
             rightChevronPadding: EdgeInsets.only(right: 60, top: 10, bottom: 10),
           ),
@@ -45,26 +48,14 @@ class LeaderboardHome extends StatelessWidget {
                     strokeAlign: StrokeAlign.center
                 )
             ),*/
-            todayTextStyle:  const TextStyle(
+            todayTextStyle: const TextStyle(
               color: Colors.black,
               fontSize: 16.0,
             ),
-            defaultTextStyle: const TextStyle(
-                color: Colors.white
-            ),
-            weekendTextStyle: const TextStyle(
-                color: Colors.white
-            ),
+            defaultTextStyle: const TextStyle(color: Colors.white),
+            weekendTextStyle: const TextStyle(color: Colors.white),
             selectedDecoration: BoxDecoration(
-                color: const Color(0xFF0EE6F3),
-                shape: BoxShape.circle,
-                border: Border.all(
-                    width: 14,
-                    style: BorderStyle.solid,
-                    color: const Color(0xFF363841),
-                    strokeAlign: StrokeAlign.center
-                )
-            ),
+                color: const Color(0xFF0EE6F3), shape: BoxShape.circle, border: Border.all(width: 14, style: BorderStyle.solid, color: const Color(0xFF363841), strokeAlign: StrokeAlign.center)),
             selectedTextStyle: const TextStyle(
               color: Colors.black,
               fontSize: 16.0,
@@ -108,19 +99,11 @@ class LeaderboardHome extends StatelessWidget {
           ),
           Expanded(
             flex: 1,
-            child: Text(
-                '${ranker.rewardGo.toString()} GO',
-                textAlign: TextAlign.right,
-                style: const TextStyle(color: Colors.white, fontSize: 14, fontWeight: FontWeight.w600)
-            ),
+            child: Text('${ranker.rewardGo.toString()} GO', textAlign: TextAlign.right, style: const TextStyle(color: Colors.white, fontSize: 14, fontWeight: FontWeight.w600)),
           ),
           Expanded(
             flex: 1,
-            child: Text(
-                '${ranker.rewardTik.toString()} TIK',
-                textAlign: TextAlign.right,
-                style: const TextStyle(color: Color(0xFF5B5B67), fontSize: 14, fontWeight: FontWeight.w600)
-            ),
+            child: Text('${ranker.rewardTik.toString()} TIK', textAlign: TextAlign.right, style: const TextStyle(color: Color(0xFF5B5B67), fontSize: 14, fontWeight: FontWeight.w600)),
           ),
         ],
       ),
@@ -135,7 +118,6 @@ class LeaderboardHome extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-
         Padding(
           padding: const EdgeInsets.only(left: 24),
           child: StyledText(
@@ -211,7 +193,7 @@ class LeaderboardHome extends StatelessWidget {
                       'TIK은 매일 자정(KST)에 배분됩니다.',
                       color: Colors.white,
                       fontWeight: 500,
-                      fontSize: 18,
+                      fontSize: 16,
                       lineHeight: 21,
                     ),
                     Padding(padding: EdgeInsets.only(left: 5)),
@@ -253,36 +235,35 @@ class LeaderboardHome extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              StyledText('리더보드', color: Colors.white, fontSize: 20, fontWeight: 600,),
-              InkWell(
-                onTap: () => controller.showCalendar(context),
-                child: Row(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    Obx(() {
-                      return StyledText(controller.leaderboardDate.value!, color: const Color(0xFF747474), fontSize: 12, fontWeight: 600);
-                    }),
-                    //StyledText(controller.leaderboardDate.value!, color: const Color(0xFF747474), fontSize: 12, fontWeight: 600,),
-                    const Padding(padding: EdgeInsets.only(left: 8)),
-                    InkWell(
-                      onTap: () => {
-                        showMaterialModalBottomSheet(
-                          context: context,
-                          builder: (context) => showBottomCalender(context, controller),
-                        )
-                      },
-                      child: Container(
-                        width: 18.0,
-                        height: 13.0,
-                        decoration: const BoxDecoration(
-                          color: Color(0xFF747474),
-                          shape: BoxShape.rectangle
-                        ),
-                      ),
-                    )
-                    //Text(controller.formattedDate.value)
-                  ],
-                ),
+              StyledText(
+                '리더보드',
+                color: Colors.white,
+                fontSize: 20,
+                fontWeight: 600,
+              ),
+              Row(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Obx(() {
+                    return StyledText(controller.leaderboardDate.value!, color: const Color(0xFF747474), fontSize: 12, fontWeight: 600);
+                  }),
+                  //StyledText(controller.leaderboardDate.value!, color: const Color(0xFF747474), fontSize: 12, fontWeight: 600,),
+                  const Padding(padding: EdgeInsets.only(left: 8)),
+                  InkWell(
+                    onTap: () => {
+                      showMaterialModalBottomSheet(
+                        context: context,
+                        builder: (context) => showBottomCalender(context, controller),
+                      )
+                    },
+                    child: Container(
+                      width: 18.0,
+                      height: 13.0,
+                      decoration: const BoxDecoration(color: Color(0xFF747474), shape: BoxShape.rectangle),
+                    ),
+                  )
+                  //Text(controller.formattedDate.value)
+                ],
               )
             ],
           ),
@@ -293,9 +274,7 @@ class LeaderboardHome extends StatelessWidget {
               pagingController: controller.pagingController,
               separatorBuilder: (context, index) => const Divider(thickness: 2, indent: 0, endIndent: 0, height: 1, color: Color(0xFF26272F)),
               builderDelegate: PagedChildBuilderDelegate<RankerModel>(
-                itemBuilder: (context, item, index) => (
-                    renderRanker(item, index)
-                ),
+                itemBuilder: (context, item, index) => (renderRanker(item, index)),
                 noItemsFoundIndicatorBuilder: (context) => const Padding(
                   padding: EdgeInsets.all(8.0),
                   child: Center(
