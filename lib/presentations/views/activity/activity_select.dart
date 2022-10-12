@@ -48,70 +48,72 @@ class ActivitySelect extends StatelessWidget {
                         ),
                       ),
                     ),
-                    Container(
-                      width: 155,
-                      height: 215,
-                      decoration: BoxDecoration(
-                        color: Color(0xFF363841),
-                        border: Border.all(
-                          width: 1,
-                          style: BorderStyle.solid,
-                          color: Colors.black,
+                    Obx(() {
+                      return Container(
+                        width: 155,
+                        height: 215,
+                        decoration: BoxDecoration(
+                          color: Color(0xFF363841),
+                          border: Border.all(
+                            width: 1,
+                            style: BorderStyle.solid,
+                            color: Colors.black,
+                          ),
+                          boxShadow: [
+                            BoxShadow(
+                              color: Color.fromRGBO(0, 0, 0, 0.25),
+                              offset: Offset(0, 0),
+                              blurRadius: 4,
+                              spreadRadius: 4,
+                            )
+                          ],
+                          borderRadius: BorderRadius.circular(14),
                         ),
-                        boxShadow: [
-                          BoxShadow(
-                            color: Color.fromRGBO(0, 0, 0, 0.25),
-                            offset: Offset(0, 0),
-                            blurRadius: 4,
-                            spreadRadius: 4,
-                          )
-                        ],
-                        borderRadius: BorderRadius.circular(14),
-                      ),
-                      foregroundDecoration: BoxDecoration(
-                        color: controller.doableChallenges.isNotEmpty ? Colors.transparent : Color.fromRGBO(0, 0, 0, 0.6),
-                      ),
-                      child: InkWell(
-                        onTap: controller.doableChallenges.isNotEmpty ? () => controller.moveToChallangeSelection() : null,
-                        borderRadius: BorderRadius.circular(14),
-                        child: Padding(
-                          padding: EdgeInsets.only(top: 32),
-                          child: Column(
-                            children: [
-                              SvgPicture.asset(
-                                'assets/images/activity/ico_hiking.svg',
-                                width: 88,
-                                height: 88,
-                              ),
-                              Padding(
-                                padding: const EdgeInsets.only(top: 30),
-                                child: Text(
-                                  '등산',
-                                  style: TextStyle(
-                                    color: Color(0xff4FFF4B),
-                                    fontWeight: FontWeight.w800,
-                                    fontSize: 28,
-                                    height: 16 / 28,
+                        foregroundDecoration: BoxDecoration(
+                          color: controller.doableChallenges.isNotEmpty ? Colors.transparent : Color.fromRGBO(0, 0, 0, 0.6),
+                        ),
+                        child: InkWell(
+                          onTap: controller.doableChallenges.isNotEmpty ? () => controller.moveToChallangeSelection() : null,
+                          borderRadius: BorderRadius.circular(14),
+                          child: Padding(
+                            padding: EdgeInsets.only(top: 32),
+                            child: Column(
+                              children: [
+                                SvgPicture.asset(
+                                  'assets/images/activity/ico_hiking.svg',
+                                  width: 88,
+                                  height: 88,
+                                ),
+                                Padding(
+                                  padding: const EdgeInsets.only(top: 30),
+                                  child: Text(
+                                    '등산',
+                                    style: TextStyle(
+                                      color: Color(0xff4FFF4B),
+                                      fontWeight: FontWeight.w800,
+                                      fontSize: 28,
+                                      height: 16 / 28,
+                                    ),
                                   ),
                                 ),
-                              ),
-                              Padding(
-                                padding: const EdgeInsets.only(top: 14),
-                                child: Text(
-                                  '완등 후 뱃지 증정!',
-                                  style: TextStyle(
-                                    color: Color(0xff4FFF4B),
-                                    fontWeight: FontWeight.w800,
-                                    fontSize: 12,
-                                    height: 16 / 12,
+                                Padding(
+                                  padding: const EdgeInsets.only(top: 14),
+                                  child: Text(
+                                    '완등 후 뱃지 증정!',
+                                    style: TextStyle(
+                                      color: Color(0xff4FFF4B),
+                                      fontWeight: FontWeight.w800,
+                                      fontSize: 12,
+                                      height: 16 / 12,
+                                    ),
                                   ),
                                 ),
-                              ),
-                            ],
+                              ],
+                            ),
                           ),
                         ),
-                      ),
-                    ),
+                      );
+                    }),
                   ],
                 ),
                 Padding(

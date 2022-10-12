@@ -455,6 +455,7 @@ class ActivityController extends GetxController with MapMixin, ActivityMixin, Ch
     } else {
       await getChallengeList();
     }
+    detectChallengeZone(currentLocation.value);
     await setMarkerImages();
   }
 }

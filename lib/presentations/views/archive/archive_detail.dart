@@ -152,6 +152,7 @@ class ArchiveDetail extends StatelessWidget {
                 color: Colors.grey,
                 child: NaverMap(
                   nightModeEnable: true,
+                  tiltGestureEnable: false,
                   mapType: MapType.Navi,
                   initialCameraPosition: CameraPosition(
                     target: controller.locations.first,
