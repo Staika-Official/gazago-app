@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_naver_map/flutter_naver_map.dart';
+import 'package:gaza_go/constants/enums.dart';
 import 'package:gaza_go/platform/controllers/archive_controller.dart';
 import 'package:gaza_go/platform/helpers/base_helper.dart';
 import 'package:gaza_go/presentations/components/default_container.dart';
@@ -44,14 +45,13 @@ class ArchiveDetail extends StatelessWidget {
                           children: [
                             CircleAvatar(
                               radius: 21,
-                              child: ClipRRect(
-                                borderRadius: BorderRadius.circular(25.0),
-                              ),
+                              child: controller.selectedItem.value.type == ExerciseType.hiking.name.toUpperCase() ? iconArchiveHiking : iconArchiveWalking,
                             ),
+                            // if (controller.selectedItem.value.badgeIssueId != null)
                             Positioned(
                               right: 0,
                               bottom: 0,
-                              child: iconArchiveDetailBadge,
+                              child: Image.asset('assets/images/archive/ico_badge.png', width: 15, height: 20),
                             ),
                           ],
                         ),

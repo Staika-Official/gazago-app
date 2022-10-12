@@ -78,6 +78,7 @@ dependencies:
   permission_handler: ^10.0.2
   flutter_svg_provider: ^1.0.3
   percent_indicator: ^4.2.2
+  smooth_page_indicator: ^1.0.0+2
 
 dev_dependencies:
   flutter_test:
@@ -110,6 +111,7 @@ flutter:
     - assets/images/common/
     - assets/images/activity/
     - assets/images/archive/
+    - assets/images/inventory/
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware

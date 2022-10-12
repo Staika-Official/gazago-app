@@ -3,6 +3,7 @@ import 'package:get/get.dart';
 
 class StyledText extends StatelessWidget {
   String text;
+  String fontFamily;
   double fontSize;
   Color color;
   Color backgroundColor;
@@ -11,6 +12,7 @@ class StyledText extends StatelessWidget {
   StyledText(
     this.text, {
     Key? key,
+    this.fontFamily = 'Pretendard',
     this.fontSize = 12,
     this.lineHeight = 12,
     this.color = Colors.white,
@@ -48,7 +50,7 @@ class StyledText extends StatelessWidget {
   Widget build(BuildContext context) {
     return Text(
       text,
-      style: TextStyle(fontSize: fontSize, color: color, fontWeight: getFontWeight.value, height: getLineHeight, backgroundColor: backgroundColor),
+      style: TextStyle(fontSize: fontSize, fontFamily: fontFamily, color: color, fontWeight: getFontWeight.value, height: getLineHeight, backgroundColor: backgroundColor),
     );
   }
 }
