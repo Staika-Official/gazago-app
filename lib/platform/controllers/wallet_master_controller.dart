@@ -1,4 +1,5 @@
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
 import 'package:gaza_go/constants/enums.dart';
 import 'package:gaza_go/constants/routes.dart';
 import 'package:gaza_go/platform/models/asset_detail_model.dart';
@@ -65,10 +66,7 @@ class WalletMasterController extends GetxService {
     buyTikResult.value = await WalletService.buyTik(tikAmount);
     await getSpendingWalletBalances();
     await getSpendingMetaData();
-    Get.snackbar(
-      '충전 완료',
-      '$tikAmount Tik이 충전되었습니다.',
-    );
+    Get.snackbar('충전 완료', '$tikAmount Tik이 충전되었습니다.', colorText: Colors.white);
     Get.until((route) => route.settings.name == Routes.wallet);
   }
 
