@@ -11,7 +11,7 @@ class InventoryBadge extends StatelessWidget {
     return controller.userBadgesList
         .map(
           (item) => InkWell(
-            onTap: () => controller.toBadgeDetail(item.id),
+            onTap: () => controller.toBadgeDetail(item.badge.id),
             child: Container(
               decoration: const BoxDecoration(
                 color: Color(0xFF1D1D26),

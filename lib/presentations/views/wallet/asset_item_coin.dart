@@ -26,7 +26,7 @@ class AssetItemCoin extends StatelessWidget {
               mainAxisSize: MainAxisSize.max,
               children: [
                 CircleAvatar(
-                  foregroundImage: asset.meta?.logoUrl != '' ? CachedNetworkImageProvider(asset.meta!.logoUrl) : Svg('assets/images/ico_token_tik.svg') as ImageProvider,
+                  foregroundImage: asset.meta?.logoUrl != '' ? CachedNetworkImageProvider(asset.meta!.logoUrl) : Svg('assets/images/common/ico_token_tik.svg') as ImageProvider,
                 ),
                 Expanded(
                   child: Padding(

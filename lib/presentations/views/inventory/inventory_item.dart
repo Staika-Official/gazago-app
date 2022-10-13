@@ -30,7 +30,7 @@ class InventoryItem extends StatelessWidget {
             children: [
               ...controller.allItems[tab['itemType']]!.map(
                 (item) => InkWell(
-                  onTap: () => item.equipped == true ? null : controller.toItemDetail(item.id),
+                  onTap: () => controller.toItemDetail(item.id),
                   child: Container(
                     decoration: const BoxDecoration(
                       color: Color(0xFF1D1D26),

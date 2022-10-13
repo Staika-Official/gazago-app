@@ -1,5 +1,4 @@
 import 'dart:async';
-import 'dart:developer';
 import 'dart:io';
 
 import 'package:flutter/material.dart';
@@ -137,12 +136,12 @@ class ActivityController extends GetxController with ActivityMixin, ChallengeMix
                 label: _currentSliderValue.value.floor().toString(),
                 onChanged: (double value) {
                   if (stat.type == 'STAMINA') {
-                    _currentSliderValue.value = double.parse(value.toStringAsFixed(0));
+                    _currentSliderValue.value = value;
                     costTik.value = _currentSliderValue.value.toInt() * 100;
                   } else {
-                    if (value >= stat.currentStat.toInt().floor()) {
+                    if (value >= stat.currentStat.floor().toInt()) {
                       _currentSliderValue.value = value;
-                      repairDurability.value = (value - stat.currentStat).toInt();
+                      repairDurability.value = (value - stat.currentStat.floor()).toInt();
                       costTik.value = (value.toInt() - remainDurability.value).abs() * 100;
                     }
                   }
@@ -199,7 +198,7 @@ class ActivityController extends GetxController with ActivityMixin, ChallengeMix
   void getUserState() async {
     userState.value = await ActivityService.getCurrentUserState();
     exerciseState.value = ExerciseState.ready;
-    inspect('sssssssssssssssssss${userState.value.shoes!.id}');
+
     if (userState.value.exercise != null && userState.value.exercise!.state == 'ONGOING') {
       exerciseState.value = ExerciseState.ongoing;
       continueExercise();
@@ -427,14 +426,12 @@ class ActivityController extends GetxController with ActivityMixin, ChallengeMix
   }
 
   Future<void> getCurrentLocation() async {
-
     await Geolocator.getCurrentPosition(desiredAccuracy: LocationAccuracy.bestForNavigation, timeLimit: Duration(seconds: 5)).then((location) {
       currentLocation.value = location;
       isListeningToLocation.value = true;
     }).onError((error, stackTrace) {
       Get.snackbar('위치정보 수신실패', '위치정보를 가져오지 못했습니다.');
     });
-
   }
 
   Future<void> initializeActivity() async {

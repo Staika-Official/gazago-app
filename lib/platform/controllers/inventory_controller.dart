@@ -284,7 +284,7 @@ class InventoryController extends GetxController with LinearProgressMixin, Inven
                 onChanged: (double value) {
                   if (value >= equippedShoe.value.durability.toInt().floor()) {
                     _currentSliderValue.value = value;
-                    repairDurability.value = (value - equippedShoe.value.durability).toInt();
+                    repairDurability.value = (value - equippedShoe.value.durability.floor()).toInt();
                     costTik.value = (value.toInt() - remainDurability.value).abs() * 100;
                   }
                 },
