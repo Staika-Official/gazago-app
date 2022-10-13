@@ -44,9 +44,19 @@ class ArchiveHome extends StatelessWidget {
                         mainAxisAlignment: MainAxisAlignment.start,
                         crossAxisAlignment: CrossAxisAlignment.center,
                         children: [
-                          CircleAvatar(
-                            radius: 21,
-                            child: archive.type == ExerciseType.hiking.name.toUpperCase() ? iconArchiveHiking : iconArchiveWalking,
+                          Stack(
+                            children: [
+                              CircleAvatar(
+                                radius: 21,
+                                child: archive.type == ExerciseType.hiking.name.toUpperCase() ? iconArchiveHiking : iconArchiveWalking,
+                              ),
+                              if (controller.selectedItem.value.badgeIssueId != null)
+                                Positioned(
+                                  right: 0,
+                                  bottom: 0,
+                                  child: Image.asset('assets/images/archive/ico_badge.png', width: 15, height: 20),
+                                ),
+                            ],
                           ),
                           Padding(
                             padding: const EdgeInsets.only(

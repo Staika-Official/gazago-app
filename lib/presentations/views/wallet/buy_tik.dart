@@ -48,7 +48,7 @@ class BuyTik extends StatelessWidget {
                       mainAxisSize: MainAxisSize.min,
                       children: [
                         CircleAvatar(
-                          foregroundImage: tik.meta?.logoUrl != '' ? CachedNetworkImageProvider(tik.meta!.logoUrl) : Svg('assets/images/ico_token_tik.svg') as ImageProvider,
+                          foregroundImage: tik.meta?.logoUrl != '' ? CachedNetworkImageProvider(tik.meta!.logoUrl) : Svg('assets/images/common/ico_token_tik.svg') as ImageProvider,
                         ),
                         Text('${controller.buyTikAmount.value} ${tik.meta!.symbol}'),
                       ],

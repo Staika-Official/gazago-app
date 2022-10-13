@@ -19,7 +19,7 @@ class ArchiveDetail extends StatelessWidget {
       titleText: '${formatDateUntilDay(controller.selectedItem.value.startedDate)} 기록',
       trailingChild: InkWell(
         child: IconButton(
-          onPressed: null,
+          onPressed: () => controller.deleteItem(controller.selectedItem.value.id!),
           icon: iconWasteBasket,
           constraints: const BoxConstraints(
             minWidth: 20,
@@ -47,12 +47,12 @@ class ArchiveDetail extends StatelessWidget {
                               radius: 21,
                               child: controller.selectedItem.value.type == ExerciseType.hiking.name.toUpperCase() ? iconArchiveHiking : iconArchiveWalking,
                             ),
-                            // if (controller.selectedItem.value.badgeIssueId != null)
-                            Positioned(
-                              right: 0,
-                              bottom: 0,
-                              child: Image.asset('assets/images/archive/ico_badge.png', width: 15, height: 20),
-                            ),
+                            if (controller.selectedItem.value.badgeIssueId != null)
+                              Positioned(
+                                right: 0,
+                                bottom: 0,
+                                child: Image.asset('assets/images/archive/ico_badge.png', width: 15, height: 20),
+                              ),
                           ],
                         ),
                       ),
@@ -155,12 +155,12 @@ class ArchiveDetail extends StatelessWidget {
                   tiltGestureEnable: false,
                   mapType: MapType.Navi,
                   initialCameraPosition: CameraPosition(
-                    target: controller.locations.first,
+                    target: controller.locations.length > 1 ? controller.locations.first : LatLng(37.5525, 126.9883),
                   ),
                   pathOverlays: {
                     PathOverlay(
                       PathOverlayId('detail path'),
-                      controller.locations.length > 1 ? controller.locations : [controller.locations.first, controller.locations.first],
+                      controller.locations.length > 1 ? controller.locations : [LatLng(37.5551, 126.9933), LatLng(37.5551, 126.9933)],
                       width: 3,
                       color: Colors.red,
                       outlineColor: Colors.white,

@@ -90,27 +90,39 @@ class ActivityMixin {
   }
 
   void initExerciseTimer() {
-    exerciseTimer ??= Timer.periodic(const Duration(seconds: 1), (timer) {
+    if (exerciseTimer != null) {
+      exerciseTimer = null;
+    }
+
+    exerciseTimer = Timer.periodic(const Duration(seconds: 1), (timer) {
       exerciseTime.value++;
     });
   }
 
   void initStepStream() {
-    stepSubscription ??= Pedometer.stepCountStream.listen((StepCount event) {
-      exerciseSteps.value++;
-    });
-    stepSubscription!.onError((error) {
-      print(error);
-    });
+    if (stepSubscription != null && stepSubscription!.isPaused) {
+      stepSubscription?.resume();
+    } else {
+      stepSubscription ??= Pedometer.stepCountStream.listen((StepCount event) {
+        exerciseSteps.value++;
+      });
+      stepSubscription!.onError((error) {
+        print(error);
+      });
+    }
   }
 
   void initPedestrianStatusStream() {
-    pedestrianStatusSubscription ??= Pedometer.pedestrianStatusStream.listen((PedestrianStatus event) {
-      pedestrianStatus.value = event.status.toUpperCase();
-    });
-    stepSubscription!.onError((error) {
-      print(error);
-    });
+    if (pedestrianStatusSubscription != null && pedestrianStatusSubscription!.isPaused) {
+      pedestrianStatusSubscription?.resume();
+    } else {
+      pedestrianStatusSubscription ??= Pedometer.pedestrianStatusStream.listen((PedestrianStatus event) {
+        pedestrianStatus.value = event.status.toUpperCase();
+      });
+      stepSubscription!.onError((error) {
+        print(error);
+      });
+    }
   }
 
   void startExercise(ExerciseType exerciseType, ChallengeModel? challenge) async {
@@ -186,6 +198,7 @@ class ActivityMixin {
     if (updateTimer != null) {
       updateTimer = null;
     }
+
     updateTimer = Timer.periodic(
       Duration(milliseconds: updateInterval),
       (timer) {
@@ -219,6 +232,15 @@ class ActivityMixin {
   void initializeStopTimer() {
     stopTimer?.cancel();
     stopTimer = null;
+  }
+
+  void pauseExercise() {
+    updateTimer?.cancel();
+    exerciseTimer?.cancel();
+    stepSubscription?.pause();
+    pedestrianStatusSubscription?.pause();
+    exerciseState.value = ExerciseState.paused;
+    updateExercise();
   }
 
   void endExercise() async {

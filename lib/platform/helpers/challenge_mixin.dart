@@ -30,7 +30,11 @@ class ChallengeMixin {
 
   void selectChallenge(ChallengeModel challenge) {
     selectedChallenge.value = challenge;
-    _challengeMapController.moveCamera(CameraUpdate.toCameraPosition(CameraPosition(target: LatLng(challenge.startLat!, challenge.startLon!),),));
+    _challengeMapController.moveCamera(CameraUpdate.toCameraPosition(
+      CameraPosition(
+        target: LatLng(challenge.startLat!, challenge.startLon!),
+      ),
+    ));
   }
 
   void detectChallengeZone(Position location) {
@@ -53,10 +57,7 @@ class ChallengeMixin {
 
       if (hasArrived && userState.exercise!.badgeIssueId == null) {
         VoidCallback successCallback = () {
-          Get.snackbar(
-            '뱃지 발급',
-            '뱃지가 발급되었습니다.',
-          );
+          Get.snackbar('뱃지 발급', '뱃지가 발급되었습니다.', colorText: Colors.white);
         };
 
         InventoryBadgeModel badge = await BadgeService.fetchUserIssuanceBadge(userState.exercise!.id!, successCallback);

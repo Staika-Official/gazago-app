@@ -201,7 +201,7 @@ class ActivityController extends GetxController with ActivityMixin, ChallengeMix
 
     if (userState.value.exercise != null && userState.value.exercise!.state == 'ONGOING') {
       exerciseState.value = ExerciseState.ongoing;
-      continueExercise();
+      // continueExercise();
     }
   }
 
@@ -347,7 +347,7 @@ class ActivityController extends GetxController with ActivityMixin, ChallengeMix
   }
 
   void getActivityRoute() {
-    if (exerciseState.value == ExerciseState.ongoing) {
+    if ([ExerciseState.ongoing, ExerciseState.paused].any((state) => state == exerciseState.value)) {
       Get.toNamed(Routes.activityActive);
     } else {
       Get.dialog(const ActivitySelect(), barrierDismissible: false, barrierColor: Color.fromRGBO(0, 0, 0, 0.85));
@@ -366,7 +366,7 @@ class ActivityController extends GetxController with ActivityMixin, ChallengeMix
   // }
 
   void selectExerciseType(ExerciseType exerciseType) {
-    this.selectedExerciseType.value = exerciseType;
+    selectedExerciseType.value = exerciseType;
     Get.offNamed(Routes.activityActive);
   }
 
@@ -404,11 +404,15 @@ class ActivityController extends GetxController with ActivityMixin, ChallengeMix
 
     locationSubscription ??= Geolocator.getPositionStream(locationSettings: locationSettings).listen((Position position) {
       currentLocation.value = position;
-      exerciseData.add(UserExerciseModel(
-        altitude: position.altitude,
-        speed: position.speed,
-      ));
-      coordinates.add(LatLng(position.latitude, position.longitude));
+
+      if (exerciseState.value == ExerciseState.ongoing) {
+        exerciseData.add(UserExerciseModel(
+          altitude: position.altitude,
+          speed: position.speed,
+        ));
+        coordinates.add(LatLng(position.latitude, position.longitude));
+      }
+
       detectChallengeZone(position);
       autoFinishChallenge(userState.value);
     });
@@ -430,7 +434,7 @@ class ActivityController extends GetxController with ActivityMixin, ChallengeMix
       currentLocation.value = location;
       isListeningToLocation.value = true;
     }).onError((error, stackTrace) {
-      Get.snackbar('위치정보 수신실패', '위치정보를 가져오지 못했습니다.');
+      Get.snackbar('위치정보 수신실패', '위치정보를 가져오지 못했습니다.', colorText: Colors.white);
     });
   }
 

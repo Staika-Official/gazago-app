@@ -1,3 +1,5 @@
+import 'dart:ui';
+
 import 'package:dio/dio.dart';
 import 'package:gaza_go/constants/enums.dart';
 import 'package:gaza_go/platform/apis/archive.dart';
@@ -20,6 +22,14 @@ class ArchiveService {
   static Future<ArchiveDetailItemModel> getArchiveItem(int archiveId) async {
     Response res = await ArchiveApi.getArchiveItem(userId!, archiveId);
     return ArchiveDetailItemModel.fromJson(res.data);
-    ;
+  }
+
+  static Future<void> deleteArchiveItem(int archiveId, VoidCallback successCallback, VoidCallback errorCallback) async {
+    Response res = await ArchiveApi.deleteArchiveItem(userId!, archiveId);
+    if (res.statusCode == 204) {
+      successCallback();
+    } else {
+      errorCallback();
+    }
   }
 }

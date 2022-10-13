@@ -304,14 +304,13 @@ class ActivityActive extends StatelessWidget {
   Widget build(BuildContext context) {
     ActivityController controller = Get.find();
 
-    return DefaultContainer(
-      backgroundColor: Color(0xff2A2B33),
-      onBackButtonTap: () {
-        Get.offNamed(Routes.home);
-      },
-      titleText: '운동중',
-      child: Obx(() {
-        return Column(
+    return Obx(() {
+      return DefaultContainer(
+        onBackButtonTap: () {
+          Get.offNamed(Routes.home);
+        },
+        titleText: controller.exerciseState.value.label,
+        child: Column(
           mainAxisSize: MainAxisSize.max,
           children: [
             Padding(
@@ -509,7 +508,7 @@ class ActivityActive extends StatelessWidget {
                           'assets/images/activity/ico_map.svg',
                         ),
                       ),
-                      [ExerciseState.ongoing, ExerciseState.paused].any((state) => controller.exerciseState.value == state)
+                      [ExerciseState.ongoing].any((state) => controller.exerciseState.value == state)
                           ? Row(
                               children: [
                                 GestureDetector(
@@ -544,7 +543,7 @@ class ActivityActive extends StatelessWidget {
                                   child: CircularButton(
                                     radius: 78,
                                     color: Color(0xffFF2222),
-                                    onTap: () => null,
+                                    onTap: () => controller.pauseExercise(),
                                     child: Icon(Icons.pause, color: Colors.white, size: 35),
                                   ),
                                 )
@@ -553,13 +552,21 @@ class ActivityActive extends StatelessWidget {
                           : CircularButton(
                               radius: 90,
                               color: Color(0xffFF2222),
-                              onTap: () => controller.startExercise(controller.selectedExerciseType.value, controller.selectedChallenge.value),
+                              onTap: () {
+                                if (controller.exerciseState.value == ExerciseState.paused) {
+                                  controller.continueExercise();
+                                } else {
+                                  controller.startExercise(controller.selectedExerciseType.value, controller.selectedChallenge.value);
+                                }
+                              },
                               child: Icon(Icons.play_arrow, color: Colors.white, size: 35),
                             ),
                       CircularButton(
                         radius: 50,
                         color: Colors.white,
-                        onTap: () => null,
+                        onTap: () {
+                          Get.snackbar('[기능 구현 필요]', '구현 예정인 기능입니다.', colorText: Colors.white);
+                        },
                         child: SvgPicture.asset(
                           'assets/images/activity/ico_item.svg',
                         ),
@@ -582,9 +589,9 @@ class ActivityActive extends StatelessWidget {
             //   ),
             // ),
           ],
-        );
-      }),
-    );
+        ),
+      );
+    });
   }
 }
 

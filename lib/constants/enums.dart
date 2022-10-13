@@ -81,6 +81,23 @@ enum ExerciseState {
   finished,
 }
 
+extension ExerciseStateLabel on ExerciseState {
+  String get label {
+    switch (this) {
+      case ExerciseState.init:
+        return '초기화 완료';
+      case ExerciseState.ready:
+        return '운동 준비중';
+      case ExerciseState.ongoing:
+        return '운동 중';
+      case ExerciseState.paused:
+        return '운동 일시정지';
+      case ExerciseState.finished:
+        return '운동 완료';
+    }
+  }
+}
+
 enum RoundType {
   round,
   ceil,
