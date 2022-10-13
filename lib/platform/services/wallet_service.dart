@@ -39,8 +39,15 @@ class WalletService {
     return PayResponseModel.fromJson(res.data);
   }
 
-  static Future<TokenInfoModel> getSpendingMetaData(String mint) async {
-    Response res = await WalletApi.getSpendingMetaData(mint);
+  static Future<List<TokenInfoModel>> getSpendingMetaData() async {
+    Response res = await WalletApi.getSpendingMetaData();
+    List<TokenInfoModel> tokenData = [];
+    res.data.forEach((item) => tokenData.add(TokenInfoModel.fromJson(item)));
+    return tokenData;
+  }
+
+  static Future<TokenInfoModel> getSpendingMetaDataByItem(String mint) async {
+    Response res = await WalletApi.getSpendingMetaDataByItem(mint);
     return TokenInfoModel.fromJson(res.data);
   }
 }

@@ -1,9 +1,11 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_svg_provider/flutter_svg_provider.dart';
+import 'package:flutter_svg/flutter_svg.dart';
+import 'package:flutter_svg_provider/flutter_svg_provider.dart' as SP;
 import 'package:gaza_go/platform/controllers/wallet_master_controller.dart';
 import 'package:gaza_go/platform/helpers/base_helper.dart';
 import 'package:gaza_go/presentations/components/default_container.dart';
+import 'package:gaza_go/presentations/styles/styled_text.dart';
 import 'package:get/get.dart';
 
 class WalletDetail extends StatelessWidget {
@@ -43,22 +45,64 @@ class WalletDetail extends StatelessWidget {
     return controller.assetDetail.value.transactions
         .map(
           (transaction) => Container(
-            child: Column(
-              children: [
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Text(transaction.description!),
-                    Text('${transaction.uiAmountString!} ${transaction.symbol!}'),
-                  ],
+            padding: EdgeInsets.only(left: 3, right: 3, top: 25, bottom: 13),
+            decoration: BoxDecoration(
+              border: BorderDirectional(
+                bottom: BorderSide(
+                  color: Colors.white,
                 ),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Text(formatDate(transaction.timestamp!)),
-                    Text(transaction.confirmationStatus!),
-                  ],
-                )
+              ),
+            ),
+            child: Row(
+              mainAxisSize: MainAxisSize.max,
+              children: [
+                Expanded(
+                  child: Column(
+                    children: [
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          StyledText(
+                            transaction.description!,
+                            fontSize: 20,
+                            lineHeight: 20,
+                            letterSpacing: -0.5,
+                            fontWeight: 600,
+                          ),
+                          StyledText(
+                            '${transaction.uiAmountString!} ${transaction.symbol!}',
+                            fontSize: 18,
+                            lineHeight: 20,
+                            letterSpacing: -0.5,
+                            fontWeight: 700,
+                          ),
+                        ],
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.only(top: 8),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            StyledText(
+                              formatDate(transaction.timestamp!),
+                              fontSize: 14,
+                              lineHeight: 10,
+                              fontWeight: 500,
+                              color: Color(0xff7C7F82),
+                            ),
+                            StyledText(
+                              transaction.confirmationStatus!,
+                              fontSize: 12,
+                              lineHeight: 10,
+                              fontWeight: 600,
+                              color: Color(0xff7C7F82),
+                            ),
+                          ],
+                        ),
+                      )
+                    ],
+                  ),
+                ),
               ],
             ),
           ),
@@ -70,62 +114,94 @@ class WalletDetail extends StatelessWidget {
   Widget build(BuildContext context) {
     WalletMasterController controller = Get.find();
 
-    return DefaultContainer(
-      child: Obx(() {
-        return Column(
+    return Obx(() {
+      return DefaultContainer(
+        backgroundColor: Color(0xff1D1D26),
+        titleText: controller.selectedAsset.value.meta!.name,
+        child: Column(
           children: [
-            Row(
-              mainAxisSize: MainAxisSize.max,
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                CircleAvatar(
-                  foregroundImage: controller.selectedAsset.value.meta?.logoUrl != ''
-                      ? CachedNetworkImageProvider(controller.selectedAsset.value.meta!.logoUrl)
-                      : Svg('assets/images/common/ico_token_tik.svg') as ImageProvider,
-                ),
-                Padding(
-                  padding: const EdgeInsets.only(left: 8.0),
-                  child: Text(controller.selectedAsset.value.meta!.name),
-                )
-              ],
+            // controller.selectedAsset.value.price!.isNotEmpty
+            //     ? Padding(
+            //         padding: const EdgeInsets.only(top: 8.0),
+            //         child: Text('\u2248 \$100'),
+            //       )
+            //     : Container(),
+            CircleAvatar(
+              foregroundImage: controller.selectedAsset.value.meta?.logoUrl != ''
+                  ? CachedNetworkImageProvider(controller.selectedAsset.value.meta!.logoUrl)
+                  : SP.Svg('assets/images/common/ico_token_tik.svg') as ImageProvider,
             ),
             Padding(
-              padding: const EdgeInsets.only(top: 8.0),
-              child: Text('${'${controller.assetDetail.value.balance.amount} ${controller.selectedAsset.value.meta!.symbol}'} '),
+              padding: const EdgeInsets.only(top: 14),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  StyledText(
+                    controller.assetDetail.value.balance.amount.toString(),
+                    fontSize: 28,
+                    lineHeight: 28,
+                    fontWeight: 600,
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.only(left: 5),
+                    child: StyledText(
+                      controller.selectedAsset.value.meta!.symbol,
+                      fontSize: 28,
+                      lineHeight: 28,
+                      fontWeight: 500,
+                    ),
+                  ),
+                ],
+              ),
             ),
-            controller.selectedAsset.value.price!.isNotEmpty
-                ? Padding(
-                    padding: const EdgeInsets.only(top: 8.0),
-                    child: Text('\u2248 \$100'),
-                  )
-                : Container(),
             // SizedBox(
             //   width: double.infinity,
             //   child: renderButtons(controller),
             // ),
-            Padding(
-              padding: EdgeInsets.all(10),
-              child: SizedBox(
-                  width: double.infinity,
-                  child: Text(
-                    '거래내역',
-                    textAlign: TextAlign.start,
-                  )),
+            Container(
+              color: Color(0xff2A2B33),
+              height: 6,
+              width: double.infinity,
+              margin: EdgeInsets.only(top: 50),
             ),
             Expanded(
               child: controller.assetDetail.value.transactions.isEmpty
-                  ? Center(
-                      child: Text('거래내역이 없습니다.'),
-                    )
+                  ? LayoutBuilder(builder: (context, constraints) {
+                      return Padding(
+                        padding: EdgeInsets.only(bottom: constraints.maxHeight / 3 * 1),
+                        child: Center(
+                          child: Column(
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              SvgPicture.asset('assets/images/wallet/ico_empty.svg'),
+                              Padding(
+                                padding: const EdgeInsets.only(top: 20),
+                                child: StyledText(
+                                  '거래내역이 없습니다.',
+                                  color: Color(0xff7b7b7b),
+                                  fontSize: 16,
+                                  lineHeight: 10,
+                                  fontWeight: 500,
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                      );
+                    })
                   : SingleChildScrollView(
-                      child: Column(
-                        children: [...renderTransactionList(controller)],
+                      physics: ClampingScrollPhysics(),
+                      child: Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 16),
+                        child: Column(
+                          children: [...renderTransactionList(controller)],
+                        ),
                       ),
                     ),
             ),
           ],
-        );
-      }),
-    );
+        ),
+      );
+    });
   }
 }

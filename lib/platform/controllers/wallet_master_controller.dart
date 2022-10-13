@@ -31,6 +31,14 @@ class WalletMasterController extends GetxService {
     return RxList(balanceUiList);
   }
 
+  Rx<AssetTokenBalanceUiModel> get tik {
+    return Rx(spendingTokenUiList.singleWhere((token) => token.mint == '1'));
+  }
+
+  Rx<AssetTokenBalanceUiModel> get stik {
+    return Rx(spendingTokenUiList.singleWhere((token) => token.mint == '2'));
+  }
+
   @override
   void onInit() async {
     await getSpendingWalletBalances();
@@ -49,13 +57,7 @@ class WalletMasterController extends GetxService {
   }
 
   Future<void> getSpendingMetaData() async {
-    List<TokenInfoModel> tokenInfoList = List.empty(growable: true);
-    for (AssetTokenBalanceModel token in spendingTokens.value.tokens) {
-      TokenInfoModel tokenMetaData = await WalletService.getSpendingMetaData(token.mint!);
-      tokenInfoList.add(tokenMetaData);
-    }
-
-    spendingTokenInfoList.value = tokenInfoList;
+    spendingTokenInfoList.value = await WalletService.getSpendingMetaData();
   }
 
   Future<void> getBuyTikCommission() async {
@@ -95,6 +97,7 @@ class WalletMasterController extends GetxService {
       confirmationBottomSheet,
       isDismissible: false,
       enableDrag: false,
+      isScrollControlled: true,
     );
   }
 }

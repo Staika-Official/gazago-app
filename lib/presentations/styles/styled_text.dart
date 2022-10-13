@@ -9,6 +9,8 @@ class StyledText extends StatelessWidget {
   final int fontWeight;
   final double lineHeight;
   final double letterSpacing;
+  final TextAlign textAlign;
+
   const StyledText(
     this.text, {
     Key? key,
@@ -19,6 +21,7 @@ class StyledText extends StatelessWidget {
     this.fontWeight = 400,
     this.backgroundColor = Colors.transparent,
     this.letterSpacing = 1,
+    this.textAlign = TextAlign.start,
   }) : super(key: key);
 
   FontWeight get getFontWeight {
@@ -60,6 +63,7 @@ class StyledText extends StatelessWidget {
   Widget build(BuildContext context) {
     return Text(
       text,
+      textAlign: textAlign,
       style: TextStyle(
         fontSize: fontSize,
         fontFamily: fontFamily,

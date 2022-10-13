@@ -48,7 +48,13 @@ class WalletApi {
     });
   }
 
-  static Future<Response> getSpendingMetaData(String mint) async {
+  static Future<Response> getSpendingMetaData() async {
+    return await Api.client(serviceUrl: ServiceUrl.spendingWalletService).get('/tokens', queryParameters: {
+      'clientId': 'GAZAGO',
+    });
+  }
+
+  static Future<Response> getSpendingMetaDataByItem(String mint) async {
     return await Api.client(serviceUrl: ServiceUrl.spendingWalletService).get('/token/$mint', queryParameters: {
       'clientId': 'GAZAGO',
     });

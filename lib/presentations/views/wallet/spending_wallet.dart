@@ -10,11 +10,15 @@ class SpendingWallet extends StatelessWidget {
   List<Widget> renderInventoryList(WalletMasterController controller) {
     return controller.spendingTokenUiList
         .map(
-          (asset) => AssetItemCoin(
-            asset: asset,
-            onTap: () => controller.moveToWalletDetail(asset: asset, walletType: WalletType.inventory, assetType: asset.meta!.name.toUpperCase() == 'TAIKA' ? AssetType.token : AssetType.coin),
-            onTapButton: asset.meta!.name.toUpperCase() == 'TAIKA' ? () => controller.toBuyTik() : null,
-            buttonText: asset.meta!.name.toUpperCase() == 'TAIKA' ? '충전' : null,
+          (asset) => Padding(
+            padding: const EdgeInsets.only(top: 14, left: 21, right: 21),
+            child: AssetItemCoin(
+              asset: asset,
+              onTap: () => controller.moveToWalletDetail(asset: asset, walletType: WalletType.inventory, assetType: asset.meta!.name.toUpperCase() == 'TAIKA' ? AssetType.token : AssetType.coin),
+              onTapButton: asset.meta!.name.toUpperCase() == 'TAIKA' ? () => controller.toBuyTik() : null,
+              buttonText: asset.meta!.name.toUpperCase() == 'TAIKA' ? '충전' : null,
+              showPrice: false,
+            ),
           ),
         )
         .toList();
