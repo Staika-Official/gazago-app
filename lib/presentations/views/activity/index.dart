@@ -52,31 +52,33 @@ class ActivityHome extends StatelessWidget {
                                         ),
                                       ),
                                       stat.currentStat > 1.0
-                                          ? Container(
-                                              width: stat.currentStat > 20
-                                                  ? MediaQuery.of(context).size.width / (100 / stat.currentStat)
-                                                  : stat.currentStat < 2
-                                                      ? 0
-                                                      : 34,
-                                              decoration: BoxDecoration(
-                                                color: stat.currentStat < 20 ? const Color(0xFFFF2525) : const Color(0xFFCDFF41),
-                                                border: Border.all(
-                                                  width: 2,
-                                                  color: Colors.black,
-                                                ),
-                                                borderRadius: const BorderRadius.all(
-                                                  Radius.circular(30),
-                                                ),
-                                                boxShadow: const [
-                                                  BoxShadow(
+                                          ? LayoutBuilder(builder: (context, constraints) {
+                                              return Container(
+                                                width: stat.currentStat > 20
+                                                    ? constraints.maxWidth / (100 / stat.currentStat)
+                                                    : stat.currentStat < 2
+                                                        ? 0
+                                                        : 34,
+                                                decoration: BoxDecoration(
+                                                  color: stat.currentStat < 20 ? const Color(0xFFFF2525) : const Color(0xFFCDFF41),
+                                                  border: Border.all(
+                                                    width: 2,
                                                     color: Colors.black,
-                                                    offset: Offset(1, 0),
-                                                    blurRadius: 4.0,
-                                                    spreadRadius: 0.0,
                                                   ),
-                                                ],
-                                              ),
-                                            )
+                                                  borderRadius: const BorderRadius.all(
+                                                    Radius.circular(30),
+                                                  ),
+                                                  boxShadow: const [
+                                                    BoxShadow(
+                                                      color: Colors.black,
+                                                      offset: Offset(1, 0),
+                                                      blurRadius: 4.0,
+                                                      spreadRadius: 0.0,
+                                                    ),
+                                                  ],
+                                                ),
+                                              );
+                                            })
                                           : Container(),
                                     ],
                                   ),
@@ -105,31 +107,33 @@ class ActivityHome extends StatelessWidget {
                                         ),
                                       ),
                                       stat.currentStat > 1.0
-                                          ? Container(
-                                              width: stat.currentStat > 20
-                                                  ? MediaQuery.of(context).size.width / (100 / stat.currentStat)
-                                                  : stat.currentStat < 2
-                                                      ? 0
-                                                      : 34,
-                                              decoration: BoxDecoration(
-                                                color: stat.currentStat < 20 ? const Color(0xFFFF2525) : const Color(0xFFB85DFF),
-                                                border: Border.all(
-                                                  width: 2,
-                                                  color: Colors.black,
-                                                ),
-                                                borderRadius: const BorderRadius.all(
-                                                  Radius.circular(50),
-                                                ),
-                                                boxShadow: const [
-                                                  BoxShadow(
+                                          ? LayoutBuilder(builder: (context, constraints) {
+                                              return Container(
+                                                width: stat.currentStat > 20
+                                                    ? constraints.maxWidth / (100 / stat.currentStat)
+                                                    : stat.currentStat < 2
+                                                        ? 0
+                                                        : 34,
+                                                decoration: BoxDecoration(
+                                                  color: stat.currentStat < 20 ? const Color(0xFFFF2525) : const Color(0xFFB85DFF),
+                                                  border: Border.all(
+                                                    width: 2,
                                                     color: Colors.black,
-                                                    offset: Offset(1, 0),
-                                                    blurRadius: 4.0,
-                                                    spreadRadius: 0.0,
                                                   ),
-                                                ],
-                                              ),
-                                            )
+                                                  borderRadius: const BorderRadius.all(
+                                                    Radius.circular(50),
+                                                  ),
+                                                  boxShadow: const [
+                                                    BoxShadow(
+                                                      color: Colors.black,
+                                                      offset: Offset(1, 0),
+                                                      blurRadius: 4.0,
+                                                      spreadRadius: 0.0,
+                                                    ),
+                                                  ],
+                                                ),
+                                              );
+                                            })
                                           : Container(),
                                     ],
                                   ),
