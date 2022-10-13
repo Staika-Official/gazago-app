@@ -17,7 +17,7 @@ class DefaultContainer extends StatelessWidget {
   const DefaultContainer({
     Key? key,
     required this.child,
-    this.backgroundColor = Colors.white,
+    this.backgroundColor = const Color(0xff2A2B33),
     this.disableSafeArea = false,
     this.customHeader,
     this.isLeadingShow = true,

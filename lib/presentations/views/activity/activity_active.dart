@@ -306,7 +306,6 @@ class ActivityActive extends StatelessWidget {
 
     return Obx(() {
       return DefaultContainer(
-        backgroundColor: Color(0xff2A2B33),
         onBackButtonTap: () {
           Get.offNamed(Routes.home);
         },
