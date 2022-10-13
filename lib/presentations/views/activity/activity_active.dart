@@ -509,7 +509,7 @@ class ActivityActive extends StatelessWidget {
                           'assets/images/activity/ico_map.svg',
                         ),
                       ),
-                      [ExerciseState.ongoing, ExerciseState.paused].any((state) => controller.exerciseState.value == state)
+                      [ExerciseState.ongoing].any((state) => controller.exerciseState.value == state)
                           ? Row(
                               children: [
                                 GestureDetector(
@@ -544,7 +544,7 @@ class ActivityActive extends StatelessWidget {
                                   child: CircularButton(
                                     radius: 78,
                                     color: Color(0xffFF2222),
-                                    onTap: () => null,
+                                    onTap: () => controller.pauseExercise(),
                                     child: Icon(Icons.pause, color: Colors.white, size: 35),
                                   ),
                                 )
@@ -553,7 +553,13 @@ class ActivityActive extends StatelessWidget {
                           : CircularButton(
                               radius: 90,
                               color: Color(0xffFF2222),
-                              onTap: () => controller.startExercise(controller.selectedExerciseType.value, controller.selectedChallenge.value),
+                              onTap: () {
+                                if (controller.exerciseState.value == ExerciseState.paused) {
+                                  controller.continueExercise();
+                                } else {
+                                  controller.startExercise(controller.selectedExerciseType.value, controller.selectedChallenge.value);
+                                }
+                              },
                               child: Icon(Icons.play_arrow, color: Colors.white, size: 35),
                             ),
                       CircularButton(

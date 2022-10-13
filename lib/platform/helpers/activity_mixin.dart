@@ -90,7 +90,11 @@ class ActivityMixin {
   }
 
   void initExerciseTimer() {
-    exerciseTimer ??= Timer.periodic(const Duration(seconds: 1), (timer) {
+    if (exerciseTimer != null) {
+      exerciseTimer = null;
+    }
+
+    exerciseTimer = Timer.periodic(const Duration(seconds: 1), (timer) {
       exerciseTime.value++;
     });
   }
@@ -186,6 +190,7 @@ class ActivityMixin {
     if (updateTimer != null) {
       updateTimer = null;
     }
+
     updateTimer = Timer.periodic(
       Duration(milliseconds: updateInterval),
       (timer) {
@@ -219,6 +224,13 @@ class ActivityMixin {
   void initializeStopTimer() {
     stopTimer?.cancel();
     stopTimer = null;
+  }
+
+  void pauseExercise() {
+    updateTimer?.cancel();
+    exerciseTimer?.cancel();
+    updateExercise();
+    exerciseState.value = ExerciseState.paused;
   }
 
   void endExercise() async {

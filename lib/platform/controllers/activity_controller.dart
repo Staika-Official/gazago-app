@@ -348,7 +348,7 @@ class ActivityController extends GetxController with ActivityMixin, ChallengeMix
   }
 
   void getActivityRoute() {
-    if (exerciseState.value == ExerciseState.ongoing) {
+    if ([ExerciseState.ongoing, ExerciseState.paused].any((state) => state == exerciseState.value)) {
       Get.toNamed(Routes.activityActive);
     } else {
       Get.dialog(const ActivitySelect(), barrierDismissible: false, barrierColor: Color.fromRGBO(0, 0, 0, 0.85));
@@ -427,14 +427,12 @@ class ActivityController extends GetxController with ActivityMixin, ChallengeMix
   }
 
   Future<void> getCurrentLocation() async {
-
     await Geolocator.getCurrentPosition(desiredAccuracy: LocationAccuracy.bestForNavigation, timeLimit: Duration(seconds: 5)).then((location) {
       currentLocation.value = location;
       isListeningToLocation.value = true;
     }).onError((error, stackTrace) {
       Get.snackbar('위치정보 수신실패', '위치정보를 가져오지 못했습니다.');
     });
-
   }
 
   Future<void> initializeActivity() async {
