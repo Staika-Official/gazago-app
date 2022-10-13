@@ -81,7 +81,7 @@ class WalletDetail extends StatelessWidget {
                 CircleAvatar(
                   foregroundImage: controller.selectedAsset.value.meta?.logoUrl != ''
                       ? CachedNetworkImageProvider(controller.selectedAsset.value.meta!.logoUrl)
-                      : Svg('assets/images/ico_token_tik.svg') as ImageProvider,
+                      : Svg('assets/images/common/ico_token_tik.svg') as ImageProvider,
                 ),
                 Padding(
                   padding: const EdgeInsets.only(left: 8.0),
