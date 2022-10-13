@@ -341,224 +341,216 @@ class ActivityHome extends StatelessWidget {
           alignment: Alignment(100, 1.5),
         ),
       ),
-      child: Padding(
-        padding: const EdgeInsets.all(20.0),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                StyledText(
-                  '가자고와 함께 \n등산하고 뱃지를 받아보자고-!',
-                  color: const Color(0xFF0EE6F3),
-                  fontWeight: 700,
-                  fontSize: 24,
-                  lineHeight: 32,
-                ),
-                Container(
-                  margin: const EdgeInsets.symmetric(vertical: 25),
-                  decoration: BoxDecoration(
+      child: SingleChildScrollView(
+        physics: ClampingScrollPhysics(),
+        child: Padding(
+          padding: const EdgeInsets.all(20.0),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  StyledText(
+                    '가자고와 함께 \n등산하고 뱃지를 받아보자고-!',
                     color: const Color(0xFF0EE6F3),
-                    border: Border.all(
-                      width: 1,
-                      color: Colors.black,
-                    ),
-                    borderRadius: const BorderRadius.all(
-                      Radius.circular(15),
-                    ),
-                    boxShadow: const [
-                      BoxShadow(
-                        color: Color(0xFF000000),
-                        spreadRadius: 0,
-                        blurRadius: 0,
-                        offset: Offset(0, 4), // changes position of shadow
-                      ),
-                    ],
+                    fontWeight: 700,
+                    fontSize: 24,
+                    lineHeight: 32,
                   ),
-                  child: Padding(
-                    padding: const EdgeInsets.symmetric(vertical: 15.0, horizontal: 20.0),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.start,
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      children: [
-                        iconActivityTokenGo,
-                        Padding(
-                          padding: const EdgeInsets.only(left: 10.0),
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              StyledText(
-                                'Today',
-                                fontFamily: 'Montserrat',
-                                color: Colors.black,
-                                fontWeight: 500,
-                                fontSize: 13,
-                                lineHeight: 13,
-                              ),
-                              Obx(() {
-                                return Row(
-                                  children: [
-                                    StyledText(
-                                      '${controller.userState.value.state != null ? controller.userState.value.state!.dailyGoReward.toString() : 0}',
-                                      fontFamily: 'Montserrat',
-                                      color: Colors.black,
-                                      fontWeight: 600,
-                                      fontSize: 30,
-                                      lineHeight: 34,
-                                    ),
-                                    Padding(
-                                      padding: const EdgeInsets.only(left: 2.0, right: 5.0),
-                                      child: StyledText(
-                                        'GO',
-                                        fontFamily: 'Montserrat',
-                                        color: Colors.black,
-                                        fontWeight: 500,
-                                        fontSize: 18,
-                                        lineHeight: 26,
-                                      ),
-                                    ),
-                                  ],
-                                );
-                              }),
-                            ],
-                          ),
-                        )
+                  Container(
+                    margin: const EdgeInsets.symmetric(vertical: 25),
+                    decoration: BoxDecoration(
+                      color: const Color(0xFF0EE6F3),
+                      border: Border.all(
+                        width: 1,
+                        color: Colors.black,
+                      ),
+                      borderRadius: const BorderRadius.all(
+                        Radius.circular(15),
+                      ),
+                      boxShadow: const [
+                        BoxShadow(
+                          color: Color(0xFF000000),
+                          spreadRadius: 0,
+                          blurRadius: 0,
+                          offset: Offset(0, 4), // changes position of shadow
+                        ),
                       ],
                     ),
-                  ),
-                ),
-              ],
-            ),
-            Obx(() {
-              return Column(
-                children: [
-                  ...renderStatList(controller, context),
-                ],
-              );
-            }),
-            Padding(
-              padding: const EdgeInsets.only(top: 40.0),
-              child: StyledText(
-                '나의 운동 스토리',
-                color: Color(0xFF8A8A8A),
-                fontSize: 18,
-                fontWeight: 600,
-              ),
-            ),
-            Obx(() {
-              return SafeArea(
-                child: SingleChildScrollView(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    children: <Widget>[
-                      Padding(
-                        padding: const EdgeInsets.only(top: 14.0),
-                        child: SizedBox(
-                          height: 134,
-                          child: PageView.builder(
-                            controller: slideController,
-                            itemCount: renderActivitySumList(controller).length ~/ 2,
-                            itemBuilder: (_, index) {
-                              if (index == 0) {
-                                return Row(
-                                  children: [
-                                    Expanded(child: renderActivitySumList(controller)[index]),
-                                    Expanded(child: renderActivitySumList(controller)[index + 1]),
-                                  ],
-                                );
-                              } else {
-                                return Row(
-                                  children: [
-                                    Expanded(child: renderActivitySumList(controller)[index + 1]),
-                                    Expanded(child: renderActivitySumList(controller)[index + 2]),
-                                  ],
-                                );
-                              }
-                            },
-                          ),
-                        ),
-                      ),
-                      Padding(
-                        padding: const EdgeInsets.only(top: 10.0),
-                        child: SmoothPageIndicator(
-                          controller: slideController,
-                          count: renderActivitySumList(controller).length ~/ 2,
-                          effect: const ExpandingDotsEffect(
-                            dotHeight: 5, dotWidth: 5, activeDotColor: Color(0xFFA6A9B4), dotColor: Color(0xFF666870),
-                            // strokeWidth: 5,
-                          ),
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-              );
-            }),
-            Expanded(
-              child: Stack(
-                children: [
-                  Center(
-                    child: Obx(() {
-                      return Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
+                    child: Padding(
+                      padding: const EdgeInsets.symmetric(vertical: 15.0, horizontal: 20.0),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        crossAxisAlignment: CrossAxisAlignment.center,
                         children: [
-                          Container(
-                            decoration: BoxDecoration(
-                              color: const Color(0xFF0EE6F3),
-                              border: Border.all(
-                                width: 2,
-                                color: Colors.black,
-                              ),
-                              borderRadius: const BorderRadius.all(
-                                Radius.circular(115),
-                              ),
-                              boxShadow: const [
-                                BoxShadow(
+                          iconActivityTokenGo,
+                          Padding(
+                            padding: const EdgeInsets.only(left: 10.0),
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                StyledText(
+                                  'Today',
+                                  fontFamily: 'Montserrat',
                                   color: Colors.black,
-                                  offset: Offset(0, 4),
-                                  blurRadius: 0.0,
-                                  spreadRadius: 0.0,
+                                  fontWeight: 500,
+                                  fontSize: 13,
+                                  lineHeight: 13,
                                 ),
+                                Obx(() {
+                                  return Row(
+                                    children: [
+                                      StyledText(
+                                        '${controller.userState.value.state != null ? controller.userState.value.state!.dailyGoReward.toString() : 0}',
+                                        fontFamily: 'Montserrat',
+                                        color: Colors.black,
+                                        fontWeight: 600,
+                                        fontSize: 30,
+                                        lineHeight: 34,
+                                      ),
+                                      Padding(
+                                        padding: const EdgeInsets.only(left: 2.0, right: 5.0),
+                                        child: StyledText(
+                                          'GO',
+                                          fontFamily: 'Montserrat',
+                                          color: Colors.black,
+                                          fontWeight: 500,
+                                          fontSize: 18,
+                                          lineHeight: 26,
+                                        ),
+                                      ),
+                                    ],
+                                  );
+                                }),
                               ],
                             ),
-                            child: MaterialButton(
-                              onPressed: [ExerciseState.ongoing, ExerciseState.paused, ExerciseState.ready].any((state) => controller.exerciseState.value == state)
-                                  ? () => controller.requestExerciseInitialization()
-                                  : null,
-                              shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(115),
-                              ),
-                              color: const Color(0xFF0EE6F3),
-                              height: 115,
-                              minWidth: 115,
-                              child: StyledText(
-                                [ExerciseState.ongoing, ExerciseState.paused].any((state) => controller.exerciseState.value == state) ? 'Continue' : 'GO',
-                                fontWeight: 800,
-                                fontFamily: 'Montserrat',
-                                fontSize: [ExerciseState.ongoing, ExerciseState.paused].any((state) => controller.exerciseState.value == state) ? 18 : 34,
-                                lineHeight: [ExerciseState.ongoing, ExerciseState.paused].any((state) => controller.exerciseState.value == state) ? 18 : 34,
-                                color: Colors.black,
-                                letterSpacing: 0.5,
-                              ),
-                            ),
-                          ),
+                          )
                         ],
-                      );
-                    }),
+                      ),
+                    ),
                   ),
-                  // Positioned(
-                  //   bottom: 10,
-                  //   right: 10,
-                  //   child: ElevatedButton(
-                  //     onPressed: () => null,
-                  //     child: const Icon(Icons.terrain),
-                  //   ),
-                  // )
                 ],
               ),
-            )
-          ],
+              Obx(() {
+                return Column(
+                  children: [
+                    ...renderStatList(controller, context),
+                  ],
+                );
+              }),
+              Padding(
+                padding: const EdgeInsets.only(top: 40.0),
+                child: StyledText(
+                  '나의 운동 스토리',
+                  color: Color(0xFF8A8A8A),
+                  fontSize: 18,
+                  fontWeight: 600,
+                ),
+              ),
+              Obx(() {
+                return Column(
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: <Widget>[
+                    Padding(
+                      padding: const EdgeInsets.only(top: 14.0),
+                      child: SizedBox(
+                        height: 134,
+                        child: PageView.builder(
+                          controller: slideController,
+                          itemCount: renderActivitySumList(controller).length ~/ 2,
+                          itemBuilder: (_, index) {
+                            if (index == 0) {
+                              return Row(
+                                children: [
+                                  Expanded(child: renderActivitySumList(controller)[index]),
+                                  Expanded(child: renderActivitySumList(controller)[index + 1]),
+                                ],
+                              );
+                            } else {
+                              return Row(
+                                children: [
+                                  Expanded(child: renderActivitySumList(controller)[index + 1]),
+                                  Expanded(child: renderActivitySumList(controller)[index + 2]),
+                                ],
+                              );
+                            }
+                          },
+                        ),
+                      ),
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.only(top: 10.0),
+                      child: SmoothPageIndicator(
+                        controller: slideController,
+                        count: renderActivitySumList(controller).length ~/ 2,
+                        effect: const ExpandingDotsEffect(
+                          dotHeight: 5, dotWidth: 5, activeDotColor: Color(0xFFA6A9B4), dotColor: Color(0xFF666870),
+                          // strokeWidth: 5,
+                        ),
+                      ),
+                    ),
+                  ],
+                );
+              }),
+              Padding(
+                padding: const EdgeInsets.only(top: 20),
+                child: Stack(
+                  children: [
+                    Center(
+                      child: Obx(() {
+                        return Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Container(
+                              decoration: BoxDecoration(
+                                color: const Color(0xFF0EE6F3),
+                                border: Border.all(
+                                  width: 2,
+                                  color: Colors.black,
+                                ),
+                                borderRadius: const BorderRadius.all(
+                                  Radius.circular(115),
+                                ),
+                                boxShadow: const [
+                                  BoxShadow(
+                                    color: Colors.black,
+                                    offset: Offset(0, 4),
+                                    blurRadius: 0.0,
+                                    spreadRadius: 0.0,
+                                  ),
+                                ],
+                              ),
+                              child: MaterialButton(
+                                onPressed: [ExerciseState.ongoing, ExerciseState.paused, ExerciseState.ready].any((state) => controller.exerciseState.value == state)
+                                    ? () => controller.requestExerciseInitialization()
+                                    : null,
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(115),
+                                ),
+                                color: const Color(0xFF0EE6F3),
+                                height: 115,
+                                minWidth: 115,
+                                child: StyledText(
+                                  [ExerciseState.ongoing, ExerciseState.paused].any((state) => controller.exerciseState.value == state) ? 'Continue' : 'GO',
+                                  fontWeight: 800,
+                                  fontFamily: 'Montserrat',
+                                  fontSize: [ExerciseState.ongoing, ExerciseState.paused].any((state) => controller.exerciseState.value == state) ? 18 : 34,
+                                  lineHeight: [ExerciseState.ongoing, ExerciseState.paused].any((state) => controller.exerciseState.value == state) ? 18 : 34,
+                                  color: Colors.black,
+                                  letterSpacing: 0.5,
+                                ),
+                              ),
+                            ),
+                          ],
+                        );
+                      }),
+                    ),
+                  ],
+                ),
+              )
+            ],
+          ),
         ),
       ),
     );
