@@ -10,4 +10,8 @@ class ArchiveApi {
   static Future<Response> getArchiveItem(String userId, int archiveId) async {
     return await Api.client(serviceUrl: ServiceUrl.exerciseService).get('/users/$userId/records/$archiveId');
   }
+
+  static Future<Response> deleteArchiveItem(String userId, int archiveId) async {
+    return await Api.client(serviceUrl: ServiceUrl.exerciseService).delete('/users/$userId/$archiveId');
+  }
 }
