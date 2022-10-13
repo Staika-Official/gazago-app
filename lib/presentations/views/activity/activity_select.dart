@@ -73,7 +73,12 @@ class ActivitySelect extends StatelessWidget {
                           color: controller.doableChallenges.isNotEmpty ? Colors.transparent : Color.fromRGBO(0, 0, 0, 0.6),
                         ),
                         child: InkWell(
-                          onTap: controller.doableChallenges.isNotEmpty ? () => controller.moveToChallangeSelection() : null,
+                          onTap: controller.doableChallenges.isNotEmpty
+                              ? () {
+                                  controller.selectExerciseType(ExerciseType.hiking);
+                                  controller.moveToChallangeSelection();
+                                }
+                              : null,
                           borderRadius: BorderRadius.circular(14),
                           child: Padding(
                             padding: EdgeInsets.only(top: 32),
@@ -154,7 +159,7 @@ class ActivitySelect extends StatelessWidget {
                           borderRadius: BorderRadius.circular(14),
                         ),
                         child: InkWell(
-                          onTap: () => controller.loadExercise(ExerciseType.walking),
+                          onTap: () => controller.selectExerciseType(ExerciseType.walking),
                           borderRadius: BorderRadius.circular(14),
                           child: Padding(
                             padding: EdgeInsets.only(top: 32),

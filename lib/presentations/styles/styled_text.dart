@@ -1,15 +1,15 @@
 import 'package:flutter/material.dart';
-import 'package:get/get.dart';
 
 class StyledText extends StatelessWidget {
-  String text;
-  String fontFamily;
-  double fontSize;
-  Color color;
-  Color backgroundColor;
-  int fontWeight;
-  double lineHeight;
-  StyledText(
+  final String text;
+  final String fontFamily;
+  final double fontSize;
+  final Color color;
+  final Color backgroundColor;
+  final int fontWeight;
+  final double lineHeight;
+  final double letterSpacing;
+  const StyledText(
     this.text, {
     Key? key,
     this.fontFamily = 'Pretendard',
@@ -18,28 +18,38 @@ class StyledText extends StatelessWidget {
     this.color = Colors.white,
     this.fontWeight = 400,
     this.backgroundColor = Colors.transparent,
+    this.letterSpacing = 1,
   }) : super(key: key);
 
-  Rx<FontWeight> get getFontWeight {
+  FontWeight get getFontWeight {
+    FontWeight _fontWeight = FontWeight.w400;
     switch (fontWeight) {
       case 100:
-        return Rx(FontWeight.w100);
+        _fontWeight = FontWeight.w100;
+        break;
       case 200:
-        return Rx(FontWeight.w200);
+        _fontWeight = FontWeight.w200;
+        break;
       case 300:
-        return Rx(FontWeight.w300);
+        _fontWeight = FontWeight.w300;
+        break;
       case 400:
-        return Rx(FontWeight.w400);
+        _fontWeight = FontWeight.w400;
+        break;
       case 500:
-        return Rx(FontWeight.w500);
+        _fontWeight = FontWeight.w500;
+        break;
       case 600:
-        return Rx(FontWeight.w600);
+        _fontWeight = FontWeight.w600;
+        break;
       case 700:
-        return Rx(FontWeight.w700);
+        _fontWeight = FontWeight.w700;
+        break;
       case 800:
-        return Rx(FontWeight.w800);
+        _fontWeight = FontWeight.w800;
+        break;
     }
-    return Rx(FontWeight.w400);
+    return _fontWeight;
   }
 
   double get getLineHeight {
@@ -50,7 +60,15 @@ class StyledText extends StatelessWidget {
   Widget build(BuildContext context) {
     return Text(
       text,
-      style: TextStyle(fontSize: fontSize, fontFamily: fontFamily, color: color, fontWeight: getFontWeight.value, height: getLineHeight, backgroundColor: backgroundColor),
+      style: TextStyle(
+        fontSize: fontSize,
+        fontFamily: fontFamily,
+        color: color,
+        fontWeight: getFontWeight,
+        height: getLineHeight,
+        backgroundColor: backgroundColor,
+        letterSpacing: letterSpacing,
+      ),
     );
   }
 }

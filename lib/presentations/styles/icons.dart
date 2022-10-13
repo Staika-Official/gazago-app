@@ -35,6 +35,12 @@ SvgPicture iconShoes = SvgPicture.asset('assets/images/activity/ico_shoes.svg', 
 // archive
 SvgPicture iconArchiveDetailBadge = SvgPicture.asset('assets/images/archive/ico_archive_detail_badge.svg', width: 15, height: 20, color: Colors.black);
 SvgPicture iconWasteBasket = SvgPicture.asset('assets/images/common/ico_wastebasket.svg', width: 15, height: 20);
+
+//leaderboard
+SvgPicture iconStatisticsTokenGo = SvgPicture.asset('assets/images/activity/ico_activity_token_go.svg', width: 25.27, height: 27.62);
+SvgPicture iconCalendarStatisticsTokenTik = SvgPicture.asset('assets/images/leaderboard/ico_token_tik.svg', width: 17.54, height: 19.18);
+SvgPicture iconLeaderboardRightArrow = SvgPicture.asset('assets/images/leaderboard/ico_right_arrow.svg');
+
 SvgPicture iconArchiveWalking = SvgPicture.asset('assets/images/archive/ico_archive_walking.svg', width: 42, height: 42);
 SvgPicture iconArchiveHiking = SvgPicture.asset('assets/images/archive/ico_archive_hiking.svg', width: 42, height: 42);
 
@@ -42,3 +48,4 @@ SvgPicture iconArchiveHiking = SvgPicture.asset('assets/images/archive/ico_archi
 SvgPicture iconGoReward = SvgPicture.asset('assets/images/inventory/ico_go_reward.svg', width: 15.79, height: 9.03);
 SvgPicture iconItemAbrasion = SvgPicture.asset('assets/images/inventory/ico_item_abrasion.svg', width: 12, height: 10);
 SvgPicture iconStaminaReduce = SvgPicture.asset('assets/images/inventory/ico_stamina_reduce.svg', width: 12, height: 9);
+

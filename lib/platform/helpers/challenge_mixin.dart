@@ -30,13 +30,7 @@ class ChallengeMixin {
 
   void selectChallenge(ChallengeModel challenge) {
     selectedChallenge.value = challenge;
-    _challengeMapController.moveCamera(
-      CameraUpdate.toCameraPosition(
-        CameraPosition(
-          target: LatLng(challenge.startLat!, challenge.startLon!),
-        ),
-      ),
-    );
+    _challengeMapController.moveCamera(CameraUpdate.toCameraPosition(CameraPosition(target: LatLng(challenge.startLat!, challenge.startLon!),),));
   }
 
   void detectChallengeZone(Position location) {

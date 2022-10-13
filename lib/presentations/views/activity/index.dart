@@ -143,6 +143,7 @@ class ActivityHome extends StatelessWidget {
                     crossAxisAlignment: CrossAxisAlignment.center,
                     children: [
                       Row(
+                        crossAxisAlignment: CrossAxisAlignment.center,
                         children: [
                           stat.type == 'STAMINA'
                               ? Padding(
@@ -158,7 +159,7 @@ class ActivityHome extends StatelessWidget {
                             fontFamily: 'Montserrat',
                             fontWeight: 600,
                             fontSize: 14,
-                            lineHeight: 19,
+                            lineHeight: 14,
                             color: stat.currentStat < 20 ? Colors.white : Colors.black,
                           ),
                           Padding(
@@ -166,8 +167,8 @@ class ActivityHome extends StatelessWidget {
                             child: StyledText(
                               stat.currentStat.toString(),
                               fontWeight: 600,
-                              fontSize: 14,
-                              lineHeight: 19,
+                              fontSize: 13,
+                              lineHeight: 14,
                               color: stat.currentStat < 20 ? Colors.white : Colors.black,
                             ),
                           ),
@@ -332,7 +333,7 @@ class ActivityHome extends StatelessWidget {
     WalletMasterController walletMasterController = Get.find();
     ActivityController controller = Get.put(ActivityController(walletMasterController));
     final slideController = PageController(viewportFraction: 1, keepPage: true);
-    controller.initController();
+
     return Container(
       decoration: const BoxDecoration(
         image: DecorationImage(
@@ -502,22 +503,6 @@ class ActivityHome extends StatelessWidget {
                       return Row(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
-                          [ExerciseState.ongoing, ExerciseState.paused].any((state) => controller.exerciseState.value == state)
-                              ? Padding(
-                                  padding: const EdgeInsets.only(right: 8.0),
-                                  child: MaterialButton(
-                                    onPressed: null,
-                                    onLongPress: () => controller.endExercise(),
-                                    shape: RoundedRectangleBorder(
-                                      borderRadius: BorderRadius.circular(100),
-                                    ),
-                                    color: Colors.blue,
-                                    height: 100,
-                                    minWidth: 100,
-                                    child: Text('Stop'),
-                                  ),
-                                )
-                              : Container(),
                           Container(
                             decoration: BoxDecoration(
                               color: const Color(0xFF0EE6F3),
@@ -526,7 +511,7 @@ class ActivityHome extends StatelessWidget {
                                 color: Colors.black,
                               ),
                               borderRadius: const BorderRadius.all(
-                                Radius.circular(100),
+                                Radius.circular(115),
                               ),
                               boxShadow: const [
                                 BoxShadow(
@@ -542,18 +527,19 @@ class ActivityHome extends StatelessWidget {
                                   ? () => controller.requestExerciseInitialization()
                                   : null,
                               shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(100),
+                                borderRadius: BorderRadius.circular(115),
                               ),
                               color: const Color(0xFF0EE6F3),
-                              height: 100,
-                              minWidth: 100,
+                              height: 115,
+                              minWidth: 115,
                               child: StyledText(
-                                [ExerciseState.ongoing, ExerciseState.paused].any((state) => controller.exerciseState.value == state) ? 'Continue' : 'Go',
+                                [ExerciseState.ongoing, ExerciseState.paused].any((state) => controller.exerciseState.value == state) ? 'Continue' : 'GO',
                                 fontWeight: 800,
                                 fontFamily: 'Montserrat',
-                                fontSize: 34,
-                                lineHeight: 38,
+                                fontSize: [ExerciseState.ongoing, ExerciseState.paused].any((state) => controller.exerciseState.value == state) ? 18 : 34,
+                                lineHeight: [ExerciseState.ongoing, ExerciseState.paused].any((state) => controller.exerciseState.value == state) ? 18 : 34,
                                 color: Colors.black,
+                                letterSpacing: 0.5,
                               ),
                             ),
                           ),

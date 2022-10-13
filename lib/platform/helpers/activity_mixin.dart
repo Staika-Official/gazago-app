@@ -1,5 +1,7 @@
 import 'dart:async';
 
+import 'package:flutter/gestures.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter_naver_map/flutter_naver_map.dart';
 import 'package:gaza_go/constants/enums.dart';
 import 'package:gaza_go/platform/helpers/activity_helper.dart';
@@ -16,8 +18,6 @@ import 'package:pedometer/pedometer.dart';
 class ActivityMixin {
   final Rx<CurrentUserStateModel> userState = Rx(CurrentUserStateModel());
   final updateInterval = 10000;
-  // final Location location = Location();
-  // final Rx<LocationData> currentLocation = Rx(LocationData.fromMap({}));
   final Rx<Position> currentLocation = Rx(Position(speed: 0, altitude: 0, accuracy: 0, heading: 0, latitude: 0, longitude: 0, speedAccuracy: 0, timestamp: DateTime.now()));
   final RxList<UserExerciseModel> exerciseData = RxList.empty();
   final RxList<LatLng> coordinates = RxList.empty();
@@ -27,8 +27,9 @@ class ActivityMixin {
   final Rx<ExerciseState> exerciseState = Rx(ExerciseState.init);
   Timer? exerciseTimer;
   Timer? updateTimer;
+  Timer? stopTimer;
+  final RxDouble stopProgress = RxDouble(0);
   Completer<NaverMapController> mapCompleter = Completer();
-  // StreamSubscription<LocationData>? locationSubscription;
   StreamSubscription<Position>? locationSubscription;
   StreamSubscription<StepCount>? stepSubscription;
   StreamSubscription<PedestrianStatus>? pedestrianStatusSubscription;
@@ -59,11 +60,6 @@ class ActivityMixin {
         ),
       );
     }
-    // print('coordinate length: ' + coordinates.length.toString());
-    // for (double distance in distanceList) {
-    //   print('distance: ' + distance.toString());
-    // }
-    // print('totalDist. : ' + calculateTotalDistance(distanceList).toString());
     return coordinates.isNotEmpty ? RxDouble(calculateTotalDistance(distanceList)) : RxDouble(0);
   }
 
@@ -94,7 +90,7 @@ class ActivityMixin {
   }
 
   void initExerciseTimer() {
-    exerciseTimer ??= Timer.periodic(Duration(seconds: 1), (timer) {
+    exerciseTimer ??= Timer.periodic(const Duration(seconds: 1), (timer) {
       exerciseTime.value++;
     });
   }
@@ -172,16 +168,17 @@ class ActivityMixin {
     }
 
     CurrentUserStateModel newUserState = await ActivityService.fetchUpdateUserExercises(
-        UserExerciseModel(
-          id: userState.value.exercise!.id,
-          steps: exerciseSteps.value,
-          speed: avgSpeed.value,
-          distance: totalDistance.value,
-          altitude: highestAltitude.value,
-          time: exerciseTime.value,
-          locations: coordinatesToString(coordinates),
-        ),
-        onError: errorHandler);
+      UserExerciseModel(
+        id: userState.value.exercise!.id,
+        steps: exerciseSteps.value,
+        speed: avgSpeed.value,
+        distance: totalDistance.value,
+        altitude: highestAltitude.value,
+        time: exerciseTime.value,
+        locations: coordinatesToString(coordinates),
+      ),
+      onError: errorHandler,
+    );
     userState.value = newUserState;
   }
 
@@ -195,6 +192,33 @@ class ActivityMixin {
         updateExercise();
       },
     );
+  }
+
+  void onTapDownStop(TapDownDetails tapDownDetails) {
+    Duration counter = Duration.zero;
+
+    if (stopTimer != null) {
+      initializeStopTimer();
+    }
+
+    stopTimer = Timer.periodic(const Duration(milliseconds: 10), (timer) {
+      if (counter == const Duration(seconds: 1)) {
+        initializeStopTimer();
+        endExercise();
+      }
+      counter = counter + const Duration(milliseconds: 10);
+      stopProgress.value += 0.01;
+    });
+  }
+
+  void onTapUpStop(TapUpDetails tapUpDetails) {
+    stopProgress.value = 0;
+    initializeStopTimer();
+  }
+
+  void initializeStopTimer() {
+    stopTimer?.cancel();
+    stopTimer = null;
   }
 
   void endExercise() async {
@@ -215,15 +239,21 @@ class ActivityMixin {
       userState.update((state) {
         state = newUserState;
       });
-      updateTimer!.cancel();
+      exerciseTime.value = 0;
+      stopProgress.value = 0;
+      updateTimer?.cancel();
       updateTimer = null;
-      exerciseTimer!.cancel();
+      exerciseTimer?.cancel();
       exerciseTimer = null;
-      stepSubscription!.cancel();
+      stepSubscription?.cancel();
       stepSubscription = null;
-      pedestrianStatusSubscription!.cancel();
+      pedestrianStatusSubscription?.cancel();
       pedestrianStatusSubscription = null;
     }
+  }
+
+  void showExerciseMap(Widget mapWidget) {
+    Get.dialog(mapWidget, barrierDismissible: false);
   }
 
   Future<void> setMarkerImages() async {

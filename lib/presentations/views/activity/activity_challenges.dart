@@ -140,7 +140,7 @@ class ActivityChallenges extends StatelessWidget {
                         right: 30,
                       ),
                       child: InkWell(
-                        onTap: () => controller.loadExercise(ExerciseType.hiking, controller.selectedChallenge.value),
+                        onTap: () => controller.selectExerciseType(ExerciseType.hiking),
                         child: Container(
                           padding: const EdgeInsets.all(20),
                           width: double.infinity,

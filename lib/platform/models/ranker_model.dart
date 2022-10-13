@@ -6,6 +6,7 @@ part 'ranker_model.g.dart';
 class RankerModel {
   int? id;
   int? userId;
+  int? ranking;
   String profileImageUrl;
   String nickname;
   double rewardGo;
@@ -19,6 +20,7 @@ class RankerModel {
   RankerModel({
     this.id,
     this.userId,
+    this.ranking,
     required this.profileImageUrl,
     required this.nickname,
     required this.rewardGo,
