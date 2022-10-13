@@ -235,23 +235,32 @@ class InventoryItemDetail extends StatelessWidget {
                               ),
                             ),
                             Padding(
-                              padding: const EdgeInsets.only(top: 30, bottom: 5),
+                              padding: const EdgeInsets.only(top: 30, bottom: 20),
                               child: Column(
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
                                   Padding(
-                                    padding: const EdgeInsets.only(bottom: 5),
+                                    padding: const EdgeInsets.only(bottom: 10),
                                     child: StyledText(
                                       '제품 설명',
                                       color: Color(0xFF8A8A8A),
                                       fontSize: 14,
                                     ),
                                   ),
-                                  // Expanded(
-                                  //   child: Text(
-                                  //     controller.selectedItem.value.description.toString(),
-                                  //   ),
-                                  // ),
+                                  Container(
+                                    height: (controller.isShoe.value) ? 70 : 100,
+                                    child: ListView(
+                                      children: [
+                                        StyledText(
+                                          controller.selectedItem.value.description.toString(),
+                                          color: Color(0xFFE2E2E2),
+                                          fontWeight: 500,
+                                          fontSize: 14,
+                                          lineHeight: 20,
+                                        ),
+                                      ],
+                                    ),
+                                  ),
                                 ],
                               ),
                             ),
@@ -262,8 +271,8 @@ class InventoryItemDetail extends StatelessWidget {
                                     SizedBox(
                                       width: double.infinity,
                                       child: ElevatedButton(
-                                        onPressed: () => controller.showShoesRepairPopup(controller.selectedItem.value.id),
-                                        child: const Text('수리'),
+                                        onPressed: () => null,
+                                        child: const Text('장착'),
                                       ),
                                     ),
                                   ],
@@ -280,7 +289,7 @@ class InventoryItemDetail extends StatelessWidget {
                 child: Align(
                   alignment: Alignment.bottomCenter,
                   child: InkWell(
-                    onTap: () => null,
+                    onTap: () => controller.showShoesRepairPopup(controller.selectedItem.value.id),
                     child: Container(
                       padding: const EdgeInsets.all(20),
                       width: double.infinity,
@@ -302,7 +311,7 @@ class InventoryItemDetail extends StatelessWidget {
                         ],
                       ),
                       child: Text(
-                        '시작하기',
+                        '수리',
                         textAlign: TextAlign.center,
                         style: TextStyle(
                           fontSize: 18,

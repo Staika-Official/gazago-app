@@ -415,21 +415,23 @@ class Tile extends StatelessWidget {
                                         durability! > 1.0
                                             ? Padding(
                                                 padding: const EdgeInsets.only(top: 2.0, left: 2.0),
-                                                child: Container(
-                                                  height: 16,
-                                                  margin: EdgeInsets.zero,
-                                                  width: durability! > 20
-                                                      ? MediaQuery.of(context).size.width / (100 / durability!)
-                                                      : durability! < 2
-                                                          ? 0
-                                                          : 34,
-                                                  decoration: BoxDecoration(
-                                                    color: durability! < 20 ? const Color(0xFFFF2525) : const Color(0xFFB85DFF),
-                                                    borderRadius: const BorderRadius.all(
-                                                      Radius.circular(50),
+                                                child: LayoutBuilder(builder: (context, constraints) {
+                                                  return Container(
+                                                    height: 16,
+                                                    margin: EdgeInsets.zero,
+                                                    width: durability! > 20
+                                                        ? constraints.maxWidth / (100 / durability!)
+                                                        : durability! < 2
+                                                            ? 0
+                                                            : 34,
+                                                    decoration: BoxDecoration(
+                                                      color: durability! < 20 ? const Color(0xFFFF2525) : const Color(0xFFB85DFF),
+                                                      borderRadius: const BorderRadius.all(
+                                                        Radius.circular(50),
+                                                      ),
                                                     ),
-                                                  ),
-                                                ),
+                                                  );
+                                                }),
                                               )
                                             : Container(),
                                       ],
