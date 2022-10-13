@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:developer';
 import 'dart:io';
 
 import 'package:flutter/material.dart';
@@ -119,10 +120,15 @@ class ActivityController extends GetxController with MapMixin, ActivityMixin, Ch
           mainAxisSize: MainAxisSize.min,
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
-            Text(
-              '체력 ${stat.currentStat}/100',
-              textAlign: TextAlign.center,
-            ),
+            stat.type == 'STAMINA'
+                ? Text(
+                    '체력 ${stat.currentStat}/100',
+                    textAlign: TextAlign.center,
+                  )
+                : Text(
+                    '내구도 ${stat.currentStat}/100',
+                    textAlign: TextAlign.center,
+                  ),
             Obx(() {
               return Slider(
                 value: _currentSliderValue.value > 100 ? 100 : double.parse(_currentSliderValue.value.toStringAsFixed(0)),
@@ -194,7 +200,7 @@ class ActivityController extends GetxController with MapMixin, ActivityMixin, Ch
   void getUserState() async {
     userState.value = await ActivityService.getCurrentUserState();
     exerciseState.value = ExerciseState.ready;
-
+    inspect('sssssssssssssssssss${userState.value.shoes!.id}');
     if (userState.value.exercise != null && userState.value.exercise!.state == 'ONGOING') {
       exerciseState.value = ExerciseState.ongoing;
       continueExercise();
@@ -441,10 +447,11 @@ class ActivityController extends GetxController with MapMixin, ActivityMixin, Ch
 
     // currentLocation.value = await location.getLocation();
 
-    currentLocation.value = await Geolocator.getCurrentPosition(desiredAccuracy: LocationAccuracy.bestForNavigation);
-    if (currentLocation.value.latitude != null && currentLocation.value.longitude != null) {
-      isListeningToLocation.value = true;
-    }
+    // currentLocation.value = await Geolocator.getCurrentPosition(desiredAccuracy: LocationAccuracy.reduced);
+    // if (currentLocation.value.latitude != null && currentLocation.value.longitude != null) {
+    //   isListeningToLocation.value = true;
+    // }
+    isListeningToLocation.value = true;
   }
 
   Future<void> initializeActivity() async {
