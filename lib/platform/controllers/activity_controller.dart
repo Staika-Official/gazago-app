@@ -8,8 +8,6 @@ import 'package:gaza_go/constants/routes.dart';
 import 'package:gaza_go/platform/controllers/wallet_master_controller.dart';
 import 'package:gaza_go/platform/helpers/activity_mixin.dart';
 import 'package:gaza_go/platform/helpers/challenge_mixin.dart';
-import 'package:gaza_go/platform/helpers/map_mixin.dart';
-import 'package:gaza_go/platform/models/challenge_model.dart';
 import 'package:gaza_go/platform/models/inventory_item_model.dart';
 import 'package:gaza_go/platform/models/repair_shoes_model.dart';
 import 'package:gaza_go/platform/models/stat_model.dart';
@@ -24,7 +22,7 @@ import 'package:geolocator/geolocator.dart';
 import 'package:get/get.dart';
 import 'package:permission_handler/permission_handler.dart' as PH;
 
-class ActivityController extends GetxController with MapMixin, ActivityMixin, ChallengeMixin {
+class ActivityController extends GetxController with ActivityMixin, ChallengeMixin {
   final WalletMasterController walletMasterController;
 
   ActivityController(this.walletMasterController);
@@ -50,6 +48,7 @@ class ActivityController extends GetxController with MapMixin, ActivityMixin, Ch
   final RxInt repairDurability = RxInt(0);
   final RxInt costTik = RxInt(0);
   final RxBool isListeningToLocation = RxBool(false);
+  final Rx<ExerciseType> selectedExerciseType = Rx(ExerciseType.walking);
   final Rx<LocationPermission> _locationPermission = Rx(LocationPermission.unableToDetermine);
   final Rx<LocationAccuracyStatus> _locationAccuracyStatus = Rx(LocationAccuracyStatus.unknown);
   StreamSubscription<ServiceStatus>? _serviceStatusStream;
@@ -350,15 +349,20 @@ class ActivityController extends GetxController with MapMixin, ActivityMixin, Ch
     }
   }
 
-  void loadExercise(ExerciseType exerciseType, [ChallengeModel? challenge]) {
-    Get.offNamed(Routes.activityLoading);
-    Timer(
-      Duration(seconds: 3),
-      () {
-        Get.offNamed(Routes.activityActive);
-        startExercise(exerciseType, challenge);
-      },
-    );
+  // void loadExercise(ExerciseType exerciseType, [ChallengeModel? challenge]) {
+  //   Get.offNamed(Routes.activityLoading);
+  //   Timer(
+  //     Duration(seconds: 3),
+  //     () {
+  //       Get.offNamed(Routes.activityActive);
+  //       startExercise(exerciseType, challenge);
+  //     },
+  //   );
+  // }
+
+  void selectExerciseType(ExerciseType exerciseType) {
+    this.selectedExerciseType.value = exerciseType;
+    Get.offNamed(Routes.activityActive);
   }
 
   void moveToChallangeSelection() {
@@ -366,17 +370,6 @@ class ActivityController extends GetxController with MapMixin, ActivityMixin, Ch
   }
 
   void initLocationStream() {
-    // location.onLocationChanged.listen((LocationData location) {
-    //   currentLocation.value = location;
-    //   exerciseData.add(UserExerciseModel(
-    //     altitude: location.altitude,
-    //     speed: location.speed,
-    //   ));
-    //   coordinates.add(LatLng(location.latitude!, location.longitude!));
-    //   detectChallengeZone(location);
-    //   autoFinishChallenge(userState.value);
-    // });
-
     late LocationSettings locationSettings;
 
     if (Platform.isAndroid) {
@@ -428,30 +421,19 @@ class ActivityController extends GetxController with MapMixin, ActivityMixin, Ch
   }
 
   Future<void> getCurrentLocation() async {
-    // bool isBackgroundAllowed = await location.isBackgroundModeEnabled();
-    // bool hasBackgroundPermission = false;
-    // if (Platform.isAndroid && _locationPermission.value == LocationPermission.always) {
-    //   hasBackgroundPermission = true;
-    // } else if (Platform.isIOS && [LocationPermission.always, LocationPermission.whileInUse].any((permission) => permission == _locationPermission.value)) {
-    //   hasBackgroundPermission = true;
-    // }
-    // if (hasBackgroundPermission && !isBackgroundAllowed) {
-    //   await location.enableBackgroundMode();
-    // }
-
-    // currentLocation.value = await location.getLocation();
-
-    currentLocation.value = await Geolocator.getCurrentPosition(desiredAccuracy: LocationAccuracy.bestForNavigation);
-    if (currentLocation.value.latitude != null && currentLocation.value.longitude != null) {
+    await Geolocator.getCurrentPosition(desiredAccuracy: LocationAccuracy.bestForNavigation, timeLimit: Duration(seconds: 5)).then((location) {
+      currentLocation.value = location;
       isListeningToLocation.value = true;
-    }
+    }).onError((error, stackTrace) {
+      Get.snackbar('위치정보 수신실패', '위치정보를 가져오지 못했습니다.');
+    });
   }
 
   Future<void> initializeActivity() async {
     await getCurrentLocation();
     initLocationStream();
     initGpsServiceStream();
-    if (currentLocation.value.latitude != null && currentLocation.value.longitude != null) {
+    if (currentLocation.value.latitude != 0 && currentLocation.value.longitude != 0) {
       await getNearByChallengeList(currentLocation.value);
     } else {
       await getChallengeList();

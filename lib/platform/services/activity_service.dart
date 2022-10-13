@@ -22,14 +22,17 @@ class ActivityService {
     return challengeList;
   }
 
-  // static Future<List<ChallengeModel>> getNearByChallenges(LocationData currentLocation) async {
   static Future<List<ChallengeModel>> getNearByChallenges(Position currentLocation) async {
     Response res = await ActivityApi.getNearByChallenges(currentLocation);
     List<ChallengeModel> challengeList = List.empty(growable: true);
-    res.data.forEach((challenge) {
-      challengeList.add(ChallengeModel.fromJson(challenge));
-    });
-    return challengeList;
+    if (res.statusCode == 200) {
+      res.data.forEach((challenge) {
+        challengeList.add(ChallengeModel.fromJson(challenge));
+      });
+      return challengeList;
+    } else {
+      return [];
+    }
   }
 
   static Future<CurrentUserStateModel> getCurrentUserState() async {
