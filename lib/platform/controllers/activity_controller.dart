@@ -1,5 +1,4 @@
 import 'dart:async';
-import 'dart:developer';
 import 'dart:io';
 
 import 'package:flutter/material.dart';
@@ -199,10 +198,9 @@ class ActivityController extends GetxController with ActivityMixin, ChallengeMix
   void getUserState() async {
     userState.value = await ActivityService.getCurrentUserState();
     exerciseState.value = ExerciseState.ready;
-    inspect('sssssssssssssssssss${userState.value.shoes!.id}');
     if (userState.value.exercise != null && userState.value.exercise!.state == 'ONGOING') {
       exerciseState.value = ExerciseState.ongoing;
-      continueExercise();
+      // continueExercise();
     }
   }
 
