@@ -15,6 +15,7 @@ import 'package:get/get.dart';
 
 class HomeMenuController extends GetxController {
   final RxInt selectedIndex = RxInt(0);
+  final RxList<int> visitedTabs = RxList.empty();
 
   final List<PreferredSizeWidget> appbarList = [
     MainAppbar(),
@@ -44,25 +45,30 @@ class HomeMenuController extends GetxController {
   }
 
   void selectMenu(int index) {
+    int prevTabIndex = selectedIndex.value;
     selectedIndex.value = index;
-    ActivityController activityController = Get.find();
-    ArchiveController archiveController = Get.find();
-    InventoryController inventoryController = Get.find();
-    LeaderboardController leaderboardController = Get.find();
 
-    switch (index) {
-      case 0:
-        activityController.initController();
-        break;
-      case 1:
-        archiveController.initController();
-        break;
-      case 2:
-        inventoryController.initController();
-        break;
-      case 3:
-        leaderboardController.initController();
-        break;
+    if (visitedTabs.any((tabIndex) => tabIndex == index) && prevTabIndex != index) {
+      switch (index) {
+        case 0:
+          ActivityController activityController = Get.find();
+          activityController.initController();
+          break;
+        case 1:
+          ArchiveController archiveController = Get.find();
+          archiveController.initController();
+          break;
+        case 2:
+          InventoryController inventoryController = Get.find();
+          inventoryController.initController();
+          break;
+        case 3:
+          LeaderboardController leaderboardController = Get.find();
+          leaderboardController.initController();
+          break;
+      }
+    } else {
+      visitedTabs.add(index);
     }
   }
 
