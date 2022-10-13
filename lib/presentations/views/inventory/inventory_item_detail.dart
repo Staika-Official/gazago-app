@@ -124,7 +124,7 @@ class InventoryItemDetail extends StatelessWidget {
                             SizedBox(
                               width: double.infinity,
                               child: ElevatedButton(
-                                onPressed: () => controller.showShoesRepairPopup(),
+                                onPressed: () => controller.showShoesRepairPopup(controller.selectedItem.value.id),
                                 child: const Text('수리'),
                               ),
                             ),

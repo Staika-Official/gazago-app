@@ -237,12 +237,12 @@ class InventoryController extends GetxController with LinearProgressMixin, Inven
     Get.toNamed(Routes.syntheticBadge);
   }
 
-  void fetchRepairShoes() async {
+  void fetchRepairShoes(shoeId) async {
     print(repairDurability.value);
     if (costTik.value > 0) {
       InventoryItemModel repairModel = await ItemService.fetchRepairItemShoes(
         RepairShoesModel(
-          id: selectedItem.value.id,
+          id: shoeId,
           durability: repairDurability.value,
           feeTik: costTik.value.toInt(),
         ),
@@ -262,8 +262,9 @@ class InventoryController extends GetxController with LinearProgressMixin, Inven
     costTik.value = 0;
   }
 
-  void showShoesRepairPopup() {
-    _currentSliderValue.value = selectedItem.value.durability.toInt().floor().toDouble();
+  void showShoesRepairPopup(id) {
+    _currentSliderValue.value = equippedShoe.value.durability.toInt().floor().toDouble();
+
     Get.dialog(
       AlertDialog(
         title: const Text('내구도 충전'),
@@ -281,10 +282,9 @@ class InventoryController extends GetxController with LinearProgressMixin, Inven
                 divisions: 100,
                 label: _currentSliderValue.round().toString(),
                 onChanged: (double value) {
-                  if (value >= selectedItem.value.durability.toInt().floor()) {
+                  if (value >= equippedShoe.value.durability.toInt().floor()) {
                     _currentSliderValue.value = value;
-                    repairDurability.value = value.toInt();
-                    print(remainDurability.value);
+                    repairDurability.value = (value - equippedShoe.value.durability).toInt();
                     costTik.value = (value.toInt() - remainDurability.value).abs() * 100;
                   }
                 },
@@ -297,7 +297,7 @@ class InventoryController extends GetxController with LinearProgressMixin, Inven
         ),
         actions: [
           ElevatedButton(onPressed: () => closeRepairPopup(), child: const Text('아니요')),
-          ElevatedButton(onPressed: () => fetchRepairShoes(), child: const Text('네')),
+          ElevatedButton(onPressed: () => fetchRepairShoes(equippedShoe.value.id), child: const Text('네')),
         ],
       ),
     );

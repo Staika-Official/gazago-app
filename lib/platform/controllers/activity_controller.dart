@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:developer';
 import 'dart:io';
 
 import 'package:flutter/material.dart';
@@ -118,10 +119,15 @@ class ActivityController extends GetxController with ActivityMixin, ChallengeMix
           mainAxisSize: MainAxisSize.min,
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
-            Text(
-              '체력 ${stat.currentStat}/100',
-              textAlign: TextAlign.center,
-            ),
+            stat.type == 'STAMINA'
+                ? Text(
+                    '체력 ${stat.currentStat}/100',
+                    textAlign: TextAlign.center,
+                  )
+                : Text(
+                    '내구도 ${stat.currentStat}/100',
+                    textAlign: TextAlign.center,
+                  ),
             Obx(() {
               return Slider(
                 value: _currentSliderValue.value > 100 ? 100 : double.parse(_currentSliderValue.value.toStringAsFixed(0)),
@@ -193,7 +199,7 @@ class ActivityController extends GetxController with ActivityMixin, ChallengeMix
   void getUserState() async {
     userState.value = await ActivityService.getCurrentUserState();
     exerciseState.value = ExerciseState.ready;
-
+    inspect('sssssssssssssssssss${userState.value.shoes!.id}');
     if (userState.value.exercise != null && userState.value.exercise!.state == 'ONGOING') {
       exerciseState.value = ExerciseState.ongoing;
       continueExercise();
@@ -421,12 +427,14 @@ class ActivityController extends GetxController with ActivityMixin, ChallengeMix
   }
 
   Future<void> getCurrentLocation() async {
+
     await Geolocator.getCurrentPosition(desiredAccuracy: LocationAccuracy.bestForNavigation, timeLimit: Duration(seconds: 5)).then((location) {
       currentLocation.value = location;
       isListeningToLocation.value = true;
     }).onError((error, stackTrace) {
       Get.snackbar('위치정보 수신실패', '위치정보를 가져오지 못했습니다.');
     });
+
   }
 
   Future<void> initializeActivity() async {

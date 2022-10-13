@@ -41,6 +41,7 @@ class InventoryHome extends StatelessWidget {
                             mainAxisCellCount: 2,
                             child: Tile(
                               index: 0,
+                              id: controller.equippedShoe.value.id,
                               itemGrade: controller.equippedShoe.value.itemGrade,
                               durability: controller.equippedShoe.value.durability,
                               imageUrl: controller.equippedShoe.value.itemImageUrl,
@@ -316,6 +317,7 @@ class InventoryHome extends StatelessWidget {
 class Tile extends StatelessWidget {
   const Tile({
     Key? key,
+    this.id,
     required this.index,
     required this.imageUrl,
     this.extent,
@@ -326,6 +328,7 @@ class Tile extends StatelessWidget {
   }) : super(key: key);
 
   final int index;
+  final int? id;
   final double? durability;
   final String imageUrl;
   final String? itemGrade;
@@ -474,16 +477,19 @@ class Tile extends StatelessWidget {
                                     ),
                                   ],
                                 ),
-                                child: CircleAvatar(
-                                  radius: 8,
-                                  backgroundColor: Color(0xFFB85DFF),
-                                  child: IconButton(
-                                    alignment: Alignment.center,
-                                    padding: EdgeInsets.zero,
-                                    iconSize: 20.0,
-                                    icon: iconPlus,
-                                    onPressed: null,
-                                    // onPressed: () => {controller.onClickRepairStat(stat)},
+                                child: InkWell(
+                                  onTap: () => controller.showShoesRepairPopup(id),
+                                  child: CircleAvatar(
+                                    radius: 8,
+                                    backgroundColor: const Color(0xFFB85DFF),
+                                    child: IconButton(
+                                      alignment: Alignment.center,
+                                      padding: EdgeInsets.zero,
+                                      iconSize: 20.0,
+                                      icon: iconPlus,
+                                      onPressed: null,
+                                      // onPressed: () => {controller.onClickRepairStat(stat)},
+                                    ),
                                   ),
                                 ),
                               ),
