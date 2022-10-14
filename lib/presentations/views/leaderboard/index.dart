@@ -84,9 +84,12 @@ class LeaderboardHome extends StatelessWidget {
           Padding(padding: EdgeInsets.only(left: 12)),
           Row(
             children: [
-              CircleAvatar(
+              (ranker.profileImageUrl != '') ? CircleAvatar(
                 radius: 15,
                 foregroundImage: NetworkImage(ranker.profileImageUrl),
+              ) : CircleAvatar(
+                radius: 15,
+                backgroundColor: Colors.black,
               ),
               Container(
                 width: 150,
