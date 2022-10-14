@@ -100,29 +100,21 @@ class ActivityMixin {
   }
 
   void initStepStream() {
-    if (stepSubscription != null && stepSubscription!.isPaused) {
-      stepSubscription?.resume();
-    } else {
-      stepSubscription ??= Pedometer.stepCountStream.listen((StepCount event) {
-        exerciseSteps.value++;
-      });
-      stepSubscription!.onError((error) {
-        print(error);
-      });
-    }
+    stepSubscription ??= Pedometer.stepCountStream.listen((StepCount event) {
+      exerciseSteps.value++;
+    });
+    stepSubscription!.onError((error) {
+      print(error);
+    });
   }
 
   void initPedestrianStatusStream() {
-    if (pedestrianStatusSubscription != null && pedestrianStatusSubscription!.isPaused) {
-      pedestrianStatusSubscription?.resume();
-    } else {
-      pedestrianStatusSubscription ??= Pedometer.pedestrianStatusStream.listen((PedestrianStatus event) {
-        pedestrianStatus.value = event.status.toUpperCase();
-      });
-      stepSubscription!.onError((error) {
-        print(error);
-      });
-    }
+    pedestrianStatusSubscription ??= Pedometer.pedestrianStatusStream.listen((PedestrianStatus event) {
+      pedestrianStatus.value = event.status.toUpperCase();
+    });
+    stepSubscription!.onError((error) {
+      print(error);
+    });
   }
 
   void startExercise(ExerciseType exerciseType, ChallengeModel? challenge) async {
@@ -237,8 +229,10 @@ class ActivityMixin {
   void pauseExercise() {
     updateTimer?.cancel();
     exerciseTimer?.cancel();
-    stepSubscription?.pause();
-    pedestrianStatusSubscription?.pause();
+    stepSubscription?.cancel();
+    stepSubscription = null;
+    pedestrianStatusSubscription?.cancel();
+    pedestrianStatusSubscription = null;
     exerciseState.value = ExerciseState.paused;
     updateExercise();
   }
