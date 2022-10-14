@@ -75,7 +75,7 @@ class ActivitySelect extends StatelessWidget {
                         child: InkWell(
                           onTap: controller.doableChallenges.isNotEmpty
                               ? () {
-                                  controller.selectExerciseType(ExerciseType.hiking);
+                                  Get.back();
                                   controller.moveToChallangeSelection();
                                 }
                               : null,
