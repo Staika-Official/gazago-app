@@ -8,6 +8,7 @@ import 'package:gaza_go/constants/routes.dart';
 import 'package:gaza_go/platform/controllers/wallet_master_controller.dart';
 import 'package:gaza_go/platform/helpers/activity_mixin.dart';
 import 'package:gaza_go/platform/helpers/challenge_mixin.dart';
+import 'package:gaza_go/platform/models/challenge_model.dart';
 import 'package:gaza_go/platform/models/inventory_item_model.dart';
 import 'package:gaza_go/platform/models/repair_shoes_model.dart';
 import 'package:gaza_go/platform/models/stat_model.dart';
@@ -204,8 +205,22 @@ class ActivityController extends GetxController with ActivityMixin, ChallengeMix
     exerciseState.value = ExerciseState.ready;
 
     if (userState.value.exercise != null && userState.value.exercise!.state == 'ONGOING') {
-      exerciseState.value = ExerciseState.ongoing;
-      // continueExercise();
+      if (updateTimer == null) {
+        print('restart!!!!!!!!!!!');
+        exerciseData.value = List.empty(growable: true);
+        exerciseData.add(userState.value.exercise!);
+        exerciseTime.value = userState.value.exercise!.time!;
+        exerciseSteps.value = userState.value.exercise!.steps!;
+
+        coordinates.value = List.empty(growable: true);
+        if (userState.value.exercise!.locations != null) {
+          coordinates.addAll(parseCoordinates());
+        }
+
+        exerciseState.value = ExerciseState.paused;
+      } else {
+        exerciseState.value = ExerciseState.ongoing;
+      }
     }
   }
 
@@ -375,6 +390,7 @@ class ActivityController extends GetxController with ActivityMixin, ChallengeMix
   }
 
   void moveToChallangeSelection() {
+    selectedChallenge.value = ChallengeModel();
     Get.toNamed(Routes.activityChallenges);
   }
 
