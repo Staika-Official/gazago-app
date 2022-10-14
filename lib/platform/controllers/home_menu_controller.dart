@@ -52,19 +52,19 @@ class HomeMenuController extends GetxController {
       switch (index) {
         case 0:
           ActivityController activityController = Get.find();
-          activityController.initController();
+          activityController.refreshController();
           break;
         case 1:
           ArchiveController archiveController = Get.find();
-          archiveController.initController();
+          archiveController.refreshController();
           break;
         case 2:
           InventoryController inventoryController = Get.find();
-          inventoryController.initController();
+          inventoryController.refreshController();
           break;
         case 3:
           LeaderboardController leaderboardController = Get.find();
-          leaderboardController.initController();
+          leaderboardController.refreshController();
           break;
       }
     } else {

@@ -29,6 +29,10 @@ class ArchiveController extends GetxController {
     await getArchiveList();
   }
 
+  Future<void> refreshController() async {
+    await getArchiveList();
+  }
+
   Future<void> getArchiveList() async {
     archiveList.value = await ArchiveService.getArchiveList();
     return Future(() => null);

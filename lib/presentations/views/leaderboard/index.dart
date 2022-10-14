@@ -84,15 +84,18 @@ class LeaderboardHome extends StatelessWidget {
           Padding(padding: EdgeInsets.only(left: 12)),
           Row(
             children: [
-              CircleAvatar(
+              (ranker.profileImageUrl != '') ? CircleAvatar(
                 radius: 15,
                 foregroundImage: NetworkImage(ranker.profileImageUrl),
+              ) : CircleAvatar(
+                radius: 15,
+                backgroundColor: Colors.black,
               ),
               Container(
                 width: 150,
                 child: Padding(
                   padding: const EdgeInsets.only(left: 8.0),
-                  child: Text(ranker.nickname, overflow: TextOverflow.ellipsis, style: const TextStyle(color: Colors.white, fontSize: 14, fontWeight: FontWeight.w600), textAlign: TextAlign.center),
+                  child: Text((ranker.nickname.contains('@') ? ranker.nickname.substring(0, ranker.nickname.indexOf('@')): ranker.nickname), overflow: TextOverflow.ellipsis, style: const TextStyle(color: Colors.white, fontSize: 14, fontWeight: FontWeight.w600), textAlign: TextAlign.left),
                 ),
               ),
             ],
@@ -101,6 +104,7 @@ class LeaderboardHome extends StatelessWidget {
             flex: 1,
             child: Text('${ranker.rewardGo.toString()} GO', textAlign: TextAlign.right, style: const TextStyle(color: Colors.white, fontSize: 14, fontWeight: FontWeight.w600)),
           ),
+          Padding(padding: EdgeInsets.only(left: 10)),
           Expanded(
             flex: 1,
             child: Text('${ranker.rewardTik.toString()} TIK', textAlign: TextAlign.right, style: const TextStyle(color: Color(0xFF5B5B67), fontSize: 14, fontWeight: FontWeight.w600)),

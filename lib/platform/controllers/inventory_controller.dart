@@ -172,6 +172,11 @@ class InventoryController extends GetxController with LinearProgressMixin, Inven
     getUserBadgesList();
   }
 
+  Future<void> refreshController() async {
+    getUserAllItems();
+    getUserBadgesList();
+  }
+
   void getSyntheticBadgeList() {
     syntheticBadgeList.value = [];
   }

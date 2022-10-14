@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:gaza_go/constants/routes.dart';
 import 'package:gaza_go/platform/models/ranker_model.dart';
@@ -43,6 +45,11 @@ class LeaderboardController extends GetxController {
     pagingController.addPageRequestListener((pageKey) {
       _fetchRankerList(pageKey);
     });
+  }
+
+  Future<void> refreshController() async {
+    pagingController.itemList = [];
+    _fetchRankerList(0);
   }
 
   Future<void> _fetchRankerList(int page) async {

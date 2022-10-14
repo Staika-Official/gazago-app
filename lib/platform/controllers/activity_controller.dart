@@ -82,6 +82,10 @@ class ActivityController extends GetxController with ActivityMixin, ChallengeMix
     getUserState();
   }
 
+  Future<void> refreshController() async {
+    getUserState();
+  }
+
   void initRepairInfo() {
     repairDurability.value = 0;
     remainDurability.value = 0;
