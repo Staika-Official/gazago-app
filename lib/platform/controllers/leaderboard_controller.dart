@@ -30,6 +30,9 @@ class LeaderboardController extends GetxController {
   @override
   void onInit() {
     initController();
+    pagingController.addPageRequestListener((pageKey) {
+      _fetchRankerList(pageKey);
+    });
     super.onInit();
   }
 
@@ -40,9 +43,8 @@ class LeaderboardController extends GetxController {
   }
 
   Future<void> initController() async {
-    pagingController.addPageRequestListener((pageKey) {
-      _fetchRankerList(pageKey);
-    });
+    pagingController.itemList = [];
+    _fetchRankerList(0);
   }
 
   Future<void> _fetchRankerList(int page) async {
