@@ -40,12 +40,12 @@ class ChallengeMixin {
   void detectChallengeZone(Position location) {
     doableChallenges.value = challengeList.where((challenge) {
       double distance = calculateDistance(location.latitude, location.longitude, challenge.startLat, challenge.startLon);
-      return distance <= challenge.startRadius!;
+      return distance <= convertMetersToKM(challenge.startRadius!);
     }).toList();
 
     achievableChallenges.value = challengeList.where((challenge) {
       double distance = calculateDistance(location.latitude, location.longitude, challenge.endLat, challenge.endLon);
-      return distance <= challenge.endRadius!;
+      return distance <= convertMetersToKM(challenge.endRadius!);
     }).toList();
   }
 
@@ -60,7 +60,11 @@ class ChallengeMixin {
           Get.snackbar('뱃지 발급', '뱃지가 발급되었습니다.', colorText: Colors.white);
         };
 
-        InventoryBadgeModel badge = await BadgeService.fetchUserIssuanceBadge(userState.exercise!.id!, successCallback);
+        VoidCallback errorCallback = () {
+          Get.snackbar('뱃지 발급 실패', '뱃지 발급에 실패했습니다.', colorText: Colors.white);
+        };
+
+        InventoryBadgeModel badge = await BadgeService.fetchUserIssuanceBadge(userState.exercise!.id!, successCallback, errorCallback);
         userState.exercise!.badgeIssueId = badge.id;
       }
     }

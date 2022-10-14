@@ -19,6 +19,10 @@ double convertMStoKMH(double avgSpeedMS) {
   return (avgSpeedMS * 3600 / 1000);
 }
 
+double convertMetersToKM(double meters) {
+  return meters / 1000;
+}
+
 double calculateTotalDistance(List<double> distanceList) {
   return distanceList.fold(0, (summedValue, distance) => summedValue + distance);
 }
