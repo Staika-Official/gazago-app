@@ -140,7 +140,15 @@ class ActivityChallenges extends StatelessWidget {
                         right: 30,
                       ),
                       child: InkWell(
-                        onTap: () => controller.selectExerciseType(ExerciseType.hiking),
+                        onTap: () {
+                          if (controller.selectedChallenge.value.id != null) {
+                            controller.selectExerciseType(ExerciseType.hiking);
+                          } else {
+                            if (!Get.isSnackbarOpen) {
+                              Get.snackbar('챌린지 미선택', '시작할 챌린지를 선택해주세요', colorText: Colors.white);
+                            }
+                          }
+                        },
                         child: Container(
                           padding: const EdgeInsets.all(20),
                           width: double.infinity,
