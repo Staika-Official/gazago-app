@@ -561,16 +561,21 @@ class ActivityActive extends StatelessWidget {
                               },
                               child: Icon(Icons.play_arrow, color: Colors.white, size: 35),
                             ),
-                      CircularButton(
-                        radius: 50,
-                        color: Colors.white,
-                        onTap: () {
-                          Get.snackbar('[기능 구현 필요]', '구현 예정인 기능입니다.', colorText: Colors.white);
-                        },
-                        child: SvgPicture.asset(
-                          'assets/images/activity/ico_item.svg',
-                        ),
-                      ),
+                      // CircularButton(
+                      //   radius: 50,
+                      //   color: Colors.white,
+                      //   onTap: () {
+                      //     Get.snackbar('[기능 구현 필요]', '구현 예정인 기능입니다.', colorText: Colors.white);
+                      //   },
+                      //   child: SvgPicture.asset(
+                      //     'assets/images/activity/ico_item.svg',
+                      //   ),
+                      // ),
+                      Container(
+                        width: 50,
+                        height: 50,
+                        color: Colors.transparent,
+                      )
                     ],
                   ),
                 ),
