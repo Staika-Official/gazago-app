@@ -36,7 +36,7 @@ class ActivityMixin {
 
   RxDouble get realTimeSpeed {
     double speed = currentLocation.value.speed ?? 0;
-    return RxDouble(speed <= 0 ? 0 : currentLocation.value.speed!);
+    return RxDouble(speed <= 0 ? 0 : convertMStoKMH(currentLocation.value.speed!));
   }
 
   RxDouble get avgSpeed {

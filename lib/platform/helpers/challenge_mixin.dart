@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_naver_map/flutter_naver_map.dart';
 import 'package:gaza_go/platform/helpers/activity_helper.dart';
@@ -21,7 +22,20 @@ class ChallengeMixin {
   }
 
   Future<void> getNearByChallengeList(Position currentLocation) async {
-    challengeList.value = await ActivityService.getNearByChallenges(currentLocation);
+    List<ChallengeModel> result = await ActivityService.getNearByChallenges(currentLocation);
+    notificationOnChallenge(result);
+    challengeList.value = result;
+  }
+
+  void notificationOnChallenge(List<ChallengeModel> result) {
+    bool notification = false;
+    var filteredList = result.toSet().difference(challengeList.value.toSet()).toList();
+    if (filteredList.length != challengeList.length) {
+      notification = true;
+    }
+    if (notification) {
+      Get.snackbar('도전 지역 발견', '새로운 도전을 시작하세요.', colorText: Colors.green);
+    }
   }
 
   void onChallengeMapCreated(NaverMapController controller) {

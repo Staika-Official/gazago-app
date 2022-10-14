@@ -53,6 +53,7 @@ class ActivityController extends GetxController with ActivityMixin, ChallengeMix
   final Rx<LocationPermission> _locationPermission = Rx(LocationPermission.unableToDetermine);
   final Rx<LocationAccuracyStatus> _locationAccuracyStatus = Rx(LocationAccuracyStatus.unknown);
   StreamSubscription<ServiceStatus>? _serviceStatusStream;
+  final Rx<DateTime> receiveLocationTime = Rx(DateTime.now());
 
   @override
   void onInit() async {
@@ -431,6 +432,12 @@ class ActivityController extends GetxController with ActivityMixin, ChallengeMix
           speed: position.speed,
         ));
         coordinates.add(LatLng(position.latitude, position.longitude));
+      } else {
+        // 첼린지 존 찾기(30초마다 요청)
+        DateTime now = DateTime.now();
+        if(receiveLocationTime.value.add(const Duration(seconds: 5)).compareTo(now) < 0){
+          findChallenge();
+        }
       }
 
       detectChallengeZone(position);
@@ -462,12 +469,17 @@ class ActivityController extends GetxController with ActivityMixin, ChallengeMix
     await getCurrentLocation();
     initLocationStream();
     initGpsServiceStream();
+    //await setMarkerImages();
+    findChallenge();
+    detectChallengeZone(currentLocation.value);
+  }
+
+  // 챌린지 찾기
+  Future<void> findChallenge() async {
     if (currentLocation.value.latitude != 0 && currentLocation.value.longitude != 0) {
       await getNearByChallengeList(currentLocation.value);
     } else {
       await getChallengeList();
     }
-    detectChallengeZone(currentLocation.value);
-    await setMarkerImages();
   }
 }
