@@ -3,6 +3,7 @@ import 'package:flutter_svg/flutter_svg.dart';
 
 // Common Icons
 SvgPicture iconPlus = SvgPicture.asset('assets/images/common/ico_plus.svg', width: 10, height: 10);
+SvgPicture iconSliderShoe = SvgPicture.asset('assets/images/common/ico_slider_shoe.svg', width: 14.7, height: 16);
 
 // Bottom Navigation Icon
 SvgPicture iconMenuHome = SvgPicture.asset('assets/images/common/ico_menu_home.svg', width: 20.5, height: 20);
@@ -48,4 +49,5 @@ SvgPicture iconArchiveHiking = SvgPicture.asset('assets/images/archive/ico_archi
 SvgPicture iconGoReward = SvgPicture.asset('assets/images/inventory/ico_go_reward.svg', width: 15.79, height: 9.03);
 SvgPicture iconItemAbrasion = SvgPicture.asset('assets/images/inventory/ico_item_abrasion.svg', width: 12, height: 10);
 SvgPicture iconStaminaReduce = SvgPicture.asset('assets/images/inventory/ico_stamina_reduce.svg', width: 12, height: 9);
-
+SvgPicture iconLucky = SvgPicture.asset('assets/images/inventory/ico_lucky.svg', width: 12, height: 9);
+SvgPicture iconCirclePlus = SvgPicture.asset('assets/images/inventory/ico_circle_plus.svg', width: 37, height: 37);

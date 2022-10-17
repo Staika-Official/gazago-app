@@ -4,7 +4,9 @@ import 'package:dio/dio.dart';
 import 'package:gaza_go/constants/enums.dart';
 import 'package:gaza_go/constants/routes.dart';
 import 'package:gaza_go/flavors.dart';
+import 'package:gaza_go/platform/helpers/base_helper.dart';
 import 'package:gaza_go/platform/models/access_token_model.dart';
+import 'package:gaza_go/platform/models/error_response_data_model.dart';
 import 'package:gaza_go/platform/stores/hive_store.dart';
 import 'package:get/get.dart' as getx;
 import 'package:logger/logger.dart';
@@ -74,6 +76,8 @@ class Api {
       '\nError ResponseCode: ${e.response?.statusCode}'
       '\nError ResponseMessage: ${e.response?.statusMessage}',
     );
+    ErrorResponseDataModel errorData = ErrorResponseDataModel.fromJson(e.response?.data);
+    showToastPopup(errorData.errorMessage);
 
     if (e.response?.statusCode == ResponseStatus.unauthorized.code) {
       final String? refreshToken = HiveStore.loadString(key: HiveKey.refreshToken.name);
