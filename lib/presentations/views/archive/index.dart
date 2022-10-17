@@ -50,7 +50,7 @@ class ArchiveHome extends StatelessWidget {
                                 radius: 21,
                                 child: archive.type == ExerciseType.hiking.name.toUpperCase() ? iconArchiveHiking : iconArchiveWalking,
                               ),
-                              if (controller.selectedItem.value.badgeIssueId != null)
+                              if (archive.badgeIssueId != null)
                                 Positioned(
                                   right: 0,
                                   bottom: 0,
