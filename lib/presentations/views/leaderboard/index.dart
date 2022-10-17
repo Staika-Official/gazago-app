@@ -1,14 +1,13 @@
 import 'package:flutter/material.dart';
+import 'package:gaza_go/platform/controllers/activity_controller.dart';
 import 'package:gaza_go/platform/controllers/leaderboard_controller.dart';
 import 'package:gaza_go/platform/models/ranker_model.dart';
+import 'package:gaza_go/presentations/styles/icons.dart';
+import 'package:gaza_go/presentations/styles/styled_text.dart';
 import 'package:get/get.dart';
 import 'package:infinite_scroll_pagination/infinite_scroll_pagination.dart';
 import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
 import 'package:table_calendar/table_calendar.dart';
-
-import '../../../platform/controllers/activity_controller.dart';
-import '../../styles/icons.dart';
-import '../../styles/styled_text.dart';
 
 class LeaderboardHome extends StatelessWidget {
   const LeaderboardHome({Key? key}) : super(key: key);
@@ -84,18 +83,21 @@ class LeaderboardHome extends StatelessWidget {
           Padding(padding: EdgeInsets.only(left: 12)),
           Row(
             children: [
-              (ranker.profileImageUrl != '') ? CircleAvatar(
-                radius: 15,
-                foregroundImage: NetworkImage(ranker.profileImageUrl),
-              ) : CircleAvatar(
-                radius: 15,
-                backgroundColor: Colors.black,
-              ),
+              (ranker.profileImageUrl != '')
+                  ? CircleAvatar(
+                      radius: 15,
+                      foregroundImage: NetworkImage(ranker.profileImageUrl),
+                    )
+                  : CircleAvatar(
+                      radius: 15,
+                      backgroundColor: Colors.black,
+                    ),
               Container(
                 width: 150,
                 child: Padding(
                   padding: const EdgeInsets.only(left: 8.0),
-                  child: Text((ranker.nickname.contains('@') ? ranker.nickname.substring(0, ranker.nickname.indexOf('@')): ranker.nickname), overflow: TextOverflow.ellipsis, style: const TextStyle(color: Colors.white, fontSize: 14, fontWeight: FontWeight.w600), textAlign: TextAlign.left),
+                  child: Text((ranker.nickname.contains('@') ? ranker.nickname.substring(0, ranker.nickname.indexOf('@')) : ranker.nickname),
+                      overflow: TextOverflow.ellipsis, style: const TextStyle(color: Colors.white, fontSize: 14, fontWeight: FontWeight.w600), textAlign: TextAlign.left),
                 ),
               ),
             ],

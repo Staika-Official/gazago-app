@@ -1,3 +1,4 @@
+import 'package:gaza_go/platform/models/user_exercise_model.dart';
 import 'package:hive/hive.dart';
 
 class HiveStore {
@@ -10,9 +11,20 @@ class HiveStore {
     box.put(key, value);
   }
 
+  static void saveExerciseData({required UserExerciseModel exerciseData}) {
+    final Box box = Hive.box('gazaGo');
+    box.put('exerciseData', exerciseData);
+  }
+
   static String? loadString({required String key}) {
     final Box box = Hive.box('gazaGo');
     String? loadData = box.get(key);
+    return loadData;
+  }
+
+  static UserExerciseModel? loadExerciseData() {
+    final Box box = Hive.box('gazaGo');
+    UserExerciseModel? loadData = box.get('exerciseData');
     return loadData;
   }
 

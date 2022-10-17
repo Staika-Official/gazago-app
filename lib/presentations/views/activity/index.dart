@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:gaza_go/constants/enums.dart';
 import 'package:gaza_go/platform/controllers/activity_controller.dart';
-import 'package:gaza_go/platform/controllers/wallet_master_controller.dart';
 import 'package:gaza_go/presentations/styles/icons.dart';
 import 'package:gaza_go/presentations/styles/styled_text.dart';
 import 'package:get/get.dart';
@@ -334,8 +333,8 @@ class ActivityHome extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    WalletMasterController walletMasterController = Get.find();
-    ActivityController controller = Get.put(ActivityController(walletMasterController));
+    ActivityController controller = Get.find();
+
     final slideController = PageController(viewportFraction: 1, keepPage: true);
 
     return Container(
@@ -546,6 +545,10 @@ class ActivityHome extends StatelessWidget {
                                 ),
                               ),
                             ),
+                           /* ElevatedButton(
+                              onPressed: () => { controller.onClickTestNoti() },
+                              child: Text('확인'),
+                            ),*/
                           ],
                         );
                       }),
