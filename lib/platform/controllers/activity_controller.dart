@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'dart:io';
 
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_naver_map/flutter_naver_map.dart';
 import 'package:gaza_go/constants/enums.dart';
@@ -75,6 +76,7 @@ class ActivityController extends GetxController with ActivityMixin, ChallengeMix
     pedestrianStatusSubscription = null;
     _serviceStatusStream?.cancel();
     _serviceStatusStream = null;
+
     super.onClose();
   }
 
@@ -398,6 +400,8 @@ class ActivityController extends GetxController with ActivityMixin, ChallengeMix
   void initLocationStream() {
     late LocationSettings locationSettings;
 
+    print('########################### initLocationStream');
+
     if (Platform.isAndroid) {
       locationSettings = AndroidSettings(
           accuracy: LocationAccuracy.bestForNavigation,
@@ -435,8 +439,10 @@ class ActivityController extends GetxController with ActivityMixin, ChallengeMix
       } else {
         // 첼린지 존 찾기(30초마다 요청)
         DateTime now = DateTime.now();
-        if(receiveLocationTime.value.add(const Duration(seconds: 5)).compareTo(now) < 0){
+
+        if(receiveLocationTime.value.add(const Duration(seconds: 30)).compareTo(now) < 0){
           findChallenge();
+          receiveLocationTime.value = now;
         }
       }
 
