@@ -1,13 +1,14 @@
 import 'dart:async';
 import 'dart:io';
 
-import 'package:firebase_messaging/firebase_messaging.dart';
+import 'package:another_xlider/another_xlider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_naver_map/flutter_naver_map.dart';
 import 'package:gaza_go/constants/enums.dart';
 import 'package:gaza_go/constants/routes.dart';
 import 'package:gaza_go/platform/controllers/wallet_master_controller.dart';
 import 'package:gaza_go/platform/helpers/activity_mixin.dart';
+import 'package:gaza_go/platform/helpers/base_helper.dart';
 import 'package:gaza_go/platform/helpers/challenge_mixin.dart';
 import 'package:gaza_go/platform/models/challenge_model.dart';
 import 'package:gaza_go/platform/models/inventory_item_model.dart';
@@ -19,6 +20,7 @@ import 'package:gaza_go/platform/models/user_state_model.dart';
 import 'package:gaza_go/platform/services/activity_service.dart';
 import 'package:gaza_go/platform/services/item_service.dart';
 import 'package:gaza_go/presentations/styles/icons.dart';
+import 'package:gaza_go/presentations/styles/styled_text.dart';
 import 'package:gaza_go/presentations/views/activity/activity_select.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:get/get.dart';
@@ -58,8 +60,16 @@ class ActivityController extends GetxController with ActivityMixin, ChallengeMix
 
   @override
   void onInit() async {
+    print('onInitActivity');
     await initController();
+
     super.onInit();
+  }
+
+  void onReady() async {
+    print('onReadyActivity');
+    print('123123123123123${walletMasterController.spendingTokenUiList.value}');
+    super.onReady();
   }
 
   @override
@@ -81,9 +91,13 @@ class ActivityController extends GetxController with ActivityMixin, ChallengeMix
   }
 
   Future<void> initController() async {
+    print('1initController');
     await checkAvailabilities();
+    print('2initController');
     await initializeActivity();
+    print('3initController');
     getUserState();
+    print('4initController');
   }
 
   Future<void> refreshController() async {
@@ -111,95 +125,304 @@ class ActivityController extends GetxController with ActivityMixin, ChallengeMix
   }
 
   void handleShowStaminaPopup(stat) {
-    Get.dialog(
-      AlertDialog(
-        title: stat.type == 'STAMINA'
-            ? const Text(
-                '체력 충전 하기',
-                textAlign: TextAlign.center,
-              )
-            : const Text(
-                '내구도 수리 하기',
-                textAlign: TextAlign.center,
-              ),
-        content: Column(
-          mainAxisSize: MainAxisSize.min,
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: [
-            stat.type == 'STAMINA'
-                ? Text(
-                    '체력 ${stat.currentStat}/100',
-                    textAlign: TextAlign.center,
-                  )
-                : Text(
-                    '내구도 ${stat.currentStat}/100',
-                    textAlign: TextAlign.center,
-                  ),
-            Obx(() {
-              return Slider(
-                value: _currentSliderValue.value > 100 ? 100 : double.parse(_currentSliderValue.value.toStringAsFixed(0)),
-                max: 100,
-                min: 0,
-                divisions: stat.type == 'STAMINA' ? 10 : 100,
-                label: _currentSliderValue.value.floor().toString(),
-                onChanged: (double value) {
-                  if (stat.type == 'STAMINA') {
-                    _currentSliderValue.value = value;
-                    costTik.value = _currentSliderValue.value.toInt() * 100;
-                  } else {
-                    if (value >= stat.currentStat.floor().toInt()) {
-                      _currentSliderValue.value = value;
-                      repairDurability.value = (value - stat.currentStat.floor()).toInt();
-                      costTik.value = (value.toInt() - remainDurability.value).abs() * 100;
-                    }
-                  }
-                },
-              );
-            }),
-            Obx(() {
-              return Text('비용: ${costTik.value} TIK');
-            }),
-          ],
+    Get.bottomSheet(
+      Obx(() {
+        return Container(
+          decoration: const BoxDecoration(
+            color: Color(0xff363841),
+            borderRadius: BorderRadius.only(
+              topLeft: Radius.circular(12),
+              topRight: Radius.circular(12),
+            ),
+          ),
+          child: Padding(
+            padding: const EdgeInsets.symmetric(vertical: 30.0, horizontal: 20.0),
+            child: Column(
+              children: [
+                Column(
+                  mainAxisSize: MainAxisSize.max,
+                  children: [
+                    stat.type == 'STAMINA'
+                        ? const StyledText(
+                            '체력 충전',
+                            fontSize: 22,
+                            lineHeight: 22,
+                            fontWeight: 500,
+                          )
+                        : const StyledText(
+                            '내구도 충전',
+                            fontSize: 22,
+                            lineHeight: 22,
+                            fontWeight: 500,
+                          ),
+                    Padding(
+                      padding: const EdgeInsets.only(top: 12.0),
+                      child: stat.type == 'STAMINA'
+                          ? StyledText(
+                              '체력 ${stat.currentStat}/100',
+                              fontSize: 16,
+                              lineHeight: 22,
+                              fontWeight: 500,
+                              color: const Color(0xFF8A8A8A),
+                            )
+                          : StyledText(
+                              '내구도 ${stat.currentStat}/100',
+                              fontSize: 16,
+                              lineHeight: 22,
+                              fontWeight: 500,
+                              color: const Color(0xFF8A8A8A),
+                            ),
+                    ),
+                    Container(
+                      margin: const EdgeInsets.only(top: 15),
+                      child: FlutterSlider(
+                        values: [_currentSliderValue.value],
+                        max: 100,
+                        min: 0,
+                        step: FlutterSliderStep(
+                          step: stat.type == 'STAMINA' ? 10 : 1, // default
+                        ),
+                        handlerHeight: 32.0,
+                        ignoreSteps: [
+                          stat.type == 'DURABILITY' ? FlutterSliderIgnoreSteps(from: -1, to: stat.currentStat - 1) : FlutterSliderIgnoreSteps(from: 0, to: 0),
+                        ],
+                        trackBar: FlutterSliderTrackBar(
+                          inactiveTrackBarHeight: 16,
+                          activeTrackBarHeight: 15,
+                          inactiveTrackBar: BoxDecoration(
+                            borderRadius: BorderRadius.circular(20),
+                            color: const Color(0xFF494954),
+                            boxShadow: const [
+                              BoxShadow(
+                                color: Colors.black,
+                                offset: Offset(2, 3),
+                              )
+                            ],
+                          ),
+                          activeTrackBar: BoxDecoration(
+                            borderRadius: BorderRadius.circular(20),
+                            color: stat.type == 'STAMINA' ? const Color(0xFFCDFF41) : const Color(0xFFB85DFF),
+                          ),
+                        ),
+                        onDragging: (handlerIndex, lowerValue, upperValue) {
+                          if (stat.type == 'STAMINA') {
+                            _currentSliderValue.value = lowerValue;
+                            costTik.value = _currentSliderValue.value.toInt() * 100;
+                          } else {
+                            if (lowerValue >= stat.currentStat.floor().toInt()) {
+                              _currentSliderValue.value = lowerValue;
+                              repairDurability.value = (lowerValue - stat.currentStat.floor()).toInt();
+                              costTik.value = (lowerValue.toInt() - remainDurability.value).abs() * 100;
+                            }
+                          }
+                        },
+                        handler: FlutterSliderHandler(
+                          decoration: BoxDecoration(
+                            color: stat.type == 'STAMINA' ? const Color(0xFFCDFF41) : const Color(0xFFB85DFF),
+                            border: Border.all(width: 2, color: Colors.white),
+                            borderRadius: BorderRadius.circular(30),
+                            boxShadow: const [
+                              BoxShadow(
+                                color: Colors.black,
+                                offset: Offset(2, 3),
+                              )
+                            ],
+                          ),
+                          child: iconSliderShoe,
+                        ),
+                      ),
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.symmetric(vertical: 40.0),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children: [
+                          const StyledText(
+                            '비용 :',
+                            fontSize: 22,
+                            fontWeight: 500,
+                            color: Color(0xFFA7A7A7),
+                          ),
+                          StyledText(
+                            ' ${costTik.value} TIK',
+                            fontSize: 22,
+                            fontWeight: 500,
+                            color: Colors.white,
+                          ),
+                        ],
+                      ),
+                    ),
+                    Row(
+                      children: [
+                        Expanded(
+                          child: Padding(
+                            padding: const EdgeInsets.only(right: 8.0),
+                            child: Container(
+                              decoration: BoxDecoration(
+                                color: const Color(0xFF363841),
+                                border: Border.all(width: 2, color: Colors.black),
+                                borderRadius: BorderRadius.circular(8),
+                                boxShadow: const [
+                                  BoxShadow(
+                                    color: Colors.black,
+                                    offset: Offset(0, 3),
+                                  )
+                                ],
+                              ),
+                              child: InkWell(
+                                onTap: () => closeRepairPopup(),
+                                child: const Padding(
+                                  padding: EdgeInsets.symmetric(vertical: 12.0),
+                                  child: Center(
+                                      child: StyledText(
+                                    '취소',
+                                    fontSize: 18,
+                                    lineHeight: 18,
+                                  )),
+                                ),
+                              ),
+                            ),
+                          ),
+                        ),
+                        Expanded(
+                          child: Container(
+                            decoration: BoxDecoration(
+                              color: const Color(0xFF0EE6F3),
+                              border: Border.all(width: 2, color: Colors.black),
+                              borderRadius: BorderRadius.circular(8),
+                              boxShadow: const [
+                                BoxShadow(
+                                  color: Colors.black,
+                                  offset: Offset(0, 3),
+                                )
+                              ],
+                            ),
+                            child: InkWell(
+                              onTap: () => stat.type == 'STAMINA' ? fetchRechargeStamina(stat.type) : fetchRepairShoes(),
+                              child: const Padding(
+                                padding: EdgeInsets.symmetric(vertical: 12.0),
+                                child: Center(
+                                    child: StyledText(
+                                  '확인',
+                                  fontSize: 18,
+                                  lineHeight: 18,
+                                  color: Colors.black,
+                                )),
+                              ),
+                            ),
+                          ),
+                        ),
+                      ],
+                    )
+                  ],
+                ),
+              ],
+            ),
+          ),
+        );
+      }),
+    );
+  }
+
+  void handleNotEnoughTaikaPopup() {
+    Get.bottomSheet(
+      Container(
+        height: 200,
+        decoration: const BoxDecoration(
+          color: Color(0xff363841),
+          borderRadius: BorderRadius.only(
+            topLeft: Radius.circular(12),
+            topRight: Radius.circular(12),
+          ),
         ),
-        actions: [
-          ElevatedButton(onPressed: () => closeRepairPopup(), child: const Text('아니요')),
-          ElevatedButton(onPressed: () => stat.type == 'STAMINA' ? fetchRechargeStamina(stat.type) : fetchRepairShoes(), child: const Text('네')),
-        ],
+        child: Padding(
+          padding: const EdgeInsets.symmetric(vertical: 30.0, horizontal: 40.0),
+          child: Column(
+            children: [
+              StyledText(
+                'Taika 가 부족하여 진행할 수 없습니다.\n 인벤토리에 Taika를 충전해 주세요.',
+                fontWeight: 500,
+                fontSize: 18,
+                lineHeight: 28,
+              ),
+              Container(
+                margin: EdgeInsets.only(top: 20),
+                decoration: BoxDecoration(
+                  color: const Color(0xFF0EE6F3),
+                  border: Border.all(width: 2, color: Colors.black),
+                  borderRadius: BorderRadius.circular(8),
+                  boxShadow: const [
+                    BoxShadow(
+                      color: Colors.black,
+                      offset: Offset(0, 3),
+                    )
+                  ],
+                ),
+                child: InkWell(
+                  onTap: () => Get.back(),
+                  child: const Padding(
+                    padding: EdgeInsets.symmetric(vertical: 12.0),
+                    child: Center(
+                        child: StyledText(
+                      '확인',
+                      fontSize: 18,
+                      lineHeight: 18,
+                      color: Colors.black,
+                    )),
+                  ),
+                ),
+              ),
+            ],
+          ),
+        ),
       ),
     );
   }
 
   void fetchRechargeStamina(type) async {
-    UserStateModel newUserState = await ActivityService.fetchUserStaminaRecharge(
-      UserStaminaRechargeModel(
-        type: type,
-        stat: _currentSliderValue.value.toInt(),
-        feeTik: costTik.value,
-      ),
-    );
-    userState.update((state) {
-      state!.state = newUserState;
-    });
-
-    closeRepairPopup();
+    if (walletMasterController.tik.value.amount! >= costTik.value) {
+      if (costTik.value > 0) {
+        UserStateModel newUserState = await ActivityService.fetchUserStaminaRecharge(
+          UserStaminaRechargeModel(
+            type: type,
+            stat: _currentSliderValue.value.toInt(),
+            feeTik: costTik.value,
+          ),
+        );
+        userState.update((state) {
+          state!.state = newUserState;
+        });
+        showToastPopup('체력이 충전되었습니다.');
+        closeRepairPopup();
+      } else {
+        showToastPopup('충전할 게이지를 확인해주세요.');
+      }
+    } else {
+      handleNotEnoughTaikaPopup();
+    }
   }
 
   void fetchRepairShoes() async {
-    if (costTik.value > 0) {
-      InventoryItemModel repairModel = await ItemService.fetchRepairItemShoes(
-        RepairShoesModel(
-          id: userState.value.shoes!.id,
-          durability: repairDurability.value,
-          feeTik: costTik.value.toInt(),
-        ),
-      );
-      userState.update((state) {
-        state!.shoes!.durability = repairModel.durability;
-      });
-
-      closeRepairPopup();
+    if (walletMasterController.tik.value.amount! >= costTik.value) {
+      if (costTik.value > 0) {
+        InventoryItemModel repairModel = await ItemService.fetchRepairItemShoes(
+          RepairShoesModel(
+            id: userState.value.shoes!.id,
+            durability: repairDurability.value,
+            feeTik: costTik.value.toInt(),
+          ),
+        );
+        userState.update((state) {
+          state!.shoes!.durability = repairModel.durability;
+        });
+        showToastPopup('내구도 충전이 완료되었습니다.');
+        closeRepairPopup();
+      } else {
+        showToastPopup('충전할 게이지를 확인해주세요.');
+      }
     } else {
-      print('수리할 내구도가 없습니다.');
+      handleNotEnoughTaikaPopup();
     }
   }
 
@@ -440,7 +663,7 @@ class ActivityController extends GetxController with ActivityMixin, ChallengeMix
         // 첼린지 존 찾기(30초마다 요청)
         DateTime now = DateTime.now();
 
-        if(receiveLocationTime.value.add(const Duration(seconds: 30)).compareTo(now) < 0){
+        if (receiveLocationTime.value.add(const Duration(seconds: 30)).compareTo(now) < 0) {
           findChallenge();
           receiveLocationTime.value = now;
         }
@@ -463,7 +686,9 @@ class ActivityController extends GetxController with ActivityMixin, ChallengeMix
   }
 
   Future<void> getCurrentLocation() async {
+    print('getCurrentLocation');
     await Geolocator.getCurrentPosition(desiredAccuracy: LocationAccuracy.bestForNavigation, timeLimit: Duration(seconds: 5)).then((location) {
+      print('getCurrentLocation 위치정보 가져옴');
       currentLocation.value = location;
       isListeningToLocation.value = true;
     }).onError((error, stackTrace) {
