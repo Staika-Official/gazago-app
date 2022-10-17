@@ -12,6 +12,7 @@ Future<void> initFcm() async {
   await requestPermission();
 
   await FirebaseMessaging.instance.getToken().then((fcmToken) async {
+    print('fcmToken: $fcmToken');
     if (fcmToken != null && fcmToken.isNotEmpty) {
       HiveStore.save(key: HiveKey.fcmToken.name, value: fcmToken);
     }
@@ -35,6 +36,8 @@ void handleMessage() {
   FirebaseMessaging.onMessage.listen((RemoteMessage message) {
     RemoteNotification? notification = message.notification;
     AndroidNotification? android = message.notification?.android;
+
+    print('FCM Foreground handleMessage ${notification!.title}');
 
     if (notification != null && android != null) {
       flutterLocalNotificationsPlugin.show(

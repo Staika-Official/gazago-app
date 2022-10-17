@@ -3,10 +3,12 @@ import 'dart:io';
 
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:flutter_naver_map/flutter_naver_map.dart';
 import 'package:gaza_go/constants/enums.dart';
 import 'package:gaza_go/constants/routes.dart';
 import 'package:gaza_go/platform/controllers/wallet_master_controller.dart';
+import 'package:gaza_go/platform/firebase/cloud_messaging.dart';
 import 'package:gaza_go/platform/helpers/activity_mixin.dart';
 import 'package:gaza_go/platform/helpers/challenge_mixin.dart';
 import 'package:gaza_go/platform/models/challenge_model.dart';
@@ -88,6 +90,21 @@ class ActivityController extends GetxController with ActivityMixin, ChallengeMix
 
   Future<void> refreshController() async {
     getUserState();
+  }
+
+  Future<void> onClickTestNoti() async {
+    const AndroidNotificationDetails androidNotificationDetails =
+      AndroidNotificationDetails(
+        'your channel id',
+        'your channel name',
+        channelDescription: 'your channel description',
+        importance: Importance.max,
+        priority: Priority.high,
+        ticker: 'ticker',
+      );
+    const NotificationDetails platformChannelSpecifics = NotificationDetails(android: androidNotificationDetails, iOS: IOSNotificationDetails());
+
+    await flutterLocalNotificationsPlugin.show(0, 'Title', 'Body', platformChannelSpecifics, payload: 'Payload');
   }
 
   void initRepairInfo() {

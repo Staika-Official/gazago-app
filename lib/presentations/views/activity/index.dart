@@ -546,6 +546,10 @@ class ActivityHome extends StatelessWidget {
                                 ),
                               ),
                             ),
+                           /* ElevatedButton(
+                              onPressed: () => { controller.onClickTestNoti() },
+                              child: Text('확인'),
+                            ),*/
                           ],
                         );
                       }),
