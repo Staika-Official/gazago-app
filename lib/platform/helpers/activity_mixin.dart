@@ -37,10 +37,21 @@ class ActivityMixin {
   StreamSubscription<Position>? locationSubscription;
   StreamSubscription<StepCount>? stepSubscription;
   StreamSubscription<PedestrianStatus>? pedestrianStatusSubscription;
+  final Rx<DateTime> pedestrianStoppedTime = Rx(DateTime.now());
 
   RxDouble get realTimeSpeed {
     double speed = currentLocation.value.speed ?? 0;
-    return RxDouble(speed <= 0 ? 0 : convertMStoKMH(currentLocation.value.speed));
+
+    // 15초 이상 걷기 감지가 되지 않을 경우에는 속도 0으로 표시
+    if (speed > 0 && pedestrianStatus.value == 'STOPPED') {
+      DateTime now = DateTime.now();
+      if (pedestrianStoppedTime.value.add(const Duration(seconds: 15)).compareTo(now) < 0) {
+        speed = 0;
+      }
+    } else {
+      pedestrianStoppedTime.value = DateTime.now();
+    }
+    return RxDouble(speed <= 0 ? 0 : convertMStoKMH(currentLocation.value.speed!));
   }
 
   RxDouble get avgSpeed {

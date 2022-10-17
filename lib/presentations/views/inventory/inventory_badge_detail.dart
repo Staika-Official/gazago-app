@@ -2,6 +2,7 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:gaza_go/platform/controllers/inventory_controller.dart';
 import 'package:gaza_go/platform/controllers/synthetic_badge_controller.dart';
+import 'package:gaza_go/platform/helpers/base_helper.dart';
 import 'package:gaza_go/presentations/components/default_container.dart';
 import 'package:gaza_go/presentations/styles/icons.dart';
 import 'package:gaza_go/presentations/styles/styled_text.dart';
@@ -62,272 +63,304 @@ class InventoryBadgeDetail extends StatelessWidget {
     SyntheticBadgeController syntheticBadgeController = Get.put(SyntheticBadgeController(controller.selectedBadge));
 
     return DefaultContainer(
-      titleText: '상세',
-      child: SingleChildScrollView(
-        child: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 20),
-          child: Column(
-            mainAxisSize: MainAxisSize.max,
-            children: [
-              Container(
-                child: Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 10.0, vertical: 20.0),
-                  child: Column(
-                    children: [
-                      // Padding(
-                      //   padding: const EdgeInsets.only(top: 10, bottom: 10),
-                      //   child: Text(controller.selectedBadge.value.badge.description!),
-                      // ),
-                      SizedBox(
-                        width: 100,
-                        height: 100,
-                        child: Stack(
-                          alignment: Alignment.bottomCenter,
-                          children: [
-                            CachedNetworkImage(
-                              imageUrl: controller.selectedBadge.value.badge.imageUrl,
-                              fit: BoxFit.fill,
-                              placeholder: (context, url) => const CircularProgressIndicator(),
-                              // errorWidget: (context, url, error) => Image.asset("assets/images/@temp_badge.png"),
-                            )
-                          ],
-                        ),
-                      ),
-
-                      Container(
-                        margin: EdgeInsets.only(top: 5),
-                        decoration: const BoxDecoration(
-                          color: Color(0xFF1D1D26),
-                          borderRadius: BorderRadius.all(
-                            Radius.circular(10),
-                          ),
-                          boxShadow: [
-                            BoxShadow(
-                              color: Colors.black,
-                              offset: Offset(0, 1),
-                              blurRadius: 1.0,
-                              spreadRadius: 0.0,
-                            ),
-                          ],
-                        ),
-                        child: Padding(
-                          padding: const EdgeInsets.all(20.0),
-                          child: Row(
-                            mainAxisSize: MainAxisSize.max,
-                            crossAxisAlignment: CrossAxisAlignment.center,
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              Padding(
-                                padding: const EdgeInsets.only(right: 20.0),
-                                child: Column(
-                                  children: [
-                                    Row(
-                                      mainAxisAlignment: MainAxisAlignment.center,
-                                      children: [
-                                        StyledText(
-                                          '${controller.selectedItem.value.rewardRate.toInt()}',
-                                          fontSize: 28,
-                                          lineHeight: 28,
-                                          fontWeight: 500,
-                                          color: Color(0xFF0EE6F3),
-                                        ),
-                                        const StyledText(
-                                          '%',
-                                          fontSize: 16,
-                                          lineHeight: 24,
-                                          fontWeight: 500,
-                                          color: Color(0xFF0EE6F3),
-                                        ),
-                                      ],
-                                    ),
-                                    Padding(
-                                      padding: const EdgeInsets.only(top: 5.0),
-                                      child: Row(
-                                        mainAxisAlignment: MainAxisAlignment.center,
-                                        children: [
-                                          Padding(
-                                            padding: const EdgeInsets.only(top: 3.0, right: 2.0),
-                                            child: iconGoReward,
-                                          ),
-                                          const StyledText(
-                                            'GO 보상율',
-                                            color: Color(0xFF8A8A8A),
-                                            fontSize: 11,
-                                            lineHeight: 12,
-                                            fontWeight: 500,
-                                          ),
-                                        ],
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                              ),
-                              Column(
-                                children: [
-                                  Row(
-                                    mainAxisAlignment: MainAxisAlignment.center,
-                                    children: [
-                                      StyledText(
-                                        '${controller.selectedItem.value.abrasionRate.toInt()}',
-                                        fontSize: 28,
-                                        lineHeight: 28,
-                                        fontWeight: 500,
-                                        color: Color(0xFFB85DFF),
-                                      ),
-                                      const StyledText(
-                                        '%',
-                                        fontSize: 16,
-                                        lineHeight: 24,
-                                        fontWeight: 500,
-                                        color: Color(0xFFB85DFF),
-                                      ),
-                                    ],
-                                  ),
-                                  Padding(
-                                    padding: const EdgeInsets.only(top: 5.0),
-                                    child: Row(
-                                      mainAxisAlignment: MainAxisAlignment.center,
-                                      crossAxisAlignment: CrossAxisAlignment.center,
-                                      children: [
-                                        Padding(
-                                          padding: const EdgeInsets.only(top: 1.0, right: 3.0),
-                                          child: iconItemAbrasion,
-                                        ),
-                                        StyledText(
-                                          '아이템 마모율',
-                                          color: Color(0xFF8A8A8A),
-                                          fontSize: 11,
-                                          lineHeight: 12,
-                                          fontWeight: 500,
-                                        ),
-                                      ],
-                                    ),
-                                  ),
-                                ],
-                              ),
-                              Padding(
-                                padding: const EdgeInsets.only(left: 20.0),
-                                child: Column(
-                                  children: [
-                                    Row(
-                                      mainAxisAlignment: MainAxisAlignment.center,
-                                      children: [
-                                        StyledText(
-                                          '${controller.selectedItem.value.staminaReduceRate.toInt()}',
-                                          fontSize: 28,
-                                          lineHeight: 28,
-                                          fontWeight: 500,
-                                          color: Color(0xFFCDFF41),
-                                        ),
-                                        StyledText(
-                                          '%',
-                                          fontSize: 16,
-                                          lineHeight: 24,
-                                          fontWeight: 500,
-                                          color: Color(0xFFCDFF41),
-                                        ),
-                                      ],
-                                    ),
-                                    Padding(
-                                      padding: const EdgeInsets.only(top: 5.0),
-                                      child: Row(
-                                        mainAxisAlignment: MainAxisAlignment.center,
-                                        children: [
-                                          Padding(
-                                            padding: const EdgeInsets.only(top: 1.0, right: 3.0),
-                                            child: iconStaminaReduce,
-                                          ),
-                                          StyledText(
-                                            '체력 감소율',
-                                            color: Color(0xFF8A8A8A),
-                                            fontSize: 11,
-                                            lineHeight: 12,
-                                            fontWeight: 500,
-                                          ),
-                                        ],
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
-                      ),
-                    ],
-                  ),
+      titleText: 'Lv.${controller.selectedBadge.value.badge.level} ${controller.selectedBadge.value.badge.name}',
+      backgroundColor: Color(0xFF191921),
+      child: Padding(
+        padding: const EdgeInsets.all(22),
+        child: Column(
+          mainAxisSize: MainAxisSize.max,
+          children: [
+            Container(
+              decoration: BoxDecoration(
+                color: Color(0xFF2A2B33),
+                border: Border.all(
+                  width: 2,
+                  color: Colors.black,
                 ),
-              ),
-              Container(
-                child: Column(
-                  children: [
-                    Padding(
-                      padding: const EdgeInsets.only(top: 10, bottom: 5),
-                      /**/
-                      child: Row(children: [Text('이동 보상율'), Spacer(), Text('${controller.selectedBadge.value.badge.rewardRate}%')]),
-                    ),
-                    LinearProgressIndicator(
-                      value: controller.calculateProgress(controller.selectedBadge.value.badge.rewardRate),
-                      minHeight: 10,
-                      backgroundColor: const Color(0xffb74093),
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.only(top: 10, bottom: 5),
-                      child: Row(children: [Text('행운 지수율'), Spacer(), Text('${controller.selectedBadge.value.badge.luckRate}%')]),
-                    ),
-                    LinearProgressIndicator(
-                      value: controller.calculateProgress(controller.selectedBadge.value.badge.luckRate),
-                      minHeight: 10,
-                      backgroundColor: const Color(0xffb74093),
-                    ),
-                  ],
+                borderRadius: const BorderRadius.all(
+                  Radius.circular(14),
                 ),
-              ),
-              Column(
-                children: [
-                  Padding(
-                    padding: const EdgeInsets.only(top: 30, bottom: 5),
-                    child: Row(children: [Text('획득 정보')]),
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.only(top: 5, bottom: 5),
-                    child: Row(children: [
-                      Container(
-                        child: Text(syntheticBadgeController.badgeType.value),
-                      ),
-                      Container(
-                        padding: EdgeInsets.only(left: 5),
-                        child: Text('·'),
-                      ),
-                      Container(
-                        padding: EdgeInsets.only(left: 5),
-                        child: Text(controller.getBadgeDate.value),
-                      ),
-                    ]),
+                boxShadow: [
+                  BoxShadow(
+                    color: Colors.black.withOpacity(0.25),
+                    offset: Offset(0, 1),
+                    blurRadius: 5.0,
+                    spreadRadius: 0.0,
                   ),
                 ],
               ),
-              SizedBox(
-                height: 200,
-                child: Padding(
-                  padding: const EdgeInsets.only(top: 10),
-                  child: Column(
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      ...renderBadgeList(controller),
-                    ],
+              child: Column(
+                children: [
+                  SizedBox(
+                    child: Stack(
+                      children: [
+                        Positioned(
+                          top: 12,
+                          right: 12,
+                          child: Container(
+                            decoration: BoxDecoration(
+                              border: Border.all(
+                                width: 1,
+                                color: Color(0xFF8A8A8A),
+                              ),
+                              borderRadius: const BorderRadius.all(
+                                Radius.circular(20),
+                              ),
+                            ),
+                            child: Padding(
+                              padding: EdgeInsets.symmetric(vertical: 5.0, horizontal: 10.0),
+                              child: StyledText(
+                                '#${controller.selectedBadge.value.badge.id}',
+                                fontSize: 14,
+                                fontFamily: 'Montserrat',
+                                fontWeight: 600,
+                                lineHeight: 15,
+                                color: Color(0xFF8A8A8A),
+                              ),
+                            ),
+                          ),
+                        ),
+                        Column(
+                          children: [
+                            Padding(
+                              padding: const EdgeInsets.only(top: 40.0),
+                              child: SizedBox(
+                                width: 150,
+                                child: CachedNetworkImage(
+                                  imageUrl: controller.selectedBadge.value.badge.imageUrl,
+                                  fit: BoxFit.fill,
+                                  placeholder: (context, url) => const CircularProgressIndicator(),
+                                ),
+                              ),
+                            ),
+                            Wrap(
+                              direction: Axis.vertical,
+                              children: [
+                                Container(
+                                  margin: EdgeInsets.only(
+                                    top: 12,
+                                  ),
+                                  padding: EdgeInsets.symmetric(
+                                    vertical: 20,
+                                    horizontal: 45,
+                                  ),
+                                  decoration: const BoxDecoration(
+                                    color: Color(0xFF1D1D26),
+                                    borderRadius: BorderRadius.all(
+                                      Radius.circular(10),
+                                    ),
+                                  ),
+                                  child: Column(
+                                    children: [
+                                      Row(
+                                        crossAxisAlignment: CrossAxisAlignment.center,
+                                        mainAxisAlignment: MainAxisAlignment.center,
+                                        children: [
+                                          Padding(
+                                            padding: const EdgeInsets.only(right: 20.0),
+                                            child: Column(
+                                              children: [
+                                                Row(
+                                                  mainAxisAlignment: MainAxisAlignment.center,
+                                                  children: [
+                                                    StyledText(
+                                                      '${controller.selectedBadge.value.badge.rewardRate.toInt()}',
+                                                      fontSize: 28,
+                                                      lineHeight: 28,
+                                                      fontWeight: 500,
+                                                      color: Color(0xFF0EE6F3),
+                                                    ),
+                                                    const StyledText(
+                                                      '%',
+                                                      fontSize: 16,
+                                                      lineHeight: 24,
+                                                      fontWeight: 500,
+                                                      color: Color(0xFF0EE6F3),
+                                                    ),
+                                                  ],
+                                                ),
+                                                Padding(
+                                                  padding: const EdgeInsets.only(top: 5.0),
+                                                  child: Row(
+                                                    mainAxisAlignment: MainAxisAlignment.center,
+                                                    children: [
+                                                      Padding(
+                                                        padding: const EdgeInsets.only(top: 2.0, right: 2.0),
+                                                        child: iconGoReward,
+                                                      ),
+                                                      const StyledText(
+                                                        'GO 보상율',
+                                                        color: Color(0xFF8A8A8A),
+                                                        fontSize: 11,
+                                                        lineHeight: 12,
+                                                        fontWeight: 500,
+                                                      ),
+                                                    ],
+                                                  ),
+                                                ),
+                                              ],
+                                            ),
+                                          ),
+                                          Column(
+                                            children: [
+                                              Row(
+                                                mainAxisAlignment: MainAxisAlignment.center,
+                                                children: [
+                                                  StyledText(
+                                                    '${controller.selectedBadge.value.badge.luckRate.toInt()}',
+                                                    fontSize: 28,
+                                                    lineHeight: 28,
+                                                    fontWeight: 500,
+                                                    color: Color(0xFFFF41CA),
+                                                  ),
+                                                  const StyledText(
+                                                    '%',
+                                                    fontSize: 16,
+                                                    lineHeight: 24,
+                                                    fontWeight: 500,
+                                                    color: Color(0xFFFF41CA),
+                                                  ),
+                                                ],
+                                              ),
+                                              Padding(
+                                                padding: const EdgeInsets.only(top: 5.0),
+                                                child: Row(
+                                                  mainAxisAlignment: MainAxisAlignment.center,
+                                                  crossAxisAlignment: CrossAxisAlignment.center,
+                                                  children: [
+                                                    Padding(
+                                                      padding: const EdgeInsets.only(top: 1.0, right: 3.0),
+                                                      child: iconLucky,
+                                                    ),
+                                                    StyledText(
+                                                      '행운 지수율',
+                                                      color: Color(0xFF8A8A8A),
+                                                      fontSize: 11,
+                                                      lineHeight: 12,
+                                                      fontWeight: 500,
+                                                    ),
+                                                  ],
+                                                ),
+                                              ),
+                                            ],
+                                          ),
+                                        ],
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                              ],
+                            ),
+
+                            const Padding(
+                              padding: EdgeInsets.symmetric(vertical: 20.0),
+                              child: Divider(thickness: 1, height: 1, color: Color(0xFF363841)),
+                            ),
+
+                            Padding(
+                              padding: const EdgeInsets.symmetric(horizontal: 15.0),
+                              child: Column(
+                                children: [
+                                  Row(children: const [
+                                    StyledText(
+                                      '획득 정보',
+                                      color: Color(0xFFBFBFBF),
+                                      fontSize: 14,
+                                      fontWeight: 500,
+                                    )
+                                  ]),
+                                  Obx(() {
+                                    return Padding(
+                                      padding: const EdgeInsets.only(top: 10, bottom: 15),
+                                      child: Row(children: [
+                                        StyledText(
+                                          syntheticBadgeController.badgeType.value,
+                                          color: Color(0xFF8A8A8A),
+                                          fontSize: 14,
+                                          fontWeight: 500,
+                                        ),
+                                        Container(
+                                          padding: EdgeInsets.only(left: 5),
+                                          child: StyledText(
+                                            '·',
+                                            fontSize: 14,
+                                            fontWeight: 500,
+                                            color: Color(0xFF8A8A8A),
+                                          ),
+                                        ),
+                                        Container(
+                                          padding: EdgeInsets.only(left: 5),
+                                          child: StyledText(
+                                            formatDate(controller.getBadgeDate.value),
+                                            fontSize: 14,
+                                            fontWeight: 500,
+                                            color: Color(0xFF8A8A8A),
+                                          ),
+                                        ),
+                                      ]),
+                                    );
+                                  }),
+                                ],
+                              ),
+                            ),
+                            // SizedBox(
+                            //   height: 200,
+                            //   child: Padding(
+                            //     padding: const EdgeInsets.only(top: 10),
+                            //     child: Column(
+                            //       mainAxisSize: MainAxisSize.min,
+                            //       children: [
+                            //         ...renderBadgeList(controller),
+                            //       ],
+                            //     ),
+                            //   ),
+                            // ),
+                          ],
+                        )
+                      ],
+                    ),
                   ),
-                ),
+                ],
               ),
-              SizedBox(
-                width: double.infinity,
-                child: ElevatedButton(
-                  onPressed: () => controller.toSyntheticBadgeDetail(controller.selectedBadge.value.badge.id),
-                  child: const Text('합성'),
-                ),
-              ),
-            ],
-          ),
+            ),
+            // Spacer(),
+            // Align(
+            //   alignment: Alignment.bottomCenter,
+            //   child: InkWell(
+            //     onTap: () => controller.toSyntheticBadgeDetail(controller.selectedBadge.value.badge.id),
+            //     child: Container(
+            //       padding: const EdgeInsets.all(20),
+            //       width: double.infinity,
+            //       decoration: BoxDecoration(
+            //         color: Color(0xff0EE6F3),
+            //         borderRadius: BorderRadius.circular(12),
+            //         border: Border.all(
+            //           width: 2,
+            //           style: BorderStyle.solid,
+            //           color: Colors.black,
+            //         ),
+            //         boxShadow: const [
+            //           BoxShadow(
+            //             offset: Offset(0, 4),
+            //             blurRadius: 0,
+            //             spreadRadius: 0,
+            //             color: Colors.black,
+            //           ),
+            //         ],
+            //       ),
+            //       child: const Text(
+            //         '합성',
+            //         textAlign: TextAlign.center,
+            //         style: TextStyle(
+            //           fontSize: 18,
+            //           fontWeight: FontWeight.w600,
+            //           height: 16 / 18,
+            //         ),
+            //       ),
+            //     ),
+            //   ),
+            // ),
+          ],
         ),
       ),
     );

@@ -17,3 +17,7 @@ Future<void> initFirebasePackages() async {
   await initRemoteConfig();
   await initFcm();
 }
+
+Future<void> backgroundFcm() async {
+  await setForegroundConfig();
+}

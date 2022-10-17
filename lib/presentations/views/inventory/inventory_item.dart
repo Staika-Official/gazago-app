@@ -83,7 +83,7 @@ class InventoryItem extends StatelessWidget {
                                         borderRadius: const BorderRadius.all(
                                           Radius.circular(20),
                                         ),
-                                        boxShadow: [
+                                        boxShadow: const [
                                           BoxShadow(
                                             offset: Offset(0, 3),
                                             blurRadius: 0,
@@ -93,7 +93,7 @@ class InventoryItem extends StatelessWidget {
                                         ],
                                       ),
                                       alignment: Alignment.center,
-                                      child: Padding(
+                                      child: const Padding(
                                         padding: const EdgeInsets.all(8.0),
                                         child: StyledText(
                                           '장착',

@@ -40,6 +40,8 @@ class SyntheticBadgeController extends GetxController with InventoryMixin {
         return RxString('등산');
       case 'MISSION':
         return RxString('미션');
+      case 'CHALLENGE':
+        return RxString('보상');
       case 'COMPOSE':
         return RxString('합성');
     }

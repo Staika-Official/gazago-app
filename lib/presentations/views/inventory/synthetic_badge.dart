@@ -17,6 +17,7 @@ class SyntheticBadge extends StatelessWidget {
     return Scaffold(
       appBar: homeMenuController.appbarList[1],
       body: Container(
+        color: Color(0xFF1D1D26),
         child: Padding(
           padding: const EdgeInsets.symmetric(horizontal: 20),
           child: Column(
@@ -28,64 +29,21 @@ class SyntheticBadge extends StatelessWidget {
                   child: Center(
                     child: Wrap(
                       runSpacing: 25.0,
-                      //between line
                       spacing: 50.0,
                       alignment: WrapAlignment.center,
                       crossAxisAlignment: WrapCrossAlignment.start,
-
                       children: [
-                        // if (_controller.selectedBadgeList.length > 0)
                         for (int i = 0; i < _controller.selectedBadgeLevel.value; i++)
                           Obx(() {
                             return GestureDetector(
                               onTap: () => i != 0 ? _controller.showSelectBadgePopup(controller.userBadgesList.value, controller.selectedBadge.value, i) : null,
                               child: CircleAvatar(
-                                backgroundImage: const AssetImage('assets/images/@temp_img_empty.png'),
+                                backgroundImage: AssetImage('assets/images/inventory/ico_circle_plus.png'),
                                 foregroundImage: NetworkImage(_controller.selectedBadgeList[i] != null ? _controller.selectedBadgeList[i]!.badge.imageUrl ?? '' : ''),
-                                radius: 30,
+                                radius: 54,
                               ),
                             );
                           })
-                        // GestureDetector(
-                        //   onTap: () => _controller.showSelectBadgePopup(controller.myBadgeList.value),
-                        //   child: CircleAvatar(
-                        //     backgroundImage: AssetImage('assets/images/@temp_img_empty.png'),
-                        //     // foregroundImage: CachedNetworkImageProvider('https://placeimg.com/60/60/any'),
-                        //     radius: 30,
-                        //   ),
-                        // ),
-                        // GestureDetector(
-                        //   onTap: () => _controller.showSelectBadgePopup(controller.myBadgeList.value),
-                        //   child: CircleAvatar(
-                        //     backgroundImage: AssetImage('assets/images/@temp_img_empty.png'),
-                        //     // foregroundImage: CachedNetworkImageProvider('https://placeimg.com/60/60/any'),
-                        //     radius: 30,
-                        //   ),
-                        // ),
-                        // GestureDetector(
-                        //   onTap: () => _controller.showSelectBadgePopup(controller.myBadgeList.value),
-                        //   child: CircleAvatar(
-                        //     backgroundImage: AssetImage('assets/images/@temp_img_empty.png'),
-                        //     // foregroundImage: CachedNetworkImageProvider('https://placeimg.com/60/60/any'),
-                        //     radius: 30,
-                        //   ),
-                        // ),
-                        // GestureDetector(
-                        //   onTap: () => _controller.showSelectBadgePopup(controller.myBadgeList.value),
-                        //   child: CircleAvatar(
-                        //     backgroundImage: AssetImage('assets/images/@temp_img_empty.png'),
-                        //     // foregroundImage: CachedNetworkImageProvider('https://placeimg.com/60/60/any'),
-                        //     radius: 30,
-                        //   ),
-                        // ),
-                        // GestureDetector(
-                        //   onTap: () => _controller.showSelectBadgePopup(controller.myBadgeList.value),
-                        //   child: CircleAvatar(
-                        //     backgroundImage: AssetImage('assets/images/@temp_img_empty.png'),
-                        //     // foregroundImage: CachedNetworkImageProvider('https://placeimg.com/60/60/any'),
-                        //     radius: 30,
-                        //   ),
-                        // ),
                       ],
                     ),
                   ),
