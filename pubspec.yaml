@@ -41,6 +41,7 @@ dependencies:
   intl: ^0.17.0 #https://pub.dev/packages/intl
   hive: ^2.2.3 #https://pub.dev/packages/hive
   hive_flutter: ^1.1.0
+  hive_generator: ^2.0.0
   rxdart: ^0.27.5 #https://pub.dev/packages/rxdart
   lottie: ^1.4.2 #https://pub.dev/packages/lottie
   share_plus: ^4.0.10+1 #https://pub.dev/packages/share_plus

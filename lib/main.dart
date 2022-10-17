@@ -7,6 +7,7 @@ import 'package:flutter/services.dart';
 import 'package:gaza_go/constants/enums.dart';
 import 'package:gaza_go/platform/firebase/core.dart';
 import 'package:gaza_go/platform/firebase/crashlytics.dart';
+import 'package:gaza_go/platform/models/user_exercise_model.dart';
 import 'package:gaza_go/platform/stores/hive_store.dart';
 import 'package:get/get.dart';
 import 'package:hive/hive.dart';
@@ -31,6 +32,7 @@ void main() async {
   await runZonedGuarded(() async {
     WidgetsFlutterBinding.ensureInitialized(); // async로 할 때 반드시 호출
     await Hive.initFlutter();
+    Hive.registerAdapter(UserExerciseModelAdapter());
     await HiveStore.openBox();
     await initFirebase();
     await initFirebasePackages();

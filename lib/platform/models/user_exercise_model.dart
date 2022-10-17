@@ -1,35 +1,63 @@
+import 'package:hive/hive.dart';
 import 'package:json_annotation/json_annotation.dart';
 
 part 'user_exercise_model.g.dart';
 
+@HiveType(typeId: 0)
 @JsonSerializable(explicitToJson: true)
 class UserExerciseModel {
+  @HiveField(0)
   int? id;
+  @HiveField(1)
   int? userId;
+  @HiveField(2)
   int? steps;
+  @HiveField(3)
   double? speed;
+  @HiveField(4)
   double? distance;
+  @HiveField(5)
   double? altitude;
+  @HiveField(6)
   int? time;
+  @HiveField(7)
   String? startPoint;
+  @HiveField(8)
   double? rewardGo;
+  @HiveField(9)
   double? rewardDistance;
+  @HiveField(10)
   double? spendStamina;
+  @HiveField(11)
   double? spendDurability;
+  @HiveField(12)
   String? startedDate;
+  @HiveField(13)
   String? endedDate;
+  @HiveField(14)
   String? locations;
+  @HiveField(15)
   int? badgeIssueId;
+  @HiveField(16)
   String? state;
+  @HiveField(17)
   bool? deleted;
+  @HiveField(18)
   String? createdBy;
+  @HiveField(19)
   String? createdDate;
+  @HiveField(20)
   String? lastModifiedBy;
+  @HiveField(21)
   String? lastModifiedDate;
   //운동 시작할때만 필요한 파라미터
+  @HiveField(22)
   String? type;
+  @HiveField(23)
   String? userProfileImageUrl;
+  @HiveField(24)
   String? userNickname;
+  @HiveField(25)
   int? challengeId;
 
   UserExerciseModel({

@@ -1,9 +1,11 @@
 import 'dart:async';
 
+import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_naver_map/flutter_naver_map.dart';
 import 'package:gaza_go/constants/enums.dart';
+import 'package:gaza_go/platform/controllers/global_controller.dart';
 import 'package:gaza_go/platform/helpers/activity_helper.dart';
 import 'package:gaza_go/platform/helpers/base_helper.dart';
 import 'package:gaza_go/platform/models/challenge_model.dart';
@@ -16,6 +18,8 @@ import 'package:get/get.dart';
 import 'package:pedometer/pedometer.dart';
 
 class ActivityMixin {
+  GlobalController globalController = Get.find();
+
   final Rx<CurrentUserStateModel> userState = Rx(CurrentUserStateModel());
   final updateInterval = 10000;
   final Rx<Position> currentLocation = Rx(Position(speed: 0, altitude: 0, accuracy: 0, heading: 0, latitude: 0, longitude: 0, speedAccuracy: 0, timestamp: DateTime.now()));
@@ -36,7 +40,7 @@ class ActivityMixin {
 
   RxDouble get realTimeSpeed {
     double speed = currentLocation.value.speed ?? 0;
-    return RxDouble(speed <= 0 ? 0 : convertMStoKMH(currentLocation.value.speed!));
+    return RxDouble(speed <= 0 ? 0 : convertMStoKMH(currentLocation.value.speed));
   }
 
   RxDouble get avgSpeed {
@@ -96,6 +100,17 @@ class ActivityMixin {
 
     exerciseTimer = Timer.periodic(const Duration(seconds: 1), (timer) {
       exerciseTime.value++;
+      HiveStore.saveExerciseData(
+        exerciseData: UserExerciseModel(
+          id: userState.value.exercise!.id,
+          steps: exerciseSteps.value,
+          speed: avgSpeed.value,
+          distance: totalDistance.value,
+          altitude: highestAltitude.value,
+          time: exerciseTime.value,
+          locations: coordinatesToString(coordinates),
+        ),
+      );
     });
   }
 
@@ -118,30 +133,34 @@ class ActivityMixin {
   }
 
   void startExercise(ExerciseType exerciseType, ChallengeModel? challenge) async {
-    UserExerciseModel exerciseModel = await ActivityService.fetchStartUserExercises(
-      UserExerciseModel(
-        userId: int.parse(
-          HiveStore.loadString(
-            key: HiveKey.userId.name,
-          )!,
+    if (globalController.connectivityResult.value != ConnectivityResult.none) {
+      UserExerciseModel exerciseModel = await ActivityService.fetchStartUserExercises(
+        UserExerciseModel(
+          userId: int.parse(
+            HiveStore.loadString(
+              key: HiveKey.userId.name,
+            )!,
+          ),
+          userNickname: HiveStore.loadString(key: HiveKey.nickname.name),
+          userProfileImageUrl: HiveStore.loadString(key: HiveKey.profileImageUrl.name),
+          type: exerciseType.value,
+          steps: 0,
+          speed: 0,
+          distance: 0,
+          altitude: currentLocation.value.altitude,
+          time: 0,
+          startPoint: challenge != null ? challenge.firstName : '${currentLocation.value.longitude}, ${currentLocation.value.latitude}',
+          challengeId: challenge?.id,
         ),
-        userNickname: HiveStore.loadString(key: HiveKey.nickname.name),
-        userProfileImageUrl: HiveStore.loadString(key: HiveKey.profileImageUrl.name),
-        type: exerciseType.value,
-        steps: 0,
-        speed: 0,
-        distance: 0,
-        altitude: currentLocation.value.altitude,
-        time: 0,
-        startPoint: challenge != null ? challenge.firstName : '${currentLocation.value.longitude}, ${currentLocation.value.latitude}',
-        challengeId: challenge?.id,
-      ),
-    );
-    userState.update((state) => state!.exercise = exerciseModel);
-    exerciseState.value = ExerciseState.ongoing;
-    initExerciseStats();
-    initStream();
-    startPeriodicUpdate();
+      );
+      userState.update((state) => state!.exercise = exerciseModel);
+      exerciseState.value = ExerciseState.ongoing;
+      initExerciseStats();
+      initStream();
+      startPeriodicUpdate();
+    } else {
+      Get.snackbar('인터넷 연결 불가', '인터넷 상태를 확인해주세요', colorText: Colors.white);
+    }
   }
 
   void continueExercise() {
@@ -171,19 +190,21 @@ class ActivityMixin {
       updateTimer = null;
     }
 
-    CurrentUserStateModel newUserState = await ActivityService.fetchUpdateUserExercises(
-      UserExerciseModel(
-        id: userState.value.exercise!.id,
-        steps: exerciseSteps.value,
-        speed: avgSpeed.value,
-        distance: totalDistance.value,
-        altitude: highestAltitude.value,
-        time: exerciseTime.value,
-        locations: coordinatesToString(coordinates),
-      ),
-      onError: errorHandler,
-    );
-    userState.value = newUserState;
+    if (globalController.connectivityResult.value != ConnectivityResult.none) {
+      CurrentUserStateModel newUserState = await ActivityService.fetchUpdateUserExercises(
+        UserExerciseModel(
+          id: userState.value.exercise!.id,
+          steps: exerciseSteps.value,
+          speed: avgSpeed.value,
+          distance: totalDistance.value,
+          altitude: highestAltitude.value,
+          time: exerciseTime.value,
+          locations: coordinatesToString(coordinates),
+        ),
+        onError: errorHandler,
+      );
+      userState.value = newUserState;
+    }
   }
 
   void startPeriodicUpdate() {
@@ -238,33 +259,38 @@ class ActivityMixin {
   }
 
   void endExercise() async {
-    CurrentUserStateModel newUserState = await ActivityService.fetchEndUserExercises(
-      UserExerciseModel(
-        id: userState.value.exercise!.id,
-        steps: exerciseSteps.value,
-        speed: avgSpeed.value,
-        distance: totalDistance.value,
-        altitude: highestAltitude.value,
-        time: exerciseTime.value,
-        locations: coordinatesToString(coordinates),
-      ),
-    );
+    if (globalController.connectivityResult.value != ConnectivityResult.none) {
+      CurrentUserStateModel newUserState = await ActivityService.fetchEndUserExercises(
+        UserExerciseModel(
+          id: userState.value.exercise!.id,
+          steps: exerciseSteps.value,
+          speed: avgSpeed.value,
+          distance: totalDistance.value,
+          altitude: highestAltitude.value,
+          time: exerciseTime.value,
+          locations: coordinatesToString(coordinates),
+        ),
+      );
 
-    if (newUserState.exercise!.state == 'ENDED') {
-      exerciseState.value = ExerciseState.ready;
-      userState.update((state) {
-        state = newUserState;
-      });
-      exerciseTime.value = 0;
-      stopProgress.value = 0;
-      updateTimer?.cancel();
-      updateTimer = null;
-      exerciseTimer?.cancel();
-      exerciseTimer = null;
-      stepSubscription?.cancel();
-      stepSubscription = null;
-      pedestrianStatusSubscription?.cancel();
-      pedestrianStatusSubscription = null;
+      if (newUserState.exercise!.state == 'ENDED') {
+        exerciseState.value = ExerciseState.ready;
+        userState.update((state) {
+          state = newUserState;
+        });
+        HiveStore.deleteKey(key: 'exerciseData');
+        exerciseTime.value = 0;
+        stopProgress.value = 0;
+        updateTimer?.cancel();
+        updateTimer = null;
+        exerciseTimer?.cancel();
+        exerciseTimer = null;
+        stepSubscription?.cancel();
+        stepSubscription = null;
+        pedestrianStatusSubscription?.cancel();
+        pedestrianStatusSubscription = null;
+      }
+    } else {
+      Get.snackbar('인터넷 연결 불가', '지금은 인터넷과 연결되지 않아 정상적으로 종료하지 못합니다.', colorText: Colors.white);
     }
   }
 
