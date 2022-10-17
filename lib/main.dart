@@ -89,7 +89,7 @@ class MyApp extends StatelessWidget {
         ),
       ),
       navigatorObservers: <NavigatorObserver>[observer],
-      initialRoute: Routes.login,
+      initialRoute: Routes.joinTerms,
       getPages: [...Routes.pages],
     );
   }

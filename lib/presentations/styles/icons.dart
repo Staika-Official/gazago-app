@@ -4,6 +4,7 @@ import 'package:flutter_svg/flutter_svg.dart';
 // Common Icons
 SvgPicture iconPlus = SvgPicture.asset('assets/images/common/ico_plus.svg', width: 10, height: 10);
 SvgPicture iconSliderShoe = SvgPicture.asset('assets/images/common/ico_slider_shoe.svg', width: 14.7, height: 16);
+SvgPicture iconSliderStamina = SvgPicture.asset('assets/images/common/ico_slider_stamina.svg', width: 13.33, height: 20.8);
 
 // Bottom Navigation Icon
 SvgPicture iconMenuHome = SvgPicture.asset('assets/images/common/ico_menu_home.svg', width: 20.5, height: 20);

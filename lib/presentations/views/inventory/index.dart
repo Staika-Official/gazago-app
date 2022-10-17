@@ -231,10 +231,10 @@ class InventoryHome extends StatelessWidget {
               child: TabBar(
                 controller: inventoryMenuController.tabController,
                 labelColor: Colors.white,
-                labelStyle: TextStyle(fontSize: 16, fontWeight: FontWeight.w500),
+                labelStyle: const TextStyle(fontSize: 16, fontWeight: FontWeight.w500),
                 unselectedLabelColor: const Color(0xFF8A8A8A),
                 indicatorWeight: 0.1,
-                labelPadding: EdgeInsets.all(0),
+                labelPadding: const EdgeInsets.all(0),
                 indicator: const BoxDecoration(
                   color: Color(0xFF363841),
                   borderRadius: BorderRadius.only(
@@ -364,12 +364,14 @@ class Tile extends StatelessWidget {
                 mainAxisAlignment: MainAxisAlignment.center,
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
-                  SizedBox(
+                  AspectRatio(
+                    aspectRatio: 1 / 1,
                     child: CachedNetworkImage(
-                        imageUrl: imageUrl,
-                        placeholder: (context, url) => const CircularProgressIndicator(),
-                        errorWidget: (context, url, error) => Image.asset("assets/images/@temp_badge.png"),
-                        fit: BoxFit.cover),
+                      imageUrl: imageUrl,
+                      placeholder: (context, url) => const CircularProgressIndicator(),
+                      errorWidget: (context, url, error) => Image.asset("assets/images/@temp_badge.png"),
+                      fit: BoxFit.fill,
+                    ),
                   ),
                 ],
               ),

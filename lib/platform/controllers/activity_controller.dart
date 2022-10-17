@@ -60,15 +60,12 @@ class ActivityController extends GetxController with ActivityMixin, ChallengeMix
 
   @override
   void onInit() async {
-    print('onInitActivity');
     await initController();
 
     super.onInit();
   }
 
   void onReady() async {
-    print('onReadyActivity');
-    print('123123123123123${walletMasterController.spendingTokenUiList.value}');
     super.onReady();
   }
 
@@ -128,6 +125,7 @@ class ActivityController extends GetxController with ActivityMixin, ChallengeMix
     Get.bottomSheet(
       Obx(() {
         return Container(
+          height: 340,
           decoration: const BoxDecoration(
             color: Color(0xff363841),
             borderRadius: BorderRadius.only(
@@ -228,7 +226,7 @@ class ActivityController extends GetxController with ActivityMixin, ChallengeMix
                               )
                             ],
                           ),
-                          child: iconSliderShoe,
+                          child: stat.type == 'STAMINA' ? iconSliderStamina : iconSliderShoe,
                         ),
                       ),
                     ),
