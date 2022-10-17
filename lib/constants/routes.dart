@@ -12,6 +12,7 @@ import 'package:gaza_go/presentations/views/inventory/inventory_item_detail.dart
 import 'package:gaza_go/presentations/views/inventory/synthetic_badge.dart';
 import 'package:gaza_go/presentations/views/join/join_terms.dart';
 import 'package:gaza_go/presentations/views/leaderboard/calendar_statistics.dart';
+import 'package:gaza_go/presentations/views/loading.dart';
 import 'package:gaza_go/presentations/views/login.dart';
 import 'package:gaza_go/presentations/views/on_boarding.dart';
 import 'package:gaza_go/presentations/views/preferences/edit_biometrics.dart';
@@ -33,6 +34,7 @@ class Routes {
   static const login = '/login';
   static const onBoarding = '/on_boarding';
   static const joinTerms = '/join_terms';
+  static const loading = '/loading';
   static const home = '/home';
   static const term = '/term/:termType';
   static const archiveDetail = '/archive/detail';
@@ -61,6 +63,7 @@ class Routes {
     stepPage(name: Routes.login, page: const Login()),
     stepPage(name: Routes.onBoarding, page: const OnBoarding()),
     stepPage(name: Routes.joinTerms, page: const JoinTerms()),
+    stepPage(name: Routes.loading, page: const Loading()),
     stepPage(
       name: Routes.home,
       page: const Home(),

@@ -742,7 +742,7 @@ class ActivityMap extends StatelessWidget {
           nightModeEnable: true,
           mapType: MapType.Navi,
           initialCameraPosition: CameraPosition(
-            target: LatLng(controller.currentLocation.value.latitude ?? 0, controller.currentLocation.value.longitude ?? 0),
+            target: LatLng(controller.currentLocation.value.latitude, controller.currentLocation.value.longitude),
             zoom: 15,
           ),
           initLocationTrackingMode: LocationTrackingMode.Follow,

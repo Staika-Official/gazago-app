@@ -2,6 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:gaza_go/constants/enums.dart';
 import 'package:gaza_go/constants/routes.dart';
+import 'package:gaza_go/platform/controllers/loading_controller.dart';
 import 'package:gaza_go/platform/models/asset_detail_model.dart';
 import 'package:gaza_go/platform/models/asset_token_balance_list_model.dart';
 import 'package:gaza_go/platform/models/asset_token_balance_model.dart';
@@ -12,7 +13,8 @@ import 'package:gaza_go/platform/models/token_info_model.dart';
 import 'package:gaza_go/platform/services/wallet_service.dart';
 import 'package:get/get.dart';
 
-class WalletMasterController extends GetxService {
+class WalletMasterController extends GetxController {
+  final LoadingController _loadingController = Get.find();
   final Rx<AssetTokenBalanceListModel> spendingTokens = Rx(AssetTokenBalanceListModel(tokens: []));
   final RxList<TokenInfoModel> spendingTokenInfoList = RxList.empty();
   final Rx<AssetTokenBalanceUiModel> selectedAsset = Rx(AssetTokenBalanceUiModel());
@@ -42,8 +44,11 @@ class WalletMasterController extends GetxService {
   @override
   void onInit() async {
     await getSpendingWalletBalances();
+    _loadingController.progress.value = 0.2;
     await getSpendingMetaData();
+    _loadingController.progress.value = 0.4;
     await getBuyTikCommission();
+    _loadingController.progress.value = 0.6;
     super.onInit();
   }
 

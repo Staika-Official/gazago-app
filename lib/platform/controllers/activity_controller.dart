@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_naver_map/flutter_naver_map.dart';
 import 'package:gaza_go/constants/enums.dart';
 import 'package:gaza_go/constants/routes.dart';
+import 'package:gaza_go/platform/controllers/loading_controller.dart';
 import 'package:gaza_go/platform/controllers/wallet_master_controller.dart';
 import 'package:gaza_go/platform/helpers/activity_mixin.dart';
 import 'package:gaza_go/platform/helpers/challenge_mixin.dart';
@@ -24,9 +25,9 @@ import 'package:get/get.dart';
 import 'package:permission_handler/permission_handler.dart' as PH;
 
 class ActivityController extends GetxController with ActivityMixin, ChallengeMixin {
-  final WalletMasterController walletMasterController;
+  final LoadingController _loadingController = Get.find();
+  final WalletMasterController walletMasterController = Get.find();
 
-  ActivityController(this.walletMasterController);
   //index.dart
   RxList<StatModel> get statList {
     return RxList([
@@ -80,7 +81,9 @@ class ActivityController extends GetxController with ActivityMixin, ChallengeMix
 
   Future<void> initController() async {
     await checkAvailabilities();
+    _loadingController.progress.value = 0.8;
     await initializeActivity();
+    _loadingController.progress.value = 1;
     getUserState();
   }
 
@@ -435,7 +438,7 @@ class ActivityController extends GetxController with ActivityMixin, ChallengeMix
       } else {
         // 첼린지 존 찾기(30초마다 요청)
         DateTime now = DateTime.now();
-        if(receiveLocationTime.value.add(const Duration(seconds: 5)).compareTo(now) < 0){
+        if (receiveLocationTime.value.add(const Duration(seconds: 5)).compareTo(now) < 0) {
           findChallenge();
         }
       }

@@ -86,7 +86,7 @@ class JoinTerms extends StatelessWidget {
                   width: double.infinity,
                   child: Obx(() {
                     return ElevatedButton(
-                      onPressed: controller.allAgreed.value ? () => Get.toNamed(Routes.home) : null,
+                      onPressed: controller.allAgreed.value ? () => Get.toNamed(Routes.loading) : null,
                       child: const Text('다음'),
                     );
                   }),

@@ -10,12 +10,12 @@ class AuthMiddleware extends GetMiddleware {
     String? accessToken = HiveStore.loadString(key: HiveKey.accessToken.name);
     if (accessToken == null) {
       if (route != Routes.login) {
-        return RouteSettings(name: Routes.login);
+        return const RouteSettings(name: Routes.login);
       } else {
         return null;
       }
     } else if (route == Routes.login) {
-      return RouteSettings(name: Routes.home);
+      return const RouteSettings(name: Routes.loading);
     } else {
       return null;
     }
