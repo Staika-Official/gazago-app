@@ -5,7 +5,6 @@ import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:gaza_go/constants/enums.dart';
-import 'package:gaza_go/platform/firebase/cloud_messaging.dart';
 import 'package:gaza_go/platform/firebase/core.dart';
 import 'package:gaza_go/platform/firebase/crashlytics.dart';
 import 'package:gaza_go/platform/models/user_exercise_model.dart';
@@ -100,7 +99,7 @@ class MyApp extends StatelessWidget {
         ),
       ),
       navigatorObservers: <NavigatorObserver>[observer],
-      initialRoute: Routes.joinTerms,
+      initialRoute: Routes.login,
       getPages: [...Routes.pages],
     );
   }
