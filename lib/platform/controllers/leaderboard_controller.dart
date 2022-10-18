@@ -16,6 +16,8 @@ class LeaderboardController extends GetxController {
   Rx<DateTime?> focusDay = Rx(DateTime.now());
   Rx<DateTime?> firstDay = Rx(DateTime.utc(2022, 1, 1));
   Rx<DateTime?> lastDay = Rx(DateTime.utc(2050, 12, 31));
+  Rx<RankerModel?> myRank = Rxn<RankerModel>();
+
   RxString get formattedDate {
     return RxString(DateFormat('yyyy-MM-dd').format(selectedDate.value!.toLocal()).toString());
   }
@@ -25,7 +27,7 @@ class LeaderboardController extends GetxController {
     }
     return RxString(DateFormat('yyyy-MM-dd').format(selectedDate.value!.toLocal()).toString());
   }
-  RxInt size = RxInt(20);
+  RxInt size = RxInt(100);
 
   final PagingController<int, RankerModel> pagingController = PagingController(firstPageKey: 0, invisibleItemsThreshold: 10);
 
@@ -42,12 +44,16 @@ class LeaderboardController extends GetxController {
   }
 
   Future<void> initController() async {
+    _fetchMyRank();
+
     pagingController.addPageRequestListener((pageKey) {
       _fetchRankerList(pageKey);
     });
   }
 
   Future<void> refreshController() async {
+    _fetchMyRank();
+
     pagingController.itemList = [];
     _fetchRankerList(0);
   }
@@ -57,7 +63,7 @@ class LeaderboardController extends GetxController {
     try {
       List<RankerModel> rankingList = await DashboardService.getDailyRankingList(formattedDate.value, page, size.value);
       rankingList.asMap().forEach((index, ranker) {
-        ranker.ranking = (index + 1) + (page * size.value);
+        ranker.rank = (index + 1) + (page * size.value);
       });
 
       final isLastPage = rankingList.length < size.value;
@@ -73,12 +79,18 @@ class LeaderboardController extends GetxController {
     }
   }
 
-  //TODO. 콜백 가능한 방법 찾아서 적용할 것 => https://pub.dev/packages/syncfusion_flutter_datepicker 참고해볼만한 것으로 생각됨.
+  void _fetchMyRank() {
+    DashboardService.getDailyRankingMyRank(formattedDate.value).then((data) {
+      myRank.value = data;
+      print(myRank.value?.profileImageUrl);
+    });
+  }
+
   void showCalendar(BuildContext context) async {
     DateTime? pickedDate = await showDatePicker(context: context, firstDate: DateTime(2022, 9, 1), lastDate: DateTime.now(), initialDate: selectedDate.value!);
     if (pickedDate != null) {
       selectedDate.value = pickedDate;
-      _fetchRankerList(0);
+      _fetchMyRank();
     }
   }
 
@@ -87,11 +99,7 @@ class LeaderboardController extends GetxController {
   }
 
   void calendarSelectedChanged(selectedDay) {
-    print(selectedDay);
     selectedDate.value = selectedDay;
-    pagingController.itemList = [];
-    _fetchRankerList(0);
-    //String month = DateFormat('yyyy-MM').format(focusedDay);
-    //getCalendarStatistics(month);
+    refreshController();
   }
 }
