@@ -180,7 +180,7 @@ class JoinTerms extends StatelessWidget {
                 ],
               ),
             ),
-            Spacer(),
+            const Spacer(),
             Container(
               height: 55,
               decoration: BoxDecoration(
