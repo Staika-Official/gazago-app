@@ -49,6 +49,10 @@ enum HiveKey {
   profileImageUrl,
   nickname,
   locationData,
+  userState,
+  exerciseData,
+  endExerciseRequested,
+  badgeIssuanceRequested,
 }
 
 enum ResponseStatus {

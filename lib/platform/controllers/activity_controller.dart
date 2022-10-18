@@ -22,6 +22,7 @@ import 'package:gaza_go/platform/models/user_stamina_recharge_model.dart';
 import 'package:gaza_go/platform/models/user_state_model.dart';
 import 'package:gaza_go/platform/services/activity_service.dart';
 import 'package:gaza_go/platform/services/item_service.dart';
+import 'package:gaza_go/platform/stores/hive_store.dart';
 import 'package:gaza_go/presentations/styles/icons.dart';
 import 'package:gaza_go/presentations/styles/styled_text.dart';
 import 'package:gaza_go/presentations/views/activity/activity_select.dart';
@@ -91,15 +92,11 @@ class ActivityController extends GetxController with ActivityMixin, ChallengeMix
   }
 
   Future<void> initController() async {
-    print('1initController');
     await checkAvailabilities();
     _loadingController.progress.value = 0.8;
-    print('2initController');
     await initializeActivity();
     _loadingController.progress.value = 1;
-    print('3initController');
     getUserState();
-    print('4initController');
   }
 
   Future<void> refreshController() async {
@@ -449,7 +446,6 @@ class ActivityController extends GetxController with ActivityMixin, ChallengeMix
 
     if (userState.value.exercise != null && userState.value.exercise!.state == 'ONGOING') {
       if (updateTimer == null) {
-        print('restart!!!!!!!!!!!');
         exerciseData.value = List.empty(growable: true);
         exerciseData.add(userState.value.exercise!);
         exerciseTime.value = userState.value.exercise!.time!;
@@ -516,7 +512,6 @@ class ActivityController extends GetxController with ActivityMixin, ChallengeMix
   Future<bool> checkLocationPermission() async {
     LocationPermission locationPermission = await Geolocator.checkPermission();
     _locationPermission.value = locationPermission;
-    print('locationPermission: ' + locationPermission.name);
 
     return [LocationPermission.always, LocationPermission.whileInUse].any((permission) => permission == locationPermission);
   }
@@ -524,7 +519,6 @@ class ActivityController extends GetxController with ActivityMixin, ChallengeMix
   Future<bool> checkLocationAccuracy() async {
     LocationAccuracyStatus accuracyStatus = await Geolocator.getLocationAccuracy();
     _locationAccuracyStatus.value = accuracyStatus;
-    print('accuracy: ' + accuracyStatus.name);
 
     return accuracyStatus == LocationAccuracyStatus.precise;
   }
@@ -632,15 +626,13 @@ class ActivityController extends GetxController with ActivityMixin, ChallengeMix
     Get.offNamed(Routes.activityActive);
   }
 
-  void moveToChallangeSelection() {
+  void moveToChallengeSelection() {
     selectedChallenge.value = ChallengeModel();
     Get.toNamed(Routes.activityChallenges);
   }
 
   void initLocationStream() {
     late LocationSettings locationSettings;
-
-    print('########################### initLocationStream');
 
     if (Platform.isAndroid) {
       locationSettings = AndroidSettings(
@@ -729,5 +721,19 @@ class ActivityController extends GetxController with ActivityMixin, ChallengeMix
     } else {
       await getChallengeList();
     }
+  }
+
+  void checkConnectivityStatus() {
+    globalController.connectivityResult.listen((value) async {
+      if (value != ConnectionState.none) {
+        if (HiveStore.loadString(key: HiveKey.badgeIssuanceRequested.name) != null) {
+          await requestBadgeIssuance(userState.value);
+        }
+
+        if (HiveStore.loadString(key: HiveKey.endExerciseRequested.name) != null) {
+          endExercise();
+        }
+      }
+    });
   }
 }
