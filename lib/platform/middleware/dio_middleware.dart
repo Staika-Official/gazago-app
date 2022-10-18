@@ -76,8 +76,11 @@ class Api {
       '\nError ResponseCode: ${e.response?.statusCode}'
       '\nError ResponseMessage: ${e.response?.statusMessage}',
     );
-    ErrorResponseDataModel errorData = ErrorResponseDataModel.fromJson(e.response?.data);
-    showToastPopup(errorData.errorMessage);
+
+    if (e.response?.data != null) {
+      ErrorResponseDataModel errorData = ErrorResponseDataModel.fromJson(e.response?.data);
+      showToastPopup(errorData.errorMessage!);
+    }
 
     if (e.response?.statusCode == ResponseStatus.unauthorized.code) {
       final String? refreshToken = HiveStore.loadString(key: HiveKey.refreshToken.name);
