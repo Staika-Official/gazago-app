@@ -74,7 +74,8 @@ class Api {
       '\nErrorPath: ${e.response?.requestOptions.baseUrl}${e.response?.requestOptions.path}'
       '\nErrorQuery: ${e.response?.requestOptions.queryParameters}'
       '\nError ResponseCode: ${e.response?.statusCode}'
-      '\nError ResponseMessage: ${e.response?.statusMessage}',
+      '\nError ResponseMessage: ${e.response?.statusMessage}'
+      '\nError ResponseData: ${e.response?.data}',
     );
 
     if (e.response?.data != null) {

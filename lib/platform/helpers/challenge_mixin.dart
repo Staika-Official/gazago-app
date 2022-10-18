@@ -1,16 +1,22 @@
+import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_naver_map/flutter_naver_map.dart';
+import 'package:gaza_go/constants/enums.dart';
+import 'package:gaza_go/platform/controllers/global_controller.dart';
 import 'package:gaza_go/platform/helpers/activity_helper.dart';
 import 'package:gaza_go/platform/models/challenge_model.dart';
 import 'package:gaza_go/platform/models/current_user_state_model.dart';
 import 'package:gaza_go/platform/models/inventory_badge_model.dart';
 import 'package:gaza_go/platform/services/activity_service.dart';
 import 'package:gaza_go/platform/services/badge_service.dart';
+import 'package:gaza_go/platform/stores/hive_store.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:get/get.dart';
 
 class ChallengeMixin {
+  GlobalController globalController = Get.find();
+
   final RxList<ChallengeModel> challengeList = RxList.empty();
   final RxList<ChallengeModel> doableChallenges = RxList.empty();
   final RxList<ChallengeModel> achievableChallenges = RxList.empty();
@@ -54,12 +60,12 @@ class ChallengeMixin {
   void detectChallengeZone(Position location) {
     doableChallenges.value = challengeList.where((challenge) {
       double distance = calculateDistance(location.latitude, location.longitude, challenge.startLat, challenge.startLon);
-      return distance <= convertMetersToKM(challenge.startRadius!);
+      return distance <= convertMetersToKm(challenge.startRadius!);
     }).toList();
 
     achievableChallenges.value = challengeList.where((challenge) {
       double distance = calculateDistance(location.latitude, location.longitude, challenge.endLat, challenge.endLon);
-      return distance <= convertMetersToKM(challenge.endRadius!);
+      return distance <= convertMetersToKm(challenge.endRadius!);
     }).toList();
   }
 
@@ -70,17 +76,26 @@ class ChallengeMixin {
       });
 
       if (hasArrived && userState.exercise!.badgeIssueId == null) {
-        VoidCallback successCallback = () {
-          Get.snackbar('뱃지 발급', '뱃지가 발급되었습니다.', colorText: Colors.white);
-        };
-
-        VoidCallback errorCallback = () {
-          Get.snackbar('뱃지 발급 실패', '뱃지 발급에 실패했습니다.', colorText: Colors.white);
-        };
-
-        InventoryBadgeModel badge = await BadgeService.fetchUserIssuanceBadge(userState.exercise!.id!, successCallback, errorCallback);
-        userState.exercise!.badgeIssueId = badge.id;
+        if (globalController.connectivityResult.value != ConnectivityResult.none) {
+          requestBadgeIssuance(userState);
+        } else {
+          HiveStore.save(key: HiveKey.badgeIssuanceRequested.name, value: true.toString());
+        }
       }
     }
+  }
+
+  Future<void> requestBadgeIssuance(CurrentUserStateModel userState) async {
+    void successCallback(InventoryBadgeModel badge) {
+      Get.snackbar('뱃지 발급', '뱃지가 발급되었습니다.', colorText: Colors.white);
+      userState.exercise!.badgeIssueId = badge.id;
+      HiveStore.deleteKey(key: HiveKey.badgeIssuanceRequested.name);
+    }
+
+    VoidCallback errorCallback = () {
+      Get.snackbar('뱃지 발급 실패', '뱃지 발급에 실패했습니다.', colorText: Colors.white);
+    };
+
+    await BadgeService.fetchUserIssuanceBadge(userState.exercise!.id!, successCallback, errorCallback);
   }
 }

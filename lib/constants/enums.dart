@@ -1,7 +1,7 @@
 enum LoginType {
+  apple,
   kakao,
   google,
-  apple,
   email,
 }
 
@@ -49,6 +49,10 @@ enum HiveKey {
   profileImageUrl,
   nickname,
   locationData,
+  userState,
+  exerciseData,
+  endExerciseRequested,
+  badgeIssuanceRequested,
 }
 
 enum ResponseStatus {

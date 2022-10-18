@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:gaza_go/constants/enums.dart';
 import 'package:gaza_go/platform/controllers/login_controller.dart';
+import 'package:gaza_go/platform/helpers/login_helper.dart';
 import 'package:gaza_go/presentations/components/default_container.dart';
+import 'package:gaza_go/presentations/styles/styled_text.dart';
 
 class Login extends StatelessWidget {
   const Login({Key? key}) : super(key: key);
@@ -10,11 +12,46 @@ class Login extends StatelessWidget {
     return LoginType.values
         .map(
           (loginType) => Container(
-            padding: const EdgeInsets.all(10),
+            padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 25),
             width: double.infinity,
-            child: ElevatedButton(
-              onPressed: () => controller.login(loginType),
-              child: Text(loginType.name),
+            child: SizedBox(
+              height: 50,
+              child: InkWell(
+                onTap: () => controller.login(loginType),
+                child: Container(
+                  decoration: BoxDecoration(
+                    color: getLoginButtonColor(loginType.name),
+                    border: Border.all(
+                      width: 1,
+                      color: Colors.black,
+                    ),
+                    borderRadius: const BorderRadius.all(Radius.circular(10)),
+                    boxShadow: const [
+                      BoxShadow(
+                        color: Color(0xFF000000),
+                        spreadRadius: 0,
+                        blurRadius: 0,
+                        offset: Offset(0, 4), // changes position of shadow
+                      ),
+                    ],
+                  ),
+                  alignment: Alignment.center,
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      getLoginButtonIcon(loginType.name),
+                      StyledText(
+                        '${getLoginButtonText(loginType.name)}로 로그인',
+                        color: loginType.name == 'apple' ? Colors.white : Colors.black,
+                        fontWeight: 500,
+                        fontSize: 16,
+                        lineHeight: 16,
+                      ),
+                    ],
+                  ),
+                ),
+              ),
             ),
           ),
         )

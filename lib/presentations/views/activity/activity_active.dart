@@ -313,7 +313,6 @@ class ActivityActive extends StatelessWidget {
         child: Column(
           mainAxisSize: MainAxisSize.max,
           children: [
-            StyledText('${controller.realTimeSpeed.value}121212'),
             Padding(
               padding: const EdgeInsets.only(top: 70.0, bottom: 20),
               child: Row(

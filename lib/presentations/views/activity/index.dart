@@ -4,7 +4,6 @@ import 'package:gaza_go/platform/controllers/activity_controller.dart';
 import 'package:gaza_go/presentations/styles/icons.dart';
 import 'package:gaza_go/presentations/styles/styled_text.dart';
 import 'package:get/get.dart';
-import 'package:smooth_page_indicator/smooth_page_indicator.dart';
 
 class ActivityHome extends StatelessWidget {
   ActivityHome({Key? key}) : super(key: key);
@@ -442,62 +441,63 @@ class ActivityHome extends StatelessWidget {
                   ],
                 );
               }),
+              // TODO. 추후 나의 운동 스토리의 위치가 확정되면 아래 주석처리 된 소스를 이동하도록 한다.
+              // Padding(
+              //   padding: const EdgeInsets.only(top: 40.0),
+              //   child: StyledText(
+              //     '나의 운동 스토리',
+              //     color: Color(0xFF8A8A8A),
+              //     fontSize: 18,
+              //     fontWeight: 600,
+              //   ),
+              // ),
+              // Obx(() {
+              //   return Column(
+              //     crossAxisAlignment: CrossAxisAlignment.center,
+              //     children: <Widget>[
+              //       Padding(
+              //         padding: const EdgeInsets.only(top: 14.0),
+              //         child: SizedBox(
+              //           height: 134,
+              //           child: PageView.builder(
+              //             controller: slideController,
+              //             itemCount: renderActivitySumList(controller).length ~/ 2,
+              //             itemBuilder: (_, index) {
+              //               if (index == 0) {
+              //                 return Row(
+              //                   children: [
+              //                     Expanded(child: renderActivitySumList(controller)[index]),
+              //                     Expanded(child: renderActivitySumList(controller)[index + 1]),
+              //                   ],
+              //                 );
+              //               } else {
+              //                 return Row(
+              //                   children: [
+              //                     Expanded(child: renderActivitySumList(controller)[index + 1]),
+              //                     Expanded(child: renderActivitySumList(controller)[index + 2]),
+              //                   ],
+              //                 );
+              //               }
+              //             },
+              //           ),
+              //         ),
+              //       ),
+              //       Padding(
+              //         padding: const EdgeInsets.only(top: 10.0),
+              //         child: SmoothPageIndicator(
+              //           controller: slideController,
+              //           count: renderActivitySumList(controller).length ~/ 2,
+              //           effect: const ExpandingDotsEffect(
+              //             dotHeight: 5, dotWidth: 5, activeDotColor: Color(0xFFA6A9B4), dotColor: Color(0xFF666870),
+              //             // strokeWidth: 5,
+              //           ),
+              //         ),
+              //       ),
+              //     ],
+              //   );
+              // }),
               Padding(
-                padding: const EdgeInsets.only(top: 40.0),
-                child: StyledText(
-                  '나의 운동 스토리',
-                  color: Color(0xFF8A8A8A),
-                  fontSize: 18,
-                  fontWeight: 600,
-                ),
-              ),
-              Obx(() {
-                return Column(
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  children: <Widget>[
-                    Padding(
-                      padding: const EdgeInsets.only(top: 14.0),
-                      child: SizedBox(
-                        height: 134,
-                        child: PageView.builder(
-                          controller: slideController,
-                          itemCount: renderActivitySumList(controller).length ~/ 2,
-                          itemBuilder: (_, index) {
-                            if (index == 0) {
-                              return Row(
-                                children: [
-                                  Expanded(child: renderActivitySumList(controller)[index]),
-                                  Expanded(child: renderActivitySumList(controller)[index + 1]),
-                                ],
-                              );
-                            } else {
-                              return Row(
-                                children: [
-                                  Expanded(child: renderActivitySumList(controller)[index + 1]),
-                                  Expanded(child: renderActivitySumList(controller)[index + 2]),
-                                ],
-                              );
-                            }
-                          },
-                        ),
-                      ),
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.only(top: 10.0),
-                      child: SmoothPageIndicator(
-                        controller: slideController,
-                        count: renderActivitySumList(controller).length ~/ 2,
-                        effect: const ExpandingDotsEffect(
-                          dotHeight: 5, dotWidth: 5, activeDotColor: Color(0xFFA6A9B4), dotColor: Color(0xFF666870),
-                          // strokeWidth: 5,
-                        ),
-                      ),
-                    ),
-                  ],
-                );
-              }),
-              Padding(
-                padding: const EdgeInsets.only(top: 20),
+                padding: const EdgeInsets.only(top: 70),
                 child: Stack(
                   children: [
                     Center(
@@ -513,7 +513,7 @@ class ActivityHome extends StatelessWidget {
                                   color: Colors.black,
                                 ),
                                 borderRadius: const BorderRadius.all(
-                                  Radius.circular(115),
+                                  Radius.circular(150),
                                 ),
                                 boxShadow: const [
                                   BoxShadow(
@@ -527,13 +527,13 @@ class ActivityHome extends StatelessWidget {
                               child: MaterialButton(
                                 onPressed: [ExerciseState.ongoing, ExerciseState.paused, ExerciseState.ready].any((state) => controller.exerciseState.value == state)
                                     ? () => controller.requestExerciseInitialization()
-                                    : null,
+                                    : () => Get.snackbar('시작 불가', '지속적으로 문제가 발생한다면 앱을 재시작해주세요', colorText: Colors.white),
                                 shape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(115),
+                                  borderRadius: BorderRadius.circular(150),
                                 ),
                                 color: const Color(0xFF0EE6F3),
-                                height: 115,
-                                minWidth: 115,
+                                height: 150,
+                                minWidth: 150,
                                 child: StyledText(
                                   [ExerciseState.ongoing, ExerciseState.paused].any((state) => controller.exerciseState.value == state) ? 'Continue' : 'GO',
                                   fontWeight: 800,
@@ -545,7 +545,7 @@ class ActivityHome extends StatelessWidget {
                                 ),
                               ),
                             ),
-                           /* ElevatedButton(
+                            /* ElevatedButton(
                               onPressed: () => { controller.onClickTestNoti() },
                               child: Text('확인'),
                             ),*/

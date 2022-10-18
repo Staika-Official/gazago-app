@@ -1,7 +1,18 @@
+import 'package:gaza_go/constants/enums.dart';
+import 'package:gaza_go/platform/models/current_user_state_model.dart';
 import 'package:gaza_go/platform/models/user_exercise_model.dart';
+import 'package:gaza_go/platform/models/user_shoes_model.dart';
+import 'package:gaza_go/platform/models/user_state_model.dart';
 import 'package:hive/hive.dart';
 
 class HiveStore {
+  static void registerAdapters() {
+    Hive.registerAdapter(UserExerciseModelAdapter());
+    Hive.registerAdapter(UserStateModelAdapter());
+    Hive.registerAdapter(UserShoesModelAdapter());
+    Hive.registerAdapter(CurrentUserStateModelAdapter());
+  }
+
   static Future<void> openBox() async {
     await Hive.openBox('gazaGo');
   }
@@ -11,21 +22,29 @@ class HiveStore {
     box.put(key, value);
   }
 
+  static void saveCurrentUserState({required CurrentUserStateModel userState}) {
+    final Box box = Hive.box('gazaGo');
+    box.put(HiveKey.userState.name, userState);
+  }
+
   static void saveExerciseData({required UserExerciseModel exerciseData}) {
     final Box box = Hive.box('gazaGo');
-    box.put('exerciseData', exerciseData);
+    box.put(HiveKey.exerciseData.name, exerciseData);
   }
 
   static String? loadString({required String key}) {
     final Box box = Hive.box('gazaGo');
-    String? loadData = box.get(key);
-    return loadData;
+    return box.get(key);
+  }
+
+  static CurrentUserStateModel? loadCurrentUserState() {
+    final Box box = Hive.box('gazaGo');
+    return box.get(HiveKey.userState.name);
   }
 
   static UserExerciseModel? loadExerciseData() {
     final Box box = Hive.box('gazaGo');
-    UserExerciseModel? loadData = box.get('exerciseData');
-    return loadData;
+    return box.get(HiveKey.exerciseData.name);
   }
 
   static void deleteKey({required String key}) {
