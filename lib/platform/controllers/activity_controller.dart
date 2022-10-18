@@ -2,6 +2,7 @@ import 'dart:async';
 import 'dart:io';
 
 import 'package:another_xlider/another_xlider.dart';
+import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:flutter_naver_map/flutter_naver_map.dart';
@@ -65,7 +66,7 @@ class ActivityController extends GetxController with ActivityMixin, ChallengeMix
   @override
   void onInit() async {
     await initController();
-
+    checkConnectivityStatus();
     super.onInit();
   }
 
@@ -725,7 +726,7 @@ class ActivityController extends GetxController with ActivityMixin, ChallengeMix
 
   void checkConnectivityStatus() {
     globalController.connectivityResult.listen((value) async {
-      if (value != ConnectionState.none) {
+      if (value != ConnectivityResult.none) {
         if (HiveStore.loadString(key: HiveKey.badgeIssuanceRequested.name) != null) {
           await requestBadgeIssuance(userState.value);
         }

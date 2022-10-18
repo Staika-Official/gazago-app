@@ -125,10 +125,20 @@ class ActivityMixin {
 
     exerciseTimer = Timer.periodic(const Duration(seconds: 1), (timer) {
       exerciseTime.value++;
+
+      UserExerciseModel exerciseModel = userState.value.exercise!;
+      exerciseModel.id = userState.value.exercise!.id;
+      exerciseModel.steps = exerciseSteps.value;
+      exerciseModel.speed = avgSpeed.value;
+      exerciseModel.distance = convertKmToMeters(totalDistance.value);
+      exerciseModel.altitude = highestAltitude.value;
+      exerciseModel.time = exerciseTime.value;
+      exerciseModel.locations = coordinatesToString(coordinates);
+
       HiveStore.saveCurrentUserState(
         userState: CurrentUserStateModel(
           state: userState.value.state,
-          exercise: userExerciseData.value,
+          exercise: exerciseModel,
           shoes: userState.value.shoes,
         ),
       );
@@ -290,6 +300,7 @@ class ActivityMixin {
         resetSubscriptions();
       }
     } else {
+      exerciseState.value = ExerciseState.ready;
       userState.value = HiveStore.loadCurrentUserState()!;
       userState.value.exercise!.state = 'ENDED';
       HiveStore.saveCurrentUserState(userState: userState.value);
