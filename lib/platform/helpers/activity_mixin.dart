@@ -87,6 +87,20 @@ class ActivityMixin {
     return RxDouble(highestClimbed(altitudeList));
   }
 
+  Rx<UserExerciseModel> get userExerciseData {
+    return Rx(
+      UserExerciseModel(
+        id: userState.value.exercise!.id,
+        steps: exerciseSteps.value,
+        speed: avgSpeed.value,
+        distance: convertKmToMeters(totalDistance.value),
+        altitude: highestAltitude.value,
+        time: exerciseTime.value,
+        locations: coordinatesToString(coordinates),
+      ),
+    );
+  }
+
   late final Rx<OverlayImage?> startMarkerImage = Rx(null);
   late final Rx<OverlayImage?> finishMarkerImage = Rx(null);
 
@@ -111,15 +125,11 @@ class ActivityMixin {
 
     exerciseTimer = Timer.periodic(const Duration(seconds: 1), (timer) {
       exerciseTime.value++;
-      HiveStore.saveExerciseData(
-        exerciseData: UserExerciseModel(
-          id: userState.value.exercise!.id,
-          steps: exerciseSteps.value,
-          speed: avgSpeed.value,
-          distance: totalDistance.value,
-          altitude: highestAltitude.value,
-          time: exerciseTime.value,
-          locations: coordinatesToString(coordinates),
+      HiveStore.saveCurrentUserState(
+        userState: CurrentUserStateModel(
+          state: userState.value.state,
+          exercise: userExerciseData.value,
+          shoes: userState.value.shoes,
         ),
       );
     });
@@ -203,18 +213,12 @@ class ActivityMixin {
 
     if (globalController.connectivityResult.value != ConnectivityResult.none) {
       CurrentUserStateModel newUserState = await ActivityService.fetchUpdateUserExercises(
-        UserExerciseModel(
-          id: userState.value.exercise!.id,
-          steps: exerciseSteps.value,
-          speed: avgSpeed.value,
-          distance: totalDistance.value,
-          altitude: highestAltitude.value,
-          time: exerciseTime.value,
-          locations: coordinatesToString(coordinates),
-        ),
+        userExerciseData.value,
         onError: errorHandler,
       );
       userState.value = newUserState;
+    } else {
+      userState.value = HiveStore.loadCurrentUserState()!;
     }
   }
 
@@ -272,15 +276,7 @@ class ActivityMixin {
   void endExercise() async {
     if (globalController.connectivityResult.value != ConnectivityResult.none) {
       CurrentUserStateModel newUserState = await ActivityService.fetchEndUserExercises(
-        UserExerciseModel(
-          id: userState.value.exercise!.id,
-          steps: exerciseSteps.value,
-          speed: avgSpeed.value,
-          distance: totalDistance.value,
-          altitude: highestAltitude.value,
-          time: exerciseTime.value,
-          locations: coordinatesToString(coordinates),
-        ),
+        userExerciseData.value,
       );
 
       if (newUserState.exercise!.state == 'ENDED') {
@@ -288,21 +284,39 @@ class ActivityMixin {
         userState.update((state) {
           state = newUserState;
         });
-        HiveStore.deleteKey(key: 'exerciseData');
-        exerciseTime.value = 0;
-        stopProgress.value = 0;
-        updateTimer?.cancel();
-        updateTimer = null;
-        exerciseTimer?.cancel();
-        exerciseTimer = null;
-        stepSubscription?.cancel();
-        stepSubscription = null;
-        pedestrianStatusSubscription?.cancel();
-        pedestrianStatusSubscription = null;
+        HiveStore.deleteMultipleKeys(keys: [HiveKey.userState.name, HiveKey.endExerciseRequested.name]);
+        resetVariables();
+        resetTimer();
+        resetSubscriptions();
       }
     } else {
-      Get.snackbar('인터넷 연결 불가', '지금은 인터넷과 연결되지 않아 정상적으로 종료하지 못합니다.', colorText: Colors.white);
+      userState.value = HiveStore.loadCurrentUserState()!;
+      userState.value.exercise!.state = 'ENDED';
+      HiveStore.saveCurrentUserState(userState: userState.value);
+      HiveStore.save(key: HiveKey.endExerciseRequested.name, value: true.toString());
+      resetVariables();
+      resetTimer();
+      resetSubscriptions();
     }
+  }
+
+  void resetVariables() {
+    exerciseTime.value = 0;
+    stopProgress.value = 0;
+  }
+
+  void resetTimer() {
+    updateTimer?.cancel();
+    updateTimer = null;
+    exerciseTimer?.cancel();
+    exerciseTimer = null;
+  }
+
+  void resetSubscriptions() {
+    stepSubscription?.cancel();
+    stepSubscription = null;
+    pedestrianStatusSubscription?.cancel();
+    pedestrianStatusSubscription = null;
   }
 
   void showExerciseMap(Widget mapWidget) {

@@ -1,12 +1,13 @@
+import 'package:firebase_core/firebase_core.dart';
 import 'package:gaza_go/platform/firebase/cloud_messaging.dart';
 import 'package:gaza_go/platform/firebase/crashlytics.dart';
 import 'package:gaza_go/platform/firebase/dynamic_link.dart';
 import 'package:gaza_go/platform/firebase/firebase_options.dart';
 import 'package:gaza_go/platform/firebase/remote_config.dart';
-import 'package:firebase_core/firebase_core.dart';
 
 Future<void> initFirebase() async {
   await Firebase.initializeApp(
+    name: 'gazaGo',
     options: DefaultFirebaseOptions.currentPlatform,
   );
 }

@@ -76,7 +76,7 @@ class ActivitySelect extends StatelessWidget {
                           onTap: controller.doableChallenges.isNotEmpty
                               ? () {
                                   Get.back();
-                                  controller.moveToChallangeSelection();
+                                  controller.moveToChallengeSelection();
                                 }
                               : null,
                           borderRadius: BorderRadius.circular(14),

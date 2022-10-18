@@ -98,7 +98,7 @@ class LoginController extends GetxController {
     HiveStore.save(key: HiveKey.profileImageUrl.name, value: user.profileImageUrl);
     HiveStore.save(key: HiveKey.nickname.name, value: user.nickname);
 
-    await MemberService.initializeUserData();
+    await MemberService.initializeUserData(user.nickname, user.profileImageUrl);
     await WalletService.generateSpendingWallet();
   }
 

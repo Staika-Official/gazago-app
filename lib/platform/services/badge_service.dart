@@ -21,14 +21,13 @@ class BadgeService {
     return res.data;
   }
 
-  static Future<InventoryBadgeModel> fetchUserIssuanceBadge(int exerciseId, VoidCallback successCallback, VoidCallback errorCallback) async {
+  static Future<void> fetchUserIssuanceBadge(int exerciseId, Function successCallback, VoidCallback errorCallback) async {
     Response res = await BadgeApi.fetchUserIssuanceBadge(userId!, exerciseId);
     if (res.statusCode == 200) {
-      successCallback();
+      successCallback(InventoryBadgeModel.fromJson(res.data));
     } else {
       errorCallback();
     }
-    return InventoryBadgeModel.fromJson(res.data);
   }
 
   static Future<InventoryBadgeModel> fetchUserSyntheticBadge(composeData) async {
