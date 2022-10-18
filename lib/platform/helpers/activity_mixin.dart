@@ -314,6 +314,8 @@ class ActivityMixin {
   void resetVariables() {
     exerciseTime.value = 0;
     stopProgress.value = 0;
+    exerciseSteps.value = 0;
+    exerciseData.value = List.empty(growable: true);
   }
 
   void resetTimer() {
