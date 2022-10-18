@@ -14,7 +14,7 @@ class InventoryHomeController extends GetxController with GetTickerProviderState
       'itemType': 'all',
     },
     {
-      'title': '전체',
+      'title': '모자',
       'itemType': 'hats',
     },
     {
