@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:gaza_go/constants/enums.dart';
+import 'package:gaza_go/constants/routes.dart';
 import 'package:gaza_go/platform/controllers/activity_controller.dart';
 import 'package:gaza_go/presentations/styles/icons.dart';
 import 'package:gaza_go/presentations/styles/styled_text.dart';
@@ -526,7 +527,8 @@ class ActivityHome extends StatelessWidget {
                               ),
                               child: MaterialButton(
                                 onPressed: [ExerciseState.ongoing, ExerciseState.paused, ExerciseState.ready].any((state) => controller.exerciseState.value == state)
-                                    ? () => controller.requestExerciseInitialization()
+                                    // ? () => controller.requestExerciseInitialization()
+                                    ? () => Get.toNamed(Routes.joinTerms)
                                     : () => Get.snackbar('시작 불가', '지속적으로 문제가 발생한다면 앱을 재시작해주세요', colorText: Colors.white),
                                 shape: RoundedRectangleBorder(
                                   borderRadius: BorderRadius.circular(150),
