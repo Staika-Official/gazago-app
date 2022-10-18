@@ -23,4 +23,12 @@ class DashboardService {
     res.data.forEach((item) => list.add(UserRewardStatisticsModel.fromJson(item)));
     return list;
   }
+
+  static Future<RankerModel?> getDailyRankingMyRank(String date) async {
+    Response res = await DashboardApi.getDailyRankingMyRank(date, userId!);
+    if (res.data is Map<String, dynamic>) {
+      return RankerModel.fromJson(res.data);
+    }
+    return null;
+  }
 }

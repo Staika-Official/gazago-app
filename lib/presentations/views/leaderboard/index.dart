@@ -72,17 +72,82 @@ class LeaderboardHome extends StatelessWidget {
     });
   }
 
+  Widget renderMyRank(LeaderboardController controller) {
+    RankerModel myRank = controller.myRank.value!;
+    return Container(
+      width: double.maxFinite,
+      height: 90,
+      color: Color(0xFF08080B),
+      padding: const EdgeInsets.only(top: 8, left: 11, right: 17, bottom: 8),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.start,
+        children: [
+          iconMyRankArrow,
+          Container(width: 20, child: Text(myRank.rank.toString(), style: const TextStyle(color: Color(0xFF0EE6F3), fontSize: 14, fontWeight: FontWeight.w600), textAlign: TextAlign.center)),
+          Padding(padding: EdgeInsets.only(left: 4)),
+          Expanded(
+              flex: 2,
+              child: Row(
+                children: [
+                  (myRank.profileImageUrl != '')
+                      ? Container(
+                          width: 44.0,
+                          height: 44.0,
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.all( Radius.circular(50.0)),
+                            border: Border.all(
+                              color: Color(0xFF0EE6F3),
+                              width: 1.5,
+                            ),
+                          ),
+                          child: CircleAvatar(
+                            backgroundColor: Colors.black,
+                            child: CircleAvatar(
+                              radius: 15,
+                              foregroundImage: NetworkImage(myRank.profileImageUrl),
+                  ),
+                        ),
+                      )
+                      : CircleAvatar(
+                    radius: 15,
+                    backgroundColor: Colors.black,
+                  ),
+                  Container(
+                    child: Padding(
+                      padding: const EdgeInsets.only(left: 8.0),
+                      child: Text((myRank.nickname.contains('@') ? myRank.nickname.substring(0, myRank.nickname.indexOf('@')) : myRank.nickname),
+                          overflow: TextOverflow.ellipsis, style: const TextStyle(color: Colors.white, fontSize: 14, fontWeight: FontWeight.w600), textAlign: TextAlign.left),
+                    ),
+                  ),
+                ],
+              )),
+          Expanded(
+            flex: 1,
+            child: Text('${myRank.rewardGo.toString()} GO', textAlign: TextAlign.right, style: const TextStyle(color: Colors.white, fontSize: 14, fontWeight: FontWeight.w600)),
+          ),
+          Padding(padding: EdgeInsets.only(left: 10)),
+          Expanded(
+            flex: 1,
+            child: Text('${myRank.rewardTik.toString()} TIK', textAlign: TextAlign.right, style: const TextStyle(color: Color(0xFF5B5B67), fontSize: 14, fontWeight: FontWeight.w600)),
+          ),
+        ],
+      ),
+    );
+  }
+
   Widget renderRanker(RankerModel ranker, int index) {
     return Container(
       color: Color(0xFF2E3038),
-      padding: const EdgeInsets.only(top: 8, left: 24, right: 25, bottom: 8),
+      padding: const EdgeInsets.only(top: 8, left: 18, right: 17, bottom: 8),
       child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          Container(width: 20, child: Text(ranker.ranking.toString(), style: const TextStyle(color: Colors.white, fontSize: 14, fontWeight: FontWeight.w600), textAlign: TextAlign.center)),
+          Container(width: 20, child: Text(ranker.rank.toString(), style: const TextStyle(color: Colors.white, fontSize: 14, fontWeight: FontWeight.w600), textAlign: TextAlign.center)),
           Padding(padding: EdgeInsets.only(left: 12)),
-          Row(
-            children: [
+          Expanded(
+            flex: 2,
+            child: Row(
+              children: [
               (ranker.profileImageUrl != '')
                   ? CircleAvatar(
                       radius: 15,
@@ -93,7 +158,6 @@ class LeaderboardHome extends StatelessWidget {
                       backgroundColor: Colors.black,
                     ),
               Container(
-                width: 150,
                 child: Padding(
                   padding: const EdgeInsets.only(left: 8.0),
                   child: Text((ranker.nickname.contains('@') ? ranker.nickname.substring(0, ranker.nickname.indexOf('@')) : ranker.nickname),
@@ -101,7 +165,7 @@ class LeaderboardHome extends StatelessWidget {
                 ),
               ),
             ],
-          ),
+          )),
           Expanded(
             flex: 1,
             child: Text('${ranker.rewardGo.toString()} GO', textAlign: TextAlign.right, style: const TextStyle(color: Colors.white, fontSize: 14, fontWeight: FontWeight.w600)),
@@ -274,6 +338,9 @@ class LeaderboardHome extends StatelessWidget {
             ],
           ),
         ),
+        Obx(() {
+          return (controller.myRank.value != null) ? renderMyRank(controller) : Container();
+        }) ,
         Expanded(
           child: Container(
             child: PagedListView<int, RankerModel>.separated(
