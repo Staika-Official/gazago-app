@@ -1,7 +1,7 @@
 enum LoginType {
+  apple,
   kakao,
   google,
-  apple,
   email,
 }
 

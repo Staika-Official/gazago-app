@@ -16,6 +16,11 @@ SvgPicture iconMenuItemsActive = SvgPicture.asset('assets/images/common/ico_menu
 SvgPicture iconMenuRanking = SvgPicture.asset('assets/images/common/ico_menu_ranking.svg', width: 22, height: 19);
 SvgPicture iconMenuRankingActive = SvgPicture.asset('assets/images/common/ico_menu_ranking.svg', width: 22, height: 19, color: const Color(0xFF0EE6F3));
 
+// Login
+SvgPicture iconLoginApple = SvgPicture.asset('assets/images/login/ico_apple.svg', width: 11, height: 14);
+SvgPicture iconLoginKaKao = SvgPicture.asset('assets/images/login/ico_kakao.svg', width: 15, height: 14);
+SvgPicture iconLoginGoogle = SvgPicture.asset('assets/images/login/ico_google.svg', width: 14, height: 14);
+
 // Header
 SvgPicture iconHeaderLogo = SvgPicture.asset('assets/images/common/img_header_logo.svg', width: 98.57, height: 15);
 SvgPicture iconHeaderAvatar = SvgPicture.asset('assets/images/common/ico_header_avatar.svg', width: 21, height: 21);
