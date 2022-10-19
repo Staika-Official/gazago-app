@@ -118,7 +118,7 @@ class ArchiveDetail extends StatelessWidget {
                           child: iconArchiveDistance,
                         ),
                         StyledText(
-                          '${convertMetersToKm(controller.selectedItem.value.distance!)} km',
+                          '${formatDecimalPlaces(convertMetersToKm(controller.selectedItem.value.distance!), 2)} km',
                           fontSize: 16,
                           lineHeight: 20,
                           fontWeight: 600,

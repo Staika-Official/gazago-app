@@ -1,4 +1,3 @@
-import 'dart:developer';
 import 'dart:io';
 
 import 'package:firebase_auth/firebase_auth.dart';
@@ -33,9 +32,6 @@ class LoginController extends GetxController {
         await emailLogin();
         break;
     }
-
-    await initUserInfo();
-    Get.offNamed(Routes.loading);
   }
 
   Future<void> emailLogin() async {
@@ -60,10 +56,6 @@ class LoginController extends GetxController {
       idToken: googleAuth?.idToken,
     );
 
-    inspect(credential);
-    print(credential.accessToken);
-    print(credential.idToken);
-
     await requestLogin(LoginType.google, credential.idToken!);
 
     // Once signed in, return the UserCredential
@@ -82,10 +74,6 @@ class LoginController extends GetxController {
       accessToken: appleCredential.authorizationCode,
       idToken: appleCredential.identityToken,
     );
-
-    inspect(credential);
-    print(credential.accessToken);
-    print(credential.idToken);
 
     await requestLogin(LoginType.apple, credential.idToken!);
 
@@ -118,9 +106,23 @@ class LoginController extends GetxController {
       forceLogin: true,
     );
 
-    AccessTokenModel token = await UaaService.socialLogin(loginInfo);
-    HiveStore.save(key: HiveKey.accessToken.name, value: token.accessToken);
-    HiveStore.save(key: HiveKey.refreshToken.name, value: token.refreshToken);
+    await UaaService.socialLogin(
+      loginInfo,
+      successCallback: (AccessTokenModel token, int statusCode) async {
+        HiveStore.save(key: HiveKey.accessToken.name, value: token.accessToken);
+        HiveStore.save(key: HiveKey.refreshToken.name, value: token.refreshToken);
+
+        if (statusCode == 200) {
+          Get.offNamed(Routes.loading);
+        } else {
+          await initUserInfo();
+          Get.offNamed(Routes.onBoarding);
+        }
+      },
+      errorCallback: (int statusCode, String statusMessage) {
+        Get.snackbar(statusCode.toString(), statusMessage);
+      },
+    );
   }
 
   void showDuplicateLoginWarning() {

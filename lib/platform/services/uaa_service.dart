@@ -11,10 +11,13 @@ class UaaService {
     return token;
   }
 
-  static Future<AccessTokenModel> socialLogin(SocialLoginInfoModel loginInfo) async {
+  static Future<void> socialLogin(SocialLoginInfoModel loginInfo, {required Function successCallback, Function? errorCallback}) async {
     Response res = await UaaApi.socialLogin(loginInfo);
-    AccessTokenModel token = AccessTokenModel.fromJson(res.data);
-    return token;
+    if ([200, 201].any((statusCode) => statusCode == res.statusCode)) {
+      successCallback(AccessTokenModel.fromJson(res.data), res.statusCode);
+    } else {
+      errorCallback!();
+    }
   }
 
   static Future<UserAccountModel> getAccountInfo() async {

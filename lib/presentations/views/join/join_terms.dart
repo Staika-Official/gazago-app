@@ -47,7 +47,7 @@ class JoinTerms extends StatelessWidget {
                               child: Padding(
                                 padding: const EdgeInsets.only(left: 8.0),
                                 child: StyledText(
-                                  term.title,
+                                  term.title!,
                                   fontWeight: 500,
                                   fontSize: 16,
                                   lineHeight: 24,
@@ -59,12 +59,12 @@ class JoinTerms extends StatelessWidget {
                         ),
                       ),
                     ),
-                    if (term.termType != 'SERVICE')
+                    if (term.boardType != 'SERVICE')
                       Padding(
                         padding: const EdgeInsets.only(top: 2.0),
                         child: SizedBox(
                           child: GestureDetector(
-                            onTap: () => Get.toNamed(Routes.term, arguments: {'termType': term.termType}),
+                            onTap: () => Get.toNamed(Routes.term, arguments: {'termType': term.boardType, 'termId': term.id}),
                             child: const Icon(
                               Icons.chevron_right,
                               color: Color(0xFF8A8A8A),
@@ -195,7 +195,7 @@ class JoinTerms extends StatelessWidget {
                 ],
               ),
               child: InkWell(
-                onTap: () => controller.allAgreed.value ? () => Get.toNamed(Routes.loading) : null,
+                onTap: () => controller.requestJoin(),
                 child: const Padding(
                   padding: EdgeInsets.symmetric(vertical: 12.0),
                   child: Center(

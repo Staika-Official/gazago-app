@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:get/get.dart';
 import 'package:gaza_go/constants/routes.dart';
 import 'package:gaza_go/platform/controllers/withdraw_confirm_controller.dart';
 import 'package:gaza_go/presentations/components/default_container.dart';
+import 'package:get/get.dart';
 
 class WithdrawConfirm extends StatelessWidget {
   const WithdrawConfirm({Key? key}) : super(key: key);
@@ -19,7 +19,7 @@ class WithdrawConfirm extends StatelessWidget {
                   Icons.check,
                   color: checkItem.isChecked ? Colors.blue : Colors.grey,
                 ),
-                Flexible(child: Text(checkItem.title)),
+                Flexible(child: Text(checkItem.title!)),
               ],
             ),
           ),

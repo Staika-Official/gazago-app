@@ -9,11 +9,12 @@ class ServiceUrl {
   static const String uaaService = '/services/uaa/api';
   static const String itemService = '/services/gazago/api/user-items';
   static const String badgeService = '/services/gazago/api/user-badges';
-  static const String memberService = '';
+  static const String memberService = '/services/member';
   static const String stateService = '/services/gazago/api/user-states';
   static const String exerciseService = '/services/gazago/api/user-exercises';
   static const String staminaService = '/services/gazago/api/user-state-recoveries';
   static const String dashboardService = '/services/gazago/api/dash-board-reward-dailies';
   static const String spendingWalletService = '/services/gazago-wallet/api/spending';
   static const String solanaWalletService = '/services/gazago-wallet/api/solana';
+  static const String boardService = '/services/board/api';
 }

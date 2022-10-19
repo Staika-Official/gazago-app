@@ -1,9 +1,18 @@
+import 'package:flutter/material.dart';
+import 'package:gaza_go/constants/routes.dart';
 import 'package:gaza_go/platform/models/term_item_model.dart';
+import 'package:gaza_go/platform/services/board_service.dart';
 import 'package:get/get.dart';
 
 class JoinTermsController extends GetxController {
   final RxList<TermItemModel> termsList = RxList.empty();
-  final RxBool allAgreed = RxBool(false);
+  RxBool get allAgreed {
+    return RxBool(termsList.every((term) => term.isChecked == true));
+  }
+
+  RxBool get allRequiredAgreed {
+    return RxBool(termsList.where((term) => term.isRequired == true).every((term) => term.isChecked == true));
+  }
 
   @override
   void onInit() {
@@ -11,14 +20,10 @@ class JoinTermsController extends GetxController {
     super.onInit();
   }
 
-  void getTermsList() {
-    termsList.value = [
-      TermItemModel(title: '이용약관 동의', termType: 'TERM', isChecked: false, isRequired: true),
-      TermItemModel(title: '개인정보 수집 및 이용 동의', termType: 'PRIVACY', isChecked: false, isRequired: true),
-      TermItemModel(title: '위치정보 이용 동의', termType: 'LOCATION', isChecked: false, isRequired: true),
-      TermItemModel(title: '마케팅 정보 수신 동의', termType: 'MARKETING', isChecked: false, isRequired: false),
-      TermItemModel(title: 'gazaGO 계정은 Staika 플랫폼의 통합계정으로 가입되고 하나의 계정으로 편리하게 이용하실 수 있습니다. 이에 기존에 사용 중인 프로필 사진, 지갑 주소 등이 연동될수 있습니다.', termType: 'SERVICE', isChecked: false, isRequired: true),
-    ];
+  void getTermsList() async {
+    await BoardService.getFirstPostByType('T2E_TERMS,T2E_PRIVACY,T2E_LOCATION,T2E_MARKETING', successCallback: (List<TermItemModel> terms) {
+      termsList.value = terms;
+    });
   }
 
   void toggleTerm(TermItemModel termItem) {
@@ -29,15 +34,22 @@ class JoinTermsController extends GetxController {
       }
       return term;
     }).toList();
-    allAgreed.value = termsList.every((term) => term.isChecked);
   }
 
   void toggleAllTerms() {
     List<TermItemModel> termsList = this.termsList;
+    bool allChecked = !allAgreed.value;
     this.termsList.value = termsList.map((term) {
-      term.isChecked = !allAgreed.value;
+      term.isChecked = allChecked;
       return term;
     }).toList();
-    allAgreed.value = !allAgreed.value;
+  }
+
+  void requestJoin() {
+    if (allRequiredAgreed.value) {
+      Get.toNamed(Routes.loading);
+    } else {
+      Get.snackbar('필수 약관 동의 필요', '필수 약관에 동의해주세요', colorText: Colors.white);
+    }
   }
 }
