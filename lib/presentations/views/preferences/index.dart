@@ -42,10 +42,10 @@ class Preferences extends StatelessWidget {
               ),
             );
           }),
-          PreferenceItem(
-            title: '본인인증',
-            onTap: () => Get.toNamed(Routes.verification),
-          ),
+          // PreferenceItem(
+          //   title: '본인인증',
+          //   onTap: () => Get.toNamed(Routes.verification),
+          // ),
           PreferenceItem(
             title: '알림',
             onTap: () => Get.toNamed(Routes.preferenceNotification),
@@ -103,7 +103,7 @@ class PreferenceItem extends StatelessWidget {
       child: InkWell(
         onTap: type == ItemType.functional ? onTap : null,
         child: Container(
-          height: 53,
+          height: 55,
           color: Color(0xFF1D1D26),
           padding: const EdgeInsets.only(left: 25, right: 20),
           child: Row(
