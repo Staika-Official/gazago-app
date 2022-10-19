@@ -49,7 +49,7 @@ class ActivityService {
 
   static Future<void> fetchStartUserExercises(UserExerciseModel exerciseInfo, {Function? successCallback, Function? errorCallback}) async {
     Response res = await ActivityApi.fetchStartUserExercises(userId!, exerciseInfo);
-    if (res.statusCode == 200) {
+    if (res.statusCode == 201) {
       successCallback!(UserExerciseModel.fromJson(res.data));
     } else {
       errorCallback!(res.statusCode, res.statusMessage);
