@@ -1,0 +1,120 @@
+import 'package:flutter/material.dart';
+import 'package:gaza_go/platform/controllers/login_controller.dart';
+import 'package:gaza_go/presentations/components/default_container.dart';
+import 'package:gaza_go/presentations/styles/styled_text.dart';
+import 'package:get/get.dart';
+
+class SignupComplete extends StatelessWidget {
+  const SignupComplete({Key? key}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    LoginController controller = Get.put(LoginController());
+
+    return DefaultContainer(
+      backgroundColor: const Color(0xFF1D1D26),
+      child: Padding(
+        padding: const EdgeInsets.all(20),
+        child: Stack(
+          alignment: Alignment.center,
+          children: [
+            Positioned.fill(
+              child: Center(
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    Column(
+                      mainAxisSize: MainAxisSize.min,
+                      children: const [
+                        StyledText(
+                          '회원가입이 완료 되었습니다.',
+                          fontSize: 22,
+                          fontWeight: 500,
+                          lineHeight: 22,
+                        ),
+                        Padding(
+                          padding: EdgeInsets.only(top: 14.0),
+                          child: StyledText(
+                            '이제 gazaGO와 함께\n즐거운 운동을 시작해 보세요.!',
+                            fontSize: 16,
+                            fontWeight: 500,
+                            lineHeight: 22,
+                            textAlign: TextAlign.center,
+                            color: Color(0xFF8A8A8A),
+                          ),
+                        ),
+                      ],
+                    )
+                  ],
+                ),
+              ),
+            ),
+            Positioned(
+              left: 0,
+              bottom: 50,
+              right: 0,
+              child: Stack(
+                children: [
+                  Padding(
+                    padding: const EdgeInsets.only(bottom: 32.0),
+                    child: Container(
+                      decoration: BoxDecoration(
+                        color: const Color(0xFF363841),
+                        borderRadius: BorderRadius.circular(12),
+                      ),
+                      child: const Padding(
+                        padding: EdgeInsets.all(10.0),
+                        child: StyledText(
+                          '기존에 가입된 회원정보가 있어 계정 연동이 완료되었습니다. 연결된 계정은 ‘설정 > 계정정보 > SNS로그인 에서 확인 가능합니다.',
+                          color: Color(0xFFBFBFBF),
+                          fontSize: 14,
+                          lineHeight: 20,
+                          fontWeight: 500,
+                          textAlign: TextAlign.center,
+                        ),
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+            Positioned(
+              left: 0,
+              bottom: 0,
+              right: 0,
+              child: Container(
+                height: 55,
+                decoration: BoxDecoration(
+                  color: const Color(0xFF0EE6F3),
+                  border: Border.all(width: 2, color: Colors.black),
+                  borderRadius: BorderRadius.circular(8),
+                  boxShadow: const [
+                    BoxShadow(
+                      color: Colors.black,
+                      offset: Offset(0, 3),
+                    )
+                  ],
+                ),
+                child: InkWell(
+                  onTap: () => null,
+                  child: const Padding(
+                    padding: EdgeInsets.symmetric(vertical: 12.0),
+                    child: Center(
+                        child: StyledText(
+                      '시작하기',
+                      fontSize: 18,
+                      lineHeight: 18,
+                      fontWeight: 500,
+                      color: Colors.black,
+                    )),
+                  ),
+                ),
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}
