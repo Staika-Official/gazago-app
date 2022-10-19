@@ -116,7 +116,7 @@ class LoginController extends GetxController {
           Get.offNamed(Routes.loading);
         } else {
           await initUserInfo();
-          Get.offNamed(Routes.joinTerms);
+          Get.offNamed(Routes.onBoarding);
         }
       },
       errorCallback: (int statusCode, String statusMessage) {

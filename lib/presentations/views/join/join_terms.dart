@@ -195,7 +195,7 @@ class JoinTerms extends StatelessWidget {
                 ],
               ),
               child: InkWell(
-                onTap: () => controller.allAgreed.value ? () => Get.toNamed(Routes.loading) : null,
+                onTap: () => controller.requestJoin(),
                 child: const Padding(
                   padding: EdgeInsets.symmetric(vertical: 12.0),
                   child: Center(

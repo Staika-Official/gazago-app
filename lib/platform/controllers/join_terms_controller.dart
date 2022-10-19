@@ -1,3 +1,5 @@
+import 'package:flutter/material.dart';
+import 'package:gaza_go/constants/routes.dart';
 import 'package:gaza_go/platform/models/term_item_model.dart';
 import 'package:gaza_go/platform/services/board_service.dart';
 import 'package:get/get.dart';
@@ -9,7 +11,7 @@ class JoinTermsController extends GetxController {
   }
 
   RxBool get allRequiredAgreed {
-    return RxBool(termsList.every((term) => term.isChecked == true));
+    return RxBool(termsList.where((term) => term.isRequired == true).every((term) => term.isChecked == true));
   }
 
   @override
@@ -44,6 +46,10 @@ class JoinTermsController extends GetxController {
   }
 
   void requestJoin() {
-    print('all required checked');
+    if (allRequiredAgreed.value) {
+      Get.toNamed(Routes.loading);
+    } else {
+      Get.snackbar('필수 약관 동의 필요', '필수 약관에 동의해주세요', colorText: Colors.white);
+    }
   }
 }
