@@ -80,13 +80,18 @@ class LoginController extends GetxController {
     // return await FirebaseAuth.instance.signInWithCredential(credential);
   }
 
-  Future<void> initUserInfo() async {
+  Future<void> getUserInfo() async {
     UserAccountModel user = await UaaService.getAccountInfo();
     HiveStore.save(key: HiveKey.userId.name, value: user.id.toString());
     HiveStore.save(key: HiveKey.profileImageUrl.name, value: user.profileImageUrl);
     HiveStore.save(key: HiveKey.nickname.name, value: user.nickname);
+  }
 
-    await MemberService.initializeUserData(user.nickname, user.profileImageUrl);
+  Future<void> initUserInfo() async {
+    await getUserInfo();
+    String? profileImageUrl = HiveStore.loadString(key: HiveKey.profileImageUrl.name);
+    String? nickname = HiveStore.loadString(key: HiveKey.nickname.name);
+    await MemberService.initializeUserData(nickname!, profileImageUrl!);
     await WalletService.generateSpendingWallet();
   }
 
@@ -113,6 +118,7 @@ class LoginController extends GetxController {
         HiveStore.save(key: HiveKey.refreshToken.name, value: token.refreshToken);
 
         if (statusCode == 200) {
+          await getUserInfo();
           Get.offNamed(Routes.loading);
         } else {
           await initUserInfo();
