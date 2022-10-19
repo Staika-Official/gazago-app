@@ -8,6 +8,7 @@ import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:flutter_naver_map/flutter_naver_map.dart';
 import 'package:gaza_go/constants/enums.dart';
 import 'package:gaza_go/constants/routes.dart';
+import 'package:gaza_go/platform/controllers/loading_controller.dart';
 import 'package:gaza_go/platform/controllers/wallet_master_controller.dart';
 import 'package:gaza_go/platform/firebase/cloud_messaging.dart';
 import 'package:gaza_go/platform/helpers/activity_mixin.dart';
@@ -31,7 +32,6 @@ import 'package:get/get.dart';
 import 'package:permission_handler/permission_handler.dart' as PH;
 
 class ActivityController extends GetxController with ActivityMixin, ChallengeMixin {
-  // final LoadingController _loadingController = Get.find();
   final WalletMasterController walletMasterController = Get.find();
 
   //index.dart
@@ -93,9 +93,7 @@ class ActivityController extends GetxController with ActivityMixin, ChallengeMix
 
   Future<void> initController() async {
     await checkAvailabilities();
-    // _loadingController.progress.value = 0.8;
     await initializeActivity();
-    // _loadingController.progress.value = 1;
     getUserState();
   }
 
@@ -461,6 +459,8 @@ class ActivityController extends GetxController with ActivityMixin, ChallengeMix
         exerciseState.value = ExerciseState.ongoing;
       }
     }
+
+    if (Get.isRegistered<LoadingController>()) Get.find<LoadingController>().updateProgress();
   }
 
   requestExerciseInitialization() async {
@@ -484,6 +484,7 @@ class ActivityController extends GetxController with ActivityMixin, ChallengeMix
     bool hasLocationPermissionWithAccuracy = await checkLocationPermissionAndAccuracy();
     if (!hasLocationPermissionWithAccuracy) return false;
 
+    if (Get.isRegistered<LoadingController>()) Get.find<LoadingController>().updateProgress();
     return true;
   }
 
