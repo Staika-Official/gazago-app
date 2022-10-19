@@ -532,6 +532,8 @@ class ActivityController extends GetxController with ActivityMixin, ChallengeMix
       isAccurate = await checkLocationAccuracy();
     }
 
+    bool hasLocationPermission = hasPermission && isAccurate;
+
     if (!hasPermission && !isAccurate) {
       await Get.dialog(
         AlertDialog(
@@ -540,7 +542,7 @@ class ActivityController extends GetxController with ActivityMixin, ChallengeMix
           actions: [
             ElevatedButton(
                 onPressed: () async {
-                  await requestLocationPermission();
+                  hasLocationPermission = await requestLocationPermission();
                   Get.back();
                 },
                 child: const Text('확인')),
@@ -550,7 +552,7 @@ class ActivityController extends GetxController with ActivityMixin, ChallengeMix
       );
     }
 
-    return hasPermission && isAccurate;
+    return hasLocationPermission;
   }
 
   Future<bool> checkActivityPermission() async {
