@@ -1,5 +1,5 @@
-import 'package:get/get.dart';
 import 'package:gaza_go/platform/models/term_item_model.dart';
+import 'package:get/get.dart';
 
 class WithdrawConfirmController extends GetxController {
   final RxList<TermItemModel> withdrawCheckList = RxList.empty();
@@ -13,10 +13,10 @@ class WithdrawConfirmController extends GetxController {
 
   void getWithdrawCheckList() {
     withdrawCheckList.value = [
-      TermItemModel(title: '정산되지 않은 GO는 소멸됩니다.', termType: '', isChecked: false, isRequired: true),
-      TermItemModel(title: '모든 운동 기록과 개인 정보는 삭제됩니다.', termType: '', isChecked: false, isRequired: true),
-      TermItemModel(title: '코인, 지갑, 거래 내역 등을 복구할 수 없습니다.', termType: '', isChecked: false, isRequired: true),
-      TermItemModel(title: '외부 지갑으로 전송하지 않은 뱃지 NFT와 신발, 모자, 옷 등의 아이템은 소멸됩니다.', termType: '', isChecked: false, isRequired: true),
+      // TermItemModel(title: '정산되지 않은 GO는 소멸됩니다.', termType: '', isChecked: false, isRequired: true),
+      // TermItemModel(title: '모든 운동 기록과 개인 정보는 삭제됩니다.', termType: '', isChecked: false, isRequired: true),
+      // TermItemModel(title: '코인, 지갑, 거래 내역 등을 복구할 수 없습니다.', termType: '', isChecked: false, isRequired: true),
+      // TermItemModel(title: '외부 지갑으로 전송하지 않은 뱃지 NFT와 신발, 모자, 옷 등의 아이템은 소멸됩니다.', termType: '', isChecked: false, isRequired: true),
     ];
   }
 
