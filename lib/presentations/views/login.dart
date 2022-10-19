@@ -26,21 +26,13 @@ class Login extends StatelessWidget {
                       color: Colors.black,
                     ),
                     borderRadius: const BorderRadius.all(Radius.circular(10)),
-                    boxShadow: const [
-                      BoxShadow(
-                        color: Color(0xFF000000),
-                        spreadRadius: 0,
-                        blurRadius: 0,
-                        offset: Offset(0, 4), // changes position of shadow
-                      ),
-                    ],
                   ),
                   alignment: Alignment.center,
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     crossAxisAlignment: CrossAxisAlignment.center,
                     children: [
-                      getLoginButtonIcon(loginType.name),
+                      loginType.name != 'email' ? getLoginButtonIcon(loginType.name) : Container(),
                       StyledText(
                         '${getLoginButtonText(loginType.name)}로 로그인',
                         color: loginType.name == 'apple' ? Colors.white : Colors.black,

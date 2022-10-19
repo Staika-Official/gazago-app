@@ -99,133 +99,134 @@ class InventoryHome extends StatelessWidget {
               ),
             ),
             Padding(
-              padding: const EdgeInsets.symmetric(vertical: 20.0),
-              child: Row(
-                mainAxisSize: MainAxisSize.max,
-                crossAxisAlignment: CrossAxisAlignment.center,
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Column(
+                padding: const EdgeInsets.symmetric(vertical: 20.0),
+                child: Obx(() {
+                  return Row(
+                    mainAxisSize: MainAxisSize.max,
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
+                      Column(
                         children: [
-                          StyledText(
-                            '${controller.equippedAbrasionRate.toInt()}',
-                            fontSize: 28,
-                            fontWeight: 500,
-                          ),
-                          StyledText(
-                            '%',
-                            fontSize: 16,
-                            fontWeight: 500,
-                          ),
-                        ],
-                      ),
-                      Padding(
-                        padding: const EdgeInsets.only(top: 12.0),
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            Padding(
-                              padding: const EdgeInsets.only(top: 3.0, right: 2.0),
-                              child: iconGoReward,
-                            ),
-                            StyledText(
-                              'GO 보상율',
-                              color: Color(0xFF8A8A8A),
-                              fontSize: 11,
-                              lineHeight: 12,
-                              fontWeight: 500,
-                            ),
-                          ],
-                        ),
-                      ),
-                    ],
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 25.0),
-                    child: Column(
-                      children: [
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            StyledText(
-                              '${controller.equippedRewardRate.toInt()}',
-                              fontSize: 28,
-                              fontWeight: 500,
-                            ),
-                            StyledText(
-                              '%',
-                              fontSize: 16,
-                              fontWeight: 500,
-                            ),
-                          ],
-                        ),
-                        Padding(
-                          padding: const EdgeInsets.only(top: 12.0),
-                          child: Row(
+                          Row(
                             mainAxisAlignment: MainAxisAlignment.center,
-                            crossAxisAlignment: CrossAxisAlignment.center,
                             children: [
-                              Padding(
-                                padding: const EdgeInsets.only(top: 1.0, right: 3.0),
-                                child: iconItemAbrasion,
+                              StyledText(
+                                '${controller.equippedRewardRate.toInt()}',
+                                fontSize: 28,
+                                fontWeight: 500,
                               ),
                               StyledText(
-                                '아이템 마모율',
-                                color: Color(0xFF8A8A8A),
-                                fontSize: 11,
-                                lineHeight: 12,
+                                '%',
+                                fontSize: 16,
                                 fontWeight: 500,
                               ),
                             ],
                           ),
-                        ),
-                      ],
-                    ),
-                  ),
-                  Column(
-                    children: [
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          StyledText(
-                            '${controller.equippedStaminaReduceRate.toInt()}',
-                            fontSize: 28,
-                            fontWeight: 500,
-                          ),
-                          StyledText(
-                            '%',
-                            fontSize: 16,
-                            fontWeight: 500,
+                          Padding(
+                            padding: const EdgeInsets.only(top: 12.0),
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                Padding(
+                                  padding: const EdgeInsets.only(top: 3.0, right: 2.0),
+                                  child: iconGoReward,
+                                ),
+                                StyledText(
+                                  'GO 보상율',
+                                  color: Color(0xFF8A8A8A),
+                                  fontSize: 11,
+                                  lineHeight: 12,
+                                  fontWeight: 500,
+                                ),
+                              ],
+                            ),
                           ),
                         ],
                       ),
                       Padding(
-                        padding: const EdgeInsets.only(top: 12.0),
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
+                        padding: const EdgeInsets.symmetric(horizontal: 25.0),
+                        child: Column(
                           children: [
-                            Padding(
-                              padding: const EdgeInsets.only(top: 1.0, right: 3.0),
-                              child: iconStaminaReduce,
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                StyledText(
+                                  '${controller.equippedAbrasionRate.toInt()}',
+                                  fontSize: 28,
+                                  fontWeight: 500,
+                                ),
+                                StyledText(
+                                  '%',
+                                  fontSize: 16,
+                                  fontWeight: 500,
+                                ),
+                              ],
                             ),
-                            StyledText(
-                              '체력 감소율',
-                              color: Color(0xFF8A8A8A),
-                              fontSize: 11,
-                              lineHeight: 12,
-                              fontWeight: 500,
+                            Padding(
+                              padding: const EdgeInsets.only(top: 12.0),
+                              child: Row(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                crossAxisAlignment: CrossAxisAlignment.center,
+                                children: [
+                                  Padding(
+                                    padding: const EdgeInsets.only(top: 1.0, right: 3.0),
+                                    child: iconItemAbrasion,
+                                  ),
+                                  StyledText(
+                                    '아이템 마모율',
+                                    color: Color(0xFF8A8A8A),
+                                    fontSize: 11,
+                                    lineHeight: 12,
+                                    fontWeight: 500,
+                                  ),
+                                ],
+                              ),
                             ),
                           ],
                         ),
                       ),
+                      Column(
+                        children: [
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              StyledText(
+                                '${controller.equippedStaminaReduceRate.toInt()}',
+                                fontSize: 28,
+                                fontWeight: 500,
+                              ),
+                              StyledText(
+                                '%',
+                                fontSize: 16,
+                                fontWeight: 500,
+                              ),
+                            ],
+                          ),
+                          Padding(
+                            padding: const EdgeInsets.only(top: 12.0),
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                Padding(
+                                  padding: const EdgeInsets.only(top: 1.0, right: 3.0),
+                                  child: iconStaminaReduce,
+                                ),
+                                StyledText(
+                                  '체력 감소율',
+                                  color: Color(0xFF8A8A8A),
+                                  fontSize: 11,
+                                  lineHeight: 12,
+                                  fontWeight: 500,
+                                ),
+                              ],
+                            ),
+                          ),
+                        ],
+                      ),
                     ],
-                  ),
-                ],
-              ),
-            ),
+                  );
+                })),
             Padding(
               padding: const EdgeInsets.only(top: 10),
               child: TabBar(

@@ -153,7 +153,7 @@ class InventoryController extends GetxController with LinearProgressMixin, Inven
   }
 
   double get equippedRewardRate {
-    return equippedItemList.fold(0.0, (summedValue, element) => summedValue + element.rewardRate);
+    return equippedItemList.fold(0.0, (summedValue, element) => summedValue + element.rewardRate) + equippedBadge.value.badge.rewardRate;
   }
 
   double get equippedStaminaReduceRate {
