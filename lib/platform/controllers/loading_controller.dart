@@ -7,6 +7,7 @@ import 'package:get/get.dart';
 
 class LoadingController extends GetxController {
   final RxDouble progress = RxDouble(0);
+  final RxString progressMessage = RxString("로드중......");
 
   @override
   void onInit() {
@@ -16,14 +17,15 @@ class LoadingController extends GetxController {
     // ever(progress, (callback) => {if (progress.value == 1) Get.offAllNamed(Routes.home)});
     Timer.periodic(Duration(seconds: 1), (timer) {
       progress.value = progress.value + 0.2;
-      // if (progress.value == 1) Get.offAllNamed(Routes.home);
+      if (progress.value == 1) Get.offAllNamed(Routes.home);
     });
 
     super.onInit();
   }
 
-  void updateProgress() {
+  void updateProgress(String message) {
     progress.value = progress.value + 0.2;
+    progressMessage.value = message;
     if (progress.value == 1) Get.offAllNamed(Routes.home);
   }
 }
