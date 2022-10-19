@@ -371,7 +371,7 @@ class Tile extends StatelessWidget {
                       imageUrl: imageUrl,
                       placeholder: (context, url) => const CircularProgressIndicator(),
                       errorWidget: (context, url, error) => Image.asset("assets/images/@temp_badge.png"),
-                      fit: BoxFit.fill,
+                      fit: BoxFit.contain,
                     ),
                   ),
                 ],

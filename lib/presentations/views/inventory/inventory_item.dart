@@ -17,16 +17,16 @@ class InventoryItem extends StatelessWidget {
         .toList();
   }
 
-  List<Widget> renderItemList(InventoryHomeController homeController, InventoryController controller) {
+  List<Widget> renderItemList(InventoryHomeController homeController, InventoryController controller, double width) {
     return homeController.itemSubTabList
         .map(
           (tab) => GridView.count(
             primary: false,
-            padding: const EdgeInsets.only(left: 20, right: 20, bottom: 30),
+            padding: const EdgeInsets.only(left: 20, right: 20),
             childAspectRatio: (1 / 1.4),
             crossAxisSpacing: 10,
             mainAxisSpacing: 10,
-            crossAxisCount: 3,
+            crossAxisCount: (width < 350) ? 2 : 3,
             children: [
               ...controller.allItems[tab['itemType']]!.map(
                 (item) => InkWell(
@@ -35,7 +35,7 @@ class InventoryItem extends StatelessWidget {
                     decoration: const BoxDecoration(
                       color: Color(0xFF1D1D26),
                       borderRadius: BorderRadius.all(
-                        Radius.circular(20),
+                        Radius.circular(10),
                       ),
                     ),
                     child: Stack(children: [
@@ -129,7 +129,7 @@ class InventoryItem extends StatelessWidget {
                                       alignment: Alignment.center,
                                       child: Padding(
                                         padding: const EdgeInsets.all(8.0),
-                                        child: StyledText('장착 중', fontWeight: 500, fontSize: 14, color: Color(0xFF8A8A8A)),
+                                        child: StyledText('장착중', fontWeight: 500, fontSize: 14, color: Color(0xFF8A8A8A)),
                                       ),
                                     ),
                                   ),
@@ -164,6 +164,7 @@ class InventoryItem extends StatelessWidget {
   Widget build(BuildContext context) {
     InventoryHomeController _controller = Get.find();
     InventoryController inventoryController = Get.find();
+    double width = MediaQuery.of(context).size.width;
     return Container(
       color: const Color(0xFF363841),
       child: Column(
@@ -195,10 +196,13 @@ class InventoryItem extends StatelessWidget {
             return Expanded(
               child: TabBarView(
                 controller: _controller.subTabController,
-                children: [...renderItemList(_controller, inventoryController)],
+                children: [...renderItemList(_controller, inventoryController, width)],
               ),
             );
           }),
+          Spacer(
+            flex: 1,
+          ),
         ],
       ),
     );

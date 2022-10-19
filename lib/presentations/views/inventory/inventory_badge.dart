@@ -69,7 +69,7 @@ class InventoryBadge extends StatelessWidget {
                                 child: Padding(
                                   padding: const EdgeInsets.all(8.0),
                                   child: StyledText(
-                                    '장착 중',
+                                    '장착중',
                                     fontWeight: 500,
                                     fontSize: 14,
                                     color: Color(0xFF8A8A8A),
@@ -124,7 +124,7 @@ class InventoryBadge extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     InventoryController controller = Get.put(InventoryController());
-
+    double width = MediaQuery.of(context).size.width;
     return Container(
       color: Color(0xFF363841),
       child: Padding(
@@ -136,7 +136,7 @@ class InventoryBadge extends StatelessWidget {
             childAspectRatio: (1 / 1.4),
             crossAxisSpacing: 10,
             mainAxisSpacing: 10,
-            crossAxisCount: 3,
+            crossAxisCount: (width < 350) ? 2 : 3,
             children: <Widget>[
               ...renderUserBadgesList(controller),
             ],

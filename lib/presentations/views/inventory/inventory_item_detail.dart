@@ -67,7 +67,7 @@ class InventoryItemDetail extends StatelessWidget {
                             ],
                           ),
                           child: Container(
-                            width: 80,
+                            width: 90,
                             alignment: Alignment.center,
                             padding: const EdgeInsets.symmetric(vertical: 5.0, horizontal: 10.0),
                             child: StyledText(

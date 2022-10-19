@@ -138,7 +138,7 @@ class InventoryController extends GetxController with LinearProgressMixin, Inven
     return RxMap(
       {
         'all': myAllItems,
-        'outers': myAllItems.where((item) => item.itemCategory == 'OUTER').toList(),
+        'outers': myAllItems.where((item) => item.itemCategory == 'TOP').toList(),
         'shoes': myAllItems.where((item) => item.itemCategory == 'SHOES').toList(),
         'accessories': myAllItems.where((item) => item.itemCategory == 'ACCESSORY').toList(),
         'drinks': myAllItems.where((item) => item.itemCategory == 'DRINK').toList(),
