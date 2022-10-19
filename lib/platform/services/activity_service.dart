@@ -47,16 +47,19 @@ class ActivityService {
     return EquippedItemModel.fromJson(res.data);
   }
 
-  static Future<UserExerciseModel> fetchStartUserExercises(UserExerciseModel exerciseInfo) async {
+  static Future<void> fetchStartUserExercises(UserExerciseModel exerciseInfo, {Function? successCallback, Function? errorCallback}) async {
     Response res = await ActivityApi.fetchStartUserExercises(userId!, exerciseInfo);
-    UserExerciseModel userState = UserExerciseModel.fromJson(res.data);
-    return userState;
+    if (res.statusCode == 200) {
+      successCallback!(UserExerciseModel.fromJson(res.data));
+    } else {
+      errorCallback!(res.statusCode, res.statusMessage);
+    }
   }
 
-  static Future<CurrentUserStateModel> fetchUpdateUserExercises(UserExerciseModel exerciseInfo, {onError}) async {
+  static Future<CurrentUserStateModel> fetchUpdateUserExercises(UserExerciseModel exerciseInfo, {Function? onError}) async {
     Response res = await ActivityApi.fetchUpdateUserExercises(userId!, exerciseInfo);
     CurrentUserStateModel userState = CurrentUserStateModel.fromJson(res.data);
-    if (res.statusCode == 404) onError();
+    if (res.statusCode == 404) onError!();
     return userState;
   }
 

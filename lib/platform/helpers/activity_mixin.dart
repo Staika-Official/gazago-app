@@ -165,7 +165,7 @@ class ActivityMixin {
 
   void startExercise(ExerciseType exerciseType, ChallengeModel? challenge) async {
     if (globalController.connectivityResult.value != ConnectivityResult.none) {
-      UserExerciseModel exerciseModel = await ActivityService.fetchStartUserExercises(
+      await ActivityService.fetchStartUserExercises(
         UserExerciseModel(
           userId: int.parse(
             HiveStore.loadString(
@@ -183,12 +183,17 @@ class ActivityMixin {
           startPoint: challenge != null ? challenge.firstName : '${currentLocation.value.longitude}, ${currentLocation.value.latitude}',
           challengeId: challenge?.id,
         ),
+        successCallback: (UserExerciseModel userExerciseData) {
+          userState.update((state) => state!.exercise = userExerciseData);
+          exerciseState.value = ExerciseState.ongoing;
+          initExerciseStats();
+          initStream();
+          startPeriodicUpdate();
+        },
+        errorCallback: (int statusCode, String statusMessage) {
+          Get.snackbar(statusCode.toString(), statusMessage);
+        },
       );
-      userState.update((state) => state!.exercise = exerciseModel);
-      exerciseState.value = ExerciseState.ongoing;
-      initExerciseStats();
-      initStream();
-      startPeriodicUpdate();
     } else {
       Get.snackbar('인터넷 연결 불가', '인터넷 상태를 확인해주세요', colorText: Colors.white);
     }
