@@ -50,7 +50,7 @@ class WalletMasterController extends GetxController {
 
   Future<void> getSpendingWalletBalances() async {
     spendingTokens.value = await WalletService.getSpendingWalletBalance();
-    if (Get.isRegistered<LoadingController>()) Get.find<LoadingController>().updateProgress("지갑 정보가 로드되었습니다.");
+    if (Get.isRegistered<LoadingController>()) Get.find<LoadingController>().updateProgress("지갑 열렸다 다음으로 가자고!");
   }
 
   Future<void> getSpendingWalletTransactions(AssetTokenBalanceUiModel asset) async {
@@ -60,12 +60,12 @@ class WalletMasterController extends GetxController {
 
   Future<void> getSpendingMetaData() async {
     spendingTokenInfoList.value = await WalletService.getSpendingMetaData();
-    if (Get.isRegistered<LoadingController>()) Get.find<LoadingController>().updateProgress("메타 정보가 로드되었습니다.");
+    if (Get.isRegistered<LoadingController>()) Get.find<LoadingController>().updateProgress("메타 정보 들왔다 다음으로 가자고!");
   }
 
   Future<void> getBuyTikCommission() async {
     buyTikCommission.value = await WalletService.getBuyTikCommission();
-    if (Get.isRegistered<LoadingController>()) Get.find<LoadingController>().updateProgress("토큰 시세 정보가 로드되었습니다.");
+    if (Get.isRegistered<LoadingController>()) Get.find<LoadingController>().updateProgress("시세 가져왔다 다음으로 가자고!");
   }
 
   Future<void> buyTik(int tikAmount) async {
