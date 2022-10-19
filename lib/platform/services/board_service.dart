@@ -36,7 +36,7 @@ class BoardService {
   static Future<void> getPostById(int id, {required Function successCallback, Function? errorCallback}) async {
     Response res = await BoardApi.getPostById(id);
     if (res.statusCode == 200) {
-      successCallback();
+      successCallback(TermItemModel.fromJson(res.data));
     } else {
       errorCallback!();
     }
