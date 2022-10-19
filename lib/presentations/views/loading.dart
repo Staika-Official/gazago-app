@@ -4,6 +4,7 @@ import 'package:gaza_go/platform/controllers/global_controller.dart';
 import 'package:gaza_go/platform/controllers/loading_controller.dart';
 import 'package:gaza_go/platform/controllers/wallet_master_controller.dart';
 import 'package:gaza_go/presentations/components/default_container.dart';
+import 'package:gaza_go/presentations/styles/styled_text.dart';
 import 'package:get/get.dart';
 
 class Loading extends StatelessWidget {
@@ -25,8 +26,15 @@ class Loading extends StatelessWidget {
             Padding(
               padding: const EdgeInsets.all(8.0),
               child: Obx(() {
-                return LinearProgressIndicator(
-                  value: loadingController.progress.value,
+                return Column(
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    StyledText(loadingController.progressMessage.value, color: Colors.white,),
+                    const Padding(padding: EdgeInsets.only(top: 10)),
+                    LinearProgressIndicator(
+                      value: loadingController.progress.value,
+                    ),
+                  ],
                 );
               }),
             )
