@@ -103,32 +103,25 @@ class PreferenceItem extends StatelessWidget {
       child: InkWell(
         onTap: type == ItemType.functional ? onTap : null,
         child: Container(
-          height: 55,
-          padding: const EdgeInsets.only(left: 20, right: 15),
+          height: 53,
+          color: Color(0xFF1D1D26),
+          padding: const EdgeInsets.only(left: 25, right: 20),
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              Text(
+              StyledText(
                 title,
-                style: const TextStyle(
-                  color: Color(0xff3a3a3a),
-                  fontSize: 16,
-                  fontWeight: FontWeight.w500,
-                  height: 14 / 16,
-                ),
+                fontSize: 18,
               ),
               type == ItemType.functional
-                  ? Icon(Icons.chevron_right)
+                  ? Icon(
+                      Icons.chevron_right,
+                      color: Color(0xFFBDC0C7),
+                    )
                   : Padding(
                       padding: const EdgeInsets.only(right: 5),
-                      child: Text(
+                      child: StyledText(
                         description!,
-                        style: const TextStyle(
-                          color: Color(0xff878787),
-                          fontSize: 12,
-                          fontWeight: FontWeight.w500,
-                          height: 10 / 12,
-                        ),
                       ),
                     ),
             ],
