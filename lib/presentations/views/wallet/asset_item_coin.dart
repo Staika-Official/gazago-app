@@ -16,20 +16,21 @@ class AssetItemCoin extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return InkWell(
-      onTap: onTap,
-      child: Container(
-        decoration: BoxDecoration(
-          color: Color(0xff2a2b33),
-          border: Border.all(width: 2, color: Colors.black),
-          borderRadius: BorderRadius.circular(12),
-          boxShadow: [
-            BoxShadow(
-              color: Colors.black,
-              offset: Offset(2, 4),
-            )
-          ],
-        ),
+    return Ink(
+      decoration: BoxDecoration(
+        color: Color(0xff2a2b33),
+        border: Border.all(width: 2, color: Colors.black),
+        borderRadius: BorderRadius.circular(12),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black,
+            offset: Offset(2, 4),
+          )
+        ],
+      ),
+      child: InkWell(
+        onTap: onTap,
+        borderRadius: BorderRadius.circular(12),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.center,
           mainAxisAlignment: MainAxisAlignment.start,
