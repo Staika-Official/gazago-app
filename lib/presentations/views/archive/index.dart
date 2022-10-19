@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:gaza_go/constants/enums.dart';
 import 'package:gaza_go/platform/controllers/archive_controller.dart';
+import 'package:gaza_go/platform/helpers/activity_helper.dart';
 import 'package:gaza_go/platform/helpers/base_helper.dart';
 import 'package:gaza_go/presentations/styles/icons.dart';
 import 'package:gaza_go/presentations/styles/styled_text.dart';
@@ -101,7 +102,7 @@ class ArchiveHome extends StatelessWidget {
                                 child: iconArchiveDistance,
                               ),
                               StyledText(
-                                '${archive.distance} km',
+                                '${convertMetersToKm(archive.distance!)} km',
                                 fontWeight: 600,
                               ),
                             ],

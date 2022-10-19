@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_naver_map/flutter_naver_map.dart';
 import 'package:gaza_go/constants/enums.dart';
 import 'package:gaza_go/platform/controllers/archive_controller.dart';
+import 'package:gaza_go/platform/helpers/activity_helper.dart';
 import 'package:gaza_go/platform/helpers/base_helper.dart';
 import 'package:gaza_go/presentations/components/default_container.dart';
 import 'package:gaza_go/presentations/styles/icons.dart';
@@ -117,7 +118,7 @@ class ArchiveDetail extends StatelessWidget {
                           child: iconArchiveDistance,
                         ),
                         StyledText(
-                          '${controller.selectedItem.value.distance} km',
+                          '${convertMetersToKm(controller.selectedItem.value.distance!)} km',
                           fontSize: 16,
                           lineHeight: 20,
                           fontWeight: 600,
