@@ -49,13 +49,23 @@ class WalletDetail extends StatelessWidget {
             decoration: BoxDecoration(
               border: BorderDirectional(
                 bottom: BorderSide(
-                  color: Colors.white,
+                  color: Color(0xff363841),
                 ),
               ),
             ),
             child: Row(
               mainAxisSize: MainAxisSize.max,
+              crossAxisAlignment: CrossAxisAlignment.start,
               children: [
+                Container(
+                  width: 8,
+                  height: 8,
+                  margin: EdgeInsets.only(right: 15, top: 4, left: 4),
+                  decoration: BoxDecoration(
+                    color: Color(0xff0ee6f3),
+                    borderRadius: BorderRadius.circular(8),
+                  ),
+                ),
                 Expanded(
                   child: Column(
                     children: [
@@ -91,7 +101,7 @@ class WalletDetail extends StatelessWidget {
                               color: Color(0xff7C7F82),
                             ),
                             StyledText(
-                              transaction.confirmationStatus!,
+                              transaction.confirmationStatus! == 'finalized' ? '완료' : transaction.confirmationStatus!,
                               fontSize: 12,
                               lineHeight: 10,
                               fontWeight: 600,
