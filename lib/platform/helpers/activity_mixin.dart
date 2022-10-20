@@ -213,11 +213,7 @@ class ActivityMixin {
   void continueExercise() {
     exerciseData.value = List.empty(growable: true);
     exerciseState.value = ExerciseState.ongoing;
-    print('*****************************');
-    print(userState.value.exercise!.speed);
     exerciseData.add(userState.value.exercise!);
-    print('*****************************');
-    print(userState.value.exercise!.speed);
     exerciseTime.value = userState.value.exercise!.time!;
     exerciseSteps.value = userState.value.exercise!.steps!;
 
@@ -242,12 +238,10 @@ class ActivityMixin {
     }
 
     if (globalController.connectivityResult.value != ConnectivityResult.none) {
-      print(('current user speed: ${userState.value.exercise!.speed}'));
       await ActivityService.fetchUpdateUserExercises(
         userExerciseData.value,
         Platform.operatingSystem,
         successCallback: (CurrentUserStateModel newUserState) {
-          print('newUserState speed: ${newUserState.exercise!.speed}');
           userState.value = newUserState;
           updateCount.value = updateCount.value + 1;
           lastUpdateTime.value = DateTime.now().toIso8601String();
