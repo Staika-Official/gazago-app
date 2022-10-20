@@ -627,6 +627,7 @@ class ActivityController extends GetxController with ActivityMixin, ChallengeMix
 
   void selectExerciseType(ExerciseType exerciseType) {
     selectedExerciseType.value = exerciseType;
+    if (selectedExerciseType.value == ExerciseType.walking) selectedChallenge.value = ChallengeModel();
     Get.offNamed(Routes.activityActive);
   }
 
