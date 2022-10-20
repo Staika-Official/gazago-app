@@ -38,6 +38,9 @@ class LoginController extends GetxController {
     AccessTokenModel token = await UaaService.emailLogin();
     HiveStore.save(key: HiveKey.accessToken.name, value: token.accessToken);
     HiveStore.save(key: HiveKey.refreshToken.name, value: token.refreshToken);
+
+    await initUserInfo();
+    Get.offNamed(Routes.onBoarding);
   }
 
   Future<void> signInWithGoogle() async {
