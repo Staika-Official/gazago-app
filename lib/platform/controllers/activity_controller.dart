@@ -666,7 +666,7 @@ class ActivityController extends GetxController with ActivityMixin, ChallengeMix
     locationSubscription ??= Geolocator.getPositionStream(locationSettings: locationSettings).listen((Position position) {
       currentLocation.value = position;
 
-      if (exerciseState.value == ExerciseState.ongoing) {
+      if (exerciseState.value == ExerciseState.ongoing && pedestrianStatus.value != 'STOPPED') {
         exerciseData.add(UserExerciseModel(
           altitude: position.altitude,
           speed: position.speed,
