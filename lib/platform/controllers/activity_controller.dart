@@ -460,7 +460,7 @@ class ActivityController extends GetxController with ActivityMixin, ChallengeMix
       }
     }
 
-    if (Get.isRegistered<LoadingController>()) Get.find<LoadingController>().updateProgress("사용자 정보 수신됐다 다음으로 가자고!");
+    if (Get.isRegistered<LoadingController>()) Get.find<LoadingController>().updateProgress("곧 가자고와 가자고~!");
   }
 
   requestExerciseInitialization() async {
@@ -484,7 +484,8 @@ class ActivityController extends GetxController with ActivityMixin, ChallengeMix
     bool hasLocationPermissionWithAccuracy = await checkLocationPermissionAndAccuracy();
     if (!hasLocationPermissionWithAccuracy) return false;
 
-    if (Get.isRegistered<LoadingController>()) Get.find<LoadingController>().updateProgress("GPS & 권한 가져왔다. 다음으로 가자고!");
+    if (Get.isRegistered<LoadingController>()) Get.find<LoadingController>().updateProgress("조금만 기다려주세요");
+
     return true;
   }
 

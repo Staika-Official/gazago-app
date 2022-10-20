@@ -88,8 +88,8 @@ class Loading extends StatelessWidget {
                                 padding: const EdgeInsets.only(bottom: 40.0),
                                 child: StyledText(
                                   loadingController.progressMessage.value,
-                                  color: Colors.white,
-                                  fontSize: 14,
+                                  color: Color(0xFF0EE6F3),
+                                  fontSize: 13,
                                 ),
                               ),
                             ],
