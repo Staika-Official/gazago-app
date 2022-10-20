@@ -11,7 +11,7 @@ double calculateAvgSpeed(List<double> speedList) {
     double sumSpeed = speedList.fold(0, (summedValue, speed) => summedValue + speed);
     return convertMStoKMH(sumSpeed / speedList.length);
   } else {
-    return 0.0;
+    return 0;
   }
 }
 
