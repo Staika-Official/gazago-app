@@ -313,6 +313,8 @@ class ActivityActive extends StatelessWidget {
         child: Column(
           mainAxisSize: MainAxisSize.max,
           children: [
+            // TODO. qa후 삭제 필요.
+            StyledText('gps정확도: ${formatDecimalPlaces(controller.currentLocation.value.accuracy, 4)}m [속도: ${formatDecimalPlaces(convertMStoKMH(controller.currentLocation.value.speed), 4)}km/h]'),
             Padding(
               padding: const EdgeInsets.only(top: 70.0, bottom: 20),
               child: Row(
