@@ -118,7 +118,7 @@ class LoginController extends GetxController {
         HiveStore.save(key: HiveKey.refreshToken.name, value: token.refreshToken);
 
         if (statusCode == 200) {
-          await getUserInfo();
+          await initUserInfo();
           Get.offNamed(Routes.loading);
         } else {
           await initUserInfo();
