@@ -43,7 +43,7 @@ class ActivityMixin {
   final RxString lastUpdateTime = RxString('');
 
   RxDouble get realTimeSpeed {
-    double speed = exerciseData.isNotEmpty ? exerciseData.last.speed! : 0;
+    double speed = exerciseData.isNotEmpty && exerciseData.length > 1 ? exerciseData.last.speed! : 0;
 
     // 15초 이상 걷기 감지가 되지 않을 경우에는 속도 0으로 표시
     if (speed > 0 && pedestrianStatus.value == 'STOPPED') {
@@ -54,7 +54,7 @@ class ActivityMixin {
     } else {
       pedestrianStoppedTime.value = DateTime.now();
     }
-    return RxDouble(speed <= 0 ? 0 : convertMStoKMH(speed));
+    return RxDouble(speed <= 0 ? 0 : speed);
   }
 
   RxDouble get avgSpeed {
@@ -149,6 +149,9 @@ class ActivityMixin {
   }
 
   void initStepStream() {
+    if (stepSubscription != null) {
+      stepSubscription = null;
+    }
     stepSubscription ??= Pedometer.stepCountStream.skip(1).listen((StepCount event) {
       if (exerciseState.value == ExerciseState.ongoing) exerciseSteps.value++;
     });
@@ -158,6 +161,10 @@ class ActivityMixin {
   }
 
   void initPedestrianStatusStream() {
+    if (pedestrianStatusSubscription != null) {
+      pedestrianStatusSubscription = null;
+    }
+
     pedestrianStatusSubscription ??= Pedometer.pedestrianStatusStream.skip(1).listen((PedestrianStatus event) {
       pedestrianStatus.value = event.status.toUpperCase();
     });
@@ -206,7 +213,11 @@ class ActivityMixin {
   void continueExercise() {
     exerciseData.value = List.empty(growable: true);
     exerciseState.value = ExerciseState.ongoing;
+    print('*****************************');
+    print(userState.value.exercise!.speed);
     exerciseData.add(userState.value.exercise!);
+    print('*****************************');
+    print(userState.value.exercise!.speed);
     exerciseTime.value = userState.value.exercise!.time!;
     exerciseSteps.value = userState.value.exercise!.steps!;
 
@@ -231,10 +242,12 @@ class ActivityMixin {
     }
 
     if (globalController.connectivityResult.value != ConnectivityResult.none) {
+      print(('current user speed: ${userState.value.exercise!.speed}'));
       await ActivityService.fetchUpdateUserExercises(
         userExerciseData.value,
         Platform.operatingSystem,
         successCallback: (CurrentUserStateModel newUserState) {
+          print('newUserState speed: ${newUserState.exercise!.speed}');
           userState.value = newUserState;
           updateCount.value = updateCount.value + 1;
           lastUpdateTime.value = DateTime.now().toIso8601String();
@@ -290,9 +303,7 @@ class ActivityMixin {
     updateTimer?.cancel();
     exerciseTimer?.cancel();
     stepSubscription?.cancel();
-    stepSubscription = null;
     pedestrianStatusSubscription?.cancel();
-    pedestrianStatusSubscription = null;
     exerciseState.value = ExerciseState.paused;
     updateExercise();
   }
@@ -332,6 +343,10 @@ class ActivityMixin {
     userState.value.exercise!.rewardGo = 0;
     exerciseData.value = List.empty(growable: true);
     coordinates.value = List.empty(growable: true);
+
+    //TODO 삭제
+    updateCount.value = 0;
+    lastUpdateTime.value = '';
   }
 
   void resetTimer() {

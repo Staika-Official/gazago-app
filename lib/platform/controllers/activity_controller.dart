@@ -11,6 +11,7 @@ import 'package:gaza_go/constants/routes.dart';
 import 'package:gaza_go/platform/controllers/loading_controller.dart';
 import 'package:gaza_go/platform/controllers/wallet_master_controller.dart';
 import 'package:gaza_go/platform/firebase/cloud_messaging.dart';
+import 'package:gaza_go/platform/helpers/activity_helper.dart';
 import 'package:gaza_go/platform/helpers/activity_mixin.dart';
 import 'package:gaza_go/platform/helpers/base_helper.dart';
 import 'package:gaza_go/platform/helpers/challenge_mixin.dart';
@@ -667,10 +668,10 @@ class ActivityController extends GetxController with ActivityMixin, ChallengeMix
     locationSubscription ??= Geolocator.getPositionStream(locationSettings: locationSettings).listen((Position position) {
       currentLocation.value = position;
 
-      if (exerciseState.value == ExerciseState.ongoing && pedestrianStatus.value != 'STOPPED') {
+      if (exerciseState.value == ExerciseState.ongoing && position.accuracy < 20) {
         exerciseData.add(UserExerciseModel(
           altitude: position.altitude,
-          speed: position.speed,
+          speed: convertMStoKMH(position.speed),
         ));
         coordinates.add(LatLng(position.latitude, position.longitude));
       } else {
