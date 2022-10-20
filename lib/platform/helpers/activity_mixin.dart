@@ -203,6 +203,7 @@ class ActivityMixin {
 
   void continueExercise() {
     exerciseData.value = List.empty(growable: true);
+    exerciseState.value = ExerciseState.ongoing;
     exerciseData.add(userState.value.exercise!);
     exerciseTime.value = userState.value.exercise!.time!;
     exerciseSteps.value = userState.value.exercise!.steps!;
