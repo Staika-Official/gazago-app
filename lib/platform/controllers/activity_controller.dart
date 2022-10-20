@@ -663,7 +663,7 @@ class ActivityController extends GetxController with ActivityMixin, ChallengeMix
       );
     }
 
-    locationSubscription ??= Geolocator.getPositionStream(locationSettings: locationSettings).listen((Position position) {
+    locationSubscription ??= Geolocator.getPositionStream(locationSettings: locationSettings).skip(1).listen((Position position) {
       currentLocation.value = position;
 
       if (exerciseState.value == ExerciseState.ongoing) {

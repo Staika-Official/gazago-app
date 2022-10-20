@@ -147,8 +147,8 @@ class ActivityMixin {
   }
 
   void initStepStream() {
-    stepSubscription ??= Pedometer.stepCountStream.listen((StepCount event) {
-      exerciseSteps.value++;
+    stepSubscription ??= Pedometer.stepCountStream.skip(1).listen((StepCount event) {
+      if (exerciseState.value == ExerciseState.ongoing) exerciseSteps.value++;
     });
     stepSubscription!.onError((error) {
       print(error);
@@ -156,7 +156,7 @@ class ActivityMixin {
   }
 
   void initPedestrianStatusStream() {
-    pedestrianStatusSubscription ??= Pedometer.pedestrianStatusStream.listen((PedestrianStatus event) {
+    pedestrianStatusSubscription ??= Pedometer.pedestrianStatusStream.skip(1).listen((PedestrianStatus event) {
       pedestrianStatus.value = event.status.toUpperCase();
     });
     stepSubscription!.onError((error) {
@@ -203,7 +203,6 @@ class ActivityMixin {
 
   void continueExercise() {
     exerciseData.value = List.empty(growable: true);
-    exerciseState.value = ExerciseState.ongoing;
     exerciseData.add(userState.value.exercise!);
     exerciseTime.value = userState.value.exercise!.time!;
     exerciseSteps.value = userState.value.exercise!.steps!;
