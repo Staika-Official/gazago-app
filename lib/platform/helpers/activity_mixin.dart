@@ -39,6 +39,8 @@ class ActivityMixin {
   StreamSubscription<StepCount>? stepSubscription;
   StreamSubscription<PedestrianStatus>? pedestrianStatusSubscription;
   final Rx<DateTime> pedestrianStoppedTime = Rx(DateTime.now());
+  final RxInt updateCount = RxInt(0);
+  final RxString lastUpdateTime = RxString('');
 
   RxDouble get realTimeSpeed {
     double speed = exerciseData.isNotEmpty ? exerciseData.last.speed! : 0;
@@ -234,6 +236,8 @@ class ActivityMixin {
         Platform.operatingSystem,
         successCallback: (CurrentUserStateModel newUserState) {
           userState.value = newUserState;
+          updateCount.value = updateCount.value + 1;
+          lastUpdateTime.value = DateTime.now().toIso8601String();
         },
         errorCallback: errorHandler,
       );
