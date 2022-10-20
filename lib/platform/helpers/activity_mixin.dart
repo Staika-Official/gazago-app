@@ -41,7 +41,7 @@ class ActivityMixin {
   final Rx<DateTime> pedestrianStoppedTime = Rx(DateTime.now());
 
   RxDouble get realTimeSpeed {
-    double speed = currentLocation.value.speed ?? 0;
+    double speed = exerciseData.isNotEmpty ? exerciseData.last.speed! : 0;
 
     // 15초 이상 걷기 감지가 되지 않을 경우에는 속도 0으로 표시
     if (speed > 0 && pedestrianStatus.value == 'STOPPED') {
@@ -52,14 +52,14 @@ class ActivityMixin {
     } else {
       pedestrianStoppedTime.value = DateTime.now();
     }
-    return RxDouble(speed <= 0 ? 0 : convertMStoKMH(currentLocation.value.speed!));
+    return RxDouble(speed <= 0 ? 0 : convertMStoKMH(speed));
   }
 
   RxDouble get avgSpeed {
     //보통사람의 걷기 속도는 평균 3~4.5kmH이다. 따라서 3 = 0.8333 m/s 4.5 = 1.25m/s
     // List<double> speedList = exerciseData.where((data) => data.speed! > 0.833).map((filteredLocation) => filteredLocation.speed!).toList();
 
-    List<double> speedList = exerciseData.where((data) => data.speed! > 0).map((filteredLocation) => filteredLocation.speed!).toList();
+    List<double> speedList = exerciseData.where((data) => data.speed! > 0.05 && data.speed! < 4.16).map((filteredLocation) => filteredLocation.speed!).toList();
     return RxDouble(calculateAvgSpeed(speedList));
   }
 
@@ -325,6 +325,7 @@ class ActivityMixin {
     exerciseTime.value = 0;
     stopProgress.value = 0;
     exerciseSteps.value = 0;
+    userState.value.exercise!.rewardGo = 0;
     exerciseData.value = List.empty(growable: true);
     coordinates.value = List.empty(growable: true);
   }
