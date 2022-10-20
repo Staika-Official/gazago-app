@@ -4,7 +4,6 @@ import 'package:gaza_go/platform/controllers/activity_controller.dart';
 import 'package:gaza_go/platform/controllers/archive_controller.dart';
 import 'package:gaza_go/platform/controllers/inventory_controller.dart';
 import 'package:gaza_go/platform/controllers/leaderboard_controller.dart';
-import 'package:gaza_go/platform/services/uaa_service.dart';
 import 'package:gaza_go/presentations/components/main_appbar.dart';
 import 'package:gaza_go/presentations/components/secondary_appbar.dart';
 import 'package:gaza_go/presentations/views/activity/index.dart';
@@ -32,12 +31,6 @@ class HomeMenuController extends GetxController {
 
   PreferredSizeWidget get appbar {
     return selectedIndex.value == 0 ? appbarList.first : appbarList.last;
-  }
-
-  @override
-  void onInit() async {
-    await checkLoginStatus();
-    super.onInit();
   }
 
   bool isBackButton() {
@@ -70,10 +63,5 @@ class HomeMenuController extends GetxController {
     } else {
       visitedTabs.add(index);
     }
-  }
-
-  Future<void> checkLoginStatus() async {
-    int statusCode = await UaaService.checkLoginStatus();
-    if (statusCode != 200) Get.offAllNamed(Routes.login);
   }
 }

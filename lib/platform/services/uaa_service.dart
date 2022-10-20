@@ -26,8 +26,12 @@ class UaaService {
     return user;
   }
 
-  static Future<int> checkLoginStatus() async {
+  static Future<void> checkLoginStatus({required Function successCallback, Function? errorCallback}) async {
     Response res = await UaaApi.checkLoginStatus();
-    return res.statusCode!;
+    if (res.statusCode! == 200) {
+      successCallback();
+    } else {
+      errorCallback!();
+    }
   }
 }

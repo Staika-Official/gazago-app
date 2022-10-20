@@ -5,6 +5,7 @@ import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:gaza_go/constants/enums.dart';
+import 'package:gaza_go/platform/controllers/global_controller.dart';
 import 'package:gaza_go/platform/firebase/core.dart';
 import 'package:gaza_go/platform/firebase/crashlytics.dart';
 import 'package:gaza_go/platform/stores/hive_store.dart';
@@ -68,6 +69,8 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    Get.put(GlobalController(), permanent: true);
+
     return GetMaterialApp(
       builder: (context, child) {
         // 시스템 폰트 크기 무시
