@@ -484,7 +484,7 @@ class ActivityController extends GetxController with ActivityMixin, ChallengeMix
     bool hasLocationPermissionWithAccuracy = await checkLocationPermissionAndAccuracy();
     if (!hasLocationPermissionWithAccuracy) return false;
 
-    if (Get.isRegistered<LoadingController>()) Get.find<LoadingController>().updateProgress("GP & 권한 가져왔다. 다음으로 가자고!");
+    if (Get.isRegistered<LoadingController>()) Get.find<LoadingController>().updateProgress("GPS & 권한 가져왔다. 다음으로 가자고!");
     return true;
   }
 
