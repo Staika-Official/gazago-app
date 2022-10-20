@@ -7,8 +7,8 @@ class ArchiveApi {
     return await Api.client(serviceUrl: ServiceUrl.exerciseService).get('/users/$userId/records');
   }
 
-  static Future<Response> getArchiveItem(String userId, int archiveId) async {
-    return await Api.client(serviceUrl: ServiceUrl.exerciseService).get('/users/$userId/records/$archiveId');
+  static Future<Response> getArchiveItem(String userId, int archiveId, String platform) async {
+    return await Api.client(serviceUrl: ServiceUrl.exerciseService).get('/users/$userId/records/$archiveId', queryParameters: {'platform': platform});
   }
 
   static Future<Response> deleteArchiveItem(String userId, int archiveId) async {

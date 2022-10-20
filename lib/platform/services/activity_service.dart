@@ -47,8 +47,8 @@ class ActivityService {
     return EquippedItemModel.fromJson(res.data);
   }
 
-  static Future<void> fetchStartUserExercises(UserExerciseModel exerciseInfo, {Function? successCallback, Function? errorCallback}) async {
-    Response res = await ActivityApi.fetchStartUserExercises(userId!, exerciseInfo);
+  static Future<void> fetchStartUserExercises(UserExerciseModel exerciseInfo, String platform, {required Function successCallback, Function? errorCallback}) async {
+    Response res = await ActivityApi.fetchStartUserExercises(userId!, exerciseInfo, platform);
     if (res.statusCode == 201) {
       successCallback!(UserExerciseModel.fromJson(res.data));
     } else {
@@ -56,17 +56,22 @@ class ActivityService {
     }
   }
 
-  static Future<CurrentUserStateModel> fetchUpdateUserExercises(UserExerciseModel exerciseInfo, {Function? onError}) async {
-    Response res = await ActivityApi.fetchUpdateUserExercises(userId!, exerciseInfo);
-    CurrentUserStateModel userState = CurrentUserStateModel.fromJson(res.data);
-    if (res.statusCode == 404) onError!();
-    return userState;
+  static Future<void> fetchUpdateUserExercises(UserExerciseModel exerciseInfo, String platform, {required Function successCallback, Function? errorCallback}) async {
+    Response res = await ActivityApi.fetchUpdateUserExercises(userId!, exerciseInfo, platform);
+    if (res.statusCode == 200) {
+      successCallback(CurrentUserStateModel.fromJson(res.data));
+    } else {
+      errorCallback!();
+    }
   }
 
-  static Future<CurrentUserStateModel> fetchEndUserExercises(UserExerciseModel exerciseInfo) async {
+  static Future<void> fetchEndUserExercises(UserExerciseModel exerciseInfo, {required Function successCallback, Function? errorCallback}) async {
     Response res = await ActivityApi.fetchEndUserExercises(userId!, exerciseInfo);
-    CurrentUserStateModel userState = CurrentUserStateModel.fromJson(res.data);
-    return userState;
+    if (res.statusCode == 200) {
+      successCallback(CurrentUserStateModel.fromJson(res.data));
+    } else {
+      errorCallback!();
+    }
   }
 
   static Future<UserStateModel> fetchUserStaminaRecharge(UserStaminaRechargeModel rechargeInfo) async {

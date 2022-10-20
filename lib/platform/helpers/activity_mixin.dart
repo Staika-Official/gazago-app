@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:io';
 
 import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:flutter/gestures.dart';
@@ -183,6 +184,7 @@ class ActivityMixin {
           startPoint: challenge != null ? challenge.firstName : '${currentLocation.value.longitude}, ${currentLocation.value.latitude}',
           challengeId: challenge?.id,
         ),
+        Platform.operatingSystem,
         successCallback: (UserExerciseModel userExerciseData) {
           userState.update((state) => state!.exercise = userExerciseData);
           exerciseState.value = ExerciseState.ongoing;
@@ -227,11 +229,14 @@ class ActivityMixin {
     }
 
     if (globalController.connectivityResult.value != ConnectivityResult.none) {
-      CurrentUserStateModel newUserState = await ActivityService.fetchUpdateUserExercises(
+      await ActivityService.fetchUpdateUserExercises(
         userExerciseData.value,
-        onError: errorHandler,
+        Platform.operatingSystem,
+        successCallback: (CurrentUserStateModel newUserState) {
+          userState.value = newUserState;
+        },
+        errorCallback: errorHandler,
       );
-      userState.value = newUserState;
     } else {
       userState.value = HiveStore.loadCurrentUserState()!;
     }
@@ -290,20 +295,20 @@ class ActivityMixin {
 
   void endExercise() async {
     if (globalController.connectivityResult.value != ConnectivityResult.none) {
-      CurrentUserStateModel newUserState = await ActivityService.fetchEndUserExercises(
-        userExerciseData.value,
-      );
-
-      if (newUserState.exercise!.state == 'ENDED') {
-        exerciseState.value = ExerciseState.ready;
-        userState.update((state) {
-          state = newUserState;
-        });
-        HiveStore.deleteMultipleKeys(keys: [HiveKey.userState.name, HiveKey.endExerciseRequested.name]);
-        resetVariables();
-        resetTimer();
-        resetSubscriptions();
-      }
+      await ActivityService.fetchEndUserExercises(userExerciseData.value, successCallback: (CurrentUserStateModel newUserState) {
+        if (newUserState.exercise!.state == 'ENDED') {
+          exerciseState.value = ExerciseState.ready;
+          userState.update((state) {
+            state = newUserState;
+          });
+          HiveStore.deleteMultipleKeys(keys: [HiveKey.userState.name, HiveKey.endExerciseRequested.name]);
+          resetVariables();
+          resetTimer();
+          resetSubscriptions();
+        }
+      }, errorCallback: () {
+        Get.snackbar('운동 종료 불가', '운동이 정상적으로 종료되지 않았습니디.', colorText: Colors.white);
+      });
     } else {
       exerciseState.value = ExerciseState.ready;
       userState.value = HiveStore.loadCurrentUserState()!;
