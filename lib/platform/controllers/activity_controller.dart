@@ -485,6 +485,7 @@ class ActivityController extends GetxController with ActivityMixin, ChallengeMix
     if (!hasLocationPermissionWithAccuracy) return false;
 
     if (Get.isRegistered<LoadingController>()) Get.find<LoadingController>().updateProgress("조금만 기다려주세요");
+
     return true;
   }
 
