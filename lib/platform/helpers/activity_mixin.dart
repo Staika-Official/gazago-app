@@ -243,14 +243,23 @@ class ActivityMixin {
         userExerciseData.value,
         Platform.operatingSystem,
         successCallback: (CurrentUserStateModel newUserState) {
-          userState.update((state) => state = newUserState);
+          userState.update((state) {
+            state?.state = newUserState.state;
+            state?.exercise = newUserState.exercise;
+            state?.shoes = newUserState.shoes;
+          });
           updateCount.value = updateCount.value + 1;
           lastUpdateTime.value = DateTime.now().toIso8601String();
         },
         errorCallback: errorHandler,
       );
     } else {
-      userState.value = HiveStore.loadCurrentUserState()!;
+      CurrentUserStateModel savedState = HiveStore.loadCurrentUserState()!;
+      userState.update((state) {
+        state?.state = savedState.state;
+        state?.exercise = savedState.exercise;
+        state?.shoes = savedState.shoes;
+      });
     }
   }
 
@@ -309,7 +318,9 @@ class ActivityMixin {
         if (newUserState.exercise!.state == 'ENDED') {
           exerciseState.value = ExerciseState.ready;
           userState.update((state) {
-            state = newUserState;
+            state?.state = newUserState.state;
+            state?.exercise = newUserState.exercise;
+            state?.shoes = newUserState.shoes;
           });
           HiveStore.deleteMultipleKeys(keys: [HiveKey.userState.name, HiveKey.endExerciseRequested.name]);
           resetVariables(challenge);
@@ -321,7 +332,12 @@ class ActivityMixin {
       });
     } else {
       exerciseState.value = ExerciseState.ready;
-      userState.value = HiveStore.loadCurrentUserState()!;
+      CurrentUserStateModel savedState = HiveStore.loadCurrentUserState()!;
+      userState.update((_state) {
+        _state?.state = savedState.state;
+        _state?.exercise = savedState.exercise;
+        _state?.shoes = savedState.shoes;
+      });
       userState.value.exercise!.state = 'ENDED';
       HiveStore.saveCurrentUserState(userState: userState.value);
       HiveStore.save(key: HiveKey.endExerciseRequested.name, value: true.toString());

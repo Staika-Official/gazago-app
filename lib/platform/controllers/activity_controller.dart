@@ -16,6 +16,7 @@ import 'package:gaza_go/platform/helpers/activity_mixin.dart';
 import 'package:gaza_go/platform/helpers/base_helper.dart';
 import 'package:gaza_go/platform/helpers/challenge_mixin.dart';
 import 'package:gaza_go/platform/models/challenge_model.dart';
+import 'package:gaza_go/platform/models/current_user_state_model.dart';
 import 'package:gaza_go/platform/models/inventory_item_model.dart';
 import 'package:gaza_go/platform/models/repair_shoes_model.dart';
 import 'package:gaza_go/platform/models/stat_model.dart';
@@ -95,6 +96,7 @@ class ActivityController extends GetxController with ActivityMixin, ChallengeMix
   Future<void> initController() async {
     await checkAvailabilities();
     await initializeActivity();
+    await getChallengeList();
     getUserState();
   }
 
@@ -404,7 +406,7 @@ class ActivityController extends GetxController with ActivityMixin, ChallengeMix
           ),
         );
         userState.update((state) {
-          state!.state = newUserState;
+          state?.state = newUserState;
         });
         showToastPopup('체력이 충전되었습니다.');
         closeRepairPopup();
@@ -429,6 +431,7 @@ class ActivityController extends GetxController with ActivityMixin, ChallengeMix
         userState.update((state) {
           state!.shoes!.durability = repairModel.durability;
         });
+
         showToastPopup('내구도 충전이 완료되었습니다.');
         closeRepairPopup();
       } else {
@@ -440,7 +443,12 @@ class ActivityController extends GetxController with ActivityMixin, ChallengeMix
   }
 
   void getUserState() async {
-    userState.value = await ActivityService.getCurrentUserState();
+    CurrentUserStateModel currentUserState = await ActivityService.getCurrentUserState();
+    userState.update((state) {
+      state?.state = currentUserState.state;
+      state?.exercise = currentUserState.exercise;
+      state?.shoes = currentUserState.shoes;
+    });
     exerciseState.value = ExerciseState.ready;
 
     if (userState.value.exercise != null && userState.value.exercise!.state == 'ONGOING') {
@@ -728,7 +736,6 @@ class ActivityController extends GetxController with ActivityMixin, ChallengeMix
   Future<void> findChallenge() async {
     if (currentLocation.value.latitude != 0 && currentLocation.value.longitude != 0) {
       await getNearByChallengeList(currentLocation.value);
-      await getChallengeList();
     } else {
       await getChallengeList();
     }

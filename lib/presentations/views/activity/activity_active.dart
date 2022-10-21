@@ -761,38 +761,40 @@ class ActivityMap extends StatelessWidget {
 
     return Stack(
       children: [
-        NaverMap(
-          nightModeEnable: true,
-          mapType: MapType.Navi,
-          initialCameraPosition: CameraPosition(
-            target: LatLng(controller.currentLocation.value.latitude, controller.currentLocation.value.longitude),
-            zoom: 15,
-          ),
-          initLocationTrackingMode: LocationTrackingMode.Follow,
-          circles: [
-            if (controller.selectedChallenge.value.id != null) ...renderStartPoint(controller),
-            if (controller.selectedChallenge.value.id != null) ...renderEndPoint(controller),
-          ],
-          // markers: [
-          //   ...renderStartMarker(controller),
-          //   ...renderEndMarker(controller),
-          // ],
-          pathOverlays: (controller.coordinates.length < 10)
-              ? null
-              : {
-                  PathOverlay(
-                    PathOverlayId('path'),
-                    controller.coordinates,
-                    width: 3,
-                    color: Colors.red,
-                    // outlineColor: Colors.white,
-                  )
-                },
-          locationButtonEnable: true,
-          maxZoom: 20,
-          minZoom: 8,
-          tiltGestureEnable: false,
-        ),
+        Obx(() {
+          return NaverMap(
+            nightModeEnable: true,
+            mapType: MapType.Navi,
+            initialCameraPosition: CameraPosition(
+              target: LatLng(controller.currentLocation.value.latitude, controller.currentLocation.value.longitude),
+              zoom: 15,
+            ),
+            initLocationTrackingMode: LocationTrackingMode.Follow,
+            circles: [
+              if (controller.selectedChallenge.value.id != null) ...renderStartPoint(controller),
+              if (controller.selectedChallenge.value.id != null) ...renderEndPoint(controller),
+            ],
+            // markers: [
+            //   ...renderStartMarker(controller),
+            //   ...renderEndMarker(controller),
+            // ],
+            pathOverlays: (controller.coordinates.length < 10)
+                ? null
+                : {
+                    PathOverlay(
+                      PathOverlayId('path'),
+                      controller.coordinates,
+                      width: 3,
+                      color: Colors.red,
+                      // outlineColor: Colors.white,
+                    )
+                  },
+            locationButtonEnable: true,
+            maxZoom: 20,
+            minZoom: 8,
+            tiltGestureEnable: false,
+          );
+        }),
         Positioned(
           top: 20,
           left: 20,
