@@ -23,11 +23,11 @@ class LoginController extends GetxController {
       case LoginType.google:
         await signInWithGoogle();
         break;
-      case LoginType.apple:
-        await signInWithApple();
-        break;
-      case LoginType.kakao:
-        break;
+      // case LoginType.apple:
+      //   await signInWithApple();
+      //   break;
+      // case LoginType.kakao:
+      //   break;
       default:
         await emailLogin();
         break;
@@ -78,7 +78,7 @@ class LoginController extends GetxController {
       idToken: appleCredential.identityToken,
     );
 
-    await requestLogin(LoginType.apple, credential.idToken!);
+    // await requestLogin(LoginType.apple, credential.idToken!);
 
     // return await FirebaseAuth.instance.signInWithCredential(credential);
   }
