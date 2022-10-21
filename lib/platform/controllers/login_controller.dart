@@ -40,7 +40,7 @@ class LoginController extends GetxController {
     HiveStore.save(key: HiveKey.refreshToken.name, value: token.refreshToken);
 
     await initUserInfo();
-    Get.offNamed(Routes.onBoarding);
+    Get.offNamed(Routes.loading);
   }
 
   Future<void> signInWithGoogle() async {

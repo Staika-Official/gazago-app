@@ -19,8 +19,8 @@ class ArchiveService {
     return archiveList;
   }
 
-  static Future<ArchiveDetailItemModel> getArchiveItem(int archiveId) async {
-    Response res = await ArchiveApi.getArchiveItem(userId!, archiveId);
+  static Future<ArchiveDetailItemModel> getArchiveItem(int archiveId, String platform) async {
+    Response res = await ArchiveApi.getArchiveItem(userId!, archiveId, platform);
     return ArchiveDetailItemModel.fromJson(res.data);
   }
 

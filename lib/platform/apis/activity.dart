@@ -25,12 +25,14 @@ class ActivityApi {
     return await Api.client(serviceUrl: ServiceUrl.stateService).get('/users/$userId/equipped');
   }
 
-  static Future<Response> fetchStartUserExercises(String userId, UserExerciseModel exerciseInfo) async {
-    return await Api.client(serviceUrl: ServiceUrl.exerciseService).post('/users/$userId', data: exerciseInfo);
+  static Future<Response> fetchStartUserExercises(String userId, UserExerciseModel exerciseInfo, String platform) async {
+    return await Api.client(serviceUrl: ServiceUrl.exerciseService).post('/users/$userId', data: exerciseInfo, queryParameters: {'platform': platform});
   }
 
-  static Future<Response> fetchUpdateUserExercises(String userId, UserExerciseModel exerciseInfo) async {
-    return await Api.client(serviceUrl: ServiceUrl.exerciseService).put('/users/$userId', data: exerciseInfo);
+  static Future<Response> fetchUpdateUserExercises(String userId, UserExerciseModel exerciseInfo, String platform) async {
+    return await Api.client(serviceUrl: ServiceUrl.exerciseService).put('/users/$userId', data: exerciseInfo, queryParameters: {
+      'platform': platform,
+    });
   }
 
   static Future<Response> fetchEndUserExercises(String userId, UserExerciseModel exerciseInfo) async {

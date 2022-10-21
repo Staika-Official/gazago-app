@@ -54,16 +54,19 @@ class GlobalController extends SuperController {
   }
 
   Future<void> checkLoginStatus() async {
-    await UaaService.checkLoginStatus(
-      successCallback: () => null,
-      errorCallback: () {
-        Get.snackbar('로그인 만료', '로그인 유효시간이 만료되었습니다', colorText: Colors.white);
-        Get.offAllNamed(Routes.login);
-        HiveStore.deleteMultipleKeys(keys: [
-          HiveKey.accessToken.name,
-          HiveKey.refreshToken.name,
-        ]);
-      },
-    );
+    String? accessToken = HiveStore.loadString(key: HiveKey.accessToken.name);
+    if (accessToken != null) {
+      await UaaService.checkLoginStatus(
+        successCallback: () => null,
+        errorCallback: () {
+          Get.snackbar('로그인 만료', '로그인 유효시간이 만료되었습니다', colorText: Colors.white);
+          Get.offAllNamed(Routes.login);
+          HiveStore.deleteMultipleKeys(keys: [
+            HiveKey.accessToken.name,
+            HiveKey.refreshToken.name,
+          ]);
+        },
+      );
+    }
   }
 }

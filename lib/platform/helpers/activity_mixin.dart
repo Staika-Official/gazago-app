@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:io';
 
 import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:flutter/gestures.dart';
@@ -38,9 +39,11 @@ class ActivityMixin {
   StreamSubscription<StepCount>? stepSubscription;
   StreamSubscription<PedestrianStatus>? pedestrianStatusSubscription;
   final Rx<DateTime> pedestrianStoppedTime = Rx(DateTime.now());
+  final RxInt updateCount = RxInt(0);
+  final RxString lastUpdateTime = RxString('');
 
   RxDouble get realTimeSpeed {
-    double speed = currentLocation.value.speed ?? 0;
+    double speed = exerciseData.isNotEmpty ? exerciseData.last.speed! : 0;
 
     // 15초 이상 걷기 감지가 되지 않을 경우에는 속도 0으로 표시
     if (speed > 0 && pedestrianStatus.value == 'STOPPED') {
@@ -51,14 +54,14 @@ class ActivityMixin {
     } else {
       pedestrianStoppedTime.value = DateTime.now();
     }
-    return RxDouble(speed <= 0 ? 0 : convertMStoKMH(currentLocation.value.speed!));
+    return RxDouble(speed <= 0 ? 0 : speed);
   }
 
   RxDouble get avgSpeed {
     //보통사람의 걷기 속도는 평균 3~4.5kmH이다. 따라서 3 = 0.8333 m/s 4.5 = 1.25m/s
     // List<double> speedList = exerciseData.where((data) => data.speed! > 0.833).map((filteredLocation) => filteredLocation.speed!).toList();
 
-    List<double> speedList = exerciseData.where((data) => data.speed! > 0).map((filteredLocation) => filteredLocation.speed!).toList();
+    List<double> speedList = exerciseData.where((data) => data.speed! > 0.2 && data.speed! < 15).map((filteredLocation) => filteredLocation.speed!).toList();
     return RxDouble(calculateAvgSpeed(speedList));
   }
 
@@ -146,8 +149,11 @@ class ActivityMixin {
   }
 
   void initStepStream() {
-    stepSubscription ??= Pedometer.stepCountStream.listen((StepCount event) {
-      exerciseSteps.value++;
+    if (stepSubscription != null) {
+      stepSubscription = null;
+    }
+    stepSubscription ??= Pedometer.stepCountStream.skip(1).listen((StepCount event) {
+      if (exerciseState.value == ExerciseState.ongoing) exerciseSteps.value++;
     });
     stepSubscription!.onError((error) {
       print(error);
@@ -155,7 +161,11 @@ class ActivityMixin {
   }
 
   void initPedestrianStatusStream() {
-    pedestrianStatusSubscription ??= Pedometer.pedestrianStatusStream.listen((PedestrianStatus event) {
+    if (pedestrianStatusSubscription != null) {
+      pedestrianStatusSubscription = null;
+    }
+
+    pedestrianStatusSubscription ??= Pedometer.pedestrianStatusStream.skip(1).listen((PedestrianStatus event) {
       pedestrianStatus.value = event.status.toUpperCase();
     });
     stepSubscription!.onError((error) {
@@ -183,6 +193,7 @@ class ActivityMixin {
           startPoint: challenge != null ? challenge.firstName : '${currentLocation.value.longitude}, ${currentLocation.value.latitude}',
           challengeId: challenge?.id,
         ),
+        Platform.operatingSystem,
         successCallback: (UserExerciseModel userExerciseData) {
           userState.update((state) => state!.exercise = userExerciseData);
           exerciseState.value = ExerciseState.ongoing;
@@ -202,7 +213,11 @@ class ActivityMixin {
   void continueExercise() {
     exerciseData.value = List.empty(growable: true);
     exerciseState.value = ExerciseState.ongoing;
+    print('*****************************');
+    print(userState.value.exercise!.speed);
     exerciseData.add(userState.value.exercise!);
+    print('*****************************');
+    print(userState.value.exercise!.speed);
     exerciseTime.value = userState.value.exercise!.time!;
     exerciseSteps.value = userState.value.exercise!.steps!;
 
@@ -227,11 +242,18 @@ class ActivityMixin {
     }
 
     if (globalController.connectivityResult.value != ConnectivityResult.none) {
-      CurrentUserStateModel newUserState = await ActivityService.fetchUpdateUserExercises(
+      print(('current user speed: ${userState.value.exercise!.speed}'));
+      await ActivityService.fetchUpdateUserExercises(
         userExerciseData.value,
-        onError: errorHandler,
+        Platform.operatingSystem,
+        successCallback: (CurrentUserStateModel newUserState) {
+          print('newUserState speed: ${newUserState.exercise!.speed}');
+          userState.value = newUserState;
+          updateCount.value = updateCount.value + 1;
+          lastUpdateTime.value = DateTime.now().toIso8601String();
+        },
+        errorCallback: errorHandler,
       );
-      userState.value = newUserState;
     } else {
       userState.value = HiveStore.loadCurrentUserState()!;
     }
@@ -281,29 +303,27 @@ class ActivityMixin {
     updateTimer?.cancel();
     exerciseTimer?.cancel();
     stepSubscription?.cancel();
-    stepSubscription = null;
     pedestrianStatusSubscription?.cancel();
-    pedestrianStatusSubscription = null;
     exerciseState.value = ExerciseState.paused;
     updateExercise();
   }
 
   void endExercise() async {
     if (globalController.connectivityResult.value != ConnectivityResult.none) {
-      CurrentUserStateModel newUserState = await ActivityService.fetchEndUserExercises(
-        userExerciseData.value,
-      );
-
-      if (newUserState.exercise!.state == 'ENDED') {
-        exerciseState.value = ExerciseState.ready;
-        userState.update((state) {
-          state = newUserState;
-        });
-        HiveStore.deleteMultipleKeys(keys: [HiveKey.userState.name, HiveKey.endExerciseRequested.name]);
-        resetVariables();
-        resetTimer();
-        resetSubscriptions();
-      }
+      await ActivityService.fetchEndUserExercises(userExerciseData.value, successCallback: (CurrentUserStateModel newUserState) {
+        if (newUserState.exercise!.state == 'ENDED') {
+          exerciseState.value = ExerciseState.ready;
+          userState.update((state) {
+            state = newUserState;
+          });
+          HiveStore.deleteMultipleKeys(keys: [HiveKey.userState.name, HiveKey.endExerciseRequested.name]);
+          resetVariables();
+          resetTimer();
+          resetSubscriptions();
+        }
+      }, errorCallback: () {
+        Get.snackbar('운동 종료 불가', '운동이 정상적으로 종료되지 않았습니디.', colorText: Colors.white);
+      });
     } else {
       exerciseState.value = ExerciseState.ready;
       userState.value = HiveStore.loadCurrentUserState()!;
@@ -320,7 +340,13 @@ class ActivityMixin {
     exerciseTime.value = 0;
     stopProgress.value = 0;
     exerciseSteps.value = 0;
+    userState.value.exercise!.rewardGo = 0;
     exerciseData.value = List.empty(growable: true);
+    coordinates.value = List.empty(growable: true);
+
+    //TODO 삭제
+    updateCount.value = 0;
+    lastUpdateTime.value = '';
   }
 
   void resetTimer() {

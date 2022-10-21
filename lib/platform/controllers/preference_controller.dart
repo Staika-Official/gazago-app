@@ -55,6 +55,6 @@ class PreferenceController extends GetxController {
       HiveKey.accessToken.name,
       HiveKey.refreshToken.name,
     ]);
-    Get.toNamed(Routes.login);
+    Get.offAllNamed(Routes.login);
   }
 }

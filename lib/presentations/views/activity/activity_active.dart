@@ -4,6 +4,7 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:gaza_go/constants/enums.dart';
 import 'package:gaza_go/constants/routes.dart';
 import 'package:gaza_go/platform/controllers/activity_controller.dart';
+import 'package:gaza_go/platform/helpers/activity_helper.dart';
 import 'package:gaza_go/platform/helpers/base_helper.dart';
 import 'package:gaza_go/presentations/components/circular_button.dart';
 import 'package:gaza_go/presentations/components/default_container.dart';
@@ -313,6 +314,14 @@ class ActivityActive extends StatelessWidget {
         child: Column(
           mainAxisSize: MainAxisSize.max,
           children: [
+            // TODO. qa후 삭제 필요.
+            StyledText('현재 위치의 gps정확도: ${formatDecimalPlaces(controller.currentLocation.value.accuracy, 2)}m [속도: ${formatDecimalPlaces(convertMStoKMH(controller.currentLocation.value.speed), 2)}km/h]'),
+            if (controller.exerciseData.isNotEmpty) StyledText('저장된 운동데이터 배열에서 마지막 데이터의 속도: ${formatDecimalPlaces(controller.exerciseData.last.speed!, 2)}km/h'),
+            StyledText('평균 속도: ${formatDecimalPlaces(controller.avgSpeed.value, 2)}km/h'),
+            StyledText('성공적인 업데이트 요청 (시작/종료 제외): ${controller.updateCount.value.toString()}회'),
+            StyledText('마지막 업데이트 시간: ${controller.lastUpdateTime.value != '' ? formatDate(controller.lastUpdateTime.value) : '??'}'),
+            StyledText('걷기 상태: ${controller.pedestrianStatus.value}'),
+            // TODO. qa후 삭제 필요 end.
             Padding(
               padding: const EdgeInsets.only(top: 70.0, bottom: 20),
               child: Row(

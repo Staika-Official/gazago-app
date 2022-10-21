@@ -29,7 +29,9 @@ class Api {
     if (needsToken) {
       String? accessToken = HiveStore.loadString(key: 'accessToken');
 
-      _dio.options.headers = {'Authorization': 'Bearer ${accessToken!}'};
+      if (accessToken != null) {
+        _dio.options.headers = {'Authorization': 'Bearer ${accessToken!}'};
+      }
     } else {
       _dio.options.headers = {'Authorization': ''};
     }

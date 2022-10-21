@@ -3,7 +3,7 @@ import 'dart:math';
 import 'package:geolocator/geolocator.dart';
 
 double calculateAvgSpeed(List<double> speedList) {
-  if (speedList.length > 0) {
+  if (speedList.isNotEmpty) {
     // for (double speed in speedList) {
     //   print(speedList.length.toString() + ': ' + speed.toString() + 'm/s');
     //   print(speedList.length.toString() + ': ' + convertMStoKMH(speed).toString() + 'km/h');
@@ -11,7 +11,7 @@ double calculateAvgSpeed(List<double> speedList) {
     double sumSpeed = speedList.fold(0, (summedValue, speed) => summedValue + speed);
     return convertMStoKMH(sumSpeed / speedList.length);
   } else {
-    return 0.0;
+    return 0;
   }
 }
 

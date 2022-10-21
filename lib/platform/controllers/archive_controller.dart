@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_naver_map/flutter_naver_map.dart';
 import 'package:gaza_go/constants/routes.dart';
@@ -39,7 +41,7 @@ class ArchiveController extends GetxController {
   }
 
   void toDetail(int id) async {
-    selectedItem.value = await ArchiveService.getArchiveItem(id);
+    selectedItem.value = await ArchiveService.getArchiveItem(id, Platform.operatingSystem);
     Get.toNamed(Routes.archiveDetail);
   }
 
