@@ -64,78 +64,81 @@ class MyPage extends StatelessWidget {
                   Padding(
                     padding: EdgeInsets.only(top: 10),
                     child: controller.isEditMode.value
-                        ? IntrinsicWidth(
-                            child: TextField(
-                              controller: controller.nicknameTextController,
-                              onChanged: (nickName) => controller.updateNickName(nickName),
-                              cursorColor: Color(0xFF0EE6F3),
-                              textAlign: TextAlign.center,
-                              style: const TextStyle(
-                                color: Colors.white,
-                                fontSize: 18,
-                                height: 1.0,
-                                fontWeight: FontWeight.w500,
-                              ),
-                              decoration: InputDecoration(
-                                contentPadding: EdgeInsets.symmetric(horizontal: 15.0, vertical: 4.0),
-                                enabledBorder: const UnderlineInputBorder(
-                                  borderSide: BorderSide(
-                                    color: Color(0xff363841),
-                                    width: 2.0,
-                                    style: BorderStyle.solid,
-                                  ),
+                        ? Container(
+                            constraints: BoxConstraints(minWidth: 80),
+                            child: IntrinsicWidth(
+                              child: TextField(
+                                controller: controller.nicknameTextController,
+                                onChanged: (nickName) => controller.updateNickName(nickName),
+                                cursorColor: Color(0xFF0EE6F3),
+                                textAlign: TextAlign.center,
+                                style: const TextStyle(
+                                  color: Colors.white,
+                                  fontSize: 18,
+                                  height: 1.0,
+                                  fontWeight: FontWeight.w500,
                                 ),
-                                border: const UnderlineInputBorder(
-                                  borderSide: BorderSide(
-                                    color: Color(0xff363841),
-                                    width: 2.0,
-                                    style: BorderStyle.solid,
+                                decoration: InputDecoration(
+                                  contentPadding: EdgeInsets.symmetric(horizontal: 15.0, vertical: 4.0),
+                                  enabledBorder: const UnderlineInputBorder(
+                                    borderSide: BorderSide(
+                                      color: Color(0xff363841),
+                                      width: 2.0,
+                                      style: BorderStyle.solid,
+                                    ),
                                   ),
-                                ),
-                                focusedBorder: const UnderlineInputBorder(
-                                  borderSide: BorderSide(
-                                    color: Color(0xff363841),
-                                    width: 2,
-                                    style: BorderStyle.solid,
+                                  border: const UnderlineInputBorder(
+                                    borderSide: BorderSide(
+                                      color: Color(0xff363841),
+                                      width: 2.0,
+                                      style: BorderStyle.solid,
+                                    ),
                                   ),
-                                ),
-                                counter: Center(
-                                  child: RichText(
-                                    text: TextSpan(
-                                      style: const TextStyle(
-                                        color: Colors.white,
-                                        fontSize: 12,
-                                        fontWeight: FontWeight.w500,
-                                        height: 16 / 12,
-                                        letterSpacing: -0.5,
+                                  focusedBorder: const UnderlineInputBorder(
+                                    borderSide: BorderSide(
+                                      color: Color(0xff363841),
+                                      width: 2,
+                                      style: BorderStyle.solid,
+                                    ),
+                                  ),
+                                  counter: Center(
+                                    child: RichText(
+                                      text: TextSpan(
+                                        style: const TextStyle(
+                                          color: Colors.white,
+                                          fontSize: 12,
+                                          fontWeight: FontWeight.w500,
+                                          height: 16 / 12,
+                                          letterSpacing: -0.5,
+                                        ),
+                                        children: [
+                                          TextSpan(
+                                            text: controller.profile.value.nickname.length.toString(),
+                                            style: const TextStyle(
+                                              color: Color(0xFF8A8A8A),
+                                              fontSize: 12,
+                                            ),
+                                          ),
+                                          const TextSpan(
+                                            text: ' / ',
+                                            style: TextStyle(
+                                              color: Color(0xFF8A8A8A),
+                                            ),
+                                          ),
+                                          TextSpan(
+                                            text: controller.maxNickNameLength.toString(),
+                                            style: const TextStyle(
+                                              color: Color(0xFF8A8A8A),
+                                              fontSize: 12,
+                                            ),
+                                          ),
+                                        ],
                                       ),
-                                      children: [
-                                        TextSpan(
-                                          text: controller.profile.value.nickname.length.toString(),
-                                          style: const TextStyle(
-                                            color: Color(0xFF8A8A8A),
-                                            fontSize: 12,
-                                          ),
-                                        ),
-                                        const TextSpan(
-                                          text: ' / ',
-                                          style: TextStyle(
-                                            color: Color(0xFF8A8A8A),
-                                          ),
-                                        ),
-                                        TextSpan(
-                                          text: controller.maxNickNameLength.toString(),
-                                          style: const TextStyle(
-                                            color: Color(0xFF8A8A8A),
-                                            fontSize: 12,
-                                          ),
-                                        ),
-                                      ],
                                     ),
                                   ),
                                 ),
+                                maxLength: controller.maxNickNameLength,
                               ),
-                              maxLength: controller.maxNickNameLength,
                             ),
                           )
                         : Container(
@@ -215,51 +218,51 @@ class MyPage extends StatelessWidget {
                             padding: const EdgeInsets.symmetric(horizontal: 20.0),
                             child: Column(
                               children: [
-                                Padding(
-                                  padding: const EdgeInsets.only(bottom: 21.0),
-                                  child: Column(
-                                    children: [
-                                      Row(
-                                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                        children: [
-                                          const StyledText(
-                                            '지갑주소',
-                                            fontSize: 18,
-                                            fontWeight: 500,
-                                            lineHeight: 20,
-                                          ),
-                                          TextButton(
-                                            onPressed: () async => await Clipboard.setData(ClipboardData(text: controller.profile.value.walletAddress)),
-                                            child: Row(
-                                              children: [
-                                                iconCopy,
-                                                const Padding(
-                                                  padding: const EdgeInsets.only(left: 8.0),
-                                                  child: StyledText(
-                                                    '주소복사',
-                                                    fontSize: 14,
-                                                    fontWeight: 500,
-                                                    color: Color(0xFFA8A8A8),
-                                                  ),
-                                                )
-                                              ],
-                                            ),
-                                          )
-                                        ],
-                                      ),
-                                      SizedBox(
-                                        width: double.infinity,
-                                        child: StyledText(
-                                          controller.profile.value.walletAddress,
-                                          textAlign: TextAlign.end,
-                                          fontWeight: 500,
-                                          color: const Color(0xFF646464),
-                                          fontSize: 12,
-                                        ),
-                                      ),
-                                    ],
-                                  ),
-                                ),
+                                // Padding(
+                                //   padding: const EdgeInsets.only(bottom: 21.0),
+                                //   child: Column(
+                                //     children: [
+                                //       Row(
+                                //         mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                //         children: [
+                                //           const StyledText(
+                                //             '지갑주소',
+                                //             fontSize: 18,
+                                //             fontWeight: 500,
+                                //             lineHeight: 20,
+                                //           ),
+                                //           TextButton(
+                                //             onPressed: () async => await Clipboard.setData(ClipboardData(text: controller.profile.value.walletAddress)),
+                                //             child: Row(
+                                //               children: [
+                                //                 iconCopy,
+                                //                 const Padding(
+                                //                   padding: const EdgeInsets.only(left: 8.0),
+                                //                   child: StyledText(
+                                //                     '주소복사',
+                                //                     fontSize: 14,
+                                //                     fontWeight: 500,
+                                //                     color: Color(0xFFA8A8A8),
+                                //                   ),
+                                //                 )
+                                //               ],
+                                //             ),
+                                //           )
+                                //         ],
+                                //       ),
+                                //       SizedBox(
+                                //         width: double.infinity,
+                                //         child: StyledText(
+                                //           controller.profile.value.walletAddress,
+                                //           textAlign: TextAlign.end,
+                                //           fontWeight: 500,
+                                //           color: const Color(0xFF646464),
+                                //           fontSize: 12,
+                                //         ),
+                                //       ),
+                                //     ],
+                                //   ),
+                                // ),
                                 Padding(
                                   padding: const EdgeInsets.symmetric(vertical: 21.0),
                                   child: Row(

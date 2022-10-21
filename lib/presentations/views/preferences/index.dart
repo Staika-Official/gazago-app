@@ -65,10 +65,10 @@ class Preferences extends StatelessWidget {
           //   title: '본인인증',
           //   onTap: () => Get.toNamed(Routes.verification),
           // ),
-          PreferenceItem(
-            title: '알림',
-            onTap: () => Get.toNamed(Routes.preferenceNotification),
-          ),
+          // PreferenceItem(
+          //   title: '알림',
+          //   onTap: () => Get.toNamed(Routes.preferenceNotification),
+          // ),
           PreferenceItem(
             title: '공지사항',
             onTap: () => Get.toNamed(Routes.preferenceBoard, arguments: {'boardType': 'NOTICE'}),

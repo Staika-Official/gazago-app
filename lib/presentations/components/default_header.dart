@@ -1,15 +1,17 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/svg.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
 
 class DefaultHeader extends StatelessWidget {
   final bool? isLeadingShow;
+  final bool? isPrevButtonHide;
   final Widget? trailingChild;
   final String? titleText;
   final VoidCallback? onBackButtonTap;
 
   const DefaultHeader({
     Key? key,
+    this.isPrevButtonHide,
     this.isLeadingShow,
     this.trailingChild,
     this.titleText,
@@ -24,28 +26,29 @@ class DefaultHeader extends StatelessWidget {
       child: Stack(
         alignment: Alignment.center,
         children: [
-          Positioned(
-            left: 15,
-            child: SizedBox(
-              width: 30,
-              height: 30,
-              child: Visibility(
-                visible: isLeadingShow ?? true,
-                child: InkWell(
-                  borderRadius: const BorderRadius.all(Radius.circular(30)),
-                  onTap: onBackButtonTap ??
-                      () {
-                        Get.back();
-                      },
-                  child: SvgPicture.asset(
-                    fit: BoxFit.contain,
-                    'assets/images/icons/icon_chevron_left_black.svg',
-                    color: Colors.white,
+          if (isPrevButtonHide! == false)
+            Positioned(
+              left: 15,
+              child: SizedBox(
+                width: 30,
+                height: 30,
+                child: Visibility(
+                  visible: isLeadingShow ?? true,
+                  child: InkWell(
+                    borderRadius: const BorderRadius.all(Radius.circular(30)),
+                    onTap: onBackButtonTap ??
+                        () {
+                          Get.back();
+                        },
+                    child: SvgPicture.asset(
+                      fit: BoxFit.contain,
+                      'assets/images/icons/icon_chevron_left_black.svg',
+                      color: Colors.white,
+                    ),
                   ),
                 ),
               ),
             ),
-          ),
           Text(
             titleText ?? '',
             style: const TextStyle(

@@ -54,6 +54,7 @@ class Login extends StatelessWidget {
     LoginController controller = LoginController();
 
     return DefaultContainer(
+      isPrevButtonHide: true,
       child: Column(
         children: [
           const Expanded(

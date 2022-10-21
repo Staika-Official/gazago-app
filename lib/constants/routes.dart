@@ -5,6 +5,7 @@ import 'package:gaza_go/presentations/views/activity/activity_active.dart';
 import 'package:gaza_go/presentations/views/activity/activity_challenges.dart';
 import 'package:gaza_go/presentations/views/activity/activity_loading.dart';
 import 'package:gaza_go/presentations/views/archive/archive_detail.dart';
+import 'package:gaza_go/presentations/views/auth/account_restore.dart';
 import 'package:gaza_go/presentations/views/auth/signup_complete.dart';
 import 'package:gaza_go/presentations/views/home.dart';
 import 'package:gaza_go/presentations/views/inventory/index.dart';
@@ -60,6 +61,7 @@ class Routes {
   static const syntheticBadge = '/inventory/synthetic_badge';
   static const calendarStatistics = '/leaderboard/calendar_statistics';
   static const signupComplete = '/auth/signup_complete';
+  static const accountRestore = '/account/restore';
 
   static List<GetPage> pages = [
     stepPage(name: Routes.login, page: const Login()),
@@ -99,6 +101,7 @@ class Routes {
     stepPage(name: Routes.syntheticBadge, page: const SyntheticBadge()),
     stepPage(name: Routes.calendarStatistics, page: const CalendarStatistics()),
     stepPage(name: Routes.signupComplete, page: const SignupComplete()),
+    stepPage(name: Routes.accountRestore, page: const AccountRestore()),
   ];
 }
 
