@@ -94,7 +94,7 @@ class CalendarStatistics extends StatelessWidget {
             Obx(() {
               return Container(
                 height: 49.0,
-                margin: const EdgeInsets.only(top: 38, left: 77, right: 76),
+                margin: const EdgeInsets.only(top: 38, left: 30, right: 31),
                 decoration: BoxDecoration(
                   color: const Color(0xFF2E3038),
                   border: Border.all(

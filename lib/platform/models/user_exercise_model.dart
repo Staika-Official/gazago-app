@@ -23,7 +23,7 @@ class UserExerciseModel {
   @HiveField(7)
   String? startPoint;
   @HiveField(8)
-  double? rewardGo;
+  num? rewardGo;
   @HiveField(9)
   double? rewardDistance;
   @HiveField(10)

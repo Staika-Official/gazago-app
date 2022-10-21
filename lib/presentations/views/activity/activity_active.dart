@@ -1,3 +1,4 @@
+import 'package:animated_flip_counter/animated_flip_counter.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_naver_map/flutter_naver_map.dart';
 import 'package:flutter_svg/flutter_svg.dart';
@@ -98,31 +99,33 @@ class ActivityActive extends StatelessWidget {
                                         ),
                                       ),
                                       stat.currentStat > 1.0
-                                          ? Container(
-                                              width: stat.currentStat > 20
-                                                  ? MediaQuery.of(context).size.width / (100 / stat.currentStat)
-                                                  : stat.currentStat < 2
-                                                      ? 0
-                                                      : 34,
-                                              decoration: BoxDecoration(
-                                                color: stat.currentStat < 20 ? const Color(0xFFFF2525) : const Color(0xFFCDFF41),
-                                                border: Border.all(
-                                                  width: 2,
-                                                  color: Colors.black,
-                                                ),
-                                                borderRadius: const BorderRadius.all(
-                                                  Radius.circular(30),
-                                                ),
-                                                boxShadow: const [
-                                                  BoxShadow(
+                                          ? LayoutBuilder(builder: (context, constraints) {
+                                              return Container(
+                                                width: stat.currentStat > 20
+                                                    ? constraints.maxWidth / (100 / stat.currentStat)
+                                                    : stat.currentStat < 2
+                                                    ? 0
+                                                    : 34,
+                                                decoration: BoxDecoration(
+                                                  color: stat.currentStat < 20 ? const Color(0xFFFF2525) : const Color(0xFFCDFF41),
+                                                  border: Border.all(
+                                                    width: 2,
                                                     color: Colors.black,
-                                                    offset: Offset(1, 0),
-                                                    blurRadius: 4.0,
-                                                    spreadRadius: 0.0,
                                                   ),
-                                                ],
-                                              ),
-                                            )
+                                                  borderRadius: const BorderRadius.all(
+                                                    Radius.circular(30),
+                                                  ),
+                                                  boxShadow: const [
+                                                    BoxShadow(
+                                                      color: Colors.black,
+                                                      offset: Offset(1, 0),
+                                                      blurRadius: 4.0,
+                                                      spreadRadius: 0.0,
+                                                    ),
+                                                  ],
+                                                ),
+                                              );
+                                            })
                                           : Container(),
                                     ],
                                   ),
@@ -151,31 +154,33 @@ class ActivityActive extends StatelessWidget {
                                         ),
                                       ),
                                       stat.currentStat > 1.0
-                                          ? Container(
-                                              width: stat.currentStat > 20
-                                                  ? MediaQuery.of(context).size.width / (100 / stat.currentStat)
-                                                  : stat.currentStat < 2
-                                                      ? 0
-                                                      : 34,
-                                              decoration: BoxDecoration(
-                                                color: stat.currentStat < 20 ? const Color(0xFFFF2525) : const Color(0xFFB85DFF),
-                                                border: Border.all(
-                                                  width: 2,
-                                                  color: Colors.black,
-                                                ),
-                                                borderRadius: const BorderRadius.all(
-                                                  Radius.circular(50),
-                                                ),
-                                                boxShadow: const [
-                                                  BoxShadow(
+                                          ? LayoutBuilder(builder: (context, constraints) {
+                                              return Container(
+                                                width: stat.currentStat > 20
+                                                    ? constraints.maxWidth / (100 / stat.currentStat)
+                                                    : stat.currentStat < 2
+                                                    ? 0
+                                                    : 34,
+                                                decoration: BoxDecoration(
+                                                  color: stat.currentStat < 20 ? const Color(0xFFFF2525) : const Color(0xFFB85DFF),
+                                                  border: Border.all(
+                                                    width: 2,
                                                     color: Colors.black,
-                                                    offset: Offset(1, 0),
-                                                    blurRadius: 4.0,
-                                                    spreadRadius: 0.0,
                                                   ),
-                                                ],
-                                              ),
-                                            )
+                                                  borderRadius: const BorderRadius.all(
+                                                    Radius.circular(50),
+                                                  ),
+                                                  boxShadow: const [
+                                                    BoxShadow(
+                                                      color: Colors.black,
+                                                      offset: Offset(1, 0),
+                                                      blurRadius: 4.0,
+                                                      spreadRadius: 0.0,
+                                                    ),
+                                                  ],
+                                                ),
+                                              );
+                                            })
                                           : Container(),
                                     ],
                                   ),
@@ -256,6 +261,7 @@ class ActivityActive extends StatelessWidget {
                                     backgroundColor: const Color(0xFFCDFF41),
                                     child: IconButton(
                                       icon: iconPlus,
+                                      splashRadius: 15,
                                       onPressed: () => {controller.onClickRepairStat(stat)},
                                     ),
                                   ),
@@ -284,6 +290,7 @@ class ActivityActive extends StatelessWidget {
                                     backgroundColor: Color(0xFFB85DFF),
                                     child: IconButton(
                                       icon: iconPlus,
+                                      splashRadius: 15,
                                       onPressed: () => {controller.onClickRepairStat(stat)},
                                     ),
                                   ),
@@ -315,7 +322,8 @@ class ActivityActive extends StatelessWidget {
           mainAxisSize: MainAxisSize.max,
           children: [
             // TODO. qa후 삭제 필요.
-            StyledText('현재 위치의 gps정확도: ${formatDecimalPlaces(controller.currentLocation.value.accuracy, 2)}m [속도: ${formatDecimalPlaces(convertMStoKMH(controller.currentLocation.value.speed), 2)}km/h]'),
+            StyledText(
+                '현재 위치의 gps정확도: ${formatDecimalPlaces(controller.currentLocation.value.accuracy, 2)}m [속도: ${formatDecimalPlaces(convertMStoKMH(controller.currentLocation.value.speed), 2)}km/h]'),
             if (controller.exerciseData.isNotEmpty) StyledText('저장된 운동데이터 배열에서 마지막 데이터의 속도: ${formatDecimalPlaces(controller.exerciseData.last.speed!, 2)}km/h'),
             StyledText('평균 속도: ${formatDecimalPlaces(controller.avgSpeed.value, 2)}km/h'),
             StyledText('성공적인 업데이트 요청 (시작/종료 제외): ${controller.updateCount.value.toString()}회'),
@@ -334,13 +342,19 @@ class ActivityActive extends StatelessWidget {
                   ),
                   Padding(
                     padding: const EdgeInsets.only(left: 14.0),
-                    child: StyledText(
-                      '+${(controller.userState.value.exercise != null ? controller.userState.value.exercise!.rewardGo : 0).toString()}',
-                      fontWeight: 600,
-                      fontSize: 50,
-                      lineHeight: 50,
-                      fontFamily: 'Monserrat',
-                      color: Colors.white,
+                    child: AnimatedFlipCounter(
+                      value: controller.userState.value.exercise != null ? controller.userState.value.exercise!.rewardGo! : 0,
+                      duration: Duration(milliseconds: 500),
+                      fractionDigits: 2,
+                      thousandSeparator: ',',
+                      prefix: '+',
+                      textStyle: TextStyle(
+                        fontWeight: FontWeight.w600,
+                        fontSize: 50,
+                        height: 1,
+                        fontFamily: 'Monserrat',
+                        color: Colors.white,
+                      ),
                     ),
                   ),
                   Padding(
@@ -521,7 +535,7 @@ class ActivityActive extends StatelessWidget {
                           ? Row(
                               children: [
                                 GestureDetector(
-                                  onTapDown: (tapDownDetail) => controller.onTapDownStop(tapDownDetail),
+                                  onTapDown: (tapDownDetail) => controller.onTapDownStop(tapDownDetail, controller.selectedChallenge.value),
                                   onTapUp: (tapUpDetail) => controller.onTapUpStop(tapUpDetail),
                                   child: Stack(
                                     children: [
@@ -678,35 +692,39 @@ class ActivityMap extends StatelessWidget {
   const ActivityMap({Key? key}) : super(key: key);
 
   List<CircleOverlay> renderStartPoint(ActivityController controller) {
-    return controller.challengeList
-        .where((challenge) => challenge.id == controller.userState.value.exercise?.challengeId)
-        .map(
-          (challenge) => CircleOverlay(
-            overlayId: 'ChallengeStart' + challenge.id!.toString(),
-            center: LatLng(challenge.startLat!, challenge.startLon!),
-            radius: challenge.startRadius!,
-            color: Colors.transparent,
-            outlineColor: Colors.blue[300],
-            outlineWidth: 3,
-          ),
-        )
-        .toList();
+    CircleOverlay centerCircle = CircleOverlay(
+      overlayId: 'ChallengeStartCenter' + controller.selectedChallenge.value.id!.toString(),
+      center: LatLng(controller.selectedChallenge.value.startLat!, controller.selectedChallenge.value.startLon!),
+      radius: 9,
+      color: Color(0xff0EE6F3),
+    );
+
+    CircleOverlay outerCircle = CircleOverlay(
+      overlayId: 'ChallengeStart' + controller.selectedChallenge.value.id!.toString(),
+      center: LatLng(controller.selectedChallenge.value.startLat!, controller.selectedChallenge.value.startLon!),
+      radius: controller.selectedChallenge.value.startRadius!,
+      color: Color.fromRGBO(14, 230, 243, 0.3),
+    );
+
+    return [centerCircle, outerCircle];
   }
 
   List<CircleOverlay> renderEndPoint(ActivityController controller) {
-    return controller.challengeList
-        .where((challenge) => challenge.id == controller.userState.value.exercise?.challengeId)
-        .map(
-          (challenge) => CircleOverlay(
-            overlayId: 'ChallengeEnd' + challenge.id!.toString(),
-            center: LatLng(challenge.endLat!, challenge.endLon!),
-            radius: challenge.endRadius!,
-            color: Colors.transparent,
-            outlineColor: Colors.red[300],
-            outlineWidth: 3,
-          ),
-        )
-        .toList();
+    CircleOverlay centerCircle = CircleOverlay(
+      overlayId: 'ChallengeEndCenter' + controller.selectedChallenge.value.id!.toString(),
+      center: LatLng(controller.selectedChallenge.value.endLat!, controller.selectedChallenge.value.endLon!),
+      radius: 9,
+      color: Colors.red,
+    );
+
+    CircleOverlay outerCircle = CircleOverlay(
+      overlayId: 'ChallengeEnd' + controller.selectedChallenge.value.id!.toString(),
+      center: LatLng(controller.selectedChallenge.value.endLat!, controller.selectedChallenge.value.endLon!),
+      radius: controller.selectedChallenge.value.endRadius!,
+      color: Colors.red[300]?.withOpacity(0.3),
+    );
+
+    return [centerCircle, outerCircle];
   }
 
   List<Marker> renderStartMarker(ActivityController controller) {
@@ -747,38 +765,40 @@ class ActivityMap extends StatelessWidget {
 
     return Stack(
       children: [
-        NaverMap(
-          nightModeEnable: true,
-          mapType: MapType.Navi,
-          initialCameraPosition: CameraPosition(
-            target: LatLng(controller.currentLocation.value.latitude, controller.currentLocation.value.longitude),
-            zoom: 15,
-          ),
-          initLocationTrackingMode: LocationTrackingMode.Follow,
-          circles: [
-            ...renderStartPoint(controller),
-            ...renderEndPoint(controller),
-          ],
-          markers: [
-            ...renderStartMarker(controller),
-            ...renderEndMarker(controller),
-          ],
-          pathOverlays: (controller.coordinates.length < 10)
-              ? null
-              : {
-                  PathOverlay(
-                    PathOverlayId('path'),
-                    controller.coordinates,
-                    width: 3,
-                    color: Colors.red,
-                    outlineColor: Colors.white,
-                  )
-                },
-          locationButtonEnable: true,
-          maxZoom: 20,
-          minZoom: 8,
-          tiltGestureEnable: false,
-        ),
+        Obx(() {
+          return NaverMap(
+            nightModeEnable: true,
+            mapType: MapType.Navi,
+            initialCameraPosition: CameraPosition(
+              target: LatLng(controller.currentLocation.value.latitude, controller.currentLocation.value.longitude),
+              zoom: 15,
+            ),
+            initLocationTrackingMode: LocationTrackingMode.Follow,
+            circles: [
+              if (controller.selectedChallenge.value.id != null) ...renderStartPoint(controller),
+              if (controller.selectedChallenge.value.id != null) ...renderEndPoint(controller),
+            ],
+            // markers: [
+            //   ...renderStartMarker(controller),
+            //   ...renderEndMarker(controller),
+            // ],
+            pathOverlays: (controller.coordinates.length < 10)
+                ? null
+                : {
+                    PathOverlay(
+                      PathOverlayId('path'),
+                      controller.coordinates,
+                      width: 3,
+                      color: Colors.red,
+                      // outlineColor: Colors.white,
+                    )
+                  },
+            locationButtonEnable: true,
+            maxZoom: 20,
+            minZoom: 8,
+            tiltGestureEnable: false,
+          );
+        }),
         Positioned(
           top: 20,
           left: 20,

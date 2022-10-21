@@ -18,13 +18,14 @@ class ChallengeMixin {
   GlobalController globalController = Get.find();
 
   final RxList<ChallengeModel> challengeList = RxList.empty();
+  final RxList<ChallengeModel> allChallengesList = RxList.empty();
   final RxList<ChallengeModel> doableChallenges = RxList.empty();
   final RxList<ChallengeModel> achievableChallenges = RxList.empty();
   final Rx<ChallengeModel> selectedChallenge = Rx(ChallengeModel());
   late NaverMapController _challengeMapController;
 
   Future<void> getChallengeList() async {
-    challengeList.value = await ActivityService.getChallenges();
+    allChallengesList.value = await ActivityService.getChallenges();
   }
 
   Future<void> getNearByChallengeList(Position currentLocation) async {
@@ -52,7 +53,7 @@ class ChallengeMixin {
     selectedChallenge.value = challenge;
     _challengeMapController.moveCamera(CameraUpdate.toCameraPosition(
       CameraPosition(
-        target: LatLng(challenge.startLat!, challenge.startLon!),
+        target: LatLng(challenge.endLat!, challenge.endLon!),
       ),
     ));
   }

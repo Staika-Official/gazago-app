@@ -10,29 +10,84 @@ class ActivityChallenges extends StatelessWidget {
   const ActivityChallenges({Key? key}) : super(key: key);
 
   List<CircleOverlay> renderStartPoint(ActivityController controller) {
-    List<CircleOverlay> centerCircles = controller.doableChallenges
-        .map(
-          (challenge) => CircleOverlay(
-            overlayId: 'ChallengeStartCenter' + challenge.id!.toString(),
-            center: LatLng(challenge.startLat!, challenge.startLon!),
-            radius: 9,
-            color: Color(0xff0EE6F3),
-          ),
-        )
-        .toList();
+    // List<CircleOverlay> centerCircles = controller.doableChallenges
+    //     .map(
+    //       (challenge) => CircleOverlay(
+    //         overlayId: 'ChallengeStartCenter' + challenge.id!.toString(),
+    //         center: LatLng(challenge.startLat!, challenge.startLon!),
+    //         radius: 9,
+    //         color: Color(0xff0EE6F3),
+    //       ),
+    //     )
+    //     .toList();
+    //
+    // List<CircleOverlay> outerCircles = controller.doableChallenges
+    //     .map(
+    //       (challenge) => CircleOverlay(
+    //         overlayId: 'ChallengeStart' + challenge.id!.toString(),
+    //         center: LatLng(challenge.startLat!, challenge.startLon!),
+    //         radius: challenge.startRadius!,
+    //         color: Color.fromRGBO(14, 230, 243, 0.3),
+    //       ),
+    //     )
+    //     .toList();
+    CircleOverlay centerCircle = CircleOverlay(
+      overlayId: 'ChallengeStartCenter' + controller.selectedChallenge.value.id!.toString(),
+      center: LatLng(controller.selectedChallenge.value.startLat!, controller.selectedChallenge.value.startLon!),
+      radius: 9,
+      color: Color(0xff0EE6F3),
+    );
 
-    List<CircleOverlay> outerCircles = controller.doableChallenges
-        .map(
-          (challenge) => CircleOverlay(
-            overlayId: 'ChallengeStart' + challenge.id!.toString(),
-            center: LatLng(challenge.startLat!, challenge.startLon!),
-            radius: challenge.startRadius!,
-            color: Color.fromRGBO(14, 230, 243, 0.3),
-          ),
-        )
-        .toList();
+    CircleOverlay outerCircle = CircleOverlay(
+      overlayId: 'ChallengeStart' + controller.selectedChallenge.value.id!.toString(),
+      center: LatLng(controller.selectedChallenge.value.startLat!, controller.selectedChallenge.value.startLon!),
+      radius: controller.selectedChallenge.value.startRadius!,
+      color: Color.fromRGBO(14, 230, 243, 0.3),
+    );
 
-    return [...outerCircles, ...centerCircles];
+    return [centerCircle, outerCircle];
+  }
+
+  List<CircleOverlay> renderEndPoint(ActivityController controller) {
+    // List<CircleOverlay> centerCircles = controller.doableChallenges
+    //     .map(
+    //       (challenge) => CircleOverlay(
+    //         overlayId: 'ChallengeEndCenter' + challenge.id!.toString(),
+    //         center: LatLng(challenge.endLat!, challenge.endLon!),
+    //         radius: 9,
+    //         color: Colors.red,
+    //       ),
+    //     )
+    //     .toList();
+    //
+    // List<CircleOverlay> outerCircles = controller.doableChallenges
+    //     .map(
+    //       (challenge) => CircleOverlay(
+    //         overlayId: 'ChallengeStart' + challenge.id!.toString(),
+    //         center: LatLng(challenge.endLat!, challenge.endLon!),
+    //         radius: challenge.startRadius!,
+    //         color: Colors.red[100],
+    //       ),
+    //     )
+    //     .toList();
+    //
+    // return [...outerCircles, ...centerCircles];
+
+    CircleOverlay centerCircle = CircleOverlay(
+      overlayId: 'ChallengeEndCenter' + controller.selectedChallenge.value.id!.toString(),
+      center: LatLng(controller.selectedChallenge.value.endLat!, controller.selectedChallenge.value.endLon!),
+      radius: 9,
+      color: Colors.red,
+    );
+
+    CircleOverlay outerCircle = CircleOverlay(
+      overlayId: 'ChallengeEnd' + controller.selectedChallenge.value.id!.toString(),
+      center: LatLng(controller.selectedChallenge.value.endLat!, controller.selectedChallenge.value.endLon!),
+      radius: controller.selectedChallenge.value.endRadius!,
+      color: Colors.red[300]?.withOpacity(0.3),
+    );
+
+    return [centerCircle, outerCircle];
   }
 
   List<Widget> renderChallengeList(ActivityController controller) {
@@ -93,7 +148,8 @@ class ActivityChallenges extends StatelessWidget {
                     zoom: 14,
                   ),
                   circles: [
-                    ...renderStartPoint(controller),
+                    if (controller.selectedChallenge.value.id != null) ...renderStartPoint(controller),
+                    if (controller.selectedChallenge.value.id != null) ...renderEndPoint(controller),
                   ],
                   mapType: MapType.Navi,
                   nightModeEnable: true,

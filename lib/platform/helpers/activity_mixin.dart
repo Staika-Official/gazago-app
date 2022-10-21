@@ -61,7 +61,8 @@ class ActivityMixin {
     //보통사람의 걷기 속도는 평균 3~4.5kmH이다. 따라서 3 = 0.8333 m/s 4.5 = 1.25m/s
     // List<double> speedList = exerciseData.where((data) => data.speed! > 0.833).map((filteredLocation) => filteredLocation.speed!).toList();
 
-    List<double> speedList = exerciseData.where((data) => data.speed! > 0.2 && data.speed! < 15).map((filteredLocation) => filteredLocation.speed!).toList();
+    // List<double> speedList = exerciseData.where((data) => data.speed! > 0.2 && data.speed! < 15).map((filteredLocation) => filteredLocation.speed!).toList();
+    List<double> speedList = exerciseData.where((data) => data.speed! > 0).map((filteredLocation) => filteredLocation.speed!).toList();
     return RxDouble(calculateAvgSpeed(speedList));
   }
 
@@ -213,11 +214,7 @@ class ActivityMixin {
   void continueExercise() {
     exerciseData.value = List.empty(growable: true);
     exerciseState.value = ExerciseState.ongoing;
-    print('*****************************');
-    print(userState.value.exercise!.speed);
     exerciseData.add(userState.value.exercise!);
-    print('*****************************');
-    print(userState.value.exercise!.speed);
     exerciseTime.value = userState.value.exercise!.time!;
     exerciseSteps.value = userState.value.exercise!.steps!;
 
@@ -242,20 +239,27 @@ class ActivityMixin {
     }
 
     if (globalController.connectivityResult.value != ConnectivityResult.none) {
-      print(('current user speed: ${userState.value.exercise!.speed}'));
       await ActivityService.fetchUpdateUserExercises(
         userExerciseData.value,
         Platform.operatingSystem,
         successCallback: (CurrentUserStateModel newUserState) {
-          print('newUserState speed: ${newUserState.exercise!.speed}');
-          userState.value = newUserState;
+          userState.update((state) {
+            state?.state = newUserState.state;
+            state?.exercise = newUserState.exercise;
+            state?.shoes = newUserState.shoes;
+          });
           updateCount.value = updateCount.value + 1;
           lastUpdateTime.value = DateTime.now().toIso8601String();
         },
         errorCallback: errorHandler,
       );
     } else {
-      userState.value = HiveStore.loadCurrentUserState()!;
+      CurrentUserStateModel savedState = HiveStore.loadCurrentUserState()!;
+      userState.update((state) {
+        state?.state = savedState.state;
+        state?.exercise = savedState.exercise;
+        state?.shoes = savedState.shoes;
+      });
     }
   }
 
@@ -272,7 +276,7 @@ class ActivityMixin {
     );
   }
 
-  void onTapDownStop(TapDownDetails tapDownDetails) {
+  void onTapDownStop(TapDownDetails tapDownDetails, ChallengeModel challenge) {
     Duration counter = Duration.zero;
 
     if (stopTimer != null) {
@@ -282,7 +286,7 @@ class ActivityMixin {
     stopTimer = Timer.periodic(const Duration(milliseconds: 10), (timer) {
       if (counter == const Duration(seconds: 1)) {
         initializeStopTimer();
-        endExercise();
+        endExercise(challenge);
       }
       counter = counter + const Duration(milliseconds: 10);
       stopProgress.value += 0.01;
@@ -308,16 +312,18 @@ class ActivityMixin {
     updateExercise();
   }
 
-  void endExercise() async {
+  void endExercise(ChallengeModel challenge) async {
     if (globalController.connectivityResult.value != ConnectivityResult.none) {
       await ActivityService.fetchEndUserExercises(userExerciseData.value, successCallback: (CurrentUserStateModel newUserState) {
         if (newUserState.exercise!.state == 'ENDED') {
           exerciseState.value = ExerciseState.ready;
           userState.update((state) {
-            state = newUserState;
+            state?.state = newUserState.state;
+            state?.exercise = newUserState.exercise;
+            state?.shoes = newUserState.shoes;
           });
           HiveStore.deleteMultipleKeys(keys: [HiveKey.userState.name, HiveKey.endExerciseRequested.name]);
-          resetVariables();
+          resetVariables(challenge);
           resetTimer();
           resetSubscriptions();
         }
@@ -326,23 +332,29 @@ class ActivityMixin {
       });
     } else {
       exerciseState.value = ExerciseState.ready;
-      userState.value = HiveStore.loadCurrentUserState()!;
+      CurrentUserStateModel savedState = HiveStore.loadCurrentUserState()!;
+      userState.update((_state) {
+        _state?.state = savedState.state;
+        _state?.exercise = savedState.exercise;
+        _state?.shoes = savedState.shoes;
+      });
       userState.value.exercise!.state = 'ENDED';
       HiveStore.saveCurrentUserState(userState: userState.value);
       HiveStore.save(key: HiveKey.endExerciseRequested.name, value: true.toString());
-      resetVariables();
+      resetVariables(challenge);
       resetTimer();
       resetSubscriptions();
     }
   }
 
-  void resetVariables() {
+  void resetVariables(ChallengeModel challenge) {
     exerciseTime.value = 0;
     stopProgress.value = 0;
     exerciseSteps.value = 0;
     userState.value.exercise!.rewardGo = 0;
     exerciseData.value = List.empty(growable: true);
     coordinates.value = List.empty(growable: true);
+    challenge.id = null;
 
     //TODO 삭제
     updateCount.value = 0;
