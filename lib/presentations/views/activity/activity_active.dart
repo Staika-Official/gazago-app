@@ -1,3 +1,4 @@
+import 'package:animated_flip_counter/animated_flip_counter.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_naver_map/flutter_naver_map.dart';
 import 'package:flutter_svg/flutter_svg.dart';
@@ -334,13 +335,20 @@ class ActivityActive extends StatelessWidget {
                   ),
                   Padding(
                     padding: const EdgeInsets.only(left: 14.0),
-                    child: StyledText(
-                      '+${(controller.userState.value.exercise != null ? controller.userState.value.exercise!.rewardGo : 0).toString()}',
-                      fontWeight: 600,
-                      fontSize: 50,
-                      lineHeight: 50,
-                      fontFamily: 'Monserrat',
-                      color: Colors.white,
+                    child: AnimatedFlipCounter(
+                      value: controller.userState.value.exercise != null ? controller.userState.value.exercise!.rewardGo! : 0,
+                      duration: Duration(milliseconds: 500),
+                      fractionDigits: 2,
+                      thousandSeparator: ',',
+                      prefix: '+',
+                      textStyle: TextStyle(
+                        fontWeight: FontWeight.w600,
+                        fontSize: 50,
+                        height: 1,
+                        fontFamily: 'Monserrat',
+                        color: Colors.white,
+                      ),
+
                     ),
                   ),
                   Padding(
