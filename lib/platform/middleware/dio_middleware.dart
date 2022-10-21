@@ -27,7 +27,7 @@ class Api {
     _dio.options.baseUrl = '${F.baseUrl}$serviceUrl';
 
     if (needsToken) {
-      String? accessToken = HiveStore.loadString(key: 'accessToken');
+      String? accessToken = HiveStore.loadString(key: HiveKey.accessToken.name);
 
       if (accessToken != null) {
         _dio.options.headers = {'Authorization': 'Bearer ${accessToken!}'};
