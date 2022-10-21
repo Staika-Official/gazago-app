@@ -444,6 +444,9 @@ class ActivityController extends GetxController with ActivityMixin, ChallengeMix
     exerciseState.value = ExerciseState.ready;
 
     if (userState.value.exercise != null && userState.value.exercise!.state == 'ONGOING') {
+      if (userState.value.exercise?.challengeId != null) {
+        selectedChallenge.value = allChallengesList.singleWhere((challenge) => challenge.id == userState.value.exercise!.challengeId!);
+      }
       if (updateTimer == null) {
         exerciseData.value = List.empty(growable: true);
         exerciseData.add(userState.value.exercise!);
@@ -717,7 +720,7 @@ class ActivityController extends GetxController with ActivityMixin, ChallengeMix
     initLocationStream();
     initGpsServiceStream();
     //await setMarkerImages();
-    findChallenge();
+    await findChallenge();
     detectChallengeZone(currentLocation.value);
   }
 
@@ -725,6 +728,7 @@ class ActivityController extends GetxController with ActivityMixin, ChallengeMix
   Future<void> findChallenge() async {
     if (currentLocation.value.latitude != 0 && currentLocation.value.longitude != 0) {
       await getNearByChallengeList(currentLocation.value);
+      await getChallengeList();
     } else {
       await getChallengeList();
     }
@@ -738,7 +742,7 @@ class ActivityController extends GetxController with ActivityMixin, ChallengeMix
         }
 
         if (HiveStore.loadString(key: HiveKey.endExerciseRequested.name) != null) {
-          endExercise();
+          endExercise(selectedChallenge.value);
         }
       }
     });

@@ -31,6 +31,7 @@ class MainAppbar extends StatelessWidget implements PreferredSizeWidget {
               IconButton(
                 onPressed: () => Get.toNamed(Routes.preferences),
                 icon: iconHeaderAvatar,
+                splashRadius: 20,
                 constraints: const BoxConstraints(
                   minWidth: 24,
                 ),
@@ -38,6 +39,7 @@ class MainAppbar extends StatelessWidget implements PreferredSizeWidget {
               IconButton(
                 onPressed: () => Get.toNamed(Routes.wallet),
                 icon: iconHeaderWallet,
+                splashRadius: 20,
                 constraints: const BoxConstraints(
                   minWidth: 24,
                 ),

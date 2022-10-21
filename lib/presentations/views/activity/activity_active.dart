@@ -257,6 +257,7 @@ class ActivityActive extends StatelessWidget {
                                     backgroundColor: const Color(0xFFCDFF41),
                                     child: IconButton(
                                       icon: iconPlus,
+                                      splashRadius: 15,
                                       onPressed: () => {controller.onClickRepairStat(stat)},
                                     ),
                                   ),
@@ -285,6 +286,7 @@ class ActivityActive extends StatelessWidget {
                                     backgroundColor: Color(0xFFB85DFF),
                                     child: IconButton(
                                       icon: iconPlus,
+                                      splashRadius: 15,
                                       onPressed: () => {controller.onClickRepairStat(stat)},
                                     ),
                                   ),
@@ -316,7 +318,8 @@ class ActivityActive extends StatelessWidget {
           mainAxisSize: MainAxisSize.max,
           children: [
             // TODO. qa후 삭제 필요.
-            StyledText('현재 위치의 gps정확도: ${formatDecimalPlaces(controller.currentLocation.value.accuracy, 2)}m [속도: ${formatDecimalPlaces(convertMStoKMH(controller.currentLocation.value.speed), 2)}km/h]'),
+            StyledText(
+                '현재 위치의 gps정확도: ${formatDecimalPlaces(controller.currentLocation.value.accuracy, 2)}m [속도: ${formatDecimalPlaces(convertMStoKMH(controller.currentLocation.value.speed), 2)}km/h]'),
             if (controller.exerciseData.isNotEmpty) StyledText('저장된 운동데이터 배열에서 마지막 데이터의 속도: ${formatDecimalPlaces(controller.exerciseData.last.speed!, 2)}km/h'),
             StyledText('평균 속도: ${formatDecimalPlaces(controller.avgSpeed.value, 2)}km/h'),
             StyledText('성공적인 업데이트 요청 (시작/종료 제외): ${controller.updateCount.value.toString()}회'),
@@ -348,7 +351,6 @@ class ActivityActive extends StatelessWidget {
                         fontFamily: 'Monserrat',
                         color: Colors.white,
                       ),
-
                     ),
                   ),
                   Padding(
@@ -529,7 +531,7 @@ class ActivityActive extends StatelessWidget {
                           ? Row(
                               children: [
                                 GestureDetector(
-                                  onTapDown: (tapDownDetail) => controller.onTapDownStop(tapDownDetail),
+                                  onTapDown: (tapDownDetail) => controller.onTapDownStop(tapDownDetail, controller.selectedChallenge.value),
                                   onTapUp: (tapUpDetail) => controller.onTapUpStop(tapUpDetail),
                                   child: Stack(
                                     children: [
@@ -686,35 +688,39 @@ class ActivityMap extends StatelessWidget {
   const ActivityMap({Key? key}) : super(key: key);
 
   List<CircleOverlay> renderStartPoint(ActivityController controller) {
-    return controller.challengeList
-        .where((challenge) => challenge.id == controller.userState.value.exercise?.challengeId)
-        .map(
-          (challenge) => CircleOverlay(
-            overlayId: 'ChallengeStart' + challenge.id!.toString(),
-            center: LatLng(challenge.startLat!, challenge.startLon!),
-            radius: challenge.startRadius!,
-            color: Colors.transparent,
-            outlineColor: Colors.blue[300],
-            outlineWidth: 3,
-          ),
-        )
-        .toList();
+    CircleOverlay centerCircle = CircleOverlay(
+      overlayId: 'ChallengeStartCenter' + controller.selectedChallenge.value.id!.toString(),
+      center: LatLng(controller.selectedChallenge.value.startLat!, controller.selectedChallenge.value.startLon!),
+      radius: 9,
+      color: Color(0xff0EE6F3),
+    );
+
+    CircleOverlay outerCircle = CircleOverlay(
+      overlayId: 'ChallengeStart' + controller.selectedChallenge.value.id!.toString(),
+      center: LatLng(controller.selectedChallenge.value.startLat!, controller.selectedChallenge.value.startLon!),
+      radius: controller.selectedChallenge.value.startRadius!,
+      color: Color.fromRGBO(14, 230, 243, 0.3),
+    );
+
+    return [centerCircle, outerCircle];
   }
 
   List<CircleOverlay> renderEndPoint(ActivityController controller) {
-    return controller.challengeList
-        .where((challenge) => challenge.id == controller.userState.value.exercise?.challengeId)
-        .map(
-          (challenge) => CircleOverlay(
-            overlayId: 'ChallengeEnd' + challenge.id!.toString(),
-            center: LatLng(challenge.endLat!, challenge.endLon!),
-            radius: challenge.endRadius!,
-            color: Colors.transparent,
-            outlineColor: Colors.red[300],
-            outlineWidth: 3,
-          ),
-        )
-        .toList();
+    CircleOverlay centerCircle = CircleOverlay(
+      overlayId: 'ChallengeEndCenter' + controller.selectedChallenge.value.id!.toString(),
+      center: LatLng(controller.selectedChallenge.value.endLat!, controller.selectedChallenge.value.endLon!),
+      radius: 9,
+      color: Colors.red,
+    );
+
+    CircleOverlay outerCircle = CircleOverlay(
+      overlayId: 'ChallengeEnd' + controller.selectedChallenge.value.id!.toString(),
+      center: LatLng(controller.selectedChallenge.value.endLat!, controller.selectedChallenge.value.endLon!),
+      radius: controller.selectedChallenge.value.endRadius!,
+      color: Colors.red[300]?.withOpacity(0.3),
+    );
+
+    return [centerCircle, outerCircle];
   }
 
   List<Marker> renderStartMarker(ActivityController controller) {
@@ -764,13 +770,13 @@ class ActivityMap extends StatelessWidget {
           ),
           initLocationTrackingMode: LocationTrackingMode.Follow,
           circles: [
-            ...renderStartPoint(controller),
-            ...renderEndPoint(controller),
+            if (controller.selectedChallenge.value.id != null) ...renderStartPoint(controller),
+            if (controller.selectedChallenge.value.id != null) ...renderEndPoint(controller),
           ],
-          markers: [
-            ...renderStartMarker(controller),
-            ...renderEndMarker(controller),
-          ],
+          // markers: [
+          //   ...renderStartMarker(controller),
+          //   ...renderEndMarker(controller),
+          // ],
           pathOverlays: (controller.coordinates.length < 10)
               ? null
               : {
@@ -779,7 +785,7 @@ class ActivityMap extends StatelessWidget {
                     controller.coordinates,
                     width: 3,
                     color: Colors.red,
-                    outlineColor: Colors.white,
+                    // outlineColor: Colors.white,
                   )
                 },
           locationButtonEnable: true,

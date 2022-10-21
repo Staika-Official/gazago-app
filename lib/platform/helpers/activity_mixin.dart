@@ -243,7 +243,7 @@ class ActivityMixin {
         userExerciseData.value,
         Platform.operatingSystem,
         successCallback: (CurrentUserStateModel newUserState) {
-          userState.value = newUserState;
+          userState.update((state) => state = newUserState);
           updateCount.value = updateCount.value + 1;
           lastUpdateTime.value = DateTime.now().toIso8601String();
         },
@@ -267,7 +267,7 @@ class ActivityMixin {
     );
   }
 
-  void onTapDownStop(TapDownDetails tapDownDetails) {
+  void onTapDownStop(TapDownDetails tapDownDetails, ChallengeModel challenge) {
     Duration counter = Duration.zero;
 
     if (stopTimer != null) {
@@ -277,7 +277,7 @@ class ActivityMixin {
     stopTimer = Timer.periodic(const Duration(milliseconds: 10), (timer) {
       if (counter == const Duration(seconds: 1)) {
         initializeStopTimer();
-        endExercise();
+        endExercise(challenge);
       }
       counter = counter + const Duration(milliseconds: 10);
       stopProgress.value += 0.01;
@@ -303,7 +303,7 @@ class ActivityMixin {
     updateExercise();
   }
 
-  void endExercise() async {
+  void endExercise(ChallengeModel challenge) async {
     if (globalController.connectivityResult.value != ConnectivityResult.none) {
       await ActivityService.fetchEndUserExercises(userExerciseData.value, successCallback: (CurrentUserStateModel newUserState) {
         if (newUserState.exercise!.state == 'ENDED') {
@@ -312,7 +312,7 @@ class ActivityMixin {
             state = newUserState;
           });
           HiveStore.deleteMultipleKeys(keys: [HiveKey.userState.name, HiveKey.endExerciseRequested.name]);
-          resetVariables();
+          resetVariables(challenge);
           resetTimer();
           resetSubscriptions();
         }
@@ -325,19 +325,20 @@ class ActivityMixin {
       userState.value.exercise!.state = 'ENDED';
       HiveStore.saveCurrentUserState(userState: userState.value);
       HiveStore.save(key: HiveKey.endExerciseRequested.name, value: true.toString());
-      resetVariables();
+      resetVariables(challenge);
       resetTimer();
       resetSubscriptions();
     }
   }
 
-  void resetVariables() {
+  void resetVariables(ChallengeModel challenge) {
     exerciseTime.value = 0;
     stopProgress.value = 0;
     exerciseSteps.value = 0;
     userState.value.exercise!.rewardGo = 0;
     exerciseData.value = List.empty(growable: true);
     coordinates.value = List.empty(growable: true);
+    challenge.id = null;
 
     //TODO 삭제
     updateCount.value = 0;
