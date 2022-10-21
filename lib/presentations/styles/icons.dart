@@ -5,6 +5,7 @@ import 'package:flutter_svg/flutter_svg.dart';
 SvgPicture iconPlus = SvgPicture.asset('assets/images/common/ico_plus.svg', width: 10, height: 10);
 SvgPicture iconSliderShoe = SvgPicture.asset('assets/images/common/ico_slider_shoe.svg', width: 14.7, height: 16);
 SvgPicture iconSliderStamina = SvgPicture.asset('assets/images/common/ico_slider_stamina.svg', width: 13.33, height: 20.8);
+SvgPicture iconCopy = SvgPicture.asset('assets/images/common/ico_copy.svg', width: 12.33, height: 14.2);
 
 // Bottom Navigation Icon
 SvgPicture iconMenuHome = SvgPicture.asset('assets/images/common/ico_menu_home.svg', width: 20.5, height: 20);
@@ -58,3 +59,9 @@ SvgPicture iconItemAbrasion = SvgPicture.asset('assets/images/inventory/ico_item
 SvgPicture iconStaminaReduce = SvgPicture.asset('assets/images/inventory/ico_stamina_reduce.svg', width: 12, height: 9);
 SvgPicture iconLucky = SvgPicture.asset('assets/images/inventory/ico_lucky.svg', width: 12, height: 9);
 SvgPicture iconCirclePlus = SvgPicture.asset('assets/images/inventory/ico_circle_plus.svg', width: 37, height: 37);
+
+//mypage
+SvgPicture iconCamera = SvgPicture.asset('assets/images/common/ico_camera.svg', width: 22, height: 22);
+SvgPicture iconKakao = SvgPicture.asset('assets/images/preference/ico_kakao.svg', width: 16, height: 14.55);
+SvgPicture iconApple = SvgPicture.asset('assets/images/preference/ico_apple.svg', width: 12, height: 14);
+SvgPicture iconGoogle = SvgPicture.asset('assets/images/preference/ico_google.svg', width: 14, height: 14);

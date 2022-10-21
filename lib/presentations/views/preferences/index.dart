@@ -16,26 +16,45 @@ class Preferences extends StatelessWidget {
     return DefaultContainer(
       titleText: '설정',
       backgroundColor: const Color(0xFF1D1D26),
+      headerBackgroundColor: Color(0xFF23232D),
       child: Column(
         children: [
           Obx(() {
             return InkWell(
               onTap: () => Get.toNamed(Routes.myPage),
-              child: Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: Center(
-                  child: Column(
+              child: Container(
+                color: const Color(0xFF23232D),
+                child: Padding(
+                  padding: const EdgeInsets.all(20.0),
+                  child: Row(
                     mainAxisSize: MainAxisSize.max,
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    crossAxisAlignment: CrossAxisAlignment.center,
                     children: [
-                      CircleAvatar(
-                        foregroundImage: CachedNetworkImageProvider(
-                          controller.profile.value.profileImageUrl,
-                        ),
+                      Row(
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children: [
+                          CircleAvatar(
+                            radius: 30,
+                            foregroundImage: CachedNetworkImageProvider(
+                              controller.profile.value.profileImageUrl,
+                            ),
+                          ),
+                          const Padding(
+                            padding: EdgeInsets.only(left: 14.0),
+                            child: StyledText(
+                              '아이디뭐냐구',
+                              fontWeight: 500,
+                              fontSize: 18,
+                              lineHeight: 20,
+                            ),
+                          ),
+                        ],
                       ),
-                      Padding(
-                        padding: const EdgeInsets.only(top: 8.0),
-                        child: StyledText('아이디뭐냐구'),
-                      ),
+                      const Icon(
+                        Icons.chevron_right,
+                        color: Color(0xFFBDC0C7),
+                      )
                     ],
                   ),
                 ),
@@ -114,14 +133,17 @@ class PreferenceItem extends StatelessWidget {
                 fontSize: 18,
               ),
               type == ItemType.functional
-                  ? Icon(
+                  ? const Icon(
                       Icons.chevron_right,
                       color: Color(0xFFBDC0C7),
                     )
                   : Padding(
                       padding: const EdgeInsets.only(right: 5),
                       child: StyledText(
-                        description!,
+                        'v${description!}',
+                        fontSize: 16,
+                        fontWeight: 500,
+                        color: Color(0xFF8A8A8A),
                       ),
                     ),
             ],
