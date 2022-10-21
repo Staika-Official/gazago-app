@@ -85,6 +85,7 @@ class ActivityController extends GetxController with ActivityMixin, ChallengeMix
     exerciseTimer = null;
     stepSubscription?.cancel();
     stepSubscription = null;
+    HiveStore.save(key: HiveKey.exerciseStarted.name, value: false);
     locationSubscription?.cancel();
     locationSubscription = null;
     pedestrianStatusSubscription?.cancel();
