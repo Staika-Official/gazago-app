@@ -46,29 +46,29 @@ class Preferences extends StatelessWidget {
           //   title: '본인인증',
           //   onTap: () => Get.toNamed(Routes.verification),
           // ),
-          PreferenceItem(
-            title: '알림',
-            onTap: () => Get.toNamed(Routes.preferenceNotification),
-          ),
+          // PreferenceItem(
+          //   title: '알림',
+          //   onTap: () => Get.toNamed(Routes.preferenceNotification),
+          // ),
           PreferenceItem(
             title: '공지사항',
-            onTap: () => Get.toNamed(Routes.preferenceBoard, arguments: {'boardType': 'NOTICE'}),
+            onTap: () => Get.toNamed(Routes.preferenceBoard, arguments: {'boardType': 'T2E_NOTICE'}),
           ),
           PreferenceItem(
             title: 'FAQ',
-            onTap: () => Get.toNamed(Routes.preferenceBoard, arguments: {'boardType': 'FAQ'}),
+            onTap: () => Get.toNamed(Routes.preferenceBoard, arguments: {'boardType': 'T2E_FAQ'}),
           ),
           PreferenceItem(
             title: '이용약관',
-            onTap: () => Get.toNamed(Routes.term, arguments: {'termType': 'TERMS'}),
+            onTap: () => Get.toNamed(Routes.term, arguments: {'termType': 'T2E_TERMS'}),
           ),
           PreferenceItem(
             title: '개인정보 처리방침',
-            onTap: () => Get.toNamed(Routes.term, arguments: {'termType': 'PRIVACY'}),
+            onTap: () => Get.toNamed(Routes.term, arguments: {'termType': 'T2E_PRIVACY'}),
           ),
           PreferenceItem(
             title: '마케팅 동의',
-            onTap: () => Get.toNamed(Routes.term, arguments: {'termType': 'MARKETING'}),
+            onTap: () => Get.toNamed(Routes.term, arguments: {'termType': 'T2E_MARKETING'}),
           ),
           PreferenceItem(
             title: '로그아웃',

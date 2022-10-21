@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:gaza_go/platform/controllers/preference_board_controller.dart';
 import 'package:gaza_go/presentations/components/default_container.dart';
+import 'package:gaza_go/presentations/styles/styled_text.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
 
@@ -15,7 +16,7 @@ class PreferenceBoard extends StatelessWidget {
       titleText: controller.boardName.value,
       child: Obx(() {
         return ListView.builder(
-            itemCount: controller!.boardList.length,
+            itemCount: controller.boardList.length,
             physics: const ClampingScrollPhysics(),
             itemBuilder: (context, index) {
               return Theme(
@@ -31,50 +32,45 @@ class PreferenceBoard extends StatelessWidget {
                   collapsedIconColor: const Color(0xff292929),
                   textColor: const Color(0xff292929),
                   collapsedTextColor: const Color(0xff292929),
-                  // initiallyExpanded: index == controller.selectedItem.value,
-                  // onExpansionChanged: (newState) => controller.toggleItems(newState, index),
-                  title: Text(
-                    controller.boardList[index].title,
-                    style: const TextStyle(
-                      color: const Color(0xff292929),
-                      fontSize: 16,
-                      fontWeight: FontWeight.w500,
-                    ),
+                  title: StyledText(
+                    controller.boardList[index].title!,
+                    color: Colors.white,
+                    fontSize: 18,
+                    lineHeight: 18,
+                    fontWeight: 500,
                   ),
-                  subtitle: Text(
-                    DateFormat('yyyy.MM.dd').format(DateTime.parse(controller.boardList[index].lastModifiedDate)),
-                    style: const TextStyle(
-                      color: Color(0xffb7b7b7),
-                      fontSize: 12,
-                      fontWeight: FontWeight.w500,
-                    ),
+                  subtitle: StyledText(
+                    DateFormat('yyyy.MM.dd').format(DateTime.parse(controller.boardList[index].lastModifiedDate!)),
+                    color: Colors.white,
+                    fontSize: 12,
+                    lineHeight: 10,
+                    fontWeight: 600,
+                    fontFamily: 'Monserrat',
                   ),
                   children: [
                     Container(
                       width: double.infinity,
-                      padding: const EdgeInsets.only(
+                      margin: const EdgeInsets.only(
                         left: 20,
-                        top: 15,
+                        top: 0,
                         right: 20,
                         bottom: 40,
                       ),
+                      padding: EdgeInsets.only(top: 15),
                       decoration: const BoxDecoration(
                         border: Border(
                           top: BorderSide(
-                            color: Color(0xffcfcfcf),
+                            color: Color(0xff363841),
                             width: 2,
-                            style: BorderStyle.solid,
                           ),
                         ),
                       ),
-                      child: Text(
-                        controller.boardList[index].content,
-                        style: const TextStyle(
-                          color: Color(0xff292929),
-                          fontSize: 14,
-                          fontWeight: FontWeight.w500,
-                          letterSpacing: -0.5,
-                        ),
+                      child: StyledText(
+                        controller.boardList[index].content!,
+                        color: Color(0xffbfbfbf),
+                        fontSize: 16,
+                        lineHeight: 22,
+                        fontWeight: 500,
                       ),
                     ),
                   ],

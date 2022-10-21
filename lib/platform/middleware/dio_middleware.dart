@@ -104,7 +104,11 @@ class Api {
           getx.Get.offAllNamed(Routes.login);
         });
     } else {
-      handler.resolve(e.response!);
+      if (e.type == DioErrorType.other) {
+        handler.next(e);
+      } else {
+        handler.resolve(e.response!);
+      }
     }
   }
 

@@ -6,7 +6,7 @@ class BoardApi {
   // - 스펜딩 월렛 api
 
   static Future<Response> getPostListByType(String boardTypes) async {
-    return await Api.client(serviceUrl: ServiceUrl.boardService).post('/gazago/posts/list', queryParameters: {'boardTypes': boardTypes, 'status': 'ACTIVED'});
+    return await Api.client(serviceUrl: ServiceUrl.boardService).get('/gazago/posts/list', queryParameters: {'boardTypes': boardTypes, 'status': 'ACTIVED'});
   }
 
   static Future<Response> getFirstPostByType(String boardTypes) async {

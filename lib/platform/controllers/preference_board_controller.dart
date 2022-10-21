@@ -1,11 +1,12 @@
+import 'package:gaza_go/platform/models/term_item_model.dart';
+import 'package:gaza_go/platform/services/board_service.dart';
 import 'package:get/get.dart';
-import 'package:gaza_go/platform/models/board_item_model.dart';
 
 class PreferenceBoardController extends GetxController {
   RxString boardType = RxString('');
-  RxList<BoardItemModel> boardList = RxList.empty();
+  RxList<TermItemModel> boardList = RxList.empty();
   RxString get boardName {
-    if (boardType.value == 'NOTICE') {
+    if (boardType.value == 'T2E_NOTICE') {
       return RxString('공지사항');
     } else {
       return RxString('FAQ');
@@ -19,13 +20,9 @@ class PreferenceBoardController extends GetxController {
     super.onInit();
   }
 
-  void getPostList() {
-    boardList.value = [
-      BoardItemModel(id: 1, boardType: 'NOTICE', title: 'test', content: 'testset', lastModifiedDate: '20221023'),
-      BoardItemModel(id: 1, boardType: 'NOTICE', title: 'test', content: 'testset', lastModifiedDate: '20221023'),
-      BoardItemModel(id: 1, boardType: 'NOTICE', title: 'test', content: 'testset', lastModifiedDate: '20221023'),
-      BoardItemModel(id: 1, boardType: 'NOTICE', title: 'test', content: 'testset', lastModifiedDate: '20221023'),
-      BoardItemModel(id: 1, boardType: 'NOTICE', title: 'test', content: 'testset', lastModifiedDate: '20221023'),
-    ];
+  void getPostList() async {
+    await BoardService.getPostListByType(boardType.value, successCallback: (List<TermItemModel> terms) {
+      boardList.value = terms;
+    });
   }
 }

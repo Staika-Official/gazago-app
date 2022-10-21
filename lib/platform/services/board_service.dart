@@ -9,7 +9,7 @@ class BoardService {
       List<TermItemModel> termsList = List.empty(growable: true);
       res.data.forEach((term) {
         TermItemModel termItem = TermItemModel.fromJson(term);
-        termItem.isRequired = term.meta != 'selection';
+        termItem.isRequired = termItem.meta != 'selection';
         termsList.add(termItem);
       });
       successCallback(termsList);
