@@ -40,10 +40,10 @@ class Preferences extends StatelessWidget {
                               controller.profile.value.profileImageUrl,
                             ),
                           ),
-                          const Padding(
-                            padding: EdgeInsets.only(left: 14.0),
+                          Padding(
+                            padding: const EdgeInsets.only(left: 14.0),
                             child: StyledText(
-                              '아이디뭐냐구',
+                              controller.profile.value.nickname,
                               fontWeight: 500,
                               fontSize: 18,
                               lineHeight: 20,

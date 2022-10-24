@@ -1,7 +1,7 @@
 import 'package:flutter/cupertino.dart';
+import 'package:gaza_go/platform/models/profile_model.dart';
 import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:gaza_go/platform/models/profile_model.dart';
 
 class MyPageController extends GetxController {
   final Rx<ProfileModel> profile = Rx(
@@ -46,7 +46,7 @@ class MyPageController extends GetxController {
   }
 
   void toggleEditMode() {
-    nicknameTextController.text = profile.value.nickname;
+    nicknameTextController.text = profile.value.nickname!;
     isEditMode.value = !isEditMode.value;
   }
 

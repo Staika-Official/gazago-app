@@ -113,7 +113,7 @@ class MyPage extends StatelessWidget {
                                         ),
                                         children: [
                                           TextSpan(
-                                            text: controller.profile.value.nickname.length.toString(),
+                                            text: controller.profile.value.nickname!.length.toString(),
                                             style: const TextStyle(
                                               color: Color(0xFF8A8A8A),
                                               fontSize: 12,
@@ -158,7 +158,7 @@ class MyPage extends StatelessWidget {
                                 crossAxisAlignment: CrossAxisAlignment.center,
                                 children: [
                                   StyledText(
-                                    controller.profile.value.nickname,
+                                    controller.profile.value.nickname!,
                                     fontSize: 18,
                                     fontWeight: 500,
                                   ),
@@ -202,7 +202,7 @@ class MyPage extends StatelessWidget {
                                     child: InkWell(
                                       onTap: () => controller.toggleEditMode(),
                                       child: const StyledText(
-                                        '확인',
+                                        '확인1a',
                                         color: Colors.black,
                                         fontSize: 18,
                                         fontWeight: 500,

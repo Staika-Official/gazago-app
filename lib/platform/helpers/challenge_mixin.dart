@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
@@ -30,6 +32,7 @@ class ChallengeMixin {
 
   Future<void> getNearByChallengeList(Position currentLocation) async {
     List<ChallengeModel> result = await ActivityService.getNearByChallenges(currentLocation);
+    inspect(result);
     notificationOnChallenge(result);
     challengeList.value = result;
   }
@@ -60,10 +63,14 @@ class ChallengeMixin {
 
   void detectChallengeZone(Position location) {
     doableChallenges.value = challengeList.where((challenge) {
+      inspect('시작경도점${challenge.startLat}');
+      inspect('시작위도점${challenge.startLon}');
       double distance = calculateDistance(location.latitude, location.longitude, challenge.startLat, challenge.startLon);
+      inspect('거리${distance}');
+      inspect('반경${convertMetersToKm(challenge.startRadius!)}');
       return distance <= convertMetersToKm(challenge.startRadius!);
     }).toList();
-
+    inspect('가능한 챌린지 리스트${doableChallenges.value}');
     achievableChallenges.value = challengeList.where((challenge) {
       double distance = calculateDistance(location.latitude, location.longitude, challenge.endLat, challenge.endLon);
       return distance <= convertMetersToKm(challenge.endRadius!);
