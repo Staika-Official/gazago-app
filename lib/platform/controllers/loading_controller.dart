@@ -1,4 +1,3 @@
-import 'package:gaza_go/constants/routes.dart';
 import 'package:gaza_go/platform/controllers/activity_controller.dart';
 import 'package:gaza_go/platform/controllers/wallet_master_controller.dart';
 import 'package:get/get.dart';
@@ -19,6 +18,6 @@ class LoadingController extends GetxController {
     progress.value = progress.value + 0.2;
     progressMessage.value = message;
 
-    // if (progress.value >= 0.6) Get.offAllNamed(Routes.home);
+    if (progress.value >= 0.6) Get.offAllNamed(Routes.home);
   }
 }
