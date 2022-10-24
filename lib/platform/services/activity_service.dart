@@ -22,6 +22,11 @@ class ActivityService {
     return challengeList;
   }
 
+  static Future<ChallengeModel> getChallenge(int id) async {
+    Response res = await ActivityApi.getChallenge(id);
+    return ChallengeModel.fromJson(res.data);
+  }
+
   static Future<List<ChallengeModel>> getNearByChallenges(Position currentLocation) async {
     Response res = await ActivityApi.getNearByChallenges(currentLocation);
     List<ChallengeModel> challengeList = List.empty(growable: true);

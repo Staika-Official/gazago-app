@@ -9,6 +9,7 @@ class DefaultContainer extends StatelessWidget {
 
   //default header settings
   final bool isLeadingShow;
+  final bool? isPrevButtonHide;
   final Widget? trailingChild;
   final String? titleText;
   final VoidCallback? onBackButtonTap;
@@ -21,6 +22,7 @@ class DefaultContainer extends StatelessWidget {
     this.disableSafeArea = false,
     this.customHeader,
     this.isLeadingShow = true,
+    this.isPrevButtonHide = false,
     this.trailingChild,
     this.titleText,
     this.headerBackgroundColor,
@@ -38,6 +40,7 @@ class DefaultContainer extends StatelessWidget {
         titleSpacing: 0,
         title: customHeader ??
             DefaultHeader(
+              isPrevButtonHide: isPrevButtonHide,
               isLeadingShow: isLeadingShow,
               trailingChild: trailingChild,
               titleText: titleText,
