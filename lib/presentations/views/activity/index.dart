@@ -411,8 +411,8 @@ class ActivityHome extends StatelessWidget {
                                         fontSize: 30,
                                         lineHeight: 34,
                                       ),
-                                      Padding(
-                                        padding: const EdgeInsets.only(left: 2.0, right: 5.0),
+                                      const Padding(
+                                        padding: EdgeInsets.only(left: 2.0, right: 5.0),
                                         child: StyledText(
                                           'GO',
                                           fontFamily: 'Montserrat',
@@ -441,61 +441,6 @@ class ActivityHome extends StatelessWidget {
                   ],
                 );
               }),
-              // TODO. 추후 나의 운동 스토리의 위치가 확정되면 아래 주석처리 된 소스를 이동하도록 한다.
-              // Padding(
-              //   padding: const EdgeInsets.only(top: 40.0),
-              //   child: StyledText(
-              //     '나의 운동 스토리',
-              //     color: Color(0xFF8A8A8A),
-              //     fontSize: 18,
-              //     fontWeight: 600,
-              //   ),
-              // ),
-              // Obx(() {
-              //   return Column(
-              //     crossAxisAlignment: CrossAxisAlignment.center,
-              //     children: <Widget>[
-              //       Padding(
-              //         padding: const EdgeInsets.only(top: 14.0),
-              //         child: SizedBox(
-              //           height: 134,
-              //           child: PageView.builder(
-              //             controller: slideController,
-              //             itemCount: renderActivitySumList(controller).length ~/ 2,
-              //             itemBuilder: (_, index) {
-              //               if (index == 0) {
-              //                 return Row(
-              //                   children: [
-              //                     Expanded(child: renderActivitySumList(controller)[index]),
-              //                     Expanded(child: renderActivitySumList(controller)[index + 1]),
-              //                   ],
-              //                 );
-              //               } else {
-              //                 return Row(
-              //                   children: [
-              //                     Expanded(child: renderActivitySumList(controller)[index + 1]),
-              //                     Expanded(child: renderActivitySumList(controller)[index + 2]),
-              //                   ],
-              //                 );
-              //               }
-              //             },
-              //           ),
-              //         ),
-              //       ),
-              //       Padding(
-              //         padding: const EdgeInsets.only(top: 10.0),
-              //         child: SmoothPageIndicator(
-              //           controller: slideController,
-              //           count: renderActivitySumList(controller).length ~/ 2,
-              //           effect: const ExpandingDotsEffect(
-              //             dotHeight: 5, dotWidth: 5, activeDotColor: Color(0xFFA6A9B4), dotColor: Color(0xFF666870),
-              //             // strokeWidth: 5,
-              //           ),
-              //         ),
-              //       ),
-              //     ],
-              //   );
-              // }),
               Padding(
                 padding: const EdgeInsets.only(top: 70),
                 child: Stack(

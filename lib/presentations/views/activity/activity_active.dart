@@ -104,8 +104,8 @@ class ActivityActive extends StatelessWidget {
                                                 width: stat.currentStat > 20
                                                     ? constraints.maxWidth / (100 / stat.currentStat)
                                                     : stat.currentStat < 2
-                                                    ? 0
-                                                    : 34,
+                                                        ? 0
+                                                        : 34,
                                                 decoration: BoxDecoration(
                                                   color: stat.currentStat < 20 ? const Color(0xFFFF2525) : const Color(0xFFCDFF41),
                                                   border: Border.all(
@@ -159,8 +159,8 @@ class ActivityActive extends StatelessWidget {
                                                 width: stat.currentStat > 20
                                                     ? constraints.maxWidth / (100 / stat.currentStat)
                                                     : stat.currentStat < 2
-                                                    ? 0
-                                                    : 34,
+                                                        ? 0
+                                                        : 34,
                                                 decoration: BoxDecoration(
                                                   color: stat.currentStat < 20 ? const Color(0xFFFF2525) : const Color(0xFFB85DFF),
                                                   border: Border.all(
@@ -539,7 +539,7 @@ class ActivityActive extends StatelessWidget {
                                   onTapUp: (tapUpDetail) => controller.onTapUpStop(tapUpDetail),
                                   child: Stack(
                                     children: [
-                                      CircularButton(
+                                      const CircularButton(
                                         radius: 78,
                                         color: Colors.white,
                                         child: Icon(Icons.stop, color: Colors.black, size: 35),
@@ -574,7 +574,7 @@ class ActivityActive extends StatelessWidget {
                             )
                           : CircularButton(
                               radius: 90,
-                              color: Color(0xffFF2222),
+                              color: const Color(0xffFF2222),
                               onTap: () {
                                 if (controller.exerciseState.value == ExerciseState.paused) {
                                   controller.continueExercise();
@@ -582,23 +582,18 @@ class ActivityActive extends StatelessWidget {
                                   controller.startExercise(controller.selectedExerciseType.value, controller.selectedChallenge.value);
                                 }
                               },
-                              child: Icon(Icons.play_arrow, color: Colors.white, size: 35),
+                              child: const Icon(Icons.play_arrow, color: Colors.white, size: 35),
                             ),
-                      // CircularButton(
-                      //   radius: 50,
-                      //   color: Colors.white,
-                      //   onTap: () {
-                      //     Get.snackbar('[기능 구현 필요]', '구현 예정인 기능입니다.', colorText: Colors.white);
-                      //   },
-                      //   child: SvgPicture.asset(
-                      //     'assets/images/activity/ico_item.svg',
-                      //   ),
-                      // ),
-                      Container(
-                        width: 50,
-                        height: 50,
-                        color: Colors.transparent,
-                      )
+                      CircularButton(
+                        radius: 50,
+                        color: Colors.white,
+                        onTap: () {
+                          Get.toNamed(Routes.equippedItems);
+                        },
+                        child: SvgPicture.asset(
+                          'assets/images/activity/ico_item.svg',
+                        ),
+                      ),
                     ],
                   ),
                 ),
