@@ -15,7 +15,7 @@ class UaaService {
     Response res = await UaaApi.socialLogin(loginInfo);
     if ([200, 201].any((statusCode) => statusCode == res.statusCode)) {
       successCallback(AccessTokenModel.fromJson(res.data), res.statusCode);
-    } else {
+    } else if (res.statusCode != null) {
       errorCallback!();
     }
   }
@@ -28,10 +28,10 @@ class UaaService {
 
   static Future<void> checkLoginStatus({required Function successCallback, Function? errorCallback}) async {
     Response res = await UaaApi.checkLoginStatus();
-    if (res.statusCode! == 200) {
+    if (res.statusCode != null && res.statusCode! == 200) {
       successCallback();
-    } else {
-      errorCallback!();
+    } else if (res.statusCode != null) {
+      errorCallback!(res.data);
     }
   }
 }
