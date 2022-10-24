@@ -18,6 +18,7 @@ class LoadingController extends GetxController {
   void updateProgress(String message) {
     progress.value = progress.value + 0.2;
     progressMessage.value = message;
-    if (progress.value == 1) Get.offAllNamed(Routes.home);
+
+    // if (progress.value >= 0.6) Get.offAllNamed(Routes.home);
   }
 }

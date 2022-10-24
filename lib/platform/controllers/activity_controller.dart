@@ -68,6 +68,7 @@ class ActivityController extends GetxController with ActivityMixin, ChallengeMix
   void onInit() async {
     await initController();
     checkConnectivityStatus();
+
     super.onInit();
   }
 
@@ -444,6 +445,7 @@ class ActivityController extends GetxController with ActivityMixin, ChallengeMix
 
   void getUserState() async {
     CurrentUserStateModel currentUserState = await ActivityService.getCurrentUserState();
+
     userState.update((state) {
       state?.state = currentUserState.state;
       state?.exercise = currentUserState.exercise;

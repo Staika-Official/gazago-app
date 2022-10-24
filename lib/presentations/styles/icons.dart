@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
 // Common Icons
+SvgPicture iconSplashLogo = SvgPicture.asset('assets/images/common/img_splash_logo.svg', width: 261, height: 61.15);
 SvgPicture iconPlus = SvgPicture.asset('assets/images/common/ico_plus.svg', width: 10, height: 10);
 SvgPicture iconSliderShoe = SvgPicture.asset('assets/images/common/ico_slider_shoe.svg', width: 14.7, height: 16);
 SvgPicture iconSliderStamina = SvgPicture.asset('assets/images/common/ico_slider_stamina.svg', width: 13.33, height: 20.8);
