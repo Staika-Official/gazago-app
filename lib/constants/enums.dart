@@ -1,8 +1,8 @@
 enum LoginType {
-  apple,
-  kakao,
+  // apple,
+  // kakao,
   google,
-  email,
+  // email,
 }
 
 enum ExerciseType {
@@ -53,6 +53,9 @@ enum HiveKey {
   exerciseData,
   endExerciseRequested,
   badgeIssuanceRequested,
+  exerciseStarted,
+  savedStepCount,
+  dummyStepCount,
 }
 
 enum ResponseStatus {

@@ -31,6 +31,7 @@ import 'package:gaza_go/presentations/styles/styled_text.dart';
 import 'package:gaza_go/presentations/views/activity/activity_select.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:get/get.dart';
+import 'package:health/health.dart';
 import 'package:permission_handler/permission_handler.dart' as PH;
 
 class ActivityController extends GetxController with ActivityMixin, ChallengeMixin {
@@ -63,6 +64,7 @@ class ActivityController extends GetxController with ActivityMixin, ChallengeMix
   final Rx<LocationAccuracyStatus> _locationAccuracyStatus = Rx(LocationAccuracyStatus.unknown);
   StreamSubscription<ServiceStatus>? _serviceStatusStream;
   final Rx<DateTime> receiveLocationTime = Rx(DateTime.now());
+  final HealthFactory health = HealthFactory();
 
   @override
   void onInit() async {
@@ -84,6 +86,7 @@ class ActivityController extends GetxController with ActivityMixin, ChallengeMix
     exerciseTimer = null;
     stepSubscription?.cancel();
     stepSubscription = null;
+    HiveStore.save(key: HiveKey.exerciseStarted.name, value: false);
     locationSubscription?.cancel();
     locationSubscription = null;
     pedestrianStatusSubscription?.cancel();
@@ -576,6 +579,15 @@ class ActivityController extends GetxController with ActivityMixin, ChallengeMix
       hasActivityPermission = PH.PermissionStatus.granted == await PH.Permission.activityRecognition.status;
     } else if (Platform.isIOS) {
       hasActivityPermission = PH.PermissionStatus.granted == await PH.Permission.sensors.status;
+
+      // print(healthPermission);
+      //
+      // if (healthPermission != null) {
+      //   hasActivityPermission = sensorPermission && healthPermission;
+      // } else {
+      //   hasActivityPermission = sensorPermission;
+      // }
+      // hasActivityPermission = healthPermission ?? false;
     }
     if (!hasActivityPermission) {
       await Get.dialog(
@@ -605,6 +617,9 @@ class ActivityController extends GetxController with ActivityMixin, ChallengeMix
       permissionGranted = PH.PermissionStatus.granted == await PH.Permission.activityRecognition.request();
     } else if (Platform.isIOS) {
       permissionGranted = PH.PermissionStatus.granted == await PH.Permission.sensors.request();
+      await health.requestAuthorization([HealthDataType.STEPS]);
+
+      // permissionGranted = sensorGranted && healthGranted;
     }
     activityRecognitionPermission.complete(permissionGranted);
 
