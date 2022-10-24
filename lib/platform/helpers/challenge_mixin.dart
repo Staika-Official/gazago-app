@@ -28,6 +28,10 @@ class ChallengeMixin {
     allChallengesList.value = await ActivityService.getChallenges();
   }
 
+  Future<ChallengeModel> getChallenge(int id) async {
+    return await ActivityService.getChallenge(id);
+  }
+
   Future<void> getNearByChallengeList(Position currentLocation) async {
     List<ChallengeModel> result = await ActivityService.getNearByChallenges(currentLocation);
     notificationOnChallenge(result);
@@ -59,6 +63,9 @@ class ChallengeMixin {
   }
 
   void detectChallengeZone(Position location) {
+    print('######################## detectChallengeZone');
+    print(location);
+
     doableChallenges.value = challengeList.where((challenge) {
       double distance = calculateDistance(location.latitude, location.longitude, challenge.startLat, challenge.startLon);
       return distance <= convertMetersToKm(challenge.startRadius!);
