@@ -105,7 +105,15 @@ class Api {
         });
     } else {
       if (e.type == DioErrorType.other) {
-        handler.next(e);
+        handler.resolve(
+          Response(
+            requestOptions: RequestOptions(
+              path: e.requestOptions.path,
+              data: 'unknown',
+            ),
+          ),
+        );
+        showToastPopup('통신이 원활하지 않습니다. 잠시후 다시 시도해주세요');
       } else {
         handler.resolve(e.response!);
       }

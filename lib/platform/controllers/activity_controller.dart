@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:developer';
 import 'dart:io';
 
 import 'package:another_xlider/another_xlider.dart';
@@ -458,7 +459,12 @@ class ActivityController extends GetxController with ActivityMixin, ChallengeMix
 
     if (userState.value.exercise != null && userState.value.exercise!.state == 'ONGOING') {
       if (userState.value.exercise?.challengeId != null) {
-        selectedChallenge.value = allChallengesList.singleWhere((challenge) => challenge.id == userState.value.exercise!.challengeId!);
+        //  산행중인 정보 가져오기
+        ChallengeModel challenge = await getChallenge(userState.value.exercise!.challengeId!);
+        inspect(challenge);
+        if (challenge.id != null) {
+          selectedChallenge.value = challenge;
+        }
       }
       if (updateTimer == null) {
         exerciseData.value = List.empty(growable: true);
@@ -501,8 +507,11 @@ class ActivityController extends GetxController with ActivityMixin, ChallengeMix
     bool hasLocationPermissionWithAccuracy = await checkLocationPermissionAndAccuracy();
     if (!hasLocationPermissionWithAccuracy) return false;
 
+    print('111111111111111111111111111111111111');
+
     if (Get.isRegistered<LoadingController>()) Get.find<LoadingController>().updateProgress("조금만 기다려주세요");
 
+    print('22222222222222222222222222222222222');
     return true;
   }
 

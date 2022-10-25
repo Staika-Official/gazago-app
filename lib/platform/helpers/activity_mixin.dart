@@ -126,6 +126,7 @@ class ActivityMixin {
 
   void initExerciseTimer() {
     if (exerciseTimer != null) {
+      exerciseTimer!.cancel();
       exerciseTimer = null;
     }
 
@@ -313,6 +314,7 @@ class ActivityMixin {
 
   void startPeriodicUpdate() {
     if (updateTimer != null) {
+      updateTimer!.cancel();
       updateTimer = null;
     }
 

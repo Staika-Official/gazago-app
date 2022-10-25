@@ -7,7 +7,12 @@ import 'package:geolocator/geolocator.dart';
 
 class ActivityApi {
   static Future<Response> getChallenges() async {
-    return await Api.client(serviceUrl: '/services/gazago/api').get('/challenges?size=100');
+    //return await Api.client(serviceUrl: '/services/gazago/api').get('/challenges?size=9999&page=0');
+    return await Api.client(serviceUrl: '/services/gazago/api').get('/challenges');
+  }
+
+  static Future<Response> getChallenge(int id) async {
+    return await Api.client(serviceUrl: '/services/gazago/api').get('/challenges/$id');
   }
 
   // static Future<Response> getNearByChallenges(LocationData currentLocation) async {

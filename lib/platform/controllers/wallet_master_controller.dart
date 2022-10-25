@@ -33,11 +33,17 @@ class WalletMasterController extends GetxController {
   }
 
   Rx<AssetTokenBalanceUiModel> get tik {
-    return Rx(spendingTokenUiList.singleWhere((token) => token.mint == '1'));
+    return Rx(spendingTokenUiList.singleWhere((token) => token.mint == '1', orElse: () {
+      Get.snackbar('에러', 'TAIKA를 찾을 수 없습니다.');
+      return AssetTokenBalanceUiModel();
+    }));
   }
 
   Rx<AssetTokenBalanceUiModel> get stik {
-    return Rx(spendingTokenUiList.singleWhere((token) => token.mint == '2'));
+    return Rx(spendingTokenUiList.singleWhere((token) => token.mint == '2', orElse: () {
+      Get.snackbar('에러', 'STAIKA를 찾을 수 없습니다.');
+      return AssetTokenBalanceUiModel();
+    }));
   }
 
   @override

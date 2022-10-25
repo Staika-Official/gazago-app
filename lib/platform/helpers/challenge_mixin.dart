@@ -30,6 +30,10 @@ class ChallengeMixin {
     allChallengesList.value = await ActivityService.getChallenges();
   }
 
+  Future<ChallengeModel> getChallenge(int id) async {
+    return await ActivityService.getChallenge(id);
+  }
+
   Future<void> getNearByChallengeList(Position currentLocation) async {
     List<ChallengeModel> result = await ActivityService.getNearByChallenges(currentLocation);
     inspect(result);
@@ -62,6 +66,9 @@ class ChallengeMixin {
   }
 
   void detectChallengeZone(Position location) {
+    print('######################## detectChallengeZone');
+    print(location);
+
     doableChallenges.value = challengeList.where((challenge) {
       inspect('시작경도점${challenge.startLat}');
       inspect('시작위도점${challenge.startLon}');
