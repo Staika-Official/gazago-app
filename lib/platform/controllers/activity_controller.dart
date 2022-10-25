@@ -719,7 +719,7 @@ class ActivityController extends GetxController with ActivityMixin, ChallengeMix
       }
 
       detectChallengeZone(position);
-      autoFinishChallenge(userState.value);
+      autoFinishChallenge(position, userState.value);
     });
   }
 
