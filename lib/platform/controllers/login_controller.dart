@@ -92,7 +92,7 @@ class LoginController extends GetxController {
 
   Future<void> initUserInfo() async {
     await getUserInfo();
-    print('asd');
+
     String? profileImageUrl = HiveStore.loadString(key: HiveKey.profileImageUrl.name);
     String? nickname = HiveStore.loadString(key: HiveKey.nickname.name);
     await MemberService.initializeUserData(nickname!, profileImageUrl!);

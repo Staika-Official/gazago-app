@@ -216,12 +216,17 @@ class InventoryController extends GetxController with LinearProgressMixin, Inven
     if (equippedItems.badge != null) {
       equippedBadge.update((state) {
         state!.badge.imageUrl = equippedItems.badge!.imageUrl;
+        state.badge.rewardRate = equippedItems.badge!.rewardRate;
+        state.badge.level = equippedItems.badge!.level;
+        state.badge.luckRate = equippedItems.badge!.luckRate;
+        state!.badge.name = equippedItems.badge!.name;
       });
     } else {
       equippedBadge.update((state) {
         state!.badge.imageUrl = 'assets/images/@temp_badge.png';
       });
     }
+    inspect(equippedBadge);
     remainDurability.value = equippedItems.items.firstWhere((element) => element.itemCategory == 'SHOES').durability.floor();
   }
 

@@ -24,5 +24,7 @@ class EquippedBadgeItemModel {
 
   factory EquippedBadgeItemModel.fromJson(Map<String, dynamic> json) => _$EquippedBadgeItemModelFromJson(json);
 
+  String? get name => null;
+
   Map<String, dynamic> toJson() => _$EquippedBadgeItemModelToJson(this);
 }

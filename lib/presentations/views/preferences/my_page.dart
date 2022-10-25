@@ -202,7 +202,7 @@ class MyPage extends StatelessWidget {
                                     child: InkWell(
                                       onTap: () => controller.toggleEditMode(),
                                       child: const StyledText(
-                                        '확인1a',
+                                        '확인',
                                         color: Colors.black,
                                         fontSize: 18,
                                         fontWeight: 500,
