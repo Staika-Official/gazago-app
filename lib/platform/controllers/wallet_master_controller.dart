@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:gaza_go/constants/enums.dart';
@@ -23,12 +25,17 @@ class WalletMasterController extends GetxController {
   final Rx<BuyTikResponseModel> buyTikResult = Rx(BuyTikResponseModel());
   RxList<AssetTokenBalanceUiModel> get spendingTokenUiList {
     List<AssetTokenBalanceUiModel> balanceUiList = List.empty(growable: true);
+
     for (int i = 0; i < spendingTokens.value.tokens.length; i++) {
       AssetTokenBalanceUiModel tokenUi = AssetTokenBalanceUiModel.fromJson(spendingTokens.value.tokens[i].toJson());
+
       tokenUi.meta = spendingTokenInfoList[i].meta;
+
       tokenUi.price = spendingTokenInfoList[i].price;
+
       balanceUiList.add(tokenUi);
     }
+    inspect(balanceUiList);
     return RxList(balanceUiList);
   }
 
@@ -49,15 +56,14 @@ class WalletMasterController extends GetxController {
   @override
   void onInit() async {
     await getSpendingWalletBalances();
-    // await getSpendingMetaData();
-    // await getBuyTikCommission();
+    await getSpendingMetaData();
+    await getBuyTikCommission();
     super.onInit();
   }
 
   Future<void> getSpendingWalletBalances() async {
-    print('getSpendingWalletBalances');
     spendingTokens.value = await WalletService.getSpendingWalletBalance();
-    print(spendingTokens.value);
+
     if (Get.isRegistered<LoadingController>()) Get.find<LoadingController>().updateProgress("서비스를 위해 정보를 불러오는 중입니다.");
   }
 

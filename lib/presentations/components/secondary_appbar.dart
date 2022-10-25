@@ -19,7 +19,7 @@ class SecondaryAppbar extends StatelessWidget implements PreferredSizeWidget {
           children: [
             CircleAvatar(
               radius: 11,
-              foregroundImage: token.meta?.logoUrl != '' ? CachedNetworkImageProvider(token.meta!.logoUrl) : SP.Svg('assets/images/common/ico_token_tik.svg') as ImageProvider,
+              foregroundImage: token.meta?.logoUrl != '' ? CachedNetworkImageProvider(token.meta!.logoUrl) : const SP.Svg('assets/images/common/ico_token_tik.svg') as ImageProvider,
             ),
             Padding(
               padding: const EdgeInsets.only(left: 4),

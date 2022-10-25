@@ -12,7 +12,7 @@ class Loading extends StatelessWidget {
 
   List<Widget> renderGauge(LoadingController controller, elWidth) {
     List<Widget> gaugeList = List.empty(growable: true);
-    int colored = (controller.progress.value * 43).toInt();
+    int colored = (controller.progress.value * 10).toInt();
 
     for (int i = 0; i < 26; i++) {
       //15km / 0.25 = 60
