@@ -1,7 +1,6 @@
 import 'dart:developer';
 
 import 'package:connectivity_plus/connectivity_plus.dart';
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_naver_map/flutter_naver_map.dart';
 import 'package:gaza_go/constants/enums.dart';
@@ -105,9 +104,10 @@ class ChallengeMixin {
       HiveStore.deleteKey(key: HiveKey.badgeIssuanceRequested.name);
     }
 
-    VoidCallback errorCallback = () {
+    void errorCallback() {
       Get.snackbar('뱃지 발급 실패', '뱃지 발급에 실패했습니다.', colorText: Colors.white);
-    };
+      HiveStore.save(key: HiveKey.badgeIssuanceRequested.name, value: true.toString());
+    }
 
     await BadgeService.fetchUserIssuanceBadge(userState.exercise!.id!, successCallback, errorCallback);
   }
