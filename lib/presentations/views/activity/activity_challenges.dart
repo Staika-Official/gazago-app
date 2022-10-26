@@ -110,7 +110,7 @@ class ActivityChallenges extends StatelessWidget {
                 Padding(
                   padding: const EdgeInsets.only(left: 11),
                   child: Text(
-                    challenge.firstName!,
+                    challenge.startPointName != null ? '${challenge.startPointName!} - ${challenge.endPointName!}' : challenge.firstName!,
                     style: TextStyle(
                       fontSize: 18,
                       fontWeight: FontWeight.w500,
