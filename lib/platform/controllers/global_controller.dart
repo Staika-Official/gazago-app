@@ -60,7 +60,7 @@ class GlobalController extends SuperController {
         successCallback: () => null,
         errorCallback: () {
           Get.snackbar('로그인 만료', '로그인 유효시간이 만료되었습니다', colorText: Colors.white);
-          Get.offAllNamed(Routes.login);
+          if (Get.currentRoute != Routes.login) Get.offAllNamed(Routes.login);
           HiveStore.deleteMultipleKeys(keys: [
             HiveKey.accessToken.name,
             HiveKey.refreshToken.name,

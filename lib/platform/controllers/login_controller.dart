@@ -13,6 +13,8 @@ import 'package:gaza_go/platform/services/wallet_service.dart';
 import 'package:gaza_go/platform/stores/hive_store.dart';
 import 'package:get/get.dart';
 import 'package:google_sign_in/google_sign_in.dart';
+import 'package:kakao_flutter_sdk/kakao_flutter_sdk.dart';
+import 'package:kakao_flutter_sdk/kakao_flutter_sdk_auth.dart';
 import 'package:package_info_plus/package_info_plus.dart';
 import 'package:sign_in_with_apple/sign_in_with_apple.dart';
 
@@ -23,11 +25,12 @@ class LoginController extends GetxController {
       case LoginType.google:
         await signInWithGoogle();
         break;
-      // case LoginType.apple:
-      //   await signInWithApple();
-      //   break;
-      // case LoginType.kakao:
-      //   break;
+      case LoginType.apple:
+        await signInWithApple();
+        break;
+      case LoginType.kakao:
+        await signInWithKakao();
+        break;
       default:
         await emailLogin();
         break;
@@ -60,9 +63,6 @@ class LoginController extends GetxController {
     );
 
     await requestLogin(LoginType.google, credential.idToken!);
-
-    // Once signed in, return the UserCredential
-    // return await FirebaseAuth.instance.signInWithCredential(credential);
   }
 
   Future<void> signInWithApple() async {
@@ -78,9 +78,25 @@ class LoginController extends GetxController {
       idToken: appleCredential.identityToken,
     );
 
-    // await requestLogin(LoginType.apple, credential.idToken!);
+    print(credential.idToken);
+    print('====================================');
+    print('====================================');
+    print('====================================');
+    print(credential.accessToken);
 
-    // return await FirebaseAuth.instance.signInWithCredential(credential);
+    await requestLogin(LoginType.apple, credential.accessToken!);
+  }
+
+  Future<void> signInWithKakao() async {
+    bool isKakaoInstalled = await isKakaoTalkInstalled();
+    OAuthToken credential;
+    if (isKakaoInstalled) {
+      credential = await UserApi.instance.loginWithKakaoTalk();
+    } else {
+      credential = await UserApi.instance.loginWithKakaoAccount();
+    }
+
+    await requestLogin(LoginType.kakao, credential.accessToken);
   }
 
   Future<void> getUserInfo() async {
