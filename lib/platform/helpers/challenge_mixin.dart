@@ -84,12 +84,9 @@ class ChallengeMixin {
     }).toList();
   }
 
-  void autoFinishChallenge(CurrentUserStateModel userState) async {
-    if (achievableChallenges.isNotEmpty && userState.exercise != null) {
-      bool hasArrived = achievableChallenges.any((challenge) {
-        return challenge.id == userState.exercise!.challengeId;
-      });
-
+  void autoFinishChallenge(Position currentLocation, CurrentUserStateModel userState) async {
+    if (selectedChallenge.value.id != null && userState.exercise != null && userState.exercise?.challengeId != null) {
+      bool hasArrived = selectedChallenge.value.endRadius! < Geolocator.distanceBetween(selectedChallenge.value.startLat!, selectedChallenge.value.startLon!, currentLocation.latitude, currentLocation.longitude);
       if (hasArrived && userState.exercise!.badgeIssueId == null) {
         if (globalController.connectivityResult.value != ConnectivityResult.none) {
           requestBadgeIssuance(userState);
