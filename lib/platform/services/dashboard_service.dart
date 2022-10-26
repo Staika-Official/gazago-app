@@ -7,7 +7,9 @@ import '../../constants/enums.dart';
 import '../stores/hive_store.dart';
 
 class DashboardService {
-  static final String? userId = HiveStore.loadString(key: HiveKey.userId.name);
+  static String? get userId {
+    return HiveStore.loadString(key: HiveKey.userId.name);
+  }
 
   static Future<List<RankerModel>> getDailyRankingList(String date, int page, int size) async {
     Response res = await DashboardApi.getDailyRankingList(date, page, size);
