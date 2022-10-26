@@ -86,7 +86,8 @@ class ChallengeMixin {
 
   void autoFinishChallenge(Position currentLocation, CurrentUserStateModel userState) async {
     if (selectedChallenge.value.id != null && userState.exercise != null && userState.exercise?.challengeId != null) {
-      bool hasArrived = selectedChallenge.value.endRadius! < Geolocator.distanceBetween(selectedChallenge.value.startLat!, selectedChallenge.value.startLon!, currentLocation.latitude, currentLocation.longitude);
+      bool hasArrived =
+          selectedChallenge.value.endRadius! < Geolocator.distanceBetween(selectedChallenge.value.endRadius!, selectedChallenge.value.endLon!, currentLocation.latitude, currentLocation.longitude);
       if (hasArrived && userState.exercise!.badgeIssueId == null) {
         if (globalController.connectivityResult.value != ConnectivityResult.none) {
           requestBadgeIssuance(userState);
