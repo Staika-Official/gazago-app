@@ -164,7 +164,7 @@ class ArchiveDetail extends StatelessWidget {
                       controller.locations.length > 1 ? controller.locations : [LatLng(37.5551, 126.9933), LatLng(37.5551, 126.9933)],
                       width: 3,
                       color: Colors.red,
-                      outlineColor: Colors.white,
+                      // outlineColor: Colors.white,
                     )
                   },
                 ),
