@@ -41,18 +41,5 @@
         android:name="com.naver.maps.map.CLIENT_ID"
         android:value="p7rc49dszh" />
 
-    <activity
-        android:name="com.kakao.sdk.flutter.AuthCodeCustomTabsActivity"
-        android:exported="true">
-      <intent-filter android:label="flutter_web_auth">
-        <action android:name="android.intent.action.VIEW" />
-        <category android:name="android.intent.category.DEFAULT" />
-        <category android:name="android.intent.category.BROWSABLE" />
-
-        <!-- Redirect URI, "kakao${YOUR_NATIVE_APP_KEY}://oauth" 형식 -->
-        <data android:scheme="kakao930bba5aed33cd931e3f56280a663785" android:host="oauth"/>
-        <data android:scheme="kakao2e02e4417b2bc7cdecb41b59d6196206" android:host="oauth"/>
-      </intent-filter>
-    </activity>
   </application>
 </manifest>

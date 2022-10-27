@@ -69,7 +69,6 @@ dependencies:
   flutter_flavorizr: ^2.1.4
   google_sign_in: ^5.4.1
   sign_in_with_apple: ^4.1.0
-  kakao_flutter_sdk: ^1.2.2
   uuid: ^3.0.6
   flutter_naver_map:
     git: https://github.com/wnsgh78b/flutter_naver_map.git
