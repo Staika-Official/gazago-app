@@ -283,8 +283,12 @@ class ActivityMixin {
 
   void updateExercise() async {
     void errorHandler() {
-      updateTimer?.cancel();
-      updateTimer = null;
+      CurrentUserStateModel savedState = HiveStore.loadCurrentUserState()!;
+      userState.update((state) {
+        state?.state = savedState.state;
+        state?.exercise = savedState.exercise;
+        state?.shoes = savedState.shoes;
+      });
     }
 
     if (globalController.connectivityResult.value != ConnectivityResult.none) {
@@ -303,12 +307,7 @@ class ActivityMixin {
         errorCallback: errorHandler,
       );
     } else {
-      CurrentUserStateModel savedState = HiveStore.loadCurrentUserState()!;
-      userState.update((state) {
-        state?.state = savedState.state;
-        state?.exercise = savedState.exercise;
-        state?.shoes = savedState.shoes;
-      });
+      errorHandler();
     }
   }
 
