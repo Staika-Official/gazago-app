@@ -101,7 +101,7 @@ class Api {
             HiveKey.accessToken.name,
             HiveKey.refreshToken.name,
           ]);
-          getx.Get.offAllNamed(Routes.login);
+          if (getx.Get.currentRoute != Routes.login) getx.Get.offAllNamed(Routes.login);
         });
     } else {
       if (e.type == DioErrorType.other) {
