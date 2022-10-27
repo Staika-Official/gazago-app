@@ -63,7 +63,7 @@ class InventoryBadgeDetail extends StatelessWidget {
     SyntheticBadgeController syntheticBadgeController = Get.put(SyntheticBadgeController(controller.selectedBadge));
 
     return DefaultContainer(
-      titleText: 'Lv.${controller.selectedBadge.value.badge.level} ${controller.selectedBadge.value.badge.name}',
+      titleText: 'Lv.${controller.selectedBadge.value.level} ${(controller.selectedBadge.value.name != null) ? controller.selectedBadge.value.name : ''}',
       backgroundColor: Color(0xFF191921),
       child: Padding(
         padding: const EdgeInsets.all(22),
@@ -110,7 +110,7 @@ class InventoryBadgeDetail extends StatelessWidget {
                             child: Padding(
                               padding: EdgeInsets.symmetric(vertical: 5.0, horizontal: 10.0),
                               child: StyledText(
-                                '#${controller.selectedBadge.value.badge.id}',
+                                '#${controller.selectedBadge.value.badgeId}',
                                 fontSize: 14,
                                 fontFamily: 'Montserrat',
                                 fontWeight: 600,
@@ -127,7 +127,7 @@ class InventoryBadgeDetail extends StatelessWidget {
                               child: SizedBox(
                                 width: 150,
                                 child: CachedNetworkImage(
-                                  imageUrl: controller.selectedBadge.value.badge.imageUrl,
+                                  imageUrl: controller.selectedBadge.value.imageUrl!,
                                   fit: BoxFit.fill,
                                   placeholder: (context, url) => const CircularProgressIndicator(),
                                 ),
@@ -164,7 +164,7 @@ class InventoryBadgeDetail extends StatelessWidget {
                                                   mainAxisAlignment: MainAxisAlignment.center,
                                                   children: [
                                                     StyledText(
-                                                      '${controller.selectedBadge.value.badge.rewardRate.toInt()}',
+                                                      '${controller.selectedBadge.value.rewardRate.toInt()}',
                                                       fontSize: 28,
                                                       lineHeight: 28,
                                                       fontWeight: 500,
@@ -207,7 +207,7 @@ class InventoryBadgeDetail extends StatelessWidget {
                                                 mainAxisAlignment: MainAxisAlignment.center,
                                                 children: [
                                                   StyledText(
-                                                    '${controller.selectedBadge.value.badge.luckRate.toInt()}',
+                                                    '${controller.selectedBadge.value.luckRate.toInt()}',
                                                     fontSize: 28,
                                                     lineHeight: 28,
                                                     fontWeight: 500,

@@ -3,16 +3,17 @@ import 'dart:ui';
 import 'package:dio/dio.dart';
 import 'package:gaza_go/constants/enums.dart';
 import 'package:gaza_go/platform/apis/badge.dart';
+import 'package:gaza_go/platform/models/inventory_badge_list_model.dart';
 import 'package:gaza_go/platform/models/inventory_badge_model.dart';
 import 'package:gaza_go/platform/stores/hive_store.dart';
 
 class BadgeService {
   static final String? userId = HiveStore.loadString(key: HiveKey.userId.name);
 
-  static Future<List<InventoryBadgeModel>> getUserBadgesList() async {
+  static Future<List<InventoryBadgeListModel>> getUserBadgesList() async {
     Response res = await BadgeApi.getUserBadgesList(userId!);
-    List<InventoryBadgeModel> badges = [];
-    res.data.forEach((item) => badges.add(InventoryBadgeModel.fromJson(item)));
+    List<InventoryBadgeListModel> badges = [];
+    res.data.forEach((item) => badges.add(InventoryBadgeListModel.fromJson(item)));
     return badges;
   }
 
