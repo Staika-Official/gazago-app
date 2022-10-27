@@ -9,6 +9,7 @@ import 'package:gaza_go/platform/helpers/inventory_mixin.dart';
 import 'package:gaza_go/platform/helpers/linear_progress_mixin.dart';
 import 'package:gaza_go/platform/models/equipped_item_model.dart';
 import 'package:gaza_go/platform/models/inventory_badge_item_model.dart';
+import 'package:gaza_go/platform/models/inventory_badge_list_model.dart';
 import 'package:gaza_go/platform/models/inventory_badge_model.dart';
 import 'package:gaza_go/platform/models/inventory_item_model.dart';
 import 'package:gaza_go/platform/models/repair_shoes_model.dart';
@@ -83,34 +84,19 @@ class InventoryController extends GetxController with LinearProgressMixin, Inven
       itemImageUrl: '',
     ),
   );
-  Rx<InventoryBadgeModel> selectedBadge = Rx(
-    InventoryBadgeModel(
+  Rx<InventoryBadgeListModel> selectedBadge = Rx(
+    InventoryBadgeListModel(
       id: -1,
       userId: -1,
+      badgeId: -1,
+      level: -1,
       state: '',
-      createdBy: '',
-      createdDate: '',
-      lastModifiedBy: '',
-      lastModifiedDate: '',
-      badge: InventoryBadgeItemModel(
-        id: -1,
-        level: 0,
-        rewardRate: 0.0,
-        luckRate: 0.0,
-        source: '',
-        issueType: '',
-        issueState: '',
-        issueStartedTime: '',
-        issueEndedTime: '',
-        description: '',
-        state: '',
-        address: '',
-        imageUrl: 'imageUrl',
-        createdBy: '',
-        createdDate: '',
-        lastModifiedBy: '',
-        lastModifiedDate: '',
-      ),
+      imageUrl: '',
+      rewardRate: 0.0,
+      luckRate: 0.0,
+      name: '',
+      issueType: '',
+      issueEndedTime: '',
     ),
   );
 
@@ -200,7 +186,9 @@ class InventoryController extends GetxController with LinearProgressMixin, Inven
   }
 
   void toBadgeDetail(int id) {
-    selectedBadge.value = userBadgesList.firstWhere((item) => item.badge.id == id);
+    print(id);
+    print(userBadgesList.toString());
+    selectedBadge.value = userBadgesList.firstWhere((item) => item.badgeId == id);
     setGetBadgeDate(id);
     Get.toNamed(Routes.badgeDetail);
   }
@@ -245,11 +233,11 @@ class InventoryController extends GetxController with LinearProgressMixin, Inven
   }
 
   void setGetBadgeDate(int id) {
-    getBadgeDate.value = userBadgesList.firstWhere((item) => item.badge.id == id).badge.issueEndedTime;
+    getBadgeDate.value = userBadgesList.firstWhere((item) => item.badgeId == id).issueEndedTime!;
   }
 
   void toSyntheticBadgeDetail(int id) {
-    selectedBadge.value = userBadgesList.firstWhere((item) => item.badge.id == id);
+    selectedBadge.value = userBadgesList.firstWhere((item) => item.id == id);
     Get.toNamed(Routes.syntheticBadge);
   }
 

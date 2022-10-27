@@ -11,7 +11,7 @@ class InventoryBadge extends StatelessWidget {
     return controller.userBadgesList
         .map(
           (item) => InkWell(
-            onTap: () => controller.toBadgeDetail(item.badge.id),
+            onTap: () => controller.toBadgeDetail(item.badgeId),
             child: Container(
               decoration: const BoxDecoration(
                 color: Color(0xFF1D1D26),
@@ -28,16 +28,16 @@ class InventoryBadge extends StatelessWidget {
                     Opacity(
                       opacity: item.state == 'EQUIPPED' ? 0.5 : 1,
                       child: CachedNetworkImage(
-                        imageUrl: item.badge.imageUrl,
+                        imageUrl: item.imageUrl!,
                         fit: BoxFit.fitWidth,
                         placeholder: (context, url) => const CircularProgressIndicator(),
                         errorWidget: (context, url, error) => Image.asset("assets/images/@temp_badge.png"),
                       ),
                     ),
-                    if (item.badge.name != null)
+                    if (item.name != null)
                       Padding(
                         padding: const EdgeInsets.only(top: 5, bottom: 5),
-                        child: StyledText(item.badge.name!),
+                        child: StyledText(item.name!),
                       ),
                     Padding(
                       padding: const EdgeInsets.only(top: 5.0),
@@ -78,7 +78,7 @@ class InventoryBadge extends StatelessWidget {
                               ),
                             )
                           : InkWell(
-                              onTap: () => controller.fetchEquipBadge(item.badge.id),
+                              onTap: () => controller.fetchEquipBadge(item.badgeId),
                               child: Container(
                                 width: double.infinity,
                                 decoration: BoxDecoration(

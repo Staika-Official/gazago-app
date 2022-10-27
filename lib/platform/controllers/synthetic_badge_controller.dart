@@ -5,20 +5,21 @@ import 'package:flutter/material.dart';
 import 'package:gaza_go/constants/routes.dart';
 import 'package:gaza_go/platform/helpers/inventory_mixin.dart';
 import 'package:gaza_go/platform/models/inventory_badge_item_model.dart';
+import 'package:gaza_go/platform/models/inventory_badge_list_model.dart';
 import 'package:gaza_go/platform/models/inventory_badge_model.dart';
 import 'package:gaza_go/platform/services/badge_service.dart';
 import 'package:get/get.dart';
 
 class SyntheticBadgeController extends GetxController with InventoryMixin {
-  Rx<InventoryBadgeModel> selectedBadgePrev;
+  Rx<InventoryBadgeListModel> selectedBadgePrev;
   SyntheticBadgeController(this.selectedBadgePrev);
 
-  late RxList<InventoryBadgeModel?> selectedBadgeList = RxList<InventoryBadgeModel?>.filled(selectedBadgeLevel.value, null);
+  late RxList<InventoryBadgeListModel?> selectedBadgeList = RxList<InventoryBadgeListModel?>.filled(selectedBadgeLevel.value, null);
   RxList selectedBadgeIdList = RxList.empty();
   RxList<InventoryBadgeModel> myBadgeList = RxList.empty();
   // RxList<InventoryBadgeModel> selectedBadgeList = RxList.empty();
   RxInt get selectedBadgeLevel {
-    return RxInt(selectedBadgePrev.value.badge.level == 1 ? 5 : 2);
+    return RxInt(selectedBadgePrev.value.level == 1 ? 5 : 2);
   }
 
   RxString selectedBadgeType = RxString('');
@@ -26,7 +27,7 @@ class SyntheticBadgeController extends GetxController with InventoryMixin {
     RxList<String> images = RxList.empty();
     for (int i = 0; i < selectedBadgeLevel.value; i++) {
       if (selectedBadgeList.length > i) {
-        images.add(selectedBadgeList[i]!.badge.imageUrl);
+        images.add(selectedBadgeList[i]!.imageUrl!);
       } else {
         images.add('');
       }
@@ -35,53 +36,40 @@ class SyntheticBadgeController extends GetxController with InventoryMixin {
   }
 
   RxString get badgeType {
-    switch (selectedBadgePrev.value.badge.issueType) {
+    switch (selectedBadgePrev.value.issueType) {
       case 'HIKING':
         return RxString('등산');
       case 'MISSION':
         return RxString('미션');
       case 'CHALLENGE':
-        return RxString('보상');
+        return RxString('도전');
       case 'COMPOSE':
         return RxString('합성');
     }
     return RxString('');
   }
 
-  Rx<InventoryBadgeModel> selectBadge = Rx(
-    InventoryBadgeModel(
-        id: -1,
-        userId: -1,
-        state: '',
-        createdBy: '',
-        createdDate: '',
-        lastModifiedBy: '',
-        lastModifiedDate: '',
-        badge: InventoryBadgeItemModel(
-            id: -1,
-            level: 0,
-            rewardRate: 0.0,
-            luckRate: 0.0,
-            source: '',
-            issueType: '',
-            issueState: '',
-            issueStartedTime: '',
-            issueEndedTime: '',
-            description: '',
-            state: '',
-            address: '',
-            imageUrl: 'imageUrl',
-            createdBy: 'createdBy',
-            createdDate: 'createdDate',
-            lastModifiedBy: 'lastModifiedBy',
-            lastModifiedDate: 'lastModifiedDate')),
+  Rx<InventoryBadgeListModel> selectBadge = Rx(
+    InventoryBadgeListModel(
+      id: -1,
+      userId: -1,
+      badgeId: -1,
+      level: -1,
+      state: '',
+      imageUrl: '',
+      rewardRate: 0.0,
+      luckRate: 0.0,
+      name: '',
+      issueType: '',
+      issueEndedTime: '',
+    ),
   );
   final RxInt selectBadgeId = RxInt(0);
   final RxInt selectBadgeIndex = RxInt(0);
   RxInt feeTik = RxInt(0);
 
   RxInt get syntheticBadgeFee {
-    return RxInt(selectedBadgeList.fold(0, (prevValue, element) => prevValue + element!.badge.level));
+    return RxInt(selectedBadgeList.fold(0, (prevValue, element) => prevValue + element!.level));
   }
 
   @override
@@ -93,25 +81,25 @@ class SyntheticBadgeController extends GetxController with InventoryMixin {
 
   @override
   void onReady() {
-    selectedBadgeType.value = selectedBadgePrev.value.badge.issueType;
+    selectedBadgeType.value = selectedBadgePrev.value.issueType;
     selectedBadgeList[0] = (selectedBadgePrev.value);
-    selectedBadgeIdList.add(selectedBadgePrev.value.badge.id);
+    selectedBadgeIdList.add(selectedBadgePrev.value.badgeId);
 
     super.onReady();
   }
 
-  List<Widget> _getListWidgets(List<InventoryBadgeModel> list) {
+  List<Widget> _getListWidgets(List<InventoryBadgeListModel> list) {
     return list
         .asMap()
         .entries
         .map(
           (badge) => InkWell(
-            onTap: () => selectItem(badge.value, badge.value.id),
+            onTap: () => selectItem(badge.value, badge.value.badgeId),
             child: Container(
               child: Stack(
                 children: [
-                  Text(badge.value.badge.id.toString()),
-                  if (selectBadge.value.id == badge.value.id)
+                  Text(badge.value.badgeId.toString()),
+                  if (selectBadge.value.badgeId == badge.value.badgeId)
                     const Positioned(
                       left: 0,
                       top: 0,
@@ -125,18 +113,18 @@ class SyntheticBadgeController extends GetxController with InventoryMixin {
         .toList();
   }
 
-  void showSelectBadgePopup(List<InventoryBadgeModel> badgeItems, selectedBadgeItem, index) {
+  void showSelectBadgePopup(List<InventoryBadgeListModel> badgeItems, selectedBadgeItem, index) {
     print(index);
     // selectedBadgeList[index] =
-    userBadgesList.removeWhere((element) => element.id == selectedBadgePrev.value.id);
-    if (selectedBadgePrev.value.badge.level >= 5) {
-      userBadgesList.removeWhere((element) => element.badge.level < 5);
+    userBadgesList.removeWhere((element) => element.badgeId == selectedBadgePrev.value.badgeId);
+    if (selectedBadgePrev.value.level >= 5) {
+      userBadgesList.removeWhere((element) => element.level < 5);
     } else {
-      userBadgesList.removeWhere((element) => element.badge.level >= 5);
+      userBadgesList.removeWhere((element) => element.level >= 5);
     }
 
     selectBadge.value = userBadgesList.first;
-    selectBadgeId.value = userBadgesList.first.badge.id;
+    selectBadgeId.value = userBadgesList.first.badgeId;
 
     Get.dialog(
       AlertDialog(
@@ -151,7 +139,7 @@ class SyntheticBadgeController extends GetxController with InventoryMixin {
             children: [
               Center(
                 child: CachedNetworkImage(
-                  imageUrl: selectBadge.value.badge.imageUrl,
+                  imageUrl: selectBadge.value.imageUrl!,
                   fit: BoxFit.fill,
                   placeholder: (context, url) => const CircularProgressIndicator(),
                   errorWidget: (context, url, error) => Image.asset("assets/images/@temp_badge.png"),
@@ -182,7 +170,7 @@ class SyntheticBadgeController extends GetxController with InventoryMixin {
     );
   }
 
-  void selectItem(InventoryBadgeModel badge, badgeId) {
+  void selectItem(InventoryBadgeListModel badge, badgeId) {
     selectBadge.value = badge;
     selectBadgeId.value = badgeId;
   }
@@ -193,8 +181,8 @@ class SyntheticBadgeController extends GetxController with InventoryMixin {
       selectedBadgeList[index] = null;
     }
     selectedBadgeList[index] = selectBadge.value;
-    userBadgesList.removeWhere((element) => element.badge.id == selectBadgeId.value);
-    selectedBadgeIdList.add(selectBadge.value.badge.id);
+    userBadgesList.removeWhere((element) => element.badgeId == selectBadgeId.value);
+    selectedBadgeIdList.add(selectBadge.value.badgeId);
 
     Get.back();
   }
