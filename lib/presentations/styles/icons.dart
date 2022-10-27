@@ -20,7 +20,6 @@ SvgPicture iconMenuRankingActive = SvgPicture.asset('assets/images/common/ico_me
 
 // Login
 SvgPicture iconLoginApple = SvgPicture.asset('assets/images/login/ico_apple.svg', width: 11, height: 14);
-SvgPicture iconLoginKaKao = SvgPicture.asset('assets/images/login/ico_kakao.svg', width: 15, height: 14);
 SvgPicture iconLoginGoogle = SvgPicture.asset('assets/images/login/ico_google.svg', width: 14, height: 14);
 
 // Header
@@ -63,6 +62,5 @@ SvgPicture iconCirclePlus = SvgPicture.asset('assets/images/inventory/ico_circle
 
 //mypage
 SvgPicture iconCamera = SvgPicture.asset('assets/images/common/ico_camera.svg', width: 22, height: 22);
-SvgPicture iconKakao = SvgPicture.asset('assets/images/preference/ico_kakao.svg', width: 16, height: 14.55);
 SvgPicture iconApple = SvgPicture.asset('assets/images/preference/ico_apple.svg', width: 12, height: 14);
 SvgPicture iconGoogle = SvgPicture.asset('assets/images/preference/ico_google.svg', width: 14, height: 14);

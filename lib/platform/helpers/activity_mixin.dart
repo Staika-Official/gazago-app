@@ -5,6 +5,7 @@ import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_naver_map/flutter_naver_map.dart';
+import 'package:gaza_go/constants/config.dart';
 import 'package:gaza_go/constants/enums.dart';
 import 'package:gaza_go/platform/controllers/global_controller.dart';
 import 'package:gaza_go/platform/helpers/activity_helper.dart';
@@ -23,12 +24,12 @@ class ActivityMixin {
   GlobalController globalController = Get.find();
 
   final Rx<CurrentUserStateModel> userState = Rx(CurrentUserStateModel());
-  final updateInterval = 10000;
   final Rx<Position> currentLocation = Rx(Position(speed: 0, altitude: 0, accuracy: 0, heading: 0, latitude: 0, longitude: 0, speedAccuracy: 0, timestamp: DateTime.now()));
   final RxList<UserExerciseModel> exerciseData = RxList.empty();
   final RxList<LatLng> coordinates = RxList.empty();
   final RxInt exerciseTime = RxInt(0);
   final RxInt exerciseSteps = RxInt(0);
+  final RxDouble exerciseDistance = RxDouble(0);
   final RxString pedestrianStatus = RxString('STOPPED');
   final Rx<ExerciseState> exerciseState = Rx(ExerciseState.init);
   Timer? exerciseTimer;
@@ -46,17 +47,17 @@ class ActivityMixin {
 
   RxDouble get realTimeSpeed {
     double speed = exerciseData.isNotEmpty ? exerciseData.last.speed! : 0;
+    int prevStep = exerciseData.isNotEmpty && exerciseData.length > 2 ? exerciseData[exerciseData.length - 2].steps! : 0;
+    int currentStep = exerciseData.isNotEmpty && exerciseData.length > 2 ? exerciseData.last.steps! : 0;
+    DateTime now = DateTime.now();
 
-    // 15초 이상 걷기 감지가 되지 않을 경우에는 속도 0으로 표시
-    if (speed > 0 && pedestrianStatus.value == 'STOPPED') {
-      DateTime now = DateTime.now();
-      if (pedestrianStoppedTime.value.add(const Duration(seconds: 15)).compareTo(now) < 0) {
-        speed = 0;
-      }
+    // stopTimeInterval 이상 걷기 감지가 되지 않을 경우에는 속도 0으로 표시
+    if (pedestrianStoppedTime.value.compareTo(now) < 0 && currentStep - prevStep <= stepDifference) {
+      return RxDouble(0);
     } else {
-      pedestrianStoppedTime.value = DateTime.now();
+      pedestrianStoppedTime.value = now.add(Duration(seconds: stopTimeInterval));
+      return RxDouble(speed <= 0 ? 0 : speed);
     }
-    return RxDouble(speed <= 0 ? 0 : speed);
   }
 
   RxDouble get avgSpeed {
@@ -69,19 +70,20 @@ class ActivityMixin {
   }
 
   RxDouble get totalDistance {
-    List<double> distanceList = List.empty(growable: true);
-
-    for (int i = 0; i < coordinates.length - 1; i++) {
-      distanceList.add(
-        calculateDistance(
-          coordinates[i].latitude,
-          coordinates[i].longitude,
-          coordinates[i + 1].latitude,
-          coordinates[i + 1].longitude,
-        ),
-      );
-    }
-    return coordinates.isNotEmpty ? RxDouble(calculateTotalDistance(distanceList)) : RxDouble(0);
+    // List<double> distanceList = List.empty(growable: true);
+    //
+    // for (int i = 0; i < coordinates.length - 1; i++) {
+    //   distanceList.add(
+    //     calculateDistance(
+    //       coordinates[i].latitude,
+    //       coordinates[i].longitude,
+    //       coordinates[i + 1].latitude,
+    //       coordinates[i + 1].longitude,
+    //     ),
+    //   );
+    // }
+    // return coordinates.isNotEmpty ? RxDouble(calculateTotalDistance(distanceList)) : RxDouble(0);
+    return RxDouble(convertMetersToKm(exerciseDistance.value));
   }
 
   RxList<double> get altitudes {
@@ -121,6 +123,7 @@ class ActivityMixin {
     coordinates.value = List.empty(growable: true);
     exerciseSteps.value = 0;
     exerciseTime.value = 0;
+    exerciseDistance.value = 0;
     pedestrianStatus.value = 'STOPPED';
   }
 
@@ -266,6 +269,7 @@ class ActivityMixin {
     exerciseData.add(userState.value.exercise!);
     exerciseTime.value = userState.value.exercise!.time!;
     exerciseSteps.value = userState.value.exercise!.steps!;
+    exerciseDistance.value = userState.value.exercise!.distance!;
 
     coordinates.value = List.empty(growable: true);
     if (userState.value.exercise!.locations != null) {
@@ -283,8 +287,12 @@ class ActivityMixin {
 
   void updateExercise() async {
     void errorHandler() {
-      updateTimer?.cancel();
-      updateTimer = null;
+      CurrentUserStateModel savedState = HiveStore.loadCurrentUserState()!;
+      userState.update((state) {
+        state?.state = savedState.state;
+        state?.exercise = savedState.exercise;
+        state?.shoes = savedState.shoes;
+      });
     }
 
     if (globalController.connectivityResult.value != ConnectivityResult.none) {
@@ -303,12 +311,7 @@ class ActivityMixin {
         errorCallback: errorHandler,
       );
     } else {
-      CurrentUserStateModel savedState = HiveStore.loadCurrentUserState()!;
-      userState.update((state) {
-        state?.state = savedState.state;
-        state?.exercise = savedState.exercise;
-        state?.shoes = savedState.shoes;
-      });
+      errorHandler();
     }
   }
 
@@ -401,6 +404,7 @@ class ActivityMixin {
     exerciseTime.value = 0;
     stopProgress.value = 0;
     exerciseSteps.value = 0;
+    exerciseDistance.value = 0;
     userState.value.exercise!.rewardGo = 0;
     exerciseData.value = List.empty(growable: true);
     coordinates.value = List.empty(growable: true);

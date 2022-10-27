@@ -7,6 +7,7 @@ import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:flutter_naver_map/flutter_naver_map.dart';
+import 'package:gaza_go/constants/config.dart';
 import 'package:gaza_go/constants/enums.dart';
 import 'package:gaza_go/constants/routes.dart';
 import 'package:gaza_go/platform/controllers/loading_controller.dart';
@@ -471,6 +472,7 @@ class ActivityController extends GetxController with ActivityMixin, ChallengeMix
         exerciseData.add(userState.value.exercise!);
         exerciseTime.value = userState.value.exercise!.time!;
         exerciseSteps.value = userState.value.exercise!.steps!;
+        exerciseDistance.value = userState.value.exercise!.distance!;
 
         coordinates.value = List.empty(growable: true);
         if (userState.value.exercise!.locations != null) {
@@ -507,11 +509,8 @@ class ActivityController extends GetxController with ActivityMixin, ChallengeMix
     bool hasLocationPermissionWithAccuracy = await checkLocationPermissionAndAccuracy();
     if (!hasLocationPermissionWithAccuracy) return false;
 
-    print('111111111111111111111111111111111111');
-
     if (Get.isRegistered<LoadingController>()) Get.find<LoadingController>().updateProgress("조금만 기다려주세요");
 
-    print('22222222222222222222222222222222222');
     return true;
   }
 
@@ -679,7 +678,7 @@ class ActivityController extends GetxController with ActivityMixin, ChallengeMix
 
     if (Platform.isAndroid) {
       locationSettings = AndroidSettings(
-          accuracy: LocationAccuracy.bestForNavigation,
+          accuracy: locationAccuracyQuality,
           distanceFilter: 1,
           forceLocationManager: false,
           intervalDuration: const Duration(seconds: 5),
@@ -693,7 +692,7 @@ class ActivityController extends GetxController with ActivityMixin, ChallengeMix
           ));
     } else if (Platform.isIOS) {
       locationSettings = AppleSettings(
-        accuracy: LocationAccuracy.bestForNavigation,
+        accuracy: locationAccuracyQuality,
         activityType: ActivityType.fitness,
         distanceFilter: 1,
         pauseLocationUpdatesAutomatically: false,
@@ -706,12 +705,17 @@ class ActivityController extends GetxController with ActivityMixin, ChallengeMix
       currentLocation.value = position;
 
       // if (exerciseState.value == ExerciseState.ongoing && position.accuracy < 20) {
-      if (exerciseState.value == ExerciseState.ongoing) {
+      if (exerciseState.value == ExerciseState.ongoing && position.accuracy < gpsAccuracy) {
         exerciseData.add(UserExerciseModel(
           altitude: position.altitude,
           speed: convertMStoKMH(position.speed),
+          steps: exerciseSteps.value,
         ));
         coordinates.add(LatLng(position.latitude, position.longitude));
+        if (exerciseData.isNotEmpty && exerciseData.length > 1) {
+          exerciseDistance.value = exerciseDistance.value +
+              Geolocator.distanceBetween(coordinates[coordinates.length - 2].latitude, coordinates[coordinates.length - 2].longitude, coordinates.last.latitude, coordinates.last.longitude);
+        }
       } else {
         // 첼린지 존 찾기(30초마다 요청)
         DateTime now = DateTime.now();
@@ -740,7 +744,7 @@ class ActivityController extends GetxController with ActivityMixin, ChallengeMix
 
   Future<void> getCurrentLocation() async {
     print('getCurrentLocation');
-    await Geolocator.getCurrentPosition(desiredAccuracy: LocationAccuracy.bestForNavigation, timeLimit: Duration(seconds: 5)).then((location) {
+    await Geolocator.getCurrentPosition(desiredAccuracy: locationAccuracyQuality, timeLimit: Duration(seconds: 5)).then((location) {
       print('getCurrentLocation 위치정보 가져옴');
       currentLocation.value = location;
       isListeningToLocation.value = true;
