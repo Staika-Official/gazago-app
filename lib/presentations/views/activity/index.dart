@@ -498,6 +498,16 @@ class ActivityHome extends StatelessWidget {
                         );
                       }),
                     ),
+                    Positioned(
+                      bottom: 5,
+                      right: 5,
+                      child: FloatingActionButton(
+                        onPressed: () {
+                          controller.moveToChallengeMap();
+                        },
+                        child: Icon(Icons.list),
+                      ),
+                    ),
                   ],
                 ),
               )

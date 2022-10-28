@@ -6,6 +6,7 @@ import 'package:flutter_naver_map/flutter_naver_map.dart';
 import 'package:gaza_go/constants/enums.dart';
 import 'package:gaza_go/platform/controllers/global_controller.dart';
 import 'package:gaza_go/platform/helpers/activity_helper.dart';
+import 'package:gaza_go/platform/models/challenge_hierarchy_model.dart';
 import 'package:gaza_go/platform/models/challenge_model.dart';
 import 'package:gaza_go/platform/models/current_user_state_model.dart';
 import 'package:gaza_go/platform/models/inventory_badge_model.dart';
@@ -20,6 +21,7 @@ class ChallengeMixin {
 
   final RxList<ChallengeModel> challengeList = RxList.empty();
   final RxList<ChallengeModel> allChallengesList = RxList.empty();
+  final RxList<ChallengeHierarchyModel> hierarchyChallengesList = RxList.empty();
   final RxList<ChallengeModel> doableChallenges = RxList.empty();
   final RxList<ChallengeModel> achievableChallenges = RxList.empty();
   final Rx<ChallengeModel> selectedChallenge = Rx(ChallengeModel());
@@ -28,6 +30,14 @@ class ChallengeMixin {
   Future<void> getChallengeList() async {
     allChallengesList.value = await ActivityService.getChallenges();
   }
+
+  Future<void> getChallengesHierarchy(Position currentLocation) async {
+    hierarchyChallengesList.value = await ActivityService.getChallengesHierarchy(currentLocation);
+    for (ChallengeHierarchyModel challenge in hierarchyChallengesList) {
+      for (ChallengeModel course in challenge.course) {
+        allChallengesList.add(course);
+      }
+    }}
 
   Future<ChallengeModel> getChallenge(int id) async {
     return await ActivityService.getChallenge(id);

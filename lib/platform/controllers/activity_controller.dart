@@ -102,7 +102,7 @@ class ActivityController extends GetxController with ActivityMixin, ChallengeMix
   Future<void> initController() async {
     await checkAvailabilities();
     await initializeActivity();
-    await getChallengeList();
+    await getChallengesHierarchy(this.currentLocation.value);
     getUserState();
   }
 
@@ -671,6 +671,10 @@ class ActivityController extends GetxController with ActivityMixin, ChallengeMix
   void moveToChallengeSelection() {
     selectedChallenge.value = ChallengeModel();
     Get.toNamed(Routes.activityChallenges);
+  }
+
+  void moveToChallengeMap() {
+    Get.toNamed(Routes.challengeMap);
   }
 
   void initLocationStream() {

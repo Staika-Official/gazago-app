@@ -1,6 +1,7 @@
 import 'package:dio/dio.dart';
 import 'package:gaza_go/constants/enums.dart';
 import 'package:gaza_go/platform/apis/activity.dart';
+import 'package:gaza_go/platform/models/challenge_hierarchy_model.dart';
 import 'package:gaza_go/platform/models/challenge_model.dart';
 import 'package:gaza_go/platform/models/current_user_state_model.dart';
 import 'package:gaza_go/platform/models/equipped_item_model.dart';
@@ -20,6 +21,15 @@ class ActivityService {
     List<ChallengeModel> challengeList = List.empty(growable: true);
     res.data.forEach((challenge) {
       challengeList.add(ChallengeModel.fromJson(challenge));
+    });
+    return challengeList;
+  }
+
+  static Future<List<ChallengeHierarchyModel>> getChallengesHierarchy(Position currentLocation) async {
+    Response res = await ActivityApi.getChallengesHierarchy(currentLocation);
+    List<ChallengeHierarchyModel> challengeList = List.empty(growable: true);
+    res.data.forEach((challenge) {
+      challengeList.add(ChallengeHierarchyModel.fromJson(challenge));
     });
     return challengeList;
   }
