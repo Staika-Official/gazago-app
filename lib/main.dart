@@ -74,9 +74,13 @@ class MyApp extends StatelessWidget {
     return GetMaterialApp(
       builder: (context, child) {
         // 시스템 폰트 크기 무시
-        return MediaQuery(
+        return ScrollConfiguration(
+          behavior: const MaterialScrollBehavior().copyWith(overscroll: false),
+          child: MediaQuery(
             data: MediaQuery.of(context).copyWith(textScaleFactor: 1), //텍스트가 시스템 설정에 영향받지 않음
-            child: child!);
+            child: child!,
+          ),
+        );
       },
       theme: ThemeData(
         fontFamily: 'Pretendard',
