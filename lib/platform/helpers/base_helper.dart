@@ -82,7 +82,12 @@ String formatDecimalPlaces(double val, int decimalPlaces, {RoundType roundType =
       break;
   }
 
-  NumberFormat formatter = NumberFormat('#,###.${"#" * decimalPlaces}');
+  NumberFormat formatter;
+  if (decimalPlaces != 0) {
+    formatter = NumberFormat('#,###.${"#" * decimalPlaces}');
+  } else {
+    formatter = NumberFormat('#,###');
+  }
 
   return formatter.format(formattedNumber);
 }
