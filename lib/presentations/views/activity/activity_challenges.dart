@@ -140,7 +140,7 @@ class ActivityChallenges extends StatelessWidget {
               top: 0,
               left: 0,
               child: SizedBox(
-                height: MediaQuery.of(context).size.height - (controller.doableChallenges.length * 80) - (MediaQuery.of(context).viewInsets.bottom + MediaQuery.of(context).viewInsets.top),
+                height: MediaQuery.of(context).size.height - (controller.listHeight.value + 50) - (MediaQuery.of(context).viewInsets.bottom + MediaQuery.of(context).viewInsets.top),
                 width: MediaQuery.of(context).size.width,
                 child: NaverMap(
                   initialCameraPosition: CameraPosition(
@@ -162,6 +162,7 @@ class ActivityChallenges extends StatelessWidget {
               bottom: 0,
               left: 0,
               child: Container(
+                key: controller.listKey,
                 width: MediaQuery.of(context).size.width,
                 decoration: BoxDecoration(
                   color: Color(0xff363841),

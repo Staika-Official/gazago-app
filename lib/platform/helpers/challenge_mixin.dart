@@ -17,8 +17,10 @@ import 'package:get/get.dart';
 
 class ChallengeMixin {
   GlobalController globalController = Get.find();
+  final GlobalKey listKey = GlobalKey();
 
   final RxList<ChallengeModel> challengeList = RxList.empty();
+  final RxDouble listHeight = RxDouble(0);
   final RxList<ChallengeModel> allChallengesList = RxList.empty();
   final RxList<ChallengeModel> doableChallenges = RxList.empty();
   final RxList<ChallengeModel> achievableChallenges = RxList.empty();
@@ -53,6 +55,7 @@ class ChallengeMixin {
 
   void onChallengeMapCreated(NaverMapController controller) {
     _challengeMapController = controller;
+    listHeight.value = listKey.currentContext!.size!.height;
   }
 
   void selectChallenge(ChallengeModel challenge) {
