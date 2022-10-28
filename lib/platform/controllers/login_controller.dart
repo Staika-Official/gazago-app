@@ -73,12 +73,6 @@ class LoginController extends GetxController {
       idToken: appleCredential.identityToken,
     );
 
-    print(credential.idToken);
-    print('====================================');
-    print('====================================');
-    print('====================================');
-    print(credential.accessToken);
-
     await requestLogin(LoginType.apple, credential.accessToken!);
   }
 
@@ -117,6 +111,8 @@ class LoginController extends GetxController {
     await UaaService.socialLogin(
       loginInfo,
       successCallback: (AccessTokenModel token, int statusCode) async {
+        print('access token: ${token.accessToken}');
+        print('refresh token: ${token.refreshToken}');
         HiveStore.save(key: HiveKey.accessToken.name, value: token.accessToken);
         HiveStore.save(key: HiveKey.refreshToken.name, value: token.refreshToken);
 

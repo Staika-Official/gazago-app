@@ -9,8 +9,10 @@ import 'package:gaza_go/platform/models/archive_list_item_model.dart';
 import 'package:gaza_go/platform/services/archive_service.dart';
 import 'package:get/get.dart';
 
-class ArchiveController extends GetxController {
+class ArchiveController extends GetxController with ScrollMixin {
   RxList<ArchiveListItemModel> archiveList = RxList.empty();
+  RxInt page = RxInt(0);
+  RxBool stopLoading = RxBool(false);
   Rx<ArchiveDetailItemModel> selectedItem = Rx(ArchiveDetailItemModel());
   RxList<LatLng> get locations {
     List<LatLng> locations = locationStringToLatLng(selectedItem.value.locations!);
@@ -32,12 +34,18 @@ class ArchiveController extends GetxController {
   }
 
   Future<void> refreshController() async {
-    await getArchiveList();
+    if (archiveList.isNotEmpty && archiveList.length * page.value < page.value * 20) {
+      await getArchiveList();
+    }
   }
 
   Future<void> getArchiveList() async {
-    archiveList.value = await ArchiveService.getArchiveList();
-    return Future(() => null);
+    List<ArchiveListItemModel> records = List.empty(growable: true);
+    records = await ArchiveService.getArchiveList(page.value);
+    if (records.length < 20) {
+      stopLoading.value = true;
+    }
+    archiveList.addAll(records);
   }
 
   void toDetail(int id) async {
@@ -76,5 +84,24 @@ class ArchiveController extends GetxController {
     }
 
     ArchiveService.deleteArchiveItem(id, successCallback, errorCallback);
+  }
+
+  @override
+  Future<void> onEndScroll() async {
+    if (!stopLoading.value) {
+      page.value++;
+      await getArchiveList();
+    }
+  }
+
+  @override
+  Future<void> onTopScroll() {
+    print('top reached');
+    return Future.delayed(
+      Duration(milliseconds: 10),
+      () {
+        print('top reached');
+      },
+    );
   }
 }

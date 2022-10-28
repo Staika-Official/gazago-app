@@ -12,8 +12,8 @@ class ArchiveService {
     return HiveStore.loadString(key: HiveKey.userId.name);
   }
 
-  static Future<List<ArchiveListItemModel>> getArchiveList() async {
-    Response res = await ArchiveApi.getArchiveList(userId!);
+  static Future<List<ArchiveListItemModel>> getArchiveList(int page) async {
+    Response res = await ArchiveApi.getArchiveList(userId!, page);
     List<ArchiveListItemModel> archiveList = List.empty(growable: true);
     res.data.forEach((archive) {
       archiveList.add(ArchiveListItemModel.fromJson(archive));

@@ -166,6 +166,7 @@ class ArchiveHome extends StatelessWidget {
 
               Expanded(
                 child: SingleChildScrollView(
+                  controller: controller.scroll,
                   physics: ClampingScrollPhysics(),
                   child: Column(
                     mainAxisSize: MainAxisSize.min,
