@@ -45,6 +45,25 @@ class ArchiveController extends GetxController {
     Get.toNamed(Routes.archiveDetail);
   }
 
+  void recordMapCreated(NaverMapController controller, RxList<LatLng> locations) {
+    if (locations.length > 1) {
+      double highestLat = locations.reduce((previousValue, element) => previousValue.latitude > element.latitude ? previousValue : element).latitude;
+      double lowestLat = locations.reduce((previousValue, element) => previousValue.latitude < element.latitude ? previousValue : element).latitude;
+      double highestLng = locations.reduce((previousValue, element) => previousValue.longitude > element.longitude ? previousValue : element).longitude;
+      double lowestLng = locations.reduce((previousValue, element) => previousValue.longitude < element.longitude ? previousValue : element).longitude;
+
+      controller.moveCamera(
+        CameraUpdate.fitBounds(
+          LatLngBounds(
+            northeast: LatLng(highestLat, highestLng),
+            southwest: LatLng(lowestLat, lowestLng),
+          ),
+          padding: 50,
+        ),
+      );
+    }
+  }
+
   void deleteItem(int id) {
     void successCallback() {
       getArchiveList();

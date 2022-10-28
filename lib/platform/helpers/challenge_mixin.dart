@@ -46,7 +46,7 @@ class ChallengeMixin {
     if (filteredList.length != challengeList.length) {
       notification = true;
     }
-    if (notification) {
+    if (result.isNotEmpty) {
       Get.snackbar('도전 지역 발견', '새로운 도전을 시작하세요.', colorText: Colors.green);
     }
   }
@@ -57,11 +57,18 @@ class ChallengeMixin {
 
   void selectChallenge(ChallengeModel challenge) {
     selectedChallenge.value = challenge;
-    _challengeMapController.moveCamera(CameraUpdate.toCameraPosition(
-      CameraPosition(
-        target: LatLng(challenge.endLat!, challenge.endLon!),
+
+    _challengeMapController.moveCamera(
+      CameraUpdate.fitBounds(
+        LatLngBounds.fromLatLngList(
+          [
+            LatLng(challenge.startLat!, challenge.startLon!),
+            LatLng(challenge.endLat!, challenge.endLon!),
+          ],
+        ),
+        padding: 80,
       ),
-    ));
+    );
   }
 
   void detectChallengeZone(Position location) {
