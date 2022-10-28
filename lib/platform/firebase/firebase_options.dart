@@ -59,7 +59,7 @@ class DefaultFirebaseOptions {
         )
       : const FirebaseOptions(
           apiKey: 'AIzaSyBHmS0LwPeoXpiZqW42qDFZ5iOth-VovAo',
-          appId: '1:321889905131:android:28f83939b947b3880a11ae',
+          appId: '1:321889905131:android:32e7185de2c0a9440a11ae',
           messagingSenderId: '321889905131',
           projectId: 'app-step-prod',
           storageBucket: 'app-step-prod.appspot.com',
@@ -72,8 +72,8 @@ class DefaultFirebaseOptions {
           messagingSenderId: '232716676384',
           projectId: 'app-step-dev',
           storageBucket: 'app-step-dev.appspot.com',
-          androidClientId: '232716676384-iraj4sd56d5pkl42fok0e041uu08n651.apps.googleusercontent.com',
-          iosClientId: '232716676384-dupnh80hr5j01lb5dp73idc5lkvln5hp.apps.googleusercontent.com',
+          androidClientId: '232716676384-dcu40b5ttfklj1s8d1kocg3cr8i1uaum.apps.googleusercontent.com',
+          iosClientId: '232716676384-5iun8ict73an15rbh40patma4rpgmlfh.apps.googleusercontent.com',
           iosBundleId: 'kr.co.eztechfin.gazaGo.dev',
         )
       : const FirebaseOptions(
@@ -82,7 +82,7 @@ class DefaultFirebaseOptions {
           messagingSenderId: '321889905131',
           projectId: 'app-step-prod',
           storageBucket: 'app-step-prod.appspot.com',
-          androidClientId: '321889905131-9u07qsaeagsd41481iqbi90rn5m3cbgm.apps.googleusercontent.com',
+          androidClientId: '321889905131-5q4hne8soo1v8lebda6drl4vp9tv8grd.apps.googleusercontent.com',
           iosClientId: '321889905131-22r952df5n2g5i3qehb6dgcg5o4188dt.apps.googleusercontent.com',
           iosBundleId: 'kr.co.eztechfin.gazaGo',
         );
