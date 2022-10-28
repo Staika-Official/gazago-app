@@ -84,34 +84,13 @@ class ChallengeMap extends StatelessWidget {
               width: 20,
               height: 20,
               // infoWindow: '인포 윈도우',
-              //onMarkerTab: _onMarkerTap
+              onMarkerTab: (Marker? marker, Map<String, int?> iconSiz) {
+                print('111111');
+                controller.showEndPointMarker(challenge);
+              }
       ),
     )
         .toList();
-
-    for (var test in controller.allChallengesList) {
-      print(test.startPointName);
-    }
-
-    var first = controller.allChallengesList[0];
-
-    markers.add(Marker(
-      markerId: 'end_${first.id!.toString()}',
-      position: LatLng(first.endLat!, first.endLon!),
-      captionText: '${first.endPointName}',
-      captionColor: Colors.red,
-
-      // captionTextSize: 12.0,
-      // alpha: 0.8,
-      captionOffset: 5,
-      // //icon: image,
-      // anchor: AnchorPoint(0.5, 1),
-      width: 20,
-      height: 20,
-      // infoWindow: '인포 윈도우',
-      //onMarkerTab: _onMarkerTap
-    ));
-
     return [...markers];
   }
 
@@ -154,17 +133,10 @@ class ChallengeMap extends StatelessWidget {
   Widget build(BuildContext context) {
     ActivityController controller = Get.find();
 
-
-
     return Scaffold(
       body: ExpandableBottomSheet(
         //use the key to get access to expand(), contract() and expansionStatus
         key: key,
-
-        //optional
-        //callbacks (use it for example for an animation in your header)
-        onIsContractedCallback: () => print('contracted'),
-        onIsExtendedCallback: () => print('extended'),
 
         //optional; default: Duration(milliseconds: 250)
         //The durations of the animations.
@@ -181,12 +153,13 @@ class ChallengeMap extends StatelessWidget {
         //height is smaller than the persistentContentHeight it will be
         //animated on a height change.
         //You can use it for example if you have no header.
-        persistentContentHeight: 150,
+        //persistentContentHeight: 150,
 
         //required
         //This is the widget which will be overlapped by the bottom sheet.
         background: Container(
           child: Obx(() {
+            print('체인지 #############');
             return Stack(
               children: [
                 NaverMap(
@@ -194,23 +167,8 @@ class ChallengeMap extends StatelessWidget {
                     target: LatLng(controller.currentLocation.value.latitude ?? 0, controller.currentLocation.value.longitude ?? 0),
                     zoom: 14,
                   ),
-                  /*circles: [
-                    ...renderStartPoint(controller),
-                    ...renderEndPoint(controller),
-                  ],*/
-                  markers: [...renderMarker(controller)],
-                  pathOverlays: {
-                    PathOverlay(
-                      PathOverlayId('path'),
-                      [
-                        LatLng(37.6181163, 126.9535097),
-                        LatLng(37.6255556, 126.9527778),
-                      ],
-                      width: 3,
-                      color: Colors.red,
-                      outlineColor: Colors.white,
-                    ),
-                  },
+                  markers: controller.challengeMarkers.value,
+                  //markers: [...renderMarker(controller)],
                   mapType: MapType.Navi,
                   nightModeEnable: true,
                   tiltGestureEnable: false,
