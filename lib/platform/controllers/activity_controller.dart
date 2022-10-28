@@ -76,10 +76,6 @@ class ActivityController extends GetxController with ActivityMixin, ChallengeMix
     super.onInit();
   }
 
-  void onReady() async {
-    super.onReady();
-  }
-
   @override
   void onClose() {
     updateTimer?.cancel();
