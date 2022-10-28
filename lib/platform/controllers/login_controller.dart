@@ -94,7 +94,7 @@ class LoginController extends GetxController {
 
     String? profileImageUrl = HiveStore.loadString(key: HiveKey.profileImageUrl.name);
     String? nickname = HiveStore.loadString(key: HiveKey.nickname.name);
-    await MemberService.initializeUserData(nickname!, profileImageUrl!);
+    await MemberService.initializeUserData(nickname, profileImageUrl);
     await WalletService.generateSpendingWallet();
   }
 
