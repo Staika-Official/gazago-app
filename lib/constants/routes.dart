@@ -4,6 +4,7 @@ import 'package:gaza_go/platform/middleware/router_middleware.dart';
 import 'package:gaza_go/presentations/views/activity/activity_active.dart';
 import 'package:gaza_go/presentations/views/activity/activity_challenges.dart';
 import 'package:gaza_go/presentations/views/activity/activity_loading.dart';
+import 'package:gaza_go/presentations/views/activity/challenge_map.dart';
 import 'package:gaza_go/presentations/views/activity/equipped_item.dart';
 import 'package:gaza_go/presentations/views/archive/archive_detail.dart';
 import 'package:gaza_go/presentations/views/auth/account_restore.dart';
@@ -45,6 +46,7 @@ class Routes {
   static const activityLoading = '/activity/loading';
   static const activityActive = '/activity/active';
   static const equippedItems = '/activity/equipped_items';
+  static const challengeMap = '/activity/challenge_map';
   static const preferences = '/preferences';
   static const preferenceBoard = '/preferences/board';
   static const preferenceNotification = '/preferences/notification';
@@ -80,6 +82,7 @@ class Routes {
     stepPage(name: Routes.activityChallenges, page: const ActivityChallenges()),
     stepPage(name: Routes.activityLoading, page: const ActivityLoading()),
     stepPage(name: Routes.activityActive, page: const ActivityActive()),
+    stepPage(name: Routes.challengeMap, page: const ChallengeMap()),
     stepPage(
       name: Routes.preferences,
       page: const Preferences(),

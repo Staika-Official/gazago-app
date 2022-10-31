@@ -86,6 +86,7 @@ dependencies:
   another_xlider: ^1.1.2
   animated_flip_counter: ^0.2.5
   health: ^4.1.1
+  expandable_bottom_sheet: ^1.1.1+1
 
 dev_dependencies:
   flutter_test:
