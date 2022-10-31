@@ -27,7 +27,7 @@ class ChallengeMixin {
   final RxList<ChallengeModel> doableChallenges = RxList.empty();
   final RxList<ChallengeModel> achievableChallenges = RxList.empty();
   final Rx<ChallengeModel> selectedChallenge = Rx(ChallengeModel());
-  late NaverMapController _challengeMapController;
+  late NaverMapController challengeMapController;
   final RxList<Marker> challengeMarkers = RxList.empty();
 
   Future<void> getChallengeList() async {
@@ -47,56 +47,9 @@ class ChallengeMixin {
 
   Future<void> getChallengesHierarchy(Position currentLocation) async {
     hierarchyChallengesList.value = await ActivityService.getChallengesHierarchy(currentLocation);
-    for (ChallengeHierarchyModel challenge in hierarchyChallengesList) {
-      for (ChallengeModel course in challenge.course) {
-        allChallengesList.add(course);
-
-        challengeMarkers.add(Marker(
-          markerId: course.id!.toString(),
-          position: LatLng(course.startLat!, course.startLon!),
-          captionText: course.startPointName,
-          captionColor: Colors.indigo,
-
-          // captionTextSize: 12.0,
-          // alpha: 0.8,
-          captionOffset: 5,
-          // //icon: image,
-          // anchor: AnchorPoint(0.5, 1),
-          width: 20,
-          height: 20,
-          // infoWindow: '인포 윈도우',
-          //onMarkerTab: _onMarkerTap
-          onMarkerTab: (marker, iconSize) {
-            showEndPointMarker(course);
-          },
-        ));
-      }
-    }}
-
-  void showEndPointMarker(ChallengeModel course) {
-    print('showEndPointMarker ${course.startPointName}');
-
-    if (challengeMarkers.value.last.markerId.contains('end_')) {
-      challengeMarkers.removeLast();
-    }
-
-    challengeMarkers.add(Marker(
-      markerId: 'end_${course.id!.toString()}',
-      position: LatLng(course.endLat!, course.endLon!),
-      captionText: '종료',
-      captionColor: Colors.red,
-
-      // captionTextSize: 12.0,
-      // alpha: 0.8,
-      captionOffset: 5,
-      // //icon: image,
-      // anchor: AnchorPoint(0.5, 1),
-      width: 20,
-      height: 20,
-      // infoWindow: '인포 윈도우',
-      //onMarkerTab: _onMarkerTap
-    ));
   }
+
+
 
   void notificationOnChallenge(List<ChallengeModel> result) {
     bool notification = false;
@@ -110,14 +63,14 @@ class ChallengeMixin {
   }
 
   void onChallengeMapCreated(NaverMapController controller) {
-    _challengeMapController = controller;
+    challengeMapController = controller;
     listHeight.value = listKey.currentContext!.size!.height;
   }
 
   void selectChallenge(ChallengeModel challenge) {
     selectedChallenge.value = challenge;
 
-    _challengeMapController.moveCamera(
+    challengeMapController.moveCamera(
       CameraUpdate.fitBounds(
         LatLngBounds.fromLatLngList(
           [

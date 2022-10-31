@@ -8,6 +8,7 @@ import 'package:gaza_go/platform/controllers/activity_controller.dart';
 import 'package:gaza_go/platform/models/challenge_hierarchy_model.dart';
 import 'package:gaza_go/platform/models/challenge_model.dart';
 import 'package:gaza_go/presentations/components/default_container.dart';
+import 'package:gaza_go/presentations/styles/icons.dart';
 import 'package:gaza_go/presentations/styles/styled_text.dart';
 import 'package:get/get.dart';
 import 'package:get/get_state_manager/src/rx_flutter/rx_obx_widget.dart';
@@ -67,54 +68,42 @@ class ChallengeMap extends StatelessWidget {
     return [...centerCircles];
   }
 
-  List<Marker> renderMarker(ActivityController controller) {
-    List<Marker> markers = controller.allChallengesList
-        .map(
-          (challenge) => Marker(
-              markerId: challenge.id!.toString(),
-              position: LatLng(challenge.startLat!, challenge.startLon!),
-              captionText: challenge.startPointName,
-              captionColor: Colors.indigo,
-
-              // captionTextSize: 12.0,
-              // alpha: 0.8,
-              captionOffset: 5,
-              // //icon: image,
-              // anchor: AnchorPoint(0.5, 1),
-              width: 20,
-              height: 20,
-              // infoWindow: '인포 윈도우',
-              onMarkerTab: (Marker? marker, Map<String, int?> iconSiz) {
-                print('111111');
-                controller.showEndPointMarker(challenge);
-              }
-      ),
-    )
-        .toList();
-    return [...markers];
-  }
-
-  Widget _renderChallengePoint(ChallengeHierarchyModel challenge) {
+  Widget _renderChallengePoint(ActivityController controller, ChallengeHierarchyModel challenge) {
     return ExpansionTile(
       //leading: Icon(list.icon!),
       title: Text(
         challenge.name,
-        style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: Colors.white),
+        style: TextStyle(fontSize: 18, fontWeight: FontWeight.w500, color: Colors.white),
       ),
-      children: challenge.course.map(_renderCourse).toList(),
+      collapsedIconColor: Color(0xFFBFBFBF),
+      iconColor: Color(0xFF0EE6F3),
+      tilePadding: EdgeInsets.only(left: 20, right: 20, top: 0, bottom: 0),
+      //children: challenge.course.map(course => _renderCourse(controller, course)).toList(),
+      children: challenge.course.map((course) {
+        return _renderCourse(controller, course);
+      }).toList(),
     );
   }
 
-  Widget _renderCourse(ChallengeModel course) {
+  Widget _renderCourse(ActivityController controller, ChallengeModel course) {
+    print('${controller.challengeSelectedIndex.value} ===== ${course.id}');
     return Builder(
         builder: (context) {
-          return ListTile(
-              onTap:() => {},
-              leading: SizedBox(),
-              title: Text(course.startPointName!, style: TextStyle(color: Colors.white),)
-          );
-        }
-    );;
+          return Obx(() {
+            return ListTile(
+                onTap:() {
+                  controller.showEndPointMarker(course);
+                },
+                subtitle: StyledText('${course.startPointName} - ${course.endPointName}', color:(controller.challengeSelectedIndex == course.id) ? Color(0xFF0EE6F3) : Color(0xFF8A8A8A), fontSize: 14, lineHeight: 14, fontWeight: 500,),
+                leading: Padding(
+                  padding: const EdgeInsets.only(left: 20),
+                  child: (controller.challengeSelectedIndex == course.id) ? iconChallengeCheckOn : iconChallengeCheckOff,
+                ),
+                contentPadding: const EdgeInsets.all(0.0),
+                title: Text(course.secondName!, style: TextStyle(color: (controller.challengeSelectedIndex == course.id) ? Color(0xFF0EE6F3) : Colors.white),)
+            );
+          });
+        });
   }
 
   Widget _renderChallenges(ActivityController controller) {
@@ -123,9 +112,10 @@ class ChallengeMap extends StatelessWidget {
     return ListView.builder(
       shrinkWrap: true,
       physics: NeverScrollableScrollPhysics(),
+      padding: EdgeInsets.all(0.0),
       itemCount: challenges.length,
       itemBuilder: (BuildContext context, int index) =>
-          _renderChallengePoint(challenges[index]),
+          _renderChallengePoint(controller, challenges[index]),
     );
   }
 
@@ -153,14 +143,14 @@ class ChallengeMap extends StatelessWidget {
         //height is smaller than the persistentContentHeight it will be
         //animated on a height change.
         //You can use it for example if you have no header.
-        //persistentContentHeight: 150,
+        persistentContentHeight: 120,
 
         //required
         //This is the widget which will be overlapped by the bottom sheet.
         background: Container(
           child: Obx(() {
-            print('체인지 #############');
-            return Stack(
+           return Stack(
+              alignment: Alignment.topCenter,
               children: [
                 NaverMap(
                   initialCameraPosition: CameraPosition(
@@ -174,25 +164,50 @@ class ChallengeMap extends StatelessWidget {
                   tiltGestureEnable: false,
                   onMapCreated: controller.onChallengeMapCreated,
                 ),
+                Padding(
+                  padding: const EdgeInsets.only(top: 70),
+                  child: Container(
+                    padding: EdgeInsets.only(top: 10, bottom: 10, right: 20, left: 20),
+                    decoration: BoxDecoration(
+                      color: Color(0xFF363841),
+                      borderRadius: BorderRadius.circular(14),
+                      border: Border.all(color: Colors.black, width: 2),
+                      boxShadow: [
+                        BoxShadow(
+                          color: Colors.black,
+                          spreadRadius: 0,
+                          blurRadius: 0,
+                          offset: Offset(0, 4), // changes position of shadow
+                        ),
+                      ],
+                    ),
+                    child: StyledText('첼린지 리스트', fontSize: 16, fontWeight: 500, lineHeight: 22, color: Colors.white, textAlign: TextAlign.center,)
+                  ),
+                ),
                 Positioned(
-                  top: 50,
-                  left: 15,
-                  child: StyledText('뒤로', color: Colors.white,)
-                )              ],
+                  top: 68,
+                  left: 20,
+                  child: iconChallengeScreenBack
+                )
+              ],
             );
           }),
         ),
 
         //optional
         //This widget is sticking above the content and will never be contracted.
-        persistentHeader: Container(
-          color: Colors.orange,
-          height: 20,
-          child: const Center(
-            child: SizedBox(
-              width: 50,
-              child: Divider(
-                thickness: 5,
+        persistentHeader: Padding(
+          padding: const EdgeInsets.only(top: 10),
+          child: Container(
+            color: Color(0xFF363841),
+            height: 18,
+            child: const Center(
+              child: SizedBox(
+                width: 54,
+                child: Divider(
+                  color: Color(0xFF0EE6F3),
+                  thickness: 5,
+                ),
               ),
             ),
           ),
@@ -202,7 +217,7 @@ class ChallengeMap extends StatelessWidget {
         //This is the content of the bottom sheet which will be extendable by dragging.
         expandableContent: Container(
           height: MediaQuery.of(context).size.height - 200,
-          color: Colors.black,
+          color: Color(0xFF363841),
           child: SingleChildScrollView(
             child: Column(
               mainAxisSize: MainAxisSize.min,
