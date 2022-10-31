@@ -72,7 +72,6 @@ class ActivityController extends GetxController with ActivityMixin, ChallengeMix
   void onInit() async {
     await initController();
     checkConnectivityStatus();
-
     super.onInit();
   }
 

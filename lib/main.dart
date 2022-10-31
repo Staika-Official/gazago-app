@@ -55,7 +55,7 @@ void main() async {
     await initializeDateFormatting();
     await requestNotificationPermission();
 
-    runApp(MyApp());
+    runApp(const MyApp());
   }, (error, stack) {
     recordCrashlyticsError(error, stack);
   });

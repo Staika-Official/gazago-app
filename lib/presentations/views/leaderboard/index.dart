@@ -83,52 +83,80 @@ class LeaderboardHome extends StatelessWidget {
         mainAxisAlignment: MainAxisAlignment.start,
         children: [
           iconMyRankArrow,
-          Container(width: 20, child: Text(myRank.rank.toString(), style: const TextStyle(color: Color(0xFF0EE6F3), fontSize: 14, fontWeight: FontWeight.w600), textAlign: TextAlign.center)),
+          Container(
+            width: 20,
+            child: Text(
+              myRank.rank.toString(),
+              style: const TextStyle(color: Color(0xFF0EE6F3), fontSize: 14, fontWeight: FontWeight.w600),
+              textAlign: TextAlign.center,
+            ),
+          ),
           Padding(padding: EdgeInsets.only(left: 4)),
           Expanded(
-              flex: 2,
-              child: Row(
-                children: [
-                  (myRank.profileImageUrl != '')
-                      ? Container(
-                          width: 44.0,
-                          height: 44.0,
-                          decoration: BoxDecoration(
-                            borderRadius: BorderRadius.all( Radius.circular(50.0)),
-                            border: Border.all(
-                              color: Color(0xFF0EE6F3),
-                              width: 1.5,
-                            ),
+            flex: 2,
+            child: Row(
+              children: [
+                (myRank.profileImageUrl != '')
+                    ? Container(
+                        width: 44.0,
+                        height: 44.0,
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.all(Radius.circular(50.0)),
+                          border: Border.all(
+                            color: Color(0xFF0EE6F3),
+                            width: 1.5,
                           ),
+                        ),
+                        child: CircleAvatar(
+                          backgroundColor: Colors.black,
                           child: CircleAvatar(
-                            backgroundColor: Colors.black,
-                            child: CircleAvatar(
-                              radius: 15,
-                              foregroundImage: NetworkImage(myRank.profileImageUrl),
-                  ),
+                            radius: 15,
+                            foregroundImage: NetworkImage(myRank.profileImageUrl),
+                          ),
                         ),
                       )
-                      : CircleAvatar(
-                    radius: 15,
-                    backgroundColor: Colors.black,
-                  ),
-                  Container(
-                    child: Padding(
-                      padding: const EdgeInsets.only(left: 8.0),
-                      child: Text((myRank.nickname.contains('@') ? myRank.nickname.substring(0, myRank.nickname.indexOf('@')) : myRank.nickname),
-                          overflow: TextOverflow.ellipsis, style: const TextStyle(color: Colors.white, fontSize: 14, fontWeight: FontWeight.w600), textAlign: TextAlign.left),
+                    : CircleAvatar(
+                        radius: 15,
+                        backgroundColor: Colors.black,
+                      ),
+                Container(
+                  child: Padding(
+                    padding: const EdgeInsets.only(left: 8.0),
+                    child: Text(
+                      (myRank.nickname.contains('@') ? myRank.nickname.substring(0, myRank.nickname.indexOf('@')) : myRank.nickname),
+                      overflow: TextOverflow.ellipsis,
+                      style: const TextStyle(color: Colors.white, fontSize: 14, fontWeight: FontWeight.w600),
+                      textAlign: TextAlign.left,
                     ),
                   ),
-                ],
-              )),
+                ),
+              ],
+            ),
+          ),
           Expanded(
             flex: 1,
-            child: Text('${myRank.rewardGo.toString()} GO', textAlign: TextAlign.right, style: const TextStyle(color: Colors.white, fontSize: 14, fontWeight: FontWeight.w600)),
+            child: Text(
+              '${myRank.rewardGo.toString()} GO',
+              textAlign: TextAlign.right,
+              style: const TextStyle(
+                color: Colors.white,
+                fontSize: 14,
+                fontWeight: FontWeight.w600,
+              ),
+            ),
           ),
           Padding(padding: EdgeInsets.only(left: 10)),
           Expanded(
             flex: 1,
-            child: Text('${myRank.rewardTik.toString()} TIK', textAlign: TextAlign.right, style: const TextStyle(color: Color(0xFF5B5B67), fontSize: 14, fontWeight: FontWeight.w600)),
+            child: Text(
+              '${myRank.rewardTik.toString()} TIK',
+              textAlign: TextAlign.right,
+              style: const TextStyle(
+                color: Color(0xFF5B5B67),
+                fontSize: 14,
+                fontWeight: FontWeight.w600,
+              ),
+            ),
           ),
         ],
       ),
@@ -142,30 +170,42 @@ class LeaderboardHome extends StatelessWidget {
       child: Row(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          Container(width: 20, child: Text(ranker.rank.toString(), style: const TextStyle(color: Colors.white, fontSize: 14, fontWeight: FontWeight.w600), textAlign: TextAlign.center)),
+          Container(
+            width: 20,
+            child: Text(
+              ranker.rank.toString(),
+              style: const TextStyle(
+                color: Colors.white,
+                fontSize: 14,
+                fontWeight: FontWeight.w600,
+              ),
+              textAlign: TextAlign.center,
+            ),
+          ),
           Padding(padding: EdgeInsets.only(left: 12)),
           Expanded(
             flex: 2,
             child: Row(
               children: [
-              (ranker.profileImageUrl != '')
-                  ? CircleAvatar(
-                      radius: 15,
-                      foregroundImage: NetworkImage(ranker.profileImageUrl),
-                    )
-                  : CircleAvatar(
-                      radius: 15,
-                      backgroundColor: Colors.black,
-                    ),
-              Container(
-                child: Padding(
-                  padding: const EdgeInsets.only(left: 8.0),
-                  child: Text((ranker.nickname.contains('@') ? ranker.nickname.substring(0, ranker.nickname.indexOf('@')) : ranker.nickname),
-                      overflow: TextOverflow.ellipsis, style: const TextStyle(color: Colors.white, fontSize: 14, fontWeight: FontWeight.w600), textAlign: TextAlign.left),
+                (ranker.profileImageUrl != '')
+                    ? CircleAvatar(
+                        radius: 15,
+                        foregroundImage: NetworkImage(ranker.profileImageUrl),
+                      )
+                    : CircleAvatar(
+                        radius: 15,
+                        backgroundColor: Colors.black,
+                      ),
+                Container(
+                  child: Padding(
+                    padding: const EdgeInsets.only(left: 8.0),
+                    child: Text((ranker.nickname.contains('@') ? ranker.nickname.substring(0, ranker.nickname.indexOf('@')) : ranker.nickname),
+                        overflow: TextOverflow.ellipsis, style: const TextStyle(color: Colors.white, fontSize: 14, fontWeight: FontWeight.w600), textAlign: TextAlign.left),
+                  ),
                 ),
-              ),
-            ],
-          )),
+              ],
+            ),
+          ),
           Expanded(
             flex: 1,
             child: Text('${ranker.rewardGo.toString()} GO', textAlign: TextAlign.right, style: const TextStyle(color: Colors.white, fontSize: 14, fontWeight: FontWeight.w600)),
@@ -311,41 +351,52 @@ class LeaderboardHome extends StatelessWidget {
                 fontSize: 20,
                 fontWeight: 600,
               ),
-              Row(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  Obx(() {
-                    return StyledText(controller.leaderboardDate.value!, color: const Color(0xFF747474), fontSize: 12, fontWeight: 600);
-                  }),
-                  //StyledText(controller.leaderboardDate.value!, color: const Color(0xFF747474), fontSize: 12, fontWeight: 600,),
-                  const Padding(padding: EdgeInsets.only(left: 8)),
-                  InkWell(
-                    onTap: () => {
-                      showMaterialModalBottomSheet(
-                        context: context,
-                        builder: (context) => showBottomCalender(context, controller),
-                      )
-                    },
-                    child: Container(
+              InkWell(
+                onTap: () => {
+                  showMaterialModalBottomSheet(
+                    context: context,
+                    builder: (context) => showBottomCalender(context, controller),
+                  )
+                },
+                child: Row(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Obx(() {
+                      return StyledText(
+                        controller.leaderboardDate.value!,
+                        color: const Color(0xFF747474),
+                        fontSize: 12,
+                        fontWeight: 600,
+                      );
+                    }),
+                    //StyledText(controller.leaderboardDate.value!, color: const Color(0xFF747474), fontSize: 12, fontWeight: 600,),
+                    const Padding(padding: EdgeInsets.only(left: 8)),
+                    Container(
                       width: 18.0,
                       height: 13.0,
                       decoration: const BoxDecoration(color: Color(0xFF747474), shape: BoxShape.rectangle),
-                    ),
-                  )
-                  //Text(controller.formattedDate.value)
-                ],
+                    )
+                    //Text(controller.formattedDate.value)
+                  ],
+                ),
               )
             ],
           ),
         ),
         Obx(() {
           return (controller.myRank.value != null) ? renderMyRank(controller) : Container();
-        }) ,
+        }),
         Expanded(
           child: Container(
             child: PagedListView<int, RankerModel>.separated(
               pagingController: controller.pagingController,
-              separatorBuilder: (context, index) => const Divider(thickness: 2, indent: 0, endIndent: 0, height: 1, color: Color(0xFF26272F)),
+              separatorBuilder: (context, index) => const Divider(
+                thickness: 2,
+                indent: 0,
+                endIndent: 0,
+                height: 1,
+                color: Color(0xFF26272F),
+              ),
               builderDelegate: PagedChildBuilderDelegate<RankerModel>(
                 itemBuilder: (context, item, index) => (renderRanker(item, index)),
                 noItemsFoundIndicatorBuilder: (context) => const Padding(

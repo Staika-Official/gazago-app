@@ -10,7 +10,7 @@ import 'package:intl/intl.dart';
 import 'package:package_info_plus/package_info_plus.dart';
 
 Future<bool> isUpdateTarget() async {
-  dynamic remoteAppVersion = getConfig(dataType: ConfigType.string, configKey: 'minimum_app_version');
+  String remoteAppVersion = getConfig(dataType: ConfigType.string, configKey: 'minimum_app_version');
   PackageInfo packageInfo = await PackageInfo.fromPlatform();
 
   List<int> splitVersionString(String versionString) {
