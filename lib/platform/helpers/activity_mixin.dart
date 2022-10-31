@@ -227,6 +227,7 @@ class ActivityMixin {
   }
 
   void startExercise(ExerciseType exerciseType, ChallengeModel? challenge) async {
+    if (Get.isDialogOpen != null && Get.isDialogOpen!) Get.back();
     if (globalController.connectivityResult.value != ConnectivityResult.none) {
       await ActivityService.fetchStartUserExercises(
         UserExerciseModel(

@@ -743,14 +743,9 @@ class ActivityController extends GetxController with ActivityMixin, ChallengeMix
       (timer) {
         print(loadingTime.value);
         if (loadingTime.value == 3) {
-          try {
-            timer.cancel();
-            loadingTimer = null;
-            Get.back();
-          } catch (e) {
-            print('error!!!!!!!!!!!!!!!');
-            print(e);
-          }
+          timer.cancel();
+          loadingTimer = null;
+          startExercise(exerciseType, challenge);
         } else {
           loadingTime.value++;
         }
