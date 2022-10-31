@@ -153,6 +153,7 @@ class ChallengeMap extends StatelessWidget {
               alignment: Alignment.topCenter,
               children: [
                 NaverMap(
+                  contentPadding: EdgeInsets.only(bottom: 100),
                   initialCameraPosition: CameraPosition(
                     target: LatLng(controller.currentLocation.value.latitude ?? 0, controller.currentLocation.value.longitude ?? 0),
                     zoom: 14,
@@ -187,7 +188,12 @@ class ChallengeMap extends StatelessWidget {
                 Positioned(
                   top: 68,
                   left: 20,
-                  child: iconChallengeScreenBack
+                  child: InkWell(
+                    onTap: () {
+                      Navigator.pop(context);
+                    },
+                    child: iconChallengeScreenBack
+                  )
                 )
               ],
             );

@@ -110,12 +110,10 @@ class ActivityController extends GetxController with ActivityMixin, ChallengeMix
   Future<void> loadMakerImages() async {
     startMaker = await OverlayImage.fromAssetImage(
       assetName: 'assets/images/activity/ico_challenge_start_maker.png',
-      //size: Size(20, 20),
     );
 
     endMaker = await OverlayImage.fromAssetImage(
       assetName: 'assets/images/activity/ico_challenge_end_maker.png',
-      //size: Size(20, 20),
     );
   }
 
@@ -136,16 +134,10 @@ class ActivityController extends GetxController with ActivityMixin, ChallengeMix
           subCaptionText: course.secondName,
           subCaptionColor: Colors.white,
           subCaptionHaloColor: Colors.black,
-
-          // captionTextSize: 12.0,
-          // alpha: 0.8,
           captionOffset: 5,
           icon: startMaker,
-          // anchor: AnchorPoint(0.5, 1),
           width: 20,
           height: 20,
-          // infoWindow: '인포 윈도우',
-          //onMarkerTab: _onMarkerTap
           onMarkerTab: (marker, iconSize) {
             showEndPointMarker(course);
           },
@@ -155,11 +147,7 @@ class ActivityController extends GetxController with ActivityMixin, ChallengeMix
   }
 
   void showEndPointMarker(ChallengeModel course) {
-    print('showEndPointMarker ${course.startPointName}');
-
-    print('${challengeSelectedIndex.value} ===== ${course.id}');
     challengeSelectedIndex.value = course.id!;
-
 
     if (challengeMarkers.value.last.markerId.contains('end_')) {
       challengeMarkers.removeLast();
@@ -172,26 +160,28 @@ class ActivityController extends GetxController with ActivityMixin, ChallengeMix
       captionColor: Color(0xFFFF6F75),
       captionHaloColor: Colors.black,
       captionTextSize: 16.0,
-      // alpha: 0.8,
       captionOffset: 5,
       subCaptionText: course.secondName,
       subCaptionTextSize: 14,
       subCaptionColor: Colors.white,
       subCaptionHaloColor: Colors.black,
       icon: endMaker,
-      // anchor: AnchorPoint(0.5, 1),
       width: 20,
       height: 20,
-      // infoWindow: '인포 윈도우',
-      //onMarkerTab: _onMarkerTap
     ));
 
-    challengeMapController.moveCamera(CameraUpdate.toCameraPosition(
-      CameraPosition(
-        target: LatLng(course.endLat!, course.endLon!),
-        zoom: 14,
+    challengeMapController.moveCamera(
+      CameraUpdate.fitBounds(
+        LatLngBounds.fromLatLngList(
+          [
+            LatLng(course.startLat!, course.startLon!),
+            LatLng(course.endLat!, course.endLon!),
+          ],
+        ),
+        padding: 100,
       ),
-    ));
+    );
+
   }
 
   Future<void> refreshController() async {
