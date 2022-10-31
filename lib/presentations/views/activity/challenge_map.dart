@@ -2,17 +2,13 @@ import 'package:expandable_bottom_sheet/expandable_bottom_sheet.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_naver_map/flutter_naver_map.dart';
-import 'package:flutter_svg/svg.dart';
-import 'package:gaza_go/constants/enums.dart';
 import 'package:gaza_go/platform/controllers/activity_controller.dart';
 import 'package:gaza_go/platform/models/challenge_hierarchy_model.dart';
 import 'package:gaza_go/platform/models/challenge_model.dart';
-import 'package:gaza_go/presentations/components/default_container.dart';
 import 'package:gaza_go/presentations/styles/icons.dart';
 import 'package:gaza_go/presentations/styles/styled_text.dart';
 import 'package:get/get.dart';
 import 'package:get/get_state_manager/src/rx_flutter/rx_obx_widget.dart';
-import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
 
 class ChallengeMap extends StatelessWidget {
   const ChallengeMap({Key? key}) : super(key: key);
@@ -29,7 +25,8 @@ class ChallengeMap extends StatelessWidget {
         )
         .toList();
 
-    List<CircleOverlay> outerCircles = controller.allChallengesList.map(
+    List<CircleOverlay> outerCircles = controller.allChallengesList
+        .map(
           (challenge) => CircleOverlay(
             overlayId: 'ChallengeStart' + challenge.id!.toString(),
             center: LatLng(challenge.startLat!, challenge.startLon!),
@@ -87,23 +84,30 @@ class ChallengeMap extends StatelessWidget {
 
   Widget _renderCourse(ActivityController controller, ChallengeModel course) {
     print('${controller.challengeSelectedIndex.value} ===== ${course.id}');
-    return Builder(
-        builder: (context) {
-          return Obx(() {
-            return ListTile(
-                onTap:() {
-                  controller.showEndPointMarker(course);
-                },
-                subtitle: StyledText('${course.startPointName} - ${course.endPointName}', color:(controller.challengeSelectedIndex == course.id) ? Color(0xFF0EE6F3) : Color(0xFF8A8A8A), fontSize: 14, lineHeight: 14, fontWeight: 500,),
-                leading: Padding(
-                  padding: const EdgeInsets.only(left: 20),
-                  child: (controller.challengeSelectedIndex == course.id) ? iconChallengeCheckOn : iconChallengeCheckOff,
-                ),
-                contentPadding: const EdgeInsets.all(0.0),
-                title: Text(course.secondName!, style: TextStyle(color: (controller.challengeSelectedIndex == course.id) ? Color(0xFF0EE6F3) : Colors.white),)
-            );
-          });
-        });
+    return Builder(builder: (context) {
+      return Obx(() {
+        return ListTile(
+            onTap: () {
+              controller.showEndPointMarker(course);
+            },
+            subtitle: StyledText(
+              '${course.startPointName} - ${course.endPointName}',
+              color: (controller.challengeSelectedIndex == course.id) ? Color(0xFF0EE6F3) : Color(0xFF8A8A8A),
+              fontSize: 14,
+              lineHeight: 14,
+              fontWeight: 500,
+            ),
+            leading: Padding(
+              padding: const EdgeInsets.only(left: 20),
+              child: (controller.challengeSelectedIndex == course.id) ? iconChallengeCheckOn : iconChallengeCheckOff,
+            ),
+            contentPadding: const EdgeInsets.all(0.0),
+            title: Text(
+              course.secondName!,
+              style: TextStyle(color: (controller.challengeSelectedIndex == course.id) ? Color(0xFF0EE6F3) : Colors.white),
+            ));
+      });
+    });
   }
 
   Widget _renderChallenges(ActivityController controller) {
@@ -114,8 +118,7 @@ class ChallengeMap extends StatelessWidget {
       physics: NeverScrollableScrollPhysics(),
       padding: EdgeInsets.all(0.0),
       itemCount: challenges.length,
-      itemBuilder: (BuildContext context, int index) =>
-          _renderChallengePoint(controller, challenges[index]),
+      itemBuilder: (BuildContext context, int index) => _renderChallengePoint(controller, challenges[index]),
     );
   }
 
@@ -149,7 +152,7 @@ class ChallengeMap extends StatelessWidget {
         //This is the widget which will be overlapped by the bottom sheet.
         background: Container(
           child: Obx(() {
-           return Stack(
+            return Stack(
               alignment: Alignment.topCenter,
               children: [
                 NaverMap(
@@ -168,33 +171,37 @@ class ChallengeMap extends StatelessWidget {
                 Padding(
                   padding: const EdgeInsets.only(top: 70),
                   child: Container(
-                    padding: EdgeInsets.only(top: 10, bottom: 10, right: 20, left: 20),
-                    decoration: BoxDecoration(
-                      color: Color(0xFF363841),
-                      borderRadius: BorderRadius.circular(14),
-                      border: Border.all(color: Colors.black, width: 2),
-                      boxShadow: [
-                        BoxShadow(
-                          color: Colors.black,
-                          spreadRadius: 0,
-                          blurRadius: 0,
-                          offset: Offset(0, 4), // changes position of shadow
-                        ),
-                      ],
-                    ),
-                    child: StyledText('첼린지 리스트', fontSize: 16, fontWeight: 500, lineHeight: 22, color: Colors.white, textAlign: TextAlign.center,)
-                  ),
+                      padding: EdgeInsets.only(top: 10, bottom: 10, right: 20, left: 20),
+                      decoration: BoxDecoration(
+                        color: Color(0xFF363841),
+                        borderRadius: BorderRadius.circular(14),
+                        border: Border.all(color: Colors.black, width: 2),
+                        boxShadow: [
+                          BoxShadow(
+                            color: Colors.black,
+                            spreadRadius: 0,
+                            blurRadius: 0,
+                            offset: Offset(0, 4), // changes position of shadow
+                          ),
+                        ],
+                      ),
+                      child: StyledText(
+                        '첼린지 리스트',
+                        fontSize: 16,
+                        fontWeight: 500,
+                        lineHeight: 22,
+                        color: Colors.white,
+                        textAlign: TextAlign.center,
+                      )),
                 ),
                 Positioned(
-                  top: 68,
-                  left: 20,
-                  child: InkWell(
-                    onTap: () {
-                      Navigator.pop(context);
-                    },
-                    child: iconChallengeScreenBack
-                  )
-                )
+                    top: 66,
+                    left: 20,
+                    child: InkWell(
+                        onTap: () {
+                          Navigator.pop(context);
+                        },
+                        child: iconChallengeScreenBack))
               ],
             );
           }),
@@ -227,9 +234,7 @@ class ChallengeMap extends StatelessWidget {
           child: SingleChildScrollView(
             child: Column(
               mainAxisSize: MainAxisSize.min,
-              children: <Widget>[
-                _renderChallenges(controller)
-              ],
+              children: <Widget>[_renderChallenges(controller)],
             ),
           ),
         ),
