@@ -63,7 +63,6 @@ class LoadingController extends GetxController {
         );
       } else {
         bool needUpgrade = await isRecommendUpdateTarget();
-        print(needUpgrade);
         if (needUpgrade) {
           Get.dialog(
             barrierDismissible: false,

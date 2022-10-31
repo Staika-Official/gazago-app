@@ -1,16 +1,15 @@
 import 'package:animated_flip_counter/animated_flip_counter.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_naver_map/flutter_naver_map.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:gaza_go/constants/enums.dart';
 import 'package:gaza_go/constants/routes.dart';
 import 'package:gaza_go/platform/controllers/activity_controller.dart';
-import 'package:gaza_go/platform/helpers/activity_helper.dart';
 import 'package:gaza_go/platform/helpers/base_helper.dart';
 import 'package:gaza_go/presentations/components/circular_button.dart';
 import 'package:gaza_go/presentations/components/default_container.dart';
 import 'package:gaza_go/presentations/styles/icons.dart';
 import 'package:gaza_go/presentations/styles/styled_text.dart';
+import 'package:gaza_go/presentations/views/activity/activity_map.dart';
 import 'package:get/get.dart';
 
 class ActivityActive extends StatelessWidget {
@@ -321,17 +320,32 @@ class ActivityActive extends StatelessWidget {
         child: Column(
           mainAxisSize: MainAxisSize.max,
           children: [
+            controller.selectedChallenge.value.id != null
+                ? Container(
+                    padding: EdgeInsets.symmetric(horizontal: 14, vertical: 7),
+                    decoration: BoxDecoration(
+                      color: Color(0xff1b1b1b),
+                      borderRadius: BorderRadius.circular(50),
+                    ),
+                    child: StyledText(
+                      '${controller.selectedChallenge.value.startPointName} | ${controller.selectedChallenge.value.firstName}',
+                      fontSize: 14,
+                      fontWeight: 500,
+                      color: Color(0xff8a8a8a),
+                    ),
+                  )
+                : Container(),
             // TODO. qa후 삭제 필요.
-            StyledText(
-                '현재 위치의 gps정확도: ${formatDecimalPlaces(controller.currentLocation.value.accuracy, 2)}m [속도: ${formatDecimalPlaces(convertMStoKMH(controller.currentLocation.value.speed), 2)}km/h]'),
-            if (controller.exerciseData.isNotEmpty) StyledText('저장된 운동데이터 배열에서 마지막 데이터의 속도: ${formatDecimalPlaces(controller.exerciseData.last.speed!, 2)}km/h'),
-            StyledText('평균 속도: ${formatDecimalPlaces(controller.avgSpeed.value, 2)}km/h'),
-            StyledText('성공적인 업데이트 요청 (시작/종료 제외): ${controller.updateCount.value.toString()}회'),
-            StyledText('마지막 업데이트 시간: ${controller.lastUpdateTime.value != '' ? formatDate(controller.lastUpdateTime.value) : '??'}'),
-            StyledText('걷기 상태: ${controller.pedestrianStatus.value}'),
+            // StyledText(
+            //     '현재 위치의 gps정확도: ${formatDecimalPlaces(controller.currentLocation.value.accuracy, 2)}m [속도: ${formatDecimalPlaces(convertMStoKMH(controller.currentLocation.value.speed), 2)}km/h]'),
+            // if (controller.exerciseData.isNotEmpty) StyledText('저장된 운동데이터 배열에서 마지막 데이터의 속도: ${formatDecimalPlaces(controller.exerciseData.last.speed!, 2)}km/h'),
+            // StyledText('평균 속도: ${formatDecimalPlaces(controller.avgSpeed.value, 2)}km/h'),
+            // StyledText('성공적인 업데이트 요청 (시작/종료 제외): ${controller.updateCount.value.toString()}회'),
+            // StyledText('마지막 업데이트 시간: ${controller.lastUpdateTime.value != '' ? formatDate(controller.lastUpdateTime.value) : '??'}'),
+            // StyledText('걷기 상태: ${controller.pedestrianStatus.value}'),
             // TODO. qa후 삭제 필요 end.
             Padding(
-              padding: const EdgeInsets.only(top: 70.0, bottom: 20),
+              padding: const EdgeInsets.only(top: 30.0, bottom: 20),
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
@@ -599,18 +613,6 @@ class ActivityActive extends StatelessWidget {
                 ),
               ),
             )
-            // Padding(
-            //   padding: const EdgeInsets.symmetric(horizontal: 20.0, vertical: 10),
-            //   child: Row(
-            //     mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            //     children: [
-            //       Text(
-            //         '평균속도: ' + formatDecimalPlaces(controller.avgSpeed.value, 1) + 'km/h',
-            //         style: TextStyle(fontSize: 16),
-            //       ),
-            //     ],
-            //   ),
-            // ),
           ],
         ),
       );
@@ -679,148 +681,6 @@ class GaugeCursor extends StatelessWidget {
           )
         ],
       ),
-    );
-  }
-}
-
-class ActivityMap extends StatelessWidget {
-  const ActivityMap({Key? key}) : super(key: key);
-
-  List<CircleOverlay> renderStartPoint(ActivityController controller) {
-    CircleOverlay centerCircle = CircleOverlay(
-      overlayId: 'ChallengeStartCenter' + controller.selectedChallenge.value.id!.toString(),
-      center: LatLng(controller.selectedChallenge.value.startLat!, controller.selectedChallenge.value.startLon!),
-      radius: 9,
-      color: Color(0xff0EE6F3),
-    );
-
-    CircleOverlay outerCircle = CircleOverlay(
-      overlayId: 'ChallengeStart' + controller.selectedChallenge.value.id!.toString(),
-      center: LatLng(controller.selectedChallenge.value.startLat!, controller.selectedChallenge.value.startLon!),
-      radius: controller.selectedChallenge.value.startRadius!,
-      color: Color.fromRGBO(14, 230, 243, 0.3),
-    );
-
-    return [centerCircle, outerCircle];
-  }
-
-  List<CircleOverlay> renderEndPoint(ActivityController controller) {
-    CircleOverlay centerCircle = CircleOverlay(
-      overlayId: 'ChallengeEndCenter' + controller.selectedChallenge.value.id!.toString(),
-      center: LatLng(controller.selectedChallenge.value.endLat!, controller.selectedChallenge.value.endLon!),
-      radius: 9,
-      color: Colors.red,
-    );
-
-    CircleOverlay outerCircle = CircleOverlay(
-      overlayId: 'ChallengeEnd' + controller.selectedChallenge.value.id!.toString(),
-      center: LatLng(controller.selectedChallenge.value.endLat!, controller.selectedChallenge.value.endLon!),
-      radius: controller.selectedChallenge.value.endRadius!,
-      color: Colors.red[300]?.withOpacity(0.3),
-    );
-
-    return [centerCircle, outerCircle];
-  }
-
-  List<Marker> renderStartMarker(ActivityController controller) {
-    return controller.challengeList
-        .where((challenge) => challenge.id == controller.userState.value.exercise?.challengeId)
-        .map(
-          (challenge) => Marker(
-            markerId: 'StartMarker' + challenge.id!.toString(),
-            position: LatLng(challenge.startLat!, challenge.startLon!),
-            captionText: challenge.firstName! + ' 시작점',
-            // icon: controller.startMarkerImage.value,
-            // width: 10,
-            // height: 10,
-          ),
-        )
-        .toList();
-  }
-
-  List<Marker> renderEndMarker(ActivityController controller) {
-    return controller.challengeList
-        .where((challenge) => challenge.id == controller.userState.value.exercise?.challengeId)
-        .map(
-          (challenge) => Marker(
-            markerId: 'FinishMarker' + challenge.id!.toString(),
-            position: LatLng(challenge.endLat!, challenge.endLon!),
-            captionText: challenge.firstName! + ' 도착점',
-            // icon: controller.finishMarkerImage.value,
-            // width: 10,
-            // height: 10,
-          ),
-        )
-        .toList();
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    ActivityController controller = Get.find();
-
-    return Stack(
-      children: [
-        Obx(() {
-          return NaverMap(
-            nightModeEnable: true,
-            mapType: MapType.Navi,
-            initialCameraPosition: CameraPosition(
-              target: LatLng(controller.currentLocation.value.latitude, controller.currentLocation.value.longitude),
-              zoom: 15,
-            ),
-            initLocationTrackingMode: LocationTrackingMode.Follow,
-            circles: [
-              if (controller.selectedChallenge.value.id != null) ...renderStartPoint(controller),
-              if (controller.selectedChallenge.value.id != null) ...renderEndPoint(controller),
-            ],
-            // markers: [
-            //   ...renderStartMarker(controller),
-            //   ...renderEndMarker(controller),
-            // ],
-            pathOverlays: (controller.coordinates.length < 10)
-                ? null
-                : {
-                    PathOverlay(
-                      PathOverlayId('path'),
-                      controller.coordinates,
-                      width: 3,
-                      color: Colors.red,
-                      // outlineColor: Colors.white,
-                    )
-                  },
-            locationButtonEnable: true,
-            maxZoom: 20,
-            minZoom: 8,
-            tiltGestureEnable: false,
-          );
-        }),
-        Positioned(
-          top: 20,
-          left: 20,
-          child: GestureDetector(
-            onTap: () => Get.back(),
-            child: Container(
-              width: 46,
-              height: 46,
-              decoration: BoxDecoration(
-                  color: Color(0xff363841),
-                  border: Border.all(width: 2, style: BorderStyle.solid, color: Colors.black),
-                  boxShadow: [
-                    BoxShadow(
-                      offset: Offset(2, 4),
-                      color: Colors.black,
-                    ),
-                  ],
-                  borderRadius: BorderRadius.circular(14)),
-              child: const Icon(
-                Icons.chevron_left,
-                color: Colors.white,
-                size: 30,
-              ),
-            ),
-          ),
-        )
-      ],
     );
   }
 }

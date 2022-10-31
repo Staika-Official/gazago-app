@@ -31,6 +31,7 @@ import 'package:gaza_go/platform/services/item_service.dart';
 import 'package:gaza_go/platform/stores/hive_store.dart';
 import 'package:gaza_go/presentations/styles/icons.dart';
 import 'package:gaza_go/presentations/styles/styled_text.dart';
+import 'package:gaza_go/presentations/views/activity/activity_loading.dart';
 import 'package:gaza_go/presentations/views/activity/activity_select.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:get/get.dart';
@@ -181,7 +182,6 @@ class ActivityController extends GetxController with ActivityMixin, ChallengeMix
         padding: 100,
       ),
     );
-
   }
 
   Future<void> refreshController() async {
@@ -729,21 +729,40 @@ class ActivityController extends GetxController with ActivityMixin, ChallengeMix
     }
   }
 
-  // void loadExercise(ExerciseType exerciseType, [ChallengeModel? challenge]) {
-  //   Get.offNamed(Routes.activityLoading);
-  //   Timer(
-  //     Duration(seconds: 3),
-  //     () {
-  //       Get.offNamed(Routes.activityActive);
-  //       startExercise(exerciseType, challenge);
-  //     },
-  //   );
-  // }
+  void loadExercise(ExerciseType exerciseType, [ChallengeModel? challenge]) {
+    loadingTime.value = 1;
+
+    Get.dialog(
+      barrierDismissible: false,
+      barrierColor: Color.fromRGBO(0, 0, 0, 0.8),
+      ActivityLoading(),
+    );
+
+    loadingTimer = Timer.periodic(
+      Duration(seconds: 1),
+      (timer) {
+        print(loadingTime.value);
+        if (loadingTime.value == 3) {
+          try {
+            timer.cancel();
+            loadingTimer = null;
+            Get.back();
+          } catch (e) {
+            print('error!!!!!!!!!!!!!!!');
+            print(e);
+          }
+        } else {
+          loadingTime.value++;
+        }
+      },
+    );
+  }
 
   void selectExerciseType(ExerciseType exerciseType) {
     selectedExerciseType.value = exerciseType;
     if (selectedExerciseType.value == ExerciseType.walking) selectedChallenge.value = ChallengeModel();
     Get.offNamed(Routes.activityActive);
+    loadExercise(selectedExerciseType.value);
   }
 
   void moveToChallengeSelection() {

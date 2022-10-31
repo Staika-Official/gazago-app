@@ -49,15 +49,13 @@ class ChallengeMixin {
     hierarchyChallengesList.value = await ActivityService.getChallengesHierarchy(currentLocation);
   }
 
-
-
   void notificationOnChallenge(List<ChallengeModel> result) {
     bool notification = false;
-    var filteredList = result.toSet().difference(challengeList.value.toSet()).toList();
+    var filteredList = result.toSet().difference(challengeList.toSet()).toList();
     if (filteredList.length != challengeList.length) {
       notification = true;
     }
-    if (result.isNotEmpty) {
+    if (filteredList.isNotEmpty) {
       Get.snackbar('도전 지역 발견', '새로운 도전을 시작하세요.', colorText: Colors.green);
     }
   }
@@ -95,11 +93,11 @@ class ChallengeMixin {
       inspect('반경${convertMetersToKm(challenge.startRadius!)}');
       return distance <= convertMetersToKm(challenge.startRadius!);
     }).toList();
-    inspect('가능한 챌린지 리스트${doableChallenges.value}');
-    achievableChallenges.value = challengeList.where((challenge) {
-      double distance = calculateDistance(location.latitude, location.longitude, challenge.endLat, challenge.endLon);
-      return distance <= convertMetersToKm(challenge.endRadius!);
-    }).toList();
+    // inspect('가능한 챌린지 리스트${doableChallenges.value}');
+    // achievableChallenges.value = challengeList.where((challenge) {
+    //   double distance = calculateDistance(location.latitude, location.longitude, challenge.endLat, challenge.endLon);
+    //   return distance <= convertMetersToKm(challenge.endRadius!);
+    // }).toList();
   }
 
   void autoFinishChallenge(Position currentLocation, CurrentUserStateModel userState) async {
