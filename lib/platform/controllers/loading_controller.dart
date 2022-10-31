@@ -26,7 +26,7 @@ class LoadingController extends GetxController {
     progressMessage.value = message;
 
     if (progress.value >= 1) {
-      bool needUpgrade = await isUpdateTarget();
+      bool needUpgrade = await isForceUpdateTarget();
       if (needUpgrade) {
         Get.dialog(
           barrierDismissible: false,
@@ -62,9 +62,55 @@ class LoadingController extends GetxController {
           ),
         );
       } else {
-        Get.offAllNamed(Routes.home);
+        bool needUpgrade = await isRecommendUpdateTarget();
+        print(needUpgrade);
+        if (needUpgrade) {
+          Get.dialog(
+            barrierDismissible: false,
+            AlertDialog(
+              title: StyledText(
+                '새 업데이트가 있습니다.',
+                color: Colors.black,
+              ),
+              content: StyledText(
+                '앱을 사용하기 위해서 업데이트가 필요합니다.',
+                color: Colors.black,
+              ),
+              actions: [
+                ElevatedButton(
+                  onPressed: () {
+                    if (Platform.isAndroid || Platform.isIOS) {
+                      final appId = Platform.isAndroid ? 'kr.co.eztechfin.gazaGo' : 'kr.co.eztechfin.gazaGo';
+                      final url = Uri.parse(
+                        Platform.isAndroid ? "market://details?id=$appId" : "https://apps.apple.com/app/id$appId",
+                      );
+                      launchUrl(
+                        url,
+                        mode: LaunchMode.externalApplication,
+                      );
+                    }
+                  },
+                  child: StyledText(
+                    '업데이트',
+                    color: Colors.black,
+                  ),
+                ),
+                ElevatedButton(
+                  onPressed: () {
+                    Get.offAllNamed(Routes.home);
+                  },
+                  child: StyledText(
+                    '무시하기',
+                    color: Colors.black,
+                  ),
+                )
+              ],
+            ),
+          );
+        } else {
+          Get.offAllNamed(Routes.home);
+        }
       }
     }
-    ;
   }
 }
