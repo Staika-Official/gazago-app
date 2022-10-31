@@ -17,6 +17,7 @@ import 'package:gaza_go/platform/helpers/activity_helper.dart';
 import 'package:gaza_go/platform/helpers/activity_mixin.dart';
 import 'package:gaza_go/platform/helpers/base_helper.dart';
 import 'package:gaza_go/platform/helpers/challenge_mixin.dart';
+import 'package:gaza_go/platform/models/challenge_hierarchy_model.dart';
 import 'package:gaza_go/platform/models/challenge_model.dart';
 import 'package:gaza_go/platform/models/current_user_state_model.dart';
 import 'package:gaza_go/platform/models/inventory_item_model.dart';
@@ -67,6 +68,10 @@ class ActivityController extends GetxController with ActivityMixin, ChallengeMix
   StreamSubscription<ServiceStatus>? _serviceStatusStream;
   final Rx<DateTime> receiveLocationTime = Rx(DateTime.now());
   final HealthFactory health = HealthFactory();
+  final Rxn<OverlayImage>? challengeStartMaker = Rxn();
+  OverlayImage? startMaker;
+  OverlayImage? endMaker;
+  RxInt challengeSelectedIndex = RxInt(-1);
 
   @override
   void onInit() async {
@@ -102,8 +107,96 @@ class ActivityController extends GetxController with ActivityMixin, ChallengeMix
   Future<void> initController() async {
     await checkAvailabilities();
     await initializeActivity();
-    await getChallengesHierarchy(this.currentLocation.value);
     getUserState();
+    await loadMakerImages();
+    await loadChallenges();
+  }
+
+  Future<void> loadMakerImages() async {
+    startMaker = await OverlayImage.fromAssetImage(
+      assetName: 'assets/images/activity/ico_challenge_start_maker.png',
+      //size: Size(20, 20),
+    );
+
+    endMaker = await OverlayImage.fromAssetImage(
+      assetName: 'assets/images/activity/ico_challenge_end_maker.png',
+      //size: Size(20, 20),
+    );
+  }
+
+  Future<void> loadChallenges() async {
+    await getChallengesHierarchy(this.currentLocation.value);
+    for (ChallengeHierarchyModel challenge in hierarchyChallengesList) {
+      for (ChallengeModel course in challenge.course) {
+        allChallengesList.add(course);
+
+        challengeMarkers.add(Marker(
+          markerId: course.id!.toString(),
+          position: LatLng(course.startLat!, course.startLon!),
+          captionText: course.startPointName,
+          captionColor: Color(0xFF0EE6F3),
+          captionHaloColor: Colors.black,
+          captionTextSize: 16.0,
+          subCaptionTextSize: 14,
+          subCaptionText: course.secondName,
+          subCaptionColor: Colors.white,
+          subCaptionHaloColor: Colors.black,
+
+          // captionTextSize: 12.0,
+          // alpha: 0.8,
+          captionOffset: 5,
+          icon: startMaker,
+          // anchor: AnchorPoint(0.5, 1),
+          width: 20,
+          height: 20,
+          // infoWindow: '인포 윈도우',
+          //onMarkerTab: _onMarkerTap
+          onMarkerTab: (marker, iconSize) {
+            showEndPointMarker(course);
+          },
+        ));
+      }
+    }
+  }
+
+  void showEndPointMarker(ChallengeModel course) {
+    print('showEndPointMarker ${course.startPointName}');
+
+    print('${challengeSelectedIndex.value} ===== ${course.id}');
+    challengeSelectedIndex.value = course.id!;
+
+
+    if (challengeMarkers.value.last.markerId.contains('end_')) {
+      challengeMarkers.removeLast();
+    }
+
+    challengeMarkers.add(Marker(
+      markerId: 'end_${course.id!.toString()}',
+      position: LatLng(course.endLat!, course.endLon!),
+      captionText: '도착 ${course.endPointName}',
+      captionColor: Color(0xFFFF6F75),
+      captionHaloColor: Colors.black,
+      captionTextSize: 16.0,
+      // alpha: 0.8,
+      captionOffset: 5,
+      subCaptionText: course.secondName,
+      subCaptionTextSize: 14,
+      subCaptionColor: Colors.white,
+      subCaptionHaloColor: Colors.black,
+      icon: endMaker,
+      // anchor: AnchorPoint(0.5, 1),
+      width: 20,
+      height: 20,
+      // infoWindow: '인포 윈도우',
+      //onMarkerTab: _onMarkerTap
+    ));
+
+    challengeMapController.moveCamera(CameraUpdate.toCameraPosition(
+      CameraPosition(
+        target: LatLng(course.endLat!, course.endLon!),
+        zoom: 14,
+      ),
+    ));
   }
 
   Future<void> refreshController() async {

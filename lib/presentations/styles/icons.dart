@@ -39,6 +39,10 @@ SvgPicture iconActivityStorySteps = SvgPicture.asset('assets/images/activity/ico
 SvgPicture iconActivityStoryTaika = SvgPicture.asset('assets/images/activity/ico_activity_story_tik.svg', width: 27, height: 28);
 SvgPicture iconStamina = SvgPicture.asset('assets/images/activity/ico_stamina.svg', width: 8, height: 16);
 SvgPicture iconShoes = SvgPicture.asset('assets/images/activity/ico_shoes.svg', width: 11, height: 12);
+SvgPicture iconChallengeList = SvgPicture.asset('assets/images/activity/ico_challenge_list.svg', width: 70, height: 70);
+SvgPicture iconChallengeCheckOn = SvgPicture.asset('assets/images/activity/ico_challenge_check_on.svg', width: 20, height: 20);
+SvgPicture iconChallengeCheckOff = SvgPicture.asset('assets/images/activity/ico_challenge_check_off.svg', width: 20, height: 20);
+SvgPicture iconChallengeScreenBack = SvgPicture.asset('assets/images/activity/ico_challenge_screen_back.svg', width: 57, height: 56);
 
 // archive
 SvgPicture iconArchiveDetailBadge = SvgPicture.asset('assets/images/archive/ico_archive_detail_badge.svg', width: 15, height: 20, color: Colors.black);

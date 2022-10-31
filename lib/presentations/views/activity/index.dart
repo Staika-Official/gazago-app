@@ -336,185 +336,191 @@ class ActivityHome extends StatelessWidget {
 
     final slideController = PageController(viewportFraction: 1, keepPage: true);
 
-    return Container(
-      decoration: const BoxDecoration(
-        image: DecorationImage(
-          image: AssetImage('assets/images/bg_activity_road.png'),
-          alignment: Alignment(100, 1.5),
-        ),
-      ),
-      child: SingleChildScrollView(
-        physics: ClampingScrollPhysics(),
-        child: Padding(
-          padding: const EdgeInsets.all(20.0),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  StyledText(
-                    '가자고와 함께 \n등산하고 뱃지를 받아보자고-!',
-                    color: const Color(0xFF0EE6F3),
-                    fontWeight: 700,
-                    fontSize: 24,
-                    lineHeight: 32,
-                  ),
-                  Container(
-                    margin: const EdgeInsets.symmetric(vertical: 25),
-                    decoration: BoxDecoration(
-                      color: const Color(0xFF0EE6F3),
-                      border: Border.all(
-                        width: 1,
-                        color: Colors.black,
-                      ),
-                      borderRadius: const BorderRadius.all(
-                        Radius.circular(15),
-                      ),
-                      boxShadow: const [
-                        BoxShadow(
-                          color: Color(0xFF000000),
-                          spreadRadius: 0,
-                          blurRadius: 0,
-                          offset: Offset(0, 4), // changes position of shadow
-                        ),
-                      ],
-                    ),
-                    child: Padding(
-                      padding: const EdgeInsets.symmetric(vertical: 15.0, horizontal: 20.0),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.start,
-                        crossAxisAlignment: CrossAxisAlignment.center,
+    return LayoutBuilder(
+      builder: (context, constraint) {
+        return Container(
+          decoration: const BoxDecoration(
+            image: DecorationImage(
+              image: AssetImage('assets/images/bg_activity_road.png'),
+              alignment: Alignment(100, 1.5),
+            ),
+          ),
+          child: SingleChildScrollView(
+            child: ConstrainedBox(
+              constraints: BoxConstraints(minHeight: constraint.maxHeight),
+              child: IntrinsicHeight(
+                child: Padding(
+                  padding: const EdgeInsets.only(left: 20, right: 20, bottom: 10),
+                  child: Column(
+                    children: <Widget>[
+                      Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          iconActivityTokenGo,
-                          Padding(
-                            padding: const EdgeInsets.only(left: 10.0),
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                StyledText(
-                                  'Today',
-                                  fontFamily: 'Montserrat',
-                                  color: Colors.black,
-                                  fontWeight: 500,
-                                  fontSize: 13,
-                                  lineHeight: 13,
+                          StyledText(
+                            '가자고와 함께 \n등산하고 뱃지를 받아보자고-!',
+                            color: const Color(0xFF0EE6F3),
+                            fontWeight: 700,
+                            fontSize: 24,
+                            lineHeight: 32,
+                          ),
+                          Container(
+                            margin: const EdgeInsets.symmetric(vertical: 25),
+                            decoration: BoxDecoration(
+                              color: const Color(0xFF0EE6F3),
+                              border: Border.all(
+                                width: 1,
+                                color: Colors.black,
+                              ),
+                              borderRadius: const BorderRadius.all(
+                                Radius.circular(15),
+                              ),
+                              boxShadow: const [
+                                BoxShadow(
+                                  color: Color(0xFF000000),
+                                  spreadRadius: 0,
+                                  blurRadius: 0,
+                                  offset: Offset(0, 4), // changes position of shadow
                                 ),
-                                Obx(() {
-                                  return Row(
-                                    children: [
-                                      StyledText(
-                                        '${controller.userState.value.state != null ? controller.userState.value.state!.dailyGoReward.toString() : 0}',
-                                        fontFamily: 'Montserrat',
-                                        color: Colors.black,
-                                        fontWeight: 600,
-                                        fontSize: 30,
-                                        lineHeight: 34,
-                                      ),
-                                      const Padding(
-                                        padding: EdgeInsets.only(left: 2.0, right: 5.0),
-                                        child: StyledText(
-                                          'GO',
+                              ],
+                            ),
+                            child: Padding(
+                              padding: const EdgeInsets.symmetric(vertical: 15.0, horizontal: 20.0),
+                              child: Row(
+                                mainAxisAlignment: MainAxisAlignment.start,
+                                crossAxisAlignment: CrossAxisAlignment.center,
+                                children: [
+                                  iconActivityTokenGo,
+                                  Padding(
+                                    padding: const EdgeInsets.only(left: 10.0),
+                                    child: Column(
+                                      crossAxisAlignment: CrossAxisAlignment.start,
+                                      children: [
+                                        StyledText(
+                                          'Today',
                                           fontFamily: 'Montserrat',
                                           color: Colors.black,
                                           fontWeight: 500,
-                                          fontSize: 18,
-                                          lineHeight: 26,
+                                          fontSize: 13,
+                                          lineHeight: 13,
+                                        ),
+                                        Obx(() {
+                                          return Row(
+                                            children: [
+                                              StyledText(
+                                                '${controller.userState.value.state != null ? controller.userState.value.state!.dailyGoReward.toString() : 0}',
+                                                fontFamily: 'Montserrat',
+                                                color: Colors.black,
+                                                fontWeight: 600,
+                                                fontSize: 30,
+                                                lineHeight: 34,
+                                              ),
+                                              const Padding(
+                                                padding: EdgeInsets.only(left: 2.0, right: 5.0),
+                                                child: StyledText(
+                                                  'GO',
+                                                  fontFamily: 'Montserrat',
+                                                  color: Colors.black,
+                                                  fontWeight: 500,
+                                                  fontSize: 18,
+                                                  lineHeight: 26,
+                                                ),
+                                              ),
+                                            ],
+                                          );
+                                        }),
+                                      ],
+                                    ),
+                                  )
+                                ],
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                      Obx(() {
+                        return Column(
+                          children: [
+                            ...renderStatList(controller, context),
+                          ],
+                        );
+                      }),
+                      Expanded(
+                        child: Container(
+                          child: Stack(
+                            alignment: Alignment.center,
+                            children: [
+                              Center(
+                                child: Obx(() {
+                                  return Row(
+                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    children: [
+                                      Container(
+                                        decoration: BoxDecoration(
+                                          color: const Color(0xFF0EE6F3),
+                                          border: Border.all(
+                                            width: 2,
+                                            color: Colors.black,
+                                          ),
+                                          borderRadius: const BorderRadius.all(
+                                            Radius.circular(150),
+                                          ),
+                                          boxShadow: const [
+                                            BoxShadow(
+                                              color: Colors.black,
+                                              offset: Offset(0, 4),
+                                              blurRadius: 0.0,
+                                              spreadRadius: 0.0,
+                                            ),
+                                          ],
+                                        ),
+                                        child: MaterialButton(
+                                          onPressed: [ExerciseState.ongoing, ExerciseState.paused, ExerciseState.ready].any((state) => controller.exerciseState.value == state)
+                                              ? () => controller.requestExerciseInitialization()
+                                              : () => Get.snackbar('시작 불가', '지속적으로 문제가 발생한다면 앱을 재시작해주세요', colorText: Colors.white),
+                                          shape: RoundedRectangleBorder(
+                                            borderRadius: BorderRadius.circular(150),
+                                          ),
+                                          color: const Color(0xFF0EE6F3),
+                                          height: 150,
+                                          minWidth: 150,
+                                          child: StyledText(
+                                            [ExerciseState.ongoing, ExerciseState.paused].any((state) => controller.exerciseState.value == state) ? 'Continue' : 'GO',
+                                            fontWeight: 800,
+                                            fontFamily: 'Montserrat',
+                                            fontSize: [ExerciseState.ongoing, ExerciseState.paused].any((state) => controller.exerciseState.value == state) ? 18 : 34,
+                                            lineHeight: [ExerciseState.ongoing, ExerciseState.paused].any((state) => controller.exerciseState.value == state) ? 18 : 34,
+                                            color: Colors.black,
+                                            letterSpacing: 0.5,
+                                          ),
                                         ),
                                       ),
                                     ],
                                   );
                                 }),
-                              ],
-                            ),
-                          )
-                        ],
+                              ),
+                              Positioned(
+                                bottom: 0,
+                                right: 0,
+                                child: FloatingActionButton(
+                                  onPressed: () {
+                                    controller.moveToChallengeMap();
+                                  },
+                                  child: iconChallengeList,
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
                       ),
-                    ),
+
+                    ],
                   ),
-                ],
-              ),
-              Obx(() {
-                return Column(
-                  children: [
-                    ...renderStatList(controller, context),
-                  ],
-                );
-              }),
-              Padding(
-                padding: const EdgeInsets.only(top: 70),
-                child: Stack(
-                  children: [
-                    Center(
-                      child: Obx(() {
-                        return Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            Container(
-                              decoration: BoxDecoration(
-                                color: const Color(0xFF0EE6F3),
-                                border: Border.all(
-                                  width: 2,
-                                  color: Colors.black,
-                                ),
-                                borderRadius: const BorderRadius.all(
-                                  Radius.circular(150),
-                                ),
-                                boxShadow: const [
-                                  BoxShadow(
-                                    color: Colors.black,
-                                    offset: Offset(0, 4),
-                                    blurRadius: 0.0,
-                                    spreadRadius: 0.0,
-                                  ),
-                                ],
-                              ),
-                              child: MaterialButton(
-                                onPressed: [ExerciseState.ongoing, ExerciseState.paused, ExerciseState.ready].any((state) => controller.exerciseState.value == state)
-                                    ? () => controller.requestExerciseInitialization()
-                                    : () => Get.snackbar('시작 불가', '지속적으로 문제가 발생한다면 앱을 재시작해주세요', colorText: Colors.white),
-                                shape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(150),
-                                ),
-                                color: const Color(0xFF0EE6F3),
-                                height: 150,
-                                minWidth: 150,
-                                child: StyledText(
-                                  [ExerciseState.ongoing, ExerciseState.paused].any((state) => controller.exerciseState.value == state) ? 'Continue' : 'GO',
-                                  fontWeight: 800,
-                                  fontFamily: 'Montserrat',
-                                  fontSize: [ExerciseState.ongoing, ExerciseState.paused].any((state) => controller.exerciseState.value == state) ? 18 : 34,
-                                  lineHeight: [ExerciseState.ongoing, ExerciseState.paused].any((state) => controller.exerciseState.value == state) ? 18 : 34,
-                                  color: Colors.black,
-                                  letterSpacing: 0.5,
-                                ),
-                              ),
-                            ),
-                            /* ElevatedButton(
-                              onPressed: () => { controller.onClickTestNoti() },
-                              child: Text('확인'),
-                            ),*/
-                          ],
-                        );
-                      }),
-                    ),
-                    Positioned(
-                      bottom: 5,
-                      right: 5,
-                      child: FloatingActionButton(
-                        onPressed: () {
-                          controller.moveToChallengeMap();
-                        },
-                        child: Icon(Icons.list),
-                      ),
-                    ),
-                  ],
                 ),
-              )
-            ],
+              ),
+            ),
           ),
-        ),
-      ),
+        );
+      },
     );
   }
 }
