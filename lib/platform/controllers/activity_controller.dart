@@ -1,5 +1,4 @@
 import 'dart:async';
-import 'dart:developer';
 import 'dart:io';
 
 import 'package:another_xlider/another_xlider.dart';
@@ -537,10 +536,16 @@ class ActivityController extends GetxController with ActivityMixin, ChallengeMix
     exerciseState.value = ExerciseState.ready;
 
     if (userState.value.exercise != null && userState.value.exercise!.state == 'ONGOING') {
+      CurrentUserStateModel? savedUserState = HiveStore.loadCurrentUserState();
+      if (savedUserState != null) {
+        userState.update((state) {
+          state?.exercise = savedUserState.exercise;
+        });
+      }
+
       if (userState.value.exercise?.challengeId != null) {
         //  산행중인 정보 가져오기
         ChallengeModel challenge = await getChallenge(userState.value.exercise!.challengeId!);
-        inspect(challenge);
         if (challenge.id != null) {
           selectedChallenge.value = challenge;
         }

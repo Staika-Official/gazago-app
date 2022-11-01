@@ -5,7 +5,11 @@ import 'package:gaza_go/constants/enums.dart';
 import 'package:gaza_go/platform/stores/hive_store.dart';
 import 'package:logger/logger.dart';
 
-late AndroidNotificationChannel channel;
+AndroidNotificationChannel channel = const AndroidNotificationChannel(
+  'gazago',
+  'gazago notifications',
+  importance: Importance.high,
+);
 late FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin;
 
 Future<void> initFcm() async {
@@ -71,13 +75,6 @@ Future<void> setForegroundConfig() async {
       badge: true,
       sound: true,
     );
-  } else if (defaultTargetPlatform == TargetPlatform.android) {
-    channel = const AndroidNotificationChannel(
-      'high_importance_channel',
-      'High Importance Notifications',
-      description: 'This channel is used for important notifications.',
-      importance: Importance.max,
-    );
   }
 
   const AndroidInitializationSettings initializationSettingsAndroid = AndroidInitializationSettings('@mipmap/ic_launcher');
@@ -91,10 +88,35 @@ Future<void> setForegroundConfig() async {
 
   flutterLocalNotificationsPlugin = FlutterLocalNotificationsPlugin();
 
-  await flutterLocalNotificationsPlugin.initialize(initializationSettings);
+  await flutterLocalNotificationsPlugin.initialize(initializationSettings, onSelectNotification: onSelectNotification);
 
   if (defaultTargetPlatform == TargetPlatform.android) {
     await flutterLocalNotificationsPlugin.resolvePlatformSpecificImplementation<AndroidFlutterLocalNotificationsPlugin>()?.requestPermission();
     await flutterLocalNotificationsPlugin.resolvePlatformSpecificImplementation<AndroidFlutterLocalNotificationsPlugin>()?.createNotificationChannel(channel);
+  } else {
+    await flutterLocalNotificationsPlugin.resolvePlatformSpecificImplementation<IOSFlutterLocalNotificationsPlugin>()?.requestPermissions(
+          alert: true,
+          badge: true,
+          sound: true,
+        );
   }
+}
+
+void onSelectNotification(String? payload) {
+  // TODO. 필요할 경우 payload 처리 필요
+  if (payload != null) {
+    print(payload);
+  }
+}
+
+NotificationDetails notificationDetail = NotificationDetails(
+  android: AndroidNotificationDetails(
+    channel.id,
+    channel.name,
+  ),
+);
+
+void showLocalNotification({required NotificationType notificationType, required String title, required String message, String? payload}) {
+  FlutterLocalNotificationsPlugin notificationsPlugin = FlutterLocalNotificationsPlugin();
+  notificationsPlugin.show(notificationType.id, title, message, notificationDetail);
 }
