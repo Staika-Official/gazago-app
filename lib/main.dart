@@ -4,7 +4,6 @@ import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter_native_splash/flutter_native_splash.dart';
 import 'package:gaza_go/constants/enums.dart';
 import 'package:gaza_go/platform/controllers/global_controller.dart';
 import 'package:gaza_go/platform/firebase/core.dart';
@@ -36,8 +35,7 @@ Future<PermissionStatus> requestNotificationPermission() async {
 
 void main() async {
   await runZonedGuarded(() async {
-    WidgetsBinding widgetsBinding = WidgetsFlutterBinding.ensureInitialized(); // async로 할 때 반드시 호출
-    FlutterNativeSplash.preserve(widgetsBinding: widgetsBinding);
+    WidgetsFlutterBinding.ensureInitialized(); // async로 할 때 반드시 호출
     await Hive.initFlutter();
     HiveStore.registerAdapters();
     await HiveStore.openBox();
