@@ -89,6 +89,7 @@ dependencies:
   expandable_bottom_sheet: ^1.1.1+1
   simple_animations: ^5.0.0+2
   flutter_launcher_icons: ^0.10.0
+  flutter_native_splash: ^2.2.13
 
 dev_dependencies:
   flutter_test:
