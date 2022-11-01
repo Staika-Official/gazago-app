@@ -1,6 +1,7 @@
 import 'dart:developer';
 
 import 'package:connectivity_plus/connectivity_plus.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_naver_map/flutter_naver_map.dart';
 import 'package:gaza_go/constants/enums.dart';
@@ -52,11 +53,11 @@ class ChallengeMixin {
 
   void notificationOnChallenge(List<ChallengeModel> result) {
     bool notification = false;
-    var filteredList = result.toSet().difference(challengeList.toSet()).toList();
-    if (filteredList.length != challengeList.length) {
+    List<ChallengeModel> filteredList = result.toSet().difference(challengeList.toSet()).toList();
+    if (listEquals(filteredList, challengeList) == false) {
       notification = true;
     }
-    if (filteredList.isNotEmpty) {
+    if (notification) {
       showLocalNotification(notificationType: NotificationType.challenge, title: '도전 지역 발견', message: '주변에 등산을 시작 할 수 있는 ${filteredList.first.firstName} 있어요. 등산을 시작해 보세요.');
       Get.snackbar('도전 지역 발견', '새로운 도전을 시작하세요.', colorText: Colors.green);
     }
