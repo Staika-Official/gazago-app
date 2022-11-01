@@ -181,3 +181,25 @@ extension TransactionTypeLabel on TransactionType {
     }
   }
 }
+
+enum NotificationType {
+  challenge,
+  badge,
+  stamina,
+  durability,
+}
+
+extension NotificationId on NotificationType {
+  int get id {
+    switch (this) {
+      case NotificationType.challenge:
+        return 0;
+      case NotificationType.badge:
+        return 1;
+      case NotificationType.stamina:
+        return 2;
+      case NotificationType.durability:
+        return 3;
+    }
+  }
+}
