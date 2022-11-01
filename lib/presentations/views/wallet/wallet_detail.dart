@@ -80,7 +80,7 @@ class WalletDetail extends StatelessWidget {
                             fontWeight: 600,
                           ),
                           StyledText(
-                            '${transaction.uiAmountString!} ${transaction.symbol!}',
+                            '${formatDecimalPlaces(double.parse(transaction.uiAmountString!), transaction.decimals!)} ${transaction.symbol!}',
                             fontSize: 18,
                             lineHeight: 20,
                             letterSpacing: -0.5,
@@ -147,7 +147,7 @@ class WalletDetail extends StatelessWidget {
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   StyledText(
-                    controller.assetDetail.value.balance.amount.toString(),
+                    formatDecimalPlaces(double.parse(controller.assetDetail.value.balance.uiAmountString!), controller.assetDetail.value.balance.decimals!),
                     fontSize: 28,
                     lineHeight: 28,
                     fontWeight: 600,
