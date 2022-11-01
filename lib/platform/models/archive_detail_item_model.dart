@@ -30,6 +30,7 @@ class ArchiveDetailItemModel {
   String? endPointName;
   String? description;
   String? province;
+  String? badgeImageUrl;
 
   ArchiveDetailItemModel({
     this.id,
@@ -58,6 +59,7 @@ class ArchiveDetailItemModel {
     this.endPointName,
     this.description,
     this.province,
+    this.badgeImageUrl,
   });
 
   factory ArchiveDetailItemModel.fromJson(Map<String, dynamic> json) => _$ArchiveDetailItemModelFromJson(json);

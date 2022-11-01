@@ -231,7 +231,7 @@ class ActivityMixin {
   }
 
   void startExercise(ExerciseType exerciseType, ChallengeModel? challenge) async {
-    if (Get.isDialogOpen != null && Get.isDialogOpen!) Get.back();
+    if (Get.isDialogOpen != null && Get.isDialogOpen!) Get.until((route) => Get.isDialogOpen == false);
     if (globalController.connectivityResult.value != ConnectivityResult.none) {
       await ActivityService.fetchStartUserExercises(
         UserExerciseModel(
@@ -362,13 +362,15 @@ class ActivityMixin {
       if (counter == const Duration(seconds: 3)) {
         initializeStopTimer();
         showEndExerciseDialog(challenge);
+      } else {
+        counter = counter + const Duration(milliseconds: 10);
+        stopProgress.value += (10 / 3000);
       }
-      counter = counter + const Duration(milliseconds: 10);
-      stopProgress.value += (10 / 3000);
     });
   }
 
   void onTapUpStop(TapUpDetails tapUpDetails) {
+    Get.snackbar('운동 종료', '‘3초간 눌러야 정지됩니다', colorText: Colors.white, snackPosition: SnackPosition.BOTTOM, margin: EdgeInsets.all(30));
     initializeStopTimer();
   }
 

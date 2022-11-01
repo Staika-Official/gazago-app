@@ -37,7 +37,7 @@ class ArchiveHome extends StatelessWidget {
                 elevation: 0,
                 color: const Color(0xFF363841),
                 child: Padding(
-                  padding: const EdgeInsets.only(top: 15.0, left: 15.0, right: 15.0, bottom: 10.0),
+                  padding: const EdgeInsets.only(top: 18.0, left: 18.0, right: 18.0, bottom: 17.0),
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
@@ -46,6 +46,7 @@ class ArchiveHome extends StatelessWidget {
                         crossAxisAlignment: CrossAxisAlignment.center,
                         children: [
                           Stack(
+                            clipBehavior: Clip.none,
                             children: [
                               CircleAvatar(
                                 radius: 21,
@@ -53,28 +54,29 @@ class ArchiveHome extends StatelessWidget {
                               ),
                               if (archive.badgeIssueId != null)
                                 Positioned(
-                                  right: 0,
-                                  bottom: 0,
-                                  child: Image.asset('assets/images/archive/ico_badge.png', width: 15, height: 20),
+                                  right: -5,
+                                  bottom: -5,
+                                  child: Image.network(archive.badgeImageUrl!, width: 20, height: 20),
                                 ),
                             ],
                           ),
                           Padding(
                             padding: const EdgeInsets.only(
-                              left: 10,
+                              left: 16,
                             ),
                             child: Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
                                 StyledText(formatDate(archive.startedDate!), fontSize: 16, fontWeight: 500),
-                                if (archive.challengeName != null) StyledText(archive.challengeName!, fontSize: 12, lineHeight: 20, color: const Color(0xFF949494), fontWeight: 500),
+                                if (archive.challengeTitle != null) StyledText(archive.challengeTitle!, fontSize: 12, lineHeight: 20, color: const Color(0xFF8a8a8a), fontWeight: 600),
                               ],
                             ),
                           )
                         ],
                       ),
                       const Divider(
-                        color: Color(0xFF28292C),
+                        color: Color(0xFF2a2b33),
+                        height: 25,
                         thickness: 1,
                       ),
                       Row(
