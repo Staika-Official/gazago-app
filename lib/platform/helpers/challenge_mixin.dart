@@ -54,7 +54,7 @@ class ChallengeMixin {
   void notificationOnChallenge(List<ChallengeModel> result) {
     bool notification = false;
     List<ChallengeModel> filteredList = result.toSet().difference(challengeList.toSet()).toList();
-    if (listEquals(filteredList, challengeList) == false) {
+    if (result.isNotEmpty && listEquals(filteredList, challengeList) == false) {
       notification = true;
     }
     if (notification) {
