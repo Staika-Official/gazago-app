@@ -338,9 +338,9 @@ class ActivityHome extends StatelessWidget {
     final slideController = PageController(viewportFraction: 1, keepPage: true);
 
     final challengeMovie = MovieTween()
-      ..tween('scale', Tween(begin: 0.9, end: 1.1),
+      ..tween('scale', Tween(begin: 1, end: 1.1),
           duration: const Duration(seconds: 1))
-          .thenTween('scale', Tween(begin: 1.1, end: 0.9),
+          .thenTween('scale', Tween(begin: 1.1, end: 1),
           duration: const Duration(seconds: 1));
 
     return LayoutBuilder(
