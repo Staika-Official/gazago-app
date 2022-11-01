@@ -23,7 +23,7 @@ class Api {
       ),
     );
 
-  static Dio client({required String serviceUrl, bool needsToken = true, Map<String, dynamic>? queryParams}) {
+  static Dio client({required String serviceUrl, bool needsToken = true, Map<String, dynamic>? queryParams, bool? isPatch = false, bool? isFile = false}) {
     _dio.options.baseUrl = '${F.baseUrl}$serviceUrl';
 
     if (needsToken) {
@@ -32,9 +32,16 @@ class Api {
       if (accessToken != null) {
         _dio.options.headers = {'Authorization': 'Bearer ${accessToken!}'};
       }
+      if (isPatch!) {
+        _dio.options.headers = {'Authorization': 'Bearer ${accessToken!}', 'Content-type': 'application/merge-patch+json'};
+      }
+      if (isFile!) {
+        _dio.options.headers = {'Authorization': 'Bearer ${accessToken!}', 'Content-type': 'multipart/form-data'};
+      }
     } else {
       _dio.options.headers = {'Authorization': ''};
     }
+
     if (queryParams != null) {
       _dio.options.queryParameters = queryParams;
     } else {

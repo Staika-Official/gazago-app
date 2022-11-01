@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:gaza_go/platform/controllers/activity_controller.dart';
 import 'package:gaza_go/platform/controllers/leaderboard_controller.dart';
+import 'package:gaza_go/platform/helpers/base_helper.dart';
 import 'package:gaza_go/platform/models/ranker_model.dart';
 import 'package:gaza_go/presentations/styles/icons.dart';
 import 'package:gaza_go/presentations/styles/styled_text.dart';
@@ -149,7 +150,7 @@ class LeaderboardHome extends StatelessWidget {
           Expanded(
             flex: 1,
             child: Text(
-              '${myRank.rewardTik.toString()} TIK',
+              '${formatDecimalPlaces(myRank.rewardTik, 1)} TIK',
               textAlign: TextAlign.right,
               style: const TextStyle(
                 color: Color(0xFF5B5B67),
@@ -208,12 +209,12 @@ class LeaderboardHome extends StatelessWidget {
           ),
           Expanded(
             flex: 1,
-            child: Text('${ranker.rewardGo.toString()} GO', textAlign: TextAlign.right, style: const TextStyle(color: Colors.white, fontSize: 14, fontWeight: FontWeight.w600)),
+            child: Text('${formatDecimalPlaces(ranker.rewardGo, 2)} GO', textAlign: TextAlign.right, style: const TextStyle(color: Colors.white, fontSize: 14, fontWeight: FontWeight.w600)),
           ),
           Padding(padding: EdgeInsets.only(left: 10)),
           Expanded(
             flex: 1,
-            child: Text('${ranker.rewardTik.toString()} TIK', textAlign: TextAlign.right, style: const TextStyle(color: Color(0xFF5B5B67), fontSize: 14, fontWeight: FontWeight.w600)),
+            child: Text('${formatDecimalPlaces(ranker.rewardTik, 1)} TIK', textAlign: TextAlign.right, style: const TextStyle(color: Color(0xFF5B5B67), fontSize: 14, fontWeight: FontWeight.w600)),
           ),
         ],
       ),
@@ -254,7 +255,7 @@ class LeaderboardHome extends StatelessWidget {
                       return Row(
                         children: [
                           StyledText(
-                            '${activityController.userState.value.state != null ? activityController.userState.value.state!.dailyGoReward.toString() : 0}',
+                            '${activityController.userState.value.state != null ? formatDecimalPlaces(activityController.userState.value.state!.dailyGoReward!, 2) : 0}',
                             color: Colors.white,
                             fontWeight: 600,
                             fontSize: 30,

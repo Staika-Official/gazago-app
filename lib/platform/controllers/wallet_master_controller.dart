@@ -1,5 +1,3 @@
-import 'dart:developer';
-
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:gaza_go/constants/enums.dart';
@@ -35,7 +33,7 @@ class WalletMasterController extends GetxController {
 
       balanceUiList.add(tokenUi);
     }
-    inspect(balanceUiList);
+
     return RxList(balanceUiList);
   }
 

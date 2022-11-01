@@ -184,7 +184,7 @@ class ArchiveDetail extends StatelessWidget {
                   ),
                   const Spacer(),
                   StyledText(
-                    '${controller.selectedItem.value.rewardGo.toString()} GO',
+                    '${formatDecimalPlaces(controller.selectedItem.value.rewardGo!, 2)} GO',
                     fontWeight: 500,
                     fontSize: 16,
                     color: const Color(0xFF7D7D84),

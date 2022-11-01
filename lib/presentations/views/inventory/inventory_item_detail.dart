@@ -13,7 +13,7 @@ class InventoryItemDetail extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     WalletMasterController walletMasterController = Get.find();
-    InventoryController controller = Get.put(InventoryController(walletMasterController));
+    InventoryController controller = Get.put(InventoryController());
     return DefaultContainer(
         titleText: controller.selectedItem.value.itemName,
         backgroundColor: Color(0xFF191921),

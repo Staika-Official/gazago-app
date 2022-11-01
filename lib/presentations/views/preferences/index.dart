@@ -37,13 +37,13 @@ class Preferences extends StatelessWidget {
                           CircleAvatar(
                             radius: 30,
                             foregroundImage: CachedNetworkImageProvider(
-                              controller.profile.value.profileImageUrl,
+                              controller.profile.value.profileImageUrl!,
                             ),
                           ),
                           Padding(
                             padding: const EdgeInsets.only(left: 14.0),
                             child: StyledText(
-                              controller.profile.value.nickname,
+                              controller.profile.value.nickname!,
                               fontWeight: 500,
                               fontSize: 18,
                               lineHeight: 20,

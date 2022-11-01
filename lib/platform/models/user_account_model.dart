@@ -7,7 +7,7 @@ class UserAccountModel {
   int id;
   String login;
   String email;
-  String nickname;
+  String? nickname;
   String? profileImageUrl;
   String? phone;
   String? userCode;
@@ -24,7 +24,7 @@ class UserAccountModel {
     required this.id,
     required this.login,
     required this.email,
-    required this.nickname,
+    this.nickname,
     this.profileImageUrl,
     this.phone,
     this.userCode,
@@ -41,4 +41,6 @@ class UserAccountModel {
   factory UserAccountModel.fromJson(Map<String, dynamic> json) => _$UserAccountModelFromJson(json);
 
   Map<String, dynamic> toJson() => _$UserAccountModelToJson(this);
+
+  void update(Null Function(dynamic state) param0) {}
 }

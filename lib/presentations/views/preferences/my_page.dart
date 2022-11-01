@@ -45,7 +45,7 @@ class MyPage extends StatelessWidget {
                                   File(controller.pickedImage.value!.path),
                                 )
                               : CachedNetworkImageProvider(
-                                  controller.profile.value.profileImageUrl,
+                                  controller.profile.value.profileImageUrl!,
                                 ) as ImageProvider,
                         ),
                         controller.isEditMode.value
@@ -53,7 +53,7 @@ class MyPage extends StatelessWidget {
                                 bottom: 0,
                                 right: 0,
                                 child: InkWell(
-                                  onTap: () => controller.pickedImage,
+                                  onTap: () => controller.pickImage(),
                                   child: iconCamera,
                                 ),
                               )
@@ -196,11 +196,11 @@ class MyPage extends StatelessWidget {
                                 child: SizedBox(
                                   width: double.infinity,
                                   child: Container(
-                                    color: Color(0xFF0EE6F3),
+                                    color: const Color(0xFF0EE6F3),
                                     height: 60,
                                     alignment: Alignment.center,
                                     child: InkWell(
-                                      onTap: () => controller.toggleEditMode(),
+                                      onTap: () => controller.modifyMyAccountInfo(),
                                       child: const StyledText(
                                         '확인',
                                         color: Colors.black,
@@ -278,10 +278,10 @@ class MyPage extends StatelessWidget {
                                         children: [
                                           Padding(
                                             padding: const EdgeInsets.only(right: 5.0, bottom: 3.0),
-                                            child: getMypageLoginedButtonIcon(controller.profile.value.socialAccounts),
+                                            child: getMypageLoginedButtonIcon(controller.profile.value.provider!),
                                           ),
                                           StyledText(
-                                            controller.profile.value.socialAccounts,
+                                            controller.profile.value.provider!,
                                             color: Color(0xFFA8A8A8),
                                             fontSize: 16,
                                             fontWeight: 500,

@@ -1,10 +1,17 @@
 import 'package:dio/dio.dart';
+import 'package:gaza_go/constants/enums.dart';
 import 'package:gaza_go/platform/apis/uaa.dart';
 import 'package:gaza_go/platform/models/access_token_model.dart';
 import 'package:gaza_go/platform/models/social_login_info_model.dart';
+import 'package:gaza_go/platform/models/upload_profile_image_model.dart';
 import 'package:gaza_go/platform/models/user_account_model.dart';
+import 'package:gaza_go/platform/stores/hive_store.dart';
 
 class UaaService {
+  static String? get userId {
+    return HiveStore.loadString(key: HiveKey.userId.name);
+  }
+
   static Future<AccessTokenModel> emailLogin() async {
     Response res = await UaaApi.emailLogin();
     AccessTokenModel token = AccessTokenModel.fromJson(res.data);
@@ -33,5 +40,17 @@ class UaaService {
     } else if (res.statusCode != null) {
       errorCallback!(res.data);
     }
+  }
+
+  static Future<UserAccountModel> modifyAccountInfo(String? nickname, String? profileImageUrl) async {
+    Response res = await UaaApi.modifyAccountInfo(userId!, nickname, profileImageUrl);
+    UserAccountModel user = UserAccountModel.fromJson(res.data);
+    return user;
+  }
+
+  static Future<UploadProfileImageModel?> fetchUploadImage(FormData formData) async {
+    Response res = await UaaApi.fetchUploadImage(userId!, formData);
+    UploadProfileImageModel imageRes = UploadProfileImageModel.fromJson(res.data);
+    return imageRes;
   }
 }

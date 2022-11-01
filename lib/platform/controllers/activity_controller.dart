@@ -214,10 +214,10 @@ class ActivityController extends GetxController with ActivityMixin, ChallengeMix
   }
 
   void onClickRepairStat(stat) {
-    if (stat.type == 'DURABILITY') {
-      _currentSliderValue.value = stat.currentStat;
-      remainDurability.value = stat.currentStat.toInt();
-    }
+    // if (stat.type == 'DURABILITY') {
+    //   _currentSliderValue.value = stat.currentStat;
+    //   remainDurability.value = stat.currentStat.toInt();
+    // }
     handleShowStaminaPopup(stat);
   }
 
@@ -277,12 +277,12 @@ class ActivityController extends GetxController with ActivityMixin, ChallengeMix
                         values: [_currentSliderValue.value],
                         max: 100,
                         min: 0,
-                        step: FlutterSliderStep(
-                          step: stat.type == 'STAMINA' ? 10 : 1, // default
+                        step: const FlutterSliderStep(
+                          step: 1, // default
                         ),
                         handlerHeight: 32.0,
                         ignoreSteps: [
-                          stat.type == 'DURABILITY' ? FlutterSliderIgnoreSteps(from: -1, to: stat.currentStat - 1) : FlutterSliderIgnoreSteps(from: 0, to: 0),
+                          FlutterSliderIgnoreSteps(from: 0, to: 0),
                         ],
                         trackBar: FlutterSliderTrackBar(
                           inactiveTrackBarHeight: 16,
@@ -303,16 +303,8 @@ class ActivityController extends GetxController with ActivityMixin, ChallengeMix
                           ),
                         ),
                         onDragging: (handlerIndex, lowerValue, upperValue) {
-                          if (stat.type == 'STAMINA') {
-                            _currentSliderValue.value = lowerValue;
-                            costTik.value = _currentSliderValue.value.toInt() * 100;
-                          } else {
-                            if (lowerValue >= stat.currentStat.floor().toInt()) {
-                              _currentSliderValue.value = lowerValue;
-                              repairDurability.value = (lowerValue - stat.currentStat.floor()).toInt();
-                              costTik.value = (lowerValue.toInt() - remainDurability.value).abs() * 100;
-                            }
-                          }
+                          _currentSliderValue.value = lowerValue;
+                          costTik.value = _currentSliderValue.value.toInt() * 100;
                         },
                         handler: FlutterSliderHandler(
                           decoration: BoxDecoration(
@@ -507,7 +499,7 @@ class ActivityController extends GetxController with ActivityMixin, ChallengeMix
         InventoryItemModel repairModel = await ItemService.fetchRepairItemShoes(
           RepairShoesModel(
             id: userState.value.shoes!.id,
-            durability: repairDurability.value,
+            durability: _currentSliderValue.value.toInt(),
             feeTik: costTik.value.toInt(),
           ),
         );

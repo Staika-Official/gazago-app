@@ -19,7 +19,7 @@ class ActivityHome extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
             SizedBox(
-              height: 34,
+              height: 42,
               child: Stack(
                 children: [
                   Row(
@@ -38,7 +38,7 @@ class ActivityHome extends StatelessWidget {
                                             color: Colors.black,
                                           ),
                                           borderRadius: const BorderRadius.all(
-                                            Radius.circular(30),
+                                            Radius.circular(42),
                                           ),
                                           boxShadow: const [
                                             BoxShadow(
@@ -65,7 +65,7 @@ class ActivityHome extends StatelessWidget {
                                                     color: Colors.black,
                                                   ),
                                                   borderRadius: const BorderRadius.all(
-                                                    Radius.circular(30),
+                                                    Radius.circular(42),
                                                   ),
                                                   boxShadow: const [
                                                     BoxShadow(
@@ -160,18 +160,18 @@ class ActivityHome extends StatelessWidget {
                           StyledText(
                             stat.name,
                             fontFamily: 'Montserrat',
-                            fontWeight: 600,
+                            fontWeight: 700,
                             fontSize: 14,
-                            lineHeight: 14,
+                            lineHeight: 15,
                             color: stat.currentStat < 20 ? Colors.white : Colors.black,
                           ),
                           Padding(
                             padding: const EdgeInsets.only(left: 5.0),
                             child: StyledText(
                               stat.currentStat.toString(),
-                              fontWeight: 600,
+                              fontWeight: 700,
                               fontSize: 13,
-                              lineHeight: 14,
+                              lineHeight: 15,
                               color: stat.currentStat < 20 ? Colors.white : Colors.black,
                             ),
                           ),
@@ -179,15 +179,6 @@ class ActivityHome extends StatelessWidget {
                       ),
                       Row(
                         children: [
-                          Padding(
-                            padding: const EdgeInsets.only(right: 8.0),
-                            child: StyledText(
-                              '100',
-                              color: const Color(0xFF494A51),
-                              fontSize: 14,
-                              fontWeight: 600,
-                            ),
-                          ),
                           stat.type == 'STAMINA'
                               ? Container(
                                   decoration: BoxDecoration(
@@ -197,7 +188,7 @@ class ActivityHome extends StatelessWidget {
                                       color: Colors.black,
                                     ),
                                     borderRadius: const BorderRadius.all(
-                                      Radius.circular(30),
+                                      Radius.circular(42),
                                     ),
                                     boxShadow: const [
                                       BoxShadow(
@@ -209,7 +200,7 @@ class ActivityHome extends StatelessWidget {
                                     ],
                                   ),
                                   child: CircleAvatar(
-                                    radius: 15,
+                                    radius: 19,
                                     backgroundColor: const Color(0xFFCDFF41),
                                     child: IconButton(
                                       icon: iconPlus,
@@ -237,7 +228,7 @@ class ActivityHome extends StatelessWidget {
                                     ],
                                   ),
                                   child: CircleAvatar(
-                                    radius: 15,
+                                    radius: 19,
                                     backgroundColor: Color(0xFFB85DFF),
                                     child: IconButton(
                                       icon: iconPlus,

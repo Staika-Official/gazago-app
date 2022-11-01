@@ -62,7 +62,7 @@ class Home extends StatelessWidget {
         backgroundColor: const Color(0xFF1D1D26),
         appBar: controller.appbar,
         body: controller.mainViewWidgetList.elementAt(controller.selectedIndex.value),
-        bottomNavigationBar: bottomNavigationBar(controller),
+        bottomNavigationBar: controller.selectedIndex != 2 ? bottomNavigationBar(controller) : null,
       );
     });
   }

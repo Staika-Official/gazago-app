@@ -87,9 +87,13 @@ dependencies:
   animated_flip_counter: ^0.2.5
   health: ^4.1.1
   expandable_bottom_sheet: ^1.1.1+1
+
   simple_animations: ^5.0.0+2
   flutter_launcher_icons: ^0.10.0
   flutter_native_splash: ^2.2.13
+
+  carousel_slider: ^4.1.1
+
 
 dev_dependencies:
   flutter_test:

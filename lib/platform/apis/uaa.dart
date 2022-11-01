@@ -23,4 +23,15 @@ class UaaApi {
   static Future<Response> checkLoginStatus() async {
     return await Api.client(serviceUrl: '/services/gazago').get('/api/ping');
   }
+
+  static Future<Response> modifyAccountInfo(String userId, String? nickname, String? profileImageUrl) async {
+    return await Api.client(
+      serviceUrl: ServiceUrl.uaaService,
+      isPatch: true,
+    ).patch('/users/$userId', data: {'id': userId, 'nickname': nickname, 'profileImageUrl': profileImageUrl});
+  }
+
+  static Future<Response> fetchUploadImage(String userId, FormData imageFile) async {
+    return await Api.client(serviceUrl: ServiceUrl.uaaService, isFile: true).post('/users/$userId/upload-profile-image', data: imageFile);
+  }
 }

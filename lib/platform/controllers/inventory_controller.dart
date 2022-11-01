@@ -1,5 +1,3 @@
-import 'dart:developer';
-
 import 'package:another_xlider/another_xlider.dart';
 import 'package:flutter/material.dart';
 import 'package:gaza_go/constants/routes.dart';
@@ -21,9 +19,7 @@ import 'package:gaza_go/presentations/styles/styled_text.dart';
 import 'package:get/get.dart';
 
 class InventoryController extends GetxController with LinearProgressMixin, InventoryMixin {
-  final WalletMasterController? walletMasterController;
-
-  InventoryController([this.walletMasterController]);
+  final WalletMasterController walletMasterController = Get.find();
 
   final RxList<StatModel> statList = RxList.empty();
   final RxList<InventoryItemModel> myAllItems = RxList.empty();
@@ -150,7 +146,7 @@ class InventoryController extends GetxController with LinearProgressMixin, Inven
   void onInit() {
     once(count, (_) => print('한번만 호출'));
     initController();
-    inspect('1213124124124${walletMasterController?.spendingTokenUiList.value}');
+
     super.onInit();
   }
 
@@ -186,8 +182,6 @@ class InventoryController extends GetxController with LinearProgressMixin, Inven
   }
 
   void toBadgeDetail(int id) {
-    print(id);
-    print(userBadgesList.toString());
     selectedBadge.value = userBadgesList.firstWhere((item) => item.badgeId == id);
     setGetBadgeDate(id);
     Get.toNamed(Routes.badgeDetail);
@@ -195,6 +189,10 @@ class InventoryController extends GetxController with LinearProgressMixin, Inven
 
   void getUserAllItems() async {
     List<InventoryItemModel> allItems = await ItemService.getAllMyItems();
+    // List<InventoryItemModel> test = List.empty(growable: true);
+    // for (int i = 0; i < 10; i++) {
+    //   test.add(allItems[0]);
+    // }
     myAllItems.value = allItems;
   }
 
@@ -214,7 +212,7 @@ class InventoryController extends GetxController with LinearProgressMixin, Inven
         state!.badge.imageUrl = 'assets/images/@temp_badge.png';
       });
     }
-    inspect(equippedBadge);
+
     remainDurability.value = equippedItems.items.firstWhere((element) => element.itemCategory == 'SHOES').durability.floor();
   }
 
@@ -242,17 +240,18 @@ class InventoryController extends GetxController with LinearProgressMixin, Inven
   }
 
   void fetchRepairShoes(shoeId) async {
-    if (walletMasterController!.tik.value.amount! >= costTik.value) {
+    if (walletMasterController.tik.value.amount! >= costTik.value) {
       if (costTik.value > 0) {
         InventoryItemModel repairModel = await ItemService.fetchRepairItemShoes(
           RepairShoesModel(
             id: shoeId,
-            durability: repairDurability.value,
-            feeTik: costTik.value.toInt() + 10000,
+            durability: _currentSliderValue.value.toInt(),
+            feeTik: costTik.value.toInt(),
           ),
         );
 
         costTik.value = 0;
+        _currentSliderValue.value = 0;
         selectedItem.value = repairModel;
         remainDurability.value = repairModel.durability.toInt();
         getUserAllItems();
@@ -270,7 +269,7 @@ class InventoryController extends GetxController with LinearProgressMixin, Inven
   }
 
   void showShoesRepairPopup(id) {
-    _currentSliderValue.value = equippedShoe.value.durability.toInt().floor().toDouble();
+    // _currentSliderValue.value = equippedShoe.value.durability.toInt().floor().toDouble();
 
     Get.bottomSheet(
       Obx(() {
@@ -298,7 +297,7 @@ class InventoryController extends GetxController with LinearProgressMixin, Inven
                     Padding(
                       padding: const EdgeInsets.only(top: 12.0),
                       child: StyledText(
-                        '내구도 ${_currentSliderValue.value.toStringAsFixed(0)}/100',
+                        '내구도 ${equippedShoe.value.durability.toInt()}/100',
                         fontSize: 16,
                         lineHeight: 22,
                         fontWeight: 500,
@@ -313,7 +312,7 @@ class InventoryController extends GetxController with LinearProgressMixin, Inven
                         min: 0,
                         handlerHeight: 32.0,
                         ignoreSteps: [
-                          FlutterSliderIgnoreSteps(from: -1, to: equippedShoe.value.durability - 1),
+                          FlutterSliderIgnoreSteps(from: 0, to: 0),
                         ],
                         trackBar: FlutterSliderTrackBar(
                           inactiveTrackBarHeight: 16,
@@ -334,11 +333,8 @@ class InventoryController extends GetxController with LinearProgressMixin, Inven
                           ),
                         ),
                         onDragging: (handlerIndex, lowerValue, upperValue) {
-                          if (lowerValue >= equippedShoe.value.durability.floor().toInt()) {
-                            _currentSliderValue.value = lowerValue;
-                            repairDurability.value = (lowerValue - equippedShoe.value.durability.floor()).toInt();
-                            costTik.value = (lowerValue.toInt() - remainDurability.value).abs() * 100;
-                          }
+                          _currentSliderValue.value = lowerValue;
+                          costTik.value = _currentSliderValue.value.toInt() * 100;
                         },
                         handler: FlutterSliderHandler(
                           decoration: BoxDecoration(
