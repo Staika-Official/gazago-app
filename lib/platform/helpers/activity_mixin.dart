@@ -7,7 +7,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_naver_map/flutter_naver_map.dart';
 import 'package:gaza_go/constants/config.dart';
 import 'package:gaza_go/constants/enums.dart';
+import 'package:gaza_go/platform/controllers/archive_controller.dart';
 import 'package:gaza_go/platform/controllers/global_controller.dart';
+import 'package:gaza_go/platform/controllers/home_menu_controller.dart';
 import 'package:gaza_go/platform/helpers/activity_helper.dart';
 import 'package:gaza_go/platform/helpers/base_helper.dart';
 import 'package:gaza_go/platform/models/challenge_model.dart';
@@ -15,6 +17,7 @@ import 'package:gaza_go/platform/models/current_user_state_model.dart';
 import 'package:gaza_go/platform/models/user_exercise_model.dart';
 import 'package:gaza_go/platform/services/activity_service.dart';
 import 'package:gaza_go/platform/stores/hive_store.dart';
+import 'package:gaza_go/presentations/styles/styled_text.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:get/get.dart';
 import 'package:health/health.dart';
@@ -340,23 +343,23 @@ class ActivityMixin {
     }
 
     stopTimer = Timer.periodic(const Duration(milliseconds: 10), (timer) {
-      if (counter == const Duration(seconds: 1)) {
+      if (counter == const Duration(seconds: 3)) {
         initializeStopTimer();
-        endExercise(challenge);
+        showEndExerciseDialog(challenge);
       }
       counter = counter + const Duration(milliseconds: 10);
-      stopProgress.value += 0.01;
+      stopProgress.value += (10 / 3000);
     });
   }
 
   void onTapUpStop(TapUpDetails tapUpDetails) {
-    stopProgress.value = 0;
     initializeStopTimer();
   }
 
   void initializeStopTimer() {
     stopTimer?.cancel();
     stopTimer = null;
+    stopProgress.value = 0;
   }
 
   void pauseExercise() {
@@ -368,20 +371,40 @@ class ActivityMixin {
     updateExercise();
   }
 
+  void showEndExerciseDialog(ChallengeModel challenge) {
+    Get.dialog(
+      AlertDialog(
+        title: StyledText('운동 종료', color: Colors.black),
+        content: StyledText('정말 운동을 종료하시겠어요?', color: Colors.black),
+        actions: [
+          ElevatedButton(onPressed: () => Get.back(), child: StyledText('이어하기')),
+          ElevatedButton(
+              onPressed: () async {
+                endExercise(challenge);
+              },
+              child: StyledText('종료')),
+        ],
+      ),
+    );
+  }
+
   void endExercise(ChallengeModel challenge) async {
     if (globalController.connectivityResult.value != ConnectivityResult.none) {
       await ActivityService.fetchEndUserExercises(userExerciseData.value, successCallback: (CurrentUserStateModel newUserState) {
         if (newUserState.exercise!.state == 'ENDED') {
           exerciseState.value = ExerciseState.ready;
-          userState.update((state) {
-            state?.state = newUserState.state;
-            state?.exercise = newUserState.exercise;
-            state?.shoes = newUserState.shoes;
-          });
+          userState.update(
+            (state) {
+              state?.state = newUserState.state;
+              state?.exercise = newUserState.exercise;
+              state?.shoes = newUserState.shoes;
+            },
+          );
           HiveStore.deleteMultipleKeys(keys: [HiveKey.userState.name, HiveKey.endExerciseRequested.name]);
           resetVariables(challenge);
           resetTimer();
           resetSubscriptions();
+          moveToExerciseDetail(userState.value.exercise!.id!);
         }
       }, errorCallback: () {
         Get.snackbar('운동 종료 불가', '운동이 정상적으로 종료되지 않았습니디.', colorText: Colors.white);
@@ -400,6 +423,7 @@ class ActivityMixin {
       resetVariables(challenge);
       resetTimer();
       resetSubscriptions();
+      moveToExerciseDetail(userState.value.exercise!.id!);
     }
   }
 
@@ -432,6 +456,16 @@ class ActivityMixin {
     HiveStore.save(key: HiveKey.savedStepCount.name, value: 0);
     pedestrianStatusSubscription?.cancel();
     pedestrianStatusSubscription = null;
+  }
+
+  void moveToExerciseDetail(int exerciseId) {
+    Get.until((route) => route.isFirst);
+    Get.find<HomeMenuController>().selectMenu(1);
+    if (Get.isRegistered<ArchiveController>()) {
+      Get.find<ArchiveController>().toDetail(exerciseId);
+    } else {
+      Get.put(ArchiveController()).toDetail(exerciseId);
+    }
   }
 
   void showExerciseMap(Widget mapWidget) {

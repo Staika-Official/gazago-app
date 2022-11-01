@@ -34,9 +34,10 @@ class ArchiveController extends GetxController with ScrollMixin {
   }
 
   Future<void> refreshController() async {
-    if (archiveList.isNotEmpty && archiveList.length * page.value < page.value * 20) {
-      await getArchiveList();
-    }
+    archiveList = RxList.empty();
+    page.value = 0;
+    stopLoading.value = false;
+    await getArchiveList();
   }
 
   Future<void> getArchiveList() async {
