@@ -4,6 +4,7 @@ import 'package:gaza_go/platform/controllers/activity_controller.dart';
 import 'package:gaza_go/presentations/styles/icons.dart';
 import 'package:gaza_go/presentations/styles/styled_text.dart';
 import 'package:get/get.dart';
+import 'package:simple_animations/simple_animations.dart';
 
 class ActivityHome extends StatelessWidget {
   ActivityHome({Key? key}) : super(key: key);
@@ -336,6 +337,12 @@ class ActivityHome extends StatelessWidget {
 
     final slideController = PageController(viewportFraction: 1, keepPage: true);
 
+    final challengeMovie = MovieTween()
+      ..tween('scale', Tween(begin: 0.9, end: 1.1),
+          duration: const Duration(seconds: 1))
+          .thenTween('scale', Tween(begin: 1.1, end: 0.9),
+          duration: const Duration(seconds: 1));
+
     return LayoutBuilder(
       builder: (context, constraint) {
         return Container(
@@ -487,11 +494,21 @@ class ActivityHome extends StatelessWidget {
                                             [ExerciseState.ongoing, ExerciseState.paused].any((state) => controller.exerciseState.value == state) ? 'Continue' : 'GO',
                                             fontWeight: 800,
                                             fontFamily: 'Montserrat',
-                                            fontSize: [ExerciseState.ongoing, ExerciseState.paused].any((state) => controller.exerciseState.value == state) ? 18 : 34,
-                                            lineHeight: [ExerciseState.ongoing, ExerciseState.paused].any((state) => controller.exerciseState.value == state) ? 18 : 34,
+                                            fontSize: [ExerciseState.ongoing, ExerciseState.paused].any((state) => controller.exerciseState.value == state) ? 18 : 50,
+                                            lineHeight: [ExerciseState.ongoing, ExerciseState.paused].any((state) => controller.exerciseState.value == state) ? 18 : 50,
                                             color: Colors.black,
                                             letterSpacing: 0.5,
-                                          ),
+                                          )
+                                           /* child: StyledText(
+                                              [ExerciseState.ongoing, ExerciseState.paused].any((state) => controller.exerciseState.value == state) ? 'Continue' : 'GO',
+                                              fontWeight: 800,
+                                              fontFamily: 'Montserrat',
+                                              fontSize: [ExerciseState.ongoing, ExerciseState.paused].any((state) => controller.exerciseState.value == state) ? 18 : 34,
+                                              lineHeight: [ExerciseState.ongoing, ExerciseState.paused].any((state) => controller.exerciseState.value == state) ? 18 : 34,
+                                              color: Colors.black,
+                                              letterSpacing: 0.5,
+                                            ),*/
+                                          ,
                                         ),
                                       ),
                                     ],
@@ -499,15 +516,43 @@ class ActivityHome extends StatelessWidget {
                                 }),
                               ),
                               Positioned(
-                                bottom: 0,
-                                right: 0,
-                                child: FloatingActionButton(
-                                  onPressed: () {
-                                    controller.moveToChallengeMap();
-                                  },
-                                  child: iconChallengeList,
-                                ),
+                                  bottom: 10,
+                                  right: 0,
+                                  child: LoopAnimationBuilder<Movie>(
+                                    tween: challengeMovie, // 0° to 360° (2π)
+                                    duration: challengeMovie.duration, // for 2 seconds per iteration
+                                    builder: (context, value, _) {
+                                      return Transform.scale(
+                                          scale: value.get('scale'),
+                                          child: FloatingActionButton(
+                                            onPressed: () {
+                                              controller.moveToChallengeMap();
+                                            },
+                                            child: iconChallengeList,
+                                          )
+                                      );
+                                    },
+                                  )
                               ),
+                              /*Positioned(
+                                  bottom: 10,
+                                  right: 0,
+                                  child: LoopAnimationBuilder<double>(
+                                    tween: Tween(begin: 1, end: 1.1), // 0° to 360° (2π)
+                                    duration: const Duration(milliseconds: 1200), // for 2 seconds per iteration
+                                    builder: (context, value, _) {
+                                      return Transform.scale(
+                                          scale: value,
+                                          child: FloatingActionButton(
+                                            onPressed: () {
+                                              controller.moveToChallengeMap();
+                                            },
+                                            child: iconChallengeList,
+                                          )
+                                      );
+                                    },
+                                  )
+                              ),*/
                             ],
                           ),
                         ),
