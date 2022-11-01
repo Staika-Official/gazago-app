@@ -9,7 +9,6 @@ import 'package:gaza_go/platform/models/social_login_info_model.dart';
 import 'package:gaza_go/platform/models/user_account_model.dart';
 import 'package:gaza_go/platform/services/member_service.dart';
 import 'package:gaza_go/platform/services/uaa_service.dart';
-import 'package:gaza_go/platform/services/wallet_service.dart';
 import 'package:gaza_go/platform/stores/hive_store.dart';
 import 'package:get/get.dart';
 import 'package:google_sign_in/google_sign_in.dart';
@@ -89,7 +88,6 @@ class LoginController extends GetxController {
     String? profileImageUrl = HiveStore.loadString(key: HiveKey.profileImageUrl.name);
     String? nickname = HiveStore.loadString(key: HiveKey.nickname.name);
     await MemberService.initializeUserData(nickname, profileImageUrl);
-    await WalletService.generateSpendingWallet();
   }
 
   Future<void> requestLogin(LoginType loginType, String accessToken) async {
