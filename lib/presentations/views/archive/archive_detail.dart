@@ -43,6 +43,7 @@ class ArchiveDetail extends StatelessWidget {
                       Padding(
                         padding: const EdgeInsets.only(right: 15.0),
                         child: Stack(
+                          clipBehavior: Clip.none,
                           children: [
                             CircleAvatar(
                               radius: 21,
@@ -50,9 +51,9 @@ class ArchiveDetail extends StatelessWidget {
                             ),
                             if (controller.selectedItem.value.badgeIssueId != null)
                               Positioned(
-                                right: 0,
-                                bottom: 0,
-                                child: Image.asset('assets/images/archive/ico_badge.png', width: 15, height: 20),
+                                right: -5,
+                                bottom: -5,
+                                child: Image.network(controller.selectedItem.value.badgeImageUrl!, width: 20, height: 20),
                               ),
                           ],
                         ),
@@ -62,9 +63,9 @@ class ArchiveDetail extends StatelessWidget {
                   Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      controller.selectedItem.value.challengeTitle != null
+                      controller.selectedItem.value.secondName != null
                           ? StyledText(
-                              controller.selectedItem.value.challengeTitle!,
+                              controller.selectedItem.value.secondName!,
                               fontSize: 18,
                               lineHeight: 20,
                               fontWeight: 500,
@@ -72,10 +73,11 @@ class ArchiveDetail extends StatelessWidget {
                             )
                           : Container(),
                       StyledText(
-                        formatDate(controller.selectedItem.value.startedDate),
-                        fontSize: 14,
+                        formatDateUntilDay(controller.selectedItem.value.startedDate),
+                        fontSize: controller.selectedItem.value.secondName != null ? 14 : 18,
                         lineHeight: 20,
                         fontWeight: 500,
+                        color: controller.selectedItem.value.secondName != null ? Colors.white : Color(0xFF949494),
                       ),
                     ],
                   )
@@ -190,7 +192,45 @@ class ArchiveDetail extends StatelessWidget {
                 ],
               ),
             ),
-            controller.selectedItem.value.badgeName != null
+            Padding(
+              padding: const EdgeInsets.symmetric(vertical: 10.0, horizontal: 20.0),
+              child: Row(
+                children: [
+                  StyledText(
+                    '소비 체력',
+                    fontWeight: 600,
+                    fontSize: 16,
+                  ),
+                  const Spacer(),
+                  StyledText(
+                    controller.selectedItem.value.spendStamina.toString(),
+                    fontWeight: 500,
+                    fontSize: 16,
+                    color: const Color(0xFF7D7D84),
+                  ),
+                ],
+              ),
+            ),
+            Padding(
+              padding: const EdgeInsets.symmetric(vertical: 10.0, horizontal: 20.0),
+              child: Row(
+                children: [
+                  StyledText(
+                    '소비 내구도',
+                    fontWeight: 600,
+                    fontSize: 16,
+                  ),
+                  const Spacer(),
+                  StyledText(
+                    controller.selectedItem.value.spendDurability.toString(),
+                    fontWeight: 500,
+                    fontSize: 16,
+                    color: const Color(0xFF7D7D84),
+                  ),
+                ],
+              ),
+            ),
+            controller.selectedItem.value.badgeName != null && controller.selectedItem.value.type == "HIKING"
                 ? Padding(
                     padding: const EdgeInsets.symmetric(vertical: 10.0, horizontal: 20.0),
                     child: Row(
@@ -219,6 +259,27 @@ class ArchiveDetail extends StatelessWidget {
                 color: Color(0xFF2C2C35),
               ),
             ),
+            controller.selectedItem.value.startPointName != null && controller.selectedItem.value.type == "HIKING"
+                ? Padding(
+                    padding: const EdgeInsets.symmetric(vertical: 10.0, horizontal: 20.0),
+                    child: Row(
+                      children: [
+                        StyledText(
+                          '시작점',
+                          fontWeight: 600,
+                          fontSize: 16,
+                        ),
+                        const Spacer(),
+                        StyledText(
+                          controller.selectedItem.value.startPointName!,
+                          fontWeight: 500,
+                          fontSize: 16,
+                          color: const Color(0xFF7D7D84),
+                        ),
+                      ],
+                    ),
+                  )
+                : Container(),
             Padding(
               padding: const EdgeInsets.symmetric(vertical: 10.0, horizontal: 20.0),
               child: Row(
@@ -238,6 +299,28 @@ class ArchiveDetail extends StatelessWidget {
                 ],
               ),
             ),
+            // startPointName
+            controller.selectedItem.value.endPointName != null && controller.selectedItem.value.type == "HIKING"
+                ? Padding(
+                    padding: const EdgeInsets.symmetric(vertical: 10.0, horizontal: 20.0),
+                    child: Row(
+                      children: [
+                        StyledText(
+                          '종료점',
+                          fontWeight: 600,
+                          fontSize: 16,
+                        ),
+                        const Spacer(),
+                        StyledText(
+                          controller.selectedItem.value.endPointName!,
+                          fontWeight: 500,
+                          fontSize: 16,
+                          color: const Color(0xFF7D7D84),
+                        ),
+                      ],
+                    ),
+                  )
+                : Container(),
             controller.selectedItem.value.endedDate != null
                 ? Padding(
                     padding: const EdgeInsets.symmetric(vertical: 10.0, horizontal: 20.0),
