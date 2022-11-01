@@ -335,13 +335,8 @@ class ActivityHome extends StatelessWidget {
   Widget build(BuildContext context) {
     ActivityController controller = Get.find();
 
-    final slideController = PageController(viewportFraction: 1, keepPage: true);
-
     final challengeMovie = MovieTween()
-      ..tween('scale', Tween(begin: 1, end: 1.1),
-          duration: const Duration(seconds: 1))
-          .thenTween('scale', Tween(begin: 1.1, end: 1),
-          duration: const Duration(seconds: 1));
+      ..tween('scale', Tween(begin: 1.0, end: 1.1), duration: const Duration(seconds: 1)).thenTween('scale', Tween(begin: 1.1, end: 1.0), duration: const Duration(seconds: 1));
 
     return LayoutBuilder(
       builder: (context, constraint) {
@@ -499,7 +494,7 @@ class ActivityHome extends StatelessWidget {
                                             color: Colors.black,
                                             letterSpacing: 0.5,
                                           )
-                                           /* child: StyledText(
+                                          /* child: StyledText(
                                               [ExerciseState.ongoing, ExerciseState.paused].any((state) => controller.exerciseState.value == state) ? 'Continue' : 'GO',
                                               fontWeight: 800,
                                               fontFamily: 'Montserrat',
@@ -529,11 +524,9 @@ class ActivityHome extends StatelessWidget {
                                               controller.moveToChallengeMap();
                                             },
                                             child: iconChallengeList,
-                                          )
-                                      );
+                                          ));
                                     },
-                                  )
-                              ),
+                                  )),
                               /*Positioned(
                                   bottom: 10,
                                   right: 0,
@@ -557,7 +550,6 @@ class ActivityHome extends StatelessWidget {
                           ),
                         ),
                       ),
-
                     ],
                   ),
                 ),
