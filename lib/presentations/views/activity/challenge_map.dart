@@ -209,20 +209,36 @@ class ChallengeMap extends StatelessWidget {
 
         //optional
         //This widget is sticking above the content and will never be contracted.
-        persistentHeader: Padding(
-          padding: const EdgeInsets.only(top: 10),
-          child: Container(
-            color: Color(0xFF363841),
-            height: 25,
-            child: const Center(
-              child: SizedBox(
-                width: 54,
-                child: Divider(
-                  color: Color(0xFF0EE6F3),
-                  thickness: 5,
+        persistentHeader: Container(
+          padding: EdgeInsets.only(bottom: 5),
+          height: 30,
+          decoration: BoxDecoration(
+            color: Color(0xFF4A4D57),
+            borderRadius: BorderRadius.only(topLeft: Radius.circular(15), topRight: Radius.circular(15))
+          ),
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              const Center(
+                child: SizedBox(
+                  width: 40,
+                  child: Divider(
+                    color: Color(0xFF0EE6F3),
+                    thickness: 3,
+                  ),
                 ),
               ),
-            ),
+              const Center(
+                child: SizedBox(
+                  width: 40,
+                  child: Divider(
+                    height: 1,
+                    color: Color(0xFF0EE6F3),
+                    thickness: 3,
+                  ),
+                ),
+              ),
+            ],
           ),
         ),
 
