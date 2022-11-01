@@ -80,30 +80,41 @@ class Api {
       '\nError ResponseData: ${e.response?.data}',
     );
 
-    if (e.response?.data != null) {
-      ErrorResponseDataModel errorData = ErrorResponseDataModel.fromJson(e.response?.data);
-      showToastPopup(errorData.errorMessage!);
-    }
-
     if (e.response?.statusCode == ResponseStatus.unauthorized.code) {
       final String? refreshToken = HiveStore.loadString(key: HiveKey.refreshToken.name);
+      print('refreshToken ${refreshToken}');
+      if (refreshToken!.isEmpty == null) {
+        if (getx.Get.currentRoute != Routes.login) getx.Get.offAllNamed(Routes.login);
+      }
       Dio refreshDio = Dio();
       refreshDio
         ..options.headers['Authorization'] = 'Bearer $refreshToken'
         ..post('${F.baseUrl}/services/uaa/api/sign-in/token', data: {'clientId': 'GAZAGO'}).then((Response res) {
           AccessTokenModel newToken = AccessTokenModel.fromJson(res.data);
+
           HiveStore.save(key: HiveKey.accessToken.name, value: newToken.accessToken);
           HiveStore.save(key: HiveKey.refreshToken.name, value: newToken.refreshToken);
 
+          print('new refreshToken ${newToken.refreshToken}');
+
           _retryFailedRequest(e, handler, newToken.accessToken);
         }).catchError((e) {
+          print('catchError ${e.toString()}');
           HiveStore.deleteMultipleKeys(keys: [
             HiveKey.accessToken.name,
             HiveKey.refreshToken.name,
           ]);
           if (getx.Get.currentRoute != Routes.login) getx.Get.offAllNamed(Routes.login);
         });
+
     } else {
+      if (e.response?.data != null) {
+        ErrorResponseDataModel errorData = ErrorResponseDataModel.fromJson(e.response?.data);
+        if (errorData.errorMessage != null) {
+          showToastPopup(errorData.errorMessage!);
+        }
+      }
+
       if (e.type == DioErrorType.other) {
         handler.resolve(
           Response(

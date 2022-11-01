@@ -213,7 +213,7 @@ class ChallengeMap extends StatelessWidget {
           padding: const EdgeInsets.only(top: 10),
           child: Container(
             color: Color(0xFF363841),
-            height: 18,
+            height: 25,
             child: const Center(
               child: SizedBox(
                 width: 54,
