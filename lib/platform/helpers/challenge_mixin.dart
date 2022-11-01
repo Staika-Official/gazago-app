@@ -54,9 +54,23 @@ class ChallengeMixin {
   void notificationOnChallenge(List<ChallengeModel> result) {
     bool notification = false;
     List<ChallengeModel> filteredList = result.toSet().difference(challengeList.toSet()).toList();
-    if (result.isNotEmpty && listEquals(filteredList, challengeList) == false) {
+    List<int> filteredIdList = filteredList
+        .map((element) {
+          return element.id!;
+        })
+        .toSet()
+        .toList();
+    List<int> challengeIdList = challengeList
+        .map((element) {
+          return element.id!;
+        })
+        .toSet()
+        .toList();
+
+    if (result.isNotEmpty && listEquals(filteredIdList, challengeIdList) == false) {
       notification = true;
     }
+
     if (notification) {
       showLocalNotification(notificationType: NotificationType.challenge, title: '도전 지역 발견', message: '주변에 등산을 시작 할 수 있는 ${filteredList.first.firstName} 있어요. 등산을 시작해 보세요.');
       Get.snackbar('도전 지역 발견', '새로운 도전을 시작하세요.', colorText: Colors.green);
