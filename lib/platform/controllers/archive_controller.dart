@@ -75,7 +75,7 @@ class ArchiveController extends GetxController with ScrollMixin {
 
   void deleteItem(int id) {
     void successCallback() {
-      getArchiveList();
+      archiveList.removeWhere((archive) => archive.id == id);
       Get.back();
       Get.snackbar('기록 삭제 완료', '기록을 성공적으로 삭제했습니다.', colorText: Colors.white);
     }
