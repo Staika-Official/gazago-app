@@ -72,6 +72,7 @@ class StyledText extends StatelessWidget {
         height: getLineHeight,
         backgroundColor: backgroundColor,
         letterSpacing: letterSpacing,
+        overflow: TextOverflow.ellipsis,
       ),
     );
   }

@@ -64,6 +64,7 @@ SvgPicture iconArchiveWalking = SvgPicture.asset('assets/images/archive/ico_arch
 SvgPicture iconArchiveHiking = SvgPicture.asset('assets/images/archive/ico_archive_hiking.svg', width: 42, height: 42);
 
 // inventory
+
 SvgPicture iconGoReward = SvgPicture.asset('assets/images/inventory/ico_go_reward.svg', width: 20, height: 16);
 SvgPicture iconItemAbrasion = SvgPicture.asset('assets/images/inventory/ico_item_abrasion.svg', width: 18, height: 14);
 SvgPicture iconStaminaReduce = SvgPicture.asset('assets/images/inventory/ico_stamina_reduce.svg', width: 20, height: 16);
