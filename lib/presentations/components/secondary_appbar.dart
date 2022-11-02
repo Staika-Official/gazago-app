@@ -1,9 +1,12 @@
+import 'dart:math';
+
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg_provider/flutter_svg_provider.dart' as SP;
 import 'package:gaza_go/constants/routes.dart';
 import 'package:gaza_go/platform/controllers/home_menu_controller.dart';
 import 'package:gaza_go/platform/controllers/wallet_master_controller.dart';
+import 'package:gaza_go/platform/helpers/base_helper.dart';
 import 'package:gaza_go/presentations/styles/icons.dart';
 import 'package:gaza_go/presentations/styles/styled_text.dart';
 import 'package:get/get.dart';
@@ -24,7 +27,8 @@ class SecondaryAppbar extends StatelessWidget implements PreferredSizeWidget {
             Padding(
               padding: const EdgeInsets.only(left: 4),
               child: StyledText(
-                token.uiAmountString!,
+                // token.uiAmountString!,
+                token.meta?.symbol == 'STIK' ? formatDecimalPlaces((token.amount! / pow(10.0, 9)), 9) : formatDecimalPlaces(token.amount!, 1),
                 color: Colors.white,
                 fontSize: 12,
                 fontWeight: 600,

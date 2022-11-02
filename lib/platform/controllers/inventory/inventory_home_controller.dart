@@ -7,6 +7,12 @@ class InventoryHomeController extends GetxController with GetTickerProviderState
 
   late TabController tabController;
   late TabController subTabController;
+  RxInt get containerHeight {
+    return RxInt(0);
+  }
+
+  late ScrollController scrollController = ScrollController();
+  bool fixedScroll = true;
   final RxBool isShoe = RxBool(true);
   List itemSubTabList = [
     {
@@ -35,14 +41,31 @@ class InventoryHomeController extends GetxController with GetTickerProviderState
     },
   ];
 
+  get selectedIndex => null;
+
   @override
   void onInit() {
     initController();
     super.onInit();
   }
 
+  @override
+  void dispose() {
+    tabController.dispose();
+    scrollController.dispose();
+    super.dispose();
+  }
+
+  void _scrollListener() {
+    if (fixedScroll) {
+      scrollController.jumpTo(0);
+    }
+  }
+
   void initController() {
     tabController = TabController(length: 2, vsync: this);
     subTabController = TabController(length: 6, vsync: this);
+
+    scrollController.addListener(_scrollListener);
   }
 }

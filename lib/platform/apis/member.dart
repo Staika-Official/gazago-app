@@ -6,8 +6,4 @@ class MemberApi {
   static Future<Response> initializeUserData(String userId, String? nickname, String? profileImageUrl) async {
     return await Api.client(serviceUrl: ServiceUrl.stateService).post('/users/$userId/init', data: {'nickname': nickname, 'profileImageUrl': profileImageUrl});
   }
-
-  static Future<Response> modifyUserData(String userId, String? nickname, String? profileImageUrl) async {
-    return await Api.client(serviceUrl: ServiceUrl.stateService).post('/users/$userId', data: {'nickname': nickname, 'profileImageUrl': profileImageUrl});
-  }
 }

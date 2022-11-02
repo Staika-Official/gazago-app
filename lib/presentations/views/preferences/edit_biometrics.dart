@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:get/get.dart';
 import 'package:gaza_go/platform/controllers/my_page_controller.dart';
 import 'package:gaza_go/presentations/components/default_container.dart';
+import 'package:get/get.dart';
 
 class EditBiometrics extends StatelessWidget {
   const EditBiometrics({Key? key}) : super(key: key);
@@ -18,13 +18,13 @@ class EditBiometrics extends StatelessWidget {
             children: [
               Expanded(
                 child: ElevatedButton(
-                  onPressed: () => controller.selectGender('MALE'),
+                  onPressed: () => null,
                   child: Text('남자'),
                 ),
               ),
               Expanded(
                 child: ElevatedButton(
-                  onPressed: () => controller.selectGender('FEMALE'),
+                  onPressed: () => null,
                   child: Text('여자'),
                 ),
               ),

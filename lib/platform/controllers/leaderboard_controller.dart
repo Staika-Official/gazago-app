@@ -22,10 +22,7 @@ class LeaderboardController extends GetxController {
     return RxString(DateFormat('yyyy-MM-dd').format(selectedDate.value!.toLocal()).toString());
   }
   RxString get leaderboardDate {
-    if (DateFormat('yyyy-MM-dd').format(selectedDate.value!.toLocal()) == DateFormat('yyyy-MM-dd').format(today.value!.toLocal())) {
-      return RxString('TODAY');
-    }
-    return RxString(DateFormat('yyyy-MM-dd').format(selectedDate.value!.toLocal()).toString());
+    return RxString(DateFormat('yyyy.MM.dd').format(selectedDate.value!.toLocal()).toString());
   }
   RxInt size = RxInt(100);
 

@@ -115,12 +115,16 @@ class LoginController extends GetxController {
         HiveStore.save(key: HiveKey.refreshToken.name, value: token.refreshToken);
 
         if (statusCode == 200) {
-          await initUserInfo();
-          bool? permissionRequestBefore = HiveStore.load(key: HiveKey.permissionRequestOnFirstLaunch.name);
-          if (permissionRequestBefore != null && permissionRequestBefore) {
-            Get.offNamed(Routes.loading);
+          if (token.accountStatus == 'TERMINATION_REQUESTED') {
+            Get.toNamed(Routes.accountRestore);
           } else {
-            Get.offNamed(Routes.permissions);
+            await initUserInfo();
+            bool? permissionRequestBefore = HiveStore.load(key: HiveKey.permissionRequestOnFirstLaunch.name);
+            if (permissionRequestBefore != null && permissionRequestBefore) {
+              Get.offNamed(Routes.loading);
+            } else {
+              Get.offNamed(Routes.permissions);
+            }
           }
         } else {
           await initUserInfo();
@@ -158,5 +162,17 @@ class LoginController extends GetxController {
         ],
       ),
     );
+  }
+
+  void handleFetchWithdrawCancel() async {
+    await UaaService.fetchWithdrawCancel(
+      successCallback: () async {
+        await initUserInfo();
+        Get.offNamed(Routes.loading);
+        // print('성공');
+      },
+      errorCallback: () {},
+    );
+    // Get.toNamed(Routes.withdrawCompleted)
   }
 }

@@ -96,7 +96,7 @@ class MyApp extends StatelessWidget {
               );
             } else {
               return const TextStyle(
-                color: Color(0xFF7A7A7A),
+                color: Color(0xFFBFBFBF),
                 fontSize: 10,
                 fontWeight: FontWeight.w600,
               );

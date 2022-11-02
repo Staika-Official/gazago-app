@@ -14,6 +14,7 @@ import 'package:get/get.dart';
 
 class HomeMenuController extends GetxController {
   final RxInt selectedIndex = RxInt(0);
+  final RxInt prevIndex = RxInt(0);
   final RxList<int> visitedTabs = RxList.empty();
 
   final List<PreferredSizeWidget> appbarList = [
@@ -29,8 +30,15 @@ class HomeMenuController extends GetxController {
     LeaderboardHome(),
   ];
 
-  PreferredSizeWidget get appbar {
-    return selectedIndex.value == 0 ? appbarList.first : appbarList.last;
+  PreferredSizeWidget? get appbar {
+    switch (selectedIndex.value) {
+      case 0:
+        return appbarList.first;
+      case 2:
+        return null;
+      default:
+        return appbarList.last;
+    }
   }
 
   bool isBackButton() {
@@ -38,10 +46,10 @@ class HomeMenuController extends GetxController {
   }
 
   void selectMenu(int index) {
-    int prevTabIndex = selectedIndex.value;
+    prevIndex.value = selectedIndex.value;
     selectedIndex.value = index;
 
-    if (visitedTabs.any((tabIndex) => tabIndex == index) && prevTabIndex != index) {
+    if (visitedTabs.any((tabIndex) => tabIndex == index) && prevIndex != index) {
       switch (index) {
         case 0:
           ActivityController activityController = Get.find();

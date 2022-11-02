@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:gaza_go/platform/controllers/activity_controller.dart';
 import 'package:gaza_go/platform/controllers/leaderboard_controller.dart';
+import 'package:gaza_go/platform/helpers/base_helper.dart';
 import 'package:gaza_go/platform/models/ranker_model.dart';
 import 'package:gaza_go/presentations/styles/icons.dart';
 import 'package:gaza_go/presentations/styles/styled_text.dart';
@@ -15,8 +16,11 @@ class LeaderboardHome extends StatelessWidget {
   Widget showBottomCalender(context, controller) {
     return Obx(() {
       return Container(
-        color: const Color(0xFF363841),
-        height: 420,
+        height: 400,
+        decoration: BoxDecoration(
+            color: const Color(0xFF363841),
+            borderRadius: BorderRadius.only(topLeft: Radius.circular(15), topRight: Radius.circular(15))
+        ),
         child: TableCalendar(
           locale: 'ko-KR',
           firstDay: controller.firstDay.value!,
@@ -149,7 +153,7 @@ class LeaderboardHome extends StatelessWidget {
           Expanded(
             flex: 1,
             child: Text(
-              '${myRank.rewardTik.toString()} TIK',
+              '${formatDecimalPlaces(myRank.rewardTik, 1)} TIK',
               textAlign: TextAlign.right,
               style: const TextStyle(
                 color: Color(0xFF5B5B67),
@@ -165,7 +169,8 @@ class LeaderboardHome extends StatelessWidget {
 
   Widget renderRanker(RankerModel ranker, int index) {
     return Container(
-      color: Color(0xFF2E3038),
+      color: Color(0xFF1D1D26),
+      height: 58,
       padding: const EdgeInsets.only(top: 8, left: 18, right: 17, bottom: 8),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.center,
@@ -198,7 +203,7 @@ class LeaderboardHome extends StatelessWidget {
                       ),
                 Container(
                   child: Padding(
-                    padding: const EdgeInsets.only(left: 8.0),
+                    padding: const EdgeInsets.only(left: 10.0),
                     child: Text((ranker.nickname.contains('@') ? ranker.nickname.substring(0, ranker.nickname.indexOf('@')) : ranker.nickname),
                         overflow: TextOverflow.ellipsis, style: const TextStyle(color: Colors.white, fontSize: 14, fontWeight: FontWeight.w600), textAlign: TextAlign.left),
                   ),
@@ -208,12 +213,14 @@ class LeaderboardHome extends StatelessWidget {
           ),
           Expanded(
             flex: 1,
-            child: Text('${ranker.rewardGo.toString()} GO', textAlign: TextAlign.right, style: const TextStyle(color: Colors.white, fontSize: 14, fontWeight: FontWeight.w600)),
-          ),
-          Padding(padding: EdgeInsets.only(left: 10)),
-          Expanded(
-            flex: 1,
-            child: Text('${ranker.rewardTik.toString()} TIK', textAlign: TextAlign.right, style: const TextStyle(color: Color(0xFF5B5B67), fontSize: 14, fontWeight: FontWeight.w600)),
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              crossAxisAlignment: CrossAxisAlignment.end,
+              children: [
+                Text('${formatDecimalPlaces(ranker.rewardGo, 2)} GO', textAlign: TextAlign.right, style: const TextStyle(color: Colors.white, fontSize: 14, fontWeight: FontWeight.w600)),
+                Text('${formatDecimalPlaces(ranker.rewardTik, 1)} TIK', textAlign: TextAlign.right, style: const TextStyle(color: Color(0xFFBABABA), fontSize: 14, fontWeight: FontWeight.w600)),
+              ],
+            ),
           ),
         ],
       ),
@@ -254,7 +261,7 @@ class LeaderboardHome extends StatelessWidget {
                       return Row(
                         children: [
                           StyledText(
-                            '${activityController.userState.value.state != null ? activityController.userState.value.state!.dailyGoReward.toString() : 0}',
+                            '${activityController.userState.value.state != null ? formatDecimalPlaces(activityController.userState.value.state!.dailyGoReward!, 2) : 0}',
                             color: Colors.white,
                             fontWeight: 600,
                             fontSize: 30,
@@ -306,14 +313,6 @@ class LeaderboardHome extends StatelessWidget {
                       fontSize: 16,
                       lineHeight: 21,
                     ),
-                    Padding(padding: EdgeInsets.only(left: 5)),
-                    StyledText(
-                      '10분간',
-                      color: const Color(0xFF818181),
-                      fontWeight: 500,
-                      fontSize: 14,
-                      lineHeight: 21,
-                    ),
                   ],
                 ),
                 InkWell(
@@ -340,10 +339,10 @@ class LeaderboardHome extends StatelessWidget {
           ),
         ),
         Container(
-          padding: const EdgeInsets.only(top: 38, left: 25, right: 26, bottom: 12),
+          padding: const EdgeInsets.only(top: 38, left: 25, right: 18, bottom: 12),
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            crossAxisAlignment: CrossAxisAlignment.start,
+            crossAxisAlignment: CrossAxisAlignment.center,
             children: [
               StyledText(
                 '리더보드',
@@ -353,29 +352,26 @@ class LeaderboardHome extends StatelessWidget {
               ),
               InkWell(
                 onTap: () => {
-                  showMaterialModalBottomSheet(
+                  showBarModalBottomSheet(
                     context: context,
                     builder: (context) => showBottomCalender(context, controller),
                   )
                 },
                 child: Row(
                   mainAxisSize: MainAxisSize.min,
+                  crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
                     Obx(() {
                       return StyledText(
                         controller.leaderboardDate.value!,
-                        color: const Color(0xFF747474),
+                        color: const Color(0xFFBFBFBF),
                         fontSize: 12,
                         fontWeight: 600,
                       );
                     }),
                     //StyledText(controller.leaderboardDate.value!, color: const Color(0xFF747474), fontSize: 12, fontWeight: 600,),
                     const Padding(padding: EdgeInsets.only(left: 8)),
-                    Container(
-                      width: 18.0,
-                      height: 13.0,
-                      decoration: const BoxDecoration(color: Color(0xFF747474), shape: BoxShape.rectangle),
-                    )
+                    iconCalendar
                     //Text(controller.formattedDate.value)
                   ],
                 ),
