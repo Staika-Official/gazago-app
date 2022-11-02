@@ -51,7 +51,7 @@ class MyPageController extends GetxController {
       dynamic imagePath = pickedImage.value!.path;
       dio.MultipartFile profileImage = await dio.MultipartFile.fromFile(imagePath);
       dio.FormData formData = dio.FormData.fromMap({
-        'profileImageUrl': profileImage,
+        'profileImage': profileImage,
       });
       inspect(formData);
       var res = await UaaService.fetchUploadImage(formData);
