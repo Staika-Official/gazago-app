@@ -77,6 +77,11 @@ class Preferences extends StatelessWidget {
             title: 'FAQ',
             onTap: () => Get.toNamed(Routes.preferenceBoard, arguments: {'boardType': 'T2E_FAQ'}),
           ),
+          Container(
+            width: double.infinity,
+            height: 6,
+            color: Color(0xff363841),
+          ),
           PreferenceItem(
             title: '이용약관',
             onTap: () => Get.toNamed(Routes.term, arguments: {'termType': 'T2E_TERMS'}),
@@ -86,8 +91,17 @@ class Preferences extends StatelessWidget {
             onTap: () => Get.toNamed(Routes.term, arguments: {'termType': 'T2E_PRIVACY'}),
           ),
           PreferenceItem(
+            title: '위치정보 이용동의',
+            onTap: () => Get.toNamed(Routes.term, arguments: {'termType': 'T2E_LOCATION'}),
+          ),
+          PreferenceItem(
             title: '마케팅 동의',
             onTap: () => Get.toNamed(Routes.term, arguments: {'termType': 'T2E_MARKETING'}),
+          ),
+          Container(
+            width: double.infinity,
+            height: 6,
+            color: Color(0xff363841),
           ),
           PreferenceItem(
             title: '로그아웃',
@@ -118,12 +132,12 @@ class PreferenceItem extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Material(
+    return Ink(
+      height: 55,
+      color: Color(0xFF1D1D26),
       child: InkWell(
         onTap: type == ItemType.functional ? onTap : null,
-        child: Container(
-          height: 55,
-          color: Color(0xFF1D1D26),
+        child: Padding(
           padding: const EdgeInsets.only(left: 25, right: 20),
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
