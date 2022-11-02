@@ -205,7 +205,8 @@ class InventoryController extends GetxController with LinearProgressMixin, Inven
         state.badge.rewardRate = equippedItems.badge!.rewardRate;
         state.badge.level = equippedItems.badge!.level;
         state.badge.luckRate = equippedItems.badge!.luckRate;
-        state!.badge.name = equippedItems.badge!.name;
+        state.badge.name = equippedItems.badge!.name;
+        state.badge.id = equippedItems.badge!.badgeId;
       });
     } else {
       equippedBadge.update((state) {
