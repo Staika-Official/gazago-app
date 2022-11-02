@@ -20,6 +20,15 @@ class UaaService {
     return token;
   }
 
+  static Future<void> fetchLogout({required Function successCallback, Function? errorCallback}) async {
+    Response res = await UaaApi.fetchLogout();
+    if (res.statusCode! == 204) {
+      successCallback();
+    } else if (res.statusCode != null) {
+      errorCallback!(res.data);
+    }
+  }
+
   static Future<void> socialLogin(SocialLoginInfoModel loginInfo, {required Function successCallback, Function? errorCallback}) async {
     Response res = await UaaApi.socialLogin(loginInfo);
     if ([200, 201].any((statusCode) => statusCode == res.statusCode)) {

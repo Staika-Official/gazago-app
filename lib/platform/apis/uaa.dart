@@ -1,6 +1,6 @@
 import 'package:dio/dio.dart';
-import 'package:gaza_go/constants/base_urls.dart'
-import 'package:gaza_go/flavors.dart';;
+import 'package:gaza_go/constants/base_urls.dart';
+import 'package:gaza_go/flavors.dart';
 import 'package:gaza_go/platform/middleware/dio_middleware.dart';
 import 'package:gaza_go/platform/models/social_login_info_model.dart';
 
@@ -12,6 +12,14 @@ class UaaApi {
     return await Api.client(serviceUrl: ServiceUrl.uaaService, needsToken: false).post('/sign-in/email', data: {
       "username": "admin",
       "password": "admin",
+      "clientId": "GAZAGO",
+    });
+  }
+
+  static Future<Response> fetchLogout() async {
+    String deviceId = HiveStore.loadString(key: HiveKey.uuid.name)!;
+    return await Api.client(serviceUrl: ServiceUrl.uaaService).delete('/sign-out', data: {
+      "deviceId": deviceId,
       "clientId": "GAZAGO",
     });
   }
