@@ -4,8 +4,9 @@ import 'package:flutter/material.dart';
 import 'package:gaza_go/constants/routes.dart';
 import 'package:gaza_go/platform/controllers/activity_controller.dart';
 import 'package:gaza_go/platform/controllers/wallet_master_controller.dart';
+import 'package:gaza_go/platform/helpers/alert_helper.dart';
 import 'package:gaza_go/platform/helpers/base_helper.dart';
-import 'package:gaza_go/presentations/styles/styled_text.dart';
+import 'package:gaza_go/presentations/components/gazago_button.dart';
 import 'package:get/get.dart';
 import 'package:url_launcher/url_launcher.dart';
 
@@ -28,20 +29,13 @@ class LoadingController extends GetxController {
     if (progress.value >= 0.9) {
       bool needForceUpgrade = await isForceUpdateTarget();
       if (needForceUpgrade) {
-        Get.dialog(
-          barrierDismissible: false,
-          AlertDialog(
-            title: StyledText(
-              '새 업데이트가 있습니다.',
-              color: Colors.black,
-            ),
-            content: StyledText(
-              '앱을 사용하기 위해서 업데이트가 필요합니다.',
-              color: Colors.black,
-            ),
-            actions: [
-              ElevatedButton(
-                onPressed: () {
+        showAlert(
+          title: '새 업데이트가 있습니다.',
+          contentText: '앱을 사용하기 위해서 업데이트가 필요합니다.',
+          actions: [
+            Expanded(
+              child: GazagoButton(
+                onTap: () {
                   if (Platform.isAndroid || Platform.isIOS) {
                     final appId = Platform.isAndroid ? 'kr.co.eztechfin.gazaGo' : 'kr.co.eztechfin.gazaGo';
                     final url = Uri.parse(
@@ -53,31 +47,33 @@ class LoadingController extends GetxController {
                     );
                   }
                 },
-                child: StyledText(
-                  '업데이트',
-                  color: Colors.black,
-                ),
-              )
-            ],
-          ),
+                buttonText: '업데이트',
+                buttonColor: const Color(0xFF0EE6F3),
+              ),
+            ),
+          ],
         );
       } else {
         bool needRecommendedUpgrade = await isRecommendUpdateTarget();
         if (needRecommendedUpgrade) {
-          Get.dialog(
-            barrierDismissible: false,
-            AlertDialog(
-              title: StyledText(
-                '새 업데이트가 있습니다.',
-                color: Colors.black,
+          showAlert(
+            title: '새 업데이트가 있습니다.',
+            contentText: '앱을 사용하기 위해서 업데이트가 필요합니다.',
+            actions: [
+              Expanded(
+                child: GazagoButton(
+                  onTap: () => Get.offAllNamed(Routes.home),
+                  buttonText: '무시하기',
+                  textColor: Colors.white,
+                  buttonColor: const Color(0xFF363841),
+                ),
               ),
-              content: StyledText(
-                '앱을 사용하기 위해서 업데이트가 필요합니다.',
-                color: Colors.black,
+              const SizedBox(
+                width: 9,
               ),
-              actions: [
-                ElevatedButton(
-                  onPressed: () {
+              Expanded(
+                child: GazagoButton(
+                  onTap: () {
                     if (Platform.isAndroid || Platform.isIOS) {
                       final appId = Platform.isAndroid ? 'kr.co.eztechfin.gazaGo' : 'kr.co.eztechfin.gazaGo';
                       final url = Uri.parse(
@@ -89,22 +85,11 @@ class LoadingController extends GetxController {
                       );
                     }
                   },
-                  child: StyledText(
-                    '업데이트',
-                    color: Colors.black,
-                  ),
+                  buttonText: '업데이트',
+                  buttonColor: const Color(0xFF0EE6F3),
                 ),
-                ElevatedButton(
-                  onPressed: () {
-                    Get.offAllNamed(Routes.home);
-                  },
-                  child: StyledText(
-                    '무시하기',
-                    color: Colors.black,
-                  ),
-                )
-              ],
-            ),
+              ),
+            ],
           );
         } else {
           Get.offAllNamed(Routes.home);
