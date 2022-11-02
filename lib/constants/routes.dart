@@ -25,6 +25,7 @@ import 'package:gaza_go/presentations/views/preferences/index.dart';
 import 'package:gaza_go/presentations/views/preferences/my_page.dart';
 import 'package:gaza_go/presentations/views/preferences/notification_alert.dart';
 import 'package:gaza_go/presentations/views/preferences/preference_board.dart';
+import 'package:gaza_go/presentations/views/preferences/terms_list.dart';
 import 'package:gaza_go/presentations/views/preferences/withdraw_completed.dart';
 import 'package:gaza_go/presentations/views/preferences/withdraw_confirm.dart';
 import 'package:gaza_go/presentations/views/term.dart';
@@ -42,6 +43,7 @@ class Routes {
   static const loading = '/loading';
   static const home = '/home';
   static const term = '/term/:termType';
+  static const termsList = '/terms_list';
   static const archiveDetail = '/archive/detail';
   static const activityChallenges = '/activity/challenges';
   static const activityLoading = '/activity/loading';
@@ -80,6 +82,7 @@ class Routes {
       transition: Transition.noTransition,
     ),
     stepPage(name: Routes.term, page: const Term()),
+    stepPage(name: Routes.termsList, page: const TermsList()),
     stepPage(name: Routes.archiveDetail, page: const ArchiveDetail()),
     stepPage(name: Routes.activityChallenges, page: const ActivityChallenges()),
     stepPage(name: Routes.activityLoading, page: const ActivityLoading()),

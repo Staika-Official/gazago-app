@@ -83,8 +83,8 @@ class Preferences extends StatelessWidget {
             color: Color(0xff363841),
           ),
           PreferenceItem(
-            title: '이용약관',
-            onTap: () => Get.toNamed(Routes.term, arguments: {'termType': 'T2E_TERMS'}),
+            title: '약관',
+            onTap: () => Get.toNamed(Routes.termsList),
           ),
           PreferenceItem(
             title: '개인정보 처리방침',
