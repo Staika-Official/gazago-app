@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:dio/dio.dart';
 import 'package:gaza_go/constants/enums.dart';
 import 'package:gaza_go/platform/apis/uaa.dart';
@@ -50,7 +52,26 @@ class UaaService {
 
   static Future<UploadProfileImageModel?> fetchUploadImage(FormData formData) async {
     Response res = await UaaApi.fetchUploadImage(userId!, formData);
+    inspect(res);
     UploadProfileImageModel imageRes = UploadProfileImageModel.fromJson(res.data);
     return imageRes;
+  }
+
+  static Future<void> fetchWithdrawMember({required Function successCallback, Function? errorCallback}) async {
+    Response res = await UaaApi.fetchWithdrawMember();
+    if (res.statusCode! == 204) {
+      successCallback();
+    } else if (res.statusCode != null) {
+      errorCallback!(res.data);
+    }
+  }
+
+  static Future<void> fetchWithdrawCancel({required Function successCallback, Function? errorCallback}) async {
+    Response res = await UaaApi.fetchWithdrawCancel();
+    if (res.statusCode! == 204) {
+      successCallback();
+    } else if (res.statusCode != null) {
+      errorCallback!(res.data);
+    }
   }
 }

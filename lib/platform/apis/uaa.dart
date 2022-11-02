@@ -46,4 +46,15 @@ class UaaApi {
 
     //return await Api.client(serviceUrl: ServiceUrl.uaaService, isFile: true).post('/users/$userId/upload-profile-image', data: imageFile);
   }
+
+  static Future<Response> fetchWithdrawMember() async {
+    return await Api.client(serviceUrl: ServiceUrl.uaaService).put('/account/termination', data: {
+      "reason": "APP_GAZAGO_WITHDRAW",
+      "clientId": "GAZAGO",
+    });
+  }
+
+  static Future<Response> fetchWithdrawCancel() async {
+    return await Api.client(serviceUrl: ServiceUrl.uaaService).put('/account/activation');
+  }
 }

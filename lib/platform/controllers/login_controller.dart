@@ -115,8 +115,12 @@ class LoginController extends GetxController {
         HiveStore.save(key: HiveKey.refreshToken.name, value: token.refreshToken);
 
         if (statusCode == 200) {
-          await initUserInfo();
-          Get.offNamed(Routes.loading);
+          if (token.accountStatus == 'TERMINATION_REQUESTED') {
+            Get.toNamed(Routes.accountRestore);
+          } else {
+            await initUserInfo();
+            Get.offNamed(Routes.loading);
+          }
         } else {
           await initUserInfo();
           Get.offNamed(Routes.onBoarding);
@@ -152,5 +156,17 @@ class LoginController extends GetxController {
         ],
       ),
     );
+  }
+
+  void handleFetchWithdrawCancel() async {
+    await UaaService.fetchWithdrawCancel(
+      successCallback: () async {
+        await initUserInfo();
+        Get.offNamed(Routes.loading);
+        // print('성공');
+      },
+      errorCallback: () {},
+    );
+    // Get.toNamed(Routes.withdrawCompleted)
   }
 }

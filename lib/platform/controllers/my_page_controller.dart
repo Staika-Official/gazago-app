@@ -53,9 +53,7 @@ class MyPageController extends GetxController {
       dio.FormData formData = dio.FormData.fromMap({
         'profileImage': profileImage,
       });
-      inspect(formData);
       var res = await UaaService.fetchUploadImage(formData);
-      inspect('이미지유알엘$res');
       profile.value.profileImageUrl = res?.profileImageUrl;
     }
     UserAccountModel account = await UaaService.modifyAccountInfo(profile.value.nickname!, profile.value.profileImageUrl!);

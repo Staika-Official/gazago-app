@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:gaza_go/constants/routes.dart';
+import 'package:gaza_go/platform/controllers/withdraw_confirm_controller.dart';
 import 'package:gaza_go/presentations/components/default_container.dart';
 import 'package:gaza_go/presentations/styles/styled_text.dart';
 import 'package:get/get.dart';
@@ -9,6 +9,7 @@ class WithdrawCompleted extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    WithdrawConfirmController controller = Get.put(WithdrawConfirmController());
     return DefaultContainer(
       backgroundColor: Color(0xFF1D1D26),
       isPrevButtonHide: true,
@@ -67,7 +68,7 @@ class WithdrawCompleted extends StatelessWidget {
                   ],
                 ),
                 child: InkWell(
-                  onTap: () => Get.offAllNamed(Routes.login),
+                  onTap: () => controller.handleWithdrawComplete(),
                   child: const Padding(
                     padding: EdgeInsets.symmetric(vertical: 12.0),
                     child: Center(
