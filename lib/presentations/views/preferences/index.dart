@@ -19,48 +19,51 @@ class Preferences extends StatelessWidget {
       headerBackgroundColor: Color(0xFF23232D),
       child: Column(
         children: [
-          Obx(() {
-            return InkWell(
-              onTap: () => Get.toNamed(Routes.myPage),
-              child: Container(
-                color: const Color(0xFF23232D),
-                child: Padding(
-                  padding: const EdgeInsets.all(20.0),
-                  child: Row(
-                    mainAxisSize: MainAxisSize.max,
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    children: [
-                      Row(
-                        crossAxisAlignment: CrossAxisAlignment.center,
-                        children: [
-                          CircleAvatar(
-                            radius: 30,
-                            foregroundImage: CachedNetworkImageProvider(
-                              controller.profile.value.profileImageUrl!,
+          Padding(
+            padding: const EdgeInsets.only(bottom: 10.0),
+            child: Obx(() {
+              return InkWell(
+                onTap: () => Get.toNamed(Routes.myPage),
+                child: Container(
+                  color: const Color(0xFF23232D),
+                  child: Padding(
+                    padding: const EdgeInsets.all(20.0),
+                    child: Row(
+                      mainAxisSize: MainAxisSize.max,
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: [
+                        Row(
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          children: [
+                            CircleAvatar(
+                              radius: 30,
+                              foregroundImage: CachedNetworkImageProvider(
+                                controller.profile.value.profileImageUrl!,
+                              ),
                             ),
-                          ),
-                          Padding(
-                            padding: const EdgeInsets.only(left: 14.0),
-                            child: StyledText(
-                              controller.profile.value.nickname!,
-                              fontWeight: 500,
-                              fontSize: 18,
-                              lineHeight: 20,
+                            Padding(
+                              padding: const EdgeInsets.only(left: 14.0),
+                              child: StyledText(
+                                controller.profile.value.nickname!,
+                                fontWeight: 500,
+                                fontSize: 18,
+                                lineHeight: 20,
+                              ),
                             ),
-                          ),
-                        ],
-                      ),
-                      const Icon(
-                        Icons.chevron_right,
-                        color: Color(0xFFBDC0C7),
-                      )
-                    ],
+                          ],
+                        ),
+                        const Icon(
+                          Icons.chevron_right,
+                          color: Color(0xFFBDC0C7),
+                        )
+                      ],
+                    ),
                   ),
                 ),
-              ),
-            );
-          }),
+              );
+            }),
+          ),
           // PreferenceItem(
           //   title: '본인인증',
           //   onTap: () => Get.toNamed(Routes.verification),
@@ -133,7 +136,7 @@ class PreferenceItem extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Ink(
-      height: 55,
+      height: 60,
       color: Color(0xFF1D1D26),
       child: InkWell(
         onTap: type == ItemType.functional ? onTap : null,
