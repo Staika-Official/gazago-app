@@ -247,6 +247,10 @@ class InventoryHome extends StatelessWidget {
                   indicatorWeight: 0.1,
                   isScrollable: false,
                   labelPadding: const EdgeInsets.all(0),
+                  splashBorderRadius: const BorderRadius.only(
+                    topRight: Radius.circular(15),
+                    topLeft: Radius.circular(15),
+                  ),
                   indicator: const BoxDecoration(
                     color: Color(0xFF363841),
                     borderRadius: BorderRadius.only(
