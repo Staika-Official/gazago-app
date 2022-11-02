@@ -12,13 +12,14 @@ import 'package:gaza_go/platform/controllers/global_controller.dart';
 import 'package:gaza_go/platform/controllers/home_menu_controller.dart';
 import 'package:gaza_go/platform/firebase/cloud_messaging.dart';
 import 'package:gaza_go/platform/helpers/activity_helper.dart';
+import 'package:gaza_go/platform/helpers/alert_helper.dart';
 import 'package:gaza_go/platform/helpers/base_helper.dart';
 import 'package:gaza_go/platform/models/challenge_model.dart';
 import 'package:gaza_go/platform/models/current_user_state_model.dart';
 import 'package:gaza_go/platform/models/user_exercise_model.dart';
 import 'package:gaza_go/platform/services/activity_service.dart';
 import 'package:gaza_go/platform/stores/hive_store.dart';
-import 'package:gaza_go/presentations/styles/styled_text.dart';
+import 'package:gaza_go/presentations/components/gazago_button.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:get/get.dart';
 import 'package:health/health.dart';
@@ -50,6 +51,25 @@ class ActivityMixin {
   final Rx<DateTime> pedestrianStoppedTime = Rx(DateTime.now());
   final RxInt updateCount = RxInt(0);
   final RxString lastUpdateTime = RxString('');
+  Rx<Color> get exerciseStateColor {
+    Color color = Colors.white;
+    switch (exerciseState.value) {
+      case ExerciseState.ongoing:
+        if (realTimeSpeed.value < 1 || realTimeSpeed.value > 6) {
+          color = Color(0xffFF2525);
+        } else {
+          color = Color(0xff18FF82);
+        }
+        break;
+      case ExerciseState.paused:
+        color = Color(0xffFBCB24);
+        break;
+      default:
+        color = Colors.white;
+        break;
+    }
+    return Rx(color);
+  }
 
   RxDouble get realTimeSpeed {
     double speed = exerciseData.isNotEmpty ? exerciseData.last.speed! : 0;
@@ -390,19 +410,29 @@ class ActivityMixin {
   }
 
   void showEndExerciseDialog(ChallengeModel challenge) {
-    Get.dialog(
-      AlertDialog(
-        title: StyledText('운동 종료', color: Colors.black),
-        content: StyledText('정말 운동을 종료하시겠어요?', color: Colors.black),
-        actions: [
-          ElevatedButton(onPressed: () => Get.back(), child: StyledText('이어하기')),
-          ElevatedButton(
-              onPressed: () async {
-                endExercise(challenge);
-              },
-              child: StyledText('종료')),
-        ],
-      ),
+    showAlert(
+      title: '운동 종료',
+      contentText: '지금까지의 기록만 저장됩니다.',
+      actions: [
+        Expanded(
+          child: GazagoButton(
+            onTap: () => Get.back(),
+            buttonText: '취소',
+            textColor: Colors.white,
+            buttonColor: const Color(0xFF363841),
+          ),
+        ),
+        const SizedBox(
+          width: 9,
+        ),
+        Expanded(
+          child: GazagoButton(
+            onTap: () => endExercise(challenge),
+            buttonText: '운동종료',
+            buttonColor: const Color(0xFF0EE6F3),
+          ),
+        ),
+      ],
     );
   }
 

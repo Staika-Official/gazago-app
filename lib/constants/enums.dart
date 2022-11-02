@@ -99,7 +99,7 @@ extension ExerciseStateLabel on ExerciseState {
       case ExerciseState.ongoing:
         return '운동 중';
       case ExerciseState.paused:
-        return '운동 일시정지';
+        return '운동 휴식 중';
       case ExerciseState.finished:
         return '운동 완료';
     }

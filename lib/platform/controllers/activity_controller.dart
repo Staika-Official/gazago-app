@@ -138,7 +138,7 @@ class ActivityController extends GetxController with ActivityMixin, ChallengeMix
           markerId: course.id!.toString(),
           position: LatLng(course.startLat!, course.startLon!),
           captionText: course.startPointName,
-          captionColor: Color(0xFF0EE6F3),
+          captionColor: const Color(0xFF0EE6F3),
           captionHaloColor: Colors.black,
           captionTextSize: 16.0,
           subCaptionTextSize: 14,
@@ -168,7 +168,7 @@ class ActivityController extends GetxController with ActivityMixin, ChallengeMix
       markerId: 'end_${course.id!.toString()}',
       position: LatLng(course.endLat!, course.endLon!),
       captionText: '도착 ${course.endPointName}',
-      captionColor: Color(0xFFFF6F75),
+      captionColor: const Color(0xFFFF6F75),
       captionHaloColor: Colors.black,
       captionTextSize: 16.0,
       captionOffset: 5,
@@ -215,6 +215,7 @@ class ActivityController extends GetxController with ActivityMixin, ChallengeMix
   }
 
   void handleShowStaminaPopup(stat) {
+    _currentSliderValue.value = 0;
     Get.bottomSheet(
       Obx(() {
         return Container(
@@ -235,13 +236,13 @@ class ActivityController extends GetxController with ActivityMixin, ChallengeMix
                   children: [
                     stat.type == 'STAMINA'
                         ? const StyledText(
-                            '체력 충전',
+                            '체력 충전하기',
                             fontSize: 22,
                             lineHeight: 22,
                             fontWeight: 500,
                           )
                         : const StyledText(
-                            '내구도 충전',
+                            '내구도 충전하기',
                             fontSize: 22,
                             lineHeight: 22,
                             fontWeight: 500,
@@ -250,14 +251,14 @@ class ActivityController extends GetxController with ActivityMixin, ChallengeMix
                       padding: const EdgeInsets.only(top: 12.0),
                       child: stat.type == 'STAMINA'
                           ? StyledText(
-                              '체력 ${stat.currentStat}/100',
+                              '현재 체력 ${stat.currentStat}',
                               fontSize: 16,
                               lineHeight: 22,
                               fontWeight: 500,
                               color: const Color(0xFF8A8A8A),
                             )
                           : StyledText(
-                              '내구도 ${stat.currentStat}/100',
+                              '현재 신발 내구도 ${stat.currentStat}',
                               fontSize: 16,
                               lineHeight: 22,
                               fontWeight: 500,
@@ -313,6 +314,21 @@ class ActivityController extends GetxController with ActivityMixin, ChallengeMix
                           ),
                           child: stat.type == 'STAMINA' ? iconSliderStamina : iconSliderShoe,
                         ),
+                        tooltip: FlutterSliderTooltip(
+                          textStyle: TextStyle(
+                            color: Colors.black,
+                            fontSize: 22,
+                            fontWeight: FontWeight.w500,
+                            height: 1,
+                          ),
+                          format: (label) => '+ ${formatDecimalPlaces(double.parse(label), 0)}',
+                          boxStyle: FlutterSliderTooltipBox(
+                            decoration: BoxDecoration(
+                              color: stat.type == 'STAMINA' ? const Color(0xFFCDFF41) : const Color(0xFFB85DFF),
+                              borderRadius: BorderRadius.circular(50),
+                            ),
+                          ),
+                        ),
                       ),
                     ),
                     Padding(
@@ -339,61 +355,21 @@ class ActivityController extends GetxController with ActivityMixin, ChallengeMix
                     Row(
                       children: [
                         Expanded(
-                          child: Padding(
-                            padding: const EdgeInsets.only(right: 8.0),
-                            child: Container(
-                              decoration: BoxDecoration(
-                                color: const Color(0xFF363841),
-                                border: Border.all(width: 2, color: Colors.black),
-                                borderRadius: BorderRadius.circular(8),
-                                boxShadow: const [
-                                  BoxShadow(
-                                    color: Colors.black,
-                                    offset: Offset(0, 3),
-                                  )
-                                ],
-                              ),
-                              child: InkWell(
-                                onTap: () => closeRepairPopup(),
-                                child: const Padding(
-                                  padding: EdgeInsets.symmetric(vertical: 12.0),
-                                  child: Center(
-                                      child: StyledText(
-                                    '취소',
-                                    fontSize: 18,
-                                    lineHeight: 18,
-                                  )),
-                                ),
-                              ),
-                            ),
+                          child: GazagoButton(
+                            onTap: () => closeRepairPopup(),
+                            buttonText: '취소',
+                            textColor: Colors.white,
+                            buttonColor: const Color(0xFF363841),
                           ),
                         ),
+                        const SizedBox(
+                          width: 9,
+                        ),
                         Expanded(
-                          child: Container(
-                            decoration: BoxDecoration(
-                              color: const Color(0xFF0EE6F3),
-                              border: Border.all(width: 2, color: Colors.black),
-                              borderRadius: BorderRadius.circular(8),
-                              boxShadow: const [
-                                BoxShadow(
-                                  color: Colors.black,
-                                  offset: Offset(0, 3),
-                                )
-                              ],
-                            ),
-                            child: InkWell(
-                              onTap: () => stat.type == 'STAMINA' ? fetchRechargeStamina(stat.type) : fetchRepairShoes(),
-                              child: const Padding(
-                                padding: EdgeInsets.symmetric(vertical: 12.0),
-                                child: Center(
-                                    child: StyledText(
-                                  '확인',
-                                  fontSize: 18,
-                                  lineHeight: 18,
-                                  color: Colors.black,
-                                )),
-                              ),
-                            ),
+                          child: GazagoButton(
+                            onTap: () => stat.type == 'STAMINA' ? fetchRechargeStamina(stat.type) : fetchRepairShoes(),
+                            buttonText: '네',
+                            buttonColor: const Color(0xFF0EE6F3),
                           ),
                         ),
                       ],
@@ -423,14 +399,14 @@ class ActivityController extends GetxController with ActivityMixin, ChallengeMix
           padding: const EdgeInsets.symmetric(vertical: 30.0, horizontal: 40.0),
           child: Column(
             children: [
-              StyledText(
+              const StyledText(
                 'Taika 가 부족하여 진행할 수 없습니다.\n 인벤토리에 Taika를 충전해 주세요.',
                 fontWeight: 500,
                 fontSize: 18,
                 lineHeight: 28,
               ),
               Container(
-                margin: EdgeInsets.only(top: 20),
+                margin: const EdgeInsets.only(top: 20),
                 decoration: BoxDecoration(
                   color: const Color(0xFF0EE6F3),
                   border: Border.all(width: 2, color: Colors.black),
@@ -597,7 +573,7 @@ class ActivityController extends GetxController with ActivityMixin, ChallengeMix
   Future<void> showRequestLocationAlert() async {
     await showAlert(
       title: '알림',
-      contentWidget: Text.rich(
+      contentWidget: const Text.rich(
         style: TextStyle(
           fontSize: 18,
           height: 24 / 18,
@@ -629,7 +605,7 @@ class ActivityController extends GetxController with ActivityMixin, ChallengeMix
   Future<void> showRequestActivityAlert() async {
     await showAlert(
       title: '알림',
-      contentWidget: Text.rich(
+      contentWidget: const Text.rich(
         style: TextStyle(
           fontSize: 18,
           height: 24 / 18,
@@ -661,7 +637,7 @@ class ActivityController extends GetxController with ActivityMixin, ChallengeMix
   Future<void> showGpsRequestAlert() async {
     await showAlert(
       title: '알림',
-      contentWidget: Text.rich(
+      contentWidget: const Text.rich(
         style: TextStyle(
           fontSize: 18,
           height: 24 / 18,
@@ -769,7 +745,7 @@ class ActivityController extends GetxController with ActivityMixin, ChallengeMix
     if ([ExerciseState.ongoing, ExerciseState.paused].any((state) => state == exerciseState.value)) {
       Get.toNamed(Routes.activityActive);
     } else {
-      Get.dialog(const ActivitySelect(), barrierDismissible: false, barrierColor: Color.fromRGBO(0, 0, 0, 0.85));
+      Get.dialog(const ActivitySelect(), barrierDismissible: false, barrierColor: const Color.fromRGBO(0, 0, 0, 0.85));
     }
   }
 
@@ -778,12 +754,12 @@ class ActivityController extends GetxController with ActivityMixin, ChallengeMix
 
     Get.dialog(
       barrierDismissible: false,
-      barrierColor: Color.fromRGBO(0, 0, 0, 0.8),
-      ActivityLoading(),
+      barrierColor: const Color.fromRGBO(0, 0, 0, 0.8),
+      const ActivityLoading(),
     );
 
     loadingTimer = Timer.periodic(
-      Duration(seconds: 1),
+      const Duration(seconds: 1),
       (timer) {
         print(loadingTime.value);
         if (loadingTime.value == 3) {
@@ -830,7 +806,7 @@ class ActivityController extends GetxController with ActivityMixin, ChallengeMix
           useMSLAltitude: true,
           //(Optional) Set foreground notification config to keep the app alive
           //when going to the background
-          foregroundNotificationConfig: ForegroundNotificationConfig(
+          foregroundNotificationConfig: const ForegroundNotificationConfig(
             notificationText: "운동 기록을 측정중",
             notificationTitle: "위치 기록 중",
             enableWakeLock: true,
@@ -881,7 +857,7 @@ class ActivityController extends GetxController with ActivityMixin, ChallengeMix
       if (status == ServiceStatus.disabled) {
         showAlert(
           title: '알림',
-          contentWidget: Text.rich(
+          contentWidget: const Text.rich(
             style: TextStyle(
               fontSize: 18,
               height: 24 / 18,
@@ -913,7 +889,7 @@ class ActivityController extends GetxController with ActivityMixin, ChallengeMix
 
   Future<void> getCurrentLocation() async {
     print('getCurrentLocation');
-    await Geolocator.getCurrentPosition(desiredAccuracy: locationAccuracyQuality, timeLimit: Duration(seconds: 5)).then((location) {
+    await Geolocator.getCurrentPosition(desiredAccuracy: locationAccuracyQuality, timeLimit: const Duration(seconds: 5)).then((location) {
       print('getCurrentLocation 위치정보 가져옴');
       currentLocation.value = location;
       isListeningToLocation.value = true;

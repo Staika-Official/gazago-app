@@ -51,7 +51,7 @@ class AssetItemCoin extends StatelessWidget {
                   ),
                   Expanded(
                     child: Padding(
-                      padding: const EdgeInsets.all(8.0),
+                      padding: const EdgeInsets.symmetric(horizontal: 10),
                       child: StyledText(
                         asset.meta!.name,
                         fontSize: 18,

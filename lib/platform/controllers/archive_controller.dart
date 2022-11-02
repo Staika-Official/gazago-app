@@ -3,10 +3,12 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter_naver_map/flutter_naver_map.dart';
 import 'package:gaza_go/constants/routes.dart';
+import 'package:gaza_go/platform/helpers/alert_helper.dart';
 import 'package:gaza_go/platform/helpers/base_helper.dart';
 import 'package:gaza_go/platform/models/archive_detail_item_model.dart';
 import 'package:gaza_go/platform/models/archive_list_item_model.dart';
 import 'package:gaza_go/platform/services/archive_service.dart';
+import 'package:gaza_go/presentations/components/gazago_button.dart';
 import 'package:get/get.dart';
 
 class ArchiveController extends GetxController with ScrollMixin {
@@ -76,6 +78,7 @@ class ArchiveController extends GetxController with ScrollMixin {
   void deleteItem(int id) {
     void successCallback() {
       archiveList.removeWhere((archive) => archive.id == id);
+      Get.until((route) => Get.isBottomSheetOpen == false);
       Get.back();
       Get.snackbar('기록 삭제 완료', '기록을 성공적으로 삭제했습니다.', colorText: Colors.white);
     }
@@ -84,7 +87,32 @@ class ArchiveController extends GetxController with ScrollMixin {
       Get.snackbar('기록 삭제 실패', '기록을 삭제에 실패했습니다.', colorText: Colors.white);
     }
 
-    ArchiveService.deleteArchiveItem(id, successCallback, errorCallback);
+    showAlert(
+      title: '삭제',
+      contentText: '기록이 정말 사라지길 원하십니까?',
+      actions: [
+        Expanded(
+          child: GazagoButton(
+            onTap: () => Get.back(),
+            buttonText: '아니요',
+            textColor: Colors.white,
+            buttonColor: const Color(0xFF363841),
+          ),
+        ),
+        const SizedBox(
+          width: 9,
+        ),
+        Expanded(
+          child: GazagoButton(
+            onTap: () {
+              ArchiveService.deleteArchiveItem(id, successCallback, errorCallback);
+            },
+            buttonText: '삭제하기',
+            buttonColor: const Color(0xFF0EE6F3),
+          ),
+        ),
+      ],
+    );
   }
 
   @override

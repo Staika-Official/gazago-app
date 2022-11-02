@@ -12,6 +12,7 @@ class DefaultContainer extends StatelessWidget {
   final bool? isPrevButtonHide;
   final Widget? trailingChild;
   final String? titleText;
+  final Widget? titleWidget;
   final VoidCallback? onBackButtonTap;
   final Color? headerBackgroundColor;
 
@@ -25,6 +26,7 @@ class DefaultContainer extends StatelessWidget {
     this.isPrevButtonHide = false,
     this.trailingChild,
     this.titleText,
+    this.titleWidget,
     this.headerBackgroundColor,
     this.onBackButtonTap,
   }) : super(key: key);
@@ -44,6 +46,7 @@ class DefaultContainer extends StatelessWidget {
               isLeadingShow: isLeadingShow,
               trailingChild: trailingChild,
               titleText: titleText,
+              titleWidget: titleWidget,
               onBackButtonTap: onBackButtonTap,
             ),
       ),

@@ -101,7 +101,7 @@ class ArchiveDetail extends StatelessWidget {
                       children: [
                         Padding(
                           padding: const EdgeInsets.only(right: 5.2, bottom: 3),
-                          child: iconArchiveClock,
+                          child: iconArchiveClockDetail,
                         ),
                         StyledText(
                           formatSeconds(controller.selectedItem.value.time!),
@@ -117,7 +117,7 @@ class ArchiveDetail extends StatelessWidget {
                       children: [
                         Padding(
                           padding: const EdgeInsets.only(right: 5.2, bottom: 5),
-                          child: iconArchiveDistance,
+                          child: iconArchiveDistanceDetail,
                         ),
                         StyledText(
                           '${formatDecimalPlaces(convertMetersToKm(controller.selectedItem.value.distance!), 2)} km',
@@ -133,7 +133,7 @@ class ArchiveDetail extends StatelessWidget {
                       children: [
                         Padding(
                           padding: const EdgeInsets.only(right: 5.2, bottom: 3),
-                          child: iconArchiveSteps,
+                          child: iconArchiveStepsDetail,
                         ),
                         StyledText(
                           '${controller.selectedItem.value.steps}',
@@ -384,48 +384,6 @@ class ArchiveDetail extends StatelessWidget {
                         const Spacer(),
                         StyledText(
                           '${controller.selectedItem.value.altitude!.toString()} m',
-                          fontWeight: 500,
-                          fontSize: 16,
-                          color: const Color(0xFF7D7D84),
-                        ),
-                      ],
-                    ),
-                  )
-                : Container(),
-            controller.selectedItem.value.spendStamina != null
-                ? Padding(
-                    padding: const EdgeInsets.symmetric(vertical: 10.0, horizontal: 20.0),
-                    child: Row(
-                      children: [
-                        StyledText(
-                          '소비 체력',
-                          fontWeight: 600,
-                          fontSize: 16,
-                        ),
-                        const Spacer(),
-                        StyledText(
-                          controller.selectedItem.value.spendStamina!.toString(),
-                          fontWeight: 500,
-                          fontSize: 16,
-                          color: const Color(0xFF7D7D84),
-                        ),
-                      ],
-                    ),
-                  )
-                : Container(),
-            controller.selectedItem.value.spendDurability != null
-                ? Padding(
-                    padding: const EdgeInsets.symmetric(vertical: 10.0, horizontal: 20.0),
-                    child: Row(
-                      children: [
-                        StyledText(
-                          '소비 내구도',
-                          fontWeight: 600,
-                          fontSize: 16,
-                        ),
-                        const Spacer(),
-                        StyledText(
-                          controller.selectedItem.value.spendDurability!.toString(),
                           fontWeight: 500,
                           fontSize: 16,
                           color: const Color(0xFF7D7D84),

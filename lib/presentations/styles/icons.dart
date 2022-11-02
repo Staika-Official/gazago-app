@@ -28,9 +28,13 @@ SvgPicture iconHeaderLogo = SvgPicture.asset('assets/images/common/img_header_lo
 SvgPicture iconHeaderAvatar = SvgPicture.asset('assets/images/common/ico_header_avatar.svg', width: 21, height: 21);
 SvgPicture iconHeaderWallet = SvgPicture.asset('assets/images/common/ico_header_wallet.svg', width: 22, height: 16);
 
-SvgPicture iconArchiveClock = SvgPicture.asset('assets/images/archive/ico_archive_clock.svg', width: 12.77, height: 15.25);
-SvgPicture iconArchiveDistance = SvgPicture.asset('assets/images/archive/ico_archive_distance.svg', width: 10.89, height: 10.1);
-SvgPicture iconArchiveSteps = SvgPicture.asset('assets/images/archive/ico_archive_steps.svg', width: 10.98, height: 12.56);
+SvgPicture iconArchiveClock = SvgPicture.asset('assets/images/archive/ico_archive_clock.svg', width: 14, height: 14);
+SvgPicture iconArchiveDistance = SvgPicture.asset('assets/images/archive/ico_archive_distance.svg', width: 14, height: 14);
+SvgPicture iconArchiveSteps = SvgPicture.asset('assets/images/archive/ico_archive_steps.svg', width: 14, height: 14);
+
+SvgPicture iconArchiveClockDetail = SvgPicture.asset('assets/images/archive/ico_archive_clock.svg', width: 20, height: 20);
+SvgPicture iconArchiveDistanceDetail = SvgPicture.asset('assets/images/archive/ico_archive_distance.svg', width: 20, height: 20);
+SvgPicture iconArchiveStepsDetail = SvgPicture.asset('assets/images/archive/ico_archive_steps.svg', width: 20, height: 20);
 
 //activity
 SvgPicture iconActivityTokenGo = SvgPicture.asset('assets/images/activity/ico_activity_token_go.svg', width: 41.84, height: 43);
