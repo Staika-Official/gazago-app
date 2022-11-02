@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:gaza_go/constants/enums.dart';
 import 'package:gaza_go/platform/controllers/login_controller.dart';
 import 'package:gaza_go/platform/helpers/login_helper.dart';
-import 'package:gaza_go/presentations/components/default_container.dart';
+import 'package:gaza_go/presentations/styles/icons.dart';
 import 'package:gaza_go/presentations/styles/styled_text.dart';
 
 class Login extends StatelessWidget {
@@ -54,17 +54,31 @@ class Login extends StatelessWidget {
   Widget build(BuildContext context) {
     LoginController controller = LoginController();
 
-    return DefaultContainer(
-      isPrevButtonHide: true,
-      child: Column(
-        children: [
-          const Expanded(
-            child: Center(
-              child: Text('gazaGo'),
+    return Scaffold(
+      body: Container(
+        decoration: const BoxDecoration(
+          image: DecorationImage(image: AssetImage('assets/images/common/bg_login.png'), alignment: Alignment(0, 0), fit: BoxFit.cover),
+        ),
+        child: Column(
+          children: [
+            Expanded(
+              child: Padding(
+                padding: const EdgeInsets.only(top: 38.0),
+                child: Center(
+                  child: iconSplashLogo,
+                ),
+              ),
             ),
-          ),
-          ...renderLoginButtons(controller),
-        ],
+            Padding(
+              padding: const EdgeInsets.only(bottom: 48.0),
+              child: Column(
+                children: [
+                  ...renderLoginButtons(controller),
+                ],
+              ),
+            )
+          ],
+        ),
       ),
     );
   }
