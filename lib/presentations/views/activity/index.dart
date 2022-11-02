@@ -43,8 +43,8 @@ class ActivityHome extends StatelessWidget {
                                           boxShadow: const [
                                             BoxShadow(
                                               color: Colors.black,
-                                              offset: Offset(1, 0),
-                                              blurRadius: 4.0,
+                                              offset: Offset(0, 0),
+                                              blurRadius: 0.0,
                                               spreadRadius: 0.0,
                                             ),
                                           ],
@@ -67,11 +67,11 @@ class ActivityHome extends StatelessWidget {
                                                   borderRadius: const BorderRadius.all(
                                                     Radius.circular(42),
                                                   ),
-                                                  boxShadow: const [
+                                                  boxShadow: [
                                                     BoxShadow(
-                                                      color: Colors.black,
+                                                      color: Colors.black.withOpacity(0.5),
                                                       offset: Offset(1, 0),
-                                                      blurRadius: 4.0,
+                                                      blurRadius: 0.0,
                                                       spreadRadius: 0.0,
                                                     ),
                                                   ],
@@ -99,7 +99,7 @@ class ActivityHome extends StatelessWidget {
                                             BoxShadow(
                                               color: Colors.black,
                                               offset: Offset(1, 0),
-                                              blurRadius: 4.0,
+                                              blurRadius: 0.0,
                                               spreadRadius: 0.0,
                                             ),
                                           ],
@@ -122,9 +122,9 @@ class ActivityHome extends StatelessWidget {
                                                   borderRadius: const BorderRadius.all(
                                                     Radius.circular(50),
                                                   ),
-                                                  boxShadow: const [
+                                                  boxShadow: [
                                                     BoxShadow(
-                                                      color: Colors.black,
+                                                      color: Colors.black.withOpacity(0.5),
                                                       offset: Offset(1, 0),
                                                       blurRadius: 4.0,
                                                       spreadRadius: 0.0,
@@ -349,9 +349,9 @@ class ActivityHome extends StatelessWidget {
                       Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          StyledText(
+                          const StyledText(
                             '가자고와 함께 \n등산하고 뱃지를 받아보자고-!',
-                            color: const Color(0xFF0EE6F3),
+                            color: Color(0xFF0EE6F3),
                             fontWeight: 700,
                             fontSize: 24,
                             lineHeight: 32,
@@ -388,7 +388,7 @@ class ActivityHome extends StatelessWidget {
                                     child: Column(
                                       crossAxisAlignment: CrossAxisAlignment.start,
                                       children: [
-                                        StyledText(
+                                        const StyledText(
                                           'Today',
                                           fontFamily: 'Montserrat',
                                           color: Colors.black,

@@ -454,6 +454,7 @@ class ActivityController extends GetxController with ActivityMixin, ChallengeMix
         userState.update((state) {
           state?.state = newUserState;
         });
+        walletMasterController.getSpendingWalletBalances();
         showToastPopup('체력이 충전되었습니다.');
         closeRepairPopup();
       } else {
@@ -477,7 +478,7 @@ class ActivityController extends GetxController with ActivityMixin, ChallengeMix
         userState.update((state) {
           state!.shoes!.durability = repairModel.durability;
         });
-
+        walletMasterController.getSpendingWalletBalances();
         showToastPopup('내구도 충전이 완료되었습니다.');
         closeRepairPopup();
       } else {

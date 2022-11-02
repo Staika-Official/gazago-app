@@ -35,30 +35,32 @@ class MyPage extends StatelessWidget {
                   SizedBox(
                     width: 70,
                     height: 70,
-                    child: Stack(
-                      alignment: Alignment.center,
-                      children: [
-                        CircleAvatar(
-                          radius: 35,
-                          foregroundImage: controller!.pickedImage.value != null
-                              ? FileImage(
-                                  File(controller.pickedImage.value!.path),
+                    child: InkWell(
+                      onTap: () => controller.pickImage(),
+                      child: Stack(
+                        alignment: Alignment.center,
+                        children: [
+                          CircleAvatar(
+                            radius: 35,
+                            foregroundImage: controller!.pickedImage.value != null
+                                ? FileImage(
+                                    File(controller.pickedImage.value!.path),
+                                  )
+                                : CachedNetworkImageProvider(
+                                    controller.profile.value.profileImageUrl!,
+                                  ) as ImageProvider,
+                          ),
+                          controller.isEditMode.value
+                              ? Positioned(
+                                  bottom: 0,
+                                  right: 0,
+                                  child: Container(
+                                    child: iconCamera,
+                                  ),
                                 )
-                              : CachedNetworkImageProvider(
-                                  controller.profile.value.profileImageUrl!,
-                                ) as ImageProvider,
-                        ),
-                        controller.isEditMode.value
-                            ? Positioned(
-                                bottom: 0,
-                                right: 0,
-                                child: InkWell(
-                                  onTap: () => controller.pickImage(),
-                                  child: iconCamera,
-                                ),
-                              )
-                            : Container(),
-                      ],
+                              : Container(),
+                        ],
+                      ),
                     ),
                   ),
                   Padding(
@@ -193,19 +195,21 @@ class MyPage extends StatelessWidget {
                               color: Color(0xFF1D1D26),
                               child: Align(
                                 alignment: Alignment.bottomCenter,
-                                child: SizedBox(
-                                  width: double.infinity,
-                                  child: Container(
-                                    color: const Color(0xFF0EE6F3),
-                                    height: 60,
-                                    alignment: Alignment.center,
-                                    child: InkWell(
-                                      onTap: () => controller.modifyMyAccountInfo(),
-                                      child: const StyledText(
-                                        '확인',
-                                        color: Colors.black,
-                                        fontSize: 18,
-                                        fontWeight: 500,
+                                child: Container(
+                                  color: const Color(0xFF0EE6F3),
+                                  height: 60,
+                                  alignment: Alignment.center,
+                                  child: InkWell(
+                                    onTap: () => controller.modifyMyAccountInfo(),
+                                    child: const Padding(
+                                      padding: EdgeInsets.symmetric(vertical: 8.0),
+                                      child: Center(
+                                        child: StyledText(
+                                          '확인',
+                                          color: Colors.black,
+                                          fontSize: 18,
+                                          fontWeight: 500,
+                                        ),
                                       ),
                                     ),
                                   ),

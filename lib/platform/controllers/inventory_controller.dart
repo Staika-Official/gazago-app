@@ -256,6 +256,7 @@ class InventoryController extends GetxController with LinearProgressMixin, Inven
         _currentSliderValue.value = 0;
         selectedItem.value = repairModel;
         remainDurability.value = repairModel.durability.toInt();
+        walletMasterController.getSpendingWalletBalances();
         getUserAllItems();
         getUserEquippedItems();
         showToastPopup('내구도 충전이 완료되었습니다.');
