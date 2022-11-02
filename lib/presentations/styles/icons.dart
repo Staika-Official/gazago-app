@@ -53,6 +53,9 @@ SvgPicture iconStatisticsTokenGo = SvgPicture.asset('assets/images/activity/ico_
 SvgPicture iconCalendarStatisticsTokenTik = SvgPicture.asset('assets/images/leaderboard/ico_token_tik.svg', width: 17.54, height: 19.18);
 SvgPicture iconLeaderboardRightArrow = SvgPicture.asset('assets/images/leaderboard/ico_right_arrow.svg');
 SvgPicture iconMyRankArrow = SvgPicture.asset('assets/images/leaderboard/ico_my_rank_arrow.svg', width: 10, height: 10);
+SvgPicture iconCalendar = SvgPicture.asset('assets/images/leaderboard/ico_calendar.svg', width: 18.95, height: 18.85);
+
+
 
 SvgPicture iconArchiveWalking = SvgPicture.asset('assets/images/archive/ico_archive_walking.svg', width: 42, height: 42);
 SvgPicture iconArchiveHiking = SvgPicture.asset('assets/images/archive/ico_archive_hiking.svg', width: 42, height: 42);

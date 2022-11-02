@@ -19,6 +19,7 @@ class CalendarStatistics extends StatelessWidget {
         title: Text("TIK 획득 내역"),
         centerTitle: true,
         backgroundColor: const Color(0xFF1D1D26),
+        elevation: 0,
         leading: Builder(
           builder: (context) => IconButton(
             icon: const Icon(
@@ -59,8 +60,8 @@ class CalendarStatistics extends StatelessWidget {
                         if (events.isNotEmpty) {
                           UserRewardStatisticsModel reward = events.first as UserRewardStatisticsModel;
                           return StyledText(
-                            formatDecimalPlaces(reward.tik, 1),
-                            color: Colors.red,
+                            '+${formatDecimalPlaces(reward.tik, 1)}',
+                            color: Color(0xFFFF8FB4),
                           );
                         }
                         return null;
