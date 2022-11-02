@@ -28,6 +28,7 @@ class InventoryHome extends StatelessWidget {
         homeMenuController.selectMenu(homeMenuController.prevIndex.value);
       },
       child: SingleChildScrollView(
+        physics: const ClampingScrollPhysics(),
         child: ConstrainedBox(
           constraints: BoxConstraints(maxHeight: MediaQuery.of(context).size.height),
           child: Column(

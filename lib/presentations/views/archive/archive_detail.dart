@@ -29,6 +29,7 @@ class ArchiveDetail extends StatelessWidget {
       ),
       backgroundColor: const Color(0xFF1D1D26),
       child: SingleChildScrollView(
+        physics: const ClampingScrollPhysics(),
         child: Column(
           children: [
             Padding(
@@ -77,7 +78,7 @@ class ArchiveDetail extends StatelessWidget {
                         fontSize: controller.selectedItem.value.secondName != null ? 14 : 18,
                         lineHeight: 20,
                         fontWeight: 500,
-                        color: controller.selectedItem.value.secondName != null ? Colors.white : Color(0xFF949494),
+                        color: controller.selectedItem.value.secondName != null ? Colors.white : const Color(0xFF949494),
                       ),
                     ],
                   )
@@ -159,12 +160,12 @@ class ArchiveDetail extends StatelessWidget {
                   mapType: MapType.Navi,
                   onMapCreated: (mapController) => controller.recordMapCreated(mapController, controller.locations),
                   initialCameraPosition: CameraPosition(
-                    target: controller.locations.length > 1 ? controller.locations.first : LatLng(37.5525, 126.9883),
+                    target: controller.locations.length > 1 ? controller.locations.first : const LatLng(37.5525, 126.9883),
                   ),
                   pathOverlays: {
                     PathOverlay(
                       PathOverlayId('detail path'),
-                      controller.locations.length > 1 ? controller.locations : [LatLng(37.5551, 126.9933), LatLng(37.5551, 126.9933)],
+                      controller.locations.length > 1 ? controller.locations : [const LatLng(37.5551, 126.9933), const LatLng(37.5551, 126.9933)],
                       width: 3,
                       color: Colors.red,
                       // outlineColor: Colors.white,
@@ -177,7 +178,7 @@ class ArchiveDetail extends StatelessWidget {
               padding: const EdgeInsets.symmetric(vertical: 10.0, horizontal: 20.0),
               child: Row(
                 children: [
-                  StyledText(
+                  const StyledText(
                     '획득 GO',
                     fontWeight: 600,
                     fontSize: 16,
@@ -196,7 +197,7 @@ class ArchiveDetail extends StatelessWidget {
               padding: const EdgeInsets.symmetric(vertical: 10.0, horizontal: 20.0),
               child: Row(
                 children: [
-                  StyledText(
+                  const StyledText(
                     '소비 체력',
                     fontWeight: 600,
                     fontSize: 16,
@@ -215,7 +216,7 @@ class ArchiveDetail extends StatelessWidget {
               padding: const EdgeInsets.symmetric(vertical: 10.0, horizontal: 20.0),
               child: Row(
                 children: [
-                  StyledText(
+                  const StyledText(
                     '소비 내구도',
                     fontWeight: 600,
                     fontSize: 16,
@@ -235,7 +236,7 @@ class ArchiveDetail extends StatelessWidget {
                     padding: const EdgeInsets.symmetric(vertical: 10.0, horizontal: 20.0),
                     child: Row(
                       children: [
-                        StyledText(
+                        const StyledText(
                           '획득 뱃지',
                           fontWeight: 600,
                           fontSize: 16,
@@ -264,7 +265,7 @@ class ArchiveDetail extends StatelessWidget {
                     padding: const EdgeInsets.symmetric(vertical: 10.0, horizontal: 20.0),
                     child: Row(
                       children: [
-                        StyledText(
+                        const StyledText(
                           '시작점',
                           fontWeight: 600,
                           fontSize: 16,
@@ -284,7 +285,7 @@ class ArchiveDetail extends StatelessWidget {
               padding: const EdgeInsets.symmetric(vertical: 10.0, horizontal: 20.0),
               child: Row(
                 children: [
-                  StyledText(
+                  const StyledText(
                     '시작 시간',
                     fontWeight: 600,
                     fontSize: 16,
@@ -305,7 +306,7 @@ class ArchiveDetail extends StatelessWidget {
                     padding: const EdgeInsets.symmetric(vertical: 10.0, horizontal: 20.0),
                     child: Row(
                       children: [
-                        StyledText(
+                        const StyledText(
                           '종료점',
                           fontWeight: 600,
                           fontSize: 16,
@@ -326,7 +327,7 @@ class ArchiveDetail extends StatelessWidget {
                     padding: const EdgeInsets.symmetric(vertical: 10.0, horizontal: 20.0),
                     child: Row(
                       children: [
-                        StyledText(
+                        const StyledText(
                           '종료 시간',
                           fontWeight: 600,
                           fontSize: 16,
@@ -355,7 +356,7 @@ class ArchiveDetail extends StatelessWidget {
                     padding: const EdgeInsets.symmetric(vertical: 10.0, horizontal: 20.0),
                     child: Row(
                       children: [
-                        StyledText(
+                        const StyledText(
                           '평균 속도',
                           fontWeight: 600,
                           fontSize: 16,
@@ -376,7 +377,7 @@ class ArchiveDetail extends StatelessWidget {
                     padding: const EdgeInsets.symmetric(vertical: 10.0, horizontal: 20.0),
                     child: Row(
                       children: [
-                        StyledText(
+                        const StyledText(
                           '최고 고도',
                           fontWeight: 600,
                           fontSize: 16,

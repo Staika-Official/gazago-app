@@ -212,10 +212,7 @@ class ChallengeMap extends StatelessWidget {
         persistentHeader: Container(
           padding: EdgeInsets.only(bottom: 5),
           height: 30,
-          decoration: BoxDecoration(
-            color: Color(0xFF4A4D57),
-            borderRadius: BorderRadius.only(topLeft: Radius.circular(15), topRight: Radius.circular(15))
-          ),
+          decoration: BoxDecoration(color: Color(0xFF4A4D57), borderRadius: BorderRadius.only(topLeft: Radius.circular(15), topRight: Radius.circular(15))),
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
@@ -248,6 +245,7 @@ class ChallengeMap extends StatelessWidget {
           height: MediaQuery.of(context).size.height - 200,
           color: Color(0xFF363841),
           child: SingleChildScrollView(
+            physics: const ClampingScrollPhysics(),
             child: Column(
               mainAxisSize: MainAxisSize.min,
               children: <Widget>[_renderChallenges(controller)],

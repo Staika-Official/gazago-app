@@ -340,6 +340,7 @@ class ActivityHome extends StatelessWidget {
             ),
           ),
           child: SingleChildScrollView(
+            physics: const ClampingScrollPhysics(),
             child: ConstrainedBox(
               constraints: BoxConstraints(minHeight: constraint.maxHeight),
               child: IntrinsicHeight(
