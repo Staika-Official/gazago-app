@@ -24,7 +24,6 @@ class Api {
     );
 
   static Dio client({required String serviceUrl, bool needsToken = true, Map<String, dynamic>? queryParams, bool? isPatch = false, bool? isFile = false}) {
-
     _dio.options.baseUrl = '${F.baseUrl}$serviceUrl';
 
     if (needsToken) {
@@ -114,7 +113,6 @@ class Api {
           ]);
           if (getx.Get.currentRoute != Routes.login) getx.Get.offAllNamed(Routes.login);
         });
-
     } else {
       if (e.response?.data != null) {
         ErrorResponseDataModel errorData = ErrorResponseDataModel.fromJson(e.response?.data);

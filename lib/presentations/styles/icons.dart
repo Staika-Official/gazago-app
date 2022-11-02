@@ -7,6 +7,7 @@ SvgPicture iconPlus = SvgPicture.asset('assets/images/common/ico_plus.svg', widt
 SvgPicture iconSliderShoe = SvgPicture.asset('assets/images/common/ico_slider_shoe.svg', width: 14.7, height: 16);
 SvgPicture iconSliderStamina = SvgPicture.asset('assets/images/common/ico_slider_stamina.svg', width: 13.33, height: 20.8);
 SvgPicture iconCopy = SvgPicture.asset('assets/images/common/ico_copy.svg', width: 12.33, height: 14.2);
+SvgPicture iconExclamationMark = SvgPicture.asset('assets/images/common/ico_circle_exclamation_mark.svg', width: 78, height: 78);
 
 // Bottom Navigation Icon
 SvgPicture iconMenuHome = SvgPicture.asset('assets/images/common/ico_menu_home.svg', width: 20.5, height: 20, color: const Color(0xFFBFBFBF));
@@ -54,8 +55,6 @@ SvgPicture iconCalendarStatisticsTokenTik = SvgPicture.asset('assets/images/lead
 SvgPicture iconLeaderboardRightArrow = SvgPicture.asset('assets/images/leaderboard/ico_right_arrow.svg');
 SvgPicture iconMyRankArrow = SvgPicture.asset('assets/images/leaderboard/ico_my_rank_arrow.svg', width: 10, height: 10);
 SvgPicture iconCalendar = SvgPicture.asset('assets/images/leaderboard/ico_calendar.svg', width: 18.95, height: 18.85);
-
-
 
 SvgPicture iconArchiveWalking = SvgPicture.asset('assets/images/archive/ico_archive_walking.svg', width: 42, height: 42);
 SvgPicture iconArchiveHiking = SvgPicture.asset('assets/images/archive/ico_archive_hiking.svg', width: 42, height: 42);
