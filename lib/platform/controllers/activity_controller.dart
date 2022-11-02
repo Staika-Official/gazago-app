@@ -216,6 +216,7 @@ class ActivityController extends GetxController with ActivityMixin, ChallengeMix
 
   void handleShowStaminaPopup(stat) {
     _currentSliderValue.value = 0;
+
     Get.bottomSheet(
       Obx(() {
         return Container(
@@ -230,9 +231,10 @@ class ActivityController extends GetxController with ActivityMixin, ChallengeMix
           child: Padding(
             padding: const EdgeInsets.symmetric(vertical: 30.0, horizontal: 20.0),
             child: Column(
+              mainAxisSize: MainAxisSize.min,
               children: [
                 Column(
-                  mainAxisSize: MainAxisSize.max,
+                  mainAxisSize: MainAxisSize.min,
                   children: [
                     stat.type == 'STAMINA'
                         ? const StyledText(

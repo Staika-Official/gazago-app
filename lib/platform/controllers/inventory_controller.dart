@@ -14,6 +14,7 @@ import 'package:gaza_go/platform/models/repair_shoes_model.dart';
 import 'package:gaza_go/platform/models/stat_model.dart';
 import 'package:gaza_go/platform/services/activity_service.dart';
 import 'package:gaza_go/platform/services/item_service.dart';
+import 'package:gaza_go/presentations/components/gazago_button.dart';
 import 'package:gaza_go/presentations/styles/icons.dart';
 import 'package:gaza_go/presentations/styles/styled_text.dart';
 import 'package:get/get.dart';
@@ -270,7 +271,7 @@ class InventoryController extends GetxController with LinearProgressMixin, Inven
   }
 
   void showShoesRepairPopup(id) {
-    // _currentSliderValue.value = equippedShoe.value.durability.toInt().floor().toDouble();
+    _currentSliderValue.value = 0;
 
     Get.bottomSheet(
       Obx(() {
@@ -285,12 +286,13 @@ class InventoryController extends GetxController with LinearProgressMixin, Inven
           child: Padding(
             padding: const EdgeInsets.symmetric(vertical: 30.0, horizontal: 20.0),
             child: Column(
+              mainAxisSize: MainAxisSize.min,
               children: [
                 Column(
-                  mainAxisSize: MainAxisSize.max,
+                  mainAxisSize: MainAxisSize.min,
                   children: [
                     const StyledText(
-                      '내구도 충전',
+                      '내구도 충전하기',
                       fontSize: 22,
                       lineHeight: 22,
                       fontWeight: 500,
@@ -298,7 +300,7 @@ class InventoryController extends GetxController with LinearProgressMixin, Inven
                     Padding(
                       padding: const EdgeInsets.only(top: 12.0),
                       child: StyledText(
-                        '내구도 ${equippedShoe.value.durability.toInt()}/100',
+                        '현재 신발 내구도 ${equippedShoe.value.durability.toInt()}',
                         fontSize: 16,
                         lineHeight: 22,
                         fontWeight: 500,
@@ -351,6 +353,21 @@ class InventoryController extends GetxController with LinearProgressMixin, Inven
                           ),
                           child: iconSliderShoe,
                         ),
+                        tooltip: FlutterSliderTooltip(
+                          textStyle: TextStyle(
+                            color: Colors.black,
+                            fontSize: 22,
+                            fontWeight: FontWeight.w500,
+                            height: 1,
+                          ),
+                          format: (label) => '+ ${formatDecimalPlaces(double.parse(label), 0)}',
+                          boxStyle: FlutterSliderTooltipBox(
+                            decoration: BoxDecoration(
+                              color: const Color(0xFFB85DFF),
+                              borderRadius: BorderRadius.circular(50),
+                            ),
+                          ),
+                        ),
                       ),
                     ),
                     Padding(
@@ -377,61 +394,21 @@ class InventoryController extends GetxController with LinearProgressMixin, Inven
                     Row(
                       children: [
                         Expanded(
-                          child: Padding(
-                            padding: const EdgeInsets.only(right: 8.0),
-                            child: Container(
-                              decoration: BoxDecoration(
-                                color: const Color(0xFF363841),
-                                border: Border.all(width: 2, color: Colors.black),
-                                borderRadius: BorderRadius.circular(8),
-                                boxShadow: const [
-                                  BoxShadow(
-                                    color: Colors.black,
-                                    offset: Offset(0, 3),
-                                  )
-                                ],
-                              ),
-                              child: InkWell(
-                                onTap: () => closeRepairPopup(),
-                                child: Padding(
-                                  padding: const EdgeInsets.symmetric(vertical: 12.0),
-                                  child: const Center(
-                                      child: StyledText(
-                                    '취소',
-                                    fontSize: 18,
-                                    lineHeight: 18,
-                                  )),
-                                ),
-                              ),
-                            ),
+                          child: GazagoButton(
+                            onTap: () => closeRepairPopup(),
+                            buttonText: '취소',
+                            textColor: Colors.white,
+                            buttonColor: const Color(0xFF363841),
                           ),
                         ),
+                        const SizedBox(
+                          width: 9,
+                        ),
                         Expanded(
-                          child: Container(
-                            decoration: BoxDecoration(
-                              color: const Color(0xFF0EE6F3),
-                              border: Border.all(width: 2, color: Colors.black),
-                              borderRadius: BorderRadius.circular(8),
-                              boxShadow: const [
-                                BoxShadow(
-                                  color: Colors.black,
-                                  offset: Offset(0, 3),
-                                )
-                              ],
-                            ),
-                            child: InkWell(
-                              onTap: () => fetchRepairShoes(equippedShoe.value.id),
-                              child: const Padding(
-                                padding: EdgeInsets.symmetric(vertical: 12.0),
-                                child: Center(
-                                    child: StyledText(
-                                  '확인',
-                                  fontSize: 18,
-                                  lineHeight: 18,
-                                  color: Colors.black,
-                                )),
-                              ),
-                            ),
+                          child: GazagoButton(
+                            onTap: () => fetchRepairShoes(equippedShoe.value.id),
+                            buttonText: '네',
+                            buttonColor: const Color(0xFF0EE6F3),
                           ),
                         ),
                       ],
@@ -443,13 +420,6 @@ class InventoryController extends GetxController with LinearProgressMixin, Inven
           ),
         );
       }),
-      // AlertDialog(
-      //   title: const Text('내구도 충전'),
-      //   content:
-      //   actions: [
-
-      //   ],
-      // ),
     );
   }
 
