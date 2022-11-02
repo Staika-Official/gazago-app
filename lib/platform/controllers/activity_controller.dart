@@ -897,7 +897,7 @@ class ActivityController extends GetxController with ActivityMixin, ChallengeMix
       currentLocation.value = location;
       isListeningToLocation.value = true;
     }).onError((error, stackTrace) {
-      Get.snackbar('위치정보 수신실패', '위치정보를 가져오지 못했습니다.', colorText: Colors.white);
+      showToastPopup('위치정보를 가져오지 못했습니다.');
     });
   }
 

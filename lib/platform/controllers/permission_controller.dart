@@ -1,9 +1,9 @@
 import 'dart:async';
 import 'dart:io';
 
-import 'package:flutter/material.dart';
 import 'package:gaza_go/constants/enums.dart';
 import 'package:gaza_go/constants/routes.dart';
+import 'package:gaza_go/platform/helpers/alert_helper.dart';
 import 'package:gaza_go/platform/stores/hive_store.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:get/get.dart';
@@ -43,7 +43,7 @@ class PermissionController extends GetxController {
   Future<bool> checkGpsSensor() async {
     bool isGpsAvailable = await Geolocator.isLocationServiceEnabled();
     if (!isGpsAvailable) {
-      Get.snackbar('GPS', '운동을 시작하기 위해서 GPS를 켜주세요.', colorText: Colors.white);
+      showToastPopup('운동을 시작하기 위해서 GPS를 켜주세요.');
     }
 
     return isGpsAvailable;

@@ -1,9 +1,7 @@
 import 'dart:convert';
 import 'dart:math';
 
-import 'package:flutter/material.dart';
 import 'package:flutter_naver_map/flutter_naver_map.dart';
-import 'package:fluttertoast/fluttertoast.dart';
 import 'package:gaza_go/constants/enums.dart';
 import 'package:gaza_go/platform/firebase/remote_config.dart';
 import 'package:intl/intl.dart';
@@ -105,14 +103,4 @@ String formatDecimalPlaces(double val, int decimalPlaces, {RoundType roundType =
 String formatSeconds(int time) {
   Duration seconds = Duration(seconds: time);
   return seconds.toString().split('.').first.padLeft(8, "0");
-}
-
-void showToastPopup(String message) {
-  Fluttertoast.showToast(
-    msg: message,
-    gravity: ToastGravity.TOP,
-    backgroundColor: Colors.black.withOpacity(0.8),
-    textColor: Colors.white,
-    fontSize: 16.0,
-  );
 }

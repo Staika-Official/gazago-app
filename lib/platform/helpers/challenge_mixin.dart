@@ -8,6 +8,7 @@ import 'package:gaza_go/constants/enums.dart';
 import 'package:gaza_go/platform/controllers/global_controller.dart';
 import 'package:gaza_go/platform/firebase/cloud_messaging.dart';
 import 'package:gaza_go/platform/helpers/activity_helper.dart';
+import 'package:gaza_go/platform/helpers/alert_helper.dart';
 import 'package:gaza_go/platform/models/challenge_hierarchy_model.dart';
 import 'package:gaza_go/platform/models/challenge_model.dart';
 import 'package:gaza_go/platform/models/current_user_state_model.dart';
@@ -73,7 +74,7 @@ class ChallengeMixin {
 
     if (notification) {
       showLocalNotification(notificationType: NotificationType.challenge, title: '도전 지역 발견', message: '주변에 등산을 시작 할 수 있는 ${filteredList.first.firstName} 있어요. 등산을 시작해 보세요.');
-      Get.snackbar('도전 지역 발견', '새로운 도전을 시작하세요.', colorText: Colors.green);
+      showToastPopup('새로운 도전을 시작하세요.');
     }
   }
 
@@ -134,13 +135,13 @@ class ChallengeMixin {
   Future<void> requestBadgeIssuance(CurrentUserStateModel userState) async {
     void successCallback(InventoryBadgeModel badge) {
       showLocalNotification(notificationType: NotificationType.badge, title: '뱃지 발급', message: '${selectedChallenge.value.firstName}등정에 성공하여 뱃지를 받았습니다. 새로운 뱃지를 확인해 보세요. ');
-      Get.snackbar('뱃지 발급', '뱃지가 발급되었습니다.', colorText: Colors.white);
+      showToastPopup('뱃지가 발급되었습니다.');
       userState.exercise!.badgeIssueId = badge.id;
       HiveStore.deleteKey(key: HiveKey.badgeIssuanceRequested.name);
     }
 
     void errorCallback() {
-      Get.snackbar('뱃지 발급 실패', '뱃지 발급에 실패했습니다.', colorText: Colors.white);
+      showToastPopup('뱃지 발급에 실패했습니다.');
       HiveStore.save(key: HiveKey.badgeIssuanceRequested.name, value: true.toString());
     }
 

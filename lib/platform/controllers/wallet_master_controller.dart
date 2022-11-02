@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:gaza_go/constants/enums.dart';
 import 'package:gaza_go/constants/routes.dart';
 import 'package:gaza_go/platform/controllers/loading_controller.dart';
+import 'package:gaza_go/platform/helpers/alert_helper.dart';
 import 'package:gaza_go/platform/models/asset_detail_model.dart';
 import 'package:gaza_go/platform/models/asset_token_balance_list_model.dart';
 import 'package:gaza_go/platform/models/asset_token_balance_model.dart';
@@ -39,14 +40,14 @@ class WalletMasterController extends GetxController {
 
   Rx<AssetTokenBalanceUiModel> get tik {
     return Rx(spendingTokenUiList.singleWhere((token) => token.mint == '1', orElse: () {
-      Get.snackbar('에러', 'TAIKA를 찾을 수 없습니다.');
+      showToastPopup('TAIKA를 찾을 수 없습니다.');
       return AssetTokenBalanceUiModel();
     }));
   }
 
   Rx<AssetTokenBalanceUiModel> get stik {
     return Rx(spendingTokenUiList.singleWhere((token) => token.mint == '2', orElse: () {
-      Get.snackbar('에러', 'STAIKA를 찾을 수 없습니다.');
+      showToastPopup('STAIKA를 찾을 수 없습니다.');
       return AssetTokenBalanceUiModel();
     }));
   }
@@ -82,7 +83,7 @@ class WalletMasterController extends GetxController {
     buyTikResult.value = await WalletService.buyTik(tikAmount);
     await getSpendingWalletBalances();
     await getSpendingMetaData();
-    Get.snackbar('충전 완료', '$tikAmount Tik이 충전되었습니다.', colorText: Colors.white);
+    showToastPopup('$tikAmount TIK이 충전되었습니다.');
     Get.until((route) => route.settings.name == Routes.wallet);
   }
 

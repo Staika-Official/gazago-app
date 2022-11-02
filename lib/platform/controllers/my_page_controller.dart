@@ -3,7 +3,7 @@ import 'dart:developer';
 import 'package:dio/dio.dart' as dio;
 import 'package:flutter/cupertino.dart';
 import 'package:gaza_go/platform/controllers/preference_controller.dart';
-import 'package:gaza_go/platform/helpers/base_helper.dart';
+import 'package:gaza_go/platform/helpers/alert_helper.dart';
 import 'package:gaza_go/platform/models/user_account_model.dart';
 import 'package:gaza_go/platform/services/uaa_service.dart';
 import 'package:get/get.dart';

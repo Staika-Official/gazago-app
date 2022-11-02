@@ -80,11 +80,11 @@ class ArchiveController extends GetxController with ScrollMixin {
       archiveList.removeWhere((archive) => archive.id == id);
       Get.until((route) => Get.isBottomSheetOpen == false);
       Get.back();
-      Get.snackbar('기록 삭제 완료', '기록을 성공적으로 삭제했습니다.', colorText: Colors.white);
+      showToastPopup('기록을 성공적으로 삭제했습니다.');
     }
 
     void errorCallback() {
-      Get.snackbar('기록 삭제 실패', '기록을 삭제에 실패했습니다.', colorText: Colors.white);
+      showToastPopup('기록 삭제에 실패했습니다.');
     }
 
     showAlert(

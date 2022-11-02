@@ -4,6 +4,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:gaza_go/constants/enums.dart';
 import 'package:gaza_go/constants/routes.dart';
+import 'package:gaza_go/platform/helpers/alert_helper.dart';
 import 'package:gaza_go/platform/models/access_token_model.dart';
 import 'package:gaza_go/platform/models/social_login_info_model.dart';
 import 'package:gaza_go/platform/models/user_account_model.dart';
@@ -133,7 +134,7 @@ class LoginController extends GetxController {
         }
       },
       errorCallback: (int statusCode, String statusMessage) {
-        Get.snackbar(statusCode.toString(), statusMessage);
+        showToastPopup(statusMessage);
       },
     );
   }

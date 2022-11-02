@@ -282,11 +282,11 @@ class ActivityMixin {
           startPeriodicUpdate();
         },
         errorCallback: (int statusCode, String statusMessage) {
-          Get.snackbar(statusCode.toString(), statusMessage);
+          showToastPopup(statusMessage);
         },
       );
     } else {
-      Get.snackbar('인터넷 연결 불가', '인터넷 상태를 확인해주세요', colorText: Colors.white);
+      showToastPopup('인터넷 상태를 확인해주세요');
     }
   }
 
@@ -390,7 +390,7 @@ class ActivityMixin {
   }
 
   void onTapUpStop(TapUpDetails tapUpDetails) {
-    Get.snackbar('운동 종료', '‘3초간 눌러야 정지됩니다', colorText: Colors.white, snackPosition: SnackPosition.BOTTOM, margin: EdgeInsets.all(30));
+    showToastPopup('3초간 눌러야 정지됩니다.');
     initializeStopTimer();
   }
 
@@ -455,7 +455,7 @@ class ActivityMixin {
           moveToExerciseDetail(userState.value.exercise!.id!);
         }
       }, errorCallback: () {
-        Get.snackbar('운동 종료 불가', '운동이 정상적으로 종료되지 않았습니디.', colorText: Colors.white);
+        showToastPopup('운동이 정상적으로 종료되지 않았습니다.');
       });
     } else {
       exerciseState.value = ExerciseState.ready;

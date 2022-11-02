@@ -3,6 +3,7 @@ import 'package:flutter_naver_map/flutter_naver_map.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:gaza_go/constants/enums.dart';
 import 'package:gaza_go/platform/controllers/activity_controller.dart';
+import 'package:gaza_go/platform/helpers/alert_helper.dart';
 import 'package:gaza_go/presentations/components/default_container.dart';
 import 'package:get/get.dart';
 
@@ -201,9 +202,7 @@ class ActivityChallenges extends StatelessWidget {
                           if (controller.selectedChallenge.value.id != null) {
                             controller.selectExerciseType(ExerciseType.hiking);
                           } else {
-                            if (!Get.isSnackbarOpen) {
-                              Get.snackbar('챌린지 미선택', '시작할 챌린지를 선택해주세요', colorText: Colors.white);
-                            }
+                            showToastPopup('시작할 챌린지를 선택해주세요.');
                           }
                         },
                         child: Container(
