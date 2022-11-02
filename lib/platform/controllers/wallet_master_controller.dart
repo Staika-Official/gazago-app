@@ -57,7 +57,6 @@ class WalletMasterController extends GetxController {
   void onInit() async {
     await getSpendingWalletBalances();
     await getSpendingMetaData();
-    await getBuyTikCommission();
     super.onInit();
   }
 
@@ -79,7 +78,6 @@ class WalletMasterController extends GetxController {
 
   Future<void> getBuyTikCommission() async {
     buyTikCommission.value = await WalletService.getBuyTikCommission();
-    if (Get.isRegistered<LoadingController>()) Get.find<LoadingController>().updateProgress("서비스를 위해 정보를 불러오는 중입니다.");
   }
 
   Future<void> buyTik(int tikAmount) async {

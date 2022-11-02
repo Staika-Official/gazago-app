@@ -3,6 +3,7 @@ import 'package:gaza_go/constants/enums.dart';
 import 'package:gaza_go/platform/controllers/archive_controller.dart';
 import 'package:gaza_go/platform/helpers/activity_helper.dart';
 import 'package:gaza_go/platform/helpers/base_helper.dart';
+import 'package:gaza_go/presentations/components/gazago_button.dart';
 import 'package:gaza_go/presentations/styles/icons.dart';
 import 'package:gaza_go/presentations/styles/styled_text.dart';
 import 'package:get/get.dart';
@@ -154,6 +155,7 @@ class ArchiveHome extends StatelessWidget {
                 child: StyledText(
                   '운동 기록',
                   fontSize: 20,
+                  lineHeight: 20,
                   fontWeight: 500,
                 ),
               ),

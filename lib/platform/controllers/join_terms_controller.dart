@@ -47,7 +47,7 @@ class JoinTermsController extends GetxController {
 
   void requestJoin() {
     if (allRequiredAgreed.value) {
-      Get.toNamed(Routes.loading);
+      Get.toNamed(Routes.permissions);
     } else {
       Get.snackbar('필수 약관 동의 필요', '필수 약관에 동의해주세요', colorText: Colors.white);
     }

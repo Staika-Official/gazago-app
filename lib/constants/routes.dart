@@ -19,6 +19,7 @@ import 'package:gaza_go/presentations/views/leaderboard/calendar_statistics.dart
 import 'package:gaza_go/presentations/views/loading.dart';
 import 'package:gaza_go/presentations/views/login.dart';
 import 'package:gaza_go/presentations/views/on_boarding.dart';
+import 'package:gaza_go/presentations/views/permissions.dart';
 import 'package:gaza_go/presentations/views/preferences/edit_biometrics.dart';
 import 'package:gaza_go/presentations/views/preferences/index.dart';
 import 'package:gaza_go/presentations/views/preferences/my_page.dart';
@@ -66,6 +67,7 @@ class Routes {
   static const calendarStatistics = '/leaderboard/calendar_statistics';
   static const signupComplete = '/auth/signup_complete';
   static const accountRestore = '/account/restore';
+  static const permissions = '/permissions';
 
   static List<GetPage> pages = [
     stepPage(name: Routes.login, page: const Login()),
@@ -108,6 +110,7 @@ class Routes {
     stepPage(name: Routes.signupComplete, page: const SignupComplete()),
     stepPage(name: Routes.accountRestore, page: const AccountRestore()),
     stepPage(name: Routes.equippedItems, page: const EquippedItems()),
+    stepPage(name: Routes.permissions, page: Permissions()),
   ];
 }
 

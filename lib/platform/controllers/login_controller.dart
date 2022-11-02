@@ -116,9 +116,15 @@ class LoginController extends GetxController {
 
         if (statusCode == 200) {
           await initUserInfo();
-          Get.offNamed(Routes.loading);
+          bool? permissionRequestBefore = HiveStore.load(key: HiveKey.permissionRequestOnFirstLaunch.name);
+          if (permissionRequestBefore != null && permissionRequestBefore) {
+            Get.offNamed(Routes.loading);
+          } else {
+            Get.offNamed(Routes.permissions);
+          }
         } else {
           await initUserInfo();
+          HiveStore.save(key: HiveKey.isNewUser.name, value: true);
           Get.offNamed(Routes.onBoarding);
         }
       },

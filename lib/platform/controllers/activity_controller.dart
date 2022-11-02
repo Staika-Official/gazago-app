@@ -4,16 +4,15 @@ import 'dart:io';
 import 'package:another_xlider/another_xlider.dart';
 import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:flutter_naver_map/flutter_naver_map.dart';
 import 'package:gaza_go/constants/config.dart';
 import 'package:gaza_go/constants/enums.dart';
 import 'package:gaza_go/constants/routes.dart';
 import 'package:gaza_go/platform/controllers/loading_controller.dart';
 import 'package:gaza_go/platform/controllers/wallet_master_controller.dart';
-import 'package:gaza_go/platform/firebase/cloud_messaging.dart';
 import 'package:gaza_go/platform/helpers/activity_helper.dart';
 import 'package:gaza_go/platform/helpers/activity_mixin.dart';
+import 'package:gaza_go/platform/helpers/alert_helper.dart';
 import 'package:gaza_go/platform/helpers/base_helper.dart';
 import 'package:gaza_go/platform/helpers/challenge_mixin.dart';
 import 'package:gaza_go/platform/models/challenge_hierarchy_model.dart';
@@ -28,6 +27,7 @@ import 'package:gaza_go/platform/models/user_state_model.dart';
 import 'package:gaza_go/platform/services/activity_service.dart';
 import 'package:gaza_go/platform/services/item_service.dart';
 import 'package:gaza_go/platform/stores/hive_store.dart';
+import 'package:gaza_go/presentations/components/gazago_button.dart';
 import 'package:gaza_go/presentations/styles/icons.dart';
 import 'package:gaza_go/presentations/styles/styled_text.dart';
 import 'package:gaza_go/presentations/views/activity/activity_loading.dart';
@@ -62,6 +62,7 @@ class ActivityController extends GetxController with ActivityMixin, ChallengeMix
   final RxInt repairDurability = RxInt(0);
   final RxInt costTik = RxInt(0);
   final RxBool isListeningToLocation = RxBool(false);
+  final RxBool hasPermission = RxBool(false);
   final Rx<ExerciseType> selectedExerciseType = Rx(ExerciseType.walking);
   final Rx<LocationPermission> _locationPermission = Rx(LocationPermission.unableToDetermine);
   final Rx<LocationAccuracyStatus> _locationAccuracyStatus = Rx(LocationAccuracyStatus.unknown);
@@ -100,9 +101,19 @@ class ActivityController extends GetxController with ActivityMixin, ChallengeMix
   }
 
   Future<void> initController() async {
-    await checkAvailabilities();
-    await initializeActivity();
     getUserState();
+    hasPermission.value = await checkAvailabilities();
+    if (hasPermission.value) {
+      await initActivityStatus();
+    }
+  }
+
+  Future<void> refreshController() async {
+    getUserState();
+  }
+
+  Future<void> initActivityStatus() async {
+    await initializeActivity();
     await loadMakerImages();
     await loadChallenges();
   }
@@ -118,7 +129,7 @@ class ActivityController extends GetxController with ActivityMixin, ChallengeMix
   }
 
   Future<void> loadChallenges() async {
-    await getChallengesHierarchy(this.currentLocation.value);
+    await getChallengesHierarchy(currentLocation.value);
     for (ChallengeHierarchyModel challenge in hierarchyChallengesList) {
       for (ChallengeModel course in challenge.course) {
         allChallengesList.add(course);
@@ -181,24 +192,6 @@ class ActivityController extends GetxController with ActivityMixin, ChallengeMix
         padding: 100,
       ),
     );
-  }
-
-  Future<void> refreshController() async {
-    getUserState();
-  }
-
-  Future<void> onClickTestNoti() async {
-    const AndroidNotificationDetails androidNotificationDetails = AndroidNotificationDetails(
-      'your channel id',
-      'your channel name',
-      channelDescription: 'your channel description',
-      importance: Importance.max,
-      priority: Priority.high,
-      ticker: 'ticker',
-    );
-    const NotificationDetails platformChannelSpecifics = NotificationDetails(android: androidNotificationDetails, iOS: IOSNotificationDetails());
-
-    await flutterLocalNotificationsPlugin.show(0, 'Title', 'Body', platformChannelSpecifics, payload: 'Payload');
   }
 
   void initRepairInfo() {
@@ -574,47 +567,138 @@ class ActivityController extends GetxController with ActivityMixin, ChallengeMix
   requestExerciseInitialization() async {
     bool systemReady = await checkAvailabilities();
     if (systemReady) {
+      if (!isListeningToLocation.value) {
+        initializeActivity();
+      }
       getActivityRoute();
-    }
-
-    if (!isListeningToLocation.value) {
-      initializeActivity();
+    } else {
+      await requestPermissionStepByStep();
     }
   }
 
   Future<bool> checkAvailabilities() async {
     bool isGpsAvailable = await checkGpsSensor();
-    if (!isGpsAvailable) return false;
-
     bool hasActivityPermission = await checkActivityPermission();
-    if (!hasActivityPermission) return false;
+    bool hasLocationPermissionWithAccuracy = await checkLocationPermissionAndAccuracy();
+
+    return isGpsAvailable && hasActivityPermission && hasLocationPermissionWithAccuracy;
+  }
+
+  Future<bool> requestPermissionStepByStep() async {
+    bool isGpsAvailable = await checkGpsSensor();
+    if (!isGpsAvailable) {
+      await showGpsRequestAlert();
+    }
+    bool hasActivityPermission = await checkActivityPermission();
+    if (!hasActivityPermission) {
+      await showRequestActivityAlert();
+    }
 
     bool hasLocationPermissionWithAccuracy = await checkLocationPermissionAndAccuracy();
-    if (!hasLocationPermissionWithAccuracy) return false;
+    if (!hasLocationPermissionWithAccuracy) {
+      await showRequestLocationAlert();
+    }
 
-    if (Get.isRegistered<LoadingController>()) Get.find<LoadingController>().updateProgress("조금만 기다려주세요");
+    return isGpsAvailable && hasActivityPermission && hasLocationPermissionWithAccuracy;
+  }
 
-    return true;
+  Future<void> showRequestLocationAlert() async {
+    await showAlert(
+      title: '알림',
+      contentWidget: Text.rich(
+        style: TextStyle(
+          fontSize: 18,
+          height: 24 / 18,
+          fontWeight: FontWeight.w500,
+          color: Colors.white,
+        ),
+        TextSpan(
+          text: '정확한 운동기록을 위해서 ',
+          children: [
+            TextSpan(text: '위치', style: TextStyle(color: Color(0xff0EE6F3))),
+            TextSpan(text: '엑세스 권한을 허용해 주세요'),
+          ],
+        ),
+      ),
+      actions: [
+        Expanded(
+          child: GazagoButton(
+            buttonText: '확인',
+            onTap: () async {
+              Get.back();
+              await requestLocationPermission();
+            },
+          ),
+        ),
+      ],
+    );
+  }
+
+  Future<void> showRequestActivityAlert() async {
+    await showAlert(
+      title: '알림',
+      contentWidget: Text.rich(
+        style: TextStyle(
+          fontSize: 18,
+          height: 24 / 18,
+          fontWeight: FontWeight.w500,
+          color: Colors.white,
+        ),
+        TextSpan(
+          text: '정확한 운동기록을 위해서 ',
+          children: [
+            TextSpan(text: '신체 활동\n', style: TextStyle(color: Color(0xff0EE6F3))),
+            TextSpan(text: '엑세스 권한을 허용해 주세요.'),
+          ],
+        ),
+      ),
+      actions: [
+        Expanded(
+          child: GazagoButton(
+            buttonText: '확인',
+            onTap: () async {
+              Get.back();
+              await requestActivityPermission();
+            },
+          ),
+        ),
+      ],
+    );
+  }
+
+  Future<void> showGpsRequestAlert() async {
+    await showAlert(
+      title: '알림',
+      contentWidget: Text.rich(
+        style: TextStyle(
+          fontSize: 18,
+          height: 24 / 18,
+          fontWeight: FontWeight.w500,
+          color: Colors.white,
+        ),
+        TextSpan(
+          text: '앱을 정상적으로 이용하기 위해서\n디바이스의 ',
+          children: [
+            TextSpan(text: 'GPS', style: TextStyle(color: Color(0xff0EE6F3))),
+            TextSpan(text: '기능을 켜주세요'),
+          ],
+        ),
+      ),
+      actions: [
+        Expanded(
+          child: GazagoButton(
+            buttonText: '확인',
+            onTap: () {
+              Get.back();
+            },
+          ),
+        ),
+      ],
+    );
   }
 
   Future<bool> checkGpsSensor() async {
     bool isGpsAvailable = await Geolocator.isLocationServiceEnabled();
-    if (!isGpsAvailable) {
-      await Get.dialog(
-        AlertDialog(
-          title: const Text('알림'),
-          content: const Text('운동을 시작하기 위해서 GPS를 켜주세요.'),
-          actions: [
-            ElevatedButton(
-              onPressed: () {
-                Get.back();
-              },
-              child: const Text('확인'),
-            ),
-          ],
-        ),
-      );
-    }
 
     return isGpsAvailable;
   }
@@ -643,24 +727,6 @@ class ActivityController extends GetxController with ActivityMixin, ChallengeMix
 
     bool hasLocationPermission = hasPermission && isAccurate;
 
-    if (!hasPermission && !isAccurate) {
-      await Get.dialog(
-        AlertDialog(
-          title: const Text('알림'),
-          content: const Text('원활한 채굴을 위하여\n"항상", "정확한" 위치공유를\n할 수 있도록 설정해주시기 바랍니다.'),
-          actions: [
-            ElevatedButton(
-                onPressed: () async {
-                  hasLocationPermission = await requestLocationPermission();
-                  Get.back();
-                },
-                child: const Text('확인')),
-          ],
-        ),
-        barrierDismissible: false,
-      );
-    }
-
     return hasLocationPermission;
   }
 
@@ -670,34 +736,8 @@ class ActivityController extends GetxController with ActivityMixin, ChallengeMix
       hasActivityPermission = PH.PermissionStatus.granted == await PH.Permission.activityRecognition.status;
     } else if (Platform.isIOS) {
       hasActivityPermission = PH.PermissionStatus.granted == await PH.Permission.sensors.status;
+    }
 
-      // print(healthPermission);
-      //
-      // if (healthPermission != null) {
-      //   hasActivityPermission = sensorPermission && healthPermission;
-      // } else {
-      //   hasActivityPermission = sensorPermission;
-      // }
-      // hasActivityPermission = healthPermission ?? false;
-    }
-    if (!hasActivityPermission) {
-      await Get.dialog(
-        AlertDialog(
-          title: const Text('알림'),
-          content: const Text('정확한 운동기록을 위해서 신체활동 권한을 허용해주세요'),
-          actions: [
-            ElevatedButton(
-              onPressed: () async {
-                hasActivityPermission = await requestActivityPermission();
-                Get.back();
-              },
-              child: const Text('확인'),
-            ),
-          ],
-        ),
-        barrierDismissible: false,
-      );
-    }
     return hasActivityPermission;
   }
 
@@ -712,6 +752,9 @@ class ActivityController extends GetxController with ActivityMixin, ChallengeMix
 
       // permissionGranted = sensorGranted && healthGranted;
     }
+    if (!permissionGranted) {
+      PH.openAppSettings();
+    }
     activityRecognitionPermission.complete(permissionGranted);
 
     return activityRecognitionPermission.future;
@@ -721,6 +764,10 @@ class ActivityController extends GetxController with ActivityMixin, ChallengeMix
     Completer<bool> locationPermissionCompleter = Completer();
     LocationPermission locationPermission = await Geolocator.requestPermission();
     bool gotPermission = [LocationPermission.always, LocationPermission.whileInUse].any((permission) => permission == locationPermission);
+    if (!gotPermission) {
+      Geolocator.openAppSettings();
+    }
+
     locationPermissionCompleter.complete(gotPermission);
 
     return locationPermissionCompleter.future;
@@ -770,8 +817,13 @@ class ActivityController extends GetxController with ActivityMixin, ChallengeMix
     Get.toNamed(Routes.activityChallenges);
   }
 
-  void moveToChallengeMap() {
-    Get.toNamed(Routes.challengeMap);
+  void moveToChallengeMap() async {
+    bool systemReady = await checkAvailabilities();
+    if (systemReady) {
+      Get.toNamed(Routes.challengeMap);
+    } else {
+      await requestPermissionStepByStep();
+    }
   }
 
   void initLocationStream() {
@@ -835,10 +887,34 @@ class ActivityController extends GetxController with ActivityMixin, ChallengeMix
   initGpsServiceStream() {
     _serviceStatusStream ??= Geolocator.getServiceStatusStream().listen((ServiceStatus status) {
       if (status == ServiceStatus.disabled) {
-        Get.dialog(AlertDialog(
-          title: Text('경고'),
-          content: Text('위치 기능이 꺼져있습니다. 서비스를 정상적으로 이용하기 위해서 다시 활성화해주세요.'),
-        ));
+        showAlert(
+          title: '알림',
+          contentWidget: Text.rich(
+            style: TextStyle(
+              fontSize: 18,
+              height: 24 / 18,
+              fontWeight: FontWeight.w500,
+              color: Colors.white,
+            ),
+            TextSpan(
+              text: '앱을 정상적으로 이용하기 위해서\n디바이스의 ',
+              children: [
+                TextSpan(text: 'GPS', style: TextStyle(color: Color(0xff0EE6F3))),
+                TextSpan(text: '기능을 켜주세요'),
+              ],
+            ),
+          ),
+          actions: [
+            Expanded(
+              child: GazagoButton(
+                buttonText: '확인',
+                onTap: () {
+                  Get.back();
+                },
+              ),
+            ),
+          ],
+        );
       }
     });
   }

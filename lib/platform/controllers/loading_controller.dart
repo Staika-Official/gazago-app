@@ -22,12 +22,12 @@ class LoadingController extends GetxController {
   }
 
   void updateProgress(String message) async {
-    progress.value = progress.value + 0.2;
+    progress.value = progress.value + 0.33;
     progressMessage.value = message;
 
-    if (progress.value >= 1) {
-      bool needUpgrade = await isForceUpdateTarget();
-      if (needUpgrade) {
+    if (progress.value >= 0.9) {
+      bool needForceUpgrade = await isForceUpdateTarget();
+      if (needForceUpgrade) {
         Get.dialog(
           barrierDismissible: false,
           AlertDialog(
@@ -62,8 +62,8 @@ class LoadingController extends GetxController {
           ),
         );
       } else {
-        bool needUpgrade = await isRecommendUpdateTarget();
-        if (needUpgrade) {
+        bool needRecommendedUpgrade = await isRecommendUpdateTarget();
+        if (needRecommendedUpgrade) {
           Get.dialog(
             barrierDismissible: false,
             AlertDialog(

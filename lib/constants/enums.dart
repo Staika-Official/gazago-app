@@ -55,6 +55,8 @@ enum HiveKey {
   exerciseStarted,
   savedStepCount,
   dummyStepCount,
+  isNewUser,
+  permissionRequestOnFirstLaunch,
 }
 
 enum ResponseStatus {
