@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:another_xlider/another_xlider.dart';
 import 'package:flutter/material.dart';
 import 'package:gaza_go/constants/routes.dart';
@@ -162,7 +164,7 @@ class InventoryController extends GetxController with LinearProgressMixin, Inven
     getUserEquippedItems();
     getSyntheticBadgeList();
     getUserBadgesList();
-    scrollControl();  // 스크롤 제어(아이템, 뱃지)
+    scrollControl(); // 스크롤 제어(아이템, 뱃지)
   }
 
   Future<void> refreshController() async {
@@ -211,6 +213,7 @@ class InventoryController extends GetxController with LinearProgressMixin, Inven
 
   void toItemDetail(int itemId) async {
     InventoryItemModel item = await ItemService.getItemDetailInfo(itemId);
+    inspect(item);
     selectedItem.value = item;
     isShoe.value = selectedItem.value.itemCategory == 'SHOES';
     Get.toNamed(Routes.itemDetail);
@@ -254,6 +257,9 @@ class InventoryController extends GetxController with LinearProgressMixin, Inven
 
   void fetchEquipItem(int itemId) async {
     InventoryItemModel equippedItem = await ItemService.fetchEquippedItem(itemId);
+
+    InventoryItemModel item = await ItemService.getItemDetailInfo(itemId);
+    selectedItem.value = item;
     getUserAllItems();
     getUserEquippedItems();
     showToastPopup('아이템이 장착되었습니다.');
