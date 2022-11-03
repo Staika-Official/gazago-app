@@ -162,7 +162,7 @@ class InventoryController extends GetxController with LinearProgressMixin, Inven
     getUserEquippedItems();
     getSyntheticBadgeList();
     getUserBadgesList();
-    scrollControl();  // 스크롤 제어(아이템, 뱃지)
+    scrollControl(); // 스크롤 제어(아이템, 뱃지)
   }
 
   Future<void> refreshController() async {
@@ -180,10 +180,10 @@ class InventoryController extends GetxController with LinearProgressMixin, Inven
         bool isTop = itemScrollController.position.pixels == 0;
         if (isTop) {
           //print('At the top');
-          singleChildScrollController.jumpTo(0);
+          singleChildScrollController.animateTo(0, duration: Duration(milliseconds: 200), curve: Curves.easeInOut);
         } else {
           //print('At the bottom');
-          singleChildScrollController.jumpTo(singleChildScrollController.position.maxScrollExtent);
+          singleChildScrollController.animateTo(singleChildScrollController.position.maxScrollExtent, duration: Duration(milliseconds: 200), curve: Curves.easeInOut);
         }
       }
     });
@@ -193,10 +193,10 @@ class InventoryController extends GetxController with LinearProgressMixin, Inven
         bool isTop = badgeScrollController.position.pixels == 0;
         if (isTop) {
           //print('At the top');
-          singleChildScrollController.jumpTo(0);
+          singleChildScrollController.animateTo(0, duration: Duration(milliseconds: 200), curve: Curves.easeInOut);
         } else {
           //print('At the bottom');
-          singleChildScrollController.jumpTo(singleChildScrollController.position.maxScrollExtent);
+          singleChildScrollController.animateTo(singleChildScrollController.position.maxScrollExtent, duration: Duration(milliseconds: 200), curve: Curves.easeInOut);
         }
       }
     });
