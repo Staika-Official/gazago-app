@@ -35,7 +35,7 @@ class InventoryHome extends StatelessWidget {
             mainAxisSize: MainAxisSize.max,
             children: [
               Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 20.0, vertical: 20.0),
+                padding: const EdgeInsets.only(left: 20.0, right: 20.0, bottom: 20.0),
                 child: Column(
                   children: [
                     Obx(() {
@@ -385,7 +385,7 @@ class Tile extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
                   AspectRatio(
-                    aspectRatio: 1 / 1,
+                    aspectRatio: index == 1 ? 1 / 1 : 1.2 / 1,
                     child: CachedNetworkImage(
                       imageUrl: imageUrl,
                       placeholder: (context, url) => const CircularProgressIndicator(),
@@ -449,7 +449,7 @@ class Tile extends StatelessWidget {
                                               boxShadow: [
                                                 BoxShadow(
                                                   color: Colors.black,
-                                                  offset: Offset(0, 3),
+                                                  offset: Offset(0, 1),
                                                   blurRadius: 0.0,
                                                   spreadRadius: 0.0,
                                                 ),

@@ -43,6 +43,7 @@ class GazagoButton extends StatelessWidget {
                   buttonText,
                   fontSize: 18,
                   lineHeight: 18,
+                  fontWeight: 600,
                   color: textColor,
                 ),
               ),
