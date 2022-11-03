@@ -466,7 +466,9 @@ class InventoryController extends GetxController with LinearProgressMixin, Inven
           ),
         );
       }),
-    );
+    ).whenComplete(() {
+      initRepairInfo();
+    });
   }
 
   void closeRepairPopup() {

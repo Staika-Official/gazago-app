@@ -385,7 +385,9 @@ class ActivityController extends SuperController with ActivityMixin, ChallengeMi
           ),
         );
       }),
-    );
+    ).whenComplete(() {
+      initRepairInfo();
+    });
   }
 
   void handleNotEnoughTaikaPopup() {
