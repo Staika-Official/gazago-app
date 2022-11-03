@@ -14,7 +14,6 @@ Future<void> showAlert({
     BottomSheetAlert(title: title, contentWidget: contentWidget, contentText: contentText, actions: actions),
     isDismissible: false,
     isScrollControlled: isScrollControlled,
-    backgroundColor: Color(0xff363841),
   );
 }
 

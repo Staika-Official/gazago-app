@@ -47,7 +47,7 @@ class Preferences extends StatelessWidget {
                               child: StyledText(
                                 controller.profile.value.nickname!,
                                 fontWeight: 500,
-                                fontSize: 18,
+                                fontSize: 14,
                                 lineHeight: 20,
                               ),
                             ),
@@ -83,7 +83,7 @@ class Preferences extends StatelessWidget {
           Container(
             width: double.infinity,
             height: 6,
-            color: Color(0xff363841),
+            color: Color(0xFF23232D),
           ),
           PreferenceItem(
             title: '약관',
@@ -104,7 +104,7 @@ class Preferences extends StatelessWidget {
           Container(
             width: double.infinity,
             height: 6,
-            color: Color(0xff363841),
+            color: Color(0xFF23232D),
           ),
           PreferenceItem(
             title: '로그아웃',
