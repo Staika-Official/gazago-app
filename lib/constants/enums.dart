@@ -52,7 +52,7 @@ enum HiveKey {
   exerciseData,
   endExerciseRequested,
   badgeIssuanceRequested,
-  exerciseStarted,
+  savedStepInitialized,
   savedStepCount,
   dummyStepCount,
   isNewUser,

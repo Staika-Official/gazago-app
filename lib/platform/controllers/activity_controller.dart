@@ -37,7 +37,7 @@ import 'package:get/get.dart';
 import 'package:health/health.dart';
 import 'package:permission_handler/permission_handler.dart' as PH;
 
-class ActivityController extends GetxController with ActivityMixin, ChallengeMixin {
+class ActivityController extends SuperController with ActivityMixin, ChallengeMixin {
   final WalletMasterController walletMasterController = Get.find();
 
   //index.dart
@@ -89,7 +89,7 @@ class ActivityController extends GetxController with ActivityMixin, ChallengeMix
     exerciseTimer = null;
     stepSubscription?.cancel();
     stepSubscription = null;
-    HiveStore.save(key: HiveKey.exerciseStarted.name, value: false);
+    HiveStore.save(key: HiveKey.savedStepInitialized.name, value: false);
     locationSubscription?.cancel();
     locationSubscription = null;
     pedestrianStatusSubscription?.cancel();
@@ -491,7 +491,6 @@ class ActivityController extends GetxController with ActivityMixin, ChallengeMix
 
   void getUserState() async {
     CurrentUserStateModel currentUserState = await ActivityService.getCurrentUserState();
-
     userState.update((state) {
       state?.state = currentUserState.state;
       state?.exercise = currentUserState.exercise;
@@ -505,6 +504,11 @@ class ActivityController extends GetxController with ActivityMixin, ChallengeMix
         userState.update((state) {
           state?.exercise = savedUserState.exercise;
         });
+
+        int savedSteps = HiveStore.load(key: HiveKey.savedStepCount.name) ?? 0;
+        if (savedUserState.exercise!.steps! > savedSteps) {
+          HiveStore.save(key: HiveKey.savedStepCount.name, value: savedUserState.exercise!.steps!);
+        }
       }
 
       if (userState.value.exercise?.challengeId != null) {
@@ -848,7 +852,7 @@ class ActivityController extends GetxController with ActivityMixin, ChallengeMix
           steps: exerciseSteps.value,
         ));
         coordinates.add(LatLng(position.latitude, position.longitude));
-        if (exerciseData.isNotEmpty && exerciseData.length > 1) {
+        if (exerciseData.isNotEmpty && exerciseData.length >= 2) {
           exerciseDistance.value = exerciseDistance.value +
               Geolocator.distanceBetween(coordinates[coordinates.length - 2].latitude, coordinates[coordinates.length - 2].longitude, coordinates.last.latitude, coordinates.last.longitude);
         }
@@ -929,7 +933,7 @@ class ActivityController extends GetxController with ActivityMixin, ChallengeMix
   // 챌린지 찾기
   Future<void> findChallenge() async {
     if (currentLocation.value.latitude != 0 && currentLocation.value.longitude != 0) {
-      await getNearByChallengeList(currentLocation.value);
+      await getNearByChallengeList(currentLocation.value, exerciseState.value);
     } else {
       await getChallengeList();
     }
@@ -947,5 +951,32 @@ class ActivityController extends GetxController with ActivityMixin, ChallengeMix
         }
       }
     });
+  }
+
+  @override
+  void onDetached() {
+    print('onDetached');
+    HiveStore.save(key: HiveKey.savedStepInitialized.name, value: false);
+    // TODO: implement onDetached
+  }
+
+  @override
+  void onInactive() {
+    print('onInactive');
+    HiveStore.save(key: HiveKey.savedStepInitialized.name, value: false);
+    // TODO: implement onInactive
+  }
+
+  @override
+  void onPaused() {
+    print('onPaused');
+    HiveStore.save(key: HiveKey.savedStepInitialized.name, value: false);
+    // TODO: implement onPaused
+  }
+
+  @override
+  void onResumed() {
+    print('onResumed');
+    // TODO: implement onResumed
   }
 }
