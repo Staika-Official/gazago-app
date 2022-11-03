@@ -844,7 +844,6 @@ class ActivityController extends SuperController with ActivityMixin, ChallengeMi
     locationSubscription ??= Geolocator.getPositionStream(locationSettings: locationSettings).listen((Position position) {
       currentLocation.value = position;
 
-      // if (exerciseState.value == ExerciseState.ongoing && position.accuracy < 20) {
       if (exerciseState.value == ExerciseState.ongoing && position.accuracy < gpsAccuracy) {
         exerciseData.add(UserExerciseModel(
           altitude: position.altitude,
