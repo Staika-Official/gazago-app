@@ -6,7 +6,7 @@ enum ConfigType { bool, double, int, string }
 Map<String, dynamic> _defaultConfigs = {"testVal": 'test'};
 
 Future<void> initRemoteConfig() async {
-  await FirebaseRemoteConfig.instance.setConfigSettings(RemoteConfigSettings(fetchTimeout: const Duration(seconds: 10), minimumFetchInterval: const Duration(hours: 6)));
+  await FirebaseRemoteConfig.instance.setConfigSettings(RemoteConfigSettings(fetchTimeout: const Duration(seconds: 10), minimumFetchInterval: Duration.zero));
   await _setDefaultConfigs(_defaultConfigs);
   await FirebaseRemoteConfig.instance.fetchAndActivate();
 }
