@@ -124,7 +124,7 @@ class Api {
         }
       }
 
-      if (e.type == DioErrorType.other) {
+      if ([DioErrorType.connectTimeout, DioErrorType.sendTimeout, DioErrorType.receiveTimeout, DioErrorType.other].any((element) => element == e.type)) {
         handler.resolve(
           Response(
             requestOptions: RequestOptions(
