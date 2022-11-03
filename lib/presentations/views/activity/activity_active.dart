@@ -62,7 +62,7 @@ class ActivityActive extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
             SizedBox(
-              height: 34,
+              height: 42,
               child: Stack(
                 children: [
                   Row(
@@ -81,7 +81,7 @@ class ActivityActive extends StatelessWidget {
                                             color: Colors.black,
                                           ),
                                           borderRadius: const BorderRadius.all(
-                                            Radius.circular(30),
+                                            Radius.circular(42),
                                           ),
                                         ),
                                       ),
@@ -100,7 +100,7 @@ class ActivityActive extends StatelessWidget {
                                                     color: Colors.black,
                                                   ),
                                                   borderRadius: const BorderRadius.all(
-                                                    Radius.circular(30),
+                                                    Radius.circular(42),
                                                   ),
                                                 ),
                                               );
@@ -171,18 +171,18 @@ class ActivityActive extends StatelessWidget {
                           StyledText(
                             stat.name,
                             fontFamily: 'Montserrat',
-                            fontWeight: 600,
-                            fontSize: 14,
-                            lineHeight: 14,
+                            fontWeight: 800,
+                            fontSize: 15,
+                            lineHeight: 20,
                             color: stat.currentStat < 20 ? Colors.white : Colors.black,
                           ),
                           Padding(
                             padding: const EdgeInsets.only(left: 5.0),
                             child: StyledText(
                               stat.currentStat.toString(),
-                              fontWeight: 600,
-                              fontSize: 13,
-                              lineHeight: 14,
+                              fontWeight: 800,
+                              fontSize: 14,
+                              lineHeight: 15,
                               color: stat.currentStat < 20 ? Colors.white : Colors.black,
                             ),
                           ),
@@ -199,7 +199,7 @@ class ActivityActive extends StatelessWidget {
                                       color: Colors.black,
                                     ),
                                     borderRadius: const BorderRadius.all(
-                                      Radius.circular(30),
+                                      Radius.circular(42),
                                     ),
                                     boxShadow: const [
                                       BoxShadow(
@@ -211,11 +211,11 @@ class ActivityActive extends StatelessWidget {
                                     ],
                                   ),
                                   child: CircleAvatar(
-                                    radius: 15,
+                                    radius: 19,
                                     backgroundColor: const Color(0xFFCDFF41),
                                     child: IconButton(
                                       icon: iconPlus,
-                                      splashRadius: 15,
+                                      splashRadius: 19,
                                       onPressed: () => {controller.onClickRepairStat(stat)},
                                     ),
                                   ),
@@ -240,7 +240,7 @@ class ActivityActive extends StatelessWidget {
                                     ],
                                   ),
                                   child: CircleAvatar(
-                                    radius: 15,
+                                    radius: 19,
                                     backgroundColor: const Color(0xFFB85DFF),
                                     child: IconButton(
                                       icon: iconPlus,
