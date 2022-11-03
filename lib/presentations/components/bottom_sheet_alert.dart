@@ -20,7 +20,7 @@ class BottomSheetAlert extends StatelessWidget {
         ),
       ),
       child: Padding(
-        padding: const EdgeInsets.symmetric(vertical: 30.0, horizontal: 20),
+        padding: const EdgeInsets.only(top: 30.0, left: 20, right: 20, bottom: 40),
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
