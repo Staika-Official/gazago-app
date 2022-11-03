@@ -72,7 +72,7 @@ class WalletMasterController extends GetxController {
 
   Future<void> getSpendingMetaData() async {
     spendingTokenInfoList.value = await WalletService.getSpendingMetaData();
-    if (Get.isRegistered<LoadingController>()) Get.find<LoadingController>().updateProgress("조금만 기다려주세요ㅊ");
+    if (Get.isRegistered<LoadingController>()) Get.find<LoadingController>().updateProgress("조금만 기다려주세요");
   }
 
   Future<void> getBuyTikCommission() async {
