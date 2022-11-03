@@ -68,7 +68,7 @@ class ArchiveHome extends StatelessWidget {
                             child: Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
-                                StyledText(formatDate(archive.startedDate!), fontSize: 16, fontWeight: 500),
+                                StyledText(formatDateUntilDay(archive.startedDate!), fontSize: 16, fontWeight: 500),
                                 if (archive.challengeTitle != null) StyledText(archive.challengeTitle!, fontSize: 12, lineHeight: 20, color: const Color(0xFF8a8a8a), fontWeight: 600),
                               ],
                             ),
