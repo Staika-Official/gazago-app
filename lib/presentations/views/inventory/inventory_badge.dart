@@ -34,11 +34,11 @@ class InventoryBadge extends StatelessWidget {
                         errorWidget: (context, url, error) => Image.asset("assets/images/@temp_badge.png"),
                       ),
                     ),
-                    if (item.name != null)
-                      Padding(
-                        padding: const EdgeInsets.only(top: 5, bottom: 5),
-                        child: StyledText(item.name!),
-                      ),
+                    // if (item.name != null)
+                    //   Padding(
+                    //     padding: const EdgeInsets.only(top: 5, bottom: 5),
+                    //     child: StyledText(item.name!),
+                    //   ),
                     Padding(
                       padding: const EdgeInsets.only(top: 5.0),
                       child: item.state == 'EQUIPPED'
