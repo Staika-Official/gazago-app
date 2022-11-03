@@ -339,7 +339,7 @@ class InventoryController extends GetxController with LinearProgressMixin, Inven
                         ),
                         onDragging: (handlerIndex, lowerValue, upperValue) {
                           _currentSliderValue.value = lowerValue;
-                          costTik.value = _currentSliderValue.value.toInt() * 100;
+                          costTik.value = _currentSliderValue.value.toInt() * 10;
                         },
                         handler: FlutterSliderHandler(
                           decoration: BoxDecoration(
