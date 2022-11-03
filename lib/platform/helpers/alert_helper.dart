@@ -8,10 +8,13 @@ Future<void> showAlert({
   required List<Widget> actions,
   String? contentText,
   Widget? contentWidget,
+  bool isScrollControlled = false,
 }) async {
   await Get.bottomSheet(
     BottomSheetAlert(title: title, contentWidget: contentWidget, contentText: contentText, actions: actions),
     isDismissible: false,
+    isScrollControlled: isScrollControlled,
+    backgroundColor: Color(0xff363841),
   );
 }
 

@@ -1,5 +1,6 @@
 import 'dart:developer';
 
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
@@ -16,6 +17,8 @@ import 'package:gaza_go/platform/models/inventory_badge_model.dart';
 import 'package:gaza_go/platform/services/activity_service.dart';
 import 'package:gaza_go/platform/services/badge_service.dart';
 import 'package:gaza_go/platform/stores/hive_store.dart';
+import 'package:gaza_go/presentations/components/gazago_button.dart';
+import 'package:gaza_go/presentations/styles/styled_text.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:get/get.dart';
 
@@ -138,6 +141,64 @@ class ChallengeMixin {
       showToastPopup('뱃지가 발급되었습니다.');
       userState.exercise!.badgeIssueId = badge.id;
       HiveStore.deleteKey(key: HiveKey.badgeIssuanceRequested.name);
+      showAlert(
+        isScrollControlled: true,
+        title: '등정 뱃지 발급',
+        contentWidget: Column(
+          children: [
+            Padding(
+              padding: const EdgeInsets.only(top: 30, bottom: 30),
+              child: CachedNetworkImage(
+                imageUrl: badge.badge.imageUrl,
+                placeholder: (context, url) => const CircularProgressIndicator(),
+                fit: BoxFit.contain,
+                width: 150,
+              ),
+            ),
+            Container(
+              padding: EdgeInsets.symmetric(horizontal: 25, vertical: 14),
+              decoration: BoxDecoration(
+                color: Color(0xff1d1d26),
+                borderRadius: BorderRadius.circular(11),
+              ),
+              child: StyledText(
+                '${selectedChallenge.value.startPointName} | ${selectedChallenge.value.firstName} 등정 성공',
+                fontSize: 18,
+                lineHeight: 18,
+                fontWeight: 500,
+              ),
+            ),
+            const Padding(
+              padding: EdgeInsets.only(top: 20, bottom: 30),
+              child: Text.rich(
+                textAlign: TextAlign.center,
+                style: TextStyle(
+                  fontSize: 14,
+                  height: 20 / 14,
+                  fontWeight: FontWeight.w500,
+                  color: Color(0xffbfbfbf),
+                ),
+                TextSpan(
+                  children: [
+                    TextSpan(text: '내 장비 > 뱃지', style: TextStyle(color: Color(0xff0EE6F3))),
+                    TextSpan(text: ' 카테고리에서\n획득한 뱃지를 확인하실수 있습니다.'),
+                  ],
+                ),
+              ),
+            ),
+          ],
+        ),
+        actions: [
+          Expanded(
+            child: GazagoButton(
+              buttonText: '확인',
+              onTap: () async {
+                Get.back();
+              },
+            ),
+          ),
+        ],
+      );
     }
 
     void errorCallback() {

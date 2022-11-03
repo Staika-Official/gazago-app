@@ -12,7 +12,6 @@ class BottomSheetAlert extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      height: 230,
       decoration: const BoxDecoration(
         color: Color(0xff363841),
         borderRadius: BorderRadius.only(
@@ -22,36 +21,34 @@ class BottomSheetAlert extends StatelessWidget {
       ),
       child: Padding(
         padding: const EdgeInsets.symmetric(vertical: 30.0, horizontal: 20),
-        child: Center(
-          child: Column(
-            children: [
-              Padding(
-                padding: const EdgeInsets.only(top: 8.0),
-                child: StyledText(
-                  title,
-                  fontSize: 22,
-                  lineHeight: 24,
-                  fontWeight: 500,
-                ),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Padding(
+              padding: const EdgeInsets.only(top: 8.0),
+              child: StyledText(
+                title,
+                fontSize: 22,
+                lineHeight: 24,
+                fontWeight: 500,
               ),
-              Padding(
-                  padding: const EdgeInsets.only(top: 12.0),
-                  child: contentWidget != null
-                      ? contentWidget
-                      : StyledText(
-                          contentText!,
-                          fontSize: 18,
-                          lineHeight: 24,
-                          fontWeight: 500,
-                          color: Color(0xffbfbfbf),
-                        )),
-              const Spacer(),
-              Row(
-                mainAxisSize: MainAxisSize.max,
-                children: actions,
-              )
-            ],
-          ),
+            ),
+            contentWidget ??
+                Padding(
+                  padding: const EdgeInsets.only(top: 12.0, bottom: 30),
+                  child: StyledText(
+                    contentText!,
+                    fontSize: 18,
+                    lineHeight: 24,
+                    fontWeight: 500,
+                    color: Color(0xffbfbfbf),
+                  ),
+                ),
+            Row(
+              mainAxisSize: MainAxisSize.max,
+              children: actions,
+            )
+          ],
         ),
       ),
     );

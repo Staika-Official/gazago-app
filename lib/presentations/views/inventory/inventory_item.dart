@@ -64,11 +64,13 @@ class InventoryItem extends StatelessWidget {
                                         item.itemName,
                                         fontWeight: 500,
                                         color: Color(0xFFBFBFBF).withOpacity(0.5),
+                                        overflowEllipsis: true,
                                       )
                                     : StyledText(
                                         item.itemName,
                                         fontWeight: 500,
                                         color: Color(0xFFBFBFBF),
+                                        overflowEllipsis: true,
                                       ),
                               ),
                               item.equipped == false

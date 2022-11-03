@@ -317,7 +317,7 @@ class ActivityController extends GetxController with ActivityMixin, ChallengeMix
                           child: stat.type == 'STAMINA' ? iconSliderStamina : iconSliderShoe,
                         ),
                         tooltip: FlutterSliderTooltip(
-                          textStyle: TextStyle(
+                          textStyle: const TextStyle(
                             color: Colors.black,
                             fontSize: 22,
                             fontWeight: FontWeight.w500,
@@ -576,19 +576,23 @@ class ActivityController extends GetxController with ActivityMixin, ChallengeMix
   Future<void> showRequestLocationAlert() async {
     await showAlert(
       title: '알림',
-      contentWidget: const Text.rich(
-        style: TextStyle(
-          fontSize: 18,
-          height: 24 / 18,
-          fontWeight: FontWeight.w500,
-          color: Colors.white,
-        ),
-        TextSpan(
-          text: '정확한 운동기록을 위해서 ',
-          children: [
-            TextSpan(text: '위치', style: TextStyle(color: Color(0xff0EE6F3))),
-            TextSpan(text: '엑세스 권한을 허용해 주세요'),
-          ],
+      contentWidget: const Padding(
+        padding: EdgeInsets.only(top: 30, bottom: 50),
+        child: Text.rich(
+          textAlign: TextAlign.center,
+          style: TextStyle(
+            fontSize: 18,
+            height: 24 / 18,
+            fontWeight: FontWeight.w500,
+            color: Colors.white,
+          ),
+          TextSpan(
+            text: '정확한 운동기록을 위해서 ',
+            children: [
+              TextSpan(text: '위치', style: TextStyle(color: Color(0xff0EE6F3))),
+              TextSpan(text: '엑세스 \n권한을 허용해 주세요'),
+            ],
+          ),
         ),
       ),
       actions: [
@@ -608,19 +612,23 @@ class ActivityController extends GetxController with ActivityMixin, ChallengeMix
   Future<void> showRequestActivityAlert() async {
     await showAlert(
       title: '알림',
-      contentWidget: const Text.rich(
-        style: TextStyle(
-          fontSize: 18,
-          height: 24 / 18,
-          fontWeight: FontWeight.w500,
-          color: Colors.white,
-        ),
-        TextSpan(
-          text: '정확한 운동기록을 위해서 ',
-          children: [
-            TextSpan(text: '신체 활동\n', style: TextStyle(color: Color(0xff0EE6F3))),
-            TextSpan(text: '엑세스 권한을 허용해 주세요.'),
-          ],
+      contentWidget: const Padding(
+        padding: EdgeInsets.only(top: 30, bottom: 50),
+        child: Text.rich(
+          textAlign: TextAlign.center,
+          style: TextStyle(
+            fontSize: 18,
+            height: 24 / 18,
+            fontWeight: FontWeight.w500,
+            color: Colors.white,
+          ),
+          TextSpan(
+            text: '정확한 운동기록을 위해서 ',
+            children: [
+              TextSpan(text: '신체 활동\n', style: TextStyle(color: Color(0xff0EE6F3))),
+              TextSpan(text: '엑세스 권한을 허용해 주세요.'),
+            ],
+          ),
         ),
       ),
       actions: [
@@ -640,19 +648,23 @@ class ActivityController extends GetxController with ActivityMixin, ChallengeMix
   Future<void> showGpsRequestAlert() async {
     await showAlert(
       title: '알림',
-      contentWidget: const Text.rich(
-        style: TextStyle(
-          fontSize: 18,
-          height: 24 / 18,
-          fontWeight: FontWeight.w500,
-          color: Colors.white,
-        ),
-        TextSpan(
-          text: '앱을 정상적으로 이용하기 위해서\n디바이스의 ',
-          children: [
-            TextSpan(text: 'GPS', style: TextStyle(color: Color(0xff0EE6F3))),
-            TextSpan(text: '기능을 켜주세요'),
-          ],
+      contentWidget: const Padding(
+        padding: EdgeInsets.only(top: 30, bottom: 50),
+        child: Text.rich(
+          textAlign: TextAlign.center,
+          style: TextStyle(
+            fontSize: 18,
+            height: 24 / 18,
+            fontWeight: FontWeight.w500,
+            color: Colors.white,
+          ),
+          TextSpan(
+            text: '앱을 정상적으로 이용하기 위해서\n디바이스의 ',
+            children: [
+              TextSpan(text: 'GPS', style: TextStyle(color: Color(0xff0EE6F3))),
+              TextSpan(text: '기능을 켜주세요'),
+            ],
+          ),
         ),
       ),
       actions: [
@@ -860,19 +872,23 @@ class ActivityController extends GetxController with ActivityMixin, ChallengeMix
       if (status == ServiceStatus.disabled) {
         showAlert(
           title: '알림',
-          contentWidget: const Text.rich(
-            style: TextStyle(
-              fontSize: 18,
-              height: 24 / 18,
-              fontWeight: FontWeight.w500,
-              color: Colors.white,
-            ),
-            TextSpan(
-              text: '앱을 정상적으로 이용하기 위해서\n디바이스의 ',
-              children: [
-                TextSpan(text: 'GPS', style: TextStyle(color: Color(0xff0EE6F3))),
-                TextSpan(text: '기능을 켜주세요'),
-              ],
+          contentWidget: const Padding(
+            padding: EdgeInsets.only(top: 30, bottom: 50),
+            child: Text.rich(
+              textAlign: TextAlign.center,
+              style: TextStyle(
+                fontSize: 18,
+                height: 24 / 18,
+                fontWeight: FontWeight.w500,
+                color: Colors.white,
+              ),
+              TextSpan(
+                text: '앱을 정상적으로 이용하기 위해서\n디바이스의 ',
+                children: [
+                  TextSpan(text: 'GPS', style: TextStyle(color: Color(0xff0EE6F3))),
+                  TextSpan(text: '기능을 켜주세요'),
+                ],
+              ),
             ),
           ),
           actions: [
