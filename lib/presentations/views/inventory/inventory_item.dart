@@ -21,7 +21,7 @@ class InventoryItem extends StatelessWidget {
     return homeController.itemSubTabList
         .map(
           (tab) => GridView.count(
-            physics: const NeverScrollableScrollPhysics(),
+            physics: const ScrollPhysics(),
             primary: false,
             controller: new ScrollController(keepScrollOffset: false),
             padding: const EdgeInsets.only(left: 20, right: 20),

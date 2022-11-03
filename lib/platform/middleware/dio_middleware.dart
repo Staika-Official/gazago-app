@@ -25,6 +25,9 @@ class Api {
 
   static Dio client({required String serviceUrl, bool needsToken = true, Map<String, dynamic>? queryParams, bool? isPatch = false, bool? isFile = false}) {
     _dio.options.baseUrl = '${F.baseUrl}$serviceUrl';
+    _dio.options.connectTimeout = 10000;
+    _dio.options.receiveTimeout = 10000;
+    _dio.options.sendTimeout = 10000;
 
     if (needsToken) {
       String? accessToken = HiveStore.loadString(key: HiveKey.accessToken.name);
@@ -121,7 +124,7 @@ class Api {
         }
       }
 
-      if (e.type == DioErrorType.other) {
+      if ([DioErrorType.connectTimeout, DioErrorType.sendTimeout, DioErrorType.receiveTimeout, DioErrorType.other].any((element) => element == e.type)) {
         handler.resolve(
           Response(
             requestOptions: RequestOptions(

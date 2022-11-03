@@ -78,10 +78,9 @@ class ActivityMixin {
     DateTime now = DateTime.now();
 
     // stopTimeInterval 이상 걷기 감지가 되지 않을 경우에는 속도 0으로 표시
-    if (pedestrianStoppedTime.value.compareTo(now) < 0 && currentStep - prevStep <= stepDifference) {
+    if (currentStep - prevStep <= stepDifference && exerciseState.value != ExerciseState.ongoing) {
       return RxDouble(0);
     } else {
-      pedestrianStoppedTime.value = now.add(Duration(seconds: stopTimeInterval));
       return RxDouble(speed <= 0 ? 0 : speed);
     }
   }
@@ -184,44 +183,16 @@ class ActivityMixin {
   void initStepStream() {
     if (stepSubscription != null) {
       stepSubscription = null;
-      HiveStore.save(key: HiveKey.exerciseStarted.name, value: false);
+      HiveStore.save(key: HiveKey.savedStepInitialized.name, value: false);
     }
-    // if (Platform.isAndroid) {
-    //   stepSubscription ??= Pedometer.stepCountStream.skip(1).listen((StepCount event) async {
-    //     if (exerciseState.value == ExerciseState.ongoing) exerciseSteps.value++;
-    //   });
-    // } else {
-    //   int savedSteps = 0;
-    //   stepSubscription ??= Pedometer.stepCountStream.listen((StepCount event) async {
-    //     bool isExerciseStarted = HiveStore.load(key: HiveKey.exerciseStarted.name);
-    //     if (!isExerciseStarted) {
-    //       print('!started');
-    //       deviceSteps.value = event.steps;
-    //       HiveStore.save(key: HiveKey.dummyStepCount.name, value: deviceSteps.value);
-    //       HiveStore.save(key: HiveKey.exerciseStarted.name, value: true);
-    //       savedSteps = HiveStore.load(key: HiveKey.savedStepCount.name);
-    //       print('savedSteps !start: $savedSteps');
-    //     } else if (exerciseState.value == ExerciseState.ongoing) {
-    //       int dummySteps = HiveStore.load(key: HiveKey.dummyStepCount.name);
-    //       print('dummySteps: $dummySteps');
-    //       print('event.steps: ${event.steps}');
-    //       print('savedSteps: $savedSteps');
-    //       int actualSteps = (event.steps - dummySteps) + savedSteps;
-    //       print('actualSteps: $actualSteps');
-    //       exerciseSteps.value = actualSteps;
-    //       deviceSteps.value = event.steps;
-    //       HiveStore.save(key: HiveKey.currentStepCount.name, value: event.steps);
-    //       HiveStore.save(key: HiveKey.savedStepCount.name, value: actualSteps);
-    //     }
-    //   });
-    // }
 
-    int savedSteps = 0;
+    int savedSteps = HiveStore.load(key: HiveKey.savedStepCount.name) ?? 0;
     stepSubscription ??= Pedometer.stepCountStream.listen((StepCount event) async {
-      bool isExerciseStarted = HiveStore.load(key: HiveKey.exerciseStarted.name);
+      print(event.steps);
+      bool isExerciseStarted = HiveStore.load(key: HiveKey.savedStepInitialized.name);
       if (!isExerciseStarted) {
         HiveStore.save(key: HiveKey.dummyStepCount.name, value: event.steps);
-        HiveStore.save(key: HiveKey.exerciseStarted.name, value: true);
+        HiveStore.save(key: HiveKey.savedStepInitialized.name, value: true);
         savedSteps = HiveStore.load(key: HiveKey.savedStepCount.name);
       } else if (exerciseState.value == ExerciseState.ongoing) {
         int dummySteps = HiveStore.load(key: HiveKey.dummyStepCount.name);
@@ -232,8 +203,8 @@ class ActivityMixin {
     });
 
     stepSubscription!.onError((error) {
-      print(error);
-      HiveStore.save(key: HiveKey.exerciseStarted.name, value: false);
+      showToastPopup('걸음 수를 측정할 수 없습니다.\n일시정지 후 다시 시작해주세요');
+      HiveStore.save(key: HiveKey.savedStepInitialized.name, value: false);
     });
   }
 
@@ -275,7 +246,7 @@ class ActivityMixin {
         successCallback: (UserExerciseModel userExerciseData) {
           userState.update((state) => state!.exercise = userExerciseData);
           exerciseState.value = ExerciseState.ongoing;
-          HiveStore.save(key: HiveKey.exerciseStarted.name, value: false);
+          HiveStore.save(key: HiveKey.savedStepInitialized.name, value: false);
           HiveStore.save(key: HiveKey.savedStepCount.name, value: 0);
           initExerciseStats();
           initStream();
@@ -402,10 +373,15 @@ class ActivityMixin {
 
   void pauseExercise() {
     updateTimer?.cancel();
+    updateTimer == null;
     exerciseTimer?.cancel();
+    exerciseTimer == null;
     stepSubscription?.cancel();
+    stepSubscription == null;
     pedestrianStatusSubscription?.cancel();
+    pedestrianStatusSubscription == null;
     exerciseState.value = ExerciseState.paused;
+    HiveStore.save(key: HiveKey.savedStepInitialized.name, value: false);
     updateExercise();
   }
 
@@ -500,7 +476,7 @@ class ActivityMixin {
   void resetSubscriptions() {
     stepSubscription?.cancel();
     stepSubscription = null;
-    HiveStore.save(key: HiveKey.exerciseStarted.name, value: false);
+    HiveStore.save(key: HiveKey.savedStepInitialized.name, value: false);
     HiveStore.save(key: HiveKey.savedStepCount.name, value: 0);
     pedestrianStatusSubscription?.cancel();
     pedestrianStatusSubscription = null;

@@ -231,7 +231,7 @@ class ArchiveDetail extends StatelessWidget {
                 ],
               ),
             ),
-            controller.selectedItem.value.badgeName != null && controller.selectedItem.value.type == "HIKING"
+            controller.selectedItem.value.challengeId != null && controller.selectedItem.value.type == "HIKING"
                 ? Padding(
                     padding: const EdgeInsets.symmetric(vertical: 10.0, horizontal: 20.0),
                     child: Row(
@@ -243,7 +243,7 @@ class ArchiveDetail extends StatelessWidget {
                         ),
                         const Spacer(),
                         StyledText(
-                          controller.selectedItem.value.badgeName!,
+                          controller.selectedItem.value.badgeIssueId != null ? controller.selectedItem.value.badgeName! : '챌린지 실패',
                           fontWeight: 500,
                           fontSize: 16,
                           color: const Color(0xFF7D7D84),
