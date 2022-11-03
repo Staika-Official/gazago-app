@@ -52,10 +52,6 @@ class ActivityActive extends StatelessWidget {
     }
   }
 
-  Color getGaugeColor(double speed) {
-    return speed >= 1 && speed <= 6 ? const Color(0xff76FFFB) : const Color(0xffFF2222);
-  }
-
   List<Widget> renderStatList(ActivityController controller, context) {
     return controller.statList.map((stat) {
       return Padding(
@@ -270,12 +266,12 @@ class ActivityActive extends StatelessWidget {
   Widget build(BuildContext context) {
     ActivityController controller = Get.find();
 
-    return Obx(() {
-      return DefaultContainer(
-        onBackButtonTap: () {
-          Get.offNamed(Routes.home);
-        },
-        titleWidget: Row(
+    return DefaultContainer(
+      onBackButtonTap: () {
+        Get.offNamed(Routes.home);
+      },
+      titleWidget: Obx(() {
+        return Row(
           mainAxisSize: MainAxisSize.min,
           children: [
             Container(
@@ -297,35 +293,41 @@ class ActivityActive extends StatelessWidget {
               color: controller.exerciseStateColor.value,
             )
           ],
-        ),
-        child: Column(
-          mainAxisSize: MainAxisSize.max,
-          children: [
-            controller.selectedChallenge.value.id != null
-                ? Container(
-                    padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 7),
-                    decoration: BoxDecoration(
-                      color: const Color(0xff1b1b1b),
-                      borderRadius: BorderRadius.circular(50),
-                    ),
-                    child: StyledText(
-                      '${controller.selectedChallenge.value.startPointName} | ${controller.selectedChallenge.value.firstName}',
-                      fontSize: 14,
-                      fontWeight: 500,
-                      color: const Color(0xff8a8a8a),
-                    ),
-                  )
-                : Container(),
-            // TODO. qa후 삭제 필요.
-            // StyledText(
-            //     '현재 위치의 gps정확도: ${formatDecimalPlaces(controller.currentLocation.value.accuracy, 2)}m [속도: ${formatDecimalPlaces(convertMStoKMH(controller.currentLocation.value.speed), 2)}km/h]'),
-            // if (controller.exerciseData.isNotEmpty) StyledText('저장된 운동데이터 배열에서 마지막 데이터의 속도: ${formatDecimalPlaces(controller.exerciseData.last.speed!, 2)}km/h'),
-            // StyledText('평균 속도: ${formatDecimalPlaces(controller.avgSpeed.value, 2)}km/h'),
-            // StyledText('성공적인 업데이트 요청 (시작/종료 제외): ${controller.updateCount.value.toString()}회'),
-            // StyledText('마지막 업데이트 시간: ${controller.lastUpdateTime.value != '' ? formatDate(controller.lastUpdateTime.value) : '??'}'),
-            // StyledText('걷기 상태: ${controller.pedestrianStatus.value}'),
-            // TODO. qa후 삭제 필요 end.
-            Padding(
+        );
+      }),
+      child: Column(
+        mainAxisSize: MainAxisSize.max,
+        children: [
+          Obx(() {
+            return Container(
+              child: controller.selectedChallenge.value.id != null
+                  ? Container(
+                      padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 7),
+                      decoration: BoxDecoration(
+                        color: const Color(0xff1b1b1b),
+                        borderRadius: BorderRadius.circular(50),
+                      ),
+                      child: StyledText(
+                        '${controller.selectedChallenge.value.firstName} | ${controller.selectedChallenge.value.secondName}',
+                        fontSize: 14,
+                        fontWeight: 500,
+                        color: const Color(0xff8a8a8a),
+                      ),
+                    )
+                  : Container(),
+            );
+          }),
+          // TODO. qa후 삭제 필요.
+          // StyledText(
+          //     '현재 위치의 gps정확도: ${formatDecimalPlaces(controller.currentLocation.value.accuracy, 2)}m [속도: ${formatDecimalPlaces(convertMStoKMH(controller.currentLocation.value.speed), 2)}km/h]'),
+          // if (controller.exerciseData.isNotEmpty) StyledText('저장된 운동데이터 배열에서 마지막 데이터의 속도: ${formatDecimalPlaces(controller.exerciseData.last.speed!, 2)}km/h'),
+          // StyledText('평균 속도: ${formatDecimalPlaces(controller.avgSpeed.value, 2)}km/h'),
+          // StyledText('성공적인 업데이트 요청 (시작/종료 제외): ${controller.updateCount.value.toString()}회'),
+          // StyledText('마지막 업데이트 시간: ${controller.lastUpdateTime.value != '' ? formatDate(controller.lastUpdateTime.value) : '??'}'),
+          // StyledText('걷기 상태: ${controller.pedestrianStatus.value}'),
+          // TODO. qa후 삭제 필요 end.
+          Obx(() {
+            return Padding(
               padding: const EdgeInsets.only(top: 30.0, bottom: 20),
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.center,
@@ -364,156 +366,160 @@ class ActivityActive extends StatelessWidget {
                   ),
                 ],
               ),
-            ),
-            Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 20.0, vertical: 10),
-                child: Container(
-                  width: double.infinity,
-                  padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 24),
-                  decoration: BoxDecoration(
-                    color: const Color(0xff1F2129),
-                    borderRadius: BorderRadius.circular(50),
-                  ),
-                  child: LayoutBuilder(builder: (context, constraints) {
-                    return Obx(() {
-                      return Stack(
-                        clipBehavior: Clip.none,
-                        children: [
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            crossAxisAlignment: CrossAxisAlignment.end,
-                            children: [
-                              ...renderGauge(getGaugeColor(controller.realTimeSpeed.value)),
-                            ],
+            );
+          }),
+          Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 20.0, vertical: 10),
+              child: Container(
+                width: double.infinity,
+                padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 24),
+                decoration: BoxDecoration(
+                  color: const Color(0xff1F2129),
+                  borderRadius: BorderRadius.circular(50),
+                ),
+                child: LayoutBuilder(builder: (context, constraints) {
+                  return Obx(() {
+                    return Stack(
+                      clipBehavior: Clip.none,
+                      children: [
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          crossAxisAlignment: CrossAxisAlignment.end,
+                          children: [
+                            ...renderGauge(controller.exerciseStateColor.value),
+                          ],
+                        ),
+                        Positioned(
+                          top: -26,
+                          left: calculateGaugePosition(constraints, controller.realTimeSpeed.value),
+                          child: GaugeCursor(
+                            color: controller.exerciseStateColor.value,
+                            speed: controller.realTimeSpeed.value,
                           ),
-                          Positioned(
-                            top: -26,
-                            left: calculateGaugePosition(constraints, controller.realTimeSpeed.value),
-                            child: GaugeCursor(
-                              color: getGaugeColor(controller.realTimeSpeed.value),
-                              speed: controller.realTimeSpeed.value,
-                            ),
-                          ),
-                          Positioned(
-                            bottom: -30,
-                            left: (constraints.maxWidth / 60) * 8,
-                            child: Row(
-                              children: const [
-                                StyledText(
-                                  '1-6',
+                        ),
+                        Positioned(
+                          bottom: -30,
+                          left: (constraints.maxWidth / 60) * 8,
+                          child: Row(
+                            children: const [
+                              StyledText(
+                                '1-6',
+                                color: Color(0xff8a8a8a),
+                                fontSize: 14,
+                                lineHeight: 12,
+                                fontWeight: 700,
+                                fontFamily: 'Monserrat',
+                              ),
+                              Padding(
+                                padding: EdgeInsets.only(left: 3),
+                                child: StyledText(
+                                  'km/h',
                                   color: Color(0xff8a8a8a),
-                                  fontSize: 14,
+                                  fontSize: 12,
                                   lineHeight: 12,
-                                  fontWeight: 700,
+                                  fontWeight: 500,
                                   fontFamily: 'Monserrat',
                                 ),
-                                Padding(
-                                  padding: EdgeInsets.only(left: 3),
-                                  child: StyledText(
-                                    'km/h',
-                                    color: Color(0xff8a8a8a),
-                                    fontSize: 12,
-                                    lineHeight: 12,
-                                    fontWeight: 500,
-                                    fontFamily: 'Monserrat',
-                                  ),
-                                ),
-                              ],
-                            ),
+                              ),
+                            ],
                           ),
-                        ],
-                      );
-                    });
-                  }),
-                )),
-            Padding(
-              padding: const EdgeInsets.only(
-                left: 30,
-                right: 30,
-                top: 60,
-                bottom: 25,
-              ),
-              child: LayoutBuilder(builder: (context, constraints) {
-                return Obx(() {
-                  return Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      SizedBox(
-                        width: constraints.maxWidth / 3,
-                        child: Column(
-                          children: [
-                            SvgPicture.asset('assets/images/activity/ico_time.svg'),
-                            Padding(
-                              padding: const EdgeInsets.only(top: 10),
-                              child: StyledText(
-                                formatSeconds(controller.exerciseTime.value),
-                                fontWeight: 600,
-                                fontSize: 16,
-                                lineHeight: 16,
-                                color: Colors.white,
-                              ),
-                            )
-                          ],
                         ),
-                      ),
-                      SizedBox(
-                        width: constraints.maxWidth / 3,
-                        child: Column(
-                          children: [
-                            SvgPicture.asset('assets/images/activity/ico_distance.svg'),
-                            Padding(
-                              padding: const EdgeInsets.only(top: 10),
-                              child: StyledText(
-                                '${formatDecimalPlaces(controller.totalDistance.value, 2)}km',
-                                fontWeight: 600,
-                                fontSize: 16,
-                                lineHeight: 16,
-                                color: Colors.white,
-                              ),
-                            )
-                          ],
-                        ),
-                      ),
-                      SizedBox(
-                        width: constraints.maxWidth / 3,
-                        child: Column(
-                          children: [
-                            SvgPicture.asset('assets/images/activity/ico_step.svg'),
-                            Padding(
-                              padding: const EdgeInsets.only(top: 10),
-                              child: StyledText(
-                                controller.exerciseSteps.value.toString(),
-                                fontWeight: 600,
-                                fontSize: 16,
-                                lineHeight: 16,
-                                color: Colors.white,
-                              ),
-                            )
-                          ],
-                        ),
-                      )
-                    ],
-                  );
-                });
-              }),
+                      ],
+                    );
+                  });
+                }),
+              )),
+          Padding(
+            padding: const EdgeInsets.only(
+              left: 30,
+              right: 30,
+              top: 60,
+              bottom: 25,
             ),
-            Padding(
-              padding: const EdgeInsets.only(
-                left: 30,
-                right: 30,
-              ),
-              child: Column(
+            child: LayoutBuilder(builder: (context, constraints) {
+              return Obx(() {
+                return Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    SizedBox(
+                      width: constraints.maxWidth / 3,
+                      child: Column(
+                        children: [
+                          SvgPicture.asset('assets/images/activity/ico_time.svg'),
+                          Padding(
+                            padding: const EdgeInsets.only(top: 10),
+                            child: StyledText(
+                              formatSeconds(controller.exerciseTime.value),
+                              fontWeight: 600,
+                              fontSize: 16,
+                              lineHeight: 16,
+                              color: Colors.white,
+                            ),
+                          )
+                        ],
+                      ),
+                    ),
+                    SizedBox(
+                      width: constraints.maxWidth / 3,
+                      child: Column(
+                        children: [
+                          SvgPicture.asset('assets/images/activity/ico_distance.svg'),
+                          Padding(
+                            padding: const EdgeInsets.only(top: 10),
+                            child: StyledText(
+                              '${formatDecimalPlaces(controller.totalDistance.value, 2)}km',
+                              fontWeight: 600,
+                              fontSize: 16,
+                              lineHeight: 16,
+                              color: Colors.white,
+                            ),
+                          )
+                        ],
+                      ),
+                    ),
+                    SizedBox(
+                      width: constraints.maxWidth / 3,
+                      child: Column(
+                        children: [
+                          SvgPicture.asset('assets/images/activity/ico_step.svg'),
+                          Padding(
+                            padding: const EdgeInsets.only(top: 10),
+                            child: StyledText(
+                              controller.exerciseSteps.value.toString(),
+                              fontWeight: 600,
+                              fontSize: 16,
+                              lineHeight: 16,
+                              color: Colors.white,
+                            ),
+                          )
+                        ],
+                      ),
+                    )
+                  ],
+                );
+              });
+            }),
+          ),
+          Padding(
+            padding: const EdgeInsets.only(
+              left: 30,
+              right: 30,
+            ),
+            child: Obx(() {
+              return Column(
                 children: [
                   ...renderStatList(controller, context),
                 ],
-              ),
-            ),
-            Expanded(
-              child: Align(
-                alignment: Alignment.bottomCenter,
-                child: Padding(
-                  padding: const EdgeInsets.only(left: 35, right: 35, bottom: 100),
-                  child: Row(
+              );
+            }),
+          ),
+          Expanded(
+            child: Align(
+              alignment: Alignment.bottomCenter,
+              child: Padding(
+                padding: const EdgeInsets.only(left: 35, right: 35, bottom: 100),
+                child: Obx(() {
+                  return Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       CircularButton(
@@ -588,14 +594,14 @@ class ActivityActive extends StatelessWidget {
                         ),
                       ),
                     ],
-                  ),
-                ),
+                  );
+                }),
               ),
-            )
-          ],
-        ),
-      );
-    });
+            ),
+          )
+        ],
+      ),
+    );
   }
 }
 

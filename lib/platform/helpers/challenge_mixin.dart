@@ -44,10 +44,10 @@ class ChallengeMixin {
     return await ActivityService.getChallenge(id);
   }
 
-  Future<void> getNearByChallengeList(Position currentLocation) async {
+  Future<void> getNearByChallengeList(Position currentLocation, ExerciseState exerciseState) async {
     List<ChallengeModel> result = await ActivityService.getNearByChallenges(currentLocation);
     inspect(result);
-    notificationOnChallenge(result);
+    notificationOnChallenge(result, exerciseState);
     challengeList.value = result;
   }
 
@@ -55,7 +55,7 @@ class ChallengeMixin {
     hierarchyChallengesList.value = await ActivityService.getChallengesHierarchy(currentLocation);
   }
 
-  void notificationOnChallenge(List<ChallengeModel> result) {
+  void notificationOnChallenge(List<ChallengeModel> result, ExerciseState exerciseState) {
     bool notification = false;
     List<ChallengeModel> filteredList = result.toSet().difference(challengeList.toSet()).toList();
     List<int> filteredIdList = filteredList
@@ -71,7 +71,7 @@ class ChallengeMixin {
         .toSet()
         .toList();
 
-    if (result.isNotEmpty && listEquals(filteredIdList, challengeIdList) == false) {
+    if (result.isNotEmpty && listEquals(filteredIdList, challengeIdList) == false && !([ExerciseState.ongoing, ExerciseState.paused].any((state) => state == exerciseState))) {
       notification = true;
     }
 
@@ -143,7 +143,7 @@ class ChallengeMixin {
       HiveStore.deleteKey(key: HiveKey.badgeIssuanceRequested.name);
       showAlert(
         isScrollControlled: true,
-        title: '등정 뱃지 발급',
+        title: '챌린지 뱃지 발급',
         contentWidget: Column(
           children: [
             Padding(
@@ -162,7 +162,7 @@ class ChallengeMixin {
                 borderRadius: BorderRadius.circular(11),
               ),
               child: StyledText(
-                '${selectedChallenge.value.startPointName} | ${selectedChallenge.value.firstName} 등정 성공',
+                '${selectedChallenge.value.firstName} | ${selectedChallenge.value.secondName}',
                 fontSize: 18,
                 lineHeight: 18,
                 fontWeight: 500,

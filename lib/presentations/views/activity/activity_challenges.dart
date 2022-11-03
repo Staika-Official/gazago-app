@@ -5,6 +5,7 @@ import 'package:gaza_go/constants/enums.dart';
 import 'package:gaza_go/platform/controllers/activity_controller.dart';
 import 'package:gaza_go/platform/helpers/alert_helper.dart';
 import 'package:gaza_go/presentations/components/default_container.dart';
+import 'package:gaza_go/presentations/styles/styled_text.dart';
 import 'package:get/get.dart';
 
 class ActivityChallenges extends StatelessWidget {
@@ -94,34 +95,47 @@ class ActivityChallenges extends StatelessWidget {
   List<Widget> renderChallengeList(ActivityController controller) {
     return controller.doableChallenges.map((challenge) {
       bool isSelected = challenge.id == controller.selectedChallenge.value.id;
-      return Padding(
-        padding: const EdgeInsets.only(top: 23),
-        child: InkWell(
-          onTap: () => controller.selectChallenge(challenge),
-          child: Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 30),
-            child: Row(
-              mainAxisSize: MainAxisSize.max,
-              children: [
-                SvgPicture.asset(
-                  isSelected ? 'assets/images/activity/ico_challenge_checked.svg' : 'assets/images/activity/ico_challenge_unchecked.svg',
-                  width: 16,
-                  height: 11,
-                ),
-                Padding(
-                  padding: const EdgeInsets.only(left: 11),
-                  child: Text(
-                    challenge.startPointName != null ? '${challenge.startPointName!} - ${challenge.endPointName!}' : challenge.firstName!,
-                    style: TextStyle(
+      return InkWell(
+        onTap: () => controller.selectChallenge(challenge),
+        child: Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 30, vertical: 15),
+          child: Row(
+            mainAxisSize: MainAxisSize.max,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              SvgPicture.asset(
+                isSelected ? 'assets/images/activity/ico_challenge_checked.svg' : 'assets/images/activity/ico_challenge_unchecked.svg',
+                width: 16,
+                height: 11,
+              ),
+              Padding(
+                padding: const EdgeInsets.only(left: 11),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    StyledText(
+                      challenge.secondName!,
                       fontSize: 18,
-                      fontWeight: FontWeight.w500,
-                      height: 18 / 18,
+                      fontWeight: 500,
+                      lineHeight: 18,
                       color: isSelected ? Color(0xff0EE6F3) : Colors.white,
                     ),
-                  ),
+                    Padding(
+                      padding: const EdgeInsets.only(
+                        top: 7,
+                      ),
+                      child: StyledText(
+                        challenge.startPointName != null ? '${challenge.startPointName!} - ${challenge.endPointName!}' : challenge.firstName!,
+                        fontSize: 14,
+                        fontWeight: 500,
+                        lineHeight: 14,
+                        color: isSelected ? Color(0xff0EE6F3) : Color(0xff8A8A8A),
+                      ),
+                    ),
+                  ],
                 ),
-              ],
-            ),
+              ),
+            ],
           ),
         ),
       );
@@ -181,7 +195,7 @@ class ActivityChallenges extends StatelessWidget {
                         bottom: 15,
                       ),
                       child: Text(
-                        '등산 시작점을 선택해주세요',
+                        '도전할 챌린지를 선택해주세요.',
                         style: TextStyle(
                           fontSize: 20,
                           fontWeight: FontWeight.w500,
@@ -190,19 +204,30 @@ class ActivityChallenges extends StatelessWidget {
                         ),
                       ),
                     ),
-                    ...renderChallengeList(controller),
+                    ConstrainedBox(
+                      constraints: BoxConstraints(maxHeight: 250),
+                      child: SingleChildScrollView(
+                        physics: ClampingScrollPhysics(),
+                        child: Column(
+                          children: [
+                            ...renderChallengeList(controller),
+                          ],
+                        ),
+                      ),
+                    ),
                     Padding(
                       padding: const EdgeInsets.only(
                         top: 36,
                         left: 30,
                         right: 30,
+                        bottom: 30,
                       ),
                       child: InkWell(
                         onTap: () {
                           if (controller.selectedChallenge.value.id != null) {
                             controller.selectExerciseType(ExerciseType.hiking);
                           } else {
-                            showToastPopup('시작할 챌린지를 선택해주세요.');
+                            showToastPopup('도전할 챌린지를 선택해주세요.');
                           }
                         },
                         child: Container(
@@ -226,7 +251,7 @@ class ActivityChallenges extends StatelessWidget {
                             ],
                           ),
                           child: Text(
-                            '시작하기',
+                            '가자GO',
                             textAlign: TextAlign.center,
                             style: TextStyle(
                               fontSize: 18,
