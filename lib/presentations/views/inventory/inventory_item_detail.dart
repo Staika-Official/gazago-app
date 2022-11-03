@@ -100,7 +100,7 @@ class InventoryItemDetail extends StatelessWidget {
                                         ),
                                         if (controller.isShoe.value)
                                           SizedBox(
-                                            height: 34,
+                                            height: 42,
                                             child: Stack(
                                               children: [
                                                 Row(
@@ -184,18 +184,18 @@ class InventoryItemDetail extends StatelessWidget {
                                                           StyledText(
                                                             '내구도',
                                                             fontFamily: 'Montserrat',
-                                                            fontWeight: 700,
-                                                            fontSize: 14,
-                                                            lineHeight: 14,
+                                                            fontWeight: 800,
+                                                            fontSize: 15,
+                                                            lineHeight: 21,
                                                             color: controller.selectedItem.value.durability.toInt() < 20 ? Colors.white : Colors.black,
                                                           ),
                                                           Padding(
                                                             padding: const EdgeInsets.only(left: 5.0),
                                                             child: StyledText(
                                                               controller.selectedItem.value.durability.toString(),
-                                                              fontWeight: 700,
-                                                              fontSize: 13,
-                                                              lineHeight: 14,
+                                                              fontWeight: 800,
+                                                              fontSize: 14,
+                                                              lineHeight: 15,
                                                               color: controller.selectedItem.value.durability.toInt() < 20 ? Colors.white : Colors.black,
                                                             ),
                                                           ),

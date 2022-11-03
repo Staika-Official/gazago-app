@@ -161,17 +161,17 @@ class ActivityHome extends StatelessWidget {
                           StyledText(
                             stat.name,
                             fontFamily: 'Montserrat',
-                            fontWeight: 700,
-                            fontSize: 14,
-                            lineHeight: 15,
+                            fontWeight: 800,
+                            fontSize: 15,
+                            lineHeight: 20,
                             color: stat.currentStat < 20 ? Colors.white : Colors.black,
                           ),
                           Padding(
                             padding: const EdgeInsets.only(left: 5.0),
                             child: StyledText(
                               stat.currentStat.toString(),
-                              fontWeight: 700,
-                              fontSize: 13,
+                              fontWeight: 800,
+                              fontSize: 14,
                               lineHeight: 15,
                               color: stat.currentStat < 20 ? Colors.white : Colors.black,
                             ),
