@@ -137,6 +137,7 @@ class InventoryBadge extends StatelessWidget {
             crossAxisSpacing: 10,
             mainAxisSpacing: 10,
             crossAxisCount: (width < 350) ? 2 : 3,
+            controller: controller.badgeScrollController,
             children: <Widget>[
               ...renderUserBadgesList(controller),
             ],

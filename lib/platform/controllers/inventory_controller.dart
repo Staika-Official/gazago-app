@@ -37,6 +37,10 @@ class InventoryController extends GetxController with LinearProgressMixin, Inven
   final RxDouble _currentSliderValue = RxDouble(0);
   RxList<InventoryItemModel> equippedItemList = RxList.empty();
 
+  ScrollController singleChildScrollController = ScrollController();
+  ScrollController itemScrollController = ScrollController(keepScrollOffset: false);
+  ScrollController badgeScrollController = ScrollController(keepScrollOffset: false);
+
   Rx<InventoryBadgeModel> equippedBadge = Rx(
     InventoryBadgeModel(
       id: -1,
@@ -158,6 +162,7 @@ class InventoryController extends GetxController with LinearProgressMixin, Inven
     getUserEquippedItems();
     getSyntheticBadgeList();
     getUserBadgesList();
+    scrollControl();  // 스크롤 제어(아이템, 뱃지)
   }
 
   Future<void> refreshController() async {
@@ -167,6 +172,34 @@ class InventoryController extends GetxController with LinearProgressMixin, Inven
 
   void getSyntheticBadgeList() {
     syntheticBadgeList.value = [];
+  }
+
+  void scrollControl() {
+    itemScrollController.addListener(() {
+      if (itemScrollController.position.atEdge) {
+        bool isTop = itemScrollController.position.pixels == 0;
+        if (isTop) {
+          //print('At the top');
+          singleChildScrollController.jumpTo(0);
+        } else {
+          //print('At the bottom');
+          singleChildScrollController.jumpTo(singleChildScrollController.position.maxScrollExtent);
+        }
+      }
+    });
+
+    badgeScrollController.addListener(() {
+      if (badgeScrollController.position.atEdge) {
+        bool isTop = badgeScrollController.position.pixels == 0;
+        if (isTop) {
+          //print('At the top');
+          singleChildScrollController.jumpTo(0);
+        } else {
+          //print('At the bottom');
+          singleChildScrollController.jumpTo(singleChildScrollController.position.maxScrollExtent);
+        }
+      }
+    });
   }
 
   void initStats() {

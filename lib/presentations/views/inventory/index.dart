@@ -29,6 +29,7 @@ class InventoryHome extends StatelessWidget {
       },
       child: SingleChildScrollView(
         physics: const ClampingScrollPhysics(),
+        controller: controller.singleChildScrollController,
         child: ConstrainedBox(
           constraints: BoxConstraints(maxHeight: MediaQuery.of(context).size.height),
           child: Column(

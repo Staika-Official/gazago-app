@@ -23,7 +23,7 @@ class InventoryItem extends StatelessWidget {
           (tab) => GridView.count(
             physics: const ScrollPhysics(),
             primary: false,
-            controller: new ScrollController(keepScrollOffset: false),
+            controller: controller.itemScrollController,
             padding: const EdgeInsets.only(left: 20, right: 20),
             childAspectRatio: (1 / 1.4),
             crossAxisSpacing: 10,
