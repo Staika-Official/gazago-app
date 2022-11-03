@@ -36,6 +36,7 @@ import 'package:geolocator/geolocator.dart';
 import 'package:get/get.dart';
 import 'package:health/health.dart';
 import 'package:permission_handler/permission_handler.dart' as PH;
+import 'package:simple_animations/animation_builder/custom_animation_builder.dart';
 
 class ActivityController extends SuperController with ActivityMixin, ChallengeMixin {
   final WalletMasterController walletMasterController = Get.find();
@@ -73,6 +74,7 @@ class ActivityController extends SuperController with ActivityMixin, ChallengeMi
   OverlayImage? startMaker;
   OverlayImage? endMaker;
   RxInt challengeSelectedIndex = RxInt(-1);
+  Control activityLoadControl = Control.play;
 
   @override
   void onInit() async {
@@ -787,6 +789,7 @@ class ActivityController extends SuperController with ActivityMixin, ChallengeMi
           startExercise(exerciseType, challenge);
         } else {
           loadingTime.value++;
+          activityLoadControl = Control.playFromStart;
         }
       },
     );
