@@ -58,18 +58,22 @@ class ChallengeMixin {
   void notificationOnChallenge(List<ChallengeModel> result, ExerciseState exerciseState) {
     bool notification = false;
     List<ChallengeModel> filteredList = result.toSet().difference(challengeList.toSet()).toList();
-    List<int> filteredIdList = filteredList
-        .map((element) {
-          return element.id!;
-        })
-        .toSet()
-        .toList();
-    List<int> challengeIdList = challengeList
-        .map((element) {
-          return element.id!;
-        })
-        .toSet()
-        .toList();
+    List<int> filteredIdList = List.empty(growable: true);
+    List<int> challengeIdList = List.empty(growable: true);
+    if (result.isNotEmpty) {
+      filteredIdList = filteredList
+          .map((element) {
+            return element.id!;
+          })
+          .toSet()
+          .toList();
+      challengeIdList = challengeList
+          .map((element) {
+            return element.id!;
+          })
+          .toSet()
+          .toList();
+    }
 
     if (result.isNotEmpty && listEquals(filteredIdList, challengeIdList) == false && !([ExerciseState.ongoing, ExerciseState.paused].any((state) => state == exerciseState))) {
       notification = true;
@@ -104,6 +108,7 @@ class ChallengeMixin {
 
   void detectChallengeZone(Position location) {
     print('######################## detectChallengeZone');
+    print(location.speed);
     print(location);
 
     doableChallenges.value = challengeList.where((challenge) {
