@@ -185,11 +185,11 @@ class InventoryItem extends StatelessWidget {
                 alignment: Alignment.centerLeft,
                 child: TabBar(
                   controller: _controller.subTabController,
-                  isScrollable: false,
+                  isScrollable: true,
                   labelStyle: const TextStyle(fontWeight: FontWeight.w500, fontSize: 14),
                   labelColor: Colors.black,
                   unselectedLabelColor: const Color(0xFF898B92),
-                  labelPadding: const EdgeInsets.only(left: 2.0, right: 2.0, top: 6.0, bottom: 3.0),
+                  labelPadding: const EdgeInsets.only(left: 14.0, right: 14.0, top: 6.0, bottom: 3.0),
                   indicator: BoxDecoration(
                     borderRadius: BorderRadius.circular(80.0),
                     color: const Color(0xFFECECEC),
