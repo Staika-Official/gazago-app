@@ -34,8 +34,6 @@ class HomeMenuController extends GetxController {
     switch (selectedIndex.value) {
       case 0:
         return appbarList.first;
-      case 2:
-        return null;
       default:
         return appbarList.last;
     }

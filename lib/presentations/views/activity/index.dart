@@ -452,51 +452,59 @@ class ActivityHome extends StatelessWidget {
                                       Container(
                                         decoration: BoxDecoration(
                                           color: const Color(0xFF0EE6F3),
-                                          border: Border.all(
-                                            width: 2,
-                                            color: Colors.black,
-                                          ),
+                                          border: Border.all(width: 10, color: Color(0xFF4A4D57)),
                                           borderRadius: const BorderRadius.all(
                                             Radius.circular(150),
                                           ),
                                           boxShadow: const [
                                             BoxShadow(
                                               color: Colors.black,
-                                              offset: Offset(0, 4),
+                                              offset: Offset(2, 4),
                                               blurRadius: 0.0,
-                                              spreadRadius: 0.0,
+                                              spreadRadius: 2.0,
                                             ),
                                           ],
                                         ),
-                                        child: MaterialButton(
-                                          onPressed: [ExerciseState.ongoing, ExerciseState.paused, ExerciseState.ready].any((state) => controller.exerciseState.value == state)
-                                              ? () => controller.requestExerciseInitialization()
-                                              : () => showToastPopup('지속적으로 문제가 발생한다면 앱을 재시작해주세요'),
-                                          shape: RoundedRectangleBorder(
-                                            borderRadius: BorderRadius.circular(150),
+                                        child: Container(
+                                          decoration: BoxDecoration(
+                                            border: Border.all(
+                                              width: 3,
+                                              color: Colors.black,
+                                            ),
+                                            borderRadius: const BorderRadius.all(
+                                              Radius.circular(150),
+                                            ),
                                           ),
-                                          color: const Color(0xFF0EE6F3),
-                                          height: 150,
-                                          minWidth: 150,
-                                          child: StyledText(
-                                            [ExerciseState.ongoing, ExerciseState.paused].any((state) => controller.exerciseState.value == state) ? 'Continue' : 'GO',
-                                            fontWeight: 800,
-                                            fontFamily: 'Montserrat',
-                                            fontSize: [ExerciseState.ongoing, ExerciseState.paused].any((state) => controller.exerciseState.value == state) ? 18 : 50,
-                                            lineHeight: [ExerciseState.ongoing, ExerciseState.paused].any((state) => controller.exerciseState.value == state) ? 18 : 50,
-                                            color: Colors.black,
-                                            letterSpacing: 0.5,
-                                          )
-                                          /* child: StyledText(
+                                          child: MaterialButton(
+                                            onPressed: [ExerciseState.ongoing, ExerciseState.paused, ExerciseState.ready].any((state) => controller.exerciseState.value == state)
+                                                ? () => controller.requestExerciseInitialization()
+                                                : () => showToastPopup('지속적으로 문제가 발생한다면 앱을 재시작해주세요'),
+                                            shape: RoundedRectangleBorder(
+                                              borderRadius: BorderRadius.circular(150),
+                                            ),
+                                            color: const Color(0xFF0EE6F3),
+                                            height: 150,
+                                            minWidth: 150,
+                                            child: StyledText(
                                               [ExerciseState.ongoing, ExerciseState.paused].any((state) => controller.exerciseState.value == state) ? 'Continue' : 'GO',
                                               fontWeight: 800,
                                               fontFamily: 'Montserrat',
-                                              fontSize: [ExerciseState.ongoing, ExerciseState.paused].any((state) => controller.exerciseState.value == state) ? 18 : 34,
-                                              lineHeight: [ExerciseState.ongoing, ExerciseState.paused].any((state) => controller.exerciseState.value == state) ? 18 : 34,
+                                              fontSize: [ExerciseState.ongoing, ExerciseState.paused].any((state) => controller.exerciseState.value == state) ? 18 : 50,
+                                              lineHeight: [ExerciseState.ongoing, ExerciseState.paused].any((state) => controller.exerciseState.value == state) ? 18 : 50,
                                               color: Colors.black,
                                               letterSpacing: 0.5,
-                                            ),*/
-                                          ,
+                                            )
+                                            /* child: StyledText(
+                                                [ExerciseState.ongoing, ExerciseState.paused].any((state) => controller.exerciseState.value == state) ? 'Continue' : 'GO',
+                                                fontWeight: 800,
+                                                fontFamily: 'Montserrat',
+                                                fontSize: [ExerciseState.ongoing, ExerciseState.paused].any((state) => controller.exerciseState.value == state) ? 18 : 34,
+                                                lineHeight: [ExerciseState.ongoing, ExerciseState.paused].any((state) => controller.exerciseState.value == state) ? 18 : 34,
+                                                color: Colors.black,
+                                                letterSpacing: 0.5,
+                                              ),*/
+                                            ,
+                                          ),
                                         ),
                                       ),
                                     ],

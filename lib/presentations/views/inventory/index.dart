@@ -6,7 +6,6 @@ import 'package:gaza_go/platform/controllers/home_menu_controller.dart';
 import 'package:gaza_go/platform/controllers/inventory_controller.dart';
 import 'package:gaza_go/platform/controllers/inventory_home_controller.dart';
 import 'package:gaza_go/platform/helpers/inventory_helper.dart';
-import 'package:gaza_go/presentations/components/default_container.dart';
 import 'package:gaza_go/presentations/styles/icons.dart';
 import 'package:gaza_go/presentations/styles/styled_text.dart';
 import 'package:gaza_go/presentations/views/inventory/inventory_badge.dart';
@@ -22,188 +21,143 @@ class InventoryHome extends StatelessWidget {
     InventoryController controller = Get.put(InventoryController());
     HomeMenuController homeMenuController = Get.find();
 
-    return DefaultContainer(
-      titleText: '내 장비',
-      onBackButtonTap: () {
-        homeMenuController.selectMenu(homeMenuController.prevIndex.value);
-      },
-      child: SingleChildScrollView(
-        physics: const ClampingScrollPhysics(),
-        controller: controller.singleChildScrollController,
-        child: ConstrainedBox(
-          constraints: BoxConstraints(maxHeight: MediaQuery.of(context).size.height),
-          child: Column(
-            mainAxisSize: MainAxisSize.max,
-            children: [
-              Padding(
-                padding: const EdgeInsets.only(left: 20.0, right: 20.0, bottom: 20.0),
-                child: Column(
-                  children: [
-                    Obx(() {
-                      return StaggeredGrid.count(
-                        crossAxisCount: 4,
-                        mainAxisSpacing: 6,
-                        crossAxisSpacing: 6,
-                        children: [
-                          if (controller.equippedItemList.isNotEmpty) ...[
-                            StaggeredGridTile.count(
-                              crossAxisCellCount: 2,
-                              mainAxisCellCount: 2,
-                              child: Tile(
-                                index: 0,
-                                id: controller.equippedShoe.value.id,
-                                itemGrade: controller.equippedShoe.value.itemGrade,
-                                durability: controller.equippedShoe.value.durability,
-                                imageUrl: controller.equippedShoe.value.itemImageUrl,
-                              ),
-                            ),
-                            StaggeredGridTile.count(
-                              crossAxisCellCount: 2,
-                              mainAxisCellCount: 2,
-                              child: Tile(
-                                index: 1,
-                                imageUrl: controller.equippedBadge.value.badge.imageUrl,
-                                badgeId: controller.equippedBadge.value.badge.id,
-                              ),
-                            ),
-                            StaggeredGridTile.count(
-                              crossAxisCellCount: 1,
-                              mainAxisCellCount: 1,
-                              child: Tile(
-                                index: 2,
-                                itemGrade: controller.equippedHat.value.itemGrade,
-                                imageUrl: controller.equippedHat.value.itemImageUrl,
-                              ),
-                            ),
-                            StaggeredGridTile.count(
-                              crossAxisCellCount: 1,
-                              mainAxisCellCount: 1,
-                              child: Tile(
-                                index: 3,
-                                itemGrade: controller.equippedTop.value.itemGrade,
-                                imageUrl: controller.equippedTop.value.itemImageUrl,
-                              ),
-                            ),
-                            StaggeredGridTile.count(
-                              crossAxisCellCount: 1,
-                              mainAxisCellCount: 1,
-                              child: Tile(
-                                index: 4,
-                                itemGrade: controller.equippedBottom.value.itemGrade,
-                                imageUrl: controller.equippedBottom.value.itemImageUrl,
-                              ),
-                            ),
-                            StaggeredGridTile.count(
-                              crossAxisCellCount: 1,
-                              mainAxisCellCount: 1,
-                              child: Tile(
-                                index: 5,
-                                itemGrade: controller.equippedAccessory.value.itemGrade,
-                                imageUrl: controller.equippedAccessory.value.itemImageUrl,
-                              ),
-                            ),
-                          ]
-                        ],
-                      );
-                    }),
-                  ],
-                ),
-              ),
-              Padding(
-                  padding: const EdgeInsets.symmetric(vertical: 20.0),
-                  child: Obx(() {
-                    return Row(
-                      mainAxisSize: MainAxisSize.max,
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      mainAxisAlignment: MainAxisAlignment.center,
+    return SingleChildScrollView(
+      physics: const ClampingScrollPhysics(),
+      controller: controller.singleChildScrollController,
+      child: ConstrainedBox(
+        constraints: BoxConstraints(maxHeight: MediaQuery.of(context).size.height),
+        child: Column(
+          mainAxisSize: MainAxisSize.max,
+          children: [
+            Padding(
+              padding: const EdgeInsets.only(left: 20.0, right: 20.0, bottom: 20.0),
+              child: Column(
+                children: [
+                  Obx(() {
+                    return StaggeredGrid.count(
+                      crossAxisCount: 4,
+                      mainAxisSpacing: 6,
+                      crossAxisSpacing: 6,
                       children: [
-                        Column(
-                          children: [
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: [
-                                StyledText(
-                                  '${controller.equippedRewardRate.toInt()}',
-                                  fontSize: 28,
-                                  fontWeight: 500,
-                                ),
-                                const StyledText(
-                                  '%',
-                                  fontSize: 16,
-                                  fontWeight: 500,
-                                ),
-                              ],
+                        if (controller.equippedItemList.isNotEmpty) ...[
+                          StaggeredGridTile.count(
+                            crossAxisCellCount: 2,
+                            mainAxisCellCount: 2,
+                            child: Tile(
+                              index: 0,
+                              id: controller.equippedShoe.value.id,
+                              itemGrade: controller.equippedShoe.value.itemGrade,
+                              durability: controller.equippedShoe.value.durability,
+                              imageUrl: controller.equippedShoe.value.itemImageUrl,
                             ),
-                            Padding(
-                              padding: const EdgeInsets.only(top: 12.0),
-                              child: Row(
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                children: [
-                                  Padding(
-                                    padding: const EdgeInsets.only(top: 3.0, right: 2.0),
-                                    child: iconGoReward,
-                                  ),
-                                  StyledText(
-                                    'GO 보상율',
-                                    color: Color(0xFF8A8A8A),
-                                    fontSize: 11,
-                                    lineHeight: 12,
-                                    fontWeight: 500,
-                                  ),
-                                ],
-                              ),
+                          ),
+                          StaggeredGridTile.count(
+                            crossAxisCellCount: 2,
+                            mainAxisCellCount: 2,
+                            child: Tile(
+                              index: 1,
+                              imageUrl: controller.equippedBadge.value.badge.imageUrl,
+                              badgeId: controller.equippedBadge.value.badge.id,
                             ),
-                          ],
-                        ),
-                        Padding(
-                          padding: const EdgeInsets.symmetric(horizontal: 25.0),
-                          child: Column(
+                          ),
+                          StaggeredGridTile.count(
+                            crossAxisCellCount: 1,
+                            mainAxisCellCount: 1,
+                            child: Tile(
+                              index: 2,
+                              itemGrade: controller.equippedHat.value.itemGrade,
+                              imageUrl: controller.equippedHat.value.itemImageUrl,
+                            ),
+                          ),
+                          StaggeredGridTile.count(
+                            crossAxisCellCount: 1,
+                            mainAxisCellCount: 1,
+                            child: Tile(
+                              index: 3,
+                              itemGrade: controller.equippedTop.value.itemGrade,
+                              imageUrl: controller.equippedTop.value.itemImageUrl,
+                            ),
+                          ),
+                          StaggeredGridTile.count(
+                            crossAxisCellCount: 1,
+                            mainAxisCellCount: 1,
+                            child: Tile(
+                              index: 4,
+                              itemGrade: controller.equippedBottom.value.itemGrade,
+                              imageUrl: controller.equippedBottom.value.itemImageUrl,
+                            ),
+                          ),
+                          StaggeredGridTile.count(
+                            crossAxisCellCount: 1,
+                            mainAxisCellCount: 1,
+                            child: Tile(
+                              index: 5,
+                              itemGrade: controller.equippedAccessory.value.itemGrade,
+                              imageUrl: controller.equippedAccessory.value.itemImageUrl,
+                            ),
+                          ),
+                        ]
+                      ],
+                    );
+                  }),
+                ],
+              ),
+            ),
+            Padding(
+                padding: const EdgeInsets.symmetric(vertical: 20.0),
+                child: Obx(() {
+                  return Row(
+                    mainAxisSize: MainAxisSize.max,
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Column(
+                        children: [
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
                             children: [
-                              Row(
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                children: [
-                                  StyledText(
-                                    '${controller.equippedAbrasionRate.toInt()}',
-                                    fontSize: 28,
-                                    fontWeight: 500,
-                                  ),
-                                  StyledText(
-                                    '%',
-                                    fontSize: 16,
-                                    fontWeight: 500,
-                                  ),
-                                ],
+                              StyledText(
+                                '${controller.equippedRewardRate.toInt()}',
+                                fontSize: 28,
+                                fontWeight: 500,
                               ),
-                              Padding(
-                                padding: const EdgeInsets.only(top: 12.0),
-                                child: Row(
-                                  mainAxisAlignment: MainAxisAlignment.center,
-                                  crossAxisAlignment: CrossAxisAlignment.center,
-                                  children: [
-                                    Padding(
-                                      padding: const EdgeInsets.only(top: 1.0, right: 3.0),
-                                      child: iconItemAbrasion,
-                                    ),
-                                    StyledText(
-                                      '아이템 마모율',
-                                      color: Color(0xFF8A8A8A),
-                                      fontSize: 12,
-                                      lineHeight: 12,
-                                      fontWeight: 600,
-                                    ),
-                                  ],
-                                ),
+                              const StyledText(
+                                '%',
+                                fontSize: 16,
+                                fontWeight: 500,
                               ),
                             ],
                           ),
-                        ),
-                        Column(
+                          Padding(
+                            padding: const EdgeInsets.only(top: 12.0),
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                Padding(
+                                  padding: const EdgeInsets.only(top: 3.0, right: 2.0),
+                                  child: iconGoReward,
+                                ),
+                                StyledText(
+                                  'GO 보상율',
+                                  color: Color(0xFF8A8A8A),
+                                  fontSize: 11,
+                                  lineHeight: 12,
+                                  fontWeight: 500,
+                                ),
+                              ],
+                            ),
+                          ),
+                        ],
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 25.0),
+                        child: Column(
                           children: [
                             Row(
                               mainAxisAlignment: MainAxisAlignment.center,
                               children: [
                                 StyledText(
-                                  '${controller.equippedStaminaReduceRate.toInt()}',
+                                  '${controller.equippedAbrasionRate.toInt()}',
                                   fontSize: 28,
                                   fontWeight: 500,
                                 ),
@@ -218,109 +172,148 @@ class InventoryHome extends StatelessWidget {
                               padding: const EdgeInsets.only(top: 12.0),
                               child: Row(
                                 mainAxisAlignment: MainAxisAlignment.center,
+                                crossAxisAlignment: CrossAxisAlignment.center,
                                 children: [
                                   Padding(
                                     padding: const EdgeInsets.only(top: 1.0, right: 3.0),
-                                    child: iconStaminaReduce,
+                                    child: iconItemAbrasion,
                                   ),
                                   StyledText(
-                                    '체력 감소율',
+                                    '아이템 마모율',
                                     color: Color(0xFF8A8A8A),
-                                    fontSize: 11,
+                                    fontSize: 12,
                                     lineHeight: 12,
-                                    fontWeight: 500,
+                                    fontWeight: 600,
                                   ),
                                 ],
                               ),
                             ),
                           ],
                         ),
-                      ],
-                    );
-                  })),
-              Padding(
-                padding: const EdgeInsets.only(top: 10),
-                child: TabBar(
-                  controller: inventoryMenuController.tabController,
-                  labelColor: Colors.white,
-                  labelStyle: const TextStyle(fontSize: 16, fontWeight: FontWeight.w500),
-                  unselectedLabelColor: const Color(0xFF8A8A8A),
-                  indicatorWeight: 0.1,
-                  isScrollable: false,
-                  labelPadding: const EdgeInsets.all(0),
-                  splashBorderRadius: const BorderRadius.only(
+                      ),
+                      Column(
+                        children: [
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              StyledText(
+                                '${controller.equippedStaminaReduceRate.toInt()}',
+                                fontSize: 28,
+                                fontWeight: 500,
+                              ),
+                              StyledText(
+                                '%',
+                                fontSize: 16,
+                                fontWeight: 500,
+                              ),
+                            ],
+                          ),
+                          Padding(
+                            padding: const EdgeInsets.only(top: 12.0),
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                Padding(
+                                  padding: const EdgeInsets.only(top: 1.0, right: 3.0),
+                                  child: iconStaminaReduce,
+                                ),
+                                StyledText(
+                                  '체력 감소율',
+                                  color: Color(0xFF8A8A8A),
+                                  fontSize: 11,
+                                  lineHeight: 12,
+                                  fontWeight: 500,
+                                ),
+                              ],
+                            ),
+                          ),
+                        ],
+                      ),
+                    ],
+                  );
+                })),
+            Padding(
+              padding: const EdgeInsets.only(top: 10),
+              child: TabBar(
+                controller: inventoryMenuController.tabController,
+                labelColor: Colors.white,
+                labelStyle: const TextStyle(fontSize: 16, fontWeight: FontWeight.w500),
+                unselectedLabelColor: const Color(0xFF8A8A8A),
+                indicatorWeight: 0.1,
+                isScrollable: false,
+                labelPadding: const EdgeInsets.all(0),
+                splashBorderRadius: const BorderRadius.only(
+                  topRight: Radius.circular(15),
+                  topLeft: Radius.circular(15),
+                ),
+                indicator: const BoxDecoration(
+                  color: Color(0xFF363841),
+                  borderRadius: BorderRadius.only(
                     topRight: Radius.circular(15),
                     topLeft: Radius.circular(15),
                   ),
-                  indicator: const BoxDecoration(
-                    color: Color(0xFF363841),
-                    borderRadius: BorderRadius.only(
-                      topRight: Radius.circular(15),
-                      topLeft: Radius.circular(15),
+                ),
+                tabs: <Widget>[
+                  Tab(
+                    child: Container(
+                      width: double.infinity,
+                      height: double.infinity,
+                      decoration: const ShapeDecoration(
+                        shape: CustomRoundedRectangleBorder(
+                          borderRadius: BorderRadius.only(topLeft: Radius.circular(10), topRight: Radius.circular(10)),
+                          leftSide: BorderSide(color: Colors.black, width: 2),
+                          topLeftCornerSide: BorderSide(color: Colors.black, width: 2),
+                          rightSide: BorderSide(color: Colors.black, width: 1),
+                          topRightCornerSide: BorderSide(color: Colors.black, width: 2),
+                          topSide: BorderSide(color: Colors.black, width: 2),
+                        ),
+                      ),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children: const [
+                          Text('아이템'),
+                        ],
+                      ),
                     ),
                   ),
-                  tabs: <Widget>[
-                    Tab(
-                      child: Container(
-                        width: double.infinity,
-                        height: double.infinity,
-                        decoration: const ShapeDecoration(
-                          shape: CustomRoundedRectangleBorder(
-                            borderRadius: BorderRadius.only(topLeft: Radius.circular(10), topRight: Radius.circular(10)),
-                            leftSide: BorderSide(color: Colors.black, width: 2),
-                            topLeftCornerSide: BorderSide(color: Colors.black, width: 2),
-                            rightSide: BorderSide(color: Colors.black, width: 1),
-                            topRightCornerSide: BorderSide(color: Colors.black, width: 2),
-                            topSide: BorderSide(color: Colors.black, width: 2),
-                          ),
-                        ),
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          crossAxisAlignment: CrossAxisAlignment.center,
-                          children: const [
-                            Text('아이템'),
-                          ],
+                  Tab(
+                    child: Container(
+                      width: double.infinity,
+                      height: double.infinity,
+                      decoration: const ShapeDecoration(
+                        shape: CustomRoundedRectangleBorder(
+                          borderRadius: BorderRadius.only(topLeft: Radius.circular(10), topRight: Radius.circular(10)),
+                          leftSide: BorderSide(color: Colors.black, width: 1),
+                          topLeftCornerSide: BorderSide(color: Colors.black, width: 2),
+                          rightSide: BorderSide(color: Colors.black, width: 2),
+                          topRightCornerSide: BorderSide(color: Colors.black, width: 2),
+                          topSide: BorderSide(color: Colors.black, width: 2),
                         ),
                       ),
-                    ),
-                    Tab(
-                      child: Container(
-                        width: double.infinity,
-                        height: double.infinity,
-                        decoration: const ShapeDecoration(
-                          shape: CustomRoundedRectangleBorder(
-                            borderRadius: BorderRadius.only(topLeft: Radius.circular(10), topRight: Radius.circular(10)),
-                            leftSide: BorderSide(color: Colors.black, width: 1),
-                            topLeftCornerSide: BorderSide(color: Colors.black, width: 2),
-                            rightSide: BorderSide(color: Colors.black, width: 2),
-                            topRightCornerSide: BorderSide(color: Colors.black, width: 2),
-                            topSide: BorderSide(color: Colors.black, width: 2),
-                          ),
-                        ),
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          crossAxisAlignment: CrossAxisAlignment.center,
-                          children: const [
-                            Text('뱃지'),
-                          ],
-                        ),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children: const [
+                          Text('뱃지'),
+                        ],
                       ),
                     ),
-                  ],
-                ),
+                  ),
+                ],
               ),
-              Expanded(
-                child: TabBarView(
-                  physics: const NeverScrollableScrollPhysics(),
-                  controller: inventoryMenuController.tabController,
-                  children: const [
-                    InventoryItem(),
-                    InventoryBadge(),
-                  ],
-                ),
+            ),
+            Expanded(
+              child: TabBarView(
+                physics: const NeverScrollableScrollPhysics(),
+                controller: inventoryMenuController.tabController,
+                children: const [
+                  InventoryItem(),
+                  InventoryBadge(),
+                ],
               ),
-            ],
-          ),
+            ),
+          ],
         ),
       ),
     );
