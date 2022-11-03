@@ -231,7 +231,7 @@ class ArchiveDetail extends StatelessWidget {
                 ],
               ),
             ),
-            controller.selectedItem.value.challengeId != null && controller.selectedItem.value.type == "HIKING"
+            controller.selectedItem.value.challengeId != null && controller.selectedItem.value.badgeName != null && controller.selectedItem.value.type == "HIKING"
                 ? Padding(
                     padding: const EdgeInsets.symmetric(vertical: 10.0, horizontal: 20.0),
                     child: Row(
