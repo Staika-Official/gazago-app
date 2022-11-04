@@ -63,6 +63,6 @@ class UaaApi {
   }
 
   static Future<Response> fetchWithdrawCancel() async {
-    return await Api.client(serviceUrl: ServiceUrl.uaaService).put('/account/activation');
+    return await Api.client(serviceUrl: ServiceUrl.uaaService).put('/account/activation?clientId=GAZAGO');
   }
 }

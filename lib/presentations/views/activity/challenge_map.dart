@@ -98,7 +98,7 @@ class ChallengeMap extends StatelessWidget {
               fontWeight: 500,
             ),
             leading: Padding(
-              padding: const EdgeInsets.only(left: 20),
+              padding: const EdgeInsets.only(left: 30, top: 5),
               child: (controller.challengeSelectedIndex == course.id) ? iconChallengeCheckOn : iconChallengeCheckOff,
             ),
             contentPadding: const EdgeInsets.all(0.0),
