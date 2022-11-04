@@ -373,7 +373,7 @@ class Tile extends StatelessWidget {
           alignment: Alignment.bottomCenter,
           children: [
             Padding(
-              padding: badgeId != null ? const EdgeInsets.only(top: 10.0, bottom: 30, left: 30, right: 30) : const EdgeInsets.all(10.0),
+              padding: badgeId != null && badgeId != -1 ? const EdgeInsets.only(top: 10.0, bottom: 30, left: 30, right: 30) : const EdgeInsets.all(10.0),
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 crossAxisAlignment: CrossAxisAlignment.center,
@@ -383,14 +383,14 @@ class Tile extends StatelessWidget {
                     child: CachedNetworkImage(
                       imageUrl: imageUrl,
                       placeholder: (context, url) => const CircularProgressIndicator(),
-                      errorWidget: (context, url, error) => Image.asset("assets/images/@temp_badge.png"),
+                      errorWidget: (context, url, error) => iconNoBadge,
                       fit: BoxFit.contain,
                     ),
                   ),
                 ],
               ),
             ),
-            if (badgeId != null)
+            if (badgeId != null && badgeId != -1)
               Padding(
                 padding: EdgeInsets.all(10),
                 child: Container(
