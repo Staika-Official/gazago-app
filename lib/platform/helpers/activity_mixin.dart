@@ -78,16 +78,19 @@ class ActivityMixin {
     DateTime now = DateTime.now();
 
     // 15초 이상 걷기 감지가 되지 않을 경우에는 속도 0으로 표시
-    if (currentStep - prevStep <= stepDifference || exerciseState.value != ExerciseState.ongoing) {
-      DateTime now = DateTime.now();
-      if (pedestrianStoppedTime.value.add(const Duration(seconds: 15)).compareTo(now) < 0) {
-        return RxDouble(0);
-      }
+    // if (currentStep - prevStep <= stepDifference || exerciseState.value != ExerciseState.ongoing) {
+    if (exerciseState.value != ExerciseState.ongoing) {
+      return RxDouble(0);
+      // DateTime now = DateTime.now();
+      // if (pedestrianStoppedTime.value.add(const Duration(seconds: 15)).compareTo(now) < 0) {
+      //   return RxDouble(0);
+      // }
     } else {
-      pedestrianStoppedTime.value = DateTime.now();
+      // pedestrianStoppedTime.value = DateTime.now();
+      return RxDouble(speed <= 0 ? 0 : speed);
     }
 
-    return RxDouble(speed <= 0 ? 0 : speed);
+    // return RxDouble(speed <= 0 ? 0 : speed);
   }
 
   RxDouble get avgSpeed {

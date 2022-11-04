@@ -43,16 +43,16 @@ class TermController extends GetxController {
 
   void toggleSwitch(val, {Function(String)? error}) async {
     agreeMarketing.value = val;
-    await MemberService.fetchTermsAgree(
-      [TermsHistoryModel(terms: termTitle.value, postId: termId.value, boardType: termType.value, activated: val)],
-      successCallback: (effectedCount) async {
-        if (effectedCount == 0) {
-          showToastPopup('마케팅 정보 수신 동의를 철회하였습니다.');
-        } else {
-          showToastPopup('마케팅 정보 수신 동의를 하였습니다.');
-        }
-      },
-    );
+    await MemberService.fetchTermsAgree([TermsHistoryModel(terms: termTitle.value, postId: termId.value, boardType: termType.value, activated: val)], successCallback: (effectedCount) async {
+      if (agreeMarketing.value) {
+        showToastPopup('마케팅 정보 수신 동의를 하였습니다.');
+      } else {
+        showToastPopup('마케팅 정보 수신 동의를 철회하였습니다.');
+      }
+    }, errorCallback: () {
+      showToastPopup('마케팅 정보 수신 동의를 실패');
+      agreeMarketing.value = !val;
+    });
     // await _termsUseCase.agreeJoinTerms([TermsHistoryModel(terms: term.value.title, postId: term.value.id, activated: val, boardType: term.value.boardType)], error: error);
   }
 }
