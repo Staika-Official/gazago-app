@@ -667,10 +667,10 @@ class ActivityController extends SuperController with ActivityMixin, ChallengeMi
             color: Colors.white,
           ),
           TextSpan(
-            text: '앱을 정상적으로 이용하기 위해서\n디바이스의 ',
+            text: '정상적인 gazaGO 이용을 위하여 디바이스의 ',
             children: [
               TextSpan(text: 'GPS', style: TextStyle(color: Color(0xff0EE6F3))),
-              TextSpan(text: '기능을 켜주세요'),
+              TextSpan(text: ' 기능을 활성화 시켜주세요.'),
             ],
           ),
         ),
@@ -784,7 +784,6 @@ class ActivityController extends SuperController with ActivityMixin, ChallengeMi
     loadingTimer = Timer.periodic(
       const Duration(seconds: 1),
       (timer) {
-        print(loadingTime.value);
         if (loadingTime.value == 3) {
           timer.cancel();
           loadingTimer = null;
@@ -891,10 +890,10 @@ class ActivityController extends SuperController with ActivityMixin, ChallengeMi
                 color: Colors.white,
               ),
               TextSpan(
-                text: '앱을 정상적으로 이용하기 위해서\n디바이스의 ',
+                text: '정상적인 gazaGO 이용을 위하여 디바이스의 ',
                 children: [
                   TextSpan(text: 'GPS', style: TextStyle(color: Color(0xff0EE6F3))),
-                  TextSpan(text: '기능을 켜주세요'),
+                  TextSpan(text: ' 기능을 활성화 시켜주세요.'),
                 ],
               ),
             ),
