@@ -17,9 +17,12 @@ class LeaderboardHome extends StatelessWidget {
     return Obx(() {
       return Container(
         height: 400,
-        decoration: BoxDecoration(
-            color: const Color(0xFF363841),
-            borderRadius: BorderRadius.only(topLeft: Radius.circular(15), topRight: Radius.circular(15))
+        decoration: const BoxDecoration(
+          color: Color(0xFF363841),
+          borderRadius: BorderRadius.only(
+            topLeft: Radius.circular(15),
+            topRight: Radius.circular(15),
+          ),
         ),
         child: TableCalendar(
           locale: 'ko-KR',
@@ -81,13 +84,13 @@ class LeaderboardHome extends StatelessWidget {
     return Container(
       width: double.maxFinite,
       height: 90,
-      color: Color(0xFF08080B),
+      color: const Color(0xFF08080B),
       padding: const EdgeInsets.only(top: 8, left: 11, right: 17, bottom: 8),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.start,
         children: [
           iconMyRankArrow,
-          Container(
+          SizedBox(
             width: 20,
             child: Text(
               myRank.rank.toString(),
@@ -95,7 +98,7 @@ class LeaderboardHome extends StatelessWidget {
               textAlign: TextAlign.center,
             ),
           ),
-          Padding(padding: EdgeInsets.only(left: 4)),
+          const Padding(padding: EdgeInsets.only(left: 4)),
           Expanded(
             flex: 2,
             child: Row(
@@ -105,9 +108,9 @@ class LeaderboardHome extends StatelessWidget {
                         width: 44.0,
                         height: 44.0,
                         decoration: BoxDecoration(
-                          borderRadius: BorderRadius.all(Radius.circular(50.0)),
+                          borderRadius: const BorderRadius.all(Radius.circular(50.0)),
                           border: Border.all(
-                            color: Color(0xFF0EE6F3),
+                            color: const Color(0xFF0EE6F3),
                             width: 1.5,
                           ),
                         ),
@@ -119,48 +122,40 @@ class LeaderboardHome extends StatelessWidget {
                           ),
                         ),
                       )
-                    : CircleAvatar(
+                    : const CircleAvatar(
                         radius: 15,
                         backgroundColor: Colors.black,
                       ),
-                Container(
-                  child: Padding(
-                    padding: const EdgeInsets.only(left: 8.0),
-                    child: Text(
-                      (myRank.nickname.contains('@') ? myRank.nickname.substring(0, myRank.nickname.indexOf('@')) : myRank.nickname),
-                      overflow: TextOverflow.ellipsis,
-                      style: const TextStyle(color: Colors.white, fontSize: 14, fontWeight: FontWeight.w600),
-                      textAlign: TextAlign.left,
-                    ),
+                Padding(
+                  padding: const EdgeInsets.only(left: 8.0),
+                  child: Text(
+                    (myRank.nickname.contains('@') ? myRank.nickname.substring(0, myRank.nickname.indexOf('@')) : myRank.nickname),
+                    overflow: TextOverflow.ellipsis,
+                    style: const TextStyle(color: Colors.white, fontSize: 14, fontWeight: FontWeight.w600),
+                    textAlign: TextAlign.left,
                   ),
                 ),
               ],
             ),
           ),
-          Expanded(
-            flex: 1,
-            child: Text(
-              '${myRank.rewardGo.toString()} GO',
-              textAlign: TextAlign.right,
-              style: const TextStyle(
-                color: Colors.white,
+          Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              StyledText(
+                '${myRank.rewardGo.toString()} GO',
+                textAlign: TextAlign.right,
                 fontSize: 14,
-                fontWeight: FontWeight.w600,
+                fontWeight: 600,
               ),
-            ),
-          ),
-          Padding(padding: EdgeInsets.only(left: 10)),
-          Expanded(
-            flex: 1,
-            child: Text(
-              '${formatDecimalPlaces(myRank.rewardTik, 1)} TIK',
-              textAlign: TextAlign.right,
-              style: const TextStyle(
-                color: Color(0xFF5B5B67),
+              const Padding(padding: EdgeInsets.only(top: 7)),
+              StyledText(
+                '${formatDecimalPlaces(myRank.rewardTik, 1)} TIK',
+                textAlign: TextAlign.right,
+                color: const Color(0xFFbababa),
                 fontSize: 14,
-                fontWeight: FontWeight.w600,
+                fontWeight: 500,
               ),
-            ),
+            ],
           ),
         ],
       ),
@@ -169,13 +164,13 @@ class LeaderboardHome extends StatelessWidget {
 
   Widget renderRanker(RankerModel ranker, int index) {
     return Container(
-      color: Color(0xFF1D1D26),
+      color: const Color(0xFF1D1D26),
       height: 58,
       padding: const EdgeInsets.only(top: 8, left: 18, right: 17, bottom: 8),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          Container(
+          SizedBox(
             width: 20,
             child: Text(
               ranker.rank.toString(),
@@ -187,7 +182,7 @@ class LeaderboardHome extends StatelessWidget {
               textAlign: TextAlign.center,
             ),
           ),
-          Padding(padding: EdgeInsets.only(left: 12)),
+          const Padding(padding: EdgeInsets.only(left: 12)),
           Expanded(
             flex: 2,
             child: Row(
@@ -197,16 +192,14 @@ class LeaderboardHome extends StatelessWidget {
                         radius: 15,
                         foregroundImage: NetworkImage(ranker.profileImageUrl),
                       )
-                    : CircleAvatar(
+                    : const CircleAvatar(
                         radius: 15,
                         backgroundColor: Colors.black,
                       ),
-                Container(
-                  child: Padding(
-                    padding: const EdgeInsets.only(left: 10.0),
-                    child: Text((ranker.nickname.contains('@') ? ranker.nickname.substring(0, ranker.nickname.indexOf('@')) : ranker.nickname),
-                        overflow: TextOverflow.ellipsis, style: const TextStyle(color: Colors.white, fontSize: 14, fontWeight: FontWeight.w600), textAlign: TextAlign.left),
-                  ),
+                Padding(
+                  padding: const EdgeInsets.only(left: 10.0),
+                  child: Text((ranker.nickname.contains('@') ? ranker.nickname.substring(0, ranker.nickname.indexOf('@')) : ranker.nickname),
+                      overflow: TextOverflow.ellipsis, style: const TextStyle(color: Colors.white, fontSize: 14, fontWeight: FontWeight.w600), textAlign: TextAlign.left),
                 ),
               ],
             ),
@@ -217,8 +210,24 @@ class LeaderboardHome extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.center,
               crossAxisAlignment: CrossAxisAlignment.end,
               children: [
-                Text('${formatDecimalPlaces(ranker.rewardGo, 2)} GO', textAlign: TextAlign.right, style: const TextStyle(color: Colors.white, fontSize: 14, fontWeight: FontWeight.w600)),
-                Text('${formatDecimalPlaces(ranker.rewardTik, 1)} TIK', textAlign: TextAlign.right, style: const TextStyle(color: Color(0xFFBABABA), fontSize: 14, fontWeight: FontWeight.w600)),
+                StyledText(
+                  '${formatDecimalPlaces(ranker.rewardGo, 2)} GO',
+                  textAlign: TextAlign.right,
+                  fontSize: 14,
+                  lineHeight: 14,
+                  fontWeight: 600,
+                ),
+                Padding(
+                  padding: const EdgeInsets.only(top: 3),
+                  child: StyledText(
+                    '${formatDecimalPlaces(ranker.rewardTik, 1)} TIK',
+                    textAlign: TextAlign.right,
+                    fontSize: 14,
+                    lineHeight: 14,
+                    fontWeight: 500,
+                    color: const Color(0xFFBABABA),
+                  ),
+                ),
               ],
             ),
           ),
@@ -235,11 +244,11 @@ class LeaderboardHome extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Padding(
-          padding: const EdgeInsets.only(left: 24),
+        const Padding(
+          padding: EdgeInsets.only(left: 24),
           child: StyledText(
             '오늘의 GO',
-            color: const Color(0xFF0EE6F3),
+            color: Color(0xFF0EE6F3),
             fontWeight: 700,
             fontSize: 24,
             lineHeight: 32,
@@ -267,8 +276,8 @@ class LeaderboardHome extends StatelessWidget {
                             fontSize: 30,
                             lineHeight: 28,
                           ),
-                          Padding(
-                            padding: const EdgeInsets.only(left: 2.0),
+                          const Padding(
+                            padding: EdgeInsets.only(left: 2.0),
                             child: StyledText(
                               'GO',
                               color: Colors.white,
@@ -305,7 +314,7 @@ class LeaderboardHome extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Row(
-                  children: [
+                  children: const [
                     StyledText(
                       'TIK은 매일 자정(KST)에 배분됩니다.',
                       color: Colors.white,
@@ -320,9 +329,9 @@ class LeaderboardHome extends StatelessWidget {
                   child: Row(
                     crossAxisAlignment: CrossAxisAlignment.center,
                     children: [
-                      StyledText(
+                      const StyledText(
                         'TIK 획득내역',
-                        color: const Color(0xFF0EE6F3),
+                        color: Color(0xFF0EE6F3),
                         fontWeight: 400,
                         fontSize: 14,
                         lineHeight: 21,
@@ -344,7 +353,7 @@ class LeaderboardHome extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
-              StyledText(
+              const StyledText(
                 '리더보드',
                 color: Colors.white,
                 fontSize: 20,
@@ -363,7 +372,7 @@ class LeaderboardHome extends StatelessWidget {
                   children: [
                     Obx(() {
                       return StyledText(
-                        controller.leaderboardDate.value!,
+                        controller.leaderboardDate.value,
                         color: const Color(0xFFBFBFBF),
                         fontSize: 12,
                         fontWeight: 600,
@@ -383,27 +392,25 @@ class LeaderboardHome extends StatelessWidget {
           return (controller.myRank.value != null) ? renderMyRank(controller) : Container();
         }),
         Expanded(
-          child: Container(
-            child: PagedListView<int, RankerModel>.separated(
-              pagingController: controller.pagingController,
-              separatorBuilder: (context, index) => const Divider(
-                thickness: 2,
-                indent: 0,
-                endIndent: 0,
-                height: 1,
-                color: Color(0xFF26272F),
-              ),
-              builderDelegate: PagedChildBuilderDelegate<RankerModel>(
-                itemBuilder: (context, item, index) => (renderRanker(item, index)),
-                noItemsFoundIndicatorBuilder: (context) => const Padding(
-                  padding: EdgeInsets.all(8.0),
-                  child: Center(
-                    child: Text(
-                      '랭킹 정보가 없습니다.',
-                      style: TextStyle(
-                        fontSize: 20.0,
-                        color: Colors.white,
-                      ),
+          child: PagedListView<int, RankerModel>.separated(
+            pagingController: controller.pagingController,
+            separatorBuilder: (context, index) => const Divider(
+              thickness: 2,
+              indent: 0,
+              endIndent: 0,
+              height: 1,
+              color: Color(0xFF26272F),
+            ),
+            builderDelegate: PagedChildBuilderDelegate<RankerModel>(
+              itemBuilder: (context, item, index) => (renderRanker(item, index)),
+              noItemsFoundIndicatorBuilder: (context) => const Padding(
+                padding: EdgeInsets.all(8.0),
+                child: Center(
+                  child: Text(
+                    '랭킹 정보가 없습니다.',
+                    style: TextStyle(
+                      fontSize: 20.0,
+                      color: Colors.white,
                     ),
                   ),
                 ),
