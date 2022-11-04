@@ -16,7 +16,7 @@ class TermController extends GetxController {
   void onInit() async {
     termType.value = Get.arguments['termType'] ?? '';
     termId.value = Get.arguments['termId'] ?? 0;
-    // await initMarketingAgreeStatus();
+    initMarketingAgreeStatus();
     await getTermInfo();
     super.onInit();
   }
@@ -30,15 +30,21 @@ class TermController extends GetxController {
     });
   }
 
-  // void initMarketingAgreeStatus() async {
-  //   MemberUserModel userModel = await _memberUseCase.getMemberUserInfo();
-  //   agreeMarketing.value = userModel.marketingChecked;
-  // }
+  void initMarketingAgreeStatus() async {
+    await MemberService.getMemberUserInfo(
+      successCallback: (memberUserModel) {
+        agreeMarketing.value = memberUserModel.marketingChecked;
+      },
+      errorCallback: (message) {
+        showToastPopup(message);
+      },
+    );
+  }
 
   void toggleSwitch(val, {Function(String)? error}) async {
     agreeMarketing.value = val;
     await MemberService.fetchTermsAgree(
-      TermsHistoryModel(terms: termTitle.value, postId: termId.value, boardType: termType.value, activated: val),
+      [TermsHistoryModel(terms: termTitle.value, postId: termId.value, boardType: termType.value, activated: val)],
       successCallback: (effectedCount) async {
         if (effectedCount == 0) {
           showToastPopup('마케팅 정보 수신 동의를 철회하였습니다.');
