@@ -40,6 +40,7 @@ class ActivityMixin {
   final Rx<ExerciseState> exerciseState = Rx(ExerciseState.init);
   Timer? loadingTimer;
   Timer? exerciseTimer;
+  Timer? speedTimer;
   Timer? updateTimer;
   Timer? stopTimer;
   final RxDouble stopProgress = RxDouble(0);
@@ -51,6 +52,8 @@ class ActivityMixin {
   final Rx<DateTime> pedestrianStoppedTime = Rx(DateTime.now());
   final RxInt updateCount = RxInt(0);
   final RxString lastUpdateTime = RxString('');
+  final RxDouble realTimeSpeed = RxDouble(0);
+
   Rx<Color> get exerciseStateColor {
     Color color = Colors.white;
     switch (exerciseState.value) {
@@ -71,8 +74,11 @@ class ActivityMixin {
     return Rx(color);
   }
 
-  RxDouble get realTimeSpeed {
-    double speed = exerciseData.isNotEmpty ? exerciseData.last.speed! : 0;
+  /*RxDouble get realTimeSpeed {
+    //realTimeSpeed.value += realTimeSpeed.value;
+
+    print('realTimeSpeed.value ${realTimeSpeed.value}');
+    *//*double speed = exerciseData.isNotEmpty ? exerciseData.last.speed! : 0;
     int prevStep = exerciseData.isNotEmpty && exerciseData.length > 2 ? exerciseData[exerciseData.length - 2].steps! : 0;
     int currentStep = exerciseData.isNotEmpty && exerciseData.length > 2 ? exerciseData.last.steps! : 0;
     DateTime now = DateTime.now();
@@ -85,10 +91,10 @@ class ActivityMixin {
       }
     } else {
       pedestrianStoppedTime.value = DateTime.now();
-    }
+    }*//*
 
-    return RxDouble(speed <= 0 ? 0 : speed);
-  }
+    return RxDouble(0);
+  }*/
 
   RxDouble get avgSpeed {
     //보통사람의 걷기 속도는 평균 3~4.5kmH이다. 따라서 3 = 0.8333 m/s 4.5 = 1.25m/s
@@ -144,6 +150,7 @@ class ActivityMixin {
 
   void initStream() {
     initExerciseTimer();
+    initSpeedTimer();
     initStepStream();
     initPedestrianStatusStream();
   }
@@ -185,6 +192,18 @@ class ActivityMixin {
     });
   }
 
+  void initSpeedTimer() {
+    if (speedTimer != null) {
+      speedTimer!.cancel();
+      speedTimer = null;
+    }
+
+    speedTimer = Timer.periodic(const Duration(seconds: 1), (timer) {
+      print('speedTimer ${timer}');
+      calRealtimeSpeed();
+    });
+  }
+
   void initStepStream() {
     if (stepSubscription != null) {
       stepSubscription = null;
@@ -211,6 +230,28 @@ class ActivityMixin {
       showToastPopup('걸음 수를 측정할 수 없습니다.\n일시정지 후 다시 시작해주세요');
       HiveStore.save(key: HiveKey.savedStepInitialized.name, value: false);
     });
+  }
+
+  void calRealtimeSpeed() {
+    print('calRealtimeSpeed: ${realTimeSpeed.value}, exerciseData.length: ${exerciseData.length}');
+
+    RxDouble calRealtimeSpeed = RxDouble(0);
+
+    double speed = exerciseData.isNotEmpty ? exerciseData.last.speed! : 0;
+    int prevStep = exerciseData.isNotEmpty && exerciseData.length > 2 ? exerciseData[exerciseData.length - 2].steps! : 0;
+    int currentStep = exerciseData.isNotEmpty && exerciseData.length > 2 ? exerciseData.last.steps! : 0;
+
+    // 15초 이상 걷기 감지가 되지 않을 경우에는 속도 0으로 표시
+    print('${currentStep} - ${prevStep} > ${stepDifference}');
+    if (currentStep - prevStep > stepDifference) {
+      DateTime now = DateTime.now();
+      if (pedestrianStoppedTime.value.add(const Duration(seconds: 15)).compareTo(now) < 0) {
+        calRealtimeSpeed = (exerciseState.value != ExerciseState.ongoing) ? RxDouble(0) : RxDouble(speed);
+      }
+    } else {
+      pedestrianStoppedTime.value = DateTime.now();
+    }
+    realTimeSpeed.value = calRealtimeSpeed.value;
   }
 
   void initPedestrianStatusStream() {
@@ -476,6 +517,8 @@ class ActivityMixin {
     updateTimer = null;
     exerciseTimer?.cancel();
     exerciseTimer = null;
+    speedTimer?.cancel();
+    speedTimer = null;
   }
 
   void resetSubscriptions() {
