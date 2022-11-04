@@ -305,16 +305,16 @@ class ActivityMixin {
 
           if (userState.value.state!.stamina! < 30) {
             if (userState.value.shoes!.durability! == 0) {
-              showLocalNotification(notificationType: NotificationType.stamina, title: '체력 부족', message: '지금 체력이 0이 되어 GO보상이 되지 않고 있어요. 체력을 충전해 주세요.');
+              showLocalNotification(notificationType: NotificationType.stamina, title: '체력 충전 알림', message: '체력이 부족하면 GO보상이 되지 않아요. 체력 충전하러 가자GO~~');
             } else {
-              showLocalNotification(notificationType: NotificationType.stamina, title: '체력 부족', message: '체력이 부족하면 GO보상이 되지 않아요. 체력을 충전해 주세요.');
+              showLocalNotification(notificationType: NotificationType.stamina, title: '체력 충전 알림', message: '지금 체력이 0이 되어 GO보상이 되지 않고 있어요. 체력 충전하러 가자GO~~');
             }
           }
           if (userState.value.shoes!.durability! < 30) {
             if (userState.value.shoes!.durability! == 0) {
-              showLocalNotification(notificationType: NotificationType.durability, title: '내구도 부족', message: '지금 내구도가 0이 되어 GO보상이 되지 않고 있어요. 내구도를 보충해 주세요.');
+              showLocalNotification(notificationType: NotificationType.durability, title: '아이템 수리 알림', message: '내구도(신발)가 부족하면 GO보상이 되지 않아요. 내구도 보충하러 가자GO~~');
             } else {
-              showLocalNotification(notificationType: NotificationType.durability, title: '내구도 부족', message: '내구도가 부족하면 GO보상이 되지 않아요. 내구도를 보충해 주세요.');
+              showLocalNotification(notificationType: NotificationType.durability, title: '아이템 수리 알림', message: '지금 내구도(신발)가 0이 되어 GO보상이 되지 않고 있어요. 내구도 보충하러 가자GO~~');
             }
           }
           // updateCount.value = updateCount.value + 1;

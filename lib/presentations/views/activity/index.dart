@@ -163,7 +163,7 @@ class ActivityHome extends StatelessWidget {
                             fontFamily: 'Montserrat',
                             fontWeight: 800,
                             fontSize: 15,
-                            lineHeight: 20,
+                            lineHeight: 15,
                             color: stat.currentStat < 20 ? Colors.white : Colors.black,
                           ),
                           Padding(
@@ -493,17 +493,7 @@ class ActivityHome extends StatelessWidget {
                                               lineHeight: [ExerciseState.ongoing, ExerciseState.paused].any((state) => controller.exerciseState.value == state) ? 18 : 50,
                                               color: Colors.black,
                                               letterSpacing: 0.5,
-                                            )
-                                            /* child: StyledText(
-                                                [ExerciseState.ongoing, ExerciseState.paused].any((state) => controller.exerciseState.value == state) ? 'Continue' : 'GO',
-                                                fontWeight: 800,
-                                                fontFamily: 'Montserrat',
-                                                fontSize: [ExerciseState.ongoing, ExerciseState.paused].any((state) => controller.exerciseState.value == state) ? 18 : 34,
-                                                lineHeight: [ExerciseState.ongoing, ExerciseState.paused].any((state) => controller.exerciseState.value == state) ? 18 : 34,
-                                                color: Colors.black,
-                                                letterSpacing: 0.5,
-                                              ),*/
-                                            ,
+                                            ),
                                           ),
                                         ),
                                       ),
@@ -528,25 +518,6 @@ class ActivityHome extends StatelessWidget {
                                           ));
                                     },
                                   )),
-                              /*Positioned(
-                                  bottom: 10,
-                                  right: 0,
-                                  child: LoopAnimationBuilder<double>(
-                                    tween: Tween(begin: 1, end: 1.1), // 0° to 360° (2π)
-                                    duration: const Duration(milliseconds: 1200), // for 2 seconds per iteration
-                                    builder: (context, value, _) {
-                                      return Transform.scale(
-                                          scale: value,
-                                          child: FloatingActionButton(
-                                            onPressed: () {
-                                              controller.moveToChallengeMap();
-                                            },
-                                            child: iconChallengeList,
-                                          )
-                                      );
-                                    },
-                                  )
-                              ),*/
                             ],
                           ),
                         ),
