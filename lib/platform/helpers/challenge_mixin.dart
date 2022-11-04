@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:developer';
 
 import 'package:cached_network_image/cached_network_image.dart';
@@ -91,7 +92,7 @@ class ChallengeMixin {
   }
 
   void selectChallenge(ChallengeModel challenge) {
-    selectedChallenge.value = challenge;
+    selectedChallenge.value = ChallengeModel.fromJson(challenge.toJson());
 
     challengeMapController.moveCamera(
       CameraUpdate.fitBounds(
