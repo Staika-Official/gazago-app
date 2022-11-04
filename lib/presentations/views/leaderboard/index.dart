@@ -140,6 +140,7 @@ class LeaderboardHome extends StatelessWidget {
           ),
           Column(
             mainAxisAlignment: MainAxisAlignment.center,
+            crossAxisAlignment: CrossAxisAlignment.end,
             children: [
               StyledText(
                 '${myRank.rewardGo.toString()} GO',
