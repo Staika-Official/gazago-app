@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:flutter_svg_provider/flutter_svg_provider.dart' as SP;
 import 'package:gaza_go/constants/enums.dart';
 import 'package:gaza_go/platform/controllers/archive_controller.dart';
 import 'package:gaza_go/platform/helpers/activity_helper.dart';
@@ -51,7 +52,10 @@ class ArchiveHome extends StatelessWidget {
                             children: [
                               CircleAvatar(
                                 radius: 21,
-                                child: archive.type == ExerciseType.hiking.name.toUpperCase() ? iconArchiveHiking : iconArchiveWalking,
+                                backgroundColor: Colors.transparent,
+                                foregroundImage: archive.type == ExerciseType.hiking.name.toUpperCase()
+                                    ? SP.Svg('assets/images/archive/ico_archive_hiking.svg') as ImageProvider
+                                    : SP.Svg('assets/images/archive/ico_archive_walking.svg') as ImageProvider,
                               ),
                               if (archive.badgeIssueId != null)
                                 Positioned(
