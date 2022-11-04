@@ -173,7 +173,7 @@ class ActivityActive extends StatelessWidget {
                             fontFamily: 'Montserrat',
                             fontWeight: 800,
                             fontSize: 15,
-                            lineHeight: 20,
+                            lineHeight: 15,
                             color: stat.currentStat < 20 ? Colors.white : Colors.black,
                           ),
                           Padding(
