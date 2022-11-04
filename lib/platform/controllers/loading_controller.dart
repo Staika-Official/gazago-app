@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:io';
 
 import 'package:flutter/material.dart';
@@ -13,13 +14,61 @@ import 'package:url_launcher/url_launcher.dart';
 class LoadingController extends GetxController {
   final RxDouble progress = RxDouble(0);
   final RxString progressMessage = RxString("로드중......");
+  late Timer _timer;
+  final RxInt time = RxInt(0);
 
   @override
   void onInit() async {
     if (Get.isRegistered<WalletMasterController>()) Get.find<WalletMasterController>().onInit();
     if (Get.isRegistered<ActivityController>()) Get.find<ActivityController>().onInit();
+    timerStart();
 
     super.onInit();
+    ever(
+        time,
+        (items) => {
+              if (items > 20) {showRestartAppPopup()}
+            });
+  }
+
+  @override
+  void dispose() {
+    timerStop();
+    super.dispose();
+  }
+
+  void showRestartAppPopup() {
+    timerStop();
+    showAlert(
+      title: '로딩 중 오류가 발생했습니다',
+      contentText: '재시도 후에도 오류가 발생할 경우\n잠시 후 다시 시도해 주세요',
+      actions: [
+        Expanded(
+          child: GazagoButton(
+            onTap: () => {handleRefreshApp()},
+            buttonText: '재시도하기',
+            buttonColor: const Color(0xFF0EE6F3),
+          ),
+        ),
+      ],
+    );
+  }
+
+  void handleRefreshApp() {
+    time.value = 0;
+    Get.back();
+    Get.offAllNamed(Routes.loading);
+    timerStart();
+  }
+
+  void timerStart() {
+    _timer = Timer.periodic(const Duration(seconds: 1), (timer) {
+      time.value++;
+    });
+  }
+
+  void timerStop() {
+    _timer.cancel();
   }
 
   void updateProgress(String message) async {
@@ -92,6 +141,7 @@ class LoadingController extends GetxController {
             ],
           );
         } else {
+          timerStop();
           Get.offAllNamed(Routes.home);
         }
       }
