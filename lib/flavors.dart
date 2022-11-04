@@ -14,11 +14,11 @@ class F {
   static String get title {
     switch (appFlavor) {
       case Flavor.dev:
-        return '가자GO-dev';
+        return '가자고-dev';
       case Flavor.stage:
-        return '가자GO-stage';
+        return '가자고-stage';
       case Flavor.prod:
-        return '가자GO';
+        return '가자고';
       default:
         return 'title';
     }

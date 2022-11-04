@@ -45,17 +45,17 @@ android {
         dev {
             dimension "flavor-type"
             applicationId "kr.co.eztechfin.gazaGo.dev"
-            resValue "string", "app_name", "가자GO-dev"
+            resValue "string", "app_name", "가자고-dev"
         }
         stage {
             dimension "flavor-type"
             applicationId "kr.co.eztechfin.gazaGo.dev"
-            resValue "string", "app_name", "가자GO-stage"
+            resValue "string", "app_name", "가자고-stage"
         }
         prod {
             dimension "flavor-type"
             applicationId "kr.co.eztechfin.gazaGo"
-            resValue "string", "app_name", "가자GO"
+            resValue "string", "app_name", "가자고"
         }
     }
 

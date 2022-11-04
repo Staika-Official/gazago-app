@@ -213,7 +213,7 @@ flavorizr:
   flavors:
     dev:
       app:
-        name: "가자GO-dev"
+        name: "가자고-dev"
 
       android:
         applicationId: "kr.co.eztechfin.gazaGo.dev"
@@ -225,7 +225,7 @@ flavorizr:
           config: ".firebase/dev/GoogleService-Info.plist"
     stage:
       app:
-        name: "가자GO-stage"
+        name: "가자고-stage"
       android:
         applicationId: "kr.co.eztechfin.gazaGo.dev"
         firebase:
@@ -236,7 +236,7 @@ flavorizr:
           config: ".firebase/dev/GoogleService-Info.plist"
     prod:
       app:
-        name: "가자GO"
+        name: "가자고"
 
       android:
         applicationId: "kr.co.eztechfin.gazaGo"
