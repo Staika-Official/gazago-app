@@ -158,6 +158,11 @@ class PreferenceController extends GetxController {
         HiveStore.deleteMultipleKeys(keys: [
           HiveKey.accessToken.name,
           HiveKey.refreshToken.name,
+          HiveKey.userState.name,
+          HiveKey.exerciseData.name,
+          HiveKey.savedStepCount.name,
+          HiveKey.dummyStepCount.name,
+          HiveKey.savedStepInitialized.name,
         ]);
         Get.offAllNamed(Routes.login);
       },

@@ -70,6 +70,7 @@ SvgPicture iconItemAbrasion = SvgPicture.asset('assets/images/inventory/ico_item
 SvgPicture iconStaminaReduce = SvgPicture.asset('assets/images/inventory/ico_stamina_reduce.svg', width: 20, height: 16);
 SvgPicture iconLucky = SvgPicture.asset('assets/images/inventory/ico_lucky.svg', width: 12, height: 9);
 SvgPicture iconCirclePlus = SvgPicture.asset('assets/images/inventory/ico_circle_plus.svg', width: 37, height: 37);
+SvgPicture iconNoBadge = SvgPicture.asset('assets/images/inventory/ico_no_badge.svg', width: 92, height: 112);
 
 //mypage
 SvgPicture iconCamera = SvgPicture.asset('assets/images/common/ico_camera.svg', width: 22, height: 22);
