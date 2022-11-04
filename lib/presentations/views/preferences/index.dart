@@ -90,14 +90,6 @@ class Preferences extends StatelessWidget {
             onTap: () => Get.toNamed(Routes.termsList),
           ),
           PreferenceItem(
-            title: '개인정보 처리방침',
-            onTap: () => Get.toNamed(Routes.term, arguments: {'termType': 'T2E_PRIVACY'}),
-          ),
-          PreferenceItem(
-            title: '위치정보 이용동의',
-            onTap: () => Get.toNamed(Routes.term, arguments: {'termType': 'T2E_LOCATION'}),
-          ),
-          PreferenceItem(
             title: '마케팅 동의',
             onTap: () => Get.toNamed(Routes.term, arguments: {'termType': 'T2E_MARKETING'}),
           ),

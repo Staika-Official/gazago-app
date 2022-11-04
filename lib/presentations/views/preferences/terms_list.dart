@@ -25,6 +25,10 @@ class TermsList extends StatelessWidget {
               onTap: () => Get.toNamed(Routes.term, arguments: {'termType': 'T2E_TERMS'}),
             ),
             TermsListItem(
+              title: '개인정보 처리방침',
+              onTap: () => Get.toNamed(Routes.term, arguments: {'termType': 'T2E_PRIVACY'}),
+            ),
+            TermsListItem(
               title: '위치정보 이용 동의',
               onTap: () => Get.toNamed(Routes.term, arguments: {'termType': 'T2E_LOCATION'}),
             ),
@@ -47,7 +51,9 @@ class TermsListItem extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Material(
+    return Ink(
+      height: 60,
+      color: Color(0xFF1D1D26),
       child: InkWell(
         onTap: type == ItemType.functional ? onTap : null,
         child: Container(
