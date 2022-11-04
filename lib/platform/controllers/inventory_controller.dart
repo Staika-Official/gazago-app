@@ -309,7 +309,9 @@ class InventoryController extends GetxController with LinearProgressMixin, Inven
       } else {
         showToastPopup('수리할 내구도가 없습니다.');
       }
-    } else {}
+    } else {
+      handleNotEnoughTaikaPopup();
+    }
   }
 
   void initRepairInfo() {
@@ -469,6 +471,61 @@ class InventoryController extends GetxController with LinearProgressMixin, Inven
     ).whenComplete(() {
       initRepairInfo();
     });
+  }
+
+  void handleNotEnoughTaikaPopup() {
+    Get.bottomSheet(
+      Container(
+        height: 200,
+        decoration: const BoxDecoration(
+          color: Color(0xff363841),
+          borderRadius: BorderRadius.only(
+            topLeft: Radius.circular(12),
+            topRight: Radius.circular(12),
+          ),
+        ),
+        child: Padding(
+          padding: const EdgeInsets.symmetric(vertical: 30.0, horizontal: 40.0),
+          child: Column(
+            children: [
+              const StyledText(
+                'Taika 가 부족하여 진행할 수 없습니다.\n GO지갑에 Taika를 충전해 주세요.',
+                fontWeight: 500,
+                fontSize: 18,
+                lineHeight: 28,
+              ),
+              Container(
+                margin: const EdgeInsets.only(top: 20),
+                decoration: BoxDecoration(
+                  color: const Color(0xFF0EE6F3),
+                  border: Border.all(width: 2, color: Colors.black),
+                  borderRadius: BorderRadius.circular(8),
+                  boxShadow: const [
+                    BoxShadow(
+                      color: Colors.black,
+                      offset: Offset(0, 3),
+                    )
+                  ],
+                ),
+                child: InkWell(
+                  onTap: () => Get.back(),
+                  child: const Padding(
+                    padding: EdgeInsets.symmetric(vertical: 12.0),
+                    child: Center(
+                        child: StyledText(
+                      '확인',
+                      fontSize: 18,
+                      lineHeight: 18,
+                      color: Colors.black,
+                    )),
+                  ),
+                ),
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
   }
 
   void closeRepairPopup() {
