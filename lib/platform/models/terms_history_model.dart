@@ -8,8 +8,9 @@ class TermsHistoryModel {
   int postId;
   bool activated;
   String boardType;
+  String clientId;
 
-  TermsHistoryModel({required this.terms, required this.postId, required this.activated, required this.boardType});
+  TermsHistoryModel({required this.terms, required this.postId, required this.activated, required this.boardType, this.clientId = 'GAZAGO'});
 
   factory TermsHistoryModel.fromJson(Map<String, dynamic> json) => _$TermsHistoryModelFromJson(json);
 
