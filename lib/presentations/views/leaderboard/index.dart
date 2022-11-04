@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/svg.dart';
 import 'package:gaza_go/platform/controllers/activity_controller.dart';
 import 'package:gaza_go/platform/controllers/leaderboard_controller.dart';
 import 'package:gaza_go/platform/helpers/base_helper.dart';
@@ -404,16 +405,23 @@ class LeaderboardHome extends StatelessWidget {
             ),
             builderDelegate: PagedChildBuilderDelegate<RankerModel>(
               itemBuilder: (context, item, index) => (renderRanker(item, index)),
-              noItemsFoundIndicatorBuilder: (context) => const Padding(
-                padding: EdgeInsets.all(8.0),
-                child: Center(
-                  child: Text(
-                    '랭킹 정보가 없습니다.',
-                    style: TextStyle(
-                      fontSize: 20.0,
-                      color: Colors.white,
+              noItemsFoundIndicatorBuilder: (context) => Center(
+
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    SvgPicture.asset('assets/images/wallet/ico_empty.svg'),
+                    Padding(
+                      padding: const EdgeInsets.only(top: 20),
+                      child: StyledText(
+                        '랭킹 기록이 없어요.',
+                        color: Color(0xff7b7b7b),
+                        fontSize: 16,
+                        lineHeight: 10,
+                        fontWeight: 500,
+                      ),
                     ),
-                  ),
+                  ],
                 ),
               ),
             ),
