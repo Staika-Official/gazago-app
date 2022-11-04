@@ -406,7 +406,7 @@ class ActivityController extends SuperController with ActivityMixin, ChallengeMi
           child: Column(
             children: [
               const StyledText(
-                'Taika 가 부족하여 진행할 수 없습니다.\n 인벤토리에 Taika를 충전해 주세요.',
+                'Taika 가 부족하여 진행할 수 없습니다.\n GO지갑에 Taika를 충전해 주세요.',
                 fontWeight: 500,
                 fontSize: 18,
                 lineHeight: 28,
@@ -784,7 +784,6 @@ class ActivityController extends SuperController with ActivityMixin, ChallengeMi
     loadingTimer = Timer.periodic(
       const Duration(seconds: 1),
       (timer) {
-        print(loadingTime.value);
         if (loadingTime.value == 3) {
           timer.cancel();
           loadingTimer = null;
