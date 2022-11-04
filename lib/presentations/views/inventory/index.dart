@@ -418,9 +418,9 @@ class Tile extends StatelessWidget {
               ),
             durability != null
                 ? Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 15.0, vertical: 8.0),
+                    padding: const EdgeInsets.symmetric(horizontal: 15.0, vertical: 9.0),
                     child: SizedBox(
-                      height: 20,
+                      height: 22,
                       child: Stack(
                         clipBehavior: Clip.none,
                         alignment: AlignmentDirectional.center,
