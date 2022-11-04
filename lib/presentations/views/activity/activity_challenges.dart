@@ -1,9 +1,12 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_naver_map/flutter_naver_map.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:gaza_go/constants/enums.dart';
 import 'package:gaza_go/platform/controllers/activity_controller.dart';
 import 'package:gaza_go/platform/helpers/alert_helper.dart';
+import 'package:gaza_go/platform/models/challenge_model.dart';
 import 'package:gaza_go/presentations/components/default_container.dart';
 import 'package:gaza_go/presentations/styles/styled_text.dart';
 import 'package:get/get.dart';
@@ -92,6 +95,44 @@ class ActivityChallenges extends StatelessWidget {
     return [centerCircle, outerCircle];
   }
 
+  List<Marker> renderMaker(ActivityController controller) {
+    ChallengeModel course = controller.selectedChallenge.value;
+    Marker startMaker = Marker(
+      markerId: course.id!.toString(),
+      position: LatLng(course.startLat!, course.startLon!),
+      captionText: course.startPointName,
+      captionColor: const Color(0xFF0EE6F3),
+      captionHaloColor: Colors.black,
+      captionTextSize: 16.0,
+      subCaptionTextSize: 14,
+      subCaptionText: course.secondName,
+      subCaptionColor: (Platform.isAndroid) ? Colors.white : Colors.black,
+      subCaptionHaloColor: (Platform.isAndroid) ? Colors.black : Colors.white,
+      captionOffset: 5,
+      icon: controller.startMaker,
+      width: 20,
+      height: 20
+    );
+
+    Marker endMaker = Marker(
+      markerId: 'end_${course.id!.toString()}',
+      position: LatLng(course.endLat!, course.endLon!),
+      captionText: '도착 ${course.endPointName}',
+      captionColor: const Color(0xFFFF6F75),
+      captionHaloColor: Colors.black,
+      captionTextSize: 16.0,
+      captionOffset: 5,
+      subCaptionText: course.secondName,
+      subCaptionTextSize: 14,
+      subCaptionColor: (Platform.isAndroid) ? Colors.white : Colors.black,
+      subCaptionHaloColor: (Platform.isAndroid) ? Colors.black : Colors.white,
+      icon: controller.endMaker,
+      width: 20,
+      height: 20,
+    );
+    return [startMaker, endMaker];
+  }
+
   List<Widget> renderChallengeList(ActivityController controller) {
     return controller.doableChallenges.map((challenge) {
       bool isSelected = challenge.id == controller.selectedChallenge.value.id;
@@ -165,6 +206,9 @@ class ActivityChallenges extends StatelessWidget {
                   circles: [
                     if (controller.selectedChallenge.value.id != null) ...renderStartPoint(controller),
                     if (controller.selectedChallenge.value.id != null) ...renderEndPoint(controller),
+                  ],
+                  markers: [
+                    if (controller.selectedChallenge.value.id != null) ...renderMaker(controller),
                   ],
                   mapType: MapType.Navi,
                   nightModeEnable: true,
