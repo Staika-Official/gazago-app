@@ -81,8 +81,8 @@ class ChallengeMixin {
     }
 
     if (notification) {
-      showLocalNotification(notificationType: NotificationType.challenge, title: '도전 지역 발견', message: '주변에 등산을 시작 할 수 있는 ${filteredList.first.firstName} 있어요. 등산을 시작해 보세요.');
-      showToastPopup('새로운 도전을 시작하세요.');
+      showLocalNotification(notificationType: NotificationType.challenge, title: '등산 챌린지 시작 포인트 발견', message: '주변에 챌린지를 시작 할 수 있는 ${filteredList.first.firstName}이 있어요. 뱃지 받으러 가자GO~~');
+      showToastPopup('등산 챌린지 시작 포인트 발견');
     }
   }
 
@@ -143,8 +143,8 @@ class ChallengeMixin {
 
   Future<void> requestBadgeIssuance(CurrentUserStateModel userState) async {
     void successCallback(InventoryBadgeModel badge) {
-      showLocalNotification(notificationType: NotificationType.badge, title: '뱃지 발급', message: '${selectedChallenge.value.firstName}등정에 성공하여 뱃지를 받았습니다. 새로운 뱃지를 확인해 보세요. ');
-      showToastPopup('뱃지가 발급되었습니다.');
+      showLocalNotification(notificationType: NotificationType.badge, title: '등산 챌린지 뱃지 획득', message: '${selectedChallenge.value.firstName} 등산 챌린지에 성공하여 뱃지를 받았어요. 새로운 뱃지 확인하러 가자GO~~');
+      showToastPopup('뱃지를 획득하였습니다.');
       userState.exercise!.badgeIssueId = badge.id;
       HiveStore.deleteKey(key: HiveKey.badgeIssuanceRequested.name);
       showAlert(
