@@ -31,6 +31,7 @@ class BottomSheetAlert extends StatelessWidget {
                 fontSize: 22,
                 lineHeight: 24,
                 fontWeight: 500,
+                letterSpacing: .2,
               ),
             ),
             contentWidget ??
@@ -41,7 +42,9 @@ class BottomSheetAlert extends StatelessWidget {
                     fontSize: 18,
                     lineHeight: 24,
                     fontWeight: 500,
+                    letterSpacing: .2,
                     color: Color(0xffbfbfbf),
+                    textAlign: TextAlign.center,
                   ),
                 ),
             Row(
