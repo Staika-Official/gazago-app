@@ -40,7 +40,6 @@ class ActivityMixin {
   final Rx<ExerciseState> exerciseState = Rx(ExerciseState.init);
   Timer? loadingTimer;
   Timer? exerciseTimer;
-  Timer? speedTimer;
   Timer? updateTimer;
   Timer? stopTimer;
   final RxDouble stopProgress = RxDouble(0);
@@ -150,7 +149,6 @@ class ActivityMixin {
 
   void initStream() {
     initExerciseTimer();
-    initSpeedTimer();
     initStepStream();
     initPedestrianStatusStream();
   }
@@ -171,36 +169,30 @@ class ActivityMixin {
     }
 
     exerciseTimer = Timer.periodic(const Duration(seconds: 1), (timer) {
-      exerciseTime.value++;
-
-      UserExerciseModel exerciseModel = userState.value.exercise!;
-      exerciseModel.id = userState.value.exercise!.id;
-      exerciseModel.steps = exerciseSteps.value;
-      exerciseModel.speed = avgSpeed.value;
-      exerciseModel.distance = convertKmToMeters(totalDistance.value);
-      exerciseModel.altitude = highestAltitude.value;
-      exerciseModel.time = exerciseTime.value;
-      exerciseModel.locations = coordinatesToString(coordinates);
-
-      HiveStore.saveCurrentUserState(
-        userState: CurrentUserStateModel(
-          state: userState.value.state,
-          exercise: exerciseModel,
-          shoes: userState.value.shoes,
-        ),
-      );
-    });
-  }
-
-  void initSpeedTimer() {
-    if (speedTimer != null) {
-      speedTimer!.cancel();
-      speedTimer = null;
-    }
-
-    speedTimer = Timer.periodic(const Duration(seconds: 1), (timer) {
-      print('speedTimer ${timer}');
+      // 스피드 계산
       calRealtimeSpeed();
+
+      if (exerciseState.value == ExerciseState.ongoing) {
+        exerciseTime.value++;
+
+        print('speedTimer ${timer}');
+        UserExerciseModel exerciseModel = userState.value.exercise!;
+        exerciseModel.id = userState.value.exercise!.id;
+        exerciseModel.steps = exerciseSteps.value;
+        exerciseModel.speed = avgSpeed.value;
+        exerciseModel.distance = convertKmToMeters(totalDistance.value);
+        exerciseModel.altitude = highestAltitude.value;
+        exerciseModel.time = exerciseTime.value;
+        exerciseModel.locations = coordinatesToString(coordinates);
+
+        HiveStore.saveCurrentUserState(
+          userState: CurrentUserStateModel(
+            state: userState.value.state,
+            exercise: exerciseModel,
+            shoes: userState.value.shoes,
+          ),
+        );
+      }
     });
   }
 
@@ -420,8 +412,8 @@ class ActivityMixin {
   void pauseExercise() {
     updateTimer?.cancel();
     updateTimer == null;
-    exerciseTimer?.cancel();
-    exerciseTimer == null;
+    //exerciseTimer?.cancel();
+    //exerciseTimer == null;
     stepSubscription?.cancel();
     stepSubscription == null;
     pedestrianStatusSubscription?.cancel();
@@ -517,8 +509,6 @@ class ActivityMixin {
     updateTimer = null;
     exerciseTimer?.cancel();
     exerciseTimer = null;
-    speedTimer?.cancel();
-    speedTimer = null;
   }
 
   void resetSubscriptions() {
