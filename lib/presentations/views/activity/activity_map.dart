@@ -83,7 +83,8 @@ class ActivityMap extends StatelessWidget {
         Obx(() {
           return NaverMap(
             nightModeEnable: true,
-            mapType: MapType.Navi,
+            mapType: MapType.Basic,
+            activeLayers: [MapLayer.LAYER_GROUP_MOUNTAIN],
             initialCameraPosition: CameraPosition(
               target: LatLng(controller.currentLocation.value.latitude, controller.currentLocation.value.longitude),
               zoom: 15,

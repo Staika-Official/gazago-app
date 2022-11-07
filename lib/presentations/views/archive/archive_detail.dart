@@ -162,7 +162,8 @@ class ArchiveDetail extends StatelessWidget {
                   nightModeEnable: true,
                   forceGesture: true,
                   tiltGestureEnable: false,
-                  mapType: MapType.Navi,
+                  mapType: MapType.Basic,
+                  activeLayers: [MapLayer.LAYER_GROUP_MOUNTAIN],
                   onMapCreated: (mapController) => controller.recordMapCreated(mapController, controller.locations),
                   initialCameraPosition: CameraPosition(
                     target: controller.locations.length > 1 ? controller.locations.first : const LatLng(37.5525, 126.9883),
