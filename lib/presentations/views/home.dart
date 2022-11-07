@@ -64,7 +64,7 @@ class Home extends StatelessWidget {
       onWillPop: () async {
         showAlert(
           title: '알림',
-          contentText: '앱을 종료하시겠습니까?',
+          contentText: '운동 중인 기록은 저장되지 않습니다.\ngazaGO를 종료 하시겠습니까?',
           actions: [
             Expanded(
               child: GazagoButton(

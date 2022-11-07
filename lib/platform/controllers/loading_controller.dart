@@ -14,7 +14,7 @@ import 'package:url_launcher/url_launcher.dart';
 class LoadingController extends GetxController {
   final RxDouble progress = RxDouble(0);
   final RxString progressMessage = RxString("로드중......");
-  late Timer? _timer;
+  Timer? _timer;
   final RxInt time = RxInt(0);
 
   @override
@@ -24,12 +24,6 @@ class LoadingController extends GetxController {
     timerStart();
 
     super.onInit();
-    ever(
-      time,
-      (items) => {
-        if (items > 60) {showRestartAppPopup()}
-      },
-    );
   }
 
   @override
@@ -69,6 +63,12 @@ class LoadingController extends GetxController {
 
     _timer = Timer.periodic(const Duration(seconds: 1), (timer) {
       time.value++;
+
+      print('LoadingController time: ${time.value}');
+      if (time.value > 60) {
+        showRestartAppPopup();
+        timerStop();
+      }
     });
   }
 
