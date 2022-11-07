@@ -49,8 +49,8 @@ class LeaderboardController extends GetxController {
   }
 
   Future<void> refreshController() async {
+    selectedDate.value = DateTime.now();
     _fetchMyRank();
-
     pagingController.itemList = [];
     _fetchRankerList(0);
   }
