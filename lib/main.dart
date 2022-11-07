@@ -69,6 +69,21 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    MaterialColor gazagoColor = const MaterialColor(
+      0xFF0EE6F3,
+      <int, Color>{
+        50: Color(0xFF0EE6F3),
+        100: Color(0xFF0EE6F3),
+        200: Color(0xFF0EE6F3),
+        300: Color(0xFF0EE6F3),
+        400: Color(0xFF0EE6F3),
+        500: Color(0xFF0EE6F3),
+        600: Color(0xFF0EE6F3),
+        700: Color(0xFF0EE6F3),
+        800: Color(0xFF0EE6F3),
+        900: Color(0xFF0EE6F3),
+      },
+    );
     Get.put(GlobalController(), permanent: true);
 
     return GetMaterialApp(
@@ -84,7 +99,7 @@ class MyApp extends StatelessWidget {
       },
       theme: ThemeData(
         fontFamily: 'Pretendard',
-        primarySwatch: Colors.blue,
+        primarySwatch: gazagoColor,
         navigationBarTheme: NavigationBarThemeData(
           indicatorColor: Colors.transparent,
           labelTextStyle: MaterialStateProperty.resolveWith((states) {

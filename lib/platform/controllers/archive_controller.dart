@@ -15,6 +15,7 @@ class ArchiveController extends GetxController with ScrollMixin {
   RxList<ArchiveListItemModel> archiveList = RxList.empty();
   RxInt page = RxInt(0);
   RxBool stopLoading = RxBool(false);
+  RxBool dataGetLoading = RxBool(false);
   Rx<ArchiveDetailItemModel> selectedItem = Rx(ArchiveDetailItemModel());
   RxList<LatLng> get locations {
     List<LatLng> locations = locationStringToLatLng(selectedItem.value.locations!);
@@ -43,12 +44,14 @@ class ArchiveController extends GetxController with ScrollMixin {
   }
 
   Future<void> getArchiveList() async {
+    dataGetLoading.value = true;
     List<ArchiveListItemModel> records = List.empty(growable: true);
     records = await ArchiveService.getArchiveList(page.value);
     if (records.length < 20) {
       stopLoading.value = true;
     }
     archiveList.addAll(records);
+    dataGetLoading.value = false;
   }
 
   void toDetail(int id) async {

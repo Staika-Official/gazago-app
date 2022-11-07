@@ -154,8 +154,8 @@ class ArchiveHome extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.start,
             mainAxisSize: MainAxisSize.min,
             children: [
-              Padding(
-                padding: const EdgeInsets.only(bottom: 15.0),
+              const Padding(
+                padding: EdgeInsets.only(bottom: 15.0),
                 child: StyledText(
                   '운동 기록',
                   fontSize: 20,
@@ -172,53 +172,58 @@ class ArchiveHome extends StatelessWidget {
               //   ),
               // ),
 
-              controller.archiveList.isEmpty
-                  ? Container(
-                      width: double.infinity,
-                      padding: EdgeInsets.symmetric(vertical: 50),
-                      decoration: BoxDecoration(
-                        color: Color(0xff363841),
-                        borderRadius: BorderRadius.circular(12),
-                      ),
-                      child: Column(
-                        mainAxisSize: MainAxisSize.min,
-                        children: [
-                          SvgPicture.asset('assets/images/wallet/ico_empty.svg'),
-                          Padding(
-                            padding: const EdgeInsets.only(top: 20),
-                            child: StyledText(
-                              '운동 기록이 없습니다.',
-                              color: Color(0xff7b7b7b),
-                              fontSize: 16,
-                              lineHeight: 10,
-                              fontWeight: 500,
-                            ),
-                          ),
-                          Padding(
-                            padding: const EdgeInsets.only(top: 13),
-                            child: StyledText(
-                              '운동하고 GO를 쌓아보세요!',
-                              color: Color(0xff7b7b7b),
-                              fontSize: 16,
-                              lineHeight: 10,
-                              fontWeight: 500,
-                            ),
-                          ),
-                        ],
-                      ),
+              controller.dataGetLoading.value
+                  ? const Padding(
+                      padding: EdgeInsets.symmetric(vertical: 20.0),
+                      child: Center(child: CircularProgressIndicator()),
                     )
-                  : Expanded(
-                      child: SingleChildScrollView(
-                        controller: controller.scroll,
-                        physics: ClampingScrollPhysics(),
-                        child: Column(
-                          mainAxisSize: MainAxisSize.min,
-                          children: [
-                            ...renderArchiveList(controller),
-                          ],
+                  : controller.archiveList.isEmpty
+                      ? Container(
+                          width: double.infinity,
+                          padding: EdgeInsets.symmetric(vertical: 50),
+                          decoration: BoxDecoration(
+                            color: Color(0xff363841),
+                            borderRadius: BorderRadius.circular(12),
+                          ),
+                          child: Column(
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              SvgPicture.asset('assets/images/wallet/ico_empty.svg'),
+                              const Padding(
+                                padding: EdgeInsets.only(top: 20),
+                                child: StyledText(
+                                  '운동 기록이 없습니다.',
+                                  color: Color(0xff7b7b7b),
+                                  fontSize: 16,
+                                  lineHeight: 10,
+                                  fontWeight: 500,
+                                ),
+                              ),
+                              const Padding(
+                                padding: EdgeInsets.only(top: 13),
+                                child: StyledText(
+                                  '운동하고 GO를 쌓아보세요!',
+                                  color: Color(0xff7b7b7b),
+                                  fontSize: 16,
+                                  lineHeight: 10,
+                                  fontWeight: 500,
+                                ),
+                              ),
+                            ],
+                          ),
+                        )
+                      : Expanded(
+                          child: SingleChildScrollView(
+                            controller: controller.scroll,
+                            physics: ClampingScrollPhysics(),
+                            child: Column(
+                              mainAxisSize: MainAxisSize.min,
+                              children: [
+                                ...renderArchiveList(controller),
+                              ],
+                            ),
+                          ),
                         ),
-                      ),
-                    ),
             ],
           ),
         );

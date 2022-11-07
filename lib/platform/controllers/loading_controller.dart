@@ -149,8 +149,8 @@ class LoadingController extends GetxController {
             ],
           );
         } else {
-          timerStop();
           Get.offAllNamed(Routes.home);
+          timerStop();
         }
       }
     }
