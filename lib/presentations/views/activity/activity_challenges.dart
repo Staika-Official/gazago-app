@@ -210,7 +210,8 @@ class ActivityChallenges extends StatelessWidget {
                   markers: [
                     if (controller.selectedChallenge.value.id != null) ...renderMaker(controller),
                   ],
-                  mapType: MapType.Navi,
+                  mapType: MapType.Basic,
+                  activeLayers: [MapLayer.LAYER_GROUP_MOUNTAIN],
                   nightModeEnable: true,
                   tiltGestureEnable: false,
                   onMapCreated: controller.onChallengeMapCreated,
