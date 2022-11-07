@@ -97,6 +97,8 @@ class LeaderboardController extends GetxController {
 
   void calendarSelectedChanged(selectedDay) {
     selectedDate.value = selectedDay;
-    refreshController();
+    _fetchMyRank();
+    pagingController.itemList = [];
+    _fetchRankerList(0);
   }
 }
