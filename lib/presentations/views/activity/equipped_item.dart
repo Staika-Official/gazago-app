@@ -301,7 +301,7 @@ class Tile extends StatelessWidget {
                     child: CachedNetworkImage(
                       imageUrl: imageUrl,
                       placeholder: (context, url) => const CircularProgressIndicator(),
-                      errorWidget: (context, url, error) => Image.asset("assets/images/@temp_badge.png"),
+                      errorWidget: (context, url, error) => iconNoBadge,
                       fit: BoxFit.contain,
                     ),
                   ),
