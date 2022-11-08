@@ -32,6 +32,12 @@ class LoadingController extends GetxController {
     super.dispose();
   }
 
+  @override
+  void onClose() {
+    timerStop();
+    super.onClose();
+  }
+
   void showRestartAppPopup() {
     timerStop();
     showAlert(
