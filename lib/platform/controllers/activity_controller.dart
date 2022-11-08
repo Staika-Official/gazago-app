@@ -109,6 +109,7 @@ class ActivityController extends SuperController with ActivityMixin, ChallengeMi
     if (hasPermission.value) {
       await initActivityStatus();
     }
+    await loadChallenges();
   }
 
   Future<void> refreshController() async {
@@ -118,7 +119,6 @@ class ActivityController extends SuperController with ActivityMixin, ChallengeMi
   Future<void> initActivityStatus() async {
     await initializeActivity();
     await loadMakerImages();
-    await loadChallenges();
   }
 
   Future<void> loadMakerImages() async {

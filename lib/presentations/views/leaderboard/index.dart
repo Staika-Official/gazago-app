@@ -164,7 +164,7 @@ class LeaderboardHome extends StatelessWidget {
     );
   }
 
-  Widget renderRanker(RankerModel ranker, int index) {
+  Widget renderRanker(RankerModel ranker) {
     return Container(
       color: const Color(0xFF1D1D26),
       height: 58,
@@ -245,6 +245,7 @@ class LeaderboardHome extends StatelessWidget {
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
+      mainAxisSize: MainAxisSize.min,
       children: [
         const Padding(
           padding: EdgeInsets.only(left: 24),
@@ -393,40 +394,40 @@ class LeaderboardHome extends StatelessWidget {
         Obx(() {
           return (controller.myRank.value != null) ? renderMyRank(controller) : Container();
         }),
-        Expanded(
-          child: PagedListView<int, RankerModel>.separated(
-            pagingController: controller.pagingController,
-            separatorBuilder: (context, index) => const Divider(
-              thickness: 2,
-              indent: 0,
-              endIndent: 0,
-              height: 1,
-              color: Color(0xFF26272F),
-            ),
-            builderDelegate: PagedChildBuilderDelegate<RankerModel>(
-              itemBuilder: (context, item, index) => (renderRanker(item, index)),
-              noItemsFoundIndicatorBuilder: (context) => Center(
-
-                child: Column(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    SvgPicture.asset('assets/images/wallet/ico_empty.svg'),
-                    Padding(
-                      padding: const EdgeInsets.only(top: 20),
-                      child: StyledText(
-                        '랭킹 기록이 없어요.',
-                        color: Color(0xff7b7b7b),
-                        fontSize: 16,
-                        lineHeight: 10,
-                        fontWeight: 500,
-                      ),
-                    ),
-                  ],
+        Obx(() {
+          return (controller.dataGetLoading.value) ? const Padding(
+            padding: EdgeInsets.symmetric(vertical: 20.0),
+            child: Center(child: CircularProgressIndicator()),
+          ) : (controller.rankings.isEmpty) ? Center(
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                SvgPicture.asset('assets/images/wallet/ico_empty.svg'),
+                Padding(
+                  padding: const EdgeInsets.only(top: 20),
+                  child: StyledText(
+                    '랭킹 기록이 없어요.',
+                    color: Color(0xff7b7b7b),
+                    fontSize: 16,
+                    lineHeight: 10,
+                    fontWeight: 500,
+                  ),
                 ),
+              ],
+            ),
+          ) : Flexible(
+            child: SingleChildScrollView(
+              controller: controller.scroll,
+              physics: ClampingScrollPhysics(),
+              child: Column(
+                children: [
+                  ...controller.rankings.map((item) {
+                    return renderRanker(item);
+                  }).toList()],
               ),
             ),
-          ),
-        ),
+          );
+        }),
       ],
     );
   }
