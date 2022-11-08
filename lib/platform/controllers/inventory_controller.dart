@@ -289,23 +289,25 @@ class InventoryController extends GetxController with LinearProgressMixin, Inven
   void fetchRepairShoes(shoeId) async {
     if (walletMasterController.tik.value.amount! >= costTik.value) {
       if (costTik.value > 0) {
-        InventoryItemModel repairModel = await ItemService.fetchRepairItemShoes(
+        await ItemService.fetchRepairItemShoes(
           RepairShoesModel(
             id: shoeId,
             durability: _currentSliderValue.value.toInt(),
             feeTik: costTik.value.toInt(),
           ),
+          successCallback: (repairModel) {
+            InventoryItemModel newRepairModel = repairModel;
+            costTik.value = 0;
+            _currentSliderValue.value = 0;
+            selectedItem.value = newRepairModel;
+            remainDurability.value = newRepairModel.durability.toInt();
+            walletMasterController.getSpendingWalletBalances();
+            getUserAllItems();
+            getUserEquippedItems();
+            showToastPopup('내구도 충전이 완료되었습니다.');
+            closeRepairPopup();
+          },
         );
-
-        costTik.value = 0;
-        _currentSliderValue.value = 0;
-        selectedItem.value = repairModel;
-        remainDurability.value = repairModel.durability.toInt();
-        walletMasterController.getSpendingWalletBalances();
-        getUserAllItems();
-        getUserEquippedItems();
-        showToastPopup('내구도 충전이 완료되었습니다.');
-        closeRepairPopup();
       } else {
         showToastPopup('수리할 내구도가 없습니다.');
       }

@@ -27,10 +27,13 @@ class ItemService {
     return itemDetailInfo;
   }
 
-  static Future<InventoryItemModel> fetchRepairItemShoes(RepairShoesModel repairInfo) async {
+  static Future<void> fetchRepairItemShoes(RepairShoesModel repairInfo, {required Function successCallback, Function? errorCallback}) async {
     Response res = await ItemApi.fetchRepairItemShoes(userId!, repairInfo);
-    InventoryItemModel repairItemInfo = InventoryItemModel.fromJson(res.data);
-    return repairItemInfo;
+    if (res.statusCode == 200) {
+      successCallback(InventoryItemModel.fromJson(res.data));
+    } else {
+      errorCallback!();
+    }
   }
 
   static Future<InventoryItemModel> fetchEquippedItem(int itemId) async {

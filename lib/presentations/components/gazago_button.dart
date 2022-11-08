@@ -6,6 +6,7 @@ class GazagoButton extends StatelessWidget {
   VoidCallback onTap;
   Color textColor;
   Color buttonColor;
+  bool disableButton;
 
   GazagoButton({
     Key? key,
@@ -13,6 +14,7 @@ class GazagoButton extends StatelessWidget {
     required this.onTap,
     this.textColor = Colors.black,
     this.buttonColor = const Color(0xFF0EE6F3),
+    this.disableButton = false,
   }) : super(key: key);
 
   @override
@@ -34,7 +36,7 @@ class GazagoButton extends StatelessWidget {
             ],
           ),
           child: InkWell(
-            onTap: onTap,
+            onTap: disableButton ? null : onTap,
             borderRadius: BorderRadius.circular(8),
             child: Padding(
               padding: const EdgeInsets.symmetric(vertical: 12.0),

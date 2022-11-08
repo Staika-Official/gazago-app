@@ -91,9 +91,12 @@ class ActivityService {
     }
   }
 
-  static Future<UserStateModel> fetchUserStaminaRecharge(UserStaminaRechargeModel rechargeInfo) async {
+  static Future<void> fetchUserStaminaRecharge(UserStaminaRechargeModel rechargeInfo, {required Function successCallback, Function? errorCallback}) async {
     Response res = await ActivityApi.fetchUserStaminaRecharge(userId!, rechargeInfo);
-    UserStateModel userState = UserStateModel.fromJson(res.data);
-    return userState;
+    if (res.statusCode == 200) {
+      successCallback(UserStateModel.fromJson(res.data));
+    } else {
+      errorCallback!();
+    }
   }
 }

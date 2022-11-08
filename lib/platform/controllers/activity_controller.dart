@@ -75,6 +75,7 @@ class ActivityController extends SuperController with ActivityMixin, ChallengeMi
   OverlayImage? endMaker;
   RxInt challengeSelectedIndex = RxInt(-1);
   Control activityLoadControl = Control.play;
+  RxBool disableButton = RxBool(false);
 
   @override
   void onInit() async {
@@ -372,6 +373,7 @@ class ActivityController extends SuperController with ActivityMixin, ChallengeMi
                         Expanded(
                           child: GazagoButton(
                             onTap: () => stat.type == 'STAMINA' ? fetchRechargeStamina(stat.type) : fetchRepairShoes(),
+                            disableButton: disableButton.value,
                             buttonText: '네',
                             buttonColor: const Color(0xFF0EE6F3),
                           ),
@@ -446,51 +448,71 @@ class ActivityController extends SuperController with ActivityMixin, ChallengeMi
   }
 
   void fetchRechargeStamina(type) async {
+    disableButton.value = true;
     if (walletMasterController.tik.value.amount! >= costTik.value) {
       if (costTik.value > 0) {
-        UserStateModel newUserState = await ActivityService.fetchUserStaminaRecharge(
-          UserStaminaRechargeModel(
-            type: type,
-            stat: _currentSliderValue.value.toInt(),
-            feeTik: costTik.value,
-          ),
-        );
-        userState.update((state) {
-          state?.state = newUserState;
+        await ActivityService.fetchUserStaminaRecharge(
+            UserStaminaRechargeModel(
+              type: type,
+              stat: _currentSliderValue.value.toInt(),
+              feeTik: costTik.value,
+            ), successCallback: (userState) {
+          UserStateModel newUserState = userState;
+          this.userState.update((state) {
+            state?.state = newUserState;
+          });
+          walletMasterController.getSpendingWalletBalances();
+          showToastPopup('체력이 충전되었습니다.');
+          closeRepairPopup();
+        }, errorCallback: () {
+          Timer(const Duration(milliseconds: 500), () {
+            disableButton.value = false;
+          });
         });
-        walletMasterController.getSpendingWalletBalances();
-        showToastPopup('체력이 충전되었습니다.');
-        closeRepairPopup();
       } else {
         showToastPopup('충전할 게이지를 확인해주세요.');
       }
     } else {
       handleNotEnoughTaikaPopup();
     }
+
+    Timer(const Duration(milliseconds: 500), () {
+      disableButton.value = false;
+    });
   }
 
   void fetchRepairShoes() async {
+    disableButton.value = true;
     if (walletMasterController.tik.value.amount! >= costTik.value) {
       if (costTik.value > 0) {
-        InventoryItemModel repairModel = await ItemService.fetchRepairItemShoes(
-          RepairShoesModel(
-            id: userState.value.shoes!.id,
-            durability: _currentSliderValue.value.toInt(),
-            feeTik: costTik.value.toInt(),
-          ),
-        );
-        userState.update((state) {
-          state!.shoes!.durability = repairModel.durability;
+        await ItemService.fetchRepairItemShoes(
+            RepairShoesModel(
+              id: userState.value.shoes!.id,
+              durability: _currentSliderValue.value.toInt(),
+              feeTik: costTik.value.toInt(),
+            ), successCallback: (repairModel) {
+          InventoryItemModel newRepairModel = repairModel;
+          userState.update((state) {
+            state!.shoes!.durability = newRepairModel.durability;
+          });
+          walletMasterController.getSpendingWalletBalances();
+          showToastPopup('내구도 충전이 완료되었습니다.');
+          closeRepairPopup();
+        }, errorCallback: () {
+          Timer(const Duration(milliseconds: 500), () {
+            disableButton.value = false;
+          });
         });
-        walletMasterController.getSpendingWalletBalances();
-        showToastPopup('내구도 충전이 완료되었습니다.');
-        closeRepairPopup();
       } else {
         showToastPopup('충전할 게이지를 확인해주세요.');
       }
     } else {
       handleNotEnoughTaikaPopup();
     }
+
+    Timer(const Duration(milliseconds: 500), () {
+      disableButton.value = false;
+    });
   }
 
   void getUserState() async {
