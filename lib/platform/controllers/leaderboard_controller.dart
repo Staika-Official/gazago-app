@@ -21,9 +21,14 @@ class LeaderboardController extends GetxController {
   RxString get formattedDate {
     return RxString(DateFormat('yyyy-MM-dd').format(selectedDate.value!.toLocal()).toString());
   }
+
   RxString get leaderboardDate {
-    return RxString(DateFormat('yyyy.MM.dd').format(selectedDate.value!.toLocal()).toString());
+    if (DateFormat('yyyy-MM-dd').format(selectedDate.value!.toLocal()) == DateFormat('yyyy-MM-dd').format(today.value!.toLocal())) {
+      return RxString('TODAY');
+    }
+    return RxString(DateFormat('yyyy-MM-dd').format(selectedDate.value!.toLocal()).toString());
   }
+
   RxInt size = RxInt(100);
 
   final PagingController<int, RankerModel> pagingController = PagingController(firstPageKey: 0, invisibleItemsThreshold: 10);
