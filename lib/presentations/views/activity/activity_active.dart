@@ -43,7 +43,7 @@ class ActivityActive extends StatelessWidget {
   double calculateGaugePosition(BoxConstraints constraints, double speed) {
     double spaceLeft = constraints.maxWidth - (60 * 3);
     double spacesBetweenBars = spaceLeft / 59;
-    int barStep = (speed > 15 ? 15 : speed / 0.25).floor();
+    int barStep = ((speed > 15 ? 15 : speed) / 0.25).floor();
 
     if (barStep < 2) {
       return 0.5;
