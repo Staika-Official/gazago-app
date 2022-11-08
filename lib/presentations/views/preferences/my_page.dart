@@ -46,9 +46,13 @@ class MyPage extends StatelessWidget {
                                 ? FileImage(
                                     File(controller.pickedImage.value!.path),
                                   )
-                                : CachedNetworkImageProvider(
+                                : controller.profile.value.profileImageUrl != null ? CachedNetworkImageProvider(
                                     controller.profile.value.profileImageUrl!,
-                                  ) as ImageProvider,
+                                  ) as ImageProvider
+                            :Image.asset(
+                              'assets/images/ic_launcher.png',
+                              width: 30,
+                            ).image,
                           ),
                           controller.isEditMode.value
                               ? Positioned(

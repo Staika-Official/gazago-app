@@ -38,9 +38,14 @@ class Preferences extends StatelessWidget {
                           children: [
                             CircleAvatar(
                               radius: 30,
-                              foregroundImage: CachedNetworkImageProvider(
-                                controller.profile.value.profileImageUrl!,
-                              ),
+                              foregroundImage: controller.profile.value.profileImageUrl != null
+                                  ? CachedNetworkImageProvider(
+                                      controller.profile.value.profileImageUrl!,
+                                    )
+                                  : Image.asset(
+                                      'assets/images/ic_launcher.png',
+                                      width: 30,
+                                    ).image,
                             ),
                             Padding(
                               padding: const EdgeInsets.only(left: 14.0),
