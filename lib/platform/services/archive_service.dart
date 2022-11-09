@@ -1,5 +1,3 @@
-import 'dart:ui';
-
 import 'package:dio/dio.dart';
 import 'package:gaza_go/constants/enums.dart';
 import 'package:gaza_go/platform/apis/archive.dart';
@@ -12,26 +10,34 @@ class ArchiveService {
     return HiveStore.loadString(key: HiveKey.userId.name);
   }
 
-  static Future<List<ArchiveListItemModel>> getArchiveList(int page) async {
+  static Future<void> getArchiveList(int page, {required Function successCallback, Function? errorCallback}) async {
     Response res = await ArchiveApi.getArchiveList(userId!, page);
-    List<ArchiveListItemModel> archiveList = List.empty(growable: true);
-    res.data.forEach((archive) {
-      archiveList.add(ArchiveListItemModel.fromJson(archive));
-    });
-    return archiveList;
+    if (res.statusCode == 200) {
+      List<ArchiveListItemModel> archiveList = List.empty(growable: true);
+      res.data.forEach((archive) {
+        archiveList.add(ArchiveListItemModel.fromJson(archive));
+      });
+      successCallback(archiveList);
+    } else {
+      if (errorCallback != null) errorCallback();
+    }
   }
 
-  static Future<ArchiveDetailItemModel> getArchiveItem(int archiveId, String platform) async {
+  static Future<void> getArchiveItem(int archiveId, String platform, {required Function successCallback, Function? errorCallback}) async {
     Response res = await ArchiveApi.getArchiveItem(userId!, archiveId, platform);
-    return ArchiveDetailItemModel.fromJson(res.data);
+    if (res.statusCode == 200) {
+      successCallback(ArchiveDetailItemModel.fromJson(res.data));
+    } else {
+      if (errorCallback != null) errorCallback();
+    }
   }
 
-  static Future<void> deleteArchiveItem(int archiveId, VoidCallback successCallback, VoidCallback errorCallback) async {
+  static Future<void> deleteArchiveItem(int archiveId, {required Function successCallback, Function? errorCallback}) async {
     Response res = await ArchiveApi.deleteArchiveItem(userId!, archiveId);
     if (res.statusCode == 204) {
       successCallback();
     } else {
-      errorCallback();
+      if (errorCallback != null) errorCallback();
     }
   }
 }

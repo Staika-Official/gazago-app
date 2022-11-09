@@ -14,7 +14,7 @@ class BoardService {
       });
       successCallback(termsList);
     } else {
-      errorCallback!();
+      if (errorCallback != null) errorCallback();
     }
   }
 
@@ -29,7 +29,7 @@ class BoardService {
       });
       successCallback(termsList);
     } else {
-      errorCallback!();
+      if (errorCallback != null) errorCallback();
     }
   }
 
@@ -38,7 +38,7 @@ class BoardService {
     if (res.statusCode == 200) {
       successCallback(TermItemModel.fromJson(res.data));
     } else {
-      errorCallback!();
+      if (errorCallback != null) errorCallback();
     }
   }
 }

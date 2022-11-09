@@ -46,17 +46,23 @@ class ArchiveController extends GetxController with ScrollMixin {
   Future<void> getArchiveList() async {
     dataGetLoading.value = true;
     List<ArchiveListItemModel> records = List.empty(growable: true);
-    records = await ArchiveService.getArchiveList(page.value);
-    if (records.length < 20) {
-      stopLoading.value = true;
-    }
-    archiveList.addAll(records);
-    dataGetLoading.value = false;
+    await ArchiveService.getArchiveList(
+      page.value,
+      successCallback: (records) {
+        if (records.length < 20) {
+          stopLoading.value = true;
+        }
+        archiveList.addAll(records);
+        dataGetLoading.value = false;
+      },
+    );
   }
 
   void toDetail(int id) async {
-    selectedItem.value = await ArchiveService.getArchiveItem(id, Platform.operatingSystem);
-    Get.toNamed(Routes.archiveDetail);
+    await ArchiveService.getArchiveItem(id, Platform.operatingSystem, successCallback: (archive) {
+      selectedItem.value = archive;
+      Get.toNamed(Routes.archiveDetail);
+    });
   }
 
   void recordMapCreated(NaverMapController controller, RxList<LatLng> locations) {
@@ -108,7 +114,7 @@ class ArchiveController extends GetxController with ScrollMixin {
         Expanded(
           child: GazagoButton(
             onTap: () {
-              ArchiveService.deleteArchiveItem(id, successCallback, errorCallback);
+              ArchiveService.deleteArchiveItem(id, successCallback: successCallback, errorCallback: errorCallback);
             },
             buttonText: '삭제하기',
             buttonColor: const Color(0xFF0EE6F3),

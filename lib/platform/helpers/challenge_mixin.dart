@@ -232,6 +232,6 @@ class ChallengeMixin {
       HiveStore.save(key: HiveKey.badgeIssuanceRequested.name, value: true.toString());
     }
 
-    await BadgeService.fetchUserIssuanceBadge(userState.exercise!.id!, successCallback, errorCallback);
+    await BadgeService.fetchUserIssuanceBadge(userState.exercise!.id!, successCallback: successCallback, errorCallback: errorCallback);
   }
 }
