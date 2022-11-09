@@ -242,159 +242,206 @@ class LeaderboardHome extends StatelessWidget {
   Widget build(BuildContext context) {
     LeaderboardController controller = Get.put(LeaderboardController());
     ActivityController activityController = Get.find();
-
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      mainAxisSize: MainAxisSize.min,
-      children: [
-        const Padding(
-          padding: EdgeInsets.only(left: 24),
-          child: StyledText(
-            '오늘의 GO',
-            color: Color(0xFF0EE6F3),
-            fontWeight: 700,
-            fontSize: 24,
-            lineHeight: 32,
-          ),
-        ),
-        Padding(
-          padding: const EdgeInsets.only(left: 23.0, top: 6.0),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.start,
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              iconStatisticsTokenGo,
-              Padding(
-                padding: const EdgeInsets.only(left: 10.0),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Obx(() {
-                      return Row(
-                        children: [
-                          StyledText(
-                            '${activityController.userState.value.state != null ? formatDecimalPlaces(activityController.userState.value.state!.dailyGoReward!, 2) : 0}',
-                            color: Colors.white,
-                            fontWeight: 600,
-                            fontSize: 30,
-                            lineHeight: 28,
-                          ),
-                          const Padding(
-                            padding: EdgeInsets.only(left: 2.0),
-                            child: StyledText(
-                              'GO',
-                              color: Colors.white,
-                              fontWeight: 500,
-                              fontSize: 18,
-                              lineHeight: 20,
-                            ),
-                          ),
-                        ],
-                      );
-                    }),
-                  ],
-                ),
-              )
-            ],
-          ),
-        ),
-        Container(
-          margin: const EdgeInsets.only(top: 18, left: 18, right: 22),
-          decoration: BoxDecoration(
-            color: const Color(0xFF2E3038),
-            border: Border.all(
-              width: 1,
-              color: const Color(0xFF2E3038),
-            ),
-            borderRadius: const BorderRadius.all(
-              Radius.circular(12),
+    return Obx(() {
+      return Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          const Padding(
+            padding: EdgeInsets.only(left: 24),
+            child: StyledText(
+              '오늘의 GO',
+              color: Color(0xFF0EE6F3),
+              fontWeight: 700,
+              fontSize: 24,
+              lineHeight: 32,
             ),
           ),
-          child: Padding(
-            padding: const EdgeInsets.all(20.0),
-            child: Column(
+          Padding(
+            padding: const EdgeInsets.only(left: 23.0, top: 6.0),
+            child: Row(
               mainAxisAlignment: MainAxisAlignment.start,
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Row(
-                  children: const [
-                    StyledText(
-                      'TIK은 매일 자정(KST)에 배분됩니다.',
-                      color: Colors.white,
-                      fontWeight: 500,
-                      fontSize: 16,
-                      lineHeight: 21,
-                    ),
-                  ],
-                ),
-                InkWell(
-                  onTap: () => controller.goPageCalendarStatistics(),
-                  child: Row(
-                    crossAxisAlignment: CrossAxisAlignment.center,
+                iconStatisticsTokenGo,
+                Padding(
+                  padding: const EdgeInsets.only(left: 10.0),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      const StyledText(
-                        'TIK 획득내역',
-                        color: Color(0xFF0EE6F3),
-                        fontWeight: 400,
-                        fontSize: 14,
-                        lineHeight: 21,
-                      ),
-                      Padding(
-                        padding: const EdgeInsets.only(top: 2.5),
-                        child: iconLeaderboardRightArrow,
-                      )
+                      Obx(() {
+                        return Row(
+                          children: [
+                            StyledText(
+                              '${activityController.userState.value.state != null ? formatDecimalPlaces(activityController.userState.value.state!.dailyGoReward!, 2) : 0}',
+                              color: Colors.white,
+                              fontWeight: 600,
+                              fontSize: 30,
+                              lineHeight: 28,
+                            ),
+                            const Padding(
+                              padding: EdgeInsets.only(left: 2.0),
+                              child: StyledText(
+                                'GO',
+                                color: Colors.white,
+                                fontWeight: 500,
+                                fontSize: 18,
+                                lineHeight: 20,
+                              ),
+                            ),
+                          ],
+                        );
+                      }),
                     ],
                   ),
-                ),
+                )
               ],
             ),
           ),
-        ),
-        Container(
-          padding: const EdgeInsets.only(top: 38, left: 25, right: 18, bottom: 12),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: [
-              const StyledText(
-                '리더보드',
-                color: Colors.white,
-                fontSize: 20,
-                fontWeight: 600,
+          Container(
+            margin: const EdgeInsets.only(top: 18, left: 18, right: 22),
+            decoration: BoxDecoration(
+              color: const Color(0xFF2E3038),
+              border: Border.all(
+                width: 1,
+                color: const Color(0xFF2E3038),
               ),
-              InkWell(
-                onTap: () => {
-                  showBarModalBottomSheet(
-                    context: context,
-                    builder: (context) => showBottomCalender(context, controller),
-                  )
-                },
-                child: Row(
+              borderRadius: const BorderRadius.all(
+                Radius.circular(12),
+              ),
+            ),
+            child: Padding(
+              padding: const EdgeInsets.all(20.0),
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.start,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Row(
+                    children: const [
+                      StyledText(
+                        'TIK은 매일 자정(KST)에 다.',
+                        color: Colors.white,
+                        fontWeight: 500,
+                        fontSize: 16,
+                        lineHeight: 21,
+                      ),
+                    ],
+                  ),
+                  InkWell(
+                    onTap: () => controller.goPageCalendarStatistics(),
+                    child: Row(
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: [
+                        const StyledText(
+                          'TIK 획득내역',
+                          color: Color(0xFF0EE6F3),
+                          fontWeight: 400,
+                          fontSize: 14,
+                          lineHeight: 21,
+                        ),
+                        Padding(
+                          padding: const EdgeInsets.only(top: 2.5),
+                          child: iconLeaderboardRightArrow,
+                        )
+                      ],
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ),
+          Container(
+            padding: const EdgeInsets.only(top: 38, left: 25, right: 18, bottom: 12),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                const StyledText(
+                  '리더보드',
+                  color: Colors.white,
+                  fontSize: 20,
+                  fontWeight: 600,
+                ),
+                InkWell(
+                  onTap: () => {
+                    showBarModalBottomSheet(
+                      context: context,
+                      builder: (context) => showBottomCalender(context, controller),
+                    )
+                  },
+                  child: Row(
+                    mainAxisSize: MainAxisSize.min,
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      Obx(() {
+                        return StyledText(
+                          controller.leaderboardDate.value,
+                          color: const Color(0xFFBFBFBF),
+                          fontSize: 12,
+                          fontWeight: 600,
+                        );
+                      }),
+                      //StyledText(controller.leaderboardDate.value!, color: const Color(0xFF747474), fontSize: 12, fontWeight: 600,),
+                      const Padding(padding: EdgeInsets.only(left: 8)),
+                      iconCalendar
+                      //Text(controller.formattedDate.value)
+                    ],
+                  ),
+                )
+              ],
+            ),
+          ),
+          (controller.myRank.value != null) ? renderMyRank(controller) : Container(),
+          Expanded(
+              child: (controller.dataGetLoading.value) ? const Padding(
+                padding: EdgeInsets.symmetric(vertical: 20.0),
+                child: Center(child: CircularProgressIndicator()),
+              ) : (controller.rankings.isEmpty) ? Center(
+                child: Column(
                   mainAxisSize: MainAxisSize.min,
-                  crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
-                    Obx(() {
-                      return StyledText(
-                        controller.leaderboardDate.value,
-                        color: const Color(0xFFBFBFBF),
-                        fontSize: 12,
-                        fontWeight: 600,
-                      );
-                    }),
-                    //StyledText(controller.leaderboardDate.value!, color: const Color(0xFF747474), fontSize: 12, fontWeight: 600,),
-                    const Padding(padding: EdgeInsets.only(left: 8)),
-                    iconCalendar
-                    //Text(controller.formattedDate.value)
+                    SvgPicture.asset('assets/images/wallet/ico_empty.svg'),
+                    Padding(
+                      padding: const EdgeInsets.only(top: 20),
+                      child: StyledText(
+                        '랭킹 기록이 없어요.',
+                        color: Color(0xff7b7b7b),
+                        fontSize: 16,
+                        lineHeight: 10,
+                        fontWeight: 500,
+                      ),
+                    ),
                   ],
                 ),
+              ) : Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Flexible(
+                    child: ListView.separated(
+                        controller: controller.scroll,
+                        separatorBuilder: (context, index) => const Divider(
+                          thickness: 2,
+                          indent: 0,
+                          endIndent: 0,
+                          height: 1,
+                          color: Color(0xFF26272F),
+                        ),
+                        itemCount: controller.rankings.length + 1,
+                        itemBuilder: (context, index) {
+                          if (index < controller.rankings.length) {
+                            return renderRanker(controller.rankings[index]);
+                          } else {
+                            return (controller.hasMore.value) ? const Padding(
+                                padding: EdgeInsets.symmetric(vertical: 20.0),
+                                child: Center(child: CircularProgressIndicator())) : Container();
+                          }
+                        },
+                    )
+                  ),
+                ],
               )
-            ],
-          ),
-        ),
-        Obx(() {
-          return (controller.myRank.value != null) ? renderMyRank(controller) : Container();
-        }),
-        Obx(() {
+          )
+          /*Obx(() {
           return (controller.dataGetLoading.value) ? const Padding(
             padding: EdgeInsets.symmetric(vertical: 20.0),
             child: Center(child: CircularProgressIndicator()),
@@ -415,7 +462,40 @@ class LeaderboardHome extends StatelessWidget {
                 ),
               ],
             ),
-          ) : Flexible(
+          ) : Container(
+            height: 200,
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Expanded(
+                  child: ListView.separated(
+                        itemCount: 25,
+                        shrinkWrap: true,
+                        separatorBuilder: (BuildContext context, int index) => const Divider(),
+                        itemBuilder: (BuildContext context, int index) {
+                          return Container(
+                            height: 10,
+                            child: ListTile(
+                              title: Text('item $index'),
+                            ),
+                          );
+                        },
+                        *//*separatorBuilder: (context, index) => const Divider(
+                          thickness: 2,
+                          indent: 0,
+                          endIndent: 0,
+                          height: 1,
+                          color: Color(0xFF26272F),
+                        ),
+                        itemBuilder: (context, index) => (renderRanker(controller.rankings[index])),
+                        itemCount: controller.rankings.length,*//*
+                      ),
+                ),
+              ],
+            ),
+          );
+
+          *//*Flexible(
             child: SingleChildScrollView(
               controller: controller.scroll,
               physics: ClampingScrollPhysics(),
@@ -426,9 +506,11 @@ class LeaderboardHome extends StatelessWidget {
                   }).toList()],
               ),
             ),
-          );
-        }),
-      ],
-    );
+          );*//*
+        }),*/
+        ],
+      );
+    });
+
   }
 }

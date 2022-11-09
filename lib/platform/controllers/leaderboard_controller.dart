@@ -17,8 +17,8 @@ class LeaderboardController extends GetxController with ScrollMixin {
   Rx<DateTime?> firstDay = Rx(DateTime.utc(2022, 1, 1));
   Rx<DateTime?> lastDay = Rx(DateTime.utc(2050, 12, 31));
   Rx<RankerModel?> myRank = Rxn<RankerModel>();
-  List<RankerModel> rankings = RxList(List.empty());
-  RxBool stopLoading = RxBool(false);
+  RxList<RankerModel> rankings = RxList.empty();
+  RxBool hasMore = RxBool(true);
   RxBool dataGetLoading = RxBool(false);
 
   RxString get formattedDate {
@@ -48,54 +48,40 @@ class LeaderboardController extends GetxController with ScrollMixin {
 
   Future<void> initController() async {
     _fetchMyRank();
-    _fetchRankerList();
+    _fetchRankerList(true);
   }
 
   Future<void> refreshController() async {
     selectedDate.value = DateTime.now();
-    rankings = [];
-    page.value = 0;
     _fetchMyRank();
-    _fetchRankerList();
+    _fetchRankerList(true);
   }
 
-  Future<void> _fetchRankerList() async {
-    dataGetLoading.value = true;
-
-    print('_fetchPage page: ${page.value} size: ${size.value}');
-    try {
-      List<RankerModel> rankingList = await DashboardService.getDailyRankingList(formattedDate.value, page.value, size.value);
-      rankingList.asMap().forEach((index, ranker) {
-        ranker.rank = (index + 1) + (page.value * size.value);
-      });
-      rankings = rankingList;
-      /*final isLastPage = rankingList.length < size.value;
-      if (isLastPage) {
-        pagingController.appendLastPage(rankingList);
-      } else {
-        final newPage = page + 1;
-        pagingController.appendPage(rankingList, newPage);
-      }*/
-    } catch (error) {
-      print(error);
+  Future<void> _fetchRankerList(bool reset) async {
+    if (reset) {
+      page.value = 0;
+      rankings.clear();
+      hasMore.value = true;
+      dataGetLoading.value = true;
     }
-
-    dataGetLoading.value = false;
+    List<RankerModel> rankingList = await DashboardService.getDailyRankingList(formattedDate.value, page.value, size.value);
+    if (rankingList.length < size.value) {
+      hasMore.value = false;
+    }
+    rankingList.asMap().forEach((index, ranker) {
+      ranker.rank = (index + 1) + (page.value * size.value);
+    });
+    rankings.addAll(rankingList);
+    if (reset) {
+      dataGetLoading.value = false;
+    }
+    rankings.refresh();
   }
 
   void _fetchMyRank() {
     DashboardService.getDailyRankingMyRank(formattedDate.value).then((data) {
       myRank.value = data;
-      print(myRank.value?.profileImageUrl);
     });
-  }
-
-  void showCalendar(BuildContext context) async {
-    DateTime? pickedDate = await showDatePicker(context: context, firstDate: DateTime(2022, 9, 1), lastDate: DateTime.now(), initialDate: selectedDate.value!);
-    if (pickedDate != null) {
-      selectedDate.value = pickedDate;
-      _fetchMyRank();
-    }
   }
 
   goPageCalendarStatistics() {
@@ -105,22 +91,19 @@ class LeaderboardController extends GetxController with ScrollMixin {
   void calendarSelectedChanged(selectedDay) {
     selectedDate.value = selectedDay;
     _fetchMyRank();
-    rankings = [];
-    _fetchRankerList();
+    _fetchRankerList(true);
   }
 
   @override
   Future<void> onEndScroll() async {
-    print('end reached');
-    if (!stopLoading.value) {
+    if (hasMore.value) {
       page.value = page.value + 1;
-      _fetchRankerList();
+      _fetchRankerList(false);
     }
   }
 
   @override
   Future<void> onTopScroll() {
-    print('top reached');
     return Future.delayed(
       Duration(milliseconds: 10),
           () {
