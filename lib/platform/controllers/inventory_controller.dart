@@ -8,7 +8,6 @@ import 'package:gaza_go/platform/helpers/alert_helper.dart';
 import 'package:gaza_go/platform/helpers/base_helper.dart';
 import 'package:gaza_go/platform/helpers/inventory_mixin.dart';
 import 'package:gaza_go/platform/helpers/linear_progress_mixin.dart';
-import 'package:gaza_go/platform/models/equipped_item_model.dart';
 import 'package:gaza_go/platform/models/inventory_badge_item_model.dart';
 import 'package:gaza_go/platform/models/inventory_badge_list_model.dart';
 import 'package:gaza_go/platform/models/inventory_badge_model.dart';
@@ -235,24 +234,27 @@ class InventoryController extends GetxController with LinearProgressMixin, Inven
   }
 
   void getUserEquippedItems() async {
-    EquippedItemModel equippedItems = await ActivityService.getUserEquippedItem();
-    equippedItemList.value = equippedItems.items;
-    if (equippedItems.badge != null) {
-      equippedBadge.update((state) {
-        state!.badge.imageUrl = equippedItems.badge!.imageUrl;
-        state.badge.rewardRate = equippedItems.badge!.rewardRate;
-        state.badge.level = equippedItems.badge!.level;
-        state.badge.luckRate = equippedItems.badge!.luckRate;
-        state.badge.name = equippedItems.badge!.name;
-        state.badge.id = equippedItems.badge!.badgeId;
-      });
-    } else {
-      equippedBadge.update((state) {
-        state!.badge.imageUrl = 'assets/images/@temp_badge.png';
-      });
-    }
+    await ActivityService.getUserEquippedItem(
+      successCallback: (equippedItems) {
+        equippedItemList.value = equippedItems.items;
+        if (equippedItems.badge != null) {
+          equippedBadge.update((state) {
+            state!.badge.imageUrl = equippedItems.badge!.imageUrl;
+            state.badge.rewardRate = equippedItems.badge!.rewardRate;
+            state.badge.level = equippedItems.badge!.level;
+            state.badge.luckRate = equippedItems.badge!.luckRate;
+            state.badge.name = equippedItems.badge!.name;
+            state.badge.id = equippedItems.badge!.badgeId;
+          });
+        } else {
+          equippedBadge.update((state) {
+            state!.badge.imageUrl = 'assets/images/@temp_badge.png';
+          });
+        }
 
-    remainDurability.value = equippedItems.items.firstWhere((element) => element.itemCategory == 'SHOES').durability.floor();
+        remainDurability.value = equippedItems.items.firstWhere((element) => element.itemCategory == 'SHOES').durability.floor();
+      },
+    );
   }
 
   void fetchEquipItem(int itemId) async {

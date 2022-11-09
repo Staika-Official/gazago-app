@@ -516,53 +516,56 @@ class ActivityController extends SuperController with ActivityMixin, ChallengeMi
   }
 
   void getUserState() async {
-    CurrentUserStateModel currentUserState = await ActivityService.getCurrentUserState();
-    userState.update((state) {
-      state?.state = currentUserState.state;
-      state?.exercise = currentUserState.exercise;
-      state?.shoes = currentUserState.shoes;
-    });
-    exerciseState.value = ExerciseState.ready;
-
-    if (userState.value.exercise != null && userState.value.exercise!.state == 'ONGOING') {
-      CurrentUserStateModel? savedUserState = HiveStore.loadCurrentUserState();
-      if (savedUserState != null) {
+    await ActivityService.getCurrentUserState(
+      successCallback: (currentUserState) async {
         userState.update((state) {
-          state?.exercise = savedUserState.exercise;
+          state?.state = currentUserState.state;
+          state?.exercise = currentUserState.exercise;
+          state?.shoes = currentUserState.shoes;
         });
+        exerciseState.value = ExerciseState.ready;
 
-        int savedSteps = HiveStore.load(key: HiveKey.savedStepCount.name) ?? 0;
-        if (savedUserState.exercise!.steps! > savedSteps) {
-          HiveStore.save(key: HiveKey.savedStepCount.name, value: savedUserState.exercise!.steps!);
+        if (userState.value.exercise != null && userState.value.exercise!.state == 'ONGOING') {
+          CurrentUserStateModel? savedUserState = HiveStore.loadCurrentUserState();
+          if (savedUserState != null) {
+            userState.update((state) {
+              state?.exercise = savedUserState.exercise;
+            });
+
+            int savedSteps = HiveStore.load(key: HiveKey.savedStepCount.name) ?? 0;
+            if (savedUserState.exercise!.steps! > savedSteps) {
+              HiveStore.save(key: HiveKey.savedStepCount.name, value: savedUserState.exercise!.steps!);
+            }
+          }
+
+          if (userState.value.exercise?.challengeId != null) {
+            //  산행중인 정보 가져오기
+            ChallengeModel challenge = await getChallenge(userState.value.exercise!.challengeId!);
+            if (challenge.id != null) {
+              selectedChallenge.value = challenge;
+            }
+          }
+          if (updateTimer == null) {
+            exerciseData.value = List.empty(growable: true);
+            exerciseData.add(userState.value.exercise!);
+            exerciseTime.value = userState.value.exercise!.time!;
+            exerciseSteps.value = userState.value.exercise!.steps!;
+            exerciseDistance.value = userState.value.exercise!.distance!;
+
+            coordinates.value = List.empty(growable: true);
+            if (userState.value.exercise!.locations != null) {
+              coordinates.addAll(parseCoordinates());
+            }
+
+            exerciseState.value = ExerciseState.paused;
+          } else {
+            exerciseState.value = ExerciseState.ongoing;
+          }
         }
-      }
 
-      if (userState.value.exercise?.challengeId != null) {
-        //  산행중인 정보 가져오기
-        ChallengeModel challenge = await getChallenge(userState.value.exercise!.challengeId!);
-        if (challenge.id != null) {
-          selectedChallenge.value = challenge;
-        }
-      }
-      if (updateTimer == null) {
-        exerciseData.value = List.empty(growable: true);
-        exerciseData.add(userState.value.exercise!);
-        exerciseTime.value = userState.value.exercise!.time!;
-        exerciseSteps.value = userState.value.exercise!.steps!;
-        exerciseDistance.value = userState.value.exercise!.distance!;
-
-        coordinates.value = List.empty(growable: true);
-        if (userState.value.exercise!.locations != null) {
-          coordinates.addAll(parseCoordinates());
-        }
-
-        exerciseState.value = ExerciseState.paused;
-      } else {
-        exerciseState.value = ExerciseState.ongoing;
-      }
-    }
-
-    if (Get.isRegistered<LoadingController>()) Get.find<LoadingController>().updateProgress("곧 가자고와 가자고~!");
+        if (Get.isRegistered<LoadingController>()) Get.find<LoadingController>().updateProgress("곧 가자고와 가자고~!");
+      },
+    );
   }
 
   requestExerciseInitialization() async {
