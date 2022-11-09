@@ -93,6 +93,7 @@ dependencies:
   flutter_native_splash: ^2.2.13
 
   carousel_slider: ^4.1.1
+  solana: ^0.26.2
 
 
 dev_dependencies:
