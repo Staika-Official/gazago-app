@@ -1,5 +1,3 @@
-import 'dart:developer';
-
 import 'package:another_xlider/another_xlider.dart';
 import 'package:flutter/material.dart';
 import 'package:gaza_go/constants/routes.dart';
@@ -211,11 +209,14 @@ class InventoryController extends GetxController with LinearProgressMixin, Inven
   }
 
   void toItemDetail(int itemId) async {
-    InventoryItemModel item = await ItemService.getItemDetailInfo(itemId);
-    inspect(item);
-    selectedItem.value = item;
-    isShoe.value = selectedItem.value.itemCategory == 'SHOES';
-    Get.toNamed(Routes.itemDetail);
+    await ItemService.getItemDetailInfo(
+      itemId,
+      successCallback: (item) {
+        selectedItem.value = item;
+        isShoe.value = selectedItem.value.itemCategory == 'SHOES';
+        Get.toNamed(Routes.itemDetail);
+      },
+    );
   }
 
   void toBadgeDetail(int id) {
@@ -225,12 +226,11 @@ class InventoryController extends GetxController with LinearProgressMixin, Inven
   }
 
   void getUserAllItems() async {
-    List<InventoryItemModel> allItems = await ItemService.getAllMyItems();
-    // List<InventoryItemModel> test = List.empty(growable: true);
-    // for (int i = 0; i < 10; i++) {
-    //   test.add(allItems[0]);
-    // }
-    myAllItems.value = allItems;
+    await ItemService.getAllMyItems(
+      successCallback: (allItems) {
+        myAllItems.value = allItems;
+      },
+    );
   }
 
   void getUserEquippedItems() async {
@@ -258,25 +258,31 @@ class InventoryController extends GetxController with LinearProgressMixin, Inven
   }
 
   void fetchEquipItem(int itemId) async {
-    InventoryItemModel equippedItem = await ItemService.fetchEquippedItem(itemId);
-
-    InventoryItemModel item = await ItemService.getItemDetailInfo(itemId);
-    selectedItem.value = item;
-    getUserAllItems();
-    getUserEquippedItems();
-    showToastPopup('아이템이 장착되었습니다.');
+    await ItemService.getItemDetailInfo(
+      itemId,
+      successCallback: (item) {
+        selectedItem.value = item;
+        getUserAllItems();
+        getUserEquippedItems();
+        showToastPopup('아이템이 장착되었습니다.');
+      },
+    );
   }
 
   void fetchEquipBadge(int badgeId) async {
-    InventoryBadgeModel equippedBadgeItem = await ItemService.fetchEquippedBadge(badgeId);
-    equippedBadge.value = equippedBadgeItem;
-    if (selectedBadge.value.badgeId == badgeId) {
-      selectedBadge.update((state) {
-        state?.state = 'EQUIPPED';
-      });
-    }
-    getUserBadgesList();
-    showToastPopup('뱃지가 장착되었습니다.');
+    await ItemService.fetchEquippedBadge(
+      badgeId,
+      successCallback: (equippedBadgeItem) {
+        equippedBadge.value = equippedBadgeItem;
+        if (selectedBadge.value.badgeId == badgeId) {
+          selectedBadge.update((state) {
+            state?.state = 'EQUIPPED';
+          });
+        }
+        getUserBadgesList();
+        showToastPopup('뱃지가 장착되었습니다.');
+      },
+    );
   }
 
   void setGetBadgeDate(int id) {
