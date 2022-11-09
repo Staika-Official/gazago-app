@@ -36,7 +36,7 @@ class MyPage extends StatelessWidget {
                     width: 70,
                     height: 70,
                     child: InkWell(
-                      onTap: () => controller.pickImage(),
+                      onTap: controller.isEditMode.value ? () => controller.pickImage() : null,
                       child: Stack(
                         alignment: Alignment.center,
                         children: [
@@ -46,13 +46,14 @@ class MyPage extends StatelessWidget {
                                 ? FileImage(
                                     File(controller.pickedImage.value!.path),
                                   )
-                                : controller.profile.value.profileImageUrl != null ? CachedNetworkImageProvider(
-                                    controller.profile.value.profileImageUrl!,
-                                  ) as ImageProvider
-                            :Image.asset(
-                              'assets/images/ic_launcher.png',
-                              width: 30,
-                            ).image,
+                                : controller.profile.value.profileImageUrl != null
+                                    ? CachedNetworkImageProvider(
+                                        controller.profile.value.profileImageUrl!,
+                                      )
+                                    : Image.asset(
+                                        'assets/images/ic_launcher.png',
+                                        width: 30,
+                                      ).image,
                           ),
                           controller.isEditMode.value
                               ? Positioned(
