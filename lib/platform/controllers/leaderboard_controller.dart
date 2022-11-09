@@ -9,7 +9,7 @@ import 'package:infinite_scroll_pagination/infinite_scroll_pagination.dart';
 import 'package:intl/intl.dart';
 import 'package:table_calendar/table_calendar.dart';
 
-class LeaderboardController extends GetxController {
+class LeaderboardController extends GetxController with ScrollMixin {
   Rx<DateTime?> selectedDate = Rx(DateTime.now());
   CalendarFormat calendarFormat = CalendarFormat.month;
   Rx<DateTime?> today = Rx(DateTime.now());
@@ -17,6 +17,9 @@ class LeaderboardController extends GetxController {
   Rx<DateTime?> firstDay = Rx(DateTime.utc(2022, 1, 1));
   Rx<DateTime?> lastDay = Rx(DateTime.utc(2050, 12, 31));
   Rx<RankerModel?> myRank = Rxn<RankerModel>();
+  RxList<RankerModel> rankings = RxList.empty();
+  RxBool hasMore = RxBool(true);
+  RxBool dataGetLoading = RxBool(false);
 
   RxString get formattedDate {
     return RxString(DateFormat('yyyy-MM-dd').format(selectedDate.value!.toLocal()).toString());
@@ -29,9 +32,8 @@ class LeaderboardController extends GetxController {
     return RxString(DateFormat('yyyy-MM-dd').format(selectedDate.value!.toLocal()).toString());
   }
 
+  RxInt page = RxInt(0);
   RxInt size = RxInt(100);
-
-  final PagingController<int, RankerModel> pagingController = PagingController(firstPageKey: 0, invisibleItemsThreshold: 10);
 
   @override
   void onInit() {
@@ -41,59 +43,45 @@ class LeaderboardController extends GetxController {
 
   @override
   void dispose() {
-    pagingController.dispose();
     super.dispose();
   }
 
   Future<void> initController() async {
     _fetchMyRank();
-
-    pagingController.addPageRequestListener((pageKey) {
-      _fetchRankerList(pageKey);
-    });
+    _fetchRankerList(true);
   }
 
   Future<void> refreshController() async {
     selectedDate.value = DateTime.now();
     _fetchMyRank();
-    pagingController.itemList = [];
-    _fetchRankerList(0);
+    _fetchRankerList(true);
   }
 
-  Future<void> _fetchRankerList(int page) async {
-    print('_fetchPage page: ${page} size: ${size.value}');
-    try {
-      List<RankerModel> rankingList = await DashboardService.getDailyRankingList(formattedDate.value, page, size.value);
-      rankingList.asMap().forEach((index, ranker) {
-        ranker.rank = (index + 1) + (page * size.value);
-      });
-
-      final isLastPage = rankingList.length < size.value;
-      if (isLastPage) {
-        pagingController.appendLastPage(rankingList);
-      } else {
-        final newPage = page + 1;
-        pagingController.appendPage(rankingList, newPage);
-      }
-    } catch (error) {
-      print(error);
-      pagingController.error = error;
+  Future<void> _fetchRankerList(bool reset) async {
+    if (reset) {
+      page.value = 0;
+      rankings.clear();
+      hasMore.value = true;
+      dataGetLoading.value = true;
     }
+    List<RankerModel> rankingList = await DashboardService.getDailyRankingList(formattedDate.value, page.value, size.value);
+    if (rankingList.length < size.value) {
+      hasMore.value = false;
+    }
+    rankingList.asMap().forEach((index, ranker) {
+      ranker.rank = (index + 1) + (page.value * size.value);
+    });
+    rankings.addAll(rankingList);
+    if (reset) {
+      dataGetLoading.value = false;
+    }
+    rankings.refresh();
   }
 
   void _fetchMyRank() {
     DashboardService.getDailyRankingMyRank(formattedDate.value).then((data) {
       myRank.value = data;
-      print(myRank.value?.profileImageUrl);
     });
-  }
-
-  void showCalendar(BuildContext context) async {
-    DateTime? pickedDate = await showDatePicker(context: context, firstDate: DateTime(2022, 9, 1), lastDate: DateTime.now(), initialDate: selectedDate.value!);
-    if (pickedDate != null) {
-      selectedDate.value = pickedDate;
-      _fetchMyRank();
-    }
   }
 
   goPageCalendarStatistics() {
@@ -103,7 +91,24 @@ class LeaderboardController extends GetxController {
   void calendarSelectedChanged(selectedDay) {
     selectedDate.value = selectedDay;
     _fetchMyRank();
-    pagingController.itemList = [];
-    _fetchRankerList(0);
+    _fetchRankerList(true);
+  }
+
+  @override
+  Future<void> onEndScroll() async {
+    if (hasMore.value) {
+      page.value = page.value + 1;
+      _fetchRankerList(false);
+    }
+  }
+
+  @override
+  Future<void> onTopScroll() {
+    return Future.delayed(
+      Duration(milliseconds: 10),
+          () {
+        print('top reached');
+      },
+    );
   }
 }
