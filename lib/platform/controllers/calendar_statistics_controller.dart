@@ -1,12 +1,8 @@
 import 'dart:async';
 
-import 'package:flutter/material.dart';
-import 'package:gaza_go/constants/routes.dart';
-import 'package:gaza_go/platform/models/ranker_model.dart';
 import 'package:gaza_go/platform/models/user_reward_statistics_model.dart';
 import 'package:gaza_go/platform/services/dashboard_service.dart';
 import 'package:get/get.dart';
-import 'package:infinite_scroll_pagination/infinite_scroll_pagination.dart';
 import 'package:intl/intl.dart';
 import 'package:table_calendar/table_calendar.dart';
 
@@ -42,13 +38,18 @@ class CalendarStatisticsController extends GetxController {
   }
 
   void getCalendarStatistics(month) async {
-    List<UserRewardStatisticsModel> list = await DashboardService.getUserRewardStatistics('monthly', month);
-    total.value = 0;
-    for (var item in list) {
-      userMonthlyRewardMap[item.date!] = [item];
-      total.value += item.tik;
-    }
-    streamController.add(userMonthlyRewardMap);
+    await DashboardService.getUserRewardStatistics(
+      'monthly',
+      month,
+      successCallback: (list) {
+        total.value = 0;
+        for (var item in list) {
+          userMonthlyRewardMap[item.date!] = [item];
+          total.value += item.tik;
+        }
+        streamController.add(userMonthlyRewardMap);
+      },
+    );
   }
 
   List<UserRewardStatisticsModel> findCalendarStatisticsData(date) {

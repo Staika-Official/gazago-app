@@ -7,7 +7,6 @@ import 'package:gaza_go/platform/models/ranker_model.dart';
 import 'package:gaza_go/presentations/styles/icons.dart';
 import 'package:gaza_go/presentations/styles/styled_text.dart';
 import 'package:get/get.dart';
-import 'package:infinite_scroll_pagination/infinite_scroll_pagination.dart';
 import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
 import 'package:table_calendar/table_calendar.dart';
 
@@ -319,7 +318,7 @@ class LeaderboardHome extends StatelessWidget {
                   Row(
                     children: const [
                       StyledText(
-                        'TIK은 매일 자정(KST)에 다.',
+                        'TIK은 매일 자정(KST)에 배분됩니다.',
                         color: Colors.white,
                         fontWeight: 500,
                         fontSize: 16,
@@ -393,54 +392,54 @@ class LeaderboardHome extends StatelessWidget {
           ),
           (controller.myRank.value != null) ? renderMyRank(controller) : Container(),
           Expanded(
-              child: (controller.dataGetLoading.value) ? const Padding(
-                padding: EdgeInsets.symmetric(vertical: 20.0),
-                child: Center(child: CircularProgressIndicator()),
-              ) : (controller.rankings.isEmpty) ? Center(
-                child: Column(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    SvgPicture.asset('assets/images/wallet/ico_empty.svg'),
-                    Padding(
-                      padding: const EdgeInsets.only(top: 20),
-                      child: StyledText(
-                        '랭킹 기록이 없어요.',
-                        color: Color(0xff7b7b7b),
-                        fontSize: 16,
-                        lineHeight: 10,
-                        fontWeight: 500,
-                      ),
-                    ),
-                  ],
-                ),
-              ) : Column(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  Flexible(
-                    child: ListView.separated(
-                        controller: controller.scroll,
-                        separatorBuilder: (context, index) => const Divider(
-                          thickness: 2,
-                          indent: 0,
-                          endIndent: 0,
-                          height: 1,
-                          color: Color(0xFF26272F),
-                        ),
-                        itemCount: controller.rankings.length + 1,
-                        itemBuilder: (context, index) {
-                          if (index < controller.rankings.length) {
-                            return renderRanker(controller.rankings[index]);
-                          } else {
-                            return (controller.hasMore.value) ? const Padding(
-                                padding: EdgeInsets.symmetric(vertical: 20.0),
-                                child: Center(child: CircularProgressIndicator())) : Container();
-                          }
-                        },
+              child: (controller.dataGetLoading.value)
+                  ? const Padding(
+                      padding: EdgeInsets.symmetric(vertical: 20.0),
+                      child: Center(child: CircularProgressIndicator()),
                     )
-                  ),
-                ],
-              )
-          )
+                  : (controller.rankings.isEmpty)
+                      ? Center(
+                          child: Column(
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              SvgPicture.asset('assets/images/wallet/ico_empty.svg'),
+                              Padding(
+                                padding: const EdgeInsets.only(top: 20),
+                                child: StyledText(
+                                  '랭킹 기록이 없어요.',
+                                  color: Color(0xff7b7b7b),
+                                  fontSize: 16,
+                                  lineHeight: 10,
+                                  fontWeight: 500,
+                                ),
+                              ),
+                            ],
+                          ),
+                        )
+                      : Column(
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            Flexible(
+                                child: ListView.separated(
+                              controller: controller.scroll,
+                              separatorBuilder: (context, index) => const Divider(
+                                thickness: 2,
+                                indent: 0,
+                                endIndent: 0,
+                                height: 1,
+                                color: Color(0xFF26272F),
+                              ),
+                              itemCount: controller.rankings.length + 1,
+                              itemBuilder: (context, index) {
+                                if (index < controller.rankings.length) {
+                                  return renderRanker(controller.rankings[index]);
+                                } else {
+                                  return (controller.hasMore.value) ? const Padding(padding: EdgeInsets.symmetric(vertical: 20.0), child: Center(child: CircularProgressIndicator())) : Container();
+                                }
+                              },
+                            )),
+                          ],
+                        ))
           /*Obx(() {
           return (controller.dataGetLoading.value) ? const Padding(
             padding: EdgeInsets.symmetric(vertical: 20.0),
@@ -480,7 +479,7 @@ class LeaderboardHome extends StatelessWidget {
                             ),
                           );
                         },
-                        *//*separatorBuilder: (context, index) => const Divider(
+                        */ /*separatorBuilder: (context, index) => const Divider(
                           thickness: 2,
                           indent: 0,
                           endIndent: 0,
@@ -488,14 +487,14 @@ class LeaderboardHome extends StatelessWidget {
                           color: Color(0xFF26272F),
                         ),
                         itemBuilder: (context, index) => (renderRanker(controller.rankings[index])),
-                        itemCount: controller.rankings.length,*//*
+                        itemCount: controller.rankings.length,*/ /*
                       ),
                 ),
               ],
             ),
           );
 
-          *//*Flexible(
+          */ /*Flexible(
             child: SingleChildScrollView(
               controller: controller.scroll,
               physics: ClampingScrollPhysics(),
@@ -506,11 +505,10 @@ class LeaderboardHome extends StatelessWidget {
                   }).toList()],
               ),
             ),
-          );*//*
+          );*/ /*
         }),*/
         ],
       );
     });
-
   }
 }

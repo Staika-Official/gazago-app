@@ -77,7 +77,7 @@ class ActivityMixin {
     //realTimeSpeed.value += realTimeSpeed.value;
 
     print('realTimeSpeed.value ${realTimeSpeed.value}');
-    *//*double speed = exerciseData.isNotEmpty ? exerciseData.last.speed! : 0;
+    */ /*double speed = exerciseData.isNotEmpty ? exerciseData.last.speed! : 0;
     int prevStep = exerciseData.isNotEmpty && exerciseData.length > 2 ? exerciseData[exerciseData.length - 2].steps! : 0;
     int currentStep = exerciseData.isNotEmpty && exerciseData.length > 2 ? exerciseData.last.steps! : 0;
     DateTime now = DateTime.now();
@@ -90,7 +90,7 @@ class ActivityMixin {
       }
     } else {
       pedestrianStoppedTime.value = DateTime.now();
-    }*//*
+    }*/ /*
 
     return RxDouble(0);
   }*/
@@ -452,25 +452,29 @@ class ActivityMixin {
 
   void endExercise(ChallengeModel challenge) async {
     if (globalController.connectivityResult.value != ConnectivityResult.none) {
-      await ActivityService.fetchEndUserExercises(userExerciseData.value, successCallback: (CurrentUserStateModel newUserState) {
-        if (newUserState.exercise!.state == 'ENDED') {
-          exerciseState.value = ExerciseState.ready;
-          userState.update(
-            (state) {
-              state?.state = newUserState.state;
-              state?.exercise = newUserState.exercise;
-              state?.shoes = newUserState.shoes;
-            },
-          );
-          HiveStore.deleteMultipleKeys(keys: [HiveKey.userState.name, HiveKey.endExerciseRequested.name]);
-          resetVariables(challenge);
-          resetTimer();
-          resetSubscriptions();
-          moveToExerciseDetail(userState.value.exercise!.id!);
-        }
-      }, errorCallback: () {
-        showToastPopup('운동이 정상적으로 종료되지 않았습니다.');
-      });
+      await ActivityService.fetchEndUserExercises(
+        userExerciseData.value,
+        successCallback: (CurrentUserStateModel newUserState) {
+          if (newUserState.exercise!.state == 'ENDED') {
+            exerciseState.value = ExerciseState.ready;
+            userState.update(
+              (state) {
+                state?.state = newUserState.state;
+                state?.exercise = newUserState.exercise;
+                state?.shoes = newUserState.shoes;
+              },
+            );
+            HiveStore.deleteMultipleKeys(keys: [HiveKey.userState.name, HiveKey.endExerciseRequested.name]);
+            resetVariables(challenge);
+            resetTimer();
+            resetSubscriptions();
+            moveToExerciseDetail(userState.value.exercise!.id!);
+          }
+        },
+        errorCallback: () {
+          showToastPopup('운동이 정상적으로 종료되지 않았습니다.');
+        },
+      );
     } else {
       exerciseState.value = ExerciseState.ready;
       CurrentUserStateModel savedState = HiveStore.loadCurrentUserState()!;

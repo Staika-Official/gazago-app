@@ -1,11 +1,9 @@
 import 'dart:async';
 
-import 'package:flutter/material.dart';
 import 'package:gaza_go/constants/routes.dart';
 import 'package:gaza_go/platform/models/ranker_model.dart';
 import 'package:gaza_go/platform/services/dashboard_service.dart';
 import 'package:get/get.dart';
-import 'package:infinite_scroll_pagination/infinite_scroll_pagination.dart';
 import 'package:intl/intl.dart';
 import 'package:table_calendar/table_calendar.dart';
 
@@ -64,24 +62,28 @@ class LeaderboardController extends GetxController with ScrollMixin {
       hasMore.value = true;
       dataGetLoading.value = true;
     }
-    List<RankerModel> rankingList = await DashboardService.getDailyRankingList(formattedDate.value, page.value, size.value);
-    if (rankingList.length < size.value) {
-      hasMore.value = false;
-    }
-    rankingList.asMap().forEach((index, ranker) {
-      ranker.rank = (index + 1) + (page.value * size.value);
+    await DashboardService.getDailyRankingList(formattedDate.value, page.value, size.value, successCallback: (List<RankerModel> rankingList) {
+      if (rankingList.length < size.value) {
+        hasMore.value = false;
+      }
+      rankingList.asMap().forEach((index, ranker) {
+        ranker.rank = (index + 1) + (page.value * size.value);
+      });
+      rankings.addAll(rankingList);
+      if (reset) {
+        dataGetLoading.value = false;
+      }
+      rankings.refresh();
     });
-    rankings.addAll(rankingList);
-    if (reset) {
-      dataGetLoading.value = false;
-    }
-    rankings.refresh();
   }
 
   void _fetchMyRank() {
-    DashboardService.getDailyRankingMyRank(formattedDate.value).then((data) {
-      myRank.value = data;
-    });
+    DashboardService.getDailyRankingMyRank(
+      formattedDate.value,
+      successCallback: (data) {
+        myRank.value = data;
+      },
+    );
   }
 
   goPageCalendarStatistics() {
@@ -106,7 +108,7 @@ class LeaderboardController extends GetxController with ScrollMixin {
   Future<void> onTopScroll() {
     return Future.delayed(
       Duration(milliseconds: 10),
-          () {
+      () {
         print('top reached');
       },
     );

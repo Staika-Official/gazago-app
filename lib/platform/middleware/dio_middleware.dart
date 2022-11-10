@@ -78,7 +78,7 @@ class Api {
     return handler.next(response);
   }
 
-  static _onErrorInterceptor(DioError e, ErrorInterceptorHandler handler) {
+  static _onErrorInterceptor(DioError e, ErrorInterceptorHandler handler) async {
     _logger.e(
       '------------->'
       '\nERROR'
@@ -93,13 +93,13 @@ class Api {
     if (e.response?.statusCode == ResponseStatus.unauthorized.code) {
       final String? refreshToken = HiveStore.loadString(key: HiveKey.refreshToken.name);
       print('refreshToken ${refreshToken}');
-      if (refreshToken!.isEmpty == null) {
+      if (refreshToken == null) {
         if (getx.Get.currentRoute != Routes.login) getx.Get.offAllNamed(Routes.login);
       }
       Dio refreshDio = Dio();
       refreshDio
         ..options.headers['Authorization'] = 'Bearer $refreshToken'
-        ..post('${F.baseUrl}/services/uaa/api/sign-in/token', data: {'clientId': 'GAZAGO'}).then((Response res) {
+        ..post('${F.baseUrl}/services/uaa/api/sign-in/token', data: {'clientId': 'GAZAGO'}).then((Response res) async {
           AccessTokenModel newToken = AccessTokenModel.fromJson(res.data);
 
           HiveStore.save(key: HiveKey.accessToken.name, value: newToken.accessToken);
@@ -107,7 +107,7 @@ class Api {
 
           print('new refreshToken ${newToken.refreshToken}');
 
-          _retryFailedRequest(e, handler, newToken.accessToken);
+          await _retryFailedRequest(e, handler, newToken.accessToken);
         }).catchError((e) {
           print('catchError ${e.toString()}');
           HiveStore.deleteMultipleKeys(keys: [
@@ -140,7 +140,7 @@ class Api {
     }
   }
 
-  static _retryFailedRequest(DioError e, ErrorInterceptorHandler handler, String newAccessToken) {
+  static Future<void> _retryFailedRequest(DioError e, ErrorInterceptorHandler handler, String newAccessToken) async {
     Dio dio = Dio();
     e.requestOptions.headers['Authorization'] = 'Bearer $newAccessToken';
     dio

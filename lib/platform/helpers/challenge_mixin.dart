@@ -38,22 +38,42 @@ class ChallengeMixin {
   final RxList<Marker> challengeMarkers = RxList.empty();
 
   Future<void> getChallengeList() async {
-    allChallengesList.value = await ActivityService.getChallenges();
+    await ActivityService.getChallenges(
+      successCallback: (challengesList) {
+        allChallengesList.value = challengesList;
+      },
+    );
   }
 
   Future<ChallengeModel> getChallenge(int id) async {
-    return await ActivityService.getChallenge(id);
+    ChallengeModel challengeItem = ChallengeModel();
+    await ActivityService.getChallenge(
+      id,
+      successCallback: (challenge) {
+        challengeItem = challenge;
+      },
+    );
+
+    return challengeItem;
   }
 
   Future<void> getNearByChallengeList(Position currentLocation, ExerciseState exerciseState) async {
-    List<ChallengeModel> result = await ActivityService.getNearByChallenges(currentLocation);
-    inspect(result);
-    notificationOnChallenge(result, exerciseState);
-    challengeList.value = result;
+    await ActivityService.getNearByChallenges(
+      currentLocation,
+      successCallback: (result) {
+        notificationOnChallenge(result, exerciseState);
+        challengeList.value = result;
+      },
+    );
   }
 
   Future<void> getChallengesHierarchy(Position currentLocation) async {
-    hierarchyChallengesList.value = await ActivityService.getChallengesHierarchy(currentLocation);
+    await ActivityService.getChallengesHierarchy(
+      currentLocation,
+      successCallback: (challengeList) {
+        hierarchyChallengesList.value = challengeList;
+      },
+    );
   }
 
   void notificationOnChallenge(List<ChallengeModel> result, ExerciseState exerciseState) {
@@ -212,6 +232,6 @@ class ChallengeMixin {
       HiveStore.save(key: HiveKey.badgeIssuanceRequested.name, value: true.toString());
     }
 
-    await BadgeService.fetchUserIssuanceBadge(userState.exercise!.id!, successCallback, errorCallback);
+    await BadgeService.fetchUserIssuanceBadge(userState.exercise!.id!, successCallback: successCallback, errorCallback: errorCallback);
   }
 }

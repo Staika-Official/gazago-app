@@ -29,14 +29,19 @@ class PreferenceController extends GetxController {
   }
 
   void getProfileInfo() async {
-    UserAccountModel account = await UaaService.getAccountInfo();
-    profile.update((state) {
-      state?.nickname = account.nickname;
-      state?.profileImageUrl = account.profileImageUrl;
-      state?.provider = account.provider;
-      state?.email = account.email;
-      state?.id = account.id;
-    });
+    await UaaService.getAccountInfo(
+      successCallback: (account) {
+        profile.update(
+          (state) {
+            state?.nickname = account.nickname;
+            state?.profileImageUrl = account.profileImageUrl;
+            state?.provider = account.provider;
+            state?.email = account.email;
+            state?.id = account.id;
+          },
+        );
+      },
+    );
   }
 
   void getAppVersion() async {
