@@ -14,9 +14,11 @@ class ArchiveService {
     Response res = await ArchiveApi.getArchiveList(userId!, page);
     if (res.statusCode == 200) {
       List<ArchiveListItemModel> archiveList = List.empty(growable: true);
-      res.data.forEach((archive) {
-        archiveList.add(ArchiveListItemModel.fromJson(archive));
-      });
+      if (res.data.length > 0) {
+        res.data.forEach((archive) {
+          archiveList.add(ArchiveListItemModel.fromJson(archive));
+        });
+      }
       successCallback(archiveList);
     } else {
       if (errorCallback != null) errorCallback();

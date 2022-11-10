@@ -20,9 +20,11 @@ class ActivityService {
     Response res = await ActivityApi.getChallenges();
     if (res.statusCode == 200) {
       List<ChallengeModel> challengeList = List.empty(growable: true);
-      res.data.forEach((challenge) {
-        challengeList.add(ChallengeModel.fromJson(challenge));
-      });
+      if (res.data.length > 0) {
+        res.data.forEach((challenge) {
+          challengeList.add(ChallengeModel.fromJson(challenge));
+        });
+      }
       successCallback(challengeList);
     } else {
       if (errorCallback != null) errorCallback();
@@ -33,9 +35,11 @@ class ActivityService {
     Response res = await ActivityApi.getChallengesHierarchy(currentLocation);
     if (res.statusCode == 200) {
       List<ChallengeHierarchyModel> challengeList = List.empty(growable: true);
-      res.data.forEach((challenge) {
-        challengeList.add(ChallengeHierarchyModel.fromJson(challenge));
-      });
+      if (res.data.length > 0) {
+        res.data.forEach((challenge) {
+          challengeList.add(ChallengeHierarchyModel.fromJson(challenge));
+        });
+      }
       successCallback(challengeList);
     } else {
       if (errorCallback != null) errorCallback();
@@ -55,9 +59,11 @@ class ActivityService {
     Response res = await ActivityApi.getNearByChallenges(currentLocation);
     if (res.statusCode == 200) {
       List<ChallengeModel> challengeList = List.empty(growable: true);
-      res.data.forEach((challenge) {
-        challengeList.add(ChallengeModel.fromJson(challenge));
-      });
+      if (res.data.length > 0) {
+        res.data.forEach((challenge) {
+          challengeList.add(ChallengeModel.fromJson(challenge));
+        });
+      }
       successCallback(challengeList);
     } else {
       if (errorCallback != null) errorCallback();
@@ -93,6 +99,15 @@ class ActivityService {
 
   static Future<void> fetchUpdateUserExercises(UserExerciseModel exerciseInfo, String platform, {required Function successCallback, Function? errorCallback}) async {
     Response res = await ActivityApi.fetchUpdateUserExercises(userId!, exerciseInfo, platform);
+    if (res.statusCode == 200) {
+      successCallback(CurrentUserStateModel.fromJson(res.data));
+    } else {
+      if (errorCallback != null) errorCallback();
+    }
+  }
+
+  static Future<void> fetchPausedUserExercises(UserExerciseModel exerciseInfo, String platform, {required Function successCallback, Function? errorCallback}) async {
+    Response res = await ActivityApi.fetchPausedUserExercises(userId!, exerciseInfo, platform);
     if (res.statusCode == 200) {
       successCallback(CurrentUserStateModel.fromJson(res.data));
     } else {
