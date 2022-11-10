@@ -81,7 +81,7 @@ class ChallengeMixin {
     List<ChallengeModel> filteredList = result.toSet().difference(challengeList.toSet()).toList();
     List<int> filteredIdList = List.empty(growable: true);
     List<int> challengeIdList = List.empty(growable: true);
-    if (result.isNotEmpty) {
+    if (result.isNotEmpty && challengeList.isNotEmpty) {
       filteredIdList = filteredList
           .map((element) {
             return element.id!;
@@ -96,7 +96,10 @@ class ChallengeMixin {
           .toList();
     }
 
-    if (result.isNotEmpty && listEquals(filteredIdList, challengeIdList) == false && !([ExerciseState.ongoing, ExerciseState.paused].any((state) => state == exerciseState))) {
+    if (result.isNotEmpty &&
+        challengeList.isNotEmpty &&
+        listEquals(filteredIdList, challengeIdList) == false &&
+        !([ExerciseState.ongoing, ExerciseState.paused].any((state) => state == exerciseState))) {
       notification = true;
     }
 
