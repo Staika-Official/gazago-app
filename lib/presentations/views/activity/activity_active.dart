@@ -1,5 +1,6 @@
 import 'package:animated_flip_counter/animated_flip_counter.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:gaza_go/constants/enums.dart';
 import 'package:gaza_go/constants/routes.dart';
@@ -23,14 +24,14 @@ class ActivityActive extends StatelessWidget {
       if (i > 2 && i < 24) {
         // 1 ~ 6km
         gauge = Container(
-          width: 3,
-          height: 21,
+          width: 3.sp,
+          height: 21.sp,
           color: color,
         );
       } else {
         gauge = Container(
-          width: 3,
-          height: 18,
+          width: 3.sp,
+          height: 18.sp,
           color: const Color(0xff585858),
         );
       }
@@ -55,14 +56,14 @@ class ActivityActive extends StatelessWidget {
   List<Widget> renderStatList(ActivityController controller, context) {
     return controller.statList.map((stat) {
       return Padding(
-        padding: const EdgeInsets.symmetric(
-          vertical: 6.0,
+        padding: EdgeInsets.symmetric(
+          vertical: 6.0.sp,
         ),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
             SizedBox(
-              height: 42,
+              height: 42.sp,
               child: Stack(
                 children: [
                   Row(
@@ -77,30 +78,31 @@ class ActivityActive extends StatelessWidget {
                                         decoration: BoxDecoration(
                                           color: const Color(0xFF606167),
                                           border: Border.all(
-                                            width: 2,
+                                            width: 2.sp,
                                             color: Colors.black,
                                           ),
-                                          borderRadius: const BorderRadius.all(
-                                            Radius.circular(42),
+                                          borderRadius: BorderRadius.all(
+                                            Radius.circular(42.sp),
                                           ),
                                         ),
                                       ),
                                       stat.currentStat > 1.0
                                           ? LayoutBuilder(builder: (context, constraints) {
                                               return Container(
-                                                width: stat.currentStat > 20
-                                                    ? constraints.maxWidth / (100 / stat.currentStat)
-                                                    : stat.currentStat < 2
-                                                        ? 0
-                                                        : 34,
+                                                width: (stat.currentStat > 20
+                                                        ? constraints.maxWidth / (100 / stat.currentStat)
+                                                        : stat.currentStat < 2
+                                                            ? 0
+                                                            : 34)
+                                                    .sp,
                                                 decoration: BoxDecoration(
                                                   color: stat.currentStat < 20 ? const Color(0xFFFF2525) : const Color(0xFFCDFF41),
                                                   border: Border.all(
-                                                    width: 2,
+                                                    width: 2.sp,
                                                     color: Colors.black,
                                                   ),
-                                                  borderRadius: const BorderRadius.all(
-                                                    Radius.circular(42),
+                                                  borderRadius: BorderRadius.all(
+                                                    Radius.circular(42.sp),
                                                   ),
                                                 ),
                                               );
@@ -116,11 +118,11 @@ class ActivityActive extends StatelessWidget {
                                         decoration: BoxDecoration(
                                           color: const Color(0xFF606167),
                                           border: Border.all(
-                                            width: 2,
+                                            width: 2.sp,
                                             color: Colors.black,
                                           ),
-                                          borderRadius: const BorderRadius.all(
-                                            Radius.circular(50),
+                                          borderRadius: BorderRadius.all(
+                                            Radius.circular(50.sp),
                                           ),
                                         ),
                                       ),
@@ -135,11 +137,11 @@ class ActivityActive extends StatelessWidget {
                                                 decoration: BoxDecoration(
                                                   color: stat.currentStat < 20 ? const Color(0xFFFF2525) : const Color(0xFFB85DFF),
                                                   border: Border.all(
-                                                    width: 2,
+                                                    width: 2.sp,
                                                     color: Colors.black,
                                                   ),
-                                                  borderRadius: const BorderRadius.all(
-                                                    Radius.circular(50),
+                                                  borderRadius: BorderRadius.all(
+                                                    Radius.circular(50.sp),
                                                   ),
                                                 ),
                                               );
@@ -161,11 +163,11 @@ class ActivityActive extends StatelessWidget {
                         children: [
                           stat.type == 'STAMINA'
                               ? Padding(
-                                  padding: const EdgeInsets.only(left: 13.0, right: 10),
+                                  padding: EdgeInsets.only(left: 13.0.sp, right: 10.sp),
                                   child: iconStamina,
                                 )
                               : Padding(
-                                  padding: const EdgeInsets.only(left: 12.0, right: 7),
+                                  padding: EdgeInsets.only(left: 12.0.sp, right: 7.sp),
                                   child: iconShoes,
                                 ),
                           StyledText(
@@ -177,7 +179,7 @@ class ActivityActive extends StatelessWidget {
                             color: stat.currentStat < 20 ? Colors.white : Colors.black,
                           ),
                           Padding(
-                            padding: const EdgeInsets.only(left: 5.0),
+                            padding: EdgeInsets.only(left: 5.0.sp),
                             child: StyledText(
                               stat.currentStat.toString(),
                               fontWeight: 800,
@@ -195,11 +197,11 @@ class ActivityActive extends StatelessWidget {
                                   decoration: BoxDecoration(
                                     color: const Color(0xFF606167),
                                     border: Border.all(
-                                      width: 2,
+                                      width: 2.sp,
                                       color: Colors.black,
                                     ),
-                                    borderRadius: const BorderRadius.all(
-                                      Radius.circular(42),
+                                    borderRadius: BorderRadius.all(
+                                      Radius.circular(42.sp),
                                     ),
                                     boxShadow: const [
                                       BoxShadow(
@@ -211,11 +213,11 @@ class ActivityActive extends StatelessWidget {
                                     ],
                                   ),
                                   child: CircleAvatar(
-                                    radius: 19,
+                                    radius: 19.sp,
                                     backgroundColor: const Color(0xFFCDFF41),
                                     child: IconButton(
                                       icon: iconPlus,
-                                      splashRadius: 19,
+                                      splashRadius: 19.sp,
                                       onPressed: () => {controller.onClickRepairStat(stat)},
                                     ),
                                   ),
@@ -224,11 +226,11 @@ class ActivityActive extends StatelessWidget {
                                   decoration: BoxDecoration(
                                     color: const Color(0xFF606167),
                                     border: Border.all(
-                                      width: 2,
+                                      width: 2.sp,
                                       color: Colors.black,
                                     ),
-                                    borderRadius: const BorderRadius.all(
-                                      Radius.circular(30),
+                                    borderRadius: BorderRadius.all(
+                                      Radius.circular(30.sp),
                                     ),
                                     boxShadow: const [
                                       BoxShadow(
@@ -240,11 +242,11 @@ class ActivityActive extends StatelessWidget {
                                     ],
                                   ),
                                   child: CircleAvatar(
-                                    radius: 19,
+                                    radius: 19.sp,
                                     backgroundColor: const Color(0xFFB85DFF),
                                     child: IconButton(
                                       icon: iconPlus,
-                                      splashRadius: 15,
+                                      splashRadius: 15.sp,
                                       onPressed: () => {controller.onClickRepairStat(stat)},
                                     ),
                                   ),
@@ -275,12 +277,12 @@ class ActivityActive extends StatelessWidget {
           mainAxisSize: MainAxisSize.min,
           children: [
             Container(
-              width: 6,
-              height: 6,
-              margin: EdgeInsets.only(right: 8),
+              width: 6.sp,
+              height: 6.sp,
+              margin: EdgeInsets.only(right: 8.sp),
               decoration: BoxDecoration(
                 color: controller.exerciseStateColor.value,
-                borderRadius: BorderRadius.circular(6),
+                borderRadius: BorderRadius.circular(6.sp),
               ),
             ),
             StyledText(
@@ -302,10 +304,10 @@ class ActivityActive extends StatelessWidget {
             return Container(
               child: controller.selectedChallenge.value.id != null
                   ? Container(
-                      padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 7),
+                      padding: EdgeInsets.symmetric(horizontal: 14.sp, vertical: 7.sp),
                       decoration: BoxDecoration(
                         color: const Color(0xff1b1b1b),
-                        borderRadius: BorderRadius.circular(50),
+                        borderRadius: BorderRadius.circular(50.sp),
                       ),
                       child: StyledText(
                         '${controller.selectedChallenge.value.firstName} | ${controller.selectedChallenge.value.secondName}',
@@ -329,34 +331,34 @@ class ActivityActive extends StatelessWidget {
           // TODO. qa후 삭제 필요 end.
           Obx(() {
             return Padding(
-              padding: const EdgeInsets.only(top: 30.0, bottom: 20),
+              padding: EdgeInsets.only(top: 30.0.sp, bottom: 20.sp),
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   SvgPicture.asset(
                     'assets/images/common/ico_token_go.svg',
-                    width: 36,
-                    height: 36,
+                    width: 36.sp,
+                    height: 36.sp,
                   ),
                   Padding(
-                    padding: const EdgeInsets.only(left: 14.0),
+                    padding: EdgeInsets.only(left: 14.0.sp),
                     child: AnimatedFlipCounter(
                       value: controller.userState.value.exercise != null ? controller.userState.value.exercise!.rewardGo! : 0,
                       duration: const Duration(milliseconds: 500),
                       fractionDigits: 2,
                       thousandSeparator: ',',
-                      textStyle: const TextStyle(
+                      textStyle: TextStyle(
                         fontWeight: FontWeight.w600,
-                        fontSize: 50,
+                        fontSize: 50.sp,
                         height: 1,
                         fontFamily: 'Monserrat',
                         color: Colors.white,
                       ),
                     ),
                   ),
-                  const Padding(
-                    padding: EdgeInsets.only(left: 3.0),
-                    child: StyledText(
+                  Padding(
+                    padding: EdgeInsets.only(left: 3.0.sp),
+                    child: const StyledText(
                       'GO',
                       fontWeight: 500,
                       fontSize: 35,
@@ -370,13 +372,13 @@ class ActivityActive extends StatelessWidget {
             );
           }),
           Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 20.0, vertical: 10),
+              padding: EdgeInsets.symmetric(horizontal: 20.0.sp, vertical: 10.sp),
               child: Container(
-                width: double.infinity,
-                padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 24),
+                width: double.infinity.sp,
+                padding: EdgeInsets.symmetric(vertical: 12.sp, horizontal: 24.sp),
                 decoration: BoxDecoration(
                   color: const Color(0xff1F2129),
-                  borderRadius: BorderRadius.circular(50),
+                  borderRadius: BorderRadius.circular(50.sp),
                 ),
                 child: LayoutBuilder(builder: (context, constraints) {
                   return Obx(() {
@@ -391,7 +393,7 @@ class ActivityActive extends StatelessWidget {
                           ],
                         ),
                         Positioned(
-                          top: -26,
+                          top: -26.sp,
                           left: calculateGaugePosition(constraints, controller.realTimeSpeed.value),
                           child: GaugeCursor(
                             color: controller.exerciseStateColor.value,
@@ -399,11 +401,11 @@ class ActivityActive extends StatelessWidget {
                           ),
                         ),
                         Positioned(
-                          bottom: -30,
-                          left: (constraints.maxWidth / 60) * 8,
+                          bottom: -30.sp,
+                          left: ((constraints.maxWidth / 60) * 8).sp,
                           child: Row(
-                            children: const [
-                              StyledText(
+                            children: [
+                              const StyledText(
                                 '1-6',
                                 color: Color(0xff8a8a8a),
                                 fontSize: 14,
@@ -412,8 +414,8 @@ class ActivityActive extends StatelessWidget {
                                 fontFamily: 'Monserrat',
                               ),
                               Padding(
-                                padding: EdgeInsets.only(left: 3),
-                                child: StyledText(
+                                padding: EdgeInsets.only(left: 3.sp),
+                                child: const StyledText(
                                   'km/h',
                                   color: Color(0xff8a8a8a),
                                   fontSize: 12,
@@ -431,11 +433,11 @@ class ActivityActive extends StatelessWidget {
                 }),
               )),
           Padding(
-            padding: const EdgeInsets.only(
-              left: 30,
-              right: 30,
-              top: 60,
-              bottom: 25,
+            padding: EdgeInsets.only(
+              left: 30.sp,
+              right: 30.sp,
+              top: 60.sp,
+              bottom: 25.sp,
             ),
             child: LayoutBuilder(builder: (context, constraints) {
               return Obx(() {
@@ -448,7 +450,7 @@ class ActivityActive extends StatelessWidget {
                         children: [
                           SvgPicture.asset('assets/images/activity/ico_time.svg'),
                           Padding(
-                            padding: const EdgeInsets.only(top: 10),
+                            padding: EdgeInsets.only(top: 10.sp),
                             child: StyledText(
                               formatSeconds(controller.exerciseTime.value),
                               fontWeight: 600,
@@ -466,7 +468,7 @@ class ActivityActive extends StatelessWidget {
                         children: [
                           SvgPicture.asset('assets/images/activity/ico_distance.svg'),
                           Padding(
-                            padding: const EdgeInsets.only(top: 10),
+                            padding: EdgeInsets.only(top: 10.sp),
                             child: StyledText(
                               '${formatDecimalPlaces(controller.totalDistance.value, 2)}km',
                               fontWeight: 600,
@@ -484,7 +486,7 @@ class ActivityActive extends StatelessWidget {
                         children: [
                           SvgPicture.asset('assets/images/activity/ico_step.svg'),
                           Padding(
-                            padding: const EdgeInsets.only(top: 10),
+                            padding: EdgeInsets.only(top: 10.sp),
                             child: StyledText(
                               controller.exerciseSteps.value.toString(),
                               fontWeight: 600,
@@ -502,9 +504,9 @@ class ActivityActive extends StatelessWidget {
             }),
           ),
           Padding(
-            padding: const EdgeInsets.only(
-              left: 30,
-              right: 30,
+            padding: EdgeInsets.only(
+              left: 30.sp,
+              right: 30.sp,
             ),
             child: Obx(() {
               return Column(
@@ -518,7 +520,7 @@ class ActivityActive extends StatelessWidget {
             child: Align(
               alignment: Alignment.bottomCenter,
               child: Padding(
-                padding: const EdgeInsets.only(left: 35, right: 35, bottom: 100),
+                padding: EdgeInsets.only(left: 35.sp, right: 35.sp, bottom: 100.sp),
                 child: Obx(() {
                   return Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -539,20 +541,20 @@ class ActivityActive extends StatelessWidget {
                                   onTapUp: (tapUpDetail) => controller.onTapUpStop(tapUpDetail),
                                   child: Stack(
                                     children: [
-                                      const CircularButton(
-                                        radius: 78,
+                                      CircularButton(
+                                        radius: 78.sp,
                                         color: Colors.white,
-                                        child: Icon(Icons.stop, color: Colors.black, size: 35),
+                                        child: Icon(Icons.stop, color: Colors.black, size: 35.sp),
                                       ),
                                       Positioned(
                                         top: 0,
                                         left: 0,
                                         child: Container(
-                                          width: 78,
-                                          height: 78,
-                                          padding: const EdgeInsets.all(5),
+                                          width: 78.sp,
+                                          height: 78.sp,
+                                          padding: EdgeInsets.all(5.sp),
                                           child: CircularProgressIndicator(
-                                            strokeWidth: 6,
+                                            strokeWidth: 6.sp,
                                             color: const Color(0xff0ee6f3),
                                             value: controller.stopProgress.value,
                                           ),
@@ -562,18 +564,18 @@ class ActivityActive extends StatelessWidget {
                                   ),
                                 ),
                                 Padding(
-                                  padding: const EdgeInsets.only(left: 11),
+                                  padding: EdgeInsets.only(left: 11.sp),
                                   child: CircularButton(
-                                    radius: 78,
+                                    radius: 78.sp,
                                     color: const Color(0xffFF2222),
                                     onTap: () => controller.pauseExercise(),
-                                    child: const Icon(Icons.pause, color: Colors.white, size: 35),
+                                    child: Icon(Icons.pause, color: Colors.white, size: 35.sp),
                                   ),
                                 )
                               ],
                             )
                           : CircularButton(
-                              radius: 90,
+                              radius: 90.sp,
                               color: const Color(0xffFF2222),
                               onTap: () {
                                 if (controller.exerciseState.value == ExerciseState.paused) {
@@ -582,7 +584,7 @@ class ActivityActive extends StatelessWidget {
                                   controller.startExercise(controller.selectedExerciseType.value, controller.selectedChallenge.value);
                                 }
                               },
-                              child: const Icon(Icons.play_arrow, color: Colors.white, size: 35),
+                              child: Icon(Icons.play_arrow, color: Colors.white, size: 35.sp),
                             ),
                       CircularButton(
                         radius: 50,

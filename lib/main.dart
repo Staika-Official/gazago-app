@@ -107,6 +107,7 @@ class MyApp extends StatelessWidget {
             fontFamily: 'Pretendard',
             primarySwatch: gazagoColor,
             navigationBarTheme: NavigationBarThemeData(
+              elevation: 0,
               indicatorColor: Colors.transparent,
               labelTextStyle: MaterialStateProperty.resolveWith((states) {
                 if (states.contains(MaterialState.selected)) {
@@ -119,6 +120,7 @@ class MyApp extends StatelessWidget {
                   return const TextStyle(
                     color: Color(0xFFBFBFBF),
                     fontSize: 10,
+                    wordSpacing: 0,
                     fontWeight: FontWeight.w600,
                   );
                 }

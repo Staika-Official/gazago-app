@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:gaza_go/platform/controllers/inventory_controller.dart';
 import 'package:gaza_go/platform/controllers/wallet_master_controller.dart';
 import 'package:gaza_go/platform/helpers/inventory_helper.dart';
@@ -18,18 +19,18 @@ class InventoryItemDetail extends StatelessWidget {
         titleText: controller.selectedItem.value.itemName,
         backgroundColor: Color(0xFF1D1D26),
         child: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 22.0),
+          padding: EdgeInsets.symmetric(horizontal: 22.0.sp),
           child: Column(
             children: [
               Container(
                 decoration: BoxDecoration(
                   color: Color(0xFF2A2B33),
                   border: Border.all(
-                    width: 2,
+                    width: 2.sp,
                     color: Colors.black,
                   ),
-                  borderRadius: const BorderRadius.all(
-                    Radius.circular(14),
+                  borderRadius: BorderRadius.all(
+                    Radius.circular(14.sp),
                   ),
                   boxShadow: const [
                     BoxShadow(
@@ -44,7 +45,7 @@ class InventoryItemDetail extends StatelessWidget {
                   child: Stack(
                     children: [
                       Positioned(
-                        right: 18,
+                        right: 18.sp,
                         top: 0,
                         child: Container(
                           decoration: BoxDecoration(
@@ -53,9 +54,9 @@ class InventoryItemDetail extends StatelessWidget {
                               width: 1,
                               color: Colors.black,
                             ),
-                            borderRadius: const BorderRadius.only(
-                              bottomRight: Radius.circular(5),
-                              bottomLeft: Radius.circular(5),
+                            borderRadius: BorderRadius.only(
+                              bottomRight: Radius.circular(5.sp),
+                              bottomLeft: Radius.circular(5.sp),
                             ),
                             boxShadow: const [
                               BoxShadow(
@@ -67,15 +68,15 @@ class InventoryItemDetail extends StatelessWidget {
                             ],
                           ),
                           child: Container(
-                            width: 90,
+                            width: 90.sp,
                             alignment: Alignment.center,
-                            padding: const EdgeInsets.symmetric(vertical: 5.0, horizontal: 10.0),
+                            padding: EdgeInsets.symmetric(vertical: 5.0.sp, horizontal: 10.0.sp),
                             child: StyledText(
                               color: controller.selectedItem.value.itemGrade == 'POOR' ? Colors.white.withOpacity(0.6) : Colors.black.withOpacity(0.6),
                               controller.selectedItem.value.itemGrade,
                               fontWeight: 600,
                               fontSize: controller.selectedItem.value.itemGrade.length < 6 ? 10 : 8,
-                              lineHeight: 10,
+                              lineHeight: 10.sp,
                               fontFamily: 'Montserrat',
                               letterSpacing: controller.selectedItem.value.itemGrade.length < 6 ? 4 : 1.5,
                             ),
@@ -83,24 +84,24 @@ class InventoryItemDetail extends StatelessWidget {
                         ),
                       ),
                       Padding(
-                        padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 20.0),
+                        padding: EdgeInsets.symmetric(horizontal: 12.sp, vertical: 20.0.sp),
                         child: Obx(
                           () {
                             return Column(
                               children: [
                                 Container(
                                   child: Padding(
-                                    padding: const EdgeInsets.symmetric(vertical: 10.0),
+                                    padding: EdgeInsets.symmetric(vertical: 10.0.sp),
                                     child: Column(
                                       children: [
                                         Image(
                                           image: NetworkImage(controller.selectedItem.value.itemImageUrl),
-                                          width: 200,
+                                          width: 200.sp,
                                           fit: BoxFit.fill,
                                         ),
                                         if (controller.isShoe.value)
                                           SizedBox(
-                                            height: 42,
+                                            height: 42.sp,
                                             child: Stack(
                                               children: [
                                                 Row(
@@ -116,11 +117,11 @@ class InventoryItemDetail extends StatelessWidget {
                                                                 decoration: BoxDecoration(
                                                                   color: const Color(0xFF606167),
                                                                   border: Border.all(
-                                                                    width: 2,
+                                                                    width: 2.sp,
                                                                     color: Colors.black,
                                                                   ),
-                                                                  borderRadius: const BorderRadius.all(
-                                                                    Radius.circular(50),
+                                                                  borderRadius: BorderRadius.all(
+                                                                    Radius.circular(50.sp),
                                                                   ),
                                                                   boxShadow: const [
                                                                     BoxShadow(
@@ -146,8 +147,8 @@ class InventoryItemDetail extends StatelessWidget {
                                                                             width: 2,
                                                                             color: Colors.black,
                                                                           ),
-                                                                          borderRadius: const BorderRadius.all(
-                                                                            Radius.circular(30),
+                                                                          borderRadius: BorderRadius.all(
+                                                                            Radius.circular(30.sp),
                                                                           ),
                                                                           boxShadow: [
                                                                             BoxShadow(
@@ -178,7 +179,7 @@ class InventoryItemDetail extends StatelessWidget {
                                                         crossAxisAlignment: CrossAxisAlignment.center,
                                                         children: [
                                                           Padding(
-                                                            padding: const EdgeInsets.only(left: 12.0, right: 7),
+                                                            padding: EdgeInsets.only(left: 12.0.sp, right: 7.sp),
                                                             child: iconShoes,
                                                           ),
                                                           StyledText(
@@ -190,7 +191,7 @@ class InventoryItemDetail extends StatelessWidget {
                                                             color: controller.selectedItem.value.durability.toInt() < 20 ? Colors.white : Colors.black,
                                                           ),
                                                           Padding(
-                                                            padding: const EdgeInsets.only(left: 5.0),
+                                                            padding: EdgeInsets.only(left: 5.0.sp),
                                                             child: StyledText(
                                                               controller.selectedItem.value.durability.toString(),
                                                               fontWeight: 800,
@@ -231,11 +232,11 @@ class InventoryItemDetail extends StatelessWidget {
                                   ),
                                 ),
                                 Container(
-                                  margin: EdgeInsets.only(top: 5),
-                                  decoration: const BoxDecoration(
+                                  margin: EdgeInsets.only(top: 5.sp),
+                                  decoration: BoxDecoration(
                                     color: Color(0xFF1D1D26),
                                     borderRadius: BorderRadius.all(
-                                      Radius.circular(10),
+                                      Radius.circular(10.sp),
                                     ),
                                     boxShadow: [
                                       BoxShadow(
@@ -247,14 +248,14 @@ class InventoryItemDetail extends StatelessWidget {
                                     ],
                                   ),
                                   child: Padding(
-                                    padding: const EdgeInsets.all(20.0),
+                                    padding: EdgeInsets.all(20.0.sp),
                                     child: Row(
                                       mainAxisSize: MainAxisSize.max,
                                       crossAxisAlignment: CrossAxisAlignment.center,
                                       mainAxisAlignment: MainAxisAlignment.center,
                                       children: [
                                         Padding(
-                                          padding: const EdgeInsets.only(right: 20.0),
+                                          padding: EdgeInsets.only(right: 20.0.sp),
                                           child: Column(
                                             children: [
                                               Row(
@@ -277,12 +278,12 @@ class InventoryItemDetail extends StatelessWidget {
                                                 ],
                                               ),
                                               Padding(
-                                                padding: const EdgeInsets.only(top: 5.0),
+                                                padding: EdgeInsets.only(top: 5.0.sp),
                                                 child: Row(
                                                   mainAxisAlignment: MainAxisAlignment.center,
                                                   children: [
                                                     Padding(
-                                                      padding: const EdgeInsets.only(top: 3.0, right: 2.0),
+                                                      padding: EdgeInsets.only(top: 3.0.sp, right: 2.0.sp),
                                                       child: iconGoReward,
                                                     ),
                                                     const StyledText(
@@ -322,13 +323,13 @@ class InventoryItemDetail extends StatelessWidget {
                                                 ],
                                               ),
                                               Padding(
-                                                padding: const EdgeInsets.only(top: 5.0),
+                                                padding: EdgeInsets.only(top: 5.0.sp),
                                                 child: Row(
                                                   mainAxisAlignment: MainAxisAlignment.center,
                                                   crossAxisAlignment: CrossAxisAlignment.center,
                                                   children: [
                                                     Padding(
-                                                      padding: const EdgeInsets.only(top: 1.0, right: 5.0),
+                                                      padding: EdgeInsets.only(top: 1.0.sp, right: 5.0.sp),
                                                       child: iconItemAbrasion,
                                                     ),
                                                     const StyledText(
@@ -345,7 +346,7 @@ class InventoryItemDetail extends StatelessWidget {
                                             ],
                                           ),
                                         Padding(
-                                          padding: const EdgeInsets.only(left: 20.0),
+                                          padding: EdgeInsets.only(left: 20.0.sp),
                                           child: Column(
                                             children: [
                                               Row(
@@ -368,12 +369,12 @@ class InventoryItemDetail extends StatelessWidget {
                                                 ],
                                               ),
                                               Padding(
-                                                padding: const EdgeInsets.only(top: 5.0),
+                                                padding: EdgeInsets.only(top: 5.0.sp),
                                                 child: Row(
                                                   mainAxisAlignment: MainAxisAlignment.center,
                                                   children: [
                                                     Padding(
-                                                      padding: const EdgeInsets.only(top: 1.0, right: 2.0),
+                                                      padding: EdgeInsets.only(top: 1.0.sp, right: 2.0.sp),
                                                       child: iconStaminaReduce,
                                                     ),
                                                     const StyledText(
@@ -395,12 +396,12 @@ class InventoryItemDetail extends StatelessWidget {
                                   ),
                                 ),
                                 Padding(
-                                  padding: const EdgeInsets.only(top: 30, bottom: 20),
+                                  padding: EdgeInsets.only(top: 30.sp, bottom: 20.sp),
                                   child: Column(
                                     crossAxisAlignment: CrossAxisAlignment.start,
                                     children: [
                                       Padding(
-                                        padding: const EdgeInsets.only(bottom: 10),
+                                        padding: EdgeInsets.only(bottom: 10.sp),
                                         child: StyledText(
                                           '제품 설명',
                                           color: Color(0xFF8A8A8A),
@@ -408,7 +409,7 @@ class InventoryItemDetail extends StatelessWidget {
                                         ),
                                       ),
                                       Container(
-                                        height: (controller.isShoe.value) ? 70 : 100,
+                                        height: (controller.isShoe.value) ? 70.sp : 100.sp,
                                         child: ListView(
                                           children: [
                                             StyledText(
@@ -426,82 +427,82 @@ class InventoryItemDetail extends StatelessWidget {
                                 ),
                                 controller.selectedItem.value.equipped == true
                                     ? Container(
-                                  decoration: BoxDecoration(
-                                    color: const Color(0xFF363841),
-                                    border: Border.all(
-                                      width: 1,
-                                      style: BorderStyle.solid,
-                                      color: const Color(0xFF8A8A8A),
-                                    ),
-                                    borderRadius: const BorderRadius.all(
-                                      Radius.circular(30),
-                                    ),
-                                    boxShadow: const [
-                                      BoxShadow(
-                                        color: Colors.black,
-                                        offset: Offset(0, 1),
-                                        blurRadius: 0.0,
-                                        spreadRadius: 0.0,
-                                      ),
-                                    ],
-                                  ),
-                                  child: InkWell(
-                                    onTap: () => null,
-                                    child: Padding(
-                                      padding: const EdgeInsets.symmetric(vertical: 13.0, horizontal: 20),
-                                      child: Column(
-                                        mainAxisAlignment: MainAxisAlignment.center,
-                                        children: const [
-                                          StyledText(
-                                            '장착중',
-                                            fontSize: 18,
-                                            lineHeight: 18,
-                                            fontWeight: 500,
-                                            color: Color(0xFF8A8A8A),
+                                        decoration: BoxDecoration(
+                                          color: const Color(0xFF363841),
+                                          border: Border.all(
+                                            width: 1,
+                                            style: BorderStyle.solid,
+                                            color: const Color(0xFF8A8A8A),
                                           ),
-                                        ],
-                                      ),
-                                    ),
-                                  ),
-                                )
+                                          borderRadius: BorderRadius.all(
+                                            Radius.circular(30.sp),
+                                          ),
+                                          boxShadow: const [
+                                            BoxShadow(
+                                              color: Colors.black,
+                                              offset: Offset(0, 1),
+                                              blurRadius: 0.0,
+                                              spreadRadius: 0.0,
+                                            ),
+                                          ],
+                                        ),
+                                        child: InkWell(
+                                          onTap: () => null,
+                                          child: Padding(
+                                            padding: EdgeInsets.symmetric(vertical: 13.0.sp, horizontal: 20.sp),
+                                            child: Column(
+                                              mainAxisAlignment: MainAxisAlignment.center,
+                                              children: const [
+                                                StyledText(
+                                                  '장착중',
+                                                  fontSize: 18,
+                                                  lineHeight: 18,
+                                                  fontWeight: 500,
+                                                  color: Color(0xFF8A8A8A),
+                                                ),
+                                              ],
+                                            ),
+                                          ),
+                                        ),
+                                      )
                                     : Container(
-                                  decoration: BoxDecoration(
-                                    color: const Color(0xFF1D1D26),
-                                    border: Border.all(
-                                      width: 1,
-                                      style: BorderStyle.solid,
-                                      color: const Color(0xFF54F5FF),
-                                    ),
-                                    borderRadius: const BorderRadius.all(
-                                      Radius.circular(30),
-                                    ),
-                                    boxShadow: const [
-                                      BoxShadow(
-                                        color: Colors.black,
-                                        offset: Offset(0, 1),
-                                        blurRadius: 0.0,
-                                        spreadRadius: 0.0,
-                                      ),
-                                    ],
-                                  ),
-                                  child: InkWell(
-                                    onTap: () => controller.fetchEquipItem(controller.selectedItem.value.id),
-                                    child: Padding(
-                                      padding: const EdgeInsets.symmetric(vertical: 13.0, horizontal: 20),
-                                      child: Column(
-                                        mainAxisAlignment: MainAxisAlignment.center,
-                                        children: const [
-                                          StyledText(
-                                            '장착',
-                                            fontSize: 18,
-                                            lineHeight: 18,
-                                            fontWeight: 500,
+                                        decoration: BoxDecoration(
+                                          color: const Color(0xFF1D1D26),
+                                          border: Border.all(
+                                            width: 1,
+                                            style: BorderStyle.solid,
+                                            color: const Color(0xFF54F5FF),
                                           ),
-                                        ],
+                                          borderRadius: BorderRadius.all(
+                                            Radius.circular(30.sp),
+                                          ),
+                                          boxShadow: const [
+                                            BoxShadow(
+                                              color: Colors.black,
+                                              offset: Offset(0, 1),
+                                              blurRadius: 0.0,
+                                              spreadRadius: 0.0,
+                                            ),
+                                          ],
+                                        ),
+                                        child: InkWell(
+                                          onTap: () => controller.fetchEquipItem(controller.selectedItem.value.id),
+                                          child: Padding(
+                                            padding: EdgeInsets.symmetric(vertical: 13.0.sp, horizontal: 20.sp),
+                                            child: Column(
+                                              mainAxisAlignment: MainAxisAlignment.center,
+                                              children: const [
+                                                StyledText(
+                                                  '장착',
+                                                  fontSize: 18,
+                                                  lineHeight: 18,
+                                                  fontWeight: 500,
+                                                ),
+                                              ],
+                                            ),
+                                          ),
+                                        ),
                                       ),
-                                    ),
-                                  ),
-                                ),
                               ],
                             );
                           },
@@ -518,13 +519,13 @@ class InventoryItemDetail extends StatelessWidget {
                     child: InkWell(
                       onTap: () => controller.showShoesRepairPopup(controller.selectedItem.value.id),
                       child: Container(
-                        padding: const EdgeInsets.all(20),
-                        width: double.infinity,
+                        padding: EdgeInsets.all(20.sp),
+                        width: double.infinity.sp,
                         decoration: BoxDecoration(
                           color: Color(0xff0EE6F3),
-                          borderRadius: BorderRadius.circular(12),
+                          borderRadius: BorderRadius.circular(12.sp),
                           border: Border.all(
-                            width: 2,
+                            width: 2.sp,
                             style: BorderStyle.solid,
                             color: Colors.black,
                           ),

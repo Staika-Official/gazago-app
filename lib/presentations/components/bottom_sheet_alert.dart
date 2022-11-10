@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:gaza_go/presentations/styles/styled_text.dart';
 
 class BottomSheetAlert extends StatelessWidget {
@@ -20,7 +21,7 @@ class BottomSheetAlert extends StatelessWidget {
         ),
       ),
       child: Padding(
-        padding: const EdgeInsets.only(top: 30.0, left: 20, right: 20, bottom: 40),
+        padding: EdgeInsets.only(top: 30.0.sp, left: 20.sp, right: 20.sp, bottom: 40.sp),
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
@@ -36,7 +37,7 @@ class BottomSheetAlert extends StatelessWidget {
             ),
             contentWidget ??
                 Padding(
-                  padding: const EdgeInsets.only(top: 12.0, bottom: 30),
+                  padding: EdgeInsets.only(top: 12.0.sp, bottom: 30.sp),
                   child: StyledText(
                     contentText!,
                     fontSize: 18,

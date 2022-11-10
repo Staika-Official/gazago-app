@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_naver_map/flutter_naver_map.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:gaza_go/platform/controllers/activity_controller.dart';
 import 'package:get/get.dart';
 
@@ -116,13 +117,13 @@ class ActivityMap extends StatelessWidget {
           );
         }),
         Positioned(
-          top: 20,
-          left: 20,
+          top: 20.sp,
+          left: 20.sp,
           child: GestureDetector(
             onTap: () => Get.back(),
             child: Container(
-              width: 46,
-              height: 46,
+              width: 46.sp,
+              height: 46.sp,
               decoration: BoxDecoration(
                   color: Color(0xff363841),
                   border: Border.all(width: 2, style: BorderStyle.solid, color: Colors.black),

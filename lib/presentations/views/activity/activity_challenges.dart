@@ -2,6 +2,7 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_naver_map/flutter_naver_map.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:gaza_go/constants/enums.dart';
 import 'package:gaza_go/platform/controllers/activity_controller.dart';
@@ -98,21 +99,20 @@ class ActivityChallenges extends StatelessWidget {
   List<Marker> renderMaker(ActivityController controller) {
     ChallengeModel course = controller.selectedChallenge.value;
     Marker startMaker = Marker(
-      markerId: course.id!.toString(),
-      position: LatLng(course.startLat!, course.startLon!),
-      captionText: course.startPointName,
-      captionColor: const Color(0xFF0EE6F3),
-      captionHaloColor: Colors.black,
-      captionTextSize: 16.0,
-      subCaptionTextSize: 14,
-      subCaptionText: course.secondName,
-      subCaptionColor: (Platform.isAndroid) ? Colors.white : Colors.black,
-      subCaptionHaloColor: (Platform.isAndroid) ? Colors.black : Colors.white,
-      captionOffset: 5,
-      icon: controller.startMaker,
-      width: 20,
-      height: 20
-    );
+        markerId: course.id!.toString(),
+        position: LatLng(course.startLat!, course.startLon!),
+        captionText: course.startPointName,
+        captionColor: const Color(0xFF0EE6F3),
+        captionHaloColor: Colors.black,
+        captionTextSize: 16.0.sp,
+        subCaptionTextSize: 14.sp,
+        subCaptionText: course.secondName,
+        subCaptionColor: (Platform.isAndroid) ? Colors.white : Colors.black,
+        subCaptionHaloColor: (Platform.isAndroid) ? Colors.black : Colors.white,
+        captionOffset: 5,
+        icon: controller.startMaker,
+        width: 20,
+        height: 20);
 
     Marker endMaker = Marker(
       markerId: 'end_${course.id!.toString()}',
@@ -120,10 +120,10 @@ class ActivityChallenges extends StatelessWidget {
       captionText: '도착 ${course.endPointName}',
       captionColor: const Color(0xFFFF6F75),
       captionHaloColor: Colors.black,
-      captionTextSize: 16.0,
+      captionTextSize: 16.0.sp,
       captionOffset: 5,
       subCaptionText: course.secondName,
-      subCaptionTextSize: 14,
+      subCaptionTextSize: 14.sp,
       subCaptionColor: (Platform.isAndroid) ? Colors.white : Colors.black,
       subCaptionHaloColor: (Platform.isAndroid) ? Colors.black : Colors.white,
       icon: controller.endMaker,
@@ -139,18 +139,18 @@ class ActivityChallenges extends StatelessWidget {
       return InkWell(
         onTap: () => controller.selectChallenge(challenge),
         child: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 30, vertical: 15),
+          padding: EdgeInsets.symmetric(horizontal: 30.sp, vertical: 15.sp),
           child: Row(
             mainAxisSize: MainAxisSize.max,
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               SvgPicture.asset(
                 isSelected ? 'assets/images/activity/ico_challenge_checked.svg' : 'assets/images/activity/ico_challenge_unchecked.svg',
-                width: 16,
-                height: 11,
+                width: 16.sp,
+                height: 11.sp,
               ),
               Padding(
-                padding: const EdgeInsets.only(left: 11),
+                padding: EdgeInsets.only(left: 11.sp),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
@@ -162,8 +162,8 @@ class ActivityChallenges extends StatelessWidget {
                       color: isSelected ? Color(0xff0EE6F3) : Colors.white,
                     ),
                     Padding(
-                      padding: const EdgeInsets.only(
-                        top: 7,
+                      padding: EdgeInsets.only(
+                        top: 7.sp,
                       ),
                       child: StyledText(
                         challenge.startPointName != null ? '${challenge.startPointName!} - ${challenge.endPointName!}' : challenge.firstName!,
@@ -196,8 +196,8 @@ class ActivityChallenges extends StatelessWidget {
               top: 0,
               left: 0,
               child: SizedBox(
-                height: MediaQuery.of(context).size.height - (controller.listHeight.value + 50) - (MediaQuery.of(context).viewInsets.bottom + MediaQuery.of(context).viewInsets.top),
-                width: MediaQuery.of(context).size.width,
+                height: (MediaQuery.of(context).size.height - (controller.listHeight.value + 50) - (MediaQuery.of(context).viewInsets.bottom + MediaQuery.of(context).viewInsets.top)).sp,
+                width: (MediaQuery.of(context).size.width).sp,
                 child: NaverMap(
                   initialCameraPosition: CameraPosition(
                     target: LatLng(controller.currentLocation.value.latitude ?? 0, controller.currentLocation.value.longitude ?? 0),
@@ -227,8 +227,8 @@ class ActivityChallenges extends StatelessWidget {
                 decoration: BoxDecoration(
                   color: Color(0xff363841),
                   borderRadius: BorderRadius.only(
-                    topLeft: Radius.circular(15),
-                    topRight: Radius.circular(15),
+                    topLeft: Radius.circular(15.sp),
+                    topRight: Radius.circular(15.sp),
                   ),
                 ),
                 child: Column(
@@ -236,21 +236,21 @@ class ActivityChallenges extends StatelessWidget {
                   children: [
                     Padding(
                       padding: EdgeInsets.only(
-                        top: 30,
-                        bottom: 15,
+                        top: 30.sp,
+                        bottom: 15.sp,
                       ),
                       child: Text(
                         '도전할 챌린지를 선택해주세요.',
                         style: TextStyle(
-                          fontSize: 20,
+                          fontSize: 20.sp,
                           fontWeight: FontWeight.w500,
-                          height: 18 / 25,
+                          height: (18 / 25).sp,
                           color: Colors.white,
                         ),
                       ),
                     ),
                     ConstrainedBox(
-                      constraints: BoxConstraints(maxHeight: 250),
+                      constraints: BoxConstraints(maxHeight: 250.sp),
                       child: SingleChildScrollView(
                         physics: ClampingScrollPhysics(),
                         child: Column(
@@ -261,11 +261,11 @@ class ActivityChallenges extends StatelessWidget {
                       ),
                     ),
                     Padding(
-                      padding: const EdgeInsets.only(
-                        top: 36,
-                        left: 30,
-                        right: 30,
-                        bottom: 30,
+                      padding: EdgeInsets.only(
+                        top: 36.sp,
+                        left: 30.sp,
+                        right: 30.sp,
+                        bottom: 30.sp,
                       ),
                       child: InkWell(
                         onTap: () {
@@ -276,17 +276,17 @@ class ActivityChallenges extends StatelessWidget {
                           }
                         },
                         child: Container(
-                          padding: const EdgeInsets.all(20),
-                          width: double.infinity,
+                          padding: EdgeInsets.all(20.sp),
+                          width: double.infinity.sp,
                           decoration: BoxDecoration(
                             color: Color(0xff0EE6F3),
-                            borderRadius: BorderRadius.circular(12),
+                            borderRadius: BorderRadius.circular(12.sp),
                             border: Border.all(
-                              width: 2,
+                              width: 2.sp,
                               style: BorderStyle.solid,
                               color: Colors.black,
                             ),
-                            boxShadow: [
+                            boxShadow: const [
                               BoxShadow(
                                 offset: Offset(0, 4),
                                 blurRadius: 0,
@@ -299,9 +299,9 @@ class ActivityChallenges extends StatelessWidget {
                             '가자GO',
                             textAlign: TextAlign.center,
                             style: TextStyle(
-                              fontSize: 18,
+                              fontSize: 18.sp,
                               fontWeight: FontWeight.w600,
-                              height: 16 / 18,
+                              height: (16 / 18).sp,
                             ),
                           ),
                         ),

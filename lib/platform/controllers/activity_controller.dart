@@ -5,6 +5,7 @@ import 'package:another_xlider/another_xlider.dart';
 import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_naver_map/flutter_naver_map.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:gaza_go/constants/config.dart';
 import 'package:gaza_go/constants/enums.dart';
 import 'package:gaza_go/constants/routes.dart';
@@ -223,7 +224,7 @@ class ActivityController extends SuperController with ActivityMixin, ChallengeMi
     Get.bottomSheet(
       Obx(() {
         return Container(
-          height: 340,
+          height: 340.sp,
           decoration: const BoxDecoration(
             color: Color(0xff363841),
             borderRadius: BorderRadius.only(
@@ -232,7 +233,7 @@ class ActivityController extends SuperController with ActivityMixin, ChallengeMi
             ),
           ),
           child: Padding(
-            padding: const EdgeInsets.symmetric(vertical: 30.0, horizontal: 20.0),
+            padding: EdgeInsets.symmetric(vertical: 30.0.sp, horizontal: 20.0.sp),
             child: Column(
               mainAxisSize: MainAxisSize.min,
               children: [
@@ -253,7 +254,7 @@ class ActivityController extends SuperController with ActivityMixin, ChallengeMi
                             fontWeight: 500,
                           ),
                     Padding(
-                      padding: const EdgeInsets.only(top: 12.0),
+                      padding: EdgeInsets.only(top: 12.0.sp),
                       child: stat.type == 'STAMINA'
                           ? StyledText(
                               '현재 체력 ${stat.currentStat}',
@@ -271,7 +272,7 @@ class ActivityController extends SuperController with ActivityMixin, ChallengeMi
                             ),
                     ),
                     Container(
-                      margin: const EdgeInsets.only(top: 15),
+                      margin: EdgeInsets.only(top: 15.sp),
                       child: FlutterSlider(
                         values: [_currentSliderValue.value],
                         max: 100,
@@ -279,13 +280,13 @@ class ActivityController extends SuperController with ActivityMixin, ChallengeMi
                         step: const FlutterSliderStep(
                           step: 1, // default
                         ),
-                        handlerHeight: 32.0,
+                        handlerHeight: 32.0.sp,
                         ignoreSteps: [
                           FlutterSliderIgnoreSteps(from: 0, to: 0),
                         ],
                         trackBar: FlutterSliderTrackBar(
-                          inactiveTrackBarHeight: 16,
-                          activeTrackBarHeight: 15,
+                          inactiveTrackBarHeight: 16.sp,
+                          activeTrackBarHeight: 15.sp,
                           inactiveTrackBar: BoxDecoration(
                             borderRadius: BorderRadius.circular(20),
                             color: const Color(0xFF494954),
@@ -337,7 +338,7 @@ class ActivityController extends SuperController with ActivityMixin, ChallengeMi
                       ),
                     ),
                     Padding(
-                      padding: const EdgeInsets.symmetric(vertical: 40.0),
+                      padding: EdgeInsets.symmetric(vertical: ScreenUtil().setHeight(40.0)),
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.center,
                         crossAxisAlignment: CrossAxisAlignment.center,
@@ -367,8 +368,8 @@ class ActivityController extends SuperController with ActivityMixin, ChallengeMi
                             buttonColor: const Color(0xFF363841),
                           ),
                         ),
-                        const SizedBox(
-                          width: 9,
+                        SizedBox(
+                          width: 9.sp,
                         ),
                         Expanded(
                           child: GazagoButton(
@@ -395,7 +396,7 @@ class ActivityController extends SuperController with ActivityMixin, ChallengeMi
   void handleNotEnoughTaikaPopup() {
     Get.bottomSheet(
       Container(
-        height: 200,
+        height: 200.sp,
         decoration: const BoxDecoration(
           color: Color(0xff363841),
           borderRadius: BorderRadius.only(

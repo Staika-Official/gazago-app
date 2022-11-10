@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:gaza_go/platform/controllers/permission_controller.dart';
 import 'package:gaza_go/platform/models/permission_item_model.dart';
@@ -118,7 +119,7 @@ class Permissions extends StatelessWidget {
               child: Align(
                 alignment: Alignment.bottomCenter,
                 child: Container(
-                  height: 55,
+                  height: 55.sp,
                   decoration: BoxDecoration(
                     color: const Color(0xFF0EE6F3),
                     border: Border.all(width: 2, color: Colors.black),

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:gaza_go/constants/enums.dart';
 import 'package:gaza_go/platform/controllers/activity_controller.dart';
 import 'package:gaza_go/platform/helpers/alert_helper.dart';
@@ -13,14 +14,14 @@ class ActivityHome extends StatelessWidget {
   List<Widget> renderStatList(ActivityController controller, context) {
     return controller.statList.map((stat) {
       return Padding(
-        padding: const EdgeInsets.symmetric(
-          vertical: 6.0,
+        padding: EdgeInsets.symmetric(
+          vertical: 6.0.sp,
         ),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
             SizedBox(
-              height: 42,
+              height: 42.sp,
               child: Stack(
                 children: [
                   Row(
@@ -35,11 +36,11 @@ class ActivityHome extends StatelessWidget {
                                         decoration: BoxDecoration(
                                           color: const Color(0xFF606167),
                                           border: Border.all(
-                                            width: 2,
+                                            width: 2.sp,
                                             color: Colors.black,
                                           ),
                                           borderRadius: const BorderRadius.all(
-                                            Radius.circular(42),
+                                            Radius.circular(100),
                                           ),
                                           boxShadow: const [
                                             BoxShadow(
@@ -62,11 +63,11 @@ class ActivityHome extends StatelessWidget {
                                                 decoration: BoxDecoration(
                                                   color: stat.currentStat < 20 ? const Color(0xFFFF2525) : const Color(0xFFCDFF41),
                                                   border: Border.all(
-                                                    width: 2,
+                                                    width: 2.sp,
                                                     color: Colors.black,
                                                   ),
                                                   borderRadius: const BorderRadius.all(
-                                                    Radius.circular(42),
+                                                    Radius.circular(100),
                                                   ),
                                                   boxShadow: [
                                                     BoxShadow(
@@ -94,7 +95,7 @@ class ActivityHome extends StatelessWidget {
                                             color: Colors.black,
                                           ),
                                           borderRadius: const BorderRadius.all(
-                                            Radius.circular(50),
+                                            Radius.circular(100),
                                           ),
                                           boxShadow: const [
                                             BoxShadow(
@@ -121,7 +122,7 @@ class ActivityHome extends StatelessWidget {
                                                     color: Colors.black,
                                                   ),
                                                   borderRadius: const BorderRadius.all(
-                                                    Radius.circular(50),
+                                                    Radius.circular(100),
                                                   ),
                                                   boxShadow: [
                                                     BoxShadow(
@@ -189,11 +190,11 @@ class ActivityHome extends StatelessWidget {
                                   decoration: BoxDecoration(
                                     color: const Color(0xFF606167),
                                     border: Border.all(
-                                      width: 2,
+                                      width: 2.sp,
                                       color: Colors.black,
                                     ),
                                     borderRadius: const BorderRadius.all(
-                                      Radius.circular(42),
+                                      Radius.circular(100),
                                     ),
                                     boxShadow: const [
                                       BoxShadow(
@@ -205,7 +206,7 @@ class ActivityHome extends StatelessWidget {
                                     ],
                                   ),
                                   child: CircleAvatar(
-                                    radius: 19,
+                                    radius: 19.sp,
                                     backgroundColor: const Color(0xFFCDFF41),
                                     child: IconButton(
                                       icon: iconPlus,
@@ -217,11 +218,11 @@ class ActivityHome extends StatelessWidget {
                                   decoration: BoxDecoration(
                                     color: const Color(0xFF606167),
                                     border: Border.all(
-                                      width: 2,
+                                      width: 2.sp,
                                       color: Colors.black,
                                     ),
                                     borderRadius: const BorderRadius.all(
-                                      Radius.circular(30),
+                                      Radius.circular(100),
                                     ),
                                     boxShadow: const [
                                       BoxShadow(
@@ -233,7 +234,7 @@ class ActivityHome extends StatelessWidget {
                                     ],
                                   ),
                                   child: CircleAvatar(
-                                    radius: 19,
+                                    radius: 19.sp,
                                     backgroundColor: Color(0xFFB85DFF),
                                     child: IconButton(
                                       icon: iconPlus,
@@ -287,7 +288,7 @@ class ActivityHome extends StatelessWidget {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       CircleAvatar(
-                        radius: 21,
+                        radius: 21.sp,
                         backgroundColor: Color(0xFF1D1D21),
                         child: activitySum['icon'],
                       ),
@@ -349,7 +350,7 @@ class ActivityHome extends StatelessWidget {
               constraints: BoxConstraints(minHeight: constraint.maxHeight),
               child: IntrinsicHeight(
                 child: Padding(
-                  padding: const EdgeInsets.only(left: 20, right: 20, bottom: 10),
+                  padding: EdgeInsets.only(left: 20.sp, right: 20.sp, bottom: 15.sp),
                   child: Column(
                     children: <Widget>[
                       Column(
@@ -363,7 +364,7 @@ class ActivityHome extends StatelessWidget {
                             lineHeight: 32,
                           ),
                           Container(
-                            margin: const EdgeInsets.symmetric(vertical: 25),
+                            margin: EdgeInsets.symmetric(vertical: ScreenUtil().setHeight(25)),
                             decoration: BoxDecoration(
                               color: const Color(0xFF0EE6F3),
                               border: Border.all(
@@ -383,14 +384,14 @@ class ActivityHome extends StatelessWidget {
                               ],
                             ),
                             child: Padding(
-                              padding: const EdgeInsets.symmetric(vertical: 15.0, horizontal: 20.0),
+                              padding: EdgeInsets.symmetric(vertical: ScreenUtil().setWidth(15), horizontal: ScreenUtil().setHeight(20)),
                               child: Row(
                                 mainAxisAlignment: MainAxisAlignment.start,
                                 crossAxisAlignment: CrossAxisAlignment.center,
                                 children: [
                                   iconActivityTokenGo,
                                   Padding(
-                                    padding: const EdgeInsets.only(left: 10.0),
+                                    padding: EdgeInsets.only(left: ScreenUtil().setWidth(10)),
                                     child: Column(
                                       crossAxisAlignment: CrossAxisAlignment.start,
                                       children: [
@@ -400,7 +401,7 @@ class ActivityHome extends StatelessWidget {
                                           color: Colors.black,
                                           fontWeight: 500,
                                           fontSize: 13,
-                                          lineHeight: 13,
+                                          lineHeight: 15,
                                         ),
                                         Obx(() {
                                           return Row(
@@ -456,7 +457,7 @@ class ActivityHome extends StatelessWidget {
                                       Container(
                                         decoration: BoxDecoration(
                                           color: const Color(0xFF0EE6F3),
-                                          border: Border.all(width: 10, color: Color(0xFF4A4D57)),
+                                          border: Border.all(width: 10.sp, color: Color(0xFF4A4D57)),
                                           borderRadius: const BorderRadius.all(
                                             Radius.circular(150),
                                           ),
@@ -472,7 +473,7 @@ class ActivityHome extends StatelessWidget {
                                         child: Container(
                                           decoration: BoxDecoration(
                                             border: Border.all(
-                                              width: 3,
+                                              width: 3.sp,
                                               color: Colors.black,
                                             ),
                                             borderRadius: const BorderRadius.all(
@@ -487,8 +488,8 @@ class ActivityHome extends StatelessWidget {
                                               borderRadius: BorderRadius.circular(150),
                                             ),
                                             color: const Color(0xFF0EE6F3),
-                                            height: 150,
-                                            minWidth: 150,
+                                            height: 150.sp,
+                                            minWidth: 150.sp,
                                             child: StyledText(
                                               [ExerciseState.ongoing, ExerciseState.paused].any((state) => controller.exerciseState.value == state) ? 'Continue' : 'GO',
                                               fontWeight: 800,
@@ -515,6 +516,7 @@ class ActivityHome extends StatelessWidget {
                                       return Transform.scale(
                                           scale: value.get('scale'),
                                           child: FloatingActionButton(
+                                            backgroundColor: Colors.transparent,
                                             onPressed: () {
                                               controller.moveToChallengeMap();
                                             },
