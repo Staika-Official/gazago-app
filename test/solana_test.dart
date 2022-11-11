@@ -7,165 +7,219 @@ import 'package:solana/solana.dart';
 
 void main() {
 
-  test('Derivation works for all test cases', () async {
-    for (final int walletIndex in _testCases.keys) {
-      final wallet = _testCases[walletIndex]!;
-      for (final MapEntry<int, String> item in wallet.entries) {
-        final signer = await Ed25519HDKeyPair.fromMnemonic(
-          _mnemonic,
-          account: walletIndex,
-          change: item.key,
-        );
-        expect(signer.address, equals(item.value));
-      }
-    }
+  final rpcUrl = 'https://api.devnet.solana.com';
+
+  final subscriptionClient = SubscriptionClient.connect('wss://api.devnet.solana.com');
+
+  test('create wallet', () async {
+    final randomKeyPair = await Ed25519HDKeyPair.random();
+    print('address ${randomKeyPair.address}');
+    final privateKey = await randomKeyPair.extract();
+    print('private key ${privateKey.toString()}');
+    print('private key bytes ${privateKey.bytes}');
   });
 
-  test('create wallt', () async {
+  test('import wallet', () async {
+    final address = '6BufeZ6DFnpjn4KLG5gfe3DLAVAoS3imQxYBP6DzbMBg';
+    List<int> privateKey = [161, 38, 33, 160, 179, 255, 235, 121, 6, 215, 185, 63, 133, 112, 250, 78, 156, 177, 93, 135, 102, 5, 156, 160, 192, 128, 24, 162, 226, 8, 177, 116];
+    final testKeyPair = await Ed25519HDKeyPair.fromPrivateKeyBytes(
+      privateKey: privateKey,
+    );
+
+    print('address ${testKeyPair.address}');
+
+
+  });
+
+  test('airdrop', () async {
+    final wallet = await getWalletA();
+
+    final rpcClient = RpcClient(rpcUrl);
+    final signature = await rpcClient.requestAirdrop(
+      wallet.address,
+      2 * lamportsPerSol,
+      commitment: Commitment.confirmed,
+    );
+
+    print('signature $signature');
+
+    await subscriptionClient.waitForSignatureStatus(
+      signature,
+      status: Commitment.confirmed,
+    );
+  });
+
+  test('solana token transfer', () async {
+    final SolanaClient solanaClient = SolanaClient(
+        rpcUrl: Uri.parse('https://api.devnet.solana.com'),
+        websocketUrl: Uri.parse('wss://api.devnet.solana.com'),
+    );
+
+    final sender = await getWalletA();
+    final receiver = Ed25519HDPublicKey.fromBase58('4L3ScUzhGu9onoZ6bbXCeFKFhkJ6tMAUHunj9akLu2P1');
+
+    final signature = await solanaClient.transferLamports(
+      destination: receiver,
+      lamports: 100000000,
+      source: sender,
+      commitment: Commitment.confirmed,
+    );
+
+    print('signature ${signature}');
+  });
+
+  // 솔라나 토큰 트랜스퍼 서명(이게 사용됨)
+  test('solana token transfer sign', () async {
+    final rpcClient = RpcClient(rpcUrl);
+
+    final sender = await getWalletA();
+    final receiver = Ed25519HDPublicKey.fromBase58('4L3ScUzhGu9onoZ6bbXCeFKFhkJ6tMAUHunj9akLu2P1');
+
+    final instructions = [
+      SystemInstruction.transfer(
+        fundingAccount: sender.publicKey,
+        recipientAccount: receiver,
+        lamports: 200000000,
+      ),
+    ];
+
+    final tx = await signTransaction(
+      await rpcClient.getRecentBlockhash(commitment: Commitment.finalized),
+      Message(instructions: instructions),
+      [sender], // 보내는 사람 서명 필요
+    );
+
+    print('tx ${tx.encode()}');
+  });
+
+
+  test('Initialize Mint', () async {
+    final rpcClient = RpcClient(rpcUrl);
+
+    final rent = await rpcClient
+        .getMinimumBalanceForRentExemption(TokenProgram.neededMintAccountSpace);
+
+    final mint = await Ed25519HDKeyPair.random();
+
+    final mintAuthority = await getWalletA();
+
+    // Not throwing is sufficient as test, we need the mint to exist
+    final instructions = TokenInstruction.createAccountAndInitializeMint(
+      mint: mint.publicKey,
+      mintAuthority: mintAuthority.publicKey,
+      freezeAuthority: mintAuthority.publicKey,
+      rent: rent,
+      space: TokenProgram.neededMintAccountSpace,
+      decimals: 5,
+    );
+
+
+    final signature = await rpcClient.signAndSendTransaction(
+      Message(instructions: instructions),
+      [mintAuthority, mint],
+      commitment: Commitment.confirmed,
+    );
+
+    print('signature ${signature}');
+  });
+
+  test('Create Account', () async {
+    final rpcClient = RpcClient(rpcUrl);
+
+    final rent = await rpcClient
+        .getMinimumBalanceForRentExemption(TokenProgram.neededAccountSpace);
+
+    final owner = await getWalletA();
+
+    final instructions = TokenInstruction.createAndInitializeAccount(
+      mint: getTokenAddress(),
+      address: owner.publicKey,
+      owner: owner.publicKey,
+      rent: rent,
+      space: TokenProgram.neededAccountSpace,
+    );
+
+    final signature = await rpcClient.signAndSendTransaction(
+      Message(instructions: instructions),
+      [owner],
+      commitment: Commitment.confirmed,
+    );
+
+    print('signature ${signature}');
+  });
+
+  test('Mint To', () async {
+    final rpcClient = RpcClient(rpcUrl);
+
+    final owner = await getWalletA();
+
+    final instruction = TokenInstruction.mintTo(
+      mint: getTokenAddress(),
+      destination: owner.publicKey,
+      authority: owner.publicKey,
+      amount: 10000000000,
+    );
+
+    final signature = await rpcClient.signAndSendTransaction(
+      Message.only(instruction),
+      [owner],
+      commitment: Commitment.confirmed,
+    );
+
+    print('signature ${signature}');
+  });
+
+  test('token transfer', () async {
     final randomKeyPair = await Ed25519HDKeyPair.random();
     print('address ${randomKeyPair.address}');
     final privateKey = await randomKeyPair.extract();
     print('private key ${privateKey.bytes}');
+
+    final rpcClient = RpcClient(rpcUrl);
+
+    final sender = await getWalletA();
+    final receiver = await getWalletB();
+
+    final instruction = TokenInstruction.transfer(
+      source: sender.publicKey,
+      destination: receiver.publicKey,
+      owner: sender.publicKey,
+      amount: 500000,
+    );
+
+    print('instruction ${instruction.data}');
+
+    final signature = await rpcClient.signAndSendTransaction(
+      Message.only(instruction),
+      [sender],
+      commitment: Commitment.confirmed,
+    );
+
+
+    print('signature $signature');
   });
-
-
-  test('Creating a keypair directly from private key bytes works', () async {
-    // Test with a bunch different random keys
-    for (var i = 0; i < 20; i++) {
-      final randomKeyPair = await Ed25519HDKeyPair.random();
-      final simpleKeyPairData = await randomKeyPair.extract();
-      final testKeyPair = await Ed25519HDKeyPair.fromPrivateKeyBytes(
-        privateKey: simpleKeyPairData.bytes,
-      );
-
-      expect(randomKeyPair.address, equals(testKeyPair.address));
-
-      // Sign a bunch of random messages to check that it works
-      for (var j = 0; j < 20; ++j) {
-        int random(int _) => _random.nextInt(256);
-
-        // Create the seed
-        final List<int> testBytes = List<int>.generate(100, random);
-        // Signatures are identical with both key pairs
-        final signature1 = await randomKeyPair.sign(testBytes);
-        final signature2 = await testKeyPair.sign(testBytes);
-
-        expect(signature1, signature2);
-      }
-    }
-  });
-
-  test(
-    'Can derive a public key from another public key and a seed',
-        () async {
-      _withSeedKeyDerivationData.forEach((key, value) async {
-        final derived = await Ed25519HDPublicKey.createWithSeed(
-          fromPublicKey: Ed25519HDPublicKey.fromBase58(key),
-          seed: value['seed'] as String,
-          programId: Ed25519HDPublicKey.fromBase58(SystemProgram.programId),
-        );
-
-        expect(derived.toBase58(), value['result']);
-      });
-    },
-  );
 }
 
-const _mnemonic =
-    'nothing steak step patient peasant assist add coral tone harsh hint dilemma';
-const _testCases = {
-  0: {
-    0: 'AZ9tSkwgBjvgNrSBKujYVobWkcVy7QuJJHUiiUs7PTG',
-    1: 'EABPLcGWs53zd1Kdhz25S7dSy5WNSAvS8DzjyGsDSaWN',
-    2: 'GsiMGRtdX5ufN3CZmx8UbgpVmV29V2R9PcXH6xuDghGV',
-    3: 'JEECvYzWfARXz5s4tsW1kR6ar2jkqSV3sfZSkw7ZweXY',
-    4: '4q4XDHkK2QRLmBPfFaz6wky5r8BnHsgNsFFvU9rYyvsS',
-    5: 'CcT6Ffgf498guEyVXaGxsv4mKWRXTtby8i4TEAEdYgJY',
-  },
-  1: {
-    0: 'B7KveuCb5W4CpDe4SQHdCmokEU8A8wDVEkcEyQJ5Nnyu',
-    1: '2YWUvBHTYBnXhkQnXkYvgMw3gipxc6uJ6rE9Lss9UVWB',
-    2: '6JxNKUf83kF5kUBdWbjC3CD62kkmiY4imvFB38qMxjvs',
-    3: 'AWFMLshwnwamhgfEnDYPUWVMewNswzazWtUaEEnyuh99',
-    4: 'GwFbSCTiy1eusJ9Axk3GqZthvvQZVY715FJzqAnor7bf',
-    5: '4hG6dGqGHGJRcAtHLJsZi3Vat1rgtSyC5zY4XQvfekqC',
-  },
-  2: {
-    0: 'J1QX218Pckm9m2MxWkhdKgdTBieAADzUfThGpCWqRcEu',
-    1: 'GtFJrgxwHBGuBChuuHKq3adda16PT9nuyMfBDaUgmgZ7',
-    2: '3kaUj3THFwbZsZwbJ5DRKnwVmHurZutK5PZ6rUeKYHSG',
-    3: 'GaVaMi5qgds93g5C8egHZzA5T9A2P4rxmGQaFTpTFRtR',
-    4: '5U1yWdhWWyKW1WKf3kse3MwUjXDngQCj7spV8GWvCPcJ',
-    5: '7gziCSpT9kPSodDxqmzCbZrwwm2kmMDGJj1hawohyJyQ',
-  },
-  3: {
-    0: 'FsBwksd1gXb22sX8w36VP3EdA4eFcJCJzXtYXrzhrzKF',
-    1: '54xnBocBr1xKkfTJgY43fU9LJ1SrZ2XeKhnnSFR9RcHb',
-    2: 'ADzMC2fj48AUFCESoQsGED6s4e33Uj7whzfPVfFHumGY',
-    3: 'DMV9b9cKDe4PzehTHYiLg7UZSbCUHyfMgYsY4QGbSQYq',
-    4: '8E3RxPKT8uwgqVtQEFyqM252SAGp9KoehGfL6kqFEju3',
-    5: 'HL42no5PJdQ657nDcr2fSSNAdZZbQAjNMhwxxL3TiQ1d',
-  },
-  4: {
-    0: 'EfvhFZxeptKe7pCrCfXPUZBpeqBHUu97ERsE426WTdVU',
-    1: '2WXL6RUk7qmacdmoYyEW37HHY5wviAKsYvGGP67eWYHt',
-    2: '7zGmgoa37oGncK2SYjxKeBRe7NnbvrZ94LyzEZiJEain',
-    3: '72UYv24V3NWHND8KzGF2bkLWgQ3Hc181L9pL24Bf1iPo',
-    4: 'DAVEtUY4xM4f8MEZutGvXjDTQgfWNmjsn6hhf32xdVJR',
-    5: 'YReA4Xv7PpL6BZokvsiwHZdpcd8bqEf6NjvRW2bX8Cw',
-  },
-  5: {
-    0: 'Bz69BTu8T3zQe3RXiE9D3DuARQ81U8rzCBC1bRPJSPTF',
-    1: '4F6CtKKyWNgqnoSrxFTSReUMChvCmuzCKwBK6Jc3FstJ',
-    2: 'H4FaiGjattjVe8ve9UqEgDT765pjbjGZV77Bv1vZqgUm',
-    3: 'kHtcpyHD2YjvdSnyJPzGA26TGj7D8WJfYJBUSKjK7Xj',
-    4: 'C5FkQjgPi7pezRcAHLaoafdFGW2Kavco8WvCrJ2HBYkM',
-    5: 'Av4QAMBwZKt5bNnfT2mVc8VhWzE2z4JoWW36CsprwRHP',
-  },
-};
 
-// Note: Generated with the web3.js library
-final _withSeedKeyDerivationData = {
-  'AKt2Mb3WWRvrQVVRKzPDKz2eJxt6FFp2JpqCQ2Dd6aiD': {
-    'result': '3mofn5aDR85AQADM1sjg5EJkQzxm5mfARMdf8sGHMRnU',
-    'seed': '83wbay35jln'
-  },
-  '4p4Q2mMS6beJHjWFq3Rf15yeTEagKx6xrNxS6BykHg5d': {
-    'result': '71SdWBfp5Vc5B88UsTrDmRQnaUxjR9dWPrHfUFibz63i',
-    'seed': 'sg7strvv6i8'
-  },
-  'JAJyHWhKKt1wQR393Vngd2KRGd2qp9Jt35xWRLBcE8vm': {
-    'result': 'AUvp4exymYnFp64XZVBwgd9YqrRJ5YYRfi29myUHLpQh',
-    'seed': 'hrhev1c4qka'
-  },
-  '2jTtpQYE26bjEjVtzTHBbsavTGh827Hero7YhTHkDL1P': {
-    'result': '4fKy3JG28Z1GkLW8Gk5zLHwn24sVSMsS6in81LTy4eya',
-    'seed': 'iafkw47ezrm'
-  },
-  '7vWmVQmLZw2YEGKoGVasxdBVS3BLLfv3iiLx9SnhNLu5': {
-    'result': '8UQ48VTBQ9kVYKPRPpW7igGBk5kfBHNqf5ajvX4PwhEJ',
-    'seed': 'oq4jdymivkp'
-  },
-  'AA8VS3DAdhyL6UEnrUuxYCdfVu8feyy8ccdYxbmfFpQF': {
-    'result': 'CiTXxToxwwXRSxJ2zpqbzCALV4KC7nopgVs8U9LsWjB3',
-    'seed': 'r6vuncch21s'
-  },
-  '5VxhCStjRsynKV74wAQ11DYRwW96yWxDoRdbbupayoF7': {
-    'result': '8hxtWoVLpC8m5bfjFrmukDEHcAHtY7RUCFz3VUsjsKsy',
-    'seed': '123wdwcqeq7l'
-  },
-  'E6iWcpEk7wAcEpX3ksGe1WuvrjTJekRicumJuPkbvYWh': {
-    'result': '35KWzKbGVFnKAJADtKGrLTw8XUUofrLLAipuWeKw8VPE',
-    'seed': 'gg21d582kt9'
-  },
-  '7PN32epxuKt71sG6Kygy9Dn2uhkvWHMbscka3kDdu1QE': {
-    'result': 'GTreHFzqAtAYDDkg5ahCMT4Vc5zoXHzduL918Y4ZzQQ2',
-    'seed': 'ayddb9axjft'
-  },
-  'F8UWuuDN6qo8Yh4zdofTCKQpMSh23sqA3rfFBWewHDZw': {
-    'result': '3VDGgSjBASPHP35WwMv4G5U9WZEMQgfR4sMsbraKUHhQ',
-    'seed': 'tf5b60vh0rl'
-  },
-};
 
-final _random = Random.secure();
+Future<Ed25519HDKeyPair> getWalletA() async {
+  final address = '6BufeZ6DFnpjn4KLG5gfe3DLAVAoS3imQxYBP6DzbMBg';
+  List<int> privateKey = [161, 38, 33, 160, 179, 255, 235, 121, 6, 215, 185, 63, 133, 112, 250, 78, 156, 177, 93, 135, 102, 5, 156, 160, 192, 128, 24, 162, 226, 8, 177, 116];
+  final wallet = await Ed25519HDKeyPair.fromPrivateKeyBytes(
+    privateKey: privateKey,
+  );
+  return wallet;
+}
+
+Future<Ed25519HDKeyPair> getWalletB() async {
+  String address = '4L3ScUzhGu9onoZ6bbXCeFKFhkJ6tMAUHunj9akLu2P1';
+  List<int> privateKey = [156, 174, 186, 87, 109, 39, 222, 252, 251, 84, 238, 187, 115, 49, 26, 79, 220, 78, 134, 99, 30, 196, 72, 51, 199, 107, 175, 192, 252, 93, 9, 21];
+  final wallet = await Ed25519HDKeyPair.fromPrivateKeyBytes(
+    privateKey: privateKey,
+  );
+  return wallet;
+}
+
+Ed25519HDPublicKey getTokenAddress() {
+  return Ed25519HDPublicKey.fromBase58('4L3ScUzhGu9onoZ6bbXCeFKFhkJ6tMAUHunj9akLu2P1');
+}
