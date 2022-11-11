@@ -3,6 +3,7 @@
 import 'dart:math';
 
 import 'package:flutter_test/flutter_test.dart';
+import 'package:solana/dto.dart';
 import 'package:solana/solana.dart';
 
 void main() {
@@ -83,6 +84,8 @@ void main() {
       ),
     ];
 
+    print(instructions);
+
     final tx = await signTransaction(
       await rpcClient.getRecentBlockhash(commitment: Commitment.finalized),
       Message(instructions: instructions),
@@ -123,17 +126,22 @@ void main() {
     print('signature ${signature}');
   });
 
-  test('Create Account', () async {
+  test('Create Token Account', () async {
     final rpcClient = RpcClient(rpcUrl);
 
     final rent = await rpcClient
         .getMinimumBalanceForRentExemption(TokenProgram.neededAccountSpace);
 
-    final owner = await getWalletA();
+    print('rent $rent');
+
+    //final owner = await getWalletA();
+    final owner = await getWalletB();
+
+    final tokensHolder = await Ed25519HDKeyPair.random();
 
     final instructions = TokenInstruction.createAndInitializeAccount(
       mint: getTokenAddress(),
-      address: owner.publicKey,
+      address: tokensHolder.publicKey,
       owner: owner.publicKey,
       rent: rent,
       space: TokenProgram.neededAccountSpace,
@@ -141,7 +149,7 @@ void main() {
 
     final signature = await rpcClient.signAndSendTransaction(
       Message(instructions: instructions),
-      [owner],
+      [owner, tokensHolder],
       commitment: Commitment.confirmed,
     );
 
@@ -149,13 +157,16 @@ void main() {
   });
 
   test('Mint To', () async {
+
     final rpcClient = RpcClient(rpcUrl);
 
     final owner = await getWalletA();
 
+    final tokenAccount = getWalletATokenAccount();
+
     final instruction = TokenInstruction.mintTo(
       mint: getTokenAddress(),
-      destination: owner.publicKey,
+      destination: tokenAccount,
       authority: owner.publicKey,
       amount: 10000000000,
     );
@@ -170,33 +181,48 @@ void main() {
   });
 
   test('token transfer', () async {
-    final randomKeyPair = await Ed25519HDKeyPair.random();
-    print('address ${randomKeyPair.address}');
-    final privateKey = await randomKeyPair.extract();
-    print('private key ${privateKey.bytes}');
-
     final rpcClient = RpcClient(rpcUrl);
 
-    final sender = await getWalletA();
-    final receiver = await getWalletB();
+    final tokenAccount = getWalletATokenAccount();
+    final owner = await getWalletA();
+    final receiver = getWalletBTokenAccount();
 
     final instruction = TokenInstruction.transfer(
-      source: sender.publicKey,
-      destination: receiver.publicKey,
-      owner: sender.publicKey,
-      amount: 500000,
+      source: tokenAccount,
+      destination: receiver,
+      owner: owner.publicKey,
+      amount: 10000000,
     );
 
     print('instruction ${instruction.data}');
 
     final signature = await rpcClient.signAndSendTransaction(
       Message.only(instruction),
-      [sender],
+      [owner],
       commitment: Commitment.confirmed,
     );
 
-
     print('signature $signature');
+
+    /*final SolanaClient solanaClient = SolanaClient(
+      rpcUrl: Uri.parse('https://api.devnet.solana.com'),
+      websocketUrl: Uri.parse('wss://api.devnet.solana.com'),
+    );
+
+    final token = getTokenAddress();
+    final sender = await getWalletA();
+    final receiver = await getWalletB();
+
+    await solanaClient.transferSplToken(
+      owner: sender,
+      destination: receiver.publicKey,
+      amount: 100,
+      mint: token,
+      commitment: Commitment.confirmed,
+    );
+    */
+
+
   });
 }
 
@@ -211,6 +237,10 @@ Future<Ed25519HDKeyPair> getWalletA() async {
   return wallet;
 }
 
+Ed25519HDPublicKey getWalletATokenAccount() {
+  return Ed25519HDPublicKey.fromBase58('2kZ42k3Nmnxmfbsk4vxTciBPrK3nA39VhLYJYSSXpRew');
+}
+
 Future<Ed25519HDKeyPair> getWalletB() async {
   String address = '4L3ScUzhGu9onoZ6bbXCeFKFhkJ6tMAUHunj9akLu2P1';
   List<int> privateKey = [156, 174, 186, 87, 109, 39, 222, 252, 251, 84, 238, 187, 115, 49, 26, 79, 220, 78, 134, 99, 30, 196, 72, 51, 199, 107, 175, 192, 252, 93, 9, 21];
@@ -220,6 +250,11 @@ Future<Ed25519HDKeyPair> getWalletB() async {
   return wallet;
 }
 
+Ed25519HDPublicKey getWalletBTokenAccount() {
+  return Ed25519HDPublicKey.fromBase58('9UZbKKQtfDjQwPaKWwasScjSiUqbYioGufyyh55KgwaK');
+}
+
+
 Ed25519HDPublicKey getTokenAddress() {
-  return Ed25519HDPublicKey.fromBase58('4L3ScUzhGu9onoZ6bbXCeFKFhkJ6tMAUHunj9akLu2P1');
+  return Ed25519HDPublicKey.fromBase58('DK7mBZtspjHP9LdPbZ3cT8tae2XNJvPgWsuEqqbE1tSL');
 }
