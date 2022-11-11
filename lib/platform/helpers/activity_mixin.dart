@@ -321,7 +321,7 @@ class ActivityMixin {
     return RxList(locationStringToLatLng(userState.value.exercise!.locations!));
   }
 
-  void updateExercise() async {
+  void updateExercise({bool? isPaused}) async {
     void errorHandler() {
       CurrentUserStateModel savedState = HiveStore.loadCurrentUserState()!;
       userState.update((state) {
@@ -332,35 +332,48 @@ class ActivityMixin {
     }
 
     if (globalController.connectivityResult.value != ConnectivityResult.none) {
-      await ActivityService.fetchUpdateUserExercises(
-        userExerciseData.value,
-        Platform.operatingSystem,
-        successCallback: (CurrentUserStateModel newUserState) {
-          userState.update((state) {
-            state?.state = newUserState.state;
-            state?.exercise = newUserState.exercise;
-            state?.shoes = newUserState.shoes;
-          });
+      isPaused != null && isPaused
+          ? await ActivityService.fetchPausedUserExercises(
+              userExerciseData.value,
+              Platform.operatingSystem,
+              successCallback: (CurrentUserStateModel newUserState) {
+                userState.update((state) {
+                  state?.state = newUserState.state;
+                  state?.exercise = newUserState.exercise;
+                  state?.shoes = newUserState.shoes;
+                });
+              },
+              errorCallback: errorHandler,
+            )
+          : await ActivityService.fetchUpdateUserExercises(
+              userExerciseData.value,
+              Platform.operatingSystem,
+              successCallback: (CurrentUserStateModel newUserState) {
+                userState.update((state) {
+                  state?.state = newUserState.state;
+                  state?.exercise = newUserState.exercise;
+                  state?.shoes = newUserState.shoes;
+                });
 
-          if (userState.value.state!.stamina! < 30) {
-            if (userState.value.shoes!.durability! == 0) {
-              showLocalNotification(notificationType: NotificationType.stamina, title: '체력 충전 알림', message: '지금 체력이 0이 되어 GO보상이 되지 않고 있어요. 체력 충전하러 가자GO~~');
-            } else {
-              showLocalNotification(notificationType: NotificationType.stamina, title: '체력 충전 알림', message: '체력이 부족하면 GO보상이 되지 않아요. 체력 충전하러 가자GO~~');
-            }
-          }
-          if (userState.value.shoes!.durability! < 30) {
-            if (userState.value.shoes!.durability! == 0) {
-              showLocalNotification(notificationType: NotificationType.durability, title: '아이템 수리 알림', message: '지금 내구도(신발)가 0이 되어 GO보상이 되지 않고 있어요. 내구도 보충하러 가자GO~~');
-            } else {
-              showLocalNotification(notificationType: NotificationType.durability, title: '아이템 수리 알림', message: '내구도(신발)가 부족하면 GO보상이 되지 않아요. 내구도 보충하러 가자GO~~');
-            }
-          }
-          // updateCount.value = updateCount.value + 1;
-          // lastUpdateTime.value = DateTime.now().toIso8601String();
-        },
-        errorCallback: errorHandler,
-      );
+                if (userState.value.state!.stamina! < 30) {
+                  if (userState.value.shoes!.durability! == 0) {
+                    showLocalNotification(notificationType: NotificationType.stamina, title: '체력 충전 알림', message: '지금 체력이 0이 되어 GO보상이 되지 않고 있어요. 체력 충전하러 가자GO~~');
+                  } else {
+                    showLocalNotification(notificationType: NotificationType.stamina, title: '체력 충전 알림', message: '체력이 부족하면 GO보상이 되지 않아요. 체력 충전하러 가자GO~~');
+                  }
+                }
+                if (userState.value.shoes!.durability! < 30) {
+                  if (userState.value.shoes!.durability! == 0) {
+                    showLocalNotification(notificationType: NotificationType.durability, title: '아이템 수리 알림', message: '지금 내구도(신발)가 0이 되어 GO보상이 되지 않고 있어요. 내구도 보충하러 가자GO~~');
+                  } else {
+                    showLocalNotification(notificationType: NotificationType.durability, title: '아이템 수리 알림', message: '내구도(신발)가 부족하면 GO보상이 되지 않아요. 내구도 보충하러 가자GO~~');
+                  }
+                }
+                // updateCount.value = updateCount.value + 1;
+                // lastUpdateTime.value = DateTime.now().toIso8601String();
+              },
+              errorCallback: errorHandler,
+            );
     } else {
       errorHandler();
     }
@@ -420,7 +433,7 @@ class ActivityMixin {
     pedestrianStatusSubscription == null;
     exerciseState.value = ExerciseState.paused;
     HiveStore.save(key: HiveKey.savedStepInitialized.name, value: false);
-    updateExercise();
+    updateExercise(isPaused: true);
   }
 
   void showEndExerciseDialog(ChallengeModel challenge) {
