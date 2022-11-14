@@ -640,7 +640,7 @@ class GaugeCursor extends StatelessWidget {
           ),
           Positioned(
             top: 0,
-            left: 10,
+            left: speed > 13 ? -80 : 10,
             child: Row(
               children: [
                 StyledText(
