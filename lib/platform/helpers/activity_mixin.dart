@@ -144,6 +144,7 @@ class ActivityMixin {
         altitude: highestAltitude.value,
         time: exerciseTime.value,
         locations: coordinatesToString(coordinates),
+        locationUpdateTime: DateTime.now(),
       ),
     );
   }
@@ -179,7 +180,6 @@ class ActivityMixin {
       if (exerciseState.value == ExerciseState.ongoing) {
         exerciseTime.value++;
 
-        print('speedTimer ${timer}');
         UserExerciseModel exerciseModel = userState.value.exercise!;
         exerciseModel.id = userState.value.exercise!.id;
         exerciseModel.steps = exerciseSteps.value;
@@ -188,6 +188,7 @@ class ActivityMixin {
         exerciseModel.altitude = highestAltitude.value;
         exerciseModel.time = exerciseTime.value;
         exerciseModel.locations = coordinatesToString(coordinates);
+        exerciseModel.locationUpdateTime = exerciseData.isNotEmpty ? exerciseData.last.locationUpdateTime : DateTime.now();
 
         HiveStore.saveCurrentUserState(
           userState: CurrentUserStateModel(
@@ -234,19 +235,23 @@ class ActivityMixin {
     RxDouble calRealtimeSpeed = RxDouble(0);
 
     double speed = exerciseData.isNotEmpty ? exerciseData.last.speed! : 0;
-    int prevStep = exerciseData.isNotEmpty && exerciseData.length > 2 ? exerciseData[exerciseData.length - 2].steps! : 0;
+    List<UserExerciseModel> sortedList = List.empty(growable: true);
+    UserExerciseModel? prevData;
+    if (exerciseData.length > 1) {
+      sortedList = [...exerciseData];
+      sortedList.sort((a, b) => (b.locationUpdateTime!.compareTo(a.locationUpdateTime!)));
+      prevData = sortedList.firstWhere((sortedData) => (DateTime.now().subtract(Duration(seconds: stopTimeInterval)).compareTo(sortedData.locationUpdateTime!) == 1));
+    }
+    int prevStep = prevData != null ? prevData.steps! : 0;
     int currentStep = exerciseData.isNotEmpty && exerciseData.length > 2 ? exerciseData.last.steps! : 0;
+    // int currentStep = 10;
 
     // 15초 이상 걷기 감지가 되지 않을 경우에는 속도 0으로 표시
     print('${currentStep} - ${prevStep} > ${stepDifference}');
     if (currentStep - prevStep > stepDifference) {
-      DateTime now = DateTime.now();
-      if (pedestrianStoppedTime.value.add(const Duration(seconds: 10)).compareTo(now) < 0) {
-        calRealtimeSpeed = (exerciseState.value != ExerciseState.ongoing) ? RxDouble(0) : RxDouble(speed);
-      }
-    } else {
-      pedestrianStoppedTime.value = DateTime.now();
+      calRealtimeSpeed.value = (exerciseState.value != ExerciseState.ongoing) ? 0 : speed;
     }
+
     realTimeSpeed.value = calRealtimeSpeed.value;
   }
 
@@ -283,6 +288,7 @@ class ActivityMixin {
           time: 0,
           startPoint: challenge != null ? challenge.firstName : '${currentLocation.value.longitude}, ${currentLocation.value.latitude}',
           challengeId: challenge?.id,
+          locationUpdateTime: DateTime.now(),
         ),
         Platform.operatingSystem,
         successCallback: (UserExerciseModel userExerciseData) {
@@ -306,6 +312,7 @@ class ActivityMixin {
   void continueExercise() {
     exerciseData.value = List.empty(growable: true);
     exerciseState.value = ExerciseState.ongoing;
+    userState.value.exercise!.locationUpdateTime = DateTime.now();
     exerciseData.add(userState.value.exercise!);
     exerciseTime.value = userState.value.exercise!.time!;
     exerciseSteps.value = userState.value.exercise!.steps!;
@@ -341,6 +348,7 @@ class ActivityMixin {
               userExerciseData.value,
               Platform.operatingSystem,
               successCallback: (CurrentUserStateModel newUserState) {
+                newUserState.exercise!.locationUpdateTime = DateTime.now();
                 userState.update((state) {
                   state?.state = newUserState.state;
                   state?.exercise = newUserState.exercise;
@@ -353,6 +361,7 @@ class ActivityMixin {
               userExerciseData.value,
               Platform.operatingSystem,
               successCallback: (CurrentUserStateModel newUserState) {
+                newUserState.exercise!.locationUpdateTime = DateTime.now();
                 userState.update((state) {
                   state?.state = newUserState.state;
                   state?.exercise = newUserState.exercise;
@@ -499,10 +508,10 @@ class ActivityMixin {
     } else {
       exerciseState.value = ExerciseState.ready;
       CurrentUserStateModel savedState = HiveStore.loadCurrentUserState()!;
-      userState.update((_state) {
-        _state?.state = savedState.state;
-        _state?.exercise = savedState.exercise;
-        _state?.shoes = savedState.shoes;
+      userState.update((state) {
+        state?.state = savedState.state;
+        state?.exercise = savedState.exercise;
+        state?.shoes = savedState.shoes;
       });
       userState.value.exercise!.state = 'ENDED';
       HiveStore.saveCurrentUserState(userState: userState.value);
