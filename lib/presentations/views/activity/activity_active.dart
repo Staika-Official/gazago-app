@@ -94,7 +94,7 @@ class ActivityActive extends StatelessWidget {
                                                         ? 0
                                                         : 34,
                                                 decoration: BoxDecoration(
-                                                  color: stat.currentStat < 20 ? const Color(0xFFFF2525) : const Color(0xFFCDFF41),
+                                                  color: stat.currentStat < 30 ? const Color(0xFFFF2525) : const Color(0xFFCDFF41),
                                                   border: Border.all(
                                                     width: 2,
                                                     color: Colors.black,
@@ -133,7 +133,7 @@ class ActivityActive extends StatelessWidget {
                                                         ? 0
                                                         : 34,
                                                 decoration: BoxDecoration(
-                                                  color: stat.currentStat < 20 ? const Color(0xFFFF2525) : const Color(0xFFB85DFF),
+                                                  color: stat.currentStat < 30 ? const Color(0xFFFF2525) : const Color(0xFFB85DFF),
                                                   border: Border.all(
                                                     width: 2,
                                                     color: Colors.black,
@@ -640,7 +640,7 @@ class GaugeCursor extends StatelessWidget {
           ),
           Positioned(
             top: 0,
-            left: 10,
+            left: speed > 13 ? -80 : 10,
             child: Row(
               children: [
                 StyledText(

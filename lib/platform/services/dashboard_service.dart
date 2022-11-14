@@ -14,8 +14,9 @@ class DashboardService {
     Response res = await DashboardApi.getDailyRankingList(date, page, size);
     if (res.statusCode == 200) {
       List<RankerModel> rankerList = [];
-
-      res.data.forEach((item) => rankerList.add(RankerModel.fromJson(item)));
+      if (res.data.length > 0) {
+        res.data.forEach((item) => rankerList.add(RankerModel.fromJson(item)));
+      }
       successCallback(rankerList);
     } else {
       if (errorCallback != null) errorCallback();
@@ -26,7 +27,9 @@ class DashboardService {
     Response res = await DashboardApi.getUserRewardStatistics(userId!, dateFormat, value);
     if (res.statusCode == 200) {
       List<UserRewardStatisticsModel> list = [];
-      res.data.forEach((item) => list.add(UserRewardStatisticsModel.fromJson(item)));
+      if (res.data.length > 0) {
+        res.data.forEach((item) => list.add(UserRewardStatisticsModel.fromJson(item)));
+      }
       successCallback(list);
     } else {
       if (errorCallback != null) errorCallback();

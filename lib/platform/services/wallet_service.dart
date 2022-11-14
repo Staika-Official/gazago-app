@@ -42,7 +42,9 @@ class WalletService {
   static Future<List<TokenInfoModel>> getSpendingMetaData() async {
     Response res = await WalletApi.getSpendingMetaData();
     List<TokenInfoModel> tokenData = [];
-    res.data.forEach((item) => tokenData.add(TokenInfoModel.fromJson(item)));
+    if (res.data.length > 0) {
+      res.data.forEach((item) => tokenData.add(TokenInfoModel.fromJson(item)));
+    }
     return tokenData;
   }
 

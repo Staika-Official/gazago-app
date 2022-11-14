@@ -464,7 +464,7 @@ class Tile extends StatelessWidget {
                                                             ? 0
                                                             : 34,
                                                     decoration: BoxDecoration(
-                                                      color: durability! < 20 ? const Color(0xFFFF2525) : const Color(0xFFB85DFF),
+                                                      color: durability! < 30 ? const Color(0xFFFF2525) : const Color(0xFFB85DFF),
                                                       borderRadius: const BorderRadius.all(
                                                         Radius.circular(50),
                                                       ),
