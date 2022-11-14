@@ -2,8 +2,10 @@
 
 import 'dart:math';
 
+import 'package:dio/dio.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:solana/dto.dart';
+import 'package:solana/encoder.dart';
 import 'package:solana/solana.dart';
 
 void main() {
@@ -147,6 +149,7 @@ void main() {
       space: TokenProgram.neededAccountSpace,
     );
 
+
     final signature = await rpcClient.signAndSendTransaction(
       Message(instructions: instructions),
       [owner, tokensHolder],
@@ -193,16 +196,54 @@ void main() {
       owner: owner.publicKey,
       amount: 10000000,
     );
+    print('instruction ${instruction}');
 
-    print('instruction ${instruction.data}');
 
-    final signature = await rpcClient.signAndSendTransaction(
+
+    final recentBlockhash = await rpcClient.getRecentBlockhash(commitment: Commitment.confirmed);
+
+    SignedTx signature = await signTransactionCustom(recentBlockhash, Message.only(instruction), [owner], Ed25519HDPublicKey.fromBase58('47NHwdLy1u3er4kH9PycRNzowGN3oJtMoHRbJRhFX3MV'));
+
+
+    
+    
+   /* final signature = await rpcClient.signMessage(
       Message.only(instruction),
       [owner],
       commitment: Commitment.confirmed,
-    );
+    );*/
+    print('signature ${signature.encode()}');
 
-    print('signature $signature');
+
+    final token = '';
+
+    final send = {
+      'clientId': 'GAZAGO',
+      'transInfo': signature.encode()
+    };
+
+    print('3333333333333333333333333');
+
+    try {
+      var response = await Dio().post('http://localhost:8089/api/solana/wallet/test/transfer', data: send);
+      print(response);
+    } catch (e) {
+      print(e);
+    }
+    
+    
+    /*refreshDio.post('http://localhost:8089/api/solana/wallet/test/transfer', data: send).then((Response res) {
+        print('data ${res.data}');
+      }).catchError((e) {
+        print('catchError ${e.toString()}');
+      });*/
+
+
+
+
+
+
+
 
     /*final SolanaClient solanaClient = SolanaClient(
       rpcUrl: Uri.parse('https://api.devnet.solana.com'),
@@ -257,4 +298,41 @@ Ed25519HDPublicKey getWalletBTokenAccount() {
 
 Ed25519HDPublicKey getTokenAddress() {
   return Ed25519HDPublicKey.fromBase58('DK7mBZtspjHP9LdPbZ3cT8tae2XNJvPgWsuEqqbE1tSL');
+}
+
+
+Future<SignedTx> signTransactionCustom(
+    RecentBlockhash recentBlockhash,
+    Message message,
+    List<Ed25519HDKeyPair> signers,
+    Ed25519HDPublicKey feePayer,
+    ) async {
+  if (signers.isEmpty) {
+    throw const FormatException('you must specify at least on signer');
+  }
+
+  final CompiledMessage compiledMessage = message.compile(
+    recentBlockhash: recentBlockhash.blockhash,
+    feePayer: feePayer,
+  );
+
+  /*
+  final int requiredSignaturesCount = compiledMessage.requiredSignatureCount;
+  if (signers.length != requiredSignaturesCount) {
+    throw FormatException(
+      'your message requires $requiredSignaturesCount signatures but '
+          'you provided ${signers.length}',
+    );
+  }
+   */
+
+  // FIXME(IA): signatures must match signers in the message accounts sorting
+  final List<Signature> signatures = await Future.wait(
+    signers.map((signer) => signer.sign(compiledMessage.data)),
+  );
+
+  return SignedTx(
+    messageBytes: compiledMessage.data,
+    signatures: signatures,
+  );
 }
