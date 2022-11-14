@@ -103,7 +103,7 @@ class LeaderboardHome extends StatelessWidget {
             flex: 2,
             child: Row(
               children: [
-                (myRank.profileImageUrl != '')
+                (myRank.profileImageUrl != null)
                     ? Container(
                         width: 44.0,
                         height: 44.0,
@@ -118,13 +118,13 @@ class LeaderboardHome extends StatelessWidget {
                           backgroundColor: Colors.black,
                           child: CircleAvatar(
                             radius: 15,
-                            foregroundImage: NetworkImage(myRank.profileImageUrl),
+                            foregroundImage: NetworkImage(myRank.profileImageUrl!),
                           ),
                         ),
                       )
                     : const CircleAvatar(
                         radius: 15,
-                        backgroundColor: Colors.black,
+                        backgroundColor: Colors.white,
                       ),
                 Padding(
                   padding: const EdgeInsets.only(left: 8.0),
@@ -188,14 +188,14 @@ class LeaderboardHome extends StatelessWidget {
             flex: 2,
             child: Row(
               children: [
-                (ranker.profileImageUrl != '')
+                (ranker.profileImageUrl != null)
                     ? CircleAvatar(
                         radius: 15,
-                        foregroundImage: NetworkImage(ranker.profileImageUrl),
+                        foregroundImage: NetworkImage(ranker.profileImageUrl!),
                       )
                     : const CircleAvatar(
                         radius: 15,
-                        backgroundColor: Colors.black,
+                        backgroundColor: Colors.white,
                       ),
                 Padding(
                   padding: const EdgeInsets.only(left: 10.0),
