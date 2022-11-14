@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/svg.dart';
+import 'package:flutter_svg_provider/flutter_svg_provider.dart' as SP;
 import 'package:gaza_go/constants/enums.dart';
 import 'package:gaza_go/platform/controllers/archive_controller.dart';
 import 'package:gaza_go/platform/helpers/activity_helper.dart';
@@ -37,7 +39,7 @@ class ArchiveHome extends StatelessWidget {
                 elevation: 0,
                 color: const Color(0xFF363841),
                 child: Padding(
-                  padding: const EdgeInsets.only(top: 15.0, left: 15.0, right: 15.0, bottom: 10.0),
+                  padding: const EdgeInsets.only(top: 18.0, left: 18.0, right: 18.0, bottom: 17.0),
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
@@ -46,35 +48,40 @@ class ArchiveHome extends StatelessWidget {
                         crossAxisAlignment: CrossAxisAlignment.center,
                         children: [
                           Stack(
+                            clipBehavior: Clip.none,
                             children: [
                               CircleAvatar(
                                 radius: 21,
-                                child: archive.type == ExerciseType.hiking.name.toUpperCase() ? iconArchiveHiking : iconArchiveWalking,
+                                backgroundColor: Colors.transparent,
+                                foregroundImage: archive.type == ExerciseType.hiking.name.toUpperCase()
+                                    ? SP.Svg('assets/images/archive/ico_archive_hiking.svg') as ImageProvider
+                                    : SP.Svg('assets/images/archive/ico_archive_walking.svg') as ImageProvider,
                               ),
                               if (archive.badgeIssueId != null)
                                 Positioned(
-                                  right: 0,
-                                  bottom: 0,
-                                  child: Image.asset('assets/images/archive/ico_badge.png', width: 15, height: 20),
+                                  right: -5,
+                                  bottom: -5,
+                                  child: Image.network(archive.badgeImageUrl!, width: 20, height: 20),
                                 ),
                             ],
                           ),
                           Padding(
                             padding: const EdgeInsets.only(
-                              left: 10,
+                              left: 16,
                             ),
                             child: Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
-                                StyledText(formatDate(archive.startedDate!), fontSize: 16, fontWeight: 500),
-                                if (archive.challengeName != null) StyledText(archive.challengeName!, fontSize: 12, lineHeight: 20, color: const Color(0xFF949494), fontWeight: 500),
+                                StyledText(formatDateUntilDay(archive.startedDate!), fontSize: 16, fontWeight: 500),
+                                if (archive.challengeTitle != null) StyledText(archive.challengeTitle!, fontSize: 12, lineHeight: 20, color: const Color(0xFF8a8a8a), fontWeight: 600),
                               ],
                             ),
                           )
                         ],
                       ),
                       const Divider(
-                        color: Color(0xFF28292C),
+                        color: Color(0xFF2a2b33),
+                        height: 25,
                         thickness: 1,
                       ),
                       Row(
@@ -147,11 +154,12 @@ class ArchiveHome extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.start,
             mainAxisSize: MainAxisSize.min,
             children: [
-              Padding(
-                padding: const EdgeInsets.only(bottom: 15.0),
+              const Padding(
+                padding: EdgeInsets.only(bottom: 15.0),
                 child: StyledText(
                   '운동 기록',
                   fontSize: 20,
+                  lineHeight: 20,
                   fontWeight: 500,
                 ),
               ),
@@ -164,20 +172,58 @@ class ArchiveHome extends StatelessWidget {
               //   ),
               // ),
 
-              Expanded(
-                child: RefreshIndicator(
-                  onRefresh: () async => await controller.getArchiveList(),
-                  child: SingleChildScrollView(
-                    physics: ClampingScrollPhysics(),
-                    child: Column(
-                      mainAxisSize: MainAxisSize.min,
-                      children: [
-                        ...renderArchiveList(controller),
-                      ],
-                    ),
-                  ),
-                ),
-              ),
+              controller.dataGetLoading.value
+                  ? const Padding(
+                      padding: EdgeInsets.symmetric(vertical: 20.0),
+                      child: Center(child: CircularProgressIndicator()),
+                    )
+                  : controller.archiveList.isEmpty
+                      ? Container(
+                          width: double.infinity,
+                          padding: EdgeInsets.symmetric(vertical: 50),
+                          decoration: BoxDecoration(
+                            color: Color(0xff363841),
+                            borderRadius: BorderRadius.circular(12),
+                          ),
+                          child: Column(
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              SvgPicture.asset('assets/images/wallet/ico_empty.svg'),
+                              const Padding(
+                                padding: EdgeInsets.only(top: 20),
+                                child: StyledText(
+                                  '운동 기록이 없습니다.',
+                                  color: Color(0xff7b7b7b),
+                                  fontSize: 16,
+                                  lineHeight: 10,
+                                  fontWeight: 500,
+                                ),
+                              ),
+                              const Padding(
+                                padding: EdgeInsets.only(top: 13),
+                                child: StyledText(
+                                  '운동하고 GO를 쌓아보세요!',
+                                  color: Color(0xff7b7b7b),
+                                  fontSize: 16,
+                                  lineHeight: 10,
+                                  fontWeight: 500,
+                                ),
+                              ),
+                            ],
+                          ),
+                        )
+                      : Expanded(
+                          child: SingleChildScrollView(
+                            controller: controller.scroll,
+                            physics: ClampingScrollPhysics(),
+                            child: Column(
+                              mainAxisSize: MainAxisSize.min,
+                              children: [
+                                ...renderArchiveList(controller),
+                              ],
+                            ),
+                          ),
+                        ),
             ],
           ),
         );

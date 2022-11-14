@@ -1,7 +1,10 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:gaza_go/constants/enums.dart';
 import 'package:gaza_go/constants/routes.dart';
 import 'package:gaza_go/platform/models/term_item_model.dart';
+import 'package:gaza_go/platform/services/uaa_service.dart';
+import 'package:gaza_go/platform/stores/hive_store.dart';
 import 'package:gaza_go/presentations/styles/styled_text.dart';
 import 'package:get/get.dart';
 
@@ -59,7 +62,7 @@ class WithdrawConfirmController extends GetxController {
   void showWithdrawConfirmPopup() {
     Get.bottomSheet(
       Container(
-        height: 230,
+        height: 240,
         decoration: const BoxDecoration(
           color: Color(0xff363841),
           borderRadius: BorderRadius.only(
@@ -139,7 +142,7 @@ class WithdrawConfirmController extends GetxController {
                           ],
                         ),
                         child: InkWell(
-                          onTap: () => Get.toNamed(Routes.withdrawCompleted),
+                          onTap: () => handleFetchWithdrawMember(),
                           child: const Padding(
                             padding: EdgeInsets.symmetric(vertical: 12.0),
                             child: Center(
@@ -161,5 +164,23 @@ class WithdrawConfirmController extends GetxController {
         ),
       ),
     );
+  }
+
+  void handleFetchWithdrawMember() async {
+    await UaaService.fetchWithdrawMember(
+      successCallback: () {
+        Get.toNamed(Routes.withdrawCompleted);
+      },
+      errorCallback: () {},
+    );
+    // Get.toNamed(Routes.withdrawCompleted)
+  }
+
+  void handleWithdrawComplete() {
+    HiveStore.deleteMultipleKeys(keys: [
+      HiveKey.accessToken.name,
+      HiveKey.refreshToken.name,
+    ]);
+    Get.offAllNamed(Routes.login);
   }
 }

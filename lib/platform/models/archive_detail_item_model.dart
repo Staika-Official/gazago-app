@@ -23,6 +23,14 @@ class ArchiveDetailItemModel {
   String? locations;
   double? spendDurability;
   double? spendStamina;
+  String? title;
+  String? firstName;
+  String? secondName;
+  String? startPointName;
+  String? endPointName;
+  String? description;
+  String? province;
+  String? badgeImageUrl;
 
   ArchiveDetailItemModel({
     this.id,
@@ -44,6 +52,14 @@ class ArchiveDetailItemModel {
     this.locations,
     this.spendDurability,
     this.spendStamina,
+    this.title,
+    this.firstName,
+    this.secondName,
+    this.startPointName,
+    this.endPointName,
+    this.description,
+    this.province,
+    this.badgeImageUrl,
   });
 
   factory ArchiveDetailItemModel.fromJson(Map<String, dynamic> json) => _$ArchiveDetailItemModelFromJson(json);

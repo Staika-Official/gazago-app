@@ -10,6 +10,7 @@ class StyledText extends StatelessWidget {
   final double lineHeight;
   final double letterSpacing;
   final TextAlign textAlign;
+  final bool overflowEllipsis;
 
   const StyledText(
     this.text, {
@@ -22,6 +23,7 @@ class StyledText extends StatelessWidget {
     this.backgroundColor = Colors.transparent,
     this.letterSpacing = 1,
     this.textAlign = TextAlign.start,
+    this.overflowEllipsis = false,
   }) : super(key: key);
 
   FontWeight get getFontWeight {
@@ -72,6 +74,7 @@ class StyledText extends StatelessWidget {
         height: getLineHeight,
         backgroundColor: backgroundColor,
         letterSpacing: letterSpacing,
+        overflow: overflowEllipsis ? TextOverflow.ellipsis : TextOverflow.visible,
       ),
     );
   }

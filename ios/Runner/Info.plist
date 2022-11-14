@@ -33,6 +33,12 @@
 				<string>com.googleusercontent.apps.321889905131-22r952df5n2g5i3qehb6dgcg5o4188dt</string>
 			</array>
 		</dict>
+		<dict>
+			<key>CFBundleTypeRole</key>
+			<string>Editor</string>
+			<key>CFBundleURLSchemes</key>
+			<array/>
+		</dict>
 	</array>
 	<key>CFBundleVersion</key>
 	<string>$(FLUTTER_BUILD_NUMBER)</string>
@@ -44,6 +50,12 @@
 	<true/>
 	<key>NMFClientId</key>
 	<string>p7rc49dszh</string>
+	<key>NSCameraUsageDescription</key>
+	<string>QR 코드를 스캔하기 위해서 필요합니다.</string>
+	<key>NSHealthShareUsageDescription</key>
+	<string>정확한 걸음 수 측정을 위해 필요한 기능입니다.</string>
+	<key>NSHealthUpdateUsageDescription</key>
+	<string>정확한 걸음 수 측정을 위해 필요한 기능입니다.</string>
 	<key>NSLocationAlwaysAndWhenInUseUsageDescription</key>
 	<string>앱을 사용하기 위해서 위치추적 권한을 허용해주세요.</string>
 	<key>NSLocationAlwaysUsageDescription</key>
@@ -73,6 +85,8 @@
 	<string>LaunchScreen</string>
 	<key>UIMainStoryboardFile</key>
 	<string>Main</string>
+	<key>UIStatusBarHidden</key>
+	<false/>
 	<key>UISupportedInterfaceOrientations</key>
 	<array>
 		<string>UIInterfaceOrientationPortrait</string>

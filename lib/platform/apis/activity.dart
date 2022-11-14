@@ -7,7 +7,17 @@ import 'package:geolocator/geolocator.dart';
 
 class ActivityApi {
   static Future<Response> getChallenges() async {
-    return await Api.client(serviceUrl: '/services/gazago/api').get('/challenges?size=100');
+    return await Api.client(serviceUrl: '/services/gazago/api').get('/challenges?size=9999&page=0');
+  }
+
+  static Future<Response> getChallengesHierarchy(Position currentLocation) async {
+    return await Api.client(serviceUrl: '/services/gazago/api').get(
+      '/challenges/hierarchy/lat/${currentLocation.latitude}/lon/${currentLocation.longitude}',
+    );
+  }
+
+  static Future<Response> getChallenge(int id) async {
+    return await Api.client(serviceUrl: '/services/gazago/api').get('/challenges/$id');
   }
 
   // static Future<Response> getNearByChallenges(LocationData currentLocation) async {
@@ -26,13 +36,34 @@ class ActivityApi {
   }
 
   static Future<Response> fetchStartUserExercises(String userId, UserExerciseModel exerciseInfo, String platform) async {
-    return await Api.client(serviceUrl: ServiceUrl.exerciseService).post('/users/$userId', data: exerciseInfo, queryParameters: {'platform': platform});
+    exerciseInfo.state = 'ONGOING';
+    return await Api.client(serviceUrl: ServiceUrl.exerciseService).post(
+      '/users/$userId',
+      data: exerciseInfo,
+      queryParameters: {'platform': platform},
+    );
   }
 
   static Future<Response> fetchUpdateUserExercises(String userId, UserExerciseModel exerciseInfo, String platform) async {
-    return await Api.client(serviceUrl: ServiceUrl.exerciseService).put('/users/$userId', data: exerciseInfo, queryParameters: {
-      'platform': platform,
-    });
+    exerciseInfo.state = 'ONGOING';
+    return await Api.client(serviceUrl: ServiceUrl.exerciseService).put(
+      '/users/$userId',
+      data: exerciseInfo,
+      queryParameters: {
+        'platform': platform,
+      },
+    );
+  }
+
+  static Future<Response> fetchPausedUserExercises(String userId, UserExerciseModel exerciseInfo, String platform) async {
+    exerciseInfo.state = 'PAUSED';
+    return await Api.client(serviceUrl: ServiceUrl.exerciseService).put(
+      '/users/$userId',
+      data: exerciseInfo,
+      queryParameters: {
+        'platform': platform,
+      },
+    );
   }
 
   static Future<Response> fetchEndUserExercises(String userId, UserExerciseModel exerciseInfo) async {

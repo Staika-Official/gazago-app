@@ -4,12 +4,11 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:gaza_go/constants/enums.dart';
 import 'package:gaza_go/constants/routes.dart';
+import 'package:gaza_go/platform/helpers/alert_helper.dart';
 import 'package:gaza_go/platform/models/access_token_model.dart';
 import 'package:gaza_go/platform/models/social_login_info_model.dart';
-import 'package:gaza_go/platform/models/user_account_model.dart';
 import 'package:gaza_go/platform/services/member_service.dart';
 import 'package:gaza_go/platform/services/uaa_service.dart';
-import 'package:gaza_go/platform/services/wallet_service.dart';
 import 'package:gaza_go/platform/stores/hive_store.dart';
 import 'package:get/get.dart';
 import 'package:google_sign_in/google_sign_in.dart';
@@ -25,8 +24,6 @@ class LoginController extends GetxController {
         break;
       case LoginType.apple:
         await signInWithApple();
-        break;
-      case LoginType.kakao:
         break;
       default:
         await emailLogin();
@@ -60,9 +57,6 @@ class LoginController extends GetxController {
     );
 
     await requestLogin(LoginType.google, credential.idToken!);
-
-    // Once signed in, return the UserCredential
-    // return await FirebaseAuth.instance.signInWithCredential(credential);
   }
 
   Future<void> signInWithApple() async {
@@ -78,25 +72,25 @@ class LoginController extends GetxController {
       idToken: appleCredential.identityToken,
     );
 
-    await requestLogin(LoginType.apple, credential.idToken!);
-
-    // return await FirebaseAuth.instance.signInWithCredential(credential);
+    await requestLogin(LoginType.apple, credential.accessToken!);
   }
 
   Future<void> getUserInfo() async {
-    UserAccountModel user = await UaaService.getAccountInfo();
-    HiveStore.save(key: HiveKey.userId.name, value: user.id.toString());
-    HiveStore.save(key: HiveKey.profileImageUrl.name, value: user.profileImageUrl);
-    HiveStore.save(key: HiveKey.nickname.name, value: user.nickname);
+    await UaaService.getAccountInfo(
+      successCallback: (user) {
+        HiveStore.save(key: HiveKey.userId.name, value: user.id.toString());
+        HiveStore.save(key: HiveKey.profileImageUrl.name, value: user.profileImageUrl);
+        HiveStore.save(key: HiveKey.nickname.name, value: user.nickname);
+      },
+    );
   }
 
   Future<void> initUserInfo() async {
     await getUserInfo();
-    print('asd');
+
     String? profileImageUrl = HiveStore.loadString(key: HiveKey.profileImageUrl.name);
     String? nickname = HiveStore.loadString(key: HiveKey.nickname.name);
-    await MemberService.initializeUserData(nickname!, profileImageUrl!);
-    await WalletService.generateSpendingWallet();
+    await MemberService.initializeUserData(nickname, profileImageUrl);
   }
 
   Future<void> requestLogin(LoginType loginType, String accessToken) async {
@@ -118,19 +112,31 @@ class LoginController extends GetxController {
     await UaaService.socialLogin(
       loginInfo,
       successCallback: (AccessTokenModel token, int statusCode) async {
+        print('access token: ${token.accessToken}');
+        print('refresh token: ${token.refreshToken}');
         HiveStore.save(key: HiveKey.accessToken.name, value: token.accessToken);
         HiveStore.save(key: HiveKey.refreshToken.name, value: token.refreshToken);
 
         if (statusCode == 200) {
-          await initUserInfo();
-          Get.offNamed(Routes.loading);
+          if (token.accountStatus == 'TERMINATION_REQUESTED') {
+            Get.toNamed(Routes.accountRestore);
+          } else {
+            await initUserInfo();
+            bool? permissionRequestBefore = HiveStore.load(key: HiveKey.permissionRequestOnFirstLaunch.name);
+            if (permissionRequestBefore != null && permissionRequestBefore) {
+              Get.offNamed(Routes.loading);
+            } else {
+              Get.offNamed(Routes.permissions);
+            }
+          }
         } else {
           await initUserInfo();
-          Get.offNamed(Routes.onBoarding);
+          HiveStore.save(key: HiveKey.isNewUser.name, value: true);
+          Get.offNamed(Routes.permissions);
         }
       },
       errorCallback: (int statusCode, String statusMessage) {
-        Get.snackbar(statusCode.toString(), statusMessage);
+        showToastPopup(statusMessage);
       },
     );
   }
@@ -159,5 +165,17 @@ class LoginController extends GetxController {
         ],
       ),
     );
+  }
+
+  void handleFetchWithdrawCancel() async {
+    await UaaService.fetchWithdrawCancel(
+      successCallback: () async {
+        await initUserInfo();
+        Get.offNamed(Routes.loading);
+        // print('성공');
+      },
+      errorCallback: () {},
+    );
+    // Get.toNamed(Routes.withdrawCompleted)
   }
 }

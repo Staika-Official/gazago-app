@@ -3,6 +3,7 @@ import 'dart:math';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg_provider/flutter_svg_provider.dart';
+import 'package:gaza_go/platform/helpers/base_helper.dart';
 import 'package:gaza_go/platform/models/asset_token_balance_ui_model.dart';
 import 'package:gaza_go/presentations/styles/styled_text.dart';
 
@@ -50,7 +51,7 @@ class AssetItemCoin extends StatelessWidget {
                   ),
                   Expanded(
                     child: Padding(
-                      padding: const EdgeInsets.all(8.0),
+                      padding: const EdgeInsets.symmetric(horizontal: 10),
                       child: StyledText(
                         asset.meta!.name,
                         fontSize: 18,
@@ -66,7 +67,7 @@ class AssetItemCoin extends StatelessWidget {
                         mainAxisSize: MainAxisSize.min,
                         children: [
                           StyledText(
-                            (asset.amount! / pow(10, asset.decimals!)).toString(),
+                            formatDecimalPlaces(double.parse(asset.uiAmountString!), asset.decimals!),
                             fontSize: 18,
                             lineHeight: 20,
                             letterSpacing: 0.5,

@@ -251,6 +251,93 @@ class InventoryBadgeDetail extends StatelessWidget {
                                 ),
                               ],
                             ),
+                            Obx(() {
+                              return Padding(
+                                padding: const EdgeInsets.only(top: 20.0),
+                                child: Column(
+                                  children: [
+                                    controller.selectedBadge.value.state == 'EQUIPPED'
+                                        ? Container(
+                                            decoration: BoxDecoration(
+                                              color: const Color(0xFF363841),
+                                              border: Border.all(
+                                                width: 1,
+                                                style: BorderStyle.solid,
+                                                color: const Color(0xFF8A8A8A),
+                                              ),
+                                              borderRadius: const BorderRadius.all(
+                                                Radius.circular(30),
+                                              ),
+                                              boxShadow: const [
+                                                BoxShadow(
+                                                  color: Colors.black,
+                                                  offset: Offset(0, 1),
+                                                  blurRadius: 0.0,
+                                                  spreadRadius: 0.0,
+                                                ),
+                                              ],
+                                            ),
+                                            child: InkWell(
+                                              onTap: () => null,
+                                              child: Padding(
+                                                padding: const EdgeInsets.symmetric(vertical: 13.0, horizontal: 20),
+                                                child: Column(
+                                                  mainAxisAlignment: MainAxisAlignment.center,
+                                                  children: const [
+                                                    StyledText(
+                                                      '장착중',
+                                                      fontSize: 18,
+                                                      lineHeight: 18,
+                                                      fontWeight: 500,
+                                                      color: Color(0xFF8A8A8A),
+                                                    ),
+                                                  ],
+                                                ),
+                                              ),
+                                            ),
+                                          )
+                                        : Container(
+                                            decoration: BoxDecoration(
+                                              color: const Color(0xFF1D1D26),
+                                              border: Border.all(
+                                                width: 1,
+                                                style: BorderStyle.solid,
+                                                color: const Color(0xFF54F5FF),
+                                              ),
+                                              borderRadius: const BorderRadius.all(
+                                                Radius.circular(30),
+                                              ),
+                                              boxShadow: const [
+                                                BoxShadow(
+                                                  color: Colors.black,
+                                                  offset: Offset(0, 1),
+                                                  blurRadius: 0.0,
+                                                  spreadRadius: 0.0,
+                                                ),
+                                              ],
+                                            ),
+                                            child: InkWell(
+                                              onTap: () => controller.fetchEquipBadge(controller.selectedBadge.value.badgeId),
+                                              child: Padding(
+                                                padding: const EdgeInsets.symmetric(vertical: 13.0, horizontal: 20),
+                                                child: Column(
+                                                  mainAxisAlignment: MainAxisAlignment.center,
+                                                  children: const [
+                                                    StyledText(
+                                                      '장착',
+                                                      fontSize: 18,
+                                                      lineHeight: 18,
+                                                      fontWeight: 500,
+                                                    ),
+                                                  ],
+                                                ),
+                                              ),
+                                            ),
+                                          ),
+                                  ],
+                                ),
+                              );
+                            }),
 
                             const Padding(
                               padding: EdgeInsets.symmetric(vertical: 20.0),

@@ -35,30 +35,37 @@ class MyPage extends StatelessWidget {
                   SizedBox(
                     width: 70,
                     height: 70,
-                    child: Stack(
-                      alignment: Alignment.center,
-                      children: [
-                        CircleAvatar(
-                          radius: 35,
-                          foregroundImage: controller!.pickedImage.value != null
-                              ? FileImage(
-                                  File(controller.pickedImage.value!.path),
+                    child: InkWell(
+                      onTap: controller.isEditMode.value ? () => controller.pickImage() : null,
+                      child: Stack(
+                        alignment: Alignment.center,
+                        children: [
+                          CircleAvatar(
+                            radius: 35,
+                            foregroundImage: controller!.pickedImage.value != null
+                                ? FileImage(
+                                    File(controller.pickedImage.value!.path),
+                                  )
+                                : controller.profile.value.profileImageUrl != null
+                                    ? CachedNetworkImageProvider(
+                                        controller.profile.value.profileImageUrl!,
+                                      )
+                                    : Image.asset(
+                                        'assets/images/ic_launcher.png',
+                                        width: 30,
+                                      ).image,
+                          ),
+                          controller.isEditMode.value
+                              ? Positioned(
+                                  bottom: 0,
+                                  right: 0,
+                                  child: Container(
+                                    child: iconCamera,
+                                  ),
                                 )
-                              : CachedNetworkImageProvider(
-                                  controller.profile.value.profileImageUrl,
-                                ) as ImageProvider,
-                        ),
-                        controller.isEditMode.value
-                            ? Positioned(
-                                bottom: 0,
-                                right: 0,
-                                child: InkWell(
-                                  onTap: () => controller.pickedImage,
-                                  child: iconCamera,
-                                ),
-                              )
-                            : Container(),
-                      ],
+                              : Container(),
+                        ],
+                      ),
                     ),
                   ),
                   Padding(
@@ -193,19 +200,21 @@ class MyPage extends StatelessWidget {
                               color: Color(0xFF1D1D26),
                               child: Align(
                                 alignment: Alignment.bottomCenter,
-                                child: SizedBox(
-                                  width: double.infinity,
-                                  child: Container(
-                                    color: Color(0xFF0EE6F3),
-                                    height: 60,
-                                    alignment: Alignment.center,
-                                    child: InkWell(
-                                      onTap: () => controller.toggleEditMode(),
-                                      child: const StyledText(
-                                        '확인1a',
-                                        color: Colors.black,
-                                        fontSize: 18,
-                                        fontWeight: 500,
+                                child: Container(
+                                  color: const Color(0xFF0EE6F3),
+                                  height: 60,
+                                  alignment: Alignment.center,
+                                  child: InkWell(
+                                    onTap: () => controller.modifyMyAccountInfo(),
+                                    child: const Padding(
+                                      padding: EdgeInsets.symmetric(vertical: 8.0),
+                                      child: Center(
+                                        child: StyledText(
+                                          '확인',
+                                          color: Colors.black,
+                                          fontSize: 18,
+                                          fontWeight: 500,
+                                        ),
                                       ),
                                     ),
                                   ),
@@ -278,10 +287,10 @@ class MyPage extends StatelessWidget {
                                         children: [
                                           Padding(
                                             padding: const EdgeInsets.only(right: 5.0, bottom: 3.0),
-                                            child: getMypageLoginedButtonIcon(controller.profile.value.socialAccounts),
+                                            child: getMypageLoginedButtonIcon(controller.profile.value.provider!),
                                           ),
                                           StyledText(
-                                            controller.profile.value.socialAccounts,
+                                            controller.profile.value.provider!,
                                             color: Color(0xFFA8A8A8),
                                             fontSize: 16,
                                             fontWeight: 500,

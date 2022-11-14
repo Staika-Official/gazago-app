@@ -1,8 +1,7 @@
 enum LoginType {
   apple,
-  kakao,
   google,
-  email,
+  // email,
 }
 
 enum ExerciseType {
@@ -53,6 +52,11 @@ enum HiveKey {
   exerciseData,
   endExerciseRequested,
   badgeIssuanceRequested,
+  savedStepInitialized,
+  savedStepCount,
+  dummyStepCount,
+  isNewUser,
+  permissionRequestOnFirstLaunch,
 }
 
 enum ResponseStatus {
@@ -95,7 +99,7 @@ extension ExerciseStateLabel on ExerciseState {
       case ExerciseState.ongoing:
         return '운동 중';
       case ExerciseState.paused:
-        return '운동 일시정지';
+        return '운동 휴식 중';
       case ExerciseState.finished:
         return '운동 완료';
     }
@@ -176,6 +180,28 @@ extension TransactionTypeLabel on TransactionType {
         return 'FEE'; //수수료출금
       case TransactionType.unknown:
         return 'UNKNOWN'; //알수 없음
+    }
+  }
+}
+
+enum NotificationType {
+  challenge,
+  badge,
+  stamina,
+  durability,
+}
+
+extension NotificationId on NotificationType {
+  int get id {
+    switch (this) {
+      case NotificationType.challenge:
+        return 0;
+      case NotificationType.badge:
+        return 1;
+      case NotificationType.stamina:
+        return 2;
+      case NotificationType.durability:
+        return 3;
     }
   }
 }

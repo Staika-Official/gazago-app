@@ -20,6 +20,10 @@
   <string>????</string>
   <key>CFBundleVersion</key>
   <string>1.0</string>
+  <key>CFBundleIconFiles</key>
+  <string>icon.png</string>
+  <key>CFBundleIconName</key>
+  <string>gazaGo</string>
   <key>MinimumOSVersion</key>
   <string>11.0</string>
 </dict>

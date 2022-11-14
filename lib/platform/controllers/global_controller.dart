@@ -1,9 +1,9 @@
 import 'dart:async';
 
 import 'package:connectivity_plus/connectivity_plus.dart';
-import 'package:flutter/material.dart';
 import 'package:gaza_go/constants/enums.dart';
 import 'package:gaza_go/constants/routes.dart';
+import 'package:gaza_go/platform/helpers/alert_helper.dart';
 import 'package:gaza_go/platform/services/uaa_service.dart';
 import 'package:gaza_go/platform/stores/hive_store.dart';
 import 'package:get/get.dart';
@@ -14,9 +14,9 @@ class GlobalController extends SuperController {
 
   @override
   void onInit() async {
+    await checkLoginStatus();
     await getConnectivity();
     initConnectivityStream();
-    await checkLoginStatus();
     super.onInit();
   }
 
@@ -59,8 +59,8 @@ class GlobalController extends SuperController {
       await UaaService.checkLoginStatus(
         successCallback: () => null,
         errorCallback: () {
-          Get.snackbar('로그인 만료', '로그인 유효시간이 만료되었습니다', colorText: Colors.white);
-          Get.offAllNamed(Routes.login);
+          showToastPopup('로그인 유효시간이 만료되었습니다');
+          if (Get.currentRoute != Routes.login) Get.offAllNamed(Routes.login);
           HiveStore.deleteMultipleKeys(keys: [
             HiveKey.accessToken.name,
             HiveKey.refreshToken.name,

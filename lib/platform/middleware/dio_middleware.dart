@@ -1,10 +1,11 @@
+import 'dart:async';
 import 'dart:convert';
 
 import 'package:dio/dio.dart';
 import 'package:gaza_go/constants/enums.dart';
 import 'package:gaza_go/constants/routes.dart';
 import 'package:gaza_go/flavors.dart';
-import 'package:gaza_go/platform/helpers/base_helper.dart';
+import 'package:gaza_go/platform/helpers/alert_helper.dart';
 import 'package:gaza_go/platform/models/access_token_model.dart';
 import 'package:gaza_go/platform/models/error_response_data_model.dart';
 import 'package:gaza_go/platform/stores/hive_store.dart';
@@ -15,26 +16,38 @@ class Api {
   static final Logger _logger = Logger(printer: PrettyPrinter(colors: true, printEmojis: true));
 
   static final Dio _dio = Dio()
-    ..interceptors.add(
+    ..interceptors.addAll([
       InterceptorsWrapper(
         onRequest: (RequestOptions options, RequestInterceptorHandler handler) => _requestInterceptor(options, handler),
         onResponse: (Response response, ResponseInterceptorHandler handler) => _responseInterceptor(response, handler),
-        onError: (DioError e, ErrorInterceptorHandler handler) => _onErrorInterceptor(e, handler),
       ),
-    );
+      QueuedInterceptorsWrapper(
+        onError: (DioError e, ErrorInterceptorHandler handler) => _onErrorInterceptor(e, handler),
+      )
+    ]);
 
-  static Dio client({required String serviceUrl, bool needsToken = true, Map<String, dynamic>? queryParams}) {
+  static Dio client({required String serviceUrl, bool needsToken = true, Map<String, dynamic>? queryParams, bool? isPatch = false, bool? isFile = false}) {
     _dio.options.baseUrl = '${F.baseUrl}$serviceUrl';
+    _dio.options.connectTimeout = 10000;
+    _dio.options.receiveTimeout = 10000;
+    _dio.options.sendTimeout = 10000;
 
     if (needsToken) {
-      String? accessToken = HiveStore.loadString(key: 'accessToken');
+      String? accessToken = HiveStore.loadString(key: HiveKey.accessToken.name);
 
       if (accessToken != null) {
+        _dio.options.headers = {'Authorization': 'Bearer ${accessToken!}'};
+      }
+      if (isPatch!) {
+        _dio.options.headers = {'Authorization': 'Bearer ${accessToken!}', 'Content-type': 'application/merge-patch+json'};
+      }
+      if (isFile!) {
         _dio.options.headers = {'Authorization': 'Bearer ${accessToken!}'};
       }
     } else {
       _dio.options.headers = {'Authorization': ''};
     }
+
     if (queryParams != null) {
       _dio.options.queryParameters = queryParams;
     } else {
@@ -68,7 +81,7 @@ class Api {
     return handler.next(response);
   }
 
-  static _onErrorInterceptor(DioError e, ErrorInterceptorHandler handler) {
+  static _onErrorInterceptor(DioError e, ErrorInterceptorHandler handler) async {
     _logger.e(
       '------------->'
       '\nERROR'
@@ -80,41 +93,44 @@ class Api {
       '\nError ResponseData: ${e.response?.data}',
     );
 
-    if (e.response?.data != null) {
-      ErrorResponseDataModel errorData = ErrorResponseDataModel.fromJson(e.response?.data);
-      showToastPopup(errorData.errorMessage!);
-    }
-
     if (e.response?.statusCode == ResponseStatus.unauthorized.code) {
-      final String? refreshToken = HiveStore.loadString(key: HiveKey.refreshToken.name);
-      Dio refreshDio = Dio();
-      refreshDio
-        ..options.headers['Authorization'] = 'Bearer $refreshToken'
-        ..post('${F.baseUrl}/services/uaa/api/sign-in/token', data: {'clientId': 'GAZAGO'}).then((Response res) {
-          AccessTokenModel newToken = AccessTokenModel.fromJson(res.data);
-          HiveStore.save(key: HiveKey.accessToken.name, value: newToken.accessToken);
-          HiveStore.save(key: HiveKey.refreshToken.name, value: newToken.refreshToken);
+      final String refreshToken = HiveStore.loadString(key: HiveKey.refreshToken.name) ?? '';
 
-          _retryFailedRequest(e, handler, newToken.accessToken);
-        }).catchError((e) {
-          HiveStore.deleteMultipleKeys(keys: [
-            HiveKey.accessToken.name,
-            HiveKey.refreshToken.name,
-          ]);
-          getx.Get.offAllNamed(Routes.login);
-        });
+      if (refreshToken == '') {
+        if (getx.Get.currentRoute != Routes.login) getx.Get.offAllNamed(Routes.login);
+        handler.reject(e);
+      }
+
+      await _retryFailedRequest(e, handler);
     } else {
-      if (e.type == DioErrorType.other) {
-        handler.next(e);
+      if (e.response?.data != null) {
+        ErrorResponseDataModel errorData = ErrorResponseDataModel.fromJson(e.response?.data);
+        if (errorData.errorMessage != null) {
+          showToastPopup(errorData.errorMessage!);
+        }
+      }
+
+      if ([DioErrorType.connectTimeout, DioErrorType.sendTimeout, DioErrorType.receiveTimeout, DioErrorType.other].any((element) => element == e.type)) {
+        handler.resolve(
+          Response(
+            requestOptions: RequestOptions(
+              path: e.requestOptions.path,
+              data: 'unknown',
+            ),
+          ),
+        );
+        showToastPopup('통신이 원활하지 않습니다. 잠시후 다시 시도해주세요');
       } else {
         handler.resolve(e.response!);
       }
     }
   }
 
-  static _retryFailedRequest(DioError e, ErrorInterceptorHandler handler, String newAccessToken) {
+  static Future<void> _retryFailedRequest(DioError e, ErrorInterceptorHandler handler) async {
+    print(e.requestOptions.baseUrl + e.requestOptions.path);
+    String accessToken = HiveStore.loadString(key: HiveKey.accessToken.name)!;
     Dio dio = Dio();
-    e.requestOptions.headers['Authorization'] = 'Bearer $newAccessToken';
+    e.requestOptions.headers['Authorization'] = 'Bearer $accessToken';
     dio
         .request(
       e.requestOptions.baseUrl + e.requestOptions.path,
@@ -126,20 +142,47 @@ class Api {
       queryParameters: e.requestOptions.queryParameters,
     )
         .then(
-      (response) => handler.resolve(
-        response,
-      ),
-      onError: (e) {
-        if (e is DioError) {
-          final Response? res = e.response;
-          _logger.e(
-            '------------->'
-            '\nRETRY ERROR'
-            '\n${e.response}',
-          );
-          handler.resolve(e.response!);
-        }
+      (response) {
+        handler.resolve(
+          response,
+        );
       },
-    );
+    ).onError((error, stackTrace) async {
+      if (error is DioError) {
+        final Response? res = error.response;
+        _logger.e(
+          '------------->'
+          '\nRETRY ERROR'
+          '\n${error.response}',
+        );
+        await _getNewAccessToken(e, handler);
+      }
+    });
+  }
+
+  static Future<void> _getNewAccessToken(DioError e, ErrorInterceptorHandler handler) async {
+    final String refreshToken = HiveStore.loadString(key: HiveKey.refreshToken.name) ?? '';
+
+    print('refreshToken ${refreshToken}');
+
+    Dio refreshDio = Dio();
+    refreshDio
+      ..options.headers['Authorization'] = 'Bearer $refreshToken'
+      ..post('${F.baseUrl}/services/uaa/api/sign-in/token', data: {'clientId': 'GAZAGO'}).then((Response res) async {
+        AccessTokenModel newToken = AccessTokenModel.fromJson(res.data);
+
+        HiveStore.save(key: HiveKey.accessToken.name, value: newToken.accessToken);
+        HiveStore.save(key: HiveKey.refreshToken.name, value: newToken.refreshToken);
+
+        print('new refreshToken ${newToken.refreshToken}');
+
+        await _retryFailedRequest(e, handler);
+      }).onError((error, stacktrace) {
+        HiveStore.deleteMultipleKeys(keys: [
+          HiveKey.accessToken.name,
+          HiveKey.refreshToken.name,
+        ]);
+        if (getx.Get.currentRoute != Routes.login) getx.Get.offAllNamed(Routes.login);
+      });
   }
 }

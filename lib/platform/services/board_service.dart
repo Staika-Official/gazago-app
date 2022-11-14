@@ -14,7 +14,7 @@ class BoardService {
       });
       successCallback(termsList);
     } else {
-      errorCallback!();
+      if (errorCallback != null) errorCallback();
     }
   }
 
@@ -22,14 +22,16 @@ class BoardService {
     Response res = await BoardApi.getFirstPostByType(boardTypes);
     if (res.statusCode == 200) {
       List<TermItemModel> termsList = List.empty(growable: true);
-      res.data.forEach((term) {
-        TermItemModel termItem = TermItemModel.fromJson(term);
-        termItem.isRequired = termItem.meta != 'selection';
-        termsList.add(termItem);
-      });
+      if (res.data.length > 0) {
+        res.data.forEach((term) {
+          TermItemModel termItem = TermItemModel.fromJson(term);
+          termItem.isRequired = termItem.meta != 'selection';
+          termsList.add(termItem);
+        });
+      }
       successCallback(termsList);
     } else {
-      errorCallback!();
+      if (errorCallback != null) errorCallback();
     }
   }
 
@@ -38,7 +40,7 @@ class BoardService {
     if (res.statusCode == 200) {
       successCallback(TermItemModel.fromJson(res.data));
     } else {
-      errorCallback!();
+      if (errorCallback != null) errorCallback();
     }
   }
 }

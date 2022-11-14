@@ -6,8 +6,6 @@ import 'package:gaza_go/presentations/styles/icons.dart';
 
 Color getLoginButtonColor(String loginType) {
   switch (loginType) {
-    case 'kakao':
-      return const Color(0xFFFEE502);
     case 'apple':
       return const Color(0xFF1E1E1C);
     case 'google':
@@ -18,8 +16,6 @@ Color getLoginButtonColor(String loginType) {
 
 String getLoginButtonText(String loginType) {
   switch (loginType) {
-    case 'kakao':
-      return '카카오';
     case 'apple':
       return 'Apple';
     case 'google':
@@ -30,8 +26,6 @@ String getLoginButtonText(String loginType) {
 
 SvgPicture getLoginButtonIcon(String loginType) {
   switch (loginType) {
-    case 'kakao':
-      return iconLoginKaKao;
     case 'apple':
       return iconLoginApple;
     case 'google':

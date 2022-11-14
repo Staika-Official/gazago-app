@@ -2,8 +2,9 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:custom_rounded_rectangle_border/custom_rounded_rectangle_border.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
-import 'package:gaza_go/platform/controllers/inventory/inventory_home_controller.dart';
+import 'package:gaza_go/platform/controllers/home_menu_controller.dart';
 import 'package:gaza_go/platform/controllers/inventory_controller.dart';
+import 'package:gaza_go/platform/controllers/inventory_home_controller.dart';
 import 'package:gaza_go/platform/helpers/inventory_helper.dart';
 import 'package:gaza_go/presentations/styles/icons.dart';
 import 'package:gaza_go/presentations/styles/styled_text.dart';
@@ -18,15 +19,18 @@ class InventoryHome extends StatelessWidget {
   Widget build(BuildContext context) {
     InventoryHomeController inventoryMenuController = Get.put(InventoryHomeController());
     InventoryController controller = Get.put(InventoryController());
+    HomeMenuController homeMenuController = Get.find();
 
     return SingleChildScrollView(
+      physics: const ClampingScrollPhysics(),
+      controller: controller.singleChildScrollController,
       child: ConstrainedBox(
         constraints: BoxConstraints(maxHeight: MediaQuery.of(context).size.height),
         child: Column(
           mainAxisSize: MainAxisSize.max,
           children: [
             Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 20.0, vertical: 20.0),
+              padding: const EdgeInsets.only(left: 20.0, right: 20.0, bottom: 20.0),
               child: Column(
                 children: [
                   Obx(() {
@@ -53,6 +57,7 @@ class InventoryHome extends StatelessWidget {
                             child: Tile(
                               index: 1,
                               imageUrl: controller.equippedBadge.value.badge.imageUrl,
+                              badgeId: controller.equippedBadge.value.badge.id,
                             ),
                           ),
                           StaggeredGridTile.count(
@@ -116,7 +121,7 @@ class InventoryHome extends StatelessWidget {
                                 fontSize: 28,
                                 fontWeight: 500,
                               ),
-                              StyledText(
+                              const StyledText(
                                 '%',
                                 fontSize: 16,
                                 fontWeight: 500,
@@ -176,9 +181,9 @@ class InventoryHome extends StatelessWidget {
                                   StyledText(
                                     '아이템 마모율',
                                     color: Color(0xFF8A8A8A),
-                                    fontSize: 11,
+                                    fontSize: 12,
                                     lineHeight: 12,
-                                    fontWeight: 500,
+                                    fontWeight: 600,
                                   ),
                                 ],
                               ),
@@ -235,7 +240,12 @@ class InventoryHome extends StatelessWidget {
                 labelStyle: const TextStyle(fontSize: 16, fontWeight: FontWeight.w500),
                 unselectedLabelColor: const Color(0xFF8A8A8A),
                 indicatorWeight: 0.1,
+                isScrollable: false,
                 labelPadding: const EdgeInsets.all(0),
+                splashBorderRadius: const BorderRadius.only(
+                  topRight: Radius.circular(15),
+                  topLeft: Radius.circular(15),
+                ),
                 indicator: const BoxDecoration(
                   color: Color(0xFF363841),
                   borderRadius: BorderRadius.only(
@@ -295,6 +305,7 @@ class InventoryHome extends StatelessWidget {
             ),
             Expanded(
               child: TabBarView(
+                physics: const NeverScrollableScrollPhysics(),
                 controller: inventoryMenuController.tabController,
                 children: const [
                   InventoryItem(),
@@ -320,6 +331,7 @@ class Tile extends StatelessWidget {
     this.bottomSpace,
     this.durability,
     this.itemGrade,
+    this.badgeId,
   }) : super(key: key);
 
   final int index;
@@ -330,6 +342,7 @@ class Tile extends StatelessWidget {
   final double? extent;
   final double? bottomSpace;
   final Color? backgroundColor;
+  final int? badgeId;
 
   @override
   Widget build(BuildContext context) {
@@ -360,29 +373,56 @@ class Tile extends StatelessWidget {
           alignment: Alignment.bottomCenter,
           children: [
             Padding(
-              padding: const EdgeInsets.all(10.0),
+              padding: badgeId != null && badgeId != -1 ? const EdgeInsets.only(top: 10.0, bottom: 30, left: 30, right: 30) : const EdgeInsets.all(10.0),
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
                   AspectRatio(
-                    aspectRatio: 1 / 1,
+                    aspectRatio: index == 1 ? 1 / 1 : 1.2 / 1,
                     child: CachedNetworkImage(
                       imageUrl: imageUrl,
                       placeholder: (context, url) => const CircularProgressIndicator(),
-                      errorWidget: (context, url, error) => Image.asset("assets/images/@temp_badge.png"),
+                      errorWidget: (context, url, error) => iconNoBadge,
                       fit: BoxFit.contain,
                     ),
                   ),
                 ],
               ),
             ),
+            if (badgeId != null && badgeId != -1)
+              Padding(
+                padding: EdgeInsets.all(10),
+                child: Container(
+                  padding: EdgeInsets.symmetric(
+                    vertical: 5,
+                    horizontal: 10,
+                  ),
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(60),
+                    border: Border.all(
+                      width: 1,
+                      color: Color(0xff8a8a8a),
+                    ),
+                  ),
+                  child: StyledText(
+                    '#${badgeId.toString()}',
+                    fontSize: 10,
+                    lineHeight: 10,
+                    fontWeight: 500,
+                    letterSpacing: 1,
+                    fontFamily: 'Montserrat',
+                    color: Color(0xff8a8a8a),
+                  ),
+                ),
+              ),
             durability != null
                 ? Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 15.0, vertical: 8.0),
+                    padding: const EdgeInsets.symmetric(horizontal: 15.0, vertical: 9.0),
                     child: SizedBox(
-                      height: 20,
+                      height: 22,
                       child: Stack(
+                        clipBehavior: Clip.none,
                         alignment: AlignmentDirectional.center,
                         children: [
                           Row(
@@ -403,7 +443,7 @@ class Tile extends StatelessWidget {
                                               boxShadow: [
                                                 BoxShadow(
                                                   color: Colors.black,
-                                                  offset: Offset(0, 3),
+                                                  offset: Offset(0, 1),
                                                   blurRadius: 0.0,
                                                   spreadRadius: 0.0,
                                                 ),
@@ -416,7 +456,7 @@ class Tile extends StatelessWidget {
                                                 padding: const EdgeInsets.only(top: 2.0, left: 2.0),
                                                 child: LayoutBuilder(builder: (context, constraints) {
                                                   return Container(
-                                                    height: 16,
+                                                    height: 18,
                                                     margin: EdgeInsets.zero,
                                                     width: durability! > 20
                                                         ? constraints.maxWidth / (100 / durability!)
@@ -424,7 +464,7 @@ class Tile extends StatelessWidget {
                                                             ? 0
                                                             : 34,
                                                     decoration: BoxDecoration(
-                                                      color: durability! < 20 ? const Color(0xFFFF2525) : const Color(0xFFB85DFF),
+                                                      color: durability! < 30 ? const Color(0xFFFF2525) : const Color(0xFFB85DFF),
                                                       borderRadius: const BorderRadius.all(
                                                         Radius.circular(50),
                                                       ),
@@ -455,8 +495,8 @@ class Tile extends StatelessWidget {
                             ],
                           ),
                           Positioned(
-                            right: 0,
-                            top: 0,
+                            right: -1,
+                            top: -1,
                             child: Padding(
                               padding: const EdgeInsets.only(top: 1.0),
                               child: Container(
@@ -481,7 +521,7 @@ class Tile extends StatelessWidget {
                                 child: InkWell(
                                   onTap: () => controller.showShoesRepairPopup(id),
                                   child: CircleAvatar(
-                                    radius: 8,
+                                    radius: 10,
                                     backgroundColor: const Color(0xFFB85DFF),
                                     child: IconButton(
                                       alignment: Alignment.center,

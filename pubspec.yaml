@@ -17,7 +17,7 @@ publish_to: 'none' # Remove this line if you wish to publish to pub.dev
 # https://developer.apple.com/library/archive/documentation/General/Reference/InfoPlistKeyReference/Articles/CoreFoundationKeys.html
 # In Windows, build-name is used as the major, minor, and patch parts
 # of the product and file versions while build-number is used as the build suffix.
-version: 1.0.0+1
+version: 1.0.0+11
 
 environment:
   sdk: '>=2.18.0 <3.0.0'
@@ -69,7 +69,6 @@ dependencies:
   flutter_flavorizr: ^2.1.4
   google_sign_in: ^5.4.1
   sign_in_with_apple: ^4.1.0
-  kakao_flutter_sdk: ^1.2.2
   uuid: ^3.0.6
   flutter_naver_map:
     git: https://github.com/wnsgh78b/flutter_naver_map.git
@@ -86,6 +85,15 @@ dependencies:
   custom_rounded_rectangle_border: ^0.2.0-nullsafety.0
   another_xlider: ^1.1.2
   animated_flip_counter: ^0.2.5
+  health: ^4.1.1
+  expandable_bottom_sheet: ^1.1.1+1
+
+  simple_animations: ^5.0.0+2
+  flutter_launcher_icons: ^0.10.0
+  flutter_native_splash: ^2.2.13
+
+  carousel_slider: ^4.1.1
+
 
 dev_dependencies:
   flutter_test:
@@ -102,6 +110,9 @@ dev_dependencies:
 
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec
+
+dependency_overrides:
+  firebase_core_platform_interface: 4.5.1
 
 # The following section is specific to Flutter packages.
 flutter:
@@ -123,6 +134,7 @@ flutter:
     - assets/images/inventory/
     - assets/images/wallet/
     - assets/images/preference/
+    - assets/images/permissions/
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware
@@ -201,7 +213,7 @@ flavorizr:
   flavors:
     dev:
       app:
-        name: "gazaGO-dev"
+        name: "가자고-dev"
 
       android:
         applicationId: "kr.co.eztechfin.gazaGo.dev"
@@ -213,7 +225,7 @@ flavorizr:
           config: ".firebase/dev/GoogleService-Info.plist"
     stage:
       app:
-        name: "gazaGO-stage"
+        name: "가자고-stage"
       android:
         applicationId: "kr.co.eztechfin.gazaGo.dev"
         firebase:
@@ -224,7 +236,7 @@ flavorizr:
           config: ".firebase/dev/GoogleService-Info.plist"
     prod:
       app:
-        name: "gazaGO"
+        name: "가자고"
 
       android:
         applicationId: "kr.co.eztechfin.gazaGo"

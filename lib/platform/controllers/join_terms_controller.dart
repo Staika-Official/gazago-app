@@ -1,5 +1,5 @@
-import 'package:flutter/material.dart';
 import 'package:gaza_go/constants/routes.dart';
+import 'package:gaza_go/platform/helpers/alert_helper.dart';
 import 'package:gaza_go/platform/models/term_item_model.dart';
 import 'package:gaza_go/platform/services/board_service.dart';
 import 'package:get/get.dart';
@@ -47,9 +47,9 @@ class JoinTermsController extends GetxController {
 
   void requestJoin() {
     if (allRequiredAgreed.value) {
-      Get.toNamed(Routes.loading);
+      Get.toNamed(Routes.permissions);
     } else {
-      Get.snackbar('필수 약관 동의 필요', '필수 약관에 동의해주세요', colorText: Colors.white);
+      showToastPopup('필수 약관에 동의해주세요');
     }
   }
 }

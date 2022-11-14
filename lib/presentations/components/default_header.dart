@@ -7,6 +7,7 @@ class DefaultHeader extends StatelessWidget {
   final bool? isPrevButtonHide;
   final Widget? trailingChild;
   final String? titleText;
+  final Widget? titleWidget;
   final VoidCallback? onBackButtonTap;
 
   const DefaultHeader({
@@ -15,6 +16,7 @@ class DefaultHeader extends StatelessWidget {
     this.isLeadingShow,
     this.trailingChild,
     this.titleText,
+    this.titleWidget,
     this.onBackButtonTap,
   }) : super(key: key);
 
@@ -49,16 +51,17 @@ class DefaultHeader extends StatelessWidget {
                 ),
               ),
             ),
-          Text(
-            titleText ?? '',
-            style: const TextStyle(
-              color: Colors.white,
-              fontSize: 18,
-              fontWeight: FontWeight.w500,
-              letterSpacing: -0.5,
-              height: 1,
-            ),
-          ),
+          titleWidget ??
+              Text(
+                titleText ?? '',
+                style: const TextStyle(
+                  color: Colors.white,
+                  fontSize: 18,
+                  fontWeight: FontWeight.w500,
+                  letterSpacing: -0.5,
+                  height: 1,
+                ),
+              ),
           Positioned(
             right: 15,
             child: trailingChild ?? Container(),

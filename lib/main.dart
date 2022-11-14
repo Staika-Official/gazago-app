@@ -55,7 +55,7 @@ void main() async {
     await initializeDateFormatting();
     await requestNotificationPermission();
 
-    runApp(MyApp());
+    runApp(const MyApp());
   }, (error, stack) {
     recordCrashlyticsError(error, stack);
   });
@@ -69,18 +69,37 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    MaterialColor gazagoColor = const MaterialColor(
+      0xFF0EE6F3,
+      <int, Color>{
+        50: Color(0xFF0EE6F3),
+        100: Color(0xFF0EE6F3),
+        200: Color(0xFF0EE6F3),
+        300: Color(0xFF0EE6F3),
+        400: Color(0xFF0EE6F3),
+        500: Color(0xFF0EE6F3),
+        600: Color(0xFF0EE6F3),
+        700: Color(0xFF0EE6F3),
+        800: Color(0xFF0EE6F3),
+        900: Color(0xFF0EE6F3),
+      },
+    );
     Get.put(GlobalController(), permanent: true);
 
     return GetMaterialApp(
       builder: (context, child) {
         // 시스템 폰트 크기 무시
-        return MediaQuery(
+        return ScrollConfiguration(
+          behavior: const MaterialScrollBehavior().copyWith(overscroll: false),
+          child: MediaQuery(
             data: MediaQuery.of(context).copyWith(textScaleFactor: 1), //텍스트가 시스템 설정에 영향받지 않음
-            child: child!);
+            child: child!,
+          ),
+        );
       },
       theme: ThemeData(
         fontFamily: 'Pretendard',
-        primarySwatch: Colors.blue,
+        primarySwatch: gazagoColor,
         navigationBarTheme: NavigationBarThemeData(
           indicatorColor: Colors.transparent,
           labelTextStyle: MaterialStateProperty.resolveWith((states) {
@@ -92,7 +111,7 @@ class MyApp extends StatelessWidget {
               );
             } else {
               return const TextStyle(
-                color: Color(0xFF7A7A7A),
+                color: Color(0xFFBFBFBF),
                 fontSize: 10,
                 fontWeight: FontWeight.w600,
               );

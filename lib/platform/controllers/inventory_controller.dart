@@ -1,13 +1,11 @@
-import 'dart:developer';
-
 import 'package:another_xlider/another_xlider.dart';
 import 'package:flutter/material.dart';
 import 'package:gaza_go/constants/routes.dart';
 import 'package:gaza_go/platform/controllers/wallet_master_controller.dart';
+import 'package:gaza_go/platform/helpers/alert_helper.dart';
 import 'package:gaza_go/platform/helpers/base_helper.dart';
 import 'package:gaza_go/platform/helpers/inventory_mixin.dart';
 import 'package:gaza_go/platform/helpers/linear_progress_mixin.dart';
-import 'package:gaza_go/platform/models/equipped_item_model.dart';
 import 'package:gaza_go/platform/models/inventory_badge_item_model.dart';
 import 'package:gaza_go/platform/models/inventory_badge_list_model.dart';
 import 'package:gaza_go/platform/models/inventory_badge_model.dart';
@@ -16,14 +14,13 @@ import 'package:gaza_go/platform/models/repair_shoes_model.dart';
 import 'package:gaza_go/platform/models/stat_model.dart';
 import 'package:gaza_go/platform/services/activity_service.dart';
 import 'package:gaza_go/platform/services/item_service.dart';
+import 'package:gaza_go/presentations/components/gazago_button.dart';
 import 'package:gaza_go/presentations/styles/icons.dart';
 import 'package:gaza_go/presentations/styles/styled_text.dart';
 import 'package:get/get.dart';
 
 class InventoryController extends GetxController with LinearProgressMixin, InventoryMixin {
-  final WalletMasterController? walletMasterController;
-
-  InventoryController([this.walletMasterController]);
+  final WalletMasterController walletMasterController = Get.find();
 
   final RxList<StatModel> statList = RxList.empty();
   final RxList<InventoryItemModel> myAllItems = RxList.empty();
@@ -38,6 +35,10 @@ class InventoryController extends GetxController with LinearProgressMixin, Inven
 
   final RxDouble _currentSliderValue = RxDouble(0);
   RxList<InventoryItemModel> equippedItemList = RxList.empty();
+
+  ScrollController singleChildScrollController = ScrollController();
+  ScrollController itemScrollController = ScrollController(keepScrollOffset: false);
+  ScrollController badgeScrollController = ScrollController(keepScrollOffset: false);
 
   Rx<InventoryBadgeModel> equippedBadge = Rx(
     InventoryBadgeModel(
@@ -150,7 +151,7 @@ class InventoryController extends GetxController with LinearProgressMixin, Inven
   void onInit() {
     once(count, (_) => print('한번만 호출'));
     initController();
-    inspect('1213124124124${walletMasterController?.spendingTokenUiList.value}');
+
     super.onInit();
   }
 
@@ -160,6 +161,7 @@ class InventoryController extends GetxController with LinearProgressMixin, Inven
     getUserEquippedItems();
     getSyntheticBadgeList();
     getUserBadgesList();
+    scrollControl(); // 스크롤 제어(아이템, 뱃지)
   }
 
   Future<void> refreshController() async {
@@ -171,6 +173,34 @@ class InventoryController extends GetxController with LinearProgressMixin, Inven
     syntheticBadgeList.value = [];
   }
 
+  void scrollControl() {
+    itemScrollController.addListener(() {
+      if (itemScrollController.position.atEdge) {
+        bool isTop = itemScrollController.position.pixels == 0;
+        if (isTop) {
+          //print('At the top');
+          singleChildScrollController.animateTo(0, duration: Duration(milliseconds: 200), curve: Curves.easeInOut);
+        } else {
+          //print('At the bottom');
+          singleChildScrollController.animateTo(singleChildScrollController.position.maxScrollExtent, duration: Duration(milliseconds: 200), curve: Curves.easeInOut);
+        }
+      }
+    });
+
+    badgeScrollController.addListener(() {
+      if (badgeScrollController.position.atEdge) {
+        bool isTop = badgeScrollController.position.pixels == 0;
+        if (isTop) {
+          //print('At the top');
+          singleChildScrollController.animateTo(0, duration: Duration(milliseconds: 200), curve: Curves.easeInOut);
+        } else {
+          //print('At the bottom');
+          singleChildScrollController.animateTo(singleChildScrollController.position.maxScrollExtent, duration: Duration(milliseconds: 200), curve: Curves.easeInOut);
+        }
+      }
+    });
+  }
+
   void initStats() {
     statList.value = [
       StatModel(name: '이동 보상율', currentStat: 78),
@@ -179,52 +209,80 @@ class InventoryController extends GetxController with LinearProgressMixin, Inven
   }
 
   void toItemDetail(int itemId) async {
-    InventoryItemModel item = await ItemService.getItemDetailInfo(itemId);
-    selectedItem.value = item;
-    isShoe.value = selectedItem.value.itemCategory == 'SHOES';
-    Get.toNamed(Routes.itemDetail);
+    await ItemService.getItemDetailInfo(
+      itemId,
+      successCallback: (item) {
+        selectedItem.value = item;
+        isShoe.value = selectedItem.value.itemCategory == 'SHOES';
+        Get.toNamed(Routes.itemDetail);
+      },
+    );
   }
 
   void toBadgeDetail(int id) {
-    print(id);
-    print(userBadgesList.toString());
     selectedBadge.value = userBadgesList.firstWhere((item) => item.badgeId == id);
     setGetBadgeDate(id);
     Get.toNamed(Routes.badgeDetail);
   }
 
   void getUserAllItems() async {
-    List<InventoryItemModel> allItems = await ItemService.getAllMyItems();
-    myAllItems.value = allItems;
+    await ItemService.getAllMyItems(
+      successCallback: (allItems) {
+        myAllItems.value = allItems;
+      },
+    );
   }
 
   void getUserEquippedItems() async {
-    EquippedItemModel equippedItems = await ActivityService.getUserEquippedItem();
-    equippedItemList.value = equippedItems.items;
-    if (equippedItems.badge != null) {
-      equippedBadge.update((state) {
-        state!.badge.imageUrl = equippedItems.badge!.imageUrl;
-      });
-    } else {
-      equippedBadge.update((state) {
-        state!.badge.imageUrl = 'assets/images/@temp_badge.png';
-      });
-    }
-    remainDurability.value = equippedItems.items.firstWhere((element) => element.itemCategory == 'SHOES').durability.floor();
+    await ActivityService.getUserEquippedItem(
+      successCallback: (equippedItems) {
+        equippedItemList.value = equippedItems.items;
+        if (equippedItems.badge != null) {
+          equippedBadge.update((state) {
+            state!.badge.imageUrl = equippedItems.badge!.imageUrl;
+            state.badge.rewardRate = equippedItems.badge!.rewardRate;
+            state.badge.level = equippedItems.badge!.level;
+            state.badge.luckRate = equippedItems.badge!.luckRate;
+            state.badge.name = equippedItems.badge!.name;
+            state.badge.id = equippedItems.badge!.badgeId;
+          });
+        } else {
+          equippedBadge.update((state) {
+            state!.badge.imageUrl = 'assets/images/@temp_badge.png';
+          });
+        }
+
+        remainDurability.value = equippedItems.items.firstWhere((element) => element.itemCategory == 'SHOES').durability.floor();
+      },
+    );
   }
 
   void fetchEquipItem(int itemId) async {
-    InventoryItemModel equippedItem = await ItemService.fetchEquippedItem(itemId);
-    getUserAllItems();
-    getUserEquippedItems();
-    showToastPopup('아이템이 장착되었습니다.');
+    await ItemService.getItemDetailInfo(
+      itemId,
+      successCallback: (item) {
+        selectedItem.value = item;
+        getUserAllItems();
+        getUserEquippedItems();
+        showToastPopup('아이템이 장착되었습니다.');
+      },
+    );
   }
 
   void fetchEquipBadge(int badgeId) async {
-    InventoryBadgeModel equippedBadgeItem = await ItemService.fetchEquippedBadge(badgeId);
-    equippedBadge.value = equippedBadgeItem;
-    getUserBadgesList();
-    showToastPopup('뱃지가 장착되었습니다.');
+    await ItemService.fetchEquippedBadge(
+      badgeId,
+      successCallback: (equippedBadgeItem) {
+        equippedBadge.value = equippedBadgeItem;
+        if (selectedBadge.value.badgeId == badgeId) {
+          selectedBadge.update((state) {
+            state?.state = 'EQUIPPED';
+          });
+        }
+        getUserBadgesList();
+        showToastPopup('뱃지가 장착되었습니다.');
+      },
+    );
   }
 
   void setGetBadgeDate(int id) {
@@ -237,27 +295,33 @@ class InventoryController extends GetxController with LinearProgressMixin, Inven
   }
 
   void fetchRepairShoes(shoeId) async {
-    if (walletMasterController!.tik.value.amount! >= costTik.value) {
+    if (walletMasterController.tik.value.amount! >= costTik.value) {
       if (costTik.value > 0) {
-        InventoryItemModel repairModel = await ItemService.fetchRepairItemShoes(
+        await ItemService.fetchRepairItemShoes(
           RepairShoesModel(
             id: shoeId,
-            durability: repairDurability.value,
-            feeTik: costTik.value.toInt() + 10000,
+            durability: _currentSliderValue.value.toInt(),
+            feeTik: costTik.value.toInt(),
           ),
+          successCallback: (repairModel) {
+            InventoryItemModel newRepairModel = repairModel;
+            costTik.value = 0;
+            _currentSliderValue.value = 0;
+            selectedItem.value = newRepairModel;
+            remainDurability.value = newRepairModel.durability.toInt();
+            walletMasterController.getSpendingWalletBalances();
+            getUserAllItems();
+            getUserEquippedItems();
+            showToastPopup('내구도 충전이 완료되었습니다.');
+            closeRepairPopup();
+          },
         );
-
-        costTik.value = 0;
-        selectedItem.value = repairModel;
-        remainDurability.value = repairModel.durability.toInt();
-        getUserAllItems();
-        getUserEquippedItems();
-        showToastPopup('내구도 충전이 완료되었습니다.');
-        closeRepairPopup();
       } else {
         showToastPopup('수리할 내구도가 없습니다.');
       }
-    } else {}
+    } else {
+      handleNotEnoughTaikaPopup();
+    }
   }
 
   void initRepairInfo() {
@@ -265,7 +329,7 @@ class InventoryController extends GetxController with LinearProgressMixin, Inven
   }
 
   void showShoesRepairPopup(id) {
-    _currentSliderValue.value = equippedShoe.value.durability.toInt().floor().toDouble();
+    _currentSliderValue.value = 0;
 
     Get.bottomSheet(
       Obx(() {
@@ -280,12 +344,13 @@ class InventoryController extends GetxController with LinearProgressMixin, Inven
           child: Padding(
             padding: const EdgeInsets.symmetric(vertical: 30.0, horizontal: 20.0),
             child: Column(
+              mainAxisSize: MainAxisSize.min,
               children: [
                 Column(
-                  mainAxisSize: MainAxisSize.max,
+                  mainAxisSize: MainAxisSize.min,
                   children: [
                     const StyledText(
-                      '내구도 충전',
+                      '내구도 충전하기',
                       fontSize: 22,
                       lineHeight: 22,
                       fontWeight: 500,
@@ -293,7 +358,7 @@ class InventoryController extends GetxController with LinearProgressMixin, Inven
                     Padding(
                       padding: const EdgeInsets.only(top: 12.0),
                       child: StyledText(
-                        '내구도 ${_currentSliderValue.value.toStringAsFixed(0)}/100',
+                        '현재 신발 내구도 ${equippedShoe.value.durability.toInt()}',
                         fontSize: 16,
                         lineHeight: 22,
                         fontWeight: 500,
@@ -308,7 +373,7 @@ class InventoryController extends GetxController with LinearProgressMixin, Inven
                         min: 0,
                         handlerHeight: 32.0,
                         ignoreSteps: [
-                          FlutterSliderIgnoreSteps(from: -1, to: equippedShoe.value.durability - 1),
+                          FlutterSliderIgnoreSteps(from: 0, to: 0),
                         ],
                         trackBar: FlutterSliderTrackBar(
                           inactiveTrackBarHeight: 16,
@@ -329,11 +394,8 @@ class InventoryController extends GetxController with LinearProgressMixin, Inven
                           ),
                         ),
                         onDragging: (handlerIndex, lowerValue, upperValue) {
-                          if (lowerValue >= equippedShoe.value.durability.floor().toInt()) {
-                            _currentSliderValue.value = lowerValue;
-                            repairDurability.value = (lowerValue - equippedShoe.value.durability.floor()).toInt();
-                            costTik.value = (lowerValue.toInt() - remainDurability.value).abs() * 100;
-                          }
+                          _currentSliderValue.value = lowerValue;
+                          costTik.value = _currentSliderValue.value.toInt() * 10;
                         },
                         handler: FlutterSliderHandler(
                           decoration: BoxDecoration(
@@ -348,6 +410,21 @@ class InventoryController extends GetxController with LinearProgressMixin, Inven
                             ],
                           ),
                           child: iconSliderShoe,
+                        ),
+                        tooltip: FlutterSliderTooltip(
+                          textStyle: TextStyle(
+                            color: Colors.black,
+                            fontSize: 22,
+                            fontWeight: FontWeight.w500,
+                            height: 1,
+                          ),
+                          format: (label) => '+ ${formatDecimalPlaces(double.parse(label), 0)}',
+                          boxStyle: FlutterSliderTooltipBox(
+                            decoration: BoxDecoration(
+                              color: const Color(0xFFB85DFF),
+                              borderRadius: BorderRadius.circular(50),
+                            ),
+                          ),
                         ),
                       ),
                     ),
@@ -375,61 +452,21 @@ class InventoryController extends GetxController with LinearProgressMixin, Inven
                     Row(
                       children: [
                         Expanded(
-                          child: Padding(
-                            padding: const EdgeInsets.only(right: 8.0),
-                            child: Container(
-                              decoration: BoxDecoration(
-                                color: const Color(0xFF363841),
-                                border: Border.all(width: 2, color: Colors.black),
-                                borderRadius: BorderRadius.circular(8),
-                                boxShadow: const [
-                                  BoxShadow(
-                                    color: Colors.black,
-                                    offset: Offset(0, 3),
-                                  )
-                                ],
-                              ),
-                              child: InkWell(
-                                onTap: () => closeRepairPopup(),
-                                child: Padding(
-                                  padding: const EdgeInsets.symmetric(vertical: 12.0),
-                                  child: const Center(
-                                      child: StyledText(
-                                    '취소',
-                                    fontSize: 18,
-                                    lineHeight: 18,
-                                  )),
-                                ),
-                              ),
-                            ),
+                          child: GazagoButton(
+                            onTap: () => closeRepairPopup(),
+                            buttonText: '취소',
+                            textColor: Colors.white,
+                            buttonColor: const Color(0xFF363841),
                           ),
                         ),
+                        const SizedBox(
+                          width: 9,
+                        ),
                         Expanded(
-                          child: Container(
-                            decoration: BoxDecoration(
-                              color: const Color(0xFF0EE6F3),
-                              border: Border.all(width: 2, color: Colors.black),
-                              borderRadius: BorderRadius.circular(8),
-                              boxShadow: const [
-                                BoxShadow(
-                                  color: Colors.black,
-                                  offset: Offset(0, 3),
-                                )
-                              ],
-                            ),
-                            child: InkWell(
-                              onTap: () => fetchRepairShoes(equippedShoe.value.id),
-                              child: const Padding(
-                                padding: EdgeInsets.symmetric(vertical: 12.0),
-                                child: Center(
-                                    child: StyledText(
-                                  '확인',
-                                  fontSize: 18,
-                                  lineHeight: 18,
-                                  color: Colors.black,
-                                )),
-                              ),
-                            ),
+                          child: GazagoButton(
+                            onTap: () => fetchRepairShoes(equippedShoe.value.id),
+                            buttonText: '네',
+                            buttonColor: const Color(0xFF0EE6F3),
                           ),
                         ),
                       ],
@@ -441,13 +478,63 @@ class InventoryController extends GetxController with LinearProgressMixin, Inven
           ),
         );
       }),
-      // AlertDialog(
-      //   title: const Text('내구도 충전'),
-      //   content:
-      //   actions: [
+    ).whenComplete(() {
+      initRepairInfo();
+    });
+  }
 
-      //   ],
-      // ),
+  void handleNotEnoughTaikaPopup() {
+    Get.bottomSheet(
+      Container(
+        height: 200,
+        decoration: const BoxDecoration(
+          color: Color(0xff363841),
+          borderRadius: BorderRadius.only(
+            topLeft: Radius.circular(12),
+            topRight: Radius.circular(12),
+          ),
+        ),
+        child: Padding(
+          padding: const EdgeInsets.symmetric(vertical: 30.0, horizontal: 40.0),
+          child: Column(
+            children: [
+              const StyledText(
+                'Taika 가 부족하여 진행할 수 없습니다.\n GO지갑에 Taika를 충전해 주세요.',
+                fontWeight: 500,
+                fontSize: 18,
+                lineHeight: 28,
+              ),
+              Container(
+                margin: const EdgeInsets.only(top: 20),
+                decoration: BoxDecoration(
+                  color: const Color(0xFF0EE6F3),
+                  border: Border.all(width: 2, color: Colors.black),
+                  borderRadius: BorderRadius.circular(8),
+                  boxShadow: const [
+                    BoxShadow(
+                      color: Colors.black,
+                      offset: Offset(0, 3),
+                    )
+                  ],
+                ),
+                child: InkWell(
+                  onTap: () => Get.back(),
+                  child: const Padding(
+                    padding: EdgeInsets.symmetric(vertical: 12.0),
+                    child: Center(
+                        child: StyledText(
+                      '확인',
+                      fontSize: 18,
+                      lineHeight: 18,
+                      color: Colors.black,
+                    )),
+                  ),
+                ),
+              ),
+            ],
+          ),
+        ),
+      ),
     );
   }
 

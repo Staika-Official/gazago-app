@@ -1,5 +1,3 @@
-import 'dart:ui';
-
 import 'package:dio/dio.dart';
 import 'package:gaza_go/constants/enums.dart';
 import 'package:gaza_go/platform/apis/badge.dart';
@@ -8,31 +6,47 @@ import 'package:gaza_go/platform/models/inventory_badge_model.dart';
 import 'package:gaza_go/platform/stores/hive_store.dart';
 
 class BadgeService {
-  static final String? userId = HiveStore.loadString(key: HiveKey.userId.name);
+  static String? get userId {
+    return HiveStore.loadString(key: HiveKey.userId.name);
+  }
 
-  static Future<List<InventoryBadgeListModel>> getUserBadgesList() async {
+  static Future<void> getUserBadgesList({required Function successCallback, Function? errorCallback}) async {
     Response res = await BadgeApi.getUserBadgesList(userId!);
-    List<InventoryBadgeListModel> badges = [];
-    res.data.forEach((item) => badges.add(InventoryBadgeListModel.fromJson(item)));
-    return badges;
+    if (res.statusCode == 200) {
+      List<InventoryBadgeListModel> badges = [];
+      if (res.data.length > 0) {
+        res.data.forEach((item) => badges.add(InventoryBadgeListModel.fromJson(item)));
+      }
+      successCallback(badges);
+    } else {
+      if (errorCallback != null) errorCallback();
+    }
   }
 
-  static Future<List<InventoryBadgeModel>> fetchUserEquipBadge() async {
+  static Future<void> fetchUserEquipBadge({required Function successCallback, Function? errorCallback}) async {
     Response res = await BadgeApi.fetchUserEquipBadge(userId!);
-    return res.data;
+    if (res.statusCode == 200) {
+      successCallback(res.data);
+    } else {
+      if (errorCallback != null) errorCallback();
+    }
   }
 
-  static Future<void> fetchUserIssuanceBadge(int exerciseId, Function successCallback, VoidCallback errorCallback) async {
+  static Future<void> fetchUserIssuanceBadge(int exerciseId, {required Function successCallback, Function? errorCallback}) async {
     Response res = await BadgeApi.fetchUserIssuanceBadge(userId!, exerciseId);
     if (res.statusCode == 200) {
       successCallback(InventoryBadgeModel.fromJson(res.data));
     } else {
-      errorCallback();
+      if (errorCallback != null) errorCallback();
     }
   }
 
-  static Future<InventoryBadgeModel> fetchUserSyntheticBadge(composeData) async {
+  static Future<void> fetchUserSyntheticBadge(composeData, {required Function successCallback, Function? errorCallback}) async {
     Response res = await BadgeApi.fetchUserSyntheticBadge(userId!, composeData);
-    return InventoryBadgeModel.fromJson(res.data);
+    if (res.statusCode == 200) {
+      successCallback(InventoryBadgeModel.fromJson(res.data));
+    } else {
+      if (errorCallback != null) errorCallback();
+    }
   }
 }

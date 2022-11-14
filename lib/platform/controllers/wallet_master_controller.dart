@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:gaza_go/constants/enums.dart';
 import 'package:gaza_go/constants/routes.dart';
 import 'package:gaza_go/platform/controllers/loading_controller.dart';
+import 'package:gaza_go/platform/helpers/alert_helper.dart';
 import 'package:gaza_go/platform/models/asset_detail_model.dart';
 import 'package:gaza_go/platform/models/asset_token_balance_list_model.dart';
 import 'package:gaza_go/platform/models/asset_token_balance_model.dart';
@@ -23,35 +24,44 @@ class WalletMasterController extends GetxController {
   final Rx<BuyTikResponseModel> buyTikResult = Rx(BuyTikResponseModel());
   RxList<AssetTokenBalanceUiModel> get spendingTokenUiList {
     List<AssetTokenBalanceUiModel> balanceUiList = List.empty(growable: true);
+
     for (int i = 0; i < spendingTokens.value.tokens.length; i++) {
       AssetTokenBalanceUiModel tokenUi = AssetTokenBalanceUiModel.fromJson(spendingTokens.value.tokens[i].toJson());
+
       tokenUi.meta = spendingTokenInfoList[i].meta;
+
       tokenUi.price = spendingTokenInfoList[i].price;
+
       balanceUiList.add(tokenUi);
     }
+
     return RxList(balanceUiList);
   }
 
   Rx<AssetTokenBalanceUiModel> get tik {
-    return Rx(spendingTokenUiList.singleWhere((token) => token.mint == '1'));
+    return Rx(spendingTokenUiList.singleWhere((token) => token.mint == '1', orElse: () {
+      showToastPopup('TAIKA를 찾을 수 없습니다.');
+      return AssetTokenBalanceUiModel();
+    }));
   }
 
   Rx<AssetTokenBalanceUiModel> get stik {
-    return Rx(spendingTokenUiList.singleWhere((token) => token.mint == '2'));
+    return Rx(spendingTokenUiList.singleWhere((token) => token.mint == '2', orElse: () {
+      showToastPopup('STAIKA를 찾을 수 없습니다.');
+      return AssetTokenBalanceUiModel();
+    }));
   }
 
   @override
   void onInit() async {
     await getSpendingWalletBalances();
-    // await getSpendingMetaData();
-    // await getBuyTikCommission();
+    await getSpendingMetaData();
     super.onInit();
   }
 
   Future<void> getSpendingWalletBalances() async {
-    print('getSpendingWalletBalances');
     spendingTokens.value = await WalletService.getSpendingWalletBalance();
-    print(spendingTokens.value);
+
     if (Get.isRegistered<LoadingController>()) Get.find<LoadingController>().updateProgress("서비스를 위해 정보를 불러오는 중입니다.");
   }
 
@@ -62,19 +72,18 @@ class WalletMasterController extends GetxController {
 
   Future<void> getSpendingMetaData() async {
     spendingTokenInfoList.value = await WalletService.getSpendingMetaData();
-    if (Get.isRegistered<LoadingController>()) Get.find<LoadingController>().updateProgress("조금만 기다려주세요ㅊ");
+    if (Get.isRegistered<LoadingController>()) Get.find<LoadingController>().updateProgress("조금만 기다려주세요");
   }
 
   Future<void> getBuyTikCommission() async {
     buyTikCommission.value = await WalletService.getBuyTikCommission();
-    if (Get.isRegistered<LoadingController>()) Get.find<LoadingController>().updateProgress("서비스를 위해 정보를 불러오는 중입니다.");
   }
 
   Future<void> buyTik(int tikAmount) async {
     buyTikResult.value = await WalletService.buyTik(tikAmount);
     await getSpendingWalletBalances();
     await getSpendingMetaData();
-    Get.snackbar('충전 완료', '$tikAmount Tik이 충전되었습니다.', colorText: Colors.white);
+    showToastPopup('$tikAmount TIK이 충전되었습니다.');
     Get.until((route) => route.settings.name == Routes.wallet);
   }
 

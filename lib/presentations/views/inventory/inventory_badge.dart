@@ -1,5 +1,6 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/svg.dart';
 import 'package:gaza_go/platform/controllers/inventory_controller.dart';
 import 'package:gaza_go/presentations/styles/styled_text.dart';
 import 'package:get/get.dart';
@@ -34,11 +35,11 @@ class InventoryBadge extends StatelessWidget {
                         errorWidget: (context, url, error) => Image.asset("assets/images/@temp_badge.png"),
                       ),
                     ),
-                    if (item.name != null)
-                      Padding(
-                        padding: const EdgeInsets.only(top: 5, bottom: 5),
-                        child: StyledText(item.name!),
-                      ),
+                    // if (item.name != null)
+                    //   Padding(
+                    //     padding: const EdgeInsets.only(top: 5, bottom: 5),
+                    //     child: StyledText(item.name!),
+                    //   ),
                     Padding(
                       padding: const EdgeInsets.only(top: 5.0),
                       child: item.state == 'EQUIPPED'
@@ -127,7 +128,40 @@ class InventoryBadge extends StatelessWidget {
     double width = MediaQuery.of(context).size.width;
     return Container(
       color: Color(0xFF363841),
-      child: Padding(
+      child: controller.userBadgesList.isEmpty ? Container(
+        width: double.infinity,
+        padding: EdgeInsets.symmetric(vertical: 50),
+        decoration: BoxDecoration(
+          color: Color(0xff363841),
+          borderRadius: BorderRadius.circular(12),
+        ),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            SvgPicture.asset('assets/images/wallet/ico_empty.svg'),
+            Padding(
+              padding: const EdgeInsets.only(top: 20),
+              child: StyledText(
+                '뱃지가 없습니다.',
+                color: Color(0xff7b7b7b),
+                fontSize: 16,
+                lineHeight: 10,
+                fontWeight: 500,
+              ),
+            ),
+            Padding(
+              padding: const EdgeInsets.only(top: 13),
+              child: StyledText(
+                '등산해서 뱃지를 받아보세요!',
+                color: Color(0xff7b7b7b),
+                fontSize: 16,
+                lineHeight: 10,
+                fontWeight: 500,
+              ),
+            ),
+          ],
+        ),
+      ) : Padding(
         padding: const EdgeInsets.symmetric(vertical: 20.0),
         child: Obx(() {
           return GridView.count(
@@ -137,6 +171,7 @@ class InventoryBadge extends StatelessWidget {
             crossAxisSpacing: 10,
             mainAxisSpacing: 10,
             crossAxisCount: (width < 350) ? 2 : 3,
+            controller: controller.badgeScrollController,
             children: <Widget>[
               ...renderUserBadgesList(controller),
             ],

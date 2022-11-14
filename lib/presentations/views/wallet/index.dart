@@ -28,7 +28,7 @@ class _WalletHomeState extends State<WalletHome> with SingleTickerProviderStateM
   @override
   Widget build(BuildContext context) {
     return DefaultContainer(
-      titleText: '지갑',
+      titleText: _tabController.index == 0 ? 'GO 지갑' : '지갑',
       // child: Column(
       //   children: [
       //     SizedBox(

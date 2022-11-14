@@ -17,7 +17,7 @@ class HiveStore {
     await Hive.openBox('gazaGo');
   }
 
-  static void save({required String key, required String value}) {
+  static void save({required String key, required dynamic value}) {
     final Box box = Hive.box('gazaGo');
     box.put(key, value);
   }
@@ -30,6 +30,11 @@ class HiveStore {
   static void saveExerciseData({required UserExerciseModel exerciseData}) {
     final Box box = Hive.box('gazaGo');
     box.put(HiveKey.exerciseData.name, exerciseData);
+  }
+
+  static dynamic load({required String key}) {
+    final Box box = Hive.box('gazaGo');
+    return box.get(key);
   }
 
   static String? loadString({required String key}) {

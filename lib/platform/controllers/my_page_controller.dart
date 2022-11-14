@@ -1,23 +1,27 @@
+import 'dart:developer';
+
+import 'package:dio/dio.dart' as dio;
 import 'package:flutter/cupertino.dart';
-import 'package:gaza_go/platform/models/profile_model.dart';
+import 'package:gaza_go/platform/controllers/preference_controller.dart';
+import 'package:gaza_go/platform/helpers/alert_helper.dart';
+import 'package:gaza_go/platform/models/user_account_model.dart';
+import 'package:gaza_go/platform/services/uaa_service.dart';
 import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart';
 
 class MyPageController extends GetxController {
-  final Rx<ProfileModel> profile = Rx(
-    ProfileModel(
-      id: -1,
-      nickname: '',
-      profileImageUrl: '',
-      walletAddress: '',
-      email: '',
-      socialAccounts: '',
-      gender: '',
-      age: 0,
-      weight: 0.0,
-      height: 0.0,
-    ),
-  );
+  // final PreferenceController? preferenceController;
+  //
+  // MyPageController([this.preferenceController]);
+  final PreferenceController preferenceController = Get.find();
+  final Rx<UserAccountModel> profile = Rx(UserAccountModel(
+    id: -1,
+    login: '',
+    email: '',
+    nickname: '',
+    profileImageUrl: '',
+    provider: '',
+  ));
   final ImagePicker _picker = ImagePicker();
   final Rx<XFile?> pickedImage = Rx(null);
   final RxBool isEditMode = RxBool(false);
@@ -30,18 +34,45 @@ class MyPageController extends GetxController {
     super.onInit();
   }
 
-  void getProfileInfo() {
-    profile.value = ProfileModel(
-      id: 1,
-      nickname: '헬로스텝',
-      profileImageUrl: 'https://placeimg.com/20/20/any',
-      walletAddress: 'soifje2039jf09acj092w3jc0a923r',
-      socialAccounts: 'GOOGLE',
-      email: 'hello@gazaGo.io',
-      gender: 'MALE',
-      age: 21,
-      weight: 70.4,
-      height: 177.3,
+  void getProfileInfo() async {
+    await UaaService.getAccountInfo(
+      successCallback: (account) {
+        profile.update(
+          (state) {
+            state?.nickname = account.nickname;
+            state?.profileImageUrl = account.profileImageUrl;
+            state?.provider = account.provider;
+            state?.email = account.email;
+            state?.id = account.id;
+          },
+        );
+      },
+    );
+  }
+
+  Future<void> modifyMyAccountInfo() async {
+    if (pickedImage.value != null) {
+      dynamic imagePath = pickedImage.value!.path;
+      dio.MultipartFile profileImage = await dio.MultipartFile.fromFile(imagePath);
+      dio.FormData formData = dio.FormData.fromMap({
+        'profileImage': profileImage,
+      });
+      await UaaService.fetchUploadImage(
+        formData,
+        successCallback: (res) {
+          profile.value.profileImageUrl = res?.profileImageUrl;
+        },
+      );
+    }
+
+    await UaaService.modifyAccountInfo(
+      profile.value.nickname!,
+      profile.value.profileImageUrl!,
+      successCallback: (account) {
+        preferenceController.onInit();
+        showToastPopup('프로필이 수정되었습니다.');
+        Get.back();
+      },
     );
   }
 
@@ -55,6 +86,7 @@ class MyPageController extends GetxController {
       source: ImageSource.gallery,
       imageQuality: 50,
     );
+    inspect(pickedImage.value?.path);
   }
 
   void updateNickName(nickname) {
@@ -63,11 +95,11 @@ class MyPageController extends GetxController {
     });
   }
 
-  void selectGender(String gender) {
-    profile.update((profile) {
-      profile!.gender = gender;
-    });
-  }
+  // void selectGender(String gender) {
+  //   profile.update((profile) {
+  //     profile!.gender = gender;
+  //   });
+  // }
 
   void updateBiometrics() {
     Get.back();

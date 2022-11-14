@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:gaza_go/platform/controllers/login_controller.dart';
+import 'package:gaza_go/platform/controllers/withdraw_confirm_controller.dart';
 import 'package:gaza_go/presentations/components/default_container.dart';
+import 'package:gaza_go/presentations/styles/icons.dart';
 import 'package:gaza_go/presentations/styles/styled_text.dart';
 import 'package:get/get.dart';
 
@@ -8,7 +11,10 @@ class AccountRestore extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    WithdrawConfirmController controller = Get.put(WithdrawConfirmController());
+    LoginController loginController = Get.put(LoginController());
     return DefaultContainer(
+      isPrevButtonHide: true,
       backgroundColor: const Color(0xFF1D1D26),
       child: Padding(
         padding: const EdgeInsets.all(20),
@@ -23,15 +29,19 @@ class AccountRestore extends StatelessWidget {
                   children: [
                     Column(
                       mainAxisSize: MainAxisSize.min,
-                      children: const [
-                        StyledText(
+                      children: [
+                        Padding(
+                          padding: const EdgeInsets.only(bottom: 28.0),
+                          child: iconExclamationMark,
+                        ),
+                        const StyledText(
                           '기존 회원 정보로 계정이 복구 됩니다.',
                           fontSize: 22,
                           fontWeight: 500,
                           lineHeight: 22,
                           letterSpacing: .1,
                         ),
-                        Padding(
+                        const Padding(
                           padding: EdgeInsets.only(top: 14.0),
                           child: StyledText(
                             '탈퇴 후 14일 내 로그인 시\n기존 회원 계정으로 복구 됩니다.\n복구 하시겠습니까?',
@@ -100,7 +110,7 @@ class AccountRestore extends StatelessWidget {
                         ],
                       ),
                       child: InkWell(
-                        onTap: () => null,
+                        onTap: () => loginController.handleFetchWithdrawCancel(),
                         child: const Padding(
                           padding: EdgeInsets.symmetric(vertical: 18.0),
                           child: Center(

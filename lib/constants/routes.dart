@@ -4,6 +4,7 @@ import 'package:gaza_go/platform/middleware/router_middleware.dart';
 import 'package:gaza_go/presentations/views/activity/activity_active.dart';
 import 'package:gaza_go/presentations/views/activity/activity_challenges.dart';
 import 'package:gaza_go/presentations/views/activity/activity_loading.dart';
+import 'package:gaza_go/presentations/views/activity/challenge_map.dart';
 import 'package:gaza_go/presentations/views/activity/equipped_item.dart';
 import 'package:gaza_go/presentations/views/archive/archive_detail.dart';
 import 'package:gaza_go/presentations/views/auth/account_restore.dart';
@@ -18,11 +19,13 @@ import 'package:gaza_go/presentations/views/leaderboard/calendar_statistics.dart
 import 'package:gaza_go/presentations/views/loading.dart';
 import 'package:gaza_go/presentations/views/login.dart';
 import 'package:gaza_go/presentations/views/on_boarding.dart';
+import 'package:gaza_go/presentations/views/permissions.dart';
 import 'package:gaza_go/presentations/views/preferences/edit_biometrics.dart';
 import 'package:gaza_go/presentations/views/preferences/index.dart';
 import 'package:gaza_go/presentations/views/preferences/my_page.dart';
 import 'package:gaza_go/presentations/views/preferences/notification_alert.dart';
 import 'package:gaza_go/presentations/views/preferences/preference_board.dart';
+import 'package:gaza_go/presentations/views/preferences/terms_list.dart';
 import 'package:gaza_go/presentations/views/preferences/withdraw_completed.dart';
 import 'package:gaza_go/presentations/views/preferences/withdraw_confirm.dart';
 import 'package:gaza_go/presentations/views/term.dart';
@@ -40,11 +43,13 @@ class Routes {
   static const loading = '/loading';
   static const home = '/home';
   static const term = '/term/:termType';
+  static const termsList = '/terms_list';
   static const archiveDetail = '/archive/detail';
   static const activityChallenges = '/activity/challenges';
   static const activityLoading = '/activity/loading';
   static const activityActive = '/activity/active';
   static const equippedItems = '/activity/equipped_items';
+  static const challengeMap = '/activity/challenge_map';
   static const preferences = '/preferences';
   static const preferenceBoard = '/preferences/board';
   static const preferenceNotification = '/preferences/notification';
@@ -64,6 +69,7 @@ class Routes {
   static const calendarStatistics = '/leaderboard/calendar_statistics';
   static const signupComplete = '/auth/signup_complete';
   static const accountRestore = '/account/restore';
+  static const permissions = '/permissions';
 
   static List<GetPage> pages = [
     stepPage(name: Routes.login, page: const Login()),
@@ -76,10 +82,12 @@ class Routes {
       transition: Transition.noTransition,
     ),
     stepPage(name: Routes.term, page: const Term()),
+    stepPage(name: Routes.termsList, page: const TermsList()),
     stepPage(name: Routes.archiveDetail, page: const ArchiveDetail()),
     stepPage(name: Routes.activityChallenges, page: const ActivityChallenges()),
     stepPage(name: Routes.activityLoading, page: const ActivityLoading()),
     stepPage(name: Routes.activityActive, page: const ActivityActive()),
+    stepPage(name: Routes.challengeMap, page: const ChallengeMap()),
     stepPage(
       name: Routes.preferences,
       page: const Preferences(),
@@ -105,6 +113,7 @@ class Routes {
     stepPage(name: Routes.signupComplete, page: const SignupComplete()),
     stepPage(name: Routes.accountRestore, page: const AccountRestore()),
     stepPage(name: Routes.equippedItems, page: const EquippedItems()),
+    stepPage(name: Routes.permissions, page: Permissions()),
   ];
 }
 

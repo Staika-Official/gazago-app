@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_naver_map/flutter_naver_map.dart';
+import 'package:flutter_svg_provider/flutter_svg_provider.dart';
 import 'package:gaza_go/constants/enums.dart';
 import 'package:gaza_go/platform/controllers/archive_controller.dart';
 import 'package:gaza_go/platform/helpers/activity_helper.dart';
@@ -29,6 +30,7 @@ class ArchiveDetail extends StatelessWidget {
       ),
       backgroundColor: const Color(0xFF1D1D26),
       child: SingleChildScrollView(
+        physics: const ClampingScrollPhysics(),
         child: Column(
           children: [
             Padding(
@@ -43,16 +45,20 @@ class ArchiveDetail extends StatelessWidget {
                       Padding(
                         padding: const EdgeInsets.only(right: 15.0),
                         child: Stack(
+                          clipBehavior: Clip.none,
                           children: [
                             CircleAvatar(
                               radius: 21,
-                              child: controller.selectedItem.value.type == ExerciseType.hiking.name.toUpperCase() ? iconArchiveHiking : iconArchiveWalking,
+                              backgroundColor: Colors.transparent,
+                              foregroundImage: controller.selectedItem.value.type == ExerciseType.hiking.name.toUpperCase()
+                                  ? Svg('assets/images/archive/ico_archive_hiking.svg') as ImageProvider
+                                  : Svg('assets/images/archive/ico_archive_walking.svg') as ImageProvider,
                             ),
                             if (controller.selectedItem.value.badgeIssueId != null)
                               Positioned(
-                                right: 0,
-                                bottom: 0,
-                                child: Image.asset('assets/images/archive/ico_badge.png', width: 15, height: 20),
+                                right: -5,
+                                bottom: -5,
+                                child: Image.network(controller.selectedItem.value.badgeImageUrl!, width: 20, height: 20),
                               ),
                           ],
                         ),
@@ -62,9 +68,9 @@ class ArchiveDetail extends StatelessWidget {
                   Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      controller.selectedItem.value.challengeTitle != null
+                      controller.selectedItem.value.secondName != null
                           ? StyledText(
-                              controller.selectedItem.value.challengeTitle!,
+                              controller.selectedItem.value.secondName!,
                               fontSize: 18,
                               lineHeight: 20,
                               fontWeight: 500,
@@ -72,10 +78,11 @@ class ArchiveDetail extends StatelessWidget {
                             )
                           : Container(),
                       StyledText(
-                        formatDate(controller.selectedItem.value.startedDate),
-                        fontSize: 14,
+                        formatDateUntilDay(controller.selectedItem.value.startedDate),
+                        fontSize: controller.selectedItem.value.secondName != null ? 14 : 18,
                         lineHeight: 20,
                         fontWeight: 500,
+                        color: controller.selectedItem.value.secondName != null ? Colors.white : const Color(0xFF949494),
                       ),
                     ],
                   )
@@ -99,7 +106,7 @@ class ArchiveDetail extends StatelessWidget {
                       children: [
                         Padding(
                           padding: const EdgeInsets.only(right: 5.2, bottom: 3),
-                          child: iconArchiveClock,
+                          child: iconArchiveClockDetail,
                         ),
                         StyledText(
                           formatSeconds(controller.selectedItem.value.time!),
@@ -115,7 +122,7 @@ class ArchiveDetail extends StatelessWidget {
                       children: [
                         Padding(
                           padding: const EdgeInsets.only(right: 5.2, bottom: 5),
-                          child: iconArchiveDistance,
+                          child: iconArchiveDistanceDetail,
                         ),
                         StyledText(
                           '${formatDecimalPlaces(convertMetersToKm(controller.selectedItem.value.distance!), 2)} km',
@@ -131,7 +138,7 @@ class ArchiveDetail extends StatelessWidget {
                       children: [
                         Padding(
                           padding: const EdgeInsets.only(right: 5.2, bottom: 3),
-                          child: iconArchiveSteps,
+                          child: iconArchiveStepsDetail,
                         ),
                         StyledText(
                           '${controller.selectedItem.value.steps}',
@@ -153,18 +160,21 @@ class ArchiveDetail extends StatelessWidget {
                 color: Colors.grey,
                 child: NaverMap(
                   nightModeEnable: true,
+                  forceGesture: true,
                   tiltGestureEnable: false,
-                  mapType: MapType.Navi,
+                  mapType: MapType.Basic,
+                  activeLayers: [MapLayer.LAYER_GROUP_MOUNTAIN],
+                  onMapCreated: (mapController) => controller.recordMapCreated(mapController, controller.locations),
                   initialCameraPosition: CameraPosition(
-                    target: controller.locations.length > 1 ? controller.locations.first : LatLng(37.5525, 126.9883),
+                    target: controller.locations.length > 1 ? controller.locations.first : const LatLng(37.5525, 126.9883),
                   ),
                   pathOverlays: {
                     PathOverlay(
                       PathOverlayId('detail path'),
-                      controller.locations.length > 1 ? controller.locations : [LatLng(37.5551, 126.9933), LatLng(37.5551, 126.9933)],
+                      controller.locations.length > 1 ? controller.locations : [const LatLng(37.5551, 126.9933), const LatLng(37.5551, 126.9933)],
                       width: 3,
                       color: Colors.red,
-                      outlineColor: Colors.white,
+                      // outlineColor: Colors.white,
                     )
                   },
                 ),
@@ -174,14 +184,14 @@ class ArchiveDetail extends StatelessWidget {
               padding: const EdgeInsets.symmetric(vertical: 10.0, horizontal: 20.0),
               child: Row(
                 children: [
-                  StyledText(
+                  const StyledText(
                     '획득 GO',
                     fontWeight: 600,
                     fontSize: 16,
                   ),
                   const Spacer(),
                   StyledText(
-                    '${controller.selectedItem.value.rewardGo.toString()} GO',
+                    '${formatDecimalPlaces(controller.selectedItem.value.rewardGo!, 2)} GO',
                     fontWeight: 500,
                     fontSize: 16,
                     color: const Color(0xFF7D7D84),
@@ -189,19 +199,57 @@ class ArchiveDetail extends StatelessWidget {
                 ],
               ),
             ),
-            controller.selectedItem.value.badgeName != null
+            Padding(
+              padding: const EdgeInsets.symmetric(vertical: 10.0, horizontal: 20.0),
+              child: Row(
+                children: [
+                  const StyledText(
+                    '소비 체력',
+                    fontWeight: 600,
+                    fontSize: 16,
+                  ),
+                  const Spacer(),
+                  StyledText(
+                    controller.selectedItem.value.spendStamina.toString(),
+                    fontWeight: 500,
+                    fontSize: 16,
+                    color: const Color(0xFF7D7D84),
+                  ),
+                ],
+              ),
+            ),
+            Padding(
+              padding: const EdgeInsets.symmetric(vertical: 10.0, horizontal: 20.0),
+              child: Row(
+                children: [
+                  const StyledText(
+                    '소비 내구도',
+                    fontWeight: 600,
+                    fontSize: 16,
+                  ),
+                  const Spacer(),
+                  StyledText(
+                    controller.selectedItem.value.spendDurability.toString(),
+                    fontWeight: 500,
+                    fontSize: 16,
+                    color: const Color(0xFF7D7D84),
+                  ),
+                ],
+              ),
+            ),
+            controller.selectedItem.value.challengeId != null && controller.selectedItem.value.badgeName != null && controller.selectedItem.value.type == "HIKING"
                 ? Padding(
                     padding: const EdgeInsets.symmetric(vertical: 10.0, horizontal: 20.0),
                     child: Row(
                       children: [
-                        StyledText(
+                        const StyledText(
                           '획득 뱃지',
                           fontWeight: 600,
                           fontSize: 16,
                         ),
                         const Spacer(),
                         StyledText(
-                          controller.selectedItem.value.badgeName!,
+                          controller.selectedItem.value.badgeIssueId != null ? controller.selectedItem.value.badgeName! : '챌린지 실패',
                           fontWeight: 500,
                           fontSize: 16,
                           color: const Color(0xFF7D7D84),
@@ -218,11 +266,32 @@ class ArchiveDetail extends StatelessWidget {
                 color: Color(0xFF2C2C35),
               ),
             ),
+            controller.selectedItem.value.startPointName != null && controller.selectedItem.value.type == "HIKING"
+                ? Padding(
+                    padding: const EdgeInsets.symmetric(vertical: 10.0, horizontal: 20.0),
+                    child: Row(
+                      children: [
+                        const StyledText(
+                          '시작점',
+                          fontWeight: 600,
+                          fontSize: 16,
+                        ),
+                        const Spacer(),
+                        StyledText(
+                          controller.selectedItem.value.startPointName!,
+                          fontWeight: 500,
+                          fontSize: 16,
+                          color: const Color(0xFF7D7D84),
+                        ),
+                      ],
+                    ),
+                  )
+                : Container(),
             Padding(
               padding: const EdgeInsets.symmetric(vertical: 10.0, horizontal: 20.0),
               child: Row(
                 children: [
-                  StyledText(
+                  const StyledText(
                     '시작 시간',
                     fontWeight: 600,
                     fontSize: 16,
@@ -237,12 +306,34 @@ class ArchiveDetail extends StatelessWidget {
                 ],
               ),
             ),
+            // startPointName
+            controller.selectedItem.value.endPointName != null && controller.selectedItem.value.type == "HIKING"
+                ? Padding(
+                    padding: const EdgeInsets.symmetric(vertical: 10.0, horizontal: 20.0),
+                    child: Row(
+                      children: [
+                        const StyledText(
+                          '종료점',
+                          fontWeight: 600,
+                          fontSize: 16,
+                        ),
+                        const Spacer(),
+                        StyledText(
+                          controller.selectedItem.value.endPointName!,
+                          fontWeight: 500,
+                          fontSize: 16,
+                          color: const Color(0xFF7D7D84),
+                        ),
+                      ],
+                    ),
+                  )
+                : Container(),
             controller.selectedItem.value.endedDate != null
                 ? Padding(
                     padding: const EdgeInsets.symmetric(vertical: 10.0, horizontal: 20.0),
                     child: Row(
                       children: [
-                        StyledText(
+                        const StyledText(
                           '종료 시간',
                           fontWeight: 600,
                           fontSize: 16,
@@ -271,7 +362,7 @@ class ArchiveDetail extends StatelessWidget {
                     padding: const EdgeInsets.symmetric(vertical: 10.0, horizontal: 20.0),
                     child: Row(
                       children: [
-                        StyledText(
+                        const StyledText(
                           '평균 속도',
                           fontWeight: 600,
                           fontSize: 16,
@@ -292,7 +383,7 @@ class ArchiveDetail extends StatelessWidget {
                     padding: const EdgeInsets.symmetric(vertical: 10.0, horizontal: 20.0),
                     child: Row(
                       children: [
-                        StyledText(
+                        const StyledText(
                           '최고 고도',
                           fontWeight: 600,
                           fontSize: 16,
@@ -300,48 +391,6 @@ class ArchiveDetail extends StatelessWidget {
                         const Spacer(),
                         StyledText(
                           '${controller.selectedItem.value.altitude!.toString()} m',
-                          fontWeight: 500,
-                          fontSize: 16,
-                          color: const Color(0xFF7D7D84),
-                        ),
-                      ],
-                    ),
-                  )
-                : Container(),
-            controller.selectedItem.value.spendStamina != null
-                ? Padding(
-                    padding: const EdgeInsets.symmetric(vertical: 10.0, horizontal: 20.0),
-                    child: Row(
-                      children: [
-                        StyledText(
-                          '소비 체력',
-                          fontWeight: 600,
-                          fontSize: 16,
-                        ),
-                        const Spacer(),
-                        StyledText(
-                          controller.selectedItem.value.spendStamina!.toString(),
-                          fontWeight: 500,
-                          fontSize: 16,
-                          color: const Color(0xFF7D7D84),
-                        ),
-                      ],
-                    ),
-                  )
-                : Container(),
-            controller.selectedItem.value.spendDurability != null
-                ? Padding(
-                    padding: const EdgeInsets.symmetric(vertical: 10.0, horizontal: 20.0),
-                    child: Row(
-                      children: [
-                        StyledText(
-                          '소비 내구도',
-                          fontWeight: 600,
-                          fontSize: 16,
-                        ),
-                        const Spacer(),
-                        StyledText(
-                          controller.selectedItem.value.spendDurability!.toString(),
                           fontWeight: 500,
                           fontSize: 16,
                           color: const Color(0xFF7D7D84),

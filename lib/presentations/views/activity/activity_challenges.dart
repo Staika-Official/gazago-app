@@ -1,9 +1,14 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_naver_map/flutter_naver_map.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:gaza_go/constants/enums.dart';
 import 'package:gaza_go/platform/controllers/activity_controller.dart';
+import 'package:gaza_go/platform/helpers/alert_helper.dart';
+import 'package:gaza_go/platform/models/challenge_model.dart';
 import 'package:gaza_go/presentations/components/default_container.dart';
+import 'package:gaza_go/presentations/styles/styled_text.dart';
 import 'package:get/get.dart';
 
 class ActivityChallenges extends StatelessWidget {
@@ -90,37 +95,88 @@ class ActivityChallenges extends StatelessWidget {
     return [centerCircle, outerCircle];
   }
 
+  List<Marker> renderMaker(ActivityController controller) {
+    ChallengeModel course = controller.selectedChallenge.value;
+    Marker startMaker = Marker(
+      markerId: course.id!.toString(),
+      position: LatLng(course.startLat!, course.startLon!),
+      captionText: course.startPointName,
+      captionColor: const Color(0xFF0EE6F3),
+      captionHaloColor: Colors.black,
+      captionTextSize: 16.0,
+      subCaptionTextSize: 14,
+      subCaptionText: course.secondName,
+      subCaptionColor: (Platform.isAndroid) ? Colors.white : Colors.black,
+      subCaptionHaloColor: (Platform.isAndroid) ? Colors.black : Colors.white,
+      captionOffset: 5,
+      icon: controller.startMaker,
+      width: 20,
+      height: 20
+    );
+
+    Marker endMaker = Marker(
+      markerId: 'end_${course.id!.toString()}',
+      position: LatLng(course.endLat!, course.endLon!),
+      captionText: '도착 ${course.endPointName}',
+      captionColor: const Color(0xFFFF6F75),
+      captionHaloColor: Colors.black,
+      captionTextSize: 16.0,
+      captionOffset: 5,
+      subCaptionText: course.secondName,
+      subCaptionTextSize: 14,
+      subCaptionColor: (Platform.isAndroid) ? Colors.white : Colors.black,
+      subCaptionHaloColor: (Platform.isAndroid) ? Colors.black : Colors.white,
+      icon: controller.endMaker,
+      width: 20,
+      height: 20,
+    );
+    return [startMaker, endMaker];
+  }
+
   List<Widget> renderChallengeList(ActivityController controller) {
     return controller.doableChallenges.map((challenge) {
       bool isSelected = challenge.id == controller.selectedChallenge.value.id;
-      return Padding(
-        padding: const EdgeInsets.only(top: 23),
-        child: InkWell(
-          onTap: () => controller.selectChallenge(challenge),
-          child: Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 30),
-            child: Row(
-              mainAxisSize: MainAxisSize.max,
-              children: [
-                SvgPicture.asset(
-                  isSelected ? 'assets/images/activity/ico_challenge_checked.svg' : 'assets/images/activity/ico_challenge_unchecked.svg',
-                  width: 16,
-                  height: 11,
-                ),
-                Padding(
-                  padding: const EdgeInsets.only(left: 11),
-                  child: Text(
-                    challenge.firstName!,
-                    style: TextStyle(
+      return InkWell(
+        onTap: () => controller.selectChallenge(challenge),
+        child: Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 30, vertical: 15),
+          child: Row(
+            mainAxisSize: MainAxisSize.max,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              SvgPicture.asset(
+                isSelected ? 'assets/images/activity/ico_challenge_checked.svg' : 'assets/images/activity/ico_challenge_unchecked.svg',
+                width: 16,
+                height: 11,
+              ),
+              Padding(
+                padding: const EdgeInsets.only(left: 11),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    StyledText(
+                      challenge.secondName!,
                       fontSize: 18,
-                      fontWeight: FontWeight.w500,
-                      height: 18 / 18,
+                      fontWeight: 500,
+                      lineHeight: 18,
                       color: isSelected ? Color(0xff0EE6F3) : Colors.white,
                     ),
-                  ),
+                    Padding(
+                      padding: const EdgeInsets.only(
+                        top: 7,
+                      ),
+                      child: StyledText(
+                        challenge.startPointName != null ? '${challenge.startPointName!} - ${challenge.endPointName!}' : challenge.firstName!,
+                        fontSize: 14,
+                        fontWeight: 500,
+                        lineHeight: 14,
+                        color: isSelected ? Color(0xff0EE6F3) : Color(0xff8A8A8A),
+                      ),
+                    ),
+                  ],
                 ),
-              ],
-            ),
+              ),
+            ],
           ),
         ),
       );
@@ -140,7 +196,7 @@ class ActivityChallenges extends StatelessWidget {
               top: 0,
               left: 0,
               child: SizedBox(
-                height: MediaQuery.of(context).size.height - (controller.doableChallenges.length * 80) - (MediaQuery.of(context).viewInsets.bottom + MediaQuery.of(context).viewInsets.top),
+                height: MediaQuery.of(context).size.height - (controller.listHeight.value + 50) - (MediaQuery.of(context).viewInsets.bottom + MediaQuery.of(context).viewInsets.top),
                 width: MediaQuery.of(context).size.width,
                 child: NaverMap(
                   initialCameraPosition: CameraPosition(
@@ -151,7 +207,11 @@ class ActivityChallenges extends StatelessWidget {
                     if (controller.selectedChallenge.value.id != null) ...renderStartPoint(controller),
                     if (controller.selectedChallenge.value.id != null) ...renderEndPoint(controller),
                   ],
-                  mapType: MapType.Navi,
+                  markers: [
+                    if (controller.selectedChallenge.value.id != null) ...renderMaker(controller),
+                  ],
+                  mapType: MapType.Basic,
+                  activeLayers: [MapLayer.LAYER_GROUP_MOUNTAIN],
                   nightModeEnable: true,
                   tiltGestureEnable: false,
                   onMapCreated: controller.onChallengeMapCreated,
@@ -162,6 +222,7 @@ class ActivityChallenges extends StatelessWidget {
               bottom: 0,
               left: 0,
               child: Container(
+                key: controller.listKey,
                 width: MediaQuery.of(context).size.width,
                 decoration: BoxDecoration(
                   color: Color(0xff363841),
@@ -179,7 +240,7 @@ class ActivityChallenges extends StatelessWidget {
                         bottom: 15,
                       ),
                       child: Text(
-                        '등산 시작점을 선택해주세요',
+                        '도전할 챌린지를 선택해주세요.',
                         style: TextStyle(
                           fontSize: 20,
                           fontWeight: FontWeight.w500,
@@ -188,21 +249,30 @@ class ActivityChallenges extends StatelessWidget {
                         ),
                       ),
                     ),
-                    ...renderChallengeList(controller),
+                    ConstrainedBox(
+                      constraints: BoxConstraints(maxHeight: 250),
+                      child: SingleChildScrollView(
+                        physics: ClampingScrollPhysics(),
+                        child: Column(
+                          children: [
+                            ...renderChallengeList(controller),
+                          ],
+                        ),
+                      ),
+                    ),
                     Padding(
                       padding: const EdgeInsets.only(
                         top: 36,
                         left: 30,
                         right: 30,
+                        bottom: 30,
                       ),
                       child: InkWell(
                         onTap: () {
                           if (controller.selectedChallenge.value.id != null) {
                             controller.selectExerciseType(ExerciseType.hiking);
                           } else {
-                            if (!Get.isSnackbarOpen) {
-                              Get.snackbar('챌린지 미선택', '시작할 챌린지를 선택해주세요', colorText: Colors.white);
-                            }
+                            showToastPopup('도전할 챌린지를 선택해주세요.');
                           }
                         },
                         child: Container(
@@ -226,7 +296,7 @@ class ActivityChallenges extends StatelessWidget {
                             ],
                           ),
                           child: Text(
-                            '시작하기',
+                            '가자GO',
                             textAlign: TextAlign.center,
                             style: TextStyle(
                               fontSize: 18,

@@ -1,16 +1,15 @@
 import 'package:animated_flip_counter/animated_flip_counter.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_naver_map/flutter_naver_map.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:gaza_go/constants/enums.dart';
 import 'package:gaza_go/constants/routes.dart';
 import 'package:gaza_go/platform/controllers/activity_controller.dart';
-import 'package:gaza_go/platform/helpers/activity_helper.dart';
 import 'package:gaza_go/platform/helpers/base_helper.dart';
 import 'package:gaza_go/presentations/components/circular_button.dart';
 import 'package:gaza_go/presentations/components/default_container.dart';
 import 'package:gaza_go/presentations/styles/icons.dart';
 import 'package:gaza_go/presentations/styles/styled_text.dart';
+import 'package:gaza_go/presentations/views/activity/activity_map.dart';
 import 'package:get/get.dart';
 
 class ActivityActive extends StatelessWidget {
@@ -32,7 +31,7 @@ class ActivityActive extends StatelessWidget {
         gauge = Container(
           width: 3,
           height: 18,
-          color: Color(0xff585858),
+          color: const Color(0xff585858),
         );
       }
 
@@ -44,17 +43,13 @@ class ActivityActive extends StatelessWidget {
   double calculateGaugePosition(BoxConstraints constraints, double speed) {
     double spaceLeft = constraints.maxWidth - (60 * 3);
     double spacesBetweenBars = spaceLeft / 59;
-    int barStep = (speed / 0.25).floor();
+    int barStep = ((speed > 15 ? 15 : speed) / 0.25).floor();
 
     if (barStep < 2) {
       return 0.5;
     } else {
       return (3 + spacesBetweenBars) * (barStep - 1) + 0.5;
     }
-  }
-
-  Color getGaugeColor(double speed) {
-    return speed >= 1 && speed <= 6 ? Color(0xff76FFFB) : Color(0xffFF2222);
   }
 
   List<Widget> renderStatList(ActivityController controller, context) {
@@ -67,7 +62,7 @@ class ActivityActive extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
             SizedBox(
-              height: 34,
+              height: 42,
               child: Stack(
                 children: [
                   Row(
@@ -86,16 +81,8 @@ class ActivityActive extends StatelessWidget {
                                             color: Colors.black,
                                           ),
                                           borderRadius: const BorderRadius.all(
-                                            Radius.circular(30),
+                                            Radius.circular(42),
                                           ),
-                                          boxShadow: const [
-                                            BoxShadow(
-                                              color: Colors.black,
-                                              offset: Offset(1, 0),
-                                              blurRadius: 4.0,
-                                              spreadRadius: 0.0,
-                                            ),
-                                          ],
                                         ),
                                       ),
                                       stat.currentStat > 1.0
@@ -107,22 +94,14 @@ class ActivityActive extends StatelessWidget {
                                                         ? 0
                                                         : 34,
                                                 decoration: BoxDecoration(
-                                                  color: stat.currentStat < 20 ? const Color(0xFFFF2525) : const Color(0xFFCDFF41),
+                                                  color: stat.currentStat < 30 ? const Color(0xFFFF2525) : const Color(0xFFCDFF41),
                                                   border: Border.all(
                                                     width: 2,
                                                     color: Colors.black,
                                                   ),
                                                   borderRadius: const BorderRadius.all(
-                                                    Radius.circular(30),
+                                                    Radius.circular(42),
                                                   ),
-                                                  boxShadow: const [
-                                                    BoxShadow(
-                                                      color: Colors.black,
-                                                      offset: Offset(1, 0),
-                                                      blurRadius: 4.0,
-                                                      spreadRadius: 0.0,
-                                                    ),
-                                                  ],
                                                 ),
                                               );
                                             })
@@ -143,14 +122,6 @@ class ActivityActive extends StatelessWidget {
                                           borderRadius: const BorderRadius.all(
                                             Radius.circular(50),
                                           ),
-                                          boxShadow: const [
-                                            BoxShadow(
-                                              color: Colors.black,
-                                              offset: Offset(1, 0),
-                                              blurRadius: 4.0,
-                                              spreadRadius: 0.0,
-                                            ),
-                                          ],
                                         ),
                                       ),
                                       stat.currentStat > 1.0
@@ -162,7 +133,7 @@ class ActivityActive extends StatelessWidget {
                                                         ? 0
                                                         : 34,
                                                 decoration: BoxDecoration(
-                                                  color: stat.currentStat < 20 ? const Color(0xFFFF2525) : const Color(0xFFB85DFF),
+                                                  color: stat.currentStat < 30 ? const Color(0xFFFF2525) : const Color(0xFFB85DFF),
                                                   border: Border.all(
                                                     width: 2,
                                                     color: Colors.black,
@@ -170,14 +141,6 @@ class ActivityActive extends StatelessWidget {
                                                   borderRadius: const BorderRadius.all(
                                                     Radius.circular(50),
                                                   ),
-                                                  boxShadow: const [
-                                                    BoxShadow(
-                                                      color: Colors.black,
-                                                      offset: Offset(1, 0),
-                                                      blurRadius: 4.0,
-                                                      spreadRadius: 0.0,
-                                                    ),
-                                                  ],
                                                 ),
                                               );
                                             })
@@ -208,18 +171,18 @@ class ActivityActive extends StatelessWidget {
                           StyledText(
                             stat.name,
                             fontFamily: 'Montserrat',
-                            fontWeight: 600,
-                            fontSize: 14,
-                            lineHeight: 14,
+                            fontWeight: 800,
+                            fontSize: 15,
+                            lineHeight: 15,
                             color: stat.currentStat < 20 ? Colors.white : Colors.black,
                           ),
                           Padding(
                             padding: const EdgeInsets.only(left: 5.0),
                             child: StyledText(
                               stat.currentStat.toString(),
-                              fontWeight: 600,
-                              fontSize: 13,
-                              lineHeight: 14,
+                              fontWeight: 800,
+                              fontSize: 14,
+                              lineHeight: 15,
                               color: stat.currentStat < 20 ? Colors.white : Colors.black,
                             ),
                           ),
@@ -227,15 +190,6 @@ class ActivityActive extends StatelessWidget {
                       ),
                       Row(
                         children: [
-                          Padding(
-                            padding: const EdgeInsets.only(right: 8.0),
-                            child: StyledText(
-                              '100',
-                              color: const Color(0xFF494A51),
-                              fontSize: 14,
-                              fontWeight: 600,
-                            ),
-                          ),
                           stat.type == 'STAMINA'
                               ? Container(
                                   decoration: BoxDecoration(
@@ -245,7 +199,7 @@ class ActivityActive extends StatelessWidget {
                                       color: Colors.black,
                                     ),
                                     borderRadius: const BorderRadius.all(
-                                      Radius.circular(30),
+                                      Radius.circular(42),
                                     ),
                                     boxShadow: const [
                                       BoxShadow(
@@ -257,11 +211,11 @@ class ActivityActive extends StatelessWidget {
                                     ],
                                   ),
                                   child: CircleAvatar(
-                                    radius: 15,
+                                    radius: 19,
                                     backgroundColor: const Color(0xFFCDFF41),
                                     child: IconButton(
                                       icon: iconPlus,
-                                      splashRadius: 15,
+                                      splashRadius: 19,
                                       onPressed: () => {controller.onClickRepairStat(stat)},
                                     ),
                                   ),
@@ -286,8 +240,8 @@ class ActivityActive extends StatelessWidget {
                                     ],
                                   ),
                                   child: CircleAvatar(
-                                    radius: 15,
-                                    backgroundColor: Color(0xFFB85DFF),
+                                    radius: 19,
+                                    backgroundColor: const Color(0xFFB85DFF),
                                     child: IconButton(
                                       icon: iconPlus,
                                       splashRadius: 15,
@@ -312,26 +266,70 @@ class ActivityActive extends StatelessWidget {
   Widget build(BuildContext context) {
     ActivityController controller = Get.find();
 
-    return Obx(() {
-      return DefaultContainer(
-        onBackButtonTap: () {
-          Get.offNamed(Routes.home);
-        },
-        titleText: controller.exerciseState.value.label,
-        child: Column(
-          mainAxisSize: MainAxisSize.max,
+    return DefaultContainer(
+      onBackButtonTap: () {
+        Get.offNamed(Routes.home);
+      },
+      titleWidget: Obx(() {
+        return Row(
+          mainAxisSize: MainAxisSize.min,
           children: [
-            // TODO. qa후 삭제 필요.
+            Container(
+              width: 6,
+              height: 6,
+              margin: EdgeInsets.only(right: 8),
+              decoration: BoxDecoration(
+                color: controller.exerciseStateColor.value,
+                borderRadius: BorderRadius.circular(6),
+              ),
+            ),
             StyledText(
-                '현재 위치의 gps정확도: ${formatDecimalPlaces(controller.currentLocation.value.accuracy, 2)}m [속도: ${formatDecimalPlaces(convertMStoKMH(controller.currentLocation.value.speed), 2)}km/h]'),
-            if (controller.exerciseData.isNotEmpty) StyledText('저장된 운동데이터 배열에서 마지막 데이터의 속도: ${formatDecimalPlaces(controller.exerciseData.last.speed!, 2)}km/h'),
-            StyledText('평균 속도: ${formatDecimalPlaces(controller.avgSpeed.value, 2)}km/h'),
-            StyledText('성공적인 업데이트 요청 (시작/종료 제외): ${controller.updateCount.value.toString()}회'),
-            StyledText('마지막 업데이트 시간: ${controller.lastUpdateTime.value != '' ? formatDate(controller.lastUpdateTime.value) : '??'}'),
-            StyledText('걷기 상태: ${controller.pedestrianStatus.value}'),
-            // TODO. qa후 삭제 필요 end.
-            Padding(
-              padding: const EdgeInsets.only(top: 70.0, bottom: 20),
+              (controller.realTimeSpeed.value < 1 || controller.realTimeSpeed.value > 6) && controller.exerciseState.value == ExerciseState.ongoing
+                  ? controller.exerciseState.value.label + ' (보상 불가)'
+                  : controller.exerciseState.value.label,
+              fontSize: 18,
+              lineHeight: 18,
+              fontWeight: 500,
+              color: controller.exerciseStateColor.value,
+            )
+          ],
+        );
+      }),
+      child: Column(
+        mainAxisSize: MainAxisSize.max,
+        children: [
+          Obx(() {
+            return Container(
+              child: controller.selectedChallenge.value.id != null
+                  ? Container(
+                      padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 7),
+                      decoration: BoxDecoration(
+                        color: const Color(0xff1b1b1b),
+                        borderRadius: BorderRadius.circular(50),
+                      ),
+                      child: StyledText(
+                        '${controller.selectedChallenge.value.firstName} | ${controller.selectedChallenge.value.secondName}',
+                        fontSize: 14,
+                        fontWeight: 500,
+                        color: const Color(0xff8a8a8a),
+                      ),
+                    )
+                  : Container(),
+            );
+          }),
+          // TODO. qa후 삭제 필요.
+          // StyledText(
+          //     '현재 위치의 gps정확도: ${formatDecimalPlaces(controller.currentLocation.value.accuracy, 2)}m [속도: ${formatDecimalPlaces(convertMStoKMH(controller.currentLocation.value.speed), 2)}km/h]'),
+          // if (controller.exerciseData.isNotEmpty) StyledText('저장된 운동데이터 배열에서 마지막 데이터의 속도: ${formatDecimalPlaces(controller.exerciseData.last.speed!, 2)}km/h'),
+          // StyledText('평균 속도: ${formatDecimalPlaces(controller.avgSpeed.value, 2)}km/h'),
+          // StyledText('평균 속도: ${formatDecimalPlaces(controller.realTimeSpeed.value, 2)}km/h'),
+          // StyledText('성공적인 업데이트 요청 (시작/종료 제외): ${controller.updateCount.value.toString()}회'),
+          // StyledText('마지막 업데이트 시간: ${controller.lastUpdateTime.value != '' ? formatDate(controller.lastUpdateTime.value) : '??'}'),
+          // StyledText('걷기 상태: ${controller.pedestrianStatus.value}'),
+          // TODO. qa후 삭제 필요 end.
+          Obx(() {
+            return Padding(
+              padding: const EdgeInsets.only(top: 30.0, bottom: 20),
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
@@ -344,11 +342,10 @@ class ActivityActive extends StatelessWidget {
                     padding: const EdgeInsets.only(left: 14.0),
                     child: AnimatedFlipCounter(
                       value: controller.userState.value.exercise != null ? controller.userState.value.exercise!.rewardGo! : 0,
-                      duration: Duration(milliseconds: 500),
+                      duration: const Duration(milliseconds: 500),
                       fractionDigits: 2,
                       thousandSeparator: ',',
-                      prefix: '+',
-                      textStyle: TextStyle(
+                      textStyle: const TextStyle(
                         fontWeight: FontWeight.w600,
                         fontSize: 50,
                         height: 1,
@@ -357,8 +354,8 @@ class ActivityActive extends StatelessWidget {
                       ),
                     ),
                   ),
-                  Padding(
-                    padding: const EdgeInsets.only(left: 3.0),
+                  const Padding(
+                    padding: EdgeInsets.only(left: 3.0),
                     child: StyledText(
                       'GO',
                       fontWeight: 500,
@@ -370,163 +367,166 @@ class ActivityActive extends StatelessWidget {
                   ),
                 ],
               ),
-            ),
-            Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 20.0, vertical: 10),
-                child: Container(
-                  width: double.infinity,
-                  padding: EdgeInsets.symmetric(vertical: 12, horizontal: 24),
-                  decoration: BoxDecoration(
-                    color: Color(0xff1F2129),
-                    borderRadius: BorderRadius.circular(50),
-                  ),
-                  child: LayoutBuilder(builder: (context, constraints) {
-                    return Obx(() {
-                      return Stack(
-                        clipBehavior: Clip.none,
-                        children: [
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            crossAxisAlignment: CrossAxisAlignment.end,
-                            children: [
-                              ...renderGauge(getGaugeColor(controller.realTimeSpeed.value)),
-                            ],
+            );
+          }),
+          Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 20.0, vertical: 10),
+              child: Container(
+                width: double.infinity,
+                padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 24),
+                decoration: BoxDecoration(
+                  color: const Color(0xff1F2129),
+                  borderRadius: BorderRadius.circular(50),
+                ),
+                child: LayoutBuilder(builder: (context, constraints) {
+                  return Obx(() {
+                    return Stack(
+                      clipBehavior: Clip.none,
+                      children: [
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          crossAxisAlignment: CrossAxisAlignment.end,
+                          children: [
+                            ...renderGauge(controller.exerciseStateColor.value),
+                          ],
+                        ),
+                        Positioned(
+                          top: -26,
+                          left: calculateGaugePosition(constraints, controller.realTimeSpeed.value),
+                          child: GaugeCursor(
+                            color: controller.exerciseStateColor.value,
+                            speed: controller.realTimeSpeed.value,
                           ),
-                          Positioned(
-                            top: -26,
-                            left: calculateGaugePosition(constraints, controller.realTimeSpeed.value),
-                            child: GaugeCursor(
-                              color: getGaugeColor(controller.realTimeSpeed.value),
-                              speed: controller.realTimeSpeed.value,
-                            ),
-                          ),
-                          Positioned(
-                            bottom: -30,
-                            left: (constraints.maxWidth / 60) * 8,
-                            child: Row(
-                              children: const [
-                                StyledText(
-                                  '1-6',
+                        ),
+                        Positioned(
+                          bottom: -30,
+                          left: (constraints.maxWidth / 60) * 8,
+                          child: Row(
+                            children: const [
+                              StyledText(
+                                '1-6',
+                                color: Color(0xff8a8a8a),
+                                fontSize: 14,
+                                lineHeight: 12,
+                                fontWeight: 700,
+                                fontFamily: 'Monserrat',
+                              ),
+                              Padding(
+                                padding: EdgeInsets.only(left: 3),
+                                child: StyledText(
+                                  'km/h',
                                   color: Color(0xff8a8a8a),
-                                  fontSize: 14,
+                                  fontSize: 12,
                                   lineHeight: 12,
-                                  fontWeight: 700,
+                                  fontWeight: 500,
                                   fontFamily: 'Monserrat',
                                 ),
-                                Padding(
-                                  padding: const EdgeInsets.only(left: 3),
-                                  child: StyledText(
-                                    'km/h',
-                                    color: Color(0xff8a8a8a),
-                                    fontSize: 12,
-                                    lineHeight: 12,
-                                    fontWeight: 500,
-                                    fontFamily: 'Monserrat',
-                                  ),
-                                ),
-                              ],
-                            ),
+                              ),
+                            ],
                           ),
-                        ],
-                      );
-                    });
-                  }),
-                )),
-            Padding(
-              padding: EdgeInsets.only(
-                left: 30,
-                right: 30,
-                top: 30,
-                bottom: 20,
-              ),
-              child: LayoutBuilder(builder: (context, constraints) {
-                return Obx(() {
-                  return Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      SizedBox(
-                        width: constraints.maxWidth / 3,
-                        child: Column(
-                          children: [
-                            SvgPicture.asset('assets/images/activity/ico_time.svg'),
-                            Padding(
-                              padding: const EdgeInsets.only(top: 10),
-                              child: StyledText(
-                                formatSeconds(controller.exerciseTime.value),
-                                fontWeight: 600,
-                                fontSize: 16,
-                                lineHeight: 16,
-                                color: Colors.white,
-                              ),
-                            )
-                          ],
                         ),
-                      ),
-                      SizedBox(
-                        width: constraints.maxWidth / 3,
-                        child: Column(
-                          children: [
-                            SvgPicture.asset('assets/images/activity/ico_distance.svg'),
-                            Padding(
-                              padding: const EdgeInsets.only(top: 10),
-                              child: StyledText(
-                                formatDecimalPlaces(controller.totalDistance.value, 2) + 'km',
-                                fontWeight: 600,
-                                fontSize: 16,
-                                lineHeight: 16,
-                                color: Colors.white,
-                              ),
-                            )
-                          ],
-                        ),
-                      ),
-                      SizedBox(
-                        width: constraints.maxWidth / 3,
-                        child: Column(
-                          children: [
-                            SvgPicture.asset('assets/images/activity/ico_step.svg'),
-                            Padding(
-                              padding: const EdgeInsets.only(top: 10),
-                              child: StyledText(
-                                controller.exerciseSteps.value.toString(),
-                                fontWeight: 600,
-                                fontSize: 16,
-                                lineHeight: 16,
-                                color: Colors.white,
-                              ),
-                            )
-                          ],
-                        ),
-                      )
-                    ],
-                  );
-                });
-              }),
+                      ],
+                    );
+                  });
+                }),
+              )),
+          Padding(
+            padding: const EdgeInsets.only(
+              left: 30,
+              right: 30,
+              top: 60,
+              bottom: 25,
             ),
-            Padding(
-              padding: EdgeInsets.only(
-                top: 30,
-                left: 30,
-                right: 30,
-              ),
-              child: Column(
+            child: LayoutBuilder(builder: (context, constraints) {
+              return Obx(() {
+                return Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    SizedBox(
+                      width: constraints.maxWidth / 3,
+                      child: Column(
+                        children: [
+                          SvgPicture.asset('assets/images/activity/ico_time.svg'),
+                          Padding(
+                            padding: const EdgeInsets.only(top: 10),
+                            child: StyledText(
+                              formatSeconds(controller.exerciseTime.value),
+                              fontWeight: 600,
+                              fontSize: 16,
+                              lineHeight: 16,
+                              color: Colors.white,
+                            ),
+                          )
+                        ],
+                      ),
+                    ),
+                    SizedBox(
+                      width: constraints.maxWidth / 3,
+                      child: Column(
+                        children: [
+                          SvgPicture.asset('assets/images/activity/ico_distance.svg'),
+                          Padding(
+                            padding: const EdgeInsets.only(top: 10),
+                            child: StyledText(
+                              '${formatDecimalPlaces(controller.totalDistance.value, 2)}km',
+                              fontWeight: 600,
+                              fontSize: 16,
+                              lineHeight: 16,
+                              color: Colors.white,
+                            ),
+                          )
+                        ],
+                      ),
+                    ),
+                    SizedBox(
+                      width: constraints.maxWidth / 3,
+                      child: Column(
+                        children: [
+                          SvgPicture.asset('assets/images/activity/ico_step.svg'),
+                          Padding(
+                            padding: const EdgeInsets.only(top: 10),
+                            child: StyledText(
+                              controller.exerciseSteps.value.toString(),
+                              fontWeight: 600,
+                              fontSize: 16,
+                              lineHeight: 16,
+                              color: Colors.white,
+                            ),
+                          )
+                        ],
+                      ),
+                    )
+                  ],
+                );
+              });
+            }),
+          ),
+          Padding(
+            padding: const EdgeInsets.only(
+              left: 30,
+              right: 30,
+            ),
+            child: Obx(() {
+              return Column(
                 children: [
                   ...renderStatList(controller, context),
                 ],
-              ),
-            ),
-            Expanded(
-              child: Align(
-                alignment: Alignment.bottomCenter,
-                child: Padding(
-                  padding: const EdgeInsets.only(left: 35, right: 35, bottom: 100),
-                  child: Row(
+              );
+            }),
+          ),
+          Expanded(
+            child: Align(
+              alignment: Alignment.bottomCenter,
+              child: Padding(
+                padding: const EdgeInsets.only(left: 35, right: 35, bottom: 100),
+                child: Obx(() {
+                  return Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       CircularButton(
                         radius: 50,
                         color: Colors.white,
-                        onTap: () => controller.showExerciseMap(ActivityMap()),
+                        onTap: () => controller.showExerciseMap(const ActivityMap()),
                         child: SvgPicture.asset(
                           'assets/images/activity/ico_map.svg',
                         ),
@@ -550,10 +550,10 @@ class ActivityActive extends StatelessWidget {
                                         child: Container(
                                           width: 78,
                                           height: 78,
-                                          padding: EdgeInsets.all(5),
+                                          padding: const EdgeInsets.all(5),
                                           child: CircularProgressIndicator(
                                             strokeWidth: 6,
-                                            color: Color(0xff0ee6f3),
+                                            color: const Color(0xff0ee6f3),
                                             value: controller.stopProgress.value,
                                           ),
                                         ),
@@ -565,9 +565,9 @@ class ActivityActive extends StatelessWidget {
                                   padding: const EdgeInsets.only(left: 11),
                                   child: CircularButton(
                                     radius: 78,
-                                    color: Color(0xffFF2222),
+                                    color: const Color(0xffFF2222),
                                     onTap: () => controller.pauseExercise(),
-                                    child: Icon(Icons.pause, color: Colors.white, size: 35),
+                                    child: const Icon(Icons.pause, color: Colors.white, size: 35),
                                   ),
                                 )
                               ],
@@ -595,26 +595,14 @@ class ActivityActive extends StatelessWidget {
                         ),
                       ),
                     ],
-                  ),
-                ),
+                  );
+                }),
               ),
-            )
-            // Padding(
-            //   padding: const EdgeInsets.symmetric(horizontal: 20.0, vertical: 10),
-            //   child: Row(
-            //     mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            //     children: [
-            //       Text(
-            //         '평균속도: ' + formatDecimalPlaces(controller.avgSpeed.value, 1) + 'km/h',
-            //         style: TextStyle(fontSize: 16),
-            //       ),
-            //     ],
-            //   ),
-            // ),
-          ],
-        ),
-      );
-    });
+            ),
+          )
+        ],
+      ),
+    );
   }
 }
 
@@ -652,7 +640,7 @@ class GaugeCursor extends StatelessWidget {
           ),
           Positioned(
             top: 0,
-            left: 10,
+            left: speed > 13 ? -80 : 10,
             child: Row(
               children: [
                 StyledText(
@@ -679,148 +667,6 @@ class GaugeCursor extends StatelessWidget {
           )
         ],
       ),
-    );
-  }
-}
-
-class ActivityMap extends StatelessWidget {
-  const ActivityMap({Key? key}) : super(key: key);
-
-  List<CircleOverlay> renderStartPoint(ActivityController controller) {
-    CircleOverlay centerCircle = CircleOverlay(
-      overlayId: 'ChallengeStartCenter' + controller.selectedChallenge.value.id!.toString(),
-      center: LatLng(controller.selectedChallenge.value.startLat!, controller.selectedChallenge.value.startLon!),
-      radius: 9,
-      color: Color(0xff0EE6F3),
-    );
-
-    CircleOverlay outerCircle = CircleOverlay(
-      overlayId: 'ChallengeStart' + controller.selectedChallenge.value.id!.toString(),
-      center: LatLng(controller.selectedChallenge.value.startLat!, controller.selectedChallenge.value.startLon!),
-      radius: controller.selectedChallenge.value.startRadius!,
-      color: Color.fromRGBO(14, 230, 243, 0.3),
-    );
-
-    return [centerCircle, outerCircle];
-  }
-
-  List<CircleOverlay> renderEndPoint(ActivityController controller) {
-    CircleOverlay centerCircle = CircleOverlay(
-      overlayId: 'ChallengeEndCenter' + controller.selectedChallenge.value.id!.toString(),
-      center: LatLng(controller.selectedChallenge.value.endLat!, controller.selectedChallenge.value.endLon!),
-      radius: 9,
-      color: Colors.red,
-    );
-
-    CircleOverlay outerCircle = CircleOverlay(
-      overlayId: 'ChallengeEnd' + controller.selectedChallenge.value.id!.toString(),
-      center: LatLng(controller.selectedChallenge.value.endLat!, controller.selectedChallenge.value.endLon!),
-      radius: controller.selectedChallenge.value.endRadius!,
-      color: Colors.red[300]?.withOpacity(0.3),
-    );
-
-    return [centerCircle, outerCircle];
-  }
-
-  List<Marker> renderStartMarker(ActivityController controller) {
-    return controller.challengeList
-        .where((challenge) => challenge.id == controller.userState.value.exercise?.challengeId)
-        .map(
-          (challenge) => Marker(
-            markerId: 'StartMarker' + challenge.id!.toString(),
-            position: LatLng(challenge.startLat!, challenge.startLon!),
-            captionText: challenge.firstName! + ' 시작점',
-            // icon: controller.startMarkerImage.value,
-            // width: 10,
-            // height: 10,
-          ),
-        )
-        .toList();
-  }
-
-  List<Marker> renderEndMarker(ActivityController controller) {
-    return controller.challengeList
-        .where((challenge) => challenge.id == controller.userState.value.exercise?.challengeId)
-        .map(
-          (challenge) => Marker(
-            markerId: 'FinishMarker' + challenge.id!.toString(),
-            position: LatLng(challenge.endLat!, challenge.endLon!),
-            captionText: challenge.firstName! + ' 도착점',
-            // icon: controller.finishMarkerImage.value,
-            // width: 10,
-            // height: 10,
-          ),
-        )
-        .toList();
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    ActivityController controller = Get.find();
-
-    return Stack(
-      children: [
-        Obx(() {
-          return NaverMap(
-            nightModeEnable: true,
-            mapType: MapType.Navi,
-            initialCameraPosition: CameraPosition(
-              target: LatLng(controller.currentLocation.value.latitude, controller.currentLocation.value.longitude),
-              zoom: 15,
-            ),
-            initLocationTrackingMode: LocationTrackingMode.Follow,
-            circles: [
-              if (controller.selectedChallenge.value.id != null) ...renderStartPoint(controller),
-              if (controller.selectedChallenge.value.id != null) ...renderEndPoint(controller),
-            ],
-            // markers: [
-            //   ...renderStartMarker(controller),
-            //   ...renderEndMarker(controller),
-            // ],
-            pathOverlays: (controller.coordinates.length < 10)
-                ? null
-                : {
-                    PathOverlay(
-                      PathOverlayId('path'),
-                      controller.coordinates,
-                      width: 3,
-                      color: Colors.red,
-                      // outlineColor: Colors.white,
-                    )
-                  },
-            locationButtonEnable: true,
-            maxZoom: 20,
-            minZoom: 8,
-            tiltGestureEnable: false,
-          );
-        }),
-        Positioned(
-          top: 20,
-          left: 20,
-          child: GestureDetector(
-            onTap: () => Get.back(),
-            child: Container(
-              width: 46,
-              height: 46,
-              decoration: BoxDecoration(
-                  color: Color(0xff363841),
-                  border: Border.all(width: 2, style: BorderStyle.solid, color: Colors.black),
-                  boxShadow: [
-                    BoxShadow(
-                      offset: Offset(2, 4),
-                      color: Colors.black,
-                    ),
-                  ],
-                  borderRadius: BorderRadius.circular(14)),
-              child: const Icon(
-                Icons.chevron_left,
-                color: Colors.white,
-                size: 30,
-              ),
-            ),
-          ),
-        )
-      ],
     );
   }
 }

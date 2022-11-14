@@ -45,14 +45,16 @@ class WalletDetail extends StatelessWidget {
     return controller.assetDetail.value.transactions
         .map(
           (transaction) => Container(
-            padding: EdgeInsets.only(left: 3, right: 3, top: 25, bottom: 13),
-            decoration: BoxDecoration(
-              border: BorderDirectional(
-                bottom: BorderSide(
-                  color: Color(0xff363841),
-                ),
-              ),
-            ),
+            padding: EdgeInsets.only(left: 3, right: 3, top: 20, bottom: 20),
+            decoration: controller.assetDetail.value.transactions.last == transaction
+                ? BoxDecoration()
+                : BoxDecoration(
+                    border: BorderDirectional(
+                      bottom: BorderSide(
+                        color: Color(0xff363841),
+                      ),
+                    ),
+                  ),
             child: Row(
               mainAxisSize: MainAxisSize.max,
               crossAxisAlignment: CrossAxisAlignment.start,
@@ -80,7 +82,7 @@ class WalletDetail extends StatelessWidget {
                             fontWeight: 600,
                           ),
                           StyledText(
-                            '${transaction.uiAmountString!} ${transaction.symbol!}',
+                            '${formatDecimalPlaces(double.parse(transaction.uiAmountString!), transaction.decimals!)} ${transaction.symbol!}',
                             fontSize: 18,
                             lineHeight: 20,
                             letterSpacing: -0.5,
@@ -136,18 +138,21 @@ class WalletDetail extends StatelessWidget {
             //         child: Text('\u2248 \$100'),
             //       )
             //     : Container(),
-            CircleAvatar(
-              foregroundImage: controller.selectedAsset.value.meta?.logoUrl != ''
-                  ? CachedNetworkImageProvider(controller.selectedAsset.value.meta!.logoUrl)
-                  : SP.Svg('assets/images/common/ico_token_tik.svg') as ImageProvider,
+            Padding(
+              padding: const EdgeInsets.only(top: 40),
+              child: CircleAvatar(
+                foregroundImage: controller.selectedAsset.value.meta?.logoUrl != ''
+                    ? CachedNetworkImageProvider(controller.selectedAsset.value.meta!.logoUrl)
+                    : SP.Svg('assets/images/common/ico_token_tik.svg') as ImageProvider,
+              ),
             ),
             Padding(
-              padding: const EdgeInsets.only(top: 14),
+              padding: const EdgeInsets.only(top: 18),
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   StyledText(
-                    controller.assetDetail.value.balance.amount.toString(),
+                    formatDecimalPlaces(double.parse(controller.assetDetail.value.balance.uiAmountString!), controller.assetDetail.value.balance.decimals!),
                     fontSize: 28,
                     lineHeight: 28,
                     fontWeight: 600,

@@ -19,9 +19,11 @@ class ArchiveListItemModel {
   int? badgeIssueId;
   int? challengeId;
   String? badgeDescription;
-  String? challengeName;
   double? spendDurability;
   double? spendStamina;
+  String? badgeName;
+  String? badgeImageUrl;
+  String? challengeTitle;
 
   ArchiveListItemModel({
     this.id,
@@ -39,9 +41,11 @@ class ArchiveListItemModel {
     this.badgeIssueId,
     this.challengeId,
     this.badgeDescription,
-    this.challengeName,
     this.spendDurability,
     this.spendStamina,
+    this.badgeName,
+    this.badgeImageUrl,
+    this.challengeTitle,
   });
 
   factory ArchiveListItemModel.fromJson(Map<String, dynamic> json) => _$ArchiveListItemModelFromJson(json);
