@@ -52,6 +52,10 @@ class ActivityMixin {
   final RxInt updateCount = RxInt(0);
   final RxString lastUpdateTime = RxString('');
   final RxDouble realTimeSpeed = RxDouble(0);
+  final RxBool lowStaminaNotified = RxBool(false);
+  final RxBool zeroStaminaNotified = RxBool(false);
+  final RxBool lowDurabilityNotified = RxBool(false);
+  final RxBool zeroDurabilityNotified = RxBool(false);
 
   Rx<Color> get exerciseStateColor {
     Color color = Colors.white;
@@ -356,17 +360,21 @@ class ActivityMixin {
                 });
 
                 if (userState.value.state!.stamina! < 30) {
-                  if (userState.value.shoes!.durability! == 0) {
+                  if (userState.value.state!.stamina! == 0 && !zeroStaminaNotified.value) {
                     showLocalNotification(notificationType: NotificationType.stamina, title: '체력 충전 알림', message: '지금 체력이 0이 되어 GO보상이 되지 않고 있어요. 체력 충전하러 가자GO~~');
-                  } else {
+                    zeroStaminaNotified.value = true;
+                  } else if (!lowStaminaNotified.value) {
                     showLocalNotification(notificationType: NotificationType.stamina, title: '체력 충전 알림', message: '체력이 부족하면 GO보상이 되지 않아요. 체력 충전하러 가자GO~~');
+                    lowStaminaNotified.value = true;
                   }
                 }
-                if (userState.value.shoes!.durability! < 30) {
+                if (userState.value.shoes!.durability! < 30 && !zeroDurabilityNotified.value) {
                   if (userState.value.shoes!.durability! == 0) {
                     showLocalNotification(notificationType: NotificationType.durability, title: '아이템 수리 알림', message: '지금 내구도(신발)가 0이 되어 GO보상이 되지 않고 있어요. 내구도 보충하러 가자GO~~');
-                  } else {
+                    zeroDurabilityNotified.value = true;
+                  } else if (!lowDurabilityNotified.value) {
                     showLocalNotification(notificationType: NotificationType.durability, title: '아이템 수리 알림', message: '내구도(신발)가 부족하면 GO보상이 되지 않아요. 내구도 보충하러 가자GO~~');
+                    lowDurabilityNotified.value = true;
                   }
                 }
                 // updateCount.value = updateCount.value + 1;
