@@ -9,6 +9,7 @@ import 'package:gaza_go/presentations/views/activity/equipped_item.dart';
 import 'package:gaza_go/presentations/views/archive/archive_detail.dart';
 import 'package:gaza_go/presentations/views/auth/account_restore.dart';
 import 'package:gaza_go/presentations/views/auth/signup_complete.dart';
+import 'package:gaza_go/presentations/views/debugging/request_info.dart';
 import 'package:gaza_go/presentations/views/home.dart';
 import 'package:gaza_go/presentations/views/inventory/index.dart';
 import 'package:gaza_go/presentations/views/inventory/inventory_badge_detail.dart';
@@ -35,6 +36,8 @@ import 'package:gaza_go/presentations/views/wallet/index.dart';
 import 'package:gaza_go/presentations/views/wallet/wallet_actions.dart';
 import 'package:gaza_go/presentations/views/wallet/wallet_detail.dart';
 import 'package:get/get_navigation/get_navigation.dart';
+
+import '../presentations/views/debugging/activity_logs.dart';
 
 class Routes {
   static const login = '/login';
@@ -70,6 +73,8 @@ class Routes {
   static const signupComplete = '/auth/signup_complete';
   static const accountRestore = '/account/restore';
   static const permissions = '/permissions';
+  static const requestInfo = '/debugging/request_info';
+  static const activityLogs = '/debugging/activity_logs';
 
   static List<GetPage> pages = [
     stepPage(name: Routes.login, page: const Login()),
@@ -114,6 +119,8 @@ class Routes {
     stepPage(name: Routes.accountRestore, page: const AccountRestore()),
     stepPage(name: Routes.equippedItems, page: const EquippedItems()),
     stepPage(name: Routes.permissions, page: Permissions()),
+    stepPage(name: Routes.requestInfo, page: const RequestInfo()),
+    stepPage(name: Routes.activityLogs, page: const ActivityLogs()),
   ];
 }
 

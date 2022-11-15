@@ -57,6 +57,10 @@ enum HiveKey {
   dummyStepCount,
   isNewUser,
   permissionRequestOnFirstLaunch,
+  isDebuggingMode,
+  isShowDebuggingMenu,
+  requestLogs,
+  activityLogs,
 }
 
 enum ResponseStatus {

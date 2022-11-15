@@ -39,6 +39,7 @@ void main() async {
     await Hive.initFlutter();
     HiveStore.registerAdapters();
     await HiveStore.openBox();
+    HiveStore.save(key: HiveKey.isDebuggingMode.name, value: false);
     await initFirebase();
     await initFirebasePackages();
 

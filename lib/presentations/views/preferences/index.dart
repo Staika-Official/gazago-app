@@ -1,6 +1,7 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:gaza_go/constants/routes.dart';
+import 'package:gaza_go/platform/controllers/debugging_controller.dart';
 import 'package:gaza_go/platform/controllers/preference_controller.dart';
 import 'package:gaza_go/presentations/components/default_container.dart';
 import 'package:gaza_go/presentations/styles/styled_text.dart';
@@ -12,6 +13,7 @@ class Preferences extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     PreferenceController controller = Get.put(PreferenceController());
+    DebuggingController debuggingController = Get.put(DebuggingController());
 
     return DefaultContainer(
       titleText: '설정',
@@ -108,12 +110,32 @@ class Preferences extends StatelessWidget {
             onTap: () => controller.showLogoutConfirmation(),
           ),
           Obx(() {
-            return PreferenceItem(
-              title: '버전정보',
-              type: ItemType.descriptive,
-              description: controller.appVersion.value,
+            return GestureDetector(
+              onDoubleTap: () => debuggingController.onDebuggingModeTouchCount(),
+              child: PreferenceItem(
+                title: '버전정보',
+                type: ItemType.descriptive,
+                description: controller.appVersion.value,
+              ),
             );
           }),
+          Obx(() {
+            if (debuggingController.isShowDebuggingMenu.value) {
+              return Column(
+                children: [
+                  PreferenceItem(
+                    title: 'Request Info',
+                    onTap: () => Get.toNamed(Routes.requestInfo),
+                  ),
+                  PreferenceItem(
+                    title: 'Activity Logs',
+                    onTap: () => Get.toNamed(Routes.activityLogs),
+                  )
+                ],
+              );
+            }
+            return Container();
+          })
         ],
       ),
     );
