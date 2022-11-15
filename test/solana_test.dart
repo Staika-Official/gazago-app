@@ -54,8 +54,8 @@ void main() {
 
   test('solana token transfer', () async {
     final SolanaClient solanaClient = SolanaClient(
-        rpcUrl: Uri.parse('https://api.devnet.solana.com'),
-        websocketUrl: Uri.parse('wss://api.devnet.solana.com'),
+      rpcUrl: Uri.parse('https://api.devnet.solana.com'),
+      websocketUrl: Uri.parse('wss://api.devnet.solana.com'),
     );
 
     final sender = await getWalletA();
@@ -67,6 +67,8 @@ void main() {
       source: sender,
       commitment: Commitment.confirmed,
     );
+
+
 
     print('signature ${signature}');
   });
@@ -82,19 +84,24 @@ void main() {
       SystemInstruction.transfer(
         fundingAccount: sender.publicKey,
         recipientAccount: receiver,
-        lamports: 200000000,
+        lamports: 200000,
       ),
     ];
 
     print(instructions);
 
-    final tx = await signTransaction(
-      await rpcClient.getRecentBlockhash(commitment: Commitment.finalized),
-      Message(instructions: instructions),
-      [sender], // 보내는 사람 서명 필요
-    );
+    final recentBlockhash = await rpcClient.getRecentBlockhash(commitment: Commitment.confirmed);
 
-    print('tx ${tx.encode()}');
+    SignedTx signature = await signTransactionCustom(recentBlockhash, Message.only(instructions[0]), [sender], Ed25519HDPublicKey.fromBase58('47NHwdLy1u3er4kH9PycRNzowGN3oJtMoHRbJRhFX3MV'));
+
+    print(signature.signatures.length);
+
+    /* final signature = await rpcClient.signMessage(
+      Message.only(instruction),
+      [owner],
+      commitment: Commitment.confirmed,
+    );*/
+    print('signature ${signature.encode()}');
   });
 
 
@@ -205,9 +212,9 @@ void main() {
     SignedTx signature = await signTransactionCustom(recentBlockhash, Message.only(instruction), [owner], Ed25519HDPublicKey.fromBase58('47NHwdLy1u3er4kH9PycRNzowGN3oJtMoHRbJRhFX3MV'));
 
 
-    
-    
-   /* final signature = await rpcClient.signMessage(
+
+
+    /* final signature = await rpcClient.signMessage(
       Message.only(instruction),
       [owner],
       commitment: Commitment.confirmed,
@@ -230,8 +237,8 @@ void main() {
     } catch (e) {
       print(e);
     }
-    
-    
+
+
     /*refreshDio.post('http://localhost:8089/api/solana/wallet/test/transfer', data: send).then((Response res) {
         print('data ${res.data}');
       }).catchError((e) {
