@@ -93,46 +93,24 @@ void main() {
 
     print(base64.encode(txSerialize.asUint8List()));
 
-    /*
-    final wireTransaction = transaction.serialize();
-    final encodedTransaction = base64.encode(wireTransaction.asUint8List());
+    final accessToken = 'eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJhZG1pbiIsImF1dGgiOiJST0xFX0FETUlOLFJPTEVfVVNFUiIsImV4cCI6MTY2ODU4NzQ5NSwidXNlcklkIjoiMyJ9.zVWnbWd1nxmLwKSRonETE61rO-RtmVysIyY-aw55XAA3ckJYVolK7XQ0A5pyfExSNEA-pLpKSqWilXQn9CTiEg';
 
-    final signature = await connection.sendSignedTransactionRaw(
-      encodedTransaction,
-    );
-     */
+    final send = {
+      'clientId': 'GAZAGO',
+      'endocdeTransction': base64.encode(txSerialize.asUint8List())
+    };
 
-
-
-
-    /*
-    await connection.sendAndConfirmTransaction(
-      transaction,
-      signers: [feeWallet, wallet1], // Fee payer + transaction signer.
-    );
-     */
-
-    //print(signature);
-
-
-    /*print(transaction.toJson());
-
-    final txSerialize = transaction.serialize(SerializeConfig(requireAllSignatures: false, verifySignatures: false));
-
-    print(txSerialize);
-
-    print(base64.encode(txSerialize.asUint8List()));
-
-
-    final transactionFromJson = Transaction.fromList(txSerialize.asUint8List());
-    //transactionFromJson.partialSign([feeWallet]);
-
-    final wireTransaction = transactionFromJson.serialize();
-    final signature = await connection.sendTransactionRaw(
-      Transaction.fromList(wireTransaction.asUint8List()),
-    );*/
-
-    //print('signature ${signature}');
+    try {
+      var response = await Dio().post('http://localhost:8080/services/gazago-wallet/api/solana/wallet/test/transfer', data: send,
+        options: Options(
+          headers: {
+            'Authorization': 'Bearer $accessToken'
+          },
+        ));
+      print(response.data);
+    } catch (e) {
+      print(e);
+    }
   });
 
   // 솔라나 토큰 트랜스퍼 서명(이게 사용됨)
