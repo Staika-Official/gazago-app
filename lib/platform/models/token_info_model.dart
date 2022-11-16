@@ -8,7 +8,7 @@ part 'token_info_model.g.dart';
 class TokenInfoModel {
   String mint;
   TokenMetaModel meta;
-  Map<String, TokenPriceModel> price;
+  Map<String, TokenPriceModel>? price;
 
   TokenInfoModel({
     required this.mint,

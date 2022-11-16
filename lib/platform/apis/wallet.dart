@@ -5,15 +5,14 @@ import 'package:gaza_go/platform/models/pay_info_model.dart';
 
 class WalletApi {
   // - 스펜딩 월렛 api
-
-  static Future<Response> generateSpendingWallet() async {
-    return await Api.client(serviceUrl: ServiceUrl.spendingWalletService).post('/generate-wallet', queryParameters: {
+  static Future<Response> getSpendingWalletBalances() async {
+    return await Api.client(serviceUrl: ServiceUrl.spendingWalletService).get('/balances', queryParameters: {
       'clientId': 'GAZAGO',
     });
   }
 
-  static Future<Response> getSpendingWalletBalance() async {
-    return await Api.client(serviceUrl: ServiceUrl.spendingWalletService).get('/wallet/balance', queryParameters: {
+  static Future<Response> getSpendingTokenBalance(String token) async {
+    return await Api.client(serviceUrl: ServiceUrl.spendingWalletService).get('/balance/$token', queryParameters: {
       'clientId': 'GAZAGO',
     });
   }
