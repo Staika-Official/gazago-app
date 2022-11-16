@@ -19,7 +19,7 @@ import 'package:gaza_go/platform/models/current_user_state_model.dart';
 import 'package:gaza_go/platform/models/user_exercise_model.dart';
 import 'package:gaza_go/platform/services/activity_service.dart';
 import 'package:gaza_go/platform/stores/hive_store.dart';
-import 'package:gaza_go/presentations/components/gazago_button.dart';
+import 'package:gaza_go/presentations/components/alert_ui_list.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:get/get.dart';
 import 'package:health/health.dart';
@@ -454,30 +454,7 @@ class ActivityMixin {
   }
 
   void showEndExerciseDialog(ChallengeModel challenge) {
-    showAlert(
-      title: '운동 종료',
-      contentText: '지금까지의 기록만 저장됩니다.',
-      actions: [
-        Expanded(
-          child: GazagoButton(
-            onTap: () => Get.back(),
-            buttonText: '취소',
-            textColor: Colors.white,
-            buttonColor: const Color(0xFF363841),
-          ),
-        ),
-        const SizedBox(
-          width: 9,
-        ),
-        Expanded(
-          child: GazagoButton(
-            onTap: () => endExercise(challenge),
-            buttonText: '운동종료',
-            buttonColor: const Color(0xFF0EE6F3),
-          ),
-        ),
-      ],
-    );
+    showEndExerciseAlert(this, challenge);
   }
 
   void endExercise(ChallengeModel challenge) async {

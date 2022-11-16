@@ -7,6 +7,7 @@ import 'package:gaza_go/platform/controllers/activity_controller.dart';
 import 'package:gaza_go/platform/controllers/wallet_master_controller.dart';
 import 'package:gaza_go/platform/helpers/alert_helper.dart';
 import 'package:gaza_go/platform/helpers/base_helper.dart';
+import 'package:gaza_go/presentations/components/alert_ui_list.dart';
 import 'package:gaza_go/presentations/components/gazago_button.dart';
 import 'package:get/get.dart';
 import 'package:url_launcher/url_launcher.dart';
@@ -39,19 +40,7 @@ class LoadingController extends GetxController {
 
   void showRestartAppPopup() {
     timerStop();
-    showAlert(
-      title: '로딩 중 오류가 발생했습니다',
-      contentText: '재시도 후에도 오류가 발생할 경우\n잠시 후 다시 시도해 주세요',
-      actions: [
-        Expanded(
-          child: GazagoButton(
-            onTap: () => {handleRefreshApp()},
-            buttonText: '재시도하기',
-            buttonColor: const Color(0xFF0EE6F3),
-          ),
-        ),
-      ],
-    );
+    showRetryAlert(this);
   }
 
   void handleRefreshApp() {
