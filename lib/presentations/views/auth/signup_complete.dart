@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:gaza_go/constants/routes.dart';
 import 'package:gaza_go/platform/controllers/login_controller.dart';
 import 'package:gaza_go/presentations/components/default_container.dart';
 import 'package:gaza_go/presentations/styles/styled_text.dart';
@@ -97,7 +98,7 @@ class SignupComplete extends StatelessWidget {
                   ],
                 ),
                 child: InkWell(
-                  onTap: () => null,
+                  onTap: () => Get.offAllNamed(Routes.loading),
                   child: const Padding(
                     padding: EdgeInsets.symmetric(vertical: 12.0),
                     child: Center(

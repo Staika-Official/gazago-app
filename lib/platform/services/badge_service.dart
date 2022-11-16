@@ -14,7 +14,9 @@ class BadgeService {
     Response res = await BadgeApi.getUserBadgesList(userId!);
     if (res.statusCode == 200) {
       List<InventoryBadgeListModel> badges = [];
-      res.data.forEach((item) => badges.add(InventoryBadgeListModel.fromJson(item)));
+      if (res.data.length > 0) {
+        res.data.forEach((item) => badges.add(InventoryBadgeListModel.fromJson(item)));
+      }
       successCallback(badges);
     } else {
       if (errorCallback != null) errorCallback();

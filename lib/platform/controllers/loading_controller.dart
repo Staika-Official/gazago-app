@@ -21,15 +21,14 @@ class LoadingController extends GetxController {
   void onInit() async {
     if (Get.isRegistered<WalletMasterController>()) Get.find<WalletMasterController>().onInit();
     if (Get.isRegistered<ActivityController>()) Get.find<ActivityController>().onInit();
-    timerStart();
 
     super.onInit();
   }
 
   @override
-  void dispose() {
-    timerStop();
-    super.dispose();
+  void onReady() {
+    Future.delayed(Duration.zero, () => timerStart());
+    super.onReady();
   }
 
   @override
@@ -70,6 +69,11 @@ class LoadingController extends GetxController {
     _timer = Timer.periodic(const Duration(seconds: 1), (timer) {
       time.value++;
 
+      print(Get.isRegistered<LoadingController>());
+      if (!Get.isRegistered<LoadingController>()) {
+        timerStop();
+      }
+
       print('LoadingController time: ${time.value}');
       if (time.value > 60) {
         showRestartAppPopup();
@@ -79,8 +83,10 @@ class LoadingController extends GetxController {
   }
 
   void timerStop() {
-    _timer?.cancel();
-    _timer = null;
+    if (_timer != null) {
+      _timer?.cancel();
+      _timer = null;
+    }
   }
 
   void updateProgress(String message) async {

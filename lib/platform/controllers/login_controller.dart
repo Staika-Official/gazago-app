@@ -132,7 +132,7 @@ class LoginController extends GetxController {
         } else {
           await initUserInfo();
           HiveStore.save(key: HiveKey.isNewUser.name, value: true);
-          Get.offNamed(Routes.onBoarding);
+          Get.offNamed(Routes.permissions);
         }
       },
       errorCallback: (int statusCode, String statusMessage) {

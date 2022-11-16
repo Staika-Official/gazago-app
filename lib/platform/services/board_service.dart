@@ -22,11 +22,13 @@ class BoardService {
     Response res = await BoardApi.getFirstPostByType(boardTypes);
     if (res.statusCode == 200) {
       List<TermItemModel> termsList = List.empty(growable: true);
-      res.data.forEach((term) {
-        TermItemModel termItem = TermItemModel.fromJson(term);
-        termItem.isRequired = termItem.meta != 'selection';
-        termsList.add(termItem);
-      });
+      if (res.data.length > 0) {
+        res.data.forEach((term) {
+          TermItemModel termItem = TermItemModel.fromJson(term);
+          termItem.isRequired = termItem.meta != 'selection';
+          termsList.add(termItem);
+        });
+      }
       successCallback(termsList);
     } else {
       if (errorCallback != null) errorCallback();

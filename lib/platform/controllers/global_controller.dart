@@ -14,9 +14,9 @@ class GlobalController extends SuperController {
 
   @override
   void onInit() async {
+    await checkLoginStatus();
     await getConnectivity();
     initConnectivityStream();
-    await checkLoginStatus();
     super.onInit();
   }
 

@@ -518,6 +518,7 @@ class ActivityController extends SuperController with ActivityMixin, ChallengeMi
   void getUserState() async {
     await ActivityService.getCurrentUserState(
       successCallback: (currentUserState) async {
+        currentUserState.exercise?.locationUpdateTime = DateTime.now();
         userState.update((state) {
           state?.state = currentUserState.state;
           state?.exercise = currentUserState.exercise;
@@ -528,6 +529,7 @@ class ActivityController extends SuperController with ActivityMixin, ChallengeMi
         if (userState.value.exercise != null && userState.value.exercise!.state == 'ONGOING') {
           CurrentUserStateModel? savedUserState = HiveStore.loadCurrentUserState();
           if (savedUserState != null) {
+            savedUserState.exercise!.locationUpdateTime = DateTime.now();
             userState.update((state) {
               state?.exercise = savedUserState.exercise;
             });
@@ -878,6 +880,7 @@ class ActivityController extends SuperController with ActivityMixin, ChallengeMi
           altitude: position.altitude,
           speed: convertMStoKMH(position.speed),
           steps: exerciseSteps.value,
+          locationUpdateTime: DateTime.now(),
         ));
         coordinates.add(LatLng(position.latitude, position.longitude));
         if (exerciseData.isNotEmpty && exerciseData.length >= 2) {

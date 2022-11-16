@@ -15,9 +15,11 @@ class ItemService {
     Response res = await ItemApi.getAllMyItems(userId!);
     if (res.statusCode == 200) {
       List<InventoryItemModel> userItems = List.empty(growable: true);
-      res.data.forEach((challenge) {
-        userItems.add(InventoryItemModel.fromJson(challenge));
-      });
+      if (res.data.length > 0) {
+        res.data.forEach((challenge) {
+          userItems.add(InventoryItemModel.fromJson(challenge));
+        });
+      }
       successCallback(userItems);
     } else {
       if (errorCallback != null) errorCallback();
