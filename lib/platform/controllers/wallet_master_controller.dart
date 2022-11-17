@@ -5,6 +5,7 @@ import 'package:gaza_go/constants/routes.dart';
 import 'package:gaza_go/platform/controllers/loading_controller.dart';
 import 'package:gaza_go/platform/helpers/alert_helper.dart';
 import 'package:gaza_go/platform/models/asset_detail_model.dart';
+import 'package:gaza_go/platform/models/asset_token_balance_list_model.dart';
 import 'package:gaza_go/platform/models/asset_token_balance_model.dart';
 import 'package:gaza_go/platform/models/asset_token_balance_ui_model.dart';
 import 'package:gaza_go/platform/models/buy_tik_response_model.dart';
@@ -14,7 +15,7 @@ import 'package:gaza_go/platform/services/wallet_service.dart';
 import 'package:get/get.dart';
 
 class WalletMasterController extends GetxController {
-  final RxList<AssetTokenBalanceModel> spendingTokens = RxList.empty();
+  final Rx<AssetTokenBalanceListModel> spendingTokens = Rx(AssetTokenBalanceListModel(tokens: []));
   final RxList<TokenInfoModel> spendingTokenInfoList = RxList.empty();
   final Rx<AssetTokenBalanceUiModel> selectedAsset = Rx(AssetTokenBalanceUiModel());
   final Rx<AssetDetailModel> assetDetail = Rx(AssetDetailModel(balance: AssetTokenBalanceModel(), transactions: []));
@@ -24,8 +25,8 @@ class WalletMasterController extends GetxController {
   RxList<AssetTokenBalanceUiModel> get spendingTokenUiList {
     List<AssetTokenBalanceUiModel> balanceUiList = List.empty(growable: true);
 
-    for (int i = 0; i < spendingTokens.value.length; i++) {
-      AssetTokenBalanceUiModel tokenUi = AssetTokenBalanceUiModel.fromJson(spendingTokens.value[i].toJson());
+    for (int i = 0; i < spendingTokens.value.tokens.length; i++) {
+      AssetTokenBalanceUiModel tokenUi = AssetTokenBalanceUiModel.fromJson(spendingTokens.value.tokens[i].toJson());
 
       tokenUi.meta = spendingTokenInfoList[i].meta;
 
@@ -59,11 +60,7 @@ class WalletMasterController extends GetxController {
   }
 
   Future<void> getSpendingWalletBalances() async {
-    await WalletService.getSpendingWalletBalance(
-      successCallback: (List<AssetTokenBalanceModel> spendingTokens) {
-        this.spendingTokens.value = spendingTokens;
-      },
-    );
+    spendingTokens.value = await WalletService.getSpendingWalletBalance();
 
     if (Get.isRegistered<LoadingController>()) Get.find<LoadingController>().updateProgress("서비스를 위해 정보를 불러오는 중입니다.");
   }

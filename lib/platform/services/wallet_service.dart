@@ -1,6 +1,7 @@
 import 'package:dio/dio.dart';
 import 'package:gaza_go/platform/apis/wallet.dart';
 import 'package:gaza_go/platform/models/asset_detail_model.dart';
+import 'package:gaza_go/platform/models/asset_token_balance_list_model.dart';
 import 'package:gaza_go/platform/models/asset_token_balance_model.dart';
 import 'package:gaza_go/platform/models/buy_tik_response_model.dart';
 import 'package:gaza_go/platform/models/pay_info_model.dart';
@@ -8,18 +9,13 @@ import 'package:gaza_go/platform/models/pay_response_model.dart';
 import 'package:gaza_go/platform/models/token_info_model.dart';
 
 class WalletService {
-  static Future<void> getSpendingWalletBalance({required Function successCallback, Function? errorCallback}) async {
-    Response res = await WalletApi.getSpendingWalletBalances();
-    if (res.statusCode == 200) {
-      List<AssetTokenBalanceModel> tokens = [];
-      if (res.data.length > 0) {
-        res.data.forEach((item) => tokens.add(AssetTokenBalanceModel.fromJson(item)));
-      }
+  static Future<void> generateSpendingWallet() async {
+    await WalletApi.generateSpendingWallet();
+  }
 
-      successCallback(tokens);
-    } else {
-      if (errorCallback != null) errorCallback();
-    }
+  static Future<AssetTokenBalanceListModel> getSpendingWalletBalance() async {
+    Response res = await WalletApi.getSpendingWalletBalance();
+    return AssetTokenBalanceListModel.fromJson(res.data);
   }
 
   static Future<AssetDetailModel> getSpendingWalletTransactions(String publicKey, [int size = 10]) async {

@@ -4,15 +4,15 @@ part 'asset_token_balance_model.g.dart';
 
 @JsonSerializable(explicitToJson: true)
 class AssetTokenBalanceModel {
-  int? accountId;
-  String? symbol;
+  String? publicKey;
+  String? mint;
   int? decimals;
   double? amount;
   String? uiAmountString;
 
   AssetTokenBalanceModel({
-    this.accountId,
-    this.symbol,
+    this.publicKey,
+    this.mint,
     this.decimals,
     this.amount,
     this.uiAmountString,
