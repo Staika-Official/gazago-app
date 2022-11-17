@@ -47,13 +47,13 @@ class AssetItemCoin extends StatelessWidget {
                 mainAxisSize: MainAxisSize.max,
                 children: [
                   CircleAvatar(
-                    foregroundImage: asset.meta?.logoUrl != '' ? CachedNetworkImageProvider(asset.meta!.logoUrl) : Svg('assets/images/common/ico_token_tik.svg') as ImageProvider,
+                    foregroundImage: asset.logoUrl != '' ? CachedNetworkImageProvider(asset.logoUrl!) : Svg('assets/images/common/ico_token_tik.svg') as ImageProvider,
                   ),
                   Expanded(
                     child: Padding(
                       padding: const EdgeInsets.symmetric(horizontal: 10),
                       child: StyledText(
-                        asset.meta!.name,
+                        asset.name!,
                         fontSize: 18,
                         lineHeight: 18,
                         fontWeight: 500,
@@ -76,7 +76,7 @@ class AssetItemCoin extends StatelessWidget {
                           Padding(
                             padding: const EdgeInsets.only(left: 3),
                             child: StyledText(
-                              asset.meta!.symbol,
+                              asset.symbol == 'TOTAL_TIK' ? 'TIK' : asset.symbol!,
                               fontSize: 18,
                               lineHeight: 20,
                               letterSpacing: 0.5,

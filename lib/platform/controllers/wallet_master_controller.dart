@@ -23,13 +23,13 @@ class WalletMasterController extends GetxController {
   final Rx<BuyTikResponseModel> buyTikResult = Rx(BuyTikResponseModel());
   RxList<AssetTokenBalanceUiModel> get spendingTokenUiList {
     List<AssetTokenBalanceUiModel> balanceUiList = List.empty(growable: true);
-
-    for (int i = 0; i < spendingTokens.value.length; i++) {
-      AssetTokenBalanceUiModel tokenUi = AssetTokenBalanceUiModel.fromJson(spendingTokens.value[i].toJson());
-
-      tokenUi.meta = spendingTokenInfoList[i].meta;
-
-      tokenUi.price = spendingTokenInfoList[i].price;
+    List<AssetTokenBalanceModel> filteredTokenList = spendingTokens.where((token) => token.symbol == 'STIK' || token.symbol == 'TOTAL_TIK').toList();
+    for (AssetTokenBalanceModel token in filteredTokenList) {
+      AssetTokenBalanceUiModel tokenUi = AssetTokenBalanceUiModel.fromJson(token.toJson());
+      TokenInfoModel tokenInfo = spendingTokenInfoList.singleWhere((tokenInfo) => tokenInfo.symbol == token.symbol);
+      tokenUi.name = tokenInfo.name;
+      tokenUi.logoUrl = tokenInfo.logoUrl;
+      tokenUi.price = tokenInfo.price;
 
       balanceUiList.add(tokenUi);
     }
@@ -38,14 +38,14 @@ class WalletMasterController extends GetxController {
   }
 
   Rx<AssetTokenBalanceUiModel> get tik {
-    return Rx(spendingTokenUiList.singleWhere((token) => token.mint == '1', orElse: () {
+    return Rx(spendingTokenUiList.singleWhere((token) => token.symbol == 'TOTAL_TIK', orElse: () {
       showToastPopup('TAIKA를 찾을 수 없습니다.');
       return AssetTokenBalanceUiModel();
     }));
   }
 
   Rx<AssetTokenBalanceUiModel> get stik {
-    return Rx(spendingTokenUiList.singleWhere((token) => token.mint == '2', orElse: () {
+    return Rx(spendingTokenUiList.singleWhere((token) => token.symbol == 'STIK', orElse: () {
       showToastPopup('STAIKA를 찾을 수 없습니다.');
       return AssetTokenBalanceUiModel();
     }));
@@ -70,7 +70,7 @@ class WalletMasterController extends GetxController {
 
   Future<void> getSpendingWalletTransactions(AssetTokenBalanceUiModel asset) async {
     selectedAsset.value = asset;
-    assetDetail.value = await WalletService.getSpendingWalletTransactions(asset.publicKey!);
+    assetDetail.value = await WalletService.getSpendingWalletTransactions(asset.accountId!);
   }
 
   Future<void> getSpendingMetaData() async {
