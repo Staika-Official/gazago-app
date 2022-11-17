@@ -442,13 +442,13 @@ class ActivityMixin {
 
   void pauseExercise() {
     updateTimer?.cancel();
-    updateTimer == null;
+    updateTimer = null;
     //exerciseTimer?.cancel();
-    //exerciseTimer == null;
+    //exerciseTimer = null;
     stepSubscription?.cancel();
-    stepSubscription == null;
+    stepSubscription = null;
     pedestrianStatusSubscription?.cancel();
-    pedestrianStatusSubscription == null;
+    pedestrianStatusSubscription = null;
     exerciseState.value = ExerciseState.paused;
     HiveStore.save(key: HiveKey.savedStepInitialized.name, value: false);
     updateExercise(isPaused: true);
