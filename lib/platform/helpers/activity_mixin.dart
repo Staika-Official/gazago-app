@@ -240,7 +240,7 @@ class ActivityMixin {
     if (exerciseData.length > 1) {
       sortedList = [...exerciseData];
       sortedList.sort((a, b) => (b.locationUpdateTime!.compareTo(a.locationUpdateTime!)));
-      prevData = sortedList.firstWhere((sortedData) => (DateTime.now().subtract(Duration(seconds: stopTimeInterval)).compareTo(sortedData.locationUpdateTime!) == 1));
+      prevData = sortedList.firstWhere((sortedData) => (DateTime.now().subtract(Duration(seconds: stopTimeInterval)).compareTo(sortedData.locationUpdateTime!) == 1), orElse: () => UserExerciseModel(steps: 0));
     }
     int prevStep = prevData != null ? prevData.steps! : 0;
     int currentStep = exerciseData.isNotEmpty && exerciseData.length > 2 ? exerciseData.last.steps! : 0;
