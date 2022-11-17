@@ -85,7 +85,6 @@ class ActivityController extends SuperController with ActivityMixin, ChallengeMi
   void onClose() {
     print('################# onClose ActivityController');
 
-
     updateTimer?.cancel();
     updateTimer = null;
     exerciseTimer?.cancel();
@@ -338,9 +337,9 @@ class ActivityController extends SuperController with ActivityMixin, ChallengeMi
 
           final state = userState.value.exercise!.state!;
 
-          if (state == 'ONGOING') {
+          if (state == 'ONGOING' && updateTimer != null) {
             exerciseState.value = ExerciseState.ongoing;
-          } else if (state == 'PAUSED') {
+          } else if (state == 'PAUSED' || updateTimer == null) {
             exerciseState.value = ExerciseState.paused;
           }
         }
@@ -568,7 +567,7 @@ class ActivityController extends SuperController with ActivityMixin, ChallengeMi
           locationUpdateTime: DateTime.now(),
         ));
         coordinates.add(LatLng(position.latitude, position.longitude));
-        if (exerciseData.isNotEmpty && exerciseData.length >= 2) {
+        if (coordinates.isNotEmpty && coordinates.length > 1) {
           exerciseDistance.value = exerciseDistance.value +
               Geolocator.distanceBetween(coordinates[coordinates.length - 2].latitude, coordinates[coordinates.length - 2].longitude, coordinates.last.latitude, coordinates.last.longitude);
         }
@@ -642,6 +641,9 @@ class ActivityController extends SuperController with ActivityMixin, ChallengeMi
   void onDetached() {
     print('onDetached');
     HiveStore.save(key: HiveKey.savedStepInitialized.name, value: false);
+    if (exerciseState.value == ExerciseState.ongoing) {
+      pauseExercise();
+    }
     // TODO: implement onDetached
   }
 
