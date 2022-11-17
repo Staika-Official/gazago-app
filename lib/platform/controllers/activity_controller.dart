@@ -83,6 +83,9 @@ class ActivityController extends SuperController with ActivityMixin, ChallengeMi
 
   @override
   void onClose() {
+    print('################# onClose ActivityController');
+
+
     updateTimer?.cancel();
     updateTimer = null;
     exerciseTimer?.cancel();
@@ -296,9 +299,10 @@ class ActivityController extends SuperController with ActivityMixin, ChallengeMi
           state?.exercise = currentUserState.exercise;
           state?.shoes = currentUserState.shoes;
         });
-        exerciseState.value = ExerciseState.ready;
 
-        if (userState.value.exercise != null && userState.value.exercise!.state == 'ONGOING') {
+        if (userState.value.exercise == null) {
+          exerciseState.value = ExerciseState.ready;
+        } else {
           CurrentUserStateModel? savedUserState = HiveStore.loadCurrentUserState();
           if (savedUserState != null) {
             savedUserState.exercise!.locationUpdateTime = DateTime.now();
@@ -330,10 +334,14 @@ class ActivityController extends SuperController with ActivityMixin, ChallengeMi
             if (userState.value.exercise!.locations != null) {
               coordinates.addAll(parseCoordinates());
             }
+          }
 
-            exerciseState.value = ExerciseState.paused;
-          } else {
+          final state = userState.value.exercise!.state!;
+
+          if (state == 'ONGOING') {
             exerciseState.value = ExerciseState.ongoing;
+          } else if (state == 'PAUSED') {
+            exerciseState.value = ExerciseState.paused;
           }
         }
 
