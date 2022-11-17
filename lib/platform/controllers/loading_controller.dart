@@ -94,9 +94,8 @@ class LoadingController extends GetxController {
               child: GazagoButton(
                 onTap: () {
                   if (Platform.isAndroid || Platform.isIOS) {
-                    final appId = Platform.isAndroid ? 'kr.co.eztechfin.gazaGo' : 'kr.co.eztechfin.gazaGo';
                     final url = Uri.parse(
-                      Platform.isAndroid ? "market://details?id=$appId" : "https://apps.apple.com/app/id$appId",
+                      Platform.isAndroid ? "https://gazago.page.link/update_android" : "https://gazago.page.link/update_ios",
                     );
                     launchUrl(
                       url,
@@ -133,9 +132,8 @@ class LoadingController extends GetxController {
                 child: GazagoButton(
                   onTap: () {
                     if (Platform.isAndroid || Platform.isIOS) {
-                      final appId = Platform.isAndroid ? 'kr.co.eztechfin.gazaGo' : 'kr.co.eztechfin.gazaGo';
                       final url = Uri.parse(
-                        Platform.isAndroid ? "market://details?id=$appId" : "https://apps.apple.com/app/id$appId",
+                        Platform.isAndroid ? "https://gazago.page.link/update_android" : "https://gazago.page.link/update_ios",
                       );
                       launchUrl(
                         url,
