@@ -1,3 +1,4 @@
+import 'package:gaza_go/platform/models/token_meta_model.dart';
 import 'package:gaza_go/platform/models/token_price_model.dart';
 import 'package:json_annotation/json_annotation.dart';
 
@@ -5,15 +6,13 @@ part 'token_info_model.g.dart';
 
 @JsonSerializable(explicitToJson: true)
 class TokenInfoModel {
-  String symbol;
-  String name;
-  String logoUrl;
+  String mint;
+  TokenMetaModel meta;
   Map<String, TokenPriceModel>? price;
 
   TokenInfoModel({
-    required this.symbol,
-    required this.name,
-    required this.logoUrl,
+    required this.mint,
+    required this.meta,
     required this.price,
   });
 

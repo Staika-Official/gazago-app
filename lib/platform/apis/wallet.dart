@@ -17,8 +17,8 @@ class WalletApi {
     });
   }
 
-  static Future<Response> getSpendingWalletTransactions(int accountId, int size) async {
-    return await Api.client(serviceUrl: ServiceUrl.spendingWalletService).get('/wallet/$accountId/transactions', queryParameters: {
+  static Future<Response> getSpendingWalletTransactions(String publicKey, int size) async {
+    return await Api.client(serviceUrl: ServiceUrl.spendingWalletService).get('/wallet/$publicKey/transactions', queryParameters: {
       'clientId': 'GAZAGO',
       'size': size,
     });

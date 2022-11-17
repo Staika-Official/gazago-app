@@ -22,8 +22,8 @@ class WalletService {
     }
   }
 
-  static Future<AssetDetailModel> getSpendingWalletTransactions(int accountId, [int size = 10]) async {
-    Response res = await WalletApi.getSpendingWalletTransactions(accountId, size);
+  static Future<AssetDetailModel> getSpendingWalletTransactions(String publicKey, [int size = 10]) async {
+    Response res = await WalletApi.getSpendingWalletTransactions(publicKey, size);
     return AssetDetailModel.fromJson(res.data);
   }
 
