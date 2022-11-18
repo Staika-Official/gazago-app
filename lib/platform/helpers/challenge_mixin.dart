@@ -76,33 +76,13 @@ class ChallengeMixin {
 
   void notificationOnChallenge(List<ChallengeModel> result, ExerciseState exerciseState) {
     bool notification = false;
-    List<ChallengeModel> filteredList = result.toSet().difference(challengeList.toSet()).toList();
-    List<int> filteredIdList = List.empty(growable: true);
-    List<int> challengeIdList = List.empty(growable: true);
-    if (result.isNotEmpty && challengeList.isNotEmpty) {
-      filteredIdList = filteredList
-          .map((element) {
-            return element.id!;
-          })
-          .toSet()
-          .toList();
-      challengeIdList = challengeList
-          .map((element) {
-            return element.id!;
-          })
-          .toSet()
-          .toList();
-    }
-
-    if (result.isNotEmpty &&
-        challengeList.isNotEmpty &&
-        listEquals(filteredIdList, challengeIdList) == false &&
+    if (result.isNotEmpty && result.length != challengeList.length &&
         !([ExerciseState.ongoing, ExerciseState.paused].any((state) => state == exerciseState))) {
       notification = true;
     }
 
     if (notification) {
-      showLocalNotification(notificationType: NotificationType.challenge, title: '등산 챌린지 시작 포인트 발견', message: '주변에 챌린지를 시작 할 수 있는 ${filteredList.first.firstName}이 있어요. 뱃지 받으러 가자GO~~');
+      showLocalNotification(notificationType: NotificationType.challenge, title: '등산 챌린지 시작 포인트 발견', message: '주변에 챌린지를 시작 할 수 있는 ${result.first.firstName}이 있어요. 뱃지 받으러 가자GO~~');
       showToastPopup('등산 챌린지 시작 포인트 발견');
     }
   }
