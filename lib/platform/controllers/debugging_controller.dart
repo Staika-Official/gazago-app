@@ -9,7 +9,6 @@ class DebuggingController extends GetxController {
   @override
   void onInit() async {
     isShowDebuggingMenu.value = HiveStore.load(key: HiveKey.isDebuggingMode.name);
-    print('매ㅏ에매ㅏ레ㅐㅁㅈㅁㅇ${HiveStore.load(key: HiveKey.requestLogs.name)}');
     super.onInit();
   }
 
@@ -24,15 +23,24 @@ class DebuggingController extends GetxController {
   }
 
   void onDisableDebuggingMode() {
-    HiveStore.save(key: HiveKey.isDebuggingMode.name, value: true);
-  }
-
-  void onEnableDebuggingMode() {
     HiveStore.save(key: HiveKey.isDebuggingMode.name, value: false);
   }
 
+  void onEnableDebuggingMode() {
+    HiveStore.save(key: HiveKey.isDebuggingMode.name, value: true);
+  }
+
   void handleInitLogs(String key) {
-    List logs = [];
-    HiveStore.save(key: HiveKey.requestLogs.name, value: logs);
+    switch (key) {
+      case 'requestLogs':
+        HiveStore.save(key: HiveKey.requestLogs.name, value: []);
+        break;
+      case 'userExerciseDataLogs':
+        HiveStore.save(key: HiveKey.userExerciseDataLogs.name, value: []);
+        break;
+      case 'positionLowDataLogs':
+        HiveStore.save(key: HiveKey.positionLowDataLogs.name, value: []);
+        break;
+    }
   }
 }

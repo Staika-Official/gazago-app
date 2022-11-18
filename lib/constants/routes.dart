@@ -9,7 +9,9 @@ import 'package:gaza_go/presentations/views/activity/equipped_item.dart';
 import 'package:gaza_go/presentations/views/archive/archive_detail.dart';
 import 'package:gaza_go/presentations/views/auth/account_restore.dart';
 import 'package:gaza_go/presentations/views/auth/signup_complete.dart';
+import 'package:gaza_go/presentations/views/debugging/position_low_data_logs.dart';
 import 'package:gaza_go/presentations/views/debugging/request_info.dart';
+import 'package:gaza_go/presentations/views/debugging/user_exercise_data_logs.dart';
 import 'package:gaza_go/presentations/views/home.dart';
 import 'package:gaza_go/presentations/views/inventory/index.dart';
 import 'package:gaza_go/presentations/views/inventory/inventory_badge_detail.dart';
@@ -75,6 +77,8 @@ class Routes {
   static const permissions = '/permissions';
   static const requestInfo = '/debugging/request_info';
   static const activityLogs = '/debugging/activity_logs';
+  static const userExerciseDataLogs = '/debugging/user_exercise_data_logs';
+  static const positionLowDataLogs = '/debugging/position_low_data_logs';
 
   static List<GetPage> pages = [
     stepPage(name: Routes.login, page: const Login()),
@@ -121,6 +125,8 @@ class Routes {
     stepPage(name: Routes.permissions, page: Permissions()),
     stepPage(name: Routes.requestInfo, page: const RequestInfo()),
     stepPage(name: Routes.activityLogs, page: const ActivityLogs()),
+    stepPage(name: Routes.userExerciseDataLogs, page: const UserExerciseDataLogs()),
+    stepPage(name: Routes.positionLowDataLogs, page: const PositionLowDataLogs()),
   ];
 }
 

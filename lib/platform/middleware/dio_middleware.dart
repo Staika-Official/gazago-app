@@ -57,13 +57,11 @@ class Api {
   }
 
   static _requestInterceptor(RequestOptions options, RequestInterceptorHandler handler) {
-    // List activityLogs = HiveStore.load(key: HiveKey.activityLogs.name) ?? [];
-    List requestLogs = HiveStore.load(key: HiveKey.requestLogs.name) ?? [];
-
     if (HiveStore.load(key: HiveKey.isDebuggingMode.name)) {
+      List requestLogs = HiveStore.load(key: HiveKey.requestLogs.name) ?? [];
       var logForm;
       if (options.data != null) {
-        Map optData = json.decode(json.encode(options.data));
+        final Map optData = json.decode(json.encode(options.data));
         if (optData["locations"] != null) {
           optData["locations"] = null;
         }
@@ -91,9 +89,6 @@ class Api {
 
       requestLogs.add(logForm);
       HiveStore.save(key: HiveKey.requestLogs.name, value: requestLogs);
-    } else {
-      List logs = [];
-      HiveStore.save(key: HiveKey.requestLogs.name, value: logs);
     }
 
     _logger.i(

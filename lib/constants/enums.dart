@@ -61,6 +61,8 @@ enum HiveKey {
   isShowDebuggingMenu,
   requestLogs,
   activityLogs,
+  userExerciseDataLogs,
+  positionLowDataLogs,
 }
 
 enum ResponseStatus {
