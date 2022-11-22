@@ -21,7 +21,7 @@ class ArchiveDetail extends StatelessWidget {
       titleText: '${formatDateUntilDay(controller.selectedItem.value.startedDate)} 기록',
       trailingChild: InkWell(
         child: IconButton(
-          onPressed: () => controller.deleteItem(controller.selectedItem.value.id!),
+          onPressed: () => controller.showConfirmDelete(controller.selectedItem.value.id!),
           icon: iconWasteBasket,
           constraints: const BoxConstraints(
             minWidth: 20,
