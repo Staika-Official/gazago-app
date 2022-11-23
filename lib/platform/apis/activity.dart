@@ -40,7 +40,10 @@ class ActivityApi {
     return await Api.client(serviceUrl: ServiceUrl.exerciseService).post(
       '/users/$userId',
       data: exerciseInfo,
-      queryParameters: {'platform': platform},
+      queryParameters: {
+        'platform': platform,
+        'source': 'activityActive.dart',
+      },
     );
   }
 
@@ -51,6 +54,7 @@ class ActivityApi {
       data: exerciseInfo,
       queryParameters: {
         'platform': platform,
+        'source': 'activityActive.dart',
       },
     );
   }
@@ -62,6 +66,7 @@ class ActivityApi {
       data: exerciseInfo,
       queryParameters: {
         'platform': platform,
+        'source': 'activityActive.dart',
       },
     );
   }
