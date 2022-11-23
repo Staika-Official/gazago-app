@@ -34,12 +34,20 @@ Future<PermissionStatus> requestNotificationPermission() async {
   return await Permission.notification.request();
 }
 
+void initDebuggingMode() {
+  HiveStore.save(key: HiveKey.isDebuggingMode.name, value: false);
+  HiveStore.save(key: HiveKey.requestLogs.name, value: []);
+  HiveStore.save(key: HiveKey.userExerciseDataLogs.name, value: []);
+  HiveStore.save(key: HiveKey.positionLowDataLogs.name, value: []);
+}
+
 void main() async {
   await runZonedGuarded(() async {
     WidgetsFlutterBinding.ensureInitialized(); // async로 할 때 반드시 호출
     await Hive.initFlutter();
     HiveStore.registerAdapters();
     await HiveStore.openBox();
+    initDebuggingMode();
     await initFirebase();
     await initFirebasePackages();
 
