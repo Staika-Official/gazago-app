@@ -13,11 +13,11 @@ class BottomSheetAlert extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      decoration: const BoxDecoration(
+      decoration: BoxDecoration(
         color: Color(0xff363841),
         borderRadius: BorderRadius.only(
-          topLeft: Radius.circular(12),
-          topRight: Radius.circular(12),
+          topLeft: Radius.circular(12.sp),
+          topRight: Radius.circular(12.sp),
         ),
       ),
       child: Padding(
@@ -26,7 +26,7 @@ class BottomSheetAlert extends StatelessWidget {
           mainAxisSize: MainAxisSize.min,
           children: [
             Padding(
-              padding: const EdgeInsets.only(top: 8.0),
+              padding: EdgeInsets.only(top: 8.0.sp),
               child: StyledText(
                 title,
                 fontSize: 22,

@@ -17,16 +17,16 @@ class CalendarStatistics extends StatelessWidget {
 
     return Scaffold(
       appBar: AppBar(
-        title: Text("TIK 획득 내역"),
+        title: StyledText(
+          "TIK 획득 내역",
+          fontSize: 18,
+        ),
         centerTitle: true,
         backgroundColor: const Color(0xFF1D1D26),
         elevation: 0,
         leading: Builder(
           builder: (context) => IconButton(
-            icon: Icon(
-              Icons.chevron_left,
-              size: 30.sp,
-            ),
+            icon: Icon(Icons.chevron_left, size: 30.sp, color: Colors.white),
             onPressed: () => Navigator.of(context).pop(),
           ),
         ),

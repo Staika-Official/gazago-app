@@ -126,18 +126,18 @@ class ActivityMap extends StatelessWidget {
               height: 46.sp,
               decoration: BoxDecoration(
                   color: Color(0xff363841),
-                  border: Border.all(width: 2, style: BorderStyle.solid, color: Colors.black),
+                  border: Border.all(width: 2.sp, style: BorderStyle.solid, color: Colors.black),
                   boxShadow: [
                     BoxShadow(
-                      offset: Offset(2, 4),
+                      offset: Offset(2.sp, 4.sp),
                       color: Colors.black,
                     ),
                   ],
-                  borderRadius: BorderRadius.circular(14)),
-              child: const Icon(
+                  borderRadius: BorderRadius.circular(14.sp)),
+              child: Icon(
                 Icons.chevron_left,
                 color: Colors.white,
-                size: 30,
+                size: 30.sp,
               ),
             ),
           ),

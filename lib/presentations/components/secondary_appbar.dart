@@ -98,13 +98,13 @@ class SecondaryAppbar extends StatelessWidget implements PreferredSizeWidget {
                     ],
                   ),
                   child: ClipRRect(
-                    borderRadius: const BorderRadius.all(
-                      Radius.circular(20),
+                    borderRadius: BorderRadius.all(
+                      Radius.circular(20.sp),
                     ),
                     child: Padding(
-                      padding: const EdgeInsets.only(
-                        top: 4.0,
-                        bottom: 4.0,
+                      padding: EdgeInsets.only(
+                        top: 4.0.sp,
+                        bottom: 4.0.sp,
                         left: 0,
                         right: 8,
                       ),

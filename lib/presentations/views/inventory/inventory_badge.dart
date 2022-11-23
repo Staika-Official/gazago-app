@@ -29,11 +29,14 @@ class InventoryBadge extends StatelessWidget {
                   children: [
                     Opacity(
                       opacity: item.state == 'EQUIPPED' ? 0.5 : 1,
-                      child: CachedNetworkImage(
-                        imageUrl: item.imageUrl!,
-                        fit: BoxFit.fitWidth,
-                        placeholder: (context, url) => const CircularProgressIndicator(),
-                        errorWidget: (context, url, error) => Image.asset("assets/images/@temp_badge.png"),
+                      child: Padding(
+                        padding: EdgeInsets.all(10.0.sp),
+                        child: CachedNetworkImage(
+                          imageUrl: item.imageUrl!,
+                          fit: BoxFit.fitWidth,
+                          placeholder: (context, url) => const CircularProgressIndicator(),
+                          errorWidget: (context, url, error) => Image.asset("assets/images/@temp_badge.png"),
+                        ),
                       ),
                     ),
                     // if (item.name != null)
@@ -58,9 +61,9 @@ class InventoryBadge extends StatelessWidget {
                                   borderRadius: BorderRadius.all(
                                     Radius.circular(20.sp),
                                   ),
-                                  boxShadow: const [
+                                  boxShadow: [
                                     BoxShadow(
-                                      offset: Offset(0, 3),
+                                      offset: Offset(0, 3.sp),
                                       blurRadius: 0,
                                       spreadRadius: 0,
                                       color: Colors.black,

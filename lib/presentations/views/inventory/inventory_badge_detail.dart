@@ -233,7 +233,7 @@ class InventoryBadgeDetail extends StatelessWidget {
                                                       padding: EdgeInsets.only(top: 1.0.sp, right: 3.0.sp),
                                                       child: iconLucky,
                                                     ),
-                                                    StyledText(
+                                                    const StyledText(
                                                       '행운 지수율',
                                                       color: Color(0xFF8A8A8A),
                                                       fontSize: 11,

@@ -184,7 +184,7 @@ class ArchiveHome extends StatelessWidget {
                           padding: EdgeInsets.symmetric(vertical: 50.sp),
                           decoration: BoxDecoration(
                             color: const Color(0xff363841),
-                            borderRadius: BorderRadius.circular(12),
+                            borderRadius: BorderRadius.circular(12.sp),
                           ),
                           child: Column(
                             mainAxisSize: MainAxisSize.min,

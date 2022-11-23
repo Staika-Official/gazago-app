@@ -286,9 +286,9 @@ class ActivityChallenges extends StatelessWidget {
                               style: BorderStyle.solid,
                               color: Colors.black,
                             ),
-                            boxShadow: const [
+                            boxShadow: [
                               BoxShadow(
-                                offset: Offset(0, 4),
+                                offset: Offset(0, 4.sp),
                                 blurRadius: 0,
                                 spreadRadius: 0,
                                 color: Colors.black,

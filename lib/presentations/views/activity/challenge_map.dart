@@ -96,6 +96,8 @@ class ChallengeMap extends StatelessWidget {
             onTap: () {
               controller.showEndPointMarker(course);
             },
+            dense: MediaQuery.of(context).size.width < 320,
+            visualDensity: VisualDensity(vertical: MediaQuery.of(context).size.width < 320 ? -3 : 0),
             subtitle: StyledText(
               '${course.startPointName} - ${course.endPointName}',
               color: (controller.challengeSelectedIndex == course.id) ? Color(0xFF0EE6F3) : Color(0xFF8A8A8A),
@@ -103,7 +105,7 @@ class ChallengeMap extends StatelessWidget {
               lineHeight: 14,
               fontWeight: 500,
             ),
-            minLeadingWidth: 10.sp,
+            minLeadingWidth: 10,
             leading: Padding(
               padding: EdgeInsets.only(left: 30.sp, top: 5),
               child: (controller.challengeSelectedIndex == course.id) ? iconChallengeCheckOn : iconChallengeCheckOff,
@@ -165,7 +167,7 @@ class ChallengeMap extends StatelessWidget {
               alignment: Alignment.topCenter,
               children: [
                 NaverMap(
-                  contentPadding: EdgeInsets.only(bottom: 100.sp),
+                  contentPadding: EdgeInsets.only(bottom: 100),
                   initialCameraPosition: CameraPosition(
                     target: LatLng(controller.currentLocation.value.latitude ?? 0, controller.currentLocation.value.longitude ?? 0),
                     zoom: 14,

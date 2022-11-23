@@ -190,16 +190,16 @@ class InventoryTile extends StatelessWidget {
                                 decoration: BoxDecoration(
                                   color: const Color(0xFF606167),
                                   border: Border.all(
-                                    width: 1,
+                                    width: 1.sp,
                                     color: Colors.black,
                                   ),
                                   borderRadius: BorderRadius.all(
                                     Radius.circular(30.sp),
                                   ),
-                                  boxShadow: const [
+                                  boxShadow: [
                                     BoxShadow(
                                       color: Colors.black,
-                                      offset: Offset(0, 1),
+                                      offset: Offset(0, 1.sp),
                                       blurRadius: 0.0,
                                       spreadRadius: 0.0,
                                     ),
@@ -208,7 +208,7 @@ class InventoryTile extends StatelessWidget {
                                 child: InkWell(
                                   onTap: () => controller.showShoesRepairPopup(id),
                                   child: CircleAvatar(
-                                    radius: 10,
+                                    radius: 10.sp,
                                     backgroundColor: const Color(0xFFB85DFF),
                                     child: IconButton(
                                       alignment: Alignment.center,

@@ -137,7 +137,7 @@ class InventoryHome extends StatelessWidget {
                                   padding: EdgeInsets.only(top: 3.0.sp, right: 2.0.sp),
                                   child: iconGoReward,
                                 ),
-                                StyledText(
+                                const StyledText(
                                   'GO 보상율',
                                   color: Color(0xFF8A8A8A),
                                   fontSize: 11,
@@ -178,7 +178,7 @@ class InventoryHome extends StatelessWidget {
                                     padding: EdgeInsets.only(top: 1.0.sp, right: 3.0.sp),
                                     child: iconItemAbrasion,
                                   ),
-                                  StyledText(
+                                  const StyledText(
                                     '아이템 마모율',
                                     color: Color(0xFF8A8A8A),
                                     fontSize: 12,
@@ -201,7 +201,7 @@ class InventoryHome extends StatelessWidget {
                                 fontSize: 28,
                                 fontWeight: 500,
                               ),
-                              StyledText(
+                              const StyledText(
                                 '%',
                                 fontSize: 16,
                                 fontWeight: 500,

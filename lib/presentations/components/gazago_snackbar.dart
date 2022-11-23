@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:gaza_go/presentations/styles/styled_text.dart';
 
 class GazagoSnackbar extends StatelessWidget {
@@ -15,11 +16,11 @@ class GazagoSnackbar extends StatelessWidget {
         lineHeight: 18,
         fontWeight: 500,
       ),
-      padding: EdgeInsets.all(12),
-      margin: EdgeInsets.symmetric(horizontal: 40),
+      padding: EdgeInsets.all(12.sp),
+      margin: EdgeInsets.symmetric(horizontal: 40.sp),
       backgroundColor: Color.fromRGBO(0, 0, 0, 0.9),
       shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(10),
+        borderRadius: BorderRadius.circular(10.sp),
       ),
     );
   }

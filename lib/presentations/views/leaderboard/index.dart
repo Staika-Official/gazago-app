@@ -17,7 +17,7 @@ class LeaderboardHome extends StatelessWidget {
   Widget showBottomCalender(context, controller) {
     return Obx(() {
       return Container(
-        height: 400.sp,
+        height: 400,
         decoration: BoxDecoration(
           color: Color(0xFF363841),
           borderRadius: BorderRadius.only(
