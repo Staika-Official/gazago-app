@@ -344,6 +344,8 @@ class ActivityController extends SuperController with ActivityMixin, ChallengeMi
           }
         }
 
+        await retrySavedRequests(source: 'getUserState');
+
         if (Get.isRegistered<LoadingController>()) Get.find<LoadingController>().updateProgress("곧 가자고와 가자고~!");
       },
     );
@@ -625,25 +627,27 @@ class ActivityController extends SuperController with ActivityMixin, ChallengeMi
 
   void checkConnectivityStatus() {
     globalController.connectivityResult.listen((value) async {
+      print(globalController.connectivityResult.value);
       if (value != ConnectivityResult.none) {
-        if (HiveStore.loadString(key: HiveKey.badgeIssuanceRequested.name) != null) {
-          await requestBadgeIssuance(userState.value);
-        }
-
-        if (HiveStore.loadString(key: HiveKey.endExerciseRequested.name) != null) {
-          endExercise(selectedChallenge.value);
-        }
+        await retrySavedRequests(source: 'connectivityListener');
       }
     });
+  }
+
+  Future<void> retrySavedRequests({required String source}) async {
+    if (HiveStore.load(key: HiveKey.badgeIssuanceRequested.name) != null && HiveStore.load(key: HiveKey.badgeIssuanceRequested.name)) {
+      await requestBadgeIssuance(userState.value);
+    }
+
+    if (HiveStore.load(key: HiveKey.endExerciseRequested.name) != null && HiveStore.load(key: HiveKey.endExerciseRequested.name)) {
+      await endExercise(selectedChallenge.value, source: source);
+    }
   }
 
   @override
   void onDetached() {
     print('onDetached');
     HiveStore.save(key: HiveKey.savedStepInitialized.name, value: false);
-    if (exerciseState.value == ExerciseState.ongoing) {
-      pauseExercise();
-    }
     // TODO: implement onDetached
   }
 

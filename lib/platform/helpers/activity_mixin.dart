@@ -25,7 +25,7 @@ import 'package:get/get.dart';
 import 'package:health/health.dart';
 import 'package:pedometer/pedometer.dart';
 
-class ActivityMixin {
+mixin ActivityMixin {
   GlobalController globalController = Get.find();
 
   final Rx<CurrentUserStateModel> userState = Rx(CurrentUserStateModel());
@@ -343,18 +343,32 @@ class ActivityMixin {
       });
     }
 
+    void updateLocalUserState(CurrentUserStateModel newUserState) {
+      newUserState.exercise!.locationUpdateTime = DateTime.now();
+      userState.update((state) {
+        state?.state = newUserState.state;
+        state?.exercise = newUserState.exercise;
+        state?.shoes = newUserState.shoes;
+      });
+
+      if (newUserState.exercise!.recordState == 'ABNORMAL') {
+        HiveStore.saveCurrentUserState(
+          userState: CurrentUserStateModel(
+            state: newUserState.state,
+            exercise: newUserState.exercise,
+            shoes: newUserState.shoes,
+          ),
+        );
+      }
+    }
+
     if (globalController.connectivityResult.value != ConnectivityResult.none) {
       isPaused != null && isPaused
           ? await ActivityService.fetchPausedUserExercises(
               userExerciseData.value,
               Platform.operatingSystem,
               successCallback: (CurrentUserStateModel newUserState) {
-                newUserState.exercise!.locationUpdateTime = DateTime.now();
-                userState.update((state) {
-                  state?.state = newUserState.state;
-                  state?.exercise = newUserState.exercise;
-                  state?.shoes = newUserState.shoes;
-                });
+                updateLocalUserState(newUserState);
               },
               errorCallback: errorHandler,
             )
@@ -362,12 +376,7 @@ class ActivityMixin {
               userExerciseData.value,
               Platform.operatingSystem,
               successCallback: (CurrentUserStateModel newUserState) {
-                newUserState.exercise!.locationUpdateTime = DateTime.now();
-                userState.update((state) {
-                  state?.state = newUserState.state;
-                  state?.exercise = newUserState.exercise;
-                  state?.shoes = newUserState.shoes;
-                });
+                updateLocalUserState(newUserState);
 
                 if (userState.value.state!.stamina! < 30) {
                   if (userState.value.state!.stamina! == 0 && !zeroStaminaNotified.value) {
@@ -458,47 +467,53 @@ class ActivityMixin {
     showEndExerciseAlert(this, challenge);
   }
 
-  void endExercise(ChallengeModel challenge) async {
-    if (globalController.connectivityResult.value != ConnectivityResult.none) {
-      await ActivityService.fetchEndUserExercises(
-        userExerciseData.value,
-        successCallback: (CurrentUserStateModel newUserState) {
-          if (newUserState.exercise!.state == 'ENDED') {
-            exerciseState.value = ExerciseState.ready;
-            userState.update(
-              (state) {
-                state?.state = newUserState.state;
-                state?.exercise = newUserState.exercise;
-                state?.shoes = newUserState.shoes;
-              },
-            );
-            HiveStore.deleteMultipleKeys(keys: [HiveKey.userState.name, HiveKey.endExerciseRequested.name]);
-            resetVariables(challenge);
-            resetTimer();
-            resetSubscriptions();
+  Future<void> endExercise(ChallengeModel challenge, {String? source}) async {
+    await ActivityService.fetchEndUserExercises(
+      userExerciseData.value,
+      source: source,
+      successCallback: (CurrentUserStateModel newUserState) {
+        if (newUserState.exercise!.state == 'ENDED') {
+          exerciseState.value = ExerciseState.ready;
+          userState.update(
+            (state) {
+              state?.state = newUserState.state;
+              state?.exercise = newUserState.exercise;
+              state?.shoes = newUserState.shoes;
+            },
+          );
+          HiveStore.deleteMultipleKeys(keys: [HiveKey.userState.name, HiveKey.endExerciseRequested.name]);
+          resetVariables(challenge);
+          resetTimer();
+          resetSubscriptions();
+          if (source == null) {
             moveToExerciseDetail(userState.value.exercise!.id!);
           }
-        },
-        errorCallback: () {
-          showToastPopup('운동이 정상적으로 종료되지 않았습니다.');
-        },
-      );
-    } else {
-      exerciseState.value = ExerciseState.ready;
-      CurrentUserStateModel savedState = HiveStore.loadCurrentUserState()!;
-      userState.update((state) {
-        state?.state = savedState.state;
-        state?.exercise = savedState.exercise;
-        state?.shoes = savedState.shoes;
-      });
-      userState.value.exercise!.state = 'ENDED';
-      HiveStore.saveCurrentUserState(userState: userState.value);
-      HiveStore.save(key: HiveKey.endExerciseRequested.name, value: true.toString());
-      resetVariables(challenge);
-      resetTimer();
-      resetSubscriptions();
-      moveToExerciseDetail(userState.value.exercise!.id!);
-    }
+        }
+      },
+      errorCallback: () {
+        print('error');
+        endExerciseLocally(challenge);
+      },
+    );
+  }
+
+  void endExerciseLocally(ChallengeModel challenge) {
+    print('endedLocally');
+    exerciseState.value = ExerciseState.ready;
+    CurrentUserStateModel savedState = HiveStore.loadCurrentUserState()!;
+    userState.update((state) {
+      state?.state = savedState.state;
+      state?.exercise = savedState.exercise;
+      state?.shoes = savedState.shoes;
+    });
+    userState.value.exercise!.state = 'ENDED';
+    HiveStore.saveCurrentUserState(userState: userState.value);
+    HiveStore.save(key: HiveKey.endExerciseRequested.name, value: true);
+    resetVariables(challenge);
+    resetTimer();
+    resetSubscriptions();
+    print(HiveStore.load(key: HiveKey.endExerciseRequested.name));
+    Get.until((route) => route.isFirst);
   }
 
   void resetVariables(ChallengeModel challenge) {

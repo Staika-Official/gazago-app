@@ -66,9 +66,15 @@ class ActivityApi {
     );
   }
 
-  static Future<Response> fetchEndUserExercises(String userId, UserExerciseModel exerciseInfo) async {
+  static Future<Response> fetchEndUserExercises(String userId, UserExerciseModel exerciseInfo, {String? source}) async {
     exerciseInfo.state = 'ENDED';
-    return await Api.client(serviceUrl: ServiceUrl.exerciseService).put('/users/$userId', data: exerciseInfo);
+    return await Api.client(serviceUrl: ServiceUrl.exerciseService).put(
+      '/users/$userId',
+      data: exerciseInfo,
+      queryParameters: {
+        'source': source,
+      },
+    );
   }
 
   static Future<Response> fetchUserStaminaRecharge(String userId, UserStaminaRechargeModel rechargeInfo) async {
