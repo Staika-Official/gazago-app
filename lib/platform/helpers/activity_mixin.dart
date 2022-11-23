@@ -428,12 +428,12 @@ mixin ActivityMixin {
     }
 
     stopTimer = Timer.periodic(const Duration(milliseconds: 10), (timer) {
-      if (counter == const Duration(seconds: 3)) {
+      if (counter == const Duration(milliseconds: 2500)) {
         initializeStopTimer();
         showEndExerciseDialog(challenge);
       } else {
         counter = counter + const Duration(milliseconds: 10);
-        stopProgress.value += (10 / 3000);
+        stopProgress.value += (10 / 2500);
       }
     });
   }
