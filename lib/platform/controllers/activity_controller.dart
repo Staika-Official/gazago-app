@@ -559,6 +559,22 @@ class ActivityController extends SuperController with ActivityMixin, ChallengeMi
     locationSubscription ??= Geolocator.getPositionStream(locationSettings: locationSettings).listen((Position position) {
       currentLocation.value = position;
 
+      if (HiveStore.load(key: HiveKey.isDebuggingMode.name) && exerciseState.value == ExerciseState.ongoing) {
+        List positionLowData = HiveStore.load(key: HiveKey.positionLowDataLogs.name) ?? [];
+
+        var logForm = {
+          'positionLowDataInfo': '===================================='
+              '\nAltitude: ${position.altitude}'
+              '\nSpeed: ${convertMStoKMH(position.speed)}'
+              '\nSteps: ${exerciseSteps.value}'
+              '\nAccuracy: ${position.accuracy}'
+              '\nLatitude: ${position.latitude}'
+              '\nLongitude: ${position.longitude}'
+              '\nLocationUpdateTime: ${DateTime.now()}'
+        };
+        positionLowData.add(logForm);
+        HiveStore.savePositionLowData(value: positionLowData);
+      }
       if (exerciseState.value == ExerciseState.ongoing && position.accuracy < gpsAccuracy) {
         exerciseData.add(UserExerciseModel(
           altitude: position.altitude,
@@ -566,6 +582,7 @@ class ActivityController extends SuperController with ActivityMixin, ChallengeMi
           steps: exerciseSteps.value,
           locationUpdateTime: DateTime.now(),
         ));
+
         coordinates.add(LatLng(position.latitude, position.longitude));
         if (coordinates.isNotEmpty && coordinates.length > 1) {
           exerciseDistance.value = exerciseDistance.value +

@@ -42,7 +42,7 @@ class UserExerciseDataLogs extends StatelessWidget {
                 children: [
                   Expanded(
                     child: GazagoButton(
-                      onTap: () => debuggingController.handleInitLogs('userExerciseDataLogs'),
+                      onTap: () => debuggingController.handleInitLogs(HiveKey.userExerciseDataLogs.name),
                       buttonText: '초기화',
                       buttonColor: const Color(0xFF0EE6F3),
                     ),

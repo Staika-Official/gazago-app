@@ -10,13 +10,13 @@ import 'package:hive_flutter/hive_flutter.dart';
 class PositionLowDataLogs extends StatelessWidget {
   const PositionLowDataLogs({Key? key}) : super(key: key);
 
-  List<Widget> renderRequestLogList(List<dynamic> logs) {
+  List<Widget> renderPositionLowDataList(List<dynamic> logs) {
     return logs.isNotEmpty
         ? logs
             .map((log) => Padding(
                   padding: const EdgeInsets.symmetric(vertical: 10.0),
                   child: StyledText(
-                    log['logInfo']!,
+                    log['positionLowDataInfo']!,
                     lineHeight: 18,
                   ),
                 ))
@@ -29,7 +29,7 @@ class PositionLowDataLogs extends StatelessWidget {
     DebuggingController debuggingController = Get.put(DebuggingController());
 
     return DefaultContainer(
-      titleText: 'User Exercise Data Info',
+      titleText: 'Position Low Data Info',
       backgroundColor: const Color(0xFF1D1D26),
       headerBackgroundColor: Color(0xFF23232D),
       child: SingleChildScrollView(
@@ -42,7 +42,7 @@ class PositionLowDataLogs extends StatelessWidget {
                 children: [
                   Expanded(
                     child: GazagoButton(
-                      onTap: () => debuggingController.handleInitLogs('requestLogs'),
+                      onTap: () => debuggingController.handleInitLogs(HiveKey.positionLowDataLogs.name),
                       buttonText: '초기화',
                       buttonColor: const Color(0xFF0EE6F3),
                     ),
@@ -75,7 +75,7 @@ class PositionLowDataLogs extends StatelessWidget {
                 builder: (context, box, widget) {
                   return Column(
                     children: [
-                      ...renderRequestLogList(box.get(HiveKey.requestLogs.name) ?? []),
+                      ...renderPositionLowDataList(box.get(HiveKey.positionLowDataLogs.name) ?? []),
                     ],
                   );
                 },

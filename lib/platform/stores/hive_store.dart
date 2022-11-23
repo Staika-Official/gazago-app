@@ -27,6 +27,11 @@ class HiveStore {
     box.put(HiveKey.userExerciseDataLogs.name, value);
   }
 
+  static void savePositionLowData({required dynamic value}) {
+    final Box box = Hive.box('gazaGo');
+    box.put(HiveKey.positionLowDataLogs.name, value);
+  }
+
   static void saveCurrentUserState({required CurrentUserStateModel userState}) {
     final Box box = Hive.box('gazaGo');
     box.put(HiveKey.userState.name, userState);
