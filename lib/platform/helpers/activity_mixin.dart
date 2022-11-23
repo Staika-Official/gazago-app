@@ -271,42 +271,46 @@ mixin ActivityMixin {
 
   void startExercise(ExerciseType exerciseType, ChallengeModel? challenge) async {
     if (Get.isDialogOpen != null && Get.isDialogOpen!) Get.until((route) => Get.isDialogOpen == false);
-    if (globalController.connectivityResult.value != ConnectivityResult.none) {
-      await ActivityService.fetchStartUserExercises(
-        UserExerciseModel(
-          userId: int.parse(
-            HiveStore.loadString(
-              key: HiveKey.userId.name,
-            )!,
+    if (!batchIsInProgress()) {
+      if (globalController.connectivityResult.value != ConnectivityResult.none) {
+        await ActivityService.fetchStartUserExercises(
+          UserExerciseModel(
+            userId: int.parse(
+              HiveStore.loadString(
+                key: HiveKey.userId.name,
+              )!,
+            ),
+            userNickname: HiveStore.loadString(key: HiveKey.nickname.name),
+            userProfileImageUrl: HiveStore.loadString(key: HiveKey.profileImageUrl.name),
+            type: exerciseType.value,
+            steps: 0,
+            speed: 0,
+            distance: 0,
+            altitude: currentLocation.value.altitude,
+            time: 0,
+            startPoint: challenge != null ? challenge.firstName : '${currentLocation.value.longitude}, ${currentLocation.value.latitude}',
+            challengeId: challenge?.id,
+            locationUpdateTime: DateTime.now(),
           ),
-          userNickname: HiveStore.loadString(key: HiveKey.nickname.name),
-          userProfileImageUrl: HiveStore.loadString(key: HiveKey.profileImageUrl.name),
-          type: exerciseType.value,
-          steps: 0,
-          speed: 0,
-          distance: 0,
-          altitude: currentLocation.value.altitude,
-          time: 0,
-          startPoint: challenge != null ? challenge.firstName : '${currentLocation.value.longitude}, ${currentLocation.value.latitude}',
-          challengeId: challenge?.id,
-          locationUpdateTime: DateTime.now(),
-        ),
-        Platform.operatingSystem,
-        successCallback: (UserExerciseModel userExerciseData) {
-          userState.update((state) => state!.exercise = userExerciseData);
-          exerciseState.value = ExerciseState.ongoing;
-          HiveStore.save(key: HiveKey.savedStepInitialized.name, value: false);
-          HiveStore.save(key: HiveKey.savedStepCount.name, value: 0);
-          initExerciseStats();
-          initStream();
-          startPeriodicUpdate();
-        },
-        errorCallback: (int statusCode, String statusMessage) {
-          showToastPopup(statusMessage);
-        },
-      );
+          Platform.operatingSystem,
+          successCallback: (UserExerciseModel userExerciseData) {
+            userState.update((state) => state!.exercise = userExerciseData);
+            exerciseState.value = ExerciseState.ongoing;
+            HiveStore.save(key: HiveKey.savedStepInitialized.name, value: false);
+            HiveStore.save(key: HiveKey.savedStepCount.name, value: 0);
+            initExerciseStats();
+            initStream();
+            startPeriodicUpdate();
+          },
+          errorCallback: (int statusCode, String statusMessage) {
+            showToastPopup(statusMessage);
+          },
+        );
+      } else {
+        showToastPopup('인터넷 상태를 확인해주세요');
+      }
     } else {
-      showToastPopup('인터넷 상태를 확인해주세요');
+      showToastPopup('지급은 리워드 정산시간입니다.');
     }
   }
 
@@ -362,7 +366,7 @@ mixin ActivityMixin {
       }
     }
 
-    if (globalController.connectivityResult.value != ConnectivityResult.none) {
+    if (globalController.connectivityResult.value != ConnectivityResult.none && !batchIsInProgress()) {
       isPaused != null && isPaused
           ? await ActivityService.fetchPausedUserExercises(
               userExerciseData.value,
@@ -468,33 +472,36 @@ mixin ActivityMixin {
   }
 
   Future<void> endExercise(ChallengeModel challenge, {String? source}) async {
-    await ActivityService.fetchEndUserExercises(
-      userExerciseData.value,
-      source: source,
-      successCallback: (CurrentUserStateModel newUserState) {
-        if (newUserState.exercise!.state == 'ENDED') {
-          exerciseState.value = ExerciseState.ready;
-          userState.update(
-            (state) {
-              state?.state = newUserState.state;
-              state?.exercise = newUserState.exercise;
-              state?.shoes = newUserState.shoes;
-            },
-          );
-          HiveStore.deleteMultipleKeys(keys: [HiveKey.userState.name, HiveKey.endExerciseRequested.name]);
-          resetVariables(challenge);
-          resetTimer();
-          resetSubscriptions();
-          if (source == null) {
-            moveToExerciseDetail(userState.value.exercise!.id!);
+    if (!batchIsInProgress()) {
+      await ActivityService.fetchEndUserExercises(
+        userExerciseData.value,
+        source: source,
+        successCallback: (CurrentUserStateModel newUserState) {
+          if (newUserState.exercise!.state == 'ENDED') {
+            exerciseState.value = ExerciseState.ready;
+            userState.update(
+              (state) {
+                state?.state = newUserState.state;
+                state?.exercise = newUserState.exercise;
+                state?.shoes = newUserState.shoes;
+              },
+            );
+            HiveStore.deleteMultipleKeys(keys: [HiveKey.userState.name, HiveKey.endExerciseRequested.name]);
+            resetVariables(challenge);
+            resetTimer();
+            resetSubscriptions();
+            if (source == 'showEndExerciseAlert') {
+              moveToExerciseDetail(userState.value.exercise!.id!);
+            }
           }
-        }
-      },
-      errorCallback: () {
-        print('error');
-        endExerciseLocally(challenge);
-      },
-    );
+        },
+        errorCallback: () {
+          endExerciseLocally(challenge);
+        },
+      );
+    } else {
+      endExerciseLocally(challenge);
+    }
   }
 
   void endExerciseLocally(ChallengeModel challenge) {

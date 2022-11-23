@@ -75,7 +75,7 @@ class Api {
       '\nRESPONSE'
       '\nPath: ${response.requestOptions.baseUrl + response.requestOptions.path}'
       '\nQueries: ${response.requestOptions.queryParameters}'
-      '\nnResponseCode: ${response.statusCode}'
+      '\nResponseCode: ${response.statusCode}'
       '\nResponse: ${response.data}',
     );
     return handler.next(response);
