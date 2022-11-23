@@ -5,6 +5,7 @@ import 'package:gaza_go/platform/controllers/inventory_controller.dart';
 import 'package:gaza_go/platform/controllers/synthetic_badge_controller.dart';
 import 'package:gaza_go/platform/helpers/base_helper.dart';
 import 'package:gaza_go/presentations/components/default_container.dart';
+import 'package:gaza_go/presentations/styles/colors.dart';
 import 'package:gaza_go/presentations/styles/icons.dart';
 import 'package:gaza_go/presentations/styles/styled_text.dart';
 import 'package:get/get.dart';
@@ -65,7 +66,7 @@ class InventoryBadgeDetail extends StatelessWidget {
 
     return DefaultContainer(
       titleText: 'Lv.${controller.selectedBadge.value.level} ${(controller.selectedBadge.value.name != null) ? controller.selectedBadge.value.name : ''}',
-      backgroundColor: Color(0xFF191921),
+      backgroundColor: mainBgColor,
       child: Padding(
         padding: EdgeInsets.all(22.sp),
         child: Column(
