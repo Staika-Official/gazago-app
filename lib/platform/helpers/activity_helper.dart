@@ -37,3 +37,14 @@ double calculateDistance(lat1, lon1, lat2, lon2) {
 double highestClimbed(List<double> altitudeList) {
   return altitudeList.fold(0, max);
 }
+
+bool batchIsInProgress() {
+  DateTime currentDateTime = DateTime.now().toUtc().add(const Duration(hours: 9));
+  DateTime batchProcessStartDateTime = DateTime(currentDateTime.year, currentDateTime.month, currentDateTime.day + 1);
+  DateTime batchProcessEndDateTime = DateTime(currentDateTime.year, currentDateTime.month, currentDateTime.day + 1).add(const Duration(minutes: 5));
+  if (currentDateTime.isAfter(batchProcessStartDateTime) && currentDateTime.isBefore(batchProcessEndDateTime)) {
+    return true;
+  } else {
+    return false;
+  }
+}

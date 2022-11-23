@@ -44,7 +44,7 @@ class GlobalController extends SuperController {
   }
 
   Future<void> getConnectivity() async {
-    connectivityResult.value = await (Connectivity().checkConnectivity());
+    connectivityResult.value = await Connectivity().checkConnectivity();
   }
 
   void initConnectivityStream() {

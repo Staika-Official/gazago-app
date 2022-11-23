@@ -2,7 +2,6 @@ import 'dart:async';
 import 'dart:developer';
 
 import 'package:connectivity_plus/connectivity_plus.dart';
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_naver_map/flutter_naver_map.dart';
 import 'package:gaza_go/constants/enums.dart';
@@ -21,7 +20,7 @@ import 'package:gaza_go/presentations/components/alert_ui_list.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:get/get.dart';
 
-class ChallengeMixin {
+mixin ChallengeMixin {
   GlobalController globalController = Get.find();
   final GlobalKey listKey = GlobalKey();
 
@@ -76,8 +75,7 @@ class ChallengeMixin {
 
   void notificationOnChallenge(List<ChallengeModel> result, ExerciseState exerciseState) {
     bool notification = false;
-    if (result.isNotEmpty && result.length != challengeList.length &&
-        !([ExerciseState.ongoing, ExerciseState.paused].any((state) => state == exerciseState))) {
+    if (result.isNotEmpty && result.length != challengeList.length && !([ExerciseState.ongoing, ExerciseState.paused].any((state) => state == exerciseState))) {
       notification = true;
     }
 
@@ -136,7 +134,7 @@ class ChallengeMixin {
         if (globalController.connectivityResult.value != ConnectivityResult.none) {
           requestBadgeIssuance(userState);
         } else {
-          HiveStore.save(key: HiveKey.badgeIssuanceRequested.name, value: true.toString());
+          HiveStore.save(key: HiveKey.badgeIssuanceRequested.name, value: true);
         }
       }
     }
@@ -153,7 +151,7 @@ class ChallengeMixin {
 
     void errorCallback() {
       showToastPopup('뱃지 발급에 실패했습니다.');
-      HiveStore.save(key: HiveKey.badgeIssuanceRequested.name, value: true.toString());
+      HiveStore.save(key: HiveKey.badgeIssuanceRequested.name, value: true);
     }
 
     await BadgeService.fetchUserIssuanceBadge(userState.exercise!.id!, successCallback: successCallback, errorCallback: errorCallback);

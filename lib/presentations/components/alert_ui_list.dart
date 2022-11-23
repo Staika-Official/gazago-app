@@ -439,7 +439,7 @@ void showEndExerciseAlert(ActivityMixin mixin, ChallengeModel challenge) {
       ),
       Expanded(
         child: GazagoButton(
-          onTap: () => mixin.endExercise(challenge),
+          onTap: () => mixin.endExercise(challenge, source: 'showEndExerciseAlert'),
           buttonText: '운동종료',
           buttonColor: const Color(0xFF0EE6F3),
         ),

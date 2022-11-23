@@ -40,7 +40,10 @@ class ActivityApi {
     return await Api.client(serviceUrl: ServiceUrl.exerciseService).post(
       '/users/$userId',
       data: exerciseInfo,
-      queryParameters: {'platform': platform},
+      queryParameters: {
+        'platform': platform,
+        'source': 'activityActive.dart',
+      },
     );
   }
 
@@ -51,6 +54,7 @@ class ActivityApi {
       data: exerciseInfo,
       queryParameters: {
         'platform': platform,
+        'source': 'activityActive.dart',
       },
     );
   }
@@ -62,13 +66,20 @@ class ActivityApi {
       data: exerciseInfo,
       queryParameters: {
         'platform': platform,
+        'source': 'activityActive.dart',
       },
     );
   }
 
-  static Future<Response> fetchEndUserExercises(String userId, UserExerciseModel exerciseInfo) async {
+  static Future<Response> fetchEndUserExercises(String userId, UserExerciseModel exerciseInfo, {String? source}) async {
     exerciseInfo.state = 'ENDED';
-    return await Api.client(serviceUrl: ServiceUrl.exerciseService).put('/users/$userId', data: exerciseInfo);
+    return await Api.client(serviceUrl: ServiceUrl.exerciseService).put(
+      '/users/$userId',
+      data: exerciseInfo,
+      queryParameters: {
+        'source': source,
+      },
+    );
   }
 
   static Future<Response> fetchUserStaminaRecharge(String userId, UserStaminaRechargeModel rechargeInfo) async {
