@@ -1,0 +1,261 @@
+import 'package:cached_network_image/cached_network_image.dart';
+import 'package:flutter/material.dart';
+import 'package:gaza_go/platform/controllers/inventory_controller.dart';
+import 'package:gaza_go/platform/helpers/inventory_helper.dart';
+import 'package:gaza_go/presentations/styles/icons.dart';
+import 'package:gaza_go/presentations/styles/styled_text.dart';
+import 'package:get/get.dart';
+
+class InventoryTile extends StatelessWidget {
+  const InventoryTile({
+    Key? key,
+    this.id,
+    required this.index,
+    required this.imageUrl,
+    this.extent,
+    this.backgroundColor,
+    this.bottomSpace,
+    this.durability,
+    this.itemGrade,
+    this.badgeId,
+  }) : super(key: key);
+
+  final int index;
+  final int? id;
+  final double? durability;
+  final String imageUrl;
+  final String? itemGrade;
+  final double? extent;
+  final double? bottomSpace;
+  final Color? backgroundColor;
+  final int? badgeId;
+
+  @override
+  Widget build(BuildContext context) {
+    InventoryController controller = Get.find();
+    final child = Container(
+      color: Colors.transparent,
+      height: extent,
+      child: Container(
+        decoration: BoxDecoration(
+          color: const Color(0xFF363841),
+          border: Border.all(
+            width: 2,
+            color: Colors.black,
+          ),
+          borderRadius: const BorderRadius.all(
+            Radius.circular(14),
+          ),
+          boxShadow: const [
+            BoxShadow(
+              color: Colors.black,
+              offset: Offset(2, 4),
+              blurRadius: 0.0,
+              spreadRadius: 0.0,
+            ),
+          ],
+        ),
+        child: Stack(
+          alignment: Alignment.bottomCenter,
+          children: [
+            Padding(
+              padding: badgeId != null && badgeId != -1 ? const EdgeInsets.only(top: 10.0, bottom: 30, left: 30, right: 30) : const EdgeInsets.all(10.0),
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  AspectRatio(
+                    aspectRatio: index == 1 ? 1 / 1 : 1.2 / 1,
+                    child: CachedNetworkImage(
+                      imageUrl: imageUrl,
+                      placeholder: (context, url) => const CircularProgressIndicator(),
+                      errorWidget: (context, url, error) => iconNoBadge,
+                      fit: BoxFit.contain,
+                    ),
+                  ),
+                ],
+              ),
+            ),
+            if (badgeId != null && badgeId != -1)
+              Padding(
+                padding: const EdgeInsets.all(10),
+                child: Container(
+                  padding: const EdgeInsets.symmetric(
+                    vertical: 5,
+                    horizontal: 10,
+                  ),
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(60),
+                    border: Border.all(
+                      width: 1,
+                      color: const Color(0xff8a8a8a),
+                    ),
+                  ),
+                  child: StyledText(
+                    '#${badgeId.toString()}',
+                    fontSize: 10,
+                    lineHeight: 10,
+                    fontWeight: 500,
+                    letterSpacing: 1,
+                    fontFamily: 'Montserrat',
+                    color: const Color(0xff8a8a8a),
+                  ),
+                ),
+              ),
+            durability != null
+                ? Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 15.0, vertical: 9.0),
+                    child: SizedBox(
+                      height: 22,
+                      child: Stack(
+                        clipBehavior: Clip.none,
+                        alignment: AlignmentDirectional.center,
+                        children: [
+                          Row(
+                            children: [
+                              Expanded(
+                                child: ClipRRect(
+                                  child: SizedBox(
+                                    child: Stack(
+                                      children: [
+                                        Padding(
+                                          padding: const EdgeInsets.all(2.0),
+                                          child: Container(
+                                            decoration: const BoxDecoration(
+                                              color: Color(0xFF606167),
+                                              borderRadius: BorderRadius.all(
+                                                Radius.circular(50),
+                                              ),
+                                              boxShadow: [
+                                                BoxShadow(
+                                                  color: Colors.black,
+                                                  offset: Offset(0, 1),
+                                                  blurRadius: 0.0,
+                                                  spreadRadius: 0.0,
+                                                ),
+                                              ],
+                                            ),
+                                          ),
+                                        ),
+                                        durability! > 1.0
+                                            ? Padding(
+                                                padding: const EdgeInsets.only(top: 2.0, left: 2.0),
+                                                child: LayoutBuilder(builder: (context, constraints) {
+                                                  return Container(
+                                                    height: 18,
+                                                    margin: EdgeInsets.zero,
+                                                    width: durability! > 20
+                                                        ? constraints.maxWidth / (100 / durability!)
+                                                        : durability! < 2
+                                                            ? 0
+                                                            : 34,
+                                                    decoration: BoxDecoration(
+                                                      color: durability! < 30 ? const Color(0xFFFF2525) : const Color(0xFFB85DFF),
+                                                      borderRadius: const BorderRadius.all(
+                                                        Radius.circular(50),
+                                                      ),
+                                                    ),
+                                                  );
+                                                }),
+                                              )
+                                            : Container(),
+                                      ],
+                                    ),
+                                  ),
+                                ),
+                              ),
+                            ],
+                          ),
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            crossAxisAlignment: CrossAxisAlignment.center,
+                            children: [
+                              Row(
+                                children: [
+                                  Padding(
+                                    padding: const EdgeInsets.symmetric(horizontal: 5.0),
+                                    child: iconShoes,
+                                  ),
+                                ],
+                              ),
+                            ],
+                          ),
+                          Positioned(
+                            right: -1,
+                            top: -1,
+                            child: Padding(
+                              padding: const EdgeInsets.only(top: 1.0),
+                              child: Container(
+                                decoration: BoxDecoration(
+                                  color: const Color(0xFF606167),
+                                  border: Border.all(
+                                    width: 1,
+                                    color: Colors.black,
+                                  ),
+                                  borderRadius: const BorderRadius.all(
+                                    Radius.circular(30),
+                                  ),
+                                  boxShadow: const [
+                                    BoxShadow(
+                                      color: Colors.black,
+                                      offset: Offset(0, 1),
+                                      blurRadius: 0.0,
+                                      spreadRadius: 0.0,
+                                    ),
+                                  ],
+                                ),
+                                child: InkWell(
+                                  onTap: () => controller.showShoesRepairPopup(id),
+                                  child: CircleAvatar(
+                                    radius: 10,
+                                    backgroundColor: const Color(0xFFB85DFF),
+                                    child: IconButton(
+                                      alignment: Alignment.center,
+                                      padding: EdgeInsets.zero,
+                                      iconSize: 20.0,
+                                      icon: iconPlus,
+                                      onPressed: null,
+                                      // onPressed: () => {controller.onClickRepairStat(stat)},
+                                    ),
+                                  ),
+                                ),
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  )
+                : Container(),
+            itemGrade != null
+                ? Positioned(
+                    right: index > 1 ? 6 : 10,
+                    top: index > 1 ? 6 : 10,
+                    child: CircleAvatar(
+                      backgroundColor: getItemGradeColor(itemGrade!),
+                      radius: 10,
+                      child: StyledText(
+                        itemGrade![0],
+                        fontWeight: 600,
+                        fontFamily: 'Montserrat',
+                        color: itemGrade == 'POOR' ? const Color(0xFFffffff).withOpacity(0.6) : const Color(0xFF000000).withOpacity(0.6),
+                      ),
+                    ),
+                  )
+                : Container(),
+          ],
+        ),
+      ),
+    );
+
+    if (bottomSpace == null) {
+      return child;
+    }
+
+    return Column(
+      children: [
+        Expanded(child: child),
+      ],
+    );
+  }
+}
