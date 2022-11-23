@@ -111,3 +111,7 @@ flutter {
 dependencies {
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk8:$kotlin_version"
 }
+
+configurations.all {
+    exclude group: 'com.google.android.gms', module: 'play-services-safetynet'
+}

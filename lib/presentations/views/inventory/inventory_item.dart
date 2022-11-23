@@ -89,9 +89,9 @@ class InventoryItem extends StatelessWidget {
                                           borderRadius: BorderRadius.all(
                                             Radius.circular(20.sp),
                                           ),
-                                          boxShadow: const [
+                                          boxShadow: [
                                             BoxShadow(
-                                              offset: Offset(0, 3),
+                                              offset: Offset(0, 3.sp),
                                               blurRadius: 0,
                                               spreadRadius: 0,
                                               color: Colors.black,
@@ -101,7 +101,7 @@ class InventoryItem extends StatelessWidget {
                                         alignment: Alignment.center,
                                         child: Padding(
                                           padding: EdgeInsets.all(8.0.sp),
-                                          child: StyledText(
+                                          child: const StyledText(
                                             '장착',
                                             fontWeight: 500,
                                             fontSize: 14,
@@ -125,7 +125,7 @@ class InventoryItem extends StatelessWidget {
                                           ),
                                           boxShadow: [
                                             BoxShadow(
-                                              offset: Offset(0, 3),
+                                              offset: Offset(0, 3.sp),
                                               blurRadius: 0,
                                               spreadRadius: 0,
                                               color: Colors.black,

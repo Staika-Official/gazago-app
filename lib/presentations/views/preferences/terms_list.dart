@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:gaza_go/constants/routes.dart';
 import 'package:gaza_go/platform/controllers/preference_controller.dart';
 import 'package:gaza_go/presentations/components/default_container.dart';
@@ -17,7 +18,7 @@ class TermsList extends StatelessWidget {
       backgroundColor: const Color(0xFF1D1D26),
       headerBackgroundColor: Color(0xFF1D1D26),
       child: Padding(
-        padding: const EdgeInsets.only(top: 10.0),
+        padding: EdgeInsets.only(top: 10.0.sp),
         child: Column(
           children: [
             TermsListItem(
@@ -52,14 +53,14 @@ class TermsListItem extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Ink(
-      height: 60,
-      color: Color(0xFF1D1D26),
+      height: 60.sp,
+      color: const Color(0xFF1D1D26),
       child: InkWell(
         onTap: type == ItemType.functional ? onTap : null,
         child: Container(
-          height: 55,
-          color: Color(0xFF1D1D26),
-          padding: const EdgeInsets.only(left: 25, right: 20),
+          height: 55.sp,
+          color: const Color(0xFF1D1D26),
+          padding: EdgeInsets.only(left: 25.sp, right: 20.sp),
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
@@ -73,12 +74,12 @@ class TermsListItem extends StatelessWidget {
                       color: Color(0xFFBDC0C7),
                     )
                   : Padding(
-                      padding: const EdgeInsets.only(right: 5),
+                      padding: EdgeInsets.only(right: 5.sp),
                       child: StyledText(
                         'v${description!}',
                         fontSize: 16,
                         fontWeight: 500,
-                        color: Color(0xFF8A8A8A),
+                        color: const Color(0xFF8A8A8A),
                       ),
                     ),
             ],

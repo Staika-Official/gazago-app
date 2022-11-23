@@ -14,9 +14,9 @@ class GlobalController extends SuperController {
 
   @override
   void onInit() async {
+    await checkLoginStatus();
     await getConnectivity();
     initConnectivityStream();
-    await checkLoginStatus();
     super.onInit();
   }
 
@@ -44,7 +44,7 @@ class GlobalController extends SuperController {
   }
 
   Future<void> getConnectivity() async {
-    connectivityResult.value = await (Connectivity().checkConnectivity());
+    connectivityResult.value = await Connectivity().checkConnectivity();
   }
 
   void initConnectivityStream() {

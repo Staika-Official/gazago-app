@@ -93,9 +93,9 @@ class InventoryBadge extends StatelessWidget {
                                   borderRadius: BorderRadius.all(
                                     Radius.circular(20.sp),
                                   ),
-                                  boxShadow: const [
+                                  boxShadow: [
                                     BoxShadow(
-                                      offset: Offset(0, 3),
+                                      offset: Offset(0, 3.sp),
                                       blurRadius: 0,
                                       spreadRadius: 0,
                                       color: Colors.black,

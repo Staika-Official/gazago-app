@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:get/get.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:gaza_go/constants/enums.dart';
 import 'package:gaza_go/platform/controllers/wallet_actions_controller.dart';
 import 'package:gaza_go/presentations/components/default_container.dart';
+import 'package:get/get.dart';
 
 class WalletActions extends StatelessWidget {
   const WalletActions({Key? key}) : super(key: key);
@@ -43,7 +44,7 @@ class WalletActions extends StatelessWidget {
               ],
             ),
             Padding(
-              padding: EdgeInsets.symmetric(vertical: 30),
+              padding: EdgeInsets.symmetric(vertical: 30.sp),
               child: Icon(
                 Icons.keyboard_double_arrow_down,
               ),
@@ -66,13 +67,13 @@ class WalletActions extends StatelessWidget {
             ),
             Padding(
               padding: EdgeInsets.only(
-                top: 10,
+                top: 10.sp,
               ),
               child: Column(
                 children: [
                   if (controller.actionType.value == WalletActionType.recharge)
                     Padding(
-                      padding: const EdgeInsets.all(8.0),
+                      padding: EdgeInsets.all(8.0.sp),
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
@@ -84,7 +85,7 @@ class WalletActions extends StatelessWidget {
                       ),
                     ),
                   Padding(
-                    padding: const EdgeInsets.all(8.0),
+                    padding: EdgeInsets.all(8.0.sp),
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
@@ -100,7 +101,7 @@ class WalletActions extends StatelessWidget {
             ),
             Container(
               width: double.infinity,
-              padding: EdgeInsets.all(8),
+              padding: EdgeInsets.all(8.sp),
               child: ElevatedButton(
                 onPressed: () => null,
                 child: Text(controller.actionType.value == WalletActionType.recharge ? '충전하기' : '보내기'),

@@ -36,18 +36,45 @@ class ActivityApi {
   }
 
   static Future<Response> fetchStartUserExercises(String userId, UserExerciseModel exerciseInfo, String platform) async {
-    return await Api.client(serviceUrl: ServiceUrl.exerciseService).post('/users/$userId', data: exerciseInfo, queryParameters: {'platform': platform});
+    exerciseInfo.state = 'ONGOING';
+    return await Api.client(serviceUrl: ServiceUrl.exerciseService).post(
+      '/users/$userId',
+      data: exerciseInfo,
+      queryParameters: {'platform': platform},
+    );
   }
 
   static Future<Response> fetchUpdateUserExercises(String userId, UserExerciseModel exerciseInfo, String platform) async {
-    return await Api.client(serviceUrl: ServiceUrl.exerciseService).put('/users/$userId', data: exerciseInfo, queryParameters: {
-      'platform': platform,
-    });
+    exerciseInfo.state = 'ONGOING';
+    return await Api.client(serviceUrl: ServiceUrl.exerciseService).put(
+      '/users/$userId',
+      data: exerciseInfo,
+      queryParameters: {
+        'platform': platform,
+      },
+    );
   }
 
-  static Future<Response> fetchEndUserExercises(String userId, UserExerciseModel exerciseInfo) async {
+  static Future<Response> fetchPausedUserExercises(String userId, UserExerciseModel exerciseInfo, String platform) async {
+    exerciseInfo.state = 'PAUSED';
+    return await Api.client(serviceUrl: ServiceUrl.exerciseService).put(
+      '/users/$userId',
+      data: exerciseInfo,
+      queryParameters: {
+        'platform': platform,
+      },
+    );
+  }
+
+  static Future<Response> fetchEndUserExercises(String userId, UserExerciseModel exerciseInfo, {String? source}) async {
     exerciseInfo.state = 'ENDED';
-    return await Api.client(serviceUrl: ServiceUrl.exerciseService).put('/users/$userId', data: exerciseInfo);
+    return await Api.client(serviceUrl: ServiceUrl.exerciseService).put(
+      '/users/$userId',
+      data: exerciseInfo,
+      queryParameters: {
+        'source': source,
+      },
+    );
   }
 
   static Future<Response> fetchUserStaminaRecharge(String userId, UserStaminaRechargeModel rechargeInfo) async {

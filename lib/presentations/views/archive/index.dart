@@ -27,12 +27,12 @@ class ArchiveHome extends StatelessWidget {
                   color: Colors.black,
                 ),
                 borderRadius: const BorderRadius.only(topLeft: Radius.circular(10), topRight: Radius.circular(10), bottomLeft: Radius.circular(10), bottomRight: Radius.circular(10)),
-                boxShadow: const [
+                boxShadow: [
                   BoxShadow(
                     color: Color(0xFF000000),
                     spreadRadius: 0,
                     blurRadius: 0,
-                    offset: Offset(0, 4), // changes position of shadow
+                    offset: Offset(0, 4.sp), // changes position of shadow
                   ),
                 ],
               ),

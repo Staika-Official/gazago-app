@@ -28,7 +28,7 @@ class MemberService {
     if (res.statusCode == 201) {
       successCallback(res.data['effectedCount']);
     } else {
-      errorCallback!();
+      if (errorCallback != null) errorCallback();
     }
   }
 }

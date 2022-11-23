@@ -7,7 +7,6 @@ import 'package:gaza_go/constants/routes.dart';
 import 'package:gaza_go/platform/helpers/alert_helper.dart';
 import 'package:gaza_go/platform/models/access_token_model.dart';
 import 'package:gaza_go/platform/models/social_login_info_model.dart';
-import 'package:gaza_go/platform/models/user_account_model.dart';
 import 'package:gaza_go/platform/services/member_service.dart';
 import 'package:gaza_go/platform/services/uaa_service.dart';
 import 'package:gaza_go/platform/stores/hive_store.dart';
@@ -77,10 +76,13 @@ class LoginController extends GetxController {
   }
 
   Future<void> getUserInfo() async {
-    UserAccountModel user = await UaaService.getAccountInfo();
-    HiveStore.save(key: HiveKey.userId.name, value: user.id.toString());
-    HiveStore.save(key: HiveKey.profileImageUrl.name, value: user.profileImageUrl);
-    HiveStore.save(key: HiveKey.nickname.name, value: user.nickname);
+    await UaaService.getAccountInfo(
+      successCallback: (user) {
+        HiveStore.save(key: HiveKey.userId.name, value: user.id.toString());
+        HiveStore.save(key: HiveKey.profileImageUrl.name, value: user.profileImageUrl);
+        HiveStore.save(key: HiveKey.nickname.name, value: user.nickname);
+      },
+    );
   }
 
   Future<void> initUserInfo() async {
@@ -130,7 +132,7 @@ class LoginController extends GetxController {
         } else {
           await initUserInfo();
           HiveStore.save(key: HiveKey.isNewUser.name, value: true);
-          Get.offNamed(Routes.onBoarding);
+          Get.offNamed(Routes.permissions);
         }
       },
       errorCallback: (int statusCode, String statusMessage) {

@@ -21,7 +21,7 @@ class MyPage extends StatelessWidget {
 
     return DefaultContainer(
       titleText: '계정 정보',
-      backgroundColor: Color(0xFF1D1D26),
+      backgroundColor: const Color(0xFF1D1D26),
       headerBackgroundColor: Colors.transparent,
       child: Column(
         children: [
@@ -37,7 +37,7 @@ class MyPage extends StatelessWidget {
                     width: 70.sp,
                     height: 70.sp,
                     child: InkWell(
-                      onTap: () => controller.pickImage(),
+                      onTap: controller.isEditMode.value ? () => controller.pickImage() : null,
                       child: Stack(
                         alignment: Alignment.center,
                         children: [

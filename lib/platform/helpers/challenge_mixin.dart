@@ -1,9 +1,7 @@
 import 'dart:async';
 import 'dart:developer';
 
-import 'package:cached_network_image/cached_network_image.dart';
 import 'package:connectivity_plus/connectivity_plus.dart';
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_naver_map/flutter_naver_map.dart';
 import 'package:gaza_go/constants/enums.dart';
@@ -18,12 +16,11 @@ import 'package:gaza_go/platform/models/inventory_badge_model.dart';
 import 'package:gaza_go/platform/services/activity_service.dart';
 import 'package:gaza_go/platform/services/badge_service.dart';
 import 'package:gaza_go/platform/stores/hive_store.dart';
-import 'package:gaza_go/presentations/components/gazago_button.dart';
-import 'package:gaza_go/presentations/styles/styled_text.dart';
+import 'package:gaza_go/presentations/components/alert_ui_list.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:get/get.dart';
 
-class ChallengeMixin {
+mixin ChallengeMixin {
   GlobalController globalController = Get.find();
   final GlobalKey listKey = GlobalKey();
 
@@ -38,50 +35,52 @@ class ChallengeMixin {
   final RxList<Marker> challengeMarkers = RxList.empty();
 
   Future<void> getChallengeList() async {
-    allChallengesList.value = await ActivityService.getChallenges();
+    await ActivityService.getChallenges(
+      successCallback: (challengesList) {
+        allChallengesList.value = challengesList;
+      },
+    );
   }
 
   Future<ChallengeModel> getChallenge(int id) async {
-    return await ActivityService.getChallenge(id);
+    ChallengeModel challengeItem = ChallengeModel();
+    await ActivityService.getChallenge(
+      id,
+      successCallback: (challenge) {
+        challengeItem = challenge;
+      },
+    );
+
+    return challengeItem;
   }
 
   Future<void> getNearByChallengeList(Position currentLocation, ExerciseState exerciseState) async {
-    List<ChallengeModel> result = await ActivityService.getNearByChallenges(currentLocation);
-    inspect(result);
-    notificationOnChallenge(result, exerciseState);
-    challengeList.value = result;
+    await ActivityService.getNearByChallenges(
+      currentLocation,
+      successCallback: (result) {
+        notificationOnChallenge(result, exerciseState);
+        challengeList.value = result;
+      },
+    );
   }
 
   Future<void> getChallengesHierarchy(Position currentLocation) async {
-    hierarchyChallengesList.value = await ActivityService.getChallengesHierarchy(currentLocation);
+    await ActivityService.getChallengesHierarchy(
+      currentLocation,
+      successCallback: (challengeList) {
+        hierarchyChallengesList.value = challengeList;
+      },
+    );
   }
 
   void notificationOnChallenge(List<ChallengeModel> result, ExerciseState exerciseState) {
     bool notification = false;
-    List<ChallengeModel> filteredList = result.toSet().difference(challengeList.toSet()).toList();
-    List<int> filteredIdList = List.empty(growable: true);
-    List<int> challengeIdList = List.empty(growable: true);
-    if (result.isNotEmpty) {
-      filteredIdList = filteredList
-          .map((element) {
-            return element.id!;
-          })
-          .toSet()
-          .toList();
-      challengeIdList = challengeList
-          .map((element) {
-            return element.id!;
-          })
-          .toSet()
-          .toList();
-    }
-
-    if (result.isNotEmpty && listEquals(filteredIdList, challengeIdList) == false && !([ExerciseState.ongoing, ExerciseState.paused].any((state) => state == exerciseState))) {
+    if (result.isNotEmpty && result.length != challengeList.length && !([ExerciseState.ongoing, ExerciseState.paused].any((state) => state == exerciseState))) {
       notification = true;
     }
 
     if (notification) {
-      showLocalNotification(notificationType: NotificationType.challenge, title: '등산 챌린지 시작 포인트 발견', message: '주변에 챌린지를 시작 할 수 있는 ${filteredList.first.firstName}이 있어요. 뱃지 받으러 가자GO~~');
+      showLocalNotification(notificationType: NotificationType.challenge, title: '등산 챌린지 시작 포인트 발견', message: '주변에 챌린지를 시작 할 수 있는 ${result.first.firstName}이 있어요. 뱃지 받으러 가자GO~~');
       showToastPopup('등산 챌린지 시작 포인트 발견');
     }
   }
@@ -135,7 +134,7 @@ class ChallengeMixin {
         if (globalController.connectivityResult.value != ConnectivityResult.none) {
           requestBadgeIssuance(userState);
         } else {
-          HiveStore.save(key: HiveKey.badgeIssuanceRequested.name, value: true.toString());
+          HiveStore.save(key: HiveKey.badgeIssuanceRequested.name, value: true);
         }
       }
     }
@@ -147,71 +146,14 @@ class ChallengeMixin {
       showToastPopup('뱃지를 획득하였습니다.');
       userState.exercise!.badgeIssueId = badge.id;
       HiveStore.deleteKey(key: HiveKey.badgeIssuanceRequested.name);
-      showAlert(
-        isScrollControlled: true,
-        title: '챌린지 뱃지 발급',
-        contentWidget: Column(
-          children: [
-            Padding(
-              padding: const EdgeInsets.only(top: 30, bottom: 30),
-              child: CachedNetworkImage(
-                imageUrl: badge.badge.imageUrl,
-                placeholder: (context, url) => const CircularProgressIndicator(),
-                fit: BoxFit.contain,
-                width: 150,
-              ),
-            ),
-            Container(
-              padding: EdgeInsets.symmetric(horizontal: 25, vertical: 14),
-              decoration: BoxDecoration(
-                color: Color(0xff1d1d26),
-                borderRadius: BorderRadius.circular(11),
-              ),
-              child: StyledText(
-                '${selectedChallenge.value.firstName} | ${selectedChallenge.value.secondName}',
-                fontSize: 18,
-                lineHeight: 18,
-                fontWeight: 500,
-              ),
-            ),
-            const Padding(
-              padding: EdgeInsets.only(top: 20, bottom: 30),
-              child: Text.rich(
-                textAlign: TextAlign.center,
-                style: TextStyle(
-                  fontSize: 14,
-                  height: 20 / 14,
-                  fontWeight: FontWeight.w500,
-                  color: Color(0xffbfbfbf),
-                ),
-                TextSpan(
-                  children: [
-                    TextSpan(text: '내 장비 > 뱃지', style: TextStyle(color: Color(0xff0EE6F3))),
-                    TextSpan(text: ' 카테고리에서\n획득한 뱃지를 확인하실수 있습니다.'),
-                  ],
-                ),
-              ),
-            ),
-          ],
-        ),
-        actions: [
-          Expanded(
-            child: GazagoButton(
-              buttonText: '확인',
-              onTap: () async {
-                Get.back();
-              },
-            ),
-          ),
-        ],
-      );
+      showBadgeAcquisitionAlert(badge, selectedChallenge.value);
     }
 
     void errorCallback() {
       showToastPopup('뱃지 발급에 실패했습니다.');
-      HiveStore.save(key: HiveKey.badgeIssuanceRequested.name, value: true.toString());
+      HiveStore.save(key: HiveKey.badgeIssuanceRequested.name, value: true);
     }
 
-    await BadgeService.fetchUserIssuanceBadge(userState.exercise!.id!, successCallback, errorCallback);
+    await BadgeService.fetchUserIssuanceBadge(userState.exercise!.id!, successCallback: successCallback, errorCallback: errorCallback);
   }
 }

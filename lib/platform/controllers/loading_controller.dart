@@ -7,6 +7,7 @@ import 'package:gaza_go/platform/controllers/activity_controller.dart';
 import 'package:gaza_go/platform/controllers/wallet_master_controller.dart';
 import 'package:gaza_go/platform/helpers/alert_helper.dart';
 import 'package:gaza_go/platform/helpers/base_helper.dart';
+import 'package:gaza_go/presentations/components/alert_ui_list.dart';
 import 'package:gaza_go/presentations/components/gazago_button.dart';
 import 'package:get/get.dart';
 import 'package:url_launcher/url_launcher.dart';
@@ -21,15 +22,14 @@ class LoadingController extends GetxController {
   void onInit() async {
     if (Get.isRegistered<WalletMasterController>()) Get.find<WalletMasterController>().onInit();
     if (Get.isRegistered<ActivityController>()) Get.find<ActivityController>().onInit();
-    timerStart();
 
     super.onInit();
   }
 
   @override
-  void dispose() {
-    timerStop();
-    super.dispose();
+  void onReady() {
+    Future.delayed(Duration.zero, () => timerStart());
+    super.onReady();
   }
 
   @override
@@ -40,19 +40,7 @@ class LoadingController extends GetxController {
 
   void showRestartAppPopup() {
     timerStop();
-    showAlert(
-      title: '로딩 중 오류가 발생했습니다',
-      contentText: '재시도 후에도 오류가 발생할 경우\n잠시 후 다시 시도해 주세요',
-      actions: [
-        Expanded(
-          child: GazagoButton(
-            onTap: () => {handleRefreshApp()},
-            buttonText: '재시도하기',
-            buttonColor: const Color(0xFF0EE6F3),
-          ),
-        ),
-      ],
-    );
+    showRetryAlert(this);
   }
 
   void handleRefreshApp() {
@@ -70,6 +58,11 @@ class LoadingController extends GetxController {
     _timer = Timer.periodic(const Duration(seconds: 1), (timer) {
       time.value++;
 
+      print(Get.isRegistered<LoadingController>());
+      if (!Get.isRegistered<LoadingController>()) {
+        timerStop();
+      }
+
       print('LoadingController time: ${time.value}');
       if (time.value > 60) {
         showRestartAppPopup();
@@ -79,8 +72,10 @@ class LoadingController extends GetxController {
   }
 
   void timerStop() {
-    _timer?.cancel();
-    _timer = null;
+    if (_timer != null) {
+      _timer?.cancel();
+      _timer = null;
+    }
   }
 
   void updateProgress(String message) async {
@@ -99,9 +94,8 @@ class LoadingController extends GetxController {
               child: GazagoButton(
                 onTap: () {
                   if (Platform.isAndroid || Platform.isIOS) {
-                    final appId = Platform.isAndroid ? 'kr.co.eztechfin.gazaGo' : 'kr.co.eztechfin.gazaGo';
                     final url = Uri.parse(
-                      Platform.isAndroid ? "market://details?id=$appId" : "https://apps.apple.com/app/id$appId",
+                      Platform.isAndroid ? "https://gazago.page.link/update_android" : "https://gazago.page.link/update_ios",
                     );
                     launchUrl(
                       url,
@@ -138,9 +132,8 @@ class LoadingController extends GetxController {
                 child: GazagoButton(
                   onTap: () {
                     if (Platform.isAndroid || Platform.isIOS) {
-                      final appId = Platform.isAndroid ? 'kr.co.eztechfin.gazaGo' : 'kr.co.eztechfin.gazaGo';
                       final url = Uri.parse(
-                        Platform.isAndroid ? "market://details?id=$appId" : "https://apps.apple.com/app/id$appId",
+                        Platform.isAndroid ? "https://gazago.page.link/update_android" : "https://gazago.page.link/update_ios",
                       );
                       launchUrl(
                         url,

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:gaza_go/platform/controllers/preference_board_controller.dart';
 import 'package:gaza_go/presentations/components/default_container.dart';
 import 'package:gaza_go/presentations/styles/styled_text.dart';
@@ -22,10 +23,10 @@ class PreferenceBoard extends StatelessWidget {
               return Theme(
                 data: ThemeData().copyWith(dividerColor: Colors.transparent),
                 child: ExpansionTile(
-                  tilePadding: const EdgeInsets.only(
-                    left: 20,
+                  tilePadding: EdgeInsets.only(
+                    left: 20.sp,
                     // top: 14,
-                    right: 15,
+                    right: 15.sp,
                     // bottom: 14,
                   ),
                   iconColor: const Color(0xff292929),
@@ -50,13 +51,13 @@ class PreferenceBoard extends StatelessWidget {
                   children: [
                     Container(
                       width: double.infinity,
-                      margin: const EdgeInsets.only(
-                        left: 20,
+                      margin: EdgeInsets.only(
+                        left: 20.sp,
                         top: 0,
-                        right: 20,
-                        bottom: 40,
+                        right: 20.sp,
+                        bottom: 40.sp,
                       ),
-                      padding: EdgeInsets.only(top: 15),
+                      padding: EdgeInsets.only(top: 15.sp),
                       decoration: const BoxDecoration(
                         border: Border(
                           top: BorderSide(

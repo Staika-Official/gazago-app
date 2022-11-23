@@ -35,15 +35,19 @@ class MyPageController extends GetxController {
   }
 
   void getProfileInfo() async {
-    UserAccountModel account = await UaaService.getAccountInfo();
-    profile.update((state) {
-      state?.nickname = account.nickname;
-      state?.profileImageUrl = account.profileImageUrl;
-      state?.provider = account.provider;
-      state?.email = account.email;
-      state?.id = account.id;
-    });
-    inspect(profile);
+    await UaaService.getAccountInfo(
+      successCallback: (account) {
+        profile.update(
+          (state) {
+            state?.nickname = account.nickname;
+            state?.profileImageUrl = account.profileImageUrl;
+            state?.provider = account.provider;
+            state?.email = account.email;
+            state?.id = account.id;
+          },
+        );
+      },
+    );
   }
 
   Future<void> modifyMyAccountInfo() async {
@@ -53,14 +57,23 @@ class MyPageController extends GetxController {
       dio.FormData formData = dio.FormData.fromMap({
         'profileImage': profileImage,
       });
-      var res = await UaaService.fetchUploadImage(formData);
-      profile.value.profileImageUrl = res?.profileImageUrl;
+      await UaaService.fetchUploadImage(
+        formData,
+        successCallback: (res) {
+          profile.value.profileImageUrl = res?.profileImageUrl;
+        },
+      );
     }
-    UserAccountModel account = await UaaService.modifyAccountInfo(profile.value.nickname!, profile.value.profileImageUrl!);
-    inspect(account);
-    preferenceController.onInit();
-    showToastPopup('프로필이 수정되었습니다.');
-    Get.back();
+
+    await UaaService.modifyAccountInfo(
+      profile.value.nickname!,
+      profile.value.profileImageUrl!,
+      successCallback: (account) {
+        preferenceController.onInit();
+        showToastPopup('프로필이 수정되었습니다.');
+        Get.back();
+      },
+    );
   }
 
   void toggleEditMode() {

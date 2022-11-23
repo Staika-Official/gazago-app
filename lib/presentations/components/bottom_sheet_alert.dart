@@ -3,12 +3,12 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:gaza_go/presentations/styles/styled_text.dart';
 
 class BottomSheetAlert extends StatelessWidget {
-  String title;
-  String? contentText;
-  Widget? contentWidget;
-  List<Widget> actions;
+  final String title;
+  final String? contentText;
+  final Widget? contentWidget;
+  final List<Widget> actions;
 
-  BottomSheetAlert({Key? key, required this.title, this.contentText, this.contentWidget, required this.actions}) : super(key: key);
+  const BottomSheetAlert({Key? key, required this.title, this.contentText, this.contentWidget, required this.actions}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -44,7 +44,7 @@ class BottomSheetAlert extends StatelessWidget {
                     lineHeight: 24,
                     fontWeight: 500,
                     letterSpacing: .2,
-                    color: Color(0xffbfbfbf),
+                    color: const Color(0xffbfbfbf),
                     textAlign: TextAlign.center,
                   ),
                 ),

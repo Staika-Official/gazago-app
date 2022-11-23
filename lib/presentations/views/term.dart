@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:gaza_go/platform/controllers/term_controller.dart';
 import 'package:gaza_go/presentations/components/default_container.dart';
 import 'package:gaza_go/presentations/styles/styled_text.dart';
@@ -20,20 +21,20 @@ class Term extends StatelessWidget {
             children: [
               if (controller.termType.value == 'T2E_MARKETING')
                 Container(
-                  margin: EdgeInsets.symmetric(horizontal: 25, vertical: 0),
-                  padding: EdgeInsets.symmetric(horizontal: 0, vertical: 15),
+                  margin: EdgeInsets.symmetric(horizontal: 25.sp, vertical: 0),
+                  padding: EdgeInsets.symmetric(horizontal: 0.sp, vertical: 15.sp),
                   decoration: BoxDecoration(
                     border: Border(
                       bottom: BorderSide(
-                        width: 2,
-                        color: Color(0xff363841),
+                        width: 2.sp,
+                        color: const Color(0xff363841),
                       ),
                     ),
                   ),
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      StyledText(
+                      const StyledText(
                         '마케팅 정보 수신 동의',
                         fontSize: 18,
                         lineHeight: 18,
@@ -53,7 +54,7 @@ class Term extends StatelessWidget {
                   ),
                 ),
               Padding(
-                padding: EdgeInsets.all(25),
+                padding: EdgeInsets.all(25.sp),
                 child: StyledText(
                   controller.termContent.value,
                   fontSize: 16,
