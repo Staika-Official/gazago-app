@@ -57,6 +57,40 @@ class Api {
   }
 
   static _requestInterceptor(RequestOptions options, RequestInterceptorHandler handler) {
+    if (HiveStore.load(key: HiveKey.isDebuggingMode.name)) {
+      List requestLogs = HiveStore.load(key: HiveKey.requestLogs.name) ?? [];
+      var logForm;
+      if (options.data != null) {
+        final Map optData = json.decode(json.encode(options.data));
+        if (optData["locations"] != null) {
+          optData["locations"] = null;
+        }
+        logForm = {
+          'logInfo': '==================================================='
+              '\nREQUEST'
+              '\nTime: ${DateTime.now()}'
+              '\nMethods: ${options.method}'
+              '\nPath: ${options.baseUrl + options.path}'
+              '\nQueries: ${(options.queryParameters)}'
+              '\nData: ${jsonEncode(optData)}',
+          'path': options.baseUrl + options.path,
+        };
+      } else {
+        logForm = {
+          'logInfo': '==================================================='
+              '\nREQUEST'
+              '\nTime: ${DateTime.now()}'
+              '\nMethods: ${options.method}'
+              '\nPath: ${options.baseUrl + options.path}'
+              '\nQueries: ${(options.queryParameters)}',
+          'path': options.baseUrl + options.path,
+        };
+      }
+
+      requestLogs.add(logForm);
+      HiveStore.save(key: HiveKey.requestLogs.name, value: requestLogs);
+    }
+
     _logger.i(
       '------------->'
       '\nREQUEST'

@@ -197,6 +197,23 @@ mixin ActivityMixin {
             shoes: userState.value.shoes,
           ),
         );
+
+        if (HiveStore.load(key: HiveKey.isDebuggingMode.name)) {
+          List userExerciseDataLogs = HiveStore.load(key: HiveKey.userExerciseDataLogs.name) ?? [];
+
+          var logForm = {
+            'exerciseInfo': '===================================='
+                '\nCurrentTime: ${DateTime.now()}'
+                '\nId: ${exerciseModel.id}'
+                '\nSteps: ${exerciseModel.steps}'
+                '\nSpeed: ${exerciseModel.speed}'
+                '\nDistance: ${exerciseModel.distance}'
+                '\nAltitude: ${exerciseModel.altitude}'
+                '\nTime: ${exerciseModel.time}'
+          };
+          userExerciseDataLogs.add(logForm);
+          HiveStore.saveUserExerciseData(value: userExerciseDataLogs);
+        }
       }
     });
   }
