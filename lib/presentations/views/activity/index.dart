@@ -35,7 +35,7 @@ class ActivityHome extends StatelessWidget {
                                     children: [
                                       Container(
                                         decoration: BoxDecoration(
-                                          color: const Color(0xFF606167),
+                                          color: gaugeGrayColor,
                                           border: Border.all(
                                             width: 2.sp,
                                             color: Colors.black,
@@ -62,7 +62,7 @@ class ActivityHome extends StatelessWidget {
                                                         ? 0
                                                         : 34,
                                                 decoration: BoxDecoration(
-                                                  color: stat.currentStat < 30 ? const Color(0xFFFF2525) : lightGreenColor,
+                                                  color: stat.currentStat < 30 ? textRedColor : lightGreenColor,
                                                   border: Border.all(
                                                     width: 2.sp,
                                                     color: Colors.black,
@@ -90,7 +90,7 @@ class ActivityHome extends StatelessWidget {
                                     children: [
                                       Container(
                                         decoration: BoxDecoration(
-                                          color: const Color(0xFF606167),
+                                          color: gaugeGrayColor,
                                           border: Border.all(
                                             width: 2,
                                             color: Colors.black,
@@ -117,7 +117,7 @@ class ActivityHome extends StatelessWidget {
                                                         ? 0
                                                         : 34,
                                                 decoration: BoxDecoration(
-                                                  color: stat.currentStat < 30 ? const Color(0xFFFF2525) : purpleColor,
+                                                  color: stat.currentStat < 30 ? textRedColor : purpleColor,
                                                   border: Border.all(
                                                     width: 2,
                                                     color: Colors.black,
@@ -189,7 +189,7 @@ class ActivityHome extends StatelessWidget {
                           stat.type == 'STAMINA'
                               ? Container(
                                   decoration: BoxDecoration(
-                                    color: const Color(0xFF606167),
+                                    color: gaugeGrayColor,
                                     border: Border.all(
                                       width: 2.sp,
                                       color: Colors.black,
@@ -217,7 +217,7 @@ class ActivityHome extends StatelessWidget {
                                 )
                               : Container(
                                   decoration: BoxDecoration(
-                                    color: const Color(0xFF606167),
+                                    color: gaugeGrayColor,
                                     border: Border.all(
                                       width: 2.sp,
                                       color: Colors.black,
@@ -339,8 +339,17 @@ class ActivityHome extends StatelessWidget {
     return LayoutBuilder(
       builder: (context, constraint) {
         return Container(
-          decoration: const BoxDecoration(
-            image: DecorationImage(
+          decoration: BoxDecoration(
+            gradient: LinearGradient(
+              begin: Alignment.topCenter,
+              end: Alignment.bottomCenter,
+              stops: const [-0.06, 1],
+              colors: [
+                mainBg01Color,
+                mainBg02Color,
+              ],
+            ),
+            image: const DecorationImage(
               image: AssetImage('assets/images/bg_activity_road.png'),
               alignment: Alignment(100, 1.5),
             ),

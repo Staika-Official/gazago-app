@@ -86,7 +86,7 @@ class LeaderboardHome extends StatelessWidget {
     return Container(
       width: double.maxFinite,
       height: 90.sp,
-      color: const Color(0xFF08080B),
+      color: deepBlackColor,
       padding: EdgeInsets.only(top: 8.sp, left: 11.sp, right: 17.sp, bottom: 8.sp),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.start,
@@ -154,7 +154,7 @@ class LeaderboardHome extends StatelessWidget {
               StyledText(
                 '${formatDecimalPlaces(myRank.rewardTik, 1)} TIK',
                 textAlign: TextAlign.right,
-                color: const Color(0xFFbababa),
+                color: deepGrayColor,
                 fontSize: 14,
                 fontWeight: 500,
               ),

@@ -116,7 +116,7 @@ class InventoryItemDetail extends StatelessWidget {
                                                           children: [
                                                             Container(
                                                               decoration: BoxDecoration(
-                                                                color: const Color(0xFF606167),
+                                                                color: gaugeGrayColor,
                                                                 border: Border.all(
                                                                   width: 2.sp,
                                                                   color: Colors.black,
@@ -144,7 +144,7 @@ class InventoryItemDetail extends StatelessWidget {
                                                                                 ? 0
                                                                                 : 34,
                                                                         decoration: BoxDecoration(
-                                                                          color: controller.selectedItem.value.durability < 30 ? const Color(0xFFFF2525) : purpleColor,
+                                                                          color: controller.selectedItem.value.durability < 30 ? textRedColor : purpleColor,
                                                                           border: Border.all(
                                                                             width: 2.sp,
                                                                             color: Colors.black,

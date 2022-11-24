@@ -67,7 +67,7 @@ void showShoeRepairSlider(InventoryController controller, int feeTikDurability) 
                 activeTrackBarHeight: 15,
                 inactiveTrackBar: BoxDecoration(
                   borderRadius: BorderRadius.circular(20.sp),
-                  color: Color(0xFF494954),
+                  color: sliderGrayColor,
                   boxShadow: [
                     BoxShadow(
                       color: Colors.black,
@@ -122,7 +122,7 @@ void showShoeRepairSlider(InventoryController controller, int feeTikDurability) 
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
                 const StyledText(
-                  '비용 :',
+                  '신발 내구도 충전 비용 :',
                   fontSize: 22,
                   fontWeight: 500,
                   color: Color(0xFFA7A7A7),
@@ -258,11 +258,11 @@ void showRepairStatSlider(ActivityController controller, StatModel stat, int fee
               mainAxisAlignment: MainAxisAlignment.center,
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
-                const StyledText(
-                  '비용 :',
+                StyledText(
+                  '${stat.type == 'STAMINA' ? '체력 충전 ' : '신발 내구도 충전 '}비용 :',
                   fontSize: 22,
                   fontWeight: 500,
-                  color: Color(0xFFA7A7A7),
+                  color: lightGrayColor,
                 ),
                 StyledText(
                   ' ${controller.costTik.value} TIK',

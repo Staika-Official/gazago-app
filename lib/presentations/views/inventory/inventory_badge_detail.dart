@@ -66,7 +66,7 @@ class InventoryBadgeDetail extends StatelessWidget {
 
     return DefaultContainer(
       titleText: 'Lv.${controller.selectedBadge.value.level} ${(controller.selectedBadge.value.name != null) ? controller.selectedBadge.value.name : ''}',
-      backgroundColor: mainBgColor,
+      backgroundColor: mainBg01Color,
       child: Padding(
         padding: EdgeInsets.all(22.sp),
         child: Column(

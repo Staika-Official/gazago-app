@@ -20,6 +20,7 @@ import 'package:gaza_go/platform/models/user_exercise_model.dart';
 import 'package:gaza_go/platform/services/activity_service.dart';
 import 'package:gaza_go/platform/stores/hive_store.dart';
 import 'package:gaza_go/presentations/components/alert_ui_list.dart';
+import 'package:gaza_go/presentations/styles/colors.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:get/get.dart';
 import 'package:health/health.dart';
@@ -57,18 +58,38 @@ mixin ActivityMixin {
   final RxBool lowDurabilityNotified = RxBool(false);
   final RxBool zeroDurabilityNotified = RxBool(false);
 
-  Rx<Color> get exerciseStateColor {
+  Rx<Color> get exerciseStateTextColor {
     Color color = Colors.white;
     switch (exerciseState.value) {
       case ExerciseState.ongoing:
         if (realTimeSpeed.value < 1 || realTimeSpeed.value > 6) {
-          color = Color(0xffFF2525);
+          color = textRedColor;
         } else {
-          color = Color(0xff18FF82);
+          color = textGreenColor;
         }
         break;
       case ExerciseState.paused:
-        color = Color(0xffFBCB24);
+        color = textYellowColor;
+        break;
+      default:
+        color = Colors.white;
+        break;
+    }
+    return Rx(color);
+  }
+
+  Rx<Color> get exerciseStateGaugeColor {
+    Color color = Colors.white;
+    switch (exerciseState.value) {
+      case ExerciseState.ongoing:
+        if (realTimeSpeed.value < 1 || realTimeSpeed.value > 6) {
+          color = speedRedColor;
+        } else {
+          color = speedGreenColor;
+        }
+        break;
+      case ExerciseState.paused:
+        color = speedYellowColor;
         break;
       default:
         color = Colors.white;

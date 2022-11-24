@@ -33,7 +33,7 @@ class ActivityActive extends StatelessWidget {
         gauge = Container(
           width: 3.sp,
           height: 18.sp,
-          color: const Color(0xff585858),
+          color: speedGrayColor,
         );
       }
 
@@ -77,7 +77,7 @@ class ActivityActive extends StatelessWidget {
                                     children: [
                                       Container(
                                         decoration: BoxDecoration(
-                                          color: const Color(0xFF606167),
+                                          color: gaugeGrayColor,
                                           border: Border.all(
                                             width: 2.sp,
                                             color: Colors.black,
@@ -97,7 +97,7 @@ class ActivityActive extends StatelessWidget {
                                                             : 34)
                                                     .sp,
                                                 decoration: BoxDecoration(
-                                                  color: stat.currentStat < 30 ? const Color(0xFFFF2525) : lightGreenColor,
+                                                  color: stat.currentStat < 30 ? textRedColor : lightGreenColor,
                                                   border: Border.all(
                                                     width: 2.sp,
                                                     color: Colors.black,
@@ -117,7 +117,7 @@ class ActivityActive extends StatelessWidget {
                                     children: [
                                       Container(
                                         decoration: BoxDecoration(
-                                          color: const Color(0xFF606167),
+                                          color: gaugeGrayColor,
                                           border: Border.all(
                                             width: 2.sp,
                                             color: Colors.black,
@@ -136,7 +136,7 @@ class ActivityActive extends StatelessWidget {
                                                         ? 0
                                                         : 34,
                                                 decoration: BoxDecoration(
-                                                  color: stat.currentStat < 30 ? const Color(0xFFFF2525) : purpleColor,
+                                                  color: stat.currentStat < 30 ? textRedColor : purpleColor,
                                                   border: Border.all(
                                                     width: 2.sp,
                                                     color: Colors.black,
@@ -196,7 +196,7 @@ class ActivityActive extends StatelessWidget {
                           stat.type == 'STAMINA'
                               ? Container(
                                   decoration: BoxDecoration(
-                                    color: const Color(0xFF606167),
+                                    color: gaugeGrayColor,
                                     border: Border.all(
                                       width: 2.sp,
                                       color: Colors.black,
@@ -225,7 +225,7 @@ class ActivityActive extends StatelessWidget {
                                 )
                               : Container(
                                   decoration: BoxDecoration(
-                                    color: const Color(0xFF606167),
+                                    color: gaugeGrayColor,
                                     border: Border.all(
                                       width: 2.sp,
                                       color: Colors.black,
@@ -282,7 +282,7 @@ class ActivityActive extends StatelessWidget {
               height: 6.sp,
               margin: EdgeInsets.only(right: 8.sp),
               decoration: BoxDecoration(
-                color: controller.exerciseStateColor.value,
+                color: controller.exerciseStateTextColor.value,
                 borderRadius: BorderRadius.circular(6.sp),
               ),
             ),
@@ -293,7 +293,7 @@ class ActivityActive extends StatelessWidget {
               fontSize: 18,
               lineHeight: 18,
               fontWeight: 500,
-              color: controller.exerciseStateColor.value,
+              color: controller.exerciseStateTextColor.value,
             )
           ],
         );
@@ -378,7 +378,7 @@ class ActivityActive extends StatelessWidget {
                 width: double.infinity.sp,
                 padding: EdgeInsets.symmetric(vertical: 12.sp, horizontal: 24.sp),
                 decoration: BoxDecoration(
-                  color: const Color(0xff1F2129),
+                  color: speedBlackColor,
                   borderRadius: BorderRadius.circular(50.sp),
                 ),
                 child: LayoutBuilder(builder: (context, constraints) {
@@ -390,14 +390,14 @@ class ActivityActive extends StatelessWidget {
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           crossAxisAlignment: CrossAxisAlignment.end,
                           children: [
-                            ...renderGauge(controller.exerciseStateColor.value),
+                            ...renderGauge(controller.exerciseStateGaugeColor.value),
                           ],
                         ),
                         Positioned(
                           top: -26.sp,
                           left: calculateGaugePosition(constraints, controller.realTimeSpeed.value),
                           child: GaugeCursor(
-                            color: controller.exerciseStateColor.value,
+                            color: controller.exerciseStateGaugeColor.value,
                             speed: controller.realTimeSpeed.value,
                           ),
                         ),

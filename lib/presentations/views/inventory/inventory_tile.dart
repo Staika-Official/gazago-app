@@ -152,7 +152,7 @@ class InventoryTile extends StatelessWidget {
                                                             ? 0
                                                             : 34,
                                                     decoration: BoxDecoration(
-                                                      color: durability! < 30 ? const Color(0xFFFF2525) : purpleColor,
+                                                      color: durability! < 30 ? textRedColor : purpleColor,
                                                       borderRadius: BorderRadius.all(
                                                         Radius.circular(50.sp),
                                                       ),
@@ -189,7 +189,7 @@ class InventoryTile extends StatelessWidget {
                               padding: EdgeInsets.only(top: 1.0.sp),
                               child: Container(
                                 decoration: BoxDecoration(
-                                  color: const Color(0xFF606167),
+                                  color: gaugeGrayColor,
                                   border: Border.all(
                                     width: 1.sp,
                                     color: Colors.black,
