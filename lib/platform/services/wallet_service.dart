@@ -52,4 +52,13 @@ class WalletService {
     Response res = await WalletApi.getSpendingMetaDataByItem(mint);
     return TokenInfoModel.fromJson(res.data);
   }
+
+  static Future<void> getFeeTik({required Function successCallback, Function? errorCallback}) async {
+    Response res = await WalletApi.getFeeTik();
+    if (res.statusCode! == 200) {
+      successCallback(res.data);
+    } else {
+      if (errorCallback != null) errorCallback();
+    }
+  }
 }

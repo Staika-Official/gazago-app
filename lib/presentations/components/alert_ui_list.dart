@@ -36,7 +36,7 @@ void showRetryAlert(LoadingController controller) {
   );
 }
 
-void showShoeRepairSlider(InventoryController controller) {
+void showShoeRepairSlider(InventoryController controller, int feeTikDurability) {
   showAlert(
     title: '내구도 충전하기',
     contentWidget: Obx(() {
@@ -82,7 +82,7 @@ void showShoeRepairSlider(InventoryController controller) {
               ),
               onDragging: (handlerIndex, lowerValue, upperValue) {
                 controller.currentSliderValue.value = lowerValue;
-                controller.costTik.value = controller.currentSliderValue.value.toInt() * 10;
+                controller.costTik.value = controller.currentSliderValue.value.toInt() * feeTikDurability;
               },
               handler: FlutterSliderHandler(
                 decoration: BoxDecoration(
@@ -162,7 +162,7 @@ void showShoeRepairSlider(InventoryController controller) {
   );
 }
 
-void showRepairStatSlider(ActivityController controller, StatModel stat) {
+void showRepairStatSlider(ActivityController controller, StatModel stat, int feeTikStamina, int feeTikDurability) {
   showAlert(
     title: stat.type == 'STAMINA' ? '체력 충전하기' : '내구도 충전하기',
     contentWidget: Obx(() {
@@ -219,7 +219,7 @@ void showRepairStatSlider(ActivityController controller, StatModel stat) {
               ),
               onDragging: (handlerIndex, lowerValue, upperValue) {
                 controller.currentSliderValue.value = lowerValue;
-                controller.costTik.value = controller.currentSliderValue.value.toInt() * 10;
+                controller.costTik.value = controller.currentSliderValue.value.toInt() * (stat.type == 'STAMINA' ? feeTikStamina : feeTikDurability);
               },
               handler: FlutterSliderHandler(
                 decoration: BoxDecoration(

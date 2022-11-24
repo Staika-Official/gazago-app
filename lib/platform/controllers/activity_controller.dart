@@ -213,9 +213,10 @@ class ActivityController extends SuperController with ActivityMixin, ChallengeMi
     handleShowStaminaPopup(stat);
   }
 
-  void handleShowStaminaPopup(stat) {
+  void handleShowStaminaPopup(stat) async {
     currentSliderValue.value = 0;
-    showRepairStatSlider(this, stat);
+    await walletMasterController.getFeeTik();
+    showRepairStatSlider(this, stat, walletMasterController.feeTikStamina.value, walletMasterController.feeTikDurability.value);
   }
 
   void handleNotEnoughTaikaPopup() {

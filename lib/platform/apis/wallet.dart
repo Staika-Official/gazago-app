@@ -43,6 +43,10 @@ class WalletApi {
     );
   }
 
+  static Future<Response> getFeeTik() async {
+    return await Api.client(serviceUrl: '/services/gazago/api/application-environments').get('/fee-tik');
+  }
+
   //mint(토큰): TIK = 1 , STIK = 2
   static Future<Response> payWithToken(PayInfoModel payInfo) async {
     return await Api.client(serviceUrl: ServiceUrl.spendingWalletService).post('/wallet/pay', data: payInfo, queryParameters: {
