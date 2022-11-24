@@ -324,9 +324,10 @@ class InventoryController extends GetxController with LinearProgressMixin, Inven
     costTik.value = 0;
   }
 
-  void showShoesRepairPopup(id) {
+  void showShoesRepairPopup(id) async {
     currentSliderValue.value = 0;
-    showShoeRepairSlider(this);
+    await walletMasterController.getFeeTik();
+    showShoeRepairSlider(this, walletMasterController.feeTikDurability.value);
   }
 
   void handleNotEnoughTaikaPopup() {

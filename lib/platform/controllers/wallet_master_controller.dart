@@ -22,6 +22,8 @@ class WalletMasterController extends GetxController {
   final Rx<AssetTokenBalanceModel> buyTikCommission = Rx(AssetTokenBalanceModel());
   final RxString buyTikAmount = RxString('0');
   final Rx<BuyTikResponseModel> buyTikResult = Rx(BuyTikResponseModel());
+  final RxInt feeTikStamina = RxInt(0);
+  final RxInt feeTikDurability = RxInt(0);
   RxList<AssetTokenBalanceUiModel> get spendingTokenUiList {
     List<AssetTokenBalanceUiModel> balanceUiList = List.empty(growable: true);
 
@@ -89,6 +91,15 @@ class WalletMasterController extends GetxController {
 
   Future<void> payWithToken(PayInfoModel payInfo) async {
     await WalletService.payWithToken(payInfo);
+  }
+
+  Future<void> getFeeTik() async {
+    await WalletService.getFeeTik(
+      successCallback: (fees) {
+        feeTikStamina.value = fees['FEE_TIK_STAT_RECOVERY'];
+        feeTikDurability.value = fees['FEE_TIK_ITEM_REPAIR'];
+      },
+    );
   }
 
   void moveToWalletDetail({required AssetTokenBalanceUiModel asset, required WalletType walletType, required AssetType assetType}) async {
