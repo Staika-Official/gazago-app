@@ -393,195 +393,55 @@ class LeaderboardHome extends StatelessWidget {
           ),
           (controller.myRank.value != null) ? renderMyRank(controller) : Container(),
           Expanded(
-              child: (controller.dataGetLoading.value)
-                  ? const Padding(
-                      padding: EdgeInsets.symmetric(vertical: 20.0),
-                      child: Center(child: CircularProgressIndicator()),
-                    )
-                  : (controller.rankings.isEmpty)
-                      ? Center(
-                          child: Column(
-                            mainAxisSize: MainAxisSize.min,
-                            children: [
-                              SvgPicture.asset('assets/images/wallet/ico_empty.svg'),
-                              Padding(
-                                padding: const EdgeInsets.only(top: 20),
-                                child: StyledText(
-                                  '랭킹 기록이 없어요.',
-                                  color: Color(0xff7b7b7b),
-                                  fontSize: 16,
-                                  lineHeight: 10,
-                                  fontWeight: 500,
-                                ),
-                              ),
-                            ],
-                          ),
-                        )
-                      : Column(
+            child: controller.dataGetLoading.value
+                ? const Padding(
+                    padding: EdgeInsets.symmetric(vertical: 20.0),
+                    child: Center(child: CircularProgressIndicator()),
+                  )
+                : controller.rankings.isEmpty
+                    ? Center(
+                        child: Column(
                           mainAxisSize: MainAxisSize.min,
                           children: [
-                            Flexible(
-                                child: ListView.separated(
-                              controller: controller.scroll,
-                              separatorBuilder: (context, index) => const Divider(
-                                thickness: 2,
-                                indent: 0,
-                                endIndent: 0,
-                                height: 1,
-                                color: Color(0xFF26272F),
+                            SvgPicture.asset('assets/images/wallet/ico_empty.svg'),
+                            Padding(
+                              padding: const EdgeInsets.only(top: 20),
+                              child: StyledText(
+                                '랭킹 기록이 없어요.',
+                                color: Color(0xff7b7b7b),
+                                fontSize: 16,
+                                lineHeight: 10,
+                                fontWeight: 500,
                               ),
-                              itemCount: controller.rankings.length + 1,
-                              itemBuilder: (context, index) {
-                                if (index < controller.rankings.length) {
-                                  return renderRanker(controller.rankings[index]);
-                                } else {
-                                  return (controller.hasMore.value) ? const Padding(padding: EdgeInsets.symmetric(vertical: 20.0), child: Center(child: CircularProgressIndicator())) : Container();
-                                }
-                              },
-                            )),
-                          ],
-                        ))
-          /*Obx(() {
-          return (controller.dataGetLoading.value) ? const Padding(
-            padding: EdgeInsets.symmetric(vertical: 20.0),
-            child: Center(child: CircularProgressIndicator()),
-          ) : (controller.rankings.isEmpty) ? Center(
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                SvgPicture.asset('assets/images/wallet/ico_empty.svg'),
-                Padding(
-                  padding: const EdgeInsets.only(top: 20),
-                  child: StyledText(
-                    '랭킹 기록이 없어요.',
-                    color: Color(0xff7b7b7b),
-                    fontSize: 16,
-                    lineHeight: 10,
-                    fontWeight: 500,
-                  ),
-                ),
-              ],
-            ),
-<<<<<<< HEAD
-          ),
-        ),
-        Container(
-          padding: EdgeInsets.only(top: 38.sp, left: 25.sp, right: 18.sp, bottom: 12.sp),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: [
-              const StyledText(
-                '리더보드',
-                color: Colors.white,
-                fontSize: 20,
-                fontWeight: 600,
-              ),
-              InkWell(
-                onTap: () => {
-                  showBarModalBottomSheet(
-                    context: context,
-                    builder: (context) => showBottomCalender(context, controller),
-                  )
-                },
-                child: Row(
-                  mainAxisSize: MainAxisSize.min,
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  children: [
-                    Obx(() {
-                      return StyledText(
-                        controller.leaderboardDate.value,
-                        color: const Color(0xFFBFBFBF),
-                        fontSize: 12,
-                        fontWeight: 600,
-                      );
-                    }),
-                    //StyledText(controller.leaderboardDate.value!, color: const Color(0xFF747474), fontSize: 12, fontWeight: 600,),
-                    Padding(padding: EdgeInsets.only(left: 8.sp)),
-                    iconCalendar
-                    //Text(controller.formattedDate.value)
-                  ],
-                ),
-              )
-            ],
-          ),
-        ),
-        Obx(() {
-          return (controller.myRank.value != null) ? renderMyRank(controller) : Container();
-        }),
-        Expanded(
-          child: PagedListView<int, RankerModel>.separated(
-            pagingController: controller.pagingController,
-            separatorBuilder: (context, index) => Divider(
-              thickness: 2.sp,
-              indent: 0,
-              endIndent: 0,
-              height: 1,
-              color: Color(0xFF26272F),
-            ),
-            builderDelegate: PagedChildBuilderDelegate<RankerModel>(
-              itemBuilder: (context, item, index) => (renderRanker(item, index)),
-              noItemsFoundIndicatorBuilder: (context) => Center(
-                child: Column(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    SvgPicture.asset('assets/images/wallet/ico_empty.svg'),
-                    Padding(
-                      padding: EdgeInsets.only(top: 20.sp),
-                      child: StyledText(
-                        '랭킹 기록이 없어요.',
-                        color: Color(0xff7b7b7b),
-                        fontSize: 16,
-                        lineHeight: 10,
-                        fontWeight: 500,
-=======
-          ) : Container(
-            height: 200,
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                Expanded(
-                  child: ListView.separated(
-                        itemCount: 25,
-                        shrinkWrap: true,
-                        separatorBuilder: (BuildContext context, int index) => const Divider(),
-                        itemBuilder: (BuildContext context, int index) {
-                          return Container(
-                            height: 10,
-                            child: ListTile(
-                              title: Text('item $index'),
                             ),
-                          );
-                        },
-                        */ /*separatorBuilder: (context, index) => const Divider(
-                          thickness: 2,
-                          indent: 0,
-                          endIndent: 0,
-                          height: 1,
-                          color: Color(0xFF26272F),
+                          ],
                         ),
-                        itemBuilder: (context, index) => (renderRanker(controller.rankings[index])),
-                        itemCount: controller.rankings.length,*/ /*
->>>>>>> 045fb485d81ef7be7321c93da9140444078aa56a
+                      )
+                    : Column(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          Flexible(
+                              child: ListView.separated(
+                            controller: controller.scroll,
+                            separatorBuilder: (context, index) => const Divider(
+                              thickness: 2,
+                              indent: 0,
+                              endIndent: 0,
+                              height: 1,
+                              color: Color(0xFF26272F),
+                            ),
+                            itemCount: controller.rankings.length + 1,
+                            itemBuilder: (context, index) {
+                              if (index < controller.rankings.length) {
+                                return renderRanker(controller.rankings[index]);
+                              } else {
+                                return (controller.hasMore.value) ? const Padding(padding: EdgeInsets.symmetric(vertical: 20.0), child: Center(child: CircularProgressIndicator())) : Container();
+                              }
+                            },
+                          )),
+                        ],
                       ),
-                ),
-              ],
-            ),
-          );
-
-          */ /*Flexible(
-            child: SingleChildScrollView(
-              controller: controller.scroll,
-              physics: ClampingScrollPhysics(),
-              child: Column(
-                children: [
-                  ...controller.rankings.map((item) {
-                    return renderRanker(item);
-                  }).toList()],
-              ),
-            ),
-          );*/ /*
-        }),*/
+          )
         ],
       );
     });
