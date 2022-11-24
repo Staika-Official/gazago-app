@@ -1,5 +1,6 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:gaza_go/platform/controllers/inventory_controller.dart';
 import 'package:gaza_go/platform/controllers/inventory_home_controller.dart';
 import 'package:gaza_go/platform/helpers/inventory_helper.dart';
@@ -24,26 +25,26 @@ class InventoryItem extends StatelessWidget {
             physics: const ScrollPhysics(),
             primary: false,
             controller: controller.itemScrollController,
-            padding: const EdgeInsets.only(left: 20, right: 20),
+            padding: EdgeInsets.only(left: 20.sp, right: 20.sp),
             childAspectRatio: (1 / 1.4),
-            crossAxisSpacing: 10,
-            mainAxisSpacing: 10,
-            crossAxisCount: (width < 350) ? 2 : 3,
+            crossAxisSpacing: 10.sp,
+            mainAxisSpacing: 10.sp,
+            crossAxisCount: (width < 350.sp) ? 2 : 3,
             children: [
               ...controller.allItems[tab['itemType']]!.map(
                 (item) => InkWell(
                   onTap: () => controller.toItemDetail(item.id),
                   child: Container(
-                    decoration: const BoxDecoration(
+                    decoration: BoxDecoration(
                       color: Color(0xFF1D1D26),
                       borderRadius: BorderRadius.all(
-                        Radius.circular(10),
+                        Radius.circular(10.sp),
                       ),
                     ),
                     child: Stack(
                       children: [
                         Padding(
-                          padding: const EdgeInsets.symmetric(vertical: 8.0, horizontal: 15.0),
+                          padding: EdgeInsets.symmetric(vertical: 8.0.sp, horizontal: 15.0.sp),
                           child: Column(
                             mainAxisAlignment: MainAxisAlignment.end,
                             crossAxisAlignment: CrossAxisAlignment.center,
@@ -58,7 +59,7 @@ class InventoryItem extends StatelessWidget {
                                 ),
                               ),
                               Padding(
-                                padding: const EdgeInsets.only(top: 5, bottom: 5),
+                                padding: EdgeInsets.only(top: 5.sp, bottom: 5.sp),
                                 child: item.equipped == true
                                     ? StyledText(
                                         item.itemName,
@@ -85,12 +86,12 @@ class InventoryItem extends StatelessWidget {
                                             style: BorderStyle.solid,
                                             color: const Color(0xFF54F5FF),
                                           ),
-                                          borderRadius: const BorderRadius.all(
-                                            Radius.circular(20),
+                                          borderRadius: BorderRadius.all(
+                                            Radius.circular(20.sp),
                                           ),
-                                          boxShadow: const [
+                                          boxShadow: [
                                             BoxShadow(
-                                              offset: Offset(0, 3),
+                                              offset: Offset(0, 3.sp),
                                               blurRadius: 0,
                                               spreadRadius: 0,
                                               color: Colors.black,
@@ -98,9 +99,9 @@ class InventoryItem extends StatelessWidget {
                                           ],
                                         ),
                                         alignment: Alignment.center,
-                                        child: const Padding(
-                                          padding: const EdgeInsets.all(8.0),
-                                          child: StyledText(
+                                        child: Padding(
+                                          padding: EdgeInsets.all(8.0.sp),
+                                          child: const StyledText(
                                             '장착',
                                             fontWeight: 500,
                                             fontSize: 14,
@@ -119,12 +120,12 @@ class InventoryItem extends StatelessWidget {
                                             style: BorderStyle.solid,
                                             color: const Color(0xFF8A8A8A),
                                           ),
-                                          borderRadius: const BorderRadius.all(
-                                            Radius.circular(20),
+                                          borderRadius: BorderRadius.all(
+                                            Radius.circular(20.sp),
                                           ),
                                           boxShadow: [
                                             BoxShadow(
-                                              offset: Offset(0, 3),
+                                              offset: Offset(0, 3.sp),
                                               blurRadius: 0,
                                               spreadRadius: 0,
                                               color: Colors.black,
@@ -133,7 +134,7 @@ class InventoryItem extends StatelessWidget {
                                         ),
                                         alignment: Alignment.center,
                                         child: Padding(
-                                          padding: const EdgeInsets.all(8.0),
+                                          padding: EdgeInsets.all(8.0.sp),
                                           child: StyledText('장착중', fontWeight: 500, fontSize: 14, color: Color(0xFF8A8A8A)),
                                         ),
                                       ),
@@ -142,11 +143,11 @@ class InventoryItem extends StatelessWidget {
                           ),
                         ),
                         Positioned(
-                          right: 7,
-                          top: 7,
+                          right: 7.sp,
+                          top: 7.sp,
                           child: CircleAvatar(
                             backgroundColor: getItemGradeColor(item.itemGrade),
-                            radius: 10,
+                            radius: 10.sp,
                             child: StyledText(
                               item.itemGrade![0],
                               fontWeight: 600,
@@ -178,20 +179,20 @@ class InventoryItem extends StatelessWidget {
         mainAxisSize: MainAxisSize.max,
         children: [
           Padding(
-            padding: const EdgeInsets.symmetric(vertical: 10.0, horizontal: 20.0),
+            padding: EdgeInsets.symmetric(vertical: 10.0.sp, horizontal: 20.0.sp),
             child: Container(
-              height: 28,
+              height: 28.sp,
               child: Align(
                 alignment: Alignment.centerLeft,
                 child: TabBar(
                   controller: _controller.subTabController,
                   isScrollable: true,
-                  labelStyle: const TextStyle(fontWeight: FontWeight.w500, fontSize: 14),
+                  labelStyle: TextStyle(fontWeight: FontWeight.w500, fontSize: 14.sp),
                   labelColor: Colors.black,
                   unselectedLabelColor: const Color(0xFF898B92),
-                  labelPadding: const EdgeInsets.only(left: 14.0, right: 14.0, top: 6.0, bottom: 3.0),
+                  labelPadding: EdgeInsets.only(left: 14.0.sp, right: 14.0.sp, top: 6.0.sp, bottom: 3.0.sp),
                   indicator: BoxDecoration(
-                    borderRadius: BorderRadius.circular(80.0),
+                    borderRadius: BorderRadius.circular(80.0.sp),
                     color: const Color(0xFFECECEC),
                   ),
                   tabs: [...renderItemSubTabList(_controller)],
@@ -202,7 +203,7 @@ class InventoryItem extends StatelessWidget {
           Obx(() {
             return Expanded(
               child: Padding(
-                padding: const EdgeInsets.only(top: 5.0, bottom: 15),
+                padding: EdgeInsets.only(top: 5.0.sp, bottom: 15.sp),
                 child: TabBarView(
                   physics: const NeverScrollableScrollPhysics(),
                   controller: _controller.subTabController,

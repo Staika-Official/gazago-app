@@ -2,6 +2,7 @@ import 'dart:math';
 
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg_provider/flutter_svg_provider.dart' as SP;
 import 'package:gaza_go/constants/routes.dart';
 import 'package:gaza_go/platform/controllers/home_menu_controller.dart';
@@ -17,15 +18,15 @@ class SecondaryAppbar extends StatelessWidget implements PreferredSizeWidget {
   List<Widget> renderWalletItems(WalletMasterController walletMasterController) {
     return walletMasterController.spendingTokenUiList.map((token) {
       return Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 6),
+        padding: EdgeInsets.symmetric(horizontal: 6.sp),
         child: Row(
           children: [
             CircleAvatar(
-              radius: 11,
+              radius: 11.sp,
               foregroundImage: token.meta?.logoUrl != '' ? CachedNetworkImageProvider(token.meta!.logoUrl) : const SP.Svg('assets/images/common/ico_token_tik.svg') as ImageProvider,
             ),
             Padding(
-              padding: const EdgeInsets.only(left: 4),
+              padding: EdgeInsets.only(left: 4.sp),
               child: StyledText(
                 // token.uiAmountString!,
                 token.meta?.symbol == 'STIK' ? formatDecimalPlaces((token.amount! / pow(10.0, 9)), 9) : formatDecimalPlaces(token.amount!, 1),
@@ -60,7 +61,7 @@ class SecondaryAppbar extends StatelessWidget implements PreferredSizeWidget {
             controller.isBackButton()
                 ? IconButton(
                     onPressed: () => Get.back(),
-                    padding: const EdgeInsets.all(12),
+                    padding: EdgeInsets.symmetric(horizontal: 12.sp),
                     icon: const Icon(
                       Icons.chevron_left,
                       color: Colors.grey,
@@ -68,9 +69,10 @@ class SecondaryAppbar extends StatelessWidget implements PreferredSizeWidget {
                   )
                 : IconButton(
                     onPressed: () => Get.toNamed(Routes.preferences),
+                    padding: EdgeInsets.symmetric(horizontal: 12.sp),
                     icon: iconHeaderAvatar,
-                    constraints: const BoxConstraints(
-                      minWidth: 24,
+                    constraints: BoxConstraints(
+                      minWidth: 24.sp,
                     ),
                   ),
             Row(
@@ -96,13 +98,13 @@ class SecondaryAppbar extends StatelessWidget implements PreferredSizeWidget {
                     ],
                   ),
                   child: ClipRRect(
-                    borderRadius: const BorderRadius.all(
-                      Radius.circular(20),
+                    borderRadius: BorderRadius.all(
+                      Radius.circular(20.sp),
                     ),
                     child: Padding(
-                      padding: const EdgeInsets.only(
-                        top: 4.0,
-                        bottom: 4.0,
+                      padding: EdgeInsets.only(
+                        top: 4.0.sp,
+                        bottom: 4.0.sp,
                         left: 0,
                         right: 8,
                       ),
@@ -115,11 +117,11 @@ class SecondaryAppbar extends StatelessWidget implements PreferredSizeWidget {
                   ),
                 ),
                 IconButton(
-                  padding: const EdgeInsets.only(left: 12),
+                  padding: EdgeInsets.only(left: 12.sp),
                   onPressed: () => Get.toNamed(Routes.wallet),
                   icon: iconHeaderWallet,
-                  constraints: const BoxConstraints(
-                    minWidth: 24,
+                  constraints: BoxConstraints(
+                    minWidth: 24.sp,
                   ),
                 )
               ],

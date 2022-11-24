@@ -4,6 +4,7 @@ import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:gaza_go/constants/enums.dart';
 import 'package:gaza_go/platform/controllers/global_controller.dart';
 import 'package:gaza_go/platform/firebase/core.dart';
@@ -94,42 +95,51 @@ class MyApp extends StatelessWidget {
     );
     Get.put(GlobalController(), permanent: true);
 
-    return GetMaterialApp(
-      builder: (context, child) {
-        // 시스템 폰트 크기 무시
-        return ScrollConfiguration(
-          behavior: const MaterialScrollBehavior().copyWith(overscroll: false),
-          child: MediaQuery(
-            data: MediaQuery.of(context).copyWith(textScaleFactor: 1), //텍스트가 시스템 설정에 영향받지 않음
-            child: child!,
+    return ScreenUtilInit(
+      designSize: Size(390, 844),
+      splitScreenMode: false,
+      minTextAdapt: true,
+      builder: (BuildContext context, Widget? child) {
+        return GetMaterialApp(
+          builder: (context, child) {
+            // 시스템 폰트 크기 무시
+            return ScrollConfiguration(
+              behavior: const MaterialScrollBehavior().copyWith(overscroll: false),
+              child: MediaQuery(
+                data: MediaQuery.of(context).copyWith(textScaleFactor: 1), //텍스트가 시스템 설정에 영향받지 않음
+                child: child!,
+              ),
+            );
+          },
+          theme: ThemeData(
+            fontFamily: 'Pretendard',
+            primarySwatch: gazagoColor,
+            navigationBarTheme: NavigationBarThemeData(
+              elevation: 0,
+              indicatorColor: Colors.transparent,
+              labelTextStyle: MaterialStateProperty.resolveWith((states) {
+                if (states.contains(MaterialState.selected)) {
+                  return const TextStyle(
+                    color: Color(0xFF0EE6F3),
+                    fontSize: 10,
+                    fontWeight: FontWeight.w600,
+                  );
+                } else {
+                  return const TextStyle(
+                    color: Color(0xFFBFBFBF),
+                    fontSize: 10,
+                    wordSpacing: 0,
+                    fontWeight: FontWeight.w600,
+                  );
+                }
+              }),
+            ),
           ),
+          navigatorObservers: <NavigatorObserver>[observer],
+          initialRoute: Routes.login,
+          getPages: [...Routes.pages],
         );
       },
-      theme: ThemeData(
-        fontFamily: 'Pretendard',
-        primarySwatch: gazagoColor,
-        navigationBarTheme: NavigationBarThemeData(
-          indicatorColor: Colors.transparent,
-          labelTextStyle: MaterialStateProperty.resolveWith((states) {
-            if (states.contains(MaterialState.selected)) {
-              return const TextStyle(
-                color: Color(0xFF0EE6F3),
-                fontSize: 10,
-                fontWeight: FontWeight.w600,
-              );
-            } else {
-              return const TextStyle(
-                color: Color(0xFFBFBFBF),
-                fontSize: 10,
-                fontWeight: FontWeight.w600,
-              );
-            }
-          }),
-        ),
-      ),
-      navigatorObservers: <NavigatorObserver>[observer],
-      initialRoute: Routes.login,
-      getPages: [...Routes.pages],
     );
   }
 }

@@ -1,6 +1,7 @@
 import 'package:carousel_slider/carousel_controller.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:gaza_go/presentations/styles/styled_text.dart';
 import 'package:get/get.dart';
 
@@ -84,7 +85,7 @@ class OnBoarding extends StatelessWidget {
                 style: ButtonStyle(
                   alignment: Alignment.centerRight,
                   foregroundColor: MaterialStateProperty.all(const Color.fromARGB(255, 165, 165, 165)),
-                  padding: MaterialStateProperty.all(const EdgeInsets.symmetric(horizontal: 20)),
+                  padding: MaterialStateProperty.all(EdgeInsets.symmetric(horizontal: 20.sp)),
                 ),
                 child: const Text('건너뛰기'),
               ),
@@ -110,7 +111,7 @@ class OnBoarding extends StatelessWidget {
               ),
             ),
             Padding(
-              padding: const EdgeInsets.symmetric(vertical: 8.0),
+              padding: EdgeInsets.symmetric(vertical: 8.0.sp),
               child: Obx(() {
                 return Stack(
                   fit: StackFit.loose,
@@ -127,9 +128,9 @@ class OnBoarding extends StatelessWidget {
                   onTap: () => _ccontroller.animateToPage(entry.key),
                   child: Obx(() {
                     return Container(
-                      width: 25.0,
-                      height: 3.0,
-                      margin: const EdgeInsets.only(top: 32, left: 7.0, right: 7.0, bottom: 43),
+                      width: 25.0.sp,
+                      height: 3.0.sp,
+                      margin: EdgeInsets.only(top: 32.sp, left: 7.0.sp, right: 7.0.sp, bottom: 43.sp),
                       decoration: BoxDecoration(shape: BoxShape.rectangle, color: _controller.current.value == entry.key ? const Color.fromRGBO(0, 0, 0, 1) : const Color.fromRGBO(0, 0, 0, 0.31)),
                     );
                   }),
@@ -137,9 +138,9 @@ class OnBoarding extends StatelessWidget {
               }).toList(),
             ),
             Container(
-              height: 60,
+              height: 60.sp,
               width: double.infinity,
-              margin: const EdgeInsets.only(left: 15, right: 15, bottom: 20),
+              margin: EdgeInsets.only(left: 15.sp, right: 15.sp, bottom: 20.sp),
               child: Obx(() {
                 return Visibility(
                   // visible: _controller.current.value == _controller.pageSize - 1,
@@ -150,7 +151,7 @@ class OnBoarding extends StatelessWidget {
                         onPrimary: Colors.white,
                         primary: Colors.black,
                         shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(10),
+                          borderRadius: BorderRadius.circular(10.sp),
                         ),
                         elevation: 0,
                       ),

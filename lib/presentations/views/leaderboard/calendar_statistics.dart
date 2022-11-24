@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:gaza_go/platform/controllers/calendar_statistics_controller.dart';
 import 'package:gaza_go/platform/helpers/base_helper.dart';
 import 'package:gaza_go/platform/models/user_reward_statistics_model.dart';
@@ -16,16 +17,16 @@ class CalendarStatistics extends StatelessWidget {
 
     return Scaffold(
       appBar: AppBar(
-        title: Text("TIK 획득 내역"),
+        title: StyledText(
+          "TIK 획득 내역",
+          fontSize: 18,
+        ),
         centerTitle: true,
         backgroundColor: const Color(0xFF1D1D26),
         elevation: 0,
         leading: Builder(
           builder: (context) => IconButton(
-            icon: const Icon(
-              Icons.chevron_left,
-              size: 30,
-            ),
+            icon: Icon(Icons.chevron_left, size: 30.sp, color: Colors.white),
             onPressed: () => Navigator.of(context).pop(),
           ),
         ),
@@ -43,8 +44,8 @@ class CalendarStatistics extends StatelessWidget {
                       firstDay: controller.firstDay.value!,
                       lastDay: controller.lastDay.value!,
                       focusedDay: controller.today.value!,
-                      headerStyle: const HeaderStyle(
-                        titleTextStyle: TextStyle(fontSize: 18, color: Colors.white, fontWeight: FontWeight.w500),
+                      headerStyle: HeaderStyle(
+                        titleTextStyle: TextStyle(fontSize: 18.sp, color: Colors.white, fontWeight: FontWeight.w500),
                         titleCentered: true,
                         formatButtonVisible: false,
                         leftChevronIcon: Icon(Icons.chevron_left, color: Colors.white),
@@ -52,8 +53,8 @@ class CalendarStatistics extends StatelessWidget {
                           Icons.chevron_right,
                           color: Colors.white,
                         ),
-                        leftChevronPadding: EdgeInsets.only(left: 60, top: 10, bottom: 10),
-                        rightChevronPadding: EdgeInsets.only(right: 60, top: 10, bottom: 10),
+                        leftChevronPadding: EdgeInsets.only(left: 60.sp, top: 10.sp, bottom: 10.sp),
+                        rightChevronPadding: EdgeInsets.only(right: 60.sp, top: 10.sp, bottom: 10.sp),
                       ),
                       calendarFormat: controller.calendarFormat,
                       calendarBuilders: CalendarBuilders(markerBuilder: (context, date, events) {
@@ -73,10 +74,10 @@ class CalendarStatistics extends StatelessWidget {
                         todayDecoration: BoxDecoration(
                             color: const Color(0xFF0EE6F3),
                             shape: BoxShape.circle,
-                            border: Border.all(width: 14, style: BorderStyle.solid, color: const Color(0xFF1D1D26), strokeAlign: StrokeAlign.center)),
-                        todayTextStyle: const TextStyle(
+                            border: Border.all(width: 14.sp, style: BorderStyle.solid, color: const Color(0xFF1D1D26), strokeAlign: StrokeAlign.center)),
+                        todayTextStyle: TextStyle(
                           color: Colors.black,
-                          fontSize: 16.0,
+                          fontSize: 16.0.sp,
                         ),
                         defaultTextStyle: const TextStyle(color: Colors.white),
                         weekendTextStyle: const TextStyle(color: Colors.white),
@@ -89,16 +90,16 @@ class CalendarStatistics extends StatelessWidget {
                 }),
             Obx(() {
               return Container(
-                height: 49.0,
-                margin: const EdgeInsets.only(top: 38, left: 30, right: 31),
+                height: 49.0.sp,
+                margin: EdgeInsets.only(top: 38.sp, left: 30.sp, right: 31.sp),
                 decoration: BoxDecoration(
                   color: const Color(0xFF2E3038),
                   border: Border.all(
                     width: 1,
                     color: const Color(0xFF2E3038),
                   ),
-                  borderRadius: const BorderRadius.all(
-                    Radius.circular(600),
+                  borderRadius: BorderRadius.all(
+                    Radius.circular(600.sp),
                   ),
                 ),
                 child: Row(
@@ -112,7 +113,7 @@ class CalendarStatistics extends StatelessWidget {
                       lineHeight: 20,
                     ),
                     Padding(
-                      padding: const EdgeInsets.only(left: 12, right: 5),
+                      padding: EdgeInsets.only(left: 12.sp, right: 5.sp),
                       child: iconCalendarStatisticsTokenTik,
                     ),
                     StyledText(

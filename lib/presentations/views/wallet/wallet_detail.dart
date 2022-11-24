@@ -1,5 +1,6 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:flutter_svg_provider/flutter_svg_provider.dart' as SP;
 import 'package:gaza_go/platform/controllers/wallet_master_controller.dart';
@@ -45,7 +46,7 @@ class WalletDetail extends StatelessWidget {
     return controller.assetDetail.value.transactions
         .map(
           (transaction) => Container(
-            padding: EdgeInsets.only(left: 3, right: 3, top: 20, bottom: 20),
+            padding: EdgeInsets.only(left: 3.sp, right: 3.sp, top: 20.sp, bottom: 20.sp),
             decoration: controller.assetDetail.value.transactions.last == transaction
                 ? BoxDecoration()
                 : BoxDecoration(
@@ -60,12 +61,12 @@ class WalletDetail extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Container(
-                  width: 8,
-                  height: 8,
-                  margin: EdgeInsets.only(right: 15, top: 4, left: 4),
+                  width: 8.sp,
+                  height: 8.sp,
+                  margin: EdgeInsets.only(right: 15.sp, top: 4.sp, left: 4.sp),
                   decoration: BoxDecoration(
                     color: Color(0xff0ee6f3),
-                    borderRadius: BorderRadius.circular(8),
+                    borderRadius: BorderRadius.circular(8.sp),
                   ),
                 ),
                 Expanded(
@@ -91,7 +92,7 @@ class WalletDetail extends StatelessWidget {
                         ],
                       ),
                       Padding(
-                        padding: const EdgeInsets.only(top: 8),
+                        padding: EdgeInsets.only(top: 8.sp),
                         child: Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
@@ -139,7 +140,7 @@ class WalletDetail extends StatelessWidget {
             //       )
             //     : Container(),
             Padding(
-              padding: const EdgeInsets.only(top: 40),
+              padding: EdgeInsets.only(top: 40.sp),
               child: CircleAvatar(
                 foregroundImage: controller.selectedAsset.value.meta?.logoUrl != ''
                     ? CachedNetworkImageProvider(controller.selectedAsset.value.meta!.logoUrl)
@@ -147,7 +148,7 @@ class WalletDetail extends StatelessWidget {
               ),
             ),
             Padding(
-              padding: const EdgeInsets.only(top: 18),
+              padding: EdgeInsets.only(top: 18.sp),
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
@@ -158,7 +159,7 @@ class WalletDetail extends StatelessWidget {
                     fontWeight: 600,
                   ),
                   Padding(
-                    padding: const EdgeInsets.only(left: 5),
+                    padding: EdgeInsets.only(left: 5.sp),
                     child: StyledText(
                       controller.selectedAsset.value.meta!.symbol,
                       fontSize: 28,
@@ -177,7 +178,7 @@ class WalletDetail extends StatelessWidget {
               color: Color(0xff2A2B33),
               height: 6,
               width: double.infinity,
-              margin: EdgeInsets.only(top: 50),
+              margin: EdgeInsets.only(top: 50.sp),
             ),
             Expanded(
               child: controller.assetDetail.value.transactions.isEmpty
@@ -190,8 +191,8 @@ class WalletDetail extends StatelessWidget {
                             children: [
                               SvgPicture.asset('assets/images/wallet/ico_empty.svg'),
                               Padding(
-                                padding: const EdgeInsets.only(top: 20),
-                                child: StyledText(
+                                padding: EdgeInsets.only(top: 20.sp),
+                                child: const StyledText(
                                   '거래내역이 없습니다.',
                                   color: Color(0xff7b7b7b),
                                   fontSize: 16,
@@ -207,7 +208,7 @@ class WalletDetail extends StatelessWidget {
                   : SingleChildScrollView(
                       physics: ClampingScrollPhysics(),
                       child: Padding(
-                        padding: const EdgeInsets.symmetric(horizontal: 16),
+                        padding: EdgeInsets.symmetric(horizontal: 16.sp),
                         child: Column(
                           children: [...renderTransactionList(controller)],
                         ),

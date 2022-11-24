@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:gaza_go/constants/enums.dart';
 import 'package:gaza_go/platform/controllers/wallet_asset_controller.dart';
 import 'package:gaza_go/presentations/views/wallet/asset_item_nft.dart';
@@ -41,7 +42,7 @@ class AssetWallet extends StatelessWidget {
             // ...renderCoinAssetList(controller),
             Container(
               width: double.infinity,
-              padding: const EdgeInsets.all(15),
+              padding: EdgeInsets.all(15.sp),
               child: Text(
                 'NFT',
                 textAlign: TextAlign.start,

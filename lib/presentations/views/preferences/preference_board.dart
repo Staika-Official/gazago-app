@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:gaza_go/platform/controllers/preference_board_controller.dart';
 import 'package:gaza_go/presentations/components/default_container.dart';
 import 'package:gaza_go/presentations/styles/styled_text.dart';
@@ -22,12 +23,12 @@ class PreferenceBoard extends StatelessWidget {
               return Theme(
                 data: ThemeData().copyWith(dividerColor: Colors.transparent),
                 child: Padding(
-                  padding: const EdgeInsets.symmetric(vertical: 10.0),
+                  padding: EdgeInsets.symmetric(vertical: 10.0.sp),
                   child: ExpansionTile(
-                    tilePadding: const EdgeInsets.only(
-                      left: 20,
+                    tilePadding: EdgeInsets.only(
+                      left: 20.sp,
                       // top: 14,
-                      right: 15,
+                      right: 15.sp,
                       // bottom: 14,
                     ),
                     iconColor: const Color(0xff292929),
@@ -42,7 +43,7 @@ class PreferenceBoard extends StatelessWidget {
                       fontWeight: 500,
                     ),
                     subtitle: Padding(
-                      padding: const EdgeInsets.only(top: 5.0),
+                      padding: EdgeInsets.only(top: 5.0.sp),
                       child: StyledText(
                         DateFormat('yyyy.MM.dd').format(DateTime.parse(controller.boardList[index].lastModifiedDate!)),
                         color: Colors.white,
@@ -55,18 +56,18 @@ class PreferenceBoard extends StatelessWidget {
                     children: [
                       Container(
                         width: double.infinity,
-                        margin: const EdgeInsets.only(
-                          left: 20,
-                          top: 10,
-                          right: 20,
-                          bottom: 40,
+                        margin: EdgeInsets.only(
+                          left: 20.sp,
+                          top: 10.sp,
+                          right: 20.sp,
+                          bottom: 40.sp,
                         ),
-                        padding: EdgeInsets.only(top: 10),
-                        decoration: const BoxDecoration(
+                        padding: EdgeInsets.only(top: 10.sp),
+                        decoration: BoxDecoration(
                           border: Border(
                             top: BorderSide(
                               color: Color(0xff363841),
-                              width: 2,
+                              width: 2.sp,
                             ),
                           ),
                         ),

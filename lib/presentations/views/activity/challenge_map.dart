@@ -2,6 +2,7 @@ import 'package:expandable_bottom_sheet/expandable_bottom_sheet.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_naver_map/flutter_naver_map.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:gaza_go/platform/controllers/activity_controller.dart';
 import 'package:gaza_go/platform/models/challenge_hierarchy_model.dart';
 import 'package:gaza_go/platform/models/challenge_model.dart';
@@ -45,7 +46,7 @@ class ChallengeMap extends StatelessWidget {
           (challenge) => CircleOverlay(
             overlayId: 'ChallengeEndCenter' + challenge.id!.toString(),
             center: LatLng(challenge.endLat!, challenge.endLon!),
-            radius: 30,
+            radius: 30.sp,
             color: Colors.red,
           ),
         )
@@ -66,19 +67,24 @@ class ChallengeMap extends StatelessWidget {
   }
 
   Widget _renderChallengePoint(ActivityController controller, ChallengeHierarchyModel challenge) {
-    return ExpansionTile(
-      //leading: Icon(list.icon!),
-      title: Text(
-        challenge.name,
-        style: TextStyle(fontSize: 18, fontWeight: FontWeight.w500, color: Colors.white),
+    return ListTileTheme(
+      // dense: true,
+      contentPadding: EdgeInsets.all(0),
+      minVerticalPadding: 0,
+      child: ExpansionTile(
+        childrenPadding: EdgeInsets.all(0),
+        title: Text(
+          challenge.name,
+          style: TextStyle(fontSize: 18.sp, fontWeight: FontWeight.w500, color: Colors.white),
+        ),
+        collapsedIconColor: Color(0xFFBFBFBF),
+        iconColor: Color(0xFF0EE6F3),
+        tilePadding: EdgeInsets.only(left: 20.sp, right: 20.sp, top: 0, bottom: 0),
+        //children: challenge.course.map(course => _renderCourse(controller, course)).toList(),
+        children: challenge.course.map((course) {
+          return _renderCourse(controller, course);
+        }).toList(),
       ),
-      collapsedIconColor: Color(0xFFBFBFBF),
-      iconColor: Color(0xFF0EE6F3),
-      tilePadding: EdgeInsets.only(left: 20, right: 20, top: 0, bottom: 0),
-      //children: challenge.course.map(course => _renderCourse(controller, course)).toList(),
-      children: challenge.course.map((course) {
-        return _renderCourse(controller, course);
-      }).toList(),
     );
   }
 
@@ -90,6 +96,8 @@ class ChallengeMap extends StatelessWidget {
             onTap: () {
               controller.showEndPointMarker(course);
             },
+            dense: MediaQuery.of(context).size.width < 320,
+            visualDensity: VisualDensity(vertical: MediaQuery.of(context).size.width < 320 ? -3 : 0),
             subtitle: StyledText(
               '${course.startPointName} - ${course.endPointName}',
               color: (controller.challengeSelectedIndex == course.id) ? Color(0xFF0EE6F3) : Color(0xFF8A8A8A),
@@ -97,15 +105,18 @@ class ChallengeMap extends StatelessWidget {
               lineHeight: 14,
               fontWeight: 500,
             ),
+            minLeadingWidth: 10,
             leading: Padding(
-              padding: const EdgeInsets.only(left: 30, top: 5),
+              padding: EdgeInsets.only(left: 30.sp, top: 5),
               child: (controller.challengeSelectedIndex == course.id) ? iconChallengeCheckOn : iconChallengeCheckOff,
             ),
             contentPadding: const EdgeInsets.all(0.0),
-            title: Text(
-              course.secondName!,
-              style: TextStyle(color: (controller.challengeSelectedIndex == course.id) ? Color(0xFF0EE6F3) : Colors.white),
-            ));
+            // title: Text(
+            //   course.secondName!,
+            //   style: TextStyle(color: (controller.challengeSelectedIndex == course.id) ? Color(0xFF0EE6F3) : Colors.white),
+            // ),
+
+            title: StyledText(course.secondName!, fontSize: 17, color: (controller.challengeSelectedIndex == course.id) ? Color(0xFF0EE6F3) : Colors.white));
       });
     });
   }
@@ -169,14 +180,14 @@ class ChallengeMap extends StatelessWidget {
                   onMapCreated: controller.onChallengeMapCreated,
                 ),
                 Padding(
-                  padding: const EdgeInsets.only(top: 70),
+                  padding: EdgeInsets.only(top: 70.sp),
                   child: Container(
-                      padding: EdgeInsets.only(top: 10, bottom: 10, right: 20, left: 20),
+                      padding: EdgeInsets.only(top: 10.sp, bottom: 10.sp, right: 20.sp, left: 20.sp),
                       decoration: BoxDecoration(
-                        color: Color(0xFF363841),
-                        borderRadius: BorderRadius.circular(14),
-                        border: Border.all(color: Colors.black, width: 2),
-                        boxShadow: [
+                        color: const Color(0xFF363841),
+                        borderRadius: BorderRadius.circular(14.sp),
+                        border: Border.all(color: Colors.black, width: 2.sp),
+                        boxShadow: const [
                           BoxShadow(
                             color: Colors.black,
                             spreadRadius: 0,
@@ -185,7 +196,7 @@ class ChallengeMap extends StatelessWidget {
                           ),
                         ],
                       ),
-                      child: StyledText(
+                      child: const StyledText(
                         '첼린지 리스트',
                         fontSize: 16,
                         fontWeight: 500,
@@ -195,8 +206,8 @@ class ChallengeMap extends StatelessWidget {
                       )),
                 ),
                 Positioned(
-                    top: 66,
-                    left: 20,
+                    top: 66.sp,
+                    left: 20.sp,
                     child: InkWell(
                         onTap: () {
                           Navigator.pop(context);
@@ -210,28 +221,28 @@ class ChallengeMap extends StatelessWidget {
         //optional
         //This widget is sticking above the content and will never be contracted.
         persistentHeader: Container(
-          padding: EdgeInsets.only(bottom: 5),
+          padding: EdgeInsets.only(bottom: 5.sp),
           height: 30,
-          decoration: BoxDecoration(color: Color(0xFF4A4D57), borderRadius: BorderRadius.only(topLeft: Radius.circular(15), topRight: Radius.circular(15))),
+          decoration: BoxDecoration(color: Color(0xFF4A4D57), borderRadius: BorderRadius.only(topLeft: Radius.circular(15.sp), topRight: Radius.circular(15.sp))),
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              const Center(
+              Center(
                 child: SizedBox(
-                  width: 40,
+                  width: 40.sp,
                   child: Divider(
                     color: Color(0xFF0EE6F3),
-                    thickness: 3,
+                    thickness: 3.sp,
                   ),
                 ),
               ),
-              const Center(
+              Center(
                 child: SizedBox(
-                  width: 40,
+                  width: 40.sp,
                   child: Divider(
-                    height: 1,
+                    height: 1.sp,
                     color: Color(0xFF0EE6F3),
-                    thickness: 3,
+                    thickness: 3.sp,
                   ),
                 ),
               ),

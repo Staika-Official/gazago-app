@@ -2,6 +2,7 @@ import 'dart:math';
 
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg_provider/flutter_svg_provider.dart';
 import 'package:gaza_go/platform/helpers/base_helper.dart';
 import 'package:gaza_go/platform/models/asset_token_balance_ui_model.dart';
@@ -20,38 +21,43 @@ class AssetItemCoin extends StatelessWidget {
     return Ink(
       decoration: BoxDecoration(
         color: Color(0xff2a2b33),
-        border: Border.all(width: 2, color: Colors.black),
-        borderRadius: BorderRadius.circular(12),
+        border: Border.all(width: 2.sp, color: Colors.black),
+        borderRadius: BorderRadius.circular(12.sp),
         boxShadow: [
           BoxShadow(
             color: Colors.black,
-            offset: Offset(2, 4),
+            offset: Offset(2.sp, 4.sp),
           )
         ],
       ),
       child: InkWell(
         onTap: onTap,
-        borderRadius: BorderRadius.circular(12),
+        borderRadius: BorderRadius.circular(12.sp),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.center,
           mainAxisAlignment: MainAxisAlignment.start,
           children: [
             Padding(
-              padding: const EdgeInsets.only(
-                top: 22,
-                left: 16,
-                right: 16,
-                bottom: 22,
+              padding: EdgeInsets.only(
+                top: 22.sp,
+                left: 16.sp,
+                right: 16.sp,
+                bottom: 22.sp,
               ),
               child: Row(
                 mainAxisSize: MainAxisSize.max,
                 children: [
                   CircleAvatar(
-                    foregroundImage: asset.meta?.logoUrl != '' ? CachedNetworkImageProvider(asset.meta!.logoUrl) : Svg('assets/images/common/ico_token_tik.svg') as ImageProvider,
+                    radius: 19.sp,
+                    foregroundImage: asset.meta?.logoUrl != ''
+                        ? CachedNetworkImageProvider(
+                            asset.meta!.logoUrl,
+                          )
+                        : Svg('assets/images/common/ico_token_tik.svg') as ImageProvider,
                   ),
                   Expanded(
                     child: Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 10),
+                      padding: EdgeInsets.symmetric(horizontal: 10.sp),
                       child: StyledText(
                         asset.meta!.name,
                         fontSize: 18,
@@ -87,7 +93,7 @@ class AssetItemCoin extends StatelessWidget {
                       ),
                       showPrice
                           ? Padding(
-                              padding: const EdgeInsets.only(top: 4),
+                              padding: EdgeInsets.only(top: 4.sp),
                               child: StyledText(
                                 '\u2248 \$${asset.amount! / pow(10, asset.decimals!)}',
                                 fontSize: 14,
@@ -104,20 +110,20 @@ class AssetItemCoin extends StatelessWidget {
             ),
             onTapButton != null
                 ? Padding(
-                    padding: const EdgeInsets.only(left: 16, right: 16, bottom: 11),
+                    padding: EdgeInsets.only(left: 16.sp, right: 16.sp, bottom: 11.sp),
                     child: GestureDetector(
                       onTap: onTapButton,
                       child: Container(
                         width: double.infinity,
-                        padding: EdgeInsets.all(16),
+                        padding: EdgeInsets.all(16.sp),
                         decoration: BoxDecoration(
                           color: Color(0xff0EE6F3),
                           border: Border.all(width: 1, color: Colors.black),
-                          borderRadius: BorderRadius.circular(12),
+                          borderRadius: BorderRadius.circular(12.sp),
                           boxShadow: [
                             BoxShadow(
                               color: Colors.black,
-                              offset: Offset(0, 2),
+                              offset: Offset(0, 2.sp),
                             ),
                           ],
                         ),

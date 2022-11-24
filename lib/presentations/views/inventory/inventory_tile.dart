@@ -1,5 +1,6 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:gaza_go/platform/controllers/inventory_controller.dart';
 import 'package:gaza_go/platform/helpers/inventory_helper.dart';
 import 'package:gaza_go/presentations/styles/icons.dart';
@@ -40,16 +41,16 @@ class InventoryTile extends StatelessWidget {
         decoration: BoxDecoration(
           color: const Color(0xFF363841),
           border: Border.all(
-            width: 2,
+            width: 2.sp,
             color: Colors.black,
           ),
-          borderRadius: const BorderRadius.all(
-            Radius.circular(14),
+          borderRadius: BorderRadius.all(
+            Radius.circular(14.sp),
           ),
-          boxShadow: const [
+          boxShadow: [
             BoxShadow(
               color: Colors.black,
-              offset: Offset(2, 4),
+              offset: Offset(2.sp, 4.sp),
               blurRadius: 0.0,
               spreadRadius: 0.0,
             ),
@@ -59,7 +60,7 @@ class InventoryTile extends StatelessWidget {
           alignment: Alignment.bottomCenter,
           children: [
             Padding(
-              padding: badgeId != null && badgeId != -1 ? const EdgeInsets.only(top: 10.0, bottom: 30, left: 30, right: 30) : const EdgeInsets.all(10.0),
+              padding: badgeId != null && badgeId != -1 ? EdgeInsets.only(top: 10.0.sp, bottom: 30.sp, left: 30.sp, right: 30.sp) : EdgeInsets.all(10.0.sp),
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 crossAxisAlignment: CrossAxisAlignment.center,
@@ -78,14 +79,14 @@ class InventoryTile extends StatelessWidget {
             ),
             if (badgeId != null && badgeId != -1)
               Padding(
-                padding: const EdgeInsets.all(10),
+                padding: EdgeInsets.all(10.sp),
                 child: Container(
-                  padding: const EdgeInsets.symmetric(
-                    vertical: 5,
-                    horizontal: 10,
+                  padding: EdgeInsets.symmetric(
+                    vertical: 5.sp,
+                    horizontal: 10.sp,
                   ),
                   decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(60),
+                    borderRadius: BorderRadius.circular(60.sp),
                     border: Border.all(
                       width: 1,
                       color: const Color(0xff8a8a8a),
@@ -104,9 +105,9 @@ class InventoryTile extends StatelessWidget {
               ),
             durability != null
                 ? Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 15.0, vertical: 9.0),
+                    padding: EdgeInsets.symmetric(horizontal: 15.0.sp, vertical: 9.0.sp),
                     child: SizedBox(
-                      height: 22,
+                      height: 22.sp,
                       child: Stack(
                         clipBehavior: Clip.none,
                         alignment: AlignmentDirectional.center,
@@ -119,17 +120,17 @@ class InventoryTile extends StatelessWidget {
                                     child: Stack(
                                       children: [
                                         Padding(
-                                          padding: const EdgeInsets.all(2.0),
+                                          padding: EdgeInsets.all(2.0.sp),
                                           child: Container(
-                                            decoration: const BoxDecoration(
+                                            decoration: BoxDecoration(
                                               color: Color(0xFF606167),
                                               borderRadius: BorderRadius.all(
-                                                Radius.circular(50),
+                                                Radius.circular(50.sp),
                                               ),
                                               boxShadow: [
                                                 BoxShadow(
                                                   color: Colors.black,
-                                                  offset: Offset(0, 1),
+                                                  offset: Offset(0, 1.sp),
                                                   blurRadius: 0.0,
                                                   spreadRadius: 0.0,
                                                 ),
@@ -139,10 +140,10 @@ class InventoryTile extends StatelessWidget {
                                         ),
                                         durability! > 1.0
                                             ? Padding(
-                                                padding: const EdgeInsets.only(top: 2.0, left: 2.0),
+                                                padding: EdgeInsets.only(top: 2.0.sp, left: 2.0.sp),
                                                 child: LayoutBuilder(builder: (context, constraints) {
                                                   return Container(
-                                                    height: 18,
+                                                    height: 18.sp,
                                                     margin: EdgeInsets.zero,
                                                     width: durability! > 20
                                                         ? constraints.maxWidth / (100 / durability!)
@@ -151,8 +152,8 @@ class InventoryTile extends StatelessWidget {
                                                             : 34,
                                                     decoration: BoxDecoration(
                                                       color: durability! < 30 ? const Color(0xFFFF2525) : const Color(0xFFB85DFF),
-                                                      borderRadius: const BorderRadius.all(
-                                                        Radius.circular(50),
+                                                      borderRadius: BorderRadius.all(
+                                                        Radius.circular(50.sp),
                                                       ),
                                                     ),
                                                   );
@@ -173,7 +174,7 @@ class InventoryTile extends StatelessWidget {
                               Row(
                                 children: [
                                   Padding(
-                                    padding: const EdgeInsets.symmetric(horizontal: 5.0),
+                                    padding: EdgeInsets.symmetric(horizontal: 5.0.sp),
                                     child: iconShoes,
                                   ),
                                 ],
@@ -184,21 +185,21 @@ class InventoryTile extends StatelessWidget {
                             right: -1,
                             top: -1,
                             child: Padding(
-                              padding: const EdgeInsets.only(top: 1.0),
+                              padding: EdgeInsets.only(top: 1.0.sp),
                               child: Container(
                                 decoration: BoxDecoration(
                                   color: const Color(0xFF606167),
                                   border: Border.all(
-                                    width: 1,
+                                    width: 1.sp,
                                     color: Colors.black,
                                   ),
-                                  borderRadius: const BorderRadius.all(
-                                    Radius.circular(30),
+                                  borderRadius: BorderRadius.all(
+                                    Radius.circular(30.sp),
                                   ),
-                                  boxShadow: const [
+                                  boxShadow: [
                                     BoxShadow(
                                       color: Colors.black,
-                                      offset: Offset(0, 1),
+                                      offset: Offset(0, 1.sp),
                                       blurRadius: 0.0,
                                       spreadRadius: 0.0,
                                     ),
@@ -207,12 +208,12 @@ class InventoryTile extends StatelessWidget {
                                 child: InkWell(
                                   onTap: () => controller.showShoesRepairPopup(id),
                                   child: CircleAvatar(
-                                    radius: 10,
+                                    radius: 10.sp,
                                     backgroundColor: const Color(0xFFB85DFF),
                                     child: IconButton(
                                       alignment: Alignment.center,
                                       padding: EdgeInsets.zero,
-                                      iconSize: 20.0,
+                                      iconSize: 20.0.sp,
                                       icon: iconPlus,
                                       onPressed: null,
                                       // onPressed: () => {controller.onClickRepairStat(stat)},
@@ -229,11 +230,11 @@ class InventoryTile extends StatelessWidget {
                 : Container(),
             itemGrade != null
                 ? Positioned(
-                    right: index > 1 ? 6 : 10,
-                    top: index > 1 ? 6 : 10,
+                    right: index > 1 ? 6.sp : 10.sp,
+                    top: index > 1 ? 6.sp : 10.sp,
                     child: CircleAvatar(
                       backgroundColor: getItemGradeColor(itemGrade!),
-                      radius: 10,
+                      radius: 10.sp,
                       child: StyledText(
                         itemGrade![0],
                         fontWeight: 600,

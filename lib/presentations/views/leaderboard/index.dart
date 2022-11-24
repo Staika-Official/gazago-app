@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:gaza_go/platform/controllers/activity_controller.dart';
 import 'package:gaza_go/platform/controllers/leaderboard_controller.dart';
@@ -17,11 +18,11 @@ class LeaderboardHome extends StatelessWidget {
     return Obx(() {
       return Container(
         height: 400,
-        decoration: const BoxDecoration(
+        decoration: BoxDecoration(
           color: Color(0xFF363841),
           borderRadius: BorderRadius.only(
-            topLeft: Radius.circular(15),
-            topRight: Radius.circular(15),
+            topLeft: Radius.circular(15.sp),
+            topRight: Radius.circular(15.sp),
           ),
         ),
         child: TableCalendar(
@@ -30,8 +31,8 @@ class LeaderboardHome extends StatelessWidget {
           lastDay: controller.lastDay.value!,
           focusedDay: controller.selectedDate.value!,
           selectedDayPredicate: (day) => isSameDay(day, controller.selectedDate.value!),
-          headerStyle: const HeaderStyle(
-            titleTextStyle: TextStyle(fontSize: 18, color: Colors.white, fontWeight: FontWeight.w500),
+          headerStyle: HeaderStyle(
+            titleTextStyle: TextStyle(fontSize: 18.sp, color: Colors.white, fontWeight: FontWeight.w500),
             titleCentered: true,
             formatButtonVisible: false,
             leftChevronIcon: Icon(Icons.chevron_left, color: Colors.white),
@@ -39,8 +40,8 @@ class LeaderboardHome extends StatelessWidget {
               Icons.chevron_right,
               color: Colors.white,
             ),
-            leftChevronPadding: EdgeInsets.only(left: 60, top: 10, bottom: 10),
-            rightChevronPadding: EdgeInsets.only(right: 60, top: 10, bottom: 10),
+            leftChevronPadding: EdgeInsets.only(left: 60.sp, top: 10.sp, bottom: 10.sp),
+            rightChevronPadding: EdgeInsets.only(right: 60.sp, top: 10.sp, bottom: 10.sp),
           ),
           calendarFormat: controller.calendarFormat,
           calendarStyle: CalendarStyle(
@@ -54,17 +55,17 @@ class LeaderboardHome extends StatelessWidget {
                     strokeAlign: StrokeAlign.center
                 )
             ),*/
-            todayTextStyle: const TextStyle(
+            todayTextStyle: TextStyle(
               color: Colors.black,
-              fontSize: 16.0,
+              fontSize: 16.0.sp,
             ),
             defaultTextStyle: const TextStyle(color: Colors.white),
             weekendTextStyle: const TextStyle(color: Colors.white),
             selectedDecoration: BoxDecoration(
-                color: const Color(0xFF0EE6F3), shape: BoxShape.circle, border: Border.all(width: 14, style: BorderStyle.solid, color: const Color(0xFF363841), strokeAlign: StrokeAlign.center)),
-            selectedTextStyle: const TextStyle(
+                color: const Color(0xFF0EE6F3), shape: BoxShape.circle, border: Border.all(width: 14.sp, style: BorderStyle.solid, color: const Color(0xFF363841), strokeAlign: StrokeAlign.center)),
+            selectedTextStyle: TextStyle(
               color: Colors.black,
-              fontSize: 16.0,
+              fontSize: 16.0.sp,
             ),
           ),
           onDaySelected: (selectedDay, focusedDay) {
@@ -83,35 +84,35 @@ class LeaderboardHome extends StatelessWidget {
     RankerModel myRank = controller.myRank.value!;
     return Container(
       width: double.maxFinite,
-      height: 90,
+      height: 90.sp,
       color: const Color(0xFF08080B),
-      padding: const EdgeInsets.only(top: 8, left: 11, right: 17, bottom: 8),
+      padding: EdgeInsets.only(top: 8.sp, left: 11.sp, right: 17.sp, bottom: 8.sp),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.start,
         children: [
           iconMyRankArrow,
           SizedBox(
-            width: 20,
+            width: 20.sp,
             child: Text(
               myRank.rank.toString(),
-              style: const TextStyle(color: Color(0xFF0EE6F3), fontSize: 14, fontWeight: FontWeight.w600),
+              style: TextStyle(color: Color(0xFF0EE6F3), fontSize: 14.sp, fontWeight: FontWeight.w600),
               textAlign: TextAlign.center,
             ),
           ),
-          const Padding(padding: EdgeInsets.only(left: 4)),
+          Padding(padding: EdgeInsets.only(left: 4.sp)),
           Expanded(
             flex: 2,
             child: Row(
               children: [
                 (myRank.profileImageUrl != null)
                     ? Container(
-                        width: 44.0,
-                        height: 44.0,
+                        width: 44.0.sp,
+                        height: 44.0.sp,
                         decoration: BoxDecoration(
-                          borderRadius: const BorderRadius.all(Radius.circular(50.0)),
+                          borderRadius: BorderRadius.all(Radius.circular(50.0.sp)),
                           border: Border.all(
                             color: const Color(0xFF0EE6F3),
-                            width: 1.5,
+                            width: 1.5.sp,
                           ),
                         ),
                         child: CircleAvatar(
@@ -127,11 +128,11 @@ class LeaderboardHome extends StatelessWidget {
                         backgroundColor: Colors.white,
                       ),
                 Padding(
-                  padding: const EdgeInsets.only(left: 8.0),
+                  padding: EdgeInsets.only(left: 8.0.sp),
                   child: Text(
                     (myRank.nickname.contains('@') ? myRank.nickname.substring(0, myRank.nickname.indexOf('@')) : myRank.nickname),
                     overflow: TextOverflow.ellipsis,
-                    style: const TextStyle(color: Colors.white, fontSize: 14, fontWeight: FontWeight.w600),
+                    style: TextStyle(color: Colors.white, fontSize: 14.sp, fontWeight: FontWeight.w600),
                     textAlign: TextAlign.left,
                   ),
                 ),
@@ -148,7 +149,7 @@ class LeaderboardHome extends StatelessWidget {
                 fontSize: 14,
                 fontWeight: 600,
               ),
-              const Padding(padding: EdgeInsets.only(top: 7)),
+              Padding(padding: EdgeInsets.only(top: 7.sp)),
               StyledText(
                 '${formatDecimalPlaces(myRank.rewardTik, 1)} TIK',
                 textAlign: TextAlign.right,
@@ -461,6 +462,79 @@ class LeaderboardHome extends StatelessWidget {
                 ),
               ],
             ),
+<<<<<<< HEAD
+          ),
+        ),
+        Container(
+          padding: EdgeInsets.only(top: 38.sp, left: 25.sp, right: 18.sp, bottom: 12.sp),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              const StyledText(
+                '리더보드',
+                color: Colors.white,
+                fontSize: 20,
+                fontWeight: 600,
+              ),
+              InkWell(
+                onTap: () => {
+                  showBarModalBottomSheet(
+                    context: context,
+                    builder: (context) => showBottomCalender(context, controller),
+                  )
+                },
+                child: Row(
+                  mainAxisSize: MainAxisSize.min,
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    Obx(() {
+                      return StyledText(
+                        controller.leaderboardDate.value,
+                        color: const Color(0xFFBFBFBF),
+                        fontSize: 12,
+                        fontWeight: 600,
+                      );
+                    }),
+                    //StyledText(controller.leaderboardDate.value!, color: const Color(0xFF747474), fontSize: 12, fontWeight: 600,),
+                    Padding(padding: EdgeInsets.only(left: 8.sp)),
+                    iconCalendar
+                    //Text(controller.formattedDate.value)
+                  ],
+                ),
+              )
+            ],
+          ),
+        ),
+        Obx(() {
+          return (controller.myRank.value != null) ? renderMyRank(controller) : Container();
+        }),
+        Expanded(
+          child: PagedListView<int, RankerModel>.separated(
+            pagingController: controller.pagingController,
+            separatorBuilder: (context, index) => Divider(
+              thickness: 2.sp,
+              indent: 0,
+              endIndent: 0,
+              height: 1,
+              color: Color(0xFF26272F),
+            ),
+            builderDelegate: PagedChildBuilderDelegate<RankerModel>(
+              itemBuilder: (context, item, index) => (renderRanker(item, index)),
+              noItemsFoundIndicatorBuilder: (context) => Center(
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    SvgPicture.asset('assets/images/wallet/ico_empty.svg'),
+                    Padding(
+                      padding: EdgeInsets.only(top: 20.sp),
+                      child: StyledText(
+                        '랭킹 기록이 없어요.',
+                        color: Color(0xff7b7b7b),
+                        fontSize: 16,
+                        lineHeight: 10,
+                        fontWeight: 500,
+=======
           ) : Container(
             height: 200,
             child: Column(
@@ -488,6 +562,7 @@ class LeaderboardHome extends StatelessWidget {
                         ),
                         itemBuilder: (context, index) => (renderRanker(controller.rankings[index])),
                         itemCount: controller.rankings.length,*/ /*
+>>>>>>> 045fb485d81ef7be7321c93da9140444078aa56a
                       ),
                 ),
               ],

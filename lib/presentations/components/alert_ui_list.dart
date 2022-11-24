@@ -1,6 +1,7 @@
 import 'package:another_xlider/another_xlider.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:gaza_go/platform/controllers/activity_controller.dart';
 import 'package:gaza_go/platform/controllers/archive_controller.dart';
 import 'package:gaza_go/platform/controllers/inventory_controller.dart';
@@ -41,7 +42,7 @@ void showShoeRepairSlider(InventoryController controller, int feeTikDurability) 
       return Column(
         children: [
           Padding(
-            padding: const EdgeInsets.only(top: 12.0),
+            padding: EdgeInsets.only(top: 12.0.sp),
             child: StyledText(
               '현재 신발 내구도 ${controller.equippedShoe.value.durability.toInt()}',
               fontSize: 16,
@@ -51,7 +52,7 @@ void showShoeRepairSlider(InventoryController controller, int feeTikDurability) 
             ),
           ),
           Container(
-            margin: EdgeInsets.only(top: 15),
+            margin: EdgeInsets.only(top: 15.sp),
             child: FlutterSlider(
               values: [controller.currentSliderValue.value],
               max: 100,
@@ -64,17 +65,17 @@ void showShoeRepairSlider(InventoryController controller, int feeTikDurability) 
                 inactiveTrackBarHeight: 16,
                 activeTrackBarHeight: 15,
                 inactiveTrackBar: BoxDecoration(
-                  borderRadius: BorderRadius.circular(20),
+                  borderRadius: BorderRadius.circular(20.sp),
                   color: Color(0xFF494954),
-                  boxShadow: const [
+                  boxShadow: [
                     BoxShadow(
                       color: Colors.black,
-                      offset: Offset(2, 3),
+                      offset: Offset(2.sp, 3.sp),
                     )
                   ],
                 ),
                 activeTrackBar: BoxDecoration(
-                  borderRadius: BorderRadius.circular(20),
+                  borderRadius: BorderRadius.circular(20.sp),
                   color: Color(0xFFB85DFF),
                 ),
               ),
@@ -85,12 +86,12 @@ void showShoeRepairSlider(InventoryController controller, int feeTikDurability) 
               handler: FlutterSliderHandler(
                 decoration: BoxDecoration(
                   color: Color(0xFFB85DFF),
-                  border: Border.all(width: 2, color: Colors.white),
-                  borderRadius: BorderRadius.circular(30),
-                  boxShadow: const [
+                  border: Border.all(width: 2.sp, color: Colors.white),
+                  borderRadius: BorderRadius.circular(30.sp),
+                  boxShadow: [
                     BoxShadow(
                       color: Colors.black,
-                      offset: Offset(2, 3),
+                      offset: Offset(2.sp, 3.sp),
                     )
                   ],
                 ),
@@ -99,22 +100,22 @@ void showShoeRepairSlider(InventoryController controller, int feeTikDurability) 
               tooltip: FlutterSliderTooltip(
                 textStyle: TextStyle(
                   color: Colors.black,
-                  fontSize: 22,
+                  fontSize: 22.sp,
                   fontWeight: FontWeight.w500,
-                  height: 1,
+                  height: 1.sp,
                 ),
                 format: (label) => '+ ${formatDecimalPlaces(double.parse(label), 0)}',
                 boxStyle: FlutterSliderTooltipBox(
                   decoration: BoxDecoration(
                     color: const Color(0xFFB85DFF),
-                    borderRadius: BorderRadius.circular(50),
+                    borderRadius: BorderRadius.circular(50.sp),
                   ),
                 ),
               ),
             ),
           ),
           Padding(
-            padding: const EdgeInsets.symmetric(vertical: 40.0),
+            padding: EdgeInsets.symmetric(vertical: 40.0.sp),
             child: Row(
               mainAxisAlignment: MainAxisAlignment.center,
               crossAxisAlignment: CrossAxisAlignment.center,
@@ -146,8 +147,8 @@ void showShoeRepairSlider(InventoryController controller, int feeTikDurability) 
           buttonColor: const Color(0xFF363841),
         ),
       ),
-      const SizedBox(
-        width: 9,
+      SizedBox(
+        width: 9.sp,
       ),
       Expanded(
         child: GazagoButton(
@@ -167,7 +168,7 @@ void showRepairStatSlider(ActivityController controller, StatModel stat, int fee
       return Column(
         children: [
           Padding(
-            padding: const EdgeInsets.only(top: 12.0),
+            padding: EdgeInsets.only(top: 12.0.sp),
             child: stat.type == 'STAMINA'
                 ? StyledText(
                     '현재 체력 ${stat.currentStat}',
@@ -185,7 +186,7 @@ void showRepairStatSlider(ActivityController controller, StatModel stat, int fee
                   ),
           ),
           Container(
-            margin: const EdgeInsets.only(top: 15),
+            margin: EdgeInsets.only(top: 15.sp),
             child: FlutterSlider(
               values: [controller.currentSliderValue.value],
               max: 100,
@@ -201,17 +202,17 @@ void showRepairStatSlider(ActivityController controller, StatModel stat, int fee
                 inactiveTrackBarHeight: 16,
                 activeTrackBarHeight: 15,
                 inactiveTrackBar: BoxDecoration(
-                  borderRadius: BorderRadius.circular(20),
+                  borderRadius: BorderRadius.circular(20.sp),
                   color: const Color(0xFF494954),
-                  boxShadow: const [
+                  boxShadow: [
                     BoxShadow(
                       color: Colors.black,
-                      offset: Offset(2, 3),
+                      offset: Offset(2.sp, 3.sp),
                     )
                   ],
                 ),
                 activeTrackBar: BoxDecoration(
-                  borderRadius: BorderRadius.circular(20),
+                  borderRadius: BorderRadius.circular(20.sp),
                   color: stat.type == 'STAMINA' ? const Color(0xFFCDFF41) : const Color(0xFFB85DFF),
                 ),
               ),
@@ -222,36 +223,36 @@ void showRepairStatSlider(ActivityController controller, StatModel stat, int fee
               handler: FlutterSliderHandler(
                 decoration: BoxDecoration(
                   color: stat.type == 'STAMINA' ? const Color(0xFFCDFF41) : const Color(0xFFB85DFF),
-                  border: Border.all(width: 2, color: Colors.white),
-                  borderRadius: BorderRadius.circular(30),
-                  boxShadow: const [
+                  border: Border.all(width: 2.sp, color: Colors.white),
+                  borderRadius: BorderRadius.circular(30.sp),
+                  boxShadow: [
                     BoxShadow(
                       color: Colors.black,
-                      offset: Offset(2, 3),
+                      offset: Offset(2.sp, 3.sp),
                     )
                   ],
                 ),
                 child: stat.type == 'STAMINA' ? iconSliderStamina : iconSliderShoe,
               ),
               tooltip: FlutterSliderTooltip(
-                textStyle: const TextStyle(
+                textStyle: TextStyle(
                   color: Colors.black,
-                  fontSize: 22,
+                  fontSize: 22.sp,
                   fontWeight: FontWeight.w500,
-                  height: 1,
+                  height: 1.sp,
                 ),
                 format: (label) => '+ ${formatDecimalPlaces(double.parse(label), 0)}',
                 boxStyle: FlutterSliderTooltipBox(
                   decoration: BoxDecoration(
                     color: stat.type == 'STAMINA' ? const Color(0xFFCDFF41) : const Color(0xFFB85DFF),
-                    borderRadius: BorderRadius.circular(50),
+                    borderRadius: BorderRadius.circular(50.sp),
                   ),
                 ),
               ),
             ),
           ),
           Padding(
-            padding: const EdgeInsets.symmetric(vertical: 40.0),
+            padding: EdgeInsets.symmetric(vertical: 40.0.sp),
             child: Row(
               mainAxisAlignment: MainAxisAlignment.center,
               crossAxisAlignment: CrossAxisAlignment.center,
@@ -283,8 +284,8 @@ void showRepairStatSlider(ActivityController controller, StatModel stat, int fee
           buttonColor: const Color(0xFF363841),
         ),
       ),
-      const SizedBox(
-        width: 9,
+      SizedBox(
+        width: 9.sp,
       ),
       Expanded(
         child: GazagoButton(
@@ -317,13 +318,13 @@ void showNotEnoughTaikaAlert() {
 Future<void> showLocationAlert(ActivityController controller) async {
   await showAlert(
     title: '알림',
-    contentWidget: const Padding(
-      padding: EdgeInsets.only(top: 30, bottom: 50),
+    contentWidget: Padding(
+      padding: EdgeInsets.only(top: 30.sp, bottom: 50.sp),
       child: Text.rich(
         textAlign: TextAlign.center,
         style: TextStyle(
-          fontSize: 18,
-          height: 24 / 18,
+          fontSize: 18.sp,
+          height: 24.sp / 18.sp,
           fontWeight: FontWeight.w500,
           color: Colors.white,
         ),
@@ -353,13 +354,13 @@ Future<void> showLocationAlert(ActivityController controller) async {
 Future<void> showActivityAlert(ActivityController controller) async {
   await showAlert(
     title: '알림',
-    contentWidget: const Padding(
-      padding: EdgeInsets.only(top: 30, bottom: 50),
+    contentWidget: Padding(
+      padding: EdgeInsets.only(top: 30.sp, bottom: 50.sp),
       child: Text.rich(
         textAlign: TextAlign.center,
         style: TextStyle(
-          fontSize: 18,
-          height: 24 / 18,
+          fontSize: 18.sp,
+          height: 24.sp / 18.sp,
           fontWeight: FontWeight.w500,
           color: Colors.white,
         ),
@@ -389,13 +390,13 @@ Future<void> showActivityAlert(ActivityController controller) async {
 Future<void> showGpsAlert() async {
   await showAlert(
     title: '알림',
-    contentWidget: const Padding(
-      padding: EdgeInsets.only(top: 30, bottom: 50),
+    contentWidget: Padding(
+      padding: EdgeInsets.only(top: 30.sp, bottom: 50.sp),
       child: Text.rich(
         textAlign: TextAlign.center,
         style: TextStyle(
-          fontSize: 18,
-          height: 24 / 18,
+          fontSize: 18.sp,
+          height: 24.sp / 18.sp,
           fontWeight: FontWeight.w500,
           color: Colors.white,
         ),
@@ -434,8 +435,8 @@ void showEndExerciseAlert(ActivityMixin mixin, ChallengeModel challenge) {
           buttonColor: const Color(0xFF363841),
         ),
       ),
-      const SizedBox(
-        width: 9,
+      SizedBox(
+        width: 9.sp,
       ),
       Expanded(
         child: GazagoButton(
@@ -455,19 +456,19 @@ void showBadgeAcquisitionAlert(InventoryBadgeModel badge, ChallengeModel selecte
     contentWidget: Column(
       children: [
         Padding(
-          padding: const EdgeInsets.only(top: 30, bottom: 30),
+          padding: EdgeInsets.only(top: 30.sp, bottom: 30.sp),
           child: CachedNetworkImage(
             imageUrl: badge.badge.imageUrl,
             placeholder: (context, url) => const CircularProgressIndicator(),
             fit: BoxFit.contain,
-            width: 150,
+            width: 150.sp,
           ),
         ),
         Container(
-          padding: EdgeInsets.symmetric(horizontal: 25, vertical: 14),
+          padding: EdgeInsets.symmetric(horizontal: 25.sp, vertical: 14.sp),
           decoration: BoxDecoration(
             color: Color(0xff1d1d26),
-            borderRadius: BorderRadius.circular(11),
+            borderRadius: BorderRadius.circular(11.sp),
           ),
           child: StyledText(
             '${selectedChallenge.firstName} | ${selectedChallenge.secondName}',
@@ -476,13 +477,13 @@ void showBadgeAcquisitionAlert(InventoryBadgeModel badge, ChallengeModel selecte
             fontWeight: 500,
           ),
         ),
-        const Padding(
-          padding: EdgeInsets.only(top: 20, bottom: 30),
+        Padding(
+          padding: EdgeInsets.only(top: 20.sp, bottom: 30.sp),
           child: Text.rich(
             textAlign: TextAlign.center,
             style: TextStyle(
-              fontSize: 14,
-              height: 20 / 14,
+              fontSize: 14.sp,
+              height: 20.sp / 14.sp,
               fontWeight: FontWeight.w500,
               color: Color(0xffbfbfbf),
             ),
@@ -522,8 +523,8 @@ void showDeleteRecordAlert(ArchiveController controller, int id) {
           buttonColor: const Color(0xFF363841),
         ),
       ),
-      const SizedBox(
-        width: 9,
+      SizedBox(
+        width: 9.sp,
       ),
       Expanded(
         child: GazagoButton(
@@ -551,8 +552,8 @@ void showLogoutAlert(PreferenceController controller) {
           buttonColor: const Color(0xFF363841),
         ),
       ),
-      const SizedBox(
-        width: 9,
+      SizedBox(
+        width: 9.sp,
       ),
       Expanded(
         child: GazagoButton(
@@ -578,8 +579,8 @@ void showConfirmWithdrawAlert(WithdrawConfirmController controller) {
           buttonColor: const Color(0xFF363841),
         ),
       ),
-      const SizedBox(
-        width: 9,
+      SizedBox(
+        width: 9.sp,
       ),
       Expanded(
         child: GazagoButton(

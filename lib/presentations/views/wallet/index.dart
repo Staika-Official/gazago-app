@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:gaza_go/presentations/components/default_container.dart';
 import 'package:gaza_go/presentations/styles/styled_text.dart';
 import 'package:gaza_go/presentations/views/wallet/spending_wallet.dart';
@@ -95,10 +96,10 @@ class _WalletHomeState extends State<WalletHome> with SingleTickerProviderStateM
           SizedBox(
             width: double.infinity,
             child: Padding(
-              padding: const EdgeInsets.only(left: 33, right: 33, top: 18),
+              padding: EdgeInsets.only(left: 33.sp, right: 33.sp, top: 18.sp),
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
+                children: const [
                   StyledText(
                     '디지털 자산',
                     fontSize: 16,

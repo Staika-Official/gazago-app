@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:gaza_go/constants/enums.dart';
 import 'package:gaza_go/platform/controllers/wallet_master_controller.dart';
 import 'package:gaza_go/presentations/views/wallet/asset_item_coin.dart';
@@ -11,7 +12,7 @@ class SpendingWallet extends StatelessWidget {
     return controller.spendingTokenUiList
         .map(
           (asset) => Padding(
-            padding: const EdgeInsets.only(top: 14, left: 21, right: 21),
+            padding: EdgeInsets.only(top: 14.sp, left: 21.sp, right: 21.sp),
             child: AssetItemCoin(
               asset: asset,
               onTap: () => controller.moveToWalletDetail(asset: asset, walletType: WalletType.inventory, assetType: asset.meta!.name.toUpperCase() == 'TAIKA' ? AssetType.token : AssetType.coin),

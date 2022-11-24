@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 import 'package:gaza_go/platform/controllers/inventory_controller.dart';
 import 'package:gaza_go/presentations//components/default_container.dart';
@@ -29,7 +30,7 @@ class EquippedItems extends StatelessWidget {
             mainAxisSize: MainAxisSize.max,
             children: [
               Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 20.0, vertical: 20.0),
+                padding: EdgeInsets.symmetric(horizontal: 20.0.sp, vertical: 20.0.sp),
                 child: Column(
                   children: [
                     Obx(() {
@@ -103,7 +104,7 @@ class EquippedItems extends StatelessWidget {
                 ),
               ),
               Padding(
-                  padding: const EdgeInsets.symmetric(vertical: 20.0),
+                  padding: EdgeInsets.symmetric(vertical: 20.0.sp),
                   child: Obx(() {
                     return Row(
                       mainAxisSize: MainAxisSize.max,
@@ -128,12 +129,12 @@ class EquippedItems extends StatelessWidget {
                               ],
                             ),
                             Padding(
-                              padding: const EdgeInsets.only(top: 12.0),
+                              padding: EdgeInsets.only(top: 12.0.sp),
                               child: Row(
                                 mainAxisAlignment: MainAxisAlignment.center,
                                 children: [
                                   Padding(
-                                    padding: const EdgeInsets.only(top: 3.0, right: 2.0),
+                                    padding: EdgeInsets.only(top: 3.0.sp, right: 2.0.sp),
                                     child: iconGoReward,
                                   ),
                                   StyledText(
@@ -149,7 +150,7 @@ class EquippedItems extends StatelessWidget {
                           ],
                         ),
                         Padding(
-                          padding: const EdgeInsets.symmetric(horizontal: 25.0),
+                          padding: EdgeInsets.symmetric(horizontal: 25.0.sp),
                           child: Column(
                             children: [
                               Row(
@@ -168,13 +169,13 @@ class EquippedItems extends StatelessWidget {
                                 ],
                               ),
                               Padding(
-                                padding: const EdgeInsets.only(top: 12.0),
+                                padding: EdgeInsets.only(top: 12.0.sp),
                                 child: Row(
                                   mainAxisAlignment: MainAxisAlignment.center,
                                   crossAxisAlignment: CrossAxisAlignment.center,
                                   children: [
                                     Padding(
-                                      padding: const EdgeInsets.only(top: 1.0, right: 3.0),
+                                      padding: EdgeInsets.only(top: 1.0.sp, right: 3.0.sp),
                                       child: iconItemAbrasion,
                                     ),
                                     StyledText(
@@ -208,12 +209,12 @@ class EquippedItems extends StatelessWidget {
                               ],
                             ),
                             Padding(
-                              padding: const EdgeInsets.only(top: 12.0),
+                              padding: EdgeInsets.only(top: 12.0.sp),
                               child: Row(
                                 mainAxisAlignment: MainAxisAlignment.center,
                                 children: [
                                   Padding(
-                                    padding: const EdgeInsets.only(top: 1.0, right: 3.0),
+                                    padding: EdgeInsets.only(top: 1.0.sp, right: 3.0.sp),
                                     child: iconStaminaReduce,
                                   ),
                                   StyledText(

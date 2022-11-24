@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:gaza_go/presentations/styles/styled_text.dart';
 
 class BottomSheetAlert extends StatelessWidget {
@@ -12,20 +13,20 @@ class BottomSheetAlert extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      decoration: const BoxDecoration(
+      decoration: BoxDecoration(
         color: Color(0xff363841),
         borderRadius: BorderRadius.only(
-          topLeft: Radius.circular(12),
-          topRight: Radius.circular(12),
+          topLeft: Radius.circular(12.sp),
+          topRight: Radius.circular(12.sp),
         ),
       ),
       child: Padding(
-        padding: const EdgeInsets.only(top: 30.0, left: 20, right: 20, bottom: 40),
+        padding: EdgeInsets.only(top: 30.0.sp, left: 20.sp, right: 20.sp, bottom: 40.sp),
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
             Padding(
-              padding: const EdgeInsets.only(top: 8.0),
+              padding: EdgeInsets.only(top: 8.0.sp),
               child: StyledText(
                 title,
                 fontSize: 22,
@@ -36,7 +37,7 @@ class BottomSheetAlert extends StatelessWidget {
             ),
             contentWidget ??
                 Padding(
-                  padding: const EdgeInsets.only(top: 12.0, bottom: 30),
+                  padding: EdgeInsets.only(top: 12.0.sp, bottom: 30.sp),
                   child: StyledText(
                     contentText!,
                     fontSize: 18,

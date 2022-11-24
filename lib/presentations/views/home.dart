@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:gaza_go/platform/controllers/home_menu_controller.dart';
 import 'package:gaza_go/platform/helpers/alert_helper.dart';
 import 'package:gaza_go/presentations/components/gazago_button.dart';
@@ -13,13 +14,14 @@ class Home extends StatelessWidget {
     return Container(
       decoration: BoxDecoration(
           border: Border.all(
-            width: 2,
+            width: 2.sp,
             color: Colors.black,
           ),
-          borderRadius: const BorderRadius.only(topLeft: Radius.circular(16), topRight: Radius.circular(16))),
+          borderRadius: BorderRadius.only(topLeft: Radius.circular(16.sp), topRight: Radius.circular(16.sp))),
       child: ClipRRect(
-        borderRadius: const BorderRadius.only(topLeft: Radius.circular(15), topRight: Radius.circular(15)),
+        borderRadius: BorderRadius.only(topLeft: Radius.circular(15.sp), topRight: Radius.circular(15.sp)),
         child: NavigationBar(
+          elevation: 0,
           backgroundColor: const Color(0xFF363841),
           onDestinationSelected: (index) => controller.selectMenu(index),
           selectedIndex: controller.selectedIndex.value,
@@ -74,8 +76,8 @@ class Home extends StatelessWidget {
                 buttonColor: const Color(0xFF363841),
               ),
             ),
-            const SizedBox(
-              width: 9,
+            SizedBox(
+              width: 9.sp,
             ),
             Expanded(
               child: GazagoButton(

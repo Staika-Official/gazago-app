@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 class StyledText extends StatelessWidget {
   final String text;
@@ -67,13 +68,13 @@ class StyledText extends StatelessWidget {
       text,
       textAlign: textAlign,
       style: TextStyle(
-        fontSize: fontSize,
+        fontSize: fontSize.sp,
         fontFamily: fontFamily,
         color: color,
         fontWeight: getFontWeight,
         height: getLineHeight,
         backgroundColor: backgroundColor,
-        letterSpacing: letterSpacing,
+        letterSpacing: letterSpacing.sp,
         overflow: overflowEllipsis ? TextOverflow.ellipsis : TextOverflow.visible,
       ),
     );

@@ -1,5 +1,6 @@
 import 'package:custom_rounded_rectangle_border/custom_rounded_rectangle_border.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 import 'package:gaza_go/platform/controllers/home_menu_controller.dart';
 import 'package:gaza_go/platform/controllers/inventory_controller.dart';
@@ -29,7 +30,7 @@ class InventoryHome extends StatelessWidget {
           mainAxisSize: MainAxisSize.max,
           children: [
             Padding(
-              padding: const EdgeInsets.only(left: 20.0, right: 20.0, bottom: 20.0),
+              padding: EdgeInsets.only(left: 20.0.sp, right: 20.0.sp, bottom: 20.0.sp),
               child: Column(
                 children: [
                   Obx(() {
@@ -103,7 +104,7 @@ class InventoryHome extends StatelessWidget {
               ),
             ),
             Padding(
-                padding: const EdgeInsets.symmetric(vertical: 20.0),
+                padding: EdgeInsets.symmetric(vertical: 20.0.sp),
                 child: Obx(() {
                   return Row(
                     mainAxisSize: MainAxisSize.max,
@@ -128,15 +129,15 @@ class InventoryHome extends StatelessWidget {
                             ],
                           ),
                           Padding(
-                            padding: const EdgeInsets.only(top: 12.0),
+                            padding: EdgeInsets.only(top: 12.0.sp),
                             child: Row(
                               mainAxisAlignment: MainAxisAlignment.center,
                               children: [
                                 Padding(
-                                  padding: const EdgeInsets.only(top: 3.0, right: 2.0),
+                                  padding: EdgeInsets.only(top: 3.0.sp, right: 2.0.sp),
                                   child: iconGoReward,
                                 ),
-                                StyledText(
+                                const StyledText(
                                   'GO 보상율',
                                   color: Color(0xFF8A8A8A),
                                   fontSize: 11,
@@ -149,7 +150,7 @@ class InventoryHome extends StatelessWidget {
                         ],
                       ),
                       Padding(
-                        padding: const EdgeInsets.symmetric(horizontal: 25.0),
+                        padding: EdgeInsets.symmetric(horizontal: 25.0.sp),
                         child: Column(
                           children: [
                             Row(
@@ -168,16 +169,16 @@ class InventoryHome extends StatelessWidget {
                               ],
                             ),
                             Padding(
-                              padding: const EdgeInsets.only(top: 12.0),
+                              padding: EdgeInsets.only(top: 12.0.sp),
                               child: Row(
                                 mainAxisAlignment: MainAxisAlignment.center,
                                 crossAxisAlignment: CrossAxisAlignment.center,
                                 children: [
                                   Padding(
-                                    padding: const EdgeInsets.only(top: 1.0, right: 3.0),
+                                    padding: EdgeInsets.only(top: 1.0.sp, right: 3.0.sp),
                                     child: iconItemAbrasion,
                                   ),
-                                  StyledText(
+                                  const StyledText(
                                     '아이템 마모율',
                                     color: Color(0xFF8A8A8A),
                                     fontSize: 12,
@@ -200,7 +201,7 @@ class InventoryHome extends StatelessWidget {
                                 fontSize: 28,
                                 fontWeight: 500,
                               ),
-                              StyledText(
+                              const StyledText(
                                 '%',
                                 fontSize: 16,
                                 fontWeight: 500,
@@ -208,15 +209,15 @@ class InventoryHome extends StatelessWidget {
                             ],
                           ),
                           Padding(
-                            padding: const EdgeInsets.only(top: 12.0),
+                            padding: EdgeInsets.only(top: 12.0.sp),
                             child: Row(
                               mainAxisAlignment: MainAxisAlignment.center,
                               children: [
                                 Padding(
-                                  padding: const EdgeInsets.only(top: 1.0, right: 3.0),
+                                  padding: EdgeInsets.only(top: 1.0.sp, right: 3.0.sp),
                                   child: iconStaminaReduce,
                                 ),
-                                StyledText(
+                                const StyledText(
                                   '체력 감소율',
                                   color: Color(0xFF8A8A8A),
                                   fontSize: 11,
@@ -232,39 +233,39 @@ class InventoryHome extends StatelessWidget {
                   );
                 })),
             Padding(
-              padding: const EdgeInsets.only(top: 10),
+              padding: EdgeInsets.only(top: 10.sp),
               child: TabBar(
                 controller: inventoryMenuController.tabController,
                 labelColor: Colors.white,
-                labelStyle: const TextStyle(fontSize: 16, fontWeight: FontWeight.w500),
+                labelStyle: TextStyle(fontSize: 16.sp, fontWeight: FontWeight.w500),
                 unselectedLabelColor: const Color(0xFF8A8A8A),
                 indicatorWeight: 0.1,
                 isScrollable: false,
                 labelPadding: const EdgeInsets.all(0),
-                splashBorderRadius: const BorderRadius.only(
-                  topRight: Radius.circular(15),
-                  topLeft: Radius.circular(15),
+                splashBorderRadius: BorderRadius.only(
+                  topRight: Radius.circular(15.sp),
+                  topLeft: Radius.circular(15.sp),
                 ),
-                indicator: const BoxDecoration(
+                indicator: BoxDecoration(
                   color: Color(0xFF363841),
                   borderRadius: BorderRadius.only(
-                    topRight: Radius.circular(15),
-                    topLeft: Radius.circular(15),
+                    topRight: Radius.circular(15.sp),
+                    topLeft: Radius.circular(15.sp),
                   ),
                 ),
                 tabs: <Widget>[
                   Tab(
                     child: Container(
-                      width: double.infinity,
-                      height: double.infinity,
-                      decoration: const ShapeDecoration(
+                      width: double.infinity.sp,
+                      height: double.infinity.sp,
+                      decoration: ShapeDecoration(
                         shape: CustomRoundedRectangleBorder(
-                          borderRadius: BorderRadius.only(topLeft: Radius.circular(10), topRight: Radius.circular(10)),
-                          leftSide: BorderSide(color: Colors.black, width: 2),
-                          topLeftCornerSide: BorderSide(color: Colors.black, width: 2),
-                          rightSide: BorderSide(color: Colors.black, width: 1),
-                          topRightCornerSide: BorderSide(color: Colors.black, width: 2),
-                          topSide: BorderSide(color: Colors.black, width: 2),
+                          borderRadius: BorderRadius.only(topLeft: Radius.circular(10.sp), topRight: Radius.circular(10.sp)),
+                          leftSide: BorderSide(color: Colors.black, width: 2.sp),
+                          topLeftCornerSide: BorderSide(color: Colors.black, width: 2.sp),
+                          rightSide: BorderSide(color: Colors.black, width: 1.sp),
+                          topRightCornerSide: BorderSide(color: Colors.black, width: 2.sp),
+                          topSide: BorderSide(color: Colors.black, width: 2.sp),
                         ),
                       ),
                       child: Row(
@@ -278,16 +279,16 @@ class InventoryHome extends StatelessWidget {
                   ),
                   Tab(
                     child: Container(
-                      width: double.infinity,
-                      height: double.infinity,
-                      decoration: const ShapeDecoration(
+                      width: double.infinity.sp,
+                      height: double.infinity.sp,
+                      decoration: ShapeDecoration(
                         shape: CustomRoundedRectangleBorder(
-                          borderRadius: BorderRadius.only(topLeft: Radius.circular(10), topRight: Radius.circular(10)),
-                          leftSide: BorderSide(color: Colors.black, width: 1),
-                          topLeftCornerSide: BorderSide(color: Colors.black, width: 2),
-                          rightSide: BorderSide(color: Colors.black, width: 2),
-                          topRightCornerSide: BorderSide(color: Colors.black, width: 2),
-                          topSide: BorderSide(color: Colors.black, width: 2),
+                          borderRadius: BorderRadius.only(topLeft: Radius.circular(10.sp), topRight: Radius.circular(10.sp)),
+                          leftSide: BorderSide(color: Colors.black, width: 1.sp),
+                          topLeftCornerSide: BorderSide(color: Colors.black, width: 2.sp),
+                          rightSide: BorderSide(color: Colors.black, width: 2.sp),
+                          topRightCornerSide: BorderSide(color: Colors.black, width: 2.sp),
+                          topSide: BorderSide(color: Colors.black, width: 2.sp),
                         ),
                       ),
                       child: Row(
