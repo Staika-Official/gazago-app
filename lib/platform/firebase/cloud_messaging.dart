@@ -59,6 +59,16 @@ void handleMessage() {
       );
     }
   });
+
+  FirebaseMessaging.onMessageOpenedApp.listen((RemoteMessage message) {
+    moveToLeaderboard(message);
+  });
+}
+
+void moveToLeaderboard(RemoteMessage message) {
+  if (message.data['notificationKey'] == 'DAILY_REWARD_COMPLETED') {
+    HiveStore.save(key: HiveKey.needRouteToRanking.name, value: true);
+  }
 }
 
 //for iOS and web
@@ -103,7 +113,6 @@ Future<void> setForegroundConfig() async {
 }
 
 void onSelectNotification(String? payload) {
-  // TODO. 필요할 경우 payload 처리 필요
   if (payload != null) {
     print(payload);
   }

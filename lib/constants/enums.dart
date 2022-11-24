@@ -63,6 +63,7 @@ enum HiveKey {
   activityLogs,
   userExerciseDataLogs,
   positionLowDataLogs,
+  needRouteToRanking,
 }
 
 enum ResponseStatus {

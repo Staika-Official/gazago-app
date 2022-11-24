@@ -44,7 +44,6 @@ class ArchiveController extends GetxController with ScrollMixin {
 
   Future<void> getArchiveList() async {
     dataGetLoading.value = true;
-    List<ArchiveListItemModel> records = List.empty(growable: true);
     await ArchiveService.getArchiveList(
       page.value,
       successCallback: (records) {
