@@ -270,6 +270,7 @@ class ActivityActive extends StatelessWidget {
     ActivityController controller = Get.find();
 
     return DefaultContainer(
+      backgroundColor: subBg01Color,
       onBackButtonTap: () {
         Get.offNamed(Routes.home);
       },

@@ -17,6 +17,7 @@ class EquippedItems extends StatelessWidget {
     InventoryController controller = Get.put(InventoryController());
 
     return DefaultContainer(
+      backgroundColor: subBg01Color,
       titleText: '장착 아이템',
       child: Container(
         decoration: const BoxDecoration(
