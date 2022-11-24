@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:gaza_go/platform/controllers/withdraw_confirm_controller.dart';
 import 'package:gaza_go/presentations/components/default_container.dart';
+import 'package:gaza_go/presentations/styles/colors.dart';
 import 'package:gaza_go/presentations/styles/styled_text.dart';
 import 'package:get/get.dart';
 
@@ -12,7 +13,7 @@ class WithdrawCompleted extends StatelessWidget {
   Widget build(BuildContext context) {
     WithdrawConfirmController controller = Get.put(WithdrawConfirmController());
     return DefaultContainer(
-      backgroundColor: const Color(0xFF1D1D26),
+      backgroundColor: subBg01Color,
       isPrevButtonHide: true,
       child: Padding(
         padding: EdgeInsets.all(20.sp),
@@ -36,13 +37,13 @@ class WithdrawCompleted extends StatelessWidget {
                         ),
                         Padding(
                           padding: EdgeInsets.only(top: 14.0.sp),
-                          child: const StyledText(
+                          child: StyledText(
                             '그동안 이용해 주셔서 감사합니다.',
                             fontSize: 16,
                             fontWeight: 500,
                             lineHeight: 22,
                             textAlign: TextAlign.center,
-                            color: Color(0xFF8A8A8A),
+                            color: deepGrayColor,
                           ),
                         ),
                       ],
@@ -58,7 +59,7 @@ class WithdrawCompleted extends StatelessWidget {
               child: Container(
                 height: 55.sp,
                 decoration: BoxDecoration(
-                  color: const Color(0xFF0EE6F3),
+                  color: skyBlueColor,
                   border: Border.all(width: 2.sp, color: Colors.black),
                   borderRadius: BorderRadius.circular(8.sp),
                   boxShadow: [

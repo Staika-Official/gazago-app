@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_naver_map/flutter_naver_map.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:gaza_go/platform/controllers/activity_controller.dart';
+import 'package:gaza_go/presentations/styles/colors.dart';
 import 'package:get/get.dart';
 
 class ActivityMap extends StatelessWidget {
@@ -12,7 +13,7 @@ class ActivityMap extends StatelessWidget {
       overlayId: 'ChallengeStartCenter' + controller.selectedChallenge.value.id!.toString(),
       center: LatLng(controller.selectedChallenge.value.startLat!, controller.selectedChallenge.value.startLon!),
       radius: 9,
-      color: Color(0xff0EE6F3),
+      color: skyBlueColor,
     );
 
     CircleOverlay outerCircle = CircleOverlay(
@@ -125,7 +126,7 @@ class ActivityMap extends StatelessWidget {
               width: 46.sp,
               height: 46.sp,
               decoration: BoxDecoration(
-                  color: Color(0xff363841),
+                  color: popupBgColor,
                   border: Border.all(width: 2.sp, style: BorderStyle.solid, color: Colors.black),
                   boxShadow: [
                     BoxShadow(

@@ -4,6 +4,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:gaza_go/platform/controllers/inventory_controller.dart';
 import 'package:gaza_go/platform/controllers/inventory_home_controller.dart';
 import 'package:gaza_go/platform/helpers/inventory_helper.dart';
+import 'package:gaza_go/presentations/styles/colors.dart';
 import 'package:gaza_go/presentations/styles/styled_text.dart';
 import 'package:get/get.dart';
 
@@ -36,7 +37,7 @@ class InventoryItem extends StatelessWidget {
                   onTap: () => controller.toItemDetail(item.id),
                   child: Container(
                     decoration: BoxDecoration(
-                      color: Color(0xFF1D1D26),
+                      color: subBg01Color,
                       borderRadius: BorderRadius.all(
                         Radius.circular(10.sp),
                       ),
@@ -64,13 +65,13 @@ class InventoryItem extends StatelessWidget {
                                     ? StyledText(
                                         item.itemName,
                                         fontWeight: 500,
-                                        color: Color(0xFFBFBFBF).withOpacity(0.5),
+                                        color: lightGrayColor.withOpacity(0.5),
                                         overflowEllipsis: true,
                                       )
                                     : StyledText(
                                         item.itemName,
                                         fontWeight: 500,
-                                        color: Color(0xFFBFBFBF),
+                                        color: lightGrayColor,
                                         overflowEllipsis: true,
                                       ),
                               ),
@@ -80,7 +81,7 @@ class InventoryItem extends StatelessWidget {
                                       child: Container(
                                         width: double.infinity,
                                         decoration: BoxDecoration(
-                                          color: const Color(0xFF363841),
+                                          color: popupBgColor,
                                           border: Border.all(
                                             width: 1,
                                             style: BorderStyle.solid,
@@ -114,11 +115,11 @@ class InventoryItem extends StatelessWidget {
                                       child: Container(
                                         width: double.infinity,
                                         decoration: BoxDecoration(
-                                          color: const Color(0xFF363841),
+                                          color: popupBgColor,
                                           border: Border.all(
                                             width: 1,
                                             style: BorderStyle.solid,
-                                            color: const Color(0xFF8A8A8A),
+                                            color: deepGrayColor,
                                           ),
                                           borderRadius: BorderRadius.all(
                                             Radius.circular(20.sp),
@@ -135,7 +136,7 @@ class InventoryItem extends StatelessWidget {
                                         alignment: Alignment.center,
                                         child: Padding(
                                           padding: EdgeInsets.all(8.0.sp),
-                                          child: StyledText('장착중', fontWeight: 500, fontSize: 14, color: Color(0xFF8A8A8A)),
+                                          child: StyledText('장착중', fontWeight: 500, fontSize: 14, color: deepGrayColor),
                                         ),
                                       ),
                                     ),
@@ -174,7 +175,7 @@ class InventoryItem extends StatelessWidget {
     double width = MediaQuery.of(context).size.width;
     double height = MediaQuery.of(context).size.height;
     return Container(
-      color: const Color(0xFF363841),
+      color: popupBgColor,
       child: Column(
         mainAxisSize: MainAxisSize.max,
         children: [

@@ -9,6 +9,7 @@ import 'package:gaza_go/platform/controllers/activity_controller.dart';
 import 'package:gaza_go/platform/helpers/alert_helper.dart';
 import 'package:gaza_go/platform/models/challenge_model.dart';
 import 'package:gaza_go/presentations/components/default_container.dart';
+import 'package:gaza_go/presentations/styles/colors.dart';
 import 'package:gaza_go/presentations/styles/styled_text.dart';
 import 'package:get/get.dart';
 
@@ -22,7 +23,7 @@ class ActivityChallenges extends StatelessWidget {
     //         overlayId: 'ChallengeStartCenter' + challenge.id!.toString(),
     //         center: LatLng(challenge.startLat!, challenge.startLon!),
     //         radius: 9,
-    //         color: Color(0xff0EE6F3),
+    //         color: skyBlueColor,
     //       ),
     //     )
     //     .toList();
@@ -41,7 +42,7 @@ class ActivityChallenges extends StatelessWidget {
       overlayId: 'ChallengeStartCenter' + controller.selectedChallenge.value.id!.toString(),
       center: LatLng(controller.selectedChallenge.value.startLat!, controller.selectedChallenge.value.startLon!),
       radius: 9,
-      color: Color(0xff0EE6F3),
+      color: skyBlueColor,
     );
 
     CircleOverlay outerCircle = CircleOverlay(
@@ -102,7 +103,7 @@ class ActivityChallenges extends StatelessWidget {
         markerId: course.id!.toString(),
         position: LatLng(course.startLat!, course.startLon!),
         captionText: course.startPointName,
-        captionColor: const Color(0xFF0EE6F3),
+        captionColor: skyBlueColor,
         captionHaloColor: Colors.black,
         captionTextSize: 16.0.sp,
         subCaptionTextSize: 14.sp,
@@ -159,7 +160,7 @@ class ActivityChallenges extends StatelessWidget {
                       fontSize: 18,
                       fontWeight: 500,
                       lineHeight: 18,
-                      color: isSelected ? Color(0xff0EE6F3) : Colors.white,
+                      color: isSelected ? skyBlueColor : Colors.white,
                     ),
                     Padding(
                       padding: EdgeInsets.only(
@@ -170,7 +171,7 @@ class ActivityChallenges extends StatelessWidget {
                         fontSize: 14,
                         fontWeight: 500,
                         lineHeight: 14,
-                        color: isSelected ? Color(0xff0EE6F3) : Color(0xff8A8A8A),
+                        color: isSelected ? skyBlueColor : deepGrayColor,
                       ),
                     ),
                   ],
@@ -225,7 +226,7 @@ class ActivityChallenges extends StatelessWidget {
                 key: controller.listKey,
                 width: MediaQuery.of(context).size.width,
                 decoration: BoxDecoration(
-                  color: Color(0xff363841),
+                  color: popupBgColor,
                   borderRadius: BorderRadius.only(
                     topLeft: Radius.circular(15.sp),
                     topRight: Radius.circular(15.sp),
@@ -279,7 +280,7 @@ class ActivityChallenges extends StatelessWidget {
                           padding: EdgeInsets.all(20.sp),
                           width: double.infinity.sp,
                           decoration: BoxDecoration(
-                            color: Color(0xff0EE6F3),
+                            color: skyBlueColor,
                             borderRadius: BorderRadius.circular(12.sp),
                             border: Border.all(
                               width: 2.sp,

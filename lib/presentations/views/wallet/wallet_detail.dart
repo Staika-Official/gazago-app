@@ -6,6 +6,7 @@ import 'package:flutter_svg_provider/flutter_svg_provider.dart' as SP;
 import 'package:gaza_go/platform/controllers/wallet_master_controller.dart';
 import 'package:gaza_go/platform/helpers/base_helper.dart';
 import 'package:gaza_go/presentations/components/default_container.dart';
+import 'package:gaza_go/presentations/styles/colors.dart';
 import 'package:gaza_go/presentations/styles/styled_text.dart';
 import 'package:get/get.dart';
 
@@ -52,7 +53,7 @@ class WalletDetail extends StatelessWidget {
                 : BoxDecoration(
                     border: BorderDirectional(
                       bottom: BorderSide(
-                        color: Color(0xff363841),
+                        color: popupBgColor,
                       ),
                     ),
                   ),
@@ -65,7 +66,7 @@ class WalletDetail extends StatelessWidget {
                   height: 8.sp,
                   margin: EdgeInsets.only(right: 15.sp, top: 4.sp, left: 4.sp),
                   decoration: BoxDecoration(
-                    color: Color(0xff0ee6f3),
+                    color: skyBlueColor,
                     borderRadius: BorderRadius.circular(8.sp),
                   ),
                 ),
@@ -129,7 +130,7 @@ class WalletDetail extends StatelessWidget {
 
     return Obx(() {
       return DefaultContainer(
-        backgroundColor: Color(0xff1D1D26),
+        backgroundColor: subBg01Color,
         titleText: controller.selectedAsset.value.meta!.name,
         child: Column(
           children: [
@@ -175,7 +176,7 @@ class WalletDetail extends StatelessWidget {
             //   child: renderButtons(controller),
             // ),
             Container(
-              color: Color(0xff2A2B33),
+              color: subBg02Color,
               height: 6,
               width: double.infinity,
               margin: EdgeInsets.only(top: 50.sp),

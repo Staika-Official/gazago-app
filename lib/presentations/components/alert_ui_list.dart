@@ -15,6 +15,7 @@ import 'package:gaza_go/platform/models/challenge_model.dart';
 import 'package:gaza_go/platform/models/inventory_badge_model.dart';
 import 'package:gaza_go/platform/models/stat_model.dart';
 import 'package:gaza_go/presentations/components/gazago_button.dart';
+import 'package:gaza_go/presentations/styles/colors.dart';
 import 'package:gaza_go/presentations/styles/icons.dart';
 import 'package:gaza_go/presentations/styles/styled_text.dart';
 import 'package:get/get.dart';
@@ -28,7 +29,7 @@ void showRetryAlert(LoadingController controller) {
         child: GazagoButton(
           onTap: () => controller.handleRefreshApp(),
           buttonText: '재시도하기',
-          buttonColor: const Color(0xFF0EE6F3),
+          buttonColor: skyBlueColor,
         ),
       ),
     ],
@@ -48,7 +49,7 @@ void showShoeRepairSlider(InventoryController controller) {
               fontSize: 16,
               lineHeight: 22,
               fontWeight: 500,
-              color: const Color(0xFF8A8A8A),
+              color: deepGrayColor,
             ),
           ),
           Container(
@@ -76,7 +77,7 @@ void showShoeRepairSlider(InventoryController controller) {
                 ),
                 activeTrackBar: BoxDecoration(
                   borderRadius: BorderRadius.circular(20.sp),
-                  color: Color(0xFFB85DFF),
+                  color: purpleColor,
                 ),
               ),
               onDragging: (handlerIndex, lowerValue, upperValue) {
@@ -85,7 +86,7 @@ void showShoeRepairSlider(InventoryController controller) {
               },
               handler: FlutterSliderHandler(
                 decoration: BoxDecoration(
-                  color: Color(0xFFB85DFF),
+                  color: purpleColor,
                   border: Border.all(width: 2.sp, color: Colors.white),
                   borderRadius: BorderRadius.circular(30.sp),
                   boxShadow: [
@@ -107,7 +108,7 @@ void showShoeRepairSlider(InventoryController controller) {
                 format: (label) => '+ ${formatDecimalPlaces(double.parse(label), 0)}',
                 boxStyle: FlutterSliderTooltipBox(
                   decoration: BoxDecoration(
-                    color: const Color(0xFFB85DFF),
+                    color: purpleColor,
                     borderRadius: BorderRadius.circular(50.sp),
                   ),
                 ),
@@ -144,7 +145,7 @@ void showShoeRepairSlider(InventoryController controller) {
           onTap: () => controller.closeRepairPopup(),
           buttonText: '취소',
           textColor: Colors.white,
-          buttonColor: const Color(0xFF363841),
+          buttonColor: popupBgColor,
         ),
       ),
       SizedBox(
@@ -154,7 +155,7 @@ void showShoeRepairSlider(InventoryController controller) {
         child: GazagoButton(
           onTap: () => controller.fetchRepairShoes(controller.equippedShoe.value.id),
           buttonText: '네',
-          buttonColor: const Color(0xFF0EE6F3),
+          buttonColor: skyBlueColor,
         ),
       ),
     ],
@@ -175,14 +176,14 @@ void showRepairStatSlider(ActivityController controller, StatModel stat) {
                     fontSize: 16,
                     lineHeight: 22,
                     fontWeight: 500,
-                    color: const Color(0xFF8A8A8A),
+                    color: deepGrayColor,
                   )
                 : StyledText(
                     '현재 신발 내구도 ${stat.currentStat}',
                     fontSize: 16,
                     lineHeight: 22,
                     fontWeight: 500,
-                    color: const Color(0xFF8A8A8A),
+                    color: deepGrayColor,
                   ),
           ),
           Container(
@@ -213,7 +214,7 @@ void showRepairStatSlider(ActivityController controller, StatModel stat) {
                 ),
                 activeTrackBar: BoxDecoration(
                   borderRadius: BorderRadius.circular(20.sp),
-                  color: stat.type == 'STAMINA' ? const Color(0xFFCDFF41) : const Color(0xFFB85DFF),
+                  color: stat.type == 'STAMINA' ? lightGreenColor : purpleColor,
                 ),
               ),
               onDragging: (handlerIndex, lowerValue, upperValue) {
@@ -222,7 +223,7 @@ void showRepairStatSlider(ActivityController controller, StatModel stat) {
               },
               handler: FlutterSliderHandler(
                 decoration: BoxDecoration(
-                  color: stat.type == 'STAMINA' ? const Color(0xFFCDFF41) : const Color(0xFFB85DFF),
+                  color: stat.type == 'STAMINA' ? lightGreenColor : purpleColor,
                   border: Border.all(width: 2.sp, color: Colors.white),
                   borderRadius: BorderRadius.circular(30.sp),
                   boxShadow: [
@@ -244,7 +245,7 @@ void showRepairStatSlider(ActivityController controller, StatModel stat) {
                 format: (label) => '+ ${formatDecimalPlaces(double.parse(label), 0)}',
                 boxStyle: FlutterSliderTooltipBox(
                   decoration: BoxDecoration(
-                    color: stat.type == 'STAMINA' ? const Color(0xFFCDFF41) : const Color(0xFFB85DFF),
+                    color: stat.type == 'STAMINA' ? lightGreenColor : purpleColor,
                     borderRadius: BorderRadius.circular(50.sp),
                   ),
                 ),
@@ -281,7 +282,7 @@ void showRepairStatSlider(ActivityController controller, StatModel stat) {
           onTap: () => controller.closeRepairPopup(),
           buttonText: '취소',
           textColor: Colors.white,
-          buttonColor: const Color(0xFF363841),
+          buttonColor: popupBgColor,
         ),
       ),
       SizedBox(
@@ -292,7 +293,7 @@ void showRepairStatSlider(ActivityController controller, StatModel stat) {
           onTap: () => stat.type == 'STAMINA' ? controller.fetchRechargeStamina(stat.type) : controller.fetchRepairShoes(),
           disableButton: controller.disableButton.value,
           buttonText: '네',
-          buttonColor: const Color(0xFF0EE6F3),
+          buttonColor: skyBlueColor,
         ),
       ),
     ],
@@ -308,7 +309,7 @@ void showNotEnoughTaikaAlert() {
         child: GazagoButton(
           onTap: () => Get.back(),
           buttonText: '확인',
-          buttonColor: const Color(0xFF0EE6F3),
+          buttonColor: skyBlueColor,
         ),
       ),
     ],
@@ -331,7 +332,7 @@ Future<void> showLocationAlert(ActivityController controller) async {
         TextSpan(
           text: '정확한 운동기록을 위해서 ',
           children: [
-            TextSpan(text: '위치', style: TextStyle(color: Color(0xff0EE6F3))),
+            TextSpan(text: '위치', style: TextStyle(color: skyBlueColor)),
             TextSpan(text: '엑세스 \n권한을 허용해 주세요'),
           ],
         ),
@@ -367,7 +368,7 @@ Future<void> showActivityAlert(ActivityController controller) async {
         TextSpan(
           text: '정확한 운동기록을 위해서 ',
           children: [
-            TextSpan(text: '신체 활동\n', style: TextStyle(color: Color(0xff0EE6F3))),
+            TextSpan(text: '신체 활동\n', style: TextStyle(color: skyBlueColor)),
             TextSpan(text: '엑세스 권한을 허용해 주세요.'),
           ],
         ),
@@ -403,7 +404,7 @@ Future<void> showGpsAlert() async {
         TextSpan(
           text: '정상적인 gazaGO 이용을 위하여 디바이스의 ',
           children: [
-            TextSpan(text: 'GPS', style: TextStyle(color: Color(0xff0EE6F3))),
+            TextSpan(text: 'GPS', style: TextStyle(color: skyBlueColor)),
             TextSpan(text: ' 기능을 활성화 시켜주세요.'),
           ],
         ),
@@ -432,7 +433,7 @@ void showEndExerciseAlert(ActivityMixin mixin, ChallengeModel challenge) {
           onTap: () => Get.back(),
           buttonText: '취소',
           textColor: Colors.white,
-          buttonColor: const Color(0xFF363841),
+          buttonColor: popupBgColor,
         ),
       ),
       SizedBox(
@@ -442,7 +443,7 @@ void showEndExerciseAlert(ActivityMixin mixin, ChallengeModel challenge) {
         child: GazagoButton(
           onTap: () => mixin.endExercise(challenge, source: 'showEndExerciseAlert'),
           buttonText: '운동종료',
-          buttonColor: const Color(0xFF0EE6F3),
+          buttonColor: skyBlueColor,
         ),
       ),
     ],
@@ -467,7 +468,7 @@ void showBadgeAcquisitionAlert(InventoryBadgeModel badge, ChallengeModel selecte
         Container(
           padding: EdgeInsets.symmetric(horizontal: 25.sp, vertical: 14.sp),
           decoration: BoxDecoration(
-            color: Color(0xff1d1d26),
+            color: subBg01Color,
             borderRadius: BorderRadius.circular(11.sp),
           ),
           child: StyledText(
@@ -485,11 +486,11 @@ void showBadgeAcquisitionAlert(InventoryBadgeModel badge, ChallengeModel selecte
               fontSize: 14.sp,
               height: 20.sp / 14.sp,
               fontWeight: FontWeight.w500,
-              color: Color(0xffbfbfbf),
+              color: lightGrayColor,
             ),
             TextSpan(
               children: [
-                TextSpan(text: '내 장비 > 뱃지', style: TextStyle(color: Color(0xff0EE6F3))),
+                TextSpan(text: '내 장비 > 뱃지', style: TextStyle(color: skyBlueColor)),
                 TextSpan(text: ' 카테고리에서\n획득한 뱃지를 확인하실수 있습니다.'),
               ],
             ),
@@ -520,7 +521,7 @@ void showDeleteRecordAlert(ArchiveController controller, int id) {
           onTap: () => Get.back(),
           buttonText: '아니요',
           textColor: Colors.white,
-          buttonColor: const Color(0xFF363841),
+          buttonColor: popupBgColor,
         ),
       ),
       SizedBox(
@@ -532,7 +533,7 @@ void showDeleteRecordAlert(ArchiveController controller, int id) {
             controller.deleteItem(id);
           },
           buttonText: '삭제하기',
-          buttonColor: const Color(0xFF0EE6F3),
+          buttonColor: skyBlueColor,
         ),
       ),
     ],
@@ -549,7 +550,7 @@ void showLogoutAlert(PreferenceController controller) {
           onTap: () => controller.onLogout(),
           buttonText: '네',
           textColor: Colors.white,
-          buttonColor: const Color(0xFF363841),
+          buttonColor: popupBgColor,
         ),
       ),
       SizedBox(
@@ -559,7 +560,7 @@ void showLogoutAlert(PreferenceController controller) {
         child: GazagoButton(
           onTap: () => Get.back(),
           buttonText: '아니요',
-          buttonColor: const Color(0xFF0EE6F3),
+          buttonColor: skyBlueColor,
         ),
       ),
     ],
@@ -576,7 +577,7 @@ void showConfirmWithdrawAlert(WithdrawConfirmController controller) {
           onTap: () => Get.back(),
           buttonText: '취소',
           textColor: Colors.white,
-          buttonColor: const Color(0xFF363841),
+          buttonColor: popupBgColor,
         ),
       ),
       SizedBox(
@@ -586,7 +587,7 @@ void showConfirmWithdrawAlert(WithdrawConfirmController controller) {
         child: GazagoButton(
           onTap: () => controller.handleFetchWithdrawMember(),
           buttonText: '확인',
-          buttonColor: const Color(0xFF0EE6F3),
+          buttonColor: skyBlueColor,
         ),
       ),
     ],

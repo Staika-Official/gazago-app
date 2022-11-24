@@ -4,6 +4,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg_provider/flutter_svg_provider.dart';
 import 'package:gaza_go/platform/controllers/wallet_master_controller.dart';
 import 'package:gaza_go/presentations/components/default_container.dart';
+import 'package:gaza_go/presentations/styles/colors.dart';
 import 'package:gaza_go/presentations/styles/styled_text.dart';
 import 'package:get/get.dart';
 
@@ -14,7 +15,7 @@ class BuyTik extends StatelessWidget {
     return Container(
       width: double.infinity,
       decoration: BoxDecoration(
-        color: Color(0xff363841),
+        color: popupBgColor,
         borderRadius: BorderRadius.only(
           topLeft: Radius.circular(12.sp),
           topRight: Radius.circular(12.sp),
@@ -162,11 +163,11 @@ class BuyTik extends StatelessWidget {
                 ],
               ),
             ),
-            const SizedBox(
+            SizedBox(
               width: double.infinity,
               child: StyledText(
                 '충전이 완료되면 취소할 수 없습니다.',
-                color: Color(0xff0ee6f3),
+                color: skyBlueColor,
                 fontSize: 14,
                 fontWeight: 500,
                 textAlign: TextAlign.center,
@@ -223,7 +224,7 @@ class BuyTik extends StatelessWidget {
                       padding: EdgeInsets.only(left: 6.sp),
                       child: Container(
                         decoration: BoxDecoration(
-                          color: Color(0xff0EE6F3),
+                          color: skyBlueColor,
                           borderRadius: BorderRadius.circular(12.sp),
                           border: Border.all(width: 2, color: Colors.black),
                           boxShadow: [
@@ -269,7 +270,7 @@ class BuyTik extends StatelessWidget {
   Widget build(BuildContext context) {
     WalletMasterController controller = Get.find();
     return DefaultContainer(
-      backgroundColor: const Color(0xff1D1D26),
+      backgroundColor: subBg01Color,
       child: Container(
         width: double.infinity,
         child: Column(
@@ -293,7 +294,7 @@ class BuyTik extends StatelessWidget {
               child: Container(
                 padding: EdgeInsets.only(top: 13.sp, left: 14.sp, right: 14.sp, bottom: 18.sp),
                 decoration: BoxDecoration(
-                  color: const Color(0xff2a2b33),
+                  color: subBg02Color,
                   borderRadius: BorderRadius.circular(12.sp),
                 ),
                 child: Column(
@@ -362,14 +363,14 @@ class BuyTik extends StatelessWidget {
                         onTap: () => null,
                         child: Padding(
                           padding: EdgeInsets.all(7.5.sp),
-                          child: const Center(
+                          child: Center(
                             child: StyledText(
                               '10',
                               fontSize: 16,
                               fontWeight: 500,
                               lineHeight: 16,
                               letterSpacing: -0.5,
-                              color: Color(0xff1d1d26),
+                              color: subBg01Color,
                             ),
                           ),
                         ),
@@ -391,14 +392,14 @@ class BuyTik extends StatelessWidget {
                         onTap: () => null,
                         child: Padding(
                           padding: EdgeInsets.all(7.5.sp),
-                          child: const Center(
+                          child: Center(
                             child: StyledText(
                               '100',
                               fontSize: 16,
                               fontWeight: 500,
                               lineHeight: 16,
                               letterSpacing: -0.5,
-                              color: Color(0xff1d1d26),
+                              color: subBg01Color,
                             ),
                           ),
                         ),
@@ -420,14 +421,14 @@ class BuyTik extends StatelessWidget {
                         onTap: () => null,
                         child: Padding(
                           padding: EdgeInsets.all(7.5.sp),
-                          child: const Center(
+                          child: Center(
                             child: StyledText(
                               '1000',
                               fontSize: 16,
                               fontWeight: 500,
                               lineHeight: 16,
                               letterSpacing: -0.5,
-                              color: Color(0xff1d1d26),
+                              color: subBg01Color,
                             ),
                           ),
                         ),
@@ -449,14 +450,14 @@ class BuyTik extends StatelessWidget {
                         onTap: () => null,
                         child: Padding(
                           padding: EdgeInsets.all(7.5.sp),
-                          child: const Center(
+                          child: Center(
                             child: StyledText(
                               'Max',
                               fontSize: 16,
                               fontWeight: 500,
                               lineHeight: 16,
                               letterSpacing: -0.5,
-                              color: Color(0xff1d1d26),
+                              color: subBg01Color,
                             ),
                           ),
                         ),
@@ -521,7 +522,7 @@ class BuyTik extends StatelessWidget {
                     ),
                     Expanded(
                       child: Ink(
-                        decoration: const BoxDecoration(color: Color(0xff0EE6F3)),
+                        decoration: BoxDecoration(color: skyBlueColor),
                         child: InkWell(
                           onTap: () => controller.showBuyConfirmation(getConfirmationBottomSheet(controller)),
                           child: Padding(

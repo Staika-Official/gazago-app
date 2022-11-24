@@ -8,6 +8,7 @@ import 'package:gaza_go/constants/routes.dart';
 import 'package:gaza_go/platform/controllers/home_menu_controller.dart';
 import 'package:gaza_go/platform/controllers/wallet_master_controller.dart';
 import 'package:gaza_go/platform/helpers/base_helper.dart';
+import 'package:gaza_go/presentations/styles/colors.dart';
 import 'package:gaza_go/presentations/styles/icons.dart';
 import 'package:gaza_go/presentations/styles/styled_text.dart';
 import 'package:get/get.dart';
@@ -50,7 +51,7 @@ class SecondaryAppbar extends StatelessWidget implements PreferredSizeWidget {
     WalletMasterController walletMasterController = Get.find();
 
     return AppBar(
-      backgroundColor: Color(0xFF1D1D26),
+      backgroundColor: subBg01Color,
       automaticallyImplyLeading: false,
       bottomOpacity: 0.0,
       elevation: 0.0,
@@ -80,7 +81,7 @@ class SecondaryAppbar extends StatelessWidget implements PreferredSizeWidget {
               children: [
                 Container(
                   decoration: BoxDecoration(
-                    color: Color(0xFF363841),
+                    color: popupBgColor,
                     border: Border.all(
                       width: 1,
                       color: Colors.black,

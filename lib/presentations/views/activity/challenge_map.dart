@@ -6,6 +6,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:gaza_go/platform/controllers/activity_controller.dart';
 import 'package:gaza_go/platform/models/challenge_hierarchy_model.dart';
 import 'package:gaza_go/platform/models/challenge_model.dart';
+import 'package:gaza_go/presentations/styles/colors.dart';
 import 'package:gaza_go/presentations/styles/icons.dart';
 import 'package:gaza_go/presentations/styles/styled_text.dart';
 import 'package:get/get.dart';
@@ -21,7 +22,7 @@ class ChallengeMap extends StatelessWidget {
             overlayId: 'ChallengeStartCenter' + challenge.id!.toString(),
             center: LatLng(challenge.startLat!, challenge.startLon!),
             radius: 30,
-            color: Color(0xff0EE6F3),
+            color: skyBlueColor,
           ),
         )
         .toList();
@@ -77,8 +78,8 @@ class ChallengeMap extends StatelessWidget {
           challenge.name,
           style: TextStyle(fontSize: 18.sp, fontWeight: FontWeight.w500, color: Colors.white),
         ),
-        collapsedIconColor: Color(0xFFBFBFBF),
-        iconColor: Color(0xFF0EE6F3),
+        collapsedIconColor: lightGrayColor,
+        iconColor: skyBlueColor,
         tilePadding: EdgeInsets.only(left: 20.sp, right: 20.sp, top: 0, bottom: 0),
         //children: challenge.course.map(course => _renderCourse(controller, course)).toList(),
         children: challenge.course.map((course) {
@@ -100,7 +101,7 @@ class ChallengeMap extends StatelessWidget {
             visualDensity: VisualDensity(vertical: MediaQuery.of(context).size.width < 320 ? -3 : 0),
             subtitle: StyledText(
               '${course.startPointName} - ${course.endPointName}',
-              color: (controller.challengeSelectedIndex == course.id) ? Color(0xFF0EE6F3) : Color(0xFF8A8A8A),
+              color: (controller.challengeSelectedIndex == course.id) ? skyBlueColor : deepGrayColor,
               fontSize: 14,
               lineHeight: 14,
               fontWeight: 500,
@@ -113,10 +114,10 @@ class ChallengeMap extends StatelessWidget {
             contentPadding: const EdgeInsets.all(0.0),
             // title: Text(
             //   course.secondName!,
-            //   style: TextStyle(color: (controller.challengeSelectedIndex == course.id) ? Color(0xFF0EE6F3) : Colors.white),
+            //   style: TextStyle(color: (controller.challengeSelectedIndex == course.id) ? skyBlueColor : Colors.white),
             // ),
 
-            title: StyledText(course.secondName!, fontSize: 17, color: (controller.challengeSelectedIndex == course.id) ? Color(0xFF0EE6F3) : Colors.white));
+            title: StyledText(course.secondName!, fontSize: 17, color: (controller.challengeSelectedIndex == course.id) ? skyBlueColor : Colors.white));
       });
     });
   }
@@ -184,7 +185,7 @@ class ChallengeMap extends StatelessWidget {
                   child: Container(
                       padding: EdgeInsets.only(top: 10.sp, bottom: 10.sp, right: 20.sp, left: 20.sp),
                       decoration: BoxDecoration(
-                        color: const Color(0xFF363841),
+                        color: popupBgColor,
                         borderRadius: BorderRadius.circular(14.sp),
                         border: Border.all(color: Colors.black, width: 2.sp),
                         boxShadow: const [
@@ -231,7 +232,7 @@ class ChallengeMap extends StatelessWidget {
                 child: SizedBox(
                   width: 40.sp,
                   child: Divider(
-                    color: Color(0xFF0EE6F3),
+                    color: skyBlueColor,
                     thickness: 3.sp,
                   ),
                 ),
@@ -241,7 +242,7 @@ class ChallengeMap extends StatelessWidget {
                   width: 40.sp,
                   child: Divider(
                     height: 1.sp,
-                    color: Color(0xFF0EE6F3),
+                    color: skyBlueColor,
                     thickness: 3.sp,
                   ),
                 ),
@@ -254,7 +255,7 @@ class ChallengeMap extends StatelessWidget {
         //This is the content of the bottom sheet which will be extendable by dragging.
         expandableContent: Container(
           height: MediaQuery.of(context).size.height - 200,
-          color: Color(0xFF363841),
+          color: popupBgColor,
           child: SingleChildScrollView(
             physics: const ClampingScrollPhysics(),
             child: Column(

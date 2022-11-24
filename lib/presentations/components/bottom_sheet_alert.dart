@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:gaza_go/presentations/styles/colors.dart';
 import 'package:gaza_go/presentations/styles/styled_text.dart';
 
 class BottomSheetAlert extends StatelessWidget {
@@ -14,7 +15,7 @@ class BottomSheetAlert extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       decoration: BoxDecoration(
-        color: Color(0xff363841),
+        color: popupBgColor,
         borderRadius: BorderRadius.only(
           topLeft: Radius.circular(12.sp),
           topRight: Radius.circular(12.sp),
@@ -44,7 +45,7 @@ class BottomSheetAlert extends StatelessWidget {
                     lineHeight: 24,
                     fontWeight: 500,
                     letterSpacing: .2,
-                    color: const Color(0xffbfbfbf),
+                    color: lightGrayColor,
                     textAlign: TextAlign.center,
                   ),
                 ),

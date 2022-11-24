@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:gaza_go/platform/controllers/preference_board_controller.dart';
 import 'package:gaza_go/presentations/components/default_container.dart';
+import 'package:gaza_go/presentations/styles/colors.dart';
 import 'package:gaza_go/presentations/styles/styled_text.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
@@ -66,14 +67,14 @@ class PreferenceBoard extends StatelessWidget {
                         decoration: BoxDecoration(
                           border: Border(
                             top: BorderSide(
-                              color: Color(0xff363841),
+                              color: popupBgColor,
                               width: 2.sp,
                             ),
                           ),
                         ),
                         child: StyledText(
                           controller.boardList[index].content!,
-                          color: Color(0xffbfbfbf),
+                          color: lightGrayColor,
                           fontSize: 16,
                           lineHeight: 22,
                           fontWeight: 500,

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:gaza_go/platform/controllers/withdraw_confirm_controller.dart';
 import 'package:gaza_go/presentations/components/default_container.dart';
+import 'package:gaza_go/presentations/styles/colors.dart';
 import 'package:gaza_go/presentations/styles/styled_text.dart';
 import 'package:get/get.dart';
 
@@ -22,7 +23,7 @@ class WithdrawConfirm extends StatelessWidget {
                     padding: EdgeInsets.only(top: 7.0.sp),
                     child: Icon(
                       Icons.check,
-                      color: checkItem.isChecked ? const Color(0xFF0EE6F3) : const Color(0xFF8A8A8A),
+                      color: checkItem.isChecked ? skyBlueColor : deepGrayColor,
                       size: 15.sp,
                     ),
                   ),
@@ -34,7 +35,7 @@ class WithdrawConfirm extends StatelessWidget {
                         fontWeight: 500,
                         fontSize: 16,
                         lineHeight: 24,
-                        color: const Color(0xFFBFBFBF),
+                        color: lightGrayColor,
                       ),
                     ),
                   ),
@@ -76,7 +77,7 @@ class WithdrawConfirm extends StatelessWidget {
             ),
             Divider(
               height: 40.sp,
-              color: const Color(0xFF363841),
+              color: popupBgColor,
               thickness: 1,
             ),
             Obx(
@@ -89,12 +90,12 @@ class WithdrawConfirm extends StatelessWidget {
                         controller.allAgreed.value
                             ? Icon(
                                 Icons.check_circle,
-                                color: const Color(0xFF0EE6F3),
+                                color: skyBlueColor,
                                 size: 24.sp,
                               )
                             : Icon(
                                 Icons.check_circle_rounded,
-                                color: const Color(0xFF363841),
+                                color: popupBgColor,
                                 size: 24.sp,
                               ),
                         Padding(
@@ -129,7 +130,7 @@ class WithdrawConfirm extends StatelessWidget {
                     Container(
                       height: 55.sp,
                       decoration: BoxDecoration(
-                        color: const Color(0xFF0EE6F3),
+                        color: skyBlueColor,
                         border: Border.all(width: 2.sp, color: Colors.black),
                         borderRadius: BorderRadius.circular(8.sp),
                         boxShadow: [

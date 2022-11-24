@@ -62,7 +62,7 @@ class _WalletHomeState extends State<WalletHome> with SingleTickerProviderStateM
           //     decoration: BoxDecoration(
           //       color: Colors.black,
           //       border: Border.all(
-          //         color: Color(0xff2a2b33),
+          //         color: subBg02Color,
           //         width: 2,
           //       ),
           //       borderRadius: BorderRadius.circular(50),
@@ -71,7 +71,7 @@ class _WalletHomeState extends State<WalletHome> with SingleTickerProviderStateM
           //       controller: _tabController,
           //       padding: EdgeInsets.symmetric(horizontal: 7, vertical: 5),
           //       indicator: BoxDecoration(
-          //         color: Color(0xff2A2B33),
+          //         color: subBg02Color,
           //         borderRadius: BorderRadius.circular(50),
           //       ),
           //       labelColor: Colors.white,

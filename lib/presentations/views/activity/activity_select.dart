@@ -3,6 +3,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:gaza_go/constants/enums.dart';
 import 'package:gaza_go/platform/controllers/activity_controller.dart';
+import 'package:gaza_go/presentations/styles/colors.dart';
 import 'package:get/get.dart';
 
 class ActivitySelect extends StatelessWidget {
@@ -54,7 +55,7 @@ class ActivitySelect extends StatelessWidget {
                         width: 155.sp,
                         height: 215.sp,
                         decoration: BoxDecoration(
-                          color: Color(0xFF363841),
+                          color: popupBgColor,
                           border: Border.all(
                             width: 1,
                             style: BorderStyle.solid,
@@ -148,7 +149,7 @@ class ActivitySelect extends StatelessWidget {
                         width: 155.sp,
                         height: 215.sp,
                         decoration: BoxDecoration(
-                          color: Color(0xFF363841),
+                          color: popupBgColor,
                           boxShadow: [
                             BoxShadow(
                               color: Color.fromRGBO(0, 0, 0, 0.25),

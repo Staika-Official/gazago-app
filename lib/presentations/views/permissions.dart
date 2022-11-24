@@ -4,6 +4,7 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:gaza_go/platform/controllers/permission_controller.dart';
 import 'package:gaza_go/platform/models/permission_item_model.dart';
 import 'package:gaza_go/presentations/components/default_container.dart';
+import 'package:gaza_go/presentations/styles/colors.dart';
 import 'package:gaza_go/presentations/styles/styled_text.dart';
 import 'package:get/get.dart';
 
@@ -46,7 +47,7 @@ class Permissions extends StatelessWidget {
                                 fontSize: 18,
                                 fontWeight: 500,
                                 lineHeight: 18,
-                                color: const Color(0xff8a8a8a),
+                                color: deepGrayColor,
                               ),
                             )
                           ],
@@ -58,7 +59,7 @@ class Permissions extends StatelessWidget {
                             fontSize: 14,
                             fontWeight: 500,
                             lineHeight: 14,
-                            color: const Color(0xffbfbfbf),
+                            color: lightGrayColor,
                           ),
                         ),
                       ],
@@ -85,12 +86,12 @@ class Permissions extends StatelessWidget {
                 const StyledText('접근 권한 안내', fontSize: 22, fontWeight: 500, lineHeight: 22),
                 Padding(
                   padding: EdgeInsets.only(top: 9.sp, bottom: 10.sp),
-                  child: const StyledText(
+                  child: StyledText(
                     '원활한 서비스 이용을 위하여 아래 권한들을\n허용해 주시기 바랍니다.',
                     fontSize: 16,
                     fontWeight: 500,
                     lineHeight: 22,
-                    color: Color(0xff8a8a8a),
+                    color: deepGrayColor,
                     textAlign: TextAlign.center,
                   ),
                 ),
@@ -99,7 +100,7 @@ class Permissions extends StatelessWidget {
             Divider(
               thickness: 1,
               height: 20.sp,
-              color: const Color(0xff363841),
+              color: popupBgColor,
             ),
             ...renderPermissionList(),
             Padding(
@@ -107,12 +108,12 @@ class Permissions extends StatelessWidget {
                 horizontal: 0,
                 vertical: 20.sp,
               ),
-              child: const StyledText(
+              child: StyledText(
                 "ㆍgazaGO는 운동 기록과 뱃지 획득 등의 기능 사용을 위해 앱이 닫혀 있을 때도 위치 데이터를 필요로 합니다. 원활한 서비스 이용을 위해 단말의 설정에서 위치 엑세스  권한을 ‘항상 허용'으로 설정해 주시길 바랍니다.",
                 fontSize: 13,
                 fontWeight: 500,
                 lineHeight: 18,
-                color: Color(0xff8a8a8a),
+                color: deepGrayColor,
               ),
             ),
             Expanded(
@@ -121,7 +122,7 @@ class Permissions extends StatelessWidget {
                 child: Container(
                   height: 55.sp,
                   decoration: BoxDecoration(
-                    color: const Color(0xFF0EE6F3),
+                    color: skyBlueColor,
                     border: Border.all(width: 2.sp, color: Colors.black),
                     borderRadius: BorderRadius.circular(8.sp),
                     boxShadow: [

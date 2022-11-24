@@ -8,6 +8,7 @@ import 'package:gaza_go/constants/routes.dart';
 import 'package:gaza_go/platform/controllers/my_page_controller.dart';
 import 'package:gaza_go/platform/helpers/preference_helper.dart';
 import 'package:gaza_go/presentations/components/default_container.dart';
+import 'package:gaza_go/presentations/styles/colors.dart';
 import 'package:gaza_go/presentations/styles/icons.dart';
 import 'package:gaza_go/presentations/styles/styled_text.dart';
 import 'package:get/get.dart';
@@ -21,14 +22,14 @@ class MyPage extends StatelessWidget {
 
     return DefaultContainer(
       titleText: '계정 정보',
-      backgroundColor: const Color(0xFF1D1D26),
+      backgroundColor: subBg01Color,
       headerBackgroundColor: Colors.transparent,
       child: Column(
         children: [
           Obx(() {
             return Container(
               alignment: Alignment.center,
-              color: const Color(0xFF1D1D26),
+              color: subBg01Color,
               padding: EdgeInsets.symmetric(horizontal: 20.sp, vertical: 30.sp),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.center,
@@ -79,7 +80,7 @@ class MyPage extends StatelessWidget {
                                 scrollPadding: EdgeInsets.all(20.0.sp),
                                 controller: controller.nicknameTextController,
                                 onChanged: (nickName) => controller.updateNickName(nickName),
-                                cursorColor: const Color(0xFF0EE6F3),
+                                cursorColor: skyBlueColor,
                                 textAlign: TextAlign.center,
                                 style: TextStyle(
                                   color: Colors.white,
@@ -91,21 +92,21 @@ class MyPage extends StatelessWidget {
                                   contentPadding: EdgeInsets.symmetric(horizontal: 15.0.sp, vertical: 4.0.sp),
                                   enabledBorder: UnderlineInputBorder(
                                     borderSide: BorderSide(
-                                      color: Color(0xff363841),
+                                      color: popupBgColor,
                                       width: 2.0.sp,
                                       style: BorderStyle.solid,
                                     ),
                                   ),
                                   border: UnderlineInputBorder(
                                     borderSide: BorderSide(
-                                      color: Color(0xff363841),
+                                      color: popupBgColor,
                                       width: 2.0.sp,
                                       style: BorderStyle.solid,
                                     ),
                                   ),
                                   focusedBorder: UnderlineInputBorder(
                                     borderSide: BorderSide(
-                                      color: Color(0xff363841),
+                                      color: popupBgColor,
                                       width: 2.sp,
                                       style: BorderStyle.solid,
                                     ),
@@ -124,20 +125,20 @@ class MyPage extends StatelessWidget {
                                           TextSpan(
                                             text: controller.profile.value.nickname!.length.toString(),
                                             style: TextStyle(
-                                              color: Color(0xFF8A8A8A),
+                                              color: deepGrayColor,
                                               fontSize: 12.sp,
                                             ),
                                           ),
-                                          const TextSpan(
+                                          TextSpan(
                                             text: ' / ',
                                             style: TextStyle(
-                                              color: Color(0xFF8A8A8A),
+                                              color: deepGrayColor,
                                             ),
                                           ),
                                           TextSpan(
                                             text: controller.maxNickNameLength.toString(),
                                             style: TextStyle(
-                                              color: Color(0xFF8A8A8A),
+                                              color: deepGrayColor,
                                               fontSize: 12.sp,
                                             ),
                                           ),
@@ -154,7 +155,7 @@ class MyPage extends StatelessWidget {
                             decoration: BoxDecoration(
                               border: BorderDirectional(
                                 bottom: BorderSide(
-                                  color: Color(0xff363841),
+                                  color: popupBgColor,
                                   width: 2.sp,
                                 ),
                               ),
@@ -199,11 +200,11 @@ class MyPage extends StatelessWidget {
                   controller.isEditMode.value
                       ? Expanded(
                           child: Container(
-                              color: Color(0xFF1D1D26),
+                              color: subBg01Color,
                               child: Align(
                                 alignment: Alignment.bottomCenter,
                                 child: Container(
-                                  color: const Color(0xFF0EE6F3),
+                                  color: skyBlueColor,
                                   height: 60.sp,
                                   alignment: Alignment.center,
                                   child: InkWell(
@@ -224,7 +225,7 @@ class MyPage extends StatelessWidget {
                               )),
                         )
                       : Container(
-                          color: Color(0xFF2A2B33),
+                          color: subBg02Color,
                           child: Padding(
                             padding: EdgeInsets.symmetric(horizontal: 20.0.sp),
                             child: Column(
@@ -397,9 +398,9 @@ class MyPage extends StatelessWidget {
                   if (!controller.isEditMode.value)
                     Column(
                       children: [
-                        Divider(color: Color(0xFF1D1D26), height: 6.sp),
+                        Divider(color: subBg01Color, height: 6.sp),
                         Container(
-                          color: const Color(0xFF2A2B33),
+                          color: subBg02Color,
                           child: Padding(
                             padding: EdgeInsets.symmetric(vertical: 21.0.sp, horizontal: 20.0.sp),
                             child: InkWell(

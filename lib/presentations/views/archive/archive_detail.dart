@@ -7,6 +7,7 @@ import 'package:gaza_go/platform/controllers/archive_controller.dart';
 import 'package:gaza_go/platform/helpers/activity_helper.dart';
 import 'package:gaza_go/platform/helpers/base_helper.dart';
 import 'package:gaza_go/presentations/components/default_container.dart';
+import 'package:gaza_go/presentations/styles/colors.dart';
 import 'package:gaza_go/presentations/styles/icons.dart';
 import 'package:gaza_go/presentations/styles/styled_text.dart';
 import 'package:get/get.dart';
@@ -29,7 +30,7 @@ class ArchiveDetail extends StatelessWidget {
           ),
         ),
       ),
-      backgroundColor: const Color(0xFF1D1D26),
+      backgroundColor: subBg01Color,
       child: SingleChildScrollView(
         physics: const ClampingScrollPhysics(),
         child: Column(

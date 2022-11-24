@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:gaza_go/platform/controllers/home_menu_controller.dart';
 import 'package:gaza_go/platform/controllers/inventory_controller.dart';
 import 'package:gaza_go/platform/controllers/synthetic_badge_controller.dart';
+import 'package:gaza_go/presentations/styles/colors.dart';
 import 'package:get/get.dart';
 
 class SyntheticBadge extends StatelessWidget {
@@ -17,7 +18,7 @@ class SyntheticBadge extends StatelessWidget {
     return Scaffold(
       appBar: homeMenuController.appbarList[1],
       body: Container(
-        color: Color(0xFF1D1D26),
+        color: subBg01Color,
         child: Padding(
           padding: const EdgeInsets.symmetric(horizontal: 20),
           child: Column(

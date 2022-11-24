@@ -5,6 +5,7 @@ import 'package:gaza_go/constants/routes.dart';
 import 'package:gaza_go/platform/controllers/debugging_controller.dart';
 import 'package:gaza_go/platform/controllers/preference_controller.dart';
 import 'package:gaza_go/presentations/components/default_container.dart';
+import 'package:gaza_go/presentations/styles/colors.dart';
 import 'package:gaza_go/presentations/styles/styled_text.dart';
 import 'package:get/get.dart';
 
@@ -18,7 +19,7 @@ class Preferences extends StatelessWidget {
 
     return DefaultContainer(
       titleText: '설정',
-      backgroundColor: const Color(0xFF1D1D26),
+      backgroundColor: subBg01Color,
       headerBackgroundColor: Color(0xFF23232D),
       child: SingleChildScrollView(
         child: Column(
@@ -167,7 +168,7 @@ class PreferenceItem extends StatelessWidget {
   Widget build(BuildContext context) {
     return Ink(
       height: 60.sp,
-      color: Color(0xFF1D1D26),
+      color: subBg01Color,
       child: InkWell(
         onTap: type == ItemType.functional ? onTap : null,
         child: Padding(
@@ -187,7 +188,7 @@ class PreferenceItem extends StatelessWidget {
                         'v${description!}',
                         fontSize: 16,
                         fontWeight: 500,
-                        color: Color(0xFF8A8A8A),
+                        color: deepGrayColor,
                       ),
                     ),
             ],

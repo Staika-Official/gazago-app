@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:gaza_go/presentations/styles/colors.dart';
 
 // Common Icons
 SvgPicture iconSplashLogo = SvgPicture.asset('assets/images/common/img_splash_logo.svg', width: 261, height: 61.15);
@@ -11,14 +12,14 @@ SvgPicture iconCopy = SvgPicture.asset('assets/images/common/ico_copy.svg', widt
 SvgPicture iconExclamationMark = SvgPicture.asset('assets/images/common/ico_circle_exclamation_mark.svg', width: 78.sp, height: 78.sp);
 
 // Bottom Navigation Icon
-SvgPicture iconMenuHome = SvgPicture.asset('assets/images/common/ico_menu_home.svg', width: 20.5.sp, height: 20.sp, color: const Color(0xFFBFBFBF));
-SvgPicture iconMenuHomeActive = SvgPicture.asset('assets/images/common/ico_menu_home.svg', width: 20.5.sp, height: 20.sp, color: const Color(0xFF0EE6F3));
-SvgPicture iconMenuArchive = SvgPicture.asset('assets/images/common/ico_menu_archive.svg', width: 27.sp, height: 17.sp, color: const Color(0xFFBFBFBF));
-SvgPicture iconMenuArchiveActive = SvgPicture.asset('assets/images/common/ico_menu_archive.svg', width: 27.sp, height: 17.sp, color: const Color(0xFF0EE6F3));
-SvgPicture iconMenuItems = SvgPicture.asset('assets/images/common/ico_menu_items.svg', width: 29.sp, height: 16.sp, color: const Color(0xFFBFBFBF));
-SvgPicture iconMenuItemsActive = SvgPicture.asset('assets/images/common/ico_menu_items.svg', width: 29.sp, height: 16.sp, color: const Color(0xFF0EE6F3));
-SvgPicture iconMenuRanking = SvgPicture.asset('assets/images/common/ico_menu_ranking.svg', width: 22.sp, height: 19.sp, color: const Color(0xFFBFBFBF));
-SvgPicture iconMenuRankingActive = SvgPicture.asset('assets/images/common/ico_menu_ranking.svg', width: 22.sp, height: 19.sp, color: const Color(0xFF0EE6F3));
+SvgPicture iconMenuHome = SvgPicture.asset('assets/images/common/ico_menu_home.svg', width: 20.5.sp, height: 20.sp, color: lightGrayColor);
+SvgPicture iconMenuHomeActive = SvgPicture.asset('assets/images/common/ico_menu_home.svg', width: 20.5.sp, height: 20.sp, color: skyBlueColor);
+SvgPicture iconMenuArchive = SvgPicture.asset('assets/images/common/ico_menu_archive.svg', width: 27.sp, height: 17.sp, color: lightGrayColor);
+SvgPicture iconMenuArchiveActive = SvgPicture.asset('assets/images/common/ico_menu_archive.svg', width: 27.sp, height: 17.sp, color: skyBlueColor);
+SvgPicture iconMenuItems = SvgPicture.asset('assets/images/common/ico_menu_items.svg', width: 29.sp, height: 16.sp, color: lightGrayColor);
+SvgPicture iconMenuItemsActive = SvgPicture.asset('assets/images/common/ico_menu_items.svg', width: 29.sp, height: 16.sp, color: skyBlueColor);
+SvgPicture iconMenuRanking = SvgPicture.asset('assets/images/common/ico_menu_ranking.svg', width: 22.sp, height: 19.sp, color: lightGrayColor);
+SvgPicture iconMenuRankingActive = SvgPicture.asset('assets/images/common/ico_menu_ranking.svg', width: 22.sp, height: 19.sp, color: skyBlueColor);
 
 // Login
 SvgPicture iconLoginApple = SvgPicture.asset('assets/images/login/ico_apple.svg', width: 11.sp, height: 14.sp);

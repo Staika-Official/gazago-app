@@ -3,6 +3,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:gaza_go/platform/controllers/calendar_statistics_controller.dart';
 import 'package:gaza_go/platform/helpers/base_helper.dart';
 import 'package:gaza_go/platform/models/user_reward_statistics_model.dart';
+import 'package:gaza_go/presentations/styles/colors.dart';
 import 'package:gaza_go/presentations/styles/icons.dart';
 import 'package:gaza_go/presentations/styles/styled_text.dart';
 import 'package:get/get.dart';
@@ -22,7 +23,7 @@ class CalendarStatistics extends StatelessWidget {
           fontSize: 18,
         ),
         centerTitle: true,
-        backgroundColor: const Color(0xFF1D1D26),
+        backgroundColor: subBg01Color,
         elevation: 0,
         leading: Builder(
           builder: (context) => IconButton(
@@ -32,7 +33,7 @@ class CalendarStatistics extends StatelessWidget {
         ),
       ),
       body: Container(
-        color: const Color(0xFF1D1D26),
+        color: subBg01Color,
         child: Column(
           children: [
             StreamBuilder<RxMap>(
@@ -72,9 +73,7 @@ class CalendarStatistics extends StatelessWidget {
                       },
                       calendarStyle: CalendarStyle(
                         todayDecoration: BoxDecoration(
-                            color: const Color(0xFF0EE6F3),
-                            shape: BoxShape.circle,
-                            border: Border.all(width: 14.sp, style: BorderStyle.solid, color: const Color(0xFF1D1D26), strokeAlign: StrokeAlign.center)),
+                            color: skyBlueColor, shape: BoxShape.circle, border: Border.all(width: 14.sp, style: BorderStyle.solid, color: subBg01Color, strokeAlign: StrokeAlign.center)),
                         todayTextStyle: TextStyle(
                           color: Colors.black,
                           fontSize: 16.0.sp,
