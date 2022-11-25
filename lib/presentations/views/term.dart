@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:gaza_go/platform/controllers/term_controller.dart';
 import 'package:gaza_go/presentations/components/default_container.dart';
+import 'package:gaza_go/presentations/styles/colors.dart';
 import 'package:gaza_go/presentations/styles/styled_text.dart';
 import 'package:get/get.dart';
 
@@ -27,7 +28,7 @@ class Term extends StatelessWidget {
                     border: Border(
                       bottom: BorderSide(
                         width: 2.sp,
-                        color: const Color(0xff363841),
+                        color: popupBgColor,
                       ),
                     ),
                   ),
@@ -42,8 +43,8 @@ class Term extends StatelessWidget {
                         color: Colors.white,
                       ),
                       Switch.adaptive(
-                        activeColor: const Color(0xff0EE6F3),
-                        activeTrackColor: const Color(0xff0EE6F3),
+                        activeColor: skyBlueColor,
+                        activeTrackColor: skyBlueColor,
                         inactiveTrackColor: const Color.fromRGBO(120, 120, 128, 0.16),
                         thumbColor: MaterialStateProperty.all(Colors.white),
                         overlayColor: MaterialStateProperty.all(Colors.transparent),

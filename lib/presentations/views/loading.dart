@@ -3,6 +3,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:gaza_go/platform/controllers/activity_controller.dart';
 import 'package:gaza_go/platform/controllers/loading_controller.dart';
 import 'package:gaza_go/platform/controllers/wallet_master_controller.dart';
+import 'package:gaza_go/presentations/styles/colors.dart';
 import 'package:gaza_go/presentations/styles/icons.dart';
 import 'package:gaza_go/presentations/styles/styled_text.dart';
 import 'package:get/get.dart';
@@ -21,7 +22,7 @@ class Loading extends StatelessWidget {
       gauge = Container(
         width: 6.sp,
         height: 16.sp,
-        color: i <= colored ? Color(0xFF0EE6F3) : Colors.black,
+        color: i <= colored ? skyBlueColor : Colors.black,
       );
 
       gaugeList.add(gauge);
@@ -66,9 +67,9 @@ class Loading extends StatelessWidget {
                         return Obx(() {
                           return Column(
                             children: [
-                              const StyledText(
+                              StyledText(
                                 'LOADING...',
-                                color: Color(0xFF0EE6F3),
+                                color: skyBlueColor,
                                 fontWeight: 900,
                                 fontFamily: 'Montserrat',
                                 fontSize: 20,
@@ -106,7 +107,7 @@ class Loading extends StatelessWidget {
                                     padding: EdgeInsets.only(bottom: 40.0.sp),
                                     child: StyledText(
                                       loadingController.progressMessage.value,
-                                      color: Color(0xFF0EE6F3),
+                                      color: skyBlueColor,
                                       fontWeight: 500,
                                       fontSize: 13,
                                       lineHeight: 15,

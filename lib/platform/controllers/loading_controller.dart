@@ -9,6 +9,7 @@ import 'package:gaza_go/platform/helpers/alert_helper.dart';
 import 'package:gaza_go/platform/helpers/base_helper.dart';
 import 'package:gaza_go/presentations/components/alert_ui_list.dart';
 import 'package:gaza_go/presentations/components/gazago_button.dart';
+import 'package:gaza_go/presentations/styles/colors.dart';
 import 'package:get/get.dart';
 import 'package:url_launcher/url_launcher.dart';
 
@@ -104,7 +105,7 @@ class LoadingController extends GetxController {
                   }
                 },
                 buttonText: '업데이트',
-                buttonColor: const Color(0xFF0EE6F3),
+                buttonColor: skyBlueColor,
               ),
             ),
           ],
@@ -122,7 +123,7 @@ class LoadingController extends GetxController {
                   onTap: () => Get.offAllNamed(Routes.home),
                   buttonText: '무시하기',
                   textColor: Colors.white,
-                  buttonColor: const Color(0xFF363841),
+                  buttonColor: popupBgColor,
                 ),
               ),
               const SizedBox(
@@ -142,7 +143,7 @@ class LoadingController extends GetxController {
                     }
                   },
                   buttonText: '업데이트',
-                  buttonColor: const Color(0xFF0EE6F3),
+                  buttonColor: skyBlueColor,
                 ),
               ),
             ],

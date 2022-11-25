@@ -3,6 +3,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:gaza_go/constants/enums.dart';
 import 'package:gaza_go/platform/controllers/activity_controller.dart';
 import 'package:gaza_go/platform/helpers/alert_helper.dart';
+import 'package:gaza_go/presentations/styles/colors.dart';
 import 'package:gaza_go/presentations/styles/icons.dart';
 import 'package:gaza_go/presentations/styles/styled_text.dart';
 import 'package:get/get.dart';
@@ -34,7 +35,7 @@ class ActivityHome extends StatelessWidget {
                                     children: [
                                       Container(
                                         decoration: BoxDecoration(
-                                          color: const Color(0xFF606167),
+                                          color: gaugeGrayColor,
                                           border: Border.all(
                                             width: 2.sp,
                                             color: Colors.black,
@@ -61,7 +62,7 @@ class ActivityHome extends StatelessWidget {
                                                         ? 0
                                                         : 34,
                                                 decoration: BoxDecoration(
-                                                  color: stat.currentStat < 30 ? const Color(0xFFFF2525) : const Color(0xFFCDFF41),
+                                                  color: stat.currentStat < 30 ? textRedColor : lightGreenColor,
                                                   border: Border.all(
                                                     width: 2.sp,
                                                     color: Colors.black,
@@ -89,7 +90,7 @@ class ActivityHome extends StatelessWidget {
                                     children: [
                                       Container(
                                         decoration: BoxDecoration(
-                                          color: const Color(0xFF606167),
+                                          color: gaugeGrayColor,
                                           border: Border.all(
                                             width: 2,
                                             color: Colors.black,
@@ -116,7 +117,7 @@ class ActivityHome extends StatelessWidget {
                                                         ? 0
                                                         : 34,
                                                 decoration: BoxDecoration(
-                                                  color: stat.currentStat < 30 ? const Color(0xFFFF2525) : const Color(0xFFB85DFF),
+                                                  color: stat.currentStat < 30 ? textRedColor : purpleColor,
                                                   border: Border.all(
                                                     width: 2,
                                                     color: Colors.black,
@@ -188,7 +189,7 @@ class ActivityHome extends StatelessWidget {
                           stat.type == 'STAMINA'
                               ? Container(
                                   decoration: BoxDecoration(
-                                    color: const Color(0xFF606167),
+                                    color: gaugeGrayColor,
                                     border: Border.all(
                                       width: 2.sp,
                                       color: Colors.black,
@@ -207,7 +208,7 @@ class ActivityHome extends StatelessWidget {
                                   ),
                                   child: CircleAvatar(
                                     radius: 19.sp,
-                                    backgroundColor: const Color(0xFFCDFF41),
+                                    backgroundColor: lightGreenColor,
                                     child: IconButton(
                                       icon: iconPlus,
                                       onPressed: () => {controller.onClickRepairStat(stat)},
@@ -216,7 +217,7 @@ class ActivityHome extends StatelessWidget {
                                 )
                               : Container(
                                   decoration: BoxDecoration(
-                                    color: const Color(0xFF606167),
+                                    color: gaugeGrayColor,
                                     border: Border.all(
                                       width: 2.sp,
                                       color: Colors.black,
@@ -235,7 +236,7 @@ class ActivityHome extends StatelessWidget {
                                   ),
                                   child: CircleAvatar(
                                     radius: 19.sp,
-                                    backgroundColor: Color(0xFFB85DFF),
+                                    backgroundColor: purpleColor,
                                     child: IconButton(
                                       icon: iconPlus,
                                       onPressed: () => {controller.onClickRepairStat(stat)},
@@ -262,7 +263,7 @@ class ActivityHome extends StatelessWidget {
             padding: EdgeInsets.only(left: 6.0.sp, right: 6.0.sp, top: 2.0.sp, bottom: 4.0.sp),
             child: Container(
               decoration: BoxDecoration(
-                color: const Color(0xFF363841),
+                color: popupBgColor,
                 border: Border.all(
                   width: 1,
                   color: Colors.black,
@@ -279,7 +280,7 @@ class ActivityHome extends StatelessWidget {
               ),
               child: Card(
                 margin: EdgeInsets.zero,
-                color: const Color(0xFF363841),
+                color: popupBgColor,
                 shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(14.sp)),
                 child: Padding(
                   padding: EdgeInsets.symmetric(vertical: 15.sp, horizontal: 12.sp),
@@ -338,8 +339,17 @@ class ActivityHome extends StatelessWidget {
     return LayoutBuilder(
       builder: (context, constraint) {
         return Container(
-          decoration: const BoxDecoration(
-            image: DecorationImage(
+          decoration: BoxDecoration(
+            gradient: LinearGradient(
+              begin: Alignment.topCenter,
+              end: Alignment.bottomCenter,
+              stops: const [-0.06, 1],
+              colors: [
+                mainBg01Color,
+                mainBg02Color,
+              ],
+            ),
+            image: const DecorationImage(
               image: AssetImage('assets/images/bg_activity_road.png'),
               alignment: Alignment(100, 1.5),
             ),
@@ -356,9 +366,9 @@ class ActivityHome extends StatelessWidget {
                       Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          const StyledText(
+                          StyledText(
                             '가자고와 함께 \n등산하고 뱃지를 받아보자고-!',
-                            color: Color(0xFF0EE6F3),
+                            color: skyBlueColor,
                             fontWeight: 700,
                             fontSize: 24,
                             lineHeight: 32,
@@ -366,7 +376,7 @@ class ActivityHome extends StatelessWidget {
                           Container(
                             margin: EdgeInsets.symmetric(vertical: ScreenUtil().setHeight(25)),
                             decoration: BoxDecoration(
-                              color: const Color(0xFF0EE6F3),
+                              color: skyBlueColor,
                               border: Border.all(
                                 width: 1,
                                 color: Colors.black,
@@ -456,7 +466,7 @@ class ActivityHome extends StatelessWidget {
                                     children: [
                                       Container(
                                         decoration: BoxDecoration(
-                                          color: const Color(0xFF0EE6F3),
+                                          color: skyBlueColor,
                                           border: Border.all(width: 10.sp, color: Color(0xFF4A4D57)),
                                           borderRadius: const BorderRadius.all(
                                             Radius.circular(150),
@@ -487,7 +497,7 @@ class ActivityHome extends StatelessWidget {
                                             shape: RoundedRectangleBorder(
                                               borderRadius: BorderRadius.circular(150),
                                             ),
-                                            color: const Color(0xFF0EE6F3),
+                                            color: skyBlueColor,
                                             height: 150.sp,
                                             minWidth: 150.sp,
                                             child: StyledText(

@@ -3,6 +3,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:gaza_go/constants/routes.dart';
 import 'package:gaza_go/platform/controllers/preference_controller.dart';
 import 'package:gaza_go/presentations/components/default_container.dart';
+import 'package:gaza_go/presentations/styles/colors.dart';
 import 'package:gaza_go/presentations/styles/styled_text.dart';
 import 'package:get/get.dart';
 
@@ -15,8 +16,8 @@ class TermsList extends StatelessWidget {
 
     return DefaultContainer(
       titleText: '약관',
-      backgroundColor: const Color(0xFF1D1D26),
-      headerBackgroundColor: Color(0xFF1D1D26),
+      backgroundColor: subBg01Color,
+      headerBackgroundColor: subBg01Color,
       child: Padding(
         padding: EdgeInsets.only(top: 10.0.sp),
         child: Column(
@@ -54,12 +55,12 @@ class TermsListItem extends StatelessWidget {
   Widget build(BuildContext context) {
     return Ink(
       height: 60.sp,
-      color: const Color(0xFF1D1D26),
+      color: subBg01Color,
       child: InkWell(
         onTap: type == ItemType.functional ? onTap : null,
         child: Container(
           height: 55.sp,
-          color: const Color(0xFF1D1D26),
+          color: subBg01Color,
           padding: EdgeInsets.only(left: 25.sp, right: 20.sp),
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -79,7 +80,7 @@ class TermsListItem extends StatelessWidget {
                         'v${description!}',
                         fontSize: 16,
                         fontWeight: 500,
-                        color: const Color(0xFF8A8A8A),
+                        color: deepGrayColor,
                       ),
                     ),
             ],

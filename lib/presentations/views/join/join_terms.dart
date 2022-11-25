@@ -3,6 +3,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:gaza_go/constants/routes.dart';
 import 'package:gaza_go/platform/controllers/join_terms_controller.dart';
 import 'package:gaza_go/presentations/components/default_container.dart';
+import 'package:gaza_go/presentations/styles/colors.dart';
 import 'package:gaza_go/presentations/styles/styled_text.dart';
 import 'package:get/get.dart';
 
@@ -27,7 +28,7 @@ class JoinTerms extends StatelessWidget {
                       padding: EdgeInsets.only(top: 6.0.sp),
                       child: Icon(
                         Icons.check_outlined,
-                        color: term.isChecked ? const Color(0xFF0EE6F3) : const Color(0xFF8A8A8A),
+                        color: term.isChecked ? skyBlueColor : deepGrayColor,
                         size: 15.sp,
                       ),
                     ),
@@ -42,7 +43,7 @@ class JoinTerms extends StatelessWidget {
                               fontWeight: 500,
                               fontSize: 16,
                               lineHeight: 24,
-                              color: const Color(0xFFBFBFBF),
+                              color: lightGrayColor,
                             ),
                             Expanded(
                               child: Padding(
@@ -52,7 +53,7 @@ class JoinTerms extends StatelessWidget {
                                   fontWeight: 500,
                                   fontSize: 16,
                                   lineHeight: 24,
-                                  color: const Color(0xFFBFBFBF),
+                                  color: lightGrayColor,
                                 ),
                               ),
                             ),
@@ -68,7 +69,7 @@ class JoinTerms extends StatelessWidget {
                             onTap: () => Get.toNamed(Routes.term, arguments: {'termType': term.boardType, 'termId': term.id}),
                             child: Icon(
                               Icons.chevron_right,
-                              color: Color(0xFF8A8A8A),
+                              color: deepGrayColor,
                               size: 20.sp,
                             ),
                           ),
@@ -88,7 +89,7 @@ class JoinTerms extends StatelessWidget {
     JoinTermsController controller = Get.put(JoinTermsController());
 
     return DefaultContainer(
-      backgroundColor: Color(0xFF1D1D26),
+      backgroundColor: subBg01Color,
       child: Padding(
         padding: EdgeInsets.all(20.sp),
         child: Column(
@@ -105,16 +106,16 @@ class JoinTerms extends StatelessWidget {
                   fontFamily: 'Montserrat',
                 ),
                 Row(
-                  children: const [
+                  children: [
                     StyledText(
                       'gazaGO',
                       fontSize: 24,
                       fontWeight: 700,
                       lineHeight: 32,
                       fontFamily: 'Montserrat',
-                      color: Color(0xFF0EE6F3),
+                      color: skyBlueColor,
                     ),
-                    StyledText(
+                    const StyledText(
                       ' 입니다.',
                       fontSize: 24,
                       fontWeight: 700,
@@ -135,7 +136,7 @@ class JoinTerms extends StatelessWidget {
             ),
             Divider(
               height: 40.sp,
-              color: Color(0xFF363841),
+              color: popupBgColor,
               thickness: 1,
             ),
             Obx(
@@ -149,12 +150,12 @@ class JoinTerms extends StatelessWidget {
                         controller.allAgreed.value
                             ? Icon(
                                 Icons.check_circle,
-                                color: Color(0xFF0EE6F3),
+                                color: skyBlueColor,
                                 size: 24.sp,
                               )
                             : Icon(
                                 Icons.check_circle_rounded,
-                                color: Color(0xFF363841),
+                                color: popupBgColor,
                                 size: 24.sp,
                               ),
                         Padding(
@@ -185,7 +186,7 @@ class JoinTerms extends StatelessWidget {
             Container(
               height: 55.sp,
               decoration: BoxDecoration(
-                color: const Color(0xFF0EE6F3),
+                color: skyBlueColor,
                 border: Border.all(width: 2.sp, color: Colors.black),
                 borderRadius: BorderRadius.circular(8.sp),
                 boxShadow: [

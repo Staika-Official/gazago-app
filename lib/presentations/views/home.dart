@@ -4,6 +4,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:gaza_go/platform/controllers/home_menu_controller.dart';
 import 'package:gaza_go/platform/helpers/alert_helper.dart';
 import 'package:gaza_go/presentations/components/gazago_button.dart';
+import 'package:gaza_go/presentations/styles/colors.dart';
 import 'package:gaza_go/presentations/styles/icons.dart';
 import 'package:get/get.dart';
 
@@ -22,7 +23,7 @@ class Home extends StatelessWidget {
         borderRadius: BorderRadius.only(topLeft: Radius.circular(15.sp), topRight: Radius.circular(15.sp)),
         child: NavigationBar(
           elevation: 0,
-          backgroundColor: const Color(0xFF363841),
+          backgroundColor: popupBgColor,
           onDestinationSelected: (index) => controller.selectMenu(index),
           selectedIndex: controller.selectedIndex.value,
           destinations: [
@@ -73,7 +74,7 @@ class Home extends StatelessWidget {
                 onTap: () => Get.back(),
                 buttonText: '아니요',
                 textColor: Colors.white,
-                buttonColor: const Color(0xFF363841),
+                buttonColor: popupBgColor,
               ),
             ),
             SizedBox(
@@ -85,7 +86,7 @@ class Home extends StatelessWidget {
                   SystemNavigator.pop();
                 },
                 buttonText: '예',
-                buttonColor: const Color(0xFF0EE6F3),
+                buttonColor: skyBlueColor,
               ),
             ),
           ],
@@ -96,7 +97,7 @@ class Home extends StatelessWidget {
       },
       child: Obx(() {
         return Scaffold(
-          backgroundColor: const Color(0xFF1D1D26),
+          backgroundColor: subBg01Color,
           appBar: controller.appbar,
           body: controller.mainViewWidgetList.elementAt(controller.selectedIndex.value),
           bottomNavigationBar: bottomNavigationBar(controller),

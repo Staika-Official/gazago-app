@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:gaza_go/constants/routes.dart';
+import 'package:gaza_go/presentations/styles/colors.dart';
 import 'package:gaza_go/presentations/styles/icons.dart';
 import 'package:get/get.dart';
 
@@ -13,7 +14,7 @@ class MainAppbar extends StatelessWidget implements PreferredSizeWidget {
   @override
   Widget build(BuildContext context) {
     return AppBar(
-      backgroundColor: Color(0xFF1D1D26),
+      backgroundColor: subBg01Color,
       bottomOpacity: 0.0,
       elevation: 0.0,
       automaticallyImplyLeading: false,

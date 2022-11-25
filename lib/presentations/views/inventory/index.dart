@@ -5,6 +5,7 @@ import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 import 'package:gaza_go/platform/controllers/home_menu_controller.dart';
 import 'package:gaza_go/platform/controllers/inventory_controller.dart';
 import 'package:gaza_go/platform/controllers/inventory_home_controller.dart';
+import 'package:gaza_go/presentations/styles/colors.dart';
 import 'package:gaza_go/presentations/styles/icons.dart';
 import 'package:gaza_go/presentations/styles/styled_text.dart';
 import 'package:gaza_go/presentations/views/inventory/inventory_badge.dart';
@@ -137,9 +138,9 @@ class InventoryHome extends StatelessWidget {
                                   padding: EdgeInsets.only(top: 3.0.sp, right: 2.0.sp),
                                   child: iconGoReward,
                                 ),
-                                const StyledText(
+                                StyledText(
                                   'GO 보상율',
-                                  color: Color(0xFF8A8A8A),
+                                  color: deepGrayColor,
                                   fontSize: 11,
                                   lineHeight: 12,
                                   fontWeight: 500,
@@ -178,9 +179,9 @@ class InventoryHome extends StatelessWidget {
                                     padding: EdgeInsets.only(top: 1.0.sp, right: 3.0.sp),
                                     child: iconItemAbrasion,
                                   ),
-                                  const StyledText(
+                                  StyledText(
                                     '아이템 마모율',
-                                    color: Color(0xFF8A8A8A),
+                                    color: deepGrayColor,
                                     fontSize: 12,
                                     lineHeight: 12,
                                     fontWeight: 600,
@@ -217,9 +218,9 @@ class InventoryHome extends StatelessWidget {
                                   padding: EdgeInsets.only(top: 1.0.sp, right: 3.0.sp),
                                   child: iconStaminaReduce,
                                 ),
-                                const StyledText(
+                                StyledText(
                                   '체력 감소율',
-                                  color: Color(0xFF8A8A8A),
+                                  color: deepGrayColor,
                                   fontSize: 11,
                                   lineHeight: 12,
                                   fontWeight: 500,
@@ -238,7 +239,7 @@ class InventoryHome extends StatelessWidget {
                 controller: inventoryMenuController.tabController,
                 labelColor: Colors.white,
                 labelStyle: TextStyle(fontSize: 16.sp, fontWeight: FontWeight.w500),
-                unselectedLabelColor: const Color(0xFF8A8A8A),
+                unselectedLabelColor: deepGrayColor,
                 indicatorWeight: 0.1,
                 isScrollable: false,
                 labelPadding: const EdgeInsets.all(0),
@@ -247,7 +248,7 @@ class InventoryHome extends StatelessWidget {
                   topLeft: Radius.circular(15.sp),
                 ),
                 indicator: BoxDecoration(
-                  color: Color(0xFF363841),
+                  color: popupBgColor,
                   borderRadius: BorderRadius.only(
                     topRight: Radius.circular(15.sp),
                     topLeft: Radius.circular(15.sp),

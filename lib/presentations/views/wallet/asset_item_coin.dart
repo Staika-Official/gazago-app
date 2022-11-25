@@ -6,6 +6,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg_provider/flutter_svg_provider.dart';
 import 'package:gaza_go/platform/helpers/base_helper.dart';
 import 'package:gaza_go/platform/models/asset_token_balance_ui_model.dart';
+import 'package:gaza_go/presentations/styles/colors.dart';
 import 'package:gaza_go/presentations/styles/styled_text.dart';
 
 class AssetItemCoin extends StatelessWidget {
@@ -20,7 +21,7 @@ class AssetItemCoin extends StatelessWidget {
   Widget build(BuildContext context) {
     return Ink(
       decoration: BoxDecoration(
-        color: Color(0xff2a2b33),
+        color: subBg02Color,
         border: Border.all(width: 2.sp, color: Colors.black),
         borderRadius: BorderRadius.circular(12.sp),
         boxShadow: [
@@ -117,7 +118,7 @@ class AssetItemCoin extends StatelessWidget {
                         width: double.infinity,
                         padding: EdgeInsets.all(16.sp),
                         decoration: BoxDecoration(
-                          color: Color(0xff0EE6F3),
+                          color: skyBlueColor,
                           border: Border.all(width: 1, color: Colors.black),
                           borderRadius: BorderRadius.circular(12.sp),
                           boxShadow: [

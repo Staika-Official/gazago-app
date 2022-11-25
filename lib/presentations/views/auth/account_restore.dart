@@ -3,6 +3,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:gaza_go/platform/controllers/login_controller.dart';
 import 'package:gaza_go/platform/controllers/withdraw_confirm_controller.dart';
 import 'package:gaza_go/presentations/components/default_container.dart';
+import 'package:gaza_go/presentations/styles/colors.dart';
 import 'package:gaza_go/presentations/styles/icons.dart';
 import 'package:gaza_go/presentations/styles/styled_text.dart';
 import 'package:get/get.dart';
@@ -16,7 +17,7 @@ class AccountRestore extends StatelessWidget {
     LoginController loginController = Get.put(LoginController());
     return DefaultContainer(
       isPrevButtonHide: true,
-      backgroundColor: const Color(0xFF1D1D26),
+      backgroundColor: subBg01Color,
       child: Padding(
         padding: EdgeInsets.all(20.sp),
         child: Stack(
@@ -44,14 +45,14 @@ class AccountRestore extends StatelessWidget {
                         ),
                         Padding(
                           padding: EdgeInsets.only(top: 14.0.sp),
-                          child: const StyledText(
+                          child: StyledText(
                             '탈퇴 후 14일 내 로그인 시\n기존 회원 계정으로 복구 됩니다.\n복구 하시겠습니까?',
                             fontSize: 16,
                             fontWeight: 500,
                             lineHeight: 22,
                             letterSpacing: .1,
                             textAlign: TextAlign.center,
-                            color: Color(0xFF8A8A8A),
+                            color: deepGrayColor,
                           ),
                         ),
                       ],
@@ -71,7 +72,7 @@ class AccountRestore extends StatelessWidget {
                       padding: EdgeInsets.only(right: 8.0.sp),
                       child: Container(
                         decoration: BoxDecoration(
-                          color: const Color(0xFF363841),
+                          color: popupBgColor,
                           border: Border.all(width: 2.sp, color: Colors.black),
                           borderRadius: BorderRadius.circular(8.sp),
                           boxShadow: [
@@ -100,7 +101,7 @@ class AccountRestore extends StatelessWidget {
                   Expanded(
                     child: Container(
                       decoration: BoxDecoration(
-                        color: const Color(0xFF0EE6F3),
+                        color: skyBlueColor,
                         border: Border.all(width: 2.sp, color: Colors.black),
                         borderRadius: BorderRadius.circular(8.sp),
                         boxShadow: [

@@ -4,6 +4,7 @@ import 'package:gaza_go/platform/controllers/inventory_controller.dart';
 import 'package:gaza_go/platform/controllers/wallet_master_controller.dart';
 import 'package:gaza_go/platform/helpers/inventory_helper.dart';
 import 'package:gaza_go/presentations/components/default_container.dart';
+import 'package:gaza_go/presentations/styles/colors.dart';
 import 'package:gaza_go/presentations/styles/icons.dart';
 import 'package:gaza_go/presentations/styles/styled_text.dart';
 import 'package:get/get.dart';
@@ -17,14 +18,14 @@ class InventoryItemDetail extends StatelessWidget {
     InventoryController controller = Get.put(InventoryController());
     return DefaultContainer(
       titleText: controller.selectedItem.value.itemName,
-      backgroundColor: Color(0xFF1D1D26),
+      backgroundColor: subBg01Color,
       child: Padding(
         padding: EdgeInsets.symmetric(horizontal: 22.0.sp),
         child: Column(
           children: [
             Container(
               decoration: BoxDecoration(
-                color: Color(0xFF2A2B33),
+                color: subBg02Color,
                 border: Border.all(
                   width: 2.sp,
                   color: Colors.black,
@@ -115,7 +116,7 @@ class InventoryItemDetail extends StatelessWidget {
                                                           children: [
                                                             Container(
                                                               decoration: BoxDecoration(
-                                                                color: const Color(0xFF606167),
+                                                                color: gaugeGrayColor,
                                                                 border: Border.all(
                                                                   width: 2.sp,
                                                                   color: Colors.black,
@@ -143,7 +144,7 @@ class InventoryItemDetail extends StatelessWidget {
                                                                                 ? 0
                                                                                 : 34,
                                                                         decoration: BoxDecoration(
-                                                                          color: controller.selectedItem.value.durability < 30 ? const Color(0xFFFF2525) : const Color(0xFFB85DFF),
+                                                                          color: controller.selectedItem.value.durability < 30 ? textRedColor : purpleColor,
                                                                           border: Border.all(
                                                                             width: 2.sp,
                                                                             color: Colors.black,
@@ -236,7 +237,7 @@ class InventoryItemDetail extends StatelessWidget {
                               Container(
                                 margin: EdgeInsets.only(top: 5.sp),
                                 decoration: BoxDecoration(
-                                  color: Color(0xFF1D1D26),
+                                  color: subBg01Color,
                                   borderRadius: BorderRadius.all(
                                     Radius.circular(10.sp),
                                   ),
@@ -268,14 +269,14 @@ class InventoryItemDetail extends StatelessWidget {
                                                   fontSize: 28,
                                                   lineHeight: 28,
                                                   fontWeight: 500,
-                                                  color: const Color(0xFF0EE6F3),
+                                                  color: skyBlueColor,
                                                 ),
-                                                const StyledText(
+                                                StyledText(
                                                   '%',
                                                   fontSize: 16,
                                                   lineHeight: 24,
                                                   fontWeight: 500,
-                                                  color: Color(0xFF0EE6F3),
+                                                  color: skyBlueColor,
                                                 ),
                                               ],
                                             ),
@@ -288,9 +289,9 @@ class InventoryItemDetail extends StatelessWidget {
                                                     padding: EdgeInsets.only(top: 3.0.sp, right: 2.0.sp),
                                                     child: iconGoReward,
                                                   ),
-                                                  const StyledText(
+                                                  StyledText(
                                                     'GO 보상율',
-                                                    color: Color(0xFF8A8A8A),
+                                                    color: deepGrayColor,
                                                     fontSize: 12,
                                                     lineHeight: 12,
                                                     fontWeight: 600,
@@ -313,14 +314,14 @@ class InventoryItemDetail extends StatelessWidget {
                                                   fontSize: 28,
                                                   lineHeight: 28,
                                                   fontWeight: 500,
-                                                  color: Color(0xFFB85DFF),
+                                                  color: purpleColor,
                                                 ),
-                                                const StyledText(
+                                                StyledText(
                                                   '%',
                                                   fontSize: 16,
                                                   lineHeight: 24,
                                                   fontWeight: 500,
-                                                  color: Color(0xFFB85DFF),
+                                                  color: purpleColor,
                                                 ),
                                               ],
                                             ),
@@ -334,9 +335,9 @@ class InventoryItemDetail extends StatelessWidget {
                                                     padding: EdgeInsets.only(top: 1.0.sp, right: 5.0.sp),
                                                     child: iconItemAbrasion,
                                                   ),
-                                                  const StyledText(
+                                                  StyledText(
                                                     '아이템 마모율',
-                                                    color: Color(0xFF8A8A8A),
+                                                    color: deepGrayColor,
                                                     fontSize: 12,
                                                     lineHeight: 12,
                                                     fontWeight: 600,
@@ -359,14 +360,14 @@ class InventoryItemDetail extends StatelessWidget {
                                                   fontSize: 28,
                                                   lineHeight: 28,
                                                   fontWeight: 500,
-                                                  color: Color(0xFFCDFF41),
+                                                  color: lightGreenColor,
                                                 ),
-                                                const StyledText(
+                                                StyledText(
                                                   '%',
                                                   fontSize: 16,
                                                   lineHeight: 24,
                                                   fontWeight: 500,
-                                                  color: Color(0xFFCDFF41),
+                                                  color: lightGreenColor,
                                                 ),
                                               ],
                                             ),
@@ -379,9 +380,9 @@ class InventoryItemDetail extends StatelessWidget {
                                                     padding: EdgeInsets.only(top: 1.0.sp, right: 2.0.sp),
                                                     child: iconStaminaReduce,
                                                   ),
-                                                  const StyledText(
+                                                  StyledText(
                                                     '체력 감소율',
-                                                    color: Color(0xFF8A8A8A),
+                                                    color: deepGrayColor,
                                                     fontSize: 12,
                                                     lineHeight: 12,
                                                     fontWeight: 600,
@@ -404,9 +405,9 @@ class InventoryItemDetail extends StatelessWidget {
                                   children: [
                                     Padding(
                                       padding: EdgeInsets.only(bottom: 10.sp),
-                                      child: const StyledText(
+                                      child: StyledText(
                                         '제품 설명',
-                                        color: Color(0xFF8A8A8A),
+                                        color: deepGrayColor,
                                         fontSize: 14,
                                       ),
                                     ),
@@ -430,11 +431,11 @@ class InventoryItemDetail extends StatelessWidget {
                               controller.selectedItem.value.equipped == true
                                   ? Container(
                                       decoration: BoxDecoration(
-                                        color: const Color(0xFF363841),
+                                        color: popupBgColor,
                                         border: Border.all(
                                           width: 1,
                                           style: BorderStyle.solid,
-                                          color: const Color(0xFF8A8A8A),
+                                          color: deepGrayColor,
                                         ),
                                         borderRadius: BorderRadius.all(
                                           Radius.circular(30.sp),
@@ -454,13 +455,13 @@ class InventoryItemDetail extends StatelessWidget {
                                           padding: EdgeInsets.symmetric(vertical: 13.0.sp, horizontal: 20.sp),
                                           child: Column(
                                             mainAxisAlignment: MainAxisAlignment.center,
-                                            children: const [
+                                            children: [
                                               StyledText(
                                                 '장착중',
                                                 fontSize: 18,
                                                 lineHeight: 18,
                                                 fontWeight: 500,
-                                                color: Color(0xFF8A8A8A),
+                                                color: deepGrayColor,
                                               ),
                                             ],
                                           ),
@@ -469,7 +470,7 @@ class InventoryItemDetail extends StatelessWidget {
                                     )
                                   : Container(
                                       decoration: BoxDecoration(
-                                        color: const Color(0xFF1D1D26),
+                                        color: subBg01Color,
                                         border: Border.all(
                                           width: 1,
                                           style: BorderStyle.solid,
@@ -524,7 +525,7 @@ class InventoryItemDetail extends StatelessWidget {
                       padding: EdgeInsets.all(20.sp),
                       width: double.infinity,
                       decoration: BoxDecoration(
-                        color: Color(0xff0EE6F3),
+                        color: skyBlueColor,
                         borderRadius: BorderRadius.circular(12.sp),
                         border: Border.all(
                           width: 2,

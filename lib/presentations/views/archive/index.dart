@@ -6,6 +6,7 @@ import 'package:gaza_go/constants/enums.dart';
 import 'package:gaza_go/platform/controllers/archive_controller.dart';
 import 'package:gaza_go/platform/helpers/activity_helper.dart';
 import 'package:gaza_go/platform/helpers/base_helper.dart';
+import 'package:gaza_go/presentations/styles/colors.dart';
 import 'package:gaza_go/presentations/styles/icons.dart';
 import 'package:gaza_go/presentations/styles/styled_text.dart';
 import 'package:get/get.dart';
@@ -21,7 +22,7 @@ class ArchiveHome extends StatelessWidget {
             child: Container(
               margin: EdgeInsets.only(bottom: 15.sp),
               decoration: BoxDecoration(
-                color: const Color(0xFF363841),
+                color: popupBgColor,
                 border: Border.all(
                   width: 1,
                   color: Colors.black,
@@ -38,7 +39,7 @@ class ArchiveHome extends StatelessWidget {
               ),
               child: Card(
                 elevation: 0,
-                color: const Color(0xFF363841),
+                color: popupBgColor,
                 child: Padding(
                   padding: EdgeInsets.only(top: 15.0.sp, left: 18.0.sp, right: 18.0.sp, bottom: 10.0.sp),
                   child: Column(
@@ -74,14 +75,14 @@ class ArchiveHome extends StatelessWidget {
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
                                 StyledText(formatDateUntilDay(archive.startedDate!), fontSize: 16, fontWeight: 500),
-                                if (archive.challengeTitle != null) StyledText(archive.challengeTitle!, fontSize: 12, lineHeight: 20, color: const Color(0xFF8a8a8a), fontWeight: 600),
+                                if (archive.challengeTitle != null) StyledText(archive.challengeTitle!, fontSize: 12, lineHeight: 20, color: deepGrayColor, fontWeight: 600),
                               ],
                             ),
                           )
                         ],
                       ),
                       Divider(
-                        color: Color(0xFF2a2b33),
+                        color: subBg02Color,
                         height: 25.sp,
                         thickness: 1,
                       ),
@@ -147,7 +148,7 @@ class ArchiveHome extends StatelessWidget {
     ArchiveController controller = Get.put(ArchiveController());
 
     return Container(
-      color: const Color(0xFF1D1D26),
+      color: subBg01Color,
       child: Obx(() {
         return Padding(
           padding: EdgeInsets.symmetric(vertical: 25.0.sp, horizontal: 20.0.sp),
@@ -193,6 +194,7 @@ class ArchiveHome extends StatelessWidget {
                               fontSize: 16,
                               lineHeight: 10,
                               fontWeight: 500,
+
                             ),
                           ),
                           Padding(

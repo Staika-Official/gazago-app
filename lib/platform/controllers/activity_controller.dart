@@ -26,6 +26,7 @@ import 'package:gaza_go/platform/services/activity_service.dart';
 import 'package:gaza_go/platform/services/item_service.dart';
 import 'package:gaza_go/platform/stores/hive_store.dart';
 import 'package:gaza_go/presentations/components/alert_ui_list.dart';
+import 'package:gaza_go/presentations/styles/colors.dart';
 import 'package:gaza_go/presentations/styles/icons.dart';
 import 'package:gaza_go/presentations/views/activity/activity_loading.dart';
 import 'package:gaza_go/presentations/views/activity/activity_select.dart';
@@ -140,7 +141,7 @@ class ActivityController extends SuperController with ActivityMixin, ChallengeMi
           markerId: course.id!.toString(),
           position: LatLng(course.startLat!, course.startLon!),
           captionText: course.startPointName,
-          captionColor: const Color(0xFF0EE6F3),
+          captionColor: skyBlueColor,
           captionHaloColor: Colors.black,
           captionTextSize: 16.0,
           subCaptionTextSize: 14,

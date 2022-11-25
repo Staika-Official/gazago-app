@@ -10,6 +10,7 @@ import 'package:gaza_go/platform/controllers/global_controller.dart';
 import 'package:gaza_go/platform/firebase/core.dart';
 import 'package:gaza_go/platform/firebase/crashlytics.dart';
 import 'package:gaza_go/platform/stores/hive_store.dart';
+import 'package:gaza_go/presentations/styles/colors.dart';
 import 'package:get/get.dart';
 import 'package:hive/hive.dart';
 import 'package:hive_flutter/adapters.dart';
@@ -78,19 +79,19 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    MaterialColor gazagoColor = const MaterialColor(
+    MaterialColor gazagoColor = MaterialColor(
       0xFF0EE6F3,
       <int, Color>{
-        50: Color(0xFF0EE6F3),
-        100: Color(0xFF0EE6F3),
-        200: Color(0xFF0EE6F3),
-        300: Color(0xFF0EE6F3),
-        400: Color(0xFF0EE6F3),
-        500: Color(0xFF0EE6F3),
-        600: Color(0xFF0EE6F3),
-        700: Color(0xFF0EE6F3),
-        800: Color(0xFF0EE6F3),
-        900: Color(0xFF0EE6F3),
+        50: skyBlueColor,
+        100: skyBlueColor,
+        200: skyBlueColor,
+        300: skyBlueColor,
+        400: skyBlueColor,
+        500: skyBlueColor,
+        600: skyBlueColor,
+        700: skyBlueColor,
+        800: skyBlueColor,
+        900: skyBlueColor,
       },
     );
     Get.put(GlobalController(), permanent: true);
@@ -119,14 +120,14 @@ class MyApp extends StatelessWidget {
               indicatorColor: Colors.transparent,
               labelTextStyle: MaterialStateProperty.resolveWith((states) {
                 if (states.contains(MaterialState.selected)) {
-                  return const TextStyle(
-                    color: Color(0xFF0EE6F3),
+                  return TextStyle(
+                    color: skyBlueColor,
                     fontSize: 10,
                     fontWeight: FontWeight.w600,
                   );
                 } else {
-                  return const TextStyle(
-                    color: Color(0xFFBFBFBF),
+                  return TextStyle(
+                    color: lightGrayColor,
                     fontSize: 10,
                     wordSpacing: 0,
                     fontWeight: FontWeight.w600,
