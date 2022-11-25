@@ -103,7 +103,7 @@ class ActivityController extends SuperController with ActivityMixin, ChallengeMi
   }
 
   Future<void> initController() async {
-    getUserState();
+    await getUserState();
     hasPermission.value = await checkAvailabilities();
     if (hasPermission.value) {
       await initActivityStatus();
@@ -290,7 +290,7 @@ class ActivityController extends SuperController with ActivityMixin, ChallengeMi
     });
   }
 
-  void getUserState() async {
+  Future<void> getUserState() async {
     await ActivityService.getCurrentUserState(
       successCallback: (currentUserState) async {
         currentUserState.exercise?.locationUpdateTime = DateTime.now();
