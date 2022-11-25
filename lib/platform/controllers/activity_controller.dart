@@ -83,6 +83,14 @@ class ActivityController extends SuperController with ActivityMixin, ChallengeMi
   }
 
   @override
+  void onReady() {
+    if ([ExerciseState.ongoing, ExerciseState.paused].any((state) => state == exerciseState.value)) {
+      showPendingExerciseAlert(this);
+    }
+    super.onReady();
+  }
+
+  @override
   void onClose() {
     print('################# onClose ActivityController');
 

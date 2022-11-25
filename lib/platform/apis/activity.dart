@@ -47,14 +47,14 @@ class ActivityApi {
     );
   }
 
-  static Future<Response> fetchUpdateUserExercises(String userId, UserExerciseModel exerciseInfo, String platform) async {
+  static Future<Response> fetchUpdateUserExercises(String userId, UserExerciseModel exerciseInfo, String platform, {String? source}) async {
     exerciseInfo.state = 'ONGOING';
     return await Api.client(serviceUrl: ServiceUrl.exerciseService).put(
       '/users/$userId',
       data: exerciseInfo,
       queryParameters: {
         'platform': platform,
-        'source': 'activityActive.dart',
+        'source': source ?? 'activityActive.dart',
       },
     );
   }

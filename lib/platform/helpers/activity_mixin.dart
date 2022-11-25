@@ -7,6 +7,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_naver_map/flutter_naver_map.dart';
 import 'package:gaza_go/constants/config.dart';
 import 'package:gaza_go/constants/enums.dart';
+import 'package:gaza_go/constants/routes.dart';
 import 'package:gaza_go/platform/controllers/archive_controller.dart';
 import 'package:gaza_go/platform/controllers/global_controller.dart';
 import 'package:gaza_go/platform/controllers/home_menu_controller.dart';
@@ -352,7 +353,13 @@ mixin ActivityMixin {
     }
   }
 
-  void continueExercise() {
+  void continueExerciseFromDialog() {
+    Get.back();
+    Get.toNamed(Routes.activityActive);
+    continueExercise();
+  }
+
+  void continueExercise({String? source}) {
     exerciseData.value = List.empty(growable: true);
     exerciseState.value = ExerciseState.ongoing;
     userState.value.exercise!.locationUpdateTime = DateTime.now();
@@ -367,7 +374,7 @@ mixin ActivityMixin {
     }
 
     initStream();
-    updateExercise();
+    updateExercise(source: source);
     startPeriodicUpdate();
   }
 
@@ -375,7 +382,7 @@ mixin ActivityMixin {
     return RxList(locationStringToLatLng(userState.value.exercise!.locations!));
   }
 
-  void updateExercise({bool? isPaused}) async {
+  void updateExercise({bool? isPaused, String? source}) async {
     void errorHandler() {
       CurrentUserStateModel savedState = HiveStore.loadCurrentUserState()!;
       userState.update((state) {
@@ -417,6 +424,7 @@ mixin ActivityMixin {
           : await ActivityService.fetchUpdateUserExercises(
               userExerciseData.value,
               Platform.operatingSystem,
+              source: source,
               successCallback: (CurrentUserStateModel newUserState) {
                 updateLocalUserState(newUserState);
 
@@ -462,7 +470,7 @@ mixin ActivityMixin {
     );
   }
 
-  void onTapDownStop(TapDownDetails tapDownDetails, ChallengeModel challenge) {
+  void onTapDownStop(TapDownDetails tapDownDetails, ChallengeModel challenge, {String? source}) {
     Duration counter = Duration.zero;
 
     if (stopTimer != null) {
@@ -472,7 +480,12 @@ mixin ActivityMixin {
     stopTimer = Timer.periodic(const Duration(milliseconds: 10), (timer) {
       if (counter == const Duration(milliseconds: 2500)) {
         initializeStopTimer();
-        showEndExerciseDialog(challenge);
+        if (source != null && source == 'pendingExerciseDialog') {
+          endExercise(challenge, source: source);
+          Get.back();
+        } else {
+          showEndExerciseDialog(challenge);
+        }
       } else {
         counter = counter + const Duration(milliseconds: 10);
         stopProgress.value += (10 / 2500);
@@ -480,8 +493,8 @@ mixin ActivityMixin {
     });
   }
 
-  void onTapUpStop(TapUpDetails tapUpDetails) {
-    showToastPopup('3초간 눌러야 정지됩니다.');
+  void onTapUpStop(TapUpDetails tapUpDetails, {String? source}) {
+    if (source != null && source != 'pendingExerciseDialog') showToastPopup('3초간 눌러야 정지됩니다.');
     initializeStopTimer();
   }
 
@@ -528,7 +541,7 @@ mixin ActivityMixin {
             resetVariables(challenge);
             resetTimer();
             resetSubscriptions();
-            if (source == 'showEndExerciseAlert') {
+            if (['showEndExerciseAlert', 'pendingExerciseDialog'].any((src) => src == source)) {
               moveToExerciseDetail(userState.value.exercise!.id!);
             }
           }

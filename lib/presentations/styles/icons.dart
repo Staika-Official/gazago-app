@@ -50,6 +50,7 @@ SvgPicture iconChallengeList = SvgPicture.asset('assets/images/activity/ico_chal
 SvgPicture iconChallengeCheckOn = SvgPicture.asset('assets/images/activity/ico_challenge_checked.svg', width: 16.sp, height: 11.sp);
 SvgPicture iconChallengeCheckOff = SvgPicture.asset('assets/images/activity/ico_challenge_unchecked.svg', width: 16.sp, height: 11.sp);
 SvgPicture iconChallengeScreenBack = SvgPicture.asset('assets/images/activity/ico_challenge_screen_back.svg', width: 57.sp, height: 56.sp);
+SvgPicture iconAppName = SvgPicture.asset('assets/images/activity/ico_app_name.svg', width: 140.sp, height: 32.sp);
 
 // archive
 SvgPicture iconArchiveDetailBadge = SvgPicture.asset('assets/images/archive/ico_archive_detail_badge.svg', width: 15.sp, height: 20.sp, color: Colors.black);

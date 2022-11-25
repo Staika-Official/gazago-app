@@ -14,6 +14,7 @@ import 'package:gaza_go/platform/helpers/base_helper.dart';
 import 'package:gaza_go/platform/models/challenge_model.dart';
 import 'package:gaza_go/platform/models/inventory_badge_model.dart';
 import 'package:gaza_go/platform/models/stat_model.dart';
+import 'package:gaza_go/presentations/components/circular_button.dart';
 import 'package:gaza_go/presentations/components/gazago_button.dart';
 import 'package:gaza_go/presentations/styles/colors.dart';
 import 'package:gaza_go/presentations/styles/icons.dart';
@@ -591,5 +592,115 @@ void showConfirmWithdrawAlert(WithdrawConfirmController controller) {
         ),
       ),
     ],
+  );
+}
+
+void showPendingExerciseAlert(ActivityController controller) {
+  Get.dialog(
+    Material(
+      color: Colors.transparent,
+      child: Center(
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Container(
+              width: double.infinity,
+              padding: EdgeInsets.only(top: 26.sp, left: 18.sp, right: 18.sp, bottom: 22.sp),
+              margin: EdgeInsets.only(
+                left: 30.sp,
+                right: 30.sp,
+              ),
+              decoration: BoxDecoration(
+                color: popupBgColor,
+                borderRadius: BorderRadius.circular(10.sp),
+              ),
+              child: Column(
+                children: [
+                  iconAppName,
+                  Padding(
+                    padding: EdgeInsets.symmetric(vertical: 33.sp),
+                    child: StyledText(
+                      '진행 중인 운동이 있습니다.\n계속 하시겠습니까?',
+                      fontSize: 18.sp,
+                      lineHeight: 28.sp,
+                      fontWeight: 500,
+                      textAlign: TextAlign.center,
+                    ),
+                  ),
+                  GazagoButton(
+                    onTap: () {
+                      controller.continueExerciseFromDialog();
+                    },
+                    buttonText: '네, 계속할래요',
+                  )
+                ],
+              ),
+            ),
+            Container(
+              width: double.infinity,
+              margin: EdgeInsets.only(
+                top: 39.sp,
+                left: 46.sp,
+                right: 46.sp,
+                bottom: 14.sp,
+              ),
+              padding: EdgeInsets.only(
+                top: 7.sp,
+                bottom: 11.sp,
+              ),
+              decoration: BoxDecoration(
+                color: Colors.black,
+                borderRadius: BorderRadius.circular(10.sp),
+              ),
+              child: Text.rich(
+                textAlign: TextAlign.center,
+                style: TextStyle(
+                  fontSize: 16.sp,
+                  height: 22.sp / 16.sp,
+                  fontWeight: FontWeight.w500,
+                  color: Colors.white,
+                ),
+                TextSpan(
+                  text: '운동을 종료하시려면\n',
+                  children: [
+                    TextSpan(text: '아래 '),
+                    TextSpan(text: '종료 버튼을 3초간 눌러주세요', style: TextStyle(color: skyBlueColor)),
+                  ],
+                ),
+              ),
+            ),
+            Obx(() {
+              return GestureDetector(
+                onTapDown: (tapDownDetail) => controller.onTapDownStop(tapDownDetail, controller.selectedChallenge.value, source: 'pendingExerciseDialog'),
+                onTapUp: (tapUpDetail) => controller.onTapUpStop(tapUpDetail, source: 'pendingExerciseDialog'),
+                child: Stack(
+                  children: [
+                    CircularButton(
+                      radius: 104.sp,
+                      color: Colors.white,
+                      child: Icon(Icons.stop, color: Colors.black, size: 64.sp),
+                    ),
+                    Positioned(
+                      top: 0,
+                      left: 0,
+                      child: Container(
+                        width: 104.sp,
+                        height: 104.sp,
+                        padding: EdgeInsets.all(5.sp),
+                        child: CircularProgressIndicator(
+                          strokeWidth: 6.sp,
+                          color: skyBlueColor,
+                          value: controller.stopProgress.value,
+                        ),
+                      ),
+                    )
+                  ],
+                ),
+              );
+            }),
+          ],
+        ),
+      ),
+    ),
   );
 }

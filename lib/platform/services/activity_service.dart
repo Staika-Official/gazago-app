@@ -97,8 +97,8 @@ class ActivityService {
     }
   }
 
-  static Future<void> fetchUpdateUserExercises(UserExerciseModel exerciseInfo, String platform, {required Function successCallback, Function? errorCallback}) async {
-    Response res = await ActivityApi.fetchUpdateUserExercises(userId!, exerciseInfo, platform);
+  static Future<void> fetchUpdateUserExercises(UserExerciseModel exerciseInfo, String platform, {String? source, required Function successCallback, Function? errorCallback}) async {
+    Response res = await ActivityApi.fetchUpdateUserExercises(userId!, exerciseInfo, platform, source: source);
     if (res.statusCode == 200) {
       successCallback(CurrentUserStateModel.fromJson(res.data));
     } else {
