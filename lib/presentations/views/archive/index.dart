@@ -175,41 +175,45 @@ class ArchiveHome extends StatelessWidget {
               // ),
 
               controller.archiveList.isEmpty
-                  ? Container(
-                      width: double.infinity,
-                      padding: EdgeInsets.symmetric(vertical: 50.sp),
-                      decoration: BoxDecoration(
-                        color: const Color(0xff363841),
-                        borderRadius: BorderRadius.circular(12.sp),
-                      ),
-                      child: Column(
-                        mainAxisSize: MainAxisSize.min,
-                        children: [
-                          SvgPicture.asset('assets/images/wallet/ico_empty.svg'),
-                          Padding(
-                            padding: EdgeInsets.only(top: 20.sp),
-                            child: const StyledText(
-                              '운동 기록이 없습니다.',
-                              color: Color(0xff7b7b7b),
-                              fontSize: 16,
-                              lineHeight: 10,
-                              fontWeight: 500,
-
-                            ),
+                  ? controller.dataGetLoading.value
+                      ? Padding(
+                          padding: EdgeInsets.symmetric(vertical: 20.0.sp),
+                          child: const Center(child: CircularProgressIndicator()),
+                        )
+                      : Container(
+                          width: double.infinity,
+                          padding: EdgeInsets.symmetric(vertical: 50.sp),
+                          decoration: BoxDecoration(
+                            color: const Color(0xff363841),
+                            borderRadius: BorderRadius.circular(12.sp),
                           ),
-                          Padding(
-                            padding: EdgeInsets.only(top: 13.sp),
-                            child: const StyledText(
-                              '운동하고 GO를 쌓아보세요!',
-                              color: Color(0xff7b7b7b),
-                              fontSize: 16,
-                              lineHeight: 10,
-                              fontWeight: 500,
-                            ),
+                          child: Column(
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              SvgPicture.asset('assets/images/wallet/ico_empty.svg'),
+                              Padding(
+                                padding: EdgeInsets.only(top: 20.sp),
+                                child: const StyledText(
+                                  '운동 기록이 없습니다.',
+                                  color: Color(0xff7b7b7b),
+                                  fontSize: 16,
+                                  lineHeight: 10,
+                                  fontWeight: 500,
+                                ),
+                              ),
+                              Padding(
+                                padding: EdgeInsets.only(top: 13.sp),
+                                child: const StyledText(
+                                  '운동하고 GO를 쌓아보세요!',
+                                  color: Color(0xff7b7b7b),
+                                  fontSize: 16,
+                                  lineHeight: 10,
+                                  fontWeight: 500,
+                                ),
+                              ),
+                            ],
                           ),
-                        ],
-                      ),
-                    )
+                        )
                   : Expanded(
                       child: SingleChildScrollView(
                         controller: controller.scroll,
