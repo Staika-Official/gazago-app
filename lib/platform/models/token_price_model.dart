@@ -5,6 +5,7 @@ part 'token_price_model.g.dart';
 @JsonSerializable(explicitToJson: true)
 class TokenPriceModel {
   double? price;
+  double? volume24h;
   double? percentChange1h;
   double? percentChange24h;
   double? percentChange7d;

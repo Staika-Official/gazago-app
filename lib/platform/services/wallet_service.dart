@@ -1,25 +1,36 @@
 import 'package:dio/dio.dart';
 import 'package:gaza_go/platform/apis/wallet.dart';
 import 'package:gaza_go/platform/models/asset_detail_model.dart';
-import 'package:gaza_go/platform/models/asset_token_balance_list_model.dart';
 import 'package:gaza_go/platform/models/asset_token_balance_model.dart';
 import 'package:gaza_go/platform/models/buy_tik_response_model.dart';
 import 'package:gaza_go/platform/models/pay_info_model.dart';
 import 'package:gaza_go/platform/models/pay_response_model.dart';
-import 'package:gaza_go/platform/models/token_info_model.dart';
 
 class WalletService {
-  static Future<void> generateSpendingWallet() async {
-    await WalletApi.generateSpendingWallet();
+  static Future<void> getSpendingWalletBalances({required Function successCallback, Function? errorCallback}) async {
+    Response res = await WalletApi.getSpendingWalletBalances();
+    if (res.statusCode! == 200) {
+      List<AssetTokenBalanceModel> balanceList = [];
+      if (res.data.length > 0) {
+        res.data.forEach((item) => balanceList.add(AssetTokenBalanceModel.fromJson(item)));
+      }
+      successCallback(balanceList);
+    } else {
+      if (errorCallback != null) errorCallback();
+    }
   }
 
-  static Future<AssetTokenBalanceListModel> getSpendingWalletBalance() async {
-    Response res = await WalletApi.getSpendingWalletBalance();
-    return AssetTokenBalanceListModel.fromJson(res.data);
+  static Future<void> getSpendingWalletBalance(String symbol, {required Function successCallback, Function? errorCallback}) async {
+    Response res = await WalletApi.getSpendingWalletBalance(symbol);
+    if (res.statusCode! == 200) {
+      successCallback(AssetTokenBalanceModel.fromJson(res.data));
+    } else {
+      if (errorCallback != null) errorCallback();
+    }
   }
 
-  static Future<AssetDetailModel> getSpendingWalletTransactions(String publicKey, [int size = 10]) async {
-    Response res = await WalletApi.getSpendingWalletTransactions(publicKey, size);
+  static Future<AssetDetailModel> getSpendingWalletTransactions(String symbol, [int size = 10]) async {
+    Response res = await WalletApi.getSpendingWalletTransactions(symbol, size);
     return AssetDetailModel.fromJson(res.data);
   }
 
@@ -37,20 +48,6 @@ class WalletService {
   static Future<PayResponseModel> payWithToken(PayInfoModel payInfo) async {
     Response res = await WalletApi.payWithToken(payInfo);
     return PayResponseModel.fromJson(res.data);
-  }
-
-  static Future<List<TokenInfoModel>> getSpendingMetaData() async {
-    Response res = await WalletApi.getSpendingMetaData();
-    List<TokenInfoModel> tokenData = [];
-    if (res.data.length > 0) {
-      res.data.forEach((item) => tokenData.add(TokenInfoModel.fromJson(item)));
-    }
-    return tokenData;
-  }
-
-  static Future<TokenInfoModel> getSpendingMetaDataByItem(String mint) async {
-    Response res = await WalletApi.getSpendingMetaDataByItem(mint);
-    return TokenInfoModel.fromJson(res.data);
   }
 
   static Future<void> getFeeTik({required Function successCallback, Function? errorCallback}) async {

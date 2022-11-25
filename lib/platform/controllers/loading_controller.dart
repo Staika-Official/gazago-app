@@ -80,7 +80,7 @@ class LoadingController extends GetxController {
   }
 
   void updateProgress(String message) async {
-    progress.value = progress.value + 0.33;
+    progress.value = progress.value + 0.5;
     progressMessage.value = message;
 
     if (progress.value >= 0.9) {
