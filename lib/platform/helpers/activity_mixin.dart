@@ -269,7 +269,7 @@ mixin ActivityMixin {
   }
 
   void calRealtimeSpeed() {
-    print('calRealtimeSpeed: ${realTimeSpeed.value}, exerciseData.length: ${exerciseData.length}');
+    // print('calRealtimeSpeed: ${realTimeSpeed.value}, exerciseData.length: ${exerciseData.length}');
 
     RxDouble calRealtimeSpeed = RxDouble(0);
 
@@ -287,7 +287,7 @@ mixin ActivityMixin {
     // int currentStep = 10;
 
     // 15초 이상 걷기 감지가 되지 않을 경우에는 속도 0으로 표시
-    print('${currentStep} - ${prevStep} > ${stepDifference}');
+    // print('${currentStep} - ${prevStep} > ${stepDifference}');
     if (currentStep - prevStep > stepDifference) {
       calRealtimeSpeed.value = (exerciseState.value != ExerciseState.ongoing) ? 0 : speed;
     }
@@ -349,14 +349,14 @@ mixin ActivityMixin {
         showToastPopup('인터넷 상태를 확인해주세요');
       }
     } else {
-      showToastPopup('지급은 리워드 정산시간입니다.');
+      showToastPopup('지금은 리워드 정산시간입니다.');
     }
   }
 
   void continueExerciseFromDialog() {
     Get.back();
     Get.toNamed(Routes.activityActive);
-    continueExercise();
+    continueExercise(source: 'pendingExerciseDialog');
   }
 
   void continueExercise({String? source}) {
