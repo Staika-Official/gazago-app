@@ -136,7 +136,7 @@ class ActivityActive extends StatelessWidget {
                                                         ? 0
                                                         : 34,
                                                 decoration: BoxDecoration(
-                                                  color: stat.currentStat < 30 ? textRedColor : purpleColor,
+                                                  color: stat.currentStat <= 30 ? textRedColor : purpleColor,
                                                   border: Border.all(
                                                     width: 2.sp,
                                                     color: Colors.black,
@@ -177,7 +177,7 @@ class ActivityActive extends StatelessWidget {
                             fontWeight: 800,
                             fontSize: 15,
                             lineHeight: 15,
-                            color: stat.currentStat < 20 ? Colors.white : Colors.black,
+                            color: stat.currentStat <= 30 ? Colors.white : Colors.black,
                           ),
                           Padding(
                             padding: EdgeInsets.only(left: 5.0.sp),
@@ -186,7 +186,7 @@ class ActivityActive extends StatelessWidget {
                               fontWeight: 800,
                               fontSize: 14,
                               lineHeight: 15,
-                              color: stat.currentStat < 20 ? Colors.white : Colors.black,
+                              color: stat.currentStat <= 30 ? Colors.white : Colors.black,
                             ),
                           ),
                         ],
@@ -270,7 +270,7 @@ class ActivityActive extends StatelessWidget {
     ActivityController controller = Get.find();
 
     return DefaultContainer(
-      backgroundColor: subBg01Color,
+      backgroundColor: subBg02Color,
       onBackButtonTap: () {
         Get.offNamed(Routes.home);
       },
@@ -283,19 +283,26 @@ class ActivityActive extends StatelessWidget {
               height: 6.sp,
               margin: EdgeInsets.only(right: 8.sp),
               decoration: BoxDecoration(
-                color: controller.exerciseStateTextColor.value,
+                color: controller.exerciseSteps.value < 1 ? Colors.white : controller.exerciseStateTextColor.value,
                 borderRadius: BorderRadius.circular(6.sp),
               ),
             ),
-            StyledText(
-              (controller.realTimeSpeed.value < 1 || controller.realTimeSpeed.value > 6) && controller.exerciseState.value == ExerciseState.ongoing
-                  ? controller.exerciseState.value.label + ' (보상 불가)'
-                  : controller.exerciseState.value.label,
-              fontSize: 18,
-              lineHeight: 18,
-              fontWeight: 500,
-              color: controller.exerciseStateTextColor.value,
-            )
+            controller.exerciseSteps.value < 1
+                ? StyledText(
+                    '운동 분석중',
+                    fontSize: 18,
+                    lineHeight: 18,
+                    fontWeight: 500,
+                  )
+                : StyledText(
+                    (controller.realTimeSpeed.value < 1 || controller.realTimeSpeed.value > 6) && controller.exerciseState.value == ExerciseState.ongoing
+                        ? controller.exerciseState.value.label + ' (보상 불가)'
+                        : controller.exerciseState.value.label,
+                    fontSize: 18,
+                    lineHeight: 18,
+                    fontWeight: 500,
+                    color: controller.exerciseStateTextColor.value,
+                  )
           ],
         );
       }),

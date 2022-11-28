@@ -26,7 +26,7 @@ class InventoryItem extends StatelessWidget {
             physics: const ScrollPhysics(),
             primary: false,
             controller: controller.itemScrollController,
-            padding: EdgeInsets.only(left: 20.sp, right: 20.sp),
+            padding: EdgeInsets.only(left: 20.sp, right: 20.sp, bottom: 20.sp),
             childAspectRatio: (1 / 1.4),
             crossAxisSpacing: 10.sp,
             mainAxisSpacing: 10.sp,
@@ -204,7 +204,7 @@ class InventoryItem extends StatelessWidget {
           Obx(() {
             return Expanded(
               child: Padding(
-                padding: EdgeInsets.only(top: 5.0.sp, bottom: 15.sp),
+                padding: EdgeInsets.only(top: 5.0.sp),
                 child: TabBarView(
                   physics: const NeverScrollableScrollPhysics(),
                   controller: _controller.subTabController,

@@ -144,7 +144,7 @@ class InventoryItemDetail extends StatelessWidget {
                                                                                 ? 0
                                                                                 : 34,
                                                                         decoration: BoxDecoration(
-                                                                          color: controller.selectedItem.value.durability < 30 ? textRedColor : purpleColor,
+                                                                          color: controller.selectedItem.value.durability <= 30 ? textRedColor : purpleColor,
                                                                           border: Border.all(
                                                                             width: 2.sp,
                                                                             color: Colors.black,
@@ -191,7 +191,7 @@ class InventoryItemDetail extends StatelessWidget {
                                                           fontWeight: 800,
                                                           fontSize: 15,
                                                           lineHeight: 21,
-                                                          color: controller.selectedItem.value.durability.toInt() < 20 ? Colors.white : Colors.black,
+                                                          color: controller.selectedItem.value.durability.toInt() <= 30 ? Colors.white : Colors.black,
                                                         ),
                                                         Padding(
                                                           padding: EdgeInsets.only(left: 5.0.sp),
@@ -200,7 +200,7 @@ class InventoryItemDetail extends StatelessWidget {
                                                             fontWeight: 800,
                                                             fontSize: 14,
                                                             lineHeight: 15,
-                                                            color: controller.selectedItem.value.durability.toInt() < 20 ? Colors.white : Colors.black,
+                                                            color: controller.selectedItem.value.durability.toInt() <= 30 ? Colors.white : Colors.black,
                                                           ),
                                                         ),
                                                       ],
@@ -336,7 +336,7 @@ class InventoryItemDetail extends StatelessWidget {
                                                     child: iconItemAbrasion,
                                                   ),
                                                   StyledText(
-                                                    '아이템 마모율',
+                                                    '내구도 감소율',
                                                     color: deepGrayColor,
                                                     fontSize: 12,
                                                     lineHeight: 12,

@@ -93,7 +93,7 @@ class WalletDetail extends StatelessWidget {
                         ],
                       ),
                       Padding(
-                        padding: EdgeInsets.only(top: 8.sp),
+                        padding: EdgeInsets.only(top: 14.sp),
                         child: Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [

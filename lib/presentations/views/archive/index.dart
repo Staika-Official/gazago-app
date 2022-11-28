@@ -194,7 +194,6 @@ class ArchiveHome extends StatelessWidget {
                               fontSize: 16,
                               lineHeight: 10,
                               fontWeight: 500,
-
                             ),
                           ),
                           Padding(

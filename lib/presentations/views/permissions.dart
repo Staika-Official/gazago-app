@@ -77,6 +77,7 @@ class Permissions extends StatelessWidget {
 
     return DefaultContainer(
       isLeadingShow: false,
+      backgroundColor: subBg01Color,
       child: Padding(
         padding: const EdgeInsets.all(20),
         child: Column(

@@ -3,6 +3,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:gaza_go/constants/enums.dart';
 import 'package:gaza_go/platform/controllers/activity_controller.dart';
 import 'package:gaza_go/platform/helpers/alert_helper.dart';
+import 'package:gaza_go/platform/helpers/base_helper.dart';
 import 'package:gaza_go/presentations/styles/colors.dart';
 import 'package:gaza_go/presentations/styles/icons.dart';
 import 'package:gaza_go/presentations/styles/styled_text.dart';
@@ -117,7 +118,7 @@ class ActivityHome extends StatelessWidget {
                                                         ? 0
                                                         : 34,
                                                 decoration: BoxDecoration(
-                                                  color: stat.currentStat < 30 ? textRedColor : purpleColor,
+                                                  color: stat.currentStat <= 30 ? textRedColor : purpleColor,
                                                   border: Border.all(
                                                     width: 2,
                                                     color: Colors.black,
@@ -164,7 +165,7 @@ class ActivityHome extends StatelessWidget {
                             fontWeight: 800,
                             fontSize: 15,
                             lineHeight: 15,
-                            color: stat.currentStat < 20 ? Colors.white : Colors.black,
+                            color: stat.currentStat <= 30 ? Colors.white : Colors.black,
                           ),
                           Padding(
                             padding: EdgeInsets.only(left: 5.0.sp),
@@ -177,7 +178,7 @@ class ActivityHome extends StatelessWidget {
                                   fontWeight: 800,
                                   fontSize: 15,
                                   lineHeight: 15,
-                                  color: stat.currentStat < 20 ? Colors.white : Colors.black,
+                                  color: stat.currentStat <= 30 ? Colors.white : Colors.black,
                                 ),
                               ),
                             ),
@@ -417,7 +418,7 @@ class ActivityHome extends StatelessWidget {
                                           return Row(
                                             children: [
                                               StyledText(
-                                                '${controller.userState.value.state != null ? controller.userState.value.state!.dailyGoReward.toString() : 0}',
+                                                '${controller.userState.value.state != null ? formatDecimalPlaces(controller.userState.value.state!.dailyGoReward!, 2).toString() : 0}',
                                                 fontFamily: 'Montserrat',
                                                 color: Colors.black,
                                                 fontWeight: 600,
@@ -504,8 +505,8 @@ class ActivityHome extends StatelessWidget {
                                               [ExerciseState.ongoing, ExerciseState.paused].any((state) => controller.exerciseState.value == state) ? 'Continue' : 'GO',
                                               fontWeight: 800,
                                               fontFamily: 'Montserrat',
-                                              fontSize: [ExerciseState.ongoing, ExerciseState.paused].any((state) => controller.exerciseState.value == state) ? 18 : 50,
-                                              lineHeight: [ExerciseState.ongoing, ExerciseState.paused].any((state) => controller.exerciseState.value == state) ? 18 : 50,
+                                              fontSize: [ExerciseState.ongoing, ExerciseState.paused].any((state) => controller.exerciseState.value == state) ? 23.sp : 50.sp,
+                                              lineHeight: [ExerciseState.ongoing, ExerciseState.paused].any((state) => controller.exerciseState.value == state) ? 23.sp : 50.sp,
                                               color: Colors.black,
                                               letterSpacing: 0.5,
                                             ),

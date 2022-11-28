@@ -180,7 +180,7 @@ class InventoryHome extends StatelessWidget {
                                     child: iconItemAbrasion,
                                   ),
                                   StyledText(
-                                    '아이템 마모율',
+                                    '내구도 감소율',
                                     color: deepGrayColor,
                                     fontSize: 12,
                                     lineHeight: 12,

@@ -15,6 +15,7 @@ class PreferenceBoard extends StatelessWidget {
     PreferenceBoardController controller = Get.put(PreferenceBoardController());
 
     return DefaultContainer(
+      backgroundColor: subBg01Color,
       titleText: controller.boardName.value,
       child: Obx(() {
         return ListView.builder(
@@ -44,10 +45,10 @@ class PreferenceBoard extends StatelessWidget {
                       fontWeight: 500,
                     ),
                     subtitle: Padding(
-                      padding: EdgeInsets.only(top: 5.0.sp),
+                      padding: EdgeInsets.only(top: 12.0.sp),
                       child: StyledText(
                         DateFormat('yyyy.MM.dd').format(DateTime.parse(controller.boardList[index].lastModifiedDate!)),
-                        color: Colors.white,
+                        color: deepGrayColor,
                         fontSize: 12,
                         lineHeight: 14,
                         fontWeight: 600,

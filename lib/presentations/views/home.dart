@@ -14,46 +14,59 @@ class Home extends StatelessWidget {
   Widget bottomNavigationBar(HomeMenuController controller) {
     return Container(
       decoration: BoxDecoration(
+        color: controller.selectedIndex.value == 0
+            ? Color(0xFF1C1D23)
+            : controller.selectedIndex.value == 2
+                ? popupBgColor
+                : subBg01Color,
+      ),
+      child: Container(
+        decoration: BoxDecoration(
           border: Border.all(
             width: 2.sp,
             color: Colors.black,
           ),
-          borderRadius: BorderRadius.only(topLeft: Radius.circular(16.sp), topRight: Radius.circular(16.sp))),
-      child: ClipRRect(
-        borderRadius: BorderRadius.only(topLeft: Radius.circular(15.sp), topRight: Radius.circular(15.sp)),
-        child: NavigationBar(
-          elevation: 0,
-          backgroundColor: popupBgColor,
-          onDestinationSelected: (index) => controller.selectMenu(index),
-          selectedIndex: controller.selectedIndex.value,
-          destinations: [
-            NavigationDestination(
-              icon: iconMenuHome,
-              selectedIcon: iconMenuHomeActive,
-              label: '홈',
-            ),
-            NavigationDestination(
-              icon: iconMenuArchive,
-              selectedIcon: iconMenuArchiveActive,
-              label: '기록',
-            ),
-            NavigationDestination(
-              icon: iconMenuItems,
-              selectedIcon: iconMenuItemsActive,
-              label: '내 장비',
-            ),
-            // NavigationDestination(
-            //   icon: Icon(
-            //     Icons.storefront,
-            //   ),
-            //   label: '상점',
-            // ),
-            NavigationDestination(
-              icon: iconMenuRanking,
-              selectedIcon: iconMenuRankingActive,
-              label: '랭킹',
-            )
-          ],
+          borderRadius: BorderRadius.only(
+            topLeft: Radius.circular(16.sp),
+            topRight: Radius.circular(16.sp),
+          ),
+        ),
+        child: ClipRRect(
+          borderRadius: BorderRadius.only(topLeft: Radius.circular(15.sp), topRight: Radius.circular(15.sp)),
+          child: NavigationBar(
+            elevation: 0,
+            backgroundColor: popupBgColor,
+            onDestinationSelected: (index) => controller.selectMenu(index),
+            selectedIndex: controller.selectedIndex.value,
+            destinations: [
+              NavigationDestination(
+                icon: iconMenuHome,
+                selectedIcon: iconMenuHomeActive,
+                label: '홈',
+              ),
+              NavigationDestination(
+                icon: iconMenuArchive,
+                selectedIcon: iconMenuArchiveActive,
+                label: '기록',
+              ),
+              NavigationDestination(
+                icon: iconMenuItems,
+                selectedIcon: iconMenuItemsActive,
+                label: '내 장비',
+              ),
+              // NavigationDestination(
+              //   icon: Icon(
+              //     Icons.storefront,
+              //   ),
+              //   label: '상점',
+              // ),
+              NavigationDestination(
+                icon: iconMenuRanking,
+                selectedIcon: iconMenuRankingActive,
+                label: '랭킹',
+              )
+            ],
+          ),
         ),
       ),
     );
@@ -100,7 +113,9 @@ class Home extends StatelessWidget {
           backgroundColor: subBg01Color,
           appBar: controller.appbar,
           body: controller.mainViewWidgetList.elementAt(controller.selectedIndex.value),
-          bottomNavigationBar: bottomNavigationBar(controller),
+          bottomNavigationBar: bottomNavigationBar(
+            controller,
+          ),
         );
       }),
     );

@@ -43,7 +43,7 @@ Future<bool> compareVersion(String versionString) async {
 
 String formatDate(String? isoDateString) {
   if (isoDateString != null) {
-    return DateFormat("yyyy-MM-dd hh:mm:ss").format(DateTime.parse(isoDateString).toLocal());
+    return DateFormat("yyyy-MM-dd HH:mm:ss").format(DateTime.parse(isoDateString).toLocal());
   } else {
     return '';
   }
