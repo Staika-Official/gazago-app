@@ -16,43 +16,39 @@ class InventoryBadgeDetail extends StatelessWidget {
   List<Widget> renderBadgeList(InventoryController controller) {
     return controller.syntheticBadgeList
         .map(
-          (badge) => Container(
-            child: Column(
-              children: [
-                Padding(
-                  padding: EdgeInsets.only(top: 10.sp, bottom: 5.sp),
-                  child: Row(children: [
-                    Container(
-                      child: Image(
-                        image: AssetImage(badge.badge.imageUrl),
-                        width: 30.sp,
-                        height: 30.sp,
-                      ),
-                    ),
-                    Container(
-                      padding: EdgeInsets.only(left: 10.sp),
-                      child: Text(badge.badge.description!),
-                    ),
-                    Container(
-                      padding: EdgeInsets.only(left: 5.sp),
-                      child: Text('·'),
-                    ),
-                    Container(
-                      padding: EdgeInsets.only(left: 5.sp),
-                      child: Text('LV${badge.badge.level}'),
-                    ),
-                    Container(
-                      padding: EdgeInsets.only(left: 5.sp),
-                      child: Text('(${badge.badge.createdDate})'),
-                    ),
-                    Container(
-                      padding: EdgeInsets.only(left: 5.sp),
-                      child: Text('+${badge.badge.luckRate}%'),
-                    )
-                  ]),
-                ),
-              ],
-            ),
+          (badge) => Column(
+            children: [
+              Padding(
+                padding: EdgeInsets.only(top: 10.sp, bottom: 5.sp),
+                child: Row(children: [
+                  Image(
+                    image: AssetImage(badge.badge.imageUrl),
+                    width: 30.sp,
+                    height: 30.sp,
+                  ),
+                  Padding(
+                    padding: EdgeInsets.only(left: 10.sp),
+                    child: Text(badge.badge.description!),
+                  ),
+                  Padding(
+                    padding: EdgeInsets.only(left: 5.sp),
+                    child: const Text('·'),
+                  ),
+                  Padding(
+                    padding: EdgeInsets.only(left: 5.sp),
+                    child: Text('LV${badge.badge.level}'),
+                  ),
+                  Padding(
+                    padding: EdgeInsets.only(left: 5.sp),
+                    child: Text('(${badge.badge.createdDate})'),
+                  ),
+                  Padding(
+                    padding: EdgeInsets.only(left: 5.sp),
+                    child: Text('+${badge.badge.luckRate}%'),
+                  )
+                ]),
+              ),
+            ],
           ),
         )
         .toList();
@@ -85,7 +81,7 @@ class InventoryBadgeDetail extends StatelessWidget {
                 boxShadow: [
                   BoxShadow(
                     color: Colors.black.withOpacity(0.25),
-                    offset: Offset(0, 1),
+                    offset: const Offset(0, 1),
                     blurRadius: 5.0,
                     spreadRadius: 0.0,
                   ),
@@ -213,7 +209,7 @@ class InventoryBadgeDetail extends StatelessWidget {
                                                     fontSize: 28,
                                                     lineHeight: 28,
                                                     fontWeight: 500,
-                                                    color: Color(0xFFFF41CA),
+                                                    color: const Color(0xFFFF41CA),
                                                   ),
                                                   const StyledText(
                                                     '%',
@@ -455,8 +451,6 @@ class InventoryBadgeDetail extends StatelessWidget {
     );
   }
 }
-
-const _defaultColor = Color(0xFF34568B);
 
 class Tile extends StatelessWidget {
   const Tile({

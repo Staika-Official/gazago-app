@@ -63,8 +63,8 @@ class ActivitySelect extends StatelessWidget {
                           ),
                           boxShadow: [
                             BoxShadow(
-                              color: Color.fromRGBO(0, 0, 0, 0.25),
-                              offset: Offset(0, 0),
+                              color: const Color.fromRGBO(0, 0, 0, 0.25),
+                              offset: const Offset(0, 0),
                               blurRadius: 4.sp,
                               spreadRadius: 4.sp,
                             )
@@ -72,7 +72,7 @@ class ActivitySelect extends StatelessWidget {
                           borderRadius: BorderRadius.circular(14.sp),
                         ),
                         foregroundDecoration: BoxDecoration(
-                          color: controller.doableChallenges.isNotEmpty ? Colors.transparent : Color.fromRGBO(0, 0, 0, 0.6),
+                          color: controller.doableChallenges.isNotEmpty ? Colors.transparent : const Color.fromRGBO(0, 0, 0, 0.6),
                         ),
                         child: InkWell(
                           onTap: controller.doableChallenges.isNotEmpty
@@ -96,7 +96,7 @@ class ActivitySelect extends StatelessWidget {
                                   child: Text(
                                     '등산',
                                     style: TextStyle(
-                                      color: Color(0xff4FFF4B),
+                                      color: const Color(0xff4FFF4B),
                                       fontWeight: FontWeight.w800,
                                       fontSize: 28.sp,
                                       height: 16.sp / 28.sp,
@@ -108,7 +108,7 @@ class ActivitySelect extends StatelessWidget {
                                   child: Text(
                                     '완등 후 뱃지 증정!',
                                     style: TextStyle(
-                                      color: Color(0xff4FFF4B),
+                                      color: const Color(0xff4FFF4B),
                                       fontWeight: FontWeight.w800,
                                       fontSize: 12.sp,
                                       height: 16.sp / 12.sp,
@@ -150,7 +150,7 @@ class ActivitySelect extends StatelessWidget {
                         height: 215.sp,
                         decoration: BoxDecoration(
                           color: popupBgColor,
-                          boxShadow: [
+                          boxShadow: const [
                             BoxShadow(
                               color: Color.fromRGBO(0, 0, 0, 0.25),
                               offset: Offset(0, 0),
@@ -177,7 +177,7 @@ class ActivitySelect extends StatelessWidget {
                                   child: Text(
                                     '걷기',
                                     style: TextStyle(
-                                      color: Color(0xff54F5FF),
+                                      color: const Color(0xff54F5FF),
                                       fontWeight: FontWeight.w800,
                                       fontSize: 28.sp,
                                       height: 16.sp / 28.sp,
@@ -203,7 +203,7 @@ class ActivitySelect extends StatelessWidget {
                   width: 113.sp,
                   height: 113.sp,
                   decoration: BoxDecoration(
-                    color: Color(0xff18191F),
+                    color: const Color(0xff18191F),
                     border: Border.all(width: 1, style: BorderStyle.solid, color: Colors.white),
                     borderRadius: BorderRadius.circular(113.sp),
                   ),

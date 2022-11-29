@@ -48,7 +48,7 @@ class UaaApi {
     String? accessToken = HiveStore.loadString(key: HiveKey.accessToken.name);
 
     if (accessToken != null) {
-      dio.options.headers = {'Authorization': 'Bearer ${accessToken!}'};
+      dio.options.headers = {'Authorization': 'Bearer $accessToken'};
     }
     return await dio.post('${F.baseUrl}${ServiceUrl.uaaService}/users/$userId/upload-profile-image', data: imageFile);
 

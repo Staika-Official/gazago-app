@@ -3,6 +3,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:gaza_go/constants/enums.dart';
 import 'package:gaza_go/platform/controllers/activity_controller.dart';
 import 'package:gaza_go/platform/helpers/alert_helper.dart';
+import 'package:gaza_go/platform/helpers/base_helper.dart';
 import 'package:gaza_go/presentations/styles/colors.dart';
 import 'package:gaza_go/presentations/styles/icons.dart';
 import 'package:gaza_go/presentations/styles/styled_text.dart';
@@ -10,7 +11,7 @@ import 'package:get/get.dart';
 import 'package:simple_animations/simple_animations.dart';
 
 class ActivityHome extends StatelessWidget {
-  ActivityHome({Key? key}) : super(key: key);
+  const ActivityHome({Key? key}) : super(key: key);
 
   List<Widget> renderStatList(ActivityController controller, context) {
     return controller.statList.map((stat) {
@@ -73,7 +74,7 @@ class ActivityHome extends StatelessWidget {
                                                   boxShadow: [
                                                     BoxShadow(
                                                       color: Colors.black.withOpacity(0.5),
-                                                      offset: Offset(1, 0),
+                                                      offset: const Offset(1, 0),
                                                       blurRadius: 0.0,
                                                       spreadRadius: 0.0,
                                                     ),
@@ -117,7 +118,7 @@ class ActivityHome extends StatelessWidget {
                                                         ? 0
                                                         : 34,
                                                 decoration: BoxDecoration(
-                                                  color: stat.currentStat < 30 ? textRedColor : purpleColor,
+                                                  color: stat.currentStat <= 30 ? textRedColor : purpleColor,
                                                   border: Border.all(
                                                     width: 2,
                                                     color: Colors.black,
@@ -128,7 +129,7 @@ class ActivityHome extends StatelessWidget {
                                                   boxShadow: [
                                                     BoxShadow(
                                                       color: Colors.black.withOpacity(0.5),
-                                                      offset: Offset(1, 0),
+                                                      offset: const Offset(1, 0),
                                                       blurRadius: 4.0,
                                                       spreadRadius: 0.0,
                                                     ),
@@ -164,7 +165,7 @@ class ActivityHome extends StatelessWidget {
                             fontWeight: 800,
                             fontSize: 15,
                             lineHeight: 15,
-                            color: stat.currentStat < 20 ? Colors.white : Colors.black,
+                            color: stat.currentStat <= 30 ? Colors.white : Colors.black,
                           ),
                           Padding(
                             padding: EdgeInsets.only(left: 5.0.sp),
@@ -177,7 +178,7 @@ class ActivityHome extends StatelessWidget {
                                   fontWeight: 800,
                                   fontSize: 15,
                                   lineHeight: 15,
-                                  color: stat.currentStat < 20 ? Colors.white : Colors.black,
+                                  color: stat.currentStat <= 30 ? Colors.white : Colors.black,
                                 ),
                               ),
                             ),
@@ -271,7 +272,7 @@ class ActivityHome extends StatelessWidget {
                 borderRadius: BorderRadius.all(Radius.circular(14.sp)),
                 boxShadow: [
                   BoxShadow(
-                    color: Color(0xFF000000),
+                    color: const Color(0xFF000000),
                     spreadRadius: 0,
                     blurRadius: 0,
                     offset: Offset(2.sp, 4.sp), // changes position of shadow
@@ -290,7 +291,7 @@ class ActivityHome extends StatelessWidget {
                     children: [
                       CircleAvatar(
                         radius: 21.sp,
-                        backgroundColor: Color(0xFF1D1D21),
+                        backgroundColor: const Color(0xFF1D1D21),
                         child: activitySum['icon'],
                       ),
                       Padding(
@@ -298,7 +299,7 @@ class ActivityHome extends StatelessWidget {
                         child: StyledText(
                           activitySum['title'],
                           fontSize: 13,
-                          color: Color(0xFF7A7A7A),
+                          color: const Color(0xFF7A7A7A),
                           fontWeight: 600,
                         ),
                       ),
@@ -417,7 +418,7 @@ class ActivityHome extends StatelessWidget {
                                           return Row(
                                             children: [
                                               StyledText(
-                                                '${controller.userState.value.state != null ? controller.userState.value.state!.dailyGoReward.toString() : 0}',
+                                                '${controller.userState.value.state != null ? formatDecimalPlaces(controller.userState.value.state!.dailyGoReward!, 2).toString() : 0}',
                                                 fontFamily: 'Montserrat',
                                                 color: Colors.black,
                                                 fontWeight: 600,
@@ -426,7 +427,7 @@ class ActivityHome extends StatelessWidget {
                                               ),
                                               Padding(
                                                 padding: EdgeInsets.only(left: 2.0.sp, right: 5.0.sp),
-                                                child: StyledText(
+                                                child: const StyledText(
                                                   'GO',
                                                   fontFamily: 'Montserrat',
                                                   color: Colors.black,
@@ -455,87 +456,85 @@ class ActivityHome extends StatelessWidget {
                         );
                       }),
                       Expanded(
-                        child: Container(
-                          child: Stack(
-                            alignment: Alignment.center,
-                            children: [
-                              Center(
-                                child: Obx(() {
-                                  return Row(
-                                    mainAxisAlignment: MainAxisAlignment.center,
-                                    children: [
-                                      Container(
+                        child: Stack(
+                          alignment: Alignment.center,
+                          children: [
+                            Center(
+                              child: Obx(() {
+                                return Row(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  children: [
+                                    Container(
+                                      decoration: BoxDecoration(
+                                        color: skyBlueColor,
+                                        border: Border.all(width: 10.sp, color: const Color(0xFF4A4D57)),
+                                        borderRadius: const BorderRadius.all(
+                                          Radius.circular(150),
+                                        ),
+                                        boxShadow: const [
+                                          BoxShadow(
+                                            color: Colors.black,
+                                            offset: Offset(2, 4),
+                                            blurRadius: 0.0,
+                                            spreadRadius: 2.0,
+                                          ),
+                                        ],
+                                      ),
+                                      child: Container(
                                         decoration: BoxDecoration(
-                                          color: skyBlueColor,
-                                          border: Border.all(width: 10.sp, color: Color(0xFF4A4D57)),
+                                          border: Border.all(
+                                            width: 3.sp,
+                                            color: Colors.black,
+                                          ),
                                           borderRadius: const BorderRadius.all(
                                             Radius.circular(150),
                                           ),
-                                          boxShadow: const [
-                                            BoxShadow(
-                                              color: Colors.black,
-                                              offset: Offset(2, 4),
-                                              blurRadius: 0.0,
-                                              spreadRadius: 2.0,
-                                            ),
-                                          ],
                                         ),
-                                        child: Container(
-                                          decoration: BoxDecoration(
-                                            border: Border.all(
-                                              width: 3.sp,
-                                              color: Colors.black,
-                                            ),
-                                            borderRadius: const BorderRadius.all(
-                                              Radius.circular(150),
-                                            ),
+                                        child: MaterialButton(
+                                          onPressed: [ExerciseState.ongoing, ExerciseState.paused, ExerciseState.ready].any((state) => controller.exerciseState.value == state)
+                                              ? () => controller.requestExerciseInitialization()
+                                              : () => showToastPopup('지속적으로 문제가 발생한다면 앱을 재시작해주세요'),
+                                          shape: RoundedRectangleBorder(
+                                            borderRadius: BorderRadius.circular(150),
                                           ),
-                                          child: MaterialButton(
-                                            onPressed: [ExerciseState.ongoing, ExerciseState.paused, ExerciseState.ready].any((state) => controller.exerciseState.value == state)
-                                                ? () => controller.requestExerciseInitialization()
-                                                : () => showToastPopup('지속적으로 문제가 발생한다면 앱을 재시작해주세요'),
-                                            shape: RoundedRectangleBorder(
-                                              borderRadius: BorderRadius.circular(150),
-                                            ),
-                                            color: skyBlueColor,
-                                            height: 150.sp,
-                                            minWidth: 150.sp,
-                                            child: StyledText(
-                                              [ExerciseState.ongoing, ExerciseState.paused].any((state) => controller.exerciseState.value == state) ? 'Continue' : 'GO',
-                                              fontWeight: 800,
-                                              fontFamily: 'Montserrat',
-                                              fontSize: [ExerciseState.ongoing, ExerciseState.paused].any((state) => controller.exerciseState.value == state) ? 18 : 50,
-                                              lineHeight: [ExerciseState.ongoing, ExerciseState.paused].any((state) => controller.exerciseState.value == state) ? 18 : 50,
-                                              color: Colors.black,
-                                              letterSpacing: 0.5,
-                                            ),
+                                          color: skyBlueColor,
+                                          height: 150.sp,
+                                          minWidth: 150.sp,
+                                          child: StyledText(
+                                            [ExerciseState.ongoing, ExerciseState.paused].any((state) => controller.exerciseState.value == state) ? 'Continue' : 'GO',
+                                            fontWeight: 800,
+                                            fontFamily: 'Montserrat',
+                                            fontSize: [ExerciseState.ongoing, ExerciseState.paused].any((state) => controller.exerciseState.value == state) ? 23.sp : 50.sp,
+                                            lineHeight: [ExerciseState.ongoing, ExerciseState.paused].any((state) => controller.exerciseState.value == state) ? 23.sp : 50.sp,
+                                            color: Colors.black,
+                                            letterSpacing: 0.5,
                                           ),
                                         ),
                                       ),
-                                    ],
-                                  );
-                                }),
-                              ),
-                              Positioned(
-                                  bottom: 10,
-                                  right: 0,
-                                  child: LoopAnimationBuilder<Movie>(
-                                    tween: challengeMovie, // 0° to 360° (2π)
-                                    duration: challengeMovie.duration, // for 2 seconds per iteration
-                                    builder: (context, value, _) {
-                                      return Transform.scale(
-                                          scale: value.get('scale'),
-                                          child: FloatingActionButton(
-                                            backgroundColor: Colors.transparent,
-                                            onPressed: () {
-                                              controller.moveToChallengeMap();
-                                            },
-                                            child: iconChallengeList,
-                                          ));
-                                    },
-                                  )),
-                            ],
-                          ),
+                                    ),
+                                  ],
+                                );
+                              }),
+                            ),
+                            Positioned(
+                                bottom: 10,
+                                right: 0,
+                                child: LoopAnimationBuilder<Movie>(
+                                  tween: challengeMovie, // 0° to 360° (2π)
+                                  duration: challengeMovie.duration, // for 2 seconds per iteration
+                                  builder: (context, value, _) {
+                                    return Transform.scale(
+                                        scale: value.get('scale'),
+                                        child: FloatingActionButton(
+                                          backgroundColor: Colors.transparent,
+                                          onPressed: () {
+                                            controller.moveToChallengeMap();
+                                          },
+                                          child: iconChallengeList,
+                                        ));
+                                  },
+                                )),
+                          ],
                         ),
                       ),
                     ],

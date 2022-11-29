@@ -1,5 +1,5 @@
-import 'package:get/get.dart';
 import 'package:gaza_go/constants/enums.dart';
+import 'package:get/get.dart';
 
 class WalletActionsController extends GetxController {
   final Rx<WalletActionType> actionType = Rx(WalletActionType.recharge);
@@ -17,6 +17,9 @@ class WalletActionsController extends GetxController {
         break;
       case WalletActionType.sendOutside:
         text = '외부 지갑으로 보내기';
+        break;
+      case WalletActionType.receive:
+        text = '입금하기';
         break;
     }
     return RxString(text);
@@ -48,6 +51,10 @@ class WalletActionsController extends GetxController {
       case WalletActionType.sendToAsset:
         break;
       case WalletActionType.sendOutside:
+        break;
+      case WalletActionType.receive:
+        break;
+      case WalletActionType.recharge:
         break;
     }
   }

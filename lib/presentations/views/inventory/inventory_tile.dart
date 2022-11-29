@@ -61,7 +61,7 @@ class InventoryTile extends StatelessWidget {
           alignment: Alignment.bottomCenter,
           children: [
             Padding(
-              padding: badgeId != null && badgeId != -1 ? EdgeInsets.only(top: 10.0.sp, bottom: 30.sp, left: 30.sp, right: 30.sp) : EdgeInsets.all(10.0.sp),
+              padding: badgeId != null && badgeId != -1 ? EdgeInsets.only(top: 10.0.sp, bottom: 30.sp, left: 35.sp, right: 35.sp) : EdgeInsets.all(index < 1 ? 20.sp : 10.0.sp),
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 crossAxisAlignment: CrossAxisAlignment.center,
@@ -124,7 +124,7 @@ class InventoryTile extends StatelessWidget {
                                           padding: EdgeInsets.all(2.0.sp),
                                           child: Container(
                                             decoration: BoxDecoration(
-                                              color: Color(0xFF606167),
+                                              color: const Color(0xFF606167),
                                               borderRadius: BorderRadius.all(
                                                 Radius.circular(50.sp),
                                               ),

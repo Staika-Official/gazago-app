@@ -10,17 +10,17 @@ class ActivityMap extends StatelessWidget {
 
   List<CircleOverlay> renderStartPoint(ActivityController controller) {
     CircleOverlay centerCircle = CircleOverlay(
-      overlayId: 'ChallengeStartCenter' + controller.selectedChallenge.value.id!.toString(),
+      overlayId: 'ChallengeStartCenter${controller.selectedChallenge.value.id!}',
       center: LatLng(controller.selectedChallenge.value.startLat!, controller.selectedChallenge.value.startLon!),
       radius: 9,
       color: skyBlueColor,
     );
 
     CircleOverlay outerCircle = CircleOverlay(
-      overlayId: 'ChallengeStart' + controller.selectedChallenge.value.id!.toString(),
+      overlayId: 'ChallengeStart${controller.selectedChallenge.value.id!}',
       center: LatLng(controller.selectedChallenge.value.startLat!, controller.selectedChallenge.value.startLon!),
       radius: controller.selectedChallenge.value.startRadius!,
-      color: Color.fromRGBO(14, 230, 243, 0.3),
+      color: const Color.fromRGBO(14, 230, 243, 0.3),
     );
 
     return [centerCircle, outerCircle];
@@ -28,14 +28,14 @@ class ActivityMap extends StatelessWidget {
 
   List<CircleOverlay> renderEndPoint(ActivityController controller) {
     CircleOverlay centerCircle = CircleOverlay(
-      overlayId: 'ChallengeEndCenter' + controller.selectedChallenge.value.id!.toString(),
+      overlayId: 'ChallengeEndCenter${controller.selectedChallenge.value.id!}',
       center: LatLng(controller.selectedChallenge.value.endLat!, controller.selectedChallenge.value.endLon!),
       radius: 9,
       color: Colors.red,
     );
 
     CircleOverlay outerCircle = CircleOverlay(
-      overlayId: 'ChallengeEnd' + controller.selectedChallenge.value.id!.toString(),
+      overlayId: 'ChallengeEnd${controller.selectedChallenge.value.id!}',
       center: LatLng(controller.selectedChallenge.value.endLat!, controller.selectedChallenge.value.endLon!),
       radius: controller.selectedChallenge.value.endRadius!,
       color: Colors.red[300]?.withOpacity(0.3),
@@ -49,9 +49,9 @@ class ActivityMap extends StatelessWidget {
         .where((challenge) => challenge.id == controller.userState.value.exercise?.challengeId)
         .map(
           (challenge) => Marker(
-            markerId: 'StartMarker' + challenge.id!.toString(),
+            markerId: 'StartMarker${challenge.id!}',
             position: LatLng(challenge.startLat!, challenge.startLon!),
-            captionText: challenge.firstName! + ' 시작점',
+            captionText: '${challenge.firstName!} 시작점',
             // icon: controller.startMarkerImage.value,
             // width: 10,
             // height: 10,
@@ -65,9 +65,9 @@ class ActivityMap extends StatelessWidget {
         .where((challenge) => challenge.id == controller.userState.value.exercise?.challengeId)
         .map(
           (challenge) => Marker(
-            markerId: 'FinishMarker' + challenge.id!.toString(),
+            markerId: 'FinishMarker${challenge.id!}',
             position: LatLng(challenge.endLat!, challenge.endLon!),
-            captionText: challenge.firstName! + ' 도착점',
+            captionText: '${challenge.firstName!} 도착점',
             // icon: controller.finishMarkerImage.value,
             // width: 10,
             // height: 10,
@@ -86,7 +86,7 @@ class ActivityMap extends StatelessWidget {
           return NaverMap(
             nightModeEnable: true,
             mapType: MapType.Basic,
-            activeLayers: [MapLayer.LAYER_GROUP_MOUNTAIN],
+            activeLayers: const [MapLayer.LAYER_GROUP_MOUNTAIN],
             initialCameraPosition: CameraPosition(
               target: LatLng(controller.currentLocation.value.latitude, controller.currentLocation.value.longitude),
               zoom: 15,

@@ -2,7 +2,6 @@ import 'dart:async';
 import 'dart:io';
 
 import 'package:connectivity_plus/connectivity_plus.dart';
-import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_naver_map/flutter_naver_map.dart';
 import 'package:gaza_go/constants/config.dart';
@@ -287,7 +286,7 @@ mixin ActivityMixin {
     // int currentStep = 10;
 
     // 15초 이상 걷기 감지가 되지 않을 경우에는 속도 0으로 표시
-    // print('${currentStep} - ${prevStep} > ${stepDifference}');
+    print('$currentStep - $prevStep > $stepDifference');
     if (currentStep - prevStep > stepDifference) {
       calRealtimeSpeed.value = (exerciseState.value != ExerciseState.ongoing) ? 0 : speed;
     }

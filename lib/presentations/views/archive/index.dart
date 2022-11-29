@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:flutter_svg/svg.dart';
-import 'package:flutter_svg_provider/flutter_svg_provider.dart' as SP;
+import 'package:flutter_svg_provider/flutter_svg_provider.dart' as sp;
 import 'package:gaza_go/constants/enums.dart';
 import 'package:gaza_go/platform/controllers/archive_controller.dart';
 import 'package:gaza_go/platform/helpers/activity_helper.dart';
@@ -30,7 +29,7 @@ class ArchiveHome extends StatelessWidget {
                 borderRadius: const BorderRadius.only(topLeft: Radius.circular(10), topRight: Radius.circular(10), bottomLeft: Radius.circular(10), bottomRight: Radius.circular(10)),
                 boxShadow: [
                   BoxShadow(
-                    color: Color(0xFF000000),
+                    color: const Color(0xFF000000),
                     spreadRadius: 0,
                     blurRadius: 0,
                     offset: Offset(0, 4.sp), // changes position of shadow
@@ -56,8 +55,8 @@ class ArchiveHome extends StatelessWidget {
                                 radius: 21.sp,
                                 backgroundColor: Colors.transparent,
                                 foregroundImage: archive.type == ExerciseType.hiking.name.toUpperCase()
-                                    ? SP.Svg('assets/images/archive/ico_archive_hiking.svg') as ImageProvider
-                                    : SP.Svg('assets/images/archive/ico_archive_walking.svg') as ImageProvider,
+                                    ? const sp.Svg('assets/images/archive/ico_archive_hiking.svg')
+                                    : const sp.Svg('assets/images/archive/ico_archive_walking.svg'),
                               ),
                               if (archive.badgeIssueId != null)
                                 Positioned(
@@ -190,7 +189,7 @@ class ArchiveHome extends StatelessWidget {
                           child: Column(
                             mainAxisSize: MainAxisSize.min,
                             children: [
-                              SvgPicture.asset('assets/images/wallet/ico_empty.svg'),
+                              iconEmpty,
                               Padding(
                                 padding: EdgeInsets.only(top: 20.sp),
                                 child: const StyledText(
@@ -217,7 +216,7 @@ class ArchiveHome extends StatelessWidget {
                   : Expanded(
                       child: SingleChildScrollView(
                         controller: controller.scroll,
-                        physics: ClampingScrollPhysics(),
+                        physics: const ClampingScrollPhysics(),
                         child: Column(
                           mainAxisSize: MainAxisSize.min,
                           children: [

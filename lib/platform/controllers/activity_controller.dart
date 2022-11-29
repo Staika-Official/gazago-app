@@ -33,7 +33,7 @@ import 'package:gaza_go/presentations/views/activity/activity_select.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:get/get.dart';
 import 'package:health/health.dart';
-import 'package:permission_handler/permission_handler.dart' as PH;
+import 'package:permission_handler/permission_handler.dart' as ph;
 import 'package:simple_animations/animation_builder/custom_animation_builder.dart';
 
 class ActivityController extends SuperController with ActivityMixin, ChallengeMixin {
@@ -50,9 +50,9 @@ class ActivityController extends SuperController with ActivityMixin, ChallengeMi
   RxList<dynamic> get activitySumList {
     return RxList([
       {'title': '운동 시간', 'unit': '', 'content': '1일 ${'03:15:12'}', 'icon': iconActivityStoryWatch},
-      {'title': '운동 거리', 'unit': 'km', 'content': '${300.34.toString()}', 'icon': iconActivityStoryDistance},
-      {'title': '걸음 수', 'unit': '', 'content': '${12682.toString()}', 'icon': iconActivityStorySteps},
-      {'title': '총 획득 타이카', 'unit': 'TIK', 'content': '${200.toString()}', 'icon': iconActivityStoryTaika},
+      {'title': '운동 거리', 'unit': 'km', 'content': 300.34.toString(), 'icon': iconActivityStoryDistance},
+      {'title': '걸음 수', 'unit': '', 'content': 12682.toString(), 'icon': iconActivityStorySteps},
+      {'title': '총 획득 타이카', 'unit': 'TIK', 'content': 200.toString(), 'icon': iconActivityStoryTaika},
     ]);
   }
 
@@ -171,7 +171,7 @@ class ActivityController extends SuperController with ActivityMixin, ChallengeMi
   void showEndPointMarker(ChallengeModel course) {
     challengeSelectedIndex.value = course.id!;
 
-    if (challengeMarkers.value.last.markerId.contains('end_')) {
+    if (challengeMarkers.last.markerId.contains('end_')) {
       challengeMarkers.removeLast();
     }
 
@@ -447,9 +447,9 @@ class ActivityController extends SuperController with ActivityMixin, ChallengeMi
   Future<bool> checkActivityPermission() async {
     bool hasActivityPermission = false;
     if (Platform.isAndroid) {
-      hasActivityPermission = PH.PermissionStatus.granted == await PH.Permission.activityRecognition.status;
+      hasActivityPermission = ph.PermissionStatus.granted == await ph.Permission.activityRecognition.status;
     } else if (Platform.isIOS) {
-      hasActivityPermission = PH.PermissionStatus.granted == await PH.Permission.sensors.status;
+      hasActivityPermission = ph.PermissionStatus.granted == await ph.Permission.sensors.status;
     }
 
     return hasActivityPermission;
@@ -459,15 +459,15 @@ class ActivityController extends SuperController with ActivityMixin, ChallengeMi
     Completer<bool> activityRecognitionPermission = Completer();
     bool permissionGranted = false;
     if (Platform.isAndroid) {
-      permissionGranted = PH.PermissionStatus.granted == await PH.Permission.activityRecognition.request();
+      permissionGranted = ph.PermissionStatus.granted == await ph.Permission.activityRecognition.request();
     } else if (Platform.isIOS) {
-      permissionGranted = PH.PermissionStatus.granted == await PH.Permission.sensors.request();
+      permissionGranted = ph.PermissionStatus.granted == await ph.Permission.sensors.request();
       await health.requestAuthorization([HealthDataType.STEPS]);
 
       // permissionGranted = sensorGranted && healthGranted;
     }
     if (!permissionGranted) {
-      PH.openAppSettings();
+      ph.openAppSettings();
     }
     activityRecognitionPermission.complete(permissionGranted);
 

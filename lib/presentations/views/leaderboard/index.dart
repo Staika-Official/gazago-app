@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:flutter_svg/svg.dart';
 import 'package:gaza_go/platform/controllers/activity_controller.dart';
 import 'package:gaza_go/platform/controllers/leaderboard_controller.dart';
 import 'package:gaza_go/platform/helpers/base_helper.dart';
@@ -36,8 +35,8 @@ class LeaderboardHome extends StatelessWidget {
             titleTextStyle: TextStyle(fontSize: 18.sp, color: Colors.white, fontWeight: FontWeight.w500),
             titleCentered: true,
             formatButtonVisible: false,
-            leftChevronIcon: Icon(Icons.chevron_left, color: Colors.white),
-            rightChevronIcon: Icon(
+            leftChevronIcon: const Icon(Icons.chevron_left, color: Colors.white),
+            rightChevronIcon: const Icon(
               Icons.chevron_right,
               color: Colors.white,
             ),
@@ -397,17 +396,17 @@ class LeaderboardHome extends StatelessWidget {
             child: controller.dataGetLoading.value
                 ? Padding(
                     padding: EdgeInsets.symmetric(vertical: 20.0.sp),
-                    child: Center(child: CircularProgressIndicator()),
+                    child: const Center(child: CircularProgressIndicator()),
                   )
                 : controller.rankings.isEmpty
                     ? Center(
                         child: Column(
                           mainAxisSize: MainAxisSize.min,
                           children: [
-                            SvgPicture.asset('assets/images/wallet/ico_empty.svg'),
+                            iconEmpty,
                             Padding(
                               padding: EdgeInsets.only(top: 20.sp),
-                              child: StyledText(
+                              child: const StyledText(
                                 '랭킹 기록이 없어요.',
                                 color: Color(0xff7b7b7b),
                                 fontSize: 16,
@@ -436,7 +435,7 @@ class LeaderboardHome extends StatelessWidget {
                               if (index < controller.rankings.length) {
                                 return renderRanker(controller.rankings[index]);
                               } else {
-                                return (controller.hasMore.value) ? Padding(padding: EdgeInsets.symmetric(vertical: 20.0.sp), child: Center(child: CircularProgressIndicator())) : Container();
+                                return (controller.hasMore.value) ? Padding(padding: EdgeInsets.symmetric(vertical: 20.0.sp), child: const Center(child: CircularProgressIndicator())) : Container();
                               }
                             },
                           )),

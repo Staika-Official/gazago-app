@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:gaza_go/presentations/components/default_container.dart';
+import 'package:gaza_go/presentations/styles/colors.dart';
 import 'package:gaza_go/presentations/styles/styled_text.dart';
 import 'package:gaza_go/presentations/views/wallet/spending_wallet.dart';
 
@@ -29,6 +30,7 @@ class _WalletHomeState extends State<WalletHome> with SingleTickerProviderStateM
   @override
   Widget build(BuildContext context) {
     return DefaultContainer(
+      backgroundColor: subBg01Color,
       titleText: _tabController.index == 0 ? 'GO 지갑' : '지갑',
       // child: Column(
       //   children: [
@@ -129,7 +131,7 @@ class _WalletHomeState extends State<WalletHome> with SingleTickerProviderStateM
           Expanded(
             child: TabBarView(
               controller: _tabController,
-              children: [
+              children: const [
                 SpendingWallet(),
                 // AssetWallet(),
               ],
