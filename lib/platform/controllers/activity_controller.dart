@@ -74,6 +74,7 @@ class ActivityController extends SuperController with ActivityMixin, ChallengeMi
   RxInt challengeSelectedIndex = RxInt(-1);
   Control activityLoadControl = Control.play;
   RxBool disableButton = RxBool(false);
+  RxBool disableActivityButton = RxBool(true);
 
   @override
   void onInit() async {
@@ -87,6 +88,7 @@ class ActivityController extends SuperController with ActivityMixin, ChallengeMi
     if ([ExerciseState.ongoing, ExerciseState.paused].any((state) => state == exerciseState.value)) {
       showPendingExerciseAlert(this);
     }
+    disableActivityButton.value = false;
     super.onReady();
   }
 

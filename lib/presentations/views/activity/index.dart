@@ -491,9 +491,11 @@ class ActivityHome extends StatelessWidget {
                                           ),
                                         ),
                                         child: MaterialButton(
-                                          onPressed: [ExerciseState.ongoing, ExerciseState.paused, ExerciseState.ready].any((state) => controller.exerciseState.value == state)
-                                              ? () => controller.requestExerciseInitialization()
-                                              : () => showToastPopup('지속적으로 문제가 발생한다면 앱을 재시작해주세요'),
+                                          onPressed: controller.disableActivityButton.value
+                                              ? null
+                                              : [ExerciseState.ongoing, ExerciseState.paused, ExerciseState.ready].any((state) => controller.exerciseState.value == state)
+                                                  ? () => controller.requestExerciseInitialization()
+                                                  : () => showToastPopup('지속적으로 문제가 발생한다면 앱을 재시작해주세요'),
                                           shape: RoundedRectangleBorder(
                                             borderRadius: BorderRadius.circular(150),
                                           ),
@@ -501,7 +503,11 @@ class ActivityHome extends StatelessWidget {
                                           height: 150.sp,
                                           minWidth: 150.sp,
                                           child: StyledText(
-                                            [ExerciseState.ongoing, ExerciseState.paused].any((state) => controller.exerciseState.value == state) ? 'Continue' : 'GO',
+                                            controller.disableActivityButton.value
+                                                ? 'Loading..'
+                                                : [ExerciseState.ongoing, ExerciseState.paused].any((state) => controller.exerciseState.value == state)
+                                                    ? 'Continue'
+                                                    : 'GO',
                                             fontWeight: 800,
                                             fontFamily: 'Montserrat',
                                             fontSize: [ExerciseState.ongoing, ExerciseState.paused].any((state) => controller.exerciseState.value == state) ? 23.sp : 50.sp,
