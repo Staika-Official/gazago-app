@@ -3,13 +3,13 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:gaza_go/presentations/styles/styled_text.dart';
 
 class GazagoButton extends StatelessWidget {
-  String buttonText;
-  VoidCallback onTap;
-  Color textColor;
-  Color buttonColor;
-  bool disableButton;
+  final String buttonText;
+  final VoidCallback onTap;
+  final Color textColor;
+  final Color buttonColor;
+  final bool disableButton;
 
-  GazagoButton({
+  const GazagoButton({
     Key? key,
     required this.buttonText,
     required this.onTap,

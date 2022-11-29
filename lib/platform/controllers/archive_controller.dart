@@ -113,7 +113,7 @@ class ArchiveController extends GetxController with ScrollMixin {
   Future<void> onTopScroll() {
     print('top reached');
     return Future.delayed(
-      Duration(milliseconds: 10),
+      const Duration(milliseconds: 10),
       () {
         print('top reached');
       },

@@ -5,10 +5,8 @@ class ShopHome extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      child: Center(
-        child: Text('shop'),
-      ),
+    return const Center(
+      child: Text('shop'),
     );
   }
 }

@@ -124,7 +124,7 @@ class InventoryTile extends StatelessWidget {
                                           padding: EdgeInsets.all(2.0.sp),
                                           child: Container(
                                             decoration: BoxDecoration(
-                                              color: Color(0xFF606167),
+                                              color: const Color(0xFF606167),
                                               borderRadius: BorderRadius.all(
                                                 Radius.circular(50.sp),
                                               ),

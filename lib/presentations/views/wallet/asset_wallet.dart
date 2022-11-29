@@ -36,21 +36,19 @@ class AssetWallet extends StatelessWidget {
 
     return SingleChildScrollView(
       physics: const ClampingScrollPhysics(),
-      child: Container(
-        child: Column(
-          children: [
-            // ...renderCoinAssetList(controller),
-            Container(
-              width: double.infinity,
-              padding: EdgeInsets.all(15.sp),
-              child: Text(
-                'NFT',
-                textAlign: TextAlign.start,
-              ),
+      child: Column(
+        children: [
+          // ...renderCoinAssetList(controller),
+          Container(
+            width: double.infinity,
+            padding: EdgeInsets.all(15.sp),
+            child: const Text(
+              'NFT',
+              textAlign: TextAlign.start,
             ),
-            ...renderNftAssetList(controller),
-          ],
-        ),
+          ),
+          ...renderNftAssetList(controller),
+        ],
       ),
     );
   }

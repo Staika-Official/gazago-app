@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:gaza_go/platform/controllers/inventory_controller.dart';
-import 'package:gaza_go/platform/controllers/wallet_master_controller.dart';
 import 'package:gaza_go/platform/helpers/inventory_helper.dart';
 import 'package:gaza_go/presentations/components/default_container.dart';
 import 'package:gaza_go/presentations/styles/colors.dart';
@@ -14,7 +13,6 @@ class InventoryItemDetail extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    WalletMasterController walletMasterController = Get.find();
     InventoryController controller = Get.put(InventoryController());
     return DefaultContainer(
       titleText: controller.selectedItem.value.itemName,
@@ -90,148 +88,146 @@ class InventoryItemDetail extends StatelessWidget {
                         () {
                           return Column(
                             children: [
-                              Container(
-                                child: Padding(
-                                  padding: EdgeInsets.symmetric(vertical: 10.0.sp),
-                                  child: Column(
-                                    children: [
-                                      Image(
-                                        image: NetworkImage(controller.selectedItem.value.itemImageUrl),
-                                        width: 200.sp,
-                                        fit: BoxFit.fill,
-                                      ),
-                                      if (controller.isShoe.value)
-                                        SizedBox(
-                                          height: 42.sp,
-                                          child: Stack(
-                                            children: [
-                                              Row(
-                                                crossAxisAlignment: CrossAxisAlignment.center,
-                                                mainAxisAlignment: MainAxisAlignment.center,
-                                                children: [
-                                                  Expanded(
-                                                    child: ClipRRect(
-                                                      child: SizedBox(
-                                                        child: Stack(
-                                                          children: [
-                                                            Container(
-                                                              decoration: BoxDecoration(
-                                                                color: gaugeGrayColor,
-                                                                border: Border.all(
-                                                                  width: 2.sp,
-                                                                  color: Colors.black,
-                                                                ),
-                                                                borderRadius: BorderRadius.all(
-                                                                  Radius.circular(50.sp),
-                                                                ),
-                                                                boxShadow: const [
-                                                                  BoxShadow(
-                                                                    color: Colors.black,
-                                                                    offset: Offset(0, 0),
-                                                                    blurRadius: 0.0,
-                                                                    spreadRadius: 0.0,
-                                                                  ),
-                                                                ],
+                              Padding(
+                                padding: EdgeInsets.symmetric(vertical: 10.0.sp),
+                                child: Column(
+                                  children: [
+                                    Image(
+                                      image: NetworkImage(controller.selectedItem.value.itemImageUrl),
+                                      width: 200.sp,
+                                      fit: BoxFit.fill,
+                                    ),
+                                    if (controller.isShoe.value)
+                                      SizedBox(
+                                        height: 42.sp,
+                                        child: Stack(
+                                          children: [
+                                            Row(
+                                              crossAxisAlignment: CrossAxisAlignment.center,
+                                              mainAxisAlignment: MainAxisAlignment.center,
+                                              children: [
+                                                Expanded(
+                                                  child: ClipRRect(
+                                                    child: SizedBox(
+                                                      child: Stack(
+                                                        children: [
+                                                          Container(
+                                                            decoration: BoxDecoration(
+                                                              color: gaugeGrayColor,
+                                                              border: Border.all(
+                                                                width: 2.sp,
+                                                                color: Colors.black,
                                                               ),
+                                                              borderRadius: BorderRadius.all(
+                                                                Radius.circular(50.sp),
+                                                              ),
+                                                              boxShadow: const [
+                                                                BoxShadow(
+                                                                  color: Colors.black,
+                                                                  offset: Offset(0, 0),
+                                                                  blurRadius: 0.0,
+                                                                  spreadRadius: 0.0,
+                                                                ),
+                                                              ],
                                                             ),
-                                                            controller.selectedItem.value.durability > 1.0
-                                                                ? LayoutBuilder(
-                                                                    builder: (context, constraints) {
-                                                                      return Container(
-                                                                        width: controller.selectedItem.value.durability > 20
-                                                                            ? constraints.maxWidth / (100 / controller.selectedItem.value.durability)
-                                                                            : controller.selectedItem.value.durability < 2
-                                                                                ? 0
-                                                                                : 34,
-                                                                        decoration: BoxDecoration(
-                                                                          color: controller.selectedItem.value.durability <= 30 ? textRedColor : purpleColor,
-                                                                          border: Border.all(
-                                                                            width: 2.sp,
-                                                                            color: Colors.black,
-                                                                          ),
-                                                                          borderRadius: BorderRadius.all(
-                                                                            Radius.circular(30.sp),
-                                                                          ),
-                                                                          boxShadow: [
-                                                                            BoxShadow(
-                                                                              color: Colors.black.withOpacity(0.5),
-                                                                              offset: Offset(4.sp, 0),
-                                                                              blurRadius: 4.0,
-                                                                              spreadRadius: 0.0,
-                                                                            ),
-                                                                          ],
+                                                          ),
+                                                          controller.selectedItem.value.durability > 1.0
+                                                              ? LayoutBuilder(
+                                                                  builder: (context, constraints) {
+                                                                    return Container(
+                                                                      width: controller.selectedItem.value.durability > 20
+                                                                          ? constraints.maxWidth / (100 / controller.selectedItem.value.durability)
+                                                                          : controller.selectedItem.value.durability < 2
+                                                                              ? 0
+                                                                              : 34,
+                                                                      decoration: BoxDecoration(
+                                                                        color: controller.selectedItem.value.durability <= 30 ? textRedColor : purpleColor,
+                                                                        border: Border.all(
+                                                                          width: 2.sp,
+                                                                          color: Colors.black,
                                                                         ),
-                                                                      );
-                                                                    },
-                                                                  )
-                                                                : Container(),
-                                                          ],
-                                                        ),
+                                                                        borderRadius: BorderRadius.all(
+                                                                          Radius.circular(30.sp),
+                                                                        ),
+                                                                        boxShadow: [
+                                                                          BoxShadow(
+                                                                            color: Colors.black.withOpacity(0.5),
+                                                                            offset: Offset(4.sp, 0),
+                                                                            blurRadius: 4.0,
+                                                                            spreadRadius: 0.0,
+                                                                          ),
+                                                                        ],
+                                                                      ),
+                                                                    );
+                                                                  },
+                                                                )
+                                                              : Container(),
+                                                        ],
                                                       ),
                                                     ),
                                                   ),
-                                                ],
-                                              ),
-                                              Row(
-                                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                                crossAxisAlignment: CrossAxisAlignment.center,
-                                                children: [
-                                                  Align(
-                                                    alignment: Alignment.center,
-                                                    child: Row(
-                                                      crossAxisAlignment: CrossAxisAlignment.center,
-                                                      children: [
-                                                        Padding(
-                                                          padding: EdgeInsets.only(left: 12.0.sp, right: 7.sp),
-                                                          child: iconShoes,
-                                                        ),
-                                                        StyledText(
-                                                          '내구도',
-                                                          fontFamily: 'Montserrat',
+                                                ),
+                                              ],
+                                            ),
+                                            Row(
+                                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                              crossAxisAlignment: CrossAxisAlignment.center,
+                                              children: [
+                                                Align(
+                                                  alignment: Alignment.center,
+                                                  child: Row(
+                                                    crossAxisAlignment: CrossAxisAlignment.center,
+                                                    children: [
+                                                      Padding(
+                                                        padding: EdgeInsets.only(left: 12.0.sp, right: 7.sp),
+                                                        child: iconShoes,
+                                                      ),
+                                                      StyledText(
+                                                        '내구도',
+                                                        fontFamily: 'Montserrat',
+                                                        fontWeight: 800,
+                                                        fontSize: 15,
+                                                        lineHeight: 21,
+                                                        color: controller.selectedItem.value.durability.toInt() <= 30 ? Colors.white : Colors.black,
+                                                      ),
+                                                      Padding(
+                                                        padding: EdgeInsets.only(left: 5.0.sp),
+                                                        child: StyledText(
+                                                          controller.selectedItem.value.durability.toString(),
                                                           fontWeight: 800,
-                                                          fontSize: 15,
-                                                          lineHeight: 21,
+                                                          fontSize: 14,
+                                                          lineHeight: 15,
                                                           color: controller.selectedItem.value.durability.toInt() <= 30 ? Colors.white : Colors.black,
                                                         ),
-                                                        Padding(
-                                                          padding: EdgeInsets.only(left: 5.0.sp),
-                                                          child: StyledText(
-                                                            controller.selectedItem.value.durability.toString(),
-                                                            fontWeight: 800,
-                                                            fontSize: 14,
-                                                            lineHeight: 15,
-                                                            color: controller.selectedItem.value.durability.toInt() <= 30 ? Colors.white : Colors.black,
-                                                          ),
-                                                        ),
-                                                      ],
-                                                    ),
+                                                      ),
+                                                    ],
                                                   ),
-                                                ],
-                                              ),
-                                            ],
-                                          ),
+                                                ),
+                                              ],
+                                            ),
+                                          ],
                                         ),
-                                      // SizedBox(
-                                      //   width: 200,
-                                      //   height: 200,
-                                      //   child: Stack(
-                                      //     alignment: Alignment.bottomCenter,
-                                      //     children: [
-                                      //       Image(image: NetworkImage(controller.selectedItem.value.itemImageUrl), width: 200, fit: BoxFit.fill),
-                                      //       // Obx(() {
-                                      //       //   return controller.isShoe.value
-                                      //       //       ? LinearProgressIndicator(
-                                      //       //           value: controller.calculateProgress(controller.selectedItem.value.durability),
-                                      //       //           minHeight: 10,
-                                      //       //           backgroundColor: const Color(0xffb74093),
-                                      //       //         )
-                                      //       //       : Container();
-                                      //       // }),
-                                      //     ],
-                                      //   ),
-                                      // ),
-                                    ],
-                                  ),
+                                      ),
+                                    // SizedBox(
+                                    //   width: 200,
+                                    //   height: 200,
+                                    //   child: Stack(
+                                    //     alignment: Alignment.bottomCenter,
+                                    //     children: [
+                                    //       Image(image: NetworkImage(controller.selectedItem.value.itemImageUrl), width: 200, fit: BoxFit.fill),
+                                    //       // Obx(() {
+                                    //       //   return controller.isShoe.value
+                                    //       //       ? LinearProgressIndicator(
+                                    //       //           value: controller.calculateProgress(controller.selectedItem.value.durability),
+                                    //       //           minHeight: 10,
+                                    //       //           backgroundColor: const Color(0xffb74093),
+                                    //       //         )
+                                    //       //       : Container();
+                                    //       // }),
+                                    //     ],
+                                    //   ),
+                                    // ),
+                                  ],
                                 ),
                               ),
                               Container(
@@ -411,13 +407,13 @@ class InventoryItemDetail extends StatelessWidget {
                                         fontSize: 14,
                                       ),
                                     ),
-                                    Container(
+                                    SizedBox(
                                       height: (controller.isShoe.value) ? 70.sp : 100.sp,
                                       child: ListView(
                                         children: [
                                           StyledText(
                                             controller.selectedItem.value.description.toString(),
-                                            color: Color(0xFFE2E2E2),
+                                            color: const Color(0xFFE2E2E2),
                                             fontWeight: 500,
                                             fontSize: 14,
                                             lineHeight: 20,

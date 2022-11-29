@@ -2,7 +2,6 @@ import 'dart:io';
 
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:gaza_go/constants/routes.dart';
 import 'package:gaza_go/platform/controllers/my_page_controller.dart';
@@ -44,7 +43,7 @@ class MyPage extends StatelessWidget {
                         children: [
                           CircleAvatar(
                             radius: 35.sp,
-                            foregroundImage: controller!.pickedImage.value != null
+                            foregroundImage: controller.pickedImage.value != null
                                 ? FileImage(
                                     File(controller.pickedImage.value!.path),
                                   )
@@ -179,7 +178,7 @@ class MyPage extends StatelessWidget {
                                       radius: 50.sp,
                                       child: Icon(
                                         Icons.edit,
-                                        color: Color(0xFFA5A5A5),
+                                        color: const Color(0xFFA5A5A5),
                                         size: 14.sp,
                                       ),
                                     ),
@@ -211,7 +210,7 @@ class MyPage extends StatelessWidget {
                                     onTap: () => controller.modifyMyAccountInfo(),
                                     child: Padding(
                                       padding: EdgeInsets.symmetric(vertical: 8.0.sp),
-                                      child: Center(
+                                      child: const Center(
                                         child: StyledText(
                                           '확인',
                                           color: Colors.black,
@@ -294,7 +293,7 @@ class MyPage extends StatelessWidget {
                                           ),
                                           StyledText(
                                             controller.profile.value.provider!,
-                                            color: Color(0xFFA8A8A8),
+                                            color: const Color(0xFFA8A8A8),
                                             fontSize: 16,
                                             fontWeight: 500,
                                           ),

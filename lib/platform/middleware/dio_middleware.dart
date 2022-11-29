@@ -36,7 +36,7 @@ class Api {
       String? accessToken = HiveStore.loadString(key: HiveKey.accessToken.name);
 
       if (accessToken != null) {
-        _dio.options.headers = {'Authorization': 'Bearer ${accessToken!}'};
+        _dio.options.headers = {'Authorization': 'Bearer $accessToken'};
       }
       if (isPatch!) {
         _dio.options.headers = {'Authorization': 'Bearer ${accessToken!}', 'Content-type': 'application/merge-patch+json'};
@@ -59,7 +59,7 @@ class Api {
   static _requestInterceptor(RequestOptions options, RequestInterceptorHandler handler) {
     if (HiveStore.load(key: HiveKey.isDebuggingMode.name)) {
       List requestLogs = HiveStore.load(key: HiveKey.requestLogs.name) ?? [];
-      var logForm;
+      dynamic logForm;
       if (options.data != null) {
         final Map optData = json.decode(json.encode(options.data));
         if (optData["locations"] != null) {
@@ -183,7 +183,6 @@ class Api {
       },
     ).onError((error, stackTrace) async {
       if (error is DioError) {
-        final Response? res = error.response;
         _logger.e(
           '------------->'
           '\nRETRY ERROR'
@@ -197,7 +196,7 @@ class Api {
   static Future<void> _getNewAccessToken(DioError e, ErrorInterceptorHandler handler) async {
     final String refreshToken = HiveStore.loadString(key: HiveKey.refreshToken.name) ?? '';
 
-    print('refreshToken ${refreshToken}');
+    print('refreshToken $refreshToken');
 
     Dio refreshDio = Dio();
     refreshDio

@@ -123,7 +123,7 @@ class EquippedItems extends StatelessWidget {
                                   fontSize: 28,
                                   fontWeight: 500,
                                 ),
-                                StyledText(
+                                const StyledText(
                                   '%',
                                   fontSize: 16,
                                   fontWeight: 500,
@@ -203,7 +203,7 @@ class EquippedItems extends StatelessWidget {
                                   fontSize: 28,
                                   fontWeight: 500,
                                 ),
-                                StyledText(
+                                const StyledText(
                                   '%',
                                   fontSize: 16,
                                   fontWeight: 500,

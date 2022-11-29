@@ -11,7 +11,7 @@ import 'package:get/get.dart';
 class Permissions extends StatelessWidget {
   Permissions({Key? key}) : super(key: key);
 
-  List<PermissionItemModel> permissionsList = [
+  final List<PermissionItemModel> permissionsList = [
     PermissionItemModel(iconPath: 'assets/images/permissions/ico_activity.svg', permissionName: '신체활동', isRequired: true, description: '걸음 수 확인 등'),
     PermissionItemModel(iconPath: 'assets/images/permissions/ico_location.svg', permissionName: '위치', isRequired: true, description: '사용자 위치 파악, 운동 내역 계산 등'),
     PermissionItemModel(iconPath: 'assets/images/permissions/ico_gallery.svg', permissionName: '사진', isRequired: false, description: '프로필 사진 등록 및 변경, 운동 기록 저장 등'),

@@ -53,8 +53,8 @@ class ArchiveDetail extends StatelessWidget {
                               radius: 21.sp,
                               backgroundColor: Colors.transparent,
                               foregroundImage: controller.selectedItem.value.type == ExerciseType.hiking.name.toUpperCase()
-                                  ? Svg('assets/images/archive/ico_archive_hiking.svg') as ImageProvider
-                                  : Svg('assets/images/archive/ico_archive_walking.svg') as ImageProvider,
+                                  ? const Svg('assets/images/archive/ico_archive_hiking.svg')
+                                  : const Svg('assets/images/archive/ico_archive_walking.svg'),
                             ),
                             if (controller.selectedItem.value.badgeIssueId != null)
                               Positioned(
@@ -165,7 +165,7 @@ class ArchiveDetail extends StatelessWidget {
                   forceGesture: true,
                   tiltGestureEnable: false,
                   mapType: MapType.Basic,
-                  activeLayers: [MapLayer.LAYER_GROUP_MOUNTAIN],
+                  activeLayers: const [MapLayer.LAYER_GROUP_MOUNTAIN],
                   onMapCreated: (mapController) => controller.recordMapCreated(mapController, controller.locations),
                   initialCameraPosition: CameraPosition(
                     target: controller.locations.length > 1 ? controller.locations.first : const LatLng(37.5525, 126.9883),

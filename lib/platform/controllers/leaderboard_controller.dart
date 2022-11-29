@@ -39,11 +39,6 @@ class LeaderboardController extends GetxController with ScrollMixin {
     super.onInit();
   }
 
-  @override
-  void dispose() {
-    super.dispose();
-  }
-
   Future<void> initController() async {
     _fetchMyRank();
     _fetchRankerList(true);
@@ -107,7 +102,7 @@ class LeaderboardController extends GetxController with ScrollMixin {
   @override
   Future<void> onTopScroll() {
     return Future.delayed(
-      Duration(milliseconds: 10),
+      const Duration(milliseconds: 10),
       () {
         print('top reached');
       },

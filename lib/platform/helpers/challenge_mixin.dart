@@ -115,7 +115,7 @@ mixin ChallengeMixin {
       inspect('시작경도점${challenge.startLat}');
       inspect('시작위도점${challenge.startLon}');
       double distance = calculateDistance(location.latitude, location.longitude, challenge.startLat, challenge.startLon);
-      inspect('거리${distance}');
+      inspect('거리$distance');
       inspect('반경${convertMetersToKm(challenge.startRadius!)}');
       return distance <= convertMetersToKm(challenge.startRadius!);
     }).toList();

@@ -2,7 +2,6 @@ import 'package:custom_rounded_rectangle_border/custom_rounded_rectangle_border.
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
-import 'package:gaza_go/platform/controllers/home_menu_controller.dart';
 import 'package:gaza_go/platform/controllers/inventory_controller.dart';
 import 'package:gaza_go/platform/controllers/inventory_home_controller.dart';
 import 'package:gaza_go/presentations/styles/colors.dart';
@@ -20,7 +19,6 @@ class InventoryHome extends StatelessWidget {
   Widget build(BuildContext context) {
     InventoryHomeController inventoryMenuController = Get.put(InventoryHomeController());
     InventoryController controller = Get.put(InventoryController());
-    HomeMenuController homeMenuController = Get.find();
 
     return SingleChildScrollView(
       physics: const ClampingScrollPhysics(),
@@ -162,7 +160,7 @@ class InventoryHome extends StatelessWidget {
                                   fontSize: 28,
                                   fontWeight: 500,
                                 ),
-                                StyledText(
+                                const StyledText(
                                   '%',
                                   fontSize: 16,
                                   fontWeight: 500,

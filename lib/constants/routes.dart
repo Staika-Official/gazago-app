@@ -118,7 +118,7 @@ class Routes {
     stepPage(name: Routes.withdrawCompleted, page: const WithdrawCompleted()),
     stepPage(name: Routes.wallet, page: const WalletHome()),
     stepPage(name: Routes.walletDetail, page: const WalletDetail()),
-    stepPage(name: Routes.buyTik, page: BuyTik()),
+    stepPage(name: Routes.buyTik, page: const BuyTik()),
     stepPage(name: Routes.walletActions, page: const WalletActions()),
     stepPage(name: Routes.inventory, page: const InventoryHome()),
     stepPage(name: Routes.itemDetail, page: const InventoryItemDetail()),

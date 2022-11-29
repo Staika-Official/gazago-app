@@ -54,7 +54,7 @@ class AssetItemCoin extends StatelessWidget {
                         ? CachedNetworkImageProvider(
                             asset.meta!.logoUrl,
                           )
-                        : Svg('assets/images/common/ico_token_tik.svg') as ImageProvider,
+                        : const Svg('assets/images/common/ico_token_tik.svg') as ImageProvider,
                   ),
                   Expanded(
                     child: Padding(
