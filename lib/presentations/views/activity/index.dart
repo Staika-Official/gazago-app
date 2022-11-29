@@ -502,19 +502,25 @@ class ActivityHome extends StatelessWidget {
                                           color: skyBlueColor,
                                           height: 150.sp,
                                           minWidth: 150.sp,
-                                          child: StyledText(
-                                            controller.disableActivityButton.value
-                                                ? 'Loading..'
-                                                : [ExerciseState.ongoing, ExerciseState.paused].any((state) => controller.exerciseState.value == state)
-                                                    ? 'Continue'
-                                                    : 'GO',
-                                            fontWeight: 800,
-                                            fontFamily: 'Montserrat',
-                                            fontSize: [ExerciseState.ongoing, ExerciseState.paused].any((state) => controller.exerciseState.value == state) ? 23.sp : 50.sp,
-                                            lineHeight: [ExerciseState.ongoing, ExerciseState.paused].any((state) => controller.exerciseState.value == state) ? 23.sp : 50.sp,
-                                            color: Colors.black,
-                                            letterSpacing: 0.5,
-                                          ),
+                                          child: controller.disableActivityButton.value
+                                              ? StyledText(
+                                                  'Loading..',
+                                                  fontWeight: 800,
+                                                  fontFamily: 'Montserrat',
+                                                  fontSize: 23.sp,
+                                                  lineHeight: 23.sp,
+                                                  color: Colors.black,
+                                                  letterSpacing: 0.5,
+                                                )
+                                              : StyledText(
+                                                  [ExerciseState.ongoing, ExerciseState.paused].any((state) => controller.exerciseState.value == state) ? 'Continue' : 'GO',
+                                                  fontWeight: 800,
+                                                  fontFamily: 'Montserrat',
+                                                  fontSize: [ExerciseState.ongoing, ExerciseState.paused].any((state) => controller.exerciseState.value == state) ? 23.sp : 50.sp,
+                                                  lineHeight: [ExerciseState.ongoing, ExerciseState.paused].any((state) => controller.exerciseState.value == state) ? 23.sp : 50.sp,
+                                                  color: Colors.black,
+                                                  letterSpacing: 0.5,
+                                                ),
                                         ),
                                       ),
                                     ),
