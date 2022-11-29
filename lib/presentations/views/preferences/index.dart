@@ -84,7 +84,7 @@ class Preferences extends StatelessWidget {
             // ),
             PreferenceItem(
               title: '공지사항',
-              onTap: () => Get.toNamed(Routes.preferenceBoard, arguments: {'boardType': 'T2E_NOTICE'}),
+              onTap: () => Get.toNamed(Routes.noticeList, arguments: {'boardType': 'T2E_NOTICE'}),
             ),
             PreferenceItem(
               title: 'FAQ',

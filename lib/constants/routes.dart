@@ -26,6 +26,8 @@ import 'package:gaza_go/presentations/views/permissions.dart';
 import 'package:gaza_go/presentations/views/preferences/edit_biometrics.dart';
 import 'package:gaza_go/presentations/views/preferences/index.dart';
 import 'package:gaza_go/presentations/views/preferences/my_page.dart';
+import 'package:gaza_go/presentations/views/preferences/notice_detail.dart';
+import 'package:gaza_go/presentations/views/preferences/notice_list.dart';
 import 'package:gaza_go/presentations/views/preferences/notification_alert.dart';
 import 'package:gaza_go/presentations/views/preferences/preference_board.dart';
 import 'package:gaza_go/presentations/views/preferences/terms_list.dart';
@@ -57,6 +59,8 @@ class Routes {
   static const challengeMap = '/activity/challenge_map';
   static const preferences = '/preferences';
   static const preferenceBoard = '/preferences/board';
+  static const noticeList = '/notice/list';
+  static const noticeDetail = '/notice/detail';
   static const preferenceNotification = '/preferences/notification';
   static const verification = '/verification';
   static const myPage = '/my_page';
@@ -104,6 +108,8 @@ class Routes {
       transitionDuration: const Duration(milliseconds: 200),
     ),
     stepPage(name: Routes.preferenceBoard, page: const PreferenceBoard()),
+    stepPage(name: Routes.noticeList, page: const NoticeList()),
+    stepPage(name: Routes.noticeDetail, page: const NoticeDetail()),
     stepPage(name: Routes.preferenceNotification, page: const NotificationAlert()),
     stepPage(name: Routes.verification, page: const Verification()),
     stepPage(name: Routes.myPage, page: const MyPage()),
