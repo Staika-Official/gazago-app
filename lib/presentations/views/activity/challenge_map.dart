@@ -153,6 +153,7 @@ class ChallengeMap extends StatelessWidget {
                 activeLayers: const [MapLayer.LAYER_GROUP_MOUNTAIN],
                 nightModeEnable: true,
                 tiltGestureEnable: false,
+                onMapCreated: controller.onChallengeMapCreated,
               ),
               Padding(
                 padding: EdgeInsets.only(top: 70.sp),

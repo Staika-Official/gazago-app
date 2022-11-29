@@ -87,7 +87,9 @@ mixin ChallengeMixin {
 
   void onChallengeMapCreated(NaverMapController controller) {
     challengeMapController = controller;
-    listHeight.value = listKey.currentContext!.size!.height;
+    if (listKey.currentContext != null) {
+      listHeight.value = listKey.currentContext!.size!.height;
+    }
   }
 
   void selectChallenge(ChallengeModel challenge) {
