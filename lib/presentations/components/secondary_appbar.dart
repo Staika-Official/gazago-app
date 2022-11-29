@@ -3,7 +3,7 @@ import 'dart:math';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:flutter_svg_provider/flutter_svg_provider.dart' as SP;
+import 'package:flutter_svg_provider/flutter_svg_provider.dart' as sp;
 import 'package:gaza_go/constants/routes.dart';
 import 'package:gaza_go/platform/controllers/home_menu_controller.dart';
 import 'package:gaza_go/platform/controllers/wallet_master_controller.dart';
@@ -14,7 +14,7 @@ import 'package:gaza_go/presentations/styles/styled_text.dart';
 import 'package:get/get.dart';
 
 class SecondaryAppbar extends StatelessWidget implements PreferredSizeWidget {
-  SecondaryAppbar({Key? key}) : super(key: key);
+  const SecondaryAppbar({Key? key}) : super(key: key);
 
   List<Widget> renderWalletItems(WalletMasterController walletMasterController) {
     return walletMasterController.spendingTokenUiList.map((token) {
@@ -24,7 +24,7 @@ class SecondaryAppbar extends StatelessWidget implements PreferredSizeWidget {
           children: [
             CircleAvatar(
               radius: 11.sp,
-              foregroundImage: token.logoUrl != '' && token.logoUrl != null ? CachedNetworkImageProvider(token.logoUrl!) : const SP.Svg('assets/images/common/ico_token_tik.svg') as ImageProvider,
+              foregroundImage: token.logoUrl != '' ? CachedNetworkImageProvider(token.logoUrl!) : const sp.Svg('assets/images/common/ico_token_tik.svg') as ImageProvider,
             ),
             Padding(
               padding: EdgeInsets.only(left: 4.sp),

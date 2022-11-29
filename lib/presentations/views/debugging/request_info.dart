@@ -34,7 +34,7 @@ class RequestInfo extends StatelessWidget {
     return DefaultContainer(
       titleText: 'Request Info',
       backgroundColor: subBg01Color,
-      headerBackgroundColor: Color(0xFF23232D),
+      headerBackgroundColor: const Color(0xFF23232D),
       child: SingleChildScrollView(
         physics: const ClampingScrollPhysics(),
         child: Padding(

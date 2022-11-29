@@ -1,5 +1,4 @@
 import 'package:expandable_bottom_sheet/expandable_bottom_sheet.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_naver_map/flutter_naver_map.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -10,7 +9,6 @@ import 'package:gaza_go/presentations/styles/colors.dart';
 import 'package:gaza_go/presentations/styles/icons.dart';
 import 'package:gaza_go/presentations/styles/styled_text.dart';
 import 'package:get/get.dart';
-import 'package:get/get_state_manager/src/rx_flutter/rx_obx_widget.dart';
 
 class ChallengeMap extends StatelessWidget {
   const ChallengeMap({Key? key}) : super(key: key);
@@ -19,21 +17,10 @@ class ChallengeMap extends StatelessWidget {
     List<CircleOverlay> centerCircles = controller.allChallengesList
         .map(
           (challenge) => CircleOverlay(
-            overlayId: 'ChallengeStartCenter' + challenge.id!.toString(),
+            overlayId: 'ChallengeStartCenter${challenge.id!}',
             center: LatLng(challenge.startLat!, challenge.startLon!),
             radius: 30,
             color: skyBlueColor,
-          ),
-        )
-        .toList();
-
-    List<CircleOverlay> outerCircles = controller.allChallengesList
-        .map(
-          (challenge) => CircleOverlay(
-            overlayId: 'ChallengeStart' + challenge.id!.toString(),
-            center: LatLng(challenge.startLat!, challenge.startLon!),
-            radius: challenge.startRadius!,
-            color: Color.fromRGBO(14, 230, 243, 0.3),
           ),
         )
         .toList();
@@ -45,21 +32,10 @@ class ChallengeMap extends StatelessWidget {
     List<CircleOverlay> centerCircles = controller.allChallengesList
         .map(
           (challenge) => CircleOverlay(
-            overlayId: 'ChallengeEndCenter' + challenge.id!.toString(),
+            overlayId: 'ChallengeEndCenter${challenge.id!}',
             center: LatLng(challenge.endLat!, challenge.endLon!),
             radius: 30.sp,
             color: Colors.red,
-          ),
-        )
-        .toList();
-
-    List<CircleOverlay> outerCircles = controller.allChallengesList
-        .map(
-          (challenge) => CircleOverlay(
-            overlayId: 'ChallengeStart' + challenge.id!.toString(),
-            center: LatLng(challenge.endLat!, challenge.endLon!),
-            radius: challenge.startRadius!,
-            color: Colors.red[100],
           ),
         )
         .toList();
@@ -70,10 +46,10 @@ class ChallengeMap extends StatelessWidget {
   Widget _renderChallengePoint(ActivityController controller, ChallengeHierarchyModel challenge) {
     return ListTileTheme(
       // dense: true,
-      contentPadding: EdgeInsets.all(0),
+      contentPadding: const EdgeInsets.all(0),
       minVerticalPadding: 0,
       child: ExpansionTile(
-        childrenPadding: EdgeInsets.all(0),
+        childrenPadding: const EdgeInsets.all(0),
         title: Text(
           challenge.name,
           style: TextStyle(fontSize: 18.sp, fontWeight: FontWeight.w500, color: Colors.white),
@@ -101,7 +77,7 @@ class ChallengeMap extends StatelessWidget {
             visualDensity: VisualDensity(vertical: MediaQuery.of(context).size.width < 320 ? -3 : 0),
             subtitle: StyledText(
               '${course.startPointName} - ${course.endPointName}',
-              color: (controller.challengeSelectedIndex == course.id) ? skyBlueColor : deepGrayColor,
+              color: (controller.challengeSelectedIndex.value == course.id) ? skyBlueColor : deepGrayColor,
               fontSize: 14,
               lineHeight: 14,
               fontWeight: 500,
@@ -109,7 +85,7 @@ class ChallengeMap extends StatelessWidget {
             minLeadingWidth: 10,
             leading: Padding(
               padding: EdgeInsets.only(left: 30.sp, top: 5),
-              child: (controller.challengeSelectedIndex == course.id) ? iconChallengeCheckOn : iconChallengeCheckOff,
+              child: (controller.challengeSelectedIndex.value == course.id) ? iconChallengeCheckOn : iconChallengeCheckOff,
             ),
             contentPadding: const EdgeInsets.all(0.0),
             // title: Text(
@@ -117,7 +93,7 @@ class ChallengeMap extends StatelessWidget {
             //   style: TextStyle(color: (controller.challengeSelectedIndex == course.id) ? skyBlueColor : Colors.white),
             // ),
 
-            title: StyledText(course.secondName!, fontSize: 17, color: (controller.challengeSelectedIndex == course.id) ? skyBlueColor : Colors.white));
+            title: StyledText(course.secondName!, fontSize: 17, color: (controller.challengeSelectedIndex.value == course.id) ? skyBlueColor : Colors.white));
       });
     });
   }
@@ -127,8 +103,8 @@ class ChallengeMap extends StatelessWidget {
 
     return ListView.builder(
       shrinkWrap: true,
-      physics: NeverScrollableScrollPhysics(),
-      padding: EdgeInsets.all(0.0),
+      physics: const NeverScrollableScrollPhysics(),
+      padding: const EdgeInsets.all(0.0),
       itemCount: challenges.length,
       itemBuilder: (BuildContext context, int index) => _renderChallengePoint(controller, challenges[index]),
     );
@@ -145,8 +121,8 @@ class ChallengeMap extends StatelessWidget {
 
         //optional; default: Duration(milliseconds: 250)
         //The durations of the animations.
-        animationDurationExtend: Duration(milliseconds: 500),
-        animationDurationContract: Duration(milliseconds: 250),
+        animationDurationExtend: const Duration(milliseconds: 500),
+        animationDurationContract: const Duration(milliseconds: 250),
 
         //optional; default: Curves.ease
         //The curves of the animations.
@@ -162,68 +138,68 @@ class ChallengeMap extends StatelessWidget {
 
         //required
         //This is the widget which will be overlapped by the bottom sheet.
-        background: Container(
-          child: Obx(() {
-            return Stack(
-              alignment: Alignment.topCenter,
-              children: [
-                NaverMap(
-                  contentPadding: EdgeInsets.only(bottom: 100),
-                  initialCameraPosition: CameraPosition(
-                    target: LatLng(controller.currentLocation.value.latitude ?? 0, controller.currentLocation.value.longitude ?? 0),
-                    zoom: 14,
-                  ),
-                  markers: controller.challengeMarkers.value,
-                  mapType: MapType.Basic,
-                  activeLayers: [MapLayer.LAYER_GROUP_MOUNTAIN],
-                  nightModeEnable: true,
-                  tiltGestureEnable: false,
+        background: Obx(() {
+          return Stack(
+            alignment: Alignment.topCenter,
+            children: [
+              NaverMap(
+                contentPadding: const EdgeInsets.only(bottom: 100),
+                initialCameraPosition: CameraPosition(
+                  target: LatLng(controller.currentLocation.value.latitude, controller.currentLocation.value.longitude),
+                  zoom: 14,
                 ),
-                Padding(
-                  padding: EdgeInsets.only(top: 70.sp),
-                  child: Container(
-                      padding: EdgeInsets.only(top: 10.sp, bottom: 10.sp, right: 20.sp, left: 20.sp),
-                      decoration: BoxDecoration(
-                        color: popupBgColor,
-                        borderRadius: BorderRadius.circular(14.sp),
-                        border: Border.all(color: Colors.black, width: 2.sp),
-                        boxShadow: const [
-                          BoxShadow(
-                            color: Colors.black,
-                            spreadRadius: 0,
-                            blurRadius: 0,
-                            offset: Offset(0, 4), // changes position of shadow
-                          ),
-                        ],
+                markers: controller.challengeMarkers,
+                mapType: MapType.Basic,
+                activeLayers: const [MapLayer.LAYER_GROUP_MOUNTAIN],
+                nightModeEnable: true,
+                tiltGestureEnable: false,
+              ),
+              Padding(
+                padding: EdgeInsets.only(top: 70.sp),
+                child: Container(
+                  padding: EdgeInsets.only(top: 10.sp, bottom: 10.sp, right: 20.sp, left: 20.sp),
+                  decoration: BoxDecoration(
+                    color: popupBgColor,
+                    borderRadius: BorderRadius.circular(14.sp),
+                    border: Border.all(color: Colors.black, width: 2.sp),
+                    boxShadow: const [
+                      BoxShadow(
+                        color: Colors.black,
+                        spreadRadius: 0,
+                        blurRadius: 0,
+                        offset: Offset(0, 4), // changes position of shadow
                       ),
-                      child: const StyledText(
-                        '첼린지 리스트',
-                        fontSize: 16,
-                        fontWeight: 500,
-                        lineHeight: 22,
-                        color: Colors.white,
-                        textAlign: TextAlign.center,
-                      )),
+                    ],
+                  ),
+                  child: const StyledText(
+                    '첼린지 가이드',
+                    fontSize: 16,
+                    fontWeight: 500,
+                    lineHeight: 22,
+                    color: Colors.white,
+                    textAlign: TextAlign.center,
+                  ),
                 ),
-                Positioned(
-                    top: 66.sp,
-                    left: 20.sp,
-                    child: InkWell(
-                        onTap: () {
-                          Navigator.pop(context);
-                        },
-                        child: iconChallengeScreenBack))
-              ],
-            );
-          }),
-        ),
+              ),
+              Positioned(
+                top: 66.sp,
+                left: 20.sp,
+                child: InkWell(
+                    onTap: () {
+                      Navigator.pop(context);
+                    },
+                    child: iconChallengeScreenBack),
+              ),
+            ],
+          );
+        }),
 
         //optional
         //This widget is sticking above the content and will never be contracted.
         persistentHeader: Container(
           padding: EdgeInsets.only(bottom: 5.sp),
           height: 30,
-          decoration: BoxDecoration(color: Color(0xFF4A4D57), borderRadius: BorderRadius.only(topLeft: Radius.circular(15.sp), topRight: Radius.circular(15.sp))),
+          decoration: BoxDecoration(color: const Color(0xFF4A4D57), borderRadius: BorderRadius.only(topLeft: Radius.circular(15.sp), topRight: Radius.circular(15.sp))),
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [

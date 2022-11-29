@@ -9,7 +9,7 @@ import 'package:gaza_go/presentations/styles/styled_text.dart';
 import 'package:get/get.dart';
 
 class BuyTik extends StatelessWidget {
-  BuyTik({Key? key}) : super(key: key);
+  const BuyTik({Key? key}) : super(key: key);
 
   Widget getConfirmationBottomSheet(WalletMasterController controller) {
     return Container(
@@ -132,7 +132,7 @@ class BuyTik extends StatelessWidget {
             Container(
               width: double.infinity,
               height: 2,
-              color: Color(0xff5e5e66),
+              color: const Color(0xff5e5e66),
             ),
             Padding(
               padding: EdgeInsets.only(top: 25.sp, bottom: 30.sp, left: 30.sp, right: 30.sp),
@@ -187,7 +187,7 @@ class BuyTik extends StatelessWidget {
                       padding: EdgeInsets.only(right: 6.sp),
                       child: Container(
                         decoration: BoxDecoration(
-                          color: Color(0xff3e3e4a),
+                          color: const Color(0xff3e3e4a),
                           borderRadius: BorderRadius.circular(12.sp),
                           border: Border.all(width: 2, color: Colors.black),
                           boxShadow: [
@@ -272,7 +272,7 @@ class BuyTik extends StatelessWidget {
     WalletMasterController controller = Get.find();
     return DefaultContainer(
       backgroundColor: subBg01Color,
-      child: Container(
+      child: SizedBox(
         width: double.infinity,
         child: Column(
           children: [
@@ -317,7 +317,7 @@ class BuyTik extends StatelessWidget {
                           suffixText: ' TIK',
                           hintText: '100',
                           hintStyle: TextStyle(
-                            color: Color(0xff646469),
+                            color: const Color(0xff646469),
                             fontSize: 28.sp,
                             fontWeight: FontWeight.w600,
                           ),
@@ -356,7 +356,7 @@ class BuyTik extends StatelessWidget {
                     child: Ink(
                       decoration: BoxDecoration(
                         borderRadius: BorderRadius.circular(6.sp),
-                        color: Color(0xff727380),
+                        color: const Color(0xff727380),
                       ),
                       width: double.infinity,
                       child: InkWell(
@@ -385,7 +385,7 @@ class BuyTik extends StatelessWidget {
                     child: Ink(
                       decoration: BoxDecoration(
                         borderRadius: BorderRadius.circular(6.sp),
-                        color: Color(0xff727380),
+                        color: const Color(0xff727380),
                       ),
                       width: double.infinity,
                       child: InkWell(
@@ -414,7 +414,7 @@ class BuyTik extends StatelessWidget {
                     child: Ink(
                       decoration: BoxDecoration(
                         borderRadius: BorderRadius.circular(6.sp),
-                        color: Color(0xff727380),
+                        color: const Color(0xff727380),
                       ),
                       width: double.infinity,
                       child: InkWell(
@@ -443,7 +443,7 @@ class BuyTik extends StatelessWidget {
                     child: Ink(
                       decoration: BoxDecoration(
                         borderRadius: BorderRadius.circular(6.sp),
-                        color: Color(0xff727380),
+                        color: const Color(0xff727380),
                       ),
                       width: double.infinity,
                       child: InkWell(

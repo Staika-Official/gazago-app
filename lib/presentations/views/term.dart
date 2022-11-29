@@ -15,9 +15,10 @@ class Term extends StatelessWidget {
 
     return Obx(() {
       return DefaultContainer(
+        backgroundColor: subBg01Color,
         titleText: controller.termTitle.value,
         child: SingleChildScrollView(
-          physics: ClampingScrollPhysics(),
+          physics: const ClampingScrollPhysics(),
           child: Column(
             children: [
               if (controller.termType.value == 'T2E_MARKETING')

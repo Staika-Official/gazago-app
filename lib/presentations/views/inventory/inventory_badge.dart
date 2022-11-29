@@ -1,9 +1,9 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:flutter_svg/svg.dart';
 import 'package:gaza_go/platform/controllers/inventory_controller.dart';
 import 'package:gaza_go/presentations/styles/colors.dart';
+import 'package:gaza_go/presentations/styles/icons.dart';
 import 'package:gaza_go/presentations/styles/styled_text.dart';
 import 'package:get/get.dart';
 
@@ -144,7 +144,7 @@ class InventoryBadge extends StatelessWidget {
               child: Column(
                 mainAxisSize: MainAxisSize.min,
                 children: [
-                  SvgPicture.asset('assets/images/wallet/ico_empty.svg'),
+                  iconEmpty,
                   Padding(
                     padding: EdgeInsets.only(top: 20.sp),
                     child: const StyledText(

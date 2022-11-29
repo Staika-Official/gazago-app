@@ -20,7 +20,7 @@ class Preferences extends StatelessWidget {
     return DefaultContainer(
       titleText: '설정',
       backgroundColor: subBg01Color,
-      headerBackgroundColor: Color(0xFF23232D),
+      headerBackgroundColor: const Color(0xFF23232D),
       child: SingleChildScrollView(
         child: Column(
           children: [
@@ -84,7 +84,7 @@ class Preferences extends StatelessWidget {
             // ),
             PreferenceItem(
               title: '공지사항',
-              onTap: () => Get.toNamed(Routes.preferenceBoard, arguments: {'boardType': 'T2E_NOTICE'}),
+              onTap: () => Get.toNamed(Routes.noticeList, arguments: {'boardType': 'T2E_NOTICE'}),
             ),
             PreferenceItem(
               title: 'FAQ',
@@ -93,7 +93,7 @@ class Preferences extends StatelessWidget {
             Container(
               width: double.infinity,
               height: 6.sp,
-              color: Color(0xFF23232D),
+              color: const Color(0xFF23232D),
             ),
             PreferenceItem(
               title: '약관',
@@ -106,7 +106,7 @@ class Preferences extends StatelessWidget {
             Container(
               width: double.infinity,
               height: 6.sp,
-              color: Color(0xFF23232D),
+              color: const Color(0xFF23232D),
             ),
             PreferenceItem(
               title: '로그아웃',
@@ -181,7 +181,7 @@ class PreferenceItem extends StatelessWidget {
                 fontSize: 18,
               ),
               type == ItemType.functional
-                  ? Icon(Icons.chevron_right, color: Color(0xFFBDC0C7), size: 24.sp)
+                  ? Icon(Icons.chevron_right, color: const Color(0xFFBDC0C7), size: 24.sp)
                   : Padding(
                       padding: EdgeInsets.only(right: 5.sp),
                       child: StyledText(

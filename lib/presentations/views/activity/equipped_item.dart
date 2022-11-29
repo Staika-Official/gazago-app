@@ -123,7 +123,7 @@ class EquippedItems extends StatelessWidget {
                                   fontSize: 28,
                                   fontWeight: 500,
                                 ),
-                                StyledText(
+                                const StyledText(
                                   '%',
                                   fontSize: 16,
                                   fontWeight: 500,
@@ -181,7 +181,7 @@ class EquippedItems extends StatelessWidget {
                                       child: iconItemAbrasion,
                                     ),
                                     StyledText(
-                                      '아이템 마모율',
+                                      '내구도 감소율',
                                       color: deepGrayColor,
                                       fontSize: 11,
                                       lineHeight: 12,
@@ -203,7 +203,7 @@ class EquippedItems extends StatelessWidget {
                                   fontSize: 28,
                                   fontWeight: 500,
                                 ),
-                                StyledText(
+                                const StyledText(
                                   '%',
                                   fontSize: 16,
                                   fontWeight: 500,

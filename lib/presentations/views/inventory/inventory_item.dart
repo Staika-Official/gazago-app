@@ -26,7 +26,7 @@ class InventoryItem extends StatelessWidget {
             physics: const ScrollPhysics(),
             primary: false,
             controller: controller.itemScrollController,
-            padding: EdgeInsets.only(left: 20.sp, right: 20.sp),
+            padding: EdgeInsets.only(left: 20.sp, right: 20.sp, bottom: 20.sp),
             childAspectRatio: (1 / 1.4),
             crossAxisSpacing: 10.sp,
             mainAxisSpacing: 10.sp,
@@ -150,10 +150,10 @@ class InventoryItem extends StatelessWidget {
                             backgroundColor: getItemGradeColor(item.itemGrade),
                             radius: 10.sp,
                             child: StyledText(
-                              item.itemGrade![0],
+                              item.itemGrade[0],
                               fontWeight: 600,
                               fontFamily: 'Montserrat',
-                              color: item.itemGrade == 'POOR' ? Color(0xFFffffff).withOpacity(0.6) : Color(0xFF000000).withOpacity(0.6),
+                              color: item.itemGrade == 'POOR' ? const Color(0xFFffffff).withOpacity(0.6) : const Color(0xFF000000).withOpacity(0.6),
                             ),
                           ),
                         ),
@@ -170,7 +170,7 @@ class InventoryItem extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    InventoryHomeController _controller = Get.find();
+    InventoryHomeController controller = Get.find();
     InventoryController inventoryController = Get.find();
     double width = MediaQuery.of(context).size.width;
     double height = MediaQuery.of(context).size.height;
@@ -181,12 +181,12 @@ class InventoryItem extends StatelessWidget {
         children: [
           Padding(
             padding: EdgeInsets.symmetric(vertical: 10.0.sp, horizontal: 20.0.sp),
-            child: Container(
+            child: SizedBox(
               height: 28.sp,
               child: Align(
                 alignment: Alignment.centerLeft,
                 child: TabBar(
-                  controller: _controller.subTabController,
+                  controller: controller.subTabController,
                   isScrollable: true,
                   labelStyle: TextStyle(fontWeight: FontWeight.w500, fontSize: 14.sp),
                   labelColor: Colors.black,
@@ -196,7 +196,7 @@ class InventoryItem extends StatelessWidget {
                     borderRadius: BorderRadius.circular(80.0.sp),
                     color: const Color(0xFFECECEC),
                   ),
-                  tabs: [...renderItemSubTabList(_controller)],
+                  tabs: [...renderItemSubTabList(controller)],
                 ),
               ),
             ),
@@ -204,12 +204,12 @@ class InventoryItem extends StatelessWidget {
           Obx(() {
             return Expanded(
               child: Padding(
-                padding: EdgeInsets.only(top: 5.0.sp, bottom: 15.sp),
+                padding: EdgeInsets.only(top: 5.0.sp),
                 child: TabBarView(
                   physics: const NeverScrollableScrollPhysics(),
-                  controller: _controller.subTabController,
+                  controller: controller.subTabController,
                   children: [
-                    ...renderItemList(_controller, inventoryController, width, height),
+                    ...renderItemList(controller, inventoryController, width, height),
                   ],
                 ),
               ),

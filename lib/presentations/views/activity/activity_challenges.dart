@@ -8,8 +8,8 @@ import 'package:gaza_go/constants/enums.dart';
 import 'package:gaza_go/platform/controllers/activity_controller.dart';
 import 'package:gaza_go/platform/helpers/alert_helper.dart';
 import 'package:gaza_go/platform/models/challenge_model.dart';
-import 'package:gaza_go/presentations/components/default_container.dart';
 import 'package:gaza_go/presentations/styles/colors.dart';
+import 'package:gaza_go/presentations/styles/icons.dart';
 import 'package:gaza_go/presentations/styles/styled_text.dart';
 import 'package:get/get.dart';
 
@@ -39,17 +39,17 @@ class ActivityChallenges extends StatelessWidget {
     //     )
     //     .toList();
     CircleOverlay centerCircle = CircleOverlay(
-      overlayId: 'ChallengeStartCenter' + controller.selectedChallenge.value.id!.toString(),
+      overlayId: 'ChallengeStartCenter${controller.selectedChallenge.value.id!}',
       center: LatLng(controller.selectedChallenge.value.startLat!, controller.selectedChallenge.value.startLon!),
       radius: 9,
       color: skyBlueColor,
     );
 
     CircleOverlay outerCircle = CircleOverlay(
-      overlayId: 'ChallengeStart' + controller.selectedChallenge.value.id!.toString(),
+      overlayId: 'ChallengeStart${controller.selectedChallenge.value.id!}',
       center: LatLng(controller.selectedChallenge.value.startLat!, controller.selectedChallenge.value.startLon!),
       radius: controller.selectedChallenge.value.startRadius!,
-      color: Color.fromRGBO(14, 230, 243, 0.3),
+      color: const Color.fromRGBO(14, 230, 243, 0.3),
     );
 
     return [centerCircle, outerCircle];
@@ -81,14 +81,14 @@ class ActivityChallenges extends StatelessWidget {
     // return [...outerCircles, ...centerCircles];
 
     CircleOverlay centerCircle = CircleOverlay(
-      overlayId: 'ChallengeEndCenter' + controller.selectedChallenge.value.id!.toString(),
+      overlayId: 'ChallengeEndCenter${controller.selectedChallenge.value.id!}',
       center: LatLng(controller.selectedChallenge.value.endLat!, controller.selectedChallenge.value.endLon!),
       radius: 9,
       color: Colors.red,
     );
 
     CircleOverlay outerCircle = CircleOverlay(
-      overlayId: 'ChallengeEnd' + controller.selectedChallenge.value.id!.toString(),
+      overlayId: 'ChallengeEnd${controller.selectedChallenge.value.id!}',
       center: LatLng(controller.selectedChallenge.value.endLat!, controller.selectedChallenge.value.endLon!),
       radius: controller.selectedChallenge.value.endRadius!,
       color: Colors.red[300]?.withOpacity(0.3),
@@ -188,36 +188,29 @@ class ActivityChallenges extends StatelessWidget {
   Widget build(BuildContext context) {
     ActivityController controller = Get.find();
 
-    return DefaultContainer(
-      child: Obx(() {
+    return Scaffold(
+      body: Obx(() {
         return Stack(
           fit: StackFit.expand,
+          alignment: Alignment.topCenter,
           children: [
-            Positioned(
-              top: 0,
-              left: 0,
-              child: SizedBox(
-                height: (MediaQuery.of(context).size.height - (controller.listHeight.value + 50) - (MediaQuery.of(context).viewInsets.bottom + MediaQuery.of(context).viewInsets.top)).sp,
-                width: (MediaQuery.of(context).size.width).sp,
-                child: NaverMap(
-                  initialCameraPosition: CameraPosition(
-                    target: LatLng(controller.currentLocation.value.latitude ?? 0, controller.currentLocation.value.longitude ?? 0),
-                    zoom: 14,
-                  ),
-                  circles: [
-                    if (controller.selectedChallenge.value.id != null) ...renderStartPoint(controller),
-                    if (controller.selectedChallenge.value.id != null) ...renderEndPoint(controller),
-                  ],
-                  markers: [
-                    if (controller.selectedChallenge.value.id != null) ...renderMaker(controller),
-                  ],
-                  mapType: MapType.Basic,
-                  activeLayers: [MapLayer.LAYER_GROUP_MOUNTAIN],
-                  nightModeEnable: true,
-                  tiltGestureEnable: false,
-                  onMapCreated: controller.onChallengeMapCreated,
-                ),
+            NaverMap(
+              initialCameraPosition: CameraPosition(
+                target: LatLng(controller.currentLocation.value.latitude, controller.currentLocation.value.longitude),
+                zoom: 14,
               ),
+              circles: [
+                if (controller.selectedChallenge.value.id != null) ...renderStartPoint(controller),
+                if (controller.selectedChallenge.value.id != null) ...renderEndPoint(controller),
+              ],
+              markers: [
+                if (controller.selectedChallenge.value.id != null) ...renderMaker(controller),
+              ],
+              mapType: MapType.Basic,
+              activeLayers: const [MapLayer.LAYER_GROUP_MOUNTAIN],
+              nightModeEnable: true,
+              tiltGestureEnable: false,
+              onMapCreated: controller.onChallengeMapCreated,
             ),
             Positioned(
               bottom: 0,
@@ -253,7 +246,7 @@ class ActivityChallenges extends StatelessWidget {
                     ConstrainedBox(
                       constraints: BoxConstraints(maxHeight: 250.sp),
                       child: SingleChildScrollView(
-                        physics: ClampingScrollPhysics(),
+                        physics: const ClampingScrollPhysics(),
                         child: Column(
                           children: [
                             ...renderChallengeList(controller),
@@ -280,16 +273,16 @@ class ActivityChallenges extends StatelessWidget {
                           padding: EdgeInsets.all(20.sp),
                           width: double.infinity.sp,
                           decoration: BoxDecoration(
-                            color: skyBlueColor,
+                            color: controller.selectedChallenge.value.id != null ? skyBlueColor : lightGrayColor,
                             borderRadius: BorderRadius.circular(12.sp),
                             border: Border.all(
-                              width: 2.sp,
+                              width: controller.selectedChallenge.value.id != null ? 2.sp : 0,
                               style: BorderStyle.solid,
                               color: Colors.black,
                             ),
                             boxShadow: [
                               BoxShadow(
-                                offset: Offset(0, 4.sp),
+                                offset: Offset(0, controller.selectedChallenge.value.id != null ? 4.sp : 0),
                                 blurRadius: 0,
                                 spreadRadius: 0,
                                 color: Colors.black,
@@ -299,11 +292,7 @@ class ActivityChallenges extends StatelessWidget {
                           child: Text(
                             '가자GO',
                             textAlign: TextAlign.center,
-                            style: TextStyle(
-                              fontSize: 18.sp,
-                              fontWeight: FontWeight.w600,
-                              height: (16 / 18).sp,
-                            ),
+                            style: TextStyle(fontSize: 18.sp, fontWeight: FontWeight.w600, height: (16 / 18).sp, color: controller.selectedChallenge.value.id != null ? Colors.black : Colors.grey),
                           ),
                         ),
                       ),
@@ -311,6 +300,68 @@ class ActivityChallenges extends StatelessWidget {
                   ],
                 ),
               ),
+            ),
+            // Padding(
+            //   padding: EdgeInsets.only(top: 70.sp),
+            //   child: Container(
+            //       padding: EdgeInsets.only(top: 10.sp, bottom: 10.sp, right: 20.sp, left: 20.sp),
+            //       decoration: BoxDecoration(
+            //         color: popupBgColor,
+            //         borderRadius: BorderRadius.circular(14.sp),
+            //         border: Border.all(color: Colors.black, width: 2.sp),
+            //         boxShadow: const [
+            //           BoxShadow(
+            //             color: Colors.black,
+            //             spreadRadius: 0,
+            //             blurRadius: 0,
+            //             offset: Offset(0, 4), // changes position of shadow
+            //           ),
+            //         ],
+            //       ),
+            //       child: const StyledText(
+            //         '첼린지 리스트',
+            //         fontSize: 16,
+            //         fontWeight: 500,
+            //         lineHeight: 22,
+            //         color: Colors.white,
+            //         textAlign: TextAlign.center,
+            //       )),
+            // ),
+            Positioned(
+              top: 46.sp,
+              left: 20.sp,
+              child: InkWell(
+                  onTap: () {
+                    Navigator.pop(context);
+                  },
+                  child: iconChallengeScreenBack),
+            ),
+            Positioned(
+              left: MediaQuery.of(context).size.width / 2 - 76,
+              top: 50.sp,
+              child: Container(
+                  padding: EdgeInsets.only(top: 10.sp, bottom: 10.sp, right: 20.sp, left: 20.sp),
+                  decoration: BoxDecoration(
+                    color: popupBgColor,
+                    borderRadius: BorderRadius.circular(14.sp),
+                    border: Border.all(color: Colors.black, width: 2.sp),
+                    boxShadow: const [
+                      BoxShadow(
+                        color: Colors.black,
+                        spreadRadius: 0,
+                        blurRadius: 0,
+                        offset: Offset(0, 4), // changes position of shadow
+                      ),
+                    ],
+                  ),
+                  child: const StyledText(
+                    '첼린지 고르기',
+                    fontSize: 16,
+                    fontWeight: 500,
+                    lineHeight: 22,
+                    color: Colors.white,
+                    textAlign: TextAlign.center,
+                  )),
             ),
           ],
         );

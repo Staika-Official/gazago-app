@@ -334,7 +334,7 @@ Future<void> showLocationAlert(ActivityController controller) async {
           text: '정확한 운동기록을 위해서 ',
           children: [
             TextSpan(text: '위치', style: TextStyle(color: skyBlueColor)),
-            TextSpan(text: '엑세스 \n권한을 허용해 주세요'),
+            const TextSpan(text: '엑세스 \n권한을 허용해 주세요'),
           ],
         ),
       ),
@@ -370,7 +370,7 @@ Future<void> showActivityAlert(ActivityController controller) async {
           text: '정확한 운동기록을 위해서 ',
           children: [
             TextSpan(text: '신체 활동\n', style: TextStyle(color: skyBlueColor)),
-            TextSpan(text: '엑세스 권한을 허용해 주세요.'),
+            const TextSpan(text: '엑세스 권한을 허용해 주세요.'),
           ],
         ),
       ),
@@ -406,7 +406,7 @@ Future<void> showGpsAlert() async {
           text: '정상적인 gazaGO 이용을 위하여 디바이스의 ',
           children: [
             TextSpan(text: 'GPS', style: TextStyle(color: skyBlueColor)),
-            TextSpan(text: ' 기능을 활성화 시켜주세요.'),
+            const TextSpan(text: ' 기능을 활성화 시켜주세요.'),
           ],
         ),
       ),
@@ -492,7 +492,7 @@ void showBadgeAcquisitionAlert(InventoryBadgeModel badge, ChallengeModel selecte
             TextSpan(
               children: [
                 TextSpan(text: '내 장비 > 뱃지', style: TextStyle(color: skyBlueColor)),
-                TextSpan(text: ' 카테고리에서\n획득한 뱃지를 확인하실수 있습니다.'),
+                const TextSpan(text: ' 카테고리에서\n획득한 뱃지를 확인하실수 있습니다.'),
               ],
             ),
           ),

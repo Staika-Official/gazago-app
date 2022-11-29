@@ -18,7 +18,7 @@ class CalendarStatistics extends StatelessWidget {
 
     return Scaffold(
       appBar: AppBar(
-        title: StyledText(
+        title: const StyledText(
           "TIK 획득 내역",
           fontSize: 18,
         ),
@@ -49,8 +49,8 @@ class CalendarStatistics extends StatelessWidget {
                         titleTextStyle: TextStyle(fontSize: 18.sp, color: Colors.white, fontWeight: FontWeight.w500),
                         titleCentered: true,
                         formatButtonVisible: false,
-                        leftChevronIcon: Icon(Icons.chevron_left, color: Colors.white),
-                        rightChevronIcon: Icon(
+                        leftChevronIcon: const Icon(Icons.chevron_left, color: Colors.white),
+                        rightChevronIcon: const Icon(
                           Icons.chevron_right,
                           color: Colors.white,
                         ),
@@ -63,7 +63,7 @@ class CalendarStatistics extends StatelessWidget {
                           UserRewardStatisticsModel reward = events.first as UserRewardStatisticsModel;
                           return StyledText(
                             '+${formatDecimalPlaces(reward.tik, 1)}',
-                            color: Color(0xFFFF8FB4),
+                            color: const Color(0xFFFF8FB4),
                           );
                         }
                         return null;
@@ -104,7 +104,7 @@ class CalendarStatistics extends StatelessWidget {
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    StyledText(
+                    const StyledText(
                       'Total',
                       color: Colors.white,
                       fontWeight: 500,

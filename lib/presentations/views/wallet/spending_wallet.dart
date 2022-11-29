@@ -32,15 +32,13 @@ class SpendingWallet extends StatelessWidget {
 
     return SingleChildScrollView(
       physics: const ClampingScrollPhysics(),
-      child: Container(
-        child: Obx(() {
-          return Column(
-            children: [
-              ...renderInventoryList(controller),
-            ],
-          );
-        }),
-      ),
+      child: Obx(() {
+        return Column(
+          children: [
+            ...renderInventoryList(controller),
+          ],
+        );
+      }),
     );
   }
 }

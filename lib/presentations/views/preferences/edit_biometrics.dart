@@ -13,29 +13,29 @@ class EditBiometrics extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text('성별'),
+          const Text('성별'),
           Row(
             children: [
               Expanded(
                 child: ElevatedButton(
                   onPressed: () => null,
-                  child: Text('남자'),
+                  child: const Text('남자'),
                 ),
               ),
               Expanded(
                 child: ElevatedButton(
                   onPressed: () => null,
-                  child: Text('여자'),
+                  child: const Text('여자'),
                 ),
               ),
             ],
           ),
-          Text('나이'),
-          TextField(),
-          Text('몸무게'),
-          TextField(),
-          Text('키'),
-          TextField(),
+          const Text('나이'),
+          const TextField(),
+          const Text('몸무게'),
+          const TextField(),
+          const Text('키'),
+          const TextField(),
           Expanded(
             child: Align(
               alignment: Alignment.bottomCenter,
@@ -43,7 +43,7 @@ class EditBiometrics extends StatelessWidget {
                 width: double.infinity,
                 child: ElevatedButton(
                   onPressed: () => controller.updateBiometrics(),
-                  child: Text('확인'),
+                  child: const Text('확인'),
                 ),
               ),
             ),

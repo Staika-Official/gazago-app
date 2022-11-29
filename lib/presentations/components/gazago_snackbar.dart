@@ -3,9 +3,9 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:gaza_go/presentations/styles/styled_text.dart';
 
 class GazagoSnackbar extends StatelessWidget {
-  String message;
+  final String message;
 
-  GazagoSnackbar({Key? key, required this.message}) : super(key: key);
+  const GazagoSnackbar({Key? key, required this.message}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -18,7 +18,7 @@ class GazagoSnackbar extends StatelessWidget {
       ),
       padding: EdgeInsets.all(12.sp),
       margin: EdgeInsets.symmetric(horizontal: 40.sp),
-      backgroundColor: Color.fromRGBO(0, 0, 0, 0.9),
+      backgroundColor: const Color.fromRGBO(0, 0, 0, 0.9),
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(10.sp),
       ),

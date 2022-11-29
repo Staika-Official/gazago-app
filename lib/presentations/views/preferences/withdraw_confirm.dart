@@ -52,6 +52,7 @@ class WithdrawConfirm extends StatelessWidget {
     WithdrawConfirmController controller = Get.put(WithdrawConfirmController());
 
     return DefaultContainer(
+      backgroundColor: subBg01Color,
       child: Padding(
         padding: EdgeInsets.all(20.sp),
         child: Column(

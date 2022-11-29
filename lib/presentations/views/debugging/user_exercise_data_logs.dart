@@ -32,7 +32,7 @@ class UserExerciseDataLogs extends StatelessWidget {
     return DefaultContainer(
       titleText: 'User Exercise Data Info',
       backgroundColor: subBg01Color,
-      headerBackgroundColor: Color(0xFF23232D),
+      headerBackgroundColor: const Color(0xFF23232D),
       child: SingleChildScrollView(
         physics: const ClampingScrollPhysics(),
         child: Padding(

@@ -43,7 +43,7 @@ void handleMessage() {
 
     print('FCM Foreground handleMessage ${notification!.title}');
 
-    if (notification != null && android != null) {
+    if (android != null) {
       flutterLocalNotificationsPlugin.show(
         notification.hashCode,
         notification.title,
@@ -75,7 +75,7 @@ void moveToLeaderboard(RemoteMessage message) {
 Future<void> requestPermission() async {
   FirebaseMessaging messaging = FirebaseMessaging.instance;
 
-  NotificationSettings settings = await messaging.requestPermission();
+  await messaging.requestPermission();
 }
 
 Future<void> setForegroundConfig() async {
