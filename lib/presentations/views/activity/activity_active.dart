@@ -288,7 +288,7 @@ class ActivityActive extends StatelessWidget {
               ),
             ),
             controller.exerciseSteps.value < 1
-                ? StyledText(
+                ? const StyledText(
                     '운동 분석중',
                     fontSize: 18,
                     lineHeight: 18,
@@ -296,7 +296,7 @@ class ActivityActive extends StatelessWidget {
                   )
                 : StyledText(
                     (controller.realTimeSpeed.value < 1 || controller.realTimeSpeed.value > 6) && controller.exerciseState.value == ExerciseState.ongoing
-                        ? controller.exerciseState.value.label + ' (보상 불가)'
+                        ? '${controller.exerciseState.value.label} (보상 불가)'
                         : controller.exerciseState.value.label,
                     fontSize: 18,
                     lineHeight: 18,

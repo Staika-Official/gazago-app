@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:gaza_go/platform/controllers/login_controller.dart';
-import 'package:gaza_go/platform/controllers/withdraw_confirm_controller.dart';
 import 'package:gaza_go/presentations/components/default_container.dart';
 import 'package:gaza_go/presentations/styles/colors.dart';
 import 'package:gaza_go/presentations/styles/icons.dart';
@@ -13,7 +12,6 @@ class AccountRestore extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    WithdrawConfirmController controller = Get.put(WithdrawConfirmController());
     LoginController loginController = Get.put(LoginController());
     return DefaultContainer(
       isPrevButtonHide: true,

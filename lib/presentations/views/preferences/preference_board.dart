@@ -109,7 +109,7 @@ class PreferenceBoard extends StatelessWidget {
                                 end: Alignment.bottomRight,
                                 colors: [
                                   skyBlueColor,
-                                  Color(0xff0EF3D8),
+                                  const Color(0xff0EF3D8),
                                 ],
                               ).createShader(
                                 Rect.fromLTWH(0, 0, bounds.width, bounds.height),

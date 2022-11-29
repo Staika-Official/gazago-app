@@ -28,34 +28,34 @@ class StyledText extends StatelessWidget {
   }) : super(key: key);
 
   FontWeight get getFontWeight {
-    FontWeight _fontWeight = FontWeight.w400;
+    FontWeight fw = FontWeight.w400;
     switch (fontWeight) {
       case 100:
-        _fontWeight = FontWeight.w100;
+        fw = FontWeight.w100;
         break;
       case 200:
-        _fontWeight = FontWeight.w200;
+        fw = FontWeight.w200;
         break;
       case 300:
-        _fontWeight = FontWeight.w300;
+        fw = FontWeight.w300;
         break;
       case 400:
-        _fontWeight = FontWeight.w400;
+        fw = FontWeight.w400;
         break;
       case 500:
-        _fontWeight = FontWeight.w500;
+        fw = FontWeight.w500;
         break;
       case 600:
-        _fontWeight = FontWeight.w600;
+        fw = FontWeight.w600;
         break;
       case 700:
-        _fontWeight = FontWeight.w700;
+        fw = FontWeight.w700;
         break;
       case 800:
-        _fontWeight = FontWeight.w800;
+        fw = FontWeight.w800;
         break;
     }
-    return _fontWeight;
+    return fw;
   }
 
   double get getLineHeight {

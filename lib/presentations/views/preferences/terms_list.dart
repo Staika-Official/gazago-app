@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:gaza_go/constants/routes.dart';
-import 'package:gaza_go/platform/controllers/preference_controller.dart';
 import 'package:gaza_go/presentations/components/default_container.dart';
 import 'package:gaza_go/presentations/styles/colors.dart';
 import 'package:gaza_go/presentations/styles/styled_text.dart';
@@ -12,8 +11,6 @@ class TermsList extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    PreferenceController controller = Get.put(PreferenceController());
-
     return DefaultContainer(
       titleText: '약관',
       backgroundColor: subBg01Color,

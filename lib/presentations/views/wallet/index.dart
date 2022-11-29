@@ -131,7 +131,7 @@ class _WalletHomeState extends State<WalletHome> with SingleTickerProviderStateM
           Expanded(
             child: TabBarView(
               controller: _tabController,
-              children: [
+              children: const [
                 SpendingWallet(),
                 // AssetWallet(),
               ],

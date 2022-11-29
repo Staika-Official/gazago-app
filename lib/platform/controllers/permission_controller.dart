@@ -8,7 +8,7 @@ import 'package:gaza_go/platform/stores/hive_store.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:get/get.dart';
 import 'package:health/health.dart';
-import 'package:permission_handler/permission_handler.dart' as PH;
+import 'package:permission_handler/permission_handler.dart' as ph;
 
 class PermissionController extends GetxController {
   final HealthFactory health = HealthFactory();
@@ -83,9 +83,9 @@ class PermissionController extends GetxController {
   Future<bool> checkActivityPermission() async {
     bool hasActivityPermission = false;
     if (Platform.isAndroid) {
-      hasActivityPermission = PH.PermissionStatus.granted == await PH.Permission.activityRecognition.status;
+      hasActivityPermission = ph.PermissionStatus.granted == await ph.Permission.activityRecognition.status;
     } else if (Platform.isIOS) {
-      hasActivityPermission = PH.PermissionStatus.granted == await PH.Permission.sensors.status;
+      hasActivityPermission = ph.PermissionStatus.granted == await ph.Permission.sensors.status;
     }
     if (!hasActivityPermission) {
       hasActivityPermission = await requestActivityPermission();
@@ -99,9 +99,9 @@ class PermissionController extends GetxController {
     bool sensorGranted = false;
     bool healthGranted = false;
     if (Platform.isAndroid) {
-      permissionGranted = PH.PermissionStatus.granted == await PH.Permission.activityRecognition.request();
+      permissionGranted = ph.PermissionStatus.granted == await ph.Permission.activityRecognition.request();
     } else if (Platform.isIOS) {
-      sensorGranted = PH.PermissionStatus.granted == await PH.Permission.sensors.request();
+      sensorGranted = ph.PermissionStatus.granted == await ph.Permission.sensors.request();
       healthGranted = await health.requestAuthorization([HealthDataType.STEPS]);
 
       permissionGranted = sensorGranted && healthGranted;
@@ -124,8 +124,8 @@ class PermissionController extends GetxController {
 
   Future<bool> checkPhotoPermission() async {
     bool hasPhotoPermission = false;
-    PH.PermissionStatus permissionStatus = await PH.Permission.photos.status;
-    hasPhotoPermission = [PH.PermissionStatus.granted, PH.PermissionStatus.restricted, PH.PermissionStatus.limited].any((permission) => permission == permissionStatus);
+    ph.PermissionStatus permissionStatus = await ph.Permission.photos.status;
+    hasPhotoPermission = [ph.PermissionStatus.granted, ph.PermissionStatus.restricted, ph.PermissionStatus.limited].any((permission) => permission == permissionStatus);
     if (!hasPhotoPermission) {
       hasPhotoPermission = await requestPhotoPermission();
     }
@@ -134,7 +134,7 @@ class PermissionController extends GetxController {
 
   Future<bool> checkCameraPermission() async {
     bool hasCameraPermission = false;
-    hasCameraPermission = PH.PermissionStatus.granted == await PH.Permission.camera.status;
+    hasCameraPermission = ph.PermissionStatus.granted == await ph.Permission.camera.status;
     if (!hasCameraPermission) {
       hasCameraPermission = await requestCameraPermission();
     }
@@ -144,7 +144,7 @@ class PermissionController extends GetxController {
   Future<bool> requestPhotoPermission() async {
     Completer<bool> photoPermissionCompleter = Completer();
     bool permissionGranted = false;
-    permissionGranted = PH.PermissionStatus.granted == await PH.Permission.photos.request();
+    permissionGranted = ph.PermissionStatus.granted == await ph.Permission.photos.request();
     photoPermissionCompleter.complete(permissionGranted);
 
     return photoPermissionCompleter.future;
@@ -153,7 +153,7 @@ class PermissionController extends GetxController {
   Future<bool> requestCameraPermission() async {
     Completer<bool> mediaPermissionCompleter = Completer();
     bool permissionGranted = false;
-    permissionGranted = PH.PermissionStatus.granted == await PH.Permission.camera.request();
+    permissionGranted = ph.PermissionStatus.granted == await ph.Permission.camera.request();
     mediaPermissionCompleter.complete(permissionGranted);
 
     return mediaPermissionCompleter.future;

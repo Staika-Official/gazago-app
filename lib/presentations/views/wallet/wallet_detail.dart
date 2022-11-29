@@ -1,12 +1,12 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:flutter_svg/flutter_svg.dart';
-import 'package:flutter_svg_provider/flutter_svg_provider.dart' as SP;
+import 'package:flutter_svg_provider/flutter_svg_provider.dart' as sp;
 import 'package:gaza_go/platform/controllers/wallet_master_controller.dart';
 import 'package:gaza_go/platform/helpers/base_helper.dart';
 import 'package:gaza_go/presentations/components/default_container.dart';
 import 'package:gaza_go/presentations/styles/colors.dart';
+import 'package:gaza_go/presentations/styles/icons.dart';
 import 'package:gaza_go/presentations/styles/styled_text.dart';
 import 'package:get/get.dart';
 
@@ -49,7 +49,7 @@ class WalletDetail extends StatelessWidget {
           (transaction) => Container(
             padding: EdgeInsets.only(left: 3.sp, right: 3.sp, top: 20.sp, bottom: 20.sp),
             decoration: controller.assetDetail.value.transactions.last == transaction
-                ? BoxDecoration()
+                ? const BoxDecoration()
                 : BoxDecoration(
                     border: BorderDirectional(
                       bottom: BorderSide(
@@ -145,7 +145,7 @@ class WalletDetail extends StatelessWidget {
               child: CircleAvatar(
                 foregroundImage: controller.selectedAsset.value.meta?.logoUrl != ''
                     ? CachedNetworkImageProvider(controller.selectedAsset.value.meta!.logoUrl)
-                    : SP.Svg('assets/images/common/ico_token_tik.svg') as ImageProvider,
+                    : const sp.Svg('assets/images/common/ico_token_tik.svg') as ImageProvider,
               ),
             ),
             Padding(
@@ -190,7 +190,7 @@ class WalletDetail extends StatelessWidget {
                           child: Column(
                             mainAxisSize: MainAxisSize.min,
                             children: [
-                              SvgPicture.asset('assets/images/wallet/ico_empty.svg'),
+                              iconEmpty,
                               Padding(
                                 padding: EdgeInsets.only(top: 20.sp),
                                 child: const StyledText(
@@ -207,7 +207,7 @@ class WalletDetail extends StatelessWidget {
                       );
                     })
                   : SingleChildScrollView(
-                      physics: ClampingScrollPhysics(),
+                      physics: const ClampingScrollPhysics(),
                       child: Padding(
                         padding: EdgeInsets.symmetric(horizontal: 16.sp),
                         child: Column(

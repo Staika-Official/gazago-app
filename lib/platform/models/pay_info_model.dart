@@ -1,4 +1,3 @@
-import 'package:gaza_go/platform/models/asset_short_amount_model.dart';
 import 'package:gaza_go/platform/models/request_amount_model.dart';
 import 'package:json_annotation/json_annotation.dart';
 

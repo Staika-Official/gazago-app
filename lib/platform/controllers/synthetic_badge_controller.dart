@@ -94,18 +94,16 @@ class SyntheticBadgeController extends GetxController with InventoryMixin {
         .map(
           (badge) => InkWell(
             onTap: () => selectItem(badge.value, badge.value.badgeId),
-            child: Container(
-              child: Stack(
-                children: [
-                  Text(badge.value.badgeId.toString()),
-                  if (selectBadge.value.badgeId == badge.value.badgeId)
-                    const Positioned(
-                      left: 0,
-                      top: 0,
-                      child: Icon(Icons.check, size: 20),
-                    ),
-                ],
-              ),
+            child: Stack(
+              children: [
+                Text(badge.value.badgeId.toString()),
+                if (selectBadge.value.badgeId == badge.value.badgeId)
+                  const Positioned(
+                    left: 0,
+                    top: 0,
+                    child: Icon(Icons.check, size: 20),
+                  ),
+              ],
             ),
           ),
         )
@@ -129,7 +127,7 @@ class SyntheticBadgeController extends GetxController with InventoryMixin {
       AlertDialog(
         title: Row(
           mainAxisAlignment: MainAxisAlignment.center,
-          children: [
+          children: const [
             Text('뱃지 선택'),
           ],
         ),

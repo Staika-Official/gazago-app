@@ -6,7 +6,7 @@ class Verification extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return DefaultContainer(
+    return const DefaultContainer(
       child: Center(
         child: Text('본인 인증'),
       ),

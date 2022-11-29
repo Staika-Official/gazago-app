@@ -1,7 +1,6 @@
 import 'dart:async';
 
 import 'package:firebase_analytics/firebase_analytics.dart';
-import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -12,7 +11,6 @@ import 'package:gaza_go/platform/firebase/crashlytics.dart';
 import 'package:gaza_go/platform/stores/hive_store.dart';
 import 'package:gaza_go/presentations/styles/colors.dart';
 import 'package:get/get.dart';
-import 'package:hive/hive.dart';
 import 'package:hive_flutter/adapters.dart';
 import 'package:intl/date_symbol_data_local.dart';
 import 'package:permission_handler/permission_handler.dart';
@@ -20,16 +18,16 @@ import 'package:uuid/uuid.dart';
 
 import 'constants/routes.dart';
 
-Future<void> _firebaseMessagingBackgroundHandler(RemoteMessage message) async {
-  print('call _firebaseMessagingBackgroundHandler');
-  await initFirebase();
-  print('call 1');
-  await backgroundFcm();
-  print('call 2');
-  print('_firebaseMessagingBackgroundHandler $message');
-
-  //TODO. message 처리 필요
-}
+// Future<void> _firebaseMessagingBackgroundHandler(RemoteMessage message) async {
+//   print('call _firebaseMessagingBackgroundHandler');
+//   await initFirebase();
+//   print('call 1');
+//   await backgroundFcm();
+//   print('call 2');
+//   print('_firebaseMessagingBackgroundHandler $message');
+//
+//   //TODO. message 처리 필요
+// }
 
 Future<PermissionStatus> requestNotificationPermission() async {
   return await Permission.notification.request();
@@ -60,7 +58,7 @@ void main() async {
 
     String? uuid = HiveStore.loadString(key: HiveKey.uuid.name);
     if (uuid == null || uuid.isEmpty) {
-      HiveStore.save(key: HiveKey.uuid.name, value: Uuid().v4());
+      HiveStore.save(key: HiveKey.uuid.name, value: const Uuid().v4());
     }
     await initializeDateFormatting();
     await requestNotificationPermission();
@@ -97,7 +95,7 @@ class MyApp extends StatelessWidget {
     Get.put(GlobalController(), permanent: true);
 
     return ScreenUtilInit(
-      designSize: Size(390, 844),
+      designSize: const Size(390, 844),
       splitScreenMode: false,
       minTextAdapt: true,
       builder: (BuildContext context, Widget? child) {

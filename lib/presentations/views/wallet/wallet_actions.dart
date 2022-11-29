@@ -21,9 +21,9 @@ class WalletActions extends StatelessWidget {
             Column(
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
-                Text('From'),
+                const Text('From'),
                 Row(
-                  children: [
+                  children: const [
                     Expanded(child: TextField()),
                     Text('STIK'),
                   ],
@@ -36,7 +36,7 @@ class WalletActions extends StatelessWidget {
                       Text('보유: ${100.00.toString()}'),
                       TextButton(
                         onPressed: () => null,
-                        child: Text('All'),
+                        child: const Text('All'),
                       ),
                     ],
                   ),
@@ -45,16 +45,16 @@ class WalletActions extends StatelessWidget {
             ),
             Padding(
               padding: EdgeInsets.symmetric(vertical: 30.sp),
-              child: Icon(
+              child: const Icon(
                 Icons.keyboard_double_arrow_down,
               ),
             ),
             Column(
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
-                Text('To'),
+                const Text('To'),
                 Row(
-                  children: [
+                  children: const [
                     Expanded(child: TextField()),
                     Text('TIK'),
                   ],
@@ -76,7 +76,7 @@ class WalletActions extends StatelessWidget {
                       padding: EdgeInsets.all(8.0.sp),
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
+                        children: const [
                           Text('교환 비용'),
                           Text(
                             '1 STIK \u2248 100 TIK',
@@ -89,7 +89,7 @@ class WalletActions extends StatelessWidget {
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
-                        Text('예상 수수료'),
+                        const Text('예상 수수료'),
                         Text(
                           '${0.005.toString()} STIK',
                         )

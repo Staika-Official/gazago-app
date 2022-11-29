@@ -18,7 +18,7 @@ class Term extends StatelessWidget {
         backgroundColor: subBg01Color,
         titleText: controller.termTitle.value,
         child: SingleChildScrollView(
-          physics: ClampingScrollPhysics(),
+          physics: const ClampingScrollPhysics(),
           child: Column(
             children: [
               if (controller.termType.value == 'T2E_MARKETING')

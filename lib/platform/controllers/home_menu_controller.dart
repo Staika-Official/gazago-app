@@ -21,16 +21,16 @@ class HomeMenuController extends SuperController {
   final RxList<int> visitedTabs = RxList.empty();
 
   final List<PreferredSizeWidget> appbarList = [
-    MainAppbar(),
-    SecondaryAppbar(),
+    const MainAppbar(),
+    const SecondaryAppbar(),
   ];
 
   final List<Widget> mainViewWidgetList = [
-    ActivityHome(),
-    ArchiveHome(),
-    InventoryHome(),
+    const ActivityHome(),
+    const ArchiveHome(),
+    const InventoryHome(),
     // ShopHome(),
-    LeaderboardHome(),
+    const LeaderboardHome(),
   ];
 
   PreferredSizeWidget? get appbar {
@@ -66,7 +66,7 @@ class HomeMenuController extends SuperController {
     prevIndex.value = selectedIndex.value;
     selectedIndex.value = index;
 
-    if (visitedTabs.any((tabIndex) => tabIndex == index) && prevIndex != index) {
+    if (visitedTabs.any((tabIndex) => tabIndex == index) && prevIndex.value != index) {
       switch (index) {
         case 0:
           ActivityController activityController = Get.find();
