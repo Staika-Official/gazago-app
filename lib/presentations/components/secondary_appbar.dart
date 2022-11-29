@@ -24,13 +24,13 @@ class SecondaryAppbar extends StatelessWidget implements PreferredSizeWidget {
           children: [
             CircleAvatar(
               radius: 11.sp,
-              foregroundImage: token.logoUrl != '' ? CachedNetworkImageProvider(token.logoUrl!) : const sp.Svg('assets/images/common/ico_token_tik.svg') as ImageProvider,
+              foregroundImage: token.meta?.logoUrl != '' ? CachedNetworkImageProvider(token.meta!.logoUrl) : const sp.Svg('assets/images/common/ico_token_tik.svg') as ImageProvider,
             ),
             Padding(
               padding: EdgeInsets.only(left: 4.sp),
               child: StyledText(
                 // token.uiAmountString!,
-                token.symbol! == 'STIK' ? formatDecimalPlaces((token.amount! / pow(10.0, 9)), 9) : formatDecimalPlaces(token.amount!, 1),
+                token.meta?.symbol == 'STIK' ? formatDecimalPlaces((token.amount! / pow(10.0, 9)), 9) : formatDecimalPlaces(token.amount!, 1),
                 color: Colors.white,
                 fontSize: 12,
                 fontWeight: 600,

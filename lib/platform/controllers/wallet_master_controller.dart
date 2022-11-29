@@ -5,7 +5,9 @@ import 'package:gaza_go/constants/routes.dart';
 import 'package:gaza_go/platform/controllers/loading_controller.dart';
 import 'package:gaza_go/platform/helpers/alert_helper.dart';
 import 'package:gaza_go/platform/models/asset_detail_model.dart';
+import 'package:gaza_go/platform/models/asset_token_balance_list_model.dart';
 import 'package:gaza_go/platform/models/asset_token_balance_model.dart';
+import 'package:gaza_go/platform/models/asset_token_balance_ui_model.dart';
 import 'package:gaza_go/platform/models/buy_tik_response_model.dart';
 import 'package:gaza_go/platform/models/pay_info_model.dart';
 import 'package:gaza_go/platform/models/token_info_model.dart';
@@ -13,60 +15,66 @@ import 'package:gaza_go/platform/services/wallet_service.dart';
 import 'package:get/get.dart';
 
 class WalletMasterController extends GetxController {
-  final RxList<AssetTokenBalanceModel> spendingTokens = RxList.empty();
+  final Rx<AssetTokenBalanceListModel> spendingTokens = Rx(AssetTokenBalanceListModel(tokens: []));
   final RxList<TokenInfoModel> spendingTokenInfoList = RxList.empty();
-  final Rx<AssetTokenBalanceModel> selectedAsset = Rx(AssetTokenBalanceModel());
+  final Rx<AssetTokenBalanceUiModel> selectedAsset = Rx(AssetTokenBalanceUiModel());
   final Rx<AssetDetailModel> assetDetail = Rx(AssetDetailModel(balance: AssetTokenBalanceModel(), transactions: []));
   final Rx<AssetTokenBalanceModel> buyTikCommission = Rx(AssetTokenBalanceModel());
   final RxString buyTikAmount = RxString('0');
   final Rx<BuyTikResponseModel> buyTikResult = Rx(BuyTikResponseModel());
   final RxInt feeTikStamina = RxInt(0);
   final RxInt feeTikDurability = RxInt(0);
-  RxList<AssetTokenBalanceModel> get spendingTokenUiList {
-    List<AssetTokenBalanceModel> balanceUiList = List.empty(growable: true);
+  RxList<AssetTokenBalanceUiModel> get spendingTokenUiList {
+    List<AssetTokenBalanceUiModel> balanceUiList = List.empty(growable: true);
 
-    for (AssetTokenBalanceModel token in spendingTokens) {
-      AssetTokenBalanceModel tokenUi;
-      if (['STIK', 'TOTAL_TIK'].any((symbol) => symbol == token.symbol)) {
-        tokenUi = token;
-        balanceUiList.add(tokenUi);
-      }
+    for (int i = 0; i < spendingTokens.value.tokens.length; i++) {
+      AssetTokenBalanceUiModel tokenUi = AssetTokenBalanceUiModel.fromJson(spendingTokens.value.tokens[i].toJson());
+
+      tokenUi.meta = spendingTokenInfoList[i].meta;
+
+      tokenUi.price = spendingTokenInfoList[i].price;
+
+      balanceUiList.add(tokenUi);
     }
 
     return RxList(balanceUiList);
   }
 
-  Rx<AssetTokenBalanceModel> get tik {
-    return Rx(spendingTokenUiList.singleWhere((token) => token.symbol == 'TOTAL_TIK', orElse: () {
+  Rx<AssetTokenBalanceUiModel> get tik {
+    return Rx(spendingTokenUiList.singleWhere((token) => token.mint == '1', orElse: () {
       showToastPopup('TAIKA를 찾을 수 없습니다.');
-      return AssetTokenBalanceModel();
+      return AssetTokenBalanceUiModel();
     }));
   }
 
-  Rx<AssetTokenBalanceModel> get stik {
-    return Rx(spendingTokenUiList.singleWhere((token) => token.symbol == 'STIK', orElse: () {
+  Rx<AssetTokenBalanceUiModel> get stik {
+    return Rx(spendingTokenUiList.singleWhere((token) => token.mint == '2', orElse: () {
       showToastPopup('STAIKA를 찾을 수 없습니다.');
-      return AssetTokenBalanceModel();
+      return AssetTokenBalanceUiModel();
     }));
   }
 
   @override
   void onInit() async {
     await getSpendingWalletBalances();
+    await getSpendingMetaData();
     super.onInit();
   }
 
   Future<void> getSpendingWalletBalances() async {
-    await WalletService.getSpendingWalletBalances(successCallback: (balances) {
-      spendingTokens.value = balances;
-    });
+    spendingTokens.value = await WalletService.getSpendingWalletBalance();
 
     if (Get.isRegistered<LoadingController>()) Get.find<LoadingController>().updateProgress("서비스를 위해 정보를 불러오는 중입니다.");
   }
 
-  Future<void> getSpendingWalletTransactions(AssetTokenBalanceModel asset) async {
+  Future<void> getSpendingWalletTransactions(AssetTokenBalanceUiModel asset) async {
     selectedAsset.value = asset;
-    assetDetail.value = await WalletService.getSpendingWalletTransactions(asset.symbol!);
+    assetDetail.value = await WalletService.getSpendingWalletTransactions(asset.publicKey!);
+  }
+
+  Future<void> getSpendingMetaData() async {
+    spendingTokenInfoList.value = await WalletService.getSpendingMetaData();
+    if (Get.isRegistered<LoadingController>()) Get.find<LoadingController>().updateProgress("조금만 기다려주세요");
   }
 
   Future<void> getBuyTikCommission() async {
@@ -76,6 +84,7 @@ class WalletMasterController extends GetxController {
   Future<void> buyTik(int tikAmount) async {
     buyTikResult.value = await WalletService.buyTik(tikAmount);
     await getSpendingWalletBalances();
+    await getSpendingMetaData();
     showToastPopup('$tikAmount TIK이 충전되었습니다.');
     Get.until((route) => route.settings.name == Routes.wallet);
   }
@@ -93,7 +102,7 @@ class WalletMasterController extends GetxController {
     );
   }
 
-  void moveToWalletDetail({required AssetTokenBalanceModel asset, required WalletType walletType, required AssetType assetType}) async {
+  void moveToWalletDetail({required AssetTokenBalanceUiModel asset, required WalletType walletType, required AssetType assetType}) async {
     await getSpendingWalletTransactions(asset);
     Get.toNamed(Routes.walletDetail, arguments: {'asset': asset, 'walletType': walletType, 'assetType': assetType});
   }

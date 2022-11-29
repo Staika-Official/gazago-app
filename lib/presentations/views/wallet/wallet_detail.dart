@@ -131,7 +131,7 @@ class WalletDetail extends StatelessWidget {
     return Obx(() {
       return DefaultContainer(
         backgroundColor: subBg01Color,
-        titleText: controller.selectedAsset.value.name!,
+        titleText: controller.selectedAsset.value.meta!.name,
         child: Column(
           children: [
             // controller.selectedAsset.value.price!.isNotEmpty
@@ -143,8 +143,8 @@ class WalletDetail extends StatelessWidget {
             Padding(
               padding: EdgeInsets.only(top: 40.sp),
               child: CircleAvatar(
-                foregroundImage: controller.selectedAsset.value.logoUrl != ''
-                    ? CachedNetworkImageProvider(controller.selectedAsset.value.logoUrl!)
+                foregroundImage: controller.selectedAsset.value.meta?.logoUrl != ''
+                    ? CachedNetworkImageProvider(controller.selectedAsset.value.meta!.logoUrl)
                     : const sp.Svg('assets/images/common/ico_token_tik.svg') as ImageProvider,
               ),
             ),
@@ -162,7 +162,7 @@ class WalletDetail extends StatelessWidget {
                   Padding(
                     padding: EdgeInsets.only(left: 5.sp),
                     child: StyledText(
-                      controller.selectedAsset.value.symbol! == 'TOTAL_TIK' ? 'TIK' : controller.selectedAsset.value.symbol!,
+                      controller.selectedAsset.value.meta!.symbol,
                       fontSize: 28,
                       lineHeight: 28,
                       fontWeight: 500,
