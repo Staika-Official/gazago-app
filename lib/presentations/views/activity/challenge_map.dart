@@ -76,7 +76,7 @@ class ChallengeMap extends StatelessWidget {
             dense: MediaQuery.of(context).size.width < 320,
             visualDensity: VisualDensity(vertical: MediaQuery.of(context).size.width < 320 ? -3 : 0),
             subtitle: StyledText(
-              '${course.startPointName} - ${course.endPointName}',
+              '시작: ${course.startPointName} - 도착: ${course.endPointName}',
               color: (controller.challengeSelectedIndex.value == course.id) ? skyBlueColor : deepGrayColor,
               fontSize: 14,
               lineHeight: 14,

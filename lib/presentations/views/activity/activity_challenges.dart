@@ -273,16 +273,16 @@ class ActivityChallenges extends StatelessWidget {
                           padding: EdgeInsets.all(20.sp),
                           width: double.infinity.sp,
                           decoration: BoxDecoration(
-                            color: controller.selectedChallenge.value.id != null ? skyBlueColor : lightGrayColor,
+                            color: controller.selectedChallenge.value.id != null ? skyBlueColor : popupBgColor,
                             borderRadius: BorderRadius.circular(12.sp),
                             border: Border.all(
-                              width: controller.selectedChallenge.value.id != null ? 2.sp : 0,
+                              width: 2.sp,
                               style: BorderStyle.solid,
                               color: Colors.black,
                             ),
                             boxShadow: [
                               BoxShadow(
-                                offset: Offset(0, controller.selectedChallenge.value.id != null ? 4.sp : 0),
+                                offset: Offset(0, 4.sp),
                                 blurRadius: 0,
                                 spreadRadius: 0,
                                 color: Colors.black,
@@ -292,7 +292,7 @@ class ActivityChallenges extends StatelessWidget {
                           child: Text(
                             '가자GO',
                             textAlign: TextAlign.center,
-                            style: TextStyle(fontSize: 18.sp, fontWeight: FontWeight.w600, height: (16 / 18).sp, color: controller.selectedChallenge.value.id != null ? Colors.black : Colors.grey),
+                            style: TextStyle(fontSize: 18.sp, fontWeight: FontWeight.w600, height: (16 / 18).sp, color: controller.selectedChallenge.value.id != null ? Colors.black : lightGrayColor),
                           ),
                         ),
                       ),

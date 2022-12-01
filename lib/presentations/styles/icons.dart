@@ -79,6 +79,8 @@ SvgPicture iconCamera = SvgPicture.asset('assets/images/common/ico_camera.svg', 
 SvgPicture iconApple = SvgPicture.asset('assets/images/preference/ico_apple.svg', width: 12.sp, height: 14.sp);
 SvgPicture iconGoogle = SvgPicture.asset('assets/images/preference/ico_google.svg', width: 14.sp, height: 14.sp);
 SvgPicture iconAnswer = SvgPicture.asset('assets/images/preference/ico_answer.svg', width: 18.sp, height: 18.sp);
+SvgPicture iconChevronDown = SvgPicture.asset('assets/images/preference/ico_chevron_down_grey.svg', width: 24.sp, height: 24.sp);
+SvgPicture iconChevronUp = SvgPicture.asset('assets/images/preference/ico_chevron_up_color.svg', width: 24.sp, height: 24.sp);
 
 //wallet
 SvgPicture iconEmpty = SvgPicture.asset('assets/images/wallet/ico_empty.svg', width: 90.sp, height: 90.sp);

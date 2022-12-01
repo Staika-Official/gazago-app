@@ -61,13 +61,13 @@ void handleMessage() {
   });
 
   FirebaseMessaging.onMessageOpenedApp.listen((RemoteMessage message) {
-    moveToLeaderboard(message);
+    moveToGoWallet(message);
   });
 }
 
-void moveToLeaderboard(RemoteMessage message) {
+void moveToGoWallet(RemoteMessage message) {
   if (message.data['notificationKey'] == 'DAILY_REWARD_COMPLETED') {
-    HiveStore.save(key: HiveKey.needRouteToRanking.name, value: true);
+    HiveStore.save(key: HiveKey.needRouteToGoWallet.name, value: true);
   }
 }
 

@@ -418,7 +418,7 @@ class ActivityHome extends StatelessWidget {
                                           return Row(
                                             children: [
                                               StyledText(
-                                                '${controller.userState.value.state != null ? formatDecimalPlaces(controller.userState.value.state!.dailyGoReward!, 2).toString() : 0}',
+                                                controller.userState.value.state != null ? formatDecimalPlaces(controller.userState.value.state!.dailyGoReward!, 2) : formatDecimalPlaces(0, 2),
                                                 fontFamily: 'Montserrat',
                                                 color: Colors.black,
                                                 fontWeight: 600,

@@ -44,6 +44,9 @@ class PreferenceBoard extends StatelessWidget {
                     collapsedIconColor: const Color(0xff292929),
                     textColor: const Color(0xff292929),
                     collapsedTextColor: const Color(0xff292929),
+                    onExpansionChanged: (bool expanded) {
+                      controller.toggleExpansion(controller.boardList[index], expanded);
+                    },
                     title: Row(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
@@ -71,6 +74,14 @@ class PreferenceBoard extends StatelessWidget {
                             ),
                           ),
                         ),
+                        Obx(() {
+                          return Padding(
+                            padding: const EdgeInsets.only(
+                              left: 9,
+                            ),
+                            child: controller.boardList[index].isChecked ? iconChevronUp : iconChevronDown,
+                          );
+                        })
                       ],
                     ),
                     children: [
