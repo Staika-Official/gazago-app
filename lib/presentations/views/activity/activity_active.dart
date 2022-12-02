@@ -328,16 +328,6 @@ class ActivityActive extends StatelessWidget {
                   : Container(),
             );
           }),
-          // TODO. qa후 삭제 필요.
-          // StyledText(
-          //     '현재 위치의 gps정확도: ${formatDecimalPlaces(controller.currentLocation.value.accuracy, 2)}m [속도: ${formatDecimalPlaces(convertMStoKMH(controller.currentLocation.value.speed), 2)}km/h]'),
-          // if (controller.exerciseData.isNotEmpty) StyledText('저장된 운동데이터 배열에서 마지막 데이터의 속도: ${formatDecimalPlaces(controller.exerciseData.last.speed!, 2)}km/h'),
-          // StyledText('평균 속도: ${formatDecimalPlaces(controller.avgSpeed.value, 2)}km/h'),
-          // StyledText('평균 속도: ${formatDecimalPlaces(controller.realTimeSpeed.value, 2)}km/h'),
-          // StyledText('성공적인 업데이트 요청 (시작/종료 제외): ${controller.updateCount.value.toString()}회'),
-          // StyledText('마지막 업데이트 시간: ${controller.lastUpdateTime.value != '' ? formatDate(controller.lastUpdateTime.value) : '??'}'),
-          // StyledText('걷기 상태: ${controller.pedestrianStatus.value}'),
-          // TODO. qa후 삭제 필요 end.
           Obx(() {
             return Padding(
               padding: EdgeInsets.only(top: 30.0.sp, bottom: 20.sp),
