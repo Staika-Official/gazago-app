@@ -102,7 +102,7 @@ class ActivityChallenges extends StatelessWidget {
     Marker startMaker = Marker(
         markerId: course.id!.toString(),
         position: LatLng(course.startLat!, course.startLon!),
-        captionText: course.startPointName,
+        captionText: '시작: ${course.startPointName}',
         captionColor: skyBlueColor,
         captionHaloColor: Colors.black,
         captionTextSize: 16.0.sp,
@@ -118,7 +118,7 @@ class ActivityChallenges extends StatelessWidget {
     Marker endMaker = Marker(
       markerId: 'end_${course.id!.toString()}',
       position: LatLng(course.endLat!, course.endLon!),
-      captionText: '도착 ${course.endPointName}',
+      captionText: '도착: ${course.endPointName}',
       captionColor: const Color(0xFFFF6F75),
       captionHaloColor: Colors.black,
       captionTextSize: 16.0.sp,
@@ -167,7 +167,7 @@ class ActivityChallenges extends StatelessWidget {
                         top: 7.sp,
                       ),
                       child: StyledText(
-                        challenge.startPointName != null ? '${challenge.startPointName!} - ${challenge.endPointName!}' : challenge.firstName!,
+                        challenge.startPointName != null ? '시작: ${challenge.startPointName!} - 도착: ${challenge.endPointName!}' : challenge.firstName!,
                         fontSize: 14,
                         fontWeight: 500,
                         lineHeight: 14,
