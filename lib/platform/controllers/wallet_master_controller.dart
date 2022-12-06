@@ -6,6 +6,7 @@ import 'package:gaza_go/platform/controllers/loading_controller.dart';
 import 'package:gaza_go/platform/helpers/alert_helper.dart';
 import 'package:gaza_go/platform/models/asset_detail_model.dart';
 import 'package:gaza_go/platform/models/asset_token_balance_model.dart';
+import 'package:gaza_go/platform/models/asset_token_detail_balance_model.dart';
 import 'package:gaza_go/platform/models/buy_tik_response_model.dart';
 import 'package:gaza_go/platform/models/pay_info_model.dart';
 import 'package:gaza_go/platform/models/token_info_model.dart';
@@ -16,7 +17,7 @@ class WalletMasterController extends GetxController {
   final RxList<AssetTokenBalanceModel> spendingTokens = RxList.empty();
   final RxList<TokenInfoModel> spendingTokenInfoList = RxList.empty();
   final Rx<AssetTokenBalanceModel> selectedAsset = Rx(AssetTokenBalanceModel());
-  final Rx<AssetDetailModel> assetDetail = Rx(AssetDetailModel(balance: AssetTokenBalanceModel(), transactions: []));
+  final Rx<AssetDetailModel> assetDetail = Rx(AssetDetailModel(balance: AssetTokenDetailBalanceModel(), transactions: []));
   final Rx<AssetTokenBalanceModel> buyTikCommission = Rx(AssetTokenBalanceModel());
   final RxString buyTikAmount = RxString('0');
   final Rx<BuyTikResponseModel> buyTikResult = Rx(BuyTikResponseModel());
@@ -67,10 +68,6 @@ class WalletMasterController extends GetxController {
   Future<void> getSpendingWalletTransactions(AssetTokenBalanceModel asset) async {
     selectedAsset.value = asset;
     assetDetail.value = await WalletService.getSpendingWalletTransactions(asset.symbol!);
-  }
-
-  Future<void> getBuyTikCommission() async {
-    buyTikCommission.value = await WalletService.getBuyTikCommission();
   }
 
   Future<void> buyTik(int tikAmount) async {

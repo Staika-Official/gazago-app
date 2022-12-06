@@ -1,4 +1,5 @@
 import 'package:gaza_go/platform/models/asset_token_balance_model.dart';
+import 'package:gaza_go/platform/models/asset_token_detail_balance_model.dart';
 import 'package:gaza_go/platform/models/asset_token_transaction_model.dart';
 import 'package:json_annotation/json_annotation.dart';
 
@@ -6,7 +7,7 @@ part 'asset_detail_model.g.dart';
 
 @JsonSerializable(explicitToJson: true)
 class AssetDetailModel {
-  AssetTokenBalanceModel balance;
+  AssetTokenDetailBalanceModel balance;
   List<AssetTokenTransactionModel> transactions;
 
   AssetDetailModel({

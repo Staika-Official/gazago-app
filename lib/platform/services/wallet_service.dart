@@ -34,11 +34,6 @@ class WalletService {
     return AssetDetailModel.fromJson(res.data);
   }
 
-  static Future<AssetTokenBalanceModel> getBuyTikCommission() async {
-    Response res = await WalletApi.getBuyTikCommission();
-    return AssetTokenBalanceModel.fromJson(res.data);
-  }
-
   static Future<BuyTikResponseModel> buyTik(int tikAmount) async {
     Response res = await WalletApi.buyTik(tikAmount);
     return BuyTikResponseModel.fromJson(res.data);

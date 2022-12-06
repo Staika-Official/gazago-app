@@ -61,15 +61,7 @@ class WalletDetail extends StatelessWidget {
               mainAxisSize: MainAxisSize.max,
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Container(
-                  width: 8.sp,
-                  height: 8.sp,
-                  margin: EdgeInsets.only(right: 15.sp, top: 4.sp, left: 4.sp),
-                  decoration: BoxDecoration(
-                    color: skyBlueColor,
-                    borderRadius: BorderRadius.circular(8.sp),
-                  ),
-                ),
+                transaction.type == 'IN' ? iconIn : iconOut,
                 Expanded(
                   child: Column(
                     children: [
@@ -77,14 +69,14 @@ class WalletDetail extends StatelessWidget {
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
                           StyledText(
-                            transaction.description!,
+                            transaction.content ?? '',
                             fontSize: 20,
                             lineHeight: 20,
                             letterSpacing: -0.5,
                             fontWeight: 600,
                           ),
                           StyledText(
-                            '${formatDecimalPlaces(double.parse(transaction.uiAmountString!), transaction.decimals!)} ${transaction.symbol!}',
+                            '${transaction.type == 'IN' ? '+' : '-'} ${formatDecimalPlaces(double.parse(transaction.uiAmountString!), transaction.decimals!)} ${transaction.symbol!}',
                             fontSize: 18,
                             lineHeight: 20,
                             letterSpacing: -0.5,
@@ -98,14 +90,14 @@ class WalletDetail extends StatelessWidget {
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
                             StyledText(
-                              formatDate(transaction.timestamp!),
+                              formatDate(transaction.createdDate!),
                               fontSize: 14,
                               lineHeight: 10,
                               fontWeight: 500,
                               color: deepGrayColor,
                             ),
                             StyledText(
-                              transaction.confirmationStatus! == 'finalized' ? '완료' : transaction.confirmationStatus!,
+                              '완료',
                               fontSize: 12,
                               lineHeight: 10,
                               fontWeight: 600,
