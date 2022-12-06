@@ -689,7 +689,6 @@ class ActivityController extends SuperController with ActivityMixin, ChallengeMi
 
   void checkConnectivityStatus() {
     globalController.connectivityResult.listen((value) async {
-      print(globalController.connectivityResult.value);
       if (value != ConnectivityResult.none) {
         await retrySavedRequests(source: 'connectivityListener');
       }
@@ -701,7 +700,7 @@ class ActivityController extends SuperController with ActivityMixin, ChallengeMi
       await requestBadgeIssuance(userState.value);
     }
 
-    if (HiveStore.load(key: HiveKey.endExerciseRequested.name) != null && HiveStore.load(key: HiveKey.endExerciseRequested.name)) {
+    if (HiveStore.load(key: HiveKey.endExerciseRequested.name) != null && HiveStore.load(key: HiveKey.endExerciseRequested.name) && userState.value.exercise != null) {
       await endExercise(selectedChallenge.value, source: source);
     }
   }
