@@ -10,8 +10,8 @@ class MemberService {
     return HiveStore.loadString(key: HiveKey.userId.name);
   }
 
-  static Future<void> initializeUserData(String? nickname, String? profileImageUrl) async {
-    await MemberApi.initializeUserData(userId!, nickname, profileImageUrl);
+  static Future<void> initializeUserData(String? email, String? nickname, String? profileImageUrl) async {
+    await MemberApi.initializeUserData(userId!, email, nickname, profileImageUrl);
   }
 
   static Future<void> getMemberUserInfo({required Function successCallback, required Function errorCallback}) async {
