@@ -33,6 +33,7 @@ mixin ChallengeMixin {
   final Rx<ChallengeModel> selectedChallenge = Rx(ChallengeModel());
   late NaverMapController challengeMapController;
   final RxList<Marker> challengeMarkers = RxList.empty();
+  final RxList<Marker> selectedChallengeMarkers = RxList.empty();
 
   Future<void> getChallengeList() async {
     await ActivityService.getChallenges(

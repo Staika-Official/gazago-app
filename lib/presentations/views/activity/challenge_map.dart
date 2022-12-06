@@ -148,7 +148,7 @@ class ChallengeMap extends StatelessWidget {
                   target: LatLng(controller.currentLocation.value.latitude, controller.currentLocation.value.longitude),
                   zoom: 14,
                 ),
-                markers: controller.challengeMarkers,
+                markers: [...controller.challengeMarkers, ...controller.selectedChallengeMarkers],
                 mapType: MapType.Basic,
                 activeLayers: const [MapLayer.LAYER_GROUP_MOUNTAIN],
                 nightModeEnable: true,
