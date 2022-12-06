@@ -4,8 +4,8 @@ import 'package:gaza_go/platform/middleware/dio_middleware.dart';
 import 'package:gaza_go/platform/models/terms_history_model.dart';
 
 class MemberApi {
-  static Future<Response> initializeUserData(String userId, String? nickname, String? profileImageUrl) async {
-    return await Api.client(serviceUrl: ServiceUrl.stateService).post('/users/$userId/init', data: {'nickname': nickname, 'profileImageUrl': profileImageUrl});
+  static Future<Response> initializeUserData(String userId, String? email, String? nickname, String? profileImageUrl) async {
+    return await Api.client(serviceUrl: ServiceUrl.stateService).post('/users/$userId/init', data: {'email': email, 'nickname': nickname, 'profileImageUrl': profileImageUrl});
   }
 
   static Future<Response> getMemberUserInfo(String userId) async {
