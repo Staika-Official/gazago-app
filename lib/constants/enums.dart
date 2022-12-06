@@ -45,6 +45,7 @@ enum HiveKey {
   accessToken,
   refreshToken,
   userId,
+  email,
   profileImageUrl,
   nickname,
   locationData,
