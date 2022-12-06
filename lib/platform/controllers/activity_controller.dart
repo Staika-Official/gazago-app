@@ -696,7 +696,7 @@ class ActivityController extends SuperController with ActivityMixin, ChallengeMi
   }
 
   Future<void> retrySavedRequests({required String source}) async {
-    if (HiveStore.load(key: HiveKey.badgeIssuanceRequested.name) != null && HiveStore.load(key: HiveKey.badgeIssuanceRequested.name)) {
+    if (HiveStore.load(key: HiveKey.badgeIssuanceRequested.name) != null && HiveStore.load(key: HiveKey.badgeIssuanceRequested.name) && userState.value.exercise != null) {
       await requestBadgeIssuance(userState.value);
     }
 
