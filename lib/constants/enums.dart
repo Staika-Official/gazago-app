@@ -63,7 +63,7 @@ enum HiveKey {
   activityLogs,
   userExerciseDataLogs,
   positionLowDataLogs,
-  needRouteToRanking,
+  needRouteToGoWallet,
 }
 
 enum ResponseStatus {
@@ -194,8 +194,10 @@ extension TransactionTypeLabel on TransactionType {
 enum NotificationType {
   challenge,
   badge,
-  stamina,
-  durability,
+  staminaLow,
+  staminaDepleted,
+  durabilityLow,
+  durabilityDepleted,
 }
 
 extension NotificationId on NotificationType {
@@ -205,9 +207,11 @@ extension NotificationId on NotificationType {
         return 0;
       case NotificationType.badge:
         return 1;
-      case NotificationType.stamina:
+      case NotificationType.staminaLow:
+      case NotificationType.staminaDepleted:
         return 2;
-      case NotificationType.durability:
+      case NotificationType.durabilityLow:
+      case NotificationType.durabilityDepleted:
         return 3;
     }
   }

@@ -102,7 +102,7 @@ class ActivityChallenges extends StatelessWidget {
     Marker startMaker = Marker(
         markerId: course.id!.toString(),
         position: LatLng(course.startLat!, course.startLon!),
-        captionText: course.startPointName,
+        captionText: '시작: ${course.startPointName}',
         captionColor: skyBlueColor,
         captionHaloColor: Colors.black,
         captionTextSize: 16.0.sp,
@@ -118,7 +118,7 @@ class ActivityChallenges extends StatelessWidget {
     Marker endMaker = Marker(
       markerId: 'end_${course.id!.toString()}',
       position: LatLng(course.endLat!, course.endLon!),
-      captionText: '도착 ${course.endPointName}',
+      captionText: '도착: ${course.endPointName}',
       captionColor: const Color(0xFFFF6F75),
       captionHaloColor: Colors.black,
       captionTextSize: 16.0.sp,
@@ -167,7 +167,7 @@ class ActivityChallenges extends StatelessWidget {
                         top: 7.sp,
                       ),
                       child: StyledText(
-                        challenge.startPointName != null ? '${challenge.startPointName!} - ${challenge.endPointName!}' : challenge.firstName!,
+                        challenge.startPointName != null ? '시작: ${challenge.startPointName!} - 도착: ${challenge.endPointName!}' : challenge.firstName!,
                         fontSize: 14,
                         fontWeight: 500,
                         lineHeight: 14,
@@ -273,16 +273,16 @@ class ActivityChallenges extends StatelessWidget {
                           padding: EdgeInsets.all(20.sp),
                           width: double.infinity.sp,
                           decoration: BoxDecoration(
-                            color: controller.selectedChallenge.value.id != null ? skyBlueColor : lightGrayColor,
+                            color: controller.selectedChallenge.value.id != null ? skyBlueColor : popupBgColor,
                             borderRadius: BorderRadius.circular(12.sp),
                             border: Border.all(
-                              width: controller.selectedChallenge.value.id != null ? 2.sp : 0,
+                              width: 2.sp,
                               style: BorderStyle.solid,
                               color: Colors.black,
                             ),
                             boxShadow: [
                               BoxShadow(
-                                offset: Offset(0, controller.selectedChallenge.value.id != null ? 4.sp : 0),
+                                offset: Offset(0, 4.sp),
                                 blurRadius: 0,
                                 spreadRadius: 0,
                                 color: Colors.black,
@@ -292,7 +292,7 @@ class ActivityChallenges extends StatelessWidget {
                           child: Text(
                             '가자GO',
                             textAlign: TextAlign.center,
-                            style: TextStyle(fontSize: 18.sp, fontWeight: FontWeight.w600, height: (16 / 18).sp, color: controller.selectedChallenge.value.id != null ? Colors.black : Colors.grey),
+                            style: TextStyle(fontSize: 18.sp, fontWeight: FontWeight.w600, height: (16 / 18).sp, color: controller.selectedChallenge.value.id != null ? Colors.black : lightGrayColor),
                           ),
                         ),
                       ),

@@ -76,7 +76,7 @@ class ChallengeMap extends StatelessWidget {
             dense: MediaQuery.of(context).size.width < 320,
             visualDensity: VisualDensity(vertical: MediaQuery.of(context).size.width < 320 ? -3 : 0),
             subtitle: StyledText(
-              '${course.startPointName} - ${course.endPointName}',
+              '시작: ${course.startPointName} - 도착: ${course.endPointName}',
               color: (controller.challengeSelectedIndex.value == course.id) ? skyBlueColor : deepGrayColor,
               fontSize: 14,
               lineHeight: 14,
@@ -148,11 +148,12 @@ class ChallengeMap extends StatelessWidget {
                   target: LatLng(controller.currentLocation.value.latitude, controller.currentLocation.value.longitude),
                   zoom: 14,
                 ),
-                markers: controller.challengeMarkers,
+                markers: [...controller.challengeMarkers, ...controller.selectedChallengeMarkers],
                 mapType: MapType.Basic,
                 activeLayers: const [MapLayer.LAYER_GROUP_MOUNTAIN],
                 nightModeEnable: true,
                 tiltGestureEnable: false,
+                onMapCreated: controller.onChallengeMapCreated,
               ),
               Padding(
                 padding: EdgeInsets.only(top: 70.sp),

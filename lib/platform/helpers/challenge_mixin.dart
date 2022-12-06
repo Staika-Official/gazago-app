@@ -33,6 +33,7 @@ mixin ChallengeMixin {
   final Rx<ChallengeModel> selectedChallenge = Rx(ChallengeModel());
   late NaverMapController challengeMapController;
   final RxList<Marker> challengeMarkers = RxList.empty();
+  final RxList<Marker> selectedChallengeMarkers = RxList.empty();
 
   Future<void> getChallengeList() async {
     await ActivityService.getChallenges(
@@ -87,7 +88,9 @@ mixin ChallengeMixin {
 
   void onChallengeMapCreated(NaverMapController controller) {
     challengeMapController = controller;
-    listHeight.value = listKey.currentContext!.size!.height;
+    if (listKey.currentContext != null) {
+      listHeight.value = listKey.currentContext!.size!.height;
+    }
   }
 
   void selectChallenge(ChallengeModel challenge) {

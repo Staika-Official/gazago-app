@@ -273,7 +273,7 @@ class LeaderboardHome extends StatelessWidget {
                         return Row(
                           children: [
                             StyledText(
-                              '${activityController.userState.value.state != null ? formatDecimalPlaces(activityController.userState.value.state!.dailyGoReward!, 2) : 0}',
+                              activityController.userState.value.state != null ? formatDecimalPlaces(activityController.userState.value.state!.dailyGoReward!, 2) : formatDecimalPlaces(0, 2),
                               color: Colors.white,
                               fontWeight: 600,
                               fontSize: 30,

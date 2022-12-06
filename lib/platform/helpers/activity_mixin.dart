@@ -429,19 +429,19 @@ mixin ActivityMixin {
 
                 if (userState.value.state!.stamina! < 30) {
                   if (userState.value.state!.stamina! == 0 && !zeroStaminaNotified.value) {
-                    showLocalNotification(notificationType: NotificationType.stamina, title: '체력 충전 알림', message: '지금 체력이 0이 되어 GO보상이 되지 않고 있어요. 체력 충전하러 가자GO~~');
+                    showLocalNotification(notificationType: NotificationType.staminaDepleted, title: '체력 충전 알림', message: '지금 체력이 0이 되어 GO보상이 되지 않고 있어요. 체력 충전하러 가자GO~~');
                     zeroStaminaNotified.value = true;
                   } else if (!lowStaminaNotified.value) {
-                    showLocalNotification(notificationType: NotificationType.stamina, title: '체력 충전 알림', message: '체력이 부족하면 GO보상이 되지 않아요. 체력 충전하러 가자GO~~');
+                    showLocalNotification(notificationType: NotificationType.staminaLow, title: '체력 충전 알림', message: '체력이 부족하면 GO보상이 되지 않아요. 체력 충전하러 가자GO~~');
                     lowStaminaNotified.value = true;
                   }
                 }
                 if (userState.value.shoes!.durability! < 30 && !zeroDurabilityNotified.value) {
                   if (userState.value.shoes!.durability! == 0) {
-                    showLocalNotification(notificationType: NotificationType.durability, title: '아이템 수리 알림', message: '지금 내구도(신발)가 0이 되어 GO보상이 되지 않고 있어요. 내구도 보충하러 가자GO~~');
+                    showLocalNotification(notificationType: NotificationType.durabilityDepleted, title: '아이템 수리 알림', message: '지금 내구도(신발)가 0이 되어 GO보상이 되지 않고 있어요. 내구도 보충하러 가자GO~~');
                     zeroDurabilityNotified.value = true;
                   } else if (!lowDurabilityNotified.value) {
-                    showLocalNotification(notificationType: NotificationType.durability, title: '아이템 수리 알림', message: '내구도(신발)가 부족하면 GO보상이 되지 않아요. 내구도 보충하러 가자GO~~');
+                    showLocalNotification(notificationType: NotificationType.durabilityLow, title: '아이템 수리 알림', message: '내구도(신발)가 부족하면 GO보상이 되지 않아요. 내구도 보충하러 가자GO~~');
                     lowDurabilityNotified.value = true;
                   }
                 }

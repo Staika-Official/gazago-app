@@ -53,7 +53,7 @@ class HomeMenuController extends SuperController {
 
     if (initialMessage != null) {
       if (initialMessage.data['notificationKey'] == 'DAILY_REWARD_COMPLETED') {
-        selectMenu(3);
+        Get.toNamed(Routes.wallet);
       }
     }
   }
@@ -107,9 +107,9 @@ class HomeMenuController extends SuperController {
 
   @override
   void onResumed() {
-    if (HiveStore.load(key: HiveKey.needRouteToRanking.name) != null && HiveStore.load(key: HiveKey.needRouteToRanking.name)) {
-      HiveStore.deleteKey(key: HiveKey.needRouteToRanking.name);
-      selectMenu(3);
+    if (HiveStore.load(key: HiveKey.needRouteToGoWallet.name) != null && HiveStore.load(key: HiveKey.needRouteToGoWallet.name)) {
+      HiveStore.deleteKey(key: HiveKey.needRouteToGoWallet.name);
+      Get.toNamed(Routes.wallet);
     }
   }
 }

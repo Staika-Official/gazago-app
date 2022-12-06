@@ -183,7 +183,7 @@ class ArchiveHome extends StatelessWidget {
                           width: double.infinity,
                           padding: EdgeInsets.symmetric(vertical: 50.sp),
                           decoration: BoxDecoration(
-                            color: const Color(0xff363841),
+                            color: popupBgColor,
                             borderRadius: BorderRadius.circular(12.sp),
                           ),
                           child: Column(

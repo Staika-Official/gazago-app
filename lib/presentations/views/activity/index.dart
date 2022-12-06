@@ -418,7 +418,7 @@ class ActivityHome extends StatelessWidget {
                                           return Row(
                                             children: [
                                               StyledText(
-                                                '${controller.userState.value.state != null ? formatDecimalPlaces(controller.userState.value.state!.dailyGoReward!, 2).toString() : 0}',
+                                                controller.userState.value.state != null ? formatDecimalPlaces(controller.userState.value.state!.dailyGoReward!, 2) : formatDecimalPlaces(0, 2),
                                                 fontFamily: 'Montserrat',
                                                 color: Colors.black,
                                                 fontWeight: 600,
@@ -491,24 +491,36 @@ class ActivityHome extends StatelessWidget {
                                           ),
                                         ),
                                         child: MaterialButton(
-                                          onPressed: [ExerciseState.ongoing, ExerciseState.paused, ExerciseState.ready].any((state) => controller.exerciseState.value == state)
-                                              ? () => controller.requestExerciseInitialization()
-                                              : () => showToastPopup('지속적으로 문제가 발생한다면 앱을 재시작해주세요'),
+                                          onPressed: controller.disableActivityButton.value
+                                              ? null
+                                              : [ExerciseState.ongoing, ExerciseState.paused, ExerciseState.ready].any((state) => controller.exerciseState.value == state)
+                                                  ? () => controller.requestExerciseInitialization()
+                                                  : () => showToastPopup('지속적으로 문제가 발생한다면 앱을 재시작해주세요'),
                                           shape: RoundedRectangleBorder(
                                             borderRadius: BorderRadius.circular(150),
                                           ),
                                           color: skyBlueColor,
                                           height: 150.sp,
                                           minWidth: 150.sp,
-                                          child: StyledText(
-                                            [ExerciseState.ongoing, ExerciseState.paused].any((state) => controller.exerciseState.value == state) ? 'Continue' : 'GO',
-                                            fontWeight: 800,
-                                            fontFamily: 'Montserrat',
-                                            fontSize: [ExerciseState.ongoing, ExerciseState.paused].any((state) => controller.exerciseState.value == state) ? 23.sp : 50.sp,
-                                            lineHeight: [ExerciseState.ongoing, ExerciseState.paused].any((state) => controller.exerciseState.value == state) ? 23.sp : 50.sp,
-                                            color: Colors.black,
-                                            letterSpacing: 0.5,
-                                          ),
+                                          child: controller.disableActivityButton.value
+                                              ? StyledText(
+                                                  'Loading..',
+                                                  fontWeight: 800,
+                                                  fontFamily: 'Montserrat',
+                                                  fontSize: 23.sp,
+                                                  lineHeight: 23.sp,
+                                                  color: Colors.black,
+                                                  letterSpacing: 0.5,
+                                                )
+                                              : StyledText(
+                                                  [ExerciseState.ongoing, ExerciseState.paused].any((state) => controller.exerciseState.value == state) ? 'Continue' : 'GO',
+                                                  fontWeight: 800,
+                                                  fontFamily: 'Montserrat',
+                                                  fontSize: [ExerciseState.ongoing, ExerciseState.paused].any((state) => controller.exerciseState.value == state) ? 23.sp : 50.sp,
+                                                  lineHeight: [ExerciseState.ongoing, ExerciseState.paused].any((state) => controller.exerciseState.value == state) ? 23.sp : 50.sp,
+                                                  color: Colors.black,
+                                                  letterSpacing: 0.5,
+                                                ),
                                         ),
                                       ),
                                     ),

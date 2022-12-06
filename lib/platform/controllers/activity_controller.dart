@@ -74,6 +74,7 @@ class ActivityController extends SuperController with ActivityMixin, ChallengeMi
   RxInt challengeSelectedIndex = RxInt(-1);
   Control activityLoadControl = Control.play;
   RxBool disableButton = RxBool(false);
+  RxBool disableActivityButton = RxBool(true);
 
   @override
   void onInit() async {
@@ -87,6 +88,7 @@ class ActivityController extends SuperController with ActivityMixin, ChallengeMi
     if ([ExerciseState.ongoing, ExerciseState.paused].any((state) => state == exerciseState.value)) {
       showPendingExerciseAlert(this);
     }
+    disableActivityButton.value = false;
     super.onReady();
   }
 
@@ -139,46 +141,76 @@ class ActivityController extends SuperController with ActivityMixin, ChallengeMi
     );
   }
 
-  Future<void> loadChallenges() async {
-    await getChallengesHierarchy(currentLocation.value);
+  Marker generateDefaultMarker(ChallengeModel course) {
+    return Marker(
+      markerId: course.id!.toString(),
+      position: LatLng(course.startLat!, course.startLon!),
+      captionText: course.startPointName,
+      captionColor: skyBlueColor,
+      captionHaloColor: Colors.black,
+      captionTextSize: 16.0,
+      subCaptionTextSize: 14,
+      subCaptionColor: (Platform.isAndroid) ? Colors.white : Colors.black,
+      subCaptionHaloColor: (Platform.isAndroid) ? Colors.black : Colors.white,
+      captionOffset: 5,
+      icon: startMaker,
+      width: 20,
+      height: 20,
+      onMarkerTab: (marker, iconSize) {
+        showEndPointMarker(course);
+      },
+    );
+  }
+
+  void generateChallengeMarkerList() {
+    allChallengesList.value = RxList.empty();
+    challengeMarkers.value = RxList.empty();
     for (ChallengeHierarchyModel challenge in hierarchyChallengesList) {
       for (ChallengeModel course in challenge.course) {
         allChallengesList.add(course);
 
-        challengeMarkers.add(Marker(
-          markerId: course.id!.toString(),
-          position: LatLng(course.startLat!, course.startLon!),
-          captionText: course.startPointName,
-          captionColor: skyBlueColor,
-          captionHaloColor: Colors.black,
-          captionTextSize: 16.0,
-          subCaptionTextSize: 14,
-          subCaptionText: course.secondName,
-          subCaptionColor: (Platform.isAndroid) ? Colors.white : Colors.black,
-          subCaptionHaloColor: (Platform.isAndroid) ? Colors.black : Colors.white,
-          captionOffset: 5,
-          icon: startMaker,
-          width: 20,
-          height: 20,
-          onMarkerTab: (marker, iconSize) {
-            showEndPointMarker(course);
-          },
-        ));
+        challengeMarkers.add(generateDefaultMarker(course));
       }
     }
   }
 
-  void showEndPointMarker(ChallengeModel course) {
-    challengeSelectedIndex.value = course.id!;
+  Future<void> loadChallenges() async {
+    await getChallengesHierarchy(currentLocation.value);
+    generateChallengeMarkerList();
+  }
 
-    if (challengeMarkers.last.markerId.contains('end_')) {
-      challengeMarkers.removeLast();
+  void showEndPointMarker(ChallengeModel course) {
+    if (challengeSelectedIndex.value != -1) {
+      challengeMarkers.add(generateDefaultMarker(allChallengesList.firstWhere((element) => element.id == challengeSelectedIndex.value)));
     }
 
-    challengeMarkers.add(Marker(
+    challengeSelectedIndex.value = course.id!;
+    selectedChallengeMarkers.value = RxList.empty();
+    challengeMarkers.removeWhere((element) {
+      return element.markerId == challengeSelectedIndex.value.toString();
+    });
+
+    selectedChallengeMarkers.add(Marker(
+      markerId: 'start_${course.id!.toString()}',
+      position: LatLng(course.startLat!, course.startLon!),
+      captionText: '시작: ${course.startPointName}',
+      captionColor: skyBlueColor,
+      captionHaloColor: Colors.black,
+      captionTextSize: 16.0,
+      subCaptionTextSize: 14,
+      subCaptionText: course.secondName,
+      subCaptionColor: (Platform.isAndroid) ? Colors.white : Colors.black,
+      subCaptionHaloColor: (Platform.isAndroid) ? Colors.black : Colors.white,
+      captionOffset: 5,
+      icon: startMaker,
+      width: 20,
+      height: 20,
+    ));
+
+    selectedChallengeMarkers.add(Marker(
       markerId: 'end_${course.id!.toString()}',
       position: LatLng(course.endLat!, course.endLon!),
-      captionText: '도착 ${course.endPointName}',
+      captionText: '도착: ${course.endPointName}',
       captionColor: const Color(0xFFFF6F75),
       captionHaloColor: Colors.black,
       captionTextSize: 16.0,
@@ -534,6 +566,9 @@ class ActivityController extends SuperController with ActivityMixin, ChallengeMi
   void moveToChallengeMap() async {
     bool systemReady = await checkAvailabilities();
     if (systemReady) {
+      challengeSelectedIndex.value = -1;
+      selectedChallengeMarkers.value = RxList.empty();
+      generateChallengeMarkerList();
       Get.toNamed(Routes.challengeMap);
     } else {
       await requestPermissionStepByStep();

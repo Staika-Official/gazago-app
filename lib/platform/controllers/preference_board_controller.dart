@@ -39,4 +39,14 @@ class PreferenceBoardController extends GetxController {
     noticeDetail.value = boardList.firstWhere((element) => id == element.id);
     Get.toNamed(Routes.noticeDetail, arguments: {'id': id!});
   }
+
+  void toggleExpansion(TermItemModel termItem, bool state) {
+    List<TermItemModel> termsList = boardList;
+    boardList.value = termsList.map((term) {
+      if (term == termItem) {
+        term.isChecked = state;
+      }
+      return term;
+    }).toList();
+  }
 }
