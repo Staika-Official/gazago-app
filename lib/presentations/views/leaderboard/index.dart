@@ -92,7 +92,7 @@ class LeaderboardHome extends StatelessWidget {
         children: [
           iconMyRankArrow,
           SizedBox(
-            width: 20.sp,
+            width: 20,
             child: Text(
               myRank.rank.toString(),
               style: TextStyle(color: skyBlueColor, fontSize: 14.sp, fontWeight: FontWeight.w600),
@@ -164,7 +164,7 @@ class LeaderboardHome extends StatelessWidget {
     );
   }
 
-  Widget renderRanker(RankerModel ranker) {
+  Widget renderRanker(RankerModel ranker, BuildContext context) {
     return Container(
       color: subBg01Color,
       height: 58.sp,
@@ -173,20 +173,23 @@ class LeaderboardHome extends StatelessWidget {
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
           SizedBox(
-            width: 20.sp,
-            child: Text(
-              ranker.rank.toString(),
-              style: const TextStyle(
-                color: Colors.white,
-                fontSize: 14,
-                fontWeight: FontWeight.w600,
+            width: 20,
+            child: Align(
+              alignment: Alignment.centerRight,
+              child: Text(
+                ranker.rank.toString(),
+                style: TextStyle(
+                  color: Colors.white,
+                  fontSize: 14.sp,
+                  fontWeight: FontWeight.w600,
+                ),
+                textAlign: TextAlign.right,
               ),
-              textAlign: TextAlign.center,
             ),
           ),
           Padding(padding: EdgeInsets.only(left: 12.sp)),
           Expanded(
-            flex: 2,
+            flex: 7,
             child: Row(
               children: [
                 (ranker.profileImageUrl != null)
@@ -207,7 +210,7 @@ class LeaderboardHome extends StatelessWidget {
             ),
           ),
           Expanded(
-            flex: 1,
+            flex: 2,
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               crossAxisAlignment: CrossAxisAlignment.end,
@@ -218,6 +221,7 @@ class LeaderboardHome extends StatelessWidget {
                   fontSize: 14,
                   lineHeight: 14,
                   fontWeight: 600,
+                  softWrap: false,
                 ),
                 Padding(
                   padding: EdgeInsets.only(top: 3.sp),
@@ -228,6 +232,7 @@ class LeaderboardHome extends StatelessWidget {
                     lineHeight: 14,
                     fontWeight: 500,
                     color: const Color(0xFFBABABA),
+                    softWrap: false,
                   ),
                 ),
               ],
@@ -433,7 +438,7 @@ class LeaderboardHome extends StatelessWidget {
                             itemCount: controller.rankings.length + 1,
                             itemBuilder: (context, index) {
                               if (index < controller.rankings.length) {
-                                return renderRanker(controller.rankings[index]);
+                                return renderRanker(controller.rankings[index], context);
                               } else {
                                 return (controller.hasMore.value) ? Padding(padding: EdgeInsets.symmetric(vertical: 20.0.sp), child: const Center(child: CircularProgressIndicator())) : Container();
                               }
