@@ -21,15 +21,15 @@ class TermsList extends StatelessWidget {
           children: [
             TermsListItem(
               title: '이용약관',
-              onTap: () => Get.toNamed(Routes.term, arguments: {'termType': 'T2E_TERMS'}),
+              onTap: () => Get.toNamed(Routes.term, arguments: {'termType': 'TERMS'}),
             ),
             TermsListItem(
               title: '개인정보 처리방침',
-              onTap: () => Get.toNamed(Routes.term, arguments: {'termType': 'T2E_PRIVACY'}),
+              onTap: () => Get.toNamed(Routes.term, arguments: {'termType': 'PRIVACY'}),
             ),
             TermsListItem(
               title: '위치정보 이용 동의',
-              onTap: () => Get.toNamed(Routes.term, arguments: {'termType': 'T2E_LOCATION'}),
+              onTap: () => Get.toNamed(Routes.term, arguments: {'termType': 'LOCATION'}),
             ),
           ],
         ),

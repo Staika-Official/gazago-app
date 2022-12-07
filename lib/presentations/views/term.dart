@@ -21,7 +21,7 @@ class Term extends StatelessWidget {
           physics: const ClampingScrollPhysics(),
           child: Column(
             children: [
-              if (controller.termType.value == 'T2E_MARKETING')
+              if (controller.termType.value == 'MARKETING')
                 Container(
                   margin: EdgeInsets.symmetric(horizontal: 25.sp, vertical: 0),
                   padding: EdgeInsets.symmetric(horizontal: 0.sp, vertical: 15.sp),
