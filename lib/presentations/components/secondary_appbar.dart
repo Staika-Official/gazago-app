@@ -29,7 +29,6 @@ class SecondaryAppbar extends StatelessWidget implements PreferredSizeWidget {
             Padding(
               padding: EdgeInsets.only(left: 4.sp),
               child: StyledText(
-                // token.uiAmountString!,
                 token.symbol! == 'STIK' ? formatDecimalPlaces((token.amount! / pow(10.0, 9)), 9) : formatDecimalPlaces(token.amount!, 1),
                 color: Colors.white,
                 fontSize: 12,

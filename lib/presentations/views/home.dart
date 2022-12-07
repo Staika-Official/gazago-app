@@ -15,7 +15,7 @@ class Home extends StatelessWidget {
     return Container(
       decoration: BoxDecoration(
         color: controller.selectedIndex.value == 0
-            ? const Color(0xFF1C1D23)
+            ? const Color(0xFF252529)
             : controller.selectedIndex.value == 2
                 ? popupBgColor
                 : subBg01Color,
@@ -110,6 +110,7 @@ class Home extends StatelessWidget {
       },
       child: Obx(() {
         return Scaffold(
+          // extendBody: true,
           backgroundColor: subBg01Color,
           appBar: controller.appbar,
           body: controller.mainViewWidgetList.elementAt(controller.selectedIndex.value),

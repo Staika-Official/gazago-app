@@ -150,7 +150,7 @@ class ArchiveHome extends StatelessWidget {
       color: subBg01Color,
       child: Obx(() {
         return Padding(
-          padding: EdgeInsets.symmetric(vertical: 25.0.sp, horizontal: 20.0.sp),
+          padding: EdgeInsets.only(top:20.sp, left:20.sp, right:20.sp),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             mainAxisSize: MainAxisSize.min,
