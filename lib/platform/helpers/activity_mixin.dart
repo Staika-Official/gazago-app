@@ -383,12 +383,14 @@ mixin ActivityMixin {
 
   void updateExercise({bool? isPaused, String? source}) async {
     void errorHandler() {
-      CurrentUserStateModel savedState = HiveStore.loadCurrentUserState()!;
-      userState.update((state) {
-        state?.state = savedState.state;
-        state?.exercise = savedState.exercise;
-        state?.shoes = savedState.shoes;
-      });
+      CurrentUserStateModel? savedState = HiveStore.loadCurrentUserState();
+      if (savedState != null) {
+        userState.update((state) {
+          state?.state = savedState.state;
+          state?.exercise = savedState.exercise;
+          state?.shoes = savedState.shoes;
+        });
+      }
     }
 
     void updateLocalUserState(CurrentUserStateModel newUserState) {
