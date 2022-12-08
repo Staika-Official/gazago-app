@@ -252,7 +252,7 @@ mixin ActivityMixin {
       if (!isExerciseStarted) {
         HiveStore.save(key: HiveKey.dummyStepCount.name, value: event.steps);
         HiveStore.save(key: HiveKey.savedStepInitialized.name, value: true);
-        savedSteps = HiveStore.load(key: HiveKey.savedStepCount.name);
+        savedSteps = HiveStore.load(key: HiveKey.savedStepCount.name) ?? 0;
       } else if (exerciseState.value == ExerciseState.ongoing) {
         int dummySteps = HiveStore.load(key: HiveKey.dummyStepCount.name);
         int actualSteps = (event.steps - dummySteps) + savedSteps;

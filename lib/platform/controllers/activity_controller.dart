@@ -35,6 +35,7 @@ import 'package:get/get.dart';
 import 'package:health/health.dart';
 import 'package:permission_handler/permission_handler.dart' as ph;
 import 'package:simple_animations/animation_builder/custom_animation_builder.dart';
+import 'package:throttling/throttling.dart';
 
 class ActivityController extends SuperController with ActivityMixin, ChallengeMixin {
   final WalletMasterController walletMasterController = Get.find();
@@ -75,6 +76,7 @@ class ActivityController extends SuperController with ActivityMixin, ChallengeMi
   Control activityLoadControl = Control.play;
   RxBool disableButton = RxBool(false);
   RxBool disableActivityButton = RxBool(true);
+  final Throttling thr = Throttling(duration: const Duration(milliseconds: 500));
 
   @override
   void onInit() async {
@@ -542,7 +544,7 @@ class ActivityController extends SuperController with ActivityMixin, ChallengeMi
         if (loadingTime.value == 3) {
           timer.cancel();
           loadingTimer = null;
-          startExercise(exerciseType, challenge);
+          thr.throttle(() => startExercise(exerciseType, challenge));
         } else {
           loadingTime.value++;
           activityLoadControl = Control.playFromStart;
