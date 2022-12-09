@@ -43,7 +43,7 @@ class Preferences extends StatelessWidget {
                             children: [
                               CircleAvatar(
                                 radius: 30.sp,
-                                foregroundImage: controller.profile.value.profileImageUrl != null
+                                foregroundImage: controller.profile.value.profileImageUrl != null && controller.profile.value.profileImageUrl != ''
                                     ? CachedNetworkImageProvider(
                                         controller.profile.value.profileImageUrl!,
                                       )

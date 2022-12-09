@@ -47,7 +47,7 @@ class MyPage extends StatelessWidget {
                                 ? FileImage(
                                     File(controller.pickedImage.value!.path),
                                   )
-                                : controller.profile.value.profileImageUrl != null
+                                : controller.profile.value.profileImageUrl != null && controller.profile.value.profileImageUrl != ''
                                     ? CachedNetworkImageProvider(
                                         controller.profile.value.profileImageUrl!,
                                       )
