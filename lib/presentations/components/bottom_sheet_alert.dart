@@ -4,12 +4,13 @@ import 'package:gaza_go/presentations/styles/colors.dart';
 import 'package:gaza_go/presentations/styles/styled_text.dart';
 
 class BottomSheetAlert extends StatelessWidget {
-  final String title;
+  final String? title;
   final String? contentText;
   final Widget? contentWidget;
   final List<Widget> actions;
+  final bool? isDangerTitle;
 
-  const BottomSheetAlert({Key? key, required this.title, this.contentText, this.contentWidget, required this.actions}) : super(key: key);
+  const BottomSheetAlert({Key? key, this.title, this.contentText, this.contentWidget, this.isDangerTitle, required this.actions}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -26,16 +27,18 @@ class BottomSheetAlert extends StatelessWidget {
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
-            Padding(
-              padding: EdgeInsets.only(top: 8.0.sp),
-              child: StyledText(
-                title,
-                fontSize: 22,
-                lineHeight: 24,
-                fontWeight: 500,
-                letterSpacing: .2,
+            if (title != null)
+              Padding(
+                padding: EdgeInsets.only(top: 8.0.sp),
+                child: StyledText(
+                  title!,
+                  fontSize: 22,
+                  lineHeight: 24,
+                  fontWeight: 500,
+                  letterSpacing: .2,
+                  color: isDangerTitle! ? dangerColor : Colors.white,
+                ),
               ),
-            ),
             contentWidget ??
                 Padding(
                   padding: EdgeInsets.only(top: 12.0.sp, bottom: 30.sp),

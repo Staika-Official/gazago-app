@@ -4,14 +4,21 @@ import 'package:gaza_go/presentations/components/bottom_sheet_alert.dart';
 import 'package:get/get.dart';
 
 Future<void> showAlert({
-  required String title,
+  String? title,
   required List<Widget> actions,
   String? contentText,
   Widget? contentWidget,
   bool isScrollControlled = false,
+  bool isDangerTitle = false,
 }) async {
   await Get.bottomSheet(
-    BottomSheetAlert(title: title, contentWidget: contentWidget, contentText: contentText, actions: actions),
+    BottomSheetAlert(
+      title: title,
+      contentWidget: contentWidget,
+      contentText: contentText,
+      actions: actions,
+      isDangerTitle: isDangerTitle,
+    ),
     isDismissible: false,
     isScrollControlled: isScrollControlled,
   );

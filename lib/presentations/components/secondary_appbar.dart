@@ -60,12 +60,17 @@ class SecondaryAppbar extends StatelessWidget implements PreferredSizeWidget {
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
             controller.isBackButton()
-                ? IconButton(
-                    onPressed: () => Get.back(),
-                    padding: EdgeInsets.symmetric(horizontal: 12.sp),
-                    icon: const Icon(
-                      Icons.chevron_left,
-                      color: Colors.grey,
+                ? Container(
+                    width: 20,
+                    padding: EdgeInsets.zero,
+                    child: IconButton(
+                      onPressed: () => Get.back(),
+                      padding: EdgeInsets.zero,
+                      iconSize: 30,
+                      icon: const Icon(
+                        Icons.chevron_left_sharp,
+                        color: Colors.white,
+                      ),
                     ),
                   )
                 : IconButton(
