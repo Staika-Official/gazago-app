@@ -23,6 +23,8 @@ class WalletMasterController extends GetxController {
   final Rx<BuyTikResponseModel> buyTikResult = Rx(BuyTikResponseModel());
   final RxInt feeTikStamina = RxInt(0);
   final RxInt feeTikDurability = RxInt(0);
+  final ScrollController transactionScrollController = ScrollController();
+  final RxDouble transactionScrollPosition = RxDouble(0);
   RxList<AssetTokenBalanceModel> get spendingTokenUiList {
     List<AssetTokenBalanceModel> balanceUiList = List.empty(growable: true);
 
@@ -54,6 +56,9 @@ class WalletMasterController extends GetxController {
   @override
   void onInit() async {
     await getSpendingWalletBalances();
+    transactionScrollController.addListener(() {
+      transactionScrollPosition.value = transactionScrollController.position.pixels;
+    });
     super.onInit();
   }
 
@@ -92,6 +97,7 @@ class WalletMasterController extends GetxController {
 
   void moveToWalletDetail({required AssetTokenBalanceModel asset, required WalletType walletType, required AssetType assetType}) async {
     await getSpendingWalletTransactions(asset);
+    transactionScrollPosition.value = 0;
     Get.toNamed(Routes.walletDetail, arguments: {'asset': asset, 'walletType': walletType, 'assetType': assetType});
   }
 

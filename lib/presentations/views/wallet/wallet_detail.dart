@@ -61,19 +61,22 @@ class WalletDetail extends StatelessWidget {
               mainAxisSize: MainAxisSize.max,
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                transaction.type == 'IN' ? iconIn : iconOut,
+                Padding(
+                  padding: const EdgeInsets.only(left: 5, right: 8),
+                  child: transaction.type == 'IN' ? iconIn : iconOut,
+                ),
                 Expanded(
                   child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
                           StyledText(
-                            transaction.content ?? '',
-                            fontSize: 20,
-                            lineHeight: 20,
-                            letterSpacing: -0.5,
-                            fontWeight: 600,
+                            transaction.title ?? '',
+                            fontSize: 22,
+                            lineHeight: 22,
+                            fontWeight: 500,
                           ),
                           StyledText(
                             '${transaction.type == 'IN' ? '+' : '-'} ${formatDecimalPlaces(double.parse(transaction.uiAmountString!), transaction.decimals!)} ${transaction.symbol!}',
@@ -105,7 +108,16 @@ class WalletDetail extends StatelessWidget {
                             ),
                           ],
                         ),
-                      )
+                      ),
+                      Padding(
+                        padding: EdgeInsets.only(top: 20),
+                        child: StyledText(
+                          transaction.content ?? '',
+                          fontSize: 14,
+                          lineHeight: 10,
+                          color: lightGrayColor,
+                        ),
+                      ),
                     ],
                   ),
                 ),
@@ -198,14 +210,53 @@ class WalletDetail extends StatelessWidget {
                         ),
                       );
                     })
-                  : SingleChildScrollView(
-                      physics: const ClampingScrollPhysics(),
-                      child: Padding(
-                        padding: EdgeInsets.symmetric(horizontal: 16.sp),
-                        child: Column(
-                          children: [...renderTransactionList(controller)],
+                  : Stack(
+                      children: [
+                        SingleChildScrollView(
+                          controller: controller.transactionScrollController,
+                          physics: const ClampingScrollPhysics(),
+                          child: Padding(
+                            padding: EdgeInsets.symmetric(horizontal: 16.sp),
+                            child: Column(
+                              children: [...renderTransactionList(controller)],
+                            ),
+                          ),
                         ),
-                      ),
+                        if (controller.transactionScrollPosition.value > 100)
+                          Positioned(
+                            bottom: 60,
+                            right: 30,
+                            child: Material(
+                              color: Colors.transparent,
+                              child: Ink(
+                                width: 50,
+                                height: 50,
+                                decoration: BoxDecoration(color: skyBlueColor, borderRadius: BorderRadius.circular(50), border: Border.all(color: Colors.black), boxShadow: [
+                                  BoxShadow(
+                                    color: Colors.black,
+                                    offset: Offset(0, 2),
+                                    blurRadius: 0.0,
+                                    spreadRadius: 0.0,
+                                  ),
+                                ]),
+                                child: InkWell(
+                                  onTap: () => controller.transactionScrollController.animateTo(
+                                    0,
+                                    duration: Duration(
+                                      milliseconds: 100,
+                                    ),
+                                    curve: Curves.easeIn,
+                                  ),
+                                  borderRadius: BorderRadius.circular(50),
+                                  child: Padding(
+                                    padding: EdgeInsets.all(14),
+                                    child: iconUp,
+                                  ),
+                                ),
+                              ),
+                            ),
+                          )
+                      ],
                     ),
             ),
           ],
