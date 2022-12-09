@@ -15,7 +15,7 @@ class PreferenceBoardController extends GetxController {
     ),
   );
   RxString get boardName {
-    if (boardType.value == 'T2E_NOTICE') {
+    if (boardType.value == 'NOTICE') {
       return RxString('공지사항');
     } else {
       return RxString('FAQ');

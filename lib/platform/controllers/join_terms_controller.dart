@@ -21,7 +21,7 @@ class JoinTermsController extends GetxController {
   }
 
   void getTermsList() async {
-    await BoardService.getFirstPostByType('T2E_TERMS,T2E_PRIVACY,T2E_LOCATION,T2E_MARKETING', successCallback: (List<TermItemModel> terms) {
+    await BoardService.getFirstPostByType('TERMS,PRIVACY,LOCATION,MARKETING', successCallback: (List<TermItemModel> terms) {
       termsList.value = terms;
     });
   }
