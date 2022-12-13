@@ -252,7 +252,7 @@ mixin ActivityMixin {
       if (!isExerciseStarted) {
         HiveStore.save(key: HiveKey.dummyStepCount.name, value: event.steps);
         HiveStore.save(key: HiveKey.savedStepInitialized.name, value: true);
-        savedSteps = HiveStore.load(key: HiveKey.savedStepCount.name);
+        savedSteps = HiveStore.load(key: HiveKey.savedStepCount.name) ?? 0;
       } else if (exerciseState.value == ExerciseState.ongoing) {
         int dummySteps = HiveStore.load(key: HiveKey.dummyStepCount.name);
         int actualSteps = (event.steps - dummySteps) + savedSteps;
@@ -383,12 +383,14 @@ mixin ActivityMixin {
 
   void updateExercise({bool? isPaused, String? source}) async {
     void errorHandler() {
-      CurrentUserStateModel savedState = HiveStore.loadCurrentUserState()!;
-      userState.update((state) {
-        state?.state = savedState.state;
-        state?.exercise = savedState.exercise;
-        state?.shoes = savedState.shoes;
-      });
+      CurrentUserStateModel? savedState = HiveStore.loadCurrentUserState();
+      if (savedState != null) {
+        userState.update((state) {
+          state?.state = savedState.state;
+          state?.exercise = savedState.exercise;
+          state?.shoes = savedState.shoes;
+        });
+      }
     }
 
     void updateLocalUserState(CurrentUserStateModel newUserState) {

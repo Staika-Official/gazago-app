@@ -43,7 +43,7 @@ class Preferences extends StatelessWidget {
                             children: [
                               CircleAvatar(
                                 radius: 30.sp,
-                                foregroundImage: controller.profile.value.profileImageUrl != null
+                                foregroundImage: controller.profile.value.profileImageUrl != null && controller.profile.value.profileImageUrl != ''
                                     ? CachedNetworkImageProvider(
                                         controller.profile.value.profileImageUrl!,
                                       )
@@ -84,11 +84,11 @@ class Preferences extends StatelessWidget {
             // ),
             PreferenceItem(
               title: '공지사항',
-              onTap: () => Get.toNamed(Routes.noticeList, arguments: {'boardType': 'T2E_NOTICE'}),
+              onTap: () => Get.toNamed(Routes.noticeList, arguments: {'boardType': 'NOTICE'}),
             ),
             PreferenceItem(
               title: 'FAQ',
-              onTap: () => Get.toNamed(Routes.preferenceBoard, arguments: {'boardType': 'T2E_FAQ'}),
+              onTap: () => Get.toNamed(Routes.preferenceBoard, arguments: {'boardType': 'FAQ'}),
             ),
             Container(
               width: double.infinity,
@@ -101,7 +101,7 @@ class Preferences extends StatelessWidget {
             ),
             PreferenceItem(
               title: '마케팅 동의',
-              onTap: () => Get.toNamed(Routes.term, arguments: {'termType': 'T2E_MARKETING'}),
+              onTap: () => Get.toNamed(Routes.term, arguments: {'termType': 'MARKETING'}),
             ),
             Container(
               width: double.infinity,
