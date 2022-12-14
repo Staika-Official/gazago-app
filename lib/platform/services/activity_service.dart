@@ -93,7 +93,7 @@ class ActivityService {
     if (res.statusCode == 201) {
       successCallback(UserExerciseModel.fromJson(res.data));
     } else {
-      errorCallback!(res.statusCode, res.statusMessage);
+      errorCallback!(res.statusMessage);
     }
   }
 

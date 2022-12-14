@@ -340,12 +340,12 @@ mixin ActivityMixin {
             initStream();
             startPeriodicUpdate();
           },
-          errorCallback: (int statusCode, String statusMessage) {
-            showToastPopup(statusMessage);
+          errorCallback: (String? statusMessage) {
+            showToastPopup(statusMessage ?? '운동을 시작하지 못했습니다. 잠시후 다시 시도해주세요.');
           },
         );
       } else {
-        showToastPopup('인터넷 상태를 확인해주세요');
+        showToastPopup('인터넷 상태를 확인해주세요.');
       }
     } else {
       showToastPopup('지금은 리워드 정산시간입니다.');
