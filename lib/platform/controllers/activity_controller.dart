@@ -37,7 +37,7 @@ import 'package:permission_handler/permission_handler.dart' as ph;
 import 'package:simple_animations/animation_builder/custom_animation_builder.dart';
 import 'package:throttling/throttling.dart';
 
-class ActivityController extends SuperController with ActivityMixin, ChallengeMixin {
+class ActivityController extends SuperController with ActivityMixin, ChallengeMixin, GetSingleTickerProviderStateMixin {
   final WalletMasterController walletMasterController = Get.find();
 
   //index.dart
@@ -77,9 +77,13 @@ class ActivityController extends SuperController with ActivityMixin, ChallengeMi
   RxBool disableButton = RxBool(false);
   RxBool disableActivityButton = RxBool(true);
   final Throttling thr = Throttling(duration: const Duration(milliseconds: 500));
+  late final AnimationController challengeGuideController;
+  final Rx<Control> challengeLoadControl = Rx(Control.play);
+  final RxDouble challengeLoadControlPosition = RxDouble(0);
 
   @override
   void onInit() async {
+    challengeGuideController = AnimationController(vsync: this);
     await initController();
     checkConnectivityStatus();
     super.onInit();
