@@ -6,25 +6,33 @@ part 'shop_item_model.g.dart';
 class ShopItemModel {
   int id;
   String name;
-  String itemImageUrl;
+  String? itemImageUrl;
+  String? itemCategory;
   String itemGrade;
-  int price;
-  String itemCategory;
-  String staminaReduceRate;
-  String durability;
-  String rewardRate;
+  double toRewardRate;
+  double fromRewardRate;
+  double toAbrasionRate;
+  double fromAbrasionRate;
+  double toStaminaReduceRate;
+  double fromStaminaReduceRate;
+  double price;
+  String? itemLable;
   String? description;
 
   ShopItemModel({
     required this.id,
-    required this.itemGrade,
     required this.name,
-    required this.itemCategory,
-    required this.durability,
-    required this.rewardRate,
-    required this.staminaReduceRate,
-    required this.itemImageUrl,
+    this.itemImageUrl,
+    this.itemCategory,
+    required this.itemGrade,
+    required this.toRewardRate,
+    required this.fromRewardRate,
+    required this.toAbrasionRate,
+    required this.fromAbrasionRate,
+    required this.toStaminaReduceRate,
+    required this.fromStaminaReduceRate,
     required this.price,
+    this.itemLable,
     this.description,
   });
 

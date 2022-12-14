@@ -1,3 +1,4 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:custom_rounded_rectangle_border/custom_rounded_rectangle_border.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -82,10 +83,10 @@ class ShopItemDetail extends StatelessWidget {
                                     color: controller.selectedItem.value.itemGrade == 'POOR' ? Colors.white.withOpacity(0.6) : Colors.black.withOpacity(0.6),
                                     controller.selectedItem.value.itemGrade,
                                     fontWeight: 600,
-                                    fontSize: controller.selectedItem.value.itemGrade.length < 6 ? 10 : 8,
+                                    fontSize: controller.selectedItem.value.itemGrade.length < 7 ? 10 : 8,
                                     lineHeight: 10,
                                     fontFamily: 'Montserrat',
-                                    letterSpacing: controller.selectedItem.value.itemGrade.length < 6 ? 4 : 1.5,
+                                    letterSpacing: controller.selectedItem.value.itemGrade.length < 7 ? 4 : 1.5,
                                   ),
                                 ),
                               ),
@@ -100,11 +101,20 @@ class ShopItemDetail extends StatelessWidget {
                                         padding: EdgeInsets.symmetric(vertical: 40.0.sp),
                                         child: Column(
                                           children: [
-                                            Image(
-                                              image: AssetImage(controller.selectedItem.value.itemImageUrl),
-                                              width: 150.sp,
-                                              fit: BoxFit.fill,
-                                            ),
+                                            // Image(
+                                            //   image: AssetImage(controller.selectedItem.value.itemImageUrl!),
+                                            //   width: 150.sp,
+                                            //   fit: BoxFit.fill,
+                                            // ),
+                                            SizedBox(
+                                              height: 180.sp,
+                                              child: CachedNetworkImage(
+                                                imageUrl: controller.selectedItem.value.itemImageUrl!,
+                                                fit: BoxFit.fitWidth,
+                                                placeholder: (context, url) => const CircularProgressIndicator(),
+                                                errorWidget: (context, url, error) => Image.asset("assets/images/@temp_shoes.png"),
+                                              ),
+                                            )
                                           ],
                                         ),
                                       ),
@@ -141,7 +151,7 @@ class ShopItemDetail extends StatelessWidget {
                                                         mainAxisAlignment: MainAxisAlignment.center,
                                                         children: [
                                                           StyledText(
-                                                            controller.selectedItem.value.rewardRate,
+                                                            '${formatDecimalPlaces(controller.selectedItem.value.fromRewardRate, 0)}-${formatDecimalPlaces(controller.selectedItem.value.toRewardRate, 0)}',
                                                             fontSize: 22,
                                                             lineHeight: 26,
                                                             fontWeight: 500,
@@ -186,7 +196,7 @@ class ShopItemDetail extends StatelessWidget {
                                                         mainAxisAlignment: MainAxisAlignment.center,
                                                         children: [
                                                           StyledText(
-                                                            controller.selectedItem.value.durability,
+                                                            '${formatDecimalPlaces(controller.selectedItem.value.fromAbrasionRate, 0)}-${formatDecimalPlaces(controller.selectedItem.value.toAbrasionRate, 0)}',
                                                             fontSize: 22,
                                                             lineHeight: 26,
                                                             fontWeight: 500,
@@ -232,7 +242,7 @@ class ShopItemDetail extends StatelessWidget {
                                                         mainAxisAlignment: MainAxisAlignment.center,
                                                         children: [
                                                           StyledText(
-                                                            controller.selectedItem.value.staminaReduceRate,
+                                                            '${formatDecimalPlaces(controller.selectedItem.value.fromStaminaReduceRate, 0)}-${formatDecimalPlaces(controller.selectedItem.value.toStaminaReduceRate, 0)}',
                                                             fontSize: 22,
                                                             lineHeight: 26,
                                                             fontWeight: 500,
@@ -348,16 +358,17 @@ class ShopItemDetail extends StatelessWidget {
                             fontSize: 22,
                             lineHeight: 24,
                           ),
-                          Padding(
-                            padding: EdgeInsets.only(top: 5.0.sp),
-                            child: StyledText(
-                              '마감임박',
-                              fontWeight: 500,
-                              fontSize: 14,
-                              lineHeight: 16,
-                              color: skyBlueColor,
+                          if (controller.selectedItem.value.itemLable == 'CLOSE_DEADLINE')
+                            Padding(
+                              padding: EdgeInsets.only(top: 5.0.sp),
+                              child: StyledText(
+                                '마감임박',
+                                fontWeight: 500,
+                                fontSize: 14,
+                                lineHeight: 16,
+                                color: skyBlueColor,
+                              ),
                             ),
-                          ),
                         ],
                       ),
                       InkWell(

@@ -1,3 +1,5 @@
+import 'package:cached_network_image/cached_network_image.dart';
+import 'package:custom_rounded_rectangle_border/custom_rounded_rectangle_border.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:gaza_go/platform/controllers/shop_controller.dart';
@@ -36,17 +38,18 @@ class ShopItems extends StatelessWidget {
                       crossAxisAlignment: CrossAxisAlignment.center,
                       children: [
                         Container(
-                          decoration: BoxDecoration(
+                          decoration: ShapeDecoration(
                             color: getItemGradeColor(item.itemGrade),
-                            border: Border.all(
-                              width: 1,
-                              color: Colors.black,
+                            shape: CustomRoundedRectangleBorder(
+                              borderRadius: BorderRadius.only(bottomLeft: Radius.circular(5.sp), bottomRight: Radius.circular(5.sp)),
+                              topSide: BorderSide(color: Colors.black, width: 0.sp),
+                              leftSide: BorderSide(color: Colors.black, width: 2.sp),
+                              bottomLeftCornerSide: BorderSide(color: Colors.black, width: 2.sp),
+                              rightSide: BorderSide(color: Colors.black, width: 2.sp),
+                              bottomRightCornerSide: BorderSide(color: Colors.black, width: 2.sp),
+                              bottomSide: BorderSide(color: Colors.black, width: 2.sp),
                             ),
-                            borderRadius: BorderRadius.only(
-                              bottomRight: Radius.circular(5.sp),
-                              bottomLeft: Radius.circular(5.sp),
-                            ),
-                            boxShadow: [
+                            shadows: [
                               BoxShadow(
                                 color: Colors.black,
                                 offset: Offset(1.sp, 2.sp),
@@ -60,13 +63,13 @@ class ShopItems extends StatelessWidget {
                             alignment: Alignment.center,
                             padding: EdgeInsets.symmetric(vertical: 8.0.sp, horizontal: 10.0.sp),
                             child: StyledText(
-                              '${item.itemGrade}',
+                              item.itemGrade,
                               color: item.itemGrade == 'POOR' ? Colors.white.withOpacity(0.6) : Colors.black.withOpacity(0.6),
                               fontWeight: 600,
-                              fontSize: item.itemGrade.length < 6 ? 10 : 8,
+                              fontSize: item.itemGrade.length < 7 ? 10 : 9,
                               lineHeight: 10,
                               fontFamily: 'Montserrat',
-                              letterSpacing: item.itemGrade.length < 6 ? 4 : 1.5,
+                              letterSpacing: item.itemGrade.length < 7 ? 4 : 1.5,
                             ),
                           ),
                         ),
@@ -76,18 +79,20 @@ class ShopItems extends StatelessWidget {
                           children: [
                             Padding(
                               padding: EdgeInsets.all(10.0.sp),
-                              child: SizedBox(
-                                height: 115.sp,
-                                child: Image.asset(
-                                  item.itemImageUrl!,
-                                ),
-                              ),
-                              // child: CachedNetworkImage(
-                              //   imageUrl: item.itemImageUrl!,
-                              //   fit: BoxFit.fitWidth,
-                              //   placeholder: (context, url) => const CircularProgressIndicator(),
-                              //   errorWidget: (context, url, error) => Image.asset("assets/images/@temp_badge.png"),
-                              // ),
+                              child: item.itemImageUrl != null
+                                  ? AspectRatio(
+                                      // child: Image.network(
+                                      //   "http://via.placeholder.com/350x150",
+                                      // ),
+                                      aspectRatio: 1.5,
+                                      child: CachedNetworkImage(
+                                        imageUrl: item.itemImageUrl!,
+                                        fit: BoxFit.fitHeight,
+                                        placeholder: (context, url) => const CircularProgressIndicator(),
+                                        errorWidget: (context, url, error) => Image.asset("assets/images/@temp_bal.png"),
+                                      ),
+                                    )
+                                  : Container(),
                             ),
                             StyledText(
                               item.name,
@@ -113,7 +118,7 @@ class ShopItems extends StatelessWidget {
                                           Padding(
                                             padding: EdgeInsets.only(left: 3.0.sp),
                                             child: StyledText(
-                                              item.rewardRate,
+                                              '${formatDecimalPlaces(item.fromRewardRate, 0)}-${formatDecimalPlaces(item.toRewardRate, 0)}',
                                               fontSize: 12,
                                               fontWeight: 600,
                                               color: skyBlueColor,
@@ -135,7 +140,7 @@ class ShopItems extends StatelessWidget {
                                                 Padding(
                                                   padding: EdgeInsets.only(left: 3.0.sp),
                                                   child: StyledText(
-                                                    item.durability,
+                                                    '${formatDecimalPlaces(item.fromAbrasionRate, 0)}-${formatDecimalPlaces(item.toAbrasionRate, 0)}',
                                                     fontSize: 12,
                                                     fontWeight: 600,
                                                     color: purpleColor,
@@ -157,7 +162,7 @@ class ShopItems extends StatelessWidget {
                                           Padding(
                                             padding: EdgeInsets.only(left: 3.0.sp),
                                             child: StyledText(
-                                              item.staminaReduceRate,
+                                              '${formatDecimalPlaces(item.fromStaminaReduceRate, 0)}-${formatDecimalPlaces(item.toStaminaReduceRate, 0)}',
                                               fontSize: 12,
                                               fontWeight: 600,
                                               color: lightGreenColor,
@@ -192,12 +197,14 @@ class ShopItems extends StatelessWidget {
                         child: Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
-                            StyledText(
-                              '마감임박',
-                              fontSize: 12.sp,
-                              fontWeight: 600,
-                              color: skyBlueColor,
-                            ),
+                            item.itemLable == 'CLOSE_DEADLINE'
+                                ? StyledText(
+                                    '마감임박',
+                                    fontSize: 12.sp,
+                                    fontWeight: 600,
+                                    color: skyBlueColor,
+                                  )
+                                : Container(),
                             StyledText(
                               '${formatDecimalPlaces(item.price.toDouble(), 0)} TIK',
                               fontSize: 14.sp,
@@ -220,7 +227,6 @@ class ShopItems extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     ShopController shopController = Get.find();
-    // ShopController shopController = Get.put(ShopController());
     return Obx(() {
       return Container(
         decoration: BoxDecoration(
@@ -284,16 +290,17 @@ class ShopItems extends StatelessWidget {
                   ),
                   Row(
                     children: [
-                      Padding(
-                        padding: EdgeInsets.only(right: 10.0.sp),
-                        child: StyledText(
-                          '전체',
-                          fontWeight: 600,
-                          fontSize: 14,
-                          lineHeight: 22,
-                          color: lightGrayColor,
+                      if (shopController.isSelectAllItems.value)
+                        Padding(
+                          padding: EdgeInsets.only(right: 10.0.sp),
+                          child: StyledText(
+                            '전체',
+                            fontWeight: 600,
+                            fontSize: 14,
+                            lineHeight: 22,
+                            color: lightGrayColor,
+                          ),
                         ),
-                      ),
                       InkWell(
                         onTap: () => shopController.showItemFilterPopup(),
                         child: Container(
@@ -317,7 +324,7 @@ class ShopItems extends StatelessWidget {
                           ),
                           child: Padding(
                             padding: const EdgeInsets.symmetric(horizontal: 5.0, vertical: 6.0),
-                            child: iconShopFilter,
+                            child: shopController.isSelectAllItems.value ? iconShopFilter : iconShopFilterActive,
                           ),
                         ),
                       )
@@ -325,25 +332,140 @@ class ShopItems extends StatelessWidget {
                   )
                 ],
               ),
-              Expanded(
-                child: Padding(
-                  padding: EdgeInsets.symmetric(vertical: 20.0.sp),
-                  child: Obx(() {
-                    return GridView.count(
-                      primary: false,
-                      padding: EdgeInsets.only(bottom: 30.sp),
-                      childAspectRatio: (1 / 1.4),
-                      crossAxisSpacing: 14.sp,
-                      mainAxisSpacing: 14.sp,
-                      crossAxisCount: 2,
-                      // controller: controller.badgeScrollController,
-                      children: <Widget>[
-                        ...renderShopItemsList(context, shopController),
-                      ],
-                    );
-                  }),
-                ),
-              )
+              shopController.shopItemsList.isEmpty
+                  ? shopController.dataGetLoading.value
+                      ? Padding(
+                          padding: EdgeInsets.symmetric(vertical: 120.0.sp),
+                          child: const Center(child: CircularProgressIndicator()),
+                        )
+                      : Container(
+                          width: double.infinity,
+                          padding: EdgeInsets.symmetric(vertical: 120.sp),
+                          decoration: BoxDecoration(
+                            color: popupBgColor,
+                            borderRadius: BorderRadius.circular(12.sp),
+                          ),
+                          child: Column(
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              iconShopEmpty,
+                              Padding(
+                                padding: EdgeInsets.only(top: 20.sp),
+                                child: StyledText(
+                                  '필터결과를 찾을 수 없습니다.',
+                                  color: lightGrayColor,
+                                  fontSize: 16,
+                                  lineHeight: 18,
+                                  fontWeight: 500,
+                                ),
+                              ),
+                              Column(
+                                children: [
+                                  Padding(
+                                    padding: EdgeInsets.only(top: 50.0.sp),
+                                    child: Row(
+                                      mainAxisAlignment: MainAxisAlignment.center,
+                                      children: [
+                                        Expanded(
+                                          child: Wrap(
+                                            runSpacing: 10.0,
+                                            spacing: 10.0,
+                                            alignment: WrapAlignment.center,
+                                            crossAxisAlignment: WrapCrossAlignment.start,
+                                            children: [
+                                              ...shopController.filteredCategory.asMap().entries.map(
+                                                    (entry) => Container(
+                                                      decoration: BoxDecoration(
+                                                        color: popupBgColor,
+                                                        border: Border.all(
+                                                          width: 1,
+                                                          color: Colors.white,
+                                                        ),
+                                                        borderRadius: BorderRadius.circular(20.sp),
+                                                      ),
+                                                      child: Padding(
+                                                        padding: EdgeInsets.symmetric(horizontal: 12.0.sp, vertical: 6.sp),
+                                                        child: StyledText(
+                                                          shopController.categoryFilterList.firstWhere((element) => element['value'] == entry.value)['title']!,
+                                                          fontSize: 14,
+                                                          lineHeight: 16,
+                                                          letterSpacing: .2,
+                                                          fontWeight: 500,
+                                                        ),
+                                                      ),
+                                                    ),
+                                                  ),
+                                            ],
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                  Padding(
+                                    padding: EdgeInsets.only(top: 12.0.sp),
+                                    child: Row(
+                                      mainAxisAlignment: MainAxisAlignment.center,
+                                      children: [
+                                        Expanded(
+                                          child: Wrap(
+                                            runSpacing: 10.0,
+                                            spacing: 10.0,
+                                            alignment: WrapAlignment.center,
+                                            crossAxisAlignment: WrapCrossAlignment.start,
+                                            children: [
+                                              ...shopController.filteredGrade.asMap().entries.map(
+                                                    (entry) => Container(
+                                                      decoration: BoxDecoration(
+                                                        color: popupBgColor,
+                                                        border: Border.all(
+                                                          width: 1,
+                                                          color: getItemGradeColor(entry.value),
+                                                        ),
+                                                        borderRadius: BorderRadius.circular(20.sp),
+                                                      ),
+                                                      child: Padding(
+                                                        padding: const EdgeInsets.symmetric(horizontal: 12.0, vertical: 6),
+                                                        child: StyledText(
+                                                          entry.value!,
+                                                          fontSize: 14,
+                                                          lineHeight: 16,
+                                                          letterSpacing: .2,
+                                                          fontWeight: 500,
+                                                          color: getItemGradeColor(entry.value),
+                                                        ),
+                                                      ),
+                                                    ),
+                                                  ),
+                                            ],
+                                          ),
+                                        )
+                                      ],
+                                    ),
+                                  )
+                                ],
+                              )
+                            ],
+                          ),
+                        )
+                  : Expanded(
+                      child: Padding(
+                        padding: EdgeInsets.symmetric(vertical: 20.0.sp),
+                        child: Obx(() {
+                          return GridView.count(
+                            primary: false,
+                            padding: EdgeInsets.only(bottom: 30.sp),
+                            childAspectRatio: (1 / 1.4),
+                            crossAxisSpacing: 14.sp,
+                            mainAxisSpacing: 14.sp,
+                            crossAxisCount: 2,
+                            // controller: controller.badgeScrollController,
+                            children: <Widget>[
+                              ...renderShopItemsList(context, shopController),
+                            ],
+                          );
+                        }),
+                      ),
+                    ),
             ],
           ),
         ),

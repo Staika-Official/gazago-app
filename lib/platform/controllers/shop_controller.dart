@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:gaza_go/constants/routes.dart';
 import 'package:gaza_go/platform/controllers/wallet_master_controller.dart';
 import 'package:gaza_go/platform/models/shop_item_model.dart';
+import 'package:gaza_go/platform/models/shop_item_purchase_response_model.dart';
+import 'package:gaza_go/platform/services/shop_service.dart';
 import 'package:gaza_go/presentations/components/alert_ui_list.dart';
 import 'package:get/get.dart';
 
@@ -11,9 +13,9 @@ class ShopController extends GetxController {
   final RxList<ShopItemModel> shopItemsList = RxList.empty();
 
   final List<Map<String, String>> sortingList = [
-    {'title': '최근 등록 순', 'value': 'Recent'},
-    {'title': '높은 가격 순', 'value': 'High'},
-    {'title': '낮은 가격 순', 'value': 'Low'}
+    {'title': '최근 등록 순', 'value': 'id,DESC'},
+    {'title': '높은 가격 순', 'value': 'price,DESC'},
+    {'title': '낮은 가격 순', 'value': 'price,ASC'}
   ];
 
   final List<Map<String, String>> categoryFilterList = [
@@ -33,7 +35,17 @@ class ShopController extends GetxController {
     {'title': 'Legend', 'value': 'LEGEND'},
   ];
 
-  Rx isSelectedSortValue = Rx({'title': '최근 등록 순', 'value': 'Recent'});
+  RxList selectedCategory = RxList.empty(growable: true);
+  RxList filteredCategory = RxList.empty(growable: true);
+
+  RxList selectedGrade = RxList.empty(growable: true);
+  RxList filteredGrade = RxList.empty(growable: true);
+
+  RxBool isSelectAllItems = RxBool(true);
+  RxBool isFilteredItems = RxBool(false);
+  RxBool dataGetLoading = RxBool(false);
+
+  Rx isSelectedSortValue = Rx({'title': '최근 등록 순', 'value': 'id,DESC'});
   RxString isSelectedSortString = RxString('최근 등록 순');
   ScrollController singleChildScrollController = ScrollController();
   ScrollController itemScrollController = ScrollController(keepScrollOffset: false);
@@ -48,16 +60,38 @@ class ShopController extends GetxController {
     ShopItemModel(
       id: -1,
       name: '',
-      price: 0,
       itemImageUrl: '',
-      itemGrade: '',
       itemCategory: '',
-      staminaReduceRate: '',
-      durability: '',
-      rewardRate: '',
+      itemGrade: '',
+      toRewardRate: 0,
+      fromRewardRate: 0,
+      toAbrasionRate: 0,
+      fromAbrasionRate: 0,
+      toStaminaReduceRate: 0,
+      fromStaminaReduceRate: 0,
+      price: 0,
+      description: '',
+      itemLable: '',
+    ),
+  );
+
+  Rx<ShopItemPurchaseResponseModel> purchaseCompleteItem = Rx(
+    ShopItemPurchaseResponseModel(
+      id: -1,
+      userId: -1,
+      serialNumber: '',
+      itemName: '',
+      itemImageUrl: '',
+      itemCategory: '',
+      itemGrade: '',
+      durability: 0,
+      abrasionRate: 0,
+      rewardRate: 0,
+      staminaReduceRate: 0,
       description: '',
     ),
   );
+
   @override
   void onInit() {
     initController();
@@ -66,12 +100,12 @@ class ShopController extends GetxController {
   }
 
   Future<void> initController() async {
-    getShopItems();
+    getShopItemsList();
     scrollControl();
   }
 
   Future<void> refreshController() async {
-    getShopItems();
+    getShopItemsList();
   }
 
   void scrollControl() {
@@ -90,16 +124,25 @@ class ShopController extends GetxController {
   }
 
   void toItemDetail(int itemId) async {
-    selectedItem.value = shopItemsList.firstWhere((element) => element.id == itemId);
-    Get.toNamed(Routes.shopItemDetail);
-    // await ItemService.getItemDetailInfo(
-    //   itemId,
-    //   successCallback: (item) {
-    //     selectedItem.value = item;
-    //     isShoe.value = selectedItem.value.itemCategory == 'SHOES';
-    //     Get.toNamed(Routes.itemDetail);
-    //   },
-    // );
+    await ShopService.getShopItemDetails(itemId, successCallback: (ShopItemModel items) {
+      selectedItem.value = items;
+      Get.toNamed(Routes.shopItemDetail);
+    });
+  }
+
+  void handlePurchaseShopItem(int itemId) async {
+    Get.back();
+    await ShopService.fetchPurchaseShopItem(itemId, successCallback: (ShopItemPurchaseResponseModel items) {
+      purchaseCompleteItem.value = items;
+      showItemPurchaseCompletePopup();
+    }, errorCallback: (statusCode) {
+      if (statusCode == 422) {
+        isShortBalance.value = true;
+        showTikShortBalancePopup();
+      } else {
+        itemPurchaseImpossibleAlert();
+      }
+    });
   }
 
   void onClickPurchaseItem() {
@@ -136,7 +179,6 @@ class ShopController extends GetxController {
   }
 
   void onClickSortingMenu(checkedData) {
-    print(checkedData);
     isSelectedSortValue.value = checkedData;
   }
 
@@ -147,6 +189,12 @@ class ShopController extends GetxController {
 
   void onClickConfirmSortValue(confirmData) {
     isSelectedSortString.value = confirmData['title'];
+    getShopItemsList();
+    Get.back();
+  }
+
+  void onClickConfirmFilterValue() {
+    getShopItemsList();
     Get.back();
   }
 
@@ -154,229 +202,68 @@ class ShopController extends GetxController {
     Get.back();
   }
 
-  void getShopItems() {
-    shopItemsList.value = [
-      ShopItemModel(
-        id: 1,
-        name: '기본 블루 장갑',
-        price: 10004,
-        itemImageUrl: 'assets/images/@temp_son.png',
-        itemGrade: 'UNCOMMON',
-        itemCategory: 'ACCESSORY',
-        staminaReduceRate: '80-88',
-        durability: '80-88',
-        rewardRate: '80-88',
-        description: '테스트',
-      ),
-      ShopItemModel(
-        id: 2,
-        name: '기본 블루 신발',
-        price: 10124,
-        itemImageUrl: 'assets/images/@temp_bal.png',
-        itemGrade: 'RARE',
-        itemCategory: 'SHOES',
-        staminaReduceRate: '80-88',
-        durability: '80-88',
-        rewardRate: '80-88',
-        description:
-            '테스트테스트테스트테스트테스트테스트테스트테스트테스트테스트테스트테스트테스트테스트테스트테스트테스트테스트테스트테스트테스트테스트테스트테스트테스트테스트테스트테스트테스트테스트테스트테스트테스트테스트테스트테스트테스트테스트테스트테스트테스트테스트테스트테스트테스트테스트테스트테스트테스트테스트테스트테스트테스트테스트테스트테스트테스트테스트테스트테스트테스트테스트테스트테스트테스트테스트테스트테스트테스트테스트테스트테스트테스트테스트테스트테스트테스트테스트테스트테스트테스트테스트테스트테스트테스트테스트테스트테스트테스트테스트테스트테스트테스트테스트테스트테스트테스트테스트테스트테스트테스트테스트테스트테스트테스트테스트테스트테스트테스트테스트테스트테스트테스트테스트테스트테스트테스트테스트테스트테스트테스트테스트테스트테스트테스트테스트테스트테스트테스트테스트테스트테스트테스트테스트테스트테스트테스트테스트테스트테스트테스트',
-      ),
-      ShopItemModel(
-        id: 1,
-        name: '기본 블루 장갑',
-        price: 10004,
-        itemImageUrl: 'assets/images/@temp_son.png',
-        itemGrade: 'UNCOMMON',
-        itemCategory: 'ACCESSORY',
-        staminaReduceRate: '80-88',
-        durability: '80-88',
-        rewardRate: '80-88',
-        description: '테스트',
-      ),
-      ShopItemModel(
-        id: 2,
-        name: '기본 블루 신발',
-        price: 10124,
-        itemImageUrl: 'assets/images/@temp_bal.png',
-        itemGrade: 'RARE',
-        itemCategory: 'SHOES',
-        staminaReduceRate: '80-88',
-        durability: '80-88',
-        rewardRate: '80-88',
-        description:
-            '테스트테스트테스트테스트테스트테스트테스트테스트테스트테스트테스트테스트테스트테스트테스트테스트테스트테스트테스트테스트테스트테스트테스트테스트테스트테스트테스트테스트테스트테스트테스트테스트테스트테스트테스트테스트테스트테스트테스트테스트테스트테스트테스트테스트테스트테스트테스트테스트테스트테스트테스트테스트테스트테스트테스트테스트테스트테스트테스트테스트테스트테스트테스트테스트테스트테스트테스트테스트테스트테스트테스트테스트테스트테스트테스트테스트테스트테스트테스트테스트테스트테스트테스트테스트테스트테스트테스트테스트테스트테스트테스트테스트테스트테스트테스트테스트테스트테스트테스트테스트테스트테스트테스트테스트테스트테스트테스트테스트테스트테스트테스트테스트테스트테스트테스트테스트테스트테스트테스트테스트테스트테스트테스트테스트테스트테스트테스트테스트테스트테스트테스트테스트테스트테스트테스트테스트테스트테스트테스트테스트테스트',
-      ),
-      ShopItemModel(
-        id: 1,
-        name: '기본 블루 장갑',
-        price: 10004,
-        itemImageUrl: 'assets/images/@temp_son.png',
-        itemGrade: 'UNCOMMON',
-        itemCategory: 'ACCESSORY',
-        staminaReduceRate: '80-88',
-        durability: '80-88',
-        rewardRate: '80-88',
-        description: '테스트',
-      ),
-      ShopItemModel(
-        id: 2,
-        name: '기본 블루 신발',
-        price: 10124,
-        itemImageUrl: 'assets/images/@temp_bal.png',
-        itemGrade: 'RARE',
-        itemCategory: 'SHOES',
-        staminaReduceRate: '80-88',
-        durability: '80-88',
-        rewardRate: '80-88',
-        description:
-            '테스트테스트테스트테스트테스트테스트테스트테스트테스트테스트테스트테스트테스트테스트테스트테스트테스트테스트테스트테스트테스트테스트테스트테스트테스트테스트테스트테스트테스트테스트테스트테스트테스트테스트테스트테스트테스트테스트테스트테스트테스트테스트테스트테스트테스트테스트테스트테스트테스트테스트테스트테스트테스트테스트테스트테스트테스트테스트테스트테스트테스트테스트테스트테스트테스트테스트테스트테스트테스트테스트테스트테스트테스트테스트테스트테스트테스트테스트테스트테스트테스트테스트테스트테스트테스트테스트테스트테스트테스트테스트테스트테스트테스트테스트테스트테스트테스트테스트테스트테스트테스트테스트테스트테스트테스트테스트테스트테스트테스트테스트테스트테스트테스트테스트테스트테스트테스트테스트테스트테스트테스트테스트테스트테스트테스트테스트테스트테스트테스트테스트테스트테스트테스트테스트테스트테스트테스트테스트테스트테스트테스트',
-      ),
-      ShopItemModel(
-        id: 1,
-        name: '기본 블루 장갑',
-        price: 10004,
-        itemImageUrl: 'assets/images/@temp_son.png',
-        itemGrade: 'UNCOMMON',
-        itemCategory: 'ACCESSORY',
-        staminaReduceRate: '80-88',
-        durability: '80-88',
-        rewardRate: '80-88',
-        description: '테스트',
-      ),
-      ShopItemModel(
-        id: 2,
-        name: '기본 블루 신발',
-        price: 10124,
-        itemImageUrl: 'assets/images/@temp_bal.png',
-        itemGrade: 'RARE',
-        itemCategory: 'SHOES',
-        staminaReduceRate: '80-88',
-        durability: '80-88',
-        rewardRate: '80-88',
-        description:
-            '테스트테스트테스트테스트테스트테스트테스트테스트테스트테스트테스트테스트테스트테스트테스트테스트테스트테스트테스트테스트테스트테스트테스트테스트테스트테스트테스트테스트테스트테스트테스트테스트테스트테스트테스트테스트테스트테스트테스트테스트테스트테스트테스트테스트테스트테스트테스트테스트테스트테스트테스트테스트테스트테스트테스트테스트테스트테스트테스트테스트테스트테스트테스트테스트테스트테스트테스트테스트테스트테스트테스트테스트테스트테스트테스트테스트테스트테스트테스트테스트테스트테스트테스트테스트테스트테스트테스트테스트테스트테스트테스트테스트테스트테스트테스트테스트테스트테스트테스트테스트테스트테스트테스트테스트테스트테스트테스트테스트테스트테스트테스트테스트테스트테스트테스트테스트테스트테스트테스트테스트테스트테스트테스트테스트테스트테스트테스트테스트테스트테스트테스트테스트테스트테스트테스트테스트테스트테스트테스트테스트테스트',
-      ),
-      ShopItemModel(
-        id: 1,
-        name: '기본 블루 장갑',
-        price: 10004,
-        itemImageUrl: 'assets/images/@temp_son.png',
-        itemGrade: 'UNCOMMON',
-        itemCategory: 'ACCESSORY',
-        staminaReduceRate: '80-88',
-        durability: '80-88',
-        rewardRate: '80-88',
-        description: '테스트',
-      ),
-      ShopItemModel(
-        id: 2,
-        name: '기본 블루 신발',
-        price: 10124,
-        itemImageUrl: 'assets/images/@temp_bal.png',
-        itemGrade: 'RARE',
-        itemCategory: 'SHOES',
-        staminaReduceRate: '80-88',
-        durability: '80-88',
-        rewardRate: '80-88',
-        description:
-            '테스트테스트테스트테스트테스트테스트테스트테스트테스트테스트테스트테스트테스트테스트테스트테스트테스트테스트테스트테스트테스트테스트테스트테스트테스트테스트테스트테스트테스트테스트테스트테스트테스트테스트테스트테스트테스트테스트테스트테스트테스트테스트테스트테스트테스트테스트테스트테스트테스트테스트테스트테스트테스트테스트테스트테스트테스트테스트테스트테스트테스트테스트테스트테스트테스트테스트테스트테스트테스트테스트테스트테스트테스트테스트테스트테스트테스트테스트테스트테스트테스트테스트테스트테스트테스트테스트테스트테스트테스트테스트테스트테스트테스트테스트테스트테스트테스트테스트테스트테스트테스트테스트테스트테스트테스트테스트테스트테스트테스트테스트테스트테스트테스트테스트테스트테스트테스트테스트테스트테스트테스트테스트테스트테스트테스트테스트테스트테스트테스트테스트테스트테스트테스트테스트테스트테스트테스트테스트테스트테스트테스트',
-      ),
-      ShopItemModel(
-        id: 3,
-        name: '기본 블루 장갑',
-        price: 10004,
-        itemImageUrl: 'assets/images/@temp_son.png',
-        itemGrade: 'POOR',
-        itemCategory: 'ACCESSORY',
-        staminaReduceRate: '80-88',
-        durability: '80-88',
-        rewardRate: '80-88',
-        description: '테스트',
-      ),
-      ShopItemModel(
-        id: 4,
-        name: '기본 블루 신발',
-        price: 10124,
-        itemImageUrl: 'assets/images/@temp_bal.png',
-        itemGrade: 'LEGEND',
-        itemCategory: 'SHOES',
-        staminaReduceRate: '80-88',
-        durability: '80-88',
-        rewardRate: '80-88',
-        description: '테스트',
-      ),
-      ShopItemModel(
-        id: 5,
-        name: '기본 블루 장갑',
-        price: 10004,
-        itemImageUrl: 'assets/images/@temp_son.png',
-        itemGrade: 'EPIC',
-        itemCategory: 'ACCESSORY',
-        staminaReduceRate: '80-88',
-        durability: '80-88',
-        rewardRate: '80-88',
-        description: '테스트',
-      ),
-      ShopItemModel(
-        id: 6,
-        name: '기본 블루 신발',
-        price: 10124,
-        itemImageUrl: 'assets/images/@temp_bal.png',
-        itemGrade: 'RARE',
-        itemCategory: 'SHOES',
-        staminaReduceRate: '80-88',
-        durability: '80-88',
-        rewardRate: '80-88',
-        description: '테스트',
-      ),
-      ShopItemModel(
-        id: 7,
-        name: '기본 블루 장갑',
-        price: 10004,
-        itemImageUrl: 'assets/images/@temp_son.png',
-        itemGrade: 'UNCOMMON',
-        itemCategory: 'ACCESSORY',
-        staminaReduceRate: '80-88',
-        durability: '80-88',
-        rewardRate: '80-88',
-        description: '테스트',
-      ),
-      ShopItemModel(
-        id: 8,
-        name: '기본 블루 신발',
-        price: 10124,
-        itemImageUrl: 'assets/images/@temp_bal.png',
-        itemGrade: 'RARE',
-        itemCategory: 'SHOES',
-        staminaReduceRate: '80-88',
-        durability: '80-88',
-        rewardRate: '80-88',
-        description: '테스트',
-      ),
-      ShopItemModel(
-        id: 9,
-        name: '기본 블루 장갑',
-        price: 10004,
-        itemImageUrl: 'assets/images/@temp_son.png',
-        itemGrade: 'UNCOMMON',
-        itemCategory: 'ACCESSORY',
-        staminaReduceRate: '80-88',
-        durability: '80-88',
-        rewardRate: '80-88',
-        description: '테스트',
-      ),
-      ShopItemModel(
-        id: 10,
-        name: '기본 블루 신발',
-        price: 10124,
-        itemImageUrl: 'assets/images/@temp_bal.png',
-        itemGrade: 'RARE',
-        itemCategory: 'SHOES',
-        staminaReduceRate: '80-88',
-        durability: '80-88',
-        rewardRate: '80-88',
-        description: '테스트',
-      ),
-    ];
+  void closeItemFilterPopup() {
+    List newFilteredCategory = [...filteredCategory];
+    List newFilteredGrade = [...filteredGrade];
+    if (isFilteredItems.value) {
+      selectedCategory.value = newFilteredCategory;
+      selectedGrade.value = newFilteredGrade;
+      isSelectAllItems.value = false;
+    } else {
+      initItemsFilter();
+    }
+
+    Get.back();
+  }
+
+  void initItemsFilter() {
+    selectedCategory.value = [];
+    selectedGrade.value = [];
+    isSelectAllItems.value = true;
+  }
+
+  void onSelectCategory(category) {
+    isSelectAllItems.value = false;
+    if (selectedCategory.any((element) => element == category)) {
+      selectedCategory.removeWhere((item) => item == category);
+    } else {
+      selectedCategory.add(category);
+    }
+
+    if (selectedCategory.isEmpty && selectedGrade.isEmpty) isSelectAllItems.value = true;
+  }
+
+  void onSelectGrade(grade) {
+    isSelectAllItems.value = false;
+    if (selectedGrade.any((element) => element == grade)) {
+      selectedGrade.removeWhere((item) => item == grade);
+    } else {
+      selectedGrade.add(grade);
+    }
+    if (selectedCategory.isEmpty && selectedGrade.isEmpty) isSelectAllItems.value = true;
+  }
+
+  void onSelectAllItems() {
+    initItemsFilter();
+    isSelectAllItems.value = true;
+  }
+
+  void getShopItemsList() async {
+    dataGetLoading.value = true;
+    await ShopService.getShopItems(isSelectedSortValue.value['value'], selectedGrade.join(','), selectedCategory.join(','), successCallback: (List<ShopItemModel> items) {
+      List newSelectedCategory = [...selectedCategory];
+      List newSelectedGrade = [...selectedGrade];
+      shopItemsList.value = items;
+      if (selectedGrade.join(',') != '' || selectedCategory.join(',') != '') {
+        isFilteredItems.value = true;
+        filteredCategory.value = newSelectedCategory;
+        filteredGrade.value = newSelectedGrade;
+      } else {
+        isSelectAllItems.value = true;
+        isFilteredItems.value = false;
+      }
+
+      dataGetLoading.value = false;
+    });
   }
 }

@@ -13,6 +13,8 @@ SvgPicture iconExclamationMark = SvgPicture.asset('assets/images/common/ico_circ
 SvgPicture iconArrowDown = SvgPicture.asset('assets/images/common/ico_arrow_down.svg', width: 6.2.sp, height: 6.2.sp);
 SvgPicture iconSortChecked = SvgPicture.asset('assets/images/common/ico_sort_checked.svg', width: 16.sp, height: 11.sp);
 SvgPicture iconShopFilter = SvgPicture.asset('assets/images/common/ico_item_filter.svg', width: 18.sp, height: 16.sp);
+SvgPicture iconShopFilterActive = SvgPicture.asset('assets/images/common/ico_item_filter_active.svg', width: 18.sp, height: 16.sp);
+SvgPicture iconShopEmpty = SvgPicture.asset('assets/images/common/ico_shop_list_none.svg', width: 90.sp, height: 90.sp);
 
 // Bottom Navigation Icon
 SvgPicture iconMenuHome = SvgPicture.asset('assets/images/common/ico_menu_home.svg', width: 20.5.sp, height: 20.sp, color: lightGrayColor);

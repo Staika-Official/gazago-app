@@ -731,17 +731,17 @@ void itemPurchaseAlert(ShopController controller, double remainMyTik) {
       return Column(
         children: [
           Padding(
-            padding: const EdgeInsets.only(top: 22.0, bottom: 70),
+            padding: EdgeInsets.only(top: 22.0.sp, bottom: 70.sp),
             child: Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 StyledText(
-                  '${controller.selectedItem.value.price.toString()} ',
+                  '${formatDecimalPlaces(controller.selectedItem.value.price, 0)} ',
                   fontSize: 30,
                   lineHeight: 32,
                   fontWeight: 600,
                 ),
-                StyledText(
+                const StyledText(
                   'TIK',
                   fontSize: 30,
                   lineHeight: 32,
@@ -753,14 +753,14 @@ void itemPurchaseAlert(ShopController controller, double remainMyTik) {
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              StyledText(
+              const StyledText(
                 'GO 보상율',
                 fontSize: 18,
                 lineHeight: 32,
                 fontWeight: 600,
               ),
               StyledText(
-                '${controller.selectedItem.value.rewardRate}%',
+                '${formatDecimalPlaces(controller.selectedItem.value.fromRewardRate, 0)}-${formatDecimalPlaces(controller.selectedItem.value.toRewardRate, 0)}%',
                 fontSize: 18,
                 lineHeight: 32,
                 fontWeight: 400,
@@ -770,47 +770,47 @@ void itemPurchaseAlert(ShopController controller, double remainMyTik) {
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              StyledText(
+              const StyledText(
                 '체력 감소율',
                 fontSize: 18,
                 lineHeight: 32,
                 fontWeight: 600,
               ),
               StyledText(
-                '${controller.selectedItem.value.staminaReduceRate}%',
+                '${formatDecimalPlaces(controller.selectedItem.value.fromStaminaReduceRate, 0)}-${formatDecimalPlaces(controller.selectedItem.value.toStaminaReduceRate, 0)}%',
                 fontSize: 18,
                 lineHeight: 32,
                 fontWeight: 400,
               ),
             ],
           ),
-          if (controller.selectedItem.value.durability != null)
+          if (controller.selectedItem.value.itemCategory == 'SHOES')
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                StyledText(
+                const StyledText(
                   '내구도 감소율',
                   fontSize: 18,
                   lineHeight: 32,
                   fontWeight: 600,
                 ),
                 StyledText(
-                  '${controller.selectedItem.value.durability}%',
+                  '${formatDecimalPlaces(controller.selectedItem.value.fromAbrasionRate, 0)}-${formatDecimalPlaces(controller.selectedItem.value.toAbrasionRate, 0)}%',
                   fontSize: 18,
                   lineHeight: 32,
                   fontWeight: 400,
                 ),
               ],
             ),
-          const Divider(
-            height: 40,
-            thickness: 2.0,
-            color: Color(0xFF494B56),
+          Divider(
+            height: 40.sp,
+            thickness: 2.0.sp,
+            color: const Color(0xFF494B56),
           ),
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              StyledText(
+              const StyledText(
                 '잔액',
                 fontSize: 18,
                 lineHeight: 18,
@@ -851,7 +851,7 @@ void itemPurchaseAlert(ShopController controller, double remainMyTik) {
       ),
       Expanded(
         child: GazagoButton(
-          onTap: () => null,
+          onTap: () => controller.handlePurchaseShopItem(controller.selectedItem.value.id),
           buttonText: '구매',
           buttonColor: skyBlueColor,
         ),
@@ -869,7 +869,7 @@ void itemPurchaseShortBalanceAlert(ShopController controller, double remainMyTik
       return Column(
         children: [
           Padding(
-            padding: const EdgeInsets.only(top: 22.0, bottom: 70),
+            padding: EdgeInsets.only(top: 22.0.sp, bottom: 70.sp),
             child: Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
@@ -879,7 +879,7 @@ void itemPurchaseShortBalanceAlert(ShopController controller, double remainMyTik
                   lineHeight: 32,
                   fontWeight: 600,
                 ),
-                StyledText(
+                const StyledText(
                   'TIK',
                   fontSize: 30,
                   lineHeight: 32,
@@ -891,14 +891,14 @@ void itemPurchaseShortBalanceAlert(ShopController controller, double remainMyTik
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              StyledText(
+              const StyledText(
                 'GO 보상율',
                 fontSize: 18,
                 lineHeight: 32,
                 fontWeight: 600,
               ),
               StyledText(
-                '${controller.selectedItem.value.rewardRate}%',
+                '${formatDecimalPlaces(controller.selectedItem.value.fromRewardRate, 0)}-${formatDecimalPlaces(controller.selectedItem.value.toRewardRate, 0)}%',
                 fontSize: 18,
                 lineHeight: 32,
                 fontWeight: 400,
@@ -908,42 +908,42 @@ void itemPurchaseShortBalanceAlert(ShopController controller, double remainMyTik
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              StyledText(
+              const StyledText(
                 '체력 감소율',
                 fontSize: 18,
                 lineHeight: 32,
                 fontWeight: 600,
               ),
               StyledText(
-                '${controller.selectedItem.value.staminaReduceRate}%',
+                '${formatDecimalPlaces(controller.selectedItem.value.fromStaminaReduceRate, 0)}-${formatDecimalPlaces(controller.selectedItem.value.toStaminaReduceRate, 0)}%',
                 fontSize: 18,
                 lineHeight: 32,
                 fontWeight: 400,
               ),
             ],
           ),
-          if (controller.selectedItem.value.durability != null)
+          if (controller.selectedItem.value.itemCategory == 'SHOES')
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                StyledText(
+                const StyledText(
                   '내구도 감소율',
                   fontSize: 18,
                   lineHeight: 32,
                   fontWeight: 600,
                 ),
                 StyledText(
-                  '${controller.selectedItem.value.durability}%',
+                  '${formatDecimalPlaces(controller.selectedItem.value.fromAbrasionRate, 0)}-${formatDecimalPlaces(controller.selectedItem.value.toAbrasionRate, 0)}%',
                   fontSize: 18,
                   lineHeight: 32,
                   fontWeight: 400,
                 ),
               ],
             ),
-          const Divider(
-            height: 40,
-            thickness: 2.0,
-            color: Color(0xFF494B56),
+          Divider(
+            height: 40.sp,
+            thickness: 2.0.sp,
+            color: const Color(0xFF494B56),
           ),
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -1000,10 +1000,16 @@ void itemPurchaseCompleteAlert(ShopController controller) {
             padding: EdgeInsets.symmetric(vertical: 40.0.sp),
             child: Column(
               children: [
-                Image(
-                  image: AssetImage(controller.selectedItem.value.itemImageUrl),
-                  width: 100.sp,
-                  fit: BoxFit.none,
+                // Image(
+                //   image: AssetImage(controller.purchaseCompleteItem.value.itemImageUrl!),
+                //   width: 100.sp,
+                //   fit: BoxFit.none,
+                // ),
+                CachedNetworkImage(
+                  imageUrl: controller.purchaseCompleteItem.value.itemImageUrl!,
+                  fit: BoxFit.fill,
+                  placeholder: (context, url) => const CircularProgressIndicator(),
+                  errorWidget: (context, url, error) => Image.asset("assets/images/@temp_badge.png"),
                 ),
               ],
             ),
@@ -1017,7 +1023,7 @@ void itemPurchaseCompleteAlert(ShopController controller) {
                 CircleAvatar(
                   radius: 9,
                   child: StyledText(
-                    controller.selectedItem.value.itemGrade[0],
+                    controller.purchaseCompleteItem.value.itemGrade[0],
                     color: Colors.black.withOpacity(0.6),
                     fontWeight: 600,
                   ),
@@ -1025,7 +1031,7 @@ void itemPurchaseCompleteAlert(ShopController controller) {
                 Padding(
                   padding: EdgeInsets.only(left: 5.0.sp),
                   child: StyledText(
-                    controller.selectedItem.value.name,
+                    controller.purchaseCompleteItem.value.itemName,
                     fontSize: 18,
                     lineHeight: 20,
                     fontWeight: 500,
@@ -1059,7 +1065,7 @@ void itemPurchaseCompleteAlert(ShopController controller) {
                             mainAxisAlignment: MainAxisAlignment.center,
                             children: [
                               StyledText(
-                                controller.selectedItem.value.rewardRate,
+                                formatDecimalPlaces(controller.purchaseCompleteItem.value.rewardRate, 0),
                                 fontSize: 22,
                                 lineHeight: 26,
                                 fontWeight: 500,
@@ -1104,7 +1110,7 @@ void itemPurchaseCompleteAlert(ShopController controller) {
                             mainAxisAlignment: MainAxisAlignment.center,
                             children: [
                               StyledText(
-                                controller.selectedItem.value.durability,
+                                formatDecimalPlaces(controller.purchaseCompleteItem.value.abrasionRate, 0),
                                 fontSize: 22,
                                 lineHeight: 26,
                                 fontWeight: 500,
@@ -1150,7 +1156,7 @@ void itemPurchaseCompleteAlert(ShopController controller) {
                             mainAxisAlignment: MainAxisAlignment.center,
                             children: [
                               StyledText(
-                                controller.selectedItem.value.staminaReduceRate,
+                                formatDecimalPlaces(controller.purchaseCompleteItem.value.staminaReduceRate, 0),
                                 fontSize: 22,
                                 lineHeight: 26,
                                 fontWeight: 500,
@@ -1334,131 +1340,139 @@ void itemFilterListAlert(ShopController controller) {
         mainAxisAlignment: MainAxisAlignment.start,
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Padding(
-            padding: EdgeInsets.only(bottom: 10.0),
-            child: Align(
-              alignment: Alignment.topRight,
-              child: InkWell(
-                onTap: () => null,
-                child: Container(
-                  decoration: BoxDecoration(
-                    color: popupBgColor,
-                    border: Border.all(
-                      width: 1,
-                      color: Colors.white,
+          Obx(() {
+            return Padding(
+              padding: EdgeInsets.only(bottom: 10.0.sp),
+              child: Align(
+                alignment: Alignment.topRight,
+                child: InkWell(
+                  onTap: () => controller.onSelectAllItems(),
+                  child: Container(
+                    decoration: BoxDecoration(
+                      color: controller.isSelectAllItems.value ? Colors.white : popupBgColor,
+                      border: Border.all(
+                        width: 1,
+                        color: Colors.white,
+                      ),
+                      borderRadius: BorderRadius.circular(20.sp),
                     ),
-                    borderRadius: BorderRadius.circular(20.sp),
-                  ),
-                  child: Padding(
-                    padding: EdgeInsets.symmetric(horizontal: 12.0.sp, vertical: 6.sp),
-                    child: StyledText(
-                      '전체',
-                      fontSize: 14,
-                      lineHeight: 16,
-                      letterSpacing: .2,
-                      fontWeight: 500,
+                    child: Padding(
+                      padding: EdgeInsets.symmetric(horizontal: 12.0.sp, vertical: 6.sp),
+                      child: StyledText(
+                        '전체',
+                        fontSize: 14,
+                        lineHeight: 16,
+                        letterSpacing: .2,
+                        fontWeight: 500,
+                        color: controller.isSelectAllItems.value ? Colors.black : Colors.white,
+                      ),
                     ),
                   ),
                 ),
               ),
-            ),
-          ),
+            );
+          }),
           Padding(
-            padding: const EdgeInsets.only(bottom: 10.0),
-            child: StyledText(
+            padding: EdgeInsets.only(bottom: 10.0.sp),
+            child: const StyledText(
               '카테고리',
               fontWeight: 500,
               fontSize: 16,
               lineHeight: 22,
             ),
           ),
-          SizedBox(
-            width: double.infinity,
-            child: Wrap(
-              children: [
-                ...controller.categoryFilterList.asMap().entries.map(
-                      (entry) => Padding(
-                        padding: EdgeInsets.only(right: 10.sp, bottom: 10.sp),
-                        child: InkWell(
-                          onTap: () => null,
-                          child: Container(
-                            decoration: BoxDecoration(
-                              color: popupBgColor,
-                              border: Border.all(
-                                width: 1,
-                                color: Colors.white,
+          Obx(() {
+            return SizedBox(
+              width: double.infinity,
+              child: Wrap(
+                children: [
+                  ...controller.categoryFilterList.asMap().entries.map(
+                        (entry) => Padding(
+                          padding: EdgeInsets.only(right: 10.sp, bottom: 10.sp),
+                          child: InkWell(
+                            onTap: () => controller.onSelectCategory(entry.value['value']),
+                            child: Container(
+                              decoration: BoxDecoration(
+                                color: controller.selectedCategory.any((element) => element == entry.value['value']) ? Colors.white : popupBgColor,
+                                border: Border.all(
+                                  width: 1,
+                                  color: Colors.white,
+                                ),
+                                borderRadius: BorderRadius.circular(20.sp),
                               ),
-                              borderRadius: BorderRadius.circular(20.sp),
-                            ),
-                            child: Padding(
-                              padding: EdgeInsets.symmetric(horizontal: 12.0.sp, vertical: 6.sp),
-                              child: StyledText(
-                                entry.value['title']!,
-                                fontSize: 14,
-                                lineHeight: 16,
-                                letterSpacing: .2,
-                                fontWeight: 500,
+                              child: Padding(
+                                padding: EdgeInsets.symmetric(horizontal: 12.0.sp, vertical: 6.sp),
+                                child: StyledText(
+                                  entry.value['title']!,
+                                  fontSize: 14,
+                                  lineHeight: 16,
+                                  letterSpacing: .2,
+                                  fontWeight: 500,
+                                  color: controller.selectedCategory.any((element) => element == entry.value['value']) ? Colors.black : Colors.white,
+                                ),
                               ),
                             ),
                           ),
                         ),
                       ),
-                    ),
-              ],
-            ),
-          ),
+                ],
+              ),
+            );
+          }),
           Padding(
-            padding: const EdgeInsets.only(bottom: 10.0, top: 20),
-            child: StyledText(
+            padding: EdgeInsets.only(bottom: 10.0.sp, top: 20.sp),
+            child: const StyledText(
               '등급',
               fontWeight: 500,
               fontSize: 16,
               lineHeight: 22,
             ),
           ),
-          SizedBox(
-            width: double.infinity,
-            child: Wrap(
-              children: [
-                ...controller.gradeFilterList.asMap().entries.map(
-                      (entry) => Padding(
-                        padding: EdgeInsets.only(right: 8.sp, bottom: 10.sp),
-                        child: InkWell(
-                          onTap: () => null,
-                          child: Container(
-                            decoration: BoxDecoration(
-                              color: popupBgColor,
-                              border: Border.all(
-                                width: 1,
-                                color: getItemGradeColor(entry.value['value']!),
+          Obx(() {
+            return SizedBox(
+              width: double.infinity,
+              child: Wrap(
+                children: [
+                  ...controller.gradeFilterList.asMap().entries.map(
+                        (entry) => Padding(
+                          padding: EdgeInsets.only(right: 8.sp, bottom: 10.sp),
+                          child: InkWell(
+                            onTap: () => controller.onSelectGrade(entry.value['value']),
+                            child: Container(
+                              decoration: BoxDecoration(
+                                color: controller.selectedGrade.any((element) => element == entry.value['value']) ? getItemGradeColor(entry.value['value']!) : popupBgColor,
+                                border: Border.all(
+                                  width: 1,
+                                  color: getItemGradeColor(entry.value['value']!),
+                                ),
+                                borderRadius: BorderRadius.circular(20.sp),
                               ),
-                              borderRadius: BorderRadius.circular(20.sp),
-                            ),
-                            child: Padding(
-                              padding: const EdgeInsets.symmetric(horizontal: 12.0, vertical: 6),
-                              child: StyledText(
-                                entry.value['title']!,
-                                fontSize: 14,
-                                lineHeight: 16,
-                                letterSpacing: .2,
-                                fontWeight: 500,
-                                color: getItemGradeColor(entry.value['value']!),
+                              child: Padding(
+                                padding: EdgeInsets.symmetric(horizontal: 12.0.sp, vertical: 6.sp),
+                                child: StyledText(
+                                  entry.value['title']!,
+                                  fontSize: 14,
+                                  lineHeight: 16,
+                                  letterSpacing: .2,
+                                  fontWeight: 500,
+                                  color: controller.selectedGrade.any((element) => element == entry.value['value']) ? Colors.black : getItemGradeColor(entry.value['value']!),
+                                ),
                               ),
                             ),
                           ),
                         ),
                       ),
-                    ),
-              ],
-            ),
-          ),
+                ],
+              ),
+            );
+          }),
         ],
       ),
     ),
     actions: [
       Expanded(
         child: GazagoButton(
-          onTap: () => Get.back(),
+          onTap: () => controller.closeItemFilterPopup(),
           buttonText: '취소',
           textColor: Colors.white,
           buttonColor: popupBgColor,
@@ -1469,7 +1483,7 @@ void itemFilterListAlert(ShopController controller) {
       ),
       Expanded(
         child: GazagoButton(
-          onTap: () => null,
+          onTap: () => controller.onClickConfirmFilterValue(),
           buttonText: '적용하기',
           buttonColor: skyBlueColor,
         ),
