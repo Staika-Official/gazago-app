@@ -40,8 +40,9 @@ class BuyTik extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 CircleAvatar(
-                  foregroundImage:
-                      controller.tik.value.meta?.logoUrl != '' ? CachedNetworkImageProvider(controller.tik.value.meta!.logoUrl) : const Svg('assets/images/common/ico_token_tik.svg') as ImageProvider,
+                  foregroundImage: controller.tik.value.logoUrl != '' && controller.tik.value.logoUrl != null
+                      ? CachedNetworkImageProvider(controller.tik.value.logoUrl!)
+                      : const Svg('assets/images/common/ico_token_tik.svg') as ImageProvider,
                   radius: 12.5.sp,
                 ),
                 Padding(
@@ -54,7 +55,7 @@ class BuyTik extends StatelessWidget {
                   ),
                 ),
                 StyledText(
-                  controller.tik.value.meta!.symbol,
+                  controller.tik.value.symbol!,
                   fontSize: 30,
                   lineHeight: 30,
                   fontWeight: 600,
@@ -300,8 +301,8 @@ class BuyTik extends StatelessWidget {
                 child: Column(
                   children: [
                     CircleAvatar(
-                      foregroundImage: controller.tik.value.meta?.logoUrl != ''
-                          ? CachedNetworkImageProvider(controller.tik.value.meta!.logoUrl)
+                      foregroundImage: controller.tik.value.logoUrl! != '' || controller.tik.value.logoUrl! != null
+                          ? CachedNetworkImageProvider(controller.tik.value.logoUrl!)
                           : const Svg('assets/images/common/ico_token_tik.svg') as ImageProvider,
                     ),
                     Container(

@@ -61,30 +61,25 @@ class WalletDetail extends StatelessWidget {
               mainAxisSize: MainAxisSize.max,
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Container(
-                  width: 8.sp,
-                  height: 8.sp,
-                  margin: EdgeInsets.only(right: 15.sp, top: 4.sp, left: 4.sp),
-                  decoration: BoxDecoration(
-                    color: skyBlueColor,
-                    borderRadius: BorderRadius.circular(8.sp),
-                  ),
+                Padding(
+                  padding: const EdgeInsets.only(left: 5, right: 8),
+                  child: transaction.type == 'IN' ? iconIn : iconOut,
                 ),
                 Expanded(
                   child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
                           StyledText(
-                            transaction.description!,
-                            fontSize: 20,
-                            lineHeight: 20,
-                            letterSpacing: -0.5,
-                            fontWeight: 600,
+                            transaction.title ?? '',
+                            fontSize: 22,
+                            lineHeight: 22,
+                            fontWeight: 500,
                           ),
                           StyledText(
-                            '${formatDecimalPlaces(double.parse(transaction.uiAmountString!), transaction.decimals!)} ${transaction.symbol!}',
+                            '${transaction.type == 'IN' ? '+' : '-'} ${formatDecimalPlaces(double.parse(transaction.uiAmountString!), transaction.decimals!)} ${transaction.symbol!}',
                             fontSize: 18,
                             lineHeight: 20,
                             letterSpacing: -0.5,
@@ -98,14 +93,14 @@ class WalletDetail extends StatelessWidget {
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
                             StyledText(
-                              formatDate(transaction.timestamp!),
+                              formatDate(transaction.createdDate!),
                               fontSize: 14,
                               lineHeight: 10,
                               fontWeight: 500,
                               color: deepGrayColor,
                             ),
                             StyledText(
-                              transaction.confirmationStatus! == 'finalized' ? '완료' : transaction.confirmationStatus!,
+                              '완료',
                               fontSize: 12,
                               lineHeight: 10,
                               fontWeight: 600,
@@ -113,7 +108,16 @@ class WalletDetail extends StatelessWidget {
                             ),
                           ],
                         ),
-                      )
+                      ),
+                      Padding(
+                        padding: EdgeInsets.only(top: 20),
+                        child: StyledText(
+                          transaction.content ?? '',
+                          fontSize: 14,
+                          lineHeight: 10,
+                          color: lightGrayColor,
+                        ),
+                      ),
                     ],
                   ),
                 ),
@@ -131,7 +135,7 @@ class WalletDetail extends StatelessWidget {
     return Obx(() {
       return DefaultContainer(
         backgroundColor: subBg01Color,
-        titleText: controller.selectedAsset.value.meta!.name,
+        titleText: controller.selectedAsset.value.name!,
         child: Column(
           children: [
             // controller.selectedAsset.value.price!.isNotEmpty
@@ -143,9 +147,9 @@ class WalletDetail extends StatelessWidget {
             Padding(
               padding: EdgeInsets.only(top: 40.sp),
               child: CircleAvatar(
-                foregroundImage: controller.selectedAsset.value.meta?.logoUrl != ''
-                    ? CachedNetworkImageProvider(controller.selectedAsset.value.meta!.logoUrl)
-                    : const sp.Svg('assets/images/common/ico_token_tik.svg') as ImageProvider,
+                foregroundImage: controller.selectedAsset.value.logoUrl != '' && controller.selectedAsset.value.logoUrl != null
+                    ? CachedNetworkImageProvider(controller.selectedAsset.value.logoUrl!)
+                    : sp.Svg('assets/images/common/ico_token_tik.svg') as ImageProvider,
               ),
             ),
             Padding(
@@ -162,7 +166,7 @@ class WalletDetail extends StatelessWidget {
                   Padding(
                     padding: EdgeInsets.only(left: 5.sp),
                     child: StyledText(
-                      controller.selectedAsset.value.meta!.symbol,
+                      controller.selectedAsset.value.symbol! == 'TOTAL_TIK' ? 'TIK' : controller.selectedAsset.value.symbol!,
                       fontSize: 28,
                       lineHeight: 28,
                       fontWeight: 500,
@@ -206,14 +210,53 @@ class WalletDetail extends StatelessWidget {
                         ),
                       );
                     })
-                  : SingleChildScrollView(
-                      physics: const ClampingScrollPhysics(),
-                      child: Padding(
-                        padding: EdgeInsets.symmetric(horizontal: 16.sp),
-                        child: Column(
-                          children: [...renderTransactionList(controller)],
+                  : Stack(
+                      children: [
+                        SingleChildScrollView(
+                          controller: controller.transactionScrollController,
+                          physics: const ClampingScrollPhysics(),
+                          child: Padding(
+                            padding: EdgeInsets.symmetric(horizontal: 16.sp),
+                            child: Column(
+                              children: [...renderTransactionList(controller)],
+                            ),
+                          ),
                         ),
-                      ),
+                        if (controller.transactionScrollPosition.value > 100)
+                          Positioned(
+                            bottom: 60,
+                            right: 30,
+                            child: Material(
+                              color: Colors.transparent,
+                              child: Ink(
+                                width: 50,
+                                height: 50,
+                                decoration: BoxDecoration(color: skyBlueColor, borderRadius: BorderRadius.circular(50), border: Border.all(color: Colors.black), boxShadow: [
+                                  BoxShadow(
+                                    color: Colors.black,
+                                    offset: Offset(0, 2),
+                                    blurRadius: 0.0,
+                                    spreadRadius: 0.0,
+                                  ),
+                                ]),
+                                child: InkWell(
+                                  onTap: () => controller.transactionScrollController.animateTo(
+                                    0,
+                                    duration: Duration(
+                                      milliseconds: 100,
+                                    ),
+                                    curve: Curves.easeIn,
+                                  ),
+                                  borderRadius: BorderRadius.circular(50),
+                                  child: Padding(
+                                    padding: EdgeInsets.all(14),
+                                    child: iconUp,
+                                  ),
+                                ),
+                              ),
+                            ),
+                          )
+                      ],
                     ),
             ),
           ],
