@@ -5,12 +5,12 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg_provider/flutter_svg_provider.dart';
 import 'package:gaza_go/platform/helpers/base_helper.dart';
-import 'package:gaza_go/platform/models/asset_token_balance_ui_model.dart';
+import 'package:gaza_go/platform/models/asset_token_balance_model.dart';
 import 'package:gaza_go/presentations/styles/colors.dart';
 import 'package:gaza_go/presentations/styles/styled_text.dart';
 
 class AssetItemCoin extends StatelessWidget {
-  final AssetTokenBalanceUiModel asset;
+  final AssetTokenBalanceModel asset;
   final VoidCallback onTap;
   final VoidCallback? onTapButton;
   final String? buttonText;
@@ -50,9 +50,9 @@ class AssetItemCoin extends StatelessWidget {
                 children: [
                   CircleAvatar(
                     radius: 19.sp,
-                    foregroundImage: asset.meta?.logoUrl != ''
+                    foregroundImage: asset.logoUrl != null && asset.logoUrl != ''
                         ? CachedNetworkImageProvider(
-                            asset.meta!.logoUrl,
+                            asset.logoUrl!,
                           )
                         : const Svg('assets/images/common/ico_token_tik.svg') as ImageProvider,
                   ),
@@ -60,7 +60,7 @@ class AssetItemCoin extends StatelessWidget {
                     child: Padding(
                       padding: EdgeInsets.symmetric(horizontal: 10.sp),
                       child: StyledText(
-                        asset.meta!.name,
+                        asset.name!,
                         fontSize: 18,
                         lineHeight: 18,
                         fontWeight: 500,
@@ -83,7 +83,7 @@ class AssetItemCoin extends StatelessWidget {
                           Padding(
                             padding: const EdgeInsets.only(left: 3),
                             child: StyledText(
-                              asset.meta!.symbol,
+                              asset.symbol == 'TOTAL_TIK' ? 'TIK' : asset.symbol!,
                               fontSize: 18,
                               lineHeight: 20,
                               letterSpacing: 0.5,

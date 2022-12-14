@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:gaza_go/constants/enums.dart';
@@ -8,6 +10,7 @@ import 'package:gaza_go/presentations/styles/colors.dart';
 import 'package:gaza_go/presentations/styles/icons.dart';
 import 'package:gaza_go/presentations/styles/styled_text.dart';
 import 'package:get/get.dart';
+import 'package:lottie/lottie.dart';
 import 'package:simple_animations/simple_animations.dart';
 
 class ActivityHome extends StatelessWidget {
@@ -335,7 +338,14 @@ class ActivityHome extends StatelessWidget {
     ActivityController controller = Get.find();
 
     final challengeMovie = MovieTween()
-      ..tween('scale', Tween(begin: 1.0, end: 1.1), duration: const Duration(seconds: 1)).thenTween('scale', Tween(begin: 1.1, end: 1.0), duration: const Duration(seconds: 1));
+      ..scene(begin: Duration(seconds: 1), duration: Duration(seconds: 2))
+          .thenTween('width', Tween<double>(begin: 70, end: 250), duration: const Duration(milliseconds: 300), curve: Curves.easeOut)
+          .tween('opacity', Tween<double>(begin: 0, end: 1), curve: Curves.easeOut)
+          .thenFor(duration: Duration(seconds: 3))
+          .thenTween('opacity', Tween<double>(begin: 1, end: 0), duration: const Duration(milliseconds: 300), curve: Curves.easeOut)
+          .tween('width', Tween<double>(begin: 250, end: 70), curve: Curves.easeOut)
+          .thenTween('bottom', Tween<double>(begin: 0, end: 10), duration: const Duration(milliseconds: 300), curve: Curves.easeOut)
+          .thenTween('bottom', Tween<double>(begin: 10, end: 0), duration: const Duration(milliseconds: 300), curve: Curves.easeIn);
 
     return LayoutBuilder(
       builder: (context, constraint) {
@@ -529,23 +539,91 @@ class ActivityHome extends StatelessWidget {
                               }),
                             ),
                             Positioned(
-                                bottom: 10,
+                                bottom: 0,
                                 right: 0,
-                                child: LoopAnimationBuilder<Movie>(
-                                  tween: challengeMovie, // 0° to 360° (2π)
-                                  duration: challengeMovie.duration, // for 2 seconds per iteration
-                                  builder: (context, value, _) {
-                                    return Transform.scale(
-                                        scale: value.get('scale'),
-                                        child: FloatingActionButton(
-                                          backgroundColor: Colors.transparent,
-                                          onPressed: () {
-                                            controller.moveToChallengeMap();
-                                          },
-                                          child: iconChallengeList,
-                                        ));
-                                  },
-                                )),
+                                child: Obx(() {
+                                  return CustomAnimationBuilder<Movie>(
+                                    control: controller.challengeLoadControl.value,
+                                    tween: challengeMovie,
+                                    duration: challengeMovie.duration,
+                                    builder: (context, value, _) {
+                                      return InkWell(
+                                        onTap: () {
+                                          controller.moveToChallengeMap();
+                                        },
+                                        child: Container(
+                                          width: value.get('width'),
+                                          height: 70,
+                                          decoration: BoxDecoration(
+                                            border: Border.all(color: Colors.black, width: 2),
+                                            borderRadius: BorderRadius.circular(35),
+                                            color: skyBlueColor,
+                                          ),
+                                          child: Stack(
+                                            clipBehavior: Clip.none,
+                                            fit: StackFit.expand,
+                                            children: [
+                                              Opacity(
+                                                opacity: value.get('opacity'),
+                                                child: Row(
+                                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                                  children: [
+                                                    InkWell(
+                                                      onTap: () {
+                                                        print('hello!!!!!!!!!!!!!!');
+                                                        print(challengeMovie.duration);
+                                                        controller.challengeLoadControl.value = Control.playReverseFromEnd;
+                                                        Timer(Duration.zero, () {
+                                                          controller.challengeLoadControl.value = Control.stop;
+                                                        });
+                                                      },
+                                                      child: Padding(
+                                                        padding: const EdgeInsets.only(
+                                                          left: 20,
+                                                          top: 20,
+                                                        ),
+                                                        child: iconCloseChallenge,
+                                                      ),
+                                                    ),
+                                                    const Expanded(
+                                                      child: Padding(
+                                                        padding: EdgeInsets.only(
+                                                          left: 12,
+                                                          top: 15,
+                                                        ),
+                                                        child: StyledText(
+                                                          '도전할 챌린지를\n찾아보세요',
+                                                          fontSize: 16,
+                                                          lineHeight: 20,
+                                                          fontWeight: 600,
+                                                          color: Colors.black,
+                                                        ),
+                                                      ),
+                                                    )
+                                                  ],
+                                                ),
+                                              ),
+                                              Positioned(
+                                                bottom: value.get('bottom'),
+                                                right: 0,
+                                                child: Lottie.asset(
+                                                  'assets/lottie/flag.json',
+                                                  width: 70,
+                                                  height: 70,
+                                                  repeat: false,
+                                                  // controller: controller.challengeGuideController,
+                                                  // onLoaded: (composition) {
+                                                  //   controller.challengeGuideController..play();
+                                                  // },
+                                                ),
+                                              ),
+                                            ],
+                                          ),
+                                        ),
+                                      );
+                                    },
+                                  );
+                                })),
                           ],
                         ),
                       ),

@@ -71,24 +71,19 @@ class HomeMenuController extends SuperController {
     if (visitedTabs.any((tabIndex) => tabIndex == index) && prevIndex.value != index) {
       switch (index) {
         case 0:
-          ArchiveController archiveController = Get.find();
-          archiveController.refreshController();
+          if (Get.isRegistered<ArchiveController>()) Get.find<ArchiveController>().refreshController();
           break;
         case 1:
-          InventoryController inventoryController = Get.find();
-          inventoryController.refreshController();
+          if (Get.isRegistered<InventoryController>()) Get.find<InventoryController>().refreshController();
           break;
         case 2:
-          ActivityController activityController = Get.find();
-          activityController.refreshController();
+          if (Get.isRegistered<ActivityController>()) Get.find<ActivityController>().refreshController();
           break;
         case 3:
-          ShopController shopController = Get.find();
-          shopController.refreshController();
+          if (Get.isRegistered<ShopController>()) Get.find<ShopController>().refreshController();
           break;
         case 4:
-          LeaderboardController leaderboardController = Get.find();
-          leaderboardController.refreshController();
+          if (Get.isRegistered<LeaderboardController>()) Get.find<LeaderboardController>().refreshController();
           break;
       }
     } else {

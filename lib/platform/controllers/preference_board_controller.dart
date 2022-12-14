@@ -1,8 +1,7 @@
+import 'package:gaza_go/constants/routes.dart';
 import 'package:gaza_go/platform/models/term_item_model.dart';
 import 'package:gaza_go/platform/services/board_service.dart';
 import 'package:get/get.dart';
-
-import '../../constants/routes.dart';
 
 class PreferenceBoardController extends GetxController {
   RxString boardType = RxString('');

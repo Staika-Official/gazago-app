@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+
 import 'package:gaza_go/presentations/styles/colors.dart';
 
 // Common Icons
@@ -54,6 +55,8 @@ SvgPicture iconActivityStoryTaika = SvgPicture.asset('assets/images/activity/ico
 SvgPicture iconStamina = SvgPicture.asset('assets/images/activity/ico_stamina.svg', width: 12.sp, height: 18.sp);
 SvgPicture iconShoes = SvgPicture.asset('assets/images/activity/ico_shoes.svg', width: 15.sp, height: 14.sp);
 SvgPicture iconChallengeList = SvgPicture.asset('assets/images/activity/ico_challenge_list.svg', width: 70.sp, height: 70.sp);
+SvgPicture iconChallengeFlag = SvgPicture.asset('assets/images/activity/ico_challenge_flag.svg', width: 58.sp, height: 55.sp);
+SvgPicture iconCloseChallenge = SvgPicture.asset('assets/images/activity/ico_close.svg', width: 17.sp, height: 17.sp);
 SvgPicture iconChallengeCheckOn = SvgPicture.asset('assets/images/activity/ico_challenge_checked.svg', width: 16.sp, height: 11.sp);
 SvgPicture iconChallengeCheckOff = SvgPicture.asset('assets/images/activity/ico_challenge_unchecked.svg', width: 16.sp, height: 11.sp);
 SvgPicture iconChallengeScreenBack = SvgPicture.asset('assets/images/activity/ico_challenge_screen_back.svg', width: 57.sp, height: 56.sp);
@@ -94,7 +97,11 @@ SvgPicture iconEmpty = SvgPicture.asset('assets/images/wallet/ico_empty.svg', wi
 SvgPicture iconIn = SvgPicture.asset('assets/images/wallet/ico_in.svg', width: 20.sp, height: 20.sp);
 SvgPicture iconOut = SvgPicture.asset('assets/images/wallet/ico_out.svg', width: 20.sp, height: 20.sp);
 
+
 //shop
 SvgPicture iconShopStamina = SvgPicture.asset('assets/images/shop/ico_stat_stamina.svg', width: 14.sp, height: 14.sp, color: Colors.black);
 SvgPicture iconShopDurability = SvgPicture.asset('assets/images/shop/ico_stat_durability.svg', width: 14.sp, height: 14.sp, color: Colors.black);
 SvgPicture iconShopReward = SvgPicture.asset('assets/images/shop/ico_go_reward.svg', width: 14.sp, height: 14.sp, color: Colors.black);
+
+SvgPicture iconUp = SvgPicture.asset('assets/images/wallet/ico_up.svg', width: 22.sp, height: 22.sp);
+

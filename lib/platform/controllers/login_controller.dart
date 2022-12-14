@@ -41,38 +41,43 @@ class LoginController extends GetxController {
   }
 
   Future<void> signInWithGoogle() async {
-    // Trigger the authentication flow
-    final GoogleSignInAccount? googleUser = await GoogleSignIn(scopes: [
-      'email',
-      'profile',
-    ]).signIn();
+    try {
+      final GoogleSignInAccount? googleUser = await GoogleSignIn(scopes: [
+        'email',
+        'profile',
+      ]).signIn();
 
-    // Obtain the auth details from the request
-    final GoogleSignInAuthentication? googleAuth = await googleUser?.authentication;
+      final GoogleSignInAuthentication? googleAuth = await googleUser?.authentication;
 
-    // Create a new credential
-    final credential = GoogleAuthProvider.credential(
-      accessToken: googleAuth?.accessToken,
-      idToken: googleAuth?.idToken,
-    );
+      // Create a new credential
+      final credential = GoogleAuthProvider.credential(
+        accessToken: googleAuth?.accessToken,
+        idToken: googleAuth?.idToken,
+      );
 
-    await requestLogin(LoginType.google, credential.idToken!);
+      await requestLogin(LoginType.google, credential.idToken!);
+    } catch (e) {
+      print(e);
+    }
   }
 
   Future<void> signInWithApple() async {
-    final appleCredential = await SignInWithApple.getAppleIDCredential(
-      scopes: [
-        AppleIDAuthorizationScopes.email,
-        AppleIDAuthorizationScopes.fullName,
-      ],
-    );
+    try {
+      final appleCredential = await SignInWithApple.getAppleIDCredential(
+        scopes: [
+          AppleIDAuthorizationScopes.email,
+          AppleIDAuthorizationScopes.fullName,
+        ],
+      );
 
-    final credential = OAuthProvider("apple.com").credential(
-      accessToken: appleCredential.authorizationCode,
-      idToken: appleCredential.identityToken,
-    );
-
-    await requestLogin(LoginType.apple, credential.accessToken!);
+      final credential = OAuthProvider("apple.com").credential(
+        accessToken: appleCredential.authorizationCode,
+        idToken: appleCredential.identityToken,
+      );
+      await requestLogin(LoginType.apple, credential.accessToken!);
+    } catch (e) {
+      print(e);
+    }
   }
 
   Future<void> getUserInfo() async {
