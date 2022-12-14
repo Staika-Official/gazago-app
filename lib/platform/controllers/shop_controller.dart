@@ -135,6 +135,7 @@ class ShopController extends GetxController {
     await ShopService.fetchPurchaseShopItem(itemId, successCallback: (ShopItemPurchaseResponseModel items) {
       purchaseCompleteItem.value = items;
       showItemPurchaseCompletePopup();
+      walletMasterController.getSpendingWalletBalances();
     }, errorCallback: (statusCode) {
       if (statusCode == 422) {
         isShortBalance.value = true;

@@ -1000,16 +1000,14 @@ void itemPurchaseCompleteAlert(ShopController controller) {
             padding: EdgeInsets.symmetric(vertical: 40.0.sp),
             child: Column(
               children: [
-                // Image(
-                //   image: AssetImage(controller.purchaseCompleteItem.value.itemImageUrl!),
-                //   width: 100.sp,
-                //   fit: BoxFit.none,
-                // ),
-                CachedNetworkImage(
-                  imageUrl: controller.purchaseCompleteItem.value.itemImageUrl!,
-                  fit: BoxFit.fill,
-                  placeholder: (context, url) => const CircularProgressIndicator(),
-                  errorWidget: (context, url, error) => Image.asset("assets/images/@temp_badge.png"),
+                SizedBox(
+                  width: 150.sp,
+                  child: CachedNetworkImage(
+                    imageUrl: controller.purchaseCompleteItem.value.itemImageUrl!,
+                    fit: BoxFit.fitWidth,
+                    placeholder: (context, url) => const CircularProgressIndicator(),
+                    errorWidget: (context, url, error) => Image.asset("assets/images/@temp_badge.png"),
+                  ),
                 ),
               ],
             ),
