@@ -254,7 +254,7 @@ class InventoryController extends GetxController with LinearProgressMixin, Inven
   }
 
   void fetchEquipItem(int itemId) async {
-    await ItemService.getItemDetailInfo(
+    await ItemService.fetchEquippedItem(
       itemId,
       successCallback: (item) {
         selectedItem.value = item;
