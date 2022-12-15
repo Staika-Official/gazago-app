@@ -14,9 +14,9 @@ class Home extends StatelessWidget {
   Widget bottomNavigationBar(HomeMenuController controller) {
     return Container(
       decoration: BoxDecoration(
-        color: controller.selectedIndex.value == 0
+        color: controller.selectedIndex.value == 2
             ? const Color(0xFF252529)
-            : controller.selectedIndex.value == 2
+            : controller.selectedIndex.value == 1
                 ? popupBgColor
                 : subBg01Color,
       ),
@@ -40,11 +40,6 @@ class Home extends StatelessWidget {
             selectedIndex: controller.selectedIndex.value,
             destinations: [
               NavigationDestination(
-                icon: iconMenuHome,
-                selectedIcon: iconMenuHomeActive,
-                label: '홈',
-              ),
-              NavigationDestination(
                 icon: iconMenuArchive,
                 selectedIcon: iconMenuArchiveActive,
                 label: '기록',
@@ -54,12 +49,16 @@ class Home extends StatelessWidget {
                 selectedIcon: iconMenuItemsActive,
                 label: '내 장비',
               ),
-              // NavigationDestination(
-              //   icon: Icon(
-              //     Icons.storefront,
-              //   ),
-              //   label: '상점',
-              // ),
+              NavigationDestination(
+                icon: iconMenuHome,
+                selectedIcon: iconMenuHomeActive,
+                label: '홈',
+              ),
+              NavigationDestination(
+                icon: iconMenuShop,
+                selectedIcon: iconMenuShopActive,
+                label: '상점',
+              ),
               NavigationDestination(
                 icon: iconMenuRanking,
                 selectedIcon: iconMenuRankingActive,

@@ -17,4 +17,5 @@ class ServiceUrl {
   static const String goWalletService = '/services/wallet-go/api';
   static const String walletService = '/services/wallet/api';
   static const String boardService = '/services/board/api';
+  static const String shopService = '/services/gazago/api/shop';
 }

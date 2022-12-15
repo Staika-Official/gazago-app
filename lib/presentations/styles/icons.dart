@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+
 import 'package:gaza_go/presentations/styles/colors.dart';
 
 // Common Icons
@@ -10,6 +11,11 @@ SvgPicture iconSliderShoe = SvgPicture.asset('assets/images/common/ico_slider_sh
 SvgPicture iconSliderStamina = SvgPicture.asset('assets/images/common/ico_slider_stamina.svg', width: 13.33.sp, height: 20.8.sp);
 SvgPicture iconCopy = SvgPicture.asset('assets/images/common/ico_copy.svg', width: 12.33.sp, height: 14.2.sp);
 SvgPicture iconExclamationMark = SvgPicture.asset('assets/images/common/ico_circle_exclamation_mark.svg', width: 78.sp, height: 78.sp);
+SvgPicture iconArrowDown = SvgPicture.asset('assets/images/common/ico_arrow_down.svg', width: 6.2.sp, height: 6.2.sp);
+SvgPicture iconSortChecked = SvgPicture.asset('assets/images/common/ico_sort_checked.svg', width: 16.sp, height: 11.sp);
+SvgPicture iconShopFilter = SvgPicture.asset('assets/images/common/ico_item_filter.svg', width: 18.sp, height: 16.sp);
+SvgPicture iconShopFilterActive = SvgPicture.asset('assets/images/common/ico_item_filter_active.svg', width: 18.sp, height: 16.sp);
+SvgPicture iconShopEmpty = SvgPicture.asset('assets/images/common/ico_shop_list_none.svg', width: 90.sp, height: 90.sp);
 
 // Bottom Navigation Icon
 SvgPicture iconMenuHome = SvgPicture.asset('assets/images/common/ico_menu_home.svg', width: 20.5.sp, height: 20.sp, color: lightGrayColor);
@@ -20,6 +26,8 @@ SvgPicture iconMenuItems = SvgPicture.asset('assets/images/common/ico_menu_items
 SvgPicture iconMenuItemsActive = SvgPicture.asset('assets/images/common/ico_menu_items.svg', width: 29.sp, height: 16.sp, color: skyBlueColor);
 SvgPicture iconMenuRanking = SvgPicture.asset('assets/images/common/ico_menu_ranking.svg', width: 22.sp, height: 19.sp, color: lightGrayColor);
 SvgPicture iconMenuRankingActive = SvgPicture.asset('assets/images/common/ico_menu_ranking.svg', width: 22.sp, height: 19.sp, color: skyBlueColor);
+SvgPicture iconMenuShop = SvgPicture.asset('assets/images/common/ico_menu_shop.svg', width: 24.sp, height: 24.sp, color: lightGrayColor);
+SvgPicture iconMenuShopActive = SvgPicture.asset('assets/images/common/ico_menu_shop.svg', width: 24.sp, height: 24.sp, color: skyBlueColor);
 
 // Login
 SvgPicture iconLoginApple = SvgPicture.asset('assets/images/login/ico_apple.svg', width: 11.sp, height: 14.sp);
@@ -88,4 +96,12 @@ SvgPicture iconChevronUp = SvgPicture.asset('assets/images/preference/ico_chevro
 SvgPicture iconEmpty = SvgPicture.asset('assets/images/wallet/ico_empty.svg', width: 90.sp, height: 90.sp);
 SvgPicture iconIn = SvgPicture.asset('assets/images/wallet/ico_in.svg', width: 20.sp, height: 20.sp);
 SvgPicture iconOut = SvgPicture.asset('assets/images/wallet/ico_out.svg', width: 20.sp, height: 20.sp);
+
+
+//shop
+SvgPicture iconShopStamina = SvgPicture.asset('assets/images/shop/ico_stat_stamina.svg', width: 14.sp, height: 14.sp, color: Colors.black);
+SvgPicture iconShopDurability = SvgPicture.asset('assets/images/shop/ico_stat_durability.svg', width: 14.sp, height: 14.sp, color: Colors.black);
+SvgPicture iconShopReward = SvgPicture.asset('assets/images/shop/ico_go_reward.svg', width: 14.sp, height: 14.sp, color: Colors.black);
+
 SvgPicture iconUp = SvgPicture.asset('assets/images/wallet/ico_up.svg', width: 22.sp, height: 22.sp);
+

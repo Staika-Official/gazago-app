@@ -23,11 +23,12 @@ Color speedBlackColor = const Color(0xff1F2129);
 Color gaugeGrayColor = const Color(0xFF606167);
 Color sliderGrayColor = const Color(0xFF494954);
 
-Color gradePoorColor = const Color(0xFF596869);
-Color gradeCommonColor = const Color(0xFFCBD2D2);
-Color gradeUncommonColor = const Color(0xFF00D9CC);
-Color gradeRareColor = const Color(0xFFB163FF);
-Color gradeEpicColor = const Color(0xFF2EFFCD);
-Color gradeLegendColor = const Color(0xFFCBFF5C);
+Color gradePoorColor = const Color(0xFF96A3A5);
+Color gradeCommonColor = const Color(0xFFEEF4F4);
+Color gradeUncommonColor = const Color(0xFF1CFFBB);
+Color gradeRareColor = const Color(0xFF3EDCFF);
+Color gradeEpicColor = const Color(0xFFB163FF);
+Color gradeLegendColor = const Color(0xFFFCFF5C);
 
 Color deepBlackColor = const Color(0xFF08080B);
+Color dangerColor = const Color(0xFFFF4D4D);

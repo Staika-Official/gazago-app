@@ -33,6 +33,7 @@ import 'package:gaza_go/presentations/views/preferences/preference_board.dart';
 import 'package:gaza_go/presentations/views/preferences/terms_list.dart';
 import 'package:gaza_go/presentations/views/preferences/withdraw_completed.dart';
 import 'package:gaza_go/presentations/views/preferences/withdraw_confirm.dart';
+import 'package:gaza_go/presentations/views/shop/shop_item_detail.dart';
 import 'package:gaza_go/presentations/views/term.dart';
 import 'package:gaza_go/presentations/views/verification/index.dart';
 import 'package:gaza_go/presentations/views/wallet/buy_tik.dart';
@@ -83,6 +84,7 @@ class Routes {
   static const activityLogs = '/debugging/activity_logs';
   static const userExerciseDataLogs = '/debugging/user_exercise_data_logs';
   static const positionLowDataLogs = '/debugging/position_low_data_logs';
+  static const shopItemDetail = '/shop/item/detail';
 
   static List<GetPage> pages = [
     stepPage(name: Routes.login, page: const Login()),
@@ -133,6 +135,7 @@ class Routes {
     stepPage(name: Routes.activityLogs, page: const ActivityLogs()),
     stepPage(name: Routes.userExerciseDataLogs, page: const UserExerciseDataLogs()),
     stepPage(name: Routes.positionLowDataLogs, page: const PositionLowDataLogs()),
+    stepPage(name: Routes.shopItemDetail, page: const ShopItemDetail()),
   ];
 }
 

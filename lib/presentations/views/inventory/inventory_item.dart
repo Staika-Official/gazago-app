@@ -50,17 +50,20 @@ class InventoryItem extends StatelessWidget {
                             mainAxisAlignment: MainAxisAlignment.end,
                             crossAxisAlignment: CrossAxisAlignment.center,
                             children: [
-                              Opacity(
-                                opacity: item.equipped == true ? 0.5 : 1,
-                                child: CachedNetworkImage(
-                                  imageUrl: item.itemImageUrl,
-                                  fit: BoxFit.fitWidth,
-                                  placeholder: (context, url) => const CircularProgressIndicator(),
-                                  errorWidget: (context, url, error) => Image.asset("assets/images/@temp_badge.png"),
+                              SizedBox(
+                                height: 80.sp,
+                                child: Opacity(
+                                  opacity: item.equipped == true ? 0.5 : 1,
+                                  child: CachedNetworkImage(
+                                    imageUrl: item.itemImageUrl,
+                                    fit: BoxFit.fitHeight,
+                                    placeholder: (context, url) => const CircularProgressIndicator(),
+                                    errorWidget: (context, url, error) => Image.asset("assets/images/@temp_badge.png"),
+                                  ),
                                 ),
                               ),
                               Padding(
-                                padding: EdgeInsets.only(top: 5.sp, bottom: 5.sp),
+                                padding: EdgeInsets.only(top: 10.sp, bottom: 8.sp),
                                 child: item.equipped == true
                                     ? StyledText(
                                         item.itemName,
