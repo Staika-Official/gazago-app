@@ -137,7 +137,7 @@ class Api {
 
       await _retryFailedRequest(e, handler);
     } else {
-      if (e.response?.data != null) {
+      if (e.response?.data != null && e.response?.data != '') {
         ErrorResponseDataModel errorData = ErrorResponseDataModel.fromJson(e.response?.data);
         if (errorData.errorMessage != null) {
           showToastPopup(errorData.errorMessage!);
