@@ -298,20 +298,22 @@ class ShopItemDetail extends StatelessWidget {
                                                 fontSize: 14,
                                               ),
                                             ),
-                                            SizedBox(
-                                              height: 100.sp,
-                                              child: ListView(
-                                                children: [
-                                                  StyledText(
-                                                    controller.selectedItem.value.description.toString(),
-                                                    color: const Color(0xFFE2E2E2),
-                                                    fontWeight: 500,
-                                                    fontSize: 14,
-                                                    lineHeight: 20,
-                                                  ),
-                                                ],
-                                              ),
-                                            ),
+                                            controller.selectedItem.value.description != null
+                                                ? SizedBox(
+                                                    height: 100.sp,
+                                                    child: ListView(
+                                                      children: [
+                                                        StyledText(
+                                                          controller.selectedItem.value.description!,
+                                                          color: const Color(0xFFE2E2E2),
+                                                          fontWeight: 500,
+                                                          fontSize: 14,
+                                                          lineHeight: 20,
+                                                        ),
+                                                      ],
+                                                    ),
+                                                  )
+                                                : Container(),
                                           ],
                                         ),
                                       ),
@@ -358,7 +360,7 @@ class ShopItemDetail extends StatelessWidget {
                             fontSize: 22,
                             lineHeight: 24,
                           ),
-                          if (controller.selectedItem.value.itemLable == 'CLOSE_DEADLINE')
+                          if (controller.selectedItem.value.itemLabel == 'CLOSE_DEADLINE')
                             Padding(
                               padding: EdgeInsets.only(top: 5.0.sp),
                               child: StyledText(

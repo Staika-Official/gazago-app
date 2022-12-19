@@ -233,16 +233,7 @@ class InventoryTile extends StatelessWidget {
                 ? Positioned(
                     right: index > 1 ? 6.sp : 10.sp,
                     top: index > 1 ? 6.sp : 10.sp,
-                    child: CircleAvatar(
-                      backgroundColor: getItemGradeColor(itemGrade!),
-                      radius: 10.sp,
-                      child: StyledText(
-                        itemGrade![0],
-                        fontWeight: 600,
-                        fontFamily: 'Montserrat',
-                        color: itemGrade == 'POOR' ? const Color(0xFFffffff).withOpacity(0.6) : const Color(0xFF000000).withOpacity(0.6),
-                      ),
-                    ),
+                    child: getItemGradeCircleIcon(itemGrade!),
                   )
                 : Container(),
           ],

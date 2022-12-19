@@ -1018,14 +1018,7 @@ void itemPurchaseCompleteAlert(ShopController controller) {
               mainAxisAlignment: MainAxisAlignment.center,
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
-                CircleAvatar(
-                  radius: 9,
-                  child: StyledText(
-                    controller.purchaseCompleteItem.value.itemGrade[0],
-                    color: Colors.black.withOpacity(0.6),
-                    fontWeight: 600,
-                  ),
-                ),
+                getItemGradeCircleIcon(controller.purchaseCompleteItem.value.itemGrade!),
                 Padding(
                   padding: EdgeInsets.only(left: 5.0.sp),
                   child: StyledText(
@@ -1437,25 +1430,7 @@ void itemFilterListAlert(ShopController controller) {
                           child: InkWell(
                             onTap: () => controller.onSelectGrade(entry.value['value']),
                             child: Container(
-                              decoration: BoxDecoration(
-                                color: controller.selectedGrade.any((element) => element == entry.value['value']) ? getItemGradeColor(entry.value['value']!) : popupBgColor,
-                                border: Border.all(
-                                  width: 1,
-                                  color: getItemGradeColor(entry.value['value']!),
-                                ),
-                                borderRadius: BorderRadius.circular(20.sp),
-                              ),
-                              child: Padding(
-                                padding: EdgeInsets.symmetric(horizontal: 12.0.sp, vertical: 6.sp),
-                                child: StyledText(
-                                  entry.value['title']!,
-                                  fontSize: 14,
-                                  lineHeight: 16,
-                                  letterSpacing: .2,
-                                  fontWeight: 500,
-                                  color: controller.selectedGrade.any((element) => element == entry.value['value']) ? Colors.black : getItemGradeColor(entry.value['value']!),
-                                ),
-                              ),
+                              child: getItemGradeCircleIcon(entry.value['value']!),
                             ),
                           ),
                         ),

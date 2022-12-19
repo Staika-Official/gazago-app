@@ -1,5 +1,4 @@
 import 'package:cached_network_image/cached_network_image.dart';
-import 'package:custom_rounded_rectangle_border/custom_rounded_rectangle_border.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:gaza_go/platform/controllers/shop_controller.dart';
@@ -38,40 +37,7 @@ class ShopItems extends StatelessWidget {
                       crossAxisAlignment: CrossAxisAlignment.center,
                       children: [
                         Container(
-                          decoration: ShapeDecoration(
-                            color: getItemGradeColor(item.itemGrade),
-                            shape: CustomRoundedRectangleBorder(
-                              borderRadius: BorderRadius.only(bottomLeft: Radius.circular(5.sp), bottomRight: Radius.circular(5.sp)),
-                              topSide: BorderSide(color: Colors.black, width: 0.sp),
-                              leftSide: BorderSide(color: Colors.black, width: 2.sp),
-                              bottomLeftCornerSide: BorderSide(color: Colors.black, width: 2.sp),
-                              rightSide: BorderSide(color: Colors.black, width: 2.sp),
-                              bottomRightCornerSide: BorderSide(color: Colors.black, width: 2.sp),
-                              bottomSide: BorderSide(color: Colors.black, width: 2.sp),
-                            ),
-                            shadows: [
-                              BoxShadow(
-                                color: Colors.black,
-                                offset: Offset(1.sp, 2.sp),
-                                blurRadius: 0.0,
-                                spreadRadius: 0.0,
-                              ),
-                            ],
-                          ),
-                          child: Container(
-                            width: 90.sp,
-                            alignment: Alignment.center,
-                            padding: EdgeInsets.symmetric(vertical: 8.0.sp, horizontal: 10.0.sp),
-                            child: StyledText(
-                              item.itemGrade,
-                              color: item.itemGrade == 'POOR' ? Colors.white.withOpacity(0.6) : Colors.black.withOpacity(0.6),
-                              fontWeight: 600,
-                              fontSize: item.itemGrade.length < 6 ? 10 : 9,
-                              lineHeight: 10,
-                              fontFamily: 'Montserrat',
-                              letterSpacing: item.itemGrade.length < 6 ? 4 : 1.5,
-                            ),
-                          ),
+                          child: getItemGradeIcon(item.itemGrade),
                         ),
                         Column(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -197,7 +163,7 @@ class ShopItems extends StatelessWidget {
                         child: Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
-                            item.itemLable == 'CLOSE_DEADLINE'
+                            item.itemLabel != null
                                 ? StyledText(
                                     '마감임박',
                                     fontSize: 12.sp,

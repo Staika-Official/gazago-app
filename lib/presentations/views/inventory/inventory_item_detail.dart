@@ -47,39 +47,7 @@ class InventoryItemDetail extends StatelessWidget {
                       right: 18.sp,
                       top: 0,
                       child: Container(
-                        decoration: BoxDecoration(
-                          color: getItemGradeColor(controller.selectedItem.value.itemGrade),
-                          border: Border.all(
-                            width: 1,
-                            color: Colors.black,
-                          ),
-                          borderRadius: BorderRadius.only(
-                            bottomRight: Radius.circular(5.sp),
-                            bottomLeft: Radius.circular(5.sp),
-                          ),
-                          boxShadow: [
-                            BoxShadow(
-                              color: Colors.black,
-                              offset: Offset(1.sp, 2.sp),
-                              blurRadius: 0.0,
-                              spreadRadius: 0.0,
-                            ),
-                          ],
-                        ),
-                        child: Container(
-                          width: 90.sp,
-                          alignment: Alignment.center,
-                          padding: EdgeInsets.symmetric(vertical: 5.0.sp, horizontal: 10.0.sp),
-                          child: StyledText(
-                            color: controller.selectedItem.value.itemGrade == 'POOR' ? Colors.white.withOpacity(0.6) : Colors.black.withOpacity(0.6),
-                            controller.selectedItem.value.itemGrade,
-                            fontWeight: 600,
-                            fontSize: controller.selectedItem.value.itemGrade.length < 6 ? 10 : 8,
-                            lineHeight: 10,
-                            fontFamily: 'Montserrat',
-                            letterSpacing: controller.selectedItem.value.itemGrade.length < 6 ? 4 : 1.5,
-                          ),
-                        ),
+                        child: getItemGradeIcon(controller.selectedItem.value.itemGrade),
                       ),
                     ),
                     Padding(

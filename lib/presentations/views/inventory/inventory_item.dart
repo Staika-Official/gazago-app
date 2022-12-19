@@ -149,16 +149,9 @@ class InventoryItem extends StatelessWidget {
                         Positioned(
                           right: 7.sp,
                           top: 7.sp,
-                          child: CircleAvatar(
-                            backgroundColor: getItemGradeColor(item.itemGrade),
-                            radius: 10.sp,
-                            child: StyledText(
-                              item.itemGrade[0],
-                              fontWeight: 600,
-                              fontFamily: 'Montserrat',
-                              color: item.itemGrade == 'POOR' ? const Color(0xFFffffff).withOpacity(0.6) : const Color(0xFF000000).withOpacity(0.6),
-                            ),
-                          ),
+                          width: 18,
+                          height: 18,
+                          child: getItemGradeCircleIcon(item.itemGrade!),
                         ),
                       ],
                     ),

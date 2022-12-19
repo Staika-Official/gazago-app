@@ -16,7 +16,7 @@ class ShopItemModel {
   double toStaminaReduceRate;
   double fromStaminaReduceRate;
   double price;
-  String? itemLable;
+  String? itemLabel;
   String? description;
 
   ShopItemModel({
@@ -32,7 +32,7 @@ class ShopItemModel {
     required this.toStaminaReduceRate,
     required this.fromStaminaReduceRate,
     required this.price,
-    this.itemLable,
+    this.itemLabel,
     this.description,
   });
 

@@ -71,7 +71,6 @@ class ShopController extends GetxController {
       fromStaminaReduceRate: 0,
       price: 0,
       description: '',
-      itemLable: '',
     ),
   );
 
@@ -126,6 +125,7 @@ class ShopController extends GetxController {
   void toItemDetail(int itemId) async {
     await ShopService.getShopItemDetails(itemId, successCallback: (ShopItemModel items) {
       selectedItem.value = items;
+      print(selectedItem.value);
       Get.toNamed(Routes.shopItemDetail);
     });
   }
