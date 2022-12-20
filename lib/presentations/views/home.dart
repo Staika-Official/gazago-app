@@ -1,4 +1,3 @@
-import 'package:custom_rounded_rectangle_border/custom_rounded_rectangle_border.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -14,29 +13,31 @@ class Home extends StatelessWidget {
 
   Widget bottomNavigationBar(HomeMenuController controller) {
     return Container(
-      // decoration: BoxDecoration(
-      //   color: controller.selectedIndex.value == 2
-      //       ? const Color(0xFF252529)
-      //       : controller.selectedIndex.value == 1 || controller.selectedIndex.value == 3
-      //           ? popupBgColor
-      //           : subBg01Color,
-      //   border: Border.all(
-      //     width: 2,
-      //     color: Colors.black,
-      //   ),
-      // ),
-      decoration: ShapeDecoration(
+      decoration: BoxDecoration(
         color: controller.selectedIndex.value == 2
             ? const Color(0xFF252529)
             : controller.selectedIndex.value == 1 || controller.selectedIndex.value == 3
                 ? popupBgColor
                 : subBg01Color,
-        shape: CustomRoundedRectangleBorder(
-          leftSide: BorderSide(color: Colors.black, width: 2.sp),
-          rightSide: BorderSide(color: Colors.black, width: 1.sp),
-          topSide: BorderSide(color: Colors.black, width: 0.sp),
-        ),
+
+        // border: Border.all(
+        //   width: 2,
+        //   color: Colors.black,
+        // ),
       ),
+      // decoration: ShapeDecoration(
+      //   color: controller.selectedIndex.value == 2
+      //       ? const Color(0xFF252529)
+      //       : controller.selectedIndex.value == 1 || controller.selectedIndex.value == 3
+      //           ? popupBgColor
+      //           : subBg01Color,
+      //   shape: CustomRoundedRectangleBorder(
+      //     leftSide: BorderSide(color: Colors.black, width: 0.sp),
+      //     rightSide: BorderSide(color: Colors.black, width: 0.sp),
+      //     topSide: BorderSide(color: Colors.black, width: 0.sp),
+      //     bottomSide: BorderSide(color: Colors.black, width: 0.sp),
+      //   ),
+      // ),
       child: Container(
         decoration: BoxDecoration(
           border: Border.all(

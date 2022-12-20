@@ -94,6 +94,7 @@ class ShopItemDetail extends StatelessWidget {
                                       ),
                                       Container(
                                         width: double.infinity,
+                                        height: 85.sp,
                                         margin: EdgeInsets.only(top: 5.sp),
                                         decoration: BoxDecoration(
                                           color: subBg01Color,
@@ -106,7 +107,7 @@ class ShopItemDetail extends StatelessWidget {
                                           child: FittedBox(
                                             fit: BoxFit.none,
                                             child: Row(
-                                              mainAxisSize: MainAxisSize.max,
+                                              mainAxisSize: MainAxisSize.min,
                                               crossAxisAlignment: CrossAxisAlignment.start,
                                               children: [
                                                 Padding(
@@ -121,19 +122,21 @@ class ShopItemDetail extends StatelessWidget {
                                                             fontSize: 22,
                                                             lineHeight: 26,
                                                             fontWeight: 500,
+                                                            letterSpacing: .05,
                                                             color: skyBlueColor,
                                                           ),
                                                           StyledText(
                                                             '%',
-                                                            fontSize: 16,
+                                                            fontSize: 14,
                                                             lineHeight: 24,
                                                             fontWeight: 500,
+                                                            letterSpacing: .05,
                                                             color: skyBlueColor,
                                                           ),
                                                         ],
                                                       ),
                                                       Padding(
-                                                        padding: EdgeInsets.only(top: 5.0.sp),
+                                                        padding: EdgeInsets.only(top: 5.0.sp, right: 2.sp),
                                                         child: Row(
                                                           mainAxisAlignment: MainAxisAlignment.center,
                                                           children: [
@@ -166,25 +169,27 @@ class ShopItemDetail extends StatelessWidget {
                                                             fontSize: 22,
                                                             lineHeight: 26,
                                                             fontWeight: 500,
+                                                            letterSpacing: .05,
                                                             color: purpleColor,
                                                           ),
                                                           StyledText(
                                                             '%',
-                                                            fontSize: 16,
+                                                            fontSize: 14,
                                                             lineHeight: 24,
                                                             fontWeight: 500,
+                                                            letterSpacing: .05,
                                                             color: purpleColor,
                                                           ),
                                                         ],
                                                       ),
                                                       Padding(
-                                                        padding: EdgeInsets.only(top: 5.0.sp),
+                                                        padding: EdgeInsets.only(top: 5.0.sp, right: 2.0.sp),
                                                         child: Row(
                                                           mainAxisAlignment: MainAxisAlignment.center,
                                                           crossAxisAlignment: CrossAxisAlignment.center,
                                                           children: [
                                                             Padding(
-                                                              padding: EdgeInsets.only(top: 1.0.sp, right: 5.0.sp),
+                                                              padding: EdgeInsets.only(top: 1.0.sp, right: 4.0.sp),
                                                               child: iconItemAbrasion,
                                                             ),
                                                             StyledText(
@@ -211,20 +216,22 @@ class ShopItemDetail extends StatelessWidget {
                                                             '${formatDecimalPlaces(controller.selectedItem.value.fromStaminaReduceRate, 0)}-${formatDecimalPlaces(controller.selectedItem.value.toStaminaReduceRate, 0)}',
                                                             fontSize: 22,
                                                             lineHeight: 26,
+                                                            letterSpacing: .05,
                                                             fontWeight: 500,
                                                             color: lightGreenColor,
                                                           ),
                                                           StyledText(
                                                             '%',
-                                                            fontSize: 16,
+                                                            fontSize: 14,
                                                             lineHeight: 24,
+                                                            letterSpacing: .05,
                                                             fontWeight: 500,
                                                             color: lightGreenColor,
                                                           ),
                                                         ],
                                                       ),
                                                       Padding(
-                                                        padding: EdgeInsets.only(top: 5.0.sp),
+                                                        padding: EdgeInsets.only(top: 5.0.sp, right: 2.0.sp),
                                                         child: Row(
                                                           mainAxisAlignment: MainAxisAlignment.center,
                                                           children: [
