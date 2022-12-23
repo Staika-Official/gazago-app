@@ -144,36 +144,6 @@ class VerificationPhone extends StatelessWidget {
               ),
             ),
             Obx(() {
-              // return Container(
-              //   padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 15),
-              //   width: double.infinity,
-              //   child: MaterialButton(
-              //     height: 55,
-              //     elevation: 0,
-              //     color: Colors.black,
-              //     disabledColor: const Color(0xffe8e8e8),
-              //     shape: const RoundedRectangleBorder(
-              //       borderRadius: BorderRadius.all(
-              //         Radius.circular(13),
-              //       ),
-              //     ),
-              //     onPressed: controller.isFormValid.isTrue
-              //         ? null
-              //         // ? () {
-              //         //     FocusScope.of(getContext()).requestFocus(FocusNode());
-              //         //     controller.sendIdentityCode(showInvalidInformationBS);
-              //         //   }
-              //         : null,
-              //     child: Text(
-              //       '인증코드 발송',
-              //       style: TextStyle(
-              //         fontWeight: FontWeight.w500,
-              //         fontSize: 16,
-              //         color: controller.isFormValid.isTrue ? Colors.black : Colors.white,
-              //       ),
-              //     ),
-              //   ),
-              // );
               return Container(
                 height: 55.sp,
                 decoration: BoxDecoration(

@@ -165,7 +165,6 @@ class Api {
   }
 
   static Future<void> _retryFailedRequest(DioError e, ErrorInterceptorHandler handler) async {
-    print(e.requestOptions.baseUrl + e.requestOptions.path);
     String accessToken = HiveStore.loadString(key: HiveKey.accessToken.name)!;
     Dio dio = Dio();
     e.requestOptions.headers['Authorization'] = 'Bearer $accessToken';

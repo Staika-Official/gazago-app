@@ -46,8 +46,8 @@ class VerificationName extends StatelessWidget {
                     Padding(
                       padding: EdgeInsets.only(top: 8.0.sp),
                       child: TextField(
-                        style: const TextStyle(
-                          fontSize: 20,
+                        style: TextStyle(
+                          fontSize: 20.sp,
                           fontWeight: FontWeight.w500,
                           color: Colors.white,
                           height: 1,
@@ -71,7 +71,7 @@ class VerificationName extends StatelessWidget {
                           hintText: "이름을 입력해주세요",
                           hintStyle: TextStyle(
                             color: deepGrayColor,
-                            fontSize: 20,
+                            fontSize: 20.sp,
                             fontWeight: FontWeight.w500,
                           ),
                         ),
@@ -96,7 +96,7 @@ class VerificationName extends StatelessWidget {
                         children: [
                           Expanded(
                             child: MaterialButton(
-                              height: 55,
+                              height: 55.sp,
                               elevation: 0,
                               focusElevation: 0,
                               highlightElevation: 0,
@@ -130,7 +130,7 @@ class VerificationName extends StatelessWidget {
                           ),
                           Expanded(
                             child: MaterialButton(
-                              height: 55,
+                              height: 55.sp,
                               elevation: 0,
                               focusElevation: 0,
                               highlightElevation: 0,
@@ -154,7 +154,7 @@ class VerificationName extends StatelessWidget {
                                 style: TextStyle(
                                   color: controller.nationality.value == Nationality.foreigner ? Colors.black : deepGrayColor,
                                   fontWeight: FontWeight.w500,
-                                  fontSize: 20,
+                                  fontSize: 20.sp,
                                 ),
                               ),
                             ),
@@ -182,9 +182,7 @@ class VerificationName extends StatelessWidget {
                   ],
                 ),
                 child: InkWell(
-                  onTap: () => controller.isValidNext.isTrue
-                      ? controller.nextStep()
-                      : null,
+                  onTap: () => controller.isValidNext.isTrue ? controller.nextStep() : null,
                   child: Padding(
                     padding: EdgeInsets.symmetric(vertical: 12.0.sp),
                     child: Center(

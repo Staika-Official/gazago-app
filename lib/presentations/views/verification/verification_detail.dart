@@ -47,8 +47,8 @@ class VerificationDetail extends StatelessWidget {
                     Padding(
                       padding: EdgeInsets.only(top: 8.0.sp),
                       child: TextField(
-                        style: const TextStyle(
-                          fontSize: 20,
+                        style: TextStyle(
+                          fontSize: 20.sp,
                           fontWeight: FontWeight.w500,
                           color: Colors.white,
                           height: 1,
@@ -73,7 +73,7 @@ class VerificationDetail extends StatelessWidget {
                           hintText: "00000000",
                           hintStyle: TextStyle(
                             color: deepGrayColor,
-                            fontSize: 20,
+                            fontSize: 20.sp,
                             fontWeight: FontWeight.w500,
                             height: 1,
                             letterSpacing: -0.5,
@@ -106,7 +106,7 @@ class VerificationDetail extends StatelessWidget {
                         children: [
                           Expanded(
                             child: MaterialButton(
-                              height: 55,
+                              height: 55.sp,
                               elevation: 0,
                               focusElevation: 0,
                               highlightElevation: 0,
@@ -130,7 +130,7 @@ class VerificationDetail extends StatelessWidget {
                                 style: TextStyle(
                                   color: controller.userGender.value == Gender.male ? Colors.black : deepGrayColor,
                                   fontWeight: FontWeight.w500,
-                                  fontSize: 20,
+                                  fontSize: 20.sp,
                                 ),
                               ),
                             ),
@@ -140,7 +140,7 @@ class VerificationDetail extends StatelessWidget {
                           ),
                           Expanded(
                             child: MaterialButton(
-                              height: 55,
+                              height: 55.sp,
                               elevation: 0,
                               focusElevation: 0,
                               highlightElevation: 0,
@@ -164,7 +164,7 @@ class VerificationDetail extends StatelessWidget {
                                 style: TextStyle(
                                   color: controller.userGender.value == Gender.female ? Colors.black : deepGrayColor,
                                   fontWeight: FontWeight.w500,
-                                  fontSize: 20,
+                                  fontSize: 20.sp,
                                 ),
                               ),
                             ),

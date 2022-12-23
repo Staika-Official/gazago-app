@@ -38,7 +38,6 @@ class VerificationDetailController extends GetxController {
   }
 
   void nextStep() {
-    print(userBirthday.value);
     final String birth = userBirthday.value;
     verificationUserModel.birthday = '${birth.substring(0, 4)}-${birth.substring(4, 6)}-${birth.substring(6, 8)}';
     verificationUserModel.gender = userGender.value.genderValue;
