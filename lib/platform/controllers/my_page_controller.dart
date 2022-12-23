@@ -44,6 +44,7 @@ class MyPageController extends GetxController {
             state?.provider = account.provider;
             state?.email = account.email;
             state?.id = account.id;
+            state?.authorities = account.authorities;
           },
         );
       },

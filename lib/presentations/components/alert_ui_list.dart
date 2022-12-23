@@ -4,6 +4,7 @@ import 'package:another_xlider/another_xlider.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:gaza_go/constants/enums.dart';
 import 'package:gaza_go/platform/controllers/activity_controller.dart';
 import 'package:gaza_go/platform/controllers/archive_controller.dart';
 import 'package:gaza_go/platform/controllers/inventory_controller.dart';
@@ -1458,6 +1459,91 @@ void itemFilterListAlert(ShopController controller) {
         child: GazagoButton(
           onTap: () => controller.onClickConfirmFilterValue(),
           buttonText: '적용하기',
+          buttonColor: skyBlueColor,
+        ),
+      ),
+    ],
+  );
+}
+
+void showTelecomList(controller) {
+  showAlert(
+      isNonePaddingOuter: true,
+      isScrollControlled: true,
+      contentWidget: Container(
+        padding: EdgeInsets.symmetric(vertical: 12.sp),
+        decoration: const BoxDecoration(
+          borderRadius: BorderRadius.only(
+            topLeft: Radius.circular(20),
+            topRight: Radius.circular(20),
+          ),
+        ),
+        child: Column(
+          children: [
+            Padding(
+              padding: const EdgeInsets.only(top: 6, bottom: 32),
+              child: Container(
+                width: 40,
+                height: 4,
+                decoration: BoxDecoration(
+                  color: const Color(0xffd9d9d9),
+                  borderRadius: BorderRadius.circular(50),
+                ),
+              ),
+            ),
+            const Padding(
+              padding: EdgeInsets.only(bottom: 20),
+              child: StyledText(
+                '통신사 선택',
+                fontWeight: 500,
+                fontSize: 20,
+              ),
+            ),
+            Column(
+              children: [
+                ...MobileCompany.values.map((telecom) {
+                  return SizedBox(
+                    width: double.infinity,
+                    child: MaterialButton(
+                      padding: const EdgeInsets.all(20),
+                      textColor: lightGrayColor,
+                      onPressed: () => controller!.updateTelecom(telecom),
+                      child: Text(
+                        telecom.mobileCompanyName,
+                        style: const TextStyle(
+                          fontSize: 18,
+                          fontWeight: FontWeight.w500,
+                          height: 1,
+                        ),
+                      ),
+                    ),
+                  );
+                })
+              ],
+            )
+          ],
+        ),
+      ),
+      actions: []);
+}
+
+void showInvalidVerifyCode(String errorMsg) {
+  showAlert(
+    contentWidget: Padding(
+      padding: EdgeInsets.only(bottom: 35.0.sp),
+      child: StyledText(
+        errorMsg,
+        fontSize: 18,
+        lineHeight: 24,
+        fontWeight: 500,
+        textAlign: TextAlign.center,
+      ),
+    ),
+    actions: [
+      Expanded(
+        child: GazagoButton(
+          onTap: () => Get.back(),
+          buttonText: '확인',
           buttonColor: skyBlueColor,
         ),
       ),

@@ -139,8 +139,12 @@ class Api {
     } else {
       if (e.response?.data != null && e.response?.data != '') {
         ErrorResponseDataModel errorData = ErrorResponseDataModel.fromJson(e.response?.data);
-        if (errorData.errorMessage != null) {
-          showToastPopup(errorData.errorMessage!);
+        if (e.response!.requestOptions.path.contains('user-identities')) {
+          handler.resolve(e.response!);
+        } else {
+          if (errorData.errorMessage != null) {
+            showToastPopup(errorData.errorMessage!);
+          }
         }
       }
 

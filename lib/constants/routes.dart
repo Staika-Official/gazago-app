@@ -35,7 +35,10 @@ import 'package:gaza_go/presentations/views/preferences/withdraw_completed.dart'
 import 'package:gaza_go/presentations/views/preferences/withdraw_confirm.dart';
 import 'package:gaza_go/presentations/views/shop/shop_item_detail.dart';
 import 'package:gaza_go/presentations/views/term.dart';
-import 'package:gaza_go/presentations/views/verification/index.dart';
+import 'package:gaza_go/presentations/views/verification/verification_cert_code.dart';
+import 'package:gaza_go/presentations/views/verification/verification_detail.dart';
+import 'package:gaza_go/presentations/views/verification/verification_name.dart';
+import 'package:gaza_go/presentations/views/verification/verification_phone.dart';
 import 'package:gaza_go/presentations/views/wallet/buy_tik.dart';
 import 'package:gaza_go/presentations/views/wallet/index.dart';
 import 'package:gaza_go/presentations/views/wallet/wallet_actions.dart';
@@ -43,6 +46,7 @@ import 'package:gaza_go/presentations/views/wallet/wallet_detail.dart';
 import 'package:get/get_navigation/get_navigation.dart';
 
 import '../presentations/views/debugging/activity_logs.dart';
+import '../presentations/views/verification/verification_terms.dart';
 
 class Routes {
   static const login = '/login';
@@ -64,6 +68,11 @@ class Routes {
   static const noticeDetail = '/notice/detail';
   static const preferenceNotification = '/preferences/notification';
   static const verification = '/verification';
+  static const verificationTerms = '/verification/terms';
+  static const verificationName = '/verification/name';
+  static const verificationDetail = '/verification/detail';
+  static const verificationPhone = '/verification/phone';
+  static const verificationCertCode = '/verification/cert_code';
   static const myPage = '/my_page';
   static const editBiometrics = '/my_page/edit_biometrics';
   static const withdrawConfirm = '/my_page/withdraw';
@@ -113,7 +122,11 @@ class Routes {
     stepPage(name: Routes.noticeList, page: const NoticeList()),
     stepPage(name: Routes.noticeDetail, page: const NoticeDetail()),
     stepPage(name: Routes.preferenceNotification, page: const NotificationAlert()),
-    stepPage(name: Routes.verification, page: const Verification()),
+    stepPage(name: Routes.verificationTerms, page: const VerificationTerms()),
+    stepPage(name: Routes.verificationName, page: const VerificationName()),
+    stepPage(name: Routes.verificationDetail, page: const VerificationDetail()),
+    stepPage(name: Routes.verificationPhone, page: const VerificationPhone()),
+    stepPage(name: Routes.verificationCertCode, page: const VerificationCertCode()),
     stepPage(name: Routes.myPage, page: const MyPage()),
     stepPage(name: Routes.editBiometrics, page: const EditBiometrics()),
     stepPage(name: Routes.withdrawConfirm, page: const WithdrawConfirm()),
