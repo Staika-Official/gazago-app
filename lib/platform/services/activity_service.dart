@@ -75,7 +75,7 @@ class ActivityService {
     if (res.statusCode == 200) {
       successCallback(CurrentUserStateModel.fromJson(res.data));
     } else {
-      if (errorCallback != null) errorCallback();
+      if (errorCallback != null) errorCallback(res.statusCode);
     }
   }
 

@@ -139,6 +139,11 @@ class Api {
     } else {
       if (e.response?.data != null && e.response?.data != '') {
         ErrorResponseDataModel errorData = ErrorResponseDataModel.fromJson(e.response?.data);
+
+        if (e.response?.statusCode == 404 && e.response!.requestOptions.path.contains('user-states/user/')) {
+          showToastPopup(errorData.errorMessage!);
+          handler.reject(e);
+        }
         if (e.response!.requestOptions.path.contains('user-identities')) {
           handler.resolve(e.response!);
         } else {
