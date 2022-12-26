@@ -44,7 +44,7 @@ class WalletDetail extends StatelessWidget {
   // }
 
   List<Widget> renderTransactionList(WalletMasterController controller) {
-    return controller.assetDetail.value.transactions
+    return controller.transactionsList
         .map(
           (transaction) => Container(
             padding: EdgeInsets.only(left: 3.sp, right: 3.sp, top: 20.sp, bottom: 20.sp),
@@ -73,7 +73,11 @@ class WalletDetail extends StatelessWidget {
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
                           StyledText(
-                            transaction.title ?? '',
+                            transaction.title != null
+                                ? transaction.type == 'FEE'
+                                    ? '${transaction.title!} 수수료'
+                                    : transaction.title!
+                                : '',
                             fontSize: 22,
                             lineHeight: 22,
                             fontWeight: 500,
