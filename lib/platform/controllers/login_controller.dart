@@ -97,7 +97,13 @@ class LoginController extends GetxController {
     String? email = HiveStore.loadString(key: HiveKey.email.name);
     String? profileImageUrl = HiveStore.loadString(key: HiveKey.profileImageUrl.name);
     String? nickname = HiveStore.loadString(key: HiveKey.nickname.name);
-    await MemberService.initializeUserData(email, nickname, profileImageUrl);
+    await MemberService.initializeUserData(email, nickname, profileImageUrl, errorCallback: () {
+      HiveStore.deleteMultipleKeys(keys: [
+        HiveKey.accessToken.name,
+        HiveKey.refreshToken.name,
+      ]);
+      Get.toNamed(Routes.login);
+    });
   }
 
   Future<void> requestLogin(LoginType loginType, String accessToken) async {
@@ -137,9 +143,9 @@ class LoginController extends GetxController {
             }
           }
         } else {
-          await initUserInfo();
           HiveStore.save(key: HiveKey.isNewUser.name, value: true);
-          Get.offNamed(Routes.permissions);
+          await initUserInfo();
+          Get.offNamed(Routes.joinTerms);
         }
       },
       errorCallback: (int statusCode, String statusMessage) {
