@@ -7,6 +7,7 @@ import 'package:gaza_go/platform/helpers/alert_helper.dart';
 import 'package:gaza_go/platform/models/asset_detail_model.dart';
 import 'package:gaza_go/platform/models/asset_token_balance_model.dart';
 import 'package:gaza_go/platform/models/asset_token_detail_balance_model.dart';
+import 'package:gaza_go/platform/models/asset_token_transaction_model.dart';
 import 'package:gaza_go/platform/models/buy_tik_response_model.dart';
 import 'package:gaza_go/platform/models/pay_info_model.dart';
 import 'package:gaza_go/platform/models/token_info_model.dart';
@@ -51,6 +52,61 @@ class WalletMasterController extends GetxController {
       showToastPopup('STAIKA를 찾을 수 없습니다.');
       return AssetTokenBalanceModel();
     }));
+  }
+
+  RxList<AssetTokenTransactionModel> get transactionsList {
+    List<AssetTokenTransactionModel> transactionsList = List.empty(growable: true);
+
+    List<AssetTokenTransactionModel> rawList = assetDetail.value.transactions;
+    if (rawList.isNotEmpty) {
+      int id = rawList.first.transactionId!;
+      List<List<AssetTokenTransactionModel>> listsById = List.empty(growable: true);
+      List<AssetTokenTransactionModel> tempList = List.empty(growable: true);
+      for (AssetTokenTransactionModel transaction in rawList) {
+        if (id != transaction.transactionId) {
+          id = transaction.transactionId!;
+          listsById.add(tempList);
+          tempList = List.empty(growable: true);
+        }
+
+        tempList.add(transaction);
+      }
+
+      for (List<AssetTokenTransactionModel> listById in listsById) {
+        List<AssetTokenTransactionModel> outList = List.empty(growable: true);
+        for (AssetTokenTransactionModel transaction in listById) {
+          if (transaction.type == 'FEE') {
+            transactionsList.add(transaction);
+          } else {
+            outList.add(transaction);
+          }
+        }
+
+        if (outList.length > 1) {
+          AssetTokenTransactionModel totalOutTransaction = outList.reduce((value, element) {
+            AssetTokenTransactionModel reduceTransaction;
+            reduceTransaction = AssetTokenTransactionModel.fromJson(value.toJson());
+            reduceTransaction.symbol = 'TIK';
+            reduceTransaction.amount = value.amount! + element.amount!;
+            reduceTransaction.uiAmountString = (double.parse(value.uiAmountString!) + double.parse(element.uiAmountString!)).toString();
+            return reduceTransaction;
+          });
+
+          transactionsList.add(totalOutTransaction);
+        } else {
+          transactionsList.add(outList.first);
+        }
+      }
+      // for (AssetTokenTransactionModel transaction in assetDetail.value.transactions) {
+      //   AssetTokenBalanceModel tokenUi;
+      //   if (['STIK', 'TOTAL_TIK'].any((symbol) => symbol == token.symbol)) {
+      //     tokenUi = token;
+      //     balanceUiList.add(tokenUi);
+      //   }
+      // }
+    }
+
+    return RxList(transactionsList);
   }
 
   @override

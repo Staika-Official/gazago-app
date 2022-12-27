@@ -1,7 +1,9 @@
 import 'package:gaza_go/constants/routes.dart';
 import 'package:gaza_go/platform/helpers/alert_helper.dart';
 import 'package:gaza_go/platform/models/term_item_model.dart';
+import 'package:gaza_go/platform/models/terms_history_model.dart';
 import 'package:gaza_go/platform/services/board_service.dart';
+import 'package:gaza_go/platform/services/member_service.dart';
 import 'package:get/get.dart';
 
 class JoinTermsController extends GetxController {
@@ -45,9 +47,16 @@ class JoinTermsController extends GetxController {
     }).toList();
   }
 
-  void requestJoin() {
+  void requestJoin() async {
     if (allRequiredAgreed.value) {
-      Get.toNamed(Routes.permissions);
+      await MemberService.fetchTermsAgree(termsList.map((term) => TermsHistoryModel(terms: term.title!, postId: term.id!, activated: term.isChecked, boardType: term.boardType!)).toList(),
+          successCallback: (effectedCount) async {
+        if (effectedCount == termsList.length) {
+          Get.toNamed(Routes.permissions);
+        }
+      }, errorCallback: () {
+        showToastPopup('약관 동의에 실패하였습니다.');
+      });
     } else {
       showToastPopup('필수 약관에 동의해주세요');
     }
