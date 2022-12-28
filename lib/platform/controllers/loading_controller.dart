@@ -22,7 +22,8 @@ class LoadingController extends GetxController {
   final RxInt time = RxInt(0);
   final RxList<TermsStatusModel> termsList = RxList.empty();
   RxBool get allRequiredAgreed {
-    if (termsList.singleWhere((term) => term.boardType == 'TERMS').activated &&
+    if (termsList.isNotEmpty &&
+        termsList.singleWhere((term) => term.boardType == 'TERMS').activated &&
         termsList.singleWhere((term) => term.boardType == 'LOCATION').activated &&
         termsList.singleWhere((term) => term.boardType == 'PRIVACY').activated) {
       return RxBool(true);

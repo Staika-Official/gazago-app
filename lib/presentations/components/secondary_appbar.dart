@@ -46,7 +46,7 @@ class SecondaryAppbar extends StatelessWidget implements PreferredSizeWidget {
 
   @override
   Widget build(BuildContext context) {
-    HomeMenuController controller = Get.find();
+    HomeMenuController controller = Get.put(HomeMenuController());
     WalletMasterController walletMasterController = Get.find();
 
     return AppBar(

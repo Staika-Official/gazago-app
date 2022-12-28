@@ -1,7 +1,7 @@
+import 'dart:async';
 import 'dart:io';
 
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:flutter/material.dart';
 import 'package:gaza_go/constants/enums.dart';
 import 'package:gaza_go/constants/routes.dart';
 import 'package:gaza_go/platform/helpers/alert_helper.dart';
@@ -10,6 +10,7 @@ import 'package:gaza_go/platform/models/social_login_info_model.dart';
 import 'package:gaza_go/platform/services/member_service.dart';
 import 'package:gaza_go/platform/services/uaa_service.dart';
 import 'package:gaza_go/platform/stores/hive_store.dart';
+import 'package:gaza_go/presentations/components/alert_ui_list.dart';
 import 'package:get/get.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:package_info_plus/package_info_plus.dart';
@@ -106,11 +107,12 @@ class LoginController extends GetxController {
     });
   }
 
-  Future<void> requestLogin(LoginType loginType, String accessToken) async {
+  Future<void> requestLogin(LoginType loginType, String accessToken, {bool forceLogin = false}) async {
     String deviceId = HiveStore.loadString(key: HiveKey.uuid.name)!;
     String fcmToken = HiveStore.loadString(key: HiveKey.fcmToken.name)!;
     String appVersion = await PackageInfo.fromPlatform().then((info) => info.version);
     String platform = Platform.operatingSystem;
+
     SocialLoginInfoModel loginInfo = SocialLoginInfoModel(
       provider: loginType.name.toUpperCase(),
       deviceId: deviceId,
@@ -119,21 +121,25 @@ class LoginController extends GetxController {
       appVersion: appVersion,
       platform: platform,
       clientId: 'GAZAGO',
-      forceLogin: true,
+      forceLogin: forceLogin,
     );
-
+    print('forceforceforce$forceLogin');
     await UaaService.socialLogin(
       loginInfo,
       successCallback: (AccessTokenModel token, int statusCode) async {
         print('access token: ${token.accessToken}');
         print('refresh token: ${token.refreshToken}');
-        HiveStore.save(key: HiveKey.accessToken.name, value: token.accessToken);
-        HiveStore.save(key: HiveKey.refreshToken.name, value: token.refreshToken);
 
         if (statusCode == 200) {
+          print(token.accountStatus);
           if (token.accountStatus == 'TERMINATION_REQUESTED') {
             Get.toNamed(Routes.accountRestore);
+          } else if (token.accountStatus == 'ALREADY_CONNECTED_DEVICE') {
+            showDuplicateLoginWarning(loginType, accessToken);
           } else {
+            HiveStore.save(key: HiveKey.accessToken.name, value: token.accessToken);
+            HiveStore.save(key: HiveKey.refreshToken.name, value: token.refreshToken);
+
             await initUserInfo();
             bool? permissionRequestBefore = HiveStore.load(key: HiveKey.permissionRequestOnFirstLaunch.name);
             if (permissionRequestBefore != null && permissionRequestBefore) {
@@ -143,6 +149,8 @@ class LoginController extends GetxController {
             }
           }
         } else {
+          HiveStore.save(key: HiveKey.accessToken.name, value: token.accessToken);
+          HiveStore.save(key: HiveKey.refreshToken.name, value: token.refreshToken);
           HiveStore.save(key: HiveKey.isNewUser.name, value: true);
           await initUserInfo();
           Get.offNamed(Routes.joinTerms);
@@ -154,30 +162,8 @@ class LoginController extends GetxController {
     );
   }
 
-  void showDuplicateLoginWarning() {
-    Get.dialog(
-      AlertDialog(
-        title: const Text('확인해 주세요'),
-        content: const Text('댜른 기기에 로그인 되어있습니다.\n해당 기기의 로그인을 헤제 후 로그인 하시겠습니까?'),
-        actions: [
-          ElevatedButton(onPressed: () => showLogoutConfirmation(), child: const Text('아니요')),
-          ElevatedButton(onPressed: () => Get.offNamed(Routes.onBoarding), child: const Text('네')),
-        ],
-      ),
-    );
-  }
-
-  void showLogoutConfirmation() {
-    Get.back();
-    Get.dialog(
-      AlertDialog(
-        title: const Text('알림'),
-        content: const Text('사용 중인 계정이 다른 기기에서.\n접속이 종료 되었습니다.?'),
-        actions: [
-          ElevatedButton(onPressed: () => Get.back(), child: const Text('확인')),
-        ],
-      ),
-    );
+  void showDuplicateLoginWarning(loginType, accessToken) {
+    alreadyConnectedDeviceAlert(this, loginType, accessToken);
   }
 
   void handleFetchWithdrawCancel() async {
