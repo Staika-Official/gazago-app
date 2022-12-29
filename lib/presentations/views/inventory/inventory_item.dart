@@ -63,7 +63,7 @@ class InventoryItem extends StatelessWidget {
                                 ),
                               ),
                               Padding(
-                                padding: EdgeInsets.only(top: 10.sp, bottom: 8.sp),
+                                padding: EdgeInsets.only(top: 10.sp, bottom: 6.sp),
                                 child: item.equipped == true
                                     ? StyledText(
                                         item.itemName,

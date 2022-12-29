@@ -4,13 +4,13 @@ part 'access_token_model.g.dart';
 
 @JsonSerializable(explicitToJson: true)
 class AccessTokenModel {
-  String accessToken;
-  String refreshToken;
+  String? accessToken;
+  String? refreshToken;
   String? accountStatus;
 
   AccessTokenModel({
-    required this.accessToken,
-    required this.refreshToken,
+    this.accessToken,
+    this.refreshToken,
     required this.accountStatus,
   });
 

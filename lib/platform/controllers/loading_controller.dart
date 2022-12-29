@@ -7,6 +7,8 @@ import 'package:gaza_go/platform/controllers/activity_controller.dart';
 import 'package:gaza_go/platform/controllers/wallet_master_controller.dart';
 import 'package:gaza_go/platform/helpers/alert_helper.dart';
 import 'package:gaza_go/platform/helpers/base_helper.dart';
+import 'package:gaza_go/platform/models/terms_status_model.dart';
+import 'package:gaza_go/platform/services/member_service.dart';
 import 'package:gaza_go/presentations/components/alert_ui_list.dart';
 import 'package:gaza_go/presentations/components/gazago_button.dart';
 import 'package:gaza_go/presentations/styles/colors.dart';
@@ -18,11 +20,27 @@ class LoadingController extends GetxController {
   final RxString progressMessage = RxString("로드중......");
   Timer? _timer;
   final RxInt time = RxInt(0);
+  final RxList<TermsStatusModel> termsList = RxList.empty();
+  RxBool get allRequiredAgreed {
+    if (termsList.isNotEmpty &&
+        termsList.singleWhere((term) => term.boardType == 'TERMS').activated &&
+        termsList.singleWhere((term) => term.boardType == 'LOCATION').activated &&
+        termsList.singleWhere((term) => term.boardType == 'PRIVACY').activated) {
+      return RxBool(true);
+    } else {
+      return RxBool(false);
+    }
+  }
 
   @override
   void onInit() async {
-    if (Get.isRegistered<WalletMasterController>()) Get.find<WalletMasterController>().onInit();
-    if (Get.isRegistered<ActivityController>()) Get.find<ActivityController>().onInit();
+    await checkTermsAgreeStatus();
+    if (allRequiredAgreed.value) {
+      if (Get.isRegistered<WalletMasterController>()) Get.find<WalletMasterController>().onInit();
+      if (Get.isRegistered<ActivityController>()) Get.find<ActivityController>().onInit();
+    } else {
+      Get.toNamed(Routes.joinTerms);
+    }
 
     super.onInit();
   }
@@ -77,6 +95,15 @@ class LoadingController extends GetxController {
       _timer?.cancel();
       _timer = null;
     }
+  }
+
+  Future<void> checkTermsAgreeStatus() async {
+    await MemberService.getTermsAgreeStatus(successCallback: (termsList) {
+      this.termsList.value = termsList;
+    }, errorCallback: () {
+      showToastPopup('약관 동의 여부를 확인할 수 없습니다.');
+      Get.toNamed(Routes.login);
+    });
   }
 
   void updateProgress(String message) async {

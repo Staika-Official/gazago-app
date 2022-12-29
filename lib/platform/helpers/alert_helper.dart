@@ -28,6 +28,7 @@ Future<void> showAlert({
 
 void showToastPopup(String message) {
   Fluttertoast.showToast(
+    timeInSecForIosWeb: 2,
     msg: message,
     gravity: ToastGravity.TOP,
     backgroundColor: Colors.black.withOpacity(0.9),

@@ -466,7 +466,7 @@ mixin ActivityMixin {
     updateTimer = Timer.periodic(
       Duration(milliseconds: updateInterval),
       (timer) {
-        updateExercise();
+        updateExercise(source: 'startPeriodicUpdate_${updateTimer.hashCode}');
       },
     );
   }
@@ -516,7 +516,7 @@ mixin ActivityMixin {
     pedestrianStatusSubscription = null;
     exerciseState.value = ExerciseState.paused;
     HiveStore.save(key: HiveKey.savedStepInitialized.name, value: false);
-    updateExercise(isPaused: true);
+    updateExercise(isPaused: true, source: 'pauseExercise${updateTimer.hashCode}');
   }
 
   void showEndExerciseDialog(ChallengeModel challenge) {

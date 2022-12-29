@@ -9,6 +9,7 @@ import 'package:gaza_go/platform/controllers/activity_controller.dart';
 import 'package:gaza_go/platform/controllers/archive_controller.dart';
 import 'package:gaza_go/platform/controllers/inventory_controller.dart';
 import 'package:gaza_go/platform/controllers/loading_controller.dart';
+import 'package:gaza_go/platform/controllers/login_controller.dart';
 import 'package:gaza_go/platform/controllers/preference_controller.dart';
 import 'package:gaza_go/platform/controllers/shop_controller.dart';
 import 'package:gaza_go/platform/controllers/withdraw_confirm_controller.dart';
@@ -1466,6 +1467,7 @@ void itemFilterListAlert(ShopController controller) {
   );
 }
 
+
 void showTelecomList(controller) {
   showAlert(
       isNonePaddingOuter: true,
@@ -1550,3 +1552,39 @@ void showInvalidVerifyCode(String errorMsg) {
     ],
   );
 }
+void alreadyConnectedDeviceAlert(LoginController controller, LoginType socialType, String accessToken) {
+  showAlert(
+    contentWidget: Padding(
+      padding: EdgeInsets.only(top: 20.0.sp, bottom: 40.sp),
+      child: const StyledText(
+        '댜른 기기에 로그인 되어있습니다.\n해당 기기의 로그인을 헤제 후\n로그인 하시겠습니까?',
+        fontSize: 18,
+        lineHeight: 24,
+        fontWeight: 500,
+        letterSpacing: .2,
+        textAlign: TextAlign.center,
+      ),
+    ),
+    actions: [
+      Expanded(
+        child: GazagoButton(
+          onTap: () => Get.back(),
+          buttonText: '취소',
+          textColor: Colors.white,
+          buttonColor: popupBgColor,
+        ),
+      ),
+      SizedBox(
+        width: 9.sp,
+      ),
+      Expanded(
+        child: GazagoButton(
+          onTap: () => controller.requestLogin(socialType, accessToken, forceLogin: true),
+          buttonText: '확인',
+          buttonColor: skyBlueColor,
+        ),
+      ),
+    ],
+  );
+}
+

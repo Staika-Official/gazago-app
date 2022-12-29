@@ -15,4 +15,10 @@ class MemberApi {
   static Future<Response> fetchTermsAgree(String userId, List<TermsHistoryModel> termsHistoryList) async {
     return await Api.client(serviceUrl: ServiceUrl.memberService).post('/api/terms-histories/users/$userId', data: termsHistoryList);
   }
+
+  static Future<Response> getTermsAgreeStatus(String userId) async {
+    return await Api.client(serviceUrl: ServiceUrl.memberService).get(
+      '/api/terms-histories/users/$userId/GAZAGO',
+    );
+  }
 }
