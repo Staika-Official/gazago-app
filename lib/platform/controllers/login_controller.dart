@@ -104,7 +104,7 @@ class LoginController extends GetxController {
         HiveKey.accessToken.name,
         HiveKey.refreshToken.name,
       ]);
-      Get.toNamed(Routes.login);
+      Get.offAllNamed(Routes.login);
     });
   }
 
@@ -124,7 +124,7 @@ class LoginController extends GetxController {
       clientId: 'GAZAGO',
       forceLogin: forceLogin,
     );
-    print('forceforceforce$forceLogin');
+
     await UaaService.socialLogin(
       loginInfo,
       successCallback: (AccessTokenModel token, int statusCode) async {
@@ -133,14 +133,14 @@ class LoginController extends GetxController {
 
         if (statusCode == 200) {
           print(token.accountStatus);
+          HiveStore.save(key: HiveKey.accessToken.name, value: token.accessToken);
+          HiveStore.save(key: HiveKey.refreshToken.name, value: token.refreshToken);
+
           if (token.accountStatus == 'TERMINATION_REQUESTED') {
-            Get.toNamed(Routes.accountRestore);
+            Get.offNamed(Routes.accountRestore);
           } else if (token.accountStatus == 'ALREADY_CONNECTED_DEVICE') {
             showDuplicateLoginWarning(loginType, accessToken);
           } else {
-            HiveStore.save(key: HiveKey.accessToken.name, value: token.accessToken);
-            HiveStore.save(key: HiveKey.refreshToken.name, value: token.refreshToken);
-
             await initUserInfo();
             bool? permissionRequestBefore = HiveStore.load(key: HiveKey.permissionRequestOnFirstLaunch.name);
             if (permissionRequestBefore != null && permissionRequestBefore) {
@@ -172,10 +172,8 @@ class LoginController extends GetxController {
       successCallback: () async {
         await initUserInfo();
         Get.offNamed(Routes.loading);
-        // print('성공');
       },
       errorCallback: () {},
     );
-    // Get.toNamed(Routes.withdrawCompleted)
   }
 }

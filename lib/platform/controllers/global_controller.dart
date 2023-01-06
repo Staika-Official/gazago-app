@@ -60,11 +60,11 @@ class GlobalController extends SuperController {
         successCallback: () => null,
         errorCallback: () {
           showToastPopup('로그인 유효시간이 만료되었습니다');
-          if (Get.currentRoute != Routes.login) Get.offAllNamed(Routes.login);
           HiveStore.deleteMultipleKeys(keys: [
             HiveKey.accessToken.name,
             HiveKey.refreshToken.name,
           ]);
+          if (Get.currentRoute != Routes.login) Get.offAllNamed(Routes.login);
         },
       );
     }

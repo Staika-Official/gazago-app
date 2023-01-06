@@ -570,8 +570,6 @@ class ActivityHome extends StatelessWidget {
                                                   children: [
                                                     InkWell(
                                                       onTap: () {
-                                                        print('hello!!!!!!!!!!!!!!');
-                                                        print(challengeMovie.duration);
                                                         controller.challengeLoadControl.value = Control.playReverseFromEnd;
                                                         Timer(Duration.zero, () {
                                                           controller.challengeLoadControl.value = Control.stop;
