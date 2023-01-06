@@ -16,6 +16,7 @@ class PreferenceController extends GetxController {
       nickname: '',
       profileImageUrl: '',
       provider: '',
+      authorities: HiveStore.load(key: HiveKey.authorities.name) ?? [''],
     ),
   );
   final RxString appVersion = RxString('');
@@ -37,6 +38,7 @@ class PreferenceController extends GetxController {
             state?.provider = account.provider;
             state?.email = account.email;
             state?.id = account.id;
+            state?.authorities = account.authorities;
           },
         );
       },
@@ -66,6 +68,7 @@ class PreferenceController extends GetxController {
           HiveKey.savedStepCount.name,
           HiveKey.dummyStepCount.name,
           HiveKey.savedStepInitialized.name,
+          HiveKey.authorities.name,
         ]);
         Get.offAllNamed(Routes.login);
       },

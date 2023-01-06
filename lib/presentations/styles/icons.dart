@@ -11,6 +11,7 @@ SvgPicture iconSliderStamina = SvgPicture.asset('assets/images/common/ico_slider
 SvgPicture iconCopy = SvgPicture.asset('assets/images/common/ico_copy.svg', width: 12.33.sp, height: 14.2.sp);
 SvgPicture iconExclamationMark = SvgPicture.asset('assets/images/common/ico_circle_exclamation_mark.svg', width: 78.sp, height: 78.sp);
 SvgPicture iconArrowDown = SvgPicture.asset('assets/images/common/ico_arrow_down.svg', width: 6.2.sp, height: 6.2.sp);
+SvgPicture iconSelectArrowDown = SvgPicture.asset('assets/images/common/ico_select_arrow_down.svg', width: 7.sp, height: 7.sp);
 SvgPicture iconSortChecked = SvgPicture.asset('assets/images/common/ico_sort_checked.svg', width: 16.sp, height: 11.sp);
 SvgPicture iconShopFilter = SvgPicture.asset('assets/images/common/ico_item_filter.svg', width: 18.sp, height: 16.sp);
 SvgPicture iconShopFilterActive = SvgPicture.asset('assets/images/common/ico_item_filter_active.svg', width: 18.sp, height: 16.sp);

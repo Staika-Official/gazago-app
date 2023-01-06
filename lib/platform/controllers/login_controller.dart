@@ -88,6 +88,7 @@ class LoginController extends GetxController {
         HiveStore.save(key: HiveKey.email.name, value: user.email);
         HiveStore.save(key: HiveKey.profileImageUrl.name, value: user.profileImageUrl);
         HiveStore.save(key: HiveKey.nickname.name, value: user.nickname);
+        HiveStore.save(key: HiveKey.authorities.name, value: user.authorities);
       },
     );
   }

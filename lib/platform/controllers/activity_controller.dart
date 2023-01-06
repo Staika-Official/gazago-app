@@ -24,6 +24,7 @@ import 'package:gaza_go/platform/models/user_stamina_recharge_model.dart';
 import 'package:gaza_go/platform/models/user_state_model.dart';
 import 'package:gaza_go/platform/services/activity_service.dart';
 import 'package:gaza_go/platform/services/item_service.dart';
+import 'package:gaza_go/platform/services/uaa_service.dart';
 import 'package:gaza_go/platform/stores/hive_store.dart';
 import 'package:gaza_go/presentations/components/alert_ui_list.dart';
 import 'package:gaza_go/presentations/styles/colors.dart';
@@ -120,12 +121,13 @@ class ActivityController extends SuperController with ActivityMixin, ChallengeMi
   }
 
   Future<void> initController() async {
-    await getUserState();
-    hasPermission.value = await checkAvailabilities();
-    if (hasPermission.value) {
-      await initActivityStatus();
-    }
-    await loadChallenges();
+    await getUserState().then((_) async {
+      hasPermission.value = await checkAvailabilities();
+      if (hasPermission.value) {
+        await initActivityStatus();
+      }
+      await loadChallenges();
+    });
   }
 
   Future<void> refreshController() async {
@@ -338,64 +340,88 @@ class ActivityController extends SuperController with ActivityMixin, ChallengeMi
   }
 
   Future<void> getUserState() async {
-    await ActivityService.getCurrentUserState(
-      successCallback: (currentUserState) async {
-        currentUserState.exercise?.locationUpdateTime = DateTime.now();
-        userState.update((state) {
-          state?.state = currentUserState.state;
-          state?.exercise = currentUserState.exercise;
-          state?.shoes = currentUserState.shoes;
-        });
+    await ActivityService.getCurrentUserState(successCallback: (currentUserState) async {
+      currentUserState.exercise?.locationUpdateTime = DateTime.now();
+      userState.update((state) {
+        state?.state = currentUserState.state;
+        state?.exercise = currentUserState.exercise;
+        state?.shoes = currentUserState.shoes;
+      });
 
-        if (userState.value.exercise == null) {
-          exerciseState.value = ExerciseState.ready;
-        } else {
-          CurrentUserStateModel? savedUserState = HiveStore.loadCurrentUserState();
-          if (savedUserState != null && savedUserState.exercise != null && savedUserState.exercise!.recordState! == 'NORMAL') {
-            savedUserState.exercise!.locationUpdateTime = DateTime.now();
-            userState.update((state) {
-              state?.exercise = savedUserState.exercise;
-            });
+      if (userState.value.exercise == null) {
+        exerciseState.value = ExerciseState.ready;
+      } else {
+        CurrentUserStateModel? savedUserState = HiveStore.loadCurrentUserState();
+        if (savedUserState != null && savedUserState.exercise != null && savedUserState.exercise!.recordState! == 'NORMAL') {
+          savedUserState.exercise!.locationUpdateTime = DateTime.now();
+          userState.update((state) {
+            state?.exercise = savedUserState.exercise;
+          });
 
-            int savedSteps = HiveStore.load(key: HiveKey.savedStepCount.name) ?? 0;
-            if (savedUserState.exercise!.steps! > savedSteps) {
-              HiveStore.save(key: HiveKey.savedStepCount.name, value: savedUserState.exercise!.steps!);
-            }
-          }
-
-          if (userState.value.exercise?.challengeId != null) {
-            //  산행중인 정보 가져오기
-            ChallengeModel challenge = await getChallenge(userState.value.exercise!.challengeId!);
-            if (challenge.id != null) {
-              selectedChallenge.value = challenge;
-            }
-          }
-          if (updateTimer == null) {
-            exerciseData.value = List.empty(growable: true);
-            exerciseData.add(userState.value.exercise!);
-            exerciseTime.value = userState.value.exercise!.time!;
-            exerciseSteps.value = userState.value.exercise!.steps!;
-            exerciseDistance.value = userState.value.exercise!.distance!;
-
-            coordinates.value = List.empty(growable: true);
-            if (userState.value.exercise!.locations != null) {
-              coordinates.addAll(parseCoordinates());
-            }
-          }
-
-          final state = userState.value.exercise!.state!;
-
-          if (state == 'ONGOING' && updateTimer != null) {
-            exerciseState.value = ExerciseState.ongoing;
-          } else if (state == 'PAUSED' || updateTimer == null) {
-            exerciseState.value = ExerciseState.paused;
+          int savedSteps = HiveStore.load(key: HiveKey.savedStepCount.name) ?? 0;
+          if (savedUserState.exercise!.steps! > savedSteps) {
+            HiveStore.save(key: HiveKey.savedStepCount.name, value: savedUserState.exercise!.steps!);
           }
         }
 
-        await retrySavedRequests(source: 'getUserState');
+        if (userState.value.exercise?.challengeId != null) {
+          //  산행중인 정보 가져오기
+          ChallengeModel challenge = await getChallenge(userState.value.exercise!.challengeId!);
+          if (challenge.id != null) {
+            selectedChallenge.value = challenge;
+          }
+        }
+        if (updateTimer == null) {
+          exerciseData.value = List.empty(growable: true);
+          exerciseData.add(userState.value.exercise!);
+          exerciseTime.value = userState.value.exercise!.time!;
+          exerciseSteps.value = userState.value.exercise!.steps!;
+          exerciseDistance.value = userState.value.exercise!.distance!;
 
-        if (Get.isRegistered<LoadingController>()) Get.find<LoadingController>().updateProgress("곧 가자고와 가자고~!");
+          coordinates.value = List.empty(growable: true);
+          if (userState.value.exercise!.locations != null) {
+            coordinates.addAll(parseCoordinates());
+          }
+        }
+
+        final state = userState.value.exercise!.state!;
+
+        if (state == 'ONGOING' && updateTimer != null) {
+          exerciseState.value = ExerciseState.ongoing;
+        } else if (state == 'PAUSED' || updateTimer == null) {
+          exerciseState.value = ExerciseState.paused;
+        }
+      }
+
+      await retrySavedRequests(source: 'getUserState');
+
+      if (Get.isRegistered<LoadingController>()) Get.find<LoadingController>().updateProgress("곧 가자고와 가자고~!");
+    }, errorCallback: (statusCode) {
+      if (statusCode == 404) {
+        onLogout();
+      }
+      throw statusCode;
+    });
+  }
+
+  void onLogout() async {
+    await UaaService.fetchLogout(
+      successCallback: () {
+        HiveStore.deleteMultipleKeys(keys: [
+          HiveKey.accessToken.name,
+          HiveKey.refreshToken.name,
+          HiveKey.userState.name,
+          HiveKey.exerciseData.name,
+          HiveKey.endExerciseRequested.name,
+          HiveKey.badgeIssuanceRequested.name,
+          HiveKey.savedStepCount.name,
+          HiveKey.dummyStepCount.name,
+          HiveKey.savedStepInitialized.name,
+          HiveKey.authorities.name,
+        ]);
+        Get.offAllNamed(Routes.login);
       },
+      errorCallback: () {},
     );
   }
 

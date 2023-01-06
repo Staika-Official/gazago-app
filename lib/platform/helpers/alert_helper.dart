@@ -10,6 +10,7 @@ Future<void> showAlert({
   Widget? contentWidget,
   bool isScrollControlled = false,
   bool isDangerTitle = false,
+  bool isNonePaddingOuter = false,
 }) async {
   await Get.bottomSheet(
     BottomSheetAlert(
@@ -18,6 +19,7 @@ Future<void> showAlert({
       contentText: contentText,
       actions: actions,
       isDangerTitle: isDangerTitle,
+      isNonePaddingOuter: isNonePaddingOuter,
     ),
     isDismissible: false,
     isScrollControlled: isScrollControlled,

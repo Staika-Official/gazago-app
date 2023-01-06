@@ -139,8 +139,17 @@ class Api {
     } else {
       if (e.response?.data != null && e.response?.data != '') {
         ErrorResponseDataModel errorData = ErrorResponseDataModel.fromJson(e.response?.data);
-        if (errorData.errorMessage != null) {
+
+        if (e.response?.statusCode == 404 && e.response!.requestOptions.path.contains('user-states/user/')) {
           showToastPopup(errorData.errorMessage!);
+          handler.reject(e);
+        }
+        if (e.response!.requestOptions.path.contains('user-identities')) {
+          handler.resolve(e.response!);
+        } else {
+          if (errorData.errorMessage != null) {
+            showToastPopup(errorData.errorMessage!);
+          }
         }
       }
 
@@ -161,7 +170,6 @@ class Api {
   }
 
   static Future<void> _retryFailedRequest(DioError e, ErrorInterceptorHandler handler) async {
-    print(e.requestOptions.baseUrl + e.requestOptions.path);
     String accessToken = HiveStore.loadString(key: HiveKey.accessToken.name)!;
     Dio dio = Dio();
     e.requestOptions.headers['Authorization'] = 'Bearer $accessToken';

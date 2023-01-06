@@ -1467,6 +1467,91 @@ void itemFilterListAlert(ShopController controller) {
   );
 }
 
+
+void showTelecomList(controller) {
+  showAlert(
+      isNonePaddingOuter: true,
+      isScrollControlled: true,
+      contentWidget: Container(
+        padding: EdgeInsets.symmetric(vertical: 12.sp),
+        decoration: const BoxDecoration(
+          borderRadius: BorderRadius.only(
+            topLeft: Radius.circular(20),
+            topRight: Radius.circular(20),
+          ),
+        ),
+        child: Column(
+          children: [
+            Padding(
+              padding: const EdgeInsets.only(top: 6, bottom: 32),
+              child: Container(
+                width: 40,
+                height: 4,
+                decoration: BoxDecoration(
+                  color: const Color(0xffd9d9d9),
+                  borderRadius: BorderRadius.circular(50),
+                ),
+              ),
+            ),
+            const Padding(
+              padding: EdgeInsets.only(bottom: 20),
+              child: StyledText(
+                '통신사 선택',
+                fontWeight: 500,
+                fontSize: 20,
+              ),
+            ),
+            Column(
+              children: [
+                ...MobileCompany.values.map((telecom) {
+                  return SizedBox(
+                    width: double.infinity,
+                    child: MaterialButton(
+                      padding: const EdgeInsets.all(20),
+                      textColor: lightGrayColor,
+                      onPressed: () => controller!.updateTelecom(telecom),
+                      child: Text(
+                        telecom.mobileCompanyName,
+                        style: const TextStyle(
+                          fontSize: 18,
+                          fontWeight: FontWeight.w500,
+                          height: 1,
+                        ),
+                      ),
+                    ),
+                  );
+                })
+              ],
+            )
+          ],
+        ),
+      ),
+      actions: []);
+}
+
+void showInvalidVerifyCode(String errorMsg) {
+  showAlert(
+    contentWidget: Padding(
+      padding: EdgeInsets.only(bottom: 35.0.sp),
+      child: StyledText(
+        errorMsg,
+        fontSize: 18,
+        lineHeight: 24,
+        fontWeight: 500,
+        textAlign: TextAlign.center,
+      ),
+    ),
+    actions: [
+      Expanded(
+        child: GazagoButton(
+          onTap: () => Get.back(),
+          buttonText: '확인',
+          buttonColor: skyBlueColor,
+        ),
+      ),
+    ],
+  );
+}
 void alreadyConnectedDeviceAlert(LoginController controller, LoginType socialType, String accessToken) {
   showAlert(
     contentWidget: Padding(
@@ -1503,27 +1588,3 @@ void alreadyConnectedDeviceAlert(LoginController controller, LoginType socialTyp
   );
 }
 
-void prevDeviceLogoutAlert() {
-  showAlert(
-    contentWidget: Padding(
-      padding: EdgeInsets.only(top: 20.0.sp, bottom: 40.sp),
-      child: const StyledText(
-        '사용 중인 계정이 다른 기기에서.\n접속이 종료 되었습니다.',
-        fontSize: 18,
-        lineHeight: 24,
-        fontWeight: 500,
-        letterSpacing: .2,
-        textAlign: TextAlign.center,
-      ),
-    ),
-    actions: [
-      Expanded(
-        child: GazagoButton(
-          onTap: () => Get.back(),
-          buttonText: '확인',
-          buttonColor: skyBlueColor,
-        ),
-      ),
-    ],
-  );
-}
