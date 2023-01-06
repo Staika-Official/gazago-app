@@ -4,10 +4,12 @@ import 'package:another_xlider/another_xlider.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:gaza_go/constants/enums.dart';
 import 'package:gaza_go/platform/controllers/activity_controller.dart';
 import 'package:gaza_go/platform/controllers/archive_controller.dart';
 import 'package:gaza_go/platform/controllers/inventory_controller.dart';
 import 'package:gaza_go/platform/controllers/loading_controller.dart';
+import 'package:gaza_go/platform/controllers/login_controller.dart';
 import 'package:gaza_go/platform/controllers/preference_controller.dart';
 import 'package:gaza_go/platform/controllers/shop_controller.dart';
 import 'package:gaza_go/platform/controllers/withdraw_confirm_controller.dart';
@@ -1018,14 +1020,7 @@ void itemPurchaseCompleteAlert(ShopController controller) {
               mainAxisAlignment: MainAxisAlignment.center,
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
-                CircleAvatar(
-                  radius: 9,
-                  child: StyledText(
-                    controller.purchaseCompleteItem.value.itemGrade[0],
-                    color: Colors.black.withOpacity(0.6),
-                    fontWeight: 600,
-                  ),
-                ),
+                getItemGradeCircleIcon(controller.purchaseCompleteItem.value.itemGrade!),
                 Padding(
                   padding: EdgeInsets.only(left: 5.0.sp),
                   child: StyledText(
@@ -1437,25 +1432,7 @@ void itemFilterListAlert(ShopController controller) {
                           child: InkWell(
                             onTap: () => controller.onSelectGrade(entry.value['value']),
                             child: Container(
-                              decoration: BoxDecoration(
-                                color: controller.selectedGrade.any((element) => element == entry.value['value']) ? getItemGradeColor(entry.value['value']!) : popupBgColor,
-                                border: Border.all(
-                                  width: 1,
-                                  color: getItemGradeColor(entry.value['value']!),
-                                ),
-                                borderRadius: BorderRadius.circular(20.sp),
-                              ),
-                              child: Padding(
-                                padding: EdgeInsets.symmetric(horizontal: 12.0.sp, vertical: 6.sp),
-                                child: StyledText(
-                                  entry.value['title']!,
-                                  fontSize: 14,
-                                  lineHeight: 16,
-                                  letterSpacing: .2,
-                                  fontWeight: 500,
-                                  color: controller.selectedGrade.any((element) => element == entry.value['value']) ? Colors.black : getItemGradeColor(entry.value['value']!),
-                                ),
-                              ),
+                              child: getItemGradeCircleIcon(entry.value['value']!),
                             ),
                           ),
                         ),
@@ -1483,6 +1460,67 @@ void itemFilterListAlert(ShopController controller) {
         child: GazagoButton(
           onTap: () => controller.onClickConfirmFilterValue(),
           buttonText: '적용하기',
+          buttonColor: skyBlueColor,
+        ),
+      ),
+    ],
+  );
+}
+
+void alreadyConnectedDeviceAlert(LoginController controller, LoginType socialType, String accessToken) {
+  showAlert(
+    contentWidget: Padding(
+      padding: EdgeInsets.only(top: 20.0.sp, bottom: 40.sp),
+      child: const StyledText(
+        '댜른 기기에 로그인 되어있습니다.\n해당 기기의 로그인을 헤제 후\n로그인 하시겠습니까?',
+        fontSize: 18,
+        lineHeight: 24,
+        fontWeight: 500,
+        letterSpacing: .2,
+        textAlign: TextAlign.center,
+      ),
+    ),
+    actions: [
+      Expanded(
+        child: GazagoButton(
+          onTap: () => Get.back(),
+          buttonText: '취소',
+          textColor: Colors.white,
+          buttonColor: popupBgColor,
+        ),
+      ),
+      SizedBox(
+        width: 9.sp,
+      ),
+      Expanded(
+        child: GazagoButton(
+          onTap: () => controller.requestLogin(socialType, accessToken, forceLogin: true),
+          buttonText: '확인',
+          buttonColor: skyBlueColor,
+        ),
+      ),
+    ],
+  );
+}
+
+void prevDeviceLogoutAlert() {
+  showAlert(
+    contentWidget: Padding(
+      padding: EdgeInsets.only(top: 20.0.sp, bottom: 40.sp),
+      child: const StyledText(
+        '사용 중인 계정이 다른 기기에서.\n접속이 종료 되었습니다.',
+        fontSize: 18,
+        lineHeight: 24,
+        fontWeight: 500,
+        letterSpacing: .2,
+        textAlign: TextAlign.center,
+      ),
+    ),
+    actions: [
+      Expanded(
+        child: GazagoButton(
+          onTap: () => Get.back(),
+          buttonText: '확인',
           buttonColor: skyBlueColor,
         ),
       ),

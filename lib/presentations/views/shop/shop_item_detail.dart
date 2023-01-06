@@ -55,41 +55,7 @@ class ShopItemDetail extends StatelessWidget {
                             Positioned(
                               right: 32.sp,
                               top: 0,
-                              child: Container(
-                                decoration: BoxDecoration(
-                                  color: getItemGradeColor(controller.selectedItem.value.itemGrade),
-                                  border: Border.all(
-                                    width: 1,
-                                    color: Colors.black,
-                                  ),
-                                  borderRadius: BorderRadius.only(
-                                    bottomRight: Radius.circular(5.sp),
-                                    bottomLeft: Radius.circular(5.sp),
-                                  ),
-                                  boxShadow: [
-                                    BoxShadow(
-                                      color: Colors.black,
-                                      offset: Offset(1.sp, 2.sp),
-                                      blurRadius: 0.0,
-                                      spreadRadius: 0.0,
-                                    ),
-                                  ],
-                                ),
-                                child: Container(
-                                  width: 90.sp,
-                                  alignment: Alignment.center,
-                                  padding: EdgeInsets.symmetric(vertical: 5.0.sp, horizontal: 10.0.sp),
-                                  child: StyledText(
-                                    color: controller.selectedItem.value.itemGrade == 'POOR' ? Colors.white.withOpacity(0.6) : Colors.black.withOpacity(0.6),
-                                    controller.selectedItem.value.itemGrade,
-                                    fontWeight: 600,
-                                    fontSize: controller.selectedItem.value.itemGrade.length < 6 ? 10 : 8,
-                                    lineHeight: 10,
-                                    fontFamily: 'Montserrat',
-                                    letterSpacing: controller.selectedItem.value.itemGrade.length < 6 ? 4 : 1.5,
-                                  ),
-                                ),
-                              ),
+                              child: getItemGradeIcon(controller.selectedItem.value.itemGrade),
                             ),
                             Padding(
                               padding: EdgeInsets.symmetric(horizontal: 12.sp, vertical: 20.0.sp),
@@ -128,6 +94,7 @@ class ShopItemDetail extends StatelessWidget {
                                       ),
                                       Container(
                                         width: double.infinity,
+                                        height: 85.sp,
                                         margin: EdgeInsets.only(top: 5.sp),
                                         decoration: BoxDecoration(
                                           color: subBg01Color,
@@ -140,7 +107,7 @@ class ShopItemDetail extends StatelessWidget {
                                           child: FittedBox(
                                             fit: BoxFit.none,
                                             child: Row(
-                                              mainAxisSize: MainAxisSize.max,
+                                              mainAxisSize: MainAxisSize.min,
                                               crossAxisAlignment: CrossAxisAlignment.start,
                                               children: [
                                                 Padding(
@@ -155,19 +122,21 @@ class ShopItemDetail extends StatelessWidget {
                                                             fontSize: 22,
                                                             lineHeight: 26,
                                                             fontWeight: 500,
+                                                            letterSpacing: .05,
                                                             color: skyBlueColor,
                                                           ),
                                                           StyledText(
                                                             '%',
-                                                            fontSize: 16,
+                                                            fontSize: 14,
                                                             lineHeight: 24,
                                                             fontWeight: 500,
+                                                            letterSpacing: .05,
                                                             color: skyBlueColor,
                                                           ),
                                                         ],
                                                       ),
                                                       Padding(
-                                                        padding: EdgeInsets.only(top: 5.0.sp),
+                                                        padding: EdgeInsets.only(top: 5.0.sp, right: 2.sp),
                                                         child: Row(
                                                           mainAxisAlignment: MainAxisAlignment.center,
                                                           children: [
@@ -200,25 +169,27 @@ class ShopItemDetail extends StatelessWidget {
                                                             fontSize: 22,
                                                             lineHeight: 26,
                                                             fontWeight: 500,
+                                                            letterSpacing: .05,
                                                             color: purpleColor,
                                                           ),
                                                           StyledText(
                                                             '%',
-                                                            fontSize: 16,
+                                                            fontSize: 14,
                                                             lineHeight: 24,
                                                             fontWeight: 500,
+                                                            letterSpacing: .05,
                                                             color: purpleColor,
                                                           ),
                                                         ],
                                                       ),
                                                       Padding(
-                                                        padding: EdgeInsets.only(top: 5.0.sp),
+                                                        padding: EdgeInsets.only(top: 5.0.sp, right: 2.0.sp),
                                                         child: Row(
                                                           mainAxisAlignment: MainAxisAlignment.center,
                                                           crossAxisAlignment: CrossAxisAlignment.center,
                                                           children: [
                                                             Padding(
-                                                              padding: EdgeInsets.only(top: 1.0.sp, right: 5.0.sp),
+                                                              padding: EdgeInsets.only(top: 1.0.sp, right: 4.0.sp),
                                                               child: iconItemAbrasion,
                                                             ),
                                                             StyledText(
@@ -245,20 +216,22 @@ class ShopItemDetail extends StatelessWidget {
                                                             '${formatDecimalPlaces(controller.selectedItem.value.fromStaminaReduceRate, 0)}-${formatDecimalPlaces(controller.selectedItem.value.toStaminaReduceRate, 0)}',
                                                             fontSize: 22,
                                                             lineHeight: 26,
+                                                            letterSpacing: .05,
                                                             fontWeight: 500,
                                                             color: lightGreenColor,
                                                           ),
                                                           StyledText(
                                                             '%',
-                                                            fontSize: 16,
+                                                            fontSize: 14,
                                                             lineHeight: 24,
+                                                            letterSpacing: .05,
                                                             fontWeight: 500,
                                                             color: lightGreenColor,
                                                           ),
                                                         ],
                                                       ),
                                                       Padding(
-                                                        padding: EdgeInsets.only(top: 5.0.sp),
+                                                        padding: EdgeInsets.only(top: 5.0.sp, right: 2.0.sp),
                                                         child: Row(
                                                           mainAxisAlignment: MainAxisAlignment.center,
                                                           children: [
@@ -298,20 +271,22 @@ class ShopItemDetail extends StatelessWidget {
                                                 fontSize: 14,
                                               ),
                                             ),
-                                            SizedBox(
-                                              height: 100.sp,
-                                              child: ListView(
-                                                children: [
-                                                  StyledText(
-                                                    controller.selectedItem.value.description.toString(),
-                                                    color: const Color(0xFFE2E2E2),
-                                                    fontWeight: 500,
-                                                    fontSize: 14,
-                                                    lineHeight: 20,
-                                                  ),
-                                                ],
-                                              ),
-                                            ),
+                                            controller.selectedItem.value.description != null
+                                                ? SizedBox(
+                                                    height: 100.sp,
+                                                    child: ListView(
+                                                      children: [
+                                                        StyledText(
+                                                          controller.selectedItem.value.description!,
+                                                          color: const Color(0xFFE2E2E2),
+                                                          fontWeight: 500,
+                                                          fontSize: 14,
+                                                          lineHeight: 20,
+                                                        ),
+                                                      ],
+                                                    ),
+                                                  )
+                                                : Container(),
                                           ],
                                         ),
                                       ),
@@ -358,7 +333,7 @@ class ShopItemDetail extends StatelessWidget {
                             fontSize: 22,
                             lineHeight: 24,
                           ),
-                          if (controller.selectedItem.value.itemLable == 'CLOSE_DEADLINE')
+                          if (controller.selectedItem.value.itemLabel == 'CLOSE_DEADLINE')
                             Padding(
                               padding: EdgeInsets.only(top: 5.0.sp),
                               child: StyledText(

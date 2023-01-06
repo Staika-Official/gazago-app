@@ -16,10 +16,28 @@ class Home extends StatelessWidget {
       decoration: BoxDecoration(
         color: controller.selectedIndex.value == 2
             ? const Color(0xFF252529)
-            : controller.selectedIndex.value == 1
+            : controller.selectedIndex.value == 1 || controller.selectedIndex.value == 3
                 ? popupBgColor
                 : subBg01Color,
+
+        // border: Border.all(
+        //   width: 2,
+        //   color: Colors.black,
+        // ),
       ),
+      // decoration: ShapeDecoration(
+      //   color: controller.selectedIndex.value == 2
+      //       ? const Color(0xFF252529)
+      //       : controller.selectedIndex.value == 1 || controller.selectedIndex.value == 3
+      //           ? popupBgColor
+      //           : subBg01Color,
+      //   shape: CustomRoundedRectangleBorder(
+      //     leftSide: BorderSide(color: Colors.black, width: 0.sp),
+      //     rightSide: BorderSide(color: Colors.black, width: 0.sp),
+      //     topSide: BorderSide(color: Colors.black, width: 0.sp),
+      //     bottomSide: BorderSide(color: Colors.black, width: 0.sp),
+      //   ),
+      // ),
       child: Container(
         decoration: BoxDecoration(
           border: Border.all(

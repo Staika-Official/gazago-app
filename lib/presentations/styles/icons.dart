@@ -101,5 +101,18 @@ SvgPicture iconArrowRight = SvgPicture.asset('assets/images/wallet/ico_arrow_rig
 SvgPicture iconShopStamina = SvgPicture.asset('assets/images/shop/ico_stat_stamina.svg', width: 14.sp, height: 14.sp, color: Colors.black);
 SvgPicture iconShopDurability = SvgPicture.asset('assets/images/shop/ico_stat_durability.svg', width: 14.sp, height: 14.sp, color: Colors.black);
 SvgPicture iconShopReward = SvgPicture.asset('assets/images/shop/ico_go_reward.svg', width: 14.sp, height: 14.sp, color: Colors.black);
-
 SvgPicture iconUp = SvgPicture.asset('assets/images/wallet/ico_up.svg', width: 22.sp, height: 22.sp);
+
+//grade
+SvgPicture iconGradePoor = SvgPicture.asset('assets/images/common/ico_grade_poor.svg', width: 90.sp, height: 24.sp);
+SvgPicture iconGradeCommon = SvgPicture.asset('assets/images/common/ico_grade_common.svg', width: 90.sp, height: 24.sp);
+SvgPicture iconGradeUncommon = SvgPicture.asset('assets/images/common/ico_grade_uncommon.svg', width: 90.sp, height: 24.sp);
+SvgPicture iconGradeRare = SvgPicture.asset('assets/images/common/ico_grade_rare.svg', width: 90.sp, height: 24.sp);
+SvgPicture iconGradeEpic = SvgPicture.asset('assets/images/common/ico_grade_epic.svg', width: 90.sp, height: 24.sp);
+SvgPicture iconGradeLegend = SvgPicture.asset('assets/images/common/ico_grade_legend.svg', width: 90.sp, height: 24.sp);
+SvgPicture iconGradeCirclePoor = SvgPicture.asset('assets/images/common/ico_grade_circle_poor.svg', width: 18.sp, height: 18.sp);
+SvgPicture iconGradeCircleCommon = SvgPicture.asset('assets/images/common/ico_grade_circle_common.svg', width: 18.sp, height: 18.sp);
+SvgPicture iconGradeCircleUncommon = SvgPicture.asset('assets/images/common/ico_grade_circle_uncommon.svg', width: 18.sp, height: 18.sp);
+SvgPicture iconGradeCircleRare = SvgPicture.asset('assets/images/common/ico_grade_circle_rare.svg', width: 18.sp, height: 18.sp);
+SvgPicture iconGradeCircleEpic = SvgPicture.asset('assets/images/common/ico_grade_circle_epic.svg', width: 18.sp, height: 18.sp);
+SvgPicture iconGradeCircleLegend = SvgPicture.asset('assets/images/common/ico_grade_circle_legend.svg', width: 18.sp, height: 18.sp);
