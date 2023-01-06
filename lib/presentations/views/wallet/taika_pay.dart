@@ -39,7 +39,7 @@ class TaikaPay extends StatelessWidget {
 
                     case 'getToken':
                       String token = HiveStore.loadString(key: HiveKey.accessToken.name)!;
-                      result = {'appToken': '$token'};
+                      result = {'appToken': token};
                       break;
                   }
 

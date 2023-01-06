@@ -338,10 +338,10 @@ class ActivityHome extends StatelessWidget {
     ActivityController controller = Get.find();
 
     final challengeMovie = MovieTween()
-      ..scene(begin: Duration(seconds: 1), duration: Duration(seconds: 2))
+      ..scene(begin: const Duration(seconds: 1), duration: const Duration(seconds: 2))
           .thenTween('width', Tween<double>(begin: 70, end: 250), duration: const Duration(milliseconds: 300), curve: Curves.easeOut)
           .tween('opacity', Tween<double>(begin: 0, end: 1), curve: Curves.easeOut)
-          .thenFor(duration: Duration(seconds: 3))
+          .thenFor(duration: const Duration(seconds: 3))
           .thenTween('opacity', Tween<double>(begin: 1, end: 0), duration: const Duration(milliseconds: 300), curve: Curves.easeOut)
           .tween('width', Tween<double>(begin: 250, end: 70), curve: Curves.easeOut)
           .thenTween('bottom', Tween<double>(begin: 0, end: 10), duration: const Duration(milliseconds: 300), curve: Curves.easeOut)

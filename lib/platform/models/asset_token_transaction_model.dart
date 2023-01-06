@@ -1,6 +1,3 @@
-import 'package:gaza_go/platform/models/asset_address_model.dart';
-import 'package:gaza_go/platform/models/asset_amount_model.dart';
-import 'package:gaza_go/platform/models/asset_short_amount_model.dart';
 import 'package:json_annotation/json_annotation.dart';
 
 part 'asset_token_transaction_model.g.dart';

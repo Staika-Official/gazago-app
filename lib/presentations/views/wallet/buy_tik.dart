@@ -301,7 +301,7 @@ class BuyTik extends StatelessWidget {
                 child: Column(
                   children: [
                     CircleAvatar(
-                      foregroundImage: controller.tik.value.logoUrl! != '' || controller.tik.value.logoUrl! != null
+                      foregroundImage: controller.tik.value.logoUrl! != '' || controller.tik.value.logoUrl != null
                           ? CachedNetworkImageProvider(controller.tik.value.logoUrl!)
                           : const Svg('assets/images/common/ico_token_tik.svg') as ImageProvider,
                     ),

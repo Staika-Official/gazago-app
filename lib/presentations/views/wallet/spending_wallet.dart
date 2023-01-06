@@ -93,7 +93,7 @@ class SpendingWallet extends StatelessWidget {
                             Expanded(
                               child: Padding(
                                 padding: EdgeInsets.symmetric(horizontal: 10.sp),
-                                child: StyledText(
+                                child: const StyledText(
                                   '상품권 교환',
                                   fontSize: 18,
                                   lineHeight: 18,

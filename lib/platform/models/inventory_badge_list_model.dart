@@ -1,4 +1,3 @@
-import 'package:gaza_go/platform/models/inventory_badge_item_model.dart';
 import 'package:json_annotation/json_annotation.dart';
 
 part 'inventory_badge_list_model.g.dart';
@@ -17,19 +16,18 @@ class InventoryBadgeListModel {
   String issueType;
   String? issueEndedTime;
 
-  InventoryBadgeListModel({
-    required this.id,
-    required this.userId,
-    required this.badgeId,
-    required this.level,
-    required this.state,
-    this.imageUrl,
-    required this.rewardRate,
-    required this.luckRate,
-    this.name,
-    required this.issueType,
-    this.issueEndedTime
-  });
+  InventoryBadgeListModel(
+      {required this.id,
+      required this.userId,
+      required this.badgeId,
+      required this.level,
+      required this.state,
+      this.imageUrl,
+      required this.rewardRate,
+      required this.luckRate,
+      this.name,
+      required this.issueType,
+      this.issueEndedTime});
 
   factory InventoryBadgeListModel.fromJson(Map<String, dynamic> json) => _$InventoryBadgeListModelFromJson(json);
 

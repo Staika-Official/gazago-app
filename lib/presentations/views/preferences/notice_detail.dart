@@ -18,7 +18,7 @@ class NoticeDetail extends StatelessWidget {
       backgroundColor: subBg01Color,
       headerBackgroundColor: subBg01Color,
       child: SingleChildScrollView(
-        physics: ClampingScrollPhysics(),
+        physics: const ClampingScrollPhysics(),
         child: Padding(
           padding: EdgeInsets.only(left: 20.0.sp, right: 20.sp, bottom: 20.sp),
           child: Obx(() {

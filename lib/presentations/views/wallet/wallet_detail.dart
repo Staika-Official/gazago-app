@@ -114,7 +114,7 @@ class WalletDetail extends StatelessWidget {
                         ),
                       ),
                       Padding(
-                        padding: EdgeInsets.only(top: 20),
+                        padding: const EdgeInsets.only(top: 20),
                         child: StyledText(
                           transaction.content ?? '',
                           fontSize: 14,
@@ -153,7 +153,7 @@ class WalletDetail extends StatelessWidget {
               child: CircleAvatar(
                 foregroundImage: controller.selectedAsset.value.logoUrl != '' && controller.selectedAsset.value.logoUrl != null
                     ? CachedNetworkImageProvider(controller.selectedAsset.value.logoUrl!)
-                    : sp.Svg('assets/images/common/ico_token_tik.svg') as ImageProvider,
+                    : const sp.Svg('assets/images/common/ico_token_tik.svg') as ImageProvider,
               ),
             ),
             Padding(
@@ -235,7 +235,7 @@ class WalletDetail extends StatelessWidget {
                               child: Ink(
                                 width: 50,
                                 height: 50,
-                                decoration: BoxDecoration(color: skyBlueColor, borderRadius: BorderRadius.circular(50), border: Border.all(color: Colors.black), boxShadow: [
+                                decoration: BoxDecoration(color: skyBlueColor, borderRadius: BorderRadius.circular(50), border: Border.all(color: Colors.black), boxShadow: const [
                                   BoxShadow(
                                     color: Colors.black,
                                     offset: Offset(0, 2),
@@ -246,14 +246,14 @@ class WalletDetail extends StatelessWidget {
                                 child: InkWell(
                                   onTap: () => controller.transactionScrollController.animateTo(
                                     0,
-                                    duration: Duration(
+                                    duration: const Duration(
                                       milliseconds: 100,
                                     ),
                                     curve: Curves.easeIn,
                                   ),
                                   borderRadius: BorderRadius.circular(50),
                                   child: Padding(
-                                    padding: EdgeInsets.all(14),
+                                    padding: const EdgeInsets.all(14),
                                     child: iconUp,
                                   ),
                                 ),

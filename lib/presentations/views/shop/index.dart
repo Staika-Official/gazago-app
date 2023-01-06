@@ -32,7 +32,7 @@ class ShopHome extends StatelessWidget {
                   fontWeight: 500,
                 ),
               ),
-              Expanded(child: ShopItems()),
+              const Expanded(child: ShopItems()),
             ],
           ),
         ),

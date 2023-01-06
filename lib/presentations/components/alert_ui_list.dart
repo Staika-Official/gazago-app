@@ -611,7 +611,7 @@ void showPendingExerciseAlert(ActivityController controller) {
           BackdropFilter(
             filter: ImageFilter.blur(sigmaX: 20.0, sigmaY: 20.0),
             child: Container(
-              decoration: new BoxDecoration(color: Colors.black.withOpacity(0.6)),
+              decoration: BoxDecoration(color: Colors.black.withOpacity(0.6)),
             ),
           ),
           Padding(
@@ -680,7 +680,7 @@ void showPendingExerciseAlert(ActivityController controller) {
                       TextSpan(
                         text: '운동을 종료하시려면\n',
                         children: [
-                          TextSpan(text: '아래 '),
+                          const TextSpan(text: '아래 '),
                           TextSpan(text: '종료 버튼을 3초간 눌러주세요', style: TextStyle(color: skyBlueColor)),
                         ],
                       ),
@@ -1005,7 +1005,7 @@ void itemPurchaseCompleteAlert(ShopController controller) {
                 SizedBox(
                   width: 150.sp,
                   child: CachedNetworkImage(
-                    imageUrl: controller.purchaseCompleteItem.value.itemImageUrl!,
+                    imageUrl: controller.purchaseCompleteItem.value.itemImageUrl,
                     fit: BoxFit.fitWidth,
                     placeholder: (context, url) => const CircularProgressIndicator(),
                     errorWidget: (context, url, error) => Image.asset("assets/images/@temp_badge.png"),
@@ -1020,7 +1020,7 @@ void itemPurchaseCompleteAlert(ShopController controller) {
               mainAxisAlignment: MainAxisAlignment.center,
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
-                getItemGradeCircleIcon(controller.purchaseCompleteItem.value.itemGrade!),
+                getItemGradeCircleIcon(controller.purchaseCompleteItem.value.itemGrade),
                 Padding(
                   padding: EdgeInsets.only(left: 5.0.sp),
                   child: StyledText(
@@ -1467,7 +1467,6 @@ void itemFilterListAlert(ShopController controller) {
   );
 }
 
-
 void showTelecomList(controller) {
   showAlert(
       isNonePaddingOuter: true,
@@ -1552,6 +1551,7 @@ void showInvalidVerifyCode(String errorMsg) {
     ],
   );
 }
+
 void alreadyConnectedDeviceAlert(LoginController controller, LoginType socialType, String accessToken) {
   showAlert(
     contentWidget: Padding(
@@ -1587,4 +1587,3 @@ void alreadyConnectedDeviceAlert(LoginController controller, LoginType socialTyp
     ],
   );
 }
-

@@ -1,4 +1,3 @@
-import 'package:gaza_go/platform/models/asset_token_balance_model.dart';
 import 'package:gaza_go/platform/models/asset_token_detail_balance_model.dart';
 import 'package:gaza_go/platform/models/asset_token_transaction_model.dart';
 import 'package:json_annotation/json_annotation.dart';

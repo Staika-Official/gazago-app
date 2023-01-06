@@ -355,7 +355,7 @@ class ShopItemDetail extends StatelessWidget {
                           ),
                           child: Padding(
                             padding: EdgeInsets.symmetric(vertical: 8.0.sp, horizontal: 15.sp),
-                            child: StyledText(
+                            child: const StyledText(
                               '구매하기',
                               fontSize: 18,
                               lineHeight: 20,

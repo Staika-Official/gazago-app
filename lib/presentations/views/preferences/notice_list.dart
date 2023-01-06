@@ -54,7 +54,7 @@ class NoticeList extends StatelessWidget {
                     Positioned(
                       right: 0,
                       top: 10.sp,
-                      child: Icon(Icons.chevron_right, color: Color(0xFFBDC0C7), size: 24.sp),
+                      child: Icon(Icons.chevron_right, color: const Color(0xFFBDC0C7), size: 24.sp),
                     ),
                   ],
                 ),
@@ -73,7 +73,7 @@ class NoticeList extends StatelessWidget {
       backgroundColor: subBg01Color,
       headerBackgroundColor: subBg01Color,
       child: SingleChildScrollView(
-        physics: ClampingScrollPhysics(),
+        physics: const ClampingScrollPhysics(),
         child: Padding(
           padding: EdgeInsets.only(left: 20.0.sp, right: 20.sp, bottom: 20.sp),
           child: Obx(() {

@@ -151,7 +151,7 @@ class InventoryItem extends StatelessWidget {
                           top: 7.sp,
                           width: 18,
                           height: 18,
-                          child: getItemGradeCircleIcon(item.itemGrade!),
+                          child: getItemGradeCircleIcon(item.itemGrade),
                         ),
                       ],
                     ),

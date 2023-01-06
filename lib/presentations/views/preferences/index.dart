@@ -76,7 +76,7 @@ class Preferences extends StatelessWidget {
                 }),
               ),
               controller.profile.value.authorities!.contains('ROLE_CERTIFIED_USER')
-                  ? Container(
+                  ? SizedBox(
                       height: 60.sp,
                       child: Padding(
                           padding: EdgeInsets.only(left: 25.sp, right: 20.sp),
