@@ -144,7 +144,7 @@ class Api {
           showToastPopup(errorData.errorMessage!);
           handler.reject(e);
         }
-        if (e.response!.requestOptions.path.contains('user-identities')) {
+        if (e.response!.requestOptions.path.contains('user-identities') || e.response!.requestOptions.path.contains('/buy')) {
           handler.resolve(e.response!);
         } else {
           if (errorData.errorMessage != null) {

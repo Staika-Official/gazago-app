@@ -304,7 +304,7 @@ class InventoryHome extends StatelessWidget {
             ),
             Expanded(
               child: TabBarView(
-                physics: const NeverScrollableScrollPhysics(),
+                physics: const ClampingScrollPhysics(),
                 controller: inventoryMenuController.tabController,
                 children: const [
                   InventoryItem(),

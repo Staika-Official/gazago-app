@@ -15,8 +15,12 @@ import 'package:gaza_go/platform/services/item_service.dart';
 import 'package:gaza_go/presentations/components/alert_ui_list.dart';
 import 'package:get/get.dart';
 
-class InventoryController extends GetxController with LinearProgressMixin, InventoryMixin {
+class InventoryController extends GetxController with ScrollMixin, LinearProgressMixin, InventoryMixin  {
   final WalletMasterController walletMasterController = Get.find();
+
+  RxInt page = RxInt(0);
+  RxBool stopLoading = RxBool(false);
+  RxBool dataGetLoading = RxBool(false);
 
   final RxList<StatModel> statList = RxList.empty();
   final RxList<InventoryItemModel> myAllItems = RxList.empty();
@@ -161,6 +165,9 @@ class InventoryController extends GetxController with LinearProgressMixin, Inven
   }
 
   Future<void> refreshController() async {
+    myAllItems.value = RxList.empty();
+    page.value = 0;
+    stopLoading.value = false;
     getUserAllItems();
     getUserBadgesList();
   }
@@ -221,7 +228,7 @@ class InventoryController extends GetxController with LinearProgressMixin, Inven
     Get.toNamed(Routes.badgeDetail);
   }
 
-  void getUserAllItems() async {
+  Future<void> getUserAllItems() async {
     await ItemService.getAllMyItems(
       successCallback: (allItems) {
         myAllItems.value = allItems;
@@ -337,5 +344,24 @@ class InventoryController extends GetxController with LinearProgressMixin, Inven
   void closeRepairPopup() {
     initRepairInfo();
     Get.back();
+  }
+
+  @override
+  Future<void> onEndScroll() async {
+    if (!stopLoading.value) {
+      page.value++;
+      await getUserAllItems();
+    }
+  }
+
+  @override
+  Future<void> onTopScroll() {
+    print('top reached');
+    return Future.delayed(
+      const Duration(milliseconds: 10),
+      () {
+        print('top reached');
+      },
+    );
   }
 }

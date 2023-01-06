@@ -1272,8 +1272,9 @@ void itemPurchaseImpossibleAlert() {
 void itemSortListAlert(ShopController controller) {
   showAlert(
     contentWidget: Padding(
-        padding: EdgeInsets.only(top: 20.0.sp, bottom: 40.sp),
-        child: Obx(() {
+      padding: EdgeInsets.only(top: 20.0.sp, bottom: 40.sp),
+      child: Obx(
+        () {
           return Column(
             children: [
               ...controller.sortingList.asMap().entries.map(
@@ -1300,7 +1301,9 @@ void itemSortListAlert(ShopController controller) {
                   ),
             ],
           );
-        })),
+        },
+      ),
+    ),
     actions: [
       Expanded(
         child: GazagoButton(
@@ -1432,7 +1435,25 @@ void itemFilterListAlert(ShopController controller) {
                           child: InkWell(
                             onTap: () => controller.onSelectGrade(entry.value['value']),
                             child: Container(
-                              child: getItemGradeCircleIcon(entry.value['value']!),
+                              decoration: BoxDecoration(
+                                color: controller.selectedGrade.any((element) => element == entry.value['value']) ? getItemGradeColor(entry.value['value']!) : popupBgColor,
+                                border: Border.all(
+                                  width: 1,
+                                  color: getItemGradeColor(entry.value['value']!),
+                                ),
+                                borderRadius: BorderRadius.circular(20.sp),
+                              ),
+                              child: Padding(
+                                padding: EdgeInsets.symmetric(horizontal: 12.0.sp, vertical: 6.sp),
+                                child: StyledText(
+                                  entry.value['title']!,
+                                  fontSize: 14,
+                                  lineHeight: 16,
+                                  letterSpacing: .2,
+                                  fontWeight: 500,
+                                  color: controller.selectedGrade.any((element) => element == entry.value['value']) ? Colors.black : getItemGradeColor(entry.value['value']!),
+                                ),
+                              ),
                             ),
                           ),
                         ),
