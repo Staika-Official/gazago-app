@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-
 import 'package:gaza_go/presentations/styles/colors.dart';
 
 // Common Icons
@@ -96,7 +95,7 @@ SvgPicture iconChevronUp = SvgPicture.asset('assets/images/preference/ico_chevro
 SvgPicture iconEmpty = SvgPicture.asset('assets/images/wallet/ico_empty.svg', width: 90.sp, height: 90.sp);
 SvgPicture iconIn = SvgPicture.asset('assets/images/wallet/ico_in.svg', width: 20.sp, height: 20.sp);
 SvgPicture iconOut = SvgPicture.asset('assets/images/wallet/ico_out.svg', width: 20.sp, height: 20.sp);
-
+SvgPicture iconArrowRight = SvgPicture.asset('assets/images/wallet/ico_arrow_right.svg', width: 20.sp, height: 20.sp);
 
 //shop
 SvgPicture iconShopStamina = SvgPicture.asset('assets/images/shop/ico_stat_stamina.svg', width: 14.sp, height: 14.sp, color: Colors.black);
@@ -104,4 +103,3 @@ SvgPicture iconShopDurability = SvgPicture.asset('assets/images/shop/ico_stat_du
 SvgPicture iconShopReward = SvgPicture.asset('assets/images/shop/ico_go_reward.svg', width: 14.sp, height: 14.sp, color: Colors.black);
 
 SvgPicture iconUp = SvgPicture.asset('assets/images/wallet/ico_up.svg', width: 22.sp, height: 22.sp);
-

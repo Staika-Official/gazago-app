@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:gaza_go/constants/enums.dart';
@@ -26,6 +28,8 @@ class WalletMasterController extends GetxController {
   final RxInt feeTikDurability = RxInt(0);
   final ScrollController transactionScrollController = ScrollController();
   final RxDouble transactionScrollPosition = RxDouble(0);
+  final GlobalKey webViewKey = GlobalKey();
+
   RxList<AssetTokenBalanceModel> get spendingTokenUiList {
     List<AssetTokenBalanceModel> balanceUiList = List.empty(growable: true);
 
@@ -175,5 +179,9 @@ class WalletMasterController extends GetxController {
       enableDrag: false,
       isScrollControlled: true,
     );
+  }
+
+  void moveToTaikPay() {
+    Get.toNamed(Routes.taikaPay);
   }
 }

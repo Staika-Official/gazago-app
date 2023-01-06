@@ -38,6 +38,7 @@ import 'package:gaza_go/presentations/views/term.dart';
 import 'package:gaza_go/presentations/views/verification/index.dart';
 import 'package:gaza_go/presentations/views/wallet/buy_tik.dart';
 import 'package:gaza_go/presentations/views/wallet/index.dart';
+import 'package:gaza_go/presentations/views/wallet/taika_pay.dart';
 import 'package:gaza_go/presentations/views/wallet/wallet_actions.dart';
 import 'package:gaza_go/presentations/views/wallet/wallet_detail.dart';
 import 'package:get/get_navigation/get_navigation.dart';
@@ -72,6 +73,7 @@ class Routes {
   static const buyTik = '/wallet/buy_tik';
   static const walletDetail = '/wallet/detail';
   static const walletActions = '/wallet/action';
+  static const taikaPay = '/wallet/taika_pay';
   static const inventory = '/inventory';
   static const itemDetail = '/inventory/item/detail';
   static const badgeDetail = '/inventory/badge/detail';
@@ -122,6 +124,7 @@ class Routes {
     stepPage(name: Routes.walletDetail, page: const WalletDetail()),
     stepPage(name: Routes.buyTik, page: const BuyTik()),
     stepPage(name: Routes.walletActions, page: const WalletActions()),
+    stepPage(name: Routes.taikaPay, page: const TaikaPay()),
     stepPage(name: Routes.inventory, page: const InventoryHome()),
     stepPage(name: Routes.itemDetail, page: const InventoryItemDetail()),
     stepPage(name: Routes.badgeDetail, page: const InventoryBadgeDetail()),

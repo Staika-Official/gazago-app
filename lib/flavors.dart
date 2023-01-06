@@ -40,4 +40,17 @@ class F {
         return BaseUrl.dev;
     }
   }
+
+  static String get taikaPayUrl {
+    switch (appFlavor) {
+      case Flavor.dev:
+        return 'https://stage.taikapay.com';
+      case Flavor.stage:
+        return 'https://stage.taikapay.com';
+      case Flavor.prod:
+        return 'https://taikapay.com';
+      default:
+        return 'https://stage.taikapay.com';
+    }
+  }
 }

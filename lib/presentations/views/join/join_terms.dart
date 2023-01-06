@@ -89,6 +89,7 @@ class JoinTerms extends StatelessWidget {
     JoinTermsController controller = Get.put(JoinTermsController());
 
     return DefaultContainer(
+      isLeadingShow: false,
       backgroundColor: subBg01Color,
       child: Padding(
         padding: EdgeInsets.all(20.sp),

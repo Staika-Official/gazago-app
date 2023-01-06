@@ -22,9 +22,10 @@ class LoadingController extends GetxController {
   final RxInt time = RxInt(0);
   final RxList<TermsStatusModel> termsList = RxList.empty();
   RxBool get allRequiredAgreed {
-    if (termsList.singleWhere((term) => term.boardType == 'TERMS').activated &&
-        termsList.singleWhere((term) => term.boardType == 'LOCATION').activated &&
-        termsList.singleWhere((term) => term.boardType == 'PRIVACY').activated) {
+    if (termsList.isNotEmpty &&
+        termsList.singleWhere((term) => term.boardType == 'TERMS', orElse: () => TermsStatusModel(activated: false, boardType: 'TERMS')).activated &&
+        termsList.singleWhere((term) => term.boardType == 'LOCATION', orElse: () => TermsStatusModel(activated: false, boardType: 'LOCATION')).activated &&
+        termsList.singleWhere((term) => term.boardType == 'PRIVACY', orElse: () => TermsStatusModel(activated: false, boardType: 'PRIVACY')).activated) {
       return RxBool(true);
     } else {
       return RxBool(false);
@@ -38,6 +39,7 @@ class LoadingController extends GetxController {
       if (Get.isRegistered<WalletMasterController>()) Get.find<WalletMasterController>().onInit();
       if (Get.isRegistered<ActivityController>()) Get.find<ActivityController>().onInit();
     } else {
+      timerStop();
       Get.toNamed(Routes.joinTerms);
     }
 
