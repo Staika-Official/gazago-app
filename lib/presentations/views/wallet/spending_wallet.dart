@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:flutter_svg_provider/flutter_svg_provider.dart';
 import 'package:gaza_go/constants/enums.dart';
 import 'package:gaza_go/platform/controllers/wallet_master_controller.dart';
 import 'package:gaza_go/presentations/styles/colors.dart';
@@ -88,7 +89,7 @@ class SpendingWallet extends StatelessWidget {
                           children: [
                             CircleAvatar(
                               radius: 19.sp,
-                              backgroundColor: Colors.black,
+                              foregroundImage: const Svg('assets/images/wallet/ico_coupon.svg'),
                             ),
                             Expanded(
                               child: Padding(

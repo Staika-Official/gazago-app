@@ -12,6 +12,7 @@ class SignupComplete extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return DefaultContainer(
+      isLeadingShow: false,
       backgroundColor: subBg01Color,
       child: Padding(
         padding: EdgeInsets.all(20.sp),
