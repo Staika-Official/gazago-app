@@ -23,9 +23,8 @@ class InventoryItem extends StatelessWidget {
     return homeController.itemSubTabList
         .map(
           (tab) => GridView.count(
-            physics: const ScrollPhysics(),
             primary: false,
-            controller: controller.itemScrollController,
+            controller: controller.scroll,
             padding: EdgeInsets.only(left: 20.sp, right: 20.sp, bottom: 20.sp),
             childAspectRatio: (1 / 1.4),
             crossAxisSpacing: 10.sp,
@@ -167,9 +166,72 @@ class InventoryItem extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     InventoryHomeController controller = Get.find();
-    InventoryController inventoryController = Get.find();
+    // InventoryController inventoryController = Get.find();
+    InventoryController inventoryController = Get.put(InventoryController());
     double width = MediaQuery.of(context).size.width;
     double height = MediaQuery.of(context).size.height;
+    // return Scaffold(
+    //     body: NestedScrollView(
+    //   controller: inventoryController.scroll,
+    //   physics: const ClampingScrollPhysics(),
+    //   headerSliverBuilder: (BuildContext context, bool innerBoxIsScrolled) {
+    //     // These are the slivers that show up in the "outer" scroll view.
+    //     return <Widget>[
+    //       SliverOverlapAbsorber(
+    //         // This widget takes the overlapping behavior of the SliverAppBar,
+    //         // and redirects it to the SliverOverlapInjector below. If it is
+    //         // missing, then it is possible for the nested "inner" scroll view
+    //         // below to end up under the SliverAppBar even when the inner
+    //         // scroll view thinks it has not been scrolled.
+    //         // This is not necessary if the "headerSliverBuilder" only builds
+    //         // widgets that do not overlap the next sliver.
+    //         handle: NestedScrollView.sliverOverlapAbsorberHandleFor(context),
+    //         sliver: SliverAppBar(
+    //           // This is the title in the app bar.
+    //
+    //           backgroundColor: Colors.transparent,
+    //           elevation: 0,
+    //           // The "forceElevated" property causes the SliverAppBar to show
+    //           // a shadow. The "innerBoxIsScrolled" parameter is true when the
+    //           // inner scroll view is scrolled beyond its "zero" point, i.e.
+    //           // when it appears to be scrolled below the SliverAppBar.
+    //           // Without this, there are cases where the shadow would appear
+    //           // or not appear inappropriately, because the SliverAppBar is
+    //           // not actually aware of the precise position of the inner
+    //           // scroll views.
+    //           forceElevated: innerBoxIsScrolled,
+    //           bottom: TabBar(
+    //             controller: controller.subTabController,
+    //             isScrollable: true,
+    //             labelStyle: TextStyle(fontWeight: FontWeight.w500, fontSize: 14.sp),
+    //             labelColor: Colors.black,
+    //             unselectedLabelColor: const Color(0xFF898B92),
+    //             labelPadding: EdgeInsets.only(left: 14.0.sp, right: 14.0.sp, top: 6.0.sp, bottom: 3.0.sp),
+    //             indicator: BoxDecoration(
+    //               borderRadius: BorderRadius.circular(80.0.sp),
+    //               color: const Color(0xFFECECEC),
+    //             ),
+    //             tabs: [...renderItemSubTabList(controller)],
+    //           ),
+    //         ),
+    //       ),
+    //     ];
+    //   },
+    //   body: Obx(() {
+    //     return Padding(
+    //       padding: const EdgeInsets.only(top: 20.0),
+    //       child: Container(
+    //         color: Colors.black,
+    //         child: TabBarView(
+    //           controller: controller.subTabController,
+    //           children: [
+    //             ...renderItemList(controller, inventoryController, width, height),
+    //           ],
+    //         ),
+    //       ),
+    //     );
+    //   }),
+    // ));
     return Container(
       color: popupBgColor,
       child: Column(
@@ -202,7 +264,6 @@ class InventoryItem extends StatelessWidget {
               child: Padding(
                 padding: EdgeInsets.only(top: 5.0.sp),
                 child: TabBarView(
-                  physics: const NeverScrollableScrollPhysics(),
                   controller: controller.subTabController,
                   children: [
                     ...renderItemList(controller, inventoryController, width, height),

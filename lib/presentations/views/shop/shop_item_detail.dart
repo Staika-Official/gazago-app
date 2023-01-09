@@ -333,11 +333,11 @@ class ShopItemDetail extends StatelessWidget {
                             fontSize: 22,
                             lineHeight: 24,
                           ),
-                          if (controller.selectedItem.value.itemLabel == 'CLOSE_DEADLINE')
+                          if (controller.selectedItem.value.itemLabel != null)
                             Padding(
                               padding: EdgeInsets.only(top: 5.0.sp),
                               child: StyledText(
-                                '마감임박',
+                                controller.selectedItem.value.itemLabel! == 'CLOSE_DEADLINE' ? '마감임박' : '품절',
                                 fontWeight: 500,
                                 fontSize: 14,
                                 lineHeight: 16,

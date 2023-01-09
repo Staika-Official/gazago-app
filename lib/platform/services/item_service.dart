@@ -11,8 +11,8 @@ class ItemService {
     return HiveStore.loadString(key: HiveKey.userId.name);
   }
 
-  static Future<void> getAllMyItems({required Function successCallback, Function? errorCallback}) async {
-    Response res = await ItemApi.getAllMyItems(userId!);
+  static Future<void> getAllMyItems(int page, {required Function successCallback, Function? errorCallback}) async {
+    Response res = await ItemApi.getAllMyItems(userId!, page);
     if (res.statusCode == 200) {
       List<InventoryItemModel> userItems = List.empty(growable: true);
       if (res.data.length > 0) {

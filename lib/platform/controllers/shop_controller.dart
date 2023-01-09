@@ -130,12 +130,20 @@ class ShopController extends GetxController {
     });
   }
 
+  void getItemDetail(int itemId) async {
+    await ShopService.getShopItemDetails(itemId, successCallback: (ShopItemModel items) {
+      selectedItem.value = items;
+    });
+  }
+
   void handlePurchaseShopItem(int itemId) async {
     Get.back();
     await ShopService.fetchPurchaseShopItem(itemId, successCallback: (ShopItemPurchaseResponseModel items) {
       purchaseCompleteItem.value = items;
       showItemPurchaseCompletePopup();
       walletMasterController.getSpendingWalletBalances();
+      getShopItemsList();
+      getItemDetail(itemId);
     }, errorCallback: (statusCode) {
       if (statusCode == 422) {
         isShortBalance.value = true;

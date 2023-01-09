@@ -410,6 +410,7 @@ class ActivityController extends SuperController with ActivityMixin, ChallengeMi
         HiveStore.deleteMultipleKeys(keys: [
           HiveKey.accessToken.name,
           HiveKey.refreshToken.name,
+          HiveKey.accountStatus.name,
           HiveKey.userState.name,
           HiveKey.exerciseData.name,
           HiveKey.endExerciseRequested.name,

@@ -81,7 +81,7 @@ class AccountRestore extends StatelessWidget {
                           ],
                         ),
                         child: InkWell(
-                          onTap: () => Get.back(),
+                          onTap: () => loginController.handleTerminatedCancel(),
                           child: Padding(
                             padding: EdgeInsets.symmetric(vertical: 18.0.sp),
                             child: const Center(

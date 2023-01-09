@@ -165,7 +165,7 @@ class ShopItems extends StatelessWidget {
                           children: [
                             item.itemLabel != null
                                 ? StyledText(
-                                    '마감임박',
+                                    item.itemLabel! == 'CLOSE_DEADLINE' ? '마감임박' : '품절',
                                     fontSize: 12.sp,
                                     fontWeight: 600,
                                     color: skyBlueColor,

@@ -15,7 +15,7 @@ import 'package:gaza_go/platform/services/item_service.dart';
 import 'package:gaza_go/presentations/components/alert_ui_list.dart';
 import 'package:get/get.dart';
 
-class InventoryController extends GetxController with ScrollMixin, LinearProgressMixin, InventoryMixin  {
+class InventoryController extends GetxController with ScrollMixin, LinearProgressMixin, InventoryMixin {
   final WalletMasterController walletMasterController = Get.find();
 
   RxInt page = RxInt(0);
@@ -229,9 +229,16 @@ class InventoryController extends GetxController with ScrollMixin, LinearProgres
   }
 
   Future<void> getUserAllItems() async {
+    dataGetLoading.value = true;
     await ItemService.getAllMyItems(
+      page.value,
       successCallback: (allItems) {
-        myAllItems.value = allItems;
+        // myAllItems.value = allItems;
+        if (allItems.length < 100) {
+          stopLoading.value = true;
+        }
+        myAllItems.addAll(allItems);
+        dataGetLoading.value = false;
       },
     );
   }
@@ -348,6 +355,7 @@ class InventoryController extends GetxController with ScrollMixin, LinearProgres
 
   @override
   Future<void> onEndScroll() async {
+    print('bottom reached');
     if (!stopLoading.value) {
       page.value++;
       await getUserAllItems();

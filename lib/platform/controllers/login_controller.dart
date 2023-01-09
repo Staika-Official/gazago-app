@@ -124,7 +124,7 @@ class LoginController extends GetxController {
       clientId: 'GAZAGO',
       forceLogin: forceLogin,
     );
-    print('forceforceforce$forceLogin');
+
     await UaaService.socialLogin(
       loginInfo,
       successCallback: (AccessTokenModel token, int statusCode) async {
@@ -132,8 +132,9 @@ class LoginController extends GetxController {
         print('refresh token: ${token.refreshToken}');
 
         if (statusCode == 200) {
-          print(token.accountStatus);
           if (token.accountStatus == 'TERMINATION_REQUESTED') {
+            HiveStore.save(key: HiveKey.accessToken.name, value: token.accessToken);
+            HiveStore.save(key: HiveKey.refreshToken.name, value: token.refreshToken);
             Get.toNamed(Routes.accountRestore);
           } else if (token.accountStatus == 'ALREADY_CONNECTED_DEVICE') {
             showDuplicateLoginWarning(loginType, accessToken);
@@ -165,6 +166,27 @@ class LoginController extends GetxController {
 
   void showDuplicateLoginWarning(loginType, accessToken) {
     alreadyConnectedDeviceAlert(this, loginType, accessToken);
+  }
+
+  void handleTerminatedCancel() async {
+    await UaaService.fetchLogout(
+      successCallback: () {
+        HiveStore.deleteMultipleKeys(keys: [
+          HiveKey.accessToken.name,
+          HiveKey.refreshToken.name,
+          HiveKey.userState.name,
+          HiveKey.exerciseData.name,
+          HiveKey.endExerciseRequested.name,
+          HiveKey.badgeIssuanceRequested.name,
+          HiveKey.savedStepCount.name,
+          HiveKey.dummyStepCount.name,
+          HiveKey.savedStepInitialized.name,
+          HiveKey.authorities.name,
+        ]);
+        Get.offAllNamed(Routes.login);
+      },
+      errorCallback: () {},
+    );
   }
 
   void handleFetchWithdrawCancel() async {

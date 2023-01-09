@@ -97,6 +97,7 @@ SvgPicture iconEmpty = SvgPicture.asset('assets/images/wallet/ico_empty.svg', wi
 SvgPicture iconIn = SvgPicture.asset('assets/images/wallet/ico_in.svg', width: 20.sp, height: 20.sp);
 SvgPicture iconOut = SvgPicture.asset('assets/images/wallet/ico_out.svg', width: 20.sp, height: 20.sp);
 SvgPicture iconArrowRight = SvgPicture.asset('assets/images/wallet/ico_arrow_right.svg', width: 20.sp, height: 20.sp);
+SvgPicture iconGiftCon = SvgPicture.asset('assets/images/wallet/ico_giftcon.svg', width: 38.sp, height: 38.sp);
 
 //shop
 SvgPicture iconShopStamina = SvgPicture.asset('assets/images/shop/ico_stat_stamina.svg', width: 14.sp, height: 14.sp, color: Colors.black);

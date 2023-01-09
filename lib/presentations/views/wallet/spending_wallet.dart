@@ -86,10 +86,7 @@ class SpendingWallet extends StatelessWidget {
                         child: Row(
                           mainAxisSize: MainAxisSize.max,
                           children: [
-                            CircleAvatar(
-                              radius: 19.sp,
-                              backgroundColor: Colors.black,
-                            ),
+                            iconGiftCon,
                             Expanded(
                               child: Padding(
                                 padding: EdgeInsets.symmetric(horizontal: 10.sp),

@@ -47,6 +47,7 @@ enum HiveKey {
   fcmToken,
   accessToken,
   refreshToken,
+  accountStatus,
   userId,
   email,
   profileImageUrl,

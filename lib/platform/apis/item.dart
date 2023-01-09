@@ -11,8 +11,8 @@ class ItemApi {
     return items;
   }
 
-  static Future<Response> getAllMyItems(userId) async {
-    return await Api.client(serviceUrl: ServiceUrl.itemService).get('/users/$userId');
+  static Future<Response> getAllMyItems(userId, page) async {
+    return await Api.client(serviceUrl: ServiceUrl.itemService).get('/users/$userId', queryParameters: {'size': 100, 'page': page});
   }
 
   static Future<List<InventoryItemModel>> getMyItemByCategory(userId) async {
