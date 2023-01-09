@@ -71,6 +71,7 @@ class WalletMasterController extends GetxController {
       List<List<AssetTokenTransactionModel>> listsById = List.empty(growable: true);
       List<AssetTokenTransactionModel> tempList = List.empty(growable: true);
       for (AssetTokenTransactionModel transaction in rawList) {
+        print(transaction.transactionId);
         if (id != transaction.transactionId) {
           id = transaction.transactionId!;
           listsById.add(tempList);
@@ -78,6 +79,10 @@ class WalletMasterController extends GetxController {
         }
 
         tempList.add(transaction);
+
+        if (id == rawList.last.transactionId) {
+          listsById.add(tempList);
+        }
       }
 
       for (List<AssetTokenTransactionModel> listById in listsById) {
@@ -105,13 +110,6 @@ class WalletMasterController extends GetxController {
           transactionsList.add(outList.first);
         }
       }
-      // for (AssetTokenTransactionModel transaction in assetDetail.value.transactions) {
-      //   AssetTokenBalanceModel tokenUi;
-      //   if (['STIK', 'TOTAL_TIK'].any((symbol) => symbol == token.symbol)) {
-      //     tokenUi = token;
-      //     balanceUiList.add(tokenUi);
-      //   }
-      // }
     }
 
     return RxList(transactionsList);
