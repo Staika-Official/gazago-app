@@ -97,8 +97,8 @@ class LoadingController extends GetxController {
     await MemberService.getTermsAgreeStatus(successCallback: (termsList) {
       this.termsList.value = termsList;
       if (allRequiredAgreed.value) {
-        if (Get.isRegistered<WalletMasterController>()) Get.find<WalletMasterController>().onInit();
-        if (Get.isRegistered<ActivityController>()) Get.find<ActivityController>().onInit();
+        if (Get.isRegistered<WalletMasterController>()) Get.find<WalletMasterController>().initializeController();
+        if (Get.isRegistered<ActivityController>()) Get.find<ActivityController>().initializeController();
       } else {
         timerStop();
         Get.offNamed(Routes.joinTerms);

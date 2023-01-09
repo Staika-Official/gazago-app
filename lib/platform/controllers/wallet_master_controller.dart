@@ -115,13 +115,13 @@ class WalletMasterController extends GetxController {
     return RxList(transactionsList);
   }
 
-  @override
-  void onInit() async {
+  Future<void> initializeController() async {
     await getSpendingWalletBalances();
     transactionScrollController.addListener(() {
       transactionScrollPosition.value = transactionScrollController.position.pixels;
     });
-    super.onInit();
+
+    onInit();
   }
 
   Future<void> getSpendingWalletBalances() async {

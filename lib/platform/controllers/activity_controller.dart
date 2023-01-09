@@ -82,21 +82,14 @@ class ActivityController extends SuperController with ActivityMixin, ChallengeMi
   final Rx<Control> challengeLoadControl = Rx(Control.play);
   final RxDouble challengeLoadControlPosition = RxDouble(0);
 
-  @override
-  void onInit() async {
+  Future<void> initializeController() async {
     challengeGuideController = AnimationController(vsync: this);
     await initController();
     checkConnectivityStatus();
-    super.onInit();
-  }
-
-  @override
-  void onReady() {
     if ([ExerciseState.ongoing, ExerciseState.paused].any((state) => state == exerciseState.value)) {
       showPendingExerciseAlert(this);
     }
     disableActivityButton.value = false;
-    super.onReady();
   }
 
   @override
