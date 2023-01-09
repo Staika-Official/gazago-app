@@ -147,7 +147,7 @@ class VerificationTerms extends StatelessWidget {
                         Padding(
                           padding: EdgeInsets.only(left: 12.0.sp),
                           child: const StyledText(
-                            '필수항목 모구 동의하기',
+                            '필수항목 모두 동의하기',
                             color: Colors.white,
                             fontWeight: 500,
                             fontSize: 16,
