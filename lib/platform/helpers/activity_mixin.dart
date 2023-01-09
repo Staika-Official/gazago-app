@@ -608,7 +608,7 @@ mixin ActivityMixin {
 
   void moveToExerciseDetail(int exerciseId) {
     Get.until((route) => route.isFirst);
-    Get.find<HomeMenuController>().selectMenu(1);
+    Get.find<HomeMenuController>().selectMenu(0);
     if (Get.isRegistered<ArchiveController>()) {
       Get.find<ArchiveController>().toDetail(exerciseId);
     } else {

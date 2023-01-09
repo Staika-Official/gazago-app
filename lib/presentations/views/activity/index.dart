@@ -10,7 +10,6 @@ import 'package:gaza_go/presentations/styles/colors.dart';
 import 'package:gaza_go/presentations/styles/icons.dart';
 import 'package:gaza_go/presentations/styles/styled_text.dart';
 import 'package:get/get.dart';
-import 'package:lottie/lottie.dart';
 import 'package:simple_animations/simple_animations.dart';
 
 class ActivityHome extends StatelessWidget {
@@ -570,8 +569,6 @@ class ActivityHome extends StatelessWidget {
                                                   children: [
                                                     InkWell(
                                                       onTap: () {
-                                                        print('hello!!!!!!!!!!!!!!');
-                                                        print(challengeMovie.duration);
                                                         controller.challengeLoadControl.value = Control.playReverseFromEnd;
                                                         Timer(Duration.zero, () {
                                                           controller.challengeLoadControl.value = Control.stop;
@@ -603,19 +600,20 @@ class ActivityHome extends StatelessWidget {
                                                   ],
                                                 ),
                                               ),
+                                              // Positioned(
+                                              //   bottom: value.get('bottom'),
+                                              //   right: 0,
+                                              //   child: Lottie.asset(
+                                              //     'assets/lottie/flag.json',
+                                              //     width: 70,
+                                              //     height: 70,
+                                              //     repeat: false,
+                                              //   ),
+                                              // ),
                                               Positioned(
-                                                bottom: value.get('bottom'),
-                                                right: 0,
-                                                child: Lottie.asset(
-                                                  'assets/lottie/flag.json',
-                                                  width: 70,
-                                                  height: 70,
-                                                  repeat: false,
-                                                  // controller: controller.challengeGuideController,
-                                                  // onLoaded: (composition) {
-                                                  //   controller.challengeGuideController..play();
-                                                  // },
-                                                ),
+                                                bottom: 0,
+                                                right: 5,
+                                                child: iconChallengeFlag,
                                               ),
                                             ],
                                           ),

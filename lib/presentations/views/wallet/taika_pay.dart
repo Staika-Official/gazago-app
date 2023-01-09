@@ -1,10 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_inappwebview/flutter_inappwebview.dart';
 import 'package:gaza_go/constants/enums.dart';
-import 'package:gaza_go/flavors.dart';
 import 'package:gaza_go/platform/controllers/wallet_master_controller.dart';
 import 'package:gaza_go/platform/stores/hive_store.dart';
-import 'package:gaza_go/presentations/styles/colors.dart';
 import 'package:get/get.dart';
 
 class TaikaPay extends StatelessWidget {
@@ -14,38 +13,42 @@ class TaikaPay extends StatelessWidget {
   Widget build(BuildContext context) {
     WalletMasterController controller = Get.find();
 
-    return Container(
-      color: mainBg01Color,
-      child: SafeArea(
-        child: InAppWebView(
-          key: controller.webViewKey,
-          initialUrlRequest: URLRequest(url: WebUri(F.taikaPayUrl)),
-          initialSettings: InAppWebViewSettings(
-            disableContextMenu: true,
-            javaScriptEnabled: true,
+    return AnnotatedRegion(
+      value: SystemUiOverlayStyle.dark,
+      child: Container(
+        color: Colors.white,
+        child: SafeArea(
+          child: InAppWebView(
+            key: controller.webViewKey,
+            initialUrlRequest: URLRequest(url: WebUri('http://localhost:3000')),
+            // initialUrlRequest: URLRequest(url: WebUri(F.taikaPayUrl)),
+            initialSettings: InAppWebViewSettings(
+              disableContextMenu: true,
+              javaScriptEnabled: true,
+            ),
+            onWebViewCreated: (controller) {
+              // register a JavaScript handler with name "myHandlerName"
+              controller.addJavaScriptHandler(
+                  handlerName: 'app',
+                  callback: (args) {
+                    // print arguments coming from the JavaScript side!
+                    Map result = {};
+
+                    switch (args[0]) {
+                      case 'closeWebview':
+                        Get.back();
+                        break;
+
+                      case 'getToken':
+                        String token = HiveStore.loadString(key: HiveKey.accessToken.name)!;
+                        result = {'appToken': token};
+                        break;
+                    }
+
+                    return result;
+                  });
+            },
           ),
-          onWebViewCreated: (controller) {
-            // register a JavaScript handler with name "myHandlerName"
-            controller.addJavaScriptHandler(
-                handlerName: 'app',
-                callback: (args) {
-                  // print arguments coming from the JavaScript side!
-                  Map result = {};
-
-                  switch (args[0]) {
-                    case 'closeWebview':
-                      Get.back();
-                      break;
-
-                    case 'getToken':
-                      String token = HiveStore.loadString(key: HiveKey.accessToken.name)!;
-                      result = {'appToken': token};
-                      break;
-                  }
-
-                  return result;
-                });
-          },
         ),
       ),
     );

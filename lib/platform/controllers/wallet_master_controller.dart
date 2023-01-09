@@ -13,7 +13,11 @@ import 'package:gaza_go/platform/models/asset_token_transaction_model.dart';
 import 'package:gaza_go/platform/models/buy_tik_response_model.dart';
 import 'package:gaza_go/platform/models/pay_info_model.dart';
 import 'package:gaza_go/platform/models/token_info_model.dart';
+import 'package:gaza_go/platform/models/user_account_model.dart';
+import 'package:gaza_go/platform/services/uaa_service.dart';
 import 'package:gaza_go/platform/services/wallet_service.dart';
+import 'package:gaza_go/presentations/components/gazago_button.dart';
+import 'package:gaza_go/presentations/styles/colors.dart';
 import 'package:get/get.dart';
 
 class WalletMasterController extends GetxController {
@@ -67,6 +71,7 @@ class WalletMasterController extends GetxController {
       List<List<AssetTokenTransactionModel>> listsById = List.empty(growable: true);
       List<AssetTokenTransactionModel> tempList = List.empty(growable: true);
       for (AssetTokenTransactionModel transaction in rawList) {
+        print(transaction.transactionId);
         if (id != transaction.transactionId) {
           id = transaction.transactionId!;
           listsById.add(tempList);
@@ -74,6 +79,10 @@ class WalletMasterController extends GetxController {
         }
 
         tempList.add(transaction);
+
+        if (id == rawList.last.transactionId) {
+          listsById.add(tempList);
+        }
       }
 
       for (List<AssetTokenTransactionModel> listById in listsById) {
@@ -101,25 +110,18 @@ class WalletMasterController extends GetxController {
           transactionsList.add(outList.first);
         }
       }
-      // for (AssetTokenTransactionModel transaction in assetDetail.value.transactions) {
-      //   AssetTokenBalanceModel tokenUi;
-      //   if (['STIK', 'TOTAL_TIK'].any((symbol) => symbol == token.symbol)) {
-      //     tokenUi = token;
-      //     balanceUiList.add(tokenUi);
-      //   }
-      // }
     }
 
     return RxList(transactionsList);
   }
 
-  @override
-  void onInit() async {
+  Future<void> initializeController() async {
     await getSpendingWalletBalances();
     transactionScrollController.addListener(() {
       transactionScrollPosition.value = transactionScrollController.position.pixels;
     });
-    super.onInit();
+
+    onInit();
   }
 
   Future<void> getSpendingWalletBalances() async {
@@ -181,7 +183,27 @@ class WalletMasterController extends GetxController {
     );
   }
 
-  void moveToTaikPay() {
-    Get.toNamed(Routes.taikaPay);
+  void moveToTaikaPay() async {
+    await UaaService.getAccountInfo(
+      successCallback: (UserAccountModel user) {
+        if (user.authorities!.contains('ROLE_CERTIFIED_USER')) {
+          Get.toNamed(Routes.taikaPay);
+        } else {
+          showAlert(
+            title: '본인인증이 필요합니다.',
+            contentText: '상품권 교환을 위해서는 본인인증이 필요하여\n인증페이지로 이동합니다.',
+            actions: [
+              Expanded(
+                child: GazagoButton(
+                  onTap: () => Get.toNamed(Routes.verificationTerms),
+                  buttonText: '확인',
+                  buttonColor: skyBlueColor,
+                ),
+              ),
+            ],
+          );
+        }
+      },
+    );
   }
 }

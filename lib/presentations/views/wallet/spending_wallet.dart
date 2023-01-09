@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:flutter_svg_provider/flutter_svg_provider.dart';
 import 'package:gaza_go/constants/enums.dart';
 import 'package:gaza_go/platform/controllers/wallet_master_controller.dart';
 import 'package:gaza_go/presentations/styles/colors.dart';
@@ -70,7 +71,7 @@ class SpendingWallet extends StatelessWidget {
                   ],
                 ),
                 child: InkWell(
-                  onTap: () => controller.moveToTaikPay(),
+                  onTap: () => controller.moveToTaikaPay(),
                   borderRadius: BorderRadius.circular(12.sp),
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.center,
@@ -86,7 +87,10 @@ class SpendingWallet extends StatelessWidget {
                         child: Row(
                           mainAxisSize: MainAxisSize.max,
                           children: [
-                            iconGiftCon,
+                            CircleAvatar(
+                              radius: 19.sp,
+                              foregroundImage: const Svg('assets/images/wallet/ico_coupon.svg'),
+                            ),
                             Expanded(
                               child: Padding(
                                 padding: EdgeInsets.symmetric(horizontal: 10.sp),
