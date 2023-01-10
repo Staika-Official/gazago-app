@@ -21,8 +21,7 @@ class TaikaPay extends StatelessWidget {
         child: SafeArea(
           child: InAppWebView(
             key: controller.webViewKey,
-            initialUrlRequest: URLRequest(url: WebUri('http://localhost:3000')),
-            // initialUrlRequest: URLRequest(url: WebUri(F.taikaPayUrl)),
+            // initialUrlRequest: URLRequest(url: WebUri('http://localhost:3000')),
             initialUrlRequest: URLRequest(url: WebUri(F.taikaPayUrl)),
             initialSettings: InAppWebViewSettings(
               disableContextMenu: true,
