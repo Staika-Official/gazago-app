@@ -64,7 +64,7 @@ class ShopItemDetail extends StatelessWidget {
                                   return Column(
                                     children: [
                                       Padding(
-                                        padding: EdgeInsets.symmetric(vertical: 40.0.sp),
+                                        padding: EdgeInsets.only(top: 40.0.sp, bottom: 25.sp),
                                         child: Column(
                                           children: [
                                             // Image(
