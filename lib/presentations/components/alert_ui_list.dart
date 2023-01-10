@@ -877,7 +877,7 @@ void itemPurchaseShortBalanceAlert(ShopController controller, double remainMyTik
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 StyledText(
-                  '${controller.selectedItem.value.price.toString()} ',
+                  '${formatDecimalPlaces(controller.selectedItem.value.price, 0)} ',
                   fontSize: 30,
                   lineHeight: 32,
                   fontWeight: 600,
