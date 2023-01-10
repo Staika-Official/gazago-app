@@ -183,7 +183,7 @@ class WalletMasterController extends GetxController {
     );
   }
 
-  void moveToTaikaPay() async {
+  void onClickMoveToTaikaPay() async {
     await UaaService.getAccountInfo(
       successCallback: (UserAccountModel user) {
         if (user.authorities!.contains('ROLE_CERTIFIED_USER')) {
@@ -195,7 +195,7 @@ class WalletMasterController extends GetxController {
             actions: [
               Expanded(
                 child: GazagoButton(
-                  onTap: () => Get.toNamed(Routes.verificationTerms),
+                  onTap: () => moveToTaikaPay(),
                   buttonText: '확인',
                   buttonColor: skyBlueColor,
                 ),
@@ -205,5 +205,10 @@ class WalletMasterController extends GetxController {
         }
       },
     );
+  }
+
+  void moveToTaikaPay() async {
+    Get.back();
+    Get.toNamed(Routes.verificationTerms);
   }
 }

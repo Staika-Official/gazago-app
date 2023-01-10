@@ -71,7 +71,7 @@ class SpendingWallet extends StatelessWidget {
                   ],
                 ),
                 child: InkWell(
-                  onTap: () => controller.moveToTaikaPay(),
+                  onTap: () => controller.onClickMoveToTaikaPay(),
                   borderRadius: BorderRadius.circular(12.sp),
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.center,
