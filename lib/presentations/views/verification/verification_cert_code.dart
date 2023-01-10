@@ -102,7 +102,7 @@ class VerificationCertCode extends StatelessWidget {
                               ),
                             ),
                             SizedBox(
-                              width: 40,
+                              width: 45,
                               child: StyledText(
                                 controller.countdownString.value,
                                 color: deepGrayColor,
@@ -117,7 +117,7 @@ class VerificationCertCode extends StatelessWidget {
                                 bool finished = controller.countdownTime.value.inSeconds == 0;
                                 return SizedBox(
                                   height: 35,
-                                  width: 74,
+                                  width: 85,
                                   child: MaterialButton(
                                     color: finished ? popupBgColor : Colors.transparent,
                                     elevation: 0,
