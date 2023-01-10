@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_inappwebview/flutter_inappwebview.dart';
 import 'package:gaza_go/constants/enums.dart';
+import 'package:gaza_go/flavors.dart';
 import 'package:gaza_go/platform/controllers/wallet_master_controller.dart';
 import 'package:gaza_go/platform/stores/hive_store.dart';
 import 'package:get/get.dart';
@@ -22,6 +23,7 @@ class TaikaPay extends StatelessWidget {
             key: controller.webViewKey,
             initialUrlRequest: URLRequest(url: WebUri('http://localhost:3000')),
             // initialUrlRequest: URLRequest(url: WebUri(F.taikaPayUrl)),
+            initialUrlRequest: URLRequest(url: WebUri(F.taikaPayUrl)),
             initialSettings: InAppWebViewSettings(
               disableContextMenu: true,
               javaScriptEnabled: true,
