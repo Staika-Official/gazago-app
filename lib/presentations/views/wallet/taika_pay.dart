@@ -12,7 +12,7 @@ class TaikaPay extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    WalletMasterController controller = Get.find();
+    WalletMasterController walletController = Get.find();
 
     return AnnotatedRegion(
       value: SystemUiOverlayStyle.dark,
@@ -20,7 +20,7 @@ class TaikaPay extends StatelessWidget {
         color: Colors.white,
         child: SafeArea(
           child: InAppWebView(
-            key: controller.webViewKey,
+            key: walletController.webViewKey,
             // initialUrlRequest: URLRequest(url: WebUri('http://localhost:3000')),
             initialUrlRequest: URLRequest(url: WebUri(F.taikaPayUrl)),
             initialSettings: InAppWebViewSettings(
@@ -37,6 +37,7 @@ class TaikaPay extends StatelessWidget {
 
                     switch (args[0]) {
                       case 'closeWebview':
+                        walletController.getSpendingWalletBalances();
                         Get.back();
                         break;
 
