@@ -5,7 +5,6 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:gaza_go/constants/enums.dart';
-import 'package:gaza_go/constants/routes.dart';
 import 'package:gaza_go/platform/controllers/activity_controller.dart';
 import 'package:gaza_go/platform/controllers/archive_controller.dart';
 import 'package:gaza_go/platform/controllers/inventory_controller.dart';
@@ -1565,7 +1564,7 @@ void showInvalidVerifyCode(String errorMsg) {
     actions: [
       Expanded(
         child: GazagoButton(
-          onTap: () => Get.until((route) => Get.currentRoute == Routes.verificationName),
+          onTap: () => Get.back(),
           buttonText: '확인',
           buttonColor: skyBlueColor,
         ),
