@@ -48,7 +48,7 @@ class SecondaryAppbar extends StatelessWidget implements PreferredSizeWidget {
   Widget build(BuildContext context) {
     HomeMenuController controller = Get.put(HomeMenuController());
     WalletMasterController walletMasterController = Get.find();
-
+    var route = ModalRoute.of(context);
     return AppBar(
       backgroundColor: subBg01Color,
       automaticallyImplyLeading: false,
@@ -58,7 +58,7 @@ class SecondaryAppbar extends StatelessWidget implements PreferredSizeWidget {
         return Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            controller.isBackButton()
+            route!.settings.name == '/shop/item/detail'
                 ? Container(
                     width: 20,
                     padding: EdgeInsets.zero,

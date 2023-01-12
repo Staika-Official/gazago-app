@@ -177,18 +177,19 @@ class InventoryController extends GetxController with ScrollMixin, LinearProgres
   }
 
   void scrollControl() {
-    itemScrollController.addListener(() {
-      if (itemScrollController.position.atEdge) {
-        bool isTop = itemScrollController.position.pixels == 0;
-        if (isTop) {
-          //print('At the top');
-          singleChildScrollController.animateTo(0, duration: const Duration(milliseconds: 200), curve: Curves.easeInOut);
-        } else {
-          //print('At the bottom');
-          singleChildScrollController.animateTo(singleChildScrollController.position.maxScrollExtent, duration: const Duration(milliseconds: 200), curve: Curves.easeInOut);
-        }
-      }
-    });
+    // itemScrollController.addListener(() {
+    //   if (itemScrollController.position.atEdge) {
+    //     print('asdasdasda');
+    //     bool isTop = itemScrollController.position.pixels == 0;
+    //     if (isTop) {
+    //       //print('At the top');
+    //       singleChildScrollController.animateTo(0, duration: const Duration(milliseconds: 200), curve: Curves.easeInOut);
+    //     } else {
+    //       //print('At the bottom');
+    //       singleChildScrollController.animateTo(singleChildScrollController.position.maxScrollExtent, duration: const Duration(milliseconds: 200), curve: Curves.easeInOut);
+    //     }
+    //   }
+    // });
 
     badgeScrollController.addListener(() {
       if (badgeScrollController.position.atEdge) {
@@ -362,10 +363,10 @@ class InventoryController extends GetxController with ScrollMixin, LinearProgres
 
   @override
   Future<void> onEndScroll() async {
-    print('bottom reached');
     if (!stopLoading.value) {
       page.value++;
       await getUserAllItems();
+      singleChildScrollController.animateTo(singleChildScrollController.position.maxScrollExtent, duration: const Duration(milliseconds: 200), curve: Curves.easeInOut);
     }
   }
 
@@ -375,7 +376,7 @@ class InventoryController extends GetxController with ScrollMixin, LinearProgres
     return Future.delayed(
       const Duration(milliseconds: 10),
       () {
-        print('top reached');
+        singleChildScrollController.animateTo(0, duration: const Duration(milliseconds: 200), curve: Curves.easeInOut);
       },
     );
   }
