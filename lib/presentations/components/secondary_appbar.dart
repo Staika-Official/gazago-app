@@ -47,7 +47,6 @@ class SecondaryAppbar extends StatelessWidget implements PreferredSizeWidget {
   @override
   Widget build(BuildContext context) {
     WalletMasterController walletMasterController = Get.find();
-
     return AppBar(
       backgroundColor: subBg01Color,
       automaticallyImplyLeading: false,
