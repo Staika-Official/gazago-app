@@ -2,10 +2,10 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:custom_rounded_rectangle_border/custom_rounded_rectangle_border.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:gaza_go/platform/controllers/home_menu_controller.dart';
 import 'package:gaza_go/platform/controllers/shop_controller.dart';
 import 'package:gaza_go/platform/helpers/base_helper.dart';
 import 'package:gaza_go/platform/helpers/inventory_helper.dart';
+import 'package:gaza_go/presentations/components/secondary_appbar.dart';
 import 'package:gaza_go/presentations/styles/colors.dart';
 import 'package:gaza_go/presentations/styles/icons.dart';
 import 'package:gaza_go/presentations/styles/styled_text.dart';
@@ -16,10 +16,9 @@ class ShopItemDetail extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    HomeMenuController homeMenuController = Get.put(HomeMenuController());
     ShopController controller = Get.find();
     return Scaffold(
-      appBar: homeMenuController.appbarList[1],
+      appBar: const SecondaryAppbar(isShowBackButton: true),
       backgroundColor: subBg01Color,
       body: Obx(() {
         return SizedBox(

@@ -5,7 +5,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg_provider/flutter_svg_provider.dart' as sp;
 import 'package:gaza_go/constants/routes.dart';
-import 'package:gaza_go/platform/controllers/home_menu_controller.dart';
 import 'package:gaza_go/platform/controllers/wallet_master_controller.dart';
 import 'package:gaza_go/platform/helpers/base_helper.dart';
 import 'package:gaza_go/presentations/styles/colors.dart';
@@ -14,7 +13,8 @@ import 'package:gaza_go/presentations/styles/styled_text.dart';
 import 'package:get/get.dart';
 
 class SecondaryAppbar extends StatelessWidget implements PreferredSizeWidget {
-  const SecondaryAppbar({Key? key}) : super(key: key);
+  final bool isShowBackButton;
+  const SecondaryAppbar({Key? key, this.isShowBackButton = false}) : super(key: key);
 
   List<Widget> renderWalletItems(WalletMasterController walletMasterController) {
     return walletMasterController.spendingTokenUiList.map((token) {
@@ -46,7 +46,6 @@ class SecondaryAppbar extends StatelessWidget implements PreferredSizeWidget {
 
   @override
   Widget build(BuildContext context) {
-    HomeMenuController controller = Get.put(HomeMenuController());
     WalletMasterController walletMasterController = Get.find();
 
     return AppBar(
@@ -58,7 +57,7 @@ class SecondaryAppbar extends StatelessWidget implements PreferredSizeWidget {
         return Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            controller.isBackButton()
+            isShowBackButton
                 ? Container(
                     width: 20,
                     padding: EdgeInsets.zero,

@@ -60,10 +60,6 @@ class HomeMenuController extends SuperController {
     }
   }
 
-  bool isBackButton() {
-    return Get.currentRoute == Routes.shopItemDetail;
-  }
-
   void selectMenu(int index) {
     prevIndex.value = selectedIndex.value;
     selectedIndex.value = index;
