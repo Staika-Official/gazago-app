@@ -16,7 +16,7 @@ class Home extends StatelessWidget {
       decoration: BoxDecoration(
         color: controller.selectedIndex.value == 2
             ? const Color(0xFF252529)
-            : controller.selectedIndex.value == 1
+            : controller.selectedIndex.value == 1 || controller.selectedIndex.value == 3
                 ? popupBgColor
                 : subBg01Color,
       ),

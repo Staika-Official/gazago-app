@@ -1,4 +1,5 @@
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:custom_rounded_rectangle_border/custom_rounded_rectangle_border.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:gaza_go/platform/controllers/shop_controller.dart';
@@ -192,17 +193,16 @@ class ShopItems extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    ShopController shopController = Get.find();
+    ShopController shopController = Get.put(ShopController());
     return Obx(() {
       return Container(
-        decoration: BoxDecoration(
+        decoration: ShapeDecoration(
           color: popupBgColor,
-          border: Border.all(
-            width: 2,
-            color: Colors.black,
-          ),
-          borderRadius: const BorderRadius.all(
-            Radius.circular(15),
+          shape: CustomRoundedRectangleBorder(
+            borderRadius: BorderRadius.only(topLeft: Radius.circular(15.sp), topRight: Radius.circular(15.sp)),
+            topLeftCornerSide: BorderSide(color: Colors.black, width: 2.sp),
+            topRightCornerSide: BorderSide(color: Colors.black, width: 2.sp),
+            topSide: BorderSide(color: Colors.black, width: 2.sp),
           ),
         ),
         child: Padding(
