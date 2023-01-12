@@ -415,7 +415,7 @@ class ShopItems extends StatelessWidget {
                         )
                   : Expanded(
                       child: Padding(
-                        padding: EdgeInsets.symmetric(vertical: 15.0.sp),
+                        padding: EdgeInsets.only(top: 15.0.sp),
                         child: Obx(() {
                           return GridView.count(
                             primary: false,
