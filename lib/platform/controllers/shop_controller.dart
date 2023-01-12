@@ -47,7 +47,7 @@ class ShopController extends GetxController {
 
   Rx isSelectedSortValue = Rx({'title': '최근 등록 순', 'value': 'id,DESC'});
   RxString isSelectedSortString = RxString('최근 등록 순');
-  ScrollController singleChildScrollController = ScrollController();
+
   ScrollController itemScrollController = ScrollController(keepScrollOffset: false);
   RxBool isShortBalance = RxBool(false);
   RxList<ShopItemModel> get sortingShopItemList {
@@ -100,26 +100,10 @@ class ShopController extends GetxController {
 
   Future<void> initController() async {
     getShopItemsList();
-    scrollControl();
   }
 
   Future<void> refreshController() async {
     getShopItemsList();
-  }
-
-  void scrollControl() {
-    itemScrollController.addListener(() {
-      if (itemScrollController.position.atEdge) {
-        bool isTop = itemScrollController.position.pixels == 0;
-        if (isTop) {
-          //print('At the top');
-          singleChildScrollController.animateTo(0, duration: const Duration(milliseconds: 200), curve: Curves.easeInOut);
-        } else {
-          //print('At the bottom');
-          singleChildScrollController.animateTo(singleChildScrollController.position.maxScrollExtent, duration: const Duration(milliseconds: 200), curve: Curves.easeInOut);
-        }
-      }
-    });
   }
 
   void toItemDetail(int itemId) async {
