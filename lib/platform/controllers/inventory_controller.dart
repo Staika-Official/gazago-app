@@ -228,6 +228,13 @@ class InventoryController extends GetxController with ScrollMixin, LinearProgres
     Get.toNamed(Routes.badgeDetail);
   }
 
+  void getUserAllItemsAfterEquiped() async {
+    myAllItems.value = RxList.empty();
+    page.value = 0;
+    stopLoading.value = false;
+    getUserAllItems();
+  }
+
   Future<void> getUserAllItems() async {
     dataGetLoading.value = true;
     await ItemService.getAllMyItems(
@@ -272,7 +279,7 @@ class InventoryController extends GetxController with ScrollMixin, LinearProgres
       itemId,
       successCallback: (item) {
         selectedItem.value = item;
-        getUserAllItems();
+        getUserAllItemsAfterEquiped();
         getUserEquippedItems();
         showToastPopup('아이템이 장착되었습니다.');
       },
