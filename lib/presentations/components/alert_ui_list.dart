@@ -5,6 +5,7 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:gaza_go/constants/enums.dart';
+import 'package:gaza_go/constants/routes.dart';
 import 'package:gaza_go/platform/controllers/activity_controller.dart';
 import 'package:gaza_go/platform/controllers/archive_controller.dart';
 import 'package:gaza_go/platform/controllers/inventory_controller.dart';
@@ -1550,6 +1551,30 @@ void showTelecomList(controller) {
 }
 
 void showInvalidVerifyCode(String errorMsg) {
+  showAlert(
+    contentWidget: Padding(
+      padding: EdgeInsets.only(bottom: 35.0.sp),
+      child: StyledText(
+        errorMsg,
+        fontSize: 18,
+        lineHeight: 24,
+        fontWeight: 500,
+        textAlign: TextAlign.center,
+      ),
+    ),
+    actions: [
+      Expanded(
+        child: GazagoButton(
+          onTap: () => Get.until((route) => Get.currentRoute == Routes.verificationName),
+          buttonText: '확인',
+          buttonColor: skyBlueColor,
+        ),
+      ),
+    ],
+  );
+}
+
+void showInvalidCertCode(String errorMsg) {
   showAlert(
     contentWidget: Padding(
       padding: EdgeInsets.only(bottom: 35.0.sp),

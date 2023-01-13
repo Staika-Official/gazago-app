@@ -61,7 +61,7 @@ class VerificationCertCodeController extends GetxController {
         showToastPopup('본인인증이 완료되었습니다.');
         Get.until((route) => Get.currentRoute == Routes.home);
       } else {
-        showInvalidVerifyCode(res.data['errorMessage']);
+        showInvalidCertCode(res.data['errorMessage']);
       }
     });
   }

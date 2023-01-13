@@ -12,23 +12,20 @@ class OnBoardingController extends GetxController {
   }
 
   final List<Map<String, String>> _content = [
-    {'title': 'Decentalized\nAssets,', 'content': '쉽고 간편한 회원가입'},
-    {'title': 'Integrated\nManagement,', 'content': '빠르고 안전한 디지털 자산 송금'},
-    {'title': 'Staika focuses\non these problems,', 'content': '편안한 마음 편안한 디지털 자산 관리'}
+    {'title': '가자고! 산으로', 'content': '대한민국 명산 중 원하는 코스를 골라\n도전하고 뱃지를 보상으로 받아요'},
+    {'title': '받자고! 혜택을', 'content': '빠아침 햇살 내린 동네 앞길을 산책하면\n어느덧 토큰으로 보상이 쌓여요'},
+    {'title': '만나자고! 다함께', 'content': '몸과 마음 그리고 혜택까지 챙겨주는 가자고를\n친구, 가족, 그리고 연인과 함께 가자고!'}
   ];
 
   final List<Map<String, dynamic>> imgList = [
     {
-      'path': 'assets/images/onboarding_1.png',
-      'height': 250.0,
+      'path': 'assets/images/common/img_onboarding_01.png',
     },
     {
-      'path': 'assets/images/onboarding_2.png',
-      'height': 310.0,
+      'path': 'assets/images/common/img_onboarding_02.png',
     },
     {
-      'path': 'assets/images/onboarding_3.png',
-      'height': 275.0,
+      'path': 'assets/images/common/img_onboarding_03.png',
     },
   ];
 
