@@ -22,7 +22,7 @@ class TermController extends GetxController {
   }
 
   Future<void> getTermInfo() async {
-    await BoardService.getFirstPostByType(termType.value, successCallback: (List<TermItemModel> termItems) {
+    await BoardService.getPostListByType(termType.value, successCallback: (List<TermItemModel> termItems) {
       termTitle.value = termItems.first.title!;
       termContent.value = termItems.first.content!;
       termId.value = termItems.first.id!;

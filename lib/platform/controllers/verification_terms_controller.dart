@@ -22,7 +22,7 @@ class VerificationTermsController extends GetxController {
   }
 
   void getTermsList() async {
-    await BoardService.getFirstPostByType('IDENTITY_A,IDENTITY_B,IDENTITY_C,IDENTITY_D,IDENTITY_E', successCallback: (List<TermItemModel> terms) {
+    await BoardService.getPostListByType('IDENTITY_A,IDENTITY_B,IDENTITY_C,IDENTITY_D,IDENTITY_E', successCallback: (List<TermItemModel> terms) {
       termsList.value = terms;
     });
   }
