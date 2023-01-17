@@ -38,6 +38,7 @@ void initDebuggingMode() {
   HiveStore.save(key: HiveKey.requestLogs.name, value: []);
   HiveStore.save(key: HiveKey.userExerciseDataLogs.name, value: []);
   HiveStore.save(key: HiveKey.positionLowDataLogs.name, value: []);
+  HiveStore.save(key: HiveKey.responseErrorLogs.name, value: []);
 }
 
 void main() async {

@@ -127,6 +127,23 @@ class Api {
       '\nError ResponseData: ${e.response?.data}',
     );
 
+    if (HiveStore.load(key: HiveKey.isDebuggingMode.name)) {
+      List responseErrorLogs = HiveStore.load(key: HiveKey.responseErrorLogs.name) ?? [];
+      dynamic errorLogForm;
+      errorLogForm = {
+        'logInfo': '==================================================='
+            '\nERROR'
+            '\nErrorPath: ${e.response?.requestOptions.baseUrl}${e.response?.requestOptions.path}'
+            '\nErrorQuery: ${e.response?.requestOptions.queryParameters}'
+            '\nError ResponseCode: ${e.response?.statusCode}'
+            '\nError ResponseMessage: ${e.response?.statusMessage}'
+            '\nError ResponseData: ${e.response?.data}',
+      };
+
+      responseErrorLogs.add(errorLogForm);
+      HiveStore.save(key: HiveKey.responseErrorLogs.name, value: responseErrorLogs);
+    }
+
     if (e.response?.statusCode == ResponseStatus.unauthorized.code) {
       final String refreshToken = HiveStore.loadString(key: HiveKey.refreshToken.name) ?? '';
 

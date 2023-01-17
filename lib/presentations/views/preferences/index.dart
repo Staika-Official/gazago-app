@@ -170,6 +170,10 @@ class Preferences extends StatelessWidget {
                         onTap: () => Get.toNamed(Routes.requestInfo),
                       ),
                       PreferenceItem(
+                        title: 'Response Error Logs',
+                        onTap: () => Get.toNamed(Routes.responseErrorLogs),
+                      ),
+                      PreferenceItem(
                         title: 'Activity Logs',
                         onTap: () => Get.toNamed(Routes.activityLogs),
                       ),
