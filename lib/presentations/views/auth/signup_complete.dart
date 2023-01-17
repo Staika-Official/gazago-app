@@ -3,6 +3,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:gaza_go/constants/routes.dart';
 import 'package:gaza_go/presentations/components/default_container.dart';
 import 'package:gaza_go/presentations/styles/colors.dart';
+import 'package:gaza_go/presentations/styles/icons.dart';
 import 'package:gaza_go/presentations/styles/styled_text.dart';
 import 'package:get/get.dart';
 
@@ -28,6 +29,14 @@ class SignupComplete extends StatelessWidget {
                     Column(
                       mainAxisSize: MainAxisSize.min,
                       children: [
+                        Padding(
+                          padding: EdgeInsets.only(bottom: 25.0.sp),
+                          child: CircleAvatar(
+                            radius: 40,
+                            backgroundColor: popupBgColor,
+                            child: iconSkyBlueCheck,
+                          ),
+                        ),
                         const StyledText(
                           '회원가입이 완료 되었습니다.',
                           fontSize: 22,

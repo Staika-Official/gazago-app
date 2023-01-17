@@ -16,6 +16,7 @@ SvgPicture iconSortChecked = SvgPicture.asset('assets/images/common/ico_sort_che
 SvgPicture iconShopFilter = SvgPicture.asset('assets/images/common/ico_item_filter.svg', width: 18.sp, height: 16.sp);
 SvgPicture iconShopFilterActive = SvgPicture.asset('assets/images/common/ico_item_filter_active.svg', width: 18.sp, height: 16.sp);
 SvgPicture iconShopEmpty = SvgPicture.asset('assets/images/common/ico_shop_list_none.svg', width: 90.sp, height: 90.sp);
+SvgPicture iconSkyBlueCheck = SvgPicture.asset('assets/images/common/ico_check_sky_blue.svg', width: 48.sp, height: 26.sp);
 
 // Bottom Navigation Icon
 SvgPicture iconMenuHome = SvgPicture.asset('assets/images/common/ico_menu_home.svg', width: 20.5.sp, height: 20.sp, color: lightGrayColor);
