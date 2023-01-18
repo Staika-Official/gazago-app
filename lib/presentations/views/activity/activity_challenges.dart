@@ -355,7 +355,7 @@ class ActivityChallenges extends StatelessWidget {
                     ],
                   ),
                   child: const StyledText(
-                    '첼린지 고르기',
+                    '챌린지 고르기',
                     fontSize: 16,
                     fontWeight: 500,
                     lineHeight: 22,

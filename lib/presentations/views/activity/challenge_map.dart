@@ -173,7 +173,7 @@ class ChallengeMap extends StatelessWidget {
                     ],
                   ),
                   child: const StyledText(
-                    '첼린지 가이드',
+                    '챌린지 가이드',
                     fontSize: 16,
                     fontWeight: 500,
                     lineHeight: 22,
