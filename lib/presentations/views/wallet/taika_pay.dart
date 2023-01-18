@@ -14,42 +14,49 @@ class TaikaPay extends StatelessWidget {
   Widget build(BuildContext context) {
     WalletMasterController walletController = Get.find();
 
-    return AnnotatedRegion(
-      value: SystemUiOverlayStyle.dark,
-      child: Container(
-        color: Colors.white,
-        child: SafeArea(
-          child: InAppWebView(
-            key: walletController.webViewKey,
-            // initialUrlRequest: URLRequest(url: WebUri('http://localhost:3000')),
-            initialUrlRequest: URLRequest(url: WebUri(F.taikaPayUrl)),
-            initialSettings: InAppWebViewSettings(
-              disableContextMenu: true,
-              javaScriptEnabled: true,
+    return WillPopScope(
+      onWillPop: () async => await walletController.getSpendingWalletBalances().then((value) => true),
+      child: AnnotatedRegion(
+        value: SystemUiOverlayStyle.dark,
+        child: Container(
+          color: Colors.white,
+          child: SafeArea(
+            child: InAppWebView(
+              key: walletController.webViewKey,
+              // initialUrlRequest: URLRequest(url: WebUri('http://localhost:3000')),
+              initialUrlRequest: URLRequest(url: WebUri(F.taikaPayUrl)),
+              initialSettings: InAppWebViewSettings(
+                disableContextMenu: true,
+                javaScriptEnabled: true,
+              ),
+              onWebViewCreated: (controller) {
+                // register a JavaScript handler with name "myHandlerName"
+                controller.addJavaScriptHandler(
+                    handlerName: 'app',
+                    callback: (args) {
+                      // print arguments coming from the JavaScript side!
+                      Map result = {};
+
+                      switch (args[0]) {
+                        case 'closeWebview':
+                          walletController.getSpendingWalletBalances();
+                          Get.back();
+                          break;
+
+                        case 'getToken':
+                          String token = HiveStore.loadString(key: HiveKey.accessToken.name)!;
+                          result = {'appToken': token};
+                          break;
+
+                        case 'refreshBalance':
+                          walletController.getSpendingWalletBalances();
+                          break;
+                      }
+
+                      return result;
+                    });
+              },
             ),
-            onWebViewCreated: (controller) {
-              // register a JavaScript handler with name "myHandlerName"
-              controller.addJavaScriptHandler(
-                  handlerName: 'app',
-                  callback: (args) {
-                    // print arguments coming from the JavaScript side!
-                    Map result = {};
-
-                    switch (args[0]) {
-                      case 'closeWebview':
-                        walletController.getSpendingWalletBalances();
-                        Get.back();
-                        break;
-
-                      case 'getToken':
-                        String token = HiveStore.loadString(key: HiveKey.accessToken.name)!;
-                        result = {'appToken': token};
-                        break;
-                    }
-
-                    return result;
-                  });
-            },
           ),
         ),
       ),
