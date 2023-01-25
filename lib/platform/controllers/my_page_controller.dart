@@ -66,6 +66,10 @@ class MyPageController extends GetxController {
       );
     }
 
+    if (profile.value.profileImageUrl == null || profile.value.profileImageUrl == '') {
+      profile.value.profileImageUrl = 'https://image.staika.io/ic_launcher.png';
+    }
+
     await UaaService.modifyAccountInfo(
       profile.value.nickname!,
       profile.value.profileImageUrl,
