@@ -6,6 +6,8 @@ import 'package:gaza_go/presentations/views/activity/activity_challenges.dart';
 import 'package:gaza_go/presentations/views/activity/activity_loading.dart';
 import 'package:gaza_go/presentations/views/activity/challenge_map.dart';
 import 'package:gaza_go/presentations/views/activity/equipped_item.dart';
+import 'package:gaza_go/presentations/views/admob/rewarded.dart';
+import 'package:gaza_go/presentations/views/admob/rewarded_interstitial.dart';
 import 'package:gaza_go/presentations/views/archive/archive_detail.dart';
 import 'package:gaza_go/presentations/views/auth/account_restore.dart';
 import 'package:gaza_go/presentations/views/auth/signup_complete.dart';
@@ -98,6 +100,8 @@ class Routes {
   static const userExerciseDataLogs = '/debugging/user_exercise_data_logs';
   static const positionLowDataLogs = '/debugging/position_low_data_logs';
   static const shopItemDetail = '/shop/item/detail';
+  static const adMobRewarded = '/admob/reward';
+  static const adMobRewardedInterstitial = '/admob/interstitial';
 
   static List<GetPage> pages = [
     stepPage(name: Routes.login, page: const Login()),
@@ -155,6 +159,8 @@ class Routes {
     stepPage(name: Routes.userExerciseDataLogs, page: const UserExerciseDataLogs()),
     stepPage(name: Routes.positionLowDataLogs, page: const PositionLowDataLogs()),
     stepPage(name: Routes.shopItemDetail, page: const ShopItemDetail()),
+    stepPage(name: Routes.adMobRewarded, page: const AdmobRewarded()),
+    stepPage(name: Routes.adMobRewardedInterstitial, page: const AdmobRewardedInterstitial()),
   ];
 }
 
