@@ -56,7 +56,7 @@ class Preferences extends StatelessWidget {
                                 Padding(
                                   padding: EdgeInsets.only(left: 14.0.sp),
                                   child: StyledText(
-                                    controller.profile.value.nickname!,
+                                    controller.profile.value.provider == 'APPLE' ? controller.profile.value.nickname!.split('@')[0] : controller.profile.value.nickname!,
                                     fontWeight: 500,
                                     fontSize: 14,
                                     lineHeight: 20,

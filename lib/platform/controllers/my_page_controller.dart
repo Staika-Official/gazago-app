@@ -68,7 +68,7 @@ class MyPageController extends GetxController {
 
     await UaaService.modifyAccountInfo(
       profile.value.nickname!,
-      profile.value.profileImageUrl!,
+      profile.value.profileImageUrl,
       successCallback: (account) {
         preferenceController.onInit();
         showToastPopup('프로필이 수정되었습니다.');
@@ -78,7 +78,13 @@ class MyPageController extends GetxController {
   }
 
   void toggleEditMode() {
-    nicknameTextController.text = profile.value.nickname!;
+    if (profile.value.provider == 'APPLE') {
+      nicknameTextController.text = profile.value.nickname!.split('@')[0];
+      profile.value.nickname = profile.value.nickname!.split('@')[0];
+    } else {
+      nicknameTextController.text = profile.value.nickname!;
+    }
+
     isEditMode.value = !isEditMode.value;
   }
 
