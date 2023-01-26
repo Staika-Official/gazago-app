@@ -8,7 +8,7 @@ import 'package:gaza_go/presentations/styles/colors.dart';
 import 'package:gaza_go/presentations/styles/icons.dart';
 import 'package:gaza_go/presentations/styles/styled_text.dart';
 import 'package:get/get.dart';
-import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
+import 'package:modal_bottom_sheet/modal_bottom_sheet.dart' as bs;
 import 'package:table_calendar/table_calendar.dart';
 
 class LeaderboardHome extends StatelessWidget {
@@ -62,7 +62,7 @@ class LeaderboardHome extends StatelessWidget {
             defaultTextStyle: const TextStyle(color: Colors.white),
             weekendTextStyle: const TextStyle(color: Colors.white),
             selectedDecoration:
-                BoxDecoration(color: skyBlueColor, shape: BoxShape.circle, border: Border.all(width: 14.sp, style: BorderStyle.solid, color: popupBgColor, strokeAlign: StrokeAlign.center)),
+                BoxDecoration(color: skyBlueColor, shape: BoxShape.circle, border: Border.all(width: 14.sp, style: BorderStyle.solid, color: popupBgColor, strokeAlign: BorderSide.strokeAlignCenter)),
             selectedTextStyle: TextStyle(
               color: Colors.black,
               fontSize: 16.0.sp,
@@ -369,7 +369,7 @@ class LeaderboardHome extends StatelessWidget {
                 ),
                 InkWell(
                   onTap: () => {
-                    showBarModalBottomSheet(
+                    bs.showBarModalBottomSheet(
                       context: context,
                       builder: (context) => showBottomCalender(context, controller),
                     )
