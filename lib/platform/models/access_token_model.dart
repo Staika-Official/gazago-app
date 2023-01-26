@@ -11,7 +11,7 @@ class AccessTokenModel {
   AccessTokenModel({
     this.accessToken,
     this.refreshToken,
-    required this.accountStatus,
+    this.accountStatus,
   });
 
   factory AccessTokenModel.fromJson(Map<String, dynamic> json) => _$AccessTokenModelFromJson(json);

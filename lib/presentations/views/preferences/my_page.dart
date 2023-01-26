@@ -121,13 +121,21 @@ class MyPage extends StatelessWidget {
                                           letterSpacing: -0.5,
                                         ),
                                         children: [
-                                          TextSpan(
-                                            text: controller.profile.value.nickname!.length.toString(),
-                                            style: TextStyle(
-                                              color: deepGrayColor,
-                                              fontSize: 12.sp,
-                                            ),
-                                          ),
+                                          controller.profile.value.provider == 'APPLE'
+                                              ? TextSpan(
+                                                  text: controller.profile.value.nickname!.split('@')[0].length.toString(),
+                                                  style: TextStyle(
+                                                    color: deepGrayColor,
+                                                    fontSize: 12.sp,
+                                                  ),
+                                                )
+                                              : TextSpan(
+                                                  text: controller.profile.value.nickname!.length.toString(),
+                                                  style: TextStyle(
+                                                    color: deepGrayColor,
+                                                    fontSize: 12.sp,
+                                                  ),
+                                                ),
                                           TextSpan(
                                             text: ' / ',
                                             style: TextStyle(
@@ -166,11 +174,17 @@ class MyPage extends StatelessWidget {
                                 mainAxisAlignment: MainAxisAlignment.center,
                                 crossAxisAlignment: CrossAxisAlignment.center,
                                 children: [
-                                  StyledText(
-                                    controller.profile.value.nickname!,
-                                    fontSize: 18,
-                                    fontWeight: 500,
-                                  ),
+                                  controller.profile.value.provider == 'APPLE'
+                                      ? StyledText(
+                                          controller.profile.value.nickname!.split('@')[0],
+                                          fontSize: 18,
+                                          fontWeight: 500,
+                                        )
+                                      : StyledText(
+                                          controller.profile.value.nickname!,
+                                          fontSize: 18,
+                                          fontWeight: 500,
+                                        ),
                                   Padding(
                                     padding: EdgeInsets.only(left: 5.sp, bottom: 4.sp),
                                     child: InkWell(
@@ -313,12 +327,33 @@ class MyPage extends StatelessWidget {
                                         fontWeight: 500,
                                         lineHeight: 20,
                                       ),
-                                      StyledText(
-                                        controller.profile.value.email,
-                                        fontSize: 14,
-                                        fontWeight: 500,
-                                        color: const Color(0xFFA8A8A8),
-                                      ),
+                                      controller.profile.value.provider == 'APPLE'
+                                          ? Column(
+                                              crossAxisAlignment: CrossAxisAlignment.end,
+                                              children: [
+                                                StyledText(
+                                                  controller.profile.value.email.split('@')[0],
+                                                  fontSize: 14,
+                                                  fontWeight: 500,
+                                                  color: const Color(0xFFA8A8A8),
+                                                ),
+                                                Padding(
+                                                  padding: EdgeInsets.only(top: 5.0.sp),
+                                                  child: StyledText(
+                                                    '@${controller.profile.value.email.split('@')[1]}',
+                                                    fontSize: 14,
+                                                    fontWeight: 500,
+                                                    color: const Color(0xFFA8A8A8),
+                                                  ),
+                                                ),
+                                              ],
+                                            )
+                                          : StyledText(
+                                              controller.profile.value.email,
+                                              fontSize: 14,
+                                              fontWeight: 500,
+                                              color: const Color(0xFFA8A8A8),
+                                            ),
                                     ],
                                   ),
                                 ),

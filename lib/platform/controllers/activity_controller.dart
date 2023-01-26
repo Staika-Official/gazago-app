@@ -345,7 +345,7 @@ class ActivityController extends SuperController with ActivityMixin, ChallengeMi
         exerciseState.value = ExerciseState.ready;
       } else {
         CurrentUserStateModel? savedUserState = HiveStore.loadCurrentUserState();
-        if (savedUserState != null && savedUserState.exercise != null && savedUserState.exercise!.recordState! == 'NORMAL') {
+        if (savedUserState != null && savedUserState.exercise != null && savedUserState.exercise!.recordState != null &&savedUserState.exercise!.recordState! == 'NORMAL') {
           savedUserState.exercise!.locationUpdateTime = DateTime.now();
           userState.update((state) {
             state?.exercise = savedUserState.exercise;
