@@ -73,7 +73,7 @@ class CalendarStatistics extends StatelessWidget {
                       },
                       calendarStyle: CalendarStyle(
                         todayDecoration: BoxDecoration(
-                            color: skyBlueColor, shape: BoxShape.circle, border: Border.all(width: 14.sp, style: BorderStyle.solid, color: subBg01Color, strokeAlign: StrokeAlign.center)),
+                            color: skyBlueColor, shape: BoxShape.circle, border: Border.all(width: 14.sp, style: BorderStyle.solid, color: subBg01Color, strokeAlign: BorderSide.strokeAlignCenter)),
                         todayTextStyle: TextStyle(
                           color: Colors.black,
                           fontSize: 16.0.sp,
