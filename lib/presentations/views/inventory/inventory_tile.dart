@@ -68,12 +68,14 @@ class InventoryTile extends StatelessWidget {
                 children: [
                   AspectRatio(
                     aspectRatio: index == 1 ? 1 / 1 : 1.2 / 1,
-                    child: CachedNetworkImage(
-                      imageUrl: imageUrl,
-                      placeholder: (context, url) => const CircularProgressIndicator(),
-                      errorWidget: (context, url, error) => iconNoBadge,
-                      fit: BoxFit.contain,
-                    ),
+                    child: imageUrl != ''
+                        ? CachedNetworkImage(
+                            imageUrl: imageUrl,
+                            placeholder: (context, url) => const CircularProgressIndicator(),
+                            errorWidget: (context, url, error) => iconNoBadge,
+                            fit: BoxFit.contain,
+                          )
+                        : Image.asset("assets/images/@temp_badge.png"),
                   ),
                 ],
               ),
