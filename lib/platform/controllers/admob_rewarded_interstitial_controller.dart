@@ -1,6 +1,5 @@
 import 'dart:async';
 
-import 'package:gaza_go/presentations/components/alert_ui_list.dart';
 import 'package:get/get.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
 
@@ -99,6 +98,6 @@ class AdmobRewardedInterstitialController extends GetxController {
 
   void openRewardAdPopup() {
     handleRemainAdTimer();
-    showRewardedAdAlert(this);
+    // showRewardedAdAlert(this);
   }
 }

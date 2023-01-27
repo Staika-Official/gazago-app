@@ -185,8 +185,7 @@ class LoadingController extends GetxController {
           );
         } else {
           timerStop();
-          // Get.offAllNamed(Routes.adMobRewardedInterstitial);
-          Get.offAllNamed(Routes.adMobRewarded);
+          Get.offAllNamed(Routes.home);
         }
       }
     }

@@ -77,8 +77,7 @@ class ActivitySelect extends StatelessWidget {
                         child: InkWell(
                           onTap: controller.doableChallenges.isNotEmpty
                               ? () {
-                                  Get.back();
-                                  controller.moveToChallengeSelection();
+                                  controller.initTrakingStartAdLoad();
                                 }
                               : null,
                           borderRadius: BorderRadius.circular(14.sp),

@@ -7,7 +7,6 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:gaza_go/constants/enums.dart';
 import 'package:gaza_go/constants/routes.dart';
 import 'package:gaza_go/platform/controllers/activity_controller.dart';
-import 'package:gaza_go/platform/controllers/admob_rewarded_interstitial_controller.dart';
 import 'package:gaza_go/platform/controllers/archive_controller.dart';
 import 'package:gaza_go/platform/controllers/inventory_controller.dart';
 import 'package:gaza_go/platform/controllers/loading_controller.dart';
@@ -1635,7 +1634,7 @@ void alreadyConnectedDeviceAlert(LoginController controller, LoginType socialTyp
   );
 }
 
-void showRewardedAdAlert(AdmobRewardedInterstitialController controller) {
+void showRewardedAdAlert(ActivityController controller) {
   showAlert(
     title: '광고',
     contentText: '광고를 보면 10 GO 준다',
@@ -1651,22 +1650,13 @@ void showRewardedAdAlert(AdmobRewardedInterstitialController controller) {
       SizedBox(
         width: 9.sp,
       ),
-      Obx(() {
-        return Expanded(
-          child: controller.loadingTime.value == 0
-              ? GazagoButton(
-                  onTap: () => controller.showRewardedInterstitialAd(),
-                  buttonText: '동영상 보기',
-                  buttonColor: skyBlueColor,
-                )
-              : GazagoButton(
-                  onTap: () => null,
-                  buttonText: '동영상 보기 ${controller.loadingTime.value}',
-                  buttonColor: subBg01Color,
-                  textColor: mainBg02Color,
-                ),
-        );
-      }),
+      Expanded(
+        child: GazagoButton(
+          onTap: () => controller.showTrakingStartAdLoad(),
+          buttonText: '동영상 보기',
+          buttonColor: skyBlueColor,
+        ),
+      ),
     ],
   );
 }

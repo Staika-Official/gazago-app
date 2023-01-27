@@ -11,6 +11,7 @@ import 'package:gaza_go/platform/controllers/loading_controller.dart';
 import 'package:gaza_go/platform/controllers/wallet_master_controller.dart';
 import 'package:gaza_go/platform/helpers/activity_helper.dart';
 import 'package:gaza_go/platform/helpers/activity_mixin.dart';
+import 'package:gaza_go/platform/helpers/admob_mixin.dart';
 import 'package:gaza_go/platform/helpers/alert_helper.dart';
 import 'package:gaza_go/platform/helpers/challenge_mixin.dart';
 import 'package:gaza_go/platform/models/challenge_hierarchy_model.dart';
@@ -38,7 +39,7 @@ import 'package:permission_handler/permission_handler.dart' as ph;
 import 'package:simple_animations/animation_builder/custom_animation_builder.dart';
 import 'package:throttling/throttling.dart';
 
-class ActivityController extends SuperController with ActivityMixin, ChallengeMixin, GetTickerProviderStateMixin {
+class ActivityController extends SuperController with ActivityMixin, ChallengeMixin, GetTickerProviderStateMixin, AdmobMixin {
   final WalletMasterController walletMasterController = Get.find();
 
   //rewarded.dart
@@ -345,7 +346,7 @@ class ActivityController extends SuperController with ActivityMixin, ChallengeMi
         exerciseState.value = ExerciseState.ready;
       } else {
         CurrentUserStateModel? savedUserState = HiveStore.loadCurrentUserState();
-        if (savedUserState != null && savedUserState.exercise != null && savedUserState.exercise!.recordState != null &&savedUserState.exercise!.recordState! == 'NORMAL') {
+        if (savedUserState != null && savedUserState.exercise != null && savedUserState.exercise!.recordState != null && savedUserState.exercise!.recordState! == 'NORMAL') {
           savedUserState.exercise!.locationUpdateTime = DateTime.now();
           userState.update((state) {
             state?.exercise = savedUserState.exercise;
@@ -582,6 +583,19 @@ class ActivityController extends SuperController with ActivityMixin, ChallengeMi
     if (selectedExerciseType.value == ExerciseType.walking) selectedChallenge.value = ChallengeModel();
     Get.offNamed(Routes.activityActive);
     loadExercise(selectedExerciseType.value, selectedChallenge.value.id != null ? selectedChallenge.value : null);
+  }
+
+  void initTrakingStartAdLoad() {
+    rewardedTrakingStartAdInit(successCallback: () {
+      showRewardedAdAlert(this);
+    }, errorCallback: () {
+      moveToChallengeSelection();
+      print('광고볼수없음');
+    });
+  }
+
+  void showTrakingStartAdLoad() {
+    showRewardedTrakingStartAd(this);
   }
 
   void moveToChallengeSelection() {
