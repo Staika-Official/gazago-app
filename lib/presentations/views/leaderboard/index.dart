@@ -172,18 +172,19 @@ class LeaderboardHome extends StatelessWidget {
       child: Row(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          SizedBox(
-            width: 20,
-            child: Align(
-              alignment: Alignment.centerRight,
-              child: Text(
-                ranker.rank.toString(),
-                style: TextStyle(
-                  color: Colors.white,
-                  fontSize: 14.sp,
-                  fontWeight: FontWeight.w600,
+          Expanded(
+            child: SizedBox(
+              child: Align(
+                alignment: Alignment.centerRight,
+                child: Text(
+                  ranker.rank.toString(),
+                  style: TextStyle(
+                    color: Colors.white,
+                    fontSize: 14.sp,
+                    fontWeight: FontWeight.w600,
+                  ),
+                  textAlign: TextAlign.right,
                 ),
-                textAlign: TextAlign.right,
               ),
             ),
           ),

@@ -265,7 +265,7 @@ class InventoryController extends GetxController with ScrollMixin, LinearProgres
           });
         } else {
           equippedBadge.update((state) {
-            state!.badge.imageUrl = 'assets/images/@temp_badge.png';
+            state!.badge.imageUrl = '';
           });
         }
 

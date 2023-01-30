@@ -61,6 +61,7 @@ class LeaderboardController extends GetxController with ScrollMixin {
       if (rankingList.length < size.value) {
         hasMore.value = false;
       }
+
       rankingList.asMap().forEach((index, ranker) {
         ranker.rank = (index + 1) + (page.value * size.value);
       });
