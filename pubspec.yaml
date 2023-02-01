@@ -48,16 +48,16 @@ dependencies:
   logger: ^1.1.0 #https://pub.dev/packages/logger
   url_launcher: ^6.1.5 #https://pub.dev/packages/url_launcher
   connectivity_plus: ^2.3.6+1 #https://pub.dev/packages/connectivity_plus/install
-  firebase_core: ^1.21.1 #https://pub.dev/packages/firebase_core
-  firebase_auth: ^3.7.0 #https://pub.dev/packages/firebase_auth
-  firebase_analytics: ^9.3.3 #https://pub.dev/packages/firebase_analytics/install
-  firebase_crashlytics: ^2.8.9 #https://pub.dev/packages/firebase_crashlytics
-  firebase_dynamic_links: ^4.3.6 #https://pub.dev/packages/firebase_dynamic_links
-  firebase_remote_config: ^2.0.16 #https://pub.dev/packages/firebase_remote_config
-  firebase_performance: ^0.8.2+4 #https://pub.dev/packages/firebase_performance
-  firebase_app_check: ^0.0.7 #https://pub.dev/packages/firebase_app_check
-  firebase_in_app_messaging: ^0.6.0+23 #https://pub.dev/packages/firebase_in_app_messaging
-  firebase_messaging: ^13.0.0 #https://pub.dev/packages/firebase_messaging
+  firebase_core: ^2.4.1 #https://pub.dev/packages/firebase_core
+  firebase_auth: ^4.2.5 #https://pub.dev/packages/firebase_auth
+  firebase_analytics: ^10.1.0 #https://pub.dev/packages/firebase_analytics/install
+  firebase_crashlytics: ^3.0.11 #https://pub.dev/packages/firebase_crashlytics
+  firebase_dynamic_links: ^5.0.11 #https://pub.dev/packages/firebase_dynamic_links
+  firebase_remote_config: ^3.0.9 #https://pub.dev/packages/firebase_remote_config
+  firebase_performance: ^0.9.0+10 #https://pub.dev/packages/firebase_performance
+  firebase_app_check: ^0.1.1+8 #https://pub.dev/packages/firebase_app_check
+  firebase_in_app_messaging: ^0.7.0+10 #https://pub.dev/packages/firebase_in_app_messaging
+  firebase_messaging: ^14.2.1 #https://pub.dev/packages/firebase_messaging
   flutter_svg: ^1.1.4 #https://pub.dev/packages/flutter_svg
   flutter_local_notifications: ^9.9.0 #https://pub.dev/packages/flutter_local_notifications
   package_info_plus: ^1.4.3+1 #https://pub.dev/packages/package_info_plus
@@ -72,7 +72,7 @@ dependencies:
   uuid: ^3.0.6
   flutter_naver_map:
     git: https://github.com/wnsgh78b/flutter_naver_map.git
-  geolocator: ^9.0.1
+  geolocator: ^9.0.2
   pedometer: ^3.0.0
   permission_handler: ^10.0.2
   flutter_svg_provider: ^1.0.3
@@ -112,12 +112,12 @@ dev_dependencies:
   flutter_lints: ^2.0.1
   json_serializable: ^6.3.1 #https://pub.dev/packages/json_serializable
   build_runner: ^2.2.0 #https://pub.dev/packages/build_runner
+  geolocator_android: 4.1.4
 
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec
 
 dependency_overrides:
-  firebase_core_platform_interface: 4.5.1
   modal_bottom_sheet:
     git:
       url: https://github.com/danReynolds/modal_bottom_sheet.git
