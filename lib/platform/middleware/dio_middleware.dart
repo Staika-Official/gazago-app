@@ -184,6 +184,7 @@ class Api {
         handler.resolve(e.response!);
       }
     }
+    handler.next(e);
   }
 
   static Future<void> _retryFailedRequest(DioError e, ErrorInterceptorHandler handler) async {
