@@ -7,6 +7,7 @@ import 'package:flutter_naver_map/flutter_naver_map.dart';
 import 'package:gaza_go/constants/config.dart';
 import 'package:gaza_go/constants/enums.dart';
 import 'package:gaza_go/constants/routes.dart';
+import 'package:gaza_go/platform/controllers/activity_controller.dart';
 import 'package:gaza_go/platform/controllers/archive_controller.dart';
 import 'package:gaza_go/platform/controllers/global_controller.dart';
 import 'package:gaza_go/platform/controllers/home_menu_controller.dart';
@@ -166,6 +167,7 @@ mixin ActivityMixin {
         time: exerciseTime.value,
         locations: coordinatesToString(coordinates),
         locationUpdateTime: DateTime.now(),
+        adId: userState.value.exercise!.adId,
       ),
     );
   }
@@ -307,7 +309,7 @@ mixin ActivityMixin {
     });
   }
 
-  void startExercise(ExerciseType exerciseType, ChallengeModel? challenge) async {
+  void startExercise(ExerciseType exerciseType, ChallengeModel? challenge, {String? adId}) async {
     if (Get.isDialogOpen != null && Get.isDialogOpen!) Get.until((route) => Get.isDialogOpen == false);
     if (!batchIsInProgress()) {
       if (globalController.connectivityResult.value != ConnectivityResult.none) {
@@ -329,6 +331,7 @@ mixin ActivityMixin {
             startPoint: challenge != null ? challenge.firstName : '${currentLocation.value.longitude}, ${currentLocation.value.latitude}',
             challengeId: challenge?.id,
             locationUpdateTime: DateTime.now(),
+            adId: adId,
           ),
           Platform.operatingSystem,
           successCallback: (UserExerciseModel userExerciseData) {
@@ -471,22 +474,28 @@ mixin ActivityMixin {
     );
   }
 
-  void onTapDownStop(TapDownDetails tapDownDetails, ChallengeModel challenge, {String? source}) {
+  void onTapDownStop(TapDownDetails tapDownDetails, ChallengeModel challenge, {String? source, required ActivityController controller}) {
     Duration counter = Duration.zero;
 
     if (stopTimer != null) {
       initializeStopTimer();
     }
-
+    controller.onLoadExerciseEndAd();
     stopTimer = Timer.periodic(const Duration(milliseconds: 10), (timer) {
       if (counter == const Duration(milliseconds: 2500)) {
         initializeStopTimer();
         if (source != null && source == 'pendingExerciseDialog') {
-          endExercise(challenge, source: source);
+          // endExercise(challenge, source: source);
           Get.back();
+        }
+
+        if (controller.isAbleAdView.value == true) {
+          showEndExerciseAdDialog(challenge, controller);
         } else {
           showEndExerciseDialog(challenge);
         }
+
+        // showEndExerciseDialog(challenge);
       } else {
         counter = counter + const Duration(milliseconds: 10);
         stopProgress.value += (10 / 2500);
@@ -495,7 +504,8 @@ mixin ActivityMixin {
   }
 
   void onTapUpStop(TapUpDetails tapUpDetails, {String? source}) {
-    if (source != null && source != 'pendingExerciseDialog') showToastPopup('3초간 눌러야 정지됩니다.');
+    // if (source != null && source != 'pendingExerciseDialog') showToastPopup('3초간 눌러야 정지됩니다.');
+    showToastPopup('길게 눌러주세요!');
     initializeStopTimer();
   }
 
@@ -523,7 +533,18 @@ mixin ActivityMixin {
     showEndExerciseAlert(this, challenge);
   }
 
-  Future<void> endExercise(ChallengeModel challenge, {String? source}) async {
+  void showEndExerciseAdDialog(ChallengeModel challenge, ActivityController controller) {
+    showEndExerciseAdAlert(challenge, controller);
+  }
+
+  Future<void> endExercise(ChallengeModel challenge, {String? source, String? adId}) async {
+    if (adId != null) {
+      userState.update(
+        (state) {
+          state?.exercise?.adId = adId;
+        },
+      );
+    }
     if (!batchIsInProgress()) {
       await ActivityService.fetchEndUserExercises(
         userExerciseData.value,
@@ -542,7 +563,7 @@ mixin ActivityMixin {
             resetVariables(challenge);
             resetTimer();
             resetSubscriptions();
-            if (['showEndExerciseAlert', 'pendingExerciseDialog'].any((src) => src == source)) {
+            if (['showEndExerciseAlert', 'showEndADExerciseAlert', 'pendingExerciseDialog'].any((src) => src == source)) {
               moveToExerciseDetail(userState.value.exercise!.id!);
             }
           }

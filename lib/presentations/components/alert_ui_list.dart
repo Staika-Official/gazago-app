@@ -433,7 +433,7 @@ Future<void> showGpsAlert() async {
 
 void showEndExerciseAlert(ActivityMixin mixin, ChallengeModel challenge) {
   showAlert(
-    title: '운동 종료',
+    title: '활동 종료',
     contentText: '지금까지의 기록만 저장됩니다.',
     actions: [
       Expanded(
@@ -450,8 +450,63 @@ void showEndExerciseAlert(ActivityMixin mixin, ChallengeModel challenge) {
       Expanded(
         child: GazagoButton(
           onTap: () => mixin.endExercise(challenge, source: 'showEndExerciseAlert'),
-          buttonText: '운동종료',
+          buttonText: '활동 종료',
           buttonColor: skyBlueColor,
+        ),
+      ),
+    ],
+  );
+}
+
+void showEndExerciseAdAlert(ChallengeModel challenge, ActivityController controller) {
+  showAlert(
+    title: '활동 종료',
+    contentText: '지금까지의 기록만 저장됩니다.',
+    actions: [
+      Expanded(
+        child: Column(
+          children: [
+            GazagoButton(
+              onTap: () => controller.showExerciseEndAd(challenge, controller),
+              buttonText: '광고 보고, GO 10% 더 받고!',
+              buttonColor: skyBlueColor,
+            ),
+            Padding(
+              padding: EdgeInsets.only(top: 8.0.sp),
+              child: GazagoButton(
+                onTap: () => controller.endExercise(challenge, source: 'showEndExerciseAlert'),
+                buttonText: '활동 종료',
+                buttonColor: const Color(0xFF2C2E36),
+                textColor: skyBlueColor,
+              ),
+            ),
+            Padding(
+              padding: EdgeInsets.only(top: 25.0.sp),
+              child: InkWell(
+                onTap: () => Get.back(),
+                child: Container(
+                  decoration: BoxDecoration(
+                    border: Border(
+                      bottom: BorderSide(
+                        // POINT
+                        color: lightGrayColor,
+                        width: 1.0,
+                      ),
+                    ),
+                  ),
+                  child: Padding(
+                    padding: EdgeInsets.only(bottom: 6.0),
+                    child: StyledText(
+                      '취소',
+                      fontSize: 18,
+                      fontWeight: 500,
+                      color: lightGrayColor,
+                    ),
+                  ),
+                ),
+              ),
+            )
+          ],
         ),
       ),
     ],
@@ -689,8 +744,8 @@ void showPendingExerciseAlert(ActivityController controller) {
                   ),
                   Obx(() {
                     return GestureDetector(
-                      onTapDown: (tapDownDetail) => controller.onTapDownStop(tapDownDetail, controller.selectedChallenge.value, source: 'pendingExerciseDialog'),
-                      onTapUp: (tapUpDetail) => controller.onTapUpStop(tapUpDetail, source: 'pendingExerciseDialog'),
+                      onTapDown: (tapDownDetail) => controller.onTapDownStop(tapDownDetail, controller.selectedChallenge.value, controller: controller, source: 'pendingExerciseDialog'),
+                      onTapUp: (tapUpDetail) => controller.onTapUpStop(tapUpDetail),
                       child: Stack(
                         children: [
                           CircularButton(
@@ -1634,29 +1689,191 @@ void alreadyConnectedDeviceAlert(LoginController controller, LoginType socialTyp
   );
 }
 
-void showRewardedAdAlert(ActivityController controller) {
-  showAlert(
-    title: '광고',
-    contentText: '광고를 보면 10 GO 준다',
-    actions: [
-      Expanded(
-        child: GazagoButton(
-          onTap: () => Get.back(),
-          buttonText: '아니요',
-          textColor: Colors.white,
-          buttonColor: popupBgColor,
+void showAdTipAlert() {
+  Get.dialog(
+    barrierColor: Colors.transparent,
+    Material(
+      color: Colors.black.withOpacity(0.6),
+      child: Padding(
+        padding: EdgeInsets.symmetric(horizontal: 25.0.sp),
+        child: Center(
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Stack(
+                children: [
+                  Container(
+                    width: double.infinity,
+                    padding: EdgeInsets.only(top: 19.sp, left: 18.sp, right: 18.sp, bottom: 50.sp),
+                    decoration: BoxDecoration(
+                      color: popupBgColor,
+                      borderRadius: BorderRadius.circular(10.sp),
+                    ),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Align(
+                          alignment: Alignment.center,
+                          child: StyledText(
+                            '광고 시청 TIP',
+                            fontSize: 18.sp,
+                            lineHeight: 28.sp,
+                            fontWeight: 500,
+                            textAlign: TextAlign.center,
+                          ),
+                        ),
+                        Padding(
+                          padding: EdgeInsets.only(top: 29.0.sp),
+                          child: Stack(children: [
+                            Padding(
+                              padding: EdgeInsets.only(bottom: 30.0.sp),
+                              child: Container(
+                                width: double.infinity,
+                                height: 144.sp,
+                                decoration: BoxDecoration(
+                                  color: skyBlueColor,
+                                  border: Border.all(
+                                    width: 1,
+                                    style: BorderStyle.solid,
+                                    color: Colors.black,
+                                  ),
+                                  boxShadow: [
+                                    BoxShadow(
+                                      color: const Color.fromRGBO(0, 0, 0, 0.85),
+                                      offset: const Offset(0, 2),
+                                      blurRadius: 0,
+                                      spreadRadius: 2.sp,
+                                    )
+                                  ],
+                                  borderRadius: BorderRadius.circular(14.sp),
+                                ),
+                                child: Padding(
+                                  padding: EdgeInsets.only(top: 32.sp, left: 10.sp, right: 10.sp),
+                                  child: Column(
+                                    children: [
+                                      iconGo,
+                                      Padding(
+                                        padding: EdgeInsets.only(top: 12.sp),
+                                        child: FittedBox(
+                                          alignment: Alignment.topCenter,
+                                          child: StyledText(
+                                            '5GO 획득하고 시작하기',
+                                            color: Colors.black,
+                                            fontSize: 20,
+                                            fontWeight: 600,
+                                            lineHeight: 20,
+                                            fontFamily: 'Montserrat',
+                                          ),
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                              ),
+                            ),
+                            Positioned(right: 20, top: 120, child: iconHand),
+                          ]),
+                        ),
+                        Text.rich(
+                          textAlign: TextAlign.start,
+                          style: TextStyle(
+                            fontSize: 14.sp,
+                            height: 22.sp / 14.sp,
+                            fontWeight: FontWeight.w500,
+                            color: Colors.white,
+                          ),
+                          TextSpan(
+                            text: '· ',
+                            style: TextStyle(color: lightGrayColor),
+                            children: [
+                              TextSpan(
+                                text: '끝까지 광고를 시청하는 것',
+                                style: TextStyle(color: skyBlueColor),
+                              ),
+                              const TextSpan(
+                                text: '을 권장 드려요!',
+                              ),
+                            ],
+                          ),
+                        ),
+                        Text.rich(
+                          textAlign: TextAlign.start,
+                          style: TextStyle(
+                            fontSize: 14.sp,
+                            height: 22.sp / 14.sp,
+                            fontWeight: FontWeight.w500,
+                            color: Colors.white,
+                          ),
+                          TextSpan(
+                            text: '· ',
+                            style: TextStyle(color: lightGrayColor),
+                            children: [
+                              TextSpan(
+                                text: '광고 보상은 당일의 GO 획득 기준이에요!',
+                              ),
+                            ],
+                          ),
+                        ),
+                        Text.rich(
+                          textAlign: TextAlign.start,
+                          style: TextStyle(
+                            fontSize: 14.sp,
+                            height: 22.sp / 14.sp,
+                            fontWeight: FontWeight.w500,
+                            color: Colors.white,
+                          ),
+                          TextSpan(
+                            text: '· ',
+                            style: TextStyle(color: lightGrayColor),
+                            children: [
+                              TextSpan(
+                                text: '활동 종료의 광고 버튼이 비활성화 되는 경우',
+                                style: TextStyle(color: skyBlueColor),
+                              ),
+                            ],
+                          ),
+                        ),
+                        Padding(
+                          padding: EdgeInsets.only(left: 15.0.sp),
+                          child: Wrap(
+                            children: [
+                              Text.rich(
+                                textAlign: TextAlign.start,
+                                style: TextStyle(
+                                  fontSize: 14.sp,
+                                  height: 22.sp / 14.sp,
+                                  fontWeight: FontWeight.w500,
+                                  color: lightGrayColor,
+                                ),
+                                const TextSpan(
+                                  text: '(1) 적립한 GO가 0 GO일 경우',
+                                ),
+                              ),
+                              Text.rich(
+                                textAlign: TextAlign.start,
+                                style: TextStyle(
+                                  fontSize: 14.sp,
+                                  height: 22.sp / 14.sp,
+                                  fontWeight: FontWeight.w500,
+                                  color: lightGrayColor,
+                                ),
+                                const TextSpan(
+                                  text: '(2) 활동 시간이 매일 자정(KST)이 지나간 경우',
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                  Positioned(right: 14, top: 14, child: InkWell(onTap: () => Get.back(), child: iconCloseWhite)),
+                ],
+              ),
+            ],
+          ),
         ),
       ),
-      SizedBox(
-        width: 9.sp,
-      ),
-      Expanded(
-        child: GazagoButton(
-          onTap: () => controller.showTrakingStartAdLoad(),
-          buttonText: '동영상 보기',
-          buttonColor: skyBlueColor,
-        ),
-      ),
-    ],
+    ),
   );
 }

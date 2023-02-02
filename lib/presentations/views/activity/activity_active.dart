@@ -536,7 +536,7 @@ class ActivityActive extends StatelessWidget {
                           ? Row(
                               children: [
                                 GestureDetector(
-                                  onTapDown: (tapDownDetail) => controller.onTapDownStop(tapDownDetail, controller.selectedChallenge.value),
+                                  onTapDown: (tapDownDetail) => controller.onTapDownStop(tapDownDetail, controller.selectedChallenge.value, controller: controller),
                                   onTapUp: (tapUpDetail) => controller.onTapUpStop(tapUpDetail),
                                   child: Stack(
                                     children: [

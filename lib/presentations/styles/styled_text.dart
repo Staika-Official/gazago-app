@@ -11,6 +11,7 @@ class StyledText extends StatelessWidget {
   final double lineHeight;
   final double letterSpacing;
   final TextAlign textAlign;
+  final TextDecoration decoration;
   final bool overflowEllipsis;
   final bool softWrap;
 
@@ -27,6 +28,7 @@ class StyledText extends StatelessWidget {
     this.textAlign = TextAlign.start,
     this.overflowEllipsis = false,
     this.softWrap = true,
+    this.decoration = TextDecoration.none,
   }) : super(key: key);
 
   FontWeight get getFontWeight {
@@ -79,6 +81,7 @@ class StyledText extends StatelessWidget {
         backgroundColor: backgroundColor,
         letterSpacing: letterSpacing.sp,
         overflow: overflowEllipsis ? TextOverflow.ellipsis : TextOverflow.visible,
+        decoration: decoration,
       ),
     );
   }

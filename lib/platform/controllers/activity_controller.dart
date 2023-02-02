@@ -32,6 +32,7 @@ import 'package:gaza_go/presentations/styles/colors.dart';
 import 'package:gaza_go/presentations/styles/icons.dart';
 import 'package:gaza_go/presentations/views/activity/activity_loading.dart';
 import 'package:gaza_go/presentations/views/activity/activity_select.dart';
+import 'package:gaza_go/presentations/views/activity/ad_select.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:get/get.dart';
 import 'package:health/health.dart';
@@ -82,10 +83,12 @@ class ActivityController extends SuperController with ActivityMixin, ChallengeMi
   late AnimationController challengeGuideController;
   final Rx<Control> challengeLoadControl = Rx(Control.play);
   final RxDouble challengeLoadControlPosition = RxDouble(0);
+  RxBool isAbleAdView = RxBool(false);
 
   Future<void> initializeController() async {
     challengeGuideController = AnimationController(vsync: this);
     await initController();
+    // adidGet();
     checkConnectivityStatus();
     if ([ExerciseState.ongoing, ExerciseState.paused].any((state) => state == exerciseState.value)) {
       showPendingExerciseAlert(this);
@@ -554,7 +557,7 @@ class ActivityController extends SuperController with ActivityMixin, ChallengeMi
     }
   }
 
-  void loadExercise(ExerciseType exerciseType, [ChallengeModel? challenge]) {
+  void loadExercise(ExerciseType exerciseType, String? adId, [ChallengeModel? challenge]) {
     loadingTime.value = 1;
 
     Get.dialog(
@@ -569,7 +572,7 @@ class ActivityController extends SuperController with ActivityMixin, ChallengeMi
         if (loadingTime.value == 3) {
           timer.cancel();
           loadingTimer = null;
-          thr.throttle(() => startExercise(exerciseType, challenge));
+          thr.throttle(() => startExercise(exerciseType, challenge, adId: adId));
         } else {
           loadingTime.value++;
           activityLoadControl = Control.playFromStart;
@@ -580,22 +583,71 @@ class ActivityController extends SuperController with ActivityMixin, ChallengeMi
 
   void selectExerciseType(ExerciseType exerciseType) {
     selectedExerciseType.value = exerciseType;
+    if (selectedExerciseType.value == ExerciseType.dulle) {
+      moveToChallengeMap();
+    } else {
+      exerciseStartRewardedAdInit(
+        exerciseType,
+        successCallback: () {
+          print('광고볼수있음');
+          Get.dialog(const AdSelect(), barrierDismissible: false, barrierColor: const Color.fromRGBO(0, 0, 0, 0.85));
+          // showRewardedAdAlert(this);
+          // showExerciseStartAd(this);
+        },
+        errorCallback: () {
+          print('광고볼수없음');
+          if (selectedExerciseType.value == ExerciseType.walking || selectedExerciseType.value == ExerciseType.hiking) {
+            handleMoveExerciseActive(exerciseType);
+          } else {
+            Get.back();
+            // Get.dialog(const AdSelect(), barrierDismissible: false, barrierColor: const Color.fromRGBO(0, 0, 0, 0.85));
+            if (doableChallenges.isNotEmpty) {
+              moveToChallengeSelection();
+            } else {
+              moveToChallengeMap();
+            }
+          }
+        },
+      );
+    }
+
+    // if (selectedExerciseType.value == ExerciseType.walking) selectedChallenge.value = ChallengeModel();
+    // Get.offNamed(Routes.activityActive);
+    // loadExercise(selectedExerciseType.value, selectedChallenge.value.id != null ? selectedChallenge.value : null);
+  }
+
+  void showAdAndMoveActivity() {
+    showExerciseStartAd(this);
+  }
+
+  void showAdTip() {
+    showAdTipAlert();
+    print('팝업');
+    // Get.dialog(const AdTip(), barrierDismissible: false, barrierColor: const Color.fromRGBO(0, 0, 0, 0.85));
+  }
+
+  void handleMoveExerciseActive(ExerciseType exerciseType, {String? adId}) {
     if (selectedExerciseType.value == ExerciseType.walking) selectedChallenge.value = ChallengeModel();
     Get.offNamed(Routes.activityActive);
-    loadExercise(selectedExerciseType.value, selectedChallenge.value.id != null ? selectedChallenge.value : null);
+    loadExercise(
+      selectedExerciseType.value,
+      adId,
+      selectedChallenge.value.id != null ? selectedChallenge.value : null,
+    );
   }
 
-  void initTrakingStartAdLoad() {
-    rewardedTrakingStartAdInit(successCallback: () {
-      showRewardedAdAlert(this);
-    }, errorCallback: () {
-      moveToChallengeSelection();
-      print('광고볼수없음');
-    });
-  }
-
-  void showTrakingStartAdLoad() {
-    showRewardedTrakingStartAd(this);
+  void onLoadExerciseEndAd() {
+    exerciseEndRewardedAdInit(
+      selectedExerciseType.value,
+      successCallback: () {
+        print('광고볼수있음');
+        isAbleAdView.value = true;
+      },
+      errorCallback: () {
+        isAbleAdView.value = false;
+        print('광고볼수없음');
+      },
+    );
   }
 
   void moveToChallengeSelection() {

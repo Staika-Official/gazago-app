@@ -5,6 +5,8 @@ enum LoginType {
 }
 
 enum ExerciseType {
+  famous,
+  dulle,
   hiking,
   walking,
 }
@@ -18,6 +20,10 @@ extension ExerciseTypeValue on ExerciseType {
         return 'HIKING';
       case ExerciseType.walking:
         return 'WALKING';
+      case ExerciseType.famous:
+        return 'FAMOUS_MOUNTAIN_100';
+      case ExerciseType.dulle:
+        return 'DULLE';
     }
   }
 }

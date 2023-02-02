@@ -63,6 +63,8 @@ class UserExerciseModel {
   DateTime? locationUpdateTime;
   @HiveField(27)
   String? recordState;
+  @HiveField(28)
+  String? adId;
 
   UserExerciseModel({
     this.id,
@@ -93,6 +95,7 @@ class UserExerciseModel {
     this.challengeId,
     this.locationUpdateTime,
     this.recordState,
+    this.adId,
   });
 
   factory UserExerciseModel.fromJson(Map<String, dynamic> json) => _$UserExerciseModelFromJson(json);
