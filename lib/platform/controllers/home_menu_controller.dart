@@ -7,6 +7,7 @@ import 'package:gaza_go/platform/controllers/archive_controller.dart';
 import 'package:gaza_go/platform/controllers/inventory_controller.dart';
 import 'package:gaza_go/platform/controllers/leaderboard_controller.dart';
 import 'package:gaza_go/platform/controllers/shop_controller.dart';
+import 'package:gaza_go/platform/helpers/login_helper.dart';
 import 'package:gaza_go/platform/stores/hive_store.dart';
 import 'package:gaza_go/presentations/components/main_appbar.dart';
 import 'package:gaza_go/presentations/components/secondary_appbar.dart';
@@ -56,6 +57,15 @@ class HomeMenuController extends SuperController {
     if (initialMessage != null) {
       if (initialMessage.data['notificationKey'] == 'DAILY_REWARD_COMPLETED') {
         Get.toNamed(Routes.wallet);
+      }
+
+      if (initialMessage.data['notificationKey'] == 'FORCE_LOGOUT') {
+        if (HiveStore.load(key: HiveKey.hasForcedLogout.name) != null && HiveStore.load(key: HiveKey.hasForcedLogout.name)) {
+          HiveStore.deleteKey(key: HiveKey.hasForcedLogout.name);
+        } else {
+          HiveStore.save(key: HiveKey.hasForcedLogout.name, value: true); //getInitialMessage가 중복처리되어서 처리 여부를 구분하기 위해 필요
+          forceLogout();
+        }
       }
     }
   }
@@ -107,6 +117,10 @@ class HomeMenuController extends SuperController {
     if (HiveStore.load(key: HiveKey.needRouteToGoWallet.name) != null && HiveStore.load(key: HiveKey.needRouteToGoWallet.name)) {
       HiveStore.deleteKey(key: HiveKey.needRouteToGoWallet.name);
       Get.toNamed(Routes.wallet);
+    } else if (HiveStore.load(key: HiveKey.needToForceLogout.name) != null && HiveStore.load(key: HiveKey.needToForceLogout.name)) {
+      HiveStore.deleteKey(key: HiveKey.needToForceLogout.name);
+      HiveStore.save(key: HiveKey.hasForcedLogout.name, value: true); //getInitialMessage가 중복처리되어서 처리 여부를 구분하기 위해 필요
+      forceLogout();
     }
   }
 }

@@ -47,7 +47,6 @@ enum HiveKey {
   fcmToken,
   accessToken,
   refreshToken,
-  accountStatus,
   userId,
   email,
   profileImageUrl,
@@ -71,6 +70,8 @@ enum HiveKey {
   userExerciseDataLogs,
   positionLowDataLogs,
   needRouteToGoWallet,
+  needToForceLogout,
+  hasForcedLogout,
 }
 
 enum ResponseStatus {

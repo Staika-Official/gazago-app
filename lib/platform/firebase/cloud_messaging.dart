@@ -2,6 +2,7 @@ import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/foundation.dart' show defaultTargetPlatform, TargetPlatform;
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:gaza_go/constants/enums.dart';
+import 'package:gaza_go/platform/helpers/login_helper.dart';
 import 'package:gaza_go/platform/stores/hive_store.dart';
 import 'package:logger/logger.dart';
 
@@ -59,16 +60,24 @@ void handleMessage() {
         ),
       );
     }
+
+    if (message.data['notificationKey'] == 'FORCE_LOGOUT') {
+      forceLogout();
+    }
   });
 
   FirebaseMessaging.onMessageOpenedApp.listen((RemoteMessage message) {
-    moveToGoWallet(message);
+    handleNotification(message);
   });
 }
 
-void moveToGoWallet(RemoteMessage message) {
+void handleNotification(RemoteMessage message) {
   if (message.data['notificationKey'] == 'DAILY_REWARD_COMPLETED') {
     HiveStore.save(key: HiveKey.needRouteToGoWallet.name, value: true);
+  }
+
+  if (message.data['notificationKey'] == 'FORCE_LOGOUT') {
+    HiveStore.save(key: HiveKey.needToForceLogout.name, value: true);
   }
 }
 
