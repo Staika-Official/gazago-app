@@ -20,7 +20,7 @@ class UaaService {
 
   static Future<void> fetchLogout({required Function successCallback, Function? errorCallback}) async {
     Response res = await UaaApi.fetchLogout();
-    if (res.statusCode! == 204) {
+    if (res.statusCode == 204) {
       successCallback();
     } else {
       if (errorCallback != null) errorCallback(res.data);
@@ -38,7 +38,7 @@ class UaaService {
 
   static Future<void> getAccountInfo({required Function successCallback, Function? errorCallback}) async {
     Response res = await UaaApi.getAccountInfo();
-    if (res.statusCode != null && res.statusCode! == 200) {
+    if (res.statusCode == 200) {
       successCallback(UserAccountModel.fromJson(res.data));
     } else {
       if (errorCallback != null) errorCallback(res.data);
@@ -47,7 +47,7 @@ class UaaService {
 
   static Future<void> checkLoginStatus({required Function successCallback, Function? errorCallback}) async {
     Response res = await UaaApi.checkLoginStatus();
-    if (res.statusCode != null && res.statusCode! == 200) {
+    if (res.statusCode == 200) {
       successCallback();
     } else {
       if (errorCallback != null) errorCallback(res.data);
@@ -56,7 +56,7 @@ class UaaService {
 
   static Future<void> modifyAccountInfo(String? nickname, String? profileImageUrl, {required Function successCallback, Function? errorCallback}) async {
     Response res = await UaaApi.modifyAccountInfo(userId!, nickname, profileImageUrl);
-    if (res.statusCode != null && res.statusCode! == 200) {
+    if (res.statusCode == 200) {
       successCallback(UserAccountModel.fromJson(res.data));
     } else {
       if (errorCallback != null) errorCallback(res.data);
@@ -65,7 +65,7 @@ class UaaService {
 
   static Future<void> fetchUploadImage(FormData formData, {required Function successCallback, Function? errorCallback}) async {
     Response res = await UaaApi.fetchUploadImage(userId!, formData);
-    if (res.statusCode != null && res.statusCode! == 201) {
+    if (res.statusCode == 201) {
       successCallback(UploadProfileImageModel.fromJson(res.data));
     } else {
       if (errorCallback != null) errorCallback(res.data);
@@ -74,7 +74,7 @@ class UaaService {
 
   static Future<void> fetchWithdrawMember({required Function successCallback, Function? errorCallback}) async {
     Response res = await UaaApi.fetchWithdrawMember();
-    if (res.statusCode! == 204) {
+    if (res.statusCode == 204) {
       successCallback();
     } else {
       if (errorCallback != null) errorCallback(res.data);
@@ -83,7 +83,7 @@ class UaaService {
 
   static Future<void> fetchWithdrawCancel({required Function successCallback, Function? errorCallback}) async {
     Response res = await UaaApi.fetchWithdrawCancel();
-    if (res.statusCode! == 204) {
+    if (res.statusCode == 204) {
       successCallback();
     } else {
       if (errorCallback != null) errorCallback(res.data);

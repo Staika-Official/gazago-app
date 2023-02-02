@@ -9,7 +9,7 @@ import 'package:gaza_go/platform/models/pay_response_model.dart';
 class WalletService {
   static Future<void> getSpendingWalletBalances({required Function successCallback, Function? errorCallback}) async {
     Response res = await WalletApi.getSpendingWalletBalances();
-    if (res.statusCode! == 200) {
+    if (res.statusCode == 200) {
       List<AssetTokenBalanceModel> balanceList = [];
       if (res.data.length > 0) {
         res.data.forEach((item) => balanceList.add(AssetTokenBalanceModel.fromJson(item)));
@@ -22,7 +22,7 @@ class WalletService {
 
   static Future<void> getSpendingWalletBalance(String symbol, {required Function successCallback, Function? errorCallback}) async {
     Response res = await WalletApi.getSpendingWalletBalance(symbol);
-    if (res.statusCode! == 200) {
+    if (res.statusCode == 200) {
       successCallback(AssetTokenBalanceModel.fromJson(res.data));
     } else {
       if (errorCallback != null) errorCallback();
@@ -47,7 +47,7 @@ class WalletService {
 
   static Future<void> getFeeTik({required Function successCallback, Function? errorCallback}) async {
     Response res = await WalletApi.getFeeTik();
-    if (res.statusCode! == 200) {
+    if (res.statusCode == 200) {
       successCallback(res.data);
     } else {
       if (errorCallback != null) errorCallback();
