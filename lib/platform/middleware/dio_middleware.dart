@@ -23,7 +23,15 @@ class Api {
       ),
       QueuedInterceptorsWrapper(
         onError: (DioError e, ErrorInterceptorHandler handler) => _onErrorInterceptor(e, handler),
-      )
+      ),
+      // LogInterceptor(
+      //   error: true,
+      //   request: true,
+      //   requestBody: true,
+      //   requestHeader: true,
+      //   responseBody: true,
+      //   responseHeader: true,
+      // )
     ]);
 
   static Dio client({required String serviceUrl, bool needsToken = true, Map<String, dynamic>? queryParams, bool? isPatch = false, bool? isFile = false}) {
@@ -183,8 +191,9 @@ class Api {
       } else {
         handler.resolve(e.response!);
       }
+
+      handler.next(e);
     }
-    handler.next(e);
   }
 
   static Future<void> _retryFailedRequest(DioError e, ErrorInterceptorHandler handler) async {
