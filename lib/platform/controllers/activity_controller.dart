@@ -93,27 +93,6 @@ class ActivityController extends SuperController with ActivityMixin, ChallengeMi
     disableActivityButton.value = false;
   }
 
-  @override
-  void onClose() {
-    print('################# onClose ActivityController');
-
-    updateTimer?.cancel();
-    updateTimer = null;
-    exerciseTimer?.cancel();
-    exerciseTimer = null;
-    stepSubscription?.cancel();
-    stepSubscription = null;
-    HiveStore.save(key: HiveKey.savedStepInitialized.name, value: false);
-    locationSubscription?.cancel();
-    locationSubscription = null;
-    pedestrianStatusSubscription?.cancel();
-    pedestrianStatusSubscription = null;
-    _serviceStatusStream?.cancel();
-    _serviceStatusStream = null;
-
-    super.onClose();
-  }
-
   Future<void> initController() async {
     await getUserState().then((_) async {
       hasPermission.value = await checkAvailabilities();
@@ -722,22 +701,32 @@ class ActivityController extends SuperController with ActivityMixin, ChallengeMi
   @override
   void onDetached() {
     print('onDetached');
+
+    updateTimer?.cancel();
+    updateTimer = null;
+    exerciseTimer?.cancel();
+    exerciseTimer = null;
+    stepSubscription?.cancel();
+    stepSubscription = null;
+    locationSubscription?.cancel();
+    locationSubscription = null;
+    pedestrianStatusSubscription?.cancel();
+    pedestrianStatusSubscription = null;
+    _serviceStatusStream?.cancel();
+    _serviceStatusStream = null;
     HiveStore.save(key: HiveKey.savedStepInitialized.name, value: false);
-    // TODO: implement onDetached
   }
 
   @override
   void onInactive() {
     print('onInactive');
     HiveStore.save(key: HiveKey.savedStepInitialized.name, value: false);
-    // TODO: implement onInactive
   }
 
   @override
   void onPaused() {
     print('onPaused');
     HiveStore.save(key: HiveKey.savedStepInitialized.name, value: false);
-    // TODO: implement onPaused
   }
 
   @override
