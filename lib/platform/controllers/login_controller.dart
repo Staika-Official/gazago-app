@@ -5,6 +5,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:gaza_go/constants/enums.dart';
 import 'package:gaza_go/constants/routes.dart';
 import 'package:gaza_go/platform/helpers/alert_helper.dart';
+import 'package:gaza_go/platform/helpers/login_helper.dart';
 import 'package:gaza_go/platform/models/access_token_model.dart';
 import 'package:gaza_go/platform/models/social_login_info_model.dart';
 import 'package:gaza_go/platform/services/member_service.dart';
@@ -169,19 +170,7 @@ class LoginController extends GetxController {
   void handleTerminatedCancel() async {
     await UaaService.fetchLogout(
       successCallback: () {
-        HiveStore.deleteMultipleKeys(keys: [
-          HiveKey.accessToken.name,
-          HiveKey.refreshToken.name,
-          HiveKey.userState.name,
-          HiveKey.exerciseData.name,
-          HiveKey.endExerciseRequested.name,
-          HiveKey.badgeIssuanceRequested.name,
-          HiveKey.savedStepCount.name,
-          HiveKey.dummyStepCount.name,
-          HiveKey.savedStepInitialized.name,
-          HiveKey.authorities.name,
-        ]);
-        Get.offAllNamed(Routes.login);
+        forceLogout();
       },
       errorCallback: () {},
     );

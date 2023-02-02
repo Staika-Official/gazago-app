@@ -14,6 +14,7 @@ import 'package:gaza_go/platform/helpers/activity_mixin.dart';
 import 'package:gaza_go/platform/helpers/admob_mixin.dart';
 import 'package:gaza_go/platform/helpers/alert_helper.dart';
 import 'package:gaza_go/platform/helpers/challenge_mixin.dart';
+import 'package:gaza_go/platform/helpers/login_helper.dart';
 import 'package:gaza_go/platform/models/challenge_hierarchy_model.dart';
 import 'package:gaza_go/platform/models/challenge_model.dart';
 import 'package:gaza_go/platform/models/current_user_state_model.dart';
@@ -94,27 +95,6 @@ class ActivityController extends SuperController with ActivityMixin, ChallengeMi
       showPendingExerciseAlert(this);
     }
     disableActivityButton.value = false;
-  }
-
-  @override
-  void onClose() {
-    print('################# onClose ActivityController');
-
-    updateTimer?.cancel();
-    updateTimer = null;
-    exerciseTimer?.cancel();
-    exerciseTimer = null;
-    stepSubscription?.cancel();
-    stepSubscription = null;
-    HiveStore.save(key: HiveKey.savedStepInitialized.name, value: false);
-    locationSubscription?.cancel();
-    locationSubscription = null;
-    pedestrianStatusSubscription?.cancel();
-    pedestrianStatusSubscription = null;
-    _serviceStatusStream?.cancel();
-    _serviceStatusStream = null;
-
-    super.onClose();
   }
 
   Future<void> initController() async {
@@ -404,20 +384,7 @@ class ActivityController extends SuperController with ActivityMixin, ChallengeMi
   void onLogout() async {
     await UaaService.fetchLogout(
       successCallback: () {
-        HiveStore.deleteMultipleKeys(keys: [
-          HiveKey.accessToken.name,
-          HiveKey.refreshToken.name,
-          HiveKey.accountStatus.name,
-          HiveKey.userState.name,
-          HiveKey.exerciseData.name,
-          HiveKey.endExerciseRequested.name,
-          HiveKey.badgeIssuanceRequested.name,
-          HiveKey.savedStepCount.name,
-          HiveKey.dummyStepCount.name,
-          HiveKey.savedStepInitialized.name,
-          HiveKey.authorities.name,
-        ]);
-        Get.offAllNamed(Routes.login);
+        forceLogout();
       },
       errorCallback: () {},
     );
@@ -800,22 +767,32 @@ class ActivityController extends SuperController with ActivityMixin, ChallengeMi
   @override
   void onDetached() {
     print('onDetached');
+
+    updateTimer?.cancel();
+    updateTimer = null;
+    exerciseTimer?.cancel();
+    exerciseTimer = null;
+    stepSubscription?.cancel();
+    stepSubscription = null;
+    locationSubscription?.cancel();
+    locationSubscription = null;
+    pedestrianStatusSubscription?.cancel();
+    pedestrianStatusSubscription = null;
+    _serviceStatusStream?.cancel();
+    _serviceStatusStream = null;
     HiveStore.save(key: HiveKey.savedStepInitialized.name, value: false);
-    // TODO: implement onDetached
   }
 
   @override
   void onInactive() {
     print('onInactive');
     HiveStore.save(key: HiveKey.savedStepInitialized.name, value: false);
-    // TODO: implement onInactive
   }
 
   @override
   void onPaused() {
     print('onPaused');
     HiveStore.save(key: HiveKey.savedStepInitialized.name, value: false);
-    // TODO: implement onPaused
   }
 
   @override

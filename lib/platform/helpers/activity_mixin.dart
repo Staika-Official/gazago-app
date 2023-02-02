@@ -580,12 +580,14 @@ mixin ActivityMixin {
   void endExerciseLocally(ChallengeModel challenge) {
     print('endedLocally');
     exerciseState.value = ExerciseState.ready;
-    CurrentUserStateModel savedState = HiveStore.loadCurrentUserState()!;
-    userState.update((state) {
-      state?.state = savedState.state;
-      state?.exercise = savedState.exercise;
-      state?.shoes = savedState.shoes;
-    });
+    CurrentUserStateModel? savedState = HiveStore.loadCurrentUserState();
+    if (savedState != null) {
+      userState.update((state) {
+        state?.state = savedState.state;
+        state?.exercise = savedState.exercise;
+        state?.shoes = savedState.shoes;
+      });
+    }
     userState.value.exercise!.state = 'ENDED';
     HiveStore.saveCurrentUserState(userState: userState.value);
     HiveStore.save(key: HiveKey.endExerciseRequested.name, value: true);

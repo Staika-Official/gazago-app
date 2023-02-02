@@ -19,6 +19,7 @@ import 'package:uuid/uuid.dart';
 
 import 'constants/routes.dart';
 
+// @pragma('vm:entry-point')
 // Future<void> _firebaseMessagingBackgroundHandler(RemoteMessage message) async {
 //   print('call _firebaseMessagingBackgroundHandler');
 //   await initFirebase();
@@ -54,7 +55,7 @@ void main() async {
     MobileAds.instance.initialize();
     // Geolocation Engine이 2개가 생성되는 문제가 있어서(2개가 생성되면 Foreground 운동측정이 사라지지 않는다). 주석처리
     // 추후에 백그라운드 데이터로 처리가 필요한 경우 다시 고민해보자.
-    //FirebaseMessaging.onBackgroundMessage(_firebaseMessagingBackgroundHandler);
+    // FirebaseMessaging.onBackgroundMessage(_firebaseMessagingBackgroundHandler);
 
     SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp]);
 

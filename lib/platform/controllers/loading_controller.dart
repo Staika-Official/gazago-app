@@ -8,6 +8,7 @@ import 'package:gaza_go/platform/controllers/activity_controller.dart';
 import 'package:gaza_go/platform/controllers/wallet_master_controller.dart';
 import 'package:gaza_go/platform/helpers/alert_helper.dart';
 import 'package:gaza_go/platform/helpers/base_helper.dart';
+import 'package:gaza_go/platform/helpers/login_helper.dart';
 import 'package:gaza_go/platform/models/terms_status_model.dart';
 import 'package:gaza_go/platform/services/member_service.dart';
 import 'package:gaza_go/platform/stores/hive_store.dart';
@@ -18,6 +19,7 @@ import 'package:get/get.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class LoadingController extends GetxController {
+  final RxInt retryCount = RxInt(0);
   final RxDouble progress = RxDouble(0);
   final RxString progressMessage = RxString("로드중......");
   Timer? _timer;
@@ -60,8 +62,9 @@ class LoadingController extends GetxController {
 
   void handleRefreshApp() {
     time.value = 0;
+    retryCount.value = retryCount.value + 1;
     Get.back();
-    Get.offAllNamed(Routes.loading);
+    if (Get.currentRoute != Routes.loading) Get.offAllNamed(Routes.loading);
     timerStart();
   }
 
@@ -80,8 +83,13 @@ class LoadingController extends GetxController {
 
       print('LoadingController time: ${time.value}');
       if (time.value > 60) {
-        showRestartAppPopup();
-        timerStop();
+        if (retryCount.value == 1) {
+          showToastPopup('재시도에 실패하여 로그아웃 되었습니다.');
+          forceLogout();
+        } else {
+          showRestartAppPopup();
+          timerStop();
+        }
       }
     });
   }
