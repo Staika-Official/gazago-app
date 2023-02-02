@@ -13,6 +13,7 @@ import 'package:gaza_go/platform/helpers/activity_helper.dart';
 import 'package:gaza_go/platform/helpers/activity_mixin.dart';
 import 'package:gaza_go/platform/helpers/alert_helper.dart';
 import 'package:gaza_go/platform/helpers/challenge_mixin.dart';
+import 'package:gaza_go/platform/helpers/login_helper.dart';
 import 'package:gaza_go/platform/models/challenge_hierarchy_model.dart';
 import 'package:gaza_go/platform/models/challenge_model.dart';
 import 'package:gaza_go/platform/models/current_user_state_model.dart';
@@ -345,7 +346,7 @@ class ActivityController extends SuperController with ActivityMixin, ChallengeMi
         exerciseState.value = ExerciseState.ready;
       } else {
         CurrentUserStateModel? savedUserState = HiveStore.loadCurrentUserState();
-        if (savedUserState != null && savedUserState.exercise != null && savedUserState.exercise!.recordState != null &&savedUserState.exercise!.recordState! == 'NORMAL') {
+        if (savedUserState != null && savedUserState.exercise != null && savedUserState.exercise!.recordState != null && savedUserState.exercise!.recordState! == 'NORMAL') {
           savedUserState.exercise!.locationUpdateTime = DateTime.now();
           userState.update((state) {
             state?.exercise = savedUserState.exercise;
@@ -400,20 +401,7 @@ class ActivityController extends SuperController with ActivityMixin, ChallengeMi
   void onLogout() async {
     await UaaService.fetchLogout(
       successCallback: () {
-        HiveStore.deleteMultipleKeys(keys: [
-          HiveKey.accessToken.name,
-          HiveKey.refreshToken.name,
-          HiveKey.accountStatus.name,
-          HiveKey.userState.name,
-          HiveKey.exerciseData.name,
-          HiveKey.endExerciseRequested.name,
-          HiveKey.badgeIssuanceRequested.name,
-          HiveKey.savedStepCount.name,
-          HiveKey.dummyStepCount.name,
-          HiveKey.savedStepInitialized.name,
-          HiveKey.authorities.name,
-        ]);
-        Get.offAllNamed(Routes.login);
+        forceLogout();
       },
       errorCallback: () {},
     );
