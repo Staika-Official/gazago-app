@@ -85,6 +85,7 @@ class ActivityController extends SuperController with ActivityMixin, ChallengeMi
   final Rx<Control> challengeLoadControl = Rx(Control.play);
   final RxDouble challengeLoadControlPosition = RxDouble(0);
   RxBool isAbleAdView = RxBool(false);
+  final RxBool isLoadingGetAdData = RxBool(false);
 
   Future<void> initializeController() async {
     challengeGuideController = AnimationController(vsync: this);
@@ -553,16 +554,19 @@ class ActivityController extends SuperController with ActivityMixin, ChallengeMi
     if (selectedExerciseType.value == ExerciseType.dulle) {
       moveToChallengeMap();
     } else {
+      isLoadingGetAdData.value = true;
       exerciseStartRewardedAdInit(
         exerciseType,
         successCallback: () {
           print('광고볼수있음');
+          isLoadingGetAdData.value = false;
           Get.dialog(const AdSelect(), barrierDismissible: false, barrierColor: const Color.fromRGBO(0, 0, 0, 0.85));
           // showRewardedAdAlert(this);
           // showExerciseStartAd(this);
         },
         errorCallback: () {
           print('광고볼수없음');
+          isLoadingGetAdData.value = false;
           if (selectedExerciseType.value == ExerciseType.walking || selectedExerciseType.value == ExerciseType.hiking) {
             handleMoveExerciseActive(exerciseType);
           } else {
@@ -603,8 +607,8 @@ class ActivityController extends SuperController with ActivityMixin, ChallengeMi
     );
   }
 
-  void onLoadExerciseEndAd() {
-    exerciseEndRewardedAdInit(
+  Future onLoadExerciseEndAd() async {
+    await exerciseEndRewardedAdInit(
       selectedExerciseType.value,
       successCallback: () {
         print('광고볼수있음');

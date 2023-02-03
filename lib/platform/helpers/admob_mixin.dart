@@ -54,7 +54,7 @@ mixin AdmobMixin {
   }
 
   // 운동 종료 광고
-  void exerciseEndRewardedAdInit(ExerciseType exerciseType, {successCallback, errorCallback}) async {
+  Future exerciseEndRewardedAdInit(ExerciseType exerciseType, {successCallback, errorCallback}) async {
     if (exerciseType == ExerciseType.famous) {
       print('명산광고');
       // 100대 명산 등산 시작 광고

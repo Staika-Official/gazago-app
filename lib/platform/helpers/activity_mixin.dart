@@ -474,13 +474,13 @@ mixin ActivityMixin {
     );
   }
 
-  void onTapDownStop(TapDownDetails tapDownDetails, ChallengeModel challenge, {String? source, required ActivityController controller}) {
+  void onTapDownStop(TapDownDetails tapDownDetails, ChallengeModel challenge, {String? source, required ActivityController controller}) async {
     Duration counter = Duration.zero;
 
     if (stopTimer != null) {
       initializeStopTimer();
     }
-    controller.onLoadExerciseEndAd();
+    await controller.onLoadExerciseEndAd();
     stopTimer = Timer.periodic(const Duration(milliseconds: 10), (timer) {
       if (counter == const Duration(milliseconds: 2500)) {
         initializeStopTimer();
