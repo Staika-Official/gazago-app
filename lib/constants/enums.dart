@@ -72,6 +72,7 @@ enum HiveKey {
   needRouteToGoWallet,
   needToForceLogout,
   hasForcedLogout,
+  solanaSecretKey,
 }
 
 enum ResponseStatus {

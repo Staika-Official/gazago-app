@@ -6,6 +6,7 @@ import 'package:solana_web3/solana_web3.dart' as web3;
 import 'package:solana_web3/programs/system.dart';
 import 'package:solana_web3/solana_web3.dart';
 import 'package:solana_web3/types/health_status.dart';
+import 'package:gaza_go/flavors.dart';
 
 class SolanaController extends GetxController {
 
@@ -25,9 +26,13 @@ class SolanaController extends GetxController {
     String encodeSecretKey = base58.encode(wallet.secretKey);
     print(encodeSecretKey);
 
+    // 암호화 모듈 추가
     print(base58.decode(encodeSecretKey));
     await WalletService.createSolanaWallet(address.toBase58(), encodeSecretKey);
 
   }
 
+  void sendTransfer(String toAddress) async {
+
+  }
 }
