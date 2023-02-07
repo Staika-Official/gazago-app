@@ -2,11 +2,12 @@ import 'dart:io';
 
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:gaza_go/constants/routes.dart';
 import 'package:gaza_go/platform/controllers/my_page_controller.dart';
 import 'package:gaza_go/platform/helpers/preference_helper.dart';
 import 'package:gaza_go/presentations/components/default_container.dart';
+import 'package:gaza_go/presentations/styles/colors.dart';
 import 'package:gaza_go/presentations/styles/icons.dart';
 import 'package:gaza_go/presentations/styles/styled_text.dart';
 import 'package:get/get.dart';
@@ -20,39 +21,40 @@ class MyPage extends StatelessWidget {
 
     return DefaultContainer(
       titleText: '계정 정보',
-      backgroundColor: Color(0xFF1D1D26),
+      backgroundColor: subBg01Color,
       headerBackgroundColor: Colors.transparent,
       child: Column(
         children: [
           Obx(() {
             return Container(
               alignment: Alignment.center,
-              color: Color(0xFF1D1D26),
-              padding: EdgeInsets.symmetric(horizontal: 20, vertical: 30),
+              color: subBg01Color,
+              padding: EdgeInsets.symmetric(horizontal: 20.sp, vertical: 30.sp),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
                   SizedBox(
-                    width: 70,
-                    height: 70,
+                    width: 70.sp,
+                    height: 70.sp,
                     child: InkWell(
-                      onTap: () => controller.pickImage(),
+                      onTap: controller.isEditMode.value ? () => controller.pickImage() : null,
                       child: Stack(
                         alignment: Alignment.center,
                         children: [
                           CircleAvatar(
-                            radius: 35,
-                            foregroundImage: controller!.pickedImage.value != null
+                            radius: 35.sp,
+                            foregroundImage: controller.pickedImage.value != null
                                 ? FileImage(
                                     File(controller.pickedImage.value!.path),
                                   )
-                                : controller.profile.value.profileImageUrl != null ? CachedNetworkImageProvider(
-                                    controller.profile.value.profileImageUrl!,
-                                  ) as ImageProvider
-                            :Image.asset(
-                              'assets/images/ic_launcher.png',
-                              width: 30,
-                            ).image,
+                                : controller.profile.value.profileImageUrl != null && controller.profile.value.profileImageUrl != ''
+                                    ? CachedNetworkImageProvider(
+                                        controller.profile.value.profileImageUrl!,
+                                      )
+                                    : Image.asset(
+                                        'assets/images/ic_launcher.png',
+                                        width: 30.sp,
+                                      ).image,
                           ),
                           controller.isEditMode.value
                               ? Positioned(
@@ -68,74 +70,83 @@ class MyPage extends StatelessWidget {
                     ),
                   ),
                   Padding(
-                    padding: EdgeInsets.only(top: 10),
+                    padding: EdgeInsets.only(top: 10.sp),
                     child: controller.isEditMode.value
                         ? Container(
-                            constraints: BoxConstraints(minWidth: 80),
+                            constraints: BoxConstraints(minWidth: 80.sp),
                             child: IntrinsicWidth(
                               child: TextField(
+                                scrollPadding: EdgeInsets.all(20.0.sp),
                                 controller: controller.nicknameTextController,
                                 onChanged: (nickName) => controller.updateNickName(nickName),
-                                cursorColor: Color(0xFF0EE6F3),
+                                cursorColor: skyBlueColor,
                                 textAlign: TextAlign.center,
-                                style: const TextStyle(
+                                style: TextStyle(
                                   color: Colors.white,
-                                  fontSize: 18,
+                                  fontSize: 18.sp,
                                   height: 1.0,
                                   fontWeight: FontWeight.w500,
                                 ),
                                 decoration: InputDecoration(
-                                  contentPadding: EdgeInsets.symmetric(horizontal: 15.0, vertical: 4.0),
-                                  enabledBorder: const UnderlineInputBorder(
+                                  contentPadding: EdgeInsets.symmetric(horizontal: 15.0.sp, vertical: 4.0.sp),
+                                  enabledBorder: UnderlineInputBorder(
                                     borderSide: BorderSide(
-                                      color: Color(0xff363841),
-                                      width: 2.0,
+                                      color: popupBgColor,
+                                      width: 2.0.sp,
                                       style: BorderStyle.solid,
                                     ),
                                   ),
-                                  border: const UnderlineInputBorder(
+                                  border: UnderlineInputBorder(
                                     borderSide: BorderSide(
-                                      color: Color(0xff363841),
-                                      width: 2.0,
+                                      color: popupBgColor,
+                                      width: 2.0.sp,
                                       style: BorderStyle.solid,
                                     ),
                                   ),
-                                  focusedBorder: const UnderlineInputBorder(
+                                  focusedBorder: UnderlineInputBorder(
                                     borderSide: BorderSide(
-                                      color: Color(0xff363841),
-                                      width: 2,
+                                      color: popupBgColor,
+                                      width: 2.sp,
                                       style: BorderStyle.solid,
                                     ),
                                   ),
                                   counter: Center(
                                     child: RichText(
                                       text: TextSpan(
-                                        style: const TextStyle(
+                                        style: TextStyle(
                                           color: Colors.white,
-                                          fontSize: 12,
+                                          fontSize: 12.sp,
                                           fontWeight: FontWeight.w500,
-                                          height: 16 / 12,
+                                          height: (16 / 12).sp,
                                           letterSpacing: -0.5,
                                         ),
                                         children: [
+                                          controller.profile.value.provider == 'APPLE'
+                                              ? TextSpan(
+                                                  text: controller.profile.value.nickname!.split('@')[0].length.toString(),
+                                                  style: TextStyle(
+                                                    color: deepGrayColor,
+                                                    fontSize: 12.sp,
+                                                  ),
+                                                )
+                                              : TextSpan(
+                                                  text: controller.profile.value.nickname!.length.toString(),
+                                                  style: TextStyle(
+                                                    color: deepGrayColor,
+                                                    fontSize: 12.sp,
+                                                  ),
+                                                ),
                                           TextSpan(
-                                            text: controller.profile.value.nickname!.length.toString(),
-                                            style: const TextStyle(
-                                              color: Color(0xFF8A8A8A),
-                                              fontSize: 12,
-                                            ),
-                                          ),
-                                          const TextSpan(
                                             text: ' / ',
                                             style: TextStyle(
-                                              color: Color(0xFF8A8A8A),
+                                              color: deepGrayColor,
                                             ),
                                           ),
                                           TextSpan(
                                             text: controller.maxNickNameLength.toString(),
-                                            style: const TextStyle(
-                                              color: Color(0xFF8A8A8A),
-                                              fontSize: 12,
+                                            style: TextStyle(
+                                              color: deepGrayColor,
+                                              fontSize: 12.sp,
                                             ),
                                           ),
                                         ],
@@ -148,35 +159,41 @@ class MyPage extends StatelessWidget {
                             ),
                           )
                         : Container(
-                            decoration: const BoxDecoration(
+                            decoration: BoxDecoration(
                               border: BorderDirectional(
                                 bottom: BorderSide(
-                                  color: Color(0xff363841),
-                                  width: 2,
+                                  color: popupBgColor,
+                                  width: 2.sp,
                                 ),
                               ),
                             ),
                             child: Padding(
-                              padding: const EdgeInsets.symmetric(horizontal: 10.0, vertical: 2),
+                              padding: EdgeInsets.symmetric(horizontal: 10.0.sp, vertical: 2.sp),
                               child: Row(
                                 mainAxisSize: MainAxisSize.min,
                                 mainAxisAlignment: MainAxisAlignment.center,
                                 crossAxisAlignment: CrossAxisAlignment.center,
                                 children: [
-                                  StyledText(
-                                    controller.profile.value.nickname!,
-                                    fontSize: 18,
-                                    fontWeight: 500,
-                                  ),
+                                  controller.profile.value.provider == 'APPLE'
+                                      ? StyledText(
+                                          controller.profile.value.nickname!.split('@')[0],
+                                          fontSize: 18,
+                                          fontWeight: 500,
+                                        )
+                                      : StyledText(
+                                          controller.profile.value.nickname!,
+                                          fontSize: 18,
+                                          fontWeight: 500,
+                                        ),
                                   Padding(
-                                    padding: const EdgeInsets.only(left: 5, bottom: 4),
+                                    padding: EdgeInsets.only(left: 5.sp, bottom: 4.sp),
                                     child: InkWell(
                                       onTap: () => controller.toggleEditMode(),
-                                      radius: 50,
-                                      child: const Icon(
+                                      radius: 50.sp,
+                                      child: Icon(
                                         Icons.edit,
-                                        color: Color(0xFFA5A5A5),
-                                        size: 14,
+                                        color: const Color(0xFFA5A5A5),
+                                        size: 14.sp,
                                       ),
                                     ),
                                   )
@@ -196,18 +213,18 @@ class MyPage extends StatelessWidget {
                   controller.isEditMode.value
                       ? Expanded(
                           child: Container(
-                              color: Color(0xFF1D1D26),
+                              color: subBg01Color,
                               child: Align(
                                 alignment: Alignment.bottomCenter,
                                 child: Container(
-                                  color: const Color(0xFF0EE6F3),
-                                  height: 60,
+                                  color: skyBlueColor,
+                                  height: 60.sp,
                                   alignment: Alignment.center,
                                   child: InkWell(
                                     onTap: () => controller.modifyMyAccountInfo(),
-                                    child: const Padding(
-                                      padding: EdgeInsets.symmetric(vertical: 8.0),
-                                      child: Center(
+                                    child: Padding(
+                                      padding: EdgeInsets.symmetric(vertical: 8.0.sp),
+                                      child: const Center(
                                         child: StyledText(
                                           '확인',
                                           color: Colors.black,
@@ -221,9 +238,9 @@ class MyPage extends StatelessWidget {
                               )),
                         )
                       : Container(
-                          color: Color(0xFF2A2B33),
+                          color: subBg02Color,
                           child: Padding(
-                            padding: const EdgeInsets.symmetric(horizontal: 20.0),
+                            padding: EdgeInsets.symmetric(horizontal: 20.0.sp),
                             child: Column(
                               children: [
                                 // Padding(
@@ -272,7 +289,7 @@ class MyPage extends StatelessWidget {
                                 //   ),
                                 // ),
                                 Padding(
-                                  padding: const EdgeInsets.symmetric(vertical: 21.0),
+                                  padding: EdgeInsets.symmetric(vertical: 21.0.sp),
                                   child: Row(
                                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                     children: [
@@ -285,12 +302,12 @@ class MyPage extends StatelessWidget {
                                       Row(
                                         children: [
                                           Padding(
-                                            padding: const EdgeInsets.only(right: 5.0, bottom: 3.0),
+                                            padding: EdgeInsets.only(right: 5.0.sp, bottom: 3.0.sp),
                                             child: getMypageLoginedButtonIcon(controller.profile.value.provider!),
                                           ),
                                           StyledText(
                                             controller.profile.value.provider!,
-                                            color: Color(0xFFA8A8A8),
+                                            color: const Color(0xFFA8A8A8),
                                             fontSize: 16,
                                             fontWeight: 500,
                                           ),
@@ -300,7 +317,7 @@ class MyPage extends StatelessWidget {
                                   ),
                                 ),
                                 Padding(
-                                  padding: const EdgeInsets.symmetric(vertical: 21.0),
+                                  padding: EdgeInsets.symmetric(vertical: 21.0.sp),
                                   child: Row(
                                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                     children: [
@@ -310,12 +327,33 @@ class MyPage extends StatelessWidget {
                                         fontWeight: 500,
                                         lineHeight: 20,
                                       ),
-                                      StyledText(
-                                        controller.profile.value.email,
-                                        fontSize: 14,
-                                        fontWeight: 500,
-                                        color: const Color(0xFFA8A8A8),
-                                      ),
+                                      controller.profile.value.provider == 'APPLE'
+                                          ? Column(
+                                              crossAxisAlignment: CrossAxisAlignment.end,
+                                              children: [
+                                                StyledText(
+                                                  controller.profile.value.email.split('@')[0],
+                                                  fontSize: 14,
+                                                  fontWeight: 500,
+                                                  color: const Color(0xFFA8A8A8),
+                                                ),
+                                                Padding(
+                                                  padding: EdgeInsets.only(top: 5.0.sp),
+                                                  child: StyledText(
+                                                    '@${controller.profile.value.email.split('@')[1]}',
+                                                    fontSize: 14,
+                                                    fontWeight: 500,
+                                                    color: const Color(0xFFA8A8A8),
+                                                  ),
+                                                ),
+                                              ],
+                                            )
+                                          : StyledText(
+                                              controller.profile.value.email,
+                                              fontSize: 14,
+                                              fontWeight: 500,
+                                              color: const Color(0xFFA8A8A8),
+                                            ),
                                     ],
                                   ),
                                 ),
@@ -394,23 +432,27 @@ class MyPage extends StatelessWidget {
                   if (!controller.isEditMode.value)
                     Column(
                       children: [
-                        const Divider(color: Color(0xFF1D1D26), height: 6),
+                        Divider(color: subBg01Color, height: 6.sp),
                         Container(
-                          color: const Color(0xFF2A2B33),
+                          color: subBg02Color,
                           child: Padding(
-                            padding: const EdgeInsets.symmetric(vertical: 21.0, horizontal: 20.0),
+                            padding: EdgeInsets.symmetric(vertical: 21.0.sp, horizontal: 20.0.sp),
                             child: InkWell(
                               onTap: () => Get.toNamed(Routes.withdrawConfirm),
                               child: Row(
                                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                children: const [
-                                  StyledText(
+                                children: [
+                                  const StyledText(
                                     '탈퇴하기',
                                     fontSize: 18,
                                     fontWeight: 500,
                                     lineHeight: 20,
                                   ),
-                                  Icon(Icons.chevron_right, color: Color(0xFFBDC0C7)),
+                                  Icon(
+                                    Icons.chevron_right,
+                                    color: const Color(0xFFBDC0C7),
+                                    size: 22.sp,
+                                  ),
                                 ],
                               ),
                             ),

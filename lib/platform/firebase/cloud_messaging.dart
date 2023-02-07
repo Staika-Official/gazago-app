@@ -2,6 +2,7 @@ import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/foundation.dart' show defaultTargetPlatform, TargetPlatform;
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:gaza_go/constants/enums.dart';
+import 'package:gaza_go/platform/helpers/login_helper.dart';
 import 'package:gaza_go/platform/stores/hive_store.dart';
 import 'package:logger/logger.dart';
 
@@ -10,6 +11,7 @@ AndroidNotificationChannel channel = const AndroidNotificationChannel(
   'gazago notifications',
   importance: Importance.high,
 );
+
 late FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin;
 
 Future<void> initFcm() async {
@@ -43,7 +45,7 @@ void handleMessage() {
 
     print('FCM Foreground handleMessage ${notification!.title}');
 
-    if (notification != null && android != null) {
+    if (android != null) {
       flutterLocalNotificationsPlugin.show(
         notification.hashCode,
         notification.title,
@@ -58,14 +60,32 @@ void handleMessage() {
         ),
       );
     }
+
+    if (message.data['notificationKey'] == 'FORCE_LOGOUT') {
+      forceLogout();
+    }
   });
+
+  FirebaseMessaging.onMessageOpenedApp.listen((RemoteMessage message) {
+    handleNotification(message);
+  });
+}
+
+void handleNotification(RemoteMessage message) {
+  if (message.data['notificationKey'] == 'DAILY_REWARD_COMPLETED') {
+    HiveStore.save(key: HiveKey.needRouteToGoWallet.name, value: true);
+  }
+
+  if (message.data['notificationKey'] == 'FORCE_LOGOUT') {
+    HiveStore.save(key: HiveKey.needToForceLogout.name, value: true);
+  }
 }
 
 //for iOS and web
 Future<void> requestPermission() async {
   FirebaseMessaging messaging = FirebaseMessaging.instance;
 
-  NotificationSettings settings = await messaging.requestPermission();
+  await messaging.requestPermission();
 }
 
 Future<void> setForegroundConfig() async {
@@ -92,7 +112,6 @@ Future<void> setForegroundConfig() async {
 
   if (defaultTargetPlatform == TargetPlatform.android) {
     await flutterLocalNotificationsPlugin.resolvePlatformSpecificImplementation<AndroidFlutterLocalNotificationsPlugin>()?.requestPermission();
-    await flutterLocalNotificationsPlugin.resolvePlatformSpecificImplementation<AndroidFlutterLocalNotificationsPlugin>()?.createNotificationChannel(channel);
   } else {
     await flutterLocalNotificationsPlugin.resolvePlatformSpecificImplementation<IOSFlutterLocalNotificationsPlugin>()?.requestPermissions(
           alert: true,
@@ -103,7 +122,6 @@ Future<void> setForegroundConfig() async {
 }
 
 void onSelectNotification(String? payload) {
-  // TODO. 필요할 경우 payload 처리 필요
   if (payload != null) {
     print(payload);
   }
@@ -113,10 +131,68 @@ NotificationDetails notificationDetail = NotificationDetails(
   android: AndroidNotificationDetails(
     channel.id,
     channel.name,
+    importance: Importance.max,
+    priority: Priority.max,
   ),
 );
 
+NotificationDetails statLowNotificationDetail = NotificationDetails(
+  android: AndroidNotificationDetails(
+    '${channel.id}1',
+    '${channel.name}1',
+    importance: Importance.max,
+    priority: Priority.max,
+    playSound: true,
+    sound: const RawResourceAndroidNotificationSound('stat_low'),
+  ),
+  iOS: const IOSNotificationDetails(sound: 'stat_low.mp3'),
+);
+
+NotificationDetails statDepletedNotificationDetail = NotificationDetails(
+  android: AndroidNotificationDetails(
+    '${channel.id}2',
+    '${channel.name}2',
+    importance: Importance.max,
+    priority: Priority.max,
+    playSound: true,
+    sound: const RawResourceAndroidNotificationSound('stat_depleted'),
+  ),
+  iOS: const IOSNotificationDetails(sound: 'stat_depleted.mp3'),
+);
+
+NotificationDetails badgeAcquiredNotificationDetail = NotificationDetails(
+  android: AndroidNotificationDetails(
+    '${channel.id}3',
+    '${channel.name}3',
+    importance: Importance.max,
+    priority: Priority.max,
+    playSound: true,
+    sound: const RawResourceAndroidNotificationSound('badge_acquired'),
+  ),
+  iOS: const IOSNotificationDetails(sound: 'badge_acquired.mp3'),
+);
+//
+// badge,
+// stamina,
+// durability,
+
 void showLocalNotification({required NotificationType notificationType, required String title, required String message, String? payload}) {
   FlutterLocalNotificationsPlugin notificationsPlugin = FlutterLocalNotificationsPlugin();
-  notificationsPlugin.show(notificationType.id, title, message, notificationDetail);
+  NotificationDetails details;
+  switch (notificationType) {
+    case NotificationType.durabilityLow:
+    case NotificationType.staminaLow:
+      details = statLowNotificationDetail;
+      break;
+    case NotificationType.durabilityDepleted:
+    case NotificationType.staminaDepleted:
+      details = statDepletedNotificationDetail;
+      break;
+    case NotificationType.badge:
+      details = badgeAcquiredNotificationDetail;
+      break;
+    default:
+      details = notificationDetail;
+  }
+  notificationsPlugin.show(notificationType.id, title, message, details);
 }

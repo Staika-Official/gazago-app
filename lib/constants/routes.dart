@@ -9,6 +9,10 @@ import 'package:gaza_go/presentations/views/activity/equipped_item.dart';
 import 'package:gaza_go/presentations/views/archive/archive_detail.dart';
 import 'package:gaza_go/presentations/views/auth/account_restore.dart';
 import 'package:gaza_go/presentations/views/auth/signup_complete.dart';
+import 'package:gaza_go/presentations/views/debugging/position_low_data_logs.dart';
+import 'package:gaza_go/presentations/views/debugging/request_info.dart';
+import 'package:gaza_go/presentations/views/debugging/response_error_logs.dart';
+import 'package:gaza_go/presentations/views/debugging/user_exercise_data_logs.dart';
 import 'package:gaza_go/presentations/views/home.dart';
 import 'package:gaza_go/presentations/views/inventory/index.dart';
 import 'package:gaza_go/presentations/views/inventory/inventory_badge_detail.dart';
@@ -23,18 +27,28 @@ import 'package:gaza_go/presentations/views/permissions.dart';
 import 'package:gaza_go/presentations/views/preferences/edit_biometrics.dart';
 import 'package:gaza_go/presentations/views/preferences/index.dart';
 import 'package:gaza_go/presentations/views/preferences/my_page.dart';
+import 'package:gaza_go/presentations/views/preferences/notice_detail.dart';
+import 'package:gaza_go/presentations/views/preferences/notice_list.dart';
 import 'package:gaza_go/presentations/views/preferences/notification_alert.dart';
 import 'package:gaza_go/presentations/views/preferences/preference_board.dart';
 import 'package:gaza_go/presentations/views/preferences/terms_list.dart';
 import 'package:gaza_go/presentations/views/preferences/withdraw_completed.dart';
 import 'package:gaza_go/presentations/views/preferences/withdraw_confirm.dart';
+import 'package:gaza_go/presentations/views/shop/shop_item_detail.dart';
 import 'package:gaza_go/presentations/views/term.dart';
-import 'package:gaza_go/presentations/views/verification/index.dart';
+import 'package:gaza_go/presentations/views/verification/verification_cert_code.dart';
+import 'package:gaza_go/presentations/views/verification/verification_detail.dart';
+import 'package:gaza_go/presentations/views/verification/verification_name.dart';
+import 'package:gaza_go/presentations/views/verification/verification_phone.dart';
 import 'package:gaza_go/presentations/views/wallet/buy_tik.dart';
 import 'package:gaza_go/presentations/views/wallet/index.dart';
+import 'package:gaza_go/presentations/views/wallet/taika_pay.dart';
 import 'package:gaza_go/presentations/views/wallet/wallet_actions.dart';
 import 'package:gaza_go/presentations/views/wallet/wallet_detail.dart';
 import 'package:get/get_navigation/get_navigation.dart';
+
+import '../presentations/views/debugging/activity_logs.dart';
+import '../presentations/views/verification/verification_terms.dart';
 
 class Routes {
   static const login = '/login';
@@ -52,8 +66,15 @@ class Routes {
   static const challengeMap = '/activity/challenge_map';
   static const preferences = '/preferences';
   static const preferenceBoard = '/preferences/board';
+  static const noticeList = '/notice/list';
+  static const noticeDetail = '/notice/detail';
   static const preferenceNotification = '/preferences/notification';
   static const verification = '/verification';
+  static const verificationTerms = '/verification/terms';
+  static const verificationName = '/verification/name';
+  static const verificationDetail = '/verification/detail';
+  static const verificationPhone = '/verification/phone';
+  static const verificationCertCode = '/verification/cert_code';
   static const myPage = '/my_page';
   static const editBiometrics = '/my_page/edit_biometrics';
   static const withdrawConfirm = '/my_page/withdraw';
@@ -62,6 +83,7 @@ class Routes {
   static const buyTik = '/wallet/buy_tik';
   static const walletDetail = '/wallet/detail';
   static const walletActions = '/wallet/action';
+  static const taikaPay = '/wallet/taika_pay';
   static const inventory = '/inventory';
   static const itemDetail = '/inventory/item/detail';
   static const badgeDetail = '/inventory/badge/detail';
@@ -70,6 +92,12 @@ class Routes {
   static const signupComplete = '/auth/signup_complete';
   static const accountRestore = '/account/restore';
   static const permissions = '/permissions';
+  static const requestInfo = '/debugging/request_info';
+  static const activityLogs = '/debugging/activity_logs';
+  static const responseErrorLogs = '/debugging/response_error_logs';
+  static const userExerciseDataLogs = '/debugging/user_exercise_data_logs';
+  static const positionLowDataLogs = '/debugging/position_low_data_logs';
+  static const shopItemDetail = '/shop/item/detail';
 
   static List<GetPage> pages = [
     stepPage(name: Routes.login, page: const Login()),
@@ -95,16 +123,23 @@ class Routes {
       transitionDuration: const Duration(milliseconds: 200),
     ),
     stepPage(name: Routes.preferenceBoard, page: const PreferenceBoard()),
+    stepPage(name: Routes.noticeList, page: const NoticeList()),
+    stepPage(name: Routes.noticeDetail, page: const NoticeDetail()),
     stepPage(name: Routes.preferenceNotification, page: const NotificationAlert()),
-    stepPage(name: Routes.verification, page: const Verification()),
+    stepPage(name: Routes.verificationTerms, page: const VerificationTerms()),
+    stepPage(name: Routes.verificationName, page: const VerificationName()),
+    stepPage(name: Routes.verificationDetail, page: const VerificationDetail()),
+    stepPage(name: Routes.verificationPhone, page: const VerificationPhone()),
+    stepPage(name: Routes.verificationCertCode, page: const VerificationCertCode()),
     stepPage(name: Routes.myPage, page: const MyPage()),
     stepPage(name: Routes.editBiometrics, page: const EditBiometrics()),
     stepPage(name: Routes.withdrawConfirm, page: const WithdrawConfirm()),
     stepPage(name: Routes.withdrawCompleted, page: const WithdrawCompleted()),
     stepPage(name: Routes.wallet, page: const WalletHome()),
     stepPage(name: Routes.walletDetail, page: const WalletDetail()),
-    stepPage(name: Routes.buyTik, page: BuyTik()),
+    stepPage(name: Routes.buyTik, page: const BuyTik()),
     stepPage(name: Routes.walletActions, page: const WalletActions()),
+    stepPage(name: Routes.taikaPay, page: const TaikaPay()),
     stepPage(name: Routes.inventory, page: const InventoryHome()),
     stepPage(name: Routes.itemDetail, page: const InventoryItemDetail()),
     stepPage(name: Routes.badgeDetail, page: const InventoryBadgeDetail()),
@@ -114,6 +149,12 @@ class Routes {
     stepPage(name: Routes.accountRestore, page: const AccountRestore()),
     stepPage(name: Routes.equippedItems, page: const EquippedItems()),
     stepPage(name: Routes.permissions, page: Permissions()),
+    stepPage(name: Routes.requestInfo, page: const RequestInfo()),
+    stepPage(name: Routes.responseErrorLogs, page: const ResponseErrorLogs()),
+    stepPage(name: Routes.activityLogs, page: const ActivityLogs()),
+    stepPage(name: Routes.userExerciseDataLogs, page: const UserExerciseDataLogs()),
+    stepPage(name: Routes.positionLowDataLogs, page: const PositionLowDataLogs()),
+    stepPage(name: Routes.shopItemDetail, page: const ShopItemDetail()),
   ];
 }
 

@@ -4,14 +4,14 @@ part 'access_token_model.g.dart';
 
 @JsonSerializable(explicitToJson: true)
 class AccessTokenModel {
-  String accessToken;
-  String refreshToken;
+  String? accessToken;
+  String? refreshToken;
   String? accountStatus;
 
   AccessTokenModel({
-    required this.accessToken,
-    required this.refreshToken,
-    required this.accountStatus,
+    this.accessToken,
+    this.refreshToken,
+    this.accountStatus,
   });
 
   factory AccessTokenModel.fromJson(Map<String, dynamic> json) => _$AccessTokenModelFromJson(json);

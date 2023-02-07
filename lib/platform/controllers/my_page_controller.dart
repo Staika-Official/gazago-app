@@ -35,15 +35,20 @@ class MyPageController extends GetxController {
   }
 
   void getProfileInfo() async {
-    UserAccountModel account = await UaaService.getAccountInfo();
-    profile.update((state) {
-      state?.nickname = account.nickname;
-      state?.profileImageUrl = account.profileImageUrl;
-      state?.provider = account.provider;
-      state?.email = account.email;
-      state?.id = account.id;
-    });
-    inspect(profile);
+    await UaaService.getAccountInfo(
+      successCallback: (account) {
+        profile.update(
+          (state) {
+            state?.nickname = account.nickname;
+            state?.profileImageUrl = account.profileImageUrl;
+            state?.provider = account.provider;
+            state?.email = account.email;
+            state?.id = account.id;
+            state?.authorities = account.authorities;
+          },
+        );
+      },
+    );
   }
 
   Future<void> modifyMyAccountInfo() async {
@@ -53,18 +58,37 @@ class MyPageController extends GetxController {
       dio.FormData formData = dio.FormData.fromMap({
         'profileImage': profileImage,
       });
-      var res = await UaaService.fetchUploadImage(formData);
-      profile.value.profileImageUrl = res?.profileImageUrl;
+      await UaaService.fetchUploadImage(
+        formData,
+        successCallback: (res) {
+          profile.value.profileImageUrl = res?.profileImageUrl;
+        },
+      );
     }
-    UserAccountModel account = await UaaService.modifyAccountInfo(profile.value.nickname!, profile.value.profileImageUrl!);
-    inspect(account);
-    preferenceController.onInit();
-    showToastPopup('프로필이 수정되었습니다.');
-    Get.back();
+
+    if (profile.value.profileImageUrl == null || profile.value.profileImageUrl == '') {
+      profile.value.profileImageUrl = 'https://image.staika.io/ic_launcher.png';
+    }
+
+    await UaaService.modifyAccountInfo(
+      profile.value.nickname!,
+      profile.value.profileImageUrl,
+      successCallback: (account) {
+        preferenceController.onInit();
+        showToastPopup('프로필이 수정되었습니다.');
+        Get.back();
+      },
+    );
   }
 
   void toggleEditMode() {
-    nicknameTextController.text = profile.value.nickname!;
+    if (profile.value.provider == 'APPLE') {
+      nicknameTextController.text = profile.value.nickname!.split('@')[0];
+      profile.value.nickname = profile.value.nickname!.split('@')[0];
+    } else {
+      nicknameTextController.text = profile.value.nickname!;
+    }
+
     isEditMode.value = !isEditMode.value;
   }
 

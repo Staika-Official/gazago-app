@@ -43,7 +43,7 @@ Future<bool> compareVersion(String versionString) async {
 
 String formatDate(String? isoDateString) {
   if (isoDateString != null) {
-    return DateFormat("yyyy-MM-dd hh:mm:ss").format(DateTime.parse(isoDateString).toLocal());
+    return DateFormat("yyyy.MM.dd HH:mm:ss").format(DateTime.parse(isoDateString).toLocal());
   } else {
     return '';
   }
@@ -92,7 +92,11 @@ String formatDecimalPlaces(double val, int decimalPlaces, {RoundType roundType =
 
   NumberFormat formatter;
   if (decimalPlaces != 0) {
-    formatter = NumberFormat('#,###.${"#" * decimalPlaces}');
+    if (val == 0) {
+      formatter = NumberFormat('0');
+    } else {
+      formatter = NumberFormat('#,###.${"#" * decimalPlaces}');
+    }
   } else {
     formatter = NumberFormat('#,###');
   }

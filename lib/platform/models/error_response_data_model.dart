@@ -4,12 +4,12 @@ part 'error_response_data_model.g.dart';
 
 @JsonSerializable(explicitToJson: true)
 class ErrorResponseDataModel {
-  int status;
+  int? status;
   String? errorMessage;
   String? errorCode;
 
   ErrorResponseDataModel({
-    required this.status,
+    this.status,
     this.errorMessage,
     this.errorCode,
   });

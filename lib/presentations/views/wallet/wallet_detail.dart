@@ -1,10 +1,12 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/flutter_svg.dart';
-import 'package:flutter_svg_provider/flutter_svg_provider.dart' as SP;
+import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:flutter_svg_provider/flutter_svg_provider.dart' as sp;
 import 'package:gaza_go/platform/controllers/wallet_master_controller.dart';
 import 'package:gaza_go/platform/helpers/base_helper.dart';
 import 'package:gaza_go/presentations/components/default_container.dart';
+import 'package:gaza_go/presentations/styles/colors.dart';
+import 'package:gaza_go/presentations/styles/icons.dart';
 import 'package:gaza_go/presentations/styles/styled_text.dart';
 import 'package:get/get.dart';
 
@@ -42,16 +44,16 @@ class WalletDetail extends StatelessWidget {
   // }
 
   List<Widget> renderTransactionList(WalletMasterController controller) {
-    return controller.assetDetail.value.transactions
+    return controller.transactionsList
         .map(
           (transaction) => Container(
-            padding: EdgeInsets.only(left: 3, right: 3, top: 20, bottom: 20),
+            padding: EdgeInsets.only(left: 3.sp, right: 3.sp, top: 20.sp, bottom: 20.sp),
             decoration: controller.assetDetail.value.transactions.last == transaction
-                ? BoxDecoration()
+                ? const BoxDecoration()
                 : BoxDecoration(
                     border: BorderDirectional(
                       bottom: BorderSide(
-                        color: Color(0xff363841),
+                        color: popupBgColor,
                       ),
                     ),
                   ),
@@ -59,30 +61,29 @@ class WalletDetail extends StatelessWidget {
               mainAxisSize: MainAxisSize.max,
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Container(
-                  width: 8,
-                  height: 8,
-                  margin: EdgeInsets.only(right: 15, top: 4, left: 4),
-                  decoration: BoxDecoration(
-                    color: Color(0xff0ee6f3),
-                    borderRadius: BorderRadius.circular(8),
-                  ),
+                Padding(
+                  padding: const EdgeInsets.only(left: 5, right: 8),
+                  child: transaction.type == 'IN' ? iconIn : iconOut,
                 ),
                 Expanded(
                   child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
                           StyledText(
-                            transaction.description!,
-                            fontSize: 20,
-                            lineHeight: 20,
-                            letterSpacing: -0.5,
-                            fontWeight: 600,
+                            transaction.title != null
+                                ? transaction.type == 'FEE'
+                                    ? '${transaction.title!} 수수료'
+                                    : transaction.title!
+                                : '',
+                            fontSize: 22,
+                            lineHeight: 22,
+                            fontWeight: 500,
                           ),
                           StyledText(
-                            '${formatDecimalPlaces(double.parse(transaction.uiAmountString!), transaction.decimals!)} ${transaction.symbol!}',
+                            '${transaction.type == 'IN' ? '+' : '-'} ${formatDecimalPlaces(double.parse(transaction.uiAmountString!), transaction.decimals!)} ${transaction.symbol!}',
                             fontSize: 18,
                             lineHeight: 20,
                             letterSpacing: -0.5,
@@ -91,27 +92,36 @@ class WalletDetail extends StatelessWidget {
                         ],
                       ),
                       Padding(
-                        padding: const EdgeInsets.only(top: 8),
+                        padding: EdgeInsets.only(top: 14.sp),
                         child: Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
                             StyledText(
-                              formatDate(transaction.timestamp!),
+                              formatDate(transaction.createdDate!),
                               fontSize: 14,
                               lineHeight: 10,
                               fontWeight: 500,
-                              color: Color(0xff7C7F82),
+                              color: deepGrayColor,
                             ),
                             StyledText(
-                              transaction.confirmationStatus! == 'finalized' ? '완료' : transaction.confirmationStatus!,
+                              '완료',
                               fontSize: 12,
                               lineHeight: 10,
                               fontWeight: 600,
-                              color: Color(0xff7C7F82),
+                              color: deepGrayColor,
                             ),
                           ],
                         ),
-                      )
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.only(top: 20),
+                        child: StyledText(
+                          transaction.content ?? '',
+                          fontSize: 14,
+                          lineHeight: 10,
+                          color: lightGrayColor,
+                        ),
+                      ),
                     ],
                   ),
                 ),
@@ -128,8 +138,8 @@ class WalletDetail extends StatelessWidget {
 
     return Obx(() {
       return DefaultContainer(
-        backgroundColor: Color(0xff1D1D26),
-        titleText: controller.selectedAsset.value.meta!.name,
+        backgroundColor: subBg01Color,
+        titleText: controller.selectedAsset.value.name!,
         child: Column(
           children: [
             // controller.selectedAsset.value.price!.isNotEmpty
@@ -139,15 +149,15 @@ class WalletDetail extends StatelessWidget {
             //       )
             //     : Container(),
             Padding(
-              padding: const EdgeInsets.only(top: 40),
+              padding: EdgeInsets.only(top: 40.sp),
               child: CircleAvatar(
-                foregroundImage: controller.selectedAsset.value.meta?.logoUrl != ''
-                    ? CachedNetworkImageProvider(controller.selectedAsset.value.meta!.logoUrl)
-                    : SP.Svg('assets/images/common/ico_token_tik.svg') as ImageProvider,
+                foregroundImage: controller.selectedAsset.value.logoUrl != '' && controller.selectedAsset.value.logoUrl != null
+                    ? CachedNetworkImageProvider(controller.selectedAsset.value.logoUrl!)
+                    : const sp.Svg('assets/images/common/ico_token_tik.svg') as ImageProvider,
               ),
             ),
             Padding(
-              padding: const EdgeInsets.only(top: 18),
+              padding: EdgeInsets.only(top: 18.sp),
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
@@ -158,9 +168,9 @@ class WalletDetail extends StatelessWidget {
                     fontWeight: 600,
                   ),
                   Padding(
-                    padding: const EdgeInsets.only(left: 5),
+                    padding: EdgeInsets.only(left: 5.sp),
                     child: StyledText(
-                      controller.selectedAsset.value.meta!.symbol,
+                      controller.selectedAsset.value.symbol! == 'TOTAL_TIK' ? 'TIK' : controller.selectedAsset.value.symbol!,
                       fontSize: 28,
                       lineHeight: 28,
                       fontWeight: 500,
@@ -174,10 +184,10 @@ class WalletDetail extends StatelessWidget {
             //   child: renderButtons(controller),
             // ),
             Container(
-              color: Color(0xff2A2B33),
+              color: subBg02Color,
               height: 6,
               width: double.infinity,
-              margin: EdgeInsets.only(top: 50),
+              margin: EdgeInsets.only(top: 50.sp),
             ),
             Expanded(
               child: controller.assetDetail.value.transactions.isEmpty
@@ -188,10 +198,10 @@ class WalletDetail extends StatelessWidget {
                           child: Column(
                             mainAxisSize: MainAxisSize.min,
                             children: [
-                              SvgPicture.asset('assets/images/wallet/ico_empty.svg'),
+                              iconEmpty,
                               Padding(
-                                padding: const EdgeInsets.only(top: 20),
-                                child: StyledText(
+                                padding: EdgeInsets.only(top: 20.sp),
+                                child: const StyledText(
                                   '거래내역이 없습니다.',
                                   color: Color(0xff7b7b7b),
                                   fontSize: 16,
@@ -204,14 +214,53 @@ class WalletDetail extends StatelessWidget {
                         ),
                       );
                     })
-                  : SingleChildScrollView(
-                      physics: ClampingScrollPhysics(),
-                      child: Padding(
-                        padding: const EdgeInsets.symmetric(horizontal: 16),
-                        child: Column(
-                          children: [...renderTransactionList(controller)],
+                  : Stack(
+                      children: [
+                        SingleChildScrollView(
+                          controller: controller.transactionScrollController,
+                          physics: const ClampingScrollPhysics(),
+                          child: Padding(
+                            padding: EdgeInsets.symmetric(horizontal: 16.sp),
+                            child: Column(
+                              children: [...renderTransactionList(controller)],
+                            ),
+                          ),
                         ),
-                      ),
+                        if (controller.transactionScrollPosition.value > 100)
+                          Positioned(
+                            bottom: 60,
+                            right: 30,
+                            child: Material(
+                              color: Colors.transparent,
+                              child: Ink(
+                                width: 50,
+                                height: 50,
+                                decoration: BoxDecoration(color: skyBlueColor, borderRadius: BorderRadius.circular(50), border: Border.all(color: Colors.black), boxShadow: const [
+                                  BoxShadow(
+                                    color: Colors.black,
+                                    offset: Offset(0, 2),
+                                    blurRadius: 0.0,
+                                    spreadRadius: 0.0,
+                                  ),
+                                ]),
+                                child: InkWell(
+                                  onTap: () => controller.transactionScrollController.animateTo(
+                                    0,
+                                    duration: const Duration(
+                                      milliseconds: 100,
+                                    ),
+                                    curve: Curves.easeIn,
+                                  ),
+                                  borderRadius: BorderRadius.circular(50),
+                                  child: Padding(
+                                    padding: const EdgeInsets.all(14),
+                                    child: iconUp,
+                                  ),
+                                ),
+                              ),
+                            ),
+                          )
+                      ],
                     ),
             ),
           ],

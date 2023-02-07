@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 class CircularButton extends StatelessWidget {
   final double radius;
@@ -27,7 +28,7 @@ class CircularButton extends StatelessWidget {
       child: Container(
         width: radius,
         height: radius,
-        padding: EdgeInsets.symmetric(vertical: 10, horizontal: 12),
+        padding: EdgeInsets.symmetric(vertical: 10.sp, horizontal: 12.sp),
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(radius),
           color: color,
@@ -37,7 +38,7 @@ class CircularButton extends StatelessWidget {
             color: Colors.black,
           ),
           boxShadow: [
-            BoxShadow(offset: Offset(2, 4), color: Colors.black),
+            BoxShadow(offset: Offset(2.sp, 4.sp), color: Colors.black),
           ],
         ),
         child: child,

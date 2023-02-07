@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:gaza_go/presentations/components/default_container.dart';
+import 'package:gaza_go/presentations/styles/colors.dart';
 import 'package:gaza_go/presentations/styles/styled_text.dart';
 import 'package:gaza_go/presentations/views/wallet/spending_wallet.dart';
 
@@ -28,6 +30,7 @@ class _WalletHomeState extends State<WalletHome> with SingleTickerProviderStateM
   @override
   Widget build(BuildContext context) {
     return DefaultContainer(
+      backgroundColor: subBg01Color,
       titleText: _tabController.index == 0 ? 'GO 지갑' : '지갑',
       // child: Column(
       //   children: [
@@ -61,7 +64,7 @@ class _WalletHomeState extends State<WalletHome> with SingleTickerProviderStateM
           //     decoration: BoxDecoration(
           //       color: Colors.black,
           //       border: Border.all(
-          //         color: Color(0xff2a2b33),
+          //         color: subBg02Color,
           //         width: 2,
           //       ),
           //       borderRadius: BorderRadius.circular(50),
@@ -70,7 +73,7 @@ class _WalletHomeState extends State<WalletHome> with SingleTickerProviderStateM
           //       controller: _tabController,
           //       padding: EdgeInsets.symmetric(horizontal: 7, vertical: 5),
           //       indicator: BoxDecoration(
-          //         color: Color(0xff2A2B33),
+          //         color: subBg02Color,
           //         borderRadius: BorderRadius.circular(50),
           //       ),
           //       labelColor: Colors.white,
@@ -95,10 +98,10 @@ class _WalletHomeState extends State<WalletHome> with SingleTickerProviderStateM
           SizedBox(
             width: double.infinity,
             child: Padding(
-              padding: const EdgeInsets.only(left: 33, right: 33, top: 18),
+              padding: EdgeInsets.only(left: 33.sp, right: 33.sp, top: 18.sp),
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
+                children: const [
                   StyledText(
                     '디지털 자산',
                     fontSize: 16,
@@ -128,7 +131,7 @@ class _WalletHomeState extends State<WalletHome> with SingleTickerProviderStateM
           Expanded(
             child: TabBarView(
               controller: _tabController,
-              children: [
+              children: const [
                 SpendingWallet(),
                 // AssetWallet(),
               ],

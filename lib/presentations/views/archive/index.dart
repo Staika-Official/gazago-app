@@ -1,10 +1,11 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/svg.dart';
-import 'package:flutter_svg_provider/flutter_svg_provider.dart' as SP;
+import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:flutter_svg_provider/flutter_svg_provider.dart' as sp;
 import 'package:gaza_go/constants/enums.dart';
 import 'package:gaza_go/platform/controllers/archive_controller.dart';
 import 'package:gaza_go/platform/helpers/activity_helper.dart';
 import 'package:gaza_go/platform/helpers/base_helper.dart';
+import 'package:gaza_go/presentations/styles/colors.dart';
 import 'package:gaza_go/presentations/styles/icons.dart';
 import 'package:gaza_go/presentations/styles/styled_text.dart';
 import 'package:get/get.dart';
@@ -18,28 +19,28 @@ class ArchiveHome extends StatelessWidget {
           (archive) => InkWell(
             onTap: () => controller.toDetail(archive.id!),
             child: Container(
-              margin: const EdgeInsets.only(bottom: 15),
+              margin: EdgeInsets.only(bottom: 15.sp),
               decoration: BoxDecoration(
-                color: const Color(0xFF363841),
+                color: popupBgColor,
                 border: Border.all(
                   width: 1,
                   color: Colors.black,
                 ),
                 borderRadius: const BorderRadius.only(topLeft: Radius.circular(10), topRight: Radius.circular(10), bottomLeft: Radius.circular(10), bottomRight: Radius.circular(10)),
-                boxShadow: const [
+                boxShadow: [
                   BoxShadow(
-                    color: Color(0xFF000000),
+                    color: const Color(0xFF000000),
                     spreadRadius: 0,
                     blurRadius: 0,
-                    offset: Offset(0, 4), // changes position of shadow
+                    offset: Offset(0, 4.sp), // changes position of shadow
                   ),
                 ],
               ),
               child: Card(
                 elevation: 0,
-                color: const Color(0xFF363841),
+                color: popupBgColor,
                 child: Padding(
-                  padding: const EdgeInsets.only(top: 18.0, left: 18.0, right: 18.0, bottom: 17.0),
+                  padding: EdgeInsets.only(top: 15.0.sp, left: 18.0.sp, right: 18.0.sp, bottom: 10.0.sp),
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
@@ -51,48 +52,48 @@ class ArchiveHome extends StatelessWidget {
                             clipBehavior: Clip.none,
                             children: [
                               CircleAvatar(
-                                radius: 21,
+                                radius: 21.sp,
                                 backgroundColor: Colors.transparent,
                                 foregroundImage: archive.type == ExerciseType.hiking.name.toUpperCase()
-                                    ? SP.Svg('assets/images/archive/ico_archive_hiking.svg') as ImageProvider
-                                    : SP.Svg('assets/images/archive/ico_archive_walking.svg') as ImageProvider,
+                                    ? const sp.Svg('assets/images/archive/ico_archive_hiking.svg')
+                                    : const sp.Svg('assets/images/archive/ico_archive_walking.svg'),
                               ),
                               if (archive.badgeIssueId != null)
                                 Positioned(
                                   right: -5,
                                   bottom: -5,
-                                  child: Image.network(archive.badgeImageUrl!, width: 20, height: 20),
+                                  child: Image.network(archive.badgeImageUrl!, width: 20.sp, height: 20.sp),
                                 ),
                             ],
                           ),
                           Padding(
-                            padding: const EdgeInsets.only(
-                              left: 16,
+                            padding: EdgeInsets.only(
+                              left: 16.sp,
                             ),
                             child: Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
                                 StyledText(formatDateUntilDay(archive.startedDate!), fontSize: 16, fontWeight: 500),
-                                if (archive.challengeTitle != null) StyledText(archive.challengeTitle!, fontSize: 12, lineHeight: 20, color: const Color(0xFF8a8a8a), fontWeight: 600),
+                                if (archive.challengeTitle != null) StyledText(archive.challengeTitle!, fontSize: 12, lineHeight: 20, color: deepGrayColor, fontWeight: 600),
                               ],
                             ),
                           )
                         ],
                       ),
-                      const Divider(
-                        color: Color(0xFF2a2b33),
-                        height: 25,
+                      Divider(
+                        color: subBg02Color,
+                        height: 25.sp,
                         thickness: 1,
                       ),
                       Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
                           Padding(
-                            padding: const EdgeInsets.only(left: 6.0),
+                            padding: EdgeInsets.only(left: 6.0.sp),
                             child: Row(
                               children: [
                                 Padding(
-                                  padding: const EdgeInsets.only(right: 5.2),
+                                  padding: EdgeInsets.only(right: 5.2.sp),
                                   child: iconArchiveClock,
                                 ),
                                 StyledText(
@@ -105,7 +106,7 @@ class ArchiveHome extends StatelessWidget {
                           Row(
                             children: [
                               Padding(
-                                padding: const EdgeInsets.only(right: 5.2),
+                                padding: EdgeInsets.only(right: 5.2.sp),
                                 child: iconArchiveDistance,
                               ),
                               StyledText(
@@ -115,11 +116,11 @@ class ArchiveHome extends StatelessWidget {
                             ],
                           ),
                           Padding(
-                            padding: const EdgeInsets.only(right: 6.0),
+                            padding: EdgeInsets.only(right: 6.0.sp),
                             child: Row(
                               children: [
                                 Padding(
-                                  padding: const EdgeInsets.only(right: 5.2),
+                                  padding: EdgeInsets.only(right: 5.2.sp),
                                   child: iconArchiveSteps,
                                 ),
                                 StyledText(
@@ -146,17 +147,17 @@ class ArchiveHome extends StatelessWidget {
     ArchiveController controller = Get.put(ArchiveController());
 
     return Container(
-      color: const Color(0xFF1D1D26),
+      color: subBg01Color,
       child: Obx(() {
         return Padding(
-          padding: const EdgeInsets.symmetric(vertical: 25.0, horizontal: 20.0),
+          padding: EdgeInsets.only(top:20.sp, left:20.sp, right:20.sp),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             mainAxisSize: MainAxisSize.min,
             children: [
-              const Padding(
-                padding: EdgeInsets.only(bottom: 15.0),
-                child: StyledText(
+              Padding(
+                padding: EdgeInsets.only(bottom: 15.0.sp),
+                child: const StyledText(
                   '운동 기록',
                   fontSize: 20,
                   lineHeight: 20,
@@ -172,26 +173,26 @@ class ArchiveHome extends StatelessWidget {
               //   ),
               // ),
 
-              controller.dataGetLoading.value
-                  ? const Padding(
-                      padding: EdgeInsets.symmetric(vertical: 20.0),
-                      child: Center(child: CircularProgressIndicator()),
-                    )
-                  : controller.archiveList.isEmpty
-                      ? Container(
+              controller.archiveList.isEmpty
+                  ? controller.dataGetLoading.value
+                      ? Padding(
+                          padding: EdgeInsets.symmetric(vertical: 20.0.sp),
+                          child: const Center(child: CircularProgressIndicator()),
+                        )
+                      : Container(
                           width: double.infinity,
-                          padding: EdgeInsets.symmetric(vertical: 50),
+                          padding: EdgeInsets.symmetric(vertical: 50.sp),
                           decoration: BoxDecoration(
-                            color: Color(0xff363841),
-                            borderRadius: BorderRadius.circular(12),
+                            color: popupBgColor,
+                            borderRadius: BorderRadius.circular(12.sp),
                           ),
                           child: Column(
                             mainAxisSize: MainAxisSize.min,
                             children: [
-                              SvgPicture.asset('assets/images/wallet/ico_empty.svg'),
-                              const Padding(
-                                padding: EdgeInsets.only(top: 20),
-                                child: StyledText(
+                              iconEmpty,
+                              Padding(
+                                padding: EdgeInsets.only(top: 20.sp),
+                                child: const StyledText(
                                   '운동 기록이 없습니다.',
                                   color: Color(0xff7b7b7b),
                                   fontSize: 16,
@@ -199,9 +200,9 @@ class ArchiveHome extends StatelessWidget {
                                   fontWeight: 500,
                                 ),
                               ),
-                              const Padding(
-                                padding: EdgeInsets.only(top: 13),
-                                child: StyledText(
+                              Padding(
+                                padding: EdgeInsets.only(top: 13.sp),
+                                child: const StyledText(
                                   '운동하고 GO를 쌓아보세요!',
                                   color: Color(0xff7b7b7b),
                                   fontSize: 16,
@@ -212,18 +213,23 @@ class ArchiveHome extends StatelessWidget {
                             ],
                           ),
                         )
-                      : Expanded(
-                          child: SingleChildScrollView(
-                            controller: controller.scroll,
-                            physics: ClampingScrollPhysics(),
-                            child: Column(
-                              mainAxisSize: MainAxisSize.min,
-                              children: [
-                                ...renderArchiveList(controller),
-                              ],
-                            ),
-                          ),
+                  : Expanded(
+                      child: SingleChildScrollView(
+                        controller: controller.scroll,
+                        physics: const ClampingScrollPhysics(),
+                        child: Column(
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            ...renderArchiveList(controller),
+                            if (controller.dataGetLoading.value)
+                              Padding(
+                                padding: EdgeInsets.symmetric(vertical: 20.0.sp),
+                                child: const Center(child: CircularProgressIndicator()),
+                              )
+                          ],
                         ),
+                      ),
+                    ),
             ],
           ),
         );

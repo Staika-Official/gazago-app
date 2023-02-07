@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:gaza_go/constants/routes.dart';
-import 'package:gaza_go/platform/controllers/preference_controller.dart';
 import 'package:gaza_go/presentations/components/default_container.dart';
+import 'package:gaza_go/presentations/styles/colors.dart';
 import 'package:gaza_go/presentations/styles/styled_text.dart';
 import 'package:get/get.dart';
 
@@ -10,27 +11,25 @@ class TermsList extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    PreferenceController controller = Get.put(PreferenceController());
-
     return DefaultContainer(
       titleText: '약관',
-      backgroundColor: const Color(0xFF1D1D26),
-      headerBackgroundColor: Color(0xFF1D1D26),
+      backgroundColor: subBg01Color,
+      headerBackgroundColor: subBg01Color,
       child: Padding(
-        padding: const EdgeInsets.only(top: 10.0),
+        padding: EdgeInsets.only(top: 10.0.sp),
         child: Column(
           children: [
             TermsListItem(
               title: '이용약관',
-              onTap: () => Get.toNamed(Routes.term, arguments: {'termType': 'T2E_TERMS'}),
+              onTap: () => Get.toNamed(Routes.term, arguments: {'termType': 'TERMS'}),
             ),
             TermsListItem(
               title: '개인정보 처리방침',
-              onTap: () => Get.toNamed(Routes.term, arguments: {'termType': 'T2E_PRIVACY'}),
+              onTap: () => Get.toNamed(Routes.term, arguments: {'termType': 'PRIVACY'}),
             ),
             TermsListItem(
               title: '위치정보 이용 동의',
-              onTap: () => Get.toNamed(Routes.term, arguments: {'termType': 'T2E_LOCATION'}),
+              onTap: () => Get.toNamed(Routes.term, arguments: {'termType': 'LOCATION'}),
             ),
           ],
         ),
@@ -52,14 +51,14 @@ class TermsListItem extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Ink(
-      height: 60,
-      color: Color(0xFF1D1D26),
+      height: 60.sp,
+      color: subBg01Color,
       child: InkWell(
         onTap: type == ItemType.functional ? onTap : null,
         child: Container(
-          height: 55,
-          color: Color(0xFF1D1D26),
-          padding: const EdgeInsets.only(left: 25, right: 20),
+          height: 55.sp,
+          color: subBg01Color,
+          padding: EdgeInsets.only(left: 25.sp, right: 20.sp),
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
@@ -73,12 +72,12 @@ class TermsListItem extends StatelessWidget {
                       color: Color(0xFFBDC0C7),
                     )
                   : Padding(
-                      padding: const EdgeInsets.only(right: 5),
+                      padding: EdgeInsets.only(right: 5.sp),
                       child: StyledText(
                         'v${description!}',
                         fontSize: 16,
                         fontWeight: 500,
-                        color: Color(0xFF8A8A8A),
+                        color: deepGrayColor,
                       ),
                     ),
             ],

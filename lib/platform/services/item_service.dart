@@ -11,20 +11,28 @@ class ItemService {
     return HiveStore.loadString(key: HiveKey.userId.name);
   }
 
-  static Future<List<InventoryItemModel>> getAllMyItems() async {
-    Response res = await ItemApi.getAllMyItems(userId!);
-    List<InventoryItemModel> userItems = List.empty(growable: true);
-    res.data.forEach((challenge) {
-      userItems.add(InventoryItemModel.fromJson(challenge));
-    });
-
-    return userItems;
+  static Future<void> getAllMyItems(int page, {required Function successCallback, Function? errorCallback}) async {
+    Response res = await ItemApi.getAllMyItems(userId!, page);
+    if (res.statusCode == 200) {
+      List<InventoryItemModel> userItems = List.empty(growable: true);
+      if (res.data.length > 0) {
+        res.data.forEach((challenge) {
+          userItems.add(InventoryItemModel.fromJson(challenge));
+        });
+      }
+      successCallback(userItems);
+    } else {
+      if (errorCallback != null) errorCallback();
+    }
   }
 
-  static Future<InventoryItemModel> getItemDetailInfo(int itemId) async {
+  static Future<void> getItemDetailInfo(int itemId, {required Function successCallback, Function? errorCallback}) async {
     Response res = await ItemApi.getItemDetailInfo(userId!, itemId);
-    InventoryItemModel itemDetailInfo = InventoryItemModel.fromJson(res.data);
-    return itemDetailInfo;
+    if (res.statusCode == 200) {
+      successCallback(InventoryItemModel.fromJson(res.data));
+    } else {
+      if (errorCallback != null) errorCallback();
+    }
   }
 
   static Future<void> fetchRepairItemShoes(RepairShoesModel repairInfo, {required Function successCallback, Function? errorCallback}) async {
@@ -32,19 +40,25 @@ class ItemService {
     if (res.statusCode == 200) {
       successCallback(InventoryItemModel.fromJson(res.data));
     } else {
-      errorCallback!();
+      if (errorCallback != null) errorCallback();
     }
   }
 
-  static Future<InventoryItemModel> fetchEquippedItem(int itemId) async {
+  static Future<void> fetchEquippedItem(int itemId, {required Function successCallback, Function? errorCallback}) async {
     Response res = await ItemApi.fetchEquippedItem(userId!, itemId);
-    InventoryItemModel equippedItem = InventoryItemModel.fromJson(res.data);
-    return equippedItem;
+    if (res.statusCode == 200) {
+      successCallback(InventoryItemModel.fromJson(res.data));
+    } else {
+      if (errorCallback != null) errorCallback();
+    }
   }
 
-  static Future<InventoryBadgeModel> fetchEquippedBadge(int badgeId) async {
+  static Future<void> fetchEquippedBadge(int badgeId, {required Function successCallback, Function? errorCallback}) async {
     Response res = await ItemApi.fetchEquippedBadge(userId!, badgeId);
-    InventoryBadgeModel equippedBadge = InventoryBadgeModel.fromJson(res.data);
-    return equippedBadge;
+    if (res.statusCode == 200) {
+      successCallback(InventoryBadgeModel.fromJson(res.data));
+    } else {
+      if (errorCallback != null) errorCallback();
+    }
   }
 }

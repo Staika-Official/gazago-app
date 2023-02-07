@@ -1,19 +1,58 @@
-import 'dart:ui';
+import 'package:flutter/material.dart';
+import 'package:flutter_svg/svg.dart';
+import 'package:gaza_go/presentations/styles/colors.dart';
+import 'package:gaza_go/presentations/styles/icons.dart';
 
 Color getItemGradeColor(String itemGrade) {
   switch (itemGrade) {
     case 'POOR':
-      return const Color(0xFF596869);
+      return gradePoorColor;
     case 'COMMON':
-      return const Color(0xFFCBD2D2);
+      return gradeCommonColor;
     case 'UNCOMMON':
-      return const Color(0xFF00D9CC);
+      return gradeUncommonColor;
     case 'RARE':
-      return const Color(0xFFB163FF);
+      return gradeRareColor;
     case 'EPIC':
-      return const Color(0xFF2EFFCD);
+      return gradeEpicColor;
     case 'LEGEND':
-      return const Color(0xFFCBFF5C);
+      return gradeLegendColor;
   }
-  return const Color(0xFFffffff);
+  return gradePoorColor;
+}
+
+SvgPicture getItemGradeIcon(String itemGrade) {
+  switch (itemGrade) {
+    case 'POOR':
+      return iconGradePoor;
+    case 'COMMON':
+      return iconGradeCommon;
+    case 'UNCOMMON':
+      return iconGradeUncommon;
+    case 'RARE':
+      return iconGradeRare;
+    case 'EPIC':
+      return iconGradeEpic;
+    case 'LEGEND':
+      return iconGradeLegend;
+  }
+  return iconGradePoor;
+}
+
+Widget getItemGradeCircleIcon(String itemGrade) {
+  switch (itemGrade) {
+    case 'POOR':
+      return iconGradeCirclePoor;
+    case 'COMMON':
+      return iconGradeCircleCommon;
+    case 'UNCOMMON':
+      return iconGradeCircleUncommon;
+    case 'RARE':
+      return iconGradeCircleRare;
+    case 'EPIC':
+      return iconGradeCircleEpic;
+    case 'LEGEND':
+      return iconGradeCircleLegend;
+  }
+  return iconGradeCirclePoor;
 }

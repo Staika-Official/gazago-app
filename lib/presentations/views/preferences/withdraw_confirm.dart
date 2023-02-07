@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:gaza_go/platform/controllers/withdraw_confirm_controller.dart';
 import 'package:gaza_go/presentations/components/default_container.dart';
+import 'package:gaza_go/presentations/styles/colors.dart';
 import 'package:gaza_go/presentations/styles/styled_text.dart';
 import 'package:get/get.dart';
 
@@ -11,29 +13,29 @@ class WithdrawConfirm extends StatelessWidget {
     return controller.withdrawCheckList
         .map(
           (checkItem) => Padding(
-            padding: const EdgeInsets.symmetric(vertical: 8.0),
+            padding: EdgeInsets.symmetric(vertical: 8.0.sp),
             child: InkWell(
               onTap: () => controller.toggleCheckList(checkItem),
               child: Row(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Padding(
-                    padding: const EdgeInsets.only(top: 7.0),
+                    padding: EdgeInsets.only(top: 7.0.sp),
                     child: Icon(
                       Icons.check,
-                      color: checkItem.isChecked ? const Color(0xFF0EE6F3) : const Color(0xFF8A8A8A),
-                      size: 15,
+                      color: checkItem.isChecked ? skyBlueColor : deepGrayColor,
+                      size: 15.sp,
                     ),
                   ),
                   Expanded(
                     child: Padding(
-                      padding: const EdgeInsets.only(left: 8.0),
+                      padding: EdgeInsets.only(left: 8.0.sp),
                       child: StyledText(
                         checkItem.title!,
                         fontWeight: 500,
                         fontSize: 16,
                         lineHeight: 24,
-                        color: Color(0xFFBFBFBF),
+                        color: lightGrayColor,
                       ),
                     ),
                   ),
@@ -50,8 +52,9 @@ class WithdrawConfirm extends StatelessWidget {
     WithdrawConfirmController controller = Get.put(WithdrawConfirmController());
 
     return DefaultContainer(
+      backgroundColor: subBg01Color,
       child: Padding(
-        padding: const EdgeInsets.all(20),
+        padding: EdgeInsets.all(20.sp),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
@@ -73,9 +76,9 @@ class WithdrawConfirm extends StatelessWidget {
                 )
               ],
             ),
-            const Divider(
-              height: 40,
-              color: Color(0xFF363841),
+            Divider(
+              height: 40.sp,
+              color: popupBgColor,
               thickness: 1,
             ),
             Obx(
@@ -86,19 +89,19 @@ class WithdrawConfirm extends StatelessWidget {
                     child: Row(
                       children: [
                         controller.allAgreed.value
-                            ? const Icon(
+                            ? Icon(
                                 Icons.check_circle,
-                                color: Color(0xFF0EE6F3),
-                                size: 24,
+                                color: skyBlueColor,
+                                size: 24.sp,
                               )
-                            : const Icon(
+                            : Icon(
                                 Icons.check_circle_rounded,
-                                color: Color(0xFF363841),
-                                size: 24,
+                                color: popupBgColor,
+                                size: 24.sp,
                               ),
-                        const Padding(
-                          padding: EdgeInsets.only(left: 8.0),
-                          child: StyledText(
+                        Padding(
+                          padding: EdgeInsets.only(left: 8.0.sp),
+                          child: const StyledText(
                             '탈퇴 전 꼭 확인해 주세요.',
                             color: Colors.white,
                             fontWeight: 500,
@@ -110,7 +113,7 @@ class WithdrawConfirm extends StatelessWidget {
                     ),
                   ),
                   Padding(
-                    padding: const EdgeInsets.symmetric(vertical: 8.0, horizontal: 5.0),
+                    padding: EdgeInsets.symmetric(vertical: 8.0.sp, horizontal: 5.0.sp),
                     child: Column(
                       children: [
                         ...renderCheckList(controller),
@@ -126,23 +129,23 @@ class WithdrawConfirm extends StatelessWidget {
                 children: [
                   if (controller.allAgreed.value)
                     Container(
-                      height: 55,
+                      height: 55.sp,
                       decoration: BoxDecoration(
-                        color: const Color(0xFF0EE6F3),
-                        border: Border.all(width: 2, color: Colors.black),
-                        borderRadius: BorderRadius.circular(8),
-                        boxShadow: const [
+                        color: skyBlueColor,
+                        border: Border.all(width: 2.sp, color: Colors.black),
+                        borderRadius: BorderRadius.circular(8.sp),
+                        boxShadow: [
                           BoxShadow(
                             color: Colors.black,
-                            offset: Offset(0, 3),
+                            offset: Offset(0, 3.sp),
                           )
                         ],
                       ),
                       child: InkWell(
                         onTap: () => controller.showWithdrawConfirmPopup(),
-                        child: const Padding(
-                          padding: EdgeInsets.symmetric(vertical: 12.0),
-                          child: Center(
+                        child: Padding(
+                          padding: EdgeInsets.symmetric(vertical: 12.0.sp),
+                          child: const Center(
                               child: StyledText(
                             '다음',
                             fontSize: 18,

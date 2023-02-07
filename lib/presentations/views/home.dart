@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:gaza_go/platform/controllers/home_menu_controller.dart';
 import 'package:gaza_go/platform/helpers/alert_helper.dart';
 import 'package:gaza_go/presentations/components/gazago_button.dart';
+import 'package:gaza_go/presentations/styles/colors.dart';
 import 'package:gaza_go/presentations/styles/icons.dart';
 import 'package:get/get.dart';
 
@@ -12,45 +14,58 @@ class Home extends StatelessWidget {
   Widget bottomNavigationBar(HomeMenuController controller) {
     return Container(
       decoration: BoxDecoration(
+        color: controller.selectedIndex.value == 2
+            ? const Color(0xFF252529)
+            : controller.selectedIndex.value == 1 || controller.selectedIndex.value == 3
+                ? popupBgColor
+                : subBg01Color,
+      ),
+      child: Container(
+        decoration: BoxDecoration(
           border: Border.all(
-            width: 2,
+            width: 2.sp,
             color: Colors.black,
           ),
-          borderRadius: const BorderRadius.only(topLeft: Radius.circular(16), topRight: Radius.circular(16))),
-      child: ClipRRect(
-        borderRadius: const BorderRadius.only(topLeft: Radius.circular(15), topRight: Radius.circular(15)),
-        child: NavigationBar(
-          backgroundColor: const Color(0xFF363841),
-          onDestinationSelected: (index) => controller.selectMenu(index),
-          selectedIndex: controller.selectedIndex.value,
-          destinations: [
-            NavigationDestination(
-              icon: iconMenuHome,
-              selectedIcon: iconMenuHomeActive,
-              label: '홈',
-            ),
-            NavigationDestination(
-              icon: iconMenuArchive,
-              selectedIcon: iconMenuArchiveActive,
-              label: '기록',
-            ),
-            NavigationDestination(
-              icon: iconMenuItems,
-              selectedIcon: iconMenuItemsActive,
-              label: '내 장비',
-            ),
-            // NavigationDestination(
-            //   icon: Icon(
-            //     Icons.storefront,
-            //   ),
-            //   label: '상점',
-            // ),
-            NavigationDestination(
-              icon: iconMenuRanking,
-              selectedIcon: iconMenuRankingActive,
-              label: '랭킹',
-            )
-          ],
+          borderRadius: BorderRadius.only(
+            topLeft: Radius.circular(16.sp),
+            topRight: Radius.circular(16.sp),
+          ),
+        ),
+        child: ClipRRect(
+          borderRadius: BorderRadius.only(topLeft: Radius.circular(15.sp), topRight: Radius.circular(15.sp)),
+          child: NavigationBar(
+            elevation: 0,
+            backgroundColor: popupBgColor,
+            onDestinationSelected: (index) => controller.selectMenu(index),
+            selectedIndex: controller.selectedIndex.value,
+            destinations: [
+              NavigationDestination(
+                icon: iconMenuArchive,
+                selectedIcon: iconMenuArchiveActive,
+                label: '기록',
+              ),
+              NavigationDestination(
+                icon: iconMenuItems,
+                selectedIcon: iconMenuItemsActive,
+                label: '내 장비',
+              ),
+              NavigationDestination(
+                icon: iconMenuHome,
+                selectedIcon: iconMenuHomeActive,
+                label: '홈',
+              ),
+              NavigationDestination(
+                icon: iconMenuShop,
+                selectedIcon: iconMenuShopActive,
+                label: '상점',
+              ),
+              NavigationDestination(
+                icon: iconMenuRanking,
+                selectedIcon: iconMenuRankingActive,
+                label: '랭킹',
+              )
+            ],
+          ),
         ),
       ),
     );
@@ -71,11 +86,11 @@ class Home extends StatelessWidget {
                 onTap: () => Get.back(),
                 buttonText: '아니요',
                 textColor: Colors.white,
-                buttonColor: const Color(0xFF363841),
+                buttonColor: popupBgColor,
               ),
             ),
-            const SizedBox(
-              width: 9,
+            SizedBox(
+              width: 9.sp,
             ),
             Expanded(
               child: GazagoButton(
@@ -83,7 +98,7 @@ class Home extends StatelessWidget {
                   SystemNavigator.pop();
                 },
                 buttonText: '예',
-                buttonColor: const Color(0xFF0EE6F3),
+                buttonColor: skyBlueColor,
               ),
             ),
           ],
@@ -94,10 +109,13 @@ class Home extends StatelessWidget {
       },
       child: Obx(() {
         return Scaffold(
-          backgroundColor: const Color(0xFF1D1D26),
+          // extendBody: true,
+          backgroundColor: subBg01Color,
           appBar: controller.appbar,
           body: controller.mainViewWidgetList.elementAt(controller.selectedIndex.value),
-          bottomNavigationBar: bottomNavigationBar(controller),
+          bottomNavigationBar: bottomNavigationBar(
+            controller,
+          ),
         );
       }),
     );

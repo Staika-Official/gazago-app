@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 class StyledText extends StatelessWidget {
   final String text;
@@ -11,6 +12,7 @@ class StyledText extends StatelessWidget {
   final double letterSpacing;
   final TextAlign textAlign;
   final bool overflowEllipsis;
+  final bool softWrap;
 
   const StyledText(
     this.text, {
@@ -24,37 +26,38 @@ class StyledText extends StatelessWidget {
     this.letterSpacing = 1,
     this.textAlign = TextAlign.start,
     this.overflowEllipsis = false,
+    this.softWrap = true,
   }) : super(key: key);
 
   FontWeight get getFontWeight {
-    FontWeight _fontWeight = FontWeight.w400;
+    FontWeight fw = FontWeight.w400;
     switch (fontWeight) {
       case 100:
-        _fontWeight = FontWeight.w100;
+        fw = FontWeight.w100;
         break;
       case 200:
-        _fontWeight = FontWeight.w200;
+        fw = FontWeight.w200;
         break;
       case 300:
-        _fontWeight = FontWeight.w300;
+        fw = FontWeight.w300;
         break;
       case 400:
-        _fontWeight = FontWeight.w400;
+        fw = FontWeight.w400;
         break;
       case 500:
-        _fontWeight = FontWeight.w500;
+        fw = FontWeight.w500;
         break;
       case 600:
-        _fontWeight = FontWeight.w600;
+        fw = FontWeight.w600;
         break;
       case 700:
-        _fontWeight = FontWeight.w700;
+        fw = FontWeight.w700;
         break;
       case 800:
-        _fontWeight = FontWeight.w800;
+        fw = FontWeight.w800;
         break;
     }
-    return _fontWeight;
+    return fw;
   }
 
   double get getLineHeight {
@@ -66,14 +69,15 @@ class StyledText extends StatelessWidget {
     return Text(
       text,
       textAlign: textAlign,
+      softWrap: softWrap,
       style: TextStyle(
-        fontSize: fontSize,
+        fontSize: fontSize.sp,
         fontFamily: fontFamily,
         color: color,
         fontWeight: getFontWeight,
         height: getLineHeight,
         backgroundColor: backgroundColor,
-        letterSpacing: letterSpacing,
+        letterSpacing: letterSpacing.sp,
         overflow: overflowEllipsis ? TextOverflow.ellipsis : TextOverflow.visible,
       ),
     );

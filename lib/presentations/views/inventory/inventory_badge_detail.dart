@@ -1,9 +1,11 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:gaza_go/platform/controllers/inventory_controller.dart';
 import 'package:gaza_go/platform/controllers/synthetic_badge_controller.dart';
 import 'package:gaza_go/platform/helpers/base_helper.dart';
 import 'package:gaza_go/presentations/components/default_container.dart';
+import 'package:gaza_go/presentations/styles/colors.dart';
 import 'package:gaza_go/presentations/styles/icons.dart';
 import 'package:gaza_go/presentations/styles/styled_text.dart';
 import 'package:get/get.dart';
@@ -14,43 +16,39 @@ class InventoryBadgeDetail extends StatelessWidget {
   List<Widget> renderBadgeList(InventoryController controller) {
     return controller.syntheticBadgeList
         .map(
-          (badge) => Container(
-            child: Column(
-              children: [
-                Padding(
-                  padding: const EdgeInsets.only(top: 10, bottom: 5),
-                  child: Row(children: [
-                    Container(
-                      child: Image(
-                        image: AssetImage(badge.badge.imageUrl),
-                        width: 30,
-                        height: 30,
-                      ),
-                    ),
-                    Container(
-                      padding: const EdgeInsets.only(left: 10),
-                      child: Text(badge.badge.description!),
-                    ),
-                    Container(
-                      padding: const EdgeInsets.only(left: 5),
-                      child: Text('·'),
-                    ),
-                    Container(
-                      padding: const EdgeInsets.only(left: 5),
-                      child: Text('LV${badge.badge.level}'),
-                    ),
-                    Container(
-                      padding: const EdgeInsets.only(left: 5),
-                      child: Text('(${badge.badge.createdDate})'),
-                    ),
-                    Container(
-                      padding: const EdgeInsets.only(left: 5),
-                      child: Text('+${badge.badge.luckRate}%'),
-                    )
-                  ]),
-                ),
-              ],
-            ),
+          (badge) => Column(
+            children: [
+              Padding(
+                padding: EdgeInsets.only(top: 10.sp, bottom: 5.sp),
+                child: Row(children: [
+                  Image(
+                    image: AssetImage(badge.badge.imageUrl),
+                    width: 30.sp,
+                    height: 30.sp,
+                  ),
+                  Padding(
+                    padding: EdgeInsets.only(left: 10.sp),
+                    child: Text(badge.badge.description!),
+                  ),
+                  Padding(
+                    padding: EdgeInsets.only(left: 5.sp),
+                    child: const Text('·'),
+                  ),
+                  Padding(
+                    padding: EdgeInsets.only(left: 5.sp),
+                    child: Text('LV${badge.badge.level}'),
+                  ),
+                  Padding(
+                    padding: EdgeInsets.only(left: 5.sp),
+                    child: Text('(${badge.badge.createdDate})'),
+                  ),
+                  Padding(
+                    padding: EdgeInsets.only(left: 5.sp),
+                    child: Text('+${badge.badge.luckRate}%'),
+                  )
+                ]),
+              ),
+            ],
           ),
         )
         .toList();
@@ -64,26 +62,26 @@ class InventoryBadgeDetail extends StatelessWidget {
 
     return DefaultContainer(
       titleText: 'Lv.${controller.selectedBadge.value.level} ${(controller.selectedBadge.value.name != null) ? controller.selectedBadge.value.name : ''}',
-      backgroundColor: Color(0xFF191921),
+      backgroundColor: mainBg01Color,
       child: Padding(
-        padding: const EdgeInsets.all(22),
+        padding: EdgeInsets.all(22.sp),
         child: Column(
           mainAxisSize: MainAxisSize.max,
           children: [
             Container(
               decoration: BoxDecoration(
-                color: Color(0xFF2A2B33),
+                color: subBg02Color,
                 border: Border.all(
-                  width: 2,
+                  width: 2.sp,
                   color: Colors.black,
                 ),
-                borderRadius: const BorderRadius.all(
-                  Radius.circular(14),
+                borderRadius: BorderRadius.all(
+                  Radius.circular(14.sp),
                 ),
                 boxShadow: [
                   BoxShadow(
                     color: Colors.black.withOpacity(0.25),
-                    offset: Offset(0, 1),
+                    offset: const Offset(0, 1),
                     blurRadius: 5.0,
                     spreadRadius: 0.0,
                   ),
@@ -95,27 +93,27 @@ class InventoryBadgeDetail extends StatelessWidget {
                     child: Stack(
                       children: [
                         Positioned(
-                          top: 12,
-                          right: 12,
+                          top: 12.sp,
+                          right: 12.sp,
                           child: Container(
                             decoration: BoxDecoration(
                               border: Border.all(
                                 width: 1,
-                                color: Color(0xFF8A8A8A),
+                                color: deepGrayColor,
                               ),
-                              borderRadius: const BorderRadius.all(
-                                Radius.circular(20),
+                              borderRadius: BorderRadius.all(
+                                Radius.circular(20.sp),
                               ),
                             ),
                             child: Padding(
-                              padding: EdgeInsets.symmetric(vertical: 5.0, horizontal: 10.0),
+                              padding: EdgeInsets.symmetric(vertical: 5.0.sp, horizontal: 10.0.sp),
                               child: StyledText(
                                 '#${controller.selectedBadge.value.badgeId}',
                                 fontSize: 14,
                                 fontFamily: 'Montserrat',
                                 fontWeight: 600,
                                 lineHeight: 15,
-                                color: Color(0xFF8A8A8A),
+                                color: deepGrayColor,
                               ),
                             ),
                           ),
@@ -123,9 +121,9 @@ class InventoryBadgeDetail extends StatelessWidget {
                         Column(
                           children: [
                             Padding(
-                              padding: const EdgeInsets.only(top: 40.0),
+                              padding: EdgeInsets.only(top: 40.0.sp),
                               child: SizedBox(
-                                width: 150,
+                                width: 150.sp,
                                 child: CachedNetworkImage(
                                   imageUrl: controller.selectedBadge.value.imageUrl!,
                                   fit: BoxFit.fill,
@@ -138,16 +136,16 @@ class InventoryBadgeDetail extends StatelessWidget {
                               children: [
                                 Container(
                                   margin: EdgeInsets.only(
-                                    top: 12,
+                                    top: 12.sp,
                                   ),
                                   padding: EdgeInsets.symmetric(
-                                    vertical: 20,
-                                    horizontal: 45,
+                                    vertical: 20.sp,
+                                    horizontal: 45.sp,
                                   ),
-                                  decoration: const BoxDecoration(
-                                    color: Color(0xFF1D1D26),
+                                  decoration: BoxDecoration(
+                                    color: subBg01Color,
                                     borderRadius: BorderRadius.all(
-                                      Radius.circular(10),
+                                      Radius.circular(10.sp),
                                     ),
                                   ),
                                   child: Column(
@@ -157,7 +155,7 @@ class InventoryBadgeDetail extends StatelessWidget {
                                         mainAxisAlignment: MainAxisAlignment.center,
                                         children: [
                                           Padding(
-                                            padding: const EdgeInsets.only(right: 20.0),
+                                            padding: EdgeInsets.only(right: 20.0.sp),
                                             child: Column(
                                               children: [
                                                 Row(
@@ -168,29 +166,29 @@ class InventoryBadgeDetail extends StatelessWidget {
                                                       fontSize: 28,
                                                       lineHeight: 28,
                                                       fontWeight: 500,
-                                                      color: Color(0xFF0EE6F3),
+                                                      color: skyBlueColor,
                                                     ),
-                                                    const StyledText(
+                                                    StyledText(
                                                       '%',
                                                       fontSize: 16,
                                                       lineHeight: 24,
                                                       fontWeight: 500,
-                                                      color: Color(0xFF0EE6F3),
+                                                      color: skyBlueColor,
                                                     ),
                                                   ],
                                                 ),
                                                 Padding(
-                                                  padding: const EdgeInsets.only(top: 5.0),
+                                                  padding: EdgeInsets.only(top: 5.0.sp),
                                                   child: Row(
                                                     mainAxisAlignment: MainAxisAlignment.center,
                                                     children: [
                                                       Padding(
-                                                        padding: const EdgeInsets.only(top: 2.0, right: 2.0),
+                                                        padding: EdgeInsets.only(top: 2.0.sp, right: 2.0.sp),
                                                         child: iconGoReward,
                                                       ),
-                                                      const StyledText(
+                                                      StyledText(
                                                         'GO 보상율',
-                                                        color: Color(0xFF8A8A8A),
+                                                        color: deepGrayColor,
                                                         fontSize: 11,
                                                         lineHeight: 12,
                                                         fontWeight: 500,
@@ -211,7 +209,7 @@ class InventoryBadgeDetail extends StatelessWidget {
                                                     fontSize: 28,
                                                     lineHeight: 28,
                                                     fontWeight: 500,
-                                                    color: Color(0xFFFF41CA),
+                                                    color: const Color(0xFFFF41CA),
                                                   ),
                                                   const StyledText(
                                                     '%',
@@ -223,18 +221,18 @@ class InventoryBadgeDetail extends StatelessWidget {
                                                 ],
                                               ),
                                               Padding(
-                                                padding: const EdgeInsets.only(top: 5.0),
+                                                padding: EdgeInsets.only(top: 5.0.sp),
                                                 child: Row(
                                                   mainAxisAlignment: MainAxisAlignment.center,
                                                   crossAxisAlignment: CrossAxisAlignment.center,
                                                   children: [
                                                     Padding(
-                                                      padding: const EdgeInsets.only(top: 1.0, right: 3.0),
+                                                      padding: EdgeInsets.only(top: 1.0.sp, right: 3.0.sp),
                                                       child: iconLucky,
                                                     ),
                                                     StyledText(
                                                       '행운 지수율',
-                                                      color: Color(0xFF8A8A8A),
+                                                      color: deepGrayColor,
                                                       fontSize: 11,
                                                       lineHeight: 12,
                                                       fontWeight: 500,
@@ -253,20 +251,20 @@ class InventoryBadgeDetail extends StatelessWidget {
                             ),
                             Obx(() {
                               return Padding(
-                                padding: const EdgeInsets.only(top: 20.0),
+                                padding: EdgeInsets.only(top: 20.0.sp),
                                 child: Column(
                                   children: [
                                     controller.selectedBadge.value.state == 'EQUIPPED'
                                         ? Container(
                                             decoration: BoxDecoration(
-                                              color: const Color(0xFF363841),
+                                              color: popupBgColor,
                                               border: Border.all(
                                                 width: 1,
                                                 style: BorderStyle.solid,
-                                                color: const Color(0xFF8A8A8A),
+                                                color: deepGrayColor,
                                               ),
-                                              borderRadius: const BorderRadius.all(
-                                                Radius.circular(30),
+                                              borderRadius: BorderRadius.all(
+                                                Radius.circular(30.sp),
                                               ),
                                               boxShadow: const [
                                                 BoxShadow(
@@ -280,16 +278,16 @@ class InventoryBadgeDetail extends StatelessWidget {
                                             child: InkWell(
                                               onTap: () => null,
                                               child: Padding(
-                                                padding: const EdgeInsets.symmetric(vertical: 13.0, horizontal: 20),
+                                                padding: EdgeInsets.symmetric(vertical: 13.0.sp, horizontal: 20.sp),
                                                 child: Column(
                                                   mainAxisAlignment: MainAxisAlignment.center,
-                                                  children: const [
+                                                  children: [
                                                     StyledText(
                                                       '장착중',
                                                       fontSize: 18,
                                                       lineHeight: 18,
                                                       fontWeight: 500,
-                                                      color: Color(0xFF8A8A8A),
+                                                      color: deepGrayColor,
                                                     ),
                                                   ],
                                                 ),
@@ -298,14 +296,14 @@ class InventoryBadgeDetail extends StatelessWidget {
                                           )
                                         : Container(
                                             decoration: BoxDecoration(
-                                              color: const Color(0xFF1D1D26),
+                                              color: subBg01Color,
                                               border: Border.all(
                                                 width: 1,
                                                 style: BorderStyle.solid,
                                                 color: const Color(0xFF54F5FF),
                                               ),
-                                              borderRadius: const BorderRadius.all(
-                                                Radius.circular(30),
+                                              borderRadius: BorderRadius.all(
+                                                Radius.circular(30.sp),
                                               ),
                                               boxShadow: const [
                                                 BoxShadow(
@@ -319,7 +317,7 @@ class InventoryBadgeDetail extends StatelessWidget {
                                             child: InkWell(
                                               onTap: () => controller.fetchEquipBadge(controller.selectedBadge.value.badgeId),
                                               child: Padding(
-                                                padding: const EdgeInsets.symmetric(vertical: 13.0, horizontal: 20),
+                                                padding: EdgeInsets.symmetric(vertical: 13.0.sp, horizontal: 20.sp),
                                                 child: Column(
                                                   mainAxisAlignment: MainAxisAlignment.center,
                                                   children: const [
@@ -339,49 +337,49 @@ class InventoryBadgeDetail extends StatelessWidget {
                               );
                             }),
 
-                            const Padding(
-                              padding: EdgeInsets.symmetric(vertical: 20.0),
-                              child: Divider(thickness: 1, height: 1, color: Color(0xFF363841)),
+                            Padding(
+                              padding: EdgeInsets.symmetric(vertical: 20.0.sp),
+                              child: Divider(thickness: 1, height: 1, color: popupBgColor),
                             ),
 
                             Padding(
-                              padding: const EdgeInsets.symmetric(horizontal: 15.0),
+                              padding: EdgeInsets.symmetric(horizontal: 15.0.sp),
                               child: Column(
                                 children: [
-                                  Row(children: const [
+                                  Row(children: [
                                     StyledText(
                                       '획득 정보',
-                                      color: Color(0xFFBFBFBF),
+                                      color: lightGrayColor,
                                       fontSize: 14,
                                       fontWeight: 500,
                                     )
                                   ]),
                                   Obx(() {
                                     return Padding(
-                                      padding: const EdgeInsets.only(top: 10, bottom: 15),
+                                      padding: EdgeInsets.only(top: 10.sp, bottom: 15.sp),
                                       child: Row(children: [
                                         StyledText(
                                           syntheticBadgeController.badgeType.value,
-                                          color: Color(0xFF8A8A8A),
+                                          color: deepGrayColor,
                                           fontSize: 14,
                                           fontWeight: 500,
                                         ),
                                         Container(
-                                          padding: EdgeInsets.only(left: 5),
+                                          padding: EdgeInsets.only(left: 5.sp),
                                           child: StyledText(
                                             '·',
                                             fontSize: 14,
                                             fontWeight: 500,
-                                            color: Color(0xFF8A8A8A),
+                                            color: deepGrayColor,
                                           ),
                                         ),
                                         Container(
-                                          padding: EdgeInsets.only(left: 5),
+                                          padding: EdgeInsets.only(left: 5.sp),
                                           child: StyledText(
                                             formatDate(controller.getBadgeDate.value),
                                             fontSize: 14,
                                             fontWeight: 500,
-                                            color: Color(0xFF8A8A8A),
+                                            color: deepGrayColor,
                                           ),
                                         ),
                                       ]),
@@ -419,7 +417,7 @@ class InventoryBadgeDetail extends StatelessWidget {
             //       padding: const EdgeInsets.all(20),
             //       width: double.infinity,
             //       decoration: BoxDecoration(
-            //         color: Color(0xff0EE6F3),
+            //         color: skyBlueColor,
             //         borderRadius: BorderRadius.circular(12),
             //         border: Border.all(
             //           width: 2,
@@ -453,8 +451,6 @@ class InventoryBadgeDetail extends StatelessWidget {
     );
   }
 }
-
-const _defaultColor = Color(0xFF34568B);
 
 class Tile extends StatelessWidget {
   const Tile({

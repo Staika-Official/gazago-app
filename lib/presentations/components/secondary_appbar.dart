@@ -2,33 +2,34 @@ import 'dart:math';
 
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_svg_provider/flutter_svg_provider.dart' as SP;
+import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:flutter_svg_provider/flutter_svg_provider.dart' as sp;
 import 'package:gaza_go/constants/routes.dart';
-import 'package:gaza_go/platform/controllers/home_menu_controller.dart';
 import 'package:gaza_go/platform/controllers/wallet_master_controller.dart';
 import 'package:gaza_go/platform/helpers/base_helper.dart';
+import 'package:gaza_go/presentations/styles/colors.dart';
 import 'package:gaza_go/presentations/styles/icons.dart';
 import 'package:gaza_go/presentations/styles/styled_text.dart';
 import 'package:get/get.dart';
 
 class SecondaryAppbar extends StatelessWidget implements PreferredSizeWidget {
-  SecondaryAppbar({Key? key}) : super(key: key);
+  final bool isShowBackButton;
+  const SecondaryAppbar({Key? key, this.isShowBackButton = false}) : super(key: key);
 
   List<Widget> renderWalletItems(WalletMasterController walletMasterController) {
     return walletMasterController.spendingTokenUiList.map((token) {
       return Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 6),
+        padding: EdgeInsets.symmetric(horizontal: 6.sp),
         child: Row(
           children: [
             CircleAvatar(
-              radius: 11,
-              foregroundImage: token.meta?.logoUrl != '' ? CachedNetworkImageProvider(token.meta!.logoUrl) : const SP.Svg('assets/images/common/ico_token_tik.svg') as ImageProvider,
+              radius: 11.sp,
+              foregroundImage: token.logoUrl != '' && token.logoUrl != null ? CachedNetworkImageProvider(token.logoUrl!) : const sp.Svg('assets/images/common/ico_token_tik.svg') as ImageProvider,
             ),
             Padding(
-              padding: const EdgeInsets.only(left: 4),
+              padding: EdgeInsets.only(left: 4.sp),
               child: StyledText(
-                // token.uiAmountString!,
-                token.meta?.symbol == 'STIK' ? formatDecimalPlaces((token.amount! / pow(10.0, 9)), 9) : formatDecimalPlaces(token.amount!, 1),
+                token.symbol! == 'STIK' ? formatDecimalPlaces((token.amount! / pow(10.0, 9)), 9) : formatDecimalPlaces(token.amount!, 1),
                 color: Colors.white,
                 fontSize: 12,
                 fontWeight: 600,
@@ -45,11 +46,9 @@ class SecondaryAppbar extends StatelessWidget implements PreferredSizeWidget {
 
   @override
   Widget build(BuildContext context) {
-    HomeMenuController controller = Get.find();
     WalletMasterController walletMasterController = Get.find();
-
     return AppBar(
-      backgroundColor: Color(0xFF1D1D26),
+      backgroundColor: subBg01Color,
       automaticallyImplyLeading: false,
       bottomOpacity: 0.0,
       elevation: 0.0,
@@ -57,20 +56,26 @@ class SecondaryAppbar extends StatelessWidget implements PreferredSizeWidget {
         return Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            controller.isBackButton()
-                ? IconButton(
-                    onPressed: () => Get.back(),
-                    padding: const EdgeInsets.all(12),
-                    icon: const Icon(
-                      Icons.chevron_left,
-                      color: Colors.grey,
+            isShowBackButton
+                ? Container(
+                    width: 20,
+                    padding: EdgeInsets.zero,
+                    child: IconButton(
+                      onPressed: () => Get.back(),
+                      padding: EdgeInsets.zero,
+                      iconSize: 30,
+                      icon: const Icon(
+                        Icons.chevron_left_sharp,
+                        color: Colors.white,
+                      ),
                     ),
                   )
                 : IconButton(
                     onPressed: () => Get.toNamed(Routes.preferences),
+                    padding: EdgeInsets.symmetric(horizontal: 12.sp),
                     icon: iconHeaderAvatar,
-                    constraints: const BoxConstraints(
-                      minWidth: 24,
+                    constraints: BoxConstraints(
+                      minWidth: 24.sp,
                     ),
                   ),
             Row(
@@ -78,7 +83,7 @@ class SecondaryAppbar extends StatelessWidget implements PreferredSizeWidget {
               children: [
                 Container(
                   decoration: BoxDecoration(
-                    color: Color(0xFF363841),
+                    color: popupBgColor,
                     border: Border.all(
                       width: 1,
                       color: Colors.black,
@@ -96,13 +101,13 @@ class SecondaryAppbar extends StatelessWidget implements PreferredSizeWidget {
                     ],
                   ),
                   child: ClipRRect(
-                    borderRadius: const BorderRadius.all(
-                      Radius.circular(20),
+                    borderRadius: BorderRadius.all(
+                      Radius.circular(20.sp),
                     ),
                     child: Padding(
-                      padding: const EdgeInsets.only(
-                        top: 4.0,
-                        bottom: 4.0,
+                      padding: EdgeInsets.only(
+                        top: 4.0.sp,
+                        bottom: 4.0.sp,
                         left: 0,
                         right: 8,
                       ),
@@ -115,11 +120,11 @@ class SecondaryAppbar extends StatelessWidget implements PreferredSizeWidget {
                   ),
                 ),
                 IconButton(
-                  padding: const EdgeInsets.only(left: 12),
+                  padding: EdgeInsets.only(left: 12.sp),
                   onPressed: () => Get.toNamed(Routes.wallet),
                   icon: iconHeaderWallet,
-                  constraints: const BoxConstraints(
-                    minWidth: 24,
+                  constraints: BoxConstraints(
+                    minWidth: 24.sp,
                   ),
                 )
               ],

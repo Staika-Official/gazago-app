@@ -1,15 +1,15 @@
-import 'package:cached_network_image/cached_network_image.dart';
 import 'package:custom_rounded_rectangle_border/custom_rounded_rectangle_border.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
-import 'package:gaza_go/platform/controllers/home_menu_controller.dart';
 import 'package:gaza_go/platform/controllers/inventory_controller.dart';
 import 'package:gaza_go/platform/controllers/inventory_home_controller.dart';
-import 'package:gaza_go/platform/helpers/inventory_helper.dart';
+import 'package:gaza_go/presentations/styles/colors.dart';
 import 'package:gaza_go/presentations/styles/icons.dart';
 import 'package:gaza_go/presentations/styles/styled_text.dart';
 import 'package:gaza_go/presentations/views/inventory/inventory_badge.dart';
 import 'package:gaza_go/presentations/views/inventory/inventory_item.dart';
+import 'package:gaza_go/presentations/views/inventory/inventory_tile.dart';
 import 'package:get/get.dart';
 
 class InventoryHome extends StatelessWidget {
@@ -19,7 +19,6 @@ class InventoryHome extends StatelessWidget {
   Widget build(BuildContext context) {
     InventoryHomeController inventoryMenuController = Get.put(InventoryHomeController());
     InventoryController controller = Get.put(InventoryController());
-    HomeMenuController homeMenuController = Get.find();
 
     return SingleChildScrollView(
       physics: const ClampingScrollPhysics(),
@@ -30,7 +29,7 @@ class InventoryHome extends StatelessWidget {
           mainAxisSize: MainAxisSize.max,
           children: [
             Padding(
-              padding: const EdgeInsets.only(left: 20.0, right: 20.0, bottom: 20.0),
+              padding: EdgeInsets.only(left: 20.0.sp, right: 20.0.sp, bottom: 20.0.sp),
               child: Column(
                 children: [
                   Obx(() {
@@ -43,7 +42,7 @@ class InventoryHome extends StatelessWidget {
                           StaggeredGridTile.count(
                             crossAxisCellCount: 2,
                             mainAxisCellCount: 2,
-                            child: Tile(
+                            child: InventoryTile(
                               index: 0,
                               id: controller.equippedShoe.value.id,
                               itemGrade: controller.equippedShoe.value.itemGrade,
@@ -54,7 +53,7 @@ class InventoryHome extends StatelessWidget {
                           StaggeredGridTile.count(
                             crossAxisCellCount: 2,
                             mainAxisCellCount: 2,
-                            child: Tile(
+                            child: InventoryTile(
                               index: 1,
                               imageUrl: controller.equippedBadge.value.badge.imageUrl,
                               badgeId: controller.equippedBadge.value.badge.id,
@@ -63,7 +62,7 @@ class InventoryHome extends StatelessWidget {
                           StaggeredGridTile.count(
                             crossAxisCellCount: 1,
                             mainAxisCellCount: 1,
-                            child: Tile(
+                            child: InventoryTile(
                               index: 2,
                               itemGrade: controller.equippedHat.value.itemGrade,
                               imageUrl: controller.equippedHat.value.itemImageUrl,
@@ -72,7 +71,7 @@ class InventoryHome extends StatelessWidget {
                           StaggeredGridTile.count(
                             crossAxisCellCount: 1,
                             mainAxisCellCount: 1,
-                            child: Tile(
+                            child: InventoryTile(
                               index: 3,
                               itemGrade: controller.equippedTop.value.itemGrade,
                               imageUrl: controller.equippedTop.value.itemImageUrl,
@@ -81,7 +80,7 @@ class InventoryHome extends StatelessWidget {
                           StaggeredGridTile.count(
                             crossAxisCellCount: 1,
                             mainAxisCellCount: 1,
-                            child: Tile(
+                            child: InventoryTile(
                               index: 4,
                               itemGrade: controller.equippedBottom.value.itemGrade,
                               imageUrl: controller.equippedBottom.value.itemImageUrl,
@@ -90,7 +89,7 @@ class InventoryHome extends StatelessWidget {
                           StaggeredGridTile.count(
                             crossAxisCellCount: 1,
                             mainAxisCellCount: 1,
-                            child: Tile(
+                            child: InventoryTile(
                               index: 5,
                               itemGrade: controller.equippedAccessory.value.itemGrade,
                               imageUrl: controller.equippedAccessory.value.itemImageUrl,
@@ -104,7 +103,7 @@ class InventoryHome extends StatelessWidget {
               ),
             ),
             Padding(
-                padding: const EdgeInsets.symmetric(vertical: 20.0),
+                padding: EdgeInsets.symmetric(vertical: 20.0.sp),
                 child: Obx(() {
                   return Row(
                     mainAxisSize: MainAxisSize.max,
@@ -129,17 +128,17 @@ class InventoryHome extends StatelessWidget {
                             ],
                           ),
                           Padding(
-                            padding: const EdgeInsets.only(top: 12.0),
+                            padding: EdgeInsets.only(top: 12.0.sp),
                             child: Row(
                               mainAxisAlignment: MainAxisAlignment.center,
                               children: [
                                 Padding(
-                                  padding: const EdgeInsets.only(top: 3.0, right: 2.0),
+                                  padding: EdgeInsets.only(top: 3.0.sp, right: 2.0.sp),
                                   child: iconGoReward,
                                 ),
                                 StyledText(
                                   'GO 보상율',
-                                  color: Color(0xFF8A8A8A),
+                                  color: deepGrayColor,
                                   fontSize: 11,
                                   lineHeight: 12,
                                   fontWeight: 500,
@@ -150,7 +149,7 @@ class InventoryHome extends StatelessWidget {
                         ],
                       ),
                       Padding(
-                        padding: const EdgeInsets.symmetric(horizontal: 25.0),
+                        padding: EdgeInsets.symmetric(horizontal: 25.0.sp),
                         child: Column(
                           children: [
                             Row(
@@ -161,7 +160,7 @@ class InventoryHome extends StatelessWidget {
                                   fontSize: 28,
                                   fontWeight: 500,
                                 ),
-                                StyledText(
+                                const StyledText(
                                   '%',
                                   fontSize: 16,
                                   fontWeight: 500,
@@ -169,18 +168,18 @@ class InventoryHome extends StatelessWidget {
                               ],
                             ),
                             Padding(
-                              padding: const EdgeInsets.only(top: 12.0),
+                              padding: EdgeInsets.only(top: 12.0.sp),
                               child: Row(
                                 mainAxisAlignment: MainAxisAlignment.center,
                                 crossAxisAlignment: CrossAxisAlignment.center,
                                 children: [
                                   Padding(
-                                    padding: const EdgeInsets.only(top: 1.0, right: 3.0),
+                                    padding: EdgeInsets.only(top: 1.0.sp, right: 3.0.sp),
                                     child: iconItemAbrasion,
                                   ),
                                   StyledText(
-                                    '아이템 마모율',
-                                    color: Color(0xFF8A8A8A),
+                                    '내구도 감소율',
+                                    color: deepGrayColor,
                                     fontSize: 12,
                                     lineHeight: 12,
                                     fontWeight: 600,
@@ -201,7 +200,7 @@ class InventoryHome extends StatelessWidget {
                                 fontSize: 28,
                                 fontWeight: 500,
                               ),
-                              StyledText(
+                              const StyledText(
                                 '%',
                                 fontSize: 16,
                                 fontWeight: 500,
@@ -209,17 +208,17 @@ class InventoryHome extends StatelessWidget {
                             ],
                           ),
                           Padding(
-                            padding: const EdgeInsets.only(top: 12.0),
+                            padding: EdgeInsets.only(top: 12.0.sp),
                             child: Row(
                               mainAxisAlignment: MainAxisAlignment.center,
                               children: [
                                 Padding(
-                                  padding: const EdgeInsets.only(top: 1.0, right: 3.0),
+                                  padding: EdgeInsets.only(top: 1.0.sp, right: 3.0.sp),
                                   child: iconStaminaReduce,
                                 ),
                                 StyledText(
                                   '체력 감소율',
-                                  color: Color(0xFF8A8A8A),
+                                  color: deepGrayColor,
                                   fontSize: 11,
                                   lineHeight: 12,
                                   fontWeight: 500,
@@ -233,39 +232,39 @@ class InventoryHome extends StatelessWidget {
                   );
                 })),
             Padding(
-              padding: const EdgeInsets.only(top: 10),
+              padding: EdgeInsets.only(top: 10.sp),
               child: TabBar(
                 controller: inventoryMenuController.tabController,
                 labelColor: Colors.white,
-                labelStyle: const TextStyle(fontSize: 16, fontWeight: FontWeight.w500),
-                unselectedLabelColor: const Color(0xFF8A8A8A),
+                labelStyle: TextStyle(fontSize: 16.sp, fontWeight: FontWeight.w500),
+                unselectedLabelColor: deepGrayColor,
                 indicatorWeight: 0.1,
                 isScrollable: false,
                 labelPadding: const EdgeInsets.all(0),
-                splashBorderRadius: const BorderRadius.only(
-                  topRight: Radius.circular(15),
-                  topLeft: Radius.circular(15),
+                splashBorderRadius: BorderRadius.only(
+                  topRight: Radius.circular(15.sp),
+                  topLeft: Radius.circular(15.sp),
                 ),
-                indicator: const BoxDecoration(
-                  color: Color(0xFF363841),
+                indicator: BoxDecoration(
+                  color: popupBgColor,
                   borderRadius: BorderRadius.only(
-                    topRight: Radius.circular(15),
-                    topLeft: Radius.circular(15),
+                    topRight: Radius.circular(15.sp),
+                    topLeft: Radius.circular(15.sp),
                   ),
                 ),
                 tabs: <Widget>[
                   Tab(
                     child: Container(
-                      width: double.infinity,
-                      height: double.infinity,
-                      decoration: const ShapeDecoration(
+                      width: double.infinity.sp,
+                      height: double.infinity.sp,
+                      decoration: ShapeDecoration(
                         shape: CustomRoundedRectangleBorder(
-                          borderRadius: BorderRadius.only(topLeft: Radius.circular(10), topRight: Radius.circular(10)),
-                          leftSide: BorderSide(color: Colors.black, width: 2),
-                          topLeftCornerSide: BorderSide(color: Colors.black, width: 2),
-                          rightSide: BorderSide(color: Colors.black, width: 1),
-                          topRightCornerSide: BorderSide(color: Colors.black, width: 2),
-                          topSide: BorderSide(color: Colors.black, width: 2),
+                          borderRadius: BorderRadius.only(topLeft: Radius.circular(10.sp), topRight: Radius.circular(10.sp)),
+                          leftSide: BorderSide(color: Colors.black, width: 2.sp),
+                          topLeftCornerSide: BorderSide(color: Colors.black, width: 2.sp),
+                          rightSide: BorderSide(color: Colors.black, width: 1.sp),
+                          topRightCornerSide: BorderSide(color: Colors.black, width: 2.sp),
+                          topSide: BorderSide(color: Colors.black, width: 2.sp),
                         ),
                       ),
                       child: Row(
@@ -279,16 +278,16 @@ class InventoryHome extends StatelessWidget {
                   ),
                   Tab(
                     child: Container(
-                      width: double.infinity,
-                      height: double.infinity,
-                      decoration: const ShapeDecoration(
+                      width: double.infinity.sp,
+                      height: double.infinity.sp,
+                      decoration: ShapeDecoration(
                         shape: CustomRoundedRectangleBorder(
-                          borderRadius: BorderRadius.only(topLeft: Radius.circular(10), topRight: Radius.circular(10)),
-                          leftSide: BorderSide(color: Colors.black, width: 1),
-                          topLeftCornerSide: BorderSide(color: Colors.black, width: 2),
-                          rightSide: BorderSide(color: Colors.black, width: 2),
-                          topRightCornerSide: BorderSide(color: Colors.black, width: 2),
-                          topSide: BorderSide(color: Colors.black, width: 2),
+                          borderRadius: BorderRadius.only(topLeft: Radius.circular(10.sp), topRight: Radius.circular(10.sp)),
+                          leftSide: BorderSide(color: Colors.black, width: 1.sp),
+                          topLeftCornerSide: BorderSide(color: Colors.black, width: 2.sp),
+                          rightSide: BorderSide(color: Colors.black, width: 2.sp),
+                          topRightCornerSide: BorderSide(color: Colors.black, width: 2.sp),
+                          topSide: BorderSide(color: Colors.black, width: 2.sp),
                         ),
                       ),
                       child: Row(
@@ -305,7 +304,7 @@ class InventoryHome extends StatelessWidget {
             ),
             Expanded(
               child: TabBarView(
-                physics: const NeverScrollableScrollPhysics(),
+                physics: const ClampingScrollPhysics(),
                 controller: inventoryMenuController.tabController,
                 children: const [
                   InventoryItem(),
@@ -316,260 +315,6 @@ class InventoryHome extends StatelessWidget {
           ],
         ),
       ),
-    );
-  }
-}
-
-class Tile extends StatelessWidget {
-  const Tile({
-    Key? key,
-    this.id,
-    required this.index,
-    required this.imageUrl,
-    this.extent,
-    this.backgroundColor,
-    this.bottomSpace,
-    this.durability,
-    this.itemGrade,
-    this.badgeId,
-  }) : super(key: key);
-
-  final int index;
-  final int? id;
-  final double? durability;
-  final String imageUrl;
-  final String? itemGrade;
-  final double? extent;
-  final double? bottomSpace;
-  final Color? backgroundColor;
-  final int? badgeId;
-
-  @override
-  Widget build(BuildContext context) {
-    InventoryController controller = Get.find();
-    final child = Container(
-      color: Colors.transparent,
-      height: extent,
-      child: Container(
-        decoration: BoxDecoration(
-          color: const Color(0xFF363841),
-          border: Border.all(
-            width: 2,
-            color: Colors.black,
-          ),
-          borderRadius: const BorderRadius.all(
-            Radius.circular(14),
-          ),
-          boxShadow: const [
-            BoxShadow(
-              color: Colors.black,
-              offset: Offset(2, 4),
-              blurRadius: 0.0,
-              spreadRadius: 0.0,
-            ),
-          ],
-        ),
-        child: Stack(
-          alignment: Alignment.bottomCenter,
-          children: [
-            Padding(
-              padding: badgeId != null && badgeId != -1 ? const EdgeInsets.only(top: 10.0, bottom: 30, left: 30, right: 30) : const EdgeInsets.all(10.0),
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: [
-                  AspectRatio(
-                    aspectRatio: index == 1 ? 1 / 1 : 1.2 / 1,
-                    child: CachedNetworkImage(
-                      imageUrl: imageUrl,
-                      placeholder: (context, url) => const CircularProgressIndicator(),
-                      errorWidget: (context, url, error) => iconNoBadge,
-                      fit: BoxFit.contain,
-                    ),
-                  ),
-                ],
-              ),
-            ),
-            if (badgeId != null && badgeId != -1)
-              Padding(
-                padding: EdgeInsets.all(10),
-                child: Container(
-                  padding: EdgeInsets.symmetric(
-                    vertical: 5,
-                    horizontal: 10,
-                  ),
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(60),
-                    border: Border.all(
-                      width: 1,
-                      color: Color(0xff8a8a8a),
-                    ),
-                  ),
-                  child: StyledText(
-                    '#${badgeId.toString()}',
-                    fontSize: 10,
-                    lineHeight: 10,
-                    fontWeight: 500,
-                    letterSpacing: 1,
-                    fontFamily: 'Montserrat',
-                    color: Color(0xff8a8a8a),
-                  ),
-                ),
-              ),
-            durability != null
-                ? Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 15.0, vertical: 9.0),
-                    child: SizedBox(
-                      height: 22,
-                      child: Stack(
-                        clipBehavior: Clip.none,
-                        alignment: AlignmentDirectional.center,
-                        children: [
-                          Row(
-                            children: [
-                              Expanded(
-                                child: ClipRRect(
-                                  child: SizedBox(
-                                    child: Stack(
-                                      children: [
-                                        Padding(
-                                          padding: const EdgeInsets.all(2.0),
-                                          child: Container(
-                                            decoration: const BoxDecoration(
-                                              color: Color(0xFF606167),
-                                              borderRadius: BorderRadius.all(
-                                                Radius.circular(50),
-                                              ),
-                                              boxShadow: [
-                                                BoxShadow(
-                                                  color: Colors.black,
-                                                  offset: Offset(0, 1),
-                                                  blurRadius: 0.0,
-                                                  spreadRadius: 0.0,
-                                                ),
-                                              ],
-                                            ),
-                                          ),
-                                        ),
-                                        durability! > 1.0
-                                            ? Padding(
-                                                padding: const EdgeInsets.only(top: 2.0, left: 2.0),
-                                                child: LayoutBuilder(builder: (context, constraints) {
-                                                  return Container(
-                                                    height: 18,
-                                                    margin: EdgeInsets.zero,
-                                                    width: durability! > 20
-                                                        ? constraints.maxWidth / (100 / durability!)
-                                                        : durability! < 2
-                                                            ? 0
-                                                            : 34,
-                                                    decoration: BoxDecoration(
-                                                      color: durability! < 20 ? const Color(0xFFFF2525) : const Color(0xFFB85DFF),
-                                                      borderRadius: const BorderRadius.all(
-                                                        Radius.circular(50),
-                                                      ),
-                                                    ),
-                                                  );
-                                                }),
-                                              )
-                                            : Container(),
-                                      ],
-                                    ),
-                                  ),
-                                ),
-                              ),
-                            ],
-                          ),
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            crossAxisAlignment: CrossAxisAlignment.center,
-                            children: [
-                              Row(
-                                children: [
-                                  Padding(
-                                    padding: const EdgeInsets.symmetric(horizontal: 5.0),
-                                    child: iconShoes,
-                                  ),
-                                ],
-                              ),
-                            ],
-                          ),
-                          Positioned(
-                            right: -1,
-                            top: -1,
-                            child: Padding(
-                              padding: const EdgeInsets.only(top: 1.0),
-                              child: Container(
-                                decoration: BoxDecoration(
-                                  color: const Color(0xFF606167),
-                                  border: Border.all(
-                                    width: 1,
-                                    color: Colors.black,
-                                  ),
-                                  borderRadius: const BorderRadius.all(
-                                    Radius.circular(30),
-                                  ),
-                                  boxShadow: const [
-                                    BoxShadow(
-                                      color: Colors.black,
-                                      offset: Offset(0, 1),
-                                      blurRadius: 0.0,
-                                      spreadRadius: 0.0,
-                                    ),
-                                  ],
-                                ),
-                                child: InkWell(
-                                  onTap: () => controller.showShoesRepairPopup(id),
-                                  child: CircleAvatar(
-                                    radius: 10,
-                                    backgroundColor: const Color(0xFFB85DFF),
-                                    child: IconButton(
-                                      alignment: Alignment.center,
-                                      padding: EdgeInsets.zero,
-                                      iconSize: 20.0,
-                                      icon: iconPlus,
-                                      onPressed: null,
-                                      // onPressed: () => {controller.onClickRepairStat(stat)},
-                                    ),
-                                  ),
-                                ),
-                              ),
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                  )
-                : Container(),
-            itemGrade != null
-                ? Positioned(
-                    right: index > 1 ? 6 : 10,
-                    top: index > 1 ? 6 : 10,
-                    child: CircleAvatar(
-                      backgroundColor: getItemGradeColor(itemGrade!),
-                      radius: 10,
-                      child: StyledText(
-                        itemGrade![0],
-                        fontWeight: 600,
-                        fontFamily: 'Montserrat',
-                        color: itemGrade == 'POOR' ? Color(0xFFffffff).withOpacity(0.6) : Color(0xFF000000).withOpacity(0.6),
-                      ),
-                    ),
-                  )
-                : Container(),
-          ],
-        ),
-      ),
-    );
-
-    if (bottomSpace == null) {
-      return child;
-    }
-
-    return Column(
-      children: [
-        Expanded(child: child),
-      ],
     );
   }
 }

@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_naver_map/flutter_naver_map.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:gaza_go/platform/controllers/activity_controller.dart';
+import 'package:gaza_go/presentations/styles/colors.dart';
 import 'package:get/get.dart';
 
 class ActivityMap extends StatelessWidget {
@@ -8,17 +10,17 @@ class ActivityMap extends StatelessWidget {
 
   List<CircleOverlay> renderStartPoint(ActivityController controller) {
     CircleOverlay centerCircle = CircleOverlay(
-      overlayId: 'ChallengeStartCenter' + controller.selectedChallenge.value.id!.toString(),
+      overlayId: 'ChallengeStartCenter${controller.selectedChallenge.value.id!}',
       center: LatLng(controller.selectedChallenge.value.startLat!, controller.selectedChallenge.value.startLon!),
       radius: 9,
-      color: Color(0xff0EE6F3),
+      color: skyBlueColor,
     );
 
     CircleOverlay outerCircle = CircleOverlay(
-      overlayId: 'ChallengeStart' + controller.selectedChallenge.value.id!.toString(),
+      overlayId: 'ChallengeStart${controller.selectedChallenge.value.id!}',
       center: LatLng(controller.selectedChallenge.value.startLat!, controller.selectedChallenge.value.startLon!),
       radius: controller.selectedChallenge.value.startRadius!,
-      color: Color.fromRGBO(14, 230, 243, 0.3),
+      color: const Color.fromRGBO(14, 230, 243, 0.3),
     );
 
     return [centerCircle, outerCircle];
@@ -26,14 +28,14 @@ class ActivityMap extends StatelessWidget {
 
   List<CircleOverlay> renderEndPoint(ActivityController controller) {
     CircleOverlay centerCircle = CircleOverlay(
-      overlayId: 'ChallengeEndCenter' + controller.selectedChallenge.value.id!.toString(),
+      overlayId: 'ChallengeEndCenter${controller.selectedChallenge.value.id!}',
       center: LatLng(controller.selectedChallenge.value.endLat!, controller.selectedChallenge.value.endLon!),
       radius: 9,
       color: Colors.red,
     );
 
     CircleOverlay outerCircle = CircleOverlay(
-      overlayId: 'ChallengeEnd' + controller.selectedChallenge.value.id!.toString(),
+      overlayId: 'ChallengeEnd${controller.selectedChallenge.value.id!}',
       center: LatLng(controller.selectedChallenge.value.endLat!, controller.selectedChallenge.value.endLon!),
       radius: controller.selectedChallenge.value.endRadius!,
       color: Colors.red[300]?.withOpacity(0.3),
@@ -47,9 +49,9 @@ class ActivityMap extends StatelessWidget {
         .where((challenge) => challenge.id == controller.userState.value.exercise?.challengeId)
         .map(
           (challenge) => Marker(
-            markerId: 'StartMarker' + challenge.id!.toString(),
+            markerId: 'StartMarker${challenge.id!}',
             position: LatLng(challenge.startLat!, challenge.startLon!),
-            captionText: challenge.firstName! + ' 시작점',
+            captionText: '${challenge.firstName!} 시작점',
             // icon: controller.startMarkerImage.value,
             // width: 10,
             // height: 10,
@@ -63,9 +65,9 @@ class ActivityMap extends StatelessWidget {
         .where((challenge) => challenge.id == controller.userState.value.exercise?.challengeId)
         .map(
           (challenge) => Marker(
-            markerId: 'FinishMarker' + challenge.id!.toString(),
+            markerId: 'FinishMarker${challenge.id!}',
             position: LatLng(challenge.endLat!, challenge.endLon!),
-            captionText: challenge.firstName! + ' 도착점',
+            captionText: '${challenge.firstName!} 도착점',
             // icon: controller.finishMarkerImage.value,
             // width: 10,
             // height: 10,
@@ -84,7 +86,7 @@ class ActivityMap extends StatelessWidget {
           return NaverMap(
             nightModeEnable: true,
             mapType: MapType.Basic,
-            activeLayers: [MapLayer.LAYER_GROUP_MOUNTAIN],
+            activeLayers: const [MapLayer.LAYER_GROUP_MOUNTAIN],
             initialCameraPosition: CameraPosition(
               target: LatLng(controller.currentLocation.value.latitude, controller.currentLocation.value.longitude),
               zoom: 15,
@@ -116,27 +118,27 @@ class ActivityMap extends StatelessWidget {
           );
         }),
         Positioned(
-          top: 20,
-          left: 20,
+          top: 20.sp,
+          left: 20.sp,
           child: GestureDetector(
             onTap: () => Get.back(),
             child: Container(
-              width: 46,
-              height: 46,
+              width: 46.sp,
+              height: 46.sp,
               decoration: BoxDecoration(
-                  color: Color(0xff363841),
-                  border: Border.all(width: 2, style: BorderStyle.solid, color: Colors.black),
+                  color: popupBgColor,
+                  border: Border.all(width: 2.sp, style: BorderStyle.solid, color: Colors.black),
                   boxShadow: [
                     BoxShadow(
-                      offset: Offset(2, 4),
+                      offset: Offset(2.sp, 4.sp),
                       color: Colors.black,
                     ),
                   ],
-                  borderRadius: BorderRadius.circular(14)),
-              child: const Icon(
+                  borderRadius: BorderRadius.circular(14.sp)),
+              child: Icon(
                 Icons.chevron_left,
                 color: Colors.white,
-                size: 30,
+                size: 30.sp,
               ),
             ),
           ),

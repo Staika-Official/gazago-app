@@ -9,6 +9,8 @@ enum ExerciseType {
   walking,
 }
 
+enum Nationality { local, foreigner, none }
+
 extension ExerciseTypeValue on ExerciseType {
   String get value {
     switch (this) {
@@ -41,12 +43,15 @@ enum WalletActionType {
 
 enum HiveKey {
   uuid,
+  certified,
   fcmToken,
   accessToken,
   refreshToken,
   userId,
+  email,
   profileImageUrl,
   nickname,
+  authorities,
   locationData,
   userState,
   exerciseData,
@@ -57,6 +62,16 @@ enum HiveKey {
   dummyStepCount,
   isNewUser,
   permissionRequestOnFirstLaunch,
+  isDebuggingMode,
+  isShowDebuggingMenu,
+  requestLogs,
+  responseErrorLogs,
+  activityLogs,
+  userExerciseDataLogs,
+  positionLowDataLogs,
+  needRouteToGoWallet,
+  needToForceLogout,
+  hasForcedLogout,
 }
 
 enum ResponseStatus {
@@ -121,6 +136,10 @@ enum PaymentPurpose {
   buyBadge,
 }
 
+enum Gender { male, female, none }
+
+enum MobileCompany { sk, kt, lg, sk_cheap, kt_cheap, lg_cheap }
+
 extension PaymentPurposeLabel on PaymentPurpose {
   String get label {
     switch (this) {
@@ -184,11 +203,25 @@ extension TransactionTypeLabel on TransactionType {
   }
 }
 
+extension NationalityName on Nationality {
+  bool get isForeigner {
+    switch (this) {
+      case Nationality.local:
+      case Nationality.none:
+        return false;
+      case Nationality.foreigner:
+        return true;
+    }
+  }
+}
+
 enum NotificationType {
   challenge,
   badge,
-  stamina,
-  durability,
+  staminaLow,
+  staminaDepleted,
+  durabilityLow,
+  durabilityDepleted,
 }
 
 extension NotificationId on NotificationType {
@@ -198,10 +231,44 @@ extension NotificationId on NotificationType {
         return 0;
       case NotificationType.badge:
         return 1;
-      case NotificationType.stamina:
+      case NotificationType.staminaLow:
+      case NotificationType.staminaDepleted:
         return 2;
-      case NotificationType.durability:
+      case NotificationType.durabilityLow:
+      case NotificationType.durabilityDepleted:
         return 3;
+    }
+  }
+}
+
+extension GenderName on Gender {
+  String get genderValue {
+    switch (this) {
+      case Gender.male:
+        return 'MALE';
+      case Gender.female:
+        return 'FEMALE';
+      case Gender.none:
+        return '';
+    }
+  }
+}
+
+extension MobileCompanyName on MobileCompany {
+  String get mobileCompanyName {
+    switch (this) {
+      case MobileCompany.sk:
+        return 'SKT';
+      case MobileCompany.kt:
+        return 'KT';
+      case MobileCompany.lg:
+        return 'LG U+';
+      case MobileCompany.sk_cheap:
+        return 'SKT 알뜰폰';
+      case MobileCompany.kt_cheap:
+        return 'KT 알뜰폰';
+      case MobileCompany.lg_cheap:
+        return 'LG U+ 알뜰폰';
     }
   }
 }

@@ -1,49 +1,55 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:gaza_go/presentations/styles/colors.dart';
 import 'package:gaza_go/presentations/styles/styled_text.dart';
 
 class BottomSheetAlert extends StatelessWidget {
-  String title;
-  String? contentText;
-  Widget? contentWidget;
-  List<Widget> actions;
+  final String? title;
+  final String? contentText;
+  final Widget? contentWidget;
+  final List<Widget> actions;
+  final bool? isDangerTitle;
+  final bool? isNonePaddingOuter;
 
-  BottomSheetAlert({Key? key, required this.title, this.contentText, this.contentWidget, required this.actions}) : super(key: key);
+  const BottomSheetAlert({Key? key, this.title, this.contentText, this.contentWidget, this.isDangerTitle, this.isNonePaddingOuter, required this.actions}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return Container(
-      decoration: const BoxDecoration(
-        color: Color(0xff363841),
+      decoration: BoxDecoration(
+        color: popupBgColor,
         borderRadius: BorderRadius.only(
-          topLeft: Radius.circular(12),
-          topRight: Radius.circular(12),
+          topLeft: Radius.circular(12.sp),
+          topRight: Radius.circular(12.sp),
         ),
       ),
       child: Padding(
-        padding: const EdgeInsets.only(top: 30.0, left: 20, right: 20, bottom: 40),
+        padding: isNonePaddingOuter! ? const EdgeInsets.all(0) : EdgeInsets.only(top: 30.0.sp, left: 20.sp, right: 20.sp, bottom: 40.sp),
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
-            Padding(
-              padding: const EdgeInsets.only(top: 8.0),
-              child: StyledText(
-                title,
-                fontSize: 22,
-                lineHeight: 24,
-                fontWeight: 500,
-                letterSpacing: .2,
+            if (title != null)
+              Padding(
+                padding: EdgeInsets.only(top: 8.0.sp),
+                child: StyledText(
+                  title!,
+                  fontSize: 22,
+                  lineHeight: 24,
+                  fontWeight: 500,
+                  letterSpacing: .2,
+                  color: isDangerTitle! ? dangerColor : Colors.white,
+                ),
               ),
-            ),
             contentWidget ??
                 Padding(
-                  padding: const EdgeInsets.only(top: 12.0, bottom: 30),
+                  padding: EdgeInsets.only(top: 12.0.sp, bottom: 30.sp),
                   child: StyledText(
                     contentText!,
                     fontSize: 18,
                     lineHeight: 24,
                     fontWeight: 500,
                     letterSpacing: .2,
-                    color: Color(0xffbfbfbf),
+                    color: lightGrayColor,
                     textAlign: TextAlign.center,
                   ),
                 ),

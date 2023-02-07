@@ -1,7 +1,9 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/svg.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:gaza_go/platform/controllers/inventory_controller.dart';
+import 'package:gaza_go/presentations/styles/colors.dart';
+import 'package:gaza_go/presentations/styles/icons.dart';
 import 'package:gaza_go/presentations/styles/styled_text.dart';
 import 'package:get/get.dart';
 
@@ -14,25 +16,28 @@ class InventoryBadge extends StatelessWidget {
           (item) => InkWell(
             onTap: () => controller.toBadgeDetail(item.badgeId),
             child: Container(
-              decoration: const BoxDecoration(
-                color: Color(0xFF1D1D26),
+              decoration: BoxDecoration(
+                color: subBg01Color,
                 borderRadius: BorderRadius.all(
-                  Radius.circular(20),
+                  Radius.circular(20.sp),
                 ),
               ),
               child: Padding(
-                padding: const EdgeInsets.symmetric(vertical: 8.0, horizontal: 15.0),
+                padding: EdgeInsets.symmetric(vertical: 8.0.sp, horizontal: 15.0.sp),
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.end,
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
                     Opacity(
                       opacity: item.state == 'EQUIPPED' ? 0.5 : 1,
-                      child: CachedNetworkImage(
-                        imageUrl: item.imageUrl!,
-                        fit: BoxFit.fitWidth,
-                        placeholder: (context, url) => const CircularProgressIndicator(),
-                        errorWidget: (context, url, error) => Image.asset("assets/images/@temp_badge.png"),
+                      child: Padding(
+                        padding: EdgeInsets.all(10.0.sp),
+                        child: CachedNetworkImage(
+                          imageUrl: item.imageUrl!,
+                          fit: BoxFit.fitWidth,
+                          placeholder: (context, url) => const CircularProgressIndicator(),
+                          errorWidget: (context, url, error) => Image.asset("assets/images/@temp_badge.png"),
+                        ),
                       ),
                     ),
                     // if (item.name != null)
@@ -41,25 +46,25 @@ class InventoryBadge extends StatelessWidget {
                     //     child: StyledText(item.name!),
                     //   ),
                     Padding(
-                      padding: const EdgeInsets.only(top: 5.0),
+                      padding: EdgeInsets.only(top: 5.0.sp),
                       child: item.state == 'EQUIPPED'
                           ? InkWell(
                               onTap: () => null,
                               child: Container(
                                 width: double.infinity,
                                 decoration: BoxDecoration(
-                                  color: const Color(0xFF363841),
+                                  color: popupBgColor,
                                   border: Border.all(
                                     width: 1,
                                     style: BorderStyle.solid,
-                                    color: const Color(0xFF8A8A8A),
+                                    color: deepGrayColor,
                                   ),
-                                  borderRadius: const BorderRadius.all(
-                                    Radius.circular(20),
+                                  borderRadius: BorderRadius.all(
+                                    Radius.circular(20.sp),
                                   ),
                                   boxShadow: [
                                     BoxShadow(
-                                      offset: Offset(0, 3),
+                                      offset: Offset(0, 3.sp),
                                       blurRadius: 0,
                                       spreadRadius: 0,
                                       color: Colors.black,
@@ -68,12 +73,12 @@ class InventoryBadge extends StatelessWidget {
                                 ),
                                 alignment: Alignment.center,
                                 child: Padding(
-                                  padding: const EdgeInsets.all(8.0),
+                                  padding: EdgeInsets.all(8.0.sp),
                                   child: StyledText(
                                     '장착중',
                                     fontWeight: 500,
                                     fontSize: 14,
-                                    color: Color(0xFF8A8A8A),
+                                    color: deepGrayColor,
                                   ),
                                 ),
                               ),
@@ -83,18 +88,18 @@ class InventoryBadge extends StatelessWidget {
                               child: Container(
                                 width: double.infinity,
                                 decoration: BoxDecoration(
-                                  color: const Color(0xFF363841),
+                                  color: popupBgColor,
                                   border: Border.all(
                                     width: 1,
                                     style: BorderStyle.solid,
                                     color: const Color(0xFF54F5FF),
                                   ),
-                                  borderRadius: const BorderRadius.all(
-                                    Radius.circular(20),
+                                  borderRadius: BorderRadius.all(
+                                    Radius.circular(20.sp),
                                   ),
                                   boxShadow: [
                                     BoxShadow(
-                                      offset: Offset(0, 3),
+                                      offset: Offset(0, 3.sp),
                                       blurRadius: 0,
                                       spreadRadius: 0,
                                       color: Colors.black,
@@ -103,8 +108,8 @@ class InventoryBadge extends StatelessWidget {
                                 ),
                                 alignment: Alignment.center,
                                 child: Padding(
-                                  padding: const EdgeInsets.all(8.0),
-                                  child: StyledText(
+                                  padding: EdgeInsets.all(8.0.sp),
+                                  child: const StyledText(
                                     '장착',
                                     fontWeight: 500,
                                     fontSize: 14,
@@ -127,57 +132,59 @@ class InventoryBadge extends StatelessWidget {
     InventoryController controller = Get.put(InventoryController());
     double width = MediaQuery.of(context).size.width;
     return Container(
-      color: Color(0xFF363841),
-      child: controller.userBadgesList.isEmpty ? Container(
-        width: double.infinity,
-        padding: EdgeInsets.symmetric(vertical: 50),
-        decoration: BoxDecoration(
-          color: Color(0xff363841),
-          borderRadius: BorderRadius.circular(12),
-        ),
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            SvgPicture.asset('assets/images/wallet/ico_empty.svg'),
-            Padding(
-              padding: const EdgeInsets.only(top: 20),
-              child: StyledText(
-                '뱃지가 없습니다.',
-                color: Color(0xff7b7b7b),
-                fontSize: 16,
-                lineHeight: 10,
-                fontWeight: 500,
+      color: popupBgColor,
+      child: controller.userBadgesList.isEmpty
+          ? Container(
+              width: double.infinity,
+              padding: EdgeInsets.symmetric(vertical: 50.sp),
+              decoration: BoxDecoration(
+                color: popupBgColor,
+                borderRadius: BorderRadius.circular(12.sp),
               ),
-            ),
-            Padding(
-              padding: const EdgeInsets.only(top: 13),
-              child: StyledText(
-                '등산해서 뱃지를 받아보세요!',
-                color: Color(0xff7b7b7b),
-                fontSize: 16,
-                lineHeight: 10,
-                fontWeight: 500,
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  iconEmpty,
+                  Padding(
+                    padding: EdgeInsets.only(top: 20.sp),
+                    child: const StyledText(
+                      '뱃지가 없습니다.',
+                      color: Color(0xff7b7b7b),
+                      fontSize: 16,
+                      lineHeight: 10,
+                      fontWeight: 500,
+                    ),
+                  ),
+                  Padding(
+                    padding: EdgeInsets.only(top: 13.sp),
+                    child: const StyledText(
+                      '등산해서 뱃지를 받아보세요!',
+                      color: Color(0xff7b7b7b),
+                      fontSize: 16,
+                      lineHeight: 10,
+                      fontWeight: 500,
+                    ),
+                  ),
+                ],
               ),
+            )
+          : Padding(
+              padding: EdgeInsets.symmetric(vertical: 20.0.sp),
+              child: Obx(() {
+                return GridView.count(
+                  primary: false,
+                  padding: EdgeInsets.only(left: 20.sp, right: 20.sp, bottom: 30.sp),
+                  childAspectRatio: (1 / 1.4),
+                  crossAxisSpacing: 10.sp,
+                  mainAxisSpacing: 10.sp,
+                  crossAxisCount: (width < 350.sp) ? 2 : 3,
+                  controller: controller.badgeScrollController,
+                  children: <Widget>[
+                    ...renderUserBadgesList(controller),
+                  ],
+                );
+              }),
             ),
-          ],
-        ),
-      ) : Padding(
-        padding: const EdgeInsets.symmetric(vertical: 20.0),
-        child: Obx(() {
-          return GridView.count(
-            primary: false,
-            padding: const EdgeInsets.only(left: 20, right: 20, bottom: 30),
-            childAspectRatio: (1 / 1.4),
-            crossAxisSpacing: 10,
-            mainAxisSpacing: 10,
-            crossAxisCount: (width < 350) ? 2 : 3,
-            controller: controller.badgeScrollController,
-            children: <Widget>[
-              ...renderUserBadgesList(controller),
-            ],
-          );
-        }),
-      ),
     );
   }
 }

@@ -1,6 +1,5 @@
 import 'dart:io';
 
-import 'package:flutter/material.dart';
 import 'package:flutter_naver_map/flutter_naver_map.dart';
 import 'package:gaza_go/constants/routes.dart';
 import 'package:gaza_go/platform/helpers/alert_helper.dart';
@@ -8,7 +7,7 @@ import 'package:gaza_go/platform/helpers/base_helper.dart';
 import 'package:gaza_go/platform/models/archive_detail_item_model.dart';
 import 'package:gaza_go/platform/models/archive_list_item_model.dart';
 import 'package:gaza_go/platform/services/archive_service.dart';
-import 'package:gaza_go/presentations/components/gazago_button.dart';
+import 'package:gaza_go/presentations/components/alert_ui_list.dart';
 import 'package:get/get.dart';
 
 class ArchiveController extends GetxController with ScrollMixin {
@@ -45,18 +44,23 @@ class ArchiveController extends GetxController with ScrollMixin {
 
   Future<void> getArchiveList() async {
     dataGetLoading.value = true;
-    List<ArchiveListItemModel> records = List.empty(growable: true);
-    records = await ArchiveService.getArchiveList(page.value);
-    if (records.length < 20) {
-      stopLoading.value = true;
-    }
-    archiveList.addAll(records);
-    dataGetLoading.value = false;
+    await ArchiveService.getArchiveList(
+      page.value,
+      successCallback: (records) {
+        if (records.length < 20) {
+          stopLoading.value = true;
+        }
+        archiveList.addAll(records);
+        dataGetLoading.value = false;
+      },
+    );
   }
 
   void toDetail(int id) async {
-    selectedItem.value = await ArchiveService.getArchiveItem(id, Platform.operatingSystem);
-    Get.toNamed(Routes.archiveDetail);
+    await ArchiveService.getArchiveItem(id, Platform.operatingSystem, successCallback: (archive) {
+      selectedItem.value = archive;
+      Get.toNamed(Routes.archiveDetail);
+    });
   }
 
   void recordMapCreated(NaverMapController controller, RxList<LatLng> locations) {
@@ -90,32 +94,11 @@ class ArchiveController extends GetxController with ScrollMixin {
       showToastPopup('기록 삭제에 실패했습니다.');
     }
 
-    showAlert(
-      title: '삭제',
-      contentText: '기록이 정말 사라지길 원하십니까?',
-      actions: [
-        Expanded(
-          child: GazagoButton(
-            onTap: () => Get.back(),
-            buttonText: '아니요',
-            textColor: Colors.white,
-            buttonColor: const Color(0xFF363841),
-          ),
-        ),
-        const SizedBox(
-          width: 9,
-        ),
-        Expanded(
-          child: GazagoButton(
-            onTap: () {
-              ArchiveService.deleteArchiveItem(id, successCallback, errorCallback);
-            },
-            buttonText: '삭제하기',
-            buttonColor: const Color(0xFF0EE6F3),
-          ),
-        ),
-      ],
-    );
+    ArchiveService.deleteArchiveItem(id, successCallback: successCallback, errorCallback: errorCallback);
+  }
+
+  void showConfirmDelete(int id) {
+    showDeleteRecordAlert(this, id);
   }
 
   @override
@@ -130,7 +113,7 @@ class ArchiveController extends GetxController with ScrollMixin {
   Future<void> onTopScroll() {
     print('top reached');
     return Future.delayed(
-      Duration(milliseconds: 10),
+      const Duration(milliseconds: 10),
       () {
         print('top reached');
       },

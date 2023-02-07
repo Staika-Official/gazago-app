@@ -57,9 +57,9 @@
 	<key>NSHealthUpdateUsageDescription</key>
 	<string>정확한 걸음 수 측정을 위해 필요한 기능입니다.</string>
 	<key>NSLocationAlwaysAndWhenInUseUsageDescription</key>
-	<string>앱을 사용하기 위해서 위치추적 권한을 허용해주세요.</string>
+	<string>가자고는 운동경로를 추적하기 위해 위치서비스를 사용합니다.</string>
 	<key>NSLocationAlwaysUsageDescription</key>
-	<string>앱을 사용하기 위해서 위치추적 권한을 허용해주세요.</string>
+	<string>가자고는 운동경로를 추적하기 위해 위치서비스를 사용합니다.</string>
 	<key>NSLocationTemporaryUsageDescriptionDictionary</key>
 	<dict>
 		<key>challenge</key>
@@ -68,9 +68,9 @@
 		<string>정확한 운동 상태를 기록하기 위해 사용됩니다.</string>
 	</dict>
 	<key>NSLocationWhenInUseUsageDescription</key>
-	<string>앱을 사용하기 위해서 위치추적 권한을 허용해주세요.</string>
+	<string>가자고는 운동경로를 추적하기 위해 위치서비스를 사용합니다.</string>
 	<key>NSMotionUsageDescription</key>
-	<string>이 앱은 유저의 움직임을 측정합니다.</string>
+	<string>가자고는 걸음걸이수 확인을 위해 동작 및 피트니스를 사용합니다.</string>
 	<key>NSPhotoLibraryUsageDescription</key>
 	<string>프로필 이미지 변경을 위해 갤러리 사용을 허용하시겠습니까?</string>
 	<key>UIApplicationSupportsIndirectInputEvents</key>

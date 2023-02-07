@@ -1,50 +1,31 @@
-import 'package:gaza_go/platform/models/asset_address_model.dart';
-import 'package:gaza_go/platform/models/asset_amount_model.dart';
-import 'package:gaza_go/platform/models/asset_short_amount_model.dart';
 import 'package:json_annotation/json_annotation.dart';
 
 part 'asset_token_transaction_model.g.dart';
 
 @JsonSerializable(explicitToJson: true)
 class AssetTokenTransactionModel {
-  String? signature;
-  String? timestamp;
-  String? confirmationStatus; //enum TransactionConfirmationStatus
-  String? err;
-  String? solscanUrl;
-  AssetAddressModel? source;
-  AssetAddressModel? destination;
-  List<String>? type; // enum TransactionType.label
-  String? description;
-  String? memo;
-  String? mint;
+  int? transactionId;
+  String? type;
+  String? title;
+  String? content;
   String? symbol;
   int? decimals;
   double? amount;
   String? uiAmountString;
-  AssetShortAmountModel? preBalance;
-  AssetShortAmountModel? postBalance;
-  AssetAmountModel? fee;
+  String? memo;
+  String? createdDate;
 
   AssetTokenTransactionModel({
-    this.signature,
-    this.timestamp,
-    this.confirmationStatus,
-    this.err,
-    this.solscanUrl,
-    this.source,
-    this.destination,
+    this.transactionId,
     this.type,
-    this.description,
-    this.memo,
-    this.mint,
+    this.title,
+    this.content,
     this.symbol,
     this.decimals,
     this.amount,
     this.uiAmountString,
-    this.preBalance,
-    this.postBalance,
-    this.fee,
+    this.memo,
+    this.createdDate,
   });
 
   factory AssetTokenTransactionModel.fromJson(Map<String, dynamic> json) => _$AssetTokenTransactionModelFromJson(json);

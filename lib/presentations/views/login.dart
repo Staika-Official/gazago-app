@@ -1,6 +1,7 @@
 import 'dart:io';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:gaza_go/constants/enums.dart';
 import 'package:gaza_go/platform/controllers/login_controller.dart';
 import 'package:gaza_go/platform/helpers/login_helper.dart';
@@ -14,16 +15,16 @@ class Login extends StatelessWidget {
     return LoginType.values.map((loginType) {
       if (Platform.isAndroid && loginType == LoginType.apple) return Container();
       return Container(
-        padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 25),
+        padding: EdgeInsets.symmetric(vertical: 8.sp, horizontal: 25.sp),
         width: double.infinity,
         child: SizedBox(
-          height: 50,
+          height: 50.sp,
           child: InkWell(
             onTap: () => controller.login(loginType),
             child: Container(
               decoration: BoxDecoration(
                 color: getLoginButtonColor(loginType.name),
-                borderRadius: const BorderRadius.all(Radius.circular(10)),
+                borderRadius: BorderRadius.all(Radius.circular(10.sp)),
               ),
               alignment: Alignment.center,
               child: Row(
@@ -32,7 +33,7 @@ class Login extends StatelessWidget {
                 children: [
                   loginType.name != 'email' ? getLoginButtonIcon(loginType.name) : Container(),
                   Padding(
-                    padding: const EdgeInsets.only(left: 6.0),
+                    padding: EdgeInsets.only(left: 6.0.sp),
                     child: StyledText(
                       '${getLoginButtonText(loginType.name)}로 로그인',
                       color: loginType.name == 'apple' ? Colors.white : Colors.black,
@@ -63,14 +64,14 @@ class Login extends StatelessWidget {
           children: [
             Expanded(
               child: Padding(
-                padding: const EdgeInsets.only(top: 38.0),
+                padding: EdgeInsets.only(top: 38.0.sp),
                 child: Center(
                   child: iconSplashLogo,
                 ),
               ),
             ),
             Padding(
-              padding: const EdgeInsets.only(bottom: 48.0),
+              padding: EdgeInsets.only(bottom: 48.0.sp),
               child: Column(
                 children: [
                   ...renderLoginButtons(controller),

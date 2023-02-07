@@ -6,7 +6,7 @@ class NotificationAlert extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return DefaultContainer(
+    return const DefaultContainer(
       child: Center(
         child: Text('알림'),
       ),

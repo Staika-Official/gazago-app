@@ -1,5 +1,3 @@
-import 'dart:developer';
-
 import 'package:dio/dio.dart';
 import 'package:gaza_go/constants/enums.dart';
 import 'package:gaza_go/platform/apis/uaa.dart';
@@ -22,10 +20,10 @@ class UaaService {
 
   static Future<void> fetchLogout({required Function successCallback, Function? errorCallback}) async {
     Response res = await UaaApi.fetchLogout();
-    if (res.statusCode! == 204) {
+    if (res.statusCode == 204) {
       successCallback();
-    } else if (res.statusCode != null) {
-      errorCallback!(res.data);
+    } else {
+      if (errorCallback != null) errorCallback(res.data);
     }
   }
 
@@ -33,54 +31,62 @@ class UaaService {
     Response res = await UaaApi.socialLogin(loginInfo);
     if ([200, 201].any((statusCode) => statusCode == res.statusCode)) {
       successCallback(AccessTokenModel.fromJson(res.data), res.statusCode);
-    } else if (res.statusCode != null) {
-      errorCallback!();
+    } else {
+      if (errorCallback != null) errorCallback();
     }
   }
 
-  static Future<UserAccountModel> getAccountInfo() async {
+  static Future<void> getAccountInfo({required Function successCallback, Function? errorCallback}) async {
     Response res = await UaaApi.getAccountInfo();
-    UserAccountModel user = UserAccountModel.fromJson(res.data);
-    return user;
+    if (res.statusCode == 200) {
+      successCallback(UserAccountModel.fromJson(res.data));
+    } else {
+      if (errorCallback != null) errorCallback(res.data);
+    }
   }
 
   static Future<void> checkLoginStatus({required Function successCallback, Function? errorCallback}) async {
     Response res = await UaaApi.checkLoginStatus();
-    if (res.statusCode != null && res.statusCode! == 200) {
+    if (res.statusCode == 200) {
       successCallback();
-    } else if (res.statusCode != null) {
-      errorCallback!(res.data);
+    } else {
+      if (errorCallback != null) errorCallback(res.data);
     }
   }
 
-  static Future<UserAccountModel> modifyAccountInfo(String? nickname, String? profileImageUrl) async {
+  static Future<void> modifyAccountInfo(String? nickname, String? profileImageUrl, {required Function successCallback, Function? errorCallback}) async {
     Response res = await UaaApi.modifyAccountInfo(userId!, nickname, profileImageUrl);
-    UserAccountModel user = UserAccountModel.fromJson(res.data);
-    return user;
+    if (res.statusCode == 200) {
+      successCallback(UserAccountModel.fromJson(res.data));
+    } else {
+      if (errorCallback != null) errorCallback(res.data);
+    }
   }
 
-  static Future<UploadProfileImageModel?> fetchUploadImage(FormData formData) async {
+  static Future<void> fetchUploadImage(FormData formData, {required Function successCallback, Function? errorCallback}) async {
     Response res = await UaaApi.fetchUploadImage(userId!, formData);
-    inspect(res);
-    UploadProfileImageModel imageRes = UploadProfileImageModel.fromJson(res.data);
-    return imageRes;
+    if (res.statusCode == 201) {
+      successCallback(UploadProfileImageModel.fromJson(res.data));
+    } else {
+      if (errorCallback != null) errorCallback(res.data);
+    }
   }
 
   static Future<void> fetchWithdrawMember({required Function successCallback, Function? errorCallback}) async {
     Response res = await UaaApi.fetchWithdrawMember();
-    if (res.statusCode! == 204) {
+    if (res.statusCode == 204) {
       successCallback();
-    } else if (res.statusCode != null) {
-      errorCallback!(res.data);
+    } else {
+      if (errorCallback != null) errorCallback(res.data);
     }
   }
 
   static Future<void> fetchWithdrawCancel({required Function successCallback, Function? errorCallback}) async {
     Response res = await UaaApi.fetchWithdrawCancel();
-    if (res.statusCode! == 204) {
+    if (res.statusCode == 204) {
       successCallback();
-    } else if (res.statusCode != null) {
-      errorCallback!(res.data);
+    } else {
+      if (errorCallback != null) errorCallback(res.data);
     }
   }
 }

@@ -1,26 +1,31 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:gaza_go/constants/enums.dart';
 import 'package:gaza_go/platform/controllers/activity_controller.dart';
 import 'package:gaza_go/platform/helpers/alert_helper.dart';
+import 'package:gaza_go/platform/helpers/base_helper.dart';
+import 'package:gaza_go/presentations/styles/colors.dart';
 import 'package:gaza_go/presentations/styles/icons.dart';
 import 'package:gaza_go/presentations/styles/styled_text.dart';
 import 'package:get/get.dart';
 import 'package:simple_animations/simple_animations.dart';
 
 class ActivityHome extends StatelessWidget {
-  ActivityHome({Key? key}) : super(key: key);
+  const ActivityHome({Key? key}) : super(key: key);
 
   List<Widget> renderStatList(ActivityController controller, context) {
     return controller.statList.map((stat) {
       return Padding(
-        padding: const EdgeInsets.symmetric(
-          vertical: 6.0,
+        padding: EdgeInsets.symmetric(
+          vertical: 6.0.sp,
         ),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
             SizedBox(
-              height: 42,
+              height: 42.sp,
               child: Stack(
                 children: [
                   Row(
@@ -33,13 +38,13 @@ class ActivityHome extends StatelessWidget {
                                     children: [
                                       Container(
                                         decoration: BoxDecoration(
-                                          color: const Color(0xFF606167),
+                                          color: gaugeGrayColor,
                                           border: Border.all(
-                                            width: 2,
+                                            width: 2.sp,
                                             color: Colors.black,
                                           ),
                                           borderRadius: const BorderRadius.all(
-                                            Radius.circular(42),
+                                            Radius.circular(100),
                                           ),
                                           boxShadow: const [
                                             BoxShadow(
@@ -60,18 +65,18 @@ class ActivityHome extends StatelessWidget {
                                                         ? 0
                                                         : 34,
                                                 decoration: BoxDecoration(
-                                                  color: stat.currentStat < 20 ? const Color(0xFFFF2525) : const Color(0xFFCDFF41),
+                                                  color: stat.currentStat < 30 ? textRedColor : lightGreenColor,
                                                   border: Border.all(
-                                                    width: 2,
+                                                    width: 2.sp,
                                                     color: Colors.black,
                                                   ),
                                                   borderRadius: const BorderRadius.all(
-                                                    Radius.circular(42),
+                                                    Radius.circular(100),
                                                   ),
                                                   boxShadow: [
                                                     BoxShadow(
                                                       color: Colors.black.withOpacity(0.5),
-                                                      offset: Offset(1, 0),
+                                                      offset: const Offset(1, 0),
                                                       blurRadius: 0.0,
                                                       spreadRadius: 0.0,
                                                     ),
@@ -88,13 +93,13 @@ class ActivityHome extends StatelessWidget {
                                     children: [
                                       Container(
                                         decoration: BoxDecoration(
-                                          color: const Color(0xFF606167),
+                                          color: gaugeGrayColor,
                                           border: Border.all(
                                             width: 2,
                                             color: Colors.black,
                                           ),
                                           borderRadius: const BorderRadius.all(
-                                            Radius.circular(50),
+                                            Radius.circular(100),
                                           ),
                                           boxShadow: const [
                                             BoxShadow(
@@ -115,18 +120,18 @@ class ActivityHome extends StatelessWidget {
                                                         ? 0
                                                         : 34,
                                                 decoration: BoxDecoration(
-                                                  color: stat.currentStat < 20 ? const Color(0xFFFF2525) : const Color(0xFFB85DFF),
+                                                  color: stat.currentStat <= 30 ? textRedColor : purpleColor,
                                                   border: Border.all(
                                                     width: 2,
                                                     color: Colors.black,
                                                   ),
                                                   borderRadius: const BorderRadius.all(
-                                                    Radius.circular(50),
+                                                    Radius.circular(100),
                                                   ),
                                                   boxShadow: [
                                                     BoxShadow(
                                                       color: Colors.black.withOpacity(0.5),
-                                                      offset: Offset(1, 0),
+                                                      offset: const Offset(1, 0),
                                                       blurRadius: 4.0,
                                                       spreadRadius: 0.0,
                                                     ),
@@ -149,11 +154,11 @@ class ActivityHome extends StatelessWidget {
                         children: [
                           stat.type == 'STAMINA'
                               ? Padding(
-                                  padding: const EdgeInsets.only(left: 13.0, right: 10),
+                                  padding: EdgeInsets.only(left: 13.0.sp, right: 10.sp),
                                   child: iconStamina,
                                 )
                               : Padding(
-                                  padding: const EdgeInsets.only(left: 12.0, right: 7),
+                                  padding: EdgeInsets.only(left: 12.0.sp, right: 7.sp),
                                   child: iconShoes,
                                 ),
                           StyledText(
@@ -162,20 +167,20 @@ class ActivityHome extends StatelessWidget {
                             fontWeight: 800,
                             fontSize: 15,
                             lineHeight: 15,
-                            color: stat.currentStat < 20 ? Colors.white : Colors.black,
+                            color: stat.currentStat <= 30 ? Colors.white : Colors.black,
                           ),
                           Padding(
-                            padding: const EdgeInsets.only(left: 5.0),
+                            padding: EdgeInsets.only(left: 5.0.sp),
                             child: Align(
                               alignment: Alignment.center,
                               child: Padding(
-                                padding: const EdgeInsets.only(left: 5.0),
+                                padding: EdgeInsets.only(left: 5.0.sp),
                                 child: StyledText(
                                   stat.currentStat.toString(),
                                   fontWeight: 800,
                                   fontSize: 15,
                                   lineHeight: 15,
-                                  color: stat.currentStat < 20 ? Colors.white : Colors.black,
+                                  color: stat.currentStat <= 30 ? Colors.white : Colors.black,
                                 ),
                               ),
                             ),
@@ -187,13 +192,13 @@ class ActivityHome extends StatelessWidget {
                           stat.type == 'STAMINA'
                               ? Container(
                                   decoration: BoxDecoration(
-                                    color: const Color(0xFF606167),
+                                    color: gaugeGrayColor,
                                     border: Border.all(
-                                      width: 2,
+                                      width: 2.sp,
                                       color: Colors.black,
                                     ),
                                     borderRadius: const BorderRadius.all(
-                                      Radius.circular(42),
+                                      Radius.circular(100),
                                     ),
                                     boxShadow: const [
                                       BoxShadow(
@@ -205,8 +210,8 @@ class ActivityHome extends StatelessWidget {
                                     ],
                                   ),
                                   child: CircleAvatar(
-                                    radius: 19,
-                                    backgroundColor: const Color(0xFFCDFF41),
+                                    radius: 19.sp,
+                                    backgroundColor: lightGreenColor,
                                     child: IconButton(
                                       icon: iconPlus,
                                       onPressed: () => {controller.onClickRepairStat(stat)},
@@ -215,13 +220,13 @@ class ActivityHome extends StatelessWidget {
                                 )
                               : Container(
                                   decoration: BoxDecoration(
-                                    color: const Color(0xFF606167),
+                                    color: gaugeGrayColor,
                                     border: Border.all(
-                                      width: 2,
+                                      width: 2.sp,
                                       color: Colors.black,
                                     ),
                                     borderRadius: const BorderRadius.all(
-                                      Radius.circular(30),
+                                      Radius.circular(100),
                                     ),
                                     boxShadow: const [
                                       BoxShadow(
@@ -233,8 +238,8 @@ class ActivityHome extends StatelessWidget {
                                     ],
                                   ),
                                   child: CircleAvatar(
-                                    radius: 19,
-                                    backgroundColor: Color(0xFFB85DFF),
+                                    radius: 19.sp,
+                                    backgroundColor: purpleColor,
                                     child: IconButton(
                                       icon: iconPlus,
                                       onPressed: () => {controller.onClickRepairStat(stat)},
@@ -258,50 +263,50 @@ class ActivityHome extends StatelessWidget {
     return controller.activitySumList
         .map(
           (activitySum) => Padding(
-            padding: const EdgeInsets.only(left: 6.0, right: 6.0, top: 2.0, bottom: 4.0),
+            padding: EdgeInsets.only(left: 6.0.sp, right: 6.0.sp, top: 2.0.sp, bottom: 4.0.sp),
             child: Container(
               decoration: BoxDecoration(
-                color: const Color(0xFF363841),
+                color: popupBgColor,
                 border: Border.all(
                   width: 1,
                   color: Colors.black,
                 ),
-                borderRadius: const BorderRadius.all(Radius.circular(14)),
-                boxShadow: const [
+                borderRadius: BorderRadius.all(Radius.circular(14.sp)),
+                boxShadow: [
                   BoxShadow(
-                    color: Color(0xFF000000),
+                    color: const Color(0xFF000000),
                     spreadRadius: 0,
                     blurRadius: 0,
-                    offset: Offset(2, 4), // changes position of shadow
+                    offset: Offset(2.sp, 4.sp), // changes position of shadow
                   ),
                 ],
               ),
               child: Card(
                 margin: EdgeInsets.zero,
-                color: const Color(0xFF363841),
-                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(14)),
+                color: popupBgColor,
+                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(14.sp)),
                 child: Padding(
-                  padding: const EdgeInsets.symmetric(vertical: 15, horizontal: 12),
+                  padding: EdgeInsets.symmetric(vertical: 15.sp, horizontal: 12.sp),
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.center,
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       CircleAvatar(
-                        radius: 21,
-                        backgroundColor: Color(0xFF1D1D21),
+                        radius: 21.sp,
+                        backgroundColor: const Color(0xFF1D1D21),
                         child: activitySum['icon'],
                       ),
                       Padding(
-                        padding: const EdgeInsets.only(top: 8.0),
+                        padding: EdgeInsets.only(top: 8.0.sp),
                         child: StyledText(
                           activitySum['title'],
                           fontSize: 13,
-                          color: Color(0xFF7A7A7A),
+                          color: const Color(0xFF7A7A7A),
                           fontWeight: 600,
                         ),
                       ),
                       Padding(
-                        padding: const EdgeInsets.only(top: 12.0),
+                        padding: EdgeInsets.only(top: 12.0.sp),
                         child: Row(
                           children: [
                             StyledText(
@@ -332,13 +337,29 @@ class ActivityHome extends StatelessWidget {
     ActivityController controller = Get.find();
 
     final challengeMovie = MovieTween()
-      ..tween('scale', Tween(begin: 1.0, end: 1.1), duration: const Duration(seconds: 1)).thenTween('scale', Tween(begin: 1.1, end: 1.0), duration: const Duration(seconds: 1));
+      ..scene(begin: const Duration(seconds: 1), duration: const Duration(seconds: 2))
+          .thenTween('width', Tween<double>(begin: 70, end: 250), duration: const Duration(milliseconds: 300), curve: Curves.easeOut)
+          .tween('opacity', Tween<double>(begin: 0, end: 1), curve: Curves.easeOut)
+          .thenFor(duration: const Duration(seconds: 3))
+          .thenTween('opacity', Tween<double>(begin: 1, end: 0), duration: const Duration(milliseconds: 300), curve: Curves.easeOut)
+          .tween('width', Tween<double>(begin: 250, end: 70), curve: Curves.easeOut)
+          .thenTween('bottom', Tween<double>(begin: 0, end: 10), duration: const Duration(milliseconds: 300), curve: Curves.easeOut)
+          .thenTween('bottom', Tween<double>(begin: 10, end: 0), duration: const Duration(milliseconds: 300), curve: Curves.easeIn);
 
     return LayoutBuilder(
       builder: (context, constraint) {
         return Container(
-          decoration: const BoxDecoration(
-            image: DecorationImage(
+          decoration: BoxDecoration(
+            gradient: LinearGradient(
+              begin: Alignment.topCenter,
+              end: Alignment.bottomCenter,
+              stops: const [-0.06, 1],
+              colors: [
+                mainBg01Color,
+                mainBg02Color,
+              ],
+            ),
+            image: const DecorationImage(
               image: AssetImage('assets/images/bg_activity_road.png'),
               alignment: Alignment(100, 1.5),
             ),
@@ -349,23 +370,23 @@ class ActivityHome extends StatelessWidget {
               constraints: BoxConstraints(minHeight: constraint.maxHeight),
               child: IntrinsicHeight(
                 child: Padding(
-                  padding: const EdgeInsets.only(left: 20, right: 20, bottom: 10),
+                  padding: EdgeInsets.only(left: 20.sp, right: 20.sp, bottom: 15.sp),
                   child: Column(
                     children: <Widget>[
                       Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          const StyledText(
+                          StyledText(
                             '가자고와 함께 \n등산하고 뱃지를 받아보자고-!',
-                            color: Color(0xFF0EE6F3),
+                            color: skyBlueColor,
                             fontWeight: 700,
                             fontSize: 24,
                             lineHeight: 32,
                           ),
                           Container(
-                            margin: const EdgeInsets.symmetric(vertical: 25),
+                            margin: EdgeInsets.symmetric(vertical: ScreenUtil().setHeight(25)),
                             decoration: BoxDecoration(
-                              color: const Color(0xFF0EE6F3),
+                              color: skyBlueColor,
                               border: Border.all(
                                 width: 1,
                                 color: Colors.black,
@@ -383,14 +404,14 @@ class ActivityHome extends StatelessWidget {
                               ],
                             ),
                             child: Padding(
-                              padding: const EdgeInsets.symmetric(vertical: 15.0, horizontal: 20.0),
+                              padding: EdgeInsets.symmetric(vertical: ScreenUtil().setWidth(15), horizontal: ScreenUtil().setHeight(20)),
                               child: Row(
                                 mainAxisAlignment: MainAxisAlignment.start,
                                 crossAxisAlignment: CrossAxisAlignment.center,
                                 children: [
                                   iconActivityTokenGo,
                                   Padding(
-                                    padding: const EdgeInsets.only(left: 10.0),
+                                    padding: EdgeInsets.only(left: ScreenUtil().setWidth(10)),
                                     child: Column(
                                       crossAxisAlignment: CrossAxisAlignment.start,
                                       children: [
@@ -400,22 +421,22 @@ class ActivityHome extends StatelessWidget {
                                           color: Colors.black,
                                           fontWeight: 500,
                                           fontSize: 13,
-                                          lineHeight: 13,
+                                          lineHeight: 15,
                                         ),
                                         Obx(() {
                                           return Row(
                                             children: [
                                               StyledText(
-                                                '${controller.userState.value.state != null ? controller.userState.value.state!.dailyGoReward.toString() : 0}',
+                                                controller.userState.value.state != null ? formatDecimalPlaces(controller.userState.value.state!.dailyGoReward!, 2) : formatDecimalPlaces(0, 2),
                                                 fontFamily: 'Montserrat',
                                                 color: Colors.black,
                                                 fontWeight: 600,
                                                 fontSize: 30,
                                                 lineHeight: 34,
                                               ),
-                                              const Padding(
-                                                padding: EdgeInsets.only(left: 2.0, right: 5.0),
-                                                child: StyledText(
+                                              Padding(
+                                                padding: EdgeInsets.only(left: 2.0.sp, right: 5.0.sp),
+                                                child: const StyledText(
                                                   'GO',
                                                   fontFamily: 'Montserrat',
                                                   color: Colors.black,
@@ -444,86 +465,164 @@ class ActivityHome extends StatelessWidget {
                         );
                       }),
                       Expanded(
-                        child: Container(
-                          child: Stack(
-                            alignment: Alignment.center,
-                            children: [
-                              Center(
-                                child: Obx(() {
-                                  return Row(
-                                    mainAxisAlignment: MainAxisAlignment.center,
-                                    children: [
-                                      Container(
+                        child: Stack(
+                          alignment: Alignment.center,
+                          children: [
+                            Center(
+                              child: Obx(() {
+                                return Row(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  children: [
+                                    Container(
+                                      decoration: BoxDecoration(
+                                        color: skyBlueColor,
+                                        border: Border.all(width: 10.sp, color: const Color(0xFF4A4D57)),
+                                        borderRadius: const BorderRadius.all(
+                                          Radius.circular(150),
+                                        ),
+                                        boxShadow: const [
+                                          BoxShadow(
+                                            color: Colors.black,
+                                            offset: Offset(2, 4),
+                                            blurRadius: 0.0,
+                                            spreadRadius: 2.0,
+                                          ),
+                                        ],
+                                      ),
+                                      child: Container(
                                         decoration: BoxDecoration(
-                                          color: const Color(0xFF0EE6F3),
-                                          border: Border.all(width: 10, color: Color(0xFF4A4D57)),
+                                          border: Border.all(
+                                            width: 3.sp,
+                                            color: Colors.black,
+                                          ),
                                           borderRadius: const BorderRadius.all(
                                             Radius.circular(150),
                                           ),
-                                          boxShadow: const [
-                                            BoxShadow(
-                                              color: Colors.black,
-                                              offset: Offset(2, 4),
-                                              blurRadius: 0.0,
-                                              spreadRadius: 2.0,
-                                            ),
-                                          ],
                                         ),
-                                        child: Container(
-                                          decoration: BoxDecoration(
-                                            border: Border.all(
-                                              width: 3,
-                                              color: Colors.black,
-                                            ),
-                                            borderRadius: const BorderRadius.all(
-                                              Radius.circular(150),
-                                            ),
+                                        child: MaterialButton(
+                                          onPressed: controller.disableActivityButton.value
+                                              ? null
+                                              : [ExerciseState.ongoing, ExerciseState.paused, ExerciseState.ready].any((state) => controller.exerciseState.value == state)
+                                                  ? () => controller.requestExerciseInitialization()
+                                                  : () => showToastPopup('지속적으로 문제가 발생한다면 앱을 재시작해주세요'),
+                                          shape: RoundedRectangleBorder(
+                                            borderRadius: BorderRadius.circular(150),
                                           ),
-                                          child: MaterialButton(
-                                            onPressed: [ExerciseState.ongoing, ExerciseState.paused, ExerciseState.ready].any((state) => controller.exerciseState.value == state)
-                                                ? () => controller.requestExerciseInitialization()
-                                                : () => showToastPopup('지속적으로 문제가 발생한다면 앱을 재시작해주세요'),
-                                            shape: RoundedRectangleBorder(
-                                              borderRadius: BorderRadius.circular(150),
-                                            ),
-                                            color: const Color(0xFF0EE6F3),
-                                            height: 150,
-                                            minWidth: 150,
-                                            child: StyledText(
-                                              [ExerciseState.ongoing, ExerciseState.paused].any((state) => controller.exerciseState.value == state) ? 'Continue' : 'GO',
-                                              fontWeight: 800,
-                                              fontFamily: 'Montserrat',
-                                              fontSize: [ExerciseState.ongoing, ExerciseState.paused].any((state) => controller.exerciseState.value == state) ? 18 : 50,
-                                              lineHeight: [ExerciseState.ongoing, ExerciseState.paused].any((state) => controller.exerciseState.value == state) ? 18 : 50,
-                                              color: Colors.black,
-                                              letterSpacing: 0.5,
-                                            ),
-                                          ),
+                                          color: skyBlueColor,
+                                          height: 150.sp,
+                                          minWidth: 150.sp,
+                                          child: controller.disableActivityButton.value
+                                              ? StyledText(
+                                                  'Loading..',
+                                                  fontWeight: 800,
+                                                  fontFamily: 'Montserrat',
+                                                  fontSize: 23.sp,
+                                                  lineHeight: 23.sp,
+                                                  color: Colors.black,
+                                                  letterSpacing: 0.5,
+                                                )
+                                              : StyledText(
+                                                  [ExerciseState.ongoing, ExerciseState.paused].any((state) => controller.exerciseState.value == state) ? 'Continue' : 'GO',
+                                                  fontWeight: 800,
+                                                  fontFamily: 'Montserrat',
+                                                  fontSize: [ExerciseState.ongoing, ExerciseState.paused].any((state) => controller.exerciseState.value == state) ? 23.sp : 50.sp,
+                                                  lineHeight: [ExerciseState.ongoing, ExerciseState.paused].any((state) => controller.exerciseState.value == state) ? 23.sp : 50.sp,
+                                                  color: Colors.black,
+                                                  letterSpacing: 0.5,
+                                                ),
                                         ),
                                       ),
-                                    ],
-                                  );
-                                }),
-                              ),
-                              Positioned(
-                                  bottom: 10,
-                                  right: 0,
-                                  child: LoopAnimationBuilder<Movie>(
-                                    tween: challengeMovie, // 0° to 360° (2π)
-                                    duration: challengeMovie.duration, // for 2 seconds per iteration
+                                    ),
+                                  ],
+                                );
+                              }),
+                            ),
+                            Positioned(
+                                bottom: 0,
+                                right: 0,
+                                child: Obx(() {
+                                  return CustomAnimationBuilder<Movie>(
+                                    control: controller.challengeLoadControl.value,
+                                    tween: challengeMovie,
+                                    duration: challengeMovie.duration,
                                     builder: (context, value, _) {
-                                      return Transform.scale(
-                                          scale: value.get('scale'),
-                                          child: FloatingActionButton(
-                                            onPressed: () {
-                                              controller.moveToChallengeMap();
-                                            },
-                                            child: iconChallengeList,
-                                          ));
+                                      return InkWell(
+                                        onTap: () {
+                                          controller.moveToChallengeMap();
+                                        },
+                                        child: Container(
+                                          width: value.get('width'),
+                                          height: 70,
+                                          decoration: BoxDecoration(
+                                            border: Border.all(color: Colors.black, width: 2),
+                                            borderRadius: BorderRadius.circular(35),
+                                            color: skyBlueColor,
+                                          ),
+                                          child: Stack(
+                                            clipBehavior: Clip.none,
+                                            fit: StackFit.expand,
+                                            children: [
+                                              Opacity(
+                                                opacity: value.get('opacity'),
+                                                child: Row(
+                                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                                  children: [
+                                                    InkWell(
+                                                      onTap: () {
+                                                        controller.challengeLoadControl.value = Control.playReverseFromEnd;
+                                                        Timer(Duration.zero, () {
+                                                          controller.challengeLoadControl.value = Control.stop;
+                                                        });
+                                                      },
+                                                      child: Padding(
+                                                        padding: const EdgeInsets.only(
+                                                          left: 20,
+                                                          top: 20,
+                                                        ),
+                                                        child: iconCloseChallenge,
+                                                      ),
+                                                    ),
+                                                    const Expanded(
+                                                      child: Padding(
+                                                        padding: EdgeInsets.only(
+                                                          left: 12,
+                                                          top: 15,
+                                                        ),
+                                                        child: StyledText(
+                                                          '도전할 챌린지를\n찾아보세요',
+                                                          fontSize: 16,
+                                                          lineHeight: 20,
+                                                          fontWeight: 600,
+                                                          color: Colors.black,
+                                                        ),
+                                                      ),
+                                                    )
+                                                  ],
+                                                ),
+                                              ),
+                                              // Positioned(
+                                              //   bottom: value.get('bottom'),
+                                              //   right: 0,
+                                              //   child: Lottie.asset(
+                                              //     'assets/lottie/flag.json',
+                                              //     width: 70,
+                                              //     height: 70,
+                                              //     repeat: false,
+                                              //   ),
+                                              // ),
+                                              Positioned(
+                                                bottom: 0,
+                                                right: 5,
+                                                child: iconChallengeFlag,
+                                              ),
+                                            ],
+                                          ),
+                                        ),
+                                      );
                                     },
-                                  )),
-                            ],
-                          ),
+                                  );
+                                })),
+                          ],
                         ),
                       ),
                     ],

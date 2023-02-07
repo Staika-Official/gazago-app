@@ -1,11 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_naver_map/flutter_naver_map.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg_provider/flutter_svg_provider.dart';
 import 'package:gaza_go/constants/enums.dart';
 import 'package:gaza_go/platform/controllers/archive_controller.dart';
 import 'package:gaza_go/platform/helpers/activity_helper.dart';
 import 'package:gaza_go/platform/helpers/base_helper.dart';
 import 'package:gaza_go/presentations/components/default_container.dart';
+import 'package:gaza_go/presentations/styles/colors.dart';
 import 'package:gaza_go/presentations/styles/icons.dart';
 import 'package:gaza_go/presentations/styles/styled_text.dart';
 import 'package:get/get.dart';
@@ -21,20 +23,20 @@ class ArchiveDetail extends StatelessWidget {
       titleText: '${formatDateUntilDay(controller.selectedItem.value.startedDate)} 기록',
       trailingChild: InkWell(
         child: IconButton(
-          onPressed: () => controller.deleteItem(controller.selectedItem.value.id!),
+          onPressed: () => controller.showConfirmDelete(controller.selectedItem.value.id!),
           icon: iconWasteBasket,
-          constraints: const BoxConstraints(
-            minWidth: 20,
+          constraints: BoxConstraints(
+            minWidth: 20.sp,
           ),
         ),
       ),
-      backgroundColor: const Color(0xFF1D1D26),
+      backgroundColor: subBg01Color,
       child: SingleChildScrollView(
         physics: const ClampingScrollPhysics(),
         child: Column(
           children: [
             Padding(
-              padding: const EdgeInsets.symmetric(vertical: 15.0, horizontal: 20.0),
+              padding: EdgeInsets.symmetric(vertical: 15.0.sp, horizontal: 20.0.sp),
               child: Row(
                 mainAxisSize: MainAxisSize.max,
                 crossAxisAlignment: CrossAxisAlignment.center,
@@ -43,22 +45,22 @@ class ArchiveDetail extends StatelessWidget {
                   Column(
                     children: [
                       Padding(
-                        padding: const EdgeInsets.only(right: 15.0),
+                        padding: EdgeInsets.only(right: 15.0.sp),
                         child: Stack(
                           clipBehavior: Clip.none,
                           children: [
                             CircleAvatar(
-                              radius: 21,
+                              radius: 21.sp,
                               backgroundColor: Colors.transparent,
                               foregroundImage: controller.selectedItem.value.type == ExerciseType.hiking.name.toUpperCase()
-                                  ? Svg('assets/images/archive/ico_archive_hiking.svg') as ImageProvider
-                                  : Svg('assets/images/archive/ico_archive_walking.svg') as ImageProvider,
+                                  ? const Svg('assets/images/archive/ico_archive_hiking.svg')
+                                  : const Svg('assets/images/archive/ico_archive_walking.svg'),
                             ),
                             if (controller.selectedItem.value.badgeIssueId != null)
                               Positioned(
                                 right: -5,
                                 bottom: -5,
-                                child: Image.network(controller.selectedItem.value.badgeImageUrl!, width: 20, height: 20),
+                                child: Image.network(controller.selectedItem.value.badgeImageUrl!, width: 20.sp, height: 20.sp),
                               ),
                           ],
                         ),
@@ -95,7 +97,7 @@ class ArchiveDetail extends StatelessWidget {
               color: Color(0xFF2C2C35),
             ),
             Padding(
-              padding: const EdgeInsets.symmetric(vertical: 20.0, horizontal: 20.0),
+              padding: EdgeInsets.symmetric(vertical: 20.0.sp, horizontal: 20.0.sp),
               child: Row(
                 mainAxisSize: MainAxisSize.max,
                 crossAxisAlignment: CrossAxisAlignment.end,
@@ -105,7 +107,7 @@ class ArchiveDetail extends StatelessWidget {
                     child: Column(
                       children: [
                         Padding(
-                          padding: const EdgeInsets.only(right: 5.2, bottom: 3),
+                          padding: EdgeInsets.only(right: 5.2.sp, bottom: 3.sp),
                           child: iconArchiveClockDetail,
                         ),
                         StyledText(
@@ -121,7 +123,7 @@ class ArchiveDetail extends StatelessWidget {
                     child: Column(
                       children: [
                         Padding(
-                          padding: const EdgeInsets.only(right: 5.2, bottom: 5),
+                          padding: EdgeInsets.only(right: 5.2.sp, bottom: 5.sp),
                           child: iconArchiveDistanceDetail,
                         ),
                         StyledText(
@@ -137,7 +139,7 @@ class ArchiveDetail extends StatelessWidget {
                     child: Column(
                       children: [
                         Padding(
-                          padding: const EdgeInsets.only(right: 5.2, bottom: 3),
+                          padding: EdgeInsets.only(right: 5.2.sp, bottom: 3.sp),
                           child: iconArchiveStepsDetail,
                         ),
                         StyledText(
@@ -153,17 +155,17 @@ class ArchiveDetail extends StatelessWidget {
               ),
             ),
             Padding(
-              padding: const EdgeInsets.only(left: 20.0, right: 20.0, top: 0.0, bottom: 15.0),
+              padding: EdgeInsets.only(left: 20.0.sp, right: 20.0.sp, top: 0.0.sp, bottom: 15.0.sp),
               child: Container(
                 width: double.infinity,
-                height: 220,
+                height: 220.sp,
                 color: Colors.grey,
                 child: NaverMap(
                   nightModeEnable: true,
                   forceGesture: true,
                   tiltGestureEnable: false,
                   mapType: MapType.Basic,
-                  activeLayers: [MapLayer.LAYER_GROUP_MOUNTAIN],
+                  activeLayers: const [MapLayer.LAYER_GROUP_MOUNTAIN],
                   onMapCreated: (mapController) => controller.recordMapCreated(mapController, controller.locations),
                   initialCameraPosition: CameraPosition(
                     target: controller.locations.length > 1 ? controller.locations.first : const LatLng(37.5525, 126.9883),
@@ -181,7 +183,7 @@ class ArchiveDetail extends StatelessWidget {
               ),
             ),
             Padding(
-              padding: const EdgeInsets.symmetric(vertical: 10.0, horizontal: 20.0),
+              padding: EdgeInsets.symmetric(vertical: 10.0.sp, horizontal: 20.0.sp),
               child: Row(
                 children: [
                   const StyledText(
@@ -200,7 +202,7 @@ class ArchiveDetail extends StatelessWidget {
               ),
             ),
             Padding(
-              padding: const EdgeInsets.symmetric(vertical: 10.0, horizontal: 20.0),
+              padding: EdgeInsets.symmetric(vertical: 10.0.sp, horizontal: 20.0.sp),
               child: Row(
                 children: [
                   const StyledText(
@@ -219,7 +221,7 @@ class ArchiveDetail extends StatelessWidget {
               ),
             ),
             Padding(
-              padding: const EdgeInsets.symmetric(vertical: 10.0, horizontal: 20.0),
+              padding: EdgeInsets.symmetric(vertical: 10.0.sp, horizontal: 20.0.sp),
               child: Row(
                 children: [
                   const StyledText(
@@ -239,7 +241,7 @@ class ArchiveDetail extends StatelessWidget {
             ),
             controller.selectedItem.value.challengeId != null && controller.selectedItem.value.badgeName != null && controller.selectedItem.value.type == "HIKING"
                 ? Padding(
-                    padding: const EdgeInsets.symmetric(vertical: 10.0, horizontal: 20.0),
+                    padding: EdgeInsets.symmetric(vertical: 10.0.sp, horizontal: 20.0.sp),
                     child: Row(
                       children: [
                         const StyledText(
@@ -258,9 +260,9 @@ class ArchiveDetail extends StatelessWidget {
                     ),
                   )
                 : Container(),
-            const Padding(
-              padding: EdgeInsets.symmetric(vertical: 10.0, horizontal: 20.0),
-              child: Divider(
+            Padding(
+              padding: EdgeInsets.symmetric(vertical: 10.0.sp, horizontal: 20.0.sp),
+              child: const Divider(
                 height: 2,
                 thickness: 2.0,
                 color: Color(0xFF2C2C35),
@@ -268,7 +270,7 @@ class ArchiveDetail extends StatelessWidget {
             ),
             controller.selectedItem.value.startPointName != null && controller.selectedItem.value.type == "HIKING"
                 ? Padding(
-                    padding: const EdgeInsets.symmetric(vertical: 10.0, horizontal: 20.0),
+                    padding: EdgeInsets.symmetric(vertical: 10.0.sp, horizontal: 20.0.sp),
                     child: Row(
                       children: [
                         const StyledText(
@@ -288,7 +290,7 @@ class ArchiveDetail extends StatelessWidget {
                   )
                 : Container(),
             Padding(
-              padding: const EdgeInsets.symmetric(vertical: 10.0, horizontal: 20.0),
+              padding: EdgeInsets.symmetric(vertical: 10.0.sp, horizontal: 20.0.sp),
               child: Row(
                 children: [
                   const StyledText(
@@ -309,7 +311,7 @@ class ArchiveDetail extends StatelessWidget {
             // startPointName
             controller.selectedItem.value.endPointName != null && controller.selectedItem.value.type == "HIKING"
                 ? Padding(
-                    padding: const EdgeInsets.symmetric(vertical: 10.0, horizontal: 20.0),
+                    padding: EdgeInsets.symmetric(vertical: 10.0.sp, horizontal: 20.0.sp),
                     child: Row(
                       children: [
                         const StyledText(
@@ -330,7 +332,7 @@ class ArchiveDetail extends StatelessWidget {
                 : Container(),
             controller.selectedItem.value.endedDate != null
                 ? Padding(
-                    padding: const EdgeInsets.symmetric(vertical: 10.0, horizontal: 20.0),
+                    padding: EdgeInsets.symmetric(vertical: 10.0.sp, horizontal: 20.0.sp),
                     child: Row(
                       children: [
                         const StyledText(
@@ -349,9 +351,9 @@ class ArchiveDetail extends StatelessWidget {
                     ),
                   )
                 : Container(),
-            const Padding(
-              padding: EdgeInsets.symmetric(vertical: 10.0, horizontal: 20.0),
-              child: Divider(
+            Padding(
+              padding: EdgeInsets.symmetric(vertical: 10.0.sp, horizontal: 20.0.sp),
+              child: const Divider(
                 height: 2,
                 thickness: 2.0,
                 color: Color(0xFF2C2C35),
@@ -359,7 +361,7 @@ class ArchiveDetail extends StatelessWidget {
             ),
             controller.selectedItem.value.speed != null
                 ? Padding(
-                    padding: const EdgeInsets.symmetric(vertical: 10.0, horizontal: 20.0),
+                    padding: EdgeInsets.symmetric(vertical: 10.0.sp, horizontal: 20.0.sp),
                     child: Row(
                       children: [
                         const StyledText(
@@ -380,7 +382,7 @@ class ArchiveDetail extends StatelessWidget {
                 : Container(),
             controller.selectedItem.value.altitude != null
                 ? Padding(
-                    padding: const EdgeInsets.symmetric(vertical: 10.0, horizontal: 20.0),
+                    padding: EdgeInsets.symmetric(vertical: 10.0.sp, horizontal: 20.0.sp),
                     child: Row(
                       children: [
                         const StyledText(

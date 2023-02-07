@@ -4,7 +4,6 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:gaza_go/constants/routes.dart';
 import 'package:gaza_go/platform/helpers/inventory_mixin.dart';
-import 'package:gaza_go/platform/models/inventory_badge_item_model.dart';
 import 'package:gaza_go/platform/models/inventory_badge_list_model.dart';
 import 'package:gaza_go/platform/models/inventory_badge_model.dart';
 import 'package:gaza_go/platform/services/badge_service.dart';
@@ -95,18 +94,16 @@ class SyntheticBadgeController extends GetxController with InventoryMixin {
         .map(
           (badge) => InkWell(
             onTap: () => selectItem(badge.value, badge.value.badgeId),
-            child: Container(
-              child: Stack(
-                children: [
-                  Text(badge.value.badgeId.toString()),
-                  if (selectBadge.value.badgeId == badge.value.badgeId)
-                    const Positioned(
-                      left: 0,
-                      top: 0,
-                      child: Icon(Icons.check, size: 20),
-                    ),
-                ],
-              ),
+            child: Stack(
+              children: [
+                Text(badge.value.badgeId.toString()),
+                if (selectBadge.value.badgeId == badge.value.badgeId)
+                  const Positioned(
+                    left: 0,
+                    top: 0,
+                    child: Icon(Icons.check, size: 20),
+                  ),
+              ],
             ),
           ),
         )
@@ -130,7 +127,7 @@ class SyntheticBadgeController extends GetxController with InventoryMixin {
       AlertDialog(
         title: Row(
           mainAxisAlignment: MainAxisAlignment.center,
-          children: [
+          children: const [
             Text('뱃지 선택'),
           ],
         ),
@@ -189,12 +186,16 @@ class SyntheticBadgeController extends GetxController with InventoryMixin {
 
   void syntheticBadgeConfirm() async {
     // print(selectedBadgeIdList);
-    InventoryBadgeModel syntheticedBadge = await BadgeService.fetchUserSyntheticBadge({
-      'composeBadges': selectedBadgeIdList,
-      'issueFeeTik': syntheticBadgeFee.toInt(),
-    });
-    inspect(syntheticedBadge);
-    Get.offNamedUntil(Routes.home, (route) => route.settings.name == Routes.home);
+    await BadgeService.fetchUserSyntheticBadge(
+      {
+        'composeBadges': selectedBadgeIdList,
+        'issueFeeTik': syntheticBadgeFee.toInt(),
+      },
+      successCallback: (InventoryBadgeModel synthesizedBadge) {
+        inspect(synthesizedBadge);
+        Get.offNamedUntil(Routes.home, (route) => route.settings.name == Routes.home);
+      },
+    );
   }
 
   void handleOpenSyntheticBadgeConfirmPopup() {

@@ -1,7 +1,7 @@
 import 'flavors.dart';
-import 'main.dart' as _main;
+import 'main.dart' as base;
 
 void main() {
   F.appFlavor = Flavor.dev;
-  _main.main();
+  base.main();
 }

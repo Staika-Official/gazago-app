@@ -7,7 +7,7 @@ class RankerModel {
   int? id;
   int? userId;
   int? rank;
-  String profileImageUrl;
+  String? profileImageUrl;
   String nickname;
   double rewardGo;
   double rewardTik;

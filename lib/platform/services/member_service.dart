@@ -3,6 +3,7 @@ import 'package:gaza_go/constants/enums.dart';
 import 'package:gaza_go/platform/apis/member.dart';
 import 'package:gaza_go/platform/models/member_user_model.dart';
 import 'package:gaza_go/platform/models/terms_history_model.dart';
+import 'package:gaza_go/platform/models/terms_status_model.dart';
 import 'package:gaza_go/platform/stores/hive_store.dart';
 
 class MemberService {
@@ -10,8 +11,11 @@ class MemberService {
     return HiveStore.loadString(key: HiveKey.userId.name);
   }
 
-  static Future<void> initializeUserData(String? nickname, String? profileImageUrl) async {
-    await MemberApi.initializeUserData(userId!, nickname, profileImageUrl);
+  static Future<void> initializeUserData(String? email, String? nickname, String? profileImageUrl, {required Function errorCallback}) async {
+    Response res = await MemberApi.initializeUserData(userId!, email, nickname, profileImageUrl);
+    if (res.statusCode != 200) {
+      errorCallback();
+    }
   }
 
   static Future<void> getMemberUserInfo({required Function successCallback, required Function errorCallback}) async {
@@ -28,7 +32,17 @@ class MemberService {
     if (res.statusCode == 201) {
       successCallback(res.data['effectedCount']);
     } else {
-      errorCallback!();
+      if (errorCallback != null) errorCallback();
+    }
+  }
+
+  static Future<void> getTermsAgreeStatus({required Function successCallback, Function? errorCallback}) async {
+    Response res = await MemberApi.getTermsAgreeStatus(userId!);
+    if (res.statusCode == 200) {
+      List<TermsStatusModel> terms = res.data.map<TermsStatusModel>((term) => TermsStatusModel.fromJson(term)).toList();
+      successCallback(terms);
+    } else {
+      if (errorCallback != null) errorCallback();
     }
   }
 }

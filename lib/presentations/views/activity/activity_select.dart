@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:gaza_go/constants/enums.dart';
 import 'package:gaza_go/platform/controllers/activity_controller.dart';
+import 'package:gaza_go/presentations/styles/colors.dart';
 import 'package:get/get.dart';
 
 class ActivitySelect extends StatelessWidget {
@@ -19,13 +21,13 @@ class ActivitySelect extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             Padding(
-              padding: const EdgeInsets.only(bottom: 42),
+              padding: EdgeInsets.only(bottom: 42.sp),
               child: Text(
                 '어떤 활동을 하시나요?',
                 style: TextStyle(
-                  fontSize: 24,
+                  fontSize: 24.sp,
                   fontWeight: FontWeight.w500,
-                  height: 24 / 16,
+                  height: 24.sp / 16.sp,
                   color: Colors.white,
                 ),
               ),
@@ -37,23 +39,23 @@ class ActivitySelect extends StatelessWidget {
                   clipBehavior: Clip.none,
                   children: [
                     Positioned(
-                      left: 1,
-                      top: 7,
+                      left: 1.sp,
+                      top: 7.sp,
                       child: Container(
-                        width: 155,
-                        height: 215,
+                        width: 155.sp,
+                        height: 215.sp,
                         decoration: BoxDecoration(
                           color: Colors.black,
-                          borderRadius: BorderRadius.circular(14),
+                          borderRadius: BorderRadius.circular(14.sp),
                         ),
                       ),
                     ),
                     Obx(() {
                       return Container(
-                        width: 155,
-                        height: 215,
+                        width: 155.sp,
+                        height: 215.sp,
                         decoration: BoxDecoration(
-                          color: Color(0xFF363841),
+                          color: popupBgColor,
                           border: Border.all(
                             width: 1,
                             style: BorderStyle.solid,
@@ -61,16 +63,16 @@ class ActivitySelect extends StatelessWidget {
                           ),
                           boxShadow: [
                             BoxShadow(
-                              color: Color.fromRGBO(0, 0, 0, 0.25),
-                              offset: Offset(0, 0),
-                              blurRadius: 4,
-                              spreadRadius: 4,
+                              color: const Color.fromRGBO(0, 0, 0, 0.25),
+                              offset: const Offset(0, 0),
+                              blurRadius: 4.sp,
+                              spreadRadius: 4.sp,
                             )
                           ],
-                          borderRadius: BorderRadius.circular(14),
+                          borderRadius: BorderRadius.circular(14.sp),
                         ),
                         foregroundDecoration: BoxDecoration(
-                          color: controller.doableChallenges.isNotEmpty ? Colors.transparent : Color.fromRGBO(0, 0, 0, 0.6),
+                          color: controller.doableChallenges.isNotEmpty ? Colors.transparent : const Color.fromRGBO(0, 0, 0, 0.6),
                         ),
                         child: InkWell(
                           onTap: controller.doableChallenges.isNotEmpty
@@ -79,37 +81,37 @@ class ActivitySelect extends StatelessWidget {
                                   controller.moveToChallengeSelection();
                                 }
                               : null,
-                          borderRadius: BorderRadius.circular(14),
+                          borderRadius: BorderRadius.circular(14.sp),
                           child: Padding(
-                            padding: EdgeInsets.only(top: 32),
+                            padding: EdgeInsets.only(top: 32.sp),
                             child: Column(
                               children: [
                                 SvgPicture.asset(
                                   'assets/images/activity/ico_hiking.svg',
-                                  width: 88,
-                                  height: 88,
+                                  width: 88.sp,
+                                  height: 88.sp,
                                 ),
                                 Padding(
-                                  padding: const EdgeInsets.only(top: 30),
+                                  padding: EdgeInsets.only(top: 30.sp),
                                   child: Text(
                                     '등산',
                                     style: TextStyle(
-                                      color: Color(0xff4FFF4B),
+                                      color: const Color(0xff4FFF4B),
                                       fontWeight: FontWeight.w800,
-                                      fontSize: 28,
-                                      height: 16 / 28,
+                                      fontSize: 28.sp,
+                                      height: 16.sp / 28.sp,
                                     ),
                                   ),
                                 ),
                                 Padding(
-                                  padding: const EdgeInsets.only(top: 14),
+                                  padding: EdgeInsets.only(top: 14.sp),
                                   child: Text(
                                     '완등 후 뱃지 증정!',
                                     style: TextStyle(
-                                      color: Color(0xff4FFF4B),
+                                      color: const Color(0xff4FFF4B),
                                       fontWeight: FontWeight.w800,
-                                      fontSize: 12,
-                                      height: 16 / 12,
+                                      fontSize: 12.sp,
+                                      height: 16.sp / 12.sp,
                                     ),
                                   ),
                                 ),
@@ -122,16 +124,16 @@ class ActivitySelect extends StatelessWidget {
                   ],
                 ),
                 Padding(
-                  padding: const EdgeInsets.only(left: 16),
+                  padding: EdgeInsets.only(left: 16.sp),
                   child: Stack(
                     clipBehavior: Clip.none,
                     children: [
                       Positioned(
-                        left: 1,
-                        top: 7,
+                        left: 1.sp,
+                        top: 7.sp,
                         child: Container(
-                          width: 155,
-                          height: 215,
+                          width: 155.sp,
+                          height: 215.sp,
                           decoration: BoxDecoration(
                             color: Colors.black,
                             border: Border.all(
@@ -139,16 +141,16 @@ class ActivitySelect extends StatelessWidget {
                               style: BorderStyle.solid,
                               color: Colors.black,
                             ),
-                            borderRadius: BorderRadius.circular(14),
+                            borderRadius: BorderRadius.circular(14.sp),
                           ),
                         ),
                       ),
                       Container(
-                        width: 155,
-                        height: 215,
+                        width: 155.sp,
+                        height: 215.sp,
                         decoration: BoxDecoration(
-                          color: Color(0xFF363841),
-                          boxShadow: [
+                          color: popupBgColor,
+                          boxShadow: const [
                             BoxShadow(
                               color: Color.fromRGBO(0, 0, 0, 0.25),
                               offset: Offset(0, 0),
@@ -156,29 +158,29 @@ class ActivitySelect extends StatelessWidget {
                               spreadRadius: 4,
                             )
                           ],
-                          borderRadius: BorderRadius.circular(14),
+                          borderRadius: BorderRadius.circular(14.sp),
                         ),
                         child: InkWell(
                           onTap: () => controller.selectExerciseType(ExerciseType.walking),
-                          borderRadius: BorderRadius.circular(14),
+                          borderRadius: BorderRadius.circular(14.sp),
                           child: Padding(
-                            padding: EdgeInsets.only(top: 32),
+                            padding: EdgeInsets.only(top: 32.sp),
                             child: Column(
                               children: [
                                 SvgPicture.asset(
                                   'assets/images/activity/ico_walking.svg',
-                                  width: 88,
-                                  height: 88,
+                                  width: 88.sp,
+                                  height: 88.sp,
                                 ),
                                 Padding(
-                                  padding: const EdgeInsets.only(top: 30),
+                                  padding: EdgeInsets.only(top: 30.sp),
                                   child: Text(
                                     '걷기',
                                     style: TextStyle(
-                                      color: Color(0xff54F5FF),
+                                      color: const Color(0xff54F5FF),
                                       fontWeight: FontWeight.w800,
-                                      fontSize: 28,
-                                      height: 16 / 28,
+                                      fontSize: 28.sp,
+                                      height: 16.sp / 28.sp,
                                     ),
                                   ),
                                 ),
@@ -193,17 +195,17 @@ class ActivitySelect extends StatelessWidget {
               ],
             ),
             Padding(
-              padding: const EdgeInsets.only(top: 130),
+              padding: EdgeInsets.only(top: 130.sp),
               child: InkWell(
                 onTap: () => Get.back(),
-                borderRadius: BorderRadius.circular(113),
+                borderRadius: BorderRadius.circular(113.sp),
                 child: Container(
-                  width: 113,
-                  height: 113,
+                  width: 113.sp,
+                  height: 113.sp,
                   decoration: BoxDecoration(
-                    color: Color(0xff18191F),
+                    color: const Color(0xff18191F),
                     border: Border.all(width: 1, style: BorderStyle.solid, color: Colors.white),
-                    borderRadius: BorderRadius.circular(113),
+                    borderRadius: BorderRadius.circular(113.sp),
                   ),
                   child: Center(
                     child: SvgPicture.asset(

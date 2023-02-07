@@ -1,14 +1,15 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:gaza_go/presentations/styles/styled_text.dart';
 
 class GazagoButton extends StatelessWidget {
-  String buttonText;
-  VoidCallback onTap;
-  Color textColor;
-  Color buttonColor;
-  bool disableButton;
+  final String buttonText;
+  final VoidCallback onTap;
+  final Color textColor;
+  final Color buttonColor;
+  final bool disableButton;
 
-  GazagoButton({
+  const GazagoButton({
     Key? key,
     required this.buttonText,
     required this.onTap,
@@ -20,26 +21,26 @@ class GazagoButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Material(
-      borderRadius: BorderRadius.circular(8),
+      borderRadius: BorderRadius.circular(8.sp),
       child: Container(
-        margin: EdgeInsets.only(bottom: 3),
+        margin: EdgeInsets.only(bottom: 3.sp),
         child: Ink(
           decoration: BoxDecoration(
             color: buttonColor,
-            border: Border.all(width: 2, color: Colors.black),
-            borderRadius: BorderRadius.circular(8),
-            boxShadow: const [
+            border: Border.all(width: 2.sp, color: Colors.black),
+            borderRadius: BorderRadius.circular(8.sp),
+            boxShadow: [
               BoxShadow(
                 color: Colors.black,
-                offset: Offset(0, 3),
+                offset: Offset(0, 3.sp),
               )
             ],
           ),
           child: InkWell(
             onTap: disableButton ? null : onTap,
-            borderRadius: BorderRadius.circular(8),
+            borderRadius: BorderRadius.circular(8.sp),
             child: Padding(
-              padding: const EdgeInsets.symmetric(vertical: 12.0),
+              padding: EdgeInsets.symmetric(vertical: 12.0.sp),
               child: Center(
                 child: StyledText(
                   buttonText,

@@ -10,6 +10,7 @@ class DefaultContainer extends StatelessWidget {
   //default header settings
   final bool isLeadingShow;
   final bool? isPrevButtonHide;
+  final bool? isHeaderHide;
   final Widget? trailingChild;
   final String? titleText;
   final Widget? titleWidget;
@@ -24,6 +25,7 @@ class DefaultContainer extends StatelessWidget {
     this.customHeader,
     this.isLeadingShow = true,
     this.isPrevButtonHide = false,
+    this.isHeaderHide = false,
     this.trailingChild,
     this.titleText,
     this.titleWidget,
