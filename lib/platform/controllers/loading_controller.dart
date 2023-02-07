@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'dart:io';
 
+import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:flutter/material.dart';
 import 'package:gaza_go/constants/enums.dart';
 import 'package:gaza_go/constants/routes.dart';
@@ -38,6 +39,8 @@ class LoadingController extends GetxController {
 
   @override
   void onInit() async {
+    String userId = HiveStore.loadString(key: HiveKey.userId.name)!;
+    FirebaseCrashlytics.instance.setUserIdentifier(userId);
     await checkTermsAgreeStatus();
 
     super.onInit();
