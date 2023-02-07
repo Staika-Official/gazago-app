@@ -6,7 +6,14 @@ import 'package:gaza_go/platform/models/buy_tik_response_model.dart';
 import 'package:gaza_go/platform/models/pay_info_model.dart';
 import 'package:gaza_go/platform/models/pay_response_model.dart';
 
+import '../../constants/enums.dart';
+import '../stores/hive_store.dart';
+
 class WalletService {
+  static String? get userId {
+    return HiveStore.loadString(key: HiveKey.userId.name);
+  }
+
   static Future<void> getSpendingWalletBalances({required Function successCallback, Function? errorCallback}) async {
     Response res = await WalletApi.getSpendingWalletBalances();
     if (res.statusCode == 200) {
@@ -52,5 +59,9 @@ class WalletService {
     } else {
       if (errorCallback != null) errorCallback();
     }
+  }
+
+  static Future<void> createSolanaWallet(String publicKey, String encodeSecretKey) async {
+    await WalletApi.generateSolanaWallet(userId!, publicKey, encodeSecretKey);
   }
 }

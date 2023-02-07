@@ -54,8 +54,8 @@ class WalletApi {
   }
 
   // - 외부 월렛 api
-  static Future<Response> generateSolanaWallet() async {
-    return await Api.client(serviceUrl: ServiceUrl.walletService).post('/gererate-wallet');
+  static Future<Response> generateSolanaWallet(String userId, String publicKey, String encryptedSecretKey) async {
+    return await Api.client(serviceUrl: ServiceUrl.walletService).post('/gererate-wallet', data: {"userId": userId, "publicKey": publicKey, "encryptedSecretKey": encryptedSecretKey});
   }
 
   static Future<Response> postEncryptedSecretKey(String publicKey, String encryptedSecretKey) async {

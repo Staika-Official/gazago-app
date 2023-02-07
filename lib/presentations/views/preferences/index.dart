@@ -161,6 +161,15 @@ class Preferences extends StatelessWidget {
                   ),
                 );
               }),
+              Container(
+                width: double.infinity,
+                height: 6.sp,
+                color: const Color(0xFF23232D),
+              ),
+              PreferenceItem(
+                title: '실험실',
+                onTap: () => Get.toNamed(Routes.laboratory),
+              ),
               Obx(() {
                 if (debuggingController.isShowDebuggingMenu.value) {
                   return Column(

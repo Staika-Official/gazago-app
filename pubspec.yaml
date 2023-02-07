@@ -97,6 +97,8 @@ dependencies:
   throttling: ^1.0.0
   flutter_inappwebview: ^6.0.0-beta.22
   path_provider: ^2.0.11
+  solana: ^0.27.0
+  solana_web3: ^0.0.2+5
 
 
 
