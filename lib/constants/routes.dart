@@ -6,8 +6,6 @@ import 'package:gaza_go/presentations/views/activity/activity_challenges.dart';
 import 'package:gaza_go/presentations/views/activity/activity_loading.dart';
 import 'package:gaza_go/presentations/views/activity/challenge_map.dart';
 import 'package:gaza_go/presentations/views/activity/equipped_item.dart';
-import 'package:gaza_go/presentations/views/admob/rewarded.dart';
-import 'package:gaza_go/presentations/views/admob/rewarded_interstitial.dart';
 import 'package:gaza_go/presentations/views/archive/archive_detail.dart';
 import 'package:gaza_go/presentations/views/auth/account_restore.dart';
 import 'package:gaza_go/presentations/views/auth/signup_complete.dart';
@@ -129,12 +127,14 @@ class Routes {
     stepPage(name: Routes.preferenceBoard, page: const PreferenceBoard()),
     stepPage(name: Routes.noticeList, page: const NoticeList()),
     stepPage(name: Routes.noticeDetail, page: const NoticeDetail()),
-    stepPage(name: Routes.preferenceNotification, page: const NotificationAlert()),
+    stepPage(
+        name: Routes.preferenceNotification, page: const NotificationAlert()),
     stepPage(name: Routes.verificationTerms, page: const VerificationTerms()),
     stepPage(name: Routes.verificationName, page: const VerificationName()),
     stepPage(name: Routes.verificationDetail, page: const VerificationDetail()),
     stepPage(name: Routes.verificationPhone, page: const VerificationPhone()),
-    stepPage(name: Routes.verificationCertCode, page: const VerificationCertCode()),
+    stepPage(
+        name: Routes.verificationCertCode, page: const VerificationCertCode()),
     stepPage(name: Routes.myPage, page: const MyPage()),
     stepPage(name: Routes.editBiometrics, page: const EditBiometrics()),
     stepPage(name: Routes.withdrawConfirm, page: const WithdrawConfirm()),
@@ -156,18 +156,28 @@ class Routes {
     stepPage(name: Routes.requestInfo, page: const RequestInfo()),
     stepPage(name: Routes.responseErrorLogs, page: const ResponseErrorLogs()),
     stepPage(name: Routes.activityLogs, page: const ActivityLogs()),
-    stepPage(name: Routes.userExerciseDataLogs, page: const UserExerciseDataLogs()),
-    stepPage(name: Routes.positionLowDataLogs, page: const PositionLowDataLogs()),
+    stepPage(
+        name: Routes.userExerciseDataLogs, page: const UserExerciseDataLogs()),
+    stepPage(
+        name: Routes.positionLowDataLogs, page: const PositionLowDataLogs()),
     stepPage(name: Routes.shopItemDetail, page: const ShopItemDetail()),
-    stepPage(name: Routes.adMobRewarded, page: const AdmobRewarded()),
-    stepPage(name: Routes.adMobRewardedInterstitial, page: const AdmobRewardedInterstitial()),
   ];
 }
 
-GetPage stepPage({required String name, required Widget page, Transition? transition, Duration? transitionDuration, List<GetMiddleware>? middlewares}) {
-  return GetPage(name: name, page: () => _flavorBanner(child: page, show: F.name != 'prod'), transition: transition, transitionDuration: transitionDuration, middlewares: [
-    AuthMiddleware(),
-  ]);
+GetPage stepPage(
+    {required String name,
+    required Widget page,
+    Transition? transition,
+    Duration? transitionDuration,
+    List<GetMiddleware>? middlewares}) {
+  return GetPage(
+      name: name,
+      page: () => _flavorBanner(child: page, show: F.name != 'prod'),
+      transition: transition,
+      transitionDuration: transitionDuration,
+      middlewares: [
+        AuthMiddleware(),
+      ]);
 }
 
 Widget _flavorBanner({
@@ -179,7 +189,10 @@ Widget _flavorBanner({
             location: BannerLocation.topStart,
             message: F.name,
             color: Colors.green.withOpacity(0.6),
-            textStyle: const TextStyle(fontWeight: FontWeight.w700, fontSize: 12.0, letterSpacing: 1.0),
+            textStyle: const TextStyle(
+                fontWeight: FontWeight.w700,
+                fontSize: 12.0,
+                letterSpacing: 1.0),
             textDirection: TextDirection.ltr,
             child: child,
           )

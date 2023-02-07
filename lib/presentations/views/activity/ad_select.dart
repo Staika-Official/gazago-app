@@ -27,7 +27,7 @@ class AdSelect extends StatelessWidget {
                 mainAxisAlignment: MainAxisAlignment.center,
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
-                  StyledText(
+                  const StyledText(
                     '선택해주세요',
                     fontSize: 24,
                     fontWeight: 700,
@@ -73,7 +73,8 @@ class AdSelect extends StatelessWidget {
                       onTap: () => controller.showAdAndMoveActivity(),
                       borderRadius: BorderRadius.circular(14.sp),
                       child: Padding(
-                        padding: EdgeInsets.only(top: 32.sp, left: 10.sp, right: 10.sp),
+                        padding: EdgeInsets.only(
+                            top: 32.sp, left: 10.sp, right: 10.sp),
                         child: Column(
                           children: [
                             iconGo,
@@ -110,7 +111,8 @@ class AdSelect extends StatelessWidget {
               ),
             ),
             Padding(
-              padding: EdgeInsets.only(left: 36.0.sp, right: 36.0.sp, top: 14.0.sp),
+              padding:
+                  EdgeInsets.only(left: 36.0.sp, right: 36.0.sp, top: 14.0.sp),
               child: Stack(
                 clipBehavior: Clip.none,
                 children: [
@@ -135,7 +137,8 @@ class AdSelect extends StatelessWidget {
                       borderRadius: BorderRadius.circular(14.sp),
                     ),
                     child: InkWell(
-                      onTap: () => controller.handleMoveExerciseActive(controller.selectedExerciseType.value),
+                      onTap: () => controller.handleMoveExerciseActive(
+                          controller.selectedExerciseType.value),
                       borderRadius: BorderRadius.circular(14.sp),
                       child: Column(
                         mainAxisAlignment: MainAxisAlignment.center,
@@ -164,7 +167,10 @@ class AdSelect extends StatelessWidget {
                   height: 57.sp,
                   decoration: BoxDecoration(
                     color: const Color(0xff18191F),
-                    border: Border.all(width: 1, style: BorderStyle.solid, color: Colors.white),
+                    border: Border.all(
+                        width: 1,
+                        style: BorderStyle.solid,
+                        color: Colors.white),
                     borderRadius: BorderRadius.circular(113.sp),
                   ),
                   child: const Center(

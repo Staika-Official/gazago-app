@@ -32,7 +32,15 @@ mixin ActivityMixin {
 
   final Rx<CurrentUserStateModel> userState = Rx(CurrentUserStateModel());
   final RxInt loadingTime = RxInt(1);
-  final Rx<Position> currentLocation = Rx(Position(speed: 0, altitude: 0, accuracy: 0, heading: 0, latitude: 0, longitude: 0, speedAccuracy: 0, timestamp: DateTime.now()));
+  final Rx<Position> currentLocation = Rx(Position(
+      speed: 0,
+      altitude: 0,
+      accuracy: 0,
+      heading: 0,
+      latitude: 0,
+      longitude: 0,
+      speedAccuracy: 0,
+      timestamp: DateTime.now()));
   final RxList<UserExerciseModel> exerciseData = RxList.empty();
   final RxList<LatLng> coordinates = RxList.empty();
   final RxInt exerciseTime = RxInt(0);
@@ -126,7 +134,10 @@ mixin ActivityMixin {
     // List<double> speedList = exerciseData.where((data) => data.speed! > 0.833).map((filteredLocation) => filteredLocation.speed!).toList();
 
     // List<double> speedList = exerciseData.where((data) => data.speed! > 0.2 && data.speed! < 15).map((filteredLocation) => filteredLocation.speed!).toList();
-    List<double> speedList = exerciseData.where((data) => data.speed! > 0).map((filteredLocation) => filteredLocation.speed!).toList();
+    List<double> speedList = exerciseData
+        .where((data) => data.speed! > 0)
+        .map((filteredLocation) => filteredLocation.speed!)
+        .toList();
     return RxDouble(calculateAvgSpeed(speedList));
   }
 
@@ -152,7 +163,8 @@ mixin ActivityMixin {
   }
 
   RxDouble get highestAltitude {
-    List<double> altitudeList = exerciseData.map((location) => location.altitude!).toList();
+    List<double> altitudeList =
+        exerciseData.map((location) => location.altitude!).toList();
     return RxDouble(highestClimbed(altitudeList));
   }
 
@@ -211,7 +223,9 @@ mixin ActivityMixin {
         exerciseModel.altitude = highestAltitude.value;
         exerciseModel.time = exerciseTime.value;
         exerciseModel.locations = coordinatesToString(coordinates);
-        exerciseModel.locationUpdateTime = exerciseData.isNotEmpty ? exerciseData.last.locationUpdateTime : DateTime.now();
+        exerciseModel.locationUpdateTime = exerciseData.isNotEmpty
+            ? exerciseData.last.locationUpdateTime
+            : DateTime.now();
 
         HiveStore.saveCurrentUserState(
           userState: CurrentUserStateModel(
@@ -222,7 +236,8 @@ mixin ActivityMixin {
         );
 
         if (HiveStore.load(key: HiveKey.isDebuggingMode.name)) {
-          List userExerciseDataLogs = HiveStore.load(key: HiveKey.userExerciseDataLogs.name) ?? [];
+          List userExerciseDataLogs =
+              HiveStore.load(key: HiveKey.userExerciseDataLogs.name) ?? [];
 
           var logForm = {
             'exerciseInfo': '===================================='
@@ -248,9 +263,11 @@ mixin ActivityMixin {
     }
 
     int savedSteps = HiveStore.load(key: HiveKey.savedStepCount.name) ?? 0;
-    stepSubscription ??= Pedometer.stepCountStream.listen((StepCount event) async {
+    stepSubscription ??=
+        Pedometer.stepCountStream.listen((StepCount event) async {
       print(event.steps);
-      bool isExerciseStarted = HiveStore.load(key: HiveKey.savedStepInitialized.name) ?? false;
+      bool isExerciseStarted =
+          HiveStore.load(key: HiveKey.savedStepInitialized.name) ?? false;
       if (!isExerciseStarted) {
         HiveStore.save(key: HiveKey.dummyStepCount.name, value: event.steps);
         HiveStore.save(key: HiveKey.savedStepInitialized.name, value: true);
@@ -279,18 +296,26 @@ mixin ActivityMixin {
     UserExerciseModel? prevData;
     if (exerciseData.length > 1) {
       sortedList = [...exerciseData];
-      sortedList.sort((a, b) => (b.locationUpdateTime!.compareTo(a.locationUpdateTime!)));
-      prevData = sortedList.firstWhere((sortedData) => (DateTime.now().subtract(Duration(seconds: stopTimeInterval)).compareTo(sortedData.locationUpdateTime!) == 1),
+      sortedList.sort(
+          (a, b) => (b.locationUpdateTime!.compareTo(a.locationUpdateTime!)));
+      prevData = sortedList.firstWhere(
+          (sortedData) => (DateTime.now()
+                  .subtract(Duration(seconds: stopTimeInterval))
+                  .compareTo(sortedData.locationUpdateTime!) ==
+              1),
           orElse: () => UserExerciseModel(steps: 0));
     }
     int prevStep = prevData != null ? prevData.steps! : 0;
-    int currentStep = exerciseData.isNotEmpty && exerciseData.length > 2 ? exerciseData.last.steps! : 0;
+    int currentStep = exerciseData.isNotEmpty && exerciseData.length > 2
+        ? exerciseData.last.steps!
+        : 0;
     // int currentStep = 10;
 
     // 15초 이상 걷기 감지가 되지 않을 경우에는 속도 0으로 표시
     print('$currentStep - $prevStep > $stepDifference');
     if (currentStep - prevStep > stepDifference) {
-      calRealtimeSpeed.value = (exerciseState.value != ExerciseState.ongoing) ? 0 : speed;
+      calRealtimeSpeed.value =
+          (exerciseState.value != ExerciseState.ongoing) ? 0 : speed;
     }
 
     realTimeSpeed.value = calRealtimeSpeed.value;
@@ -301,7 +326,9 @@ mixin ActivityMixin {
       pedestrianStatusSubscription = null;
     }
 
-    pedestrianStatusSubscription ??= Pedometer.pedestrianStatusStream.skip(1).listen((PedestrianStatus event) {
+    pedestrianStatusSubscription ??= Pedometer.pedestrianStatusStream
+        .skip(1)
+        .listen((PedestrianStatus event) {
       pedestrianStatus.value = event.status.toUpperCase();
     });
     stepSubscription!.onError((error) {
@@ -309,10 +336,13 @@ mixin ActivityMixin {
     });
   }
 
-  void startExercise(ExerciseType exerciseType, ChallengeModel? challenge, {String? adId}) async {
-    if (Get.isDialogOpen != null && Get.isDialogOpen!) Get.until((route) => Get.isDialogOpen == false);
+  void startExercise(ExerciseType exerciseType, ChallengeModel? challenge,
+      {String? adId}) async {
+    if (Get.isDialogOpen != null && Get.isDialogOpen!)
+      Get.until((route) => Get.isDialogOpen == false);
     if (!batchIsInProgress()) {
-      if (globalController.connectivityResult.value != ConnectivityResult.none) {
+      if (globalController.connectivityResult.value !=
+          ConnectivityResult.none) {
         await ActivityService.fetchStartUserExercises(
           UserExerciseModel(
             userId: int.parse(
@@ -321,14 +351,17 @@ mixin ActivityMixin {
               )!,
             ),
             userNickname: HiveStore.loadString(key: HiveKey.nickname.name),
-            userProfileImageUrl: HiveStore.loadString(key: HiveKey.profileImageUrl.name),
+            userProfileImageUrl:
+                HiveStore.loadString(key: HiveKey.profileImageUrl.name),
             type: exerciseType.value,
             steps: 0,
             speed: 0,
             distance: 0,
             altitude: currentLocation.value.altitude,
             time: 0,
-            startPoint: challenge != null ? challenge.firstName : '${currentLocation.value.longitude}, ${currentLocation.value.latitude}',
+            startPoint: challenge != null
+                ? challenge.firstName
+                : '${currentLocation.value.longitude}, ${currentLocation.value.latitude}',
             challengeId: challenge?.id,
             locationUpdateTime: DateTime.now(),
             adId: adId,
@@ -337,7 +370,8 @@ mixin ActivityMixin {
           successCallback: (UserExerciseModel userExerciseData) {
             userState.update((state) => state!.exercise = userExerciseData);
             exerciseState.value = ExerciseState.ongoing;
-            HiveStore.save(key: HiveKey.savedStepInitialized.name, value: false);
+            HiveStore.save(
+                key: HiveKey.savedStepInitialized.name, value: false);
             HiveStore.save(key: HiveKey.savedStepCount.name, value: 0);
             initExerciseStats();
             initStream();
@@ -415,7 +449,8 @@ mixin ActivityMixin {
       }
     }
 
-    if (globalController.connectivityResult.value != ConnectivityResult.none && !batchIsInProgress()) {
+    if (globalController.connectivityResult.value != ConnectivityResult.none &&
+        !batchIsInProgress()) {
       isPaused != null && isPaused
           ? await ActivityService.fetchPausedUserExercises(
               userExerciseData.value,
@@ -433,20 +468,36 @@ mixin ActivityMixin {
                 updateLocalUserState(newUserState);
 
                 if (userState.value.state!.stamina! < 30) {
-                  if (userState.value.state!.stamina! == 0 && !zeroStaminaNotified.value) {
-                    showLocalNotification(notificationType: NotificationType.staminaDepleted, title: '체력 충전 알림', message: '지금 체력이 0이 되어 GO보상이 되지 않고 있어요. 체력 충전하러 가자GO~~');
+                  if (userState.value.state!.stamina! == 0 &&
+                      !zeroStaminaNotified.value) {
+                    showLocalNotification(
+                        notificationType: NotificationType.staminaDepleted,
+                        title: '체력 충전 알림',
+                        message:
+                            '지금 체력이 0이 되어 GO보상이 되지 않고 있어요. 체력 충전하러 가자GO~~');
                     zeroStaminaNotified.value = true;
                   } else if (!lowStaminaNotified.value) {
-                    showLocalNotification(notificationType: NotificationType.staminaLow, title: '체력 충전 알림', message: '체력이 부족하면 GO보상이 되지 않아요. 체력 충전하러 가자GO~~');
+                    showLocalNotification(
+                        notificationType: NotificationType.staminaLow,
+                        title: '체력 충전 알림',
+                        message: '체력이 부족하면 GO보상이 되지 않아요. 체력 충전하러 가자GO~~');
                     lowStaminaNotified.value = true;
                   }
                 }
-                if (userState.value.shoes!.durability! < 30 && !zeroDurabilityNotified.value) {
+                if (userState.value.shoes!.durability! < 30 &&
+                    !zeroDurabilityNotified.value) {
                   if (userState.value.shoes!.durability! == 0) {
-                    showLocalNotification(notificationType: NotificationType.durabilityDepleted, title: '아이템 수리 알림', message: '지금 내구도(신발)가 0이 되어 GO보상이 되지 않고 있어요. 내구도 보충하러 가자GO~~');
+                    showLocalNotification(
+                        notificationType: NotificationType.durabilityDepleted,
+                        title: '아이템 수리 알림',
+                        message:
+                            '지금 내구도(신발)가 0이 되어 GO보상이 되지 않고 있어요. 내구도 보충하러 가자GO~~');
                     zeroDurabilityNotified.value = true;
                   } else if (!lowDurabilityNotified.value) {
-                    showLocalNotification(notificationType: NotificationType.durabilityLow, title: '아이템 수리 알림', message: '내구도(신발)가 부족하면 GO보상이 되지 않아요. 내구도 보충하러 가자GO~~');
+                    showLocalNotification(
+                        notificationType: NotificationType.durabilityLow,
+                        title: '아이템 수리 알림',
+                        message: '내구도(신발)가 부족하면 GO보상이 되지 않아요. 내구도 보충하러 가자GO~~');
                     lowDurabilityNotified.value = true;
                   }
                 }
@@ -474,28 +525,58 @@ mixin ActivityMixin {
     );
   }
 
-  void onTapDownStop(TapDownDetails tapDownDetails, ChallengeModel challenge, {String? source, required ActivityController controller}) async {
+  void onTapDownStop(TapDownDetails tapDownDetails, ChallengeModel challenge,
+      {String? source, required ActivityController controller}) async {
     Duration counter = Duration.zero;
 
     if (stopTimer != null) {
       initializeStopTimer();
     }
-    await controller.onLoadExerciseEndAd();
+    print(controller.userState.value.exercise?.type);
+    String endAd = await controller
+        .checkActivityType(controller.userState.value.exercise?.type);
+    await controller.handleSelectAdType(
+        controller.userState.value.exercise?.type == 'HIKING'
+            ? 'endHikingAd'
+            : controller.userState.value.exercise?.type == 'WALKING'
+                ? 'endWalkingAd'
+                : 'endFamousAd');
+    DateTime? date = HiveStore.load(
+        key: controller.userState.value.exercise?.type == 'HIKING'
+            ? 'endHikingAd'
+            : controller.userState.value.exercise?.type == 'WALKING'
+                ? 'endWalkingAd'
+                : 'endFamousAd');
+    print(date);
+    DateTime? viewableTime = date?.add(const Duration(hours: 1));
+    DateTime now = DateTime.now();
     stopTimer = Timer.periodic(const Duration(milliseconds: 10), (timer) {
       if (counter == const Duration(milliseconds: 2500)) {
         initializeStopTimer();
         if (source != null && source == 'pendingExerciseDialog') {
-          // endExercise(challenge, source: source);
           Get.back();
         }
-
-        if (controller.isAbleAdView.value == true) {
-          showEndExerciseAdDialog(challenge, controller);
+        if (date == null) {
+          if (controller.ads[endAd] != null) {
+            showEndExerciseAdDialog(challenge, controller);
+          } else {
+            if (source != null && source == 'pendingExerciseDialog') {
+              endExercise(challenge, source: source);
+            } else {
+              showEndExerciseDialog(challenge);
+            }
+          }
         } else {
-          showEndExerciseDialog(challenge);
+          if (viewableTime!.isBefore(now)) {
+            showEndExerciseAdDialog(challenge, controller);
+          } else {
+            if (source != null && source == 'pendingExerciseDialog') {
+              endExercise(challenge, source: source);
+            } else {
+              showEndExerciseDialog(challenge);
+            }
+          }
         }
-
-        // showEndExerciseDialog(challenge);
       } else {
         counter = counter + const Duration(milliseconds: 10);
         stopProgress.value += (10 / 2500);
@@ -526,18 +607,21 @@ mixin ActivityMixin {
     pedestrianStatusSubscription = null;
     exerciseState.value = ExerciseState.paused;
     HiveStore.save(key: HiveKey.savedStepInitialized.name, value: false);
-    updateExercise(isPaused: true, source: 'pauseExercise${updateTimer.hashCode}');
+    updateExercise(
+        isPaused: true, source: 'pauseExercise${updateTimer.hashCode}');
+  }
+
+  void showEndExerciseAdDialog(
+      ChallengeModel challenge, ActivityController controller) {
+    showEndExerciseAdAlert(challenge, controller);
   }
 
   void showEndExerciseDialog(ChallengeModel challenge) {
     showEndExerciseAlert(this, challenge);
   }
 
-  void showEndExerciseAdDialog(ChallengeModel challenge, ActivityController controller) {
-    showEndExerciseAdAlert(challenge, controller);
-  }
-
-  Future<void> endExercise(ChallengeModel challenge, {String? source, String? adId}) async {
+  Future<void> endExercise(ChallengeModel challenge,
+      {String? source, String? adId}) async {
     if (adId != null) {
       userState.update(
         (state) {
@@ -546,6 +630,7 @@ mixin ActivityMixin {
       );
     }
     if (!batchIsInProgress()) {
+      print(source);
       await ActivityService.fetchEndUserExercises(
         userExerciseData.value,
         source: source,
@@ -559,11 +644,18 @@ mixin ActivityMixin {
                 state?.shoes = newUserState.shoes;
               },
             );
-            HiveStore.deleteMultipleKeys(keys: [HiveKey.userState.name, HiveKey.endExerciseRequested.name]);
+            HiveStore.deleteMultipleKeys(keys: [
+              HiveKey.userState.name,
+              HiveKey.endExerciseRequested.name
+            ]);
             resetVariables(challenge);
             resetTimer();
             resetSubscriptions();
-            if (['showEndExerciseAlert', 'showEndADExerciseAlert', 'pendingExerciseDialog'].any((src) => src == source)) {
+            if ([
+              'showEndExerciseAlert',
+              'showEndADExerciseAlert',
+              'pendingExerciseDialog'
+            ].any((src) => src == source)) {
               moveToExerciseDetail(userState.value.exercise!.id!);
             }
           }
@@ -632,6 +724,7 @@ mixin ActivityMixin {
   void moveToExerciseDetail(int exerciseId) {
     Get.until((route) => route.isFirst);
     Get.find<HomeMenuController>().selectMenu(0);
+    // Get.put(HomeMenuController()).selectMenu(0);
     if (Get.isRegistered<ArchiveController>()) {
       Get.find<ArchiveController>().toDetail(exerciseId);
     } else {
@@ -644,7 +737,9 @@ mixin ActivityMixin {
   }
 
   Future<void> setMarkerImages() async {
-    startMarkerImage.value = await OverlayImage.fromAssetImage(assetName: 'assets/icons/start.png');
-    finishMarkerImage.value = await OverlayImage.fromAssetImage(assetName: 'assets/icons/finish.png');
+    startMarkerImage.value =
+        await OverlayImage.fromAssetImage(assetName: 'assets/icons/start.png');
+    finishMarkerImage.value =
+        await OverlayImage.fromAssetImage(assetName: 'assets/icons/finish.png');
   }
 }

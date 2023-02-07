@@ -78,6 +78,12 @@ enum HiveKey {
   needRouteToGoWallet,
   needToForceLogout,
   hasForcedLogout,
+  startFamousAd,
+  startHikingAd,
+  startWalkingAd,
+  endFamousAd,
+  endHikingAd,
+  endWalkingAd,
 }
 
 enum ResponseStatus {

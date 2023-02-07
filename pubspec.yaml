@@ -98,7 +98,9 @@ dependencies:
   flutter_inappwebview: ^6.0.0-beta.22
   google_mobile_ads: ^2.3.0
   path_provider: ^2.0.11
-  advertising_id: ^2.4.0
+  advertising_id: 2.3.0
+  device_info_plus: ^8.0.0
+
 
 
 

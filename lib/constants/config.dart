@@ -5,3 +5,4 @@ double gpsAccuracy = 30;
 LocationAccuracy locationAccuracyQuality = LocationAccuracy.high;
 int stopTimeInterval = 5;
 int stepDifference = 0;
+List<String> qaa = [];
