@@ -158,46 +158,46 @@ class MyPage extends StatelessWidget {
                               ),
                             ),
                           )
-                        : Container(
-                            decoration: BoxDecoration(
-                              border: BorderDirectional(
-                                bottom: BorderSide(
-                                  color: popupBgColor,
-                                  width: 2.sp,
+                        : InkWell(
+                            onTap: () => controller.toggleEditMode(),
+                            radius: 50.sp,
+                            child: Container(
+                              decoration: BoxDecoration(
+                                border: BorderDirectional(
+                                  bottom: BorderSide(
+                                    color: popupBgColor,
+                                    width: 2.sp,
+                                  ),
                                 ),
                               ),
-                            ),
-                            child: Padding(
-                              padding: EdgeInsets.symmetric(horizontal: 10.0.sp, vertical: 2.sp),
-                              child: Row(
-                                mainAxisSize: MainAxisSize.min,
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                crossAxisAlignment: CrossAxisAlignment.center,
-                                children: [
-                                  controller.profile.value.provider == 'APPLE'
-                                      ? StyledText(
-                                          controller.profile.value.nickname!.split('@')[0],
-                                          fontSize: 18,
-                                          fontWeight: 500,
-                                        )
-                                      : StyledText(
-                                          controller.profile.value.nickname!,
-                                          fontSize: 18,
-                                          fontWeight: 500,
-                                        ),
-                                  Padding(
-                                    padding: EdgeInsets.only(left: 5.sp, bottom: 4.sp),
-                                    child: InkWell(
-                                      onTap: () => controller.toggleEditMode(),
-                                      radius: 50.sp,
+                              child: Padding(
+                                padding: EdgeInsets.symmetric(horizontal: 10.0.sp, vertical: 2.sp),
+                                child: Row(
+                                  mainAxisSize: MainAxisSize.min,
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  crossAxisAlignment: CrossAxisAlignment.center,
+                                  children: [
+                                    controller.profile.value.provider == 'APPLE'
+                                        ? StyledText(
+                                            controller.profile.value.nickname!.split('@')[0],
+                                            fontSize: 18,
+                                            fontWeight: 500,
+                                          )
+                                        : StyledText(
+                                            controller.profile.value.nickname!,
+                                            fontSize: 18,
+                                            fontWeight: 500,
+                                          ),
+                                    Padding(
+                                      padding: EdgeInsets.only(left: 5.sp, bottom: 4.sp),
                                       child: Icon(
                                         Icons.edit,
                                         color: const Color(0xFFA5A5A5),
                                         size: 14.sp,
                                       ),
-                                    ),
-                                  )
-                                ],
+                                    )
+                                  ],
+                                ),
                               ),
                             ),
                           ),

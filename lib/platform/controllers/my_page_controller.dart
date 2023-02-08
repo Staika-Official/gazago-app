@@ -1,4 +1,4 @@
-import 'dart:developer';
+import 'dart:async';
 
 import 'package:dio/dio.dart' as dio;
 import 'package:flutter/cupertino.dart';
@@ -6,8 +6,10 @@ import 'package:gaza_go/platform/controllers/preference_controller.dart';
 import 'package:gaza_go/platform/helpers/alert_helper.dart';
 import 'package:gaza_go/platform/models/user_account_model.dart';
 import 'package:gaza_go/platform/services/uaa_service.dart';
+import 'package:gaza_go/presentations/components/alert_ui_list.dart';
 import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:permission_handler/permission_handler.dart' as ph;
 
 class MyPageController extends GetxController {
   // final PreferenceController? preferenceController;
@@ -93,11 +95,30 @@ class MyPageController extends GetxController {
   }
 
   void pickImage() async {
-    pickedImage.value = await _picker.pickImage(
-      source: ImageSource.gallery,
-      imageQuality: 50,
-    );
-    inspect(pickedImage.value?.path);
+    bool hasPhotoPermission = false;
+    ph.PermissionStatus permissionStatus = await ph.Permission.photos.status;
+    hasPhotoPermission = [ph.PermissionStatus.granted, ph.PermissionStatus.restricted, ph.PermissionStatus.limited].any((permission) => permission == permissionStatus);
+    if (!hasPhotoPermission) {
+      hasPhotoPermission = await showGalleryPermissionAlert(this);
+    }
+
+    if (hasPhotoPermission) {
+      pickedImage.value = await _picker.pickImage(
+        source: ImageSource.gallery,
+        imageQuality: 50,
+      );
+    }
+  }
+
+  Future<bool> requestPhotoPermission() async {
+    ph.PermissionStatus permissionStatus;
+    permissionStatus = await ph.Permission.photos.request();
+    if ([ph.PermissionStatus.granted, ph.PermissionStatus.restricted, ph.PermissionStatus.limited].any((permission) => permission == permissionStatus)) {
+      return true;
+    } else {
+      ph.openAppSettings();
+      return false;
+    }
   }
 
   void updateNickName(nickname) {
