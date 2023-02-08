@@ -53,7 +53,7 @@ void showShoeRepairSlider(InventoryController controller, int feeTikDurability) 
           Padding(
             padding: EdgeInsets.only(top: 12.0.sp),
             child: StyledText(
-              '현재 신발 내구도 ${controller.equippedShoe.value.durability.toInt()}',
+              '현재 신발 내구도 ${formatDecimalPlaces(controller.equippedShoe.value.durability, 2)}',
               fontSize: 16,
               lineHeight: 22,
               fontWeight: 500,
@@ -187,7 +187,7 @@ void showRepairStatSlider(ActivityController controller, StatModel stat, int fee
                     color: deepGrayColor,
                   )
                 : StyledText(
-                    '현재 신발 내구도 ${stat.currentStat}',
+                    '현재 신발 내구도 ${formatDecimalPlaces(stat.currentStat, 2)}',
                     fontSize: 16,
                     lineHeight: 22,
                     fontWeight: 500,

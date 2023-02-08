@@ -176,7 +176,7 @@ class ActivityHome extends StatelessWidget {
                               child: Padding(
                                 padding: EdgeInsets.only(left: 5.0.sp),
                                 child: StyledText(
-                                  stat.currentStat.toString(),
+                                  formatDecimalPlaces(stat.currentStat, 2),
                                   fontWeight: 800,
                                   fontSize: 15,
                                   lineHeight: 15,
