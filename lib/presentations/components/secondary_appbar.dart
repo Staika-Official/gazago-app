@@ -64,6 +64,7 @@ class SecondaryAppbar extends StatelessWidget implements PreferredSizeWidget {
                       onPressed: () => Get.back(),
                       padding: EdgeInsets.zero,
                       iconSize: 30,
+                      splashRadius: 20.sp,
                       icon: const Icon(
                         Icons.chevron_left_sharp,
                         color: Colors.white,
@@ -72,10 +73,12 @@ class SecondaryAppbar extends StatelessWidget implements PreferredSizeWidget {
                   )
                 : IconButton(
                     onPressed: () => Get.toNamed(Routes.preferences),
-                    padding: EdgeInsets.symmetric(horizontal: 12.sp),
-                    icon: iconHeaderAvatar,
+                    // padding: EdgeInsets.symmetric(horizontal: 12.sp),
+                    icon: iconHeaderGear,
+                    splashRadius: 20.sp,
+                    iconSize: 30,
                     constraints: BoxConstraints(
-                      minWidth: 24.sp,
+                      minWidth: 30.sp,
                     ),
                   ),
             Row(
@@ -119,12 +122,16 @@ class SecondaryAppbar extends StatelessWidget implements PreferredSizeWidget {
                     ),
                   ),
                 ),
-                IconButton(
-                  padding: EdgeInsets.only(left: 12.sp),
-                  onPressed: () => Get.toNamed(Routes.wallet),
-                  icon: iconHeaderWallet,
-                  constraints: BoxConstraints(
-                    minWidth: 24.sp,
+                Padding(
+                  padding: EdgeInsets.only(left: 4.sp),
+                  child: IconButton(
+                    onPressed: () => Get.toNamed(Routes.wallet),
+                    icon: iconHeaderWallet,
+                    splashRadius: 20.sp,
+                    iconSize: 30,
+                    constraints: BoxConstraints(
+                      minWidth: 30.sp,
+                    ),
                   ),
                 )
               ],

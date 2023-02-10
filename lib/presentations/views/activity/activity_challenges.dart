@@ -319,7 +319,7 @@ class ActivityChallenges extends StatelessWidget {
             //         ],
             //       ),
             //       child: const StyledText(
-            //         '첼린지 리스트',
+            //         '챌린지 리스트',
             //         fontSize: 16,
             //         fontWeight: 500,
             //         lineHeight: 22,

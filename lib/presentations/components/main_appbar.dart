@@ -32,21 +32,22 @@ class MainAppbar extends StatelessWidget implements PreferredSizeWidget {
           Row(
             children: [
               IconButton(
-                padding: EdgeInsets.symmetric(horizontal: 8.0.sp),
                 onPressed: () => Get.toNamed(Routes.preferences),
-                icon: iconHeaderAvatar,
+                icon: iconHeaderGear,
                 splashRadius: 20.sp,
+                iconSize: 30,
                 constraints: BoxConstraints(
-                  minWidth: 24.sp,
+                  minWidth: 30.sp,
                 ),
               ),
               IconButton(
-                padding: EdgeInsets.symmetric(horizontal: 8.0.sp),
+                // padding: EdgeInsets.symmetric(horizontal: 8.0.sp),
                 onPressed: () => Get.toNamed(Routes.wallet),
                 icon: iconHeaderWallet,
                 splashRadius: 20.sp,
+                iconSize: 30,
                 constraints: BoxConstraints(
-                  minWidth: 24.sp,
+                  minWidth: 30.sp,
                 ),
               ),
             ],
