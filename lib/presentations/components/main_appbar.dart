@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:gaza_go/constants/routes.dart';
+import 'package:gaza_go/platform/controllers/wallet_master_controller.dart';
 import 'package:gaza_go/presentations/styles/colors.dart';
 import 'package:gaza_go/presentations/styles/icons.dart';
 import 'package:get/get.dart';
@@ -21,13 +22,12 @@ class MainAppbar extends StatelessWidget implements PreferredSizeWidget {
       title: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
-          IconButton(
+          Container(
             padding: EdgeInsets.symmetric(vertical: 3.0.sp),
-            onPressed: null,
-            icon: iconHeaderLogo,
             constraints: BoxConstraints(
               minWidth: 100.sp,
             ),
+            child: iconHeaderLogo,
           ),
           Row(
             children: [
@@ -41,8 +41,7 @@ class MainAppbar extends StatelessWidget implements PreferredSizeWidget {
                 ),
               ),
               IconButton(
-                // padding: EdgeInsets.symmetric(horizontal: 8.0.sp),
-                onPressed: () => Get.toNamed(Routes.wallet),
+                onPressed: () => Get.find<WalletMasterController>().moveToWallet(),
                 icon: iconHeaderWallet,
                 splashRadius: 20.sp,
                 iconSize: 30,

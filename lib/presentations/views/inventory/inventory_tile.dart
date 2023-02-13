@@ -71,7 +71,7 @@ class InventoryTile extends StatelessWidget {
                     child: imageUrl != ''
                         ? CachedNetworkImage(
                             imageUrl: imageUrl,
-                            placeholder: (context, url) => const CircularProgressIndicator(),
+                            placeholder: (context, url) => const Center(child: SizedBox.square(dimension: 40, child: CircularProgressIndicator())),
                             errorWidget: (context, url, error) => iconNoBadge,
                             fit: BoxFit.contain,
                           )
