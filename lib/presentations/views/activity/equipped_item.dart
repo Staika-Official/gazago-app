@@ -26,8 +26,7 @@ class EquippedItems extends StatelessWidget {
           ),
         ),
         child: ConstrainedBox(
-          constraints:
-              BoxConstraints(maxHeight: MediaQuery.of(context).size.height),
+          constraints: BoxConstraints(maxHeight: MediaQuery.of(context).size.height),
           child: Column(
             mainAxisSize: MainAxisSize.max,
             children: [

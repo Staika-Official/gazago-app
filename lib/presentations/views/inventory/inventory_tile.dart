@@ -61,10 +61,7 @@ class InventoryTile extends StatelessWidget {
           alignment: Alignment.bottomCenter,
           children: [
             Padding(
-              padding: badgeId != null && badgeId != -1
-                  ? EdgeInsets.only(
-                      top: 10.0.sp, bottom: 30.sp, left: 35.sp, right: 35.sp)
-                  : EdgeInsets.all(index < 1 ? 20.sp : 10.0.sp),
+              padding: badgeId != null && badgeId != -1 ? EdgeInsets.only(top: 10.0.sp, bottom: 30.sp, left: 35.sp, right: 35.sp) : EdgeInsets.all(index < 1 ? 20.sp : 10.0.sp),
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 crossAxisAlignment: CrossAxisAlignment.center,
@@ -111,8 +108,7 @@ class InventoryTile extends StatelessWidget {
               ),
             durability != null
                 ? Padding(
-                    padding: EdgeInsets.symmetric(
-                        horizontal: 15.0.sp, vertical: 9.0.sp),
+                    padding: EdgeInsets.symmetric(horizontal: 15.0.sp, vertical: 9.0.sp),
                     child: SizedBox(
                       height: 22.sp,
                       child: Stack(
@@ -147,25 +143,19 @@ class InventoryTile extends StatelessWidget {
                                         ),
                                         durability! > 1.0
                                             ? Padding(
-                                                padding: EdgeInsets.only(
-                                                    top: 2.0.sp, left: 2.0.sp),
-                                                child: LayoutBuilder(builder:
-                                                    (context, constraints) {
+                                                padding: EdgeInsets.only(top: 2.0.sp, left: 2.0.sp),
+                                                child: LayoutBuilder(builder: (context, constraints) {
                                                   return Container(
                                                     height: 18.sp,
                                                     margin: EdgeInsets.zero,
                                                     width: durability! > 20
-                                                        ? constraints.maxWidth /
-                                                            (100 / durability!)
+                                                        ? constraints.maxWidth / (100 / durability!)
                                                         : durability! < 2
                                                             ? 0
                                                             : 34,
                                                     decoration: BoxDecoration(
-                                                      color: durability! < 30
-                                                          ? textRedColor
-                                                          : purpleColor,
-                                                      borderRadius:
-                                                          BorderRadius.all(
+                                                      color: durability! < 30 ? textRedColor : purpleColor,
+                                                      borderRadius: BorderRadius.all(
                                                         Radius.circular(50.sp),
                                                       ),
                                                     ),
@@ -187,8 +177,7 @@ class InventoryTile extends StatelessWidget {
                               Row(
                                 children: [
                                   Padding(
-                                    padding: EdgeInsets.symmetric(
-                                        horizontal: 5.0.sp),
+                                    padding: EdgeInsets.symmetric(horizontal: 5.0.sp),
                                     child: iconShoes,
                                   ),
                                 ],
@@ -220,8 +209,7 @@ class InventoryTile extends StatelessWidget {
                                   ],
                                 ),
                                 child: InkWell(
-                                  onTap: () =>
-                                      controller.showShoesRepairPopup(id),
+                                  onTap: () => controller.showShoesRepairPopup(id),
                                   child: CircleAvatar(
                                     radius: 10.sp,
                                     backgroundColor: purpleColor,

@@ -1,7 +1,5 @@
 import 'dart:async';
 
-import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:device_info_plus/device_info_plus.dart';
 import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -45,21 +43,6 @@ void initDebuggingMode() {
   HiveStore.save(key: HiveKey.responseErrorLogs.name, value: []);
 }
 
-initGetDeviceInfo() async {
-  final firestore = FirebaseFirestore.instance;
-
-  await firestore.collection('adPermissionId').get().then((event) {
-    for (var doc in event.docs) {
-      print("${doc.id} => ${doc.data()}");
-    }
-  });
-
-  final deviceInfoPlugin = DeviceInfoPlugin();
-  final deviceInfo = await deviceInfoPlugin.deviceInfo;
-  final allInfo = deviceInfo.data;
-  print(deviceInfo);
-}
-
 void main() async {
   await runZonedGuarded(() async {
     WidgetsFlutterBinding.ensureInitialized(); // async로 할 때 반드시 호출
@@ -95,8 +78,7 @@ class MyApp extends StatelessWidget {
   const MyApp({super.key});
 
   static FirebaseAnalytics analytics = FirebaseAnalytics.instance;
-  static FirebaseAnalyticsObserver observer =
-      FirebaseAnalyticsObserver(analytics: analytics);
+  static FirebaseAnalyticsObserver observer = FirebaseAnalyticsObserver(analytics: analytics);
 
   @override
   Widget build(BuildContext context) {
@@ -126,11 +108,9 @@ class MyApp extends StatelessWidget {
           builder: (context, child) {
             // 시스템 폰트 크기 무시
             return ScrollConfiguration(
-              behavior:
-                  const MaterialScrollBehavior().copyWith(overscroll: false),
+              behavior: const MaterialScrollBehavior().copyWith(overscroll: false),
               child: MediaQuery(
-                data: MediaQuery.of(context)
-                    .copyWith(textScaleFactor: 1), //텍스트가 시스템 설정에 영향받지 않음
+                data: MediaQuery.of(context).copyWith(textScaleFactor: 1), //텍스트가 시스템 설정에 영향받지 않음
                 child: child!,
               ),
             );
