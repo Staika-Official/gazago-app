@@ -10,6 +10,10 @@ import 'package:gaza_go/flavors.dart';
 
 class SolanaController extends GetxController {
 
+  final RxString symbol = RxString('SOL');
+  final RxString toAddress = RxString('');
+  final RxInt amount = RxInt(0);
+
   @override
   void onInit() async {
     super.onInit();
@@ -45,4 +49,16 @@ class SolanaController extends GetxController {
   /*void sendTransfer(String toAddress, String symbol, String tokenAddress, int decimals, int amount) async {
     await WalletService.sendTransfer(toAddress, symbol, tokenAddress, decimals, amount);
   }*/
+
+  void setSymbol(String? changeSymbol) {
+    symbol.value = changeSymbol!;
+  }
+
+  void setToAddress(String changeToAddress) {
+    toAddress.value = changeToAddress;
+  }
+
+  void setAmount(String changeAmount) {
+    amount.value = int.parse(changeAmount);
+  }
 }
