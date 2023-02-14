@@ -5,7 +5,7 @@ import 'package:get/get.dart';
 class InventoryMixin {
   final RxList<InventoryBadgeListModel> userBadgesList = RxList.empty();
 
-  void getUserBadgesList() async {
+  Future<void> getUserBadgesList() async {
     await BadgeService.getUserBadgesList(
       successCallback: (badges) {
         userBadgesList.value = badges;

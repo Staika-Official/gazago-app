@@ -27,14 +27,14 @@ class InventoryController extends GetxController with ScrollMixin, LinearProgres
   RxList<InventoryBadgeModel> syntheticBadgeList = RxList.empty();
 
   final RxBool isShoe = RxBool(false);
-  RxInt count = 0.obs;
-  RxString getBadgeDate = RxString('');
-  RxInt remainDurability = RxInt(0);
-  RxInt repairDurability = RxInt(0);
-  RxInt costTik = RxInt(0);
+  final RxInt count = 0.obs;
+  final RxString getBadgeDate = RxString('');
+  final RxInt remainDurability = RxInt(0);
+  final RxInt repairDurability = RxInt(0);
+  final RxInt costTik = RxInt(0);
 
   final RxDouble currentSliderValue = RxDouble(0);
-  RxList<InventoryItemModel> equippedItemList = RxList.empty();
+  final RxList<InventoryItemModel> equippedItemList = RxList.empty();
 
   ScrollController singleChildScrollController = ScrollController();
   ScrollController itemScrollController = ScrollController(keepScrollOffset: false);
@@ -148,19 +148,19 @@ class InventoryController extends GetxController with ScrollMixin, LinearProgres
   }
 
   @override
-  void onInit() {
+  void onInit() async {
     once(count, (_) => print('한번만 호출'));
-    initController();
+    await initController();
 
     super.onInit();
   }
 
   Future<void> initController() async {
     initStats();
-    getUserAllItems();
-    getUserEquippedItems();
+    await getUserAllItems();
+    await getUserEquippedItems();
     getSyntheticBadgeList();
-    getUserBadgesList();
+    await getUserBadgesList();
     scrollControl(); // 스크롤 제어(아이템, 뱃지)
   }
 
@@ -168,8 +168,8 @@ class InventoryController extends GetxController with ScrollMixin, LinearProgres
     myAllItems.value = RxList.empty();
     page.value = 0;
     stopLoading.value = false;
-    getUserAllItems();
-    getUserBadgesList();
+    await getUserAllItems();
+    await getUserBadgesList();
   }
 
   void getSyntheticBadgeList() {
@@ -228,7 +228,7 @@ class InventoryController extends GetxController with ScrollMixin, LinearProgres
     Get.toNamed(Routes.badgeDetail);
   }
 
-  void getUserAllItemsAfterEquiped() async {
+  void getUserAllItemsAfterEquipped() async {
     myAllItems.value = RxList.empty();
     page.value = 0;
     stopLoading.value = false;
@@ -250,7 +250,7 @@ class InventoryController extends GetxController with ScrollMixin, LinearProgres
     );
   }
 
-  void getUserEquippedItems() async {
+  Future<void> getUserEquippedItems() async {
     await ActivityService.getUserEquippedItem(
       successCallback: (equippedItems) {
         equippedItemList.value = equippedItems.items;
@@ -277,10 +277,18 @@ class InventoryController extends GetxController with ScrollMixin, LinearProgres
   void fetchEquipItem(int itemId) async {
     await ItemService.fetchEquippedItem(
       itemId,
-      successCallback: (item) {
+      successCallback: (InventoryItemModel item) {
         selectedItem.value = item;
-        getUserAllItemsAfterEquiped();
-        getUserEquippedItems();
+        int allItemsPrevEquippedIndex = myAllItems.indexWhere((element) => element.itemCategory == item.itemCategory && element.equipped!);
+        int allItemsIndex = myAllItems.indexWhere((element) => element.id == item.id);
+        int equippedIndex = equippedItemList.indexWhere((element) => element.itemCategory == item.itemCategory);
+        myAllItems[allItemsPrevEquippedIndex].equipped = false;
+        myAllItems[allItemsIndex] = item;
+        equippedItemList[equippedIndex] = item;
+        myAllItems.refresh();
+        equippedItemList.refresh();
+        // getUserAllItemsAfterEquipped();
+        // getUserEquippedItems();
         showToastPopup('아이템이 장착되었습니다.');
       },
     );

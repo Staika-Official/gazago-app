@@ -71,15 +71,12 @@ class SecondaryAppbar extends StatelessWidget implements PreferredSizeWidget {
                       ),
                     ),
                   )
-                : IconButton(
-                    onPressed: () => Get.toNamed(Routes.preferences),
-                    // padding: EdgeInsets.symmetric(horizontal: 12.sp),
-                    icon: iconHeaderGear,
-                    splashRadius: 20.sp,
-                    iconSize: 30,
+                : Container(
+                    padding: EdgeInsets.symmetric(vertical: 3.0.sp),
                     constraints: BoxConstraints(
-                      minWidth: 30.sp,
+                      minWidth: 100.sp,
                     ),
+                    child: iconHeaderLogo,
                   ),
             Row(
               mainAxisSize: MainAxisSize.min,
@@ -114,10 +111,13 @@ class SecondaryAppbar extends StatelessWidget implements PreferredSizeWidget {
                         left: 0,
                         right: 8,
                       ),
-                      child: Row(
-                        children: [
-                          ...renderWalletItems(walletMasterController),
-                        ],
+                      child: InkWell(
+                        onTap: () => Get.find<WalletMasterController>().moveToWallet(),
+                        child: Row(
+                          children: [
+                            ...renderWalletItems(walletMasterController),
+                          ],
+                        ),
                       ),
                     ),
                   ),
@@ -125,8 +125,8 @@ class SecondaryAppbar extends StatelessWidget implements PreferredSizeWidget {
                 Padding(
                   padding: EdgeInsets.only(left: 4.sp),
                   child: IconButton(
-                    onPressed: () => Get.toNamed(Routes.wallet),
-                    icon: iconHeaderWallet,
+                    onPressed: () => Get.toNamed(Routes.preferences),
+                    icon: iconHeaderGear,
                     splashRadius: 20.sp,
                     iconSize: 30,
                     constraints: BoxConstraints(

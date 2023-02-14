@@ -1,12 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 import 'package:gaza_go/platform/controllers/inventory_controller.dart';
 import 'package:gaza_go/presentations//components/default_container.dart';
 import 'package:gaza_go/presentations/styles/colors.dart';
 import 'package:gaza_go/presentations/styles/icons.dart';
 import 'package:gaza_go/presentations/styles/styled_text.dart';
-import 'package:gaza_go/presentations/views/inventory/inventory_tile.dart';
+import 'package:gaza_go/presentations/views/inventory/equipped_items_grid.dart';
 import 'package:get/get.dart';
 
 class EquippedItems extends StatelessWidget {
@@ -14,7 +13,7 @@ class EquippedItems extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    InventoryController controller = Get.put(InventoryController());
+    InventoryController controller = Get.isRegistered<InventoryController>() ? Get.find<InventoryController>() : Get.put(InventoryController());
 
     return DefaultContainer(
       backgroundColor: subBg01Color,
@@ -27,196 +26,70 @@ class EquippedItems extends StatelessWidget {
           ),
         ),
         child: ConstrainedBox(
-          constraints:
-              BoxConstraints(maxHeight: MediaQuery.of(context).size.height),
+          constraints: BoxConstraints(maxHeight: MediaQuery.of(context).size.height),
           child: Column(
             mainAxisSize: MainAxisSize.max,
             children: [
               Padding(
-                padding: EdgeInsets.symmetric(
-                    horizontal: 20.0.sp, vertical: 20.0.sp),
-                child: Column(
-                  children: [
-                    Obx(() {
-                      return StaggeredGrid.count(
-                        crossAxisCount: 4,
-                        mainAxisSpacing: 6,
-                        crossAxisSpacing: 6,
-                        children: [
-                          if (controller.equippedItemList.isNotEmpty) ...[
-                            StaggeredGridTile.count(
-                              crossAxisCellCount: 2,
-                              mainAxisCellCount: 2,
-                              child: InventoryTile(
-                                index: 0,
-                                id: controller.equippedShoe.value.id,
-                                itemGrade:
-                                    controller.equippedShoe.value.itemGrade,
-                                durability:
-                                    controller.equippedShoe.value.durability,
-                                imageUrl:
-                                    controller.equippedShoe.value.itemImageUrl,
-                              ),
-                            ),
-                            StaggeredGridTile.count(
-                              crossAxisCellCount: 2,
-                              mainAxisCellCount: 2,
-                              child: InventoryTile(
-                                index: 1,
-                                imageUrl: controller
-                                    .equippedBadge.value.badge.imageUrl,
-                                badgeId:
-                                    controller.equippedBadge.value.badge.id,
-                              ),
-                            ),
-                            StaggeredGridTile.count(
-                              crossAxisCellCount: 1,
-                              mainAxisCellCount: 1,
-                              child: InventoryTile(
-                                index: 2,
-                                itemGrade:
-                                    controller.equippedHat.value.itemGrade,
-                                imageUrl:
-                                    controller.equippedHat.value.itemImageUrl,
-                              ),
-                            ),
-                            StaggeredGridTile.count(
-                              crossAxisCellCount: 1,
-                              mainAxisCellCount: 1,
-                              child: InventoryTile(
-                                index: 3,
-                                itemGrade:
-                                    controller.equippedTop.value.itemGrade,
-                                imageUrl:
-                                    controller.equippedTop.value.itemImageUrl,
-                              ),
-                            ),
-                            StaggeredGridTile.count(
-                              crossAxisCellCount: 1,
-                              mainAxisCellCount: 1,
-                              child: InventoryTile(
-                                index: 4,
-                                itemGrade:
-                                    controller.equippedBottom.value.itemGrade,
-                                imageUrl: controller
-                                    .equippedBottom.value.itemImageUrl,
-                              ),
-                            ),
-                            StaggeredGridTile.count(
-                              crossAxisCellCount: 1,
-                              mainAxisCellCount: 1,
-                              child: InventoryTile(
-                                index: 5,
-                                itemGrade: controller
-                                    .equippedAccessory.value.itemGrade,
-                                imageUrl: controller
-                                    .equippedAccessory.value.itemImageUrl,
-                              ),
-                            ),
-                          ]
-                        ],
-                      );
-                    }),
-                  ],
-                ),
+                padding: EdgeInsets.symmetric(horizontal: 20.0.sp, vertical: 20.0.sp),
+                // child: EquippedItemsGrid(controller: controller),
+                child: EquippedItemsGrid(controller: controller),
               ),
               Padding(
-                  padding: EdgeInsets.symmetric(vertical: 20.0.sp),
-                  child: Obx(() {
-                    return Row(
-                      mainAxisSize: MainAxisSize.max,
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Column(
-                          children: [
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: [
-                                StyledText(
-                                  '${controller.equippedRewardRate.toInt()}',
-                                  fontSize: 28,
-                                  fontWeight: 500,
-                                ),
-                                const StyledText(
-                                  '%',
-                                  fontSize: 16,
-                                  fontWeight: 500,
-                                ),
-                              ],
-                            ),
-                            Padding(
-                              padding: EdgeInsets.only(top: 12.0.sp),
-                              child: Row(
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                children: [
-                                  Padding(
-                                    padding: EdgeInsets.only(
-                                        top: 3.0.sp, right: 2.0.sp),
-                                    child: iconGoReward,
-                                  ),
-                                  StyledText(
-                                    'GO 보상율',
-                                    color: deepGrayColor,
-                                    fontSize: 11,
-                                    lineHeight: 12,
-                                    fontWeight: 500,
-                                  ),
-                                ],
-                              ),
-                            ),
-                          ],
-                        ),
-                        Padding(
-                          padding: EdgeInsets.symmetric(horizontal: 25.0.sp),
-                          child: Column(
+                padding: EdgeInsets.symmetric(vertical: 20.0.sp),
+                child: Obx(() {
+                  return Row(
+                    mainAxisSize: MainAxisSize.max,
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Column(
+                        children: [
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
                             children: [
-                              Row(
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                children: [
-                                  StyledText(
-                                    '${controller.equippedAbrasionRate.toInt()}',
-                                    fontSize: 28,
-                                    fontWeight: 500,
-                                  ),
-                                  const StyledText(
-                                    '%',
-                                    fontSize: 16,
-                                    fontWeight: 500,
-                                  ),
-                                ],
+                              StyledText(
+                                '${controller.equippedRewardRate.toInt()}',
+                                fontSize: 28,
+                                fontWeight: 500,
                               ),
-                              Padding(
-                                padding: EdgeInsets.only(top: 12.0.sp),
-                                child: Row(
-                                  mainAxisAlignment: MainAxisAlignment.center,
-                                  crossAxisAlignment: CrossAxisAlignment.center,
-                                  children: [
-                                    Padding(
-                                      padding: EdgeInsets.only(
-                                          top: 1.0.sp, right: 3.0.sp),
-                                      child: iconItemAbrasion,
-                                    ),
-                                    StyledText(
-                                      '내구도 감소율',
-                                      color: deepGrayColor,
-                                      fontSize: 11,
-                                      lineHeight: 12,
-                                      fontWeight: 500,
-                                    ),
-                                  ],
-                                ),
+                              const StyledText(
+                                '%',
+                                fontSize: 16,
+                                fontWeight: 500,
                               ),
                             ],
                           ),
-                        ),
-                        Column(
+                          Padding(
+                            padding: EdgeInsets.only(top: 12.0.sp),
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                Padding(
+                                  padding: EdgeInsets.only(top: 3.0.sp, right: 2.0.sp),
+                                  child: iconGoReward,
+                                ),
+                                StyledText(
+                                  'GO 보상율',
+                                  color: deepGrayColor,
+                                  fontSize: 11,
+                                  lineHeight: 12,
+                                  fontWeight: 500,
+                                ),
+                              ],
+                            ),
+                          ),
+                        ],
+                      ),
+                      Padding(
+                        padding: EdgeInsets.symmetric(horizontal: 25.0.sp),
+                        child: Column(
                           children: [
                             Row(
                               mainAxisAlignment: MainAxisAlignment.center,
                               children: [
                                 StyledText(
-                                  '${controller.equippedStaminaReduceRate.toInt()}',
+                                  '${controller.equippedAbrasionRate.toInt()}',
                                   fontSize: 28,
                                   fontWeight: 500,
                                 ),
@@ -231,14 +104,14 @@ class EquippedItems extends StatelessWidget {
                               padding: EdgeInsets.only(top: 12.0.sp),
                               child: Row(
                                 mainAxisAlignment: MainAxisAlignment.center,
+                                crossAxisAlignment: CrossAxisAlignment.center,
                                 children: [
                                   Padding(
-                                    padding: EdgeInsets.only(
-                                        top: 1.0.sp, right: 3.0.sp),
-                                    child: iconStaminaReduce,
+                                    padding: EdgeInsets.only(top: 1.0.sp, right: 3.0.sp),
+                                    child: iconItemAbrasion,
                                   ),
                                   StyledText(
-                                    '체력 감소율',
+                                    '내구도 감소율',
                                     color: deepGrayColor,
                                     fontSize: 11,
                                     lineHeight: 12,
@@ -249,9 +122,49 @@ class EquippedItems extends StatelessWidget {
                             ),
                           ],
                         ),
-                      ],
-                    );
-                  })),
+                      ),
+                      Column(
+                        children: [
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              StyledText(
+                                '${controller.equippedStaminaReduceRate.toInt()}',
+                                fontSize: 28,
+                                fontWeight: 500,
+                              ),
+                              const StyledText(
+                                '%',
+                                fontSize: 16,
+                                fontWeight: 500,
+                              ),
+                            ],
+                          ),
+                          Padding(
+                            padding: EdgeInsets.only(top: 12.0.sp),
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                Padding(
+                                  padding: EdgeInsets.only(top: 1.0.sp, right: 3.0.sp),
+                                  child: iconStaminaReduce,
+                                ),
+                                StyledText(
+                                  '체력 감소율',
+                                  color: deepGrayColor,
+                                  fontSize: 11,
+                                  lineHeight: 12,
+                                  fontWeight: 500,
+                                ),
+                              ],
+                            ),
+                          ),
+                        ],
+                      ),
+                    ],
+                  );
+                }),
+              ),
             ],
           ),
         ),
