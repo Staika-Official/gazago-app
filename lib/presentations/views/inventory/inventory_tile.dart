@@ -254,3 +254,42 @@ class InventoryTile extends StatelessWidget {
     );
   }
 }
+
+class InventoryTilePlaceHolder extends StatelessWidget {
+  const InventoryTilePlaceHolder({
+    Key? key,
+  }) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    final child = Container(
+      color: Colors.transparent,
+      child: Container(
+        decoration: BoxDecoration(
+          color: popupBgColor,
+          border: Border.all(
+            width: 2.sp,
+            color: Colors.black,
+          ),
+          borderRadius: BorderRadius.all(
+            Radius.circular(14.sp),
+          ),
+          boxShadow: [
+            BoxShadow(
+              color: Colors.black,
+              offset: Offset(2.sp, 4.sp),
+              blurRadius: 0.0,
+              spreadRadius: 0.0,
+            ),
+          ],
+        ),
+      ),
+    );
+
+    return Column(
+      children: [
+        Expanded(child: child),
+      ],
+    );
+  }
+}

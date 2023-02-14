@@ -112,34 +112,31 @@ class InventoryItem extends StatelessWidget {
                                         ),
                                       ),
                                     )
-                                  : InkWell(
-                                      onTap: () => null,
-                                      child: Container(
-                                        width: double.infinity,
-                                        decoration: BoxDecoration(
-                                          color: popupBgColor,
-                                          border: Border.all(
-                                            width: 1,
-                                            style: BorderStyle.solid,
-                                            color: deepGrayColor,
-                                          ),
-                                          borderRadius: BorderRadius.all(
-                                            Radius.circular(20.sp),
-                                          ),
-                                          boxShadow: [
-                                            BoxShadow(
-                                              offset: Offset(0, 3.sp),
-                                              blurRadius: 0,
-                                              spreadRadius: 0,
-                                              color: Colors.black,
-                                            ),
-                                          ],
+                                  : Container(
+                                      width: double.infinity,
+                                      decoration: BoxDecoration(
+                                        color: popupBgColor,
+                                        border: Border.all(
+                                          width: 1,
+                                          style: BorderStyle.solid,
+                                          color: deepGrayColor,
                                         ),
-                                        alignment: Alignment.center,
-                                        child: Padding(
-                                          padding: EdgeInsets.all(8.0.sp),
-                                          child: StyledText('장착중', fontWeight: 500, fontSize: 14, color: deepGrayColor),
+                                        borderRadius: BorderRadius.all(
+                                          Radius.circular(20.sp),
                                         ),
+                                        boxShadow: [
+                                          BoxShadow(
+                                            offset: Offset(0, 3.sp),
+                                            blurRadius: 0,
+                                            spreadRadius: 0,
+                                            color: Colors.black,
+                                          ),
+                                        ],
+                                      ),
+                                      alignment: Alignment.center,
+                                      child: Padding(
+                                        padding: EdgeInsets.all(8.0.sp),
+                                        child: StyledText('장착중', fontWeight: 500, fontSize: 14, color: deepGrayColor),
                                       ),
                                     ),
                             ],
