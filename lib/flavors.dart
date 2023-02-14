@@ -1,4 +1,5 @@
 import 'package:gaza_go/constants/base_urls.dart';
+import 'package:solana/solana.dart';
 import 'package:solana_web3/solana_web3.dart' as web3;
 import 'package:solana_web3/solana_web3.dart';
 
@@ -56,29 +57,41 @@ class F {
     }
   }
 
-  static web3.Cluster get solanaCluster {
+  static SolanaClient get solanaClient {
     switch (appFlavor) {
       case Flavor.dev:
-        return web3.Cluster.devnet;
+        return SolanaClient(
+          rpcUrl: Uri.parse('https://api.devnet.solana.com'),
+          websocketUrl: Uri.parse('wss://api.devnet.solana.com'),
+        );
       case Flavor.stage:
-        return web3.Cluster.devnet;
+        return SolanaClient(
+          rpcUrl: Uri.parse('https://api.devnet.solana.com'),
+          websocketUrl: Uri.parse('wss://api.devnet.solana.com'),
+        );
       case Flavor.prod:
-        return web3.Cluster.mainnet;
+        return SolanaClient(
+          rpcUrl: Uri.parse('https://api.devnet.solana.com'),
+          websocketUrl: Uri.parse('wss://api.devnet.solana.com'),
+        );
       default:
-        return web3.Cluster.devnet;
+        return SolanaClient(
+          rpcUrl: Uri.parse('https://api.devnet.solana.com'),
+          websocketUrl: Uri.parse('wss://api.devnet.solana.com'),
+        );
     }
   }
 
-  static PublicKey get solanaFeePayer {
+  static Ed25519HDPublicKey get solanaFeePayer {
     switch (appFlavor) {
       case Flavor.dev:
-        return PublicKey.fromBase58("92RJbkjWhnqpKMepWGe6WXo94XeAQszX2PTStS7weZLc");
+        return Ed25519HDPublicKey.fromBase58("92RJbkjWhnqpKMepWGe6WXo94XeAQszX2PTStS7weZLc");
       case Flavor.stage:
-        return PublicKey.fromBase58("92RJbkjWhnqpKMepWGe6WXo94XeAQszX2PTStS7weZLc");
+        return Ed25519HDPublicKey.fromBase58("92RJbkjWhnqpKMepWGe6WXo94XeAQszX2PTStS7weZLc");
       case Flavor.prod:
-        return PublicKey.fromBase58("92RJbkjWhnqpKMepWGe6WXo94XeAQszX2PTStS7weZLc");
+        return Ed25519HDPublicKey.fromBase58("92RJbkjWhnqpKMepWGe6WXo94XeAQszX2PTStS7weZLc");
       default:
-        return PublicKey.fromBase58("92RJbkjWhnqpKMepWGe6WXo94XeAQszX2PTStS7weZLc");
+        return Ed25519HDPublicKey.fromBase58("92RJbkjWhnqpKMepWGe6WXo94XeAQszX2PTStS7weZLc");
     }
   }
 }

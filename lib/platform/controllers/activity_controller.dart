@@ -84,12 +84,17 @@ class ActivityController extends SuperController with ActivityMixin, ChallengeMi
   final RxDouble challengeLoadControlPosition = RxDouble(0);
 
   Future<void> initializeController() async {
+    print('initializeController #1');
     challengeGuideController = AnimationController(vsync: this);
+    print('initializeController #2');
     await initController();
+    print('initializeController #3');
     checkConnectivityStatus();
+    print('initializeController #4');
     if ([ExerciseState.ongoing, ExerciseState.paused].any((state) => state == exerciseState.value)) {
       showPendingExerciseAlert(this);
     }
+    print('initializeController #5');
     disableActivityButton.value = false;
   }
 
@@ -352,7 +357,13 @@ class ActivityController extends SuperController with ActivityMixin, ChallengeMi
           exerciseDistance.value = userState.value.exercise!.distance!;
 
           coordinates.value = List.empty(growable: true);
-          if (userState.value.exercise!.locations != null) {
+
+          print('##################################################');
+          print(userState.value.exercise!.locations!.length);
+          print('##################################################');
+
+
+          if (userState.value.exercise!.locations != null && userState.value.exercise!.locations!.length > 0) {
             coordinates.addAll(parseCoordinates());
           }
         }

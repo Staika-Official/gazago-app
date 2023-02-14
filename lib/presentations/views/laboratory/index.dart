@@ -49,7 +49,7 @@ class Laboratory extends StatelessWidget {
                 buttonColor: skyBlueColor,
               ),
               GazagoButton(
-                onTap: () => debuggingController.onDisableDebuggingMode(),
+                onTap: () => Get.toNamed(Routes.laboratorySolanaTransfer),
                 buttonText: '솔라나(토큰) 전송',
                 buttonColor: skyBlueColor,
               ),

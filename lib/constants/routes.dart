@@ -20,6 +20,7 @@ import 'package:gaza_go/presentations/views/inventory/inventory_item_detail.dart
 import 'package:gaza_go/presentations/views/inventory/synthetic_badge.dart';
 import 'package:gaza_go/presentations/views/join/join_terms.dart';
 import 'package:gaza_go/presentations/views/laboratory/laboratory_solana_create_wallet.dart';
+import 'package:gaza_go/presentations/views/laboratory/laboratory_solana_transfer.dart';
 import 'package:gaza_go/presentations/views/leaderboard/calendar_statistics.dart';
 import 'package:gaza_go/presentations/views/loading.dart';
 import 'package:gaza_go/presentations/views/login.dart';
@@ -101,6 +102,7 @@ class Routes {
   static const positionLowDataLogs = '/debugging/position_low_data_logs';
   static const laboratory = '/laboratory';
   static const laboratorySolanaCreateWallet = '/laboratory/laboratory_solana_create_wallet';
+  static const laboratorySolanaTransfer = '/laboratory/laboratory_solana_transfer';
   static const shopItemDetail = '/shop/item/detail';
 
   static List<GetPage> pages = [
@@ -161,6 +163,7 @@ class Routes {
     stepPage(name: Routes.shopItemDetail, page: const ShopItemDetail()),
     stepPage(name: Routes.laboratory, page: const Laboratory()),
     stepPage(name: Routes.laboratorySolanaCreateWallet, page: const LaboratorySolanaCreateWallet()),
+    stepPage(name: Routes.laboratorySolanaTransfer, page: const LaboratorySolanaTransfer()),
   ];
 }
 

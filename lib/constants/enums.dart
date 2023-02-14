@@ -1,7 +1,7 @@
 enum LoginType {
   apple,
   google,
-  // email,
+  email,
 }
 
 enum ExerciseType {

@@ -67,16 +67,31 @@ void main() {
 
     final feeWallet = await feePayerWallet();
 
+   /* final encodeTransaction = await getTransaction();
+    final transaction = web3.Transaction.fromBase64(encodeTransaction);
+
+    print(transaction);
+
+    transaction.add(
+      SystemProgram.transfer(
+        fromPublicKey: address1,
+        toPublicKey: address2,
+        lamports: BigInt.from(1000000),
+      ),
+    );*/
+
+
     print(address1);
     print(address2);
     print(feeWallet.publicKey);
 
-    PublicKey feePayer = PublicKey.fromBase58("92RJbkjWhnqpKMepWGe6WXo94XeAQszX2PTStS7weZLc");
+    //PublicKey feePayer = PublicKey.fromBase58("92RJbkjWhnqpKMepWGe6WXo94XeAQszX2PTStS7weZLc");
     final bh = await connection.getLatestBlockhash();
     final transaction = web3.Transaction(
-      feePayer: feePayer,
+      feePayer: feeWallet.publicKey,
       recentBlockhash: bh.blockhash,
     );
+
     transaction.add(
       SystemProgram.transfer(
         fromPublicKey: address1,
@@ -85,7 +100,16 @@ void main() {
       ),
     );
 
+    transaction.unsign(publicKeys: [feeWallet.publicKey, wallet1.publicKey]);
+
+    //transaction.partialSign([wallet1]);
+
     transaction.partialSign([wallet1]);
+
+    //transaction.addSignature(wallet1.publicKey, signature)
+
+    print(transaction.signatures.first.publicKey);
+    print(transaction.signatures.first.signature);
 
     final txSerialize = transaction.serialize(SerializeConfig(requireAllSignatures: false, verifySignatures: false));
 
@@ -93,7 +117,17 @@ void main() {
 
     print(base64.encode(txSerialize.asUint8List()));
 
-    final accessToken = 'eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJhZG1pbiIsImF1dGgiOiJST0xFX0FETUlOLFJPTEVfVVNFUiIsImV4cCI6MTY2ODU4NzQ5NSwidXNlcklkIjoiMyJ9.zVWnbWd1nxmLwKSRonETE61rO-RtmVysIyY-aw55XAA3ckJYVolK7XQ0A5pyfExSNEA-pLpKSqWilXQn9CTiEg';
+
+    final endocdeTransction = base64.encode(txSerialize.asUint8List());
+
+    //final decodeTransaction = Buffer.fromUint8(base64.decode(endocdeTransction));
+
+    final encode = web3.Transaction.fromBase64(endocdeTransction);
+    print('##################################');
+    print(transaction.signatures.first.publicKey);
+    print(transaction.signatures.first.signature);
+
+    final accessToken = 'eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJhZG1pbiIsImF1dGgiOiJST0xFX0FETUlOLFJPTEVfVVNFUiIsImV4cCI6MTY3NjI3NDU5NCwidXNlcklkIjoiMyJ9.ItPbb71tNXjXCwID0pLHH7IUySHqClUXOSVqQD7q2jiAOu-6LU3JDpOW_ZVTHWP0yf_wLbyyQM4NNm2tb9IOkA';
 
     final send = {
       'clientId': 'GAZAGO',
@@ -135,6 +169,31 @@ void main() {
     final transactionSignature = await connection.requestAirdrop(address, lamports);
     await connection.confirmTransaction(transactionSignature);
   });
+}
+
+Future<String> getTransaction() async {
+  final accessToken = 'eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJhZG1pbiIsImF1dGgiOiJST0xFX0FETUlOLFJPTEVfVVNFUiIsImV4cCI6MTY3NTk0MDY3MywidXNlcklkIjoiMyJ9.zSZouf8HeI2esQ0r2tTupnseBnBhWNAOCD0QSsVsKICwFKpzdks4Z2ut45FiTP6gLPJ8fJwX8FDK9Yr6s1SeMg';
+
+  final send = {
+    'clientId': 'GAZAGO'
+  };
+
+  try {
+    var response = await Dio().post('http://localhost:8080/services/gazago-wallet/api/solana/wallet/test/transaction', data: send,
+        options: Options(
+          headers: {
+            'Authorization': 'Bearer $accessToken'
+          },
+        ));
+    print(response.data);
+    print(11111111);
+    //Map<String, String> userMap = jsonDecode(response.data);
+    print(response.data['signature']);
+    return response.data['signature'];
+  } catch (e) {
+    print(e);
+  }
+  return '';
 }
 
 /// WARNING: Airdrops cannot be performed on the mainnet.

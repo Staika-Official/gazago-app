@@ -32,7 +32,17 @@ class SolanaController extends GetxController {
 
   }
 
-  void sendTransfer(String toAddress) async {
+  void sendTransfer() async {
+    String toAddress = '4L3ScUzhGu9onoZ6bbXCeFKFhkJ6tMAUHunj9akLu2P1';
+    String symbol = 'STIKA';
+    String tokenAddress = '9TuCLrnSUt2iX6tccPEHSLgUMDg3VpkoEazU5CED3MyX';
+    int decimals = 5;
+    int amount = 100000;
 
+    await WalletService.sendTransfer(toAddress, symbol, tokenAddress, decimals, amount);
   }
+
+  /*void sendTransfer(String toAddress, String symbol, String tokenAddress, int decimals, int amount) async {
+    await WalletService.sendTransfer(toAddress, symbol, tokenAddress, decimals, amount);
+  }*/
 }

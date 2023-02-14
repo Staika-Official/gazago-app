@@ -2,6 +2,7 @@ import 'package:dio/dio.dart';
 import 'package:gaza_go/constants/base_urls.dart';
 import 'package:gaza_go/platform/middleware/dio_middleware.dart';
 import 'package:gaza_go/platform/models/pay_info_model.dart';
+import 'package:solana/src/encoder/signed_tx.dart';
 
 class WalletApi {
   // - 스펜딩 월렛 api
@@ -55,15 +56,15 @@ class WalletApi {
 
   // - 외부 월렛 api
   static Future<Response> generateSolanaWallet(String userId, String publicKey, String encryptedSecretKey) async {
-    return await Api.client(serviceUrl: ServiceUrl.walletService).post('/gererate-wallet', data: {"userId": userId, "publicKey": publicKey, "encryptedSecretKey": encryptedSecretKey});
+    return await Api.client(serviceUrl: ServiceUrl.gazagoWalletService).post('/solana/gererate-wallet', data: {"userId": userId, "publicKey": publicKey, "encryptedSecretKey": encryptedSecretKey});
   }
 
   static Future<Response> postEncryptedSecretKey(String publicKey, String encryptedSecretKey) async {
-    return await Api.client(serviceUrl: ServiceUrl.walletService).post('/encrypted-secretkey', data: {"publicKey": publicKey, "encryptedSecretKey": encryptedSecretKey});
+    return await Api.client(serviceUrl: ServiceUrl.gazagoWalletService).post('/solana/encrypted-secretkey', data: {"publicKey": publicKey, "encryptedSecretKey": encryptedSecretKey});
   }
 
   static Future<Response> getEncryptedSecretKey() async {
-    return await Api.client(serviceUrl: ServiceUrl.walletService).get('/encrypted-secretkey');
+    return await Api.client(serviceUrl: ServiceUrl.walletService).get('/solana/encrypted-secretkey');
   }
 
   static Future<Response> getSolanaWalletBalance() async {
@@ -80,5 +81,9 @@ class WalletApi {
 
   static Future<Response> getNftMetaData(String publicKey) async {
     return await Api.client(serviceUrl: ServiceUrl.walletService).get('/nft/$publicKey');
+  }
+
+  static sendSolanaTransfer(Map<String, String> body) async {
+    return await Api.client(serviceUrl: ServiceUrl.gazagoWalletService).post('/solana/wallet/test/transfer', data: body);
   }
 }

@@ -98,7 +98,7 @@ dependencies:
   flutter_inappwebview: ^6.0.0-beta.22
   path_provider: ^2.0.11
   solana: ^0.27.0
-  solana_web3: ^0.0.2+5
+  solana_web3: ^0.0.2+4
 
 
 
@@ -115,6 +115,7 @@ dev_dependencies:
   json_serializable: ^6.3.1 #https://pub.dev/packages/json_serializable
   build_runner: ^2.2.0 #https://pub.dev/packages/build_runner
   geolocator_android: 4.1.4
+  mews_pedantic: ^0.11.0
 
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec

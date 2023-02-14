@@ -4,17 +4,17 @@ import 'dart:math';
 import 'package:dio/dio.dart';
 import 'package:gaza_go/constants/enums.dart';
 import 'package:gaza_go/platform/apis/wallet.dart';
+import 'package:gaza_go/platform/helpers/solana_helper.dart';
 import 'package:gaza_go/platform/models/asset_detail_model.dart';
 import 'package:gaza_go/platform/models/asset_token_balance_model.dart';
 import 'package:gaza_go/platform/models/buy_tik_response_model.dart';
 import 'package:gaza_go/platform/models/pay_info_model.dart';
 import 'package:gaza_go/platform/models/pay_response_model.dart';
 import 'package:gaza_go/platform/stores/hive_store.dart';
-import 'package:solana_web3/programs/system.dart';
-import 'package:solana_web3/solana_web3.dart';
-
-import 'package:solana_web3/solana_web3.dart' as web3;
 import 'package:gaza_go/flavors.dart';
+import 'package:solana/base58.dart';
+import 'package:solana/encoder.dart';
+import 'package:solana/solana.dart';
 
 class WalletService {
   static String? get userId {
@@ -73,43 +73,55 @@ class WalletService {
   }
 
   static Future<void> createSolanaWallet(String publicKey, String encodeSecretKey) async {
-    await WalletApi.generateSolanaWallet(userId!, publicKey, encodeSecretKey);
+    await WalletApi.postEncryptedSecretKey(publicKey, encodeSecretKey);
   }
 
-  static Future<void> sendTransfer(String toAddress, String symbol, int decimals, int amount) async {
-    final cluster = F.solanaCluster;
-    final connection = web3.Connection(cluster);
-    int sendAmount = amount * pow(10, decimals).toInt();
+  static Future<void> sendTransfer(String toAddress, String symbol, String tokenAddress, int decimals, int amount) async {
+    final SolanaClient solanaClient = F.solanaClient;
 
-    final fromAccount = web3.Keypair.fromSecretKey(base58.decode(solanaSecretKey!));
-    PublicKey toPublicKey = PublicKey.fromBase58(toAddress);
-    PublicKey feePayer = F.solanaFeePayer;
+    List<int> privateKey = [161, 38, 33, 160, 179, 255, 235, 121, 6, 215, 185, 63, 133, 112, 250, 78, 156, 177, 93, 135, 102, 5, 156, 160, 192, 128, 24, 162, 226, 8, 177, 116];
 
-    final bh = await connection.getLatestBlockhash();
+    String accountPrivateKey = 'Br4N3pMn2hjk2P685bN99FTYojhSuiRPUiz1YffX81HV';
+    final sender = await Ed25519HDKeyPair.fromPrivateKeyBytes(
+      privateKey: base58decode(accountPrivateKey),
+    );
+    final receiver = Ed25519HDPublicKey.fromBase58(toAddress);
 
-    // Transaction 생성
-    final transaction = web3.Transaction(
+    Message message;
+    if (symbol == 'SOL') {
+      message = getSolTransferMessage(sender.publicKey, receiver, amount);
+    } else {
+      final mint = Ed25519HDPublicKey.fromBase58(tokenAddress);
+      message = await getSplTransferMessage(solanaClient, sender, receiver, mint, amount);
+    }
+
+    // FeePayer
+    final feePayer = F.solanaFeePayer;
+
+    final recentBlockhash = await solanaClient.rpcClient.getRecentBlockhash(commitment: Commitment.confirmed);
+    final CompiledMessage compiledMessage = message.compile(
+      recentBlockhash: recentBlockhash.blockhash,
       feePayer: feePayer,
-      recentBlockhash: bh.blockhash,
     );
 
-    transaction.add(
-      SystemProgram.transfer(
-        fromPublicKey: fromAccount.publicKey,
-        toPublicKey: toPublicKey,
-        //lamports: BigInt.from(1000000),
-        lamports: BigInt.from(sendAmount),
-      ),
+    final List<Signature> signatures = [];
+    final feePayerSign = Signature(List.filled(64, 0), publicKey: sender.publicKey);
+    signatures.add(feePayerSign);
+    signatures.add(await sender.sign(compiledMessage.data));
+
+    SignedTx tx = SignedTx(
+      messageBytes: compiledMessage.data,
+      signatures: signatures,
     );
-
-    transaction.partialSign([fromAccount]);
-    final txSerialize = transaction.serialize(SerializeConfig(requireAllSignatures: false, verifySignatures: false));
-
-    final send = {
-      'clientId': 'GAZAGO',
-      'endocdeTransction': base64.encode(txSerialize.asUint8List())
-    };
 
     // API Call
+    Map<String, String> body = {
+      'clientId': 'GAZAGO',
+      'endocdeTransction': tx.encode()
+    };
+    Response res = await WalletApi.sendSolanaTransfer(body);
+
+
+
   }
 }
