@@ -48,14 +48,11 @@ class ShopItems extends StatelessWidget {
                               padding: EdgeInsets.all(10.0.sp),
                               child: item.itemImageUrl != null
                                   ? AspectRatio(
-                                      // child: Image.network(
-                                      //   "http://via.placeholder.com/350x150",
-                                      // ),
                                       aspectRatio: 1.5,
                                       child: CachedNetworkImage(
                                         imageUrl: item.itemImageUrl!,
                                         fit: BoxFit.fitHeight,
-                                        placeholder: (context, url) => const CircularProgressIndicator(),
+                                        placeholder: (context, url) => const Center(child: SizedBox.square(dimension: 40, child: CircularProgressIndicator())),
                                         errorWidget: (context, url, error) => Image.asset("assets/images/@temp_bal.png"),
                                       ),
                                     )

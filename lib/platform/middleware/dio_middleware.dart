@@ -176,9 +176,7 @@ class Api {
             showToastPopup(errorData.errorMessage!);
           }
         }
-      }
-
-      if ([DioErrorType.connectTimeout, DioErrorType.sendTimeout, DioErrorType.receiveTimeout, DioErrorType.other].any((element) => element == e.type)) {
+      } else if ([DioErrorType.connectTimeout, DioErrorType.sendTimeout, DioErrorType.receiveTimeout, DioErrorType.other].any((element) => element == e.type)) {
         handler.resolve(
           Response(
             requestOptions: RequestOptions(
@@ -189,10 +187,12 @@ class Api {
         );
         showToastPopup('통신이 원활하지 않습니다. 잠시후 다시 시도해주세요');
       } else {
-        handler.resolve(e.response!);
+        if (e.response != null) {
+          handler.resolve(e.response!);
+        } else {
+          handler.next(e);
+        }
       }
-
-      handler.next(e);
     }
   }
 

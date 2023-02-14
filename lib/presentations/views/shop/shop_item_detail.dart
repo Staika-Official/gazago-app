@@ -76,7 +76,7 @@ class ShopItemDetail extends StatelessWidget {
                                               child: CachedNetworkImage(
                                                 imageUrl: controller.selectedItem.value.itemImageUrl!,
                                                 fit: BoxFit.fitWidth,
-                                                placeholder: (context, url) => const CircularProgressIndicator(),
+                                                placeholder: (context, url) => const Center(child: SizedBox.square(dimension: 40, child: CircularProgressIndicator())),
                                                 errorWidget: (context, url, error) => Image.asset("assets/images/@temp_shoes.png"),
                                               ),
                                             )

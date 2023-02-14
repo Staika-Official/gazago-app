@@ -1,15 +1,14 @@
 import 'package:custom_rounded_rectangle_border/custom_rounded_rectangle_border.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 import 'package:gaza_go/platform/controllers/inventory_controller.dart';
 import 'package:gaza_go/platform/controllers/inventory_home_controller.dart';
 import 'package:gaza_go/presentations/styles/colors.dart';
 import 'package:gaza_go/presentations/styles/icons.dart';
 import 'package:gaza_go/presentations/styles/styled_text.dart';
+import 'package:gaza_go/presentations/views/inventory/equipped_items_grid.dart';
 import 'package:gaza_go/presentations/views/inventory/inventory_badge.dart';
 import 'package:gaza_go/presentations/views/inventory/inventory_item.dart';
-import 'package:gaza_go/presentations/views/inventory/inventory_tile.dart';
 import 'package:get/get.dart';
 
 class InventoryHome extends StatelessWidget {
@@ -30,77 +29,7 @@ class InventoryHome extends StatelessWidget {
           children: [
             Padding(
               padding: EdgeInsets.only(left: 20.0.sp, right: 20.0.sp, bottom: 20.0.sp),
-              child: Column(
-                children: [
-                  Obx(() {
-                    return StaggeredGrid.count(
-                      crossAxisCount: 4,
-                      mainAxisSpacing: 6,
-                      crossAxisSpacing: 6,
-                      children: [
-                        if (controller.equippedItemList.isNotEmpty) ...[
-                          StaggeredGridTile.count(
-                            crossAxisCellCount: 2,
-                            mainAxisCellCount: 2,
-                            child: InventoryTile(
-                              index: 0,
-                              id: controller.equippedShoe.value.id,
-                              itemGrade: controller.equippedShoe.value.itemGrade,
-                              durability: controller.equippedShoe.value.durability,
-                              imageUrl: controller.equippedShoe.value.itemImageUrl,
-                            ),
-                          ),
-                          StaggeredGridTile.count(
-                            crossAxisCellCount: 2,
-                            mainAxisCellCount: 2,
-                            child: InventoryTile(
-                              index: 1,
-                              imageUrl: controller.equippedBadge.value.badge.imageUrl,
-                              badgeId: controller.equippedBadge.value.badge.id,
-                            ),
-                          ),
-                          StaggeredGridTile.count(
-                            crossAxisCellCount: 1,
-                            mainAxisCellCount: 1,
-                            child: InventoryTile(
-                              index: 2,
-                              itemGrade: controller.equippedHat.value.itemGrade,
-                              imageUrl: controller.equippedHat.value.itemImageUrl,
-                            ),
-                          ),
-                          StaggeredGridTile.count(
-                            crossAxisCellCount: 1,
-                            mainAxisCellCount: 1,
-                            child: InventoryTile(
-                              index: 3,
-                              itemGrade: controller.equippedTop.value.itemGrade,
-                              imageUrl: controller.equippedTop.value.itemImageUrl,
-                            ),
-                          ),
-                          StaggeredGridTile.count(
-                            crossAxisCellCount: 1,
-                            mainAxisCellCount: 1,
-                            child: InventoryTile(
-                              index: 4,
-                              itemGrade: controller.equippedBottom.value.itemGrade,
-                              imageUrl: controller.equippedBottom.value.itemImageUrl,
-                            ),
-                          ),
-                          StaggeredGridTile.count(
-                            crossAxisCellCount: 1,
-                            mainAxisCellCount: 1,
-                            child: InventoryTile(
-                              index: 5,
-                              itemGrade: controller.equippedAccessory.value.itemGrade,
-                              imageUrl: controller.equippedAccessory.value.itemImageUrl,
-                            ),
-                          ),
-                        ]
-                      ],
-                    );
-                  }),
-                ],
-              ),
+              child: EquippedItemsGrid(controller: controller),
             ),
             Padding(
                 padding: EdgeInsets.symmetric(vertical: 20.0.sp),

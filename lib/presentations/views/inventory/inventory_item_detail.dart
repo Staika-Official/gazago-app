@@ -1,3 +1,4 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:gaza_go/platform/controllers/inventory_controller.dart';
@@ -61,10 +62,11 @@ class InventoryItemDetail extends StatelessWidget {
                                 padding: EdgeInsets.symmetric(vertical: 10.0.sp),
                                 child: Column(
                                   children: [
-                                    Image(
-                                      image: NetworkImage(controller.selectedItem.value.itemImageUrl),
+                                    CachedNetworkImage(
+                                      imageUrl: controller.selectedItem.value.itemImageUrl,
                                       width: 200.sp,
-                                      fit: BoxFit.fill,
+                                      fit: BoxFit.fitWidth,
+                                      placeholder: (context, url) => const Center(child: SizedBox.square(dimension: 40, child: CircularProgressIndicator())),
                                     ),
                                     if (controller.isShoe.value)
                                       SizedBox(

@@ -211,4 +211,9 @@ class WalletMasterController extends GetxController {
     Get.back();
     Get.toNamed(Routes.verificationTerms);
   }
+
+  void moveToWallet() async {
+    getSpendingWalletBalances();
+    Get.toNamed(Routes.wallet);
+  }
 }

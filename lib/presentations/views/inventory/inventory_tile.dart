@@ -74,8 +74,7 @@ class InventoryTile extends StatelessWidget {
                     child: imageUrl != ''
                         ? CachedNetworkImage(
                             imageUrl: imageUrl,
-                            placeholder: (context, url) =>
-                                const CircularProgressIndicator(),
+                            placeholder: (context, url) => const Center(child: SizedBox.square(dimension: 40, child: CircularProgressIndicator())),
                             errorWidget: (context, url, error) => iconNoBadge,
                             fit: BoxFit.contain,
                           )
@@ -259,6 +258,45 @@ class InventoryTile extends StatelessWidget {
     if (bottomSpace == null) {
       return child;
     }
+
+    return Column(
+      children: [
+        Expanded(child: child),
+      ],
+    );
+  }
+}
+
+class InventoryTilePlaceHolder extends StatelessWidget {
+  const InventoryTilePlaceHolder({
+    Key? key,
+  }) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    final child = Container(
+      color: Colors.transparent,
+      child: Container(
+        decoration: BoxDecoration(
+          color: popupBgColor,
+          border: Border.all(
+            width: 2.sp,
+            color: Colors.black,
+          ),
+          borderRadius: BorderRadius.all(
+            Radius.circular(14.sp),
+          ),
+          boxShadow: [
+            BoxShadow(
+              color: Colors.black,
+              offset: Offset(2.sp, 4.sp),
+              blurRadius: 0.0,
+              spreadRadius: 0.0,
+            ),
+          ],
+        ),
+      ),
+    );
 
     return Column(
       children: [
