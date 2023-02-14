@@ -36,7 +36,7 @@ class Api {
 
   static Dio client({required String serviceUrl, bool needsToken = true, Map<String, dynamic>? queryParams, bool? isPatch = false, bool? isFile = false}) {
     _dio.options.baseUrl = '${F.baseUrl}$serviceUrl';
-    _dio.options.connectTimeout = 10000;
+    // _dio.options.connectTimeout = 10000;
     _dio.options.receiveTimeout = 10000;
     _dio.options.sendTimeout = 10000;
 

@@ -39,15 +39,18 @@ class ActivityChallenges extends StatelessWidget {
     //     )
     //     .toList();
     CircleOverlay centerCircle = CircleOverlay(
-      overlayId: 'ChallengeStartCenter${controller.selectedChallenge.value.id!}',
-      center: LatLng(controller.selectedChallenge.value.startLat!, controller.selectedChallenge.value.startLon!),
+      overlayId:
+          'ChallengeStartCenter${controller.selectedChallenge.value.id!}',
+      center: LatLng(controller.selectedChallenge.value.startLat!,
+          controller.selectedChallenge.value.startLon!),
       radius: 9,
       color: skyBlueColor,
     );
 
     CircleOverlay outerCircle = CircleOverlay(
       overlayId: 'ChallengeStart${controller.selectedChallenge.value.id!}',
-      center: LatLng(controller.selectedChallenge.value.startLat!, controller.selectedChallenge.value.startLon!),
+      center: LatLng(controller.selectedChallenge.value.startLat!,
+          controller.selectedChallenge.value.startLon!),
       radius: controller.selectedChallenge.value.startRadius!,
       color: const Color.fromRGBO(14, 230, 243, 0.3),
     );
@@ -82,14 +85,16 @@ class ActivityChallenges extends StatelessWidget {
 
     CircleOverlay centerCircle = CircleOverlay(
       overlayId: 'ChallengeEndCenter${controller.selectedChallenge.value.id!}',
-      center: LatLng(controller.selectedChallenge.value.endLat!, controller.selectedChallenge.value.endLon!),
+      center: LatLng(controller.selectedChallenge.value.endLat!,
+          controller.selectedChallenge.value.endLon!),
       radius: 9,
       color: Colors.red,
     );
 
     CircleOverlay outerCircle = CircleOverlay(
       overlayId: 'ChallengeEnd${controller.selectedChallenge.value.id!}',
-      center: LatLng(controller.selectedChallenge.value.endLat!, controller.selectedChallenge.value.endLon!),
+      center: LatLng(controller.selectedChallenge.value.endLat!,
+          controller.selectedChallenge.value.endLon!),
       radius: controller.selectedChallenge.value.endRadius!,
       color: Colors.red[300]?.withOpacity(0.3),
     );
@@ -146,7 +151,9 @@ class ActivityChallenges extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               SvgPicture.asset(
-                isSelected ? 'assets/images/activity/ico_challenge_checked.svg' : 'assets/images/activity/ico_challenge_unchecked.svg',
+                isSelected
+                    ? 'assets/images/activity/ico_challenge_checked.svg'
+                    : 'assets/images/activity/ico_challenge_unchecked.svg',
                 width: 16.sp,
                 height: 11.sp,
               ),
@@ -167,7 +174,9 @@ class ActivityChallenges extends StatelessWidget {
                         top: 7.sp,
                       ),
                       child: StyledText(
-                        challenge.startPointName != null ? '시작: ${challenge.startPointName!} - 도착: ${challenge.endPointName!}' : challenge.firstName!,
+                        challenge.startPointName != null
+                            ? '시작: ${challenge.startPointName!} - 도착: ${challenge.endPointName!}'
+                            : challenge.firstName!,
                         fontSize: 14,
                         fontWeight: 500,
                         lineHeight: 14,
@@ -196,15 +205,19 @@ class ActivityChallenges extends StatelessWidget {
           children: [
             NaverMap(
               initialCameraPosition: CameraPosition(
-                target: LatLng(controller.currentLocation.value.latitude, controller.currentLocation.value.longitude),
+                target: LatLng(controller.currentLocation.value.latitude,
+                    controller.currentLocation.value.longitude),
                 zoom: 14,
               ),
               circles: [
-                if (controller.selectedChallenge.value.id != null) ...renderStartPoint(controller),
-                if (controller.selectedChallenge.value.id != null) ...renderEndPoint(controller),
+                if (controller.selectedChallenge.value.id != null)
+                  ...renderStartPoint(controller),
+                if (controller.selectedChallenge.value.id != null)
+                  ...renderEndPoint(controller),
               ],
               markers: [
-                if (controller.selectedChallenge.value.id != null) ...renderMaker(controller),
+                if (controller.selectedChallenge.value.id != null)
+                  ...renderMaker(controller),
               ],
               mapType: MapType.Basic,
               activeLayers: const [MapLayer.LAYER_GROUP_MOUNTAIN],
@@ -273,7 +286,9 @@ class ActivityChallenges extends StatelessWidget {
                           padding: EdgeInsets.all(20.sp),
                           width: double.infinity.sp,
                           decoration: BoxDecoration(
-                            color: controller.selectedChallenge.value.id != null ? skyBlueColor : popupBgColor,
+                            color: controller.selectedChallenge.value.id != null
+                                ? skyBlueColor
+                                : popupBgColor,
                             borderRadius: BorderRadius.circular(12.sp),
                             border: Border.all(
                               width: 2.sp,
@@ -292,7 +307,14 @@ class ActivityChallenges extends StatelessWidget {
                           child: Text(
                             '가자GO',
                             textAlign: TextAlign.center,
-                            style: TextStyle(fontSize: 18.sp, fontWeight: FontWeight.w600, height: (16 / 18).sp, color: controller.selectedChallenge.value.id != null ? Colors.black : lightGrayColor),
+                            style: TextStyle(
+                                fontSize: 18.sp,
+                                fontWeight: FontWeight.w600,
+                                height: (16 / 18).sp,
+                                color: controller.selectedChallenge.value.id !=
+                                        null
+                                    ? Colors.black
+                                    : lightGrayColor),
                           ),
                         ),
                       ),
@@ -319,7 +341,7 @@ class ActivityChallenges extends StatelessWidget {
             //         ],
             //       ),
             //       child: const StyledText(
-            //         '첼린지 리스트',
+            //         '챌린지 리스트',
             //         fontSize: 16,
             //         fontWeight: 500,
             //         lineHeight: 22,
@@ -340,7 +362,8 @@ class ActivityChallenges extends StatelessWidget {
               left: MediaQuery.of(context).size.width / 2 - 76,
               top: 50.sp,
               child: Container(
-                  padding: EdgeInsets.only(top: 10.sp, bottom: 10.sp, right: 20.sp, left: 20.sp),
+                  padding: EdgeInsets.only(
+                      top: 10.sp, bottom: 10.sp, right: 20.sp, left: 20.sp),
                   decoration: BoxDecoration(
                     color: popupBgColor,
                     borderRadius: BorderRadius.circular(14.sp),

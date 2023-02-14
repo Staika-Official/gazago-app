@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:ui';
 
 import 'package:another_xlider/another_xlider.dart';
@@ -11,6 +12,7 @@ import 'package:gaza_go/platform/controllers/archive_controller.dart';
 import 'package:gaza_go/platform/controllers/inventory_controller.dart';
 import 'package:gaza_go/platform/controllers/loading_controller.dart';
 import 'package:gaza_go/platform/controllers/login_controller.dart';
+import 'package:gaza_go/platform/controllers/my_page_controller.dart';
 import 'package:gaza_go/platform/controllers/preference_controller.dart';
 import 'package:gaza_go/platform/controllers/shop_controller.dart';
 import 'package:gaza_go/platform/controllers/withdraw_confirm_controller.dart';
@@ -54,7 +56,7 @@ void showShoeRepairSlider(
           Padding(
             padding: EdgeInsets.only(top: 12.0.sp),
             child: StyledText(
-              '현재 신발 내구도 ${controller.equippedShoe.value.durability.toInt()}',
+              '현재 신발 내구도 ${formatDecimalPlaces(controller.equippedShoe.value.durability, 2)}',
               fontSize: 16,
               lineHeight: 22,
               fontWeight: 500,
@@ -193,7 +195,7 @@ void showRepairStatSlider(ActivityController controller, StatModel stat,
                     color: deepGrayColor,
                   )
                 : StyledText(
-                    '현재 신발 내구도 ${stat.currentStat}',
+                    '현재 신발 내구도 ${formatDecimalPlaces(stat.currentStat, 2)}',
                     fontSize: 16,
                     lineHeight: 22,
                     fontWeight: 500,
@@ -442,6 +444,48 @@ Future<void> showGpsAlert() async {
       ),
     ],
   );
+}
+
+Future<bool> showGalleryPermissionAlert(MyPageController controller) async {
+  Completer<bool> photoPermissionCompleter = Completer();
+  bool permissionGranted = false;
+  await showAlert(
+    title: '알림',
+    contentWidget: Padding(
+      padding: EdgeInsets.only(top: 30.sp, bottom: 50.sp),
+      child: Text.rich(
+        textAlign: TextAlign.center,
+        style: TextStyle(
+          fontSize: 18.sp,
+          height: 24.sp / 18.sp,
+          fontWeight: FontWeight.w500,
+          color: Colors.white,
+        ),
+        TextSpan(
+          text: '프로필 사진 변경을 위해서 ',
+          children: [
+            TextSpan(text: '사진\n', style: TextStyle(color: skyBlueColor)),
+            const TextSpan(text: '엑세스 권한을 허용해 주세요.'),
+          ],
+        ),
+      ),
+    ),
+    actions: [
+      Expanded(
+        child: GazagoButton(
+          buttonText: '확인',
+          onTap: () async {
+            Get.back();
+            permissionGranted = await controller.requestPhotoPermission();
+          },
+        ),
+      ),
+    ],
+  );
+
+  photoPermissionCompleter.complete(permissionGranted);
+
+  return photoPermissionCompleter.future;
 }
 
 void showEndExerciseAlert(ActivityMixin mixin, ChallengeModel challenge) {

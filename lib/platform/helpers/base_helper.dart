@@ -95,7 +95,7 @@ String formatDecimalPlaces(double val, int decimalPlaces, {RoundType roundType =
     if (val == 0) {
       formatter = NumberFormat('0');
     } else {
-      formatter = NumberFormat('#,###.${"#" * decimalPlaces}');
+      formatter = NumberFormat('#,###.${"0" * decimalPlaces}');
     }
   } else {
     formatter = NumberFormat('#,###');

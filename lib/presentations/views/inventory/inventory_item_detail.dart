@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:gaza_go/platform/controllers/inventory_controller.dart';
+import 'package:gaza_go/platform/helpers/base_helper.dart';
 import 'package:gaza_go/platform/helpers/inventory_helper.dart';
 import 'package:gaza_go/presentations/components/default_container.dart';
 import 'package:gaza_go/presentations/styles/colors.dart';
@@ -161,7 +162,7 @@ class InventoryItemDetail extends StatelessWidget {
                                                       Padding(
                                                         padding: EdgeInsets.only(left: 5.0.sp),
                                                         child: StyledText(
-                                                          controller.selectedItem.value.durability.toString(),
+                                                          formatDecimalPlaces(controller.selectedItem.value.durability, 2),
                                                           fontWeight: 800,
                                                           fontSize: 14,
                                                           lineHeight: 15,
@@ -215,7 +216,7 @@ class InventoryItemDetail extends StatelessWidget {
                                   ],
                                 ),
                                 child: Padding(
-                                  padding: EdgeInsets.all(20.0.sp),
+                                  padding: EdgeInsets.all(15.0.sp),
                                   child: Row(
                                     mainAxisSize: MainAxisSize.max,
                                     crossAxisAlignment: CrossAxisAlignment.center,
@@ -414,7 +415,7 @@ class InventoryItemDetail extends StatelessWidget {
                                         ],
                                       ),
                                       child: InkWell(
-                                        onTap: () => null,
+                                        onTap: null,
                                         child: Padding(
                                           padding: EdgeInsets.symmetric(vertical: 13.0.sp, horizontal: 20.sp),
                                           child: Column(
@@ -487,6 +488,7 @@ class InventoryItemDetail extends StatelessWidget {
                     onTap: () => controller.showShoesRepairPopup(controller.selectedItem.value.id),
                     child: Container(
                       padding: EdgeInsets.all(20.sp),
+                      margin: EdgeInsets.only(bottom: 20),
                       width: double.infinity,
                       decoration: BoxDecoration(
                         color: skyBlueColor,
@@ -506,7 +508,7 @@ class InventoryItemDetail extends StatelessWidget {
                         ],
                       ),
                       child: Text(
-                        '수리',
+                        '내구도 충전하기',
                         textAlign: TextAlign.center,
                         style: TextStyle(
                           fontSize: 18.sp,

@@ -122,6 +122,7 @@ SvgPicture iconLoginGoogle = SvgPicture.asset(
     height: 14.sp);
 
 // Header
+
 SvgPicture iconHeaderLogo = SvgPicture.asset(
     'assets/images/common/img_header_logo.svg',
     width: 90.sp,
@@ -130,10 +131,14 @@ SvgPicture iconHeaderAvatar = SvgPicture.asset(
     'assets/images/common/ico_header_avatar.svg',
     width: 21.sp,
     height: 21.sp);
+SvgPicture iconHeaderGear = SvgPicture.asset(
+    'assets/images/common/ico_header_gear.svg',
+    width: 30.sp,
+    height: 30.sp);
 SvgPicture iconHeaderWallet = SvgPicture.asset(
     'assets/images/common/ico_header_wallet.svg',
-    width: 22.sp,
-    height: 16.sp);
+    width: 30.sp,
+    height: 30.sp);
 
 SvgPicture iconArchiveClock = SvgPicture.asset(
     'assets/images/archive/ico_archive_clock.svg',

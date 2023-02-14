@@ -88,21 +88,27 @@ class ActivityActive extends StatelessWidget {
                                         ),
                                       ),
                                       stat.currentStat > 1.0
-                                          ? LayoutBuilder(builder: (context, constraints) {
+                                          ? LayoutBuilder(
+                                              builder: (context, constraints) {
                                               return Container(
                                                 width: (stat.currentStat > 20
-                                                        ? constraints.maxWidth / (100 / stat.currentStat)
+                                                        ? constraints.maxWidth /
+                                                            (100 /
+                                                                stat.currentStat)
                                                         : stat.currentStat < 2
                                                             ? 0
                                                             : 34)
                                                     .sp,
                                                 decoration: BoxDecoration(
-                                                  color: stat.currentStat < 30 ? textRedColor : lightGreenColor,
+                                                  color: stat.currentStat < 30
+                                                      ? textRedColor
+                                                      : lightGreenColor,
                                                   border: Border.all(
                                                     width: 2.sp,
                                                     color: Colors.black,
                                                   ),
-                                                  borderRadius: BorderRadius.all(
+                                                  borderRadius:
+                                                      BorderRadius.all(
                                                     Radius.circular(42.sp),
                                                   ),
                                                 ),
@@ -128,20 +134,25 @@ class ActivityActive extends StatelessWidget {
                                         ),
                                       ),
                                       stat.currentStat > 1.0
-                                          ? LayoutBuilder(builder: (context, constraints) {
+                                          ? LayoutBuilder(
+                                              builder: (context, constraints) {
                                               return Container(
                                                 width: stat.currentStat > 20
-                                                    ? constraints.maxWidth / (100 / stat.currentStat)
+                                                    ? constraints.maxWidth /
+                                                        (100 / stat.currentStat)
                                                     : stat.currentStat < 2
                                                         ? 0
                                                         : 34,
                                                 decoration: BoxDecoration(
-                                                  color: stat.currentStat <= 30 ? textRedColor : purpleColor,
+                                                  color: stat.currentStat <= 30
+                                                      ? textRedColor
+                                                      : purpleColor,
                                                   border: Border.all(
                                                     width: 2.sp,
                                                     color: Colors.black,
                                                   ),
-                                                  borderRadius: BorderRadius.all(
+                                                  borderRadius:
+                                                      BorderRadius.all(
                                                     Radius.circular(50.sp),
                                                   ),
                                                 ),
@@ -164,11 +175,13 @@ class ActivityActive extends StatelessWidget {
                         children: [
                           stat.type == 'STAMINA'
                               ? Padding(
-                                  padding: EdgeInsets.only(left: 13.0.sp, right: 10.sp),
+                                  padding: EdgeInsets.only(
+                                      left: 13.0.sp, right: 10.sp),
                                   child: iconStamina,
                                 )
                               : Padding(
-                                  padding: EdgeInsets.only(left: 12.0.sp, right: 7.sp),
+                                  padding: EdgeInsets.only(
+                                      left: 12.0.sp, right: 7.sp),
                                   child: iconShoes,
                                 ),
                           StyledText(
@@ -177,7 +190,9 @@ class ActivityActive extends StatelessWidget {
                             fontWeight: 800,
                             fontSize: 15,
                             lineHeight: 15,
-                            color: stat.currentStat <= 30 ? Colors.white : Colors.black,
+                            color: stat.currentStat <= 30
+                                ? Colors.white
+                                : Colors.black,
                           ),
                           Padding(
                             padding: EdgeInsets.only(left: 5.0.sp),
@@ -186,7 +201,9 @@ class ActivityActive extends StatelessWidget {
                               fontWeight: 800,
                               fontSize: 14,
                               lineHeight: 15,
-                              color: stat.currentStat <= 30 ? Colors.white : Colors.black,
+                              color: stat.currentStat <= 30
+                                  ? Colors.white
+                                  : Colors.black,
                             ),
                           ),
                         ],
@@ -219,7 +236,8 @@ class ActivityActive extends StatelessWidget {
                                     child: IconButton(
                                       icon: iconPlus,
                                       splashRadius: 19.sp,
-                                      onPressed: () => {controller.onClickRepairStat(stat)},
+                                      onPressed: () =>
+                                          {controller.onClickRepairStat(stat)},
                                     ),
                                   ),
                                 )
@@ -248,7 +266,8 @@ class ActivityActive extends StatelessWidget {
                                     child: IconButton(
                                       icon: iconPlus,
                                       splashRadius: 15.sp,
-                                      onPressed: () => {controller.onClickRepairStat(stat)},
+                                      onPressed: () =>
+                                          {controller.onClickRepairStat(stat)},
                                     ),
                                   ),
                                 ),
@@ -283,7 +302,9 @@ class ActivityActive extends StatelessWidget {
               height: 6.sp,
               margin: EdgeInsets.only(right: 8.sp),
               decoration: BoxDecoration(
-                color: controller.exerciseSteps.value < 1 ? Colors.white : controller.exerciseStateTextColor.value,
+                color: controller.exerciseSteps.value < 1
+                    ? Colors.white
+                    : controller.exerciseStateTextColor.value,
                 borderRadius: BorderRadius.circular(6.sp),
               ),
             ),
@@ -295,7 +316,10 @@ class ActivityActive extends StatelessWidget {
                     fontWeight: 500,
                   )
                 : StyledText(
-                    (controller.realTimeSpeed.value < 1 || controller.realTimeSpeed.value > 6) && controller.exerciseState.value == ExerciseState.ongoing
+                    (controller.realTimeSpeed.value < 1 ||
+                                controller.realTimeSpeed.value > 6) &&
+                            controller.exerciseState.value ==
+                                ExerciseState.ongoing
                         ? '${controller.exerciseState.value.label} (보상 불가)'
                         : controller.exerciseState.value.label,
                     fontSize: 18,
@@ -313,7 +337,8 @@ class ActivityActive extends StatelessWidget {
             return Container(
               child: controller.selectedChallenge.value.id != null
                   ? Container(
-                      padding: EdgeInsets.symmetric(horizontal: 14.sp, vertical: 7.sp),
+                      padding: EdgeInsets.symmetric(
+                          horizontal: 14.sp, vertical: 7.sp),
                       decoration: BoxDecoration(
                         color: const Color(0xff1b1b1b),
                         borderRadius: BorderRadius.circular(50.sp),
@@ -342,7 +367,9 @@ class ActivityActive extends StatelessWidget {
                   Padding(
                     padding: EdgeInsets.only(left: 14.0.sp),
                     child: AnimatedFlipCounter(
-                      value: controller.userState.value.exercise != null ? controller.userState.value.exercise!.rewardGo! : 0,
+                      value: controller.userState.value.exercise != null
+                          ? controller.userState.value.exercise!.rewardGo!
+                          : 0,
                       duration: const Duration(milliseconds: 500),
                       fractionDigits: 2,
                       thousandSeparator: ',',
@@ -371,10 +398,12 @@ class ActivityActive extends StatelessWidget {
             );
           }),
           Padding(
-              padding: EdgeInsets.symmetric(horizontal: 20.0.sp, vertical: 10.sp),
+              padding:
+                  EdgeInsets.symmetric(horizontal: 20.0.sp, vertical: 10.sp),
               child: Container(
                 width: double.infinity.sp,
-                padding: EdgeInsets.symmetric(vertical: 12.sp, horizontal: 24.sp),
+                padding:
+                    EdgeInsets.symmetric(vertical: 12.sp, horizontal: 24.sp),
                 decoration: BoxDecoration(
                   color: speedBlackColor,
                   borderRadius: BorderRadius.circular(50.sp),
@@ -388,12 +417,14 @@ class ActivityActive extends StatelessWidget {
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           crossAxisAlignment: CrossAxisAlignment.end,
                           children: [
-                            ...renderGauge(controller.exerciseStateGaugeColor.value),
+                            ...renderGauge(
+                                controller.exerciseStateGaugeColor.value),
                           ],
                         ),
                         Positioned(
                           top: -26.sp,
-                          left: calculateGaugePosition(constraints, controller.realTimeSpeed.value),
+                          left: calculateGaugePosition(
+                              constraints, controller.realTimeSpeed.value),
                           child: GaugeCursor(
                             color: controller.exerciseStateGaugeColor.value,
                             speed: controller.realTimeSpeed.value,
@@ -447,7 +478,8 @@ class ActivityActive extends StatelessWidget {
                       width: constraints.maxWidth / 3,
                       child: Column(
                         children: [
-                          SvgPicture.asset('assets/images/activity/ico_time.svg'),
+                          SvgPicture.asset(
+                              'assets/images/activity/ico_time.svg'),
                           Padding(
                             padding: EdgeInsets.only(top: 10.sp),
                             child: StyledText(
@@ -465,7 +497,8 @@ class ActivityActive extends StatelessWidget {
                       width: constraints.maxWidth / 3,
                       child: Column(
                         children: [
-                          SvgPicture.asset('assets/images/activity/ico_distance.svg'),
+                          SvgPicture.asset(
+                              'assets/images/activity/ico_distance.svg'),
                           Padding(
                             padding: EdgeInsets.only(top: 10.sp),
                             child: StyledText(
@@ -483,7 +516,8 @@ class ActivityActive extends StatelessWidget {
                       width: constraints.maxWidth / 3,
                       child: Column(
                         children: [
-                          SvgPicture.asset('assets/images/activity/ico_step.svg'),
+                          SvgPicture.asset(
+                              'assets/images/activity/ico_step.svg'),
                           Padding(
                             padding: EdgeInsets.only(top: 10.sp),
                             child: StyledText(
@@ -519,7 +553,8 @@ class ActivityActive extends StatelessWidget {
             child: Align(
               alignment: Alignment.bottomCenter,
               child: Padding(
-                padding: EdgeInsets.only(left: 35.sp, right: 35.sp, bottom: 100.sp),
+                padding:
+                    EdgeInsets.only(left: 35.sp, right: 35.sp, bottom: 100.sp),
                 child: Obx(() {
                   return Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -527,23 +562,31 @@ class ActivityActive extends StatelessWidget {
                       CircularButton(
                         radius: 50,
                         color: Colors.white,
-                        onTap: () => controller.showExerciseMap(const ActivityMap()),
+                        onTap: () =>
+                            controller.showExerciseMap(const ActivityMap()),
                         child: SvgPicture.asset(
                           'assets/images/activity/ico_map.svg',
                         ),
                       ),
-                      [ExerciseState.ongoing].any((state) => controller.exerciseState.value == state)
+                      [
+                        ExerciseState.ongoing
+                      ].any((state) => controller.exerciseState.value == state)
                           ? Row(
                               children: [
                                 GestureDetector(
-                                  onTapDown: (tapDownDetail) => controller.onTapDownStop(tapDownDetail, controller.selectedChallenge.value, controller: controller),
-                                  onTapUp: (tapUpDetail) => controller.onTapUpStop(tapUpDetail),
+                                  onTapDown: (tapDownDetail) =>
+                                      controller.onTapDownStop(tapDownDetail,
+                                          controller.selectedChallenge.value,
+                                          controller: controller),
+                                  onTapUp: (tapUpDetail) =>
+                                      controller.onTapUpStop(tapUpDetail),
                                   child: Stack(
                                     children: [
                                       CircularButton(
                                         radius: 78.sp,
                                         color: Colors.white,
-                                        child: Icon(Icons.stop, color: Colors.black, size: 35.sp),
+                                        child: Icon(Icons.stop,
+                                            color: Colors.black, size: 35.sp),
                                       ),
                                       Positioned(
                                         top: 0,
@@ -555,7 +598,8 @@ class ActivityActive extends StatelessWidget {
                                           child: CircularProgressIndicator(
                                             strokeWidth: 6.sp,
                                             color: skyBlueColor,
-                                            value: controller.stopProgress.value,
+                                            value:
+                                                controller.stopProgress.value,
                                           ),
                                         ),
                                       )
@@ -568,7 +612,8 @@ class ActivityActive extends StatelessWidget {
                                     radius: 78.sp,
                                     color: const Color(0xffFF2222),
                                     onTap: () => controller.pauseExercise(),
-                                    child: Icon(Icons.pause, color: Colors.white, size: 35.sp),
+                                    child: Icon(Icons.pause,
+                                        color: Colors.white, size: 35.sp),
                                   ),
                                 )
                               ],
@@ -577,13 +622,19 @@ class ActivityActive extends StatelessWidget {
                               radius: 90.sp,
                               color: const Color(0xffFF2222),
                               onTap: () {
-                                if (controller.exerciseState.value == ExerciseState.paused) {
-                                  controller.thr.throttle(() => controller.continueExercise());
+                                if (controller.exerciseState.value ==
+                                    ExerciseState.paused) {
+                                  controller.thr.throttle(
+                                      () => controller.continueExercise());
                                 } else {
-                                  controller.thr.throttle(() => controller.startExercise(controller.selectedExerciseType.value, controller.selectedChallenge.value));
+                                  controller.thr.throttle(() =>
+                                      controller.startExercise(
+                                          controller.selectedExerciseType.value,
+                                          controller.selectedChallenge.value));
                                 }
                               },
-                              child: Icon(Icons.play_arrow, color: Colors.white, size: 35.sp),
+                              child: Icon(Icons.play_arrow,
+                                  color: Colors.white, size: 35.sp),
                             ),
                       CircularButton(
                         radius: 50,
@@ -611,7 +662,8 @@ class GaugeCursor extends StatelessWidget {
   final Color color;
   final double speed;
 
-  const GaugeCursor({Key? key, required this.color, required this.speed}) : super(key: key);
+  const GaugeCursor({Key? key, required this.color, required this.speed})
+      : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -627,7 +679,8 @@ class GaugeCursor extends StatelessWidget {
             child: Container(
               width: 12,
               height: 12,
-              decoration: BoxDecoration(borderRadius: BorderRadius.circular(12), color: color),
+              decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(12), color: color),
             ),
           ),
           Positioned(
