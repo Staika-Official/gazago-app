@@ -8,19 +8,22 @@ import 'package:google_mobile_ads/google_mobile_ads.dart';
 import '../models/challenge_model.dart';
 
 mixin AdmobMixin {
-  RxMap<String, RewardedAd?> ads = RxMap({
-    "startFamousAd": null,
-    "startHikingAd": null,
-    "startWalkingAd": null,
-    "endFamousAd": null,
-    "endHikingAd": null,
-    "endWalkingAd": null,
+  RewardedAd? startAd;
+  RewardedAd? endAd;
+
+  RxMap<String, int> adLoadAttempts = RxMap({
+    "startFamousAd": 0,
+    "startHikingAd": 0,
+    "startWalkingAd": 0,
+    "endFamousAd": 0,
+    "endHikingAd": 0,
+    "endWalkingAd": 0,
   });
 
-  int numRewardedLoadAttempts = 0;
   String startAdid = '';
   String endAdid = '';
   RxString selectedAd = RxString('');
+  RxBool isLoadedAd = RxBool(false);
 
   void initAdId() {
     startAdid = '';
@@ -66,6 +69,7 @@ mixin AdmobMixin {
   }
 
   Future initEndAdmobAdId(String adType) async {
+    print(adType);
     if (adType == 'endFamousAd') {
       print('명산광고');
       // 100대 명산 등산 시작 광고
@@ -90,19 +94,25 @@ mixin AdmobMixin {
   // 운동 시작 광고
   void exerciseStartRewardedAdInit(String adType,
       {successCallback, errorCallback}) async {
+    print('adType: ${adType}, ${startAdid}');
     await RewardedAd.load(
-        adUnitId: startAdid,
+        adUnitId: Platform.isIOS
+            ? 'ca-app-pub-3940256099942544/1712485313'
+            : 'ca-app-pub-3940256099942544/5224354917',
         request: const AdRequest(),
         rewardedAdLoadCallback:
             RewardedAdLoadCallback(onAdLoaded: (RewardedAd ad) {
           print('RewardedAd loaded');
-          print(ad);
-          print(adType);
-          ads[adType] = ad;
+
+          startAd = ad;
+          isLoadedAd.value = true;
+          adLoadAttempts[adType] = 0;
           successCallback();
         }, onAdFailedToLoad: (error) {
-          print('RewardedAd failed to load: $error');
-          ads[adType] = null;
+          print('RewardedAd failed to load: $error adType ${adType}');
+          startAd = null;
+          isLoadedAd.value = false;
+          adLoadAttempts[adType] = adLoadAttempts[adType]! + 1;
           errorCallback();
         }));
   }
@@ -111,29 +121,32 @@ mixin AdmobMixin {
   Future exerciseEndRewardedAdInit(String adType,
       {successCallback, errorCallback}) async {
     await RewardedAd.load(
-        adUnitId: endAdid,
+        adUnitId: Platform.isIOS
+            ? 'ca-app-pub-3940256099942544/1712485313'
+            : 'ca-app-pub-3940256099942544/5224354917',
         request: const AdRequest(),
         rewardedAdLoadCallback:
             RewardedAdLoadCallback(onAdLoaded: (RewardedAd ad) {
           print('RewardedAd loaded');
-
-          ads[adType] = ad;
+          endAd = ad;
+          adLoadAttempts[adType] = 0;
           successCallback();
           // numRewardedLoadAttempts = 0;
         }, onAdFailedToLoad: (error) {
-          print('RewardedAd failed to load: $error');
-          ads[adType] = null;
+          print('RewardedAd failed to load: $error adType ${adType}');
+          endAd = null;
+          adLoadAttempts[adType] = adLoadAttempts[adType]! + 1;
           errorCallback();
         }));
   }
 
   void showExerciseStartAd(
       ActivityController activityController, String adType) {
-    if (ads[adType] == null) {
+    if (startAd == null) {
       print('Warning: attempt to show rewarded before loaded.');
       return;
     }
-    ads[adType]!.fullScreenContentCallback = FullScreenContentCallback(
+    startAd!.fullScreenContentCallback = FullScreenContentCallback(
       onAdShowedFullScreenContent: (RewardedAd ad) =>
           print('ad onAdShowedFullScreenContent.'),
       onAdDismissedFullScreenContent: (RewardedAd ad) {
@@ -143,7 +156,7 @@ mixin AdmobMixin {
           activityController.handleMoveExerciseActive(
               activityController.selectedExerciseType.value,
               adId: ad.adUnitId);
-          ads[adType] = null;
+          startAd = null;
         }
 
         ad.dispose();
@@ -155,14 +168,13 @@ mixin AdmobMixin {
       onAdImpression: (RewardedAd ad) => print('$ad impression occurred.'),
     );
 
-    ads[adType]!.setImmersiveMode(true);
-    ads[adType]!.show(
-        onUserEarnedReward: (AdWithoutView ad, RewardItem reward) {
+    startAd!.setImmersiveMode(true);
+    startAd!.show(onUserEarnedReward: (AdWithoutView ad, RewardItem reward) {
       print('$ad with reward $RewardItem(${reward.amount}, ${reward.type})');
       DateTime now = DateTime.now();
       HiveStore.save(key: adType, value: now);
     });
-    ads[adType] = null;
+    startAd = null;
   }
 
   void showExerciseEndAd(
@@ -171,12 +183,11 @@ mixin AdmobMixin {
     //     await checkActivityType(selectedAd.value);
 
     print('끝내는운동이뭐냐${selectedAd.value}');
-    if (ads[selectedAd.value] == null) {
+    if (endAd == null) {
       print('Warning: attempt to show rewarded before loaded.');
       return;
     }
-    ads[selectedAd.value]!.fullScreenContentCallback =
-        FullScreenContentCallback(
+    endAd!.fullScreenContentCallback = FullScreenContentCallback(
       onAdShowedFullScreenContent: (RewardedAd ad) =>
           print('ad onAdShowedFullScreenContent.'),
       onAdDismissedFullScreenContent: (RewardedAd ad) {
@@ -185,7 +196,7 @@ mixin AdmobMixin {
         if (ad.adUnitId.isNotEmpty) {
           activityController.endExercise(challenge,
               source: 'showEndADExerciseAlert', adId: ad.adUnitId);
-          ads[selectedAd.value] = null;
+          endAd = null;
         }
 
         ad.dispose();
@@ -197,14 +208,13 @@ mixin AdmobMixin {
       onAdImpression: (RewardedAd ad) => print('$ad impression occurred.'),
     );
 
-    ads[selectedAd.value]!.setImmersiveMode(true);
-    ads[selectedAd.value]!.show(
-        onUserEarnedReward: (AdWithoutView ad, RewardItem reward) {
+    endAd!.setImmersiveMode(true);
+    endAd!.show(onUserEarnedReward: (AdWithoutView ad, RewardItem reward) {
       print('$ad with reward $RewardItem(${reward.amount}, ${reward.type})');
       DateTime now = DateTime.now();
 
       HiveStore.save(key: selectedAd.value, value: now);
     });
-    ads[selectedAd.value] = null;
+    endAd = null;
   }
 }

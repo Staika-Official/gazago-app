@@ -100,6 +100,7 @@ dependencies:
   path_provider: ^2.0.11
   advertising_id: 2.3.0
   device_info_plus: ^8.0.0
+  cloud_firestore: ^4.3.1
 
 
 

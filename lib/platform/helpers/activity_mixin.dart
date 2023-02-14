@@ -533,7 +533,7 @@ mixin ActivityMixin {
       initializeStopTimer();
     }
     print(controller.userState.value.exercise?.type);
-    String endAd = await controller
+    await controller
         .checkActivityType(controller.userState.value.exercise?.type);
     await controller.handleSelectAdType(
         controller.userState.value.exercise?.type == 'HIKING'
@@ -547,34 +547,28 @@ mixin ActivityMixin {
             : controller.userState.value.exercise?.type == 'WALKING'
                 ? 'endWalkingAd'
                 : 'endFamousAd');
-    print(date);
+
     DateTime? viewableTime = date?.add(const Duration(hours: 1));
     DateTime now = DateTime.now();
     stopTimer = Timer.periodic(const Duration(milliseconds: 10), (timer) {
       if (counter == const Duration(milliseconds: 2500)) {
         initializeStopTimer();
+
         if (source != null && source == 'pendingExerciseDialog') {
           Get.back();
         }
-        if (date == null) {
-          if (controller.ads[endAd] != null) {
-            showEndExerciseAdDialog(challenge, controller);
-          } else {
-            if (source != null && source == 'pendingExerciseDialog') {
-              endExercise(challenge, source: source);
-            } else {
-              showEndExerciseDialog(challenge);
-            }
-          }
+        if (date == null || viewableTime!.isBefore(now)) {
+          controller.initEndAdmobAdId(controller.selectedAd.value);
+          controller.exerciseEndRewardedAdInit(
+            controller.selectedAd.value,
+          );
+          showEndExerciseAdDialog(challenge, controller);
+          controller.adLoadTimerStart();
         } else {
-          if (viewableTime!.isBefore(now)) {
-            showEndExerciseAdDialog(challenge, controller);
+          if (source != null && source == 'pendingExerciseDialog') {
+            endExercise(challenge, source: source);
           } else {
-            if (source != null && source == 'pendingExerciseDialog') {
-              endExercise(challenge, source: source);
-            } else {
-              showEndExerciseDialog(challenge);
-            }
+            showEndExerciseDialog(challenge);
           }
         }
       } else {

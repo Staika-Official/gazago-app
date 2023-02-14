@@ -17,7 +17,6 @@ import 'package:gaza_go/platform/helpers/admob_mixin.dart';
 import 'package:gaza_go/platform/helpers/alert_helper.dart';
 import 'package:gaza_go/platform/helpers/challenge_mixin.dart';
 import 'package:gaza_go/platform/helpers/login_helper.dart';
-import 'package:gaza_go/platform/models/admob_model.dart';
 import 'package:gaza_go/platform/models/challenge_hierarchy_model.dart';
 import 'package:gaza_go/platform/models/challenge_model.dart';
 import 'package:gaza_go/platform/models/current_user_state_model.dart';
@@ -128,7 +127,7 @@ class ActivityController extends SuperController
   RxBool isAbleAdView = RxBool(false);
   final RxBool isLoadingGetAdData = RxBool(false);
   Timer? _adTimer;
-  final RxInt time = RxInt(0);
+  final RxInt time = RxInt(5);
   String? advertisingId = '';
   bool? isLimitAdTrackingEnabled;
 
@@ -158,7 +157,7 @@ class ActivityController extends SuperController
     challengeGuideController = AnimationController(vsync: this);
     await initController();
     // 타이머 시작
-    adLoadTimerStart();
+    // adLoadTimerStart();
     checkConnectivityStatus();
     if ([ExerciseState.ongoing, ExerciseState.paused]
         .any((state) => state == exerciseState.value)) {
@@ -666,93 +665,22 @@ class ActivityController extends SuperController
       DateTime? date = HiveStore.load(key: selectedAd.value);
       DateTime? viewableTime = date?.add(const Duration(hours: 1));
       DateTime now = DateTime.now();
-      isLoadingGetAdData.value = true;
+      // HiveStore.save(key: selectedAd.value, value: null);
 
-      if (date == null) {
-        if (ads[selectedAd.value] != null) {
-          Get.dialog(const AdSelect(),
-              barrierDismissible: false,
-              barrierColor: const Color.fromRGBO(0, 0, 0, 0.85));
-        } else {
-          if (selectedExerciseType.value == ExerciseType.walking ||
-              selectedExerciseType.value == ExerciseType.hiking) {
-            handleMoveExerciseActive(exerciseType);
-          } else {
-            if (doableChallenges.isNotEmpty) {
-              handleMoveExerciseActive(exerciseType);
-            } else {
-              moveToChallengeMap();
-            }
-          }
+      if (date == null || viewableTime!.isBefore(now)) {
+        Get.dialog(const AdSelect(),
+            barrierDismissible: false,
+            barrierColor: const Color.fromRGBO(0, 0, 0, 0.85));
+        if (startAd == null) {
+          await initStartAdmobAdId(selectedAd.value);
+          adLoadTimerStart();
+          exerciseStartRewardedAdInit(
+            selectedAd.value,
+          );
         }
       } else {
-        if (viewableTime!.isBefore(now)) {
-          Get.dialog(const AdSelect(),
-              barrierDismissible: false,
-              barrierColor: const Color.fromRGBO(0, 0, 0, 0.85));
-        } else {
-          if (selectedExerciseType.value == ExerciseType.walking ||
-              selectedExerciseType.value == ExerciseType.hiking) {
-            handleMoveExerciseActive(exerciseType);
-          } else {
-            if (doableChallenges.isNotEmpty) {
-              handleMoveExerciseActive(exerciseType);
-            } else {
-              moveToChallengeMap();
-            }
-          }
-        }
+        handleMoveExerciseActive(exerciseType);
       }
-
-      // if (ads[selectedAd.value] != null) {
-      //   if (viewableTime.isBefore(now)) {
-      //     Get.dialog(const AdSelect(),
-      //         barrierDismissible: false,
-      //         barrierColor: const Color.fromRGBO(0, 0, 0, 0.85));
-      //   } else {
-      //     handleMoveExerciseActive(exerciseType);
-      //   }
-      // } else {
-      //   // handleMoveExerciseActive(exerciseType);
-      //   if (selectedExerciseType.value == ExerciseType.walking ||
-      //       selectedExerciseType.value == ExerciseType.hiking) {
-      //     handleMoveExerciseActive(exerciseType);
-      //   } else {
-      //     Get.back();
-      //     if (doableChallenges.isNotEmpty) {
-      //       // moveToChallengeSelection(selectedAd);
-      //       handleMoveExerciseActive(exerciseType);
-      //     } else {
-      //       moveToChallengeMap();
-      //     }
-      //   }
-      // }
-
-      // exerciseStartRewardedAdInit(
-      //   startAdId: 'asdasd',
-      //   successCallback: () {
-      //     print('광고볼수있음');
-      //     isLoadingGetAdData.value = false;
-      //     Get.dialog(const AdSelect(),
-      //         barrierDismissible: false,
-      //         barrierColor: const Color.fromRGBO(0, 0, 0, 0.85));
-      //   },
-      //   errorCallback: () {
-      //     print('광고볼수없음');
-      //     isLoadingGetAdData.value = false;
-      //     if (selectedExerciseType.value == ExerciseType.walking ||
-      //         selectedExerciseType.value == ExerciseType.hiking) {
-      //       handleMoveExerciseActive(exerciseType);
-      //     } else {
-      //       Get.back();
-      //       if (doableChallenges.isNotEmpty) {
-      //         moveToChallengeSelection();
-      //       } else {
-      //         moveToChallengeMap();
-      //       }
-      //     }
-      //   },
-      // );
     }
 
     // if (selectedExerciseType.value == ExerciseType.walking) selectedChallenge.value = ChallengeModel();
@@ -949,13 +877,17 @@ class ActivityController extends SuperController
   }
 
   void adLoadTimerStart() {
+    time.value = 5;
     if (_adTimer != null) {
       _adTimer = null;
     }
-    checkAdViewTime();
-    _adTimer = Timer.periodic(const Duration(seconds: 5), (timer) {
-      time.value++;
-      checkAdViewTime();
+
+    _adTimer = Timer.periodic(const Duration(seconds: 1), (timer) {
+      time.value--;
+      if (time.value == 0) {
+        timer.cancel();
+        _adTimer = null;
+      }
     });
   }
 
@@ -966,39 +898,11 @@ class ActivityController extends SuperController
     }
   }
 
-  void checkAdViewTime() async {
-    AdmobModel admobTime = AdmobModel();
-    final jsonStr = admobTime.toJson();
-
-    jsonStr.forEach((adType, v) async {
-      DateTime? date = HiveStore.load(key: adType);
-      // HiveStore.save(key: adType, value: null);
-      print('${adType}: $date');
-      if (date == null) {
-        if (ads[adType] == null) {
-          if (adType.contains('start')) {
-            initStartAdmobAdId(adType);
-            exerciseStartRewardedAdInit(adType);
-          } else {
-            await initEndAdmobAdId(adType);
-            exerciseEndRewardedAdInit(adType);
-          }
-        }
-      } else {
-        DateTime? viewableTime = date.add(const Duration(hours: 1));
-        DateTime now = DateTime.now();
-
-        if (viewableTime.isBefore(now)) {
-          if (adType.contains('start')) {
-            await initStartAdmobAdId(adType);
-            exerciseStartRewardedAdInit(adType);
-          } else {
-            await initEndAdmobAdId(adType);
-            exerciseEndRewardedAdInit(adType);
-          }
-        }
-      }
-    });
+  void closeAdSelectPopup() {
+    adLoadTimerStop();
+    Get.back();
+    startAd = null;
+    endAd = null;
   }
 
   @override

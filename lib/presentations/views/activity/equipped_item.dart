@@ -27,12 +27,14 @@ class EquippedItems extends StatelessWidget {
           ),
         ),
         child: ConstrainedBox(
-          constraints: BoxConstraints(maxHeight: MediaQuery.of(context).size.height),
+          constraints:
+              BoxConstraints(maxHeight: MediaQuery.of(context).size.height),
           child: Column(
             mainAxisSize: MainAxisSize.max,
             children: [
               Padding(
-                padding: EdgeInsets.symmetric(horizontal: 20.0.sp, vertical: 20.0.sp),
+                padding: EdgeInsets.symmetric(
+                    horizontal: 20.0.sp, vertical: 20.0.sp),
                 child: Column(
                   children: [
                     Obx(() {
@@ -48,9 +50,12 @@ class EquippedItems extends StatelessWidget {
                               child: InventoryTile(
                                 index: 0,
                                 id: controller.equippedShoe.value.id,
-                                itemGrade: controller.equippedShoe.value.itemGrade,
-                                durability: controller.equippedShoe.value.durability,
-                                imageUrl: controller.equippedShoe.value.itemImageUrl,
+                                itemGrade:
+                                    controller.equippedShoe.value.itemGrade,
+                                durability:
+                                    controller.equippedShoe.value.durability,
+                                imageUrl:
+                                    controller.equippedShoe.value.itemImageUrl,
                               ),
                             ),
                             StaggeredGridTile.count(
@@ -58,8 +63,10 @@ class EquippedItems extends StatelessWidget {
                               mainAxisCellCount: 2,
                               child: InventoryTile(
                                 index: 1,
-                                imageUrl: controller.equippedBadge.value.badge.imageUrl,
-                                badgeId: controller.equippedBadge.value.badge.id,
+                                imageUrl: controller
+                                    .equippedBadge.value.badge.imageUrl,
+                                badgeId:
+                                    controller.equippedBadge.value.badge.id,
                               ),
                             ),
                             StaggeredGridTile.count(
@@ -67,8 +74,10 @@ class EquippedItems extends StatelessWidget {
                               mainAxisCellCount: 1,
                               child: InventoryTile(
                                 index: 2,
-                                itemGrade: controller.equippedHat.value.itemGrade,
-                                imageUrl: controller.equippedHat.value.itemImageUrl,
+                                itemGrade:
+                                    controller.equippedHat.value.itemGrade,
+                                imageUrl:
+                                    controller.equippedHat.value.itemImageUrl,
                               ),
                             ),
                             StaggeredGridTile.count(
@@ -76,8 +85,10 @@ class EquippedItems extends StatelessWidget {
                               mainAxisCellCount: 1,
                               child: InventoryTile(
                                 index: 3,
-                                itemGrade: controller.equippedTop.value.itemGrade,
-                                imageUrl: controller.equippedTop.value.itemImageUrl,
+                                itemGrade:
+                                    controller.equippedTop.value.itemGrade,
+                                imageUrl:
+                                    controller.equippedTop.value.itemImageUrl,
                               ),
                             ),
                             StaggeredGridTile.count(
@@ -85,8 +96,10 @@ class EquippedItems extends StatelessWidget {
                               mainAxisCellCount: 1,
                               child: InventoryTile(
                                 index: 4,
-                                itemGrade: controller.equippedBottom.value.itemGrade,
-                                imageUrl: controller.equippedBottom.value.itemImageUrl,
+                                itemGrade:
+                                    controller.equippedBottom.value.itemGrade,
+                                imageUrl: controller
+                                    .equippedBottom.value.itemImageUrl,
                               ),
                             ),
                             StaggeredGridTile.count(
@@ -94,8 +107,10 @@ class EquippedItems extends StatelessWidget {
                               mainAxisCellCount: 1,
                               child: InventoryTile(
                                 index: 5,
-                                itemGrade: controller.equippedAccessory.value.itemGrade,
-                                imageUrl: controller.equippedAccessory.value.itemImageUrl,
+                                itemGrade: controller
+                                    .equippedAccessory.value.itemGrade,
+                                imageUrl: controller
+                                    .equippedAccessory.value.itemImageUrl,
                               ),
                             ),
                           ]
@@ -136,7 +151,8 @@ class EquippedItems extends StatelessWidget {
                                 mainAxisAlignment: MainAxisAlignment.center,
                                 children: [
                                   Padding(
-                                    padding: EdgeInsets.only(top: 3.0.sp, right: 2.0.sp),
+                                    padding: EdgeInsets.only(
+                                        top: 3.0.sp, right: 2.0.sp),
                                     child: iconGoReward,
                                   ),
                                   StyledText(
@@ -177,7 +193,8 @@ class EquippedItems extends StatelessWidget {
                                   crossAxisAlignment: CrossAxisAlignment.center,
                                   children: [
                                     Padding(
-                                      padding: EdgeInsets.only(top: 1.0.sp, right: 3.0.sp),
+                                      padding: EdgeInsets.only(
+                                          top: 1.0.sp, right: 3.0.sp),
                                       child: iconItemAbrasion,
                                     ),
                                     StyledText(
@@ -216,7 +233,8 @@ class EquippedItems extends StatelessWidget {
                                 mainAxisAlignment: MainAxisAlignment.center,
                                 children: [
                                   Padding(
-                                    padding: EdgeInsets.only(top: 1.0.sp, right: 3.0.sp),
+                                    padding: EdgeInsets.only(
+                                        top: 1.0.sp, right: 3.0.sp),
                                     child: iconStaminaReduce,
                                   ),
                                   StyledText(

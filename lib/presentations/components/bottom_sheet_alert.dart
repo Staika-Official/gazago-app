@@ -11,7 +11,15 @@ class BottomSheetAlert extends StatelessWidget {
   final bool? isDangerTitle;
   final bool? isNonePaddingOuter;
 
-  const BottomSheetAlert({Key? key, this.title, this.contentText, this.contentWidget, this.isDangerTitle, this.isNonePaddingOuter, required this.actions}) : super(key: key);
+  const BottomSheetAlert(
+      {Key? key,
+      this.title,
+      this.contentText,
+      this.contentWidget,
+      this.isDangerTitle,
+      this.isNonePaddingOuter,
+      required this.actions})
+      : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -24,7 +32,10 @@ class BottomSheetAlert extends StatelessWidget {
         ),
       ),
       child: Padding(
-        padding: isNonePaddingOuter! ? const EdgeInsets.all(0) : EdgeInsets.only(top: 30.0.sp, left: 20.sp, right: 20.sp, bottom: 40.sp),
+        padding: isNonePaddingOuter!
+            ? const EdgeInsets.all(0)
+            : EdgeInsets.only(
+                top: 30.0.sp, left: 20.sp, right: 20.sp, bottom: 40.sp),
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [

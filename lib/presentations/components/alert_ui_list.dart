@@ -479,57 +479,142 @@ void showEndExerciseAdAlert(
     contentText: '지금까지의 기록만 저장됩니다.',
     actions: [
       Expanded(
-        child: Column(
-          children: [
-            GazagoButton(
-              onTap: () => controller.showExerciseEndAd(challenge, controller),
-              buttonText: '광고 보고, GO 10% 더 받고!',
-              buttonColor: skyBlueColor,
-            ),
-            Padding(
-              padding: EdgeInsets.only(top: 8.0.sp),
-              child: GazagoButton(
-                onTap: () => controller.endExercise(challenge,
-                    source: 'showEndExerciseAlert'),
-                buttonText: '활동 종료',
-                buttonColor: const Color(0xFF2C2E36),
-                textColor: skyBlueColor,
+        child: Obx(() {
+          return Column(
+            children: [
+              controller.endAd == null
+                  ? Container(
+                      width: double.infinity,
+                      height: 52.sp,
+                      alignment: Alignment.center,
+                      decoration: BoxDecoration(
+                        color: const Color(0xFF2C2E36),
+                        border: Border.all(width: 2.sp, color: Colors.black),
+                        borderRadius: BorderRadius.circular(8.sp),
+                        boxShadow: [
+                          BoxShadow(
+                            color: Colors.black,
+                            offset: Offset(0, 3.sp),
+                          )
+                        ],
+                      ),
+                      child: controller.time.value != 0
+                          ? Stack(
+                              children: [
+                                Text(
+                                  controller.time.value.toString(),
+                                  style: TextStyle(
+                                    fontSize: 40.sp,
+                                    fontFamily: 'Montserrat',
+                                    fontWeight: FontWeight.w700,
+                                    height: 1.1,
+                                    foreground: Paint()..color = skyBlueColor,
+                                  ),
+                                ),
+                                Text(
+                                  controller.time.value.toString(),
+                                  style: TextStyle(
+                                    fontSize: 40.sp,
+                                    height: 1.1,
+                                    fontFamily: 'Montserrat',
+                                    fontWeight: FontWeight.w700,
+                                    foreground: Paint()
+                                      ..strokeWidth = 2
+                                      ..color = Colors.black
+                                      ..style = PaintingStyle.stroke,
+                                  ),
+                                ),
+                              ],
+                            )
+                          : const StyledText(
+                              '아직 광고가 부족해요...',
+                              color: Color(0xFF60626C),
+                              fontSize: 18,
+                              fontWeight: 600,
+                            ),
+                    )
+                  : InkWell(
+                      onTap: () =>
+                          controller.showExerciseEndAd(challenge, controller),
+                      child: Container(
+                        width: double.infinity,
+                        height: 52.sp,
+                        alignment: Alignment.center,
+                        decoration: BoxDecoration(
+                          color: skyBlueColor,
+                          border: Border.all(width: 2.sp, color: Colors.black),
+                          borderRadius: BorderRadius.circular(8.sp),
+                          boxShadow: [
+                            BoxShadow(
+                              color: Colors.black,
+                              offset: Offset(0, 3.sp),
+                            )
+                          ],
+                        ),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          children: [
+                            Padding(
+                              padding: EdgeInsets.only(right: 5.0),
+                              child: iconGoSmall,
+                            ),
+                            StyledText(
+                              '광고 보고, GO 10% 더 받고! ',
+                              color: Colors.black,
+                              fontSize: 18,
+                              lineHeight: 19,
+                              fontWeight: 600,
+                              letterSpacing: .4,
+                            ),
+                          ],
+                        ),
+                      )),
+              Padding(
+                padding: EdgeInsets.only(top: 8.0.sp),
+                child: GazagoButton(
+                  onTap: () => controller.endExercise(challenge,
+                      source: 'showEndExerciseAlert'),
+                  buttonText: '활동 종료',
+                  buttonColor: const Color(0xFF2C2E36),
+                  textColor: skyBlueColor,
+                ),
               ),
-            ),
-            Padding(
-              padding: EdgeInsets.only(top: 25.0.sp),
-              child: InkWell(
-                onTap: () {
-                  print('close ad popup');
-                  Get.back();
-                },
-                child: Container(
-                  decoration: BoxDecoration(
-                    border: Border(
-                      bottom: BorderSide(
-                        // POINT
+              Padding(
+                padding: EdgeInsets.only(top: 25.0.sp),
+                child: InkWell(
+                  onTap: () {
+                    print('close ad popup');
+                    controller.closeAdSelectPopup();
+                  },
+                  child: Container(
+                    decoration: BoxDecoration(
+                      border: Border(
+                        bottom: BorderSide(
+                          // POINT
+                          color: lightGrayColor,
+                          width: 1.0,
+                        ),
+                      ),
+                    ),
+                    child: Padding(
+                      padding:
+                          EdgeInsets.only(bottom: 6.0, left: 5.0, right: 5.0),
+                      child: StyledText(
+                        '취소',
+                        fontSize: 18,
+                        lineHeight: 22,
+                        fontWeight: 500,
                         color: lightGrayColor,
-                        width: 1.0,
                       ),
                     ),
                   ),
-                  child: Padding(
-                    padding:
-                        EdgeInsets.only(bottom: 6.0, left: 5.0, right: 5.0),
-                    child: StyledText(
-                      '취소',
-                      fontSize: 18,
-                      lineHeight: 22,
-                      fontWeight: 500,
-                      color: lightGrayColor,
-                    ),
-                  ),
                 ),
-              ),
-            )
-          ],
-        ),
-      ),
+              )
+            ],
+          );
+        }),
+      )
     ],
   );
 }
