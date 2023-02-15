@@ -14,7 +14,7 @@ class InventoryItem extends StatelessWidget {
   List<Widget> renderItemSubTabList(InventoryHomeController controller) {
     return controller.itemSubTabList
         .map(
-          (item) => Text(item['title']),
+          (item) => Text(item['title']!),
         )
         .toList();
   }
@@ -191,6 +191,7 @@ class InventoryItem extends StatelessWidget {
                     color: const Color(0xFFECECEC),
                   ),
                   tabs: [...renderItemSubTabList(controller)],
+                  onTap: (index) => inventoryController.getUserItemsByCategory(controller.itemSubTabList, index),
                 ),
               ),
             ),

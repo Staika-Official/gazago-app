@@ -10,24 +10,27 @@ class ActivityLoading extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     ActivityController controller = Get.find();
-    return Obx(() {
-      return Center(
-          child: CustomAnimationBuilder<double>(
-        control: controller.activityLoadControl,
-        tween: Tween(begin: 0.0, end: 1.0),
-        duration: const Duration(milliseconds: 300),
-        curve: Curves.easeInOutCubic,
-        builder: (context, value, child) {
-          return Transform.scale(
-            scale: value,
-            child: child,
-          );
-        },
-        child: Padding(
-          padding: EdgeInsets.all(20.sp),
-          child: Image.asset('assets/images/activity/ico_loading_${controller.loadingTime.value}.png'),
-        ),
-      ));
-    });
+    return WillPopScope(
+      onWillPop: () async => false,
+      child: Obx(() {
+        return Center(
+            child: CustomAnimationBuilder<double>(
+          control: controller.activityLoadControl,
+          tween: Tween(begin: 0.0, end: 1.0),
+          duration: const Duration(milliseconds: 300),
+          curve: Curves.easeInOutCubic,
+          builder: (context, value, child) {
+            return Transform.scale(
+              scale: value,
+              child: child,
+            );
+          },
+          child: Padding(
+            padding: EdgeInsets.all(20.sp),
+            child: Image.asset('assets/images/activity/ico_loading_${controller.loadingTime.value}.png'),
+          ),
+        ));
+      }),
+    );
   }
 }

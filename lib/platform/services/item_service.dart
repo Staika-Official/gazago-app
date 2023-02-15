@@ -14,13 +14,29 @@ class ItemService {
   static Future<void> getAllMyItems(int page, {required Function successCallback, Function? errorCallback}) async {
     Response res = await ItemApi.getAllMyItems(userId!, page);
     if (res.statusCode == 200) {
+      int totalItemCount = int.parse(res.headers.value('x-total-count')!);
       List<InventoryItemModel> userItems = List.empty(growable: true);
       if (res.data.length > 0) {
         res.data.forEach((challenge) {
           userItems.add(InventoryItemModel.fromJson(challenge));
         });
       }
-      successCallback(userItems);
+      successCallback(userItems, totalItemCount);
+    } else {
+      if (errorCallback != null) errorCallback();
+    }
+  }
+
+  static Future<void> getMyItemsByCategory(String category, int page, {required Function successCallback, Function? errorCallback}) async {
+    Response res = await ItemApi.getMyItemsByCategory(userId!, category, page);
+    if (res.statusCode == 200) {
+      List<InventoryItemModel> userItemsByCategory = List.empty(growable: true);
+      if (res.data.length > 0) {
+        res.data.forEach((challenge) {
+          userItemsByCategory.add(InventoryItemModel.fromJson(challenge));
+        });
+      }
+      successCallback(userItemsByCategory);
     } else {
       if (errorCallback != null) errorCallback();
     }

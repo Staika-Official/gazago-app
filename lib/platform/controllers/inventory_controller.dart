@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:gaza_go/constants/enums.dart';
 import 'package:gaza_go/constants/routes.dart';
 import 'package:gaza_go/platform/controllers/wallet_master_controller.dart';
 import 'package:gaza_go/platform/helpers/alert_helper.dart';
@@ -19,6 +20,7 @@ class InventoryController extends GetxController with ScrollMixin, LinearProgres
   final WalletMasterController walletMasterController = Get.find();
 
   RxInt page = RxInt(0);
+  RxInt totalItemCount = RxInt(0);
   RxBool stopLoading = RxBool(false);
   RxBool dataGetLoading = RxBool(false);
 
@@ -124,13 +126,13 @@ class InventoryController extends GetxController with ScrollMixin, LinearProgres
   RxMap<String, List<InventoryItemModel>> get allItems {
     return RxMap(
       {
-        'all': myAllItems,
-        'outers': myAllItems.where((item) => item.itemCategory == 'TOP').toList(),
-        'shoes': myAllItems.where((item) => item.itemCategory == 'SHOES').toList(),
-        'accessories': myAllItems.where((item) => item.itemCategory == 'ACCESSORY').toList(),
-        'drinks': myAllItems.where((item) => item.itemCategory == 'DRINK').toList(),
-        'bottoms': myAllItems.where((item) => item.itemCategory == 'BOTTOM').toList(),
-        'hats': myAllItems.where((item) => item.itemCategory == 'HAT').toList(),
+        ItemType.all.name: myAllItems,
+        ItemType.top.name: myAllItems.where((item) => item.itemCategory == 'TOP').toList(),
+        ItemType.shoes.name: myAllItems.where((item) => item.itemCategory == 'SHOES').toList(),
+        ItemType.accessory.name: myAllItems.where((item) => item.itemCategory == 'ACCESSORY').toList(),
+        ItemType.drink.name: myAllItems.where((item) => item.itemCategory == 'DRINK').toList(),
+        ItemType.bottom.name: myAllItems.where((item) => item.itemCategory == 'BOTTOM').toList(),
+        ItemType.hat.name: myAllItems.where((item) => item.itemCategory == 'HAT').toList(),
       },
     );
   }
@@ -239,15 +241,35 @@ class InventoryController extends GetxController with ScrollMixin, LinearProgres
     dataGetLoading.value = true;
     await ItemService.getAllMyItems(
       page.value,
-      successCallback: (allItems) {
-        // myAllItems.value = allItems;
+      successCallback: (List<InventoryItemModel> allItems, int totalItemCount) {
+        this.totalItemCount.value = totalItemCount;
         if (allItems.length < 100) {
           stopLoading.value = true;
         }
-        myAllItems.addAll(allItems);
+
+        getUniqueItemList(allItems);
         dataGetLoading.value = false;
       },
     );
+  }
+
+  Future<void> getUserItemsByCategory(List<Map<String, String>> subTabList, int tabIndex) async {
+    String category = subTabList[tabIndex]['itemType']!.toUpperCase();
+
+    dataGetLoading.value = true;
+    if (category != 'ALL' && myAllItems.length < totalItemCount.value) {
+      await ItemService.getMyItemsByCategory(
+        category,
+        page.value,
+        successCallback: (List<InventoryItemModel> allItemsByCategory) {
+          getUniqueItemList(allItemsByCategory);
+          if (myAllItems.length == totalItemCount.value) {
+            stopLoading.value = true;
+          }
+          dataGetLoading.value = false;
+        },
+      );
+    }
   }
 
   Future<void> getUserEquippedItems() async {
@@ -385,5 +407,13 @@ class InventoryController extends GetxController with ScrollMixin, LinearProgres
         singleChildScrollController.animateTo(0, duration: const Duration(milliseconds: 200), curve: Curves.easeInOut);
       },
     );
+  }
+
+  void getUniqueItemList(List<InventoryItemModel> targetList) {
+    Set<int> itemSet = myAllItems.map((element) => element.id).toSet();
+
+    List<InventoryItemModel> uniqueItemList = targetList.where((item) => itemSet.add(item.id)).toList();
+    myAllItems.value = [...myAllItems, ...uniqueItemList];
+    myAllItems.refresh();
   }
 }

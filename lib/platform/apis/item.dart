@@ -11,14 +11,12 @@ class ItemApi {
     return items;
   }
 
-  static Future<Response> getAllMyItems(userId, page) async {
+  static Future<Response> getAllMyItems(String userId, int page) async {
     return await Api.client(serviceUrl: ServiceUrl.itemService).get('/users/$userId', queryParameters: {'size': 100, 'page': page});
   }
 
-  static Future<List<InventoryItemModel>> getMyItemByCategory(userId) async {
-    Response res = await Api.client(serviceUrl: ServiceUrl.itemService).get('/users/$userId/categories');
-    List<InventoryItemModel> items = res.data.map((item) => InventoryItemModel.fromJson(item));
-    return items;
+  static Future<Response> getMyItemsByCategory(String userId, String itemCategory, int page) async {
+    return await Api.client(serviceUrl: ServiceUrl.itemService).get('/users/$userId/categories/$itemCategory', queryParameters: {'size': 100, 'page': page});
   }
 
   static Future<Response> getItemDetailInfo(String userId, int itemId) async {
