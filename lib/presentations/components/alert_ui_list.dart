@@ -46,8 +46,7 @@ void showRetryAlert(LoadingController controller) {
   );
 }
 
-void showShoeRepairSlider(
-    InventoryController controller, int feeTikDurability) {
+void showShoeRepairSlider(InventoryController controller, int feeTikDurability) {
   showAlert(
     title: '내구도 충전하기',
     contentWidget: Obx(() {
@@ -93,9 +92,7 @@ void showShoeRepairSlider(
               ),
               onDragging: (handlerIndex, lowerValue, upperValue) {
                 controller.currentSliderValue.value = lowerValue;
-                controller.costTik.value =
-                    controller.currentSliderValue.value.toInt() *
-                        feeTikDurability;
+                controller.costTik.value = controller.currentSliderValue.value.toInt() * feeTikDurability;
               },
               handler: FlutterSliderHandler(
                 decoration: BoxDecoration(
@@ -118,8 +115,7 @@ void showShoeRepairSlider(
                   fontWeight: FontWeight.w500,
                   height: 1.sp,
                 ),
-                format: (label) =>
-                    '+ ${formatDecimalPlaces(double.parse(label), 0)}',
+                format: (label) => '+ ${formatDecimalPlaces(double.parse(label), 0)}',
                 boxStyle: FlutterSliderTooltipBox(
                   decoration: BoxDecoration(
                     color: purpleColor,
@@ -167,8 +163,7 @@ void showShoeRepairSlider(
       ),
       Expanded(
         child: GazagoButton(
-          onTap: () =>
-              controller.fetchRepairShoes(controller.equippedShoe.value.id),
+          onTap: () => controller.fetchRepairShoes(controller.equippedShoe.value.id),
           buttonText: '네',
           buttonColor: skyBlueColor,
         ),
@@ -177,8 +172,7 @@ void showShoeRepairSlider(
   );
 }
 
-void showRepairStatSlider(ActivityController controller, StatModel stat,
-    int feeTikStamina, int feeTikDurability) {
+void showRepairStatSlider(ActivityController controller, StatModel stat, int feeTikStamina, int feeTikDurability) {
   showAlert(
     title: stat.type == 'STAMINA' ? '체력 충전하기' : '내구도 충전하기',
     contentWidget: Obx(() {
@@ -235,9 +229,7 @@ void showRepairStatSlider(ActivityController controller, StatModel stat,
               ),
               onDragging: (handlerIndex, lowerValue, upperValue) {
                 controller.currentSliderValue.value = lowerValue;
-                controller.costTik.value = controller.currentSliderValue.value
-                        .toInt() *
-                    (stat.type == 'STAMINA' ? feeTikStamina : feeTikDurability);
+                controller.costTik.value = controller.currentSliderValue.value.toInt() * (stat.type == 'STAMINA' ? feeTikStamina : feeTikDurability);
               },
               handler: FlutterSliderHandler(
                 decoration: BoxDecoration(
@@ -251,8 +243,7 @@ void showRepairStatSlider(ActivityController controller, StatModel stat,
                     )
                   ],
                 ),
-                child:
-                    stat.type == 'STAMINA' ? iconSliderStamina : iconSliderShoe,
+                child: stat.type == 'STAMINA' ? iconSliderStamina : iconSliderShoe,
               ),
               tooltip: FlutterSliderTooltip(
                 textStyle: TextStyle(
@@ -261,12 +252,10 @@ void showRepairStatSlider(ActivityController controller, StatModel stat,
                   fontWeight: FontWeight.w500,
                   height: 1.sp,
                 ),
-                format: (label) =>
-                    '+ ${formatDecimalPlaces(double.parse(label), 0)}',
+                format: (label) => '+ ${formatDecimalPlaces(double.parse(label), 0)}',
                 boxStyle: FlutterSliderTooltipBox(
                   decoration: BoxDecoration(
-                    color:
-                        stat.type == 'STAMINA' ? lightGreenColor : purpleColor,
+                    color: stat.type == 'STAMINA' ? lightGreenColor : purpleColor,
                     borderRadius: BorderRadius.circular(50.sp),
                   ),
                 ),
@@ -311,9 +300,7 @@ void showRepairStatSlider(ActivityController controller, StatModel stat,
       ),
       Expanded(
         child: GazagoButton(
-          onTap: () => stat.type == 'STAMINA'
-              ? controller.fetchRechargeStamina(stat.type)
-              : controller.fetchRepairShoes(),
+          onTap: () => stat.type == 'STAMINA' ? controller.fetchRechargeStamina(stat.type) : controller.fetchRepairShoes(),
           disableButton: controller.disableButton.value,
           buttonText: '네',
           buttonColor: skyBlueColor,
@@ -506,8 +493,7 @@ void showEndExerciseAlert(ActivityMixin mixin, ChallengeModel challenge) {
       ),
       Expanded(
         child: GazagoButton(
-          onTap: () =>
-              mixin.endExercise(challenge, source: 'showEndExerciseAlert'),
+          onTap: () => mixin.endExercise(challenge, source: 'showEndExerciseAlert'),
           buttonText: '활동 종료',
           buttonColor: skyBlueColor,
         ),
@@ -516,142 +502,141 @@ void showEndExerciseAlert(ActivityMixin mixin, ChallengeModel challenge) {
   );
 }
 
-void showEndExerciseAdAlert(
-    ChallengeModel challenge, ActivityController controller) {
+void showEndExerciseAdAlert(ChallengeModel challenge, ActivityController controller) {
   showAlert(
     title: '활동 종료',
-    contentText: '지금까지의 기록만 저장됩니다.',
-    actions: [
-      Expanded(
-        child: Column(
-          children: [
-            Obx(() {
-              return InkWell(
-                  onTap: () => controller.endAd == null
-                      ? null
-                      : controller.showExerciseEndAd(challenge, controller),
-                  child: Container(
-                    width: double.infinity,
-                    height: 52.sp,
-                    alignment: Alignment.center,
-                    decoration: BoxDecoration(
-                      color: controller.endAd == null
-                          ? popupBgColor
-                          : skyBlueColor,
-                      border: Border.all(width: 2.sp, color: Colors.black),
-                      borderRadius: BorderRadius.circular(8.sp),
-                      boxShadow: [
-                        BoxShadow(
-                          color: Colors.black,
-                          offset: Offset(0, 3.sp),
-                        )
-                      ],
-                    ),
-                    child: controller.endAd == null
-                        ? controller.time.value != 0
-                            ? Stack(
-                                children: [
-                                  Text(
-                                    controller.time.value.toString(),
-                                    style: TextStyle(
-                                      fontSize: 40.sp,
-                                      fontFamily: 'Montserrat',
-                                      fontWeight: FontWeight.w700,
-                                      height: 1.1,
-                                      foreground: Paint()..color = skyBlueColor,
-                                    ),
-                                  ),
-                                  Text(
-                                    controller.time.value.toString(),
-                                    style: TextStyle(
-                                      fontSize: 40.sp,
-                                      height: 1.1,
-                                      fontFamily: 'Montserrat',
-                                      fontWeight: FontWeight.w700,
-                                      foreground: Paint()
-                                        ..strokeWidth = 2
-                                        ..color = Colors.black
-                                        ..style = PaintingStyle.stroke,
-                                    ),
-                                  ),
-                                ],
-                              )
-                            : const StyledText(
-                                '아직 광고가 부족해요...',
-                                color: Color(0xFF60626C),
-                                fontSize: 18,
-                                fontWeight: 600,
-                              )
-                        : Row(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            crossAxisAlignment: CrossAxisAlignment.center,
+    contentWidget: Column(
+      children: [
+        Padding(
+          padding: EdgeInsets.only(top: 15.0.sp, bottom: 24.sp),
+          child: StyledText(
+            '지금까지의 기록만 저장됩니다.',
+            color: lightGrayColor,
+            fontSize: 18,
+            lineHeight: 18,
+            fontWeight: 500,
+          ),
+        ),
+        Obx(() {
+          return InkWell(
+              onTap: () => controller.isAbleAdView.value ? controller.showExerciseEndAd(challenge, controller) : null,
+              child: Container(
+                width: double.infinity,
+                height: 52.sp,
+                alignment: Alignment.center,
+                decoration: BoxDecoration(
+                  color: !controller.isAbleAdView.value ? popupBgColor : skyBlueColor,
+                  border: Border.all(width: 2.sp, color: Colors.black),
+                  borderRadius: BorderRadius.circular(8.sp),
+                  boxShadow: [
+                    BoxShadow(
+                      color: Colors.black,
+                      offset: Offset(0, 3.sp),
+                    )
+                  ],
+                ),
+                child: !controller.isAbleAdView.value
+                    ? controller.time.value != 0
+                        ? Stack(
                             children: [
-                              Padding(
-                                padding: EdgeInsets.only(right: 5.0),
-                                child: iconGoSmall,
+                              Text(
+                                controller.time.value.toString(),
+                                style: TextStyle(
+                                  fontSize: 40.sp,
+                                  fontFamily: 'Montserrat',
+                                  fontWeight: FontWeight.w700,
+                                  height: 1.1,
+                                  foreground: Paint()..color = skyBlueColor,
+                                ),
                               ),
-                              StyledText(
-                                '광고 보고, GO 10% 더 받고! ',
-                                color: Colors.black,
-                                fontSize: 18,
-                                lineHeight: 19,
-                                fontWeight: 600,
-                                letterSpacing: .4,
+                              Text(
+                                controller.time.value.toString(),
+                                style: TextStyle(
+                                  fontSize: 40.sp,
+                                  height: 1.1,
+                                  fontFamily: 'Montserrat',
+                                  fontWeight: FontWeight.w700,
+                                  foreground: Paint()
+                                    ..strokeWidth = 2
+                                    ..color = Colors.black
+                                    ..style = PaintingStyle.stroke,
+                                ),
                               ),
                             ],
+                          )
+                        : const StyledText(
+                            '아직 광고가 부족해요...',
+                            color: Color(0xFF60626C),
+                            fontSize: 18,
+                            lineHeight: 19,
+                            fontWeight: 600,
+                          )
+                    : Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children: [
+                          Padding(
+                            padding: EdgeInsets.only(right: 5.0.sp),
+                            child: iconGoSmall,
                           ),
-                  ));
-            }),
-            Padding(
-              padding: EdgeInsets.only(top: 8.0.sp),
-              child: GazagoButton(
-                onTap: () => controller.endExercise(challenge,
-                    source: 'showEndExerciseAlert'),
-                buttonText: '활동 종료',
-                buttonColor: const Color(0xFF2C2E36),
-                textColor: skyBlueColor,
-              ),
-            ),
-            Padding(
-              padding: EdgeInsets.only(top: 25.0.sp),
-              child: InkWell(
-                onTap: () {
-                  print('close ad popup');
-                  controller.closeAdSelectPopup();
-                },
-                child: Container(
-                  decoration: BoxDecoration(
-                    border: Border(
-                      bottom: BorderSide(
-                        // POINT
-                        color: lightGrayColor,
-                        width: 1.0,
+                          StyledText(
+                            '광고 보고, GO 10% 더 받고! ',
+                            color: Colors.black,
+                            fontSize: 18,
+                            lineHeight: 19,
+                            fontWeight: 600,
+                            letterSpacing: .4,
+                          ),
+                        ],
                       ),
-                    ),
-                  ),
-                  child: Padding(
-                    padding:
-                        EdgeInsets.only(bottom: 6.0, left: 5.0, right: 5.0),
-                    child: StyledText(
-                      '취소',
-                      fontSize: 18,
-                      lineHeight: 22,
-                      fontWeight: 500,
-                      color: lightGrayColor,
-                    ),
+              ));
+        }),
+        Padding(
+          padding: EdgeInsets.only(top: 8.0.sp),
+          child: GazagoButton(
+            onTap: () => controller.endExercise(challenge, source: 'showEndExerciseAlert'),
+            buttonText: '활동 종료',
+            buttonColor: const Color(0xFF2C2E36),
+            textColor: skyBlueColor,
+          ),
+        ),
+        Padding(
+          padding: EdgeInsets.only(top: 25.0.sp),
+          child: InkWell(
+            onTap: () {
+              print('close ad popup');
+              controller.closeAdSelectPopup();
+            },
+            child: Container(
+              decoration: BoxDecoration(
+                border: Border(
+                  bottom: BorderSide(
+                    // POINT
+                    color: lightGrayColor,
+                    width: 1.0,
                   ),
                 ),
               ),
-            )
-          ],
-        ),
-      )
-    ],
+              child: Padding(
+                padding: EdgeInsets.only(bottom: 6.0, left: 5.0, right: 5.0),
+                child: StyledText(
+                  '취소',
+                  fontSize: 18,
+                  lineHeight: 22,
+                  fontWeight: 500,
+                  color: lightGrayColor,
+                ),
+              ),
+            ),
+          ),
+        )
+      ],
+    ),
+    actions: [],
   );
 }
 
-void showBadgeAcquisitionAlert(
-    InventoryBadgeModel badge, ChallengeModel selectedChallenge) {
+void showBadgeAcquisitionAlert(InventoryBadgeModel badge, ChallengeModel selectedChallenge) {
   showAlert(
     isScrollControlled: true,
     title: '챌린지 뱃지 발급',
@@ -691,8 +676,7 @@ void showBadgeAcquisitionAlert(
             ),
             TextSpan(
               children: [
-                TextSpan(
-                    text: '내 장비 > 뱃지', style: TextStyle(color: skyBlueColor)),
+                TextSpan(text: '내 장비 > 뱃지', style: TextStyle(color: skyBlueColor)),
                 const TextSpan(text: ' 카테고리에서\n획득한 뱃지를 확인하실수 있습니다.'),
               ],
             ),
@@ -817,8 +801,7 @@ void showPendingExerciseAlert(ActivityController controller) {
                 children: [
                   Container(
                     width: double.infinity,
-                    padding: EdgeInsets.only(
-                        top: 26.sp, left: 18.sp, right: 18.sp, bottom: 22.sp),
+                    padding: EdgeInsets.only(top: 26.sp, left: 18.sp, right: 18.sp, bottom: 22.sp),
                     margin: EdgeInsets.only(
                       left: 30.sp,
                       right: 30.sp,
@@ -877,28 +860,21 @@ void showPendingExerciseAlert(ActivityController controller) {
                         text: '운동을 종료하시려면\n',
                         children: [
                           const TextSpan(text: '아래 '),
-                          TextSpan(
-                              text: '종료 버튼을 3초간 눌러주세요',
-                              style: TextStyle(color: skyBlueColor)),
+                          TextSpan(text: '종료 버튼을 3초간 눌러주세요', style: TextStyle(color: skyBlueColor)),
                         ],
                       ),
                     ),
                   ),
                   Obx(() {
                     return GestureDetector(
-                      onTapDown: (tapDownDetail) => controller.onTapDownStop(
-                          tapDownDetail, controller.selectedChallenge.value,
-                          controller: controller,
-                          source: 'pendingExerciseDialog'),
-                      onTapUp: (tapUpDetail) =>
-                          controller.onTapUpStop(tapUpDetail),
+                      onTapDown: (tapDownDetail) => controller.onTapDownStop(tapDownDetail, controller.selectedChallenge.value, controller: controller, source: 'pendingExerciseDialog'),
+                      onTapUp: (tapUpDetail) => controller.onTapUpStop(tapUpDetail),
                       child: Stack(
                         children: [
                           CircularButton(
                             radius: 104.sp,
                             color: Colors.white,
-                            child: Icon(Icons.stop,
-                                color: Colors.black, size: 64.sp),
+                            child: Icon(Icons.stop, color: Colors.black, size: 64.sp),
                           ),
                           Positioned(
                             top: 0,
@@ -1056,8 +1032,7 @@ void itemPurchaseAlert(ShopController controller, double remainMyTik) {
       ),
       Expanded(
         child: GazagoButton(
-          onTap: () => controller
-              .handlePurchaseShopItem(controller.selectedItem.value.id),
+          onTap: () => controller.handlePurchaseShopItem(controller.selectedItem.value.id),
           buttonText: '구매',
           buttonColor: skyBlueColor,
         ),
@@ -1066,8 +1041,7 @@ void itemPurchaseAlert(ShopController controller, double remainMyTik) {
   );
 }
 
-void itemPurchaseShortBalanceAlert(
-    ShopController controller, double remainMyTik) {
+void itemPurchaseShortBalanceAlert(ShopController controller, double remainMyTik) {
   showAlert(
     title: '잔액이 부족합니다',
     isDangerTitle: true,
@@ -1210,13 +1184,10 @@ void itemPurchaseCompleteAlert(ShopController controller) {
                 SizedBox(
                   width: 150.sp,
                   child: CachedNetworkImage(
-                    imageUrl:
-                        controller.purchaseCompleteItem.value.itemImageUrl,
+                    imageUrl: controller.purchaseCompleteItem.value.itemImageUrl,
                     fit: BoxFit.fitWidth,
-                    placeholder: (context, url) =>
-                        const CircularProgressIndicator(),
-                    errorWidget: (context, url, error) =>
-                        Image.asset("assets/images/@temp_badge.png"),
+                    placeholder: (context, url) => const CircularProgressIndicator(),
+                    errorWidget: (context, url, error) => Image.asset("assets/images/@temp_badge.png"),
                   ),
                 ),
               ],
@@ -1228,8 +1199,7 @@ void itemPurchaseCompleteAlert(ShopController controller) {
               mainAxisAlignment: MainAxisAlignment.center,
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
-                getItemGradeCircleIcon(
-                    controller.purchaseCompleteItem.value.itemGrade),
+                getItemGradeCircleIcon(controller.purchaseCompleteItem.value.itemGrade),
                 Padding(
                   padding: EdgeInsets.only(left: 5.0.sp),
                   child: StyledText(
@@ -1267,10 +1237,7 @@ void itemPurchaseCompleteAlert(ShopController controller) {
                             mainAxisAlignment: MainAxisAlignment.center,
                             children: [
                               StyledText(
-                                formatDecimalPlaces(
-                                    controller
-                                        .purchaseCompleteItem.value.rewardRate,
-                                    0),
+                                formatDecimalPlaces(controller.purchaseCompleteItem.value.rewardRate, 0),
                                 fontSize: 22,
                                 lineHeight: 26,
                                 fontWeight: 500,
@@ -1291,8 +1258,7 @@ void itemPurchaseCompleteAlert(ShopController controller) {
                               mainAxisAlignment: MainAxisAlignment.center,
                               children: [
                                 Padding(
-                                  padding: EdgeInsets.only(
-                                      top: 1.0.sp, right: 2.0.sp),
+                                  padding: EdgeInsets.only(top: 1.0.sp, right: 2.0.sp),
                                   child: iconGoReward,
                                 ),
                                 StyledText(
@@ -1316,10 +1282,7 @@ void itemPurchaseCompleteAlert(ShopController controller) {
                             mainAxisAlignment: MainAxisAlignment.center,
                             children: [
                               StyledText(
-                                formatDecimalPlaces(
-                                    controller.purchaseCompleteItem.value
-                                        .abrasionRate,
-                                    0),
+                                formatDecimalPlaces(controller.purchaseCompleteItem.value.abrasionRate, 0),
                                 fontSize: 22,
                                 lineHeight: 26,
                                 fontWeight: 500,
@@ -1341,8 +1304,7 @@ void itemPurchaseCompleteAlert(ShopController controller) {
                               crossAxisAlignment: CrossAxisAlignment.center,
                               children: [
                                 Padding(
-                                  padding: EdgeInsets.only(
-                                      top: 1.0.sp, right: 5.0.sp),
+                                  padding: EdgeInsets.only(top: 1.0.sp, right: 5.0.sp),
                                   child: iconItemAbrasion,
                                 ),
                                 StyledText(
@@ -1366,10 +1328,7 @@ void itemPurchaseCompleteAlert(ShopController controller) {
                             mainAxisAlignment: MainAxisAlignment.center,
                             children: [
                               StyledText(
-                                formatDecimalPlaces(
-                                    controller.purchaseCompleteItem.value
-                                        .staminaReduceRate,
-                                    0),
+                                formatDecimalPlaces(controller.purchaseCompleteItem.value.staminaReduceRate, 0),
                                 fontSize: 22,
                                 lineHeight: 26,
                                 fontWeight: 500,
@@ -1390,8 +1349,7 @@ void itemPurchaseCompleteAlert(ShopController controller) {
                               mainAxisAlignment: MainAxisAlignment.center,
                               children: [
                                 Padding(
-                                  padding: EdgeInsets.only(
-                                      top: 1.0.sp, right: 2.0.sp),
+                                  padding: EdgeInsets.only(top: 1.0.sp, right: 2.0.sp),
                                   child: iconStaminaReduce,
                                 ),
                                 StyledText(
@@ -1512,15 +1470,9 @@ void itemSortListAlert(ShopController controller) {
                               fontSize: 18,
                               lineHeight: 20,
                               fontWeight: 500,
-                              color: controller
-                                          .isSelectedSortValue.value['value'] ==
-                                      entry.value['value']
-                                  ? skyBlueColor
-                                  : Colors.white,
+                              color: controller.isSelectedSortValue.value['value'] == entry.value['value'] ? skyBlueColor : Colors.white,
                             ),
-                            if (controller.isSelectedSortValue.value['value'] ==
-                                entry.value['value'])
-                              iconSortChecked
+                            if (controller.isSelectedSortValue.value['value'] == entry.value['value']) iconSortChecked
                           ],
                         ),
                       ),
@@ -1545,8 +1497,7 @@ void itemSortListAlert(ShopController controller) {
       ),
       Expanded(
         child: GazagoButton(
-          onTap: () => controller
-              .onClickConfirmSortValue(controller.isSelectedSortValue.value),
+          onTap: () => controller.onClickConfirmSortValue(controller.isSelectedSortValue.value),
           buttonText: '적용하기',
           buttonColor: skyBlueColor,
         ),
@@ -1573,9 +1524,7 @@ void itemFilterListAlert(ShopController controller) {
                   onTap: () => controller.onSelectAllItems(),
                   child: Container(
                     decoration: BoxDecoration(
-                      color: controller.isSelectAllItems.value
-                          ? Colors.white
-                          : popupBgColor,
+                      color: controller.isSelectAllItems.value ? Colors.white : popupBgColor,
                       border: Border.all(
                         width: 1,
                         color: Colors.white,
@@ -1583,17 +1532,14 @@ void itemFilterListAlert(ShopController controller) {
                       borderRadius: BorderRadius.circular(20.sp),
                     ),
                     child: Padding(
-                      padding: EdgeInsets.symmetric(
-                          horizontal: 12.0.sp, vertical: 6.sp),
+                      padding: EdgeInsets.symmetric(horizontal: 12.0.sp, vertical: 6.sp),
                       child: StyledText(
                         '전체',
                         fontSize: 14,
                         lineHeight: 16,
                         letterSpacing: .2,
                         fontWeight: 500,
-                        color: controller.isSelectAllItems.value
-                            ? Colors.black
-                            : Colors.white,
+                        color: controller.isSelectAllItems.value ? Colors.black : Colors.white,
                       ),
                     ),
                   ),
@@ -1619,15 +1565,10 @@ void itemFilterListAlert(ShopController controller) {
                         (entry) => Padding(
                           padding: EdgeInsets.only(right: 10.sp, bottom: 10.sp),
                           child: InkWell(
-                            onTap: () => controller
-                                .onSelectCategory(entry.value['value']),
+                            onTap: () => controller.onSelectCategory(entry.value['value']),
                             child: Container(
                               decoration: BoxDecoration(
-                                color: controller.selectedCategory.any(
-                                        (element) =>
-                                            element == entry.value['value'])
-                                    ? Colors.white
-                                    : popupBgColor,
+                                color: controller.selectedCategory.any((element) => element == entry.value['value']) ? Colors.white : popupBgColor,
                                 border: Border.all(
                                   width: 1,
                                   color: Colors.white,
@@ -1635,19 +1576,14 @@ void itemFilterListAlert(ShopController controller) {
                                 borderRadius: BorderRadius.circular(20.sp),
                               ),
                               child: Padding(
-                                padding: EdgeInsets.symmetric(
-                                    horizontal: 12.0.sp, vertical: 6.sp),
+                                padding: EdgeInsets.symmetric(horizontal: 12.0.sp, vertical: 6.sp),
                                 child: StyledText(
                                   entry.value['title']!,
                                   fontSize: 14,
                                   lineHeight: 16,
                                   letterSpacing: .2,
                                   fontWeight: 500,
-                                  color: controller.selectedCategory.any(
-                                          (element) =>
-                                              element == entry.value['value'])
-                                      ? Colors.black
-                                      : Colors.white,
+                                  color: controller.selectedCategory.any((element) => element == entry.value['value']) ? Colors.black : Colors.white,
                                 ),
                               ),
                             ),
@@ -1676,36 +1612,25 @@ void itemFilterListAlert(ShopController controller) {
                         (entry) => Padding(
                           padding: EdgeInsets.only(right: 8.sp, bottom: 10.sp),
                           child: InkWell(
-                            onTap: () =>
-                                controller.onSelectGrade(entry.value['value']),
+                            onTap: () => controller.onSelectGrade(entry.value['value']),
                             child: Container(
                               decoration: BoxDecoration(
-                                color: controller.selectedGrade.any((element) =>
-                                        element == entry.value['value'])
-                                    ? getItemGradeColor(entry.value['value']!)
-                                    : popupBgColor,
+                                color: controller.selectedGrade.any((element) => element == entry.value['value']) ? getItemGradeColor(entry.value['value']!) : popupBgColor,
                                 border: Border.all(
                                   width: 1,
-                                  color:
-                                      getItemGradeColor(entry.value['value']!),
+                                  color: getItemGradeColor(entry.value['value']!),
                                 ),
                                 borderRadius: BorderRadius.circular(20.sp),
                               ),
                               child: Padding(
-                                padding: EdgeInsets.symmetric(
-                                    horizontal: 12.0.sp, vertical: 6.sp),
+                                padding: EdgeInsets.symmetric(horizontal: 12.0.sp, vertical: 6.sp),
                                 child: StyledText(
                                   entry.value['title']!,
                                   fontSize: 14,
                                   lineHeight: 16,
                                   letterSpacing: .2,
                                   fontWeight: 500,
-                                  color: controller.selectedGrade.any(
-                                          (element) =>
-                                              element == entry.value['value'])
-                                      ? Colors.black
-                                      : getItemGradeColor(
-                                          entry.value['value']!),
+                                  color: controller.selectedGrade.any((element) => element == entry.value['value']) ? Colors.black : getItemGradeColor(entry.value['value']!),
                                 ),
                               ),
                             ),
@@ -1818,8 +1743,7 @@ void showInvalidVerifyCode(String errorMsg) {
     actions: [
       Expanded(
         child: GazagoButton(
-          onTap: () =>
-              Get.until((route) => Get.currentRoute == Routes.verificationName),
+          onTap: () => Get.until((route) => Get.currentRoute == Routes.verificationName),
           buttonText: '확인',
           buttonColor: skyBlueColor,
         ),
@@ -1852,8 +1776,7 @@ void showInvalidCertCode(String errorMsg) {
   );
 }
 
-void alreadyConnectedDeviceAlert(
-    LoginController controller, LoginType socialType, String accessToken) {
+void alreadyConnectedDeviceAlert(LoginController controller, LoginType socialType, String accessToken) {
   showAlert(
     contentWidget: Padding(
       padding: EdgeInsets.only(top: 20.0.sp, bottom: 40.sp),
@@ -1880,8 +1803,7 @@ void alreadyConnectedDeviceAlert(
       ),
       Expanded(
         child: GazagoButton(
-          onTap: () => controller.requestLogin(socialType, accessToken,
-              forceLogin: true),
+          onTap: () => controller.requestLogin(socialType, accessToken, forceLogin: true),
           buttonText: '확인',
           buttonColor: skyBlueColor,
         ),
@@ -1905,8 +1827,7 @@ void showAdTipAlert() {
                 children: [
                   Container(
                     width: double.infinity,
-                    padding: EdgeInsets.only(
-                        top: 19.sp, left: 18.sp, right: 18.sp, bottom: 50.sp),
+                    padding: EdgeInsets.only(top: 19.sp, left: 18.sp, right: 18.sp, bottom: 50.sp),
                     decoration: BoxDecoration(
                       color: popupBgColor,
                       borderRadius: BorderRadius.circular(10.sp),
@@ -1941,8 +1862,7 @@ void showAdTipAlert() {
                                   ),
                                   boxShadow: [
                                     BoxShadow(
-                                      color:
-                                          const Color.fromRGBO(0, 0, 0, 0.85),
+                                      color: const Color.fromRGBO(0, 0, 0, 0.85),
                                       offset: const Offset(0, 2),
                                       blurRadius: 0,
                                       spreadRadius: 2.sp,
@@ -1951,8 +1871,7 @@ void showAdTipAlert() {
                                   borderRadius: BorderRadius.circular(14.sp),
                                 ),
                                 child: Padding(
-                                  padding: EdgeInsets.only(
-                                      top: 32.sp, left: 10.sp, right: 10.sp),
+                                  padding: EdgeInsets.only(top: 32.sp, left: 10.sp, right: 10.sp),
                                   child: Column(
                                     children: [
                                       iconGo,
@@ -2071,11 +1990,7 @@ void showAdTipAlert() {
                       ],
                     ),
                   ),
-                  Positioned(
-                      right: 14,
-                      top: 14,
-                      child: InkWell(
-                          onTap: () => Get.back(), child: iconCloseWhite)),
+                  Positioned(right: 14, top: 14, child: InkWell(onTap: () => Get.back(), child: iconCloseWhite)),
                 ],
               ),
             ],

@@ -50,21 +50,15 @@ mixin AdmobMixin {
     if (adType == 'startFamousAd') {
       print('명산광고');
       // 100대 명산 등산 시작 광고
-      startAdid = Platform.isIOS
-          ? 'ca-app-pub-4234536720874912/7717252030'
-          : 'ca-app-pub-4234536720874912/8417209744';
+      startAdid = Platform.isIOS ? 'ca-app-pub-4234536720874912/7717252030' : 'ca-app-pub-4234536720874912/8417209744';
     } else if (adType == 'startHikingAd') {
       print('등산광고');
       // 등산 시작 광고
-      startAdid = Platform.isIOS
-          ? 'ca-app-pub-4234536720874912/6424351665'
-          : 'ca-app-pub-4234536720874912/2740311422';
+      startAdid = Platform.isIOS ? 'ca-app-pub-4234536720874912/6424351665' : 'ca-app-pub-4234536720874912/2740311422';
     } else {
       print('걷기광고');
       // 걷기 시작 광고
-      startAdid = Platform.isIOS
-          ? 'ca-app-pub-4234536720874912/4000819566'
-          : 'ca-app-pub-4234536720874912/3722220609';
+      startAdid = Platform.isIOS ? 'ca-app-pub-4234536720874912/4000819566' : 'ca-app-pub-4234536720874912/3722220609';
     }
   }
 
@@ -73,35 +67,25 @@ mixin AdmobMixin {
     if (adType == 'endFamousAd') {
       print('명산광고');
       // 100대 명산 등산 시작 광고
-      endAdid = Platform.isIOS
-          ? 'ca-app-pub-4234536720874912/6348330049'
-          : 'ca-app-pub-4234536720874912/9538719725';
+      endAdid = Platform.isIOS ? 'ca-app-pub-4234536720874912/6348330049' : 'ca-app-pub-4234536720874912/9538719725';
     } else if (adType == 'endHikingAd') {
       print('등산광고');
       // 등산 시작 광고
-      endAdid = Platform.isIOS
-          ? 'ca-app-pub-4234536720874912/7940064575'
-          : 'ca-app-pub-4234536720874912/7194545846';
+      endAdid = Platform.isIOS ? 'ca-app-pub-4234536720874912/7940064575' : 'ca-app-pub-4234536720874912/7194545846';
     } else {
       print('걷기광고');
       // 걷기 시작 광고
-      endAdid = Platform.isIOS
-          ? 'ca-app-pub-4234536720874912/9632404289'
-          : 'ca-app-pub-4234536720874912/4811940998';
+      endAdid = Platform.isIOS ? 'ca-app-pub-4234536720874912/9632404289' : 'ca-app-pub-4234536720874912/4811940998';
     }
   }
 
   // 운동 시작 광고
-  void exerciseStartRewardedAdInit(String adType,
-      {successCallback, errorCallback}) async {
+  void exerciseStartRewardedAdInit(String adType, {successCallback, errorCallback}) async {
     print('adType: ${adType}, ${startAdid}');
     await RewardedAd.load(
-        adUnitId: Platform.isIOS
-            ? 'ca-app-pub-3940256099942544/1712485313'
-            : 'ca-app-pub-3940256099942544/5224354917',
+        adUnitId: Platform.isIOS ? 'ca-app-pub-3940256099942544/1712485313' : 'ca-app-pub-3940256099942544/5224354917',
         request: const AdRequest(),
-        rewardedAdLoadCallback:
-            RewardedAdLoadCallback(onAdLoaded: (RewardedAd ad) {
+        rewardedAdLoadCallback: RewardedAdLoadCallback(onAdLoaded: (RewardedAd ad) {
           print('RewardedAd loaded');
 
           startAd = ad;
@@ -118,18 +102,15 @@ mixin AdmobMixin {
   }
 
   // 운동 종료 광고
-  Future exerciseEndRewardedAdInit(String adType,
-      {successCallback, errorCallback}) async {
+  Future exerciseEndRewardedAdInit(String adType, {successCallback, errorCallback}) async {
     await RewardedAd.load(
-        adUnitId: Platform.isIOS
-            ? 'ca-app-pub-3940256099942544/1712485313'
-            : 'ca-app-pub-3940256099942544/5224354917',
+        adUnitId: Platform.isIOS ? 'ca-app-pub-3940256099942544/1712485313' : 'ca-app-pub-3940256099942544/5224354917',
         request: const AdRequest(),
-        rewardedAdLoadCallback:
-            RewardedAdLoadCallback(onAdLoaded: (RewardedAd ad) {
+        rewardedAdLoadCallback: RewardedAdLoadCallback(onAdLoaded: (RewardedAd ad) {
           print('RewardedAd loaded');
           endAd = ad;
           adLoadAttempts[adType] = 0;
+
           successCallback();
           // numRewardedLoadAttempts = 0;
         }, onAdFailedToLoad: (error) {
@@ -140,22 +121,18 @@ mixin AdmobMixin {
         }));
   }
 
-  void showExerciseStartAd(
-      ActivityController activityController, String adType) {
+  void showExerciseStartAd(ActivityController activityController, String adType) {
     if (startAd == null) {
       print('Warning: attempt to show rewarded before loaded.');
       return;
     }
     startAd!.fullScreenContentCallback = FullScreenContentCallback(
-      onAdShowedFullScreenContent: (RewardedAd ad) =>
-          print('ad onAdShowedFullScreenContent.'),
+      onAdShowedFullScreenContent: (RewardedAd ad) => print('ad onAdShowedFullScreenContent.'),
       onAdDismissedFullScreenContent: (RewardedAd ad) {
         print('$ad onAdDismissedFullScreenContent.');
 
         if (ad.adUnitId.isNotEmpty) {
-          activityController.handleMoveExerciseActive(
-              activityController.selectedExerciseType.value,
-              adId: ad.adUnitId);
+          activityController.handleMoveExerciseActive(activityController.selectedExerciseType.value, adId: ad.adUnitId);
           startAd = null;
         }
 
@@ -177,8 +154,7 @@ mixin AdmobMixin {
     startAd = null;
   }
 
-  void showExerciseEndAd(
-      ChallengeModel challenge, ActivityController activityController) async {
+  void showExerciseEndAd(ChallengeModel challenge, ActivityController activityController) async {
     // String endAdName =
     //     await checkActivityType(selectedAd.value);
 
@@ -188,14 +164,12 @@ mixin AdmobMixin {
       return;
     }
     endAd!.fullScreenContentCallback = FullScreenContentCallback(
-      onAdShowedFullScreenContent: (RewardedAd ad) =>
-          print('ad onAdShowedFullScreenContent.'),
+      onAdShowedFullScreenContent: (RewardedAd ad) => print('ad onAdShowedFullScreenContent.'),
       onAdDismissedFullScreenContent: (RewardedAd ad) {
         print('$ad onAdDismissedFullScreenContent.');
 
         if (ad.adUnitId.isNotEmpty) {
-          activityController.endExercise(challenge,
-              source: 'showEndADExerciseAlert', adId: ad.adUnitId);
+          activityController.endExercise(challenge, source: 'showEndADExerciseAlert', adId: ad.adUnitId);
           endAd = null;
         }
 

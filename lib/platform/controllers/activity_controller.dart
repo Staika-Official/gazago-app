@@ -43,58 +43,23 @@ import 'package:permission_handler/permission_handler.dart' as ph;
 import 'package:simple_animations/animation_builder/custom_animation_builder.dart';
 import 'package:throttling/throttling.dart';
 
-class ActivityController extends SuperController
-    with
-        ActivityMixin,
-        ChallengeMixin,
-        GetTickerProviderStateMixin,
-        AdmobMixin {
+class ActivityController extends SuperController with ActivityMixin, ChallengeMixin, GetTickerProviderStateMixin, AdmobMixin {
   final WalletMasterController walletMasterController = Get.find();
 
   //rewarded.dart
   RxList<StatModel> get statList {
     return RxList([
-      StatModel(
-          name: '체력',
-          currentStat: userState.value.state != null
-              ? userState.value.state!.stamina!
-              : 0,
-          type: 'STAMINA'),
-      StatModel(
-          name: '내구도',
-          currentStat: userState.value.shoes != null
-              ? userState.value.shoes!.durability!
-              : 0,
-          type: 'DURABILITY'),
+      StatModel(name: '체력', currentStat: userState.value.state != null ? userState.value.state!.stamina! : 0, type: 'STAMINA'),
+      StatModel(name: '내구도', currentStat: userState.value.shoes != null ? userState.value.shoes!.durability! : 0, type: 'DURABILITY'),
     ]);
   }
 
   RxList<dynamic> get activitySumList {
     return RxList([
-      {
-        'title': '운동 시간',
-        'unit': '',
-        'content': '1일 ${'03:15:12'}',
-        'icon': iconActivityStoryWatch
-      },
-      {
-        'title': '운동 거리',
-        'unit': 'km',
-        'content': 300.34.toString(),
-        'icon': iconActivityStoryDistance
-      },
-      {
-        'title': '걸음 수',
-        'unit': '',
-        'content': 12682.toString(),
-        'icon': iconActivityStorySteps
-      },
-      {
-        'title': '총 획득 타이카',
-        'unit': 'TIK',
-        'content': 200.toString(),
-        'icon': iconActivityStoryTaika
-      },
+      {'title': '운동 시간', 'unit': '', 'content': '1일 ${'03:15:12'}', 'icon': iconActivityStoryWatch},
+      {'title': '운동 거리', 'unit': 'km', 'content': 300.34.toString(), 'icon': iconActivityStoryDistance},
+      {'title': '걸음 수', 'unit': '', 'content': 12682.toString(), 'icon': iconActivityStorySteps},
+      {'title': '총 획득 타이카', 'unit': 'TIK', 'content': 200.toString(), 'icon': iconActivityStoryTaika},
     ]);
   }
 
@@ -105,10 +70,8 @@ class ActivityController extends SuperController
   final RxBool isListeningToLocation = RxBool(false);
   final RxBool hasPermission = RxBool(false);
   final Rx<ExerciseType> selectedExerciseType = Rx(ExerciseType.walking);
-  final Rx<LocationPermission> _locationPermission =
-      Rx(LocationPermission.unableToDetermine);
-  final Rx<LocationAccuracyStatus> _locationAccuracyStatus =
-      Rx(LocationAccuracyStatus.unknown);
+  final Rx<LocationPermission> _locationPermission = Rx(LocationPermission.unableToDetermine);
+  final Rx<LocationAccuracyStatus> _locationAccuracyStatus = Rx(LocationAccuracyStatus.unknown);
   StreamSubscription<ServiceStatus>? _serviceStatusStream;
   final Rx<DateTime> receiveLocationTime = Rx(DateTime.now());
   final HealthFactory health = HealthFactory();
@@ -119,8 +82,7 @@ class ActivityController extends SuperController
   Control activityLoadControl = Control.play;
   RxBool disableButton = RxBool(false);
   RxBool disableActivityButton = RxBool(true);
-  final Throttling thr =
-      Throttling(duration: const Duration(milliseconds: 500));
+  final Throttling thr = Throttling(duration: const Duration(milliseconds: 500));
   late AnimationController challengeGuideController;
   final Rx<Control> challengeLoadControl = Rx(Control.play);
   final RxDouble challengeLoadControlPosition = RxDouble(0);
@@ -159,8 +121,7 @@ class ActivityController extends SuperController
     // 타이머 시작
     // adLoadTimerStart();
     checkConnectivityStatus();
-    if ([ExerciseState.ongoing, ExerciseState.paused]
-        .any((state) => state == exerciseState.value)) {
+    if ([ExerciseState.ongoing, ExerciseState.paused].any((state) => state == exerciseState.value)) {
       showPendingExerciseAlert(this);
     }
     disableActivityButton.value = false;
@@ -236,8 +197,7 @@ class ActivityController extends SuperController
 
   void showEndPointMarker(ChallengeModel course) {
     if (challengeSelectedIndex.value != -1) {
-      challengeMarkers.add(generateDefaultMarker(allChallengesList.firstWhere(
-          (element) => element.id == challengeSelectedIndex.value)));
+      challengeMarkers.add(generateDefaultMarker(allChallengesList.firstWhere((element) => element.id == challengeSelectedIndex.value)));
     }
 
     challengeSelectedIndex.value = course.id!;
@@ -312,12 +272,19 @@ class ActivityController extends SuperController
   void handleShowStaminaPopup(stat) async {
     currentSliderValue.value = 0;
     await walletMasterController.getFeeTik();
-    showRepairStatSlider(this, stat, walletMasterController.feeTikStamina.value,
-        walletMasterController.feeTikDurability.value);
+    showRepairStatSlider(this, stat, walletMasterController.feeTikStamina.value, walletMasterController.feeTikDurability.value);
   }
 
   void handleNotEnoughTaikaPopup() {
     showNotEnoughTaikaAlert();
+  }
+
+  void updateAbleViewAd() {
+    isAbleAdView.value = true;
+  }
+
+  void updateNotAbleViewAd() {
+    isAbleAdView.value = false;
   }
 
   void fetchRechargeStamina(type) async {
@@ -389,8 +356,7 @@ class ActivityController extends SuperController
   }
 
   Future<void> getUserState() async {
-    await ActivityService.getCurrentUserState(
-        successCallback: (currentUserState) async {
+    await ActivityService.getCurrentUserState(successCallback: (currentUserState) async {
       currentUserState.exercise?.locationUpdateTime = DateTime.now();
       userState.update((state) {
         state?.state = currentUserState.state;
@@ -401,30 +367,22 @@ class ActivityController extends SuperController
       if (userState.value.exercise == null) {
         exerciseState.value = ExerciseState.ready;
       } else {
-        CurrentUserStateModel? savedUserState =
-            HiveStore.loadCurrentUserState();
-        if (savedUserState != null &&
-            savedUserState.exercise != null &&
-            savedUserState.exercise!.recordState != null &&
-            savedUserState.exercise!.recordState! == 'NORMAL') {
+        CurrentUserStateModel? savedUserState = HiveStore.loadCurrentUserState();
+        if (savedUserState != null && savedUserState.exercise != null && savedUserState.exercise!.recordState != null && savedUserState.exercise!.recordState! == 'NORMAL') {
           savedUserState.exercise!.locationUpdateTime = DateTime.now();
           userState.update((state) {
             state?.exercise = savedUserState.exercise;
           });
 
-          int savedSteps =
-              HiveStore.load(key: HiveKey.savedStepCount.name) ?? 0;
+          int savedSteps = HiveStore.load(key: HiveKey.savedStepCount.name) ?? 0;
           if (savedUserState.exercise!.steps! > savedSteps) {
-            HiveStore.save(
-                key: HiveKey.savedStepCount.name,
-                value: savedUserState.exercise!.steps!);
+            HiveStore.save(key: HiveKey.savedStepCount.name, value: savedUserState.exercise!.steps!);
           }
         }
 
         if (userState.value.exercise?.challengeId != null) {
           //  산행중인 정보 가져오기
-          ChallengeModel challenge =
-              await getChallenge(userState.value.exercise!.challengeId!);
+          ChallengeModel challenge = await getChallenge(userState.value.exercise!.challengeId!);
           if (challenge.id != null) {
             selectedChallenge.value = challenge;
           }
@@ -453,8 +411,7 @@ class ActivityController extends SuperController
 
       await retrySavedRequests(source: 'getUserState');
 
-      if (Get.isRegistered<LoadingController>())
-        Get.find<LoadingController>().updateProgress("곧 가자고와 가자고~!");
+      if (Get.isRegistered<LoadingController>()) Get.find<LoadingController>().updateProgress("곧 가자고와 가자고~!");
     }, errorCallback: (statusCode) {
       if (statusCode == 404) {
         onLogout();
@@ -487,12 +444,9 @@ class ActivityController extends SuperController
   Future<bool> checkAvailabilities() async {
     bool isGpsAvailable = await checkGpsSensor();
     bool hasActivityPermission = await checkActivityPermission();
-    bool hasLocationPermissionWithAccuracy =
-        await checkLocationPermissionAndAccuracy();
+    bool hasLocationPermissionWithAccuracy = await checkLocationPermissionAndAccuracy();
 
-    return isGpsAvailable &&
-        hasActivityPermission &&
-        hasLocationPermissionWithAccuracy;
+    return isGpsAvailable && hasActivityPermission && hasLocationPermissionWithAccuracy;
   }
 
   Future<bool> requestPermissionStepByStep() async {
@@ -505,15 +459,12 @@ class ActivityController extends SuperController
       await showRequestActivityAlert();
     }
 
-    bool hasLocationPermissionWithAccuracy =
-        await checkLocationPermissionAndAccuracy();
+    bool hasLocationPermissionWithAccuracy = await checkLocationPermissionAndAccuracy();
     if (!hasLocationPermissionWithAccuracy) {
       await showRequestLocationAlert();
     }
 
-    return isGpsAvailable &&
-        hasActivityPermission &&
-        hasLocationPermissionWithAccuracy;
+    return isGpsAvailable && hasActivityPermission && hasLocationPermissionWithAccuracy;
   }
 
   Future<void> showRequestLocationAlert() async {
@@ -538,13 +489,11 @@ class ActivityController extends SuperController
     LocationPermission locationPermission = await Geolocator.checkPermission();
     _locationPermission.value = locationPermission;
 
-    return [LocationPermission.always, LocationPermission.whileInUse]
-        .any((permission) => permission == locationPermission);
+    return [LocationPermission.always, LocationPermission.whileInUse].any((permission) => permission == locationPermission);
   }
 
   Future<bool> checkLocationAccuracy() async {
-    LocationAccuracyStatus accuracyStatus =
-        await Geolocator.getLocationAccuracy();
+    LocationAccuracyStatus accuracyStatus = await Geolocator.getLocationAccuracy();
     _locationAccuracyStatus.value = accuracyStatus;
 
     return accuracyStatus == LocationAccuracyStatus.precise;
@@ -566,11 +515,9 @@ class ActivityController extends SuperController
   Future<bool> checkActivityPermission() async {
     bool hasActivityPermission = false;
     if (Platform.isAndroid) {
-      hasActivityPermission = ph.PermissionStatus.granted ==
-          await ph.Permission.activityRecognition.status;
+      hasActivityPermission = ph.PermissionStatus.granted == await ph.Permission.activityRecognition.status;
     } else if (Platform.isIOS) {
-      hasActivityPermission =
-          ph.PermissionStatus.granted == await ph.Permission.sensors.status;
+      hasActivityPermission = ph.PermissionStatus.granted == await ph.Permission.sensors.status;
     }
 
     return hasActivityPermission;
@@ -580,11 +527,9 @@ class ActivityController extends SuperController
     Completer<bool> activityRecognitionPermission = Completer();
     bool permissionGranted = false;
     if (Platform.isAndroid) {
-      permissionGranted = ph.PermissionStatus.granted ==
-          await ph.Permission.activityRecognition.request();
+      permissionGranted = ph.PermissionStatus.granted == await ph.Permission.activityRecognition.request();
     } else if (Platform.isIOS) {
-      permissionGranted =
-          ph.PermissionStatus.granted == await ph.Permission.sensors.request();
+      permissionGranted = ph.PermissionStatus.granted == await ph.Permission.sensors.request();
       await health.requestAuthorization([HealthDataType.STEPS]);
 
       // permissionGranted = sensorGranted && healthGranted;
@@ -599,12 +544,8 @@ class ActivityController extends SuperController
 
   Future<bool> requestLocationPermission() async {
     Completer<bool> locationPermissionCompleter = Completer();
-    LocationPermission locationPermission =
-        await Geolocator.requestPermission();
-    bool gotPermission = [
-      LocationPermission.always,
-      LocationPermission.whileInUse
-    ].any((permission) => permission == locationPermission);
+    LocationPermission locationPermission = await Geolocator.requestPermission();
+    bool gotPermission = [LocationPermission.always, LocationPermission.whileInUse].any((permission) => permission == locationPermission);
     if (!gotPermission) {
       Geolocator.openAppSettings();
     }
@@ -615,18 +556,14 @@ class ActivityController extends SuperController
   }
 
   void getActivityRoute() {
-    if ([ExerciseState.ongoing, ExerciseState.paused]
-        .any((state) => state == exerciseState.value)) {
+    if ([ExerciseState.ongoing, ExerciseState.paused].any((state) => state == exerciseState.value)) {
       Get.toNamed(Routes.activityActive);
     } else {
-      Get.dialog(const ActivitySelect(),
-          barrierDismissible: false,
-          barrierColor: const Color.fromRGBO(0, 0, 0, 0.85));
+      Get.dialog(const ActivitySelect(), barrierDismissible: false, barrierColor: const Color.fromRGBO(0, 0, 0, 0.85));
     }
   }
 
-  void loadExercise(ExerciseType exerciseType, String? adId,
-      [ChallengeModel? challenge]) {
+  void loadExercise(ExerciseType exerciseType, String? adId, [ChallengeModel? challenge]) {
     loadingTime.value = 1;
 
     Get.dialog(
@@ -641,8 +578,7 @@ class ActivityController extends SuperController
         if (loadingTime.value == 3) {
           timer.cancel();
           loadingTimer = null;
-          thr.throttle(
-              () => startExercise(exerciseType, challenge, adId: adId));
+          thr.throttle(() => startExercise(exerciseType, challenge, adId: adId));
         } else {
           loadingTime.value++;
           activityLoadControl = Control.playFromStart;
@@ -668,9 +604,7 @@ class ActivityController extends SuperController
       // HiveStore.save(key: selectedAd.value, value: null);
 
       if (date == null || viewableTime!.isBefore(now)) {
-        Get.dialog(const AdSelect(),
-            barrierDismissible: false,
-            barrierColor: const Color.fromRGBO(0, 0, 0, 0.85));
+        Get.dialog(const AdSelect(), barrierDismissible: false, barrierColor: const Color.fromRGBO(0, 0, 0, 0.85));
         if (startAd == null) {
           await initStartAdmobAdId(selectedAd.value);
           adLoadTimerStart();
@@ -697,8 +631,7 @@ class ActivityController extends SuperController
   }
 
   void handleMoveExerciseActive(ExerciseType exerciseType, {String? adId}) {
-    if (selectedExerciseType.value == ExerciseType.walking)
-      selectedChallenge.value = ChallengeModel();
+    if (selectedExerciseType.value == ExerciseType.walking) selectedChallenge.value = ChallengeModel();
     Get.offNamed(Routes.activityActive);
     loadExercise(
       selectedExerciseType.value,
@@ -753,15 +686,11 @@ class ActivityController extends SuperController
       );
     }
 
-    locationSubscription ??=
-        Geolocator.getPositionStream(locationSettings: locationSettings)
-            .listen((Position position) {
+    locationSubscription ??= Geolocator.getPositionStream(locationSettings: locationSettings).listen((Position position) {
       currentLocation.value = position;
 
-      if (HiveStore.load(key: HiveKey.isDebuggingMode.name) &&
-          exerciseState.value == ExerciseState.ongoing) {
-        List positionLowData =
-            HiveStore.load(key: HiveKey.positionLowDataLogs.name) ?? [];
+      if (HiveStore.load(key: HiveKey.isDebuggingMode.name) && exerciseState.value == ExerciseState.ongoing) {
+        List positionLowData = HiveStore.load(key: HiveKey.positionLowDataLogs.name) ?? [];
 
         var logForm = {
           'positionLowDataInfo': '===================================='
@@ -776,8 +705,7 @@ class ActivityController extends SuperController
         positionLowData.add(logForm);
         HiveStore.savePositionLowData(value: positionLowData);
       }
-      if (exerciseState.value == ExerciseState.ongoing &&
-          position.accuracy < gpsAccuracy) {
+      if (exerciseState.value == ExerciseState.ongoing && position.accuracy < gpsAccuracy) {
         exerciseData.add(UserExerciseModel(
           altitude: position.altitude,
           speed: convertMStoKMH(position.speed),
@@ -788,20 +716,13 @@ class ActivityController extends SuperController
         coordinates.add(LatLng(position.latitude, position.longitude));
         if (coordinates.isNotEmpty && coordinates.length > 1) {
           exerciseDistance.value = exerciseDistance.value +
-              Geolocator.distanceBetween(
-                  coordinates[coordinates.length - 2].latitude,
-                  coordinates[coordinates.length - 2].longitude,
-                  coordinates.last.latitude,
-                  coordinates.last.longitude);
+              Geolocator.distanceBetween(coordinates[coordinates.length - 2].latitude, coordinates[coordinates.length - 2].longitude, coordinates.last.latitude, coordinates.last.longitude);
         }
       } else {
         // 첼린지 존 찾기(30초마다 요청)
         DateTime now = DateTime.now();
 
-        if (receiveLocationTime.value
-                .add(const Duration(seconds: 30))
-                .compareTo(now) <
-            0) {
+        if (receiveLocationTime.value.add(const Duration(seconds: 30)).compareTo(now) < 0) {
           findChallenge();
           receiveLocationTime.value = now;
         }
@@ -813,8 +734,7 @@ class ActivityController extends SuperController
   }
 
   initGpsServiceStream() {
-    _serviceStatusStream ??=
-        Geolocator.getServiceStatusStream().listen((ServiceStatus status) {
+    _serviceStatusStream ??= Geolocator.getServiceStatusStream().listen((ServiceStatus status) {
       if (status == ServiceStatus.disabled) {
         showGpsAlert();
       }
@@ -823,10 +743,7 @@ class ActivityController extends SuperController
 
   Future<void> getCurrentLocation() async {
     print('getCurrentLocation');
-    await Geolocator.getCurrentPosition(
-            desiredAccuracy: locationAccuracyQuality,
-            timeLimit: const Duration(seconds: 5))
-        .then((location) {
+    await Geolocator.getCurrentPosition(desiredAccuracy: locationAccuracyQuality, timeLimit: const Duration(seconds: 5)).then((location) {
       print('getCurrentLocation 위치정보 가져옴');
       currentLocation.value = location;
       isListeningToLocation.value = true;
@@ -846,8 +763,7 @@ class ActivityController extends SuperController
 
   // 챌린지 찾기
   Future<void> findChallenge() async {
-    if (currentLocation.value.latitude != 0 &&
-        currentLocation.value.longitude != 0) {
+    if (currentLocation.value.latitude != 0 && currentLocation.value.longitude != 0) {
       await getNearByChallengeList(currentLocation.value, exerciseState.value);
     } else {
       await getChallengeList();
@@ -863,15 +779,11 @@ class ActivityController extends SuperController
   }
 
   Future<void> retrySavedRequests({required String source}) async {
-    if (HiveStore.load(key: HiveKey.badgeIssuanceRequested.name) != null &&
-        HiveStore.load(key: HiveKey.badgeIssuanceRequested.name) &&
-        userState.value.exercise != null) {
+    if (HiveStore.load(key: HiveKey.badgeIssuanceRequested.name) != null && HiveStore.load(key: HiveKey.badgeIssuanceRequested.name) && userState.value.exercise != null) {
       await requestBadgeIssuance(userState.value);
     }
 
-    if (HiveStore.load(key: HiveKey.endExerciseRequested.name) != null &&
-        HiveStore.load(key: HiveKey.endExerciseRequested.name) &&
-        userState.value.exercise != null) {
+    if (HiveStore.load(key: HiveKey.endExerciseRequested.name) != null && HiveStore.load(key: HiveKey.endExerciseRequested.name) && userState.value.exercise != null) {
       await endExercise(selectedChallenge.value, source: source);
     }
   }
@@ -903,6 +815,7 @@ class ActivityController extends SuperController
     Get.back();
     startAd = null;
     endAd = null;
+    updateNotAbleViewAd();
   }
 
   @override
@@ -921,24 +834,28 @@ class ActivityController extends SuperController
     pedestrianStatusSubscription = null;
     _serviceStatusStream?.cancel();
     _serviceStatusStream = null;
+    _adTimer?.cancel();
+    _adTimer = null;
     HiveStore.save(key: HiveKey.savedStepInitialized.name, value: false);
   }
 
   @override
   void onInactive() {
     print('onInactive');
+    adLoadTimerStop();
     HiveStore.save(key: HiveKey.savedStepInitialized.name, value: false);
   }
 
   @override
   void onPaused() {
     print('onPaused');
+    adLoadTimerStop();
     HiveStore.save(key: HiveKey.savedStepInitialized.name, value: false);
   }
 
   @override
   void onResumed() {
-    print('onResumed');
+    print('onResumed activity');
     // TODO: implement onResumed
   }
 }
