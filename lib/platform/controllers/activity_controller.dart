@@ -2,7 +2,6 @@ import 'dart:async';
 import 'dart:io';
 
 import 'package:advertising_id/advertising_id.dart';
-import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_naver_map/flutter_naver_map.dart';
@@ -280,7 +279,12 @@ class ActivityController extends SuperController with ActivityMixin, ChallengeMi
   }
 
   void updateAbleViewAd() {
-    isAbleAdView.value = true;
+    // isAbleAdView.value = true;
+    if (userState.value.exercise!.rewardGo! > 0) {
+      isAbleAdView.value = true;
+    } else {
+      isAbleAdView.value = false;
+    }
   }
 
   void updateNotAbleViewAd() {
@@ -604,6 +608,7 @@ class ActivityController extends SuperController with ActivityMixin, ChallengeMi
       // HiveStore.save(key: selectedAd.value, value: null);
 
       if (date == null || viewableTime!.isBefore(now)) {
+        Get.back();
         Get.dialog(const AdSelect(), barrierDismissible: false, barrierColor: const Color.fromRGBO(0, 0, 0, 0.85));
         if (startAd == null) {
           await initStartAdmobAdId(selectedAd.value);
@@ -770,12 +775,16 @@ class ActivityController extends SuperController with ActivityMixin, ChallengeMi
     }
   }
 
-  void checkConnectivityStatus() {
-    globalController.connectivityResult.listen((value) async {
-      if (value != ConnectivityResult.none) {
-        await retrySavedRequests(source: 'connectivityListener');
-      }
-    });
+  void checkConnectivityStatus() async {
+    // globalController.connectivityResult.listen((value) async {
+    //   if (value != ConnectivityResult.none) {
+    //     await retrySavedRequests(source: 'connectivityListener');
+    //   }
+    // });
+    print('인터넷 연결됐는지 확인중');
+    if (globalController.internetConnection.value) {
+      await retrySavedRequests(source: 'connectivityListener');
+    }
   }
 
   Future<void> retrySavedRequests({required String source}) async {

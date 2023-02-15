@@ -1877,7 +1877,7 @@ void showAdTipAlert() {
                                       iconGo,
                                       Padding(
                                         padding: EdgeInsets.only(top: 12.sp),
-                                        child: FittedBox(
+                                        child: const FittedBox(
                                           alignment: Alignment.topCenter,
                                           child: StyledText(
                                             '5GO 획득하고 시작하기',
@@ -1930,7 +1930,7 @@ void showAdTipAlert() {
                           TextSpan(
                             text: '· ',
                             style: TextStyle(color: lightGrayColor),
-                            children: [
+                            children: const [
                               TextSpan(
                                 text: '광고 보상은 당일의 GO 획득 기준이에요!',
                               ),

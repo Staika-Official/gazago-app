@@ -1,6 +1,7 @@
 import 'dart:io';
 
 import 'package:flutter_naver_map/flutter_naver_map.dart';
+import 'package:flutter_svg_provider/flutter_svg_provider.dart';
 import 'package:gaza_go/constants/routes.dart';
 import 'package:gaza_go/platform/helpers/alert_helper.dart';
 import 'package:gaza_go/platform/helpers/base_helper.dart';
@@ -99,6 +100,17 @@ class ArchiveController extends GetxController with ScrollMixin {
 
   void showConfirmDelete(int id) {
     showDeleteRecordAlert(this, id);
+  }
+
+  getArchiveTypeImage(archiveType) {
+    switch (archiveType) {
+      case 'FAMOUS_MOUNTAIN_100':
+        return const Svg('assets/images/archive/ico_mountain_100.svg');
+      case 'WALKING':
+        return const Svg('assets/images/archive/ico_walking.svg');
+      case 'HIKING':
+        return const Svg('assets/images/archive/ico_hiking.svg');
+    }
   }
 
   @override

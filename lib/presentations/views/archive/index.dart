@@ -1,7 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:flutter_svg_provider/flutter_svg_provider.dart' as sp;
-import 'package:gaza_go/constants/enums.dart';
 import 'package:gaza_go/platform/controllers/archive_controller.dart';
 import 'package:gaza_go/platform/helpers/activity_helper.dart';
 import 'package:gaza_go/platform/helpers/base_helper.dart';
@@ -54,9 +52,10 @@ class ArchiveHome extends StatelessWidget {
                               CircleAvatar(
                                 radius: 21.sp,
                                 backgroundColor: Colors.transparent,
-                                foregroundImage: archive.type == ExerciseType.hiking.name.toUpperCase()
-                                    ? const sp.Svg('assets/images/archive/ico_archive_hiking.svg')
-                                    : const sp.Svg('assets/images/archive/ico_archive_walking.svg'),
+                                foregroundImage: controller.getArchiveTypeImage(archive.type),
+                                // foregroundImage: archive.type == ExerciseType.hiking.name.toUpperCase()
+                                // const sp.Svg('assets/images/archive/ico_archive_hiking.svg')
+                                //     : const sp.Svg('assets/images/archive/ico_archive_walking.svg'),
                               ),
                               if (archive.badgeIssueId != null)
                                 Positioned(
@@ -150,7 +149,7 @@ class ArchiveHome extends StatelessWidget {
       color: subBg01Color,
       child: Obx(() {
         return Padding(
-          padding: EdgeInsets.only(top:20.sp, left:20.sp, right:20.sp),
+          padding: EdgeInsets.only(top: 20.sp, left: 20.sp, right: 20.sp),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             mainAxisSize: MainAxisSize.min,

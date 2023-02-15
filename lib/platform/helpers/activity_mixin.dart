@@ -1,7 +1,6 @@
 import 'dart:async';
 import 'dart:io';
 
-import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_naver_map/flutter_naver_map.dart';
 import 'package:gaza_go/constants/config.dart';
@@ -63,7 +62,7 @@ mixin ActivityMixin {
     Color color = Colors.white;
     switch (exerciseState.value) {
       case ExerciseState.ongoing:
-        if (realTimeSpeed.value < 1 || realTimeSpeed.value > 6) {
+        if (realTimeSpeed.value < 1 || realTimeSpeed.value > 7) {
           color = textRedColor;
         } else {
           color = textGreenColor;
@@ -83,7 +82,7 @@ mixin ActivityMixin {
     Color color = Colors.white;
     switch (exerciseState.value) {
       case ExerciseState.ongoing:
-        if (realTimeSpeed.value < 1 || realTimeSpeed.value > 6) {
+        if (realTimeSpeed.value < 1 || realTimeSpeed.value > 7) {
           color = speedRedColor;
         } else {
           color = speedGreenColor;
@@ -311,8 +310,10 @@ mixin ActivityMixin {
 
   void startExercise(ExerciseType exerciseType, ChallengeModel? challenge, {String? adId}) async {
     if (Get.isDialogOpen != null && Get.isDialogOpen!) Get.until((route) => Get.isDialogOpen == false);
+    print(globalController.internetConnection.value);
     if (!batchIsInProgress()) {
-      if (globalController.connectivityResult.value != ConnectivityResult.none) {
+      // if (globalController.connectivityResult.value != ConnectivityResult.none) {
+      if (globalController.internetConnection.value) {
         await ActivityService.fetchStartUserExercises(
           UserExerciseModel(
             userId: int.parse(
@@ -415,7 +416,8 @@ mixin ActivityMixin {
       }
     }
 
-    if (globalController.connectivityResult.value != ConnectivityResult.none && !batchIsInProgress()) {
+    // if (globalController.connectivityResult.value != ConnectivityResult.none && !batchIsInProgress()) {
+    if (globalController.internetConnection.value && !batchIsInProgress()) {
       isPaused != null && isPaused
           ? await ActivityService.fetchPausedUserExercises(
               userExerciseData.value,
@@ -497,16 +499,15 @@ mixin ActivityMixin {
     DateTime? viewableTime = date?.add(const Duration(hours: 1));
     DateTime now = DateTime.now();
     stopTimer = Timer.periodic(const Duration(milliseconds: 10), (timer) {
-      if (counter == const Duration(milliseconds: 2500)) {
+      if (counter == const Duration(milliseconds: 500)) {
         initializeStopTimer();
 
         if (source != null && source == 'pendingExerciseDialog') {
           Get.back();
         }
         if (date == null || viewableTime!.isBefore(now)) {
-          print('11111111');
           controller.initEndAdmobAdId(controller.selectedAd.value);
-          print('22222222');
+
           controller.exerciseEndRewardedAdInit(
             controller.selectedAd.value,
             successCallback: () {
@@ -516,7 +517,7 @@ mixin ActivityMixin {
               controller.updateNotAbleViewAd();
             },
           );
-          print('33333333');
+
           showEndExerciseAdDialog(challenge, controller);
           controller.adLoadTimerStart();
         } else {
@@ -528,7 +529,7 @@ mixin ActivityMixin {
         }
       } else {
         counter = counter + const Duration(milliseconds: 10);
-        stopProgress.value += (10 / 2500);
+        stopProgress.value += (10 / 500);
       }
     });
   }
@@ -576,7 +577,6 @@ mixin ActivityMixin {
       );
     }
     if (!batchIsInProgress()) {
-      print(source);
       await ActivityService.fetchEndUserExercises(
         userExerciseData.value,
         source: source,

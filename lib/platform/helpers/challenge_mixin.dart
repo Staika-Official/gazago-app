@@ -1,7 +1,6 @@
 import 'dart:async';
 import 'dart:developer';
 
-import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_naver_map/flutter_naver_map.dart';
 import 'package:gaza_go/constants/enums.dart';
@@ -134,7 +133,7 @@ mixin ChallengeMixin {
       bool hasArrived =
           Geolocator.distanceBetween(selectedChallenge.value.endLat!, selectedChallenge.value.endLon!, currentLocation.latitude, currentLocation.longitude) < selectedChallenge.value.endRadius!;
       if (hasArrived && userState.exercise!.badgeIssueId == null) {
-        if (globalController.connectivityResult.value != ConnectivityResult.none) {
+        if (globalController.internetConnection.value) {
           requestBadgeIssuance(userState);
         } else {
           HiveStore.save(key: HiveKey.badgeIssuanceRequested.name, value: true);
