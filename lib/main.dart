@@ -128,14 +128,14 @@ class MyApp extends StatelessWidget {
                     fontSize: 10,
                     fontWeight: FontWeight.w600,
                   );
-                } else {
-                  return TextStyle(
-                    color: lightGrayColor,
-                    fontSize: 10,
-                    wordSpacing: 0,
-                    fontWeight: FontWeight.w600,
-                  );
                 }
+
+                return TextStyle(
+                  color: lightGrayColor,
+                  fontSize: 10,
+                  wordSpacing: 0,
+                  fontWeight: FontWeight.w600,
+                );
               }),
             ),
           ),
