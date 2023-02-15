@@ -4,6 +4,7 @@ import 'dart:math';
 import 'package:dio/dio.dart';
 import 'package:gaza_go/constants/enums.dart';
 import 'package:gaza_go/platform/apis/wallet.dart';
+import 'package:gaza_go/platform/helpers/security_helper.dart';
 import 'package:gaza_go/platform/helpers/solana_helper.dart';
 import 'package:gaza_go/platform/models/asset_detail_model.dart';
 import 'package:gaza_go/platform/models/asset_token_balance_model.dart';
@@ -15,6 +16,8 @@ import 'package:gaza_go/flavors.dart';
 import 'package:solana/base58.dart';
 import 'package:solana/encoder.dart';
 import 'package:solana/solana.dart';
+import 'package:solana/solana.dart' as solana;
+import 'package:solana_web3/solana_web3.dart';
 
 class WalletService {
   static String? get userId {
@@ -72,22 +75,31 @@ class WalletService {
     }
   }
 
-  static Future<void> createSolanaWallet(String publicKey, String encodeSecretKey) async {
-    await WalletApi.postEncryptedSecretKey(publicKey, encodeSecretKey);
+  static Future<void> createSolanaWallet(String walletPassword) async {
+    // Solana Dart가 SecretKey 를 프라이빗으로 해둬서 값을 가져올수 없음. solana_web3 라이브러리 필요함
+    final wallet = Keypair.generate();
+    final address = wallet.publicKey;
+
+    String? email = HiveStore.loadString(key: HiveKey.email.name);
+
+    // 암호화된 시크릿키
+    String encryptSecretKey = encrypt(base58.encode(wallet.secretKey), email!, walletPassword);
+    await WalletApi.postEncryptedSecretKey(address.toBase58(), encryptSecretKey);
   }
 
-  static Future<void> sendTransfer(String toAddress, String symbol, String tokenAddress, int decimals, int amount) async {
+  static Future<void> sendTransfer(String walletPrivateKey, String walletPassword, String toAddress, String symbol, String tokenAddress, int decimals, int amount) async {
     final SolanaClient solanaClient = F.solanaClient;
 
-    List<int> privateKey = [161, 38, 33, 160, 179, 255, 235, 121, 6, 215, 185, 63, 133, 112, 250, 78, 156, 177, 93, 135, 102, 5, 156, 160, 192, 128, 24, 162, 226, 8, 177, 116];
+    String? email = HiveStore.loadString(key: HiveKey.email.name);
 
-    String accountPrivateKey = 'Br4N3pMn2hjk2P685bN99FTYojhSuiRPUiz1YffX81HV';
+
+
     final sender = await Ed25519HDKeyPair.fromPrivateKeyBytes(
-      privateKey: base58decode(accountPrivateKey),
+      privateKey: base58decode(decrypt(walletPrivateKey, email!, walletPassword)!),
     );
     final receiver = Ed25519HDPublicKey.fromBase58(toAddress);
 
-    Message message;
+    solana.Message message;
     if (symbol == 'SOL') {
       message = getSolTransferMessage(sender.publicKey, receiver, amount);
     } else {

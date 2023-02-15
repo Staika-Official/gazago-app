@@ -18,9 +18,6 @@ class LaboratorySolanaTransfer extends StatelessWidget {
   Widget build(BuildContext context) {
     SolanaController solanaController = Get.put(SolanaController());
 
-    final emailController = TextEditingController();
-    final passwordController = TextEditingController();
-
     return DefaultContainer(
       titleText: '솔라나 전송',
       backgroundColor: subBg01Color,

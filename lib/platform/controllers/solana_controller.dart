@@ -1,6 +1,9 @@
 import 'dart:io';
 
+import 'package:gaza_go/constants/enums.dart';
+import 'package:gaza_go/platform/helpers/security_helper.dart';
 import 'package:gaza_go/platform/services/wallet_service.dart';
+import 'package:gaza_go/platform/stores/hive_store.dart';
 import 'package:get/get.dart';
 import 'package:solana_web3/solana_web3.dart' as web3;
 import 'package:solana_web3/programs/system.dart';
@@ -12,7 +15,7 @@ class SolanaController extends GetxController {
 
   final RxString symbol = RxString('SOL');
   final RxString toAddress = RxString('');
-  final RxInt amount = RxInt(0);
+  final RxInt uiAmount = RxInt(0);
 
   @override
   void onInit() async {
@@ -20,30 +23,23 @@ class SolanaController extends GetxController {
   }
 
   void createWallet() async {
-    final wallet = web3.Keypair.generate();
-    final address = wallet.publicKey;
-    print(address);
-    print(address.toBase58());
-    print(address.toBase64());
-    print(wallet.secretKey);
-
-    String encodeSecretKey = base58.encode(wallet.secretKey);
-    print(encodeSecretKey);
-
-    // 암호화 모듈 추가
-    print(base58.decode(encodeSecretKey));
-    await WalletService.createSolanaWallet(address.toBase58(), encodeSecretKey);
+    // 지갑 패스워드
+    String walletPassword = "12345678";
+    await WalletService.createSolanaWallet(walletPassword);
 
   }
 
   void sendTransfer() async {
+    // Wallet 정보
+
+    String walletPassword = "12345678";
+    String accountPrivateKey = 'Br4N3pMn2hjk2P685bN99FTYojhSuiRPUiz1YffX81HV';
     String toAddress = '4L3ScUzhGu9onoZ6bbXCeFKFhkJ6tMAUHunj9akLu2P1';
     String symbol = 'STIKA';
     String tokenAddress = '9TuCLrnSUt2iX6tccPEHSLgUMDg3VpkoEazU5CED3MyX';
     int decimals = 5;
     int amount = 100000;
-
-    await WalletService.sendTransfer(toAddress, symbol, tokenAddress, decimals, amount);
+    await WalletService.sendTransfer(accountPrivateKey, walletPassword, toAddress, symbol, tokenAddress, decimals, amount);
   }
 
   /*void sendTransfer(String toAddress, String symbol, String tokenAddress, int decimals, int amount) async {
@@ -59,6 +55,6 @@ class SolanaController extends GetxController {
   }
 
   void setAmount(String changeAmount) {
-    amount.value = int.parse(changeAmount);
+    uiAmount.value = int.parse(changeAmount);
   }
 }
