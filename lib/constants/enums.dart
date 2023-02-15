@@ -284,3 +284,13 @@ extension MobileCompanyName on MobileCompany {
     }
   }
 }
+
+enum ItemType {
+  all,
+  top,
+  shoes,
+  accessory,
+  hat,
+  drink,
+  bottom,
+}

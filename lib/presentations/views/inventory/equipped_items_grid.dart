@@ -14,11 +14,6 @@ class EquippedItemsGrid extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    controller.equippedItemList.forEach((element) {
-      print(element.toJson());
-    });
-    print(controller.equippedBadge.value.toJson());
-
     return Obx(() {
       if (controller.equippedItemList.isNotEmpty) {
         return StaggeredGrid.count(

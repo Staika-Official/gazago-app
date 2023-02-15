@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:gaza_go/constants/enums.dart';
 import 'package:gaza_go/platform/models/inventory_item_model.dart';
 import 'package:get/get.dart';
 
@@ -14,30 +15,30 @@ class InventoryHomeController extends GetxController with GetTickerProviderState
   late ScrollController scrollController = ScrollController();
   bool fixedScroll = true;
   final RxBool isShoe = RxBool(true);
-  List itemSubTabList = [
+  List<Map<String, String>> itemSubTabList = [
     {
       'title': '전체',
-      'itemType': 'all',
+      'itemType': ItemType.all.name,
     },
     {
       'title': '모자',
-      'itemType': 'hats',
+      'itemType': ItemType.hat.name,
     },
     {
       'title': '상의',
-      'itemType': 'outers',
+      'itemType': ItemType.top.name,
     },
     {
       'title': '하의',
-      'itemType': 'bottoms',
+      'itemType': ItemType.bottom.name,
     },
     {
       'title': '신발',
-      'itemType': 'shoes',
+      'itemType': ItemType.shoes.name,
     },
     {
       'title': '액세서리',
-      'itemType': 'accessories',
+      'itemType': ItemType.accessory.name,
     },
   ];
 
