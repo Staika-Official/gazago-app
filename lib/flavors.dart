@@ -1,4 +1,7 @@
 import 'package:gaza_go/constants/base_urls.dart';
+import 'package:solana/solana.dart';
+import 'package:solana_web3/solana_web3.dart' as web3;
+import 'package:solana_web3/solana_web3.dart';
 
 enum Flavor {
   dev,
@@ -51,6 +54,44 @@ class F {
         return 'https://taikapay.com';
       default:
         return 'https://stage.taikapay.com';
+    }
+  }
+
+  static SolanaClient get solanaClient {
+    switch (appFlavor) {
+      case Flavor.dev:
+        return SolanaClient(
+          rpcUrl: Uri.parse('https://api.devnet.solana.com'),
+          websocketUrl: Uri.parse('wss://api.devnet.solana.com'),
+        );
+      case Flavor.stage:
+        return SolanaClient(
+          rpcUrl: Uri.parse('https://api.devnet.solana.com'),
+          websocketUrl: Uri.parse('wss://api.devnet.solana.com'),
+        );
+      case Flavor.prod:
+        return SolanaClient(
+          rpcUrl: Uri.parse('https://api.devnet.solana.com'),
+          websocketUrl: Uri.parse('wss://api.devnet.solana.com'),
+        );
+      default:
+        return SolanaClient(
+          rpcUrl: Uri.parse('https://api.devnet.solana.com'),
+          websocketUrl: Uri.parse('wss://api.devnet.solana.com'),
+        );
+    }
+  }
+
+  static Ed25519HDPublicKey get solanaFeePayer {
+    switch (appFlavor) {
+      case Flavor.dev:
+        return Ed25519HDPublicKey.fromBase58("92RJbkjWhnqpKMepWGe6WXo94XeAQszX2PTStS7weZLc");
+      case Flavor.stage:
+        return Ed25519HDPublicKey.fromBase58("92RJbkjWhnqpKMepWGe6WXo94XeAQszX2PTStS7weZLc");
+      case Flavor.prod:
+        return Ed25519HDPublicKey.fromBase58("92RJbkjWhnqpKMepWGe6WXo94XeAQszX2PTStS7weZLc");
+      default:
+        return Ed25519HDPublicKey.fromBase58("92RJbkjWhnqpKMepWGe6WXo94XeAQszX2PTStS7weZLc");
     }
   }
 }

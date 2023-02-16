@@ -1,9 +1,8 @@
 import 'dart:async';
 import 'dart:io';
 
-import 'package:advertising_id/advertising_id.dart';
+import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:flutter_naver_map/flutter_naver_map.dart';
 import 'package:gaza_go/constants/config.dart';
 import 'package:gaza_go/constants/enums.dart';
@@ -12,7 +11,6 @@ import 'package:gaza_go/platform/controllers/loading_controller.dart';
 import 'package:gaza_go/platform/controllers/wallet_master_controller.dart';
 import 'package:gaza_go/platform/helpers/activity_helper.dart';
 import 'package:gaza_go/platform/helpers/activity_mixin.dart';
-import 'package:gaza_go/platform/helpers/admob_mixin.dart';
 import 'package:gaza_go/platform/helpers/alert_helper.dart';
 import 'package:gaza_go/platform/helpers/challenge_mixin.dart';
 import 'package:gaza_go/platform/helpers/login_helper.dart';
@@ -34,7 +32,6 @@ import 'package:gaza_go/presentations/styles/colors.dart';
 import 'package:gaza_go/presentations/styles/icons.dart';
 import 'package:gaza_go/presentations/views/activity/activity_loading.dart';
 import 'package:gaza_go/presentations/views/activity/activity_select.dart';
-import 'package:gaza_go/presentations/views/activity/ad_select.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:get/get.dart';
 import 'package:health/health.dart';
@@ -42,10 +39,10 @@ import 'package:permission_handler/permission_handler.dart' as ph;
 import 'package:simple_animations/animation_builder/custom_animation_builder.dart';
 import 'package:throttling/throttling.dart';
 
-class ActivityController extends SuperController with ActivityMixin, ChallengeMixin, GetTickerProviderStateMixin, AdmobMixin {
+class ActivityController extends SuperController with ActivityMixin, ChallengeMixin, GetTickerProviderStateMixin {
   final WalletMasterController walletMasterController = Get.find();
 
-  //rewarded.dart
+  //index.dart
   RxList<StatModel> get statList {
     return RxList([
       StatModel(name: '체력', currentStat: userState.value.state != null ? userState.value.state!.stamina! : 0, type: 'STAMINA'),
@@ -85,44 +82,19 @@ class ActivityController extends SuperController with ActivityMixin, ChallengeMi
   late AnimationController challengeGuideController;
   final Rx<Control> challengeLoadControl = Rx(Control.play);
   final RxDouble challengeLoadControlPosition = RxDouble(0);
-  RxBool isAbleAdView = RxBool(false);
-  final RxBool isLoadingGetAdData = RxBool(false);
-  Timer? _adTimer;
-  final RxInt time = RxInt(5);
-  String? advertisingId = '';
-  bool? isLimitAdTrackingEnabled;
-
-  initPlatformState() async {
-    // Platform messages may fail, so we use a try/catch PlatformException.
-    try {
-      advertisingId = await AdvertisingId.id(true);
-    } on PlatformException {
-      advertisingId = 'Failed to get platform version.';
-    }
-
-    try {
-      isLimitAdTrackingEnabled = await AdvertisingId.isLimitAdTrackingEnabled;
-    } on PlatformException {
-      isLimitAdTrackingEnabled = false;
-    }
-
-    // If the widget was removed from the tree while the asynchronous platform
-    // message was in flight, we want to discard the reply rather than calling
-    // setState to update our non-existent appearance.
-
-    advertisingId = advertisingId;
-    isLimitAdTrackingEnabled = isLimitAdTrackingEnabled;
-  }
 
   Future<void> initializeController() async {
+    print('initializeController #1');
     challengeGuideController = AnimationController(vsync: this);
+    print('initializeController #2');
     await initController();
-    // 타이머 시작
-    // adLoadTimerStart();
+    print('initializeController #3');
     checkConnectivityStatus();
+    print('initializeController #4');
     if ([ExerciseState.ongoing, ExerciseState.paused].any((state) => state == exerciseState.value)) {
       showPendingExerciseAlert(this);
     }
+    print('initializeController #5');
     disableActivityButton.value = false;
   }
 
@@ -134,7 +106,6 @@ class ActivityController extends SuperController with ActivityMixin, ChallengeMi
       }
       await loadChallenges();
     });
-    await initPlatformState();
   }
 
   Future<void> refreshController() async {
@@ -278,19 +249,6 @@ class ActivityController extends SuperController with ActivityMixin, ChallengeMi
     showNotEnoughTaikaAlert();
   }
 
-  void updateAbleViewAd() {
-    // isAbleAdView.value = true;
-    if (userState.value.exercise!.rewardGo! > 0) {
-      isAbleAdView.value = true;
-    } else {
-      isAbleAdView.value = false;
-    }
-  }
-
-  void updateNotAbleViewAd() {
-    isAbleAdView.value = false;
-  }
-
   void fetchRechargeStamina(type) async {
     disableButton.value = true;
     if (walletMasterController.tik.value.amount! >= costTik.value) {
@@ -399,6 +357,12 @@ class ActivityController extends SuperController with ActivityMixin, ChallengeMi
           exerciseDistance.value = userState.value.exercise!.distance!;
 
           coordinates.value = List.empty(growable: true);
+
+          print('##################################################');
+          print(userState.value.exercise!.locations!.length);
+          print('##################################################');
+
+
           if (userState.value.exercise!.locations != null && userState.value.exercise!.locations!.length > 0) {
             coordinates.addAll(parseCoordinates());
           }
@@ -567,7 +531,7 @@ class ActivityController extends SuperController with ActivityMixin, ChallengeMi
     }
   }
 
-  void loadExercise(ExerciseType exerciseType, String? adId, [ChallengeModel? challenge]) {
+  void loadExercise(ExerciseType exerciseType, [ChallengeModel? challenge]) {
     loadingTime.value = 1;
 
     Get.dialog(
@@ -582,7 +546,7 @@ class ActivityController extends SuperController with ActivityMixin, ChallengeMi
         if (loadingTime.value == 3) {
           timer.cancel();
           loadingTimer = null;
-          thr.throttle(() => startExercise(exerciseType, challenge, adId: adId));
+          thr.throttle(() => startExercise(exerciseType, challenge));
         } else {
           loadingTime.value++;
           activityLoadControl = Control.playFromStart;
@@ -591,63 +555,15 @@ class ActivityController extends SuperController with ActivityMixin, ChallengeMi
     );
   }
 
-  void selectExerciseType(ExerciseType exerciseType) async {
+  void selectExerciseType(ExerciseType exerciseType) {
     selectedExerciseType.value = exerciseType;
-
-    if (selectedExerciseType.value == ExerciseType.dulle) {
-      moveToChallengeMap();
-    } else {
-      await handleSelectAdType(selectedExerciseType.value == ExerciseType.hiking
-          ? 'startHikingAd'
-          : selectedExerciseType.value == ExerciseType.walking
-              ? 'startWalkingAd'
-              : 'startFamousAd');
-      DateTime? date = HiveStore.load(key: selectedAd.value);
-      DateTime? viewableTime = date?.add(const Duration(hours: 1));
-      DateTime now = DateTime.now();
-      // HiveStore.save(key: selectedAd.value, value: null);
-
-      if (date == null || viewableTime!.isBefore(now)) {
-        Get.back();
-        Get.dialog(const AdSelect(), barrierDismissible: false, barrierColor: const Color.fromRGBO(0, 0, 0, 0.85));
-        if (startAd == null) {
-          await initStartAdmobAdId(selectedAd.value);
-          adLoadTimerStart();
-          exerciseStartRewardedAdInit(
-            selectedAd.value,
-          );
-        }
-      } else {
-        handleMoveExerciseActive(exerciseType);
-      }
-    }
-
-    // if (selectedExerciseType.value == ExerciseType.walking) selectedChallenge.value = ChallengeModel();
-    // Get.offNamed(Routes.activityActive);
-    // loadExercise(selectedExerciseType.value, selectedChallenge.value.id != null ? selectedChallenge.value : null);
-  }
-
-  void showAdAndMoveActivity() {
-    showExerciseStartAd(this, selectedAd.value);
-  }
-
-  void showAdTip() {
-    showAdTipAlert();
-  }
-
-  void handleMoveExerciseActive(ExerciseType exerciseType, {String? adId}) {
     if (selectedExerciseType.value == ExerciseType.walking) selectedChallenge.value = ChallengeModel();
     Get.offNamed(Routes.activityActive);
-    loadExercise(
-      selectedExerciseType.value,
-      adId,
-      selectedChallenge.value.id != null ? selectedChallenge.value : null,
-    );
+    loadExercise(selectedExerciseType.value, selectedChallenge.value.id != null ? selectedChallenge.value : null);
   }
 
-  void moveToChallengeSelection(adType) {
+  void moveToChallengeSelection() {
     selectedChallenge.value = ChallengeModel();
-    handleSelectAdType(adType);
     Get.toNamed(Routes.activityChallenges);
   }
 
@@ -775,16 +691,12 @@ class ActivityController extends SuperController with ActivityMixin, ChallengeMi
     }
   }
 
-  void checkConnectivityStatus() async {
-    // globalController.connectivityResult.listen((value) async {
-    //   if (value != ConnectivityResult.none) {
-    //     await retrySavedRequests(source: 'connectivityListener');
-    //   }
-    // });
-    print('인터넷 연결됐는지 확인중');
-    if (globalController.internetConnection.value) {
-      await retrySavedRequests(source: 'connectivityListener');
-    }
+  void checkConnectivityStatus() {
+    globalController.connectivityResult.listen((value) async {
+      if (value != ConnectivityResult.none) {
+        await retrySavedRequests(source: 'connectivityListener');
+      }
+    });
   }
 
   Future<void> retrySavedRequests({required String source}) async {
@@ -795,36 +707,6 @@ class ActivityController extends SuperController with ActivityMixin, ChallengeMi
     if (HiveStore.load(key: HiveKey.endExerciseRequested.name) != null && HiveStore.load(key: HiveKey.endExerciseRequested.name) && userState.value.exercise != null) {
       await endExercise(selectedChallenge.value, source: source);
     }
-  }
-
-  void adLoadTimerStart() {
-    time.value = 5;
-    if (_adTimer != null) {
-      _adTimer = null;
-    }
-
-    _adTimer = Timer.periodic(const Duration(seconds: 1), (timer) {
-      time.value--;
-      if (time.value == 0) {
-        timer.cancel();
-        _adTimer = null;
-      }
-    });
-  }
-
-  void adLoadTimerStop() {
-    if (_adTimer != null) {
-      _adTimer?.cancel();
-      _adTimer = null;
-    }
-  }
-
-  void closeAdSelectPopup() {
-    adLoadTimerStop();
-    Get.back();
-    startAd = null;
-    endAd = null;
-    updateNotAbleViewAd();
   }
 
   @override
@@ -843,28 +725,24 @@ class ActivityController extends SuperController with ActivityMixin, ChallengeMi
     pedestrianStatusSubscription = null;
     _serviceStatusStream?.cancel();
     _serviceStatusStream = null;
-    _adTimer?.cancel();
-    _adTimer = null;
     HiveStore.save(key: HiveKey.savedStepInitialized.name, value: false);
   }
 
   @override
   void onInactive() {
     print('onInactive');
-    adLoadTimerStop();
     HiveStore.save(key: HiveKey.savedStepInitialized.name, value: false);
   }
 
   @override
   void onPaused() {
     print('onPaused');
-    adLoadTimerStop();
     HiveStore.save(key: HiveKey.savedStepInitialized.name, value: false);
   }
 
   @override
   void onResumed() {
-    print('onResumed activity');
+    print('onResumed');
     // TODO: implement onResumed
   }
 }
