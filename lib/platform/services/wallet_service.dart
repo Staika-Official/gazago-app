@@ -11,6 +11,8 @@ import 'package:gaza_go/platform/models/asset_token_balance_model.dart';
 import 'package:gaza_go/platform/models/buy_tik_response_model.dart';
 import 'package:gaza_go/platform/models/pay_info_model.dart';
 import 'package:gaza_go/platform/models/pay_response_model.dart';
+import 'package:gaza_go/platform/models/wallet_solana_model.dart';
+import 'package:gaza_go/platform/models/wallet_solana_transfer_model.dart';
 import 'package:gaza_go/platform/stores/hive_store.dart';
 import 'package:gaza_go/flavors.dart';
 import 'package:solana/base58.dart';
@@ -75,27 +77,49 @@ class WalletService {
     }
   }
 
-  static Future<void> createSolanaWallet(String walletPassword) async {
+  static Future<WalletSolanaModel?> getSolanaWallet() async {
+    String? userId = HiveStore.loadString(key: HiveKey.userId.name);
+    Response res = await WalletApi.getSolanaWallet(userId);
+    print(res.data);
+    if (res.data == null || res.data == '') {
+      return null;
+    }
+    return WalletSolanaModel.fromJson(res.data);
+  }
+
+  static Future<WalletSolanaModel> createSolanaWallet(String walletPassword) async {
     // Solana Dart가 SecretKey 를 프라이빗으로 해둬서 값을 가져올수 없음. solana_web3 라이브러리 필요함
-    final wallet = Keypair.generate();
+    final wallet = Keypair.generateSync();
     final address = wallet.publicKey;
 
     String? email = HiveStore.loadString(key: HiveKey.email.name);
 
+    print('address: ${address.toBase58()}');
+    print('secretKey: ${base58.encode(wallet.secretKey)}');
+
     // 암호화된 시크릿키
     String encryptSecretKey = encrypt(base58.encode(wallet.secretKey), email!, walletPassword);
-    await WalletApi.postEncryptedSecretKey(address.toBase58(), encryptSecretKey);
+    Response res = await WalletApi.createSolanaWallet(address.toBase58(), encryptSecretKey);
+
+    return WalletSolanaModel.fromJson(res.data);
   }
 
-  static Future<void> sendTransfer(String walletPrivateKey, String walletPassword, String toAddress, String symbol, String tokenAddress, int decimals, int amount) async {
+  static Future<WalletSolanaTransferModel> transferSolana(String accountSecretkey, String walletPassword, String toAddress, String symbol, String tokenAddress, int decimals, int amount) async {
     final SolanaClient solanaClient = F.solanaClient;
 
     String? email = HiveStore.loadString(key: HiveKey.email.name);
 
+    print('##############');
+    print('accountSecretkey: ${accountSecretkey}');
+    String? decryptPrivateKey = decrypt(accountSecretkey, email!, walletPassword);
+    print('decryptPrivateKey: ${decryptPrivateKey}');
 
+    if (decryptPrivateKey == null) {
+
+    }
 
     final sender = await Ed25519HDKeyPair.fromPrivateKeyBytes(
-      privateKey: base58decode(decrypt(walletPrivateKey, email!, walletPassword)!),
+      privateKey: base58.decode(decryptPrivateKey!).sublist(0, 32),
     );
     final receiver = Ed25519HDPublicKey.fromBase58(toAddress);
 
@@ -107,6 +131,8 @@ class WalletService {
       message = await getSplTransferMessage(solanaClient, sender, receiver, mint, amount);
     }
 
+    print('sender: ${sender.address}');
+
     // FeePayer
     final feePayer = F.solanaFeePayer;
 
@@ -117,7 +143,7 @@ class WalletService {
     );
 
     final List<Signature> signatures = [];
-    final feePayerSign = Signature(List.filled(64, 0), publicKey: sender.publicKey);
+    final feePayerSign = Signature(List.filled(64, 0), publicKey: feePayer);
     signatures.add(feePayerSign);
     signatures.add(await sender.sign(compiledMessage.data));
 
@@ -129,11 +155,9 @@ class WalletService {
     // API Call
     Map<String, String> body = {
       'clientId': 'GAZAGO',
-      'endocdeTransction': tx.encode()
+      'encodeTransaction': tx.encode()
     };
-    Response res = await WalletApi.sendSolanaTransfer(body);
-
-
-
+    Response res = await WalletApi.transferSolana(body);
+    return WalletSolanaTransferModel.fromJson(res.data);
   }
 }

@@ -203,7 +203,7 @@ Future<web3.Keypair> createWalletWithBalance(
     }) async {
 
   // Create a new wallet and get its public address.
-  final wallet = web3.Keypair.generate();
+  final wallet = web3.Keypair.generateSync();
   final address = wallet.publicKey;
 
   print(address);

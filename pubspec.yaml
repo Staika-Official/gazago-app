@@ -47,7 +47,7 @@ dependencies:
   share_plus: ^4.0.10+1 #https://pub.dev/packages/share_plus
   logger: ^1.1.0 #https://pub.dev/packages/logger
   url_launcher: ^6.1.5 #https://pub.dev/packages/url_launcher
-  connectivity_plus: ^2.3.6+1 #https://pub.dev/packages/connectivity_plus/install
+  connectivity_plus: ^3.0.2 #https://pub.dev/packages/connectivity_plus/install
   firebase_core: ^2.4.1 #https://pub.dev/packages/firebase_core
   firebase_auth: ^4.2.5 #https://pub.dev/packages/firebase_auth
   firebase_analytics: ^10.1.0 #https://pub.dev/packages/firebase_analytics/install
@@ -98,7 +98,7 @@ dependencies:
   flutter_inappwebview: ^6.0.0-beta.22
   path_provider: ^2.0.11
   solana: ^0.27.0
-  solana_web3: ^0.0.2+4
+  solana_web3: ^0.0.4
   encrypt: ^5.0.1
 
 

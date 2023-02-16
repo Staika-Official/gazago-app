@@ -8,6 +8,7 @@ import 'package:gaza_go/presentations/styles/colors.dart';
 import 'package:gaza_go/presentations/styles/styled_text.dart';
 import 'package:get/get.dart';
 import 'package:hive_flutter/hive_flutter.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 import '../../../constants/enums.dart';
 
@@ -110,6 +111,38 @@ class LaboratorySolanaTransfer extends StatelessWidget {
                   GazagoButton(
                     onTap: () => solanaController.sendTransfer(),
                     buttonText: '전송하기',
+                    buttonColor: skyBlueColor,
+                  ),
+                  Padding(padding: const EdgeInsets.all(20.0)),
+                  StyledText(
+                    'Transaction: ',
+                    fontSize: 20,
+                    fontWeight: 500,
+                    color: Colors.white,
+                  ),
+                  StyledText(
+                    '${solanaController.transaction}',
+                    fontSize: 20,
+                    fontWeight: 500,
+                    lineHeight: 25,
+                    color: Colors.white,
+                  ),
+                  StyledText(
+                    'Solscan URL: ',
+                    fontSize: 20,
+                    fontWeight: 500,
+                    color: Colors.white,
+                  ),
+                  StyledText(
+                    '${solanaController.solscanUrl}',
+                    fontSize: 20,
+                    fontWeight: 500,
+                    lineHeight: 25,
+                    color: Colors.white,
+                  ),
+                  GazagoButton(
+                    onTap: () => solanaController.launchURL(),
+                    buttonText: 'Solscan 바로가기',
                     buttonColor: skyBlueColor,
                   ),
                 ],

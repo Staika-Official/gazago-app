@@ -21,20 +21,37 @@ class LaboratorySolanaCreateWallet extends StatelessWidget {
       titleText: '솔라나 지갑 생성',
       backgroundColor: subBg01Color,
       headerBackgroundColor: const Color(0xFF23232D),
-      child: SingleChildScrollView(
-        physics: const ClampingScrollPhysics(),
-        child: Padding(
-          padding: const EdgeInsets.all(10.0),
-          child: Column(
-            children: [
-              GazagoButton(
-                onTap: () => solanaController.createWallet(),
-                buttonText: '지갑 생성 하기',
-                buttonColor: skyBlueColor,
+      child: Obx(() {
+          return SingleChildScrollView(
+            physics: const ClampingScrollPhysics(),
+            child: Padding(
+              padding: const EdgeInsets.all(10.0),
+              child: Column(
+                children: [
+                  GazagoButton(
+                    onTap: () => solanaController.createWallet(),
+                    buttonText: '지갑 생성 하기',
+                    buttonColor: skyBlueColor,
+                  ),
+                  Padding(padding: const EdgeInsets.all(10.0)),
+                  StyledText(
+                    'Address: ',
+                    fontSize: 20,
+                    fontWeight: 500,
+                    color: Colors.white,
+                  ),
+                  StyledText(
+                    '${solanaController.address}',
+                    fontSize: 20,
+                    fontWeight: 500,
+                    lineHeight: 25,
+                    color: Colors.white,
+                  ),
+                ],
               ),
-            ],
-          ),
-        ),
+            ),
+          );
+        }
       ),
     );
   }
