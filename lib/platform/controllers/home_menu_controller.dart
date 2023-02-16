@@ -9,6 +9,7 @@ import 'package:gaza_go/platform/controllers/shop_controller.dart';
 import 'package:gaza_go/platform/controllers/wallet_master_controller.dart';
 import 'package:gaza_go/platform/helpers/login_helper.dart';
 import 'package:gaza_go/platform/stores/hive_store.dart';
+import 'package:gaza_go/presentations/components/alert_ui_list.dart';
 import 'package:gaza_go/presentations/components/main_appbar.dart';
 import 'package:gaza_go/presentations/components/secondary_appbar.dart';
 import 'package:gaza_go/presentations/views/activity/index.dart';
@@ -64,6 +65,7 @@ class HomeMenuController extends SuperController {
           HiveStore.deleteKey(key: HiveKey.hasForcedLogout.name);
         } else {
           HiveStore.save(key: HiveKey.hasForcedLogout.name, value: true); //getInitialMessage가 중복처리되어서 처리 여부를 구분하기 위해 필요
+          await showForceLogoutAlert();
           forceLogout();
         }
       }
@@ -113,13 +115,14 @@ class HomeMenuController extends SuperController {
   }
 
   @override
-  void onResumed() {
+  void onResumed() async {
     if (HiveStore.load(key: HiveKey.needRouteToGoWallet.name) != null && HiveStore.load(key: HiveKey.needRouteToGoWallet.name)) {
       HiveStore.deleteKey(key: HiveKey.needRouteToGoWallet.name);
       Get.find<WalletMasterController>().moveToWallet();
     } else if (HiveStore.load(key: HiveKey.needToForceLogout.name) != null && HiveStore.load(key: HiveKey.needToForceLogout.name)) {
       HiveStore.deleteKey(key: HiveKey.needToForceLogout.name);
       HiveStore.save(key: HiveKey.hasForcedLogout.name, value: true); //getInitialMessage가 중복처리되어서 처리 여부를 구분하기 위해 필요
+      await showForceLogoutAlert();
       forceLogout();
     }
   }

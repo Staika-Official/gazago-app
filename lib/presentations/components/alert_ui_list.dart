@@ -1774,10 +1774,11 @@ void showInvalidCertCode(String errorMsg) {
 
 void alreadyConnectedDeviceAlert(LoginController controller, LoginType socialType, String accessToken) {
   showAlert(
+    title: '확인 요청',
     contentWidget: Padding(
       padding: EdgeInsets.only(top: 20.0.sp, bottom: 40.sp),
       child: const StyledText(
-        '댜른 기기에 로그인 되어있습니다.\n해당 기기의 로그인을 해제 후\n로그인 하시겠습니까?',
+        '댜른 기기에 로그인 되어 있어요.\n해당 기기의 로그인 해제 후 로그인할께요.',
         fontSize: 18,
         lineHeight: 24,
         fontWeight: 500,
@@ -1789,7 +1790,7 @@ void alreadyConnectedDeviceAlert(LoginController controller, LoginType socialTyp
       Expanded(
         child: GazagoButton(
           onTap: () => Get.back(),
-          buttonText: '취소',
+          buttonText: '아니요',
           textColor: Colors.white,
           buttonColor: popupBgColor,
         ),
@@ -1800,12 +1801,41 @@ void alreadyConnectedDeviceAlert(LoginController controller, LoginType socialTyp
       Expanded(
         child: GazagoButton(
           onTap: () => controller.requestLogin(socialType, accessToken, forceLogin: true),
+          buttonText: '네',
+          buttonColor: skyBlueColor,
+        ),
+      ),
+    ],
+  );
+}
+
+Future<void> showForceLogoutAlert() {
+  Completer forceLogoutAlertCompleter = Completer();
+  showAlert(
+    title: '확인 완료',
+    contentWidget: Padding(
+      padding: EdgeInsets.only(top: 20.0.sp, bottom: 40.sp),
+      child: const StyledText(
+        '사용 중인 계정이 다른 기기에서\n로그인하여 접속이 종료되었어요.',
+        fontSize: 18,
+        lineHeight: 24,
+        fontWeight: 500,
+        letterSpacing: .2,
+        textAlign: TextAlign.center,
+      ),
+    ),
+    actions: [
+      Expanded(
+        child: GazagoButton(
+          onTap: () => forceLogoutAlertCompleter.complete(),
           buttonText: '확인',
           buttonColor: skyBlueColor,
         ),
       ),
     ],
   );
+
+  return forceLogoutAlertCompleter.future;
 }
 
 void showAdTipAlert() {
