@@ -46,7 +46,8 @@ class LaboratorySolanaTransfer extends StatelessWidget {
                       onChanged: (value) => solanaController.setSymbol(value),
                     ),
                   ),
-                  TextField(
+                  TextFormField(
+                    initialValue: solanaController.toAddress.value,
                     style: TextStyle(
                       fontSize: 20.sp,
                       fontWeight: FontWeight.w500,
@@ -79,7 +80,8 @@ class LaboratorySolanaTransfer extends StatelessWidget {
                     cursorColor: skyBlueColor,
                     keyboardType: TextInputType.name,
                   ),
-                  TextField(
+                  TextFormField(
+                    initialValue: solanaController.uiAmount.value.toString(),
                     textAlign: TextAlign.end,
                     decoration: InputDecoration(
                       suffixText: ' TIK',
@@ -103,7 +105,7 @@ class LaboratorySolanaTransfer extends StatelessWidget {
                       fontSize: 28.sp,
                       fontWeight: FontWeight.w400,
                     ),
-                    autofocus: true,
+                    autofocus: false,
                     cursorColor: Colors.white,
                     keyboardType: TextInputType.number,
                     onChanged: (value) => solanaController.setAmount(value),

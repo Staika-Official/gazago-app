@@ -17,8 +17,8 @@ import 'package:url_launcher/url_launcher.dart';
 class SolanaController extends GetxController {
 
   final RxString symbol = RxString('SOL');
-  final RxString toAddress = RxString('');
-  final RxInt uiAmount = RxInt(0);
+  final RxString toAddress = RxString('4L3ScUzhGu9onoZ6bbXCeFKFhkJ6tMAUHunj9akLu2P1');
+  final RxDouble uiAmount = RxDouble(0.5);
   final RxString address = RxString('');
   final RxString transaction = RxString('');
   final RxString solscanUrl = RxString('');
@@ -46,12 +46,12 @@ class SolanaController extends GetxController {
 
     String walletPassword = "12345678";
     String accountSecretkey = wallet!.secretkey;
-    String toAddress = '4L3ScUzhGu9onoZ6bbXCeFKFhkJ6tMAUHunj9akLu2P1';
     String symbol = 'STIKA';
     String tokenAddress = '9TuCLrnSUt2iX6tccPEHSLgUMDg3VpkoEazU5CED3MyX';
     int decimals = 5;
-    int amount = 1000;
-    WalletSolanaTransferModel transfer = await WalletService.transferSolana(accountSecretkey, walletPassword, toAddress, symbol, tokenAddress, decimals, amount);
+    int amount = (uiAmount.value * 100000000.0).toInt();
+
+    WalletSolanaTransferModel transfer = await WalletService.transferSolana(accountSecretkey, walletPassword, toAddress.value, symbol, tokenAddress, decimals, amount);
     solscanUrl.value = transfer.solscanUrl;
     transaction.value = transfer.signature;
   }
@@ -79,6 +79,6 @@ class SolanaController extends GetxController {
   }
 
   void setAmount(String changeAmount) {
-    uiAmount.value = int.parse(changeAmount);
+    uiAmount.value = double.parse(changeAmount);
   }
 }
