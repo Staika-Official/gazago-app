@@ -13,16 +13,20 @@ Future<void> showAlert({
   bool isNonePaddingOuter = false,
 }) async {
   await Get.bottomSheet(
-    BottomSheetAlert(
-      title: title,
-      contentWidget: contentWidget,
-      contentText: contentText,
-      actions: actions,
-      isDangerTitle: isDangerTitle,
-      isNonePaddingOuter: isNonePaddingOuter,
+    WillPopScope(
+      onWillPop: () async => false,
+      child: BottomSheetAlert(
+        title: title,
+        contentWidget: contentWidget,
+        contentText: contentText,
+        actions: actions,
+        isDangerTitle: isDangerTitle,
+        isNonePaddingOuter: isNonePaddingOuter,
+      ),
     ),
     isDismissible: false,
     isScrollControlled: isScrollControlled,
+    enableDrag: false,
   );
 }
 
