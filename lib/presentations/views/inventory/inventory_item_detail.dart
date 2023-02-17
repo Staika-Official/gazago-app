@@ -1,6 +1,7 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:gaza_go/platform/controllers/inventory_controller.dart';
 import 'package:gaza_go/platform/helpers/base_helper.dart';
 import 'package:gaza_go/platform/helpers/inventory_helper.dart';
@@ -62,12 +63,19 @@ class InventoryItemDetail extends StatelessWidget {
                                 padding: EdgeInsets.symmetric(vertical: 10.0.sp),
                                 child: Column(
                                   children: [
-                                    CachedNetworkImage(
-                                      imageUrl: controller.selectedItem.value.itemImageUrl,
-                                      width: 200.sp,
-                                      fit: BoxFit.fitWidth,
-                                      placeholder: (context, url) => const Center(child: SizedBox.square(dimension: 40, child: CircularProgressIndicator())),
-                                    ),
+                                    controller.selectedItem.value.itemImageUrl.contains('.svg')
+                                        ? SvgPicture.network(
+                                            fit: BoxFit.fitWidth,
+                                            width: 170.sp,
+                                            controller.selectedItem.value.itemImageUrl,
+                                            placeholderBuilder: (BuildContext context) => Container(padding: const EdgeInsets.all(30.0), child: const CircularProgressIndicator()),
+                                          )
+                                        : CachedNetworkImage(
+                                            imageUrl: controller.selectedItem.value.itemImageUrl,
+                                            width: 170.sp,
+                                            fit: BoxFit.fitWidth,
+                                            placeholder: (context, url) => const Center(child: SizedBox.square(dimension: 40, child: CircularProgressIndicator())),
+                                          ),
                                     if (controller.isShoe.value)
                                       SizedBox(
                                         height: 42.sp,

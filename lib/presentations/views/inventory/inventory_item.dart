@@ -1,6 +1,7 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:gaza_go/platform/controllers/inventory_controller.dart';
 import 'package:gaza_go/platform/controllers/inventory_home_controller.dart';
 import 'package:gaza_go/platform/helpers/inventory_helper.dart';
@@ -53,12 +54,19 @@ class InventoryItem extends StatelessWidget {
                                 height: 80.sp,
                                 child: Opacity(
                                   opacity: item.equipped == true ? 0.5 : 1,
-                                  child: CachedNetworkImage(
-                                    imageUrl: item.itemImageUrl,
-                                    fit: BoxFit.fitHeight,
-                                    placeholder: (context, url) => const Center(child: SizedBox.square(dimension: 40, child: CircularProgressIndicator())),
-                                    errorWidget: (context, url, error) => Image.asset("assets/images/@temp_badge.png"),
-                                  ),
+                                  child: item.itemImageUrl.contains('.svg')
+                                      ? SvgPicture.network(
+                                          fit: BoxFit.fitWidth,
+                                          width: 170.sp,
+                                          controller.selectedItem.value.itemImageUrl,
+                                          placeholderBuilder: (BuildContext context) => Container(padding: const EdgeInsets.all(30.0), child: const CircularProgressIndicator()),
+                                        )
+                                      : CachedNetworkImage(
+                                          imageUrl: item.itemImageUrl,
+                                          fit: BoxFit.fitHeight,
+                                          placeholder: (context, url) => const Center(child: SizedBox.square(dimension: 40, child: CircularProgressIndicator())),
+                                          errorWidget: (context, url, error) => Image.asset("assets/images/@temp_badge.png"),
+                                        ),
                                 ),
                               ),
                               Padding(

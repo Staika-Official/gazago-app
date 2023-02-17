@@ -510,15 +510,15 @@ void showEndExerciseAdAlert(ChallengeModel challenge, ActivityController control
       Expanded(
         child: Column(
           children: [
-            Obx(() {
-              return InkWell(
-                  onTap: () => controller.endAd == null ? null : controller.showExerciseEndAd(challenge, controller),
-                  child: Container(
+            InkWell(
+                onTap: () => controller.endAd.value == null ? null : controller.showExerciseEndAd(challenge, controller),
+                child: Obx(() {
+                  return Container(
                     width: double.infinity,
                     height: 52.sp,
                     alignment: Alignment.center,
                     decoration: BoxDecoration(
-                      color: controller.endAd == null ? popupBgColor : skyBlueColor,
+                      color: controller.endAd.value == null ? popupBgColor : skyBlueColor,
                       border: Border.all(width: 2.sp, color: Colors.black),
                       borderRadius: BorderRadius.circular(8.sp),
                       boxShadow: [
@@ -528,7 +528,7 @@ void showEndExerciseAdAlert(ChallengeModel challenge, ActivityController control
                         )
                       ],
                     ),
-                    child: controller.endAd == null
+                    child: controller.endAd.value == null
                         ? controller.time.value != 0
                             ? Stack(
                                 children: [
@@ -581,8 +581,8 @@ void showEndExerciseAdAlert(ChallengeModel challenge, ActivityController control
                               ),
                             ],
                           ),
-                  ));
-            }),
+                  );
+                })),
             Padding(
               padding: EdgeInsets.only(top: 8.0.sp),
               child: GazagoButton(

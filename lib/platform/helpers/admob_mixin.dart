@@ -9,7 +9,7 @@ import '../models/challenge_model.dart';
 
 mixin AdmobMixin {
   RewardedAd? startAd;
-  RewardedAd? endAd;
+  Rx<RewardedAd?> endAd = Rx(null);
 
   RxMap<String, int> adLoadAttempts = RxMap({
     "startFamousAd": 0,
@@ -110,14 +110,15 @@ mixin AdmobMixin {
         request: const AdRequest(),
         rewardedAdLoadCallback: RewardedAdLoadCallback(onAdLoaded: (RewardedAd ad) {
           print('RewardedAd loaded');
-          endAd = ad;
+
+          endAd.value = ad;
           adLoadAttempts[adType] = 0;
 
           successCallback();
           // numRewardedLoadAttempts = 0;
         }, onAdFailedToLoad: (error) {
           print('RewardedAd failed to load: $error adType ${adType}');
-          endAd = null;
+          endAd.value = null;
           adLoadAttempts[adType] = adLoadAttempts[adType]! + 1;
           errorCallback();
         }));
@@ -161,18 +162,19 @@ mixin AdmobMixin {
     //     await checkActivityType(selectedAd.value);
 
     print('끝내는운동이뭐냐${selectedAd.value}');
-    if (endAd == null) {
+    if (endAd.value == null) {
       print('Warning: attempt to show rewarded before loaded.');
       return;
     }
-    endAd!.fullScreenContentCallback = FullScreenContentCallback(
+    endAd.value!.fullScreenContentCallback = FullScreenContentCallback(
       onAdShowedFullScreenContent: (RewardedAd ad) => print('ad onAdShowedFullScreenContent.'),
       onAdDismissedFullScreenContent: (RewardedAd ad) {
         print('$ad onAdDismissedFullScreenContent.');
 
         if (ad.adUnitId.isNotEmpty) {
           activityController.endExercise(challenge, source: 'showEndADExerciseAlert', adId: ad.adUnitId);
-          endAd = null;
+          endAd.value = null;
+          activityController.time.value = 0;
         }
 
         ad.dispose();
@@ -184,13 +186,12 @@ mixin AdmobMixin {
       onAdImpression: (RewardedAd ad) => print('$ad impression occurred.'),
     );
 
-    endAd!.setImmersiveMode(true);
-    endAd!.show(onUserEarnedReward: (AdWithoutView ad, RewardItem reward) {
+    endAd.value!.setImmersiveMode(true);
+    endAd.value!.show(onUserEarnedReward: (AdWithoutView ad, RewardItem reward) {
       print('$ad with reward $RewardItem(${reward.amount}, ${reward.type})');
       DateTime now = DateTime.now();
-
       HiveStore.save(key: selectedAd.value, value: now);
     });
-    endAd = null;
+    endAd.value = null;
   }
 }

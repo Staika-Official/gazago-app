@@ -482,6 +482,7 @@ mixin ActivityMixin {
     if (stopTimer != null) {
       initializeStopTimer();
     }
+
     print(controller.userState.value.exercise?.type);
     await controller.checkActivityType(controller.userState.value.exercise?.type);
     await controller.handleSelectAdType(controller.userState.value.exercise?.type == 'HIKING'
@@ -498,6 +499,7 @@ mixin ActivityMixin {
 
     DateTime? viewableTime = date?.add(const Duration(hours: 1));
     DateTime now = DateTime.now();
+    // HiveStore.save(key: 'endWalkingAd', value: null);
     stopTimer = Timer.periodic(const Duration(milliseconds: 10), (timer) {
       if (counter == const Duration(milliseconds: 500)) {
         initializeStopTimer();
@@ -562,6 +564,7 @@ mixin ActivityMixin {
 
   void showEndExerciseAdDialog(ChallengeModel challenge, ActivityController controller) {
     showEndExerciseAdAlert(challenge, controller);
+    controller.adLoadTimerStop();
   }
 
   void showEndExerciseDialog(ChallengeModel challenge) {

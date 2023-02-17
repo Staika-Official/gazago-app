@@ -578,7 +578,7 @@ class ActivityController extends SuperController with ActivityMixin, ChallengeMi
 
     loadingTimer = Timer.periodic(
       const Duration(seconds: 1),
-          (timer) {
+      (timer) {
         if (loadingTime.value == 3) {
           timer.cancel();
           loadingTimer = null;
@@ -600,8 +600,8 @@ class ActivityController extends SuperController with ActivityMixin, ChallengeMi
       await handleSelectAdType(selectedExerciseType.value == ExerciseType.hiking
           ? 'startHikingAd'
           : selectedExerciseType.value == ExerciseType.walking
-          ? 'startWalkingAd'
-          : 'startFamousAd');
+              ? 'startWalkingAd'
+              : 'startFamousAd');
       DateTime? date = HiveStore.load(key: selectedAd.value);
       DateTime? viewableTime = date?.add(const Duration(hours: 1));
       DateTime now = DateTime.now();
@@ -823,7 +823,7 @@ class ActivityController extends SuperController with ActivityMixin, ChallengeMi
     adLoadTimerStop();
     Get.back();
     startAd = null;
-    endAd = null;
+    endAd.value = null;
     updateNotAbleViewAd();
   }
 
