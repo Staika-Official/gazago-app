@@ -2,6 +2,7 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:gaza_go/constants/routes.dart';
+import 'package:gaza_go/flavors.dart';
 import 'package:gaza_go/platform/controllers/debugging_controller.dart';
 import 'package:gaza_go/platform/controllers/preference_controller.dart';
 import 'package:gaza_go/presentations/components/default_container.dart';
@@ -161,6 +162,15 @@ class Preferences extends StatelessWidget {
                   ),
                 );
               }),
+              Container(
+                width: double.infinity,
+                height: 6.sp,
+                color: const Color(0xFF23232D),
+              ),
+              (F.isDev) ? PreferenceItem(
+                title: '실험실',
+                onTap: () => Get.toNamed(Routes.laboratory),
+              ) : Container(),
               Obx(() {
                 if (debuggingController.isShowDebuggingMenu.value) {
                   return Column(

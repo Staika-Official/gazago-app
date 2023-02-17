@@ -27,14 +27,15 @@ class LoadingController extends GetxController {
   final RxInt time = RxInt(0);
   final RxList<TermsStatusModel> termsList = RxList.empty();
   RxBool get allRequiredAgreed {
-    if (termsList.isNotEmpty &&
+   /* if (termsList.isNotEmpty &&
         termsList.singleWhere((term) => term.boardType == 'TERMS', orElse: () => TermsStatusModel(activated: false, boardType: 'TERMS')).activated &&
         termsList.singleWhere((term) => term.boardType == 'LOCATION', orElse: () => TermsStatusModel(activated: false, boardType: 'LOCATION')).activated &&
         termsList.singleWhere((term) => term.boardType == 'PRIVACY', orElse: () => TermsStatusModel(activated: false, boardType: 'PRIVACY')).activated) {
       return RxBool(true);
     } else {
       return RxBool(false);
-    }
+    }*/
+    return RxBool(true);
   }
 
   @override
@@ -128,6 +129,8 @@ class LoadingController extends GetxController {
   void updateProgress(String message) async {
     progress.value = progress.value + 0.5;
     progressMessage.value = message;
+
+    print('progressMessage ${progressMessage.value}');
 
     if (progress.value >= 0.9) {
       bool needForceUpgrade = await isForceUpdateTarget();

@@ -19,6 +19,8 @@ import 'package:gaza_go/presentations/views/inventory/inventory_badge_detail.dar
 import 'package:gaza_go/presentations/views/inventory/inventory_item_detail.dart';
 import 'package:gaza_go/presentations/views/inventory/synthetic_badge.dart';
 import 'package:gaza_go/presentations/views/join/join_terms.dart';
+import 'package:gaza_go/presentations/views/laboratory/laboratory_solana_create_wallet.dart';
+import 'package:gaza_go/presentations/views/laboratory/laboratory_solana_transfer.dart';
 import 'package:gaza_go/presentations/views/loading.dart';
 import 'package:gaza_go/presentations/views/login.dart';
 import 'package:gaza_go/presentations/views/on_boarding.dart';
@@ -47,6 +49,7 @@ import 'package:gaza_go/presentations/views/wallet/wallet_detail.dart';
 import 'package:get/get_navigation/get_navigation.dart';
 
 import '../presentations/views/debugging/activity_logs.dart';
+import '../presentations/views/laboratory/index.dart';
 import '../presentations/views/verification/verification_terms.dart';
 
 class Routes {
@@ -95,6 +98,9 @@ class Routes {
   static const responseErrorLogs = '/debugging/response_error_logs';
   static const userExerciseDataLogs = '/debugging/user_exercise_data_logs';
   static const positionLowDataLogs = '/debugging/position_low_data_logs';
+  static const laboratory = '/laboratory';
+  static const laboratorySolanaCreateWallet = '/laboratory/laboratory_solana_create_wallet';
+  static const laboratorySolanaTransfer = '/laboratory/laboratory_solana_transfer';
   static const shopItemDetail = '/shop/item/detail';
   static const adMobRewarded = '/admob/reward';
   static const adMobRewardedInterstitial = '/admob/interstitial';
@@ -154,6 +160,9 @@ class Routes {
     stepPage(name: Routes.userExerciseDataLogs, page: const UserExerciseDataLogs()),
     stepPage(name: Routes.positionLowDataLogs, page: const PositionLowDataLogs()),
     stepPage(name: Routes.shopItemDetail, page: const ShopItemDetail()),
+    stepPage(name: Routes.laboratory, page: const Laboratory()),
+    stepPage(name: Routes.laboratorySolanaCreateWallet, page: const LaboratorySolanaCreateWallet()),
+    stepPage(name: Routes.laboratorySolanaTransfer, page: const LaboratorySolanaTransfer()),
   ];
 }
 

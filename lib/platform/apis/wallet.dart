@@ -2,6 +2,7 @@ import 'package:dio/dio.dart';
 import 'package:gaza_go/constants/base_urls.dart';
 import 'package:gaza_go/platform/middleware/dio_middleware.dart';
 import 'package:gaza_go/platform/models/pay_info_model.dart';
+import 'package:solana/src/encoder/signed_tx.dart';
 
 class WalletApi {
   // - 스펜딩 월렛 api
@@ -53,32 +54,35 @@ class WalletApi {
     });
   }
 
-  // - 외부 월렛 api
-  static Future<Response> generateSolanaWallet() async {
-    return await Api.client(serviceUrl: ServiceUrl.walletService).post('/gererate-wallet');
-  }
-
-  static Future<Response> postEncryptedSecretKey(String publicKey, String encryptedSecretKey) async {
-    return await Api.client(serviceUrl: ServiceUrl.walletService).post('/encrypted-secretkey', data: {"publicKey": publicKey, "encryptedSecretKey": encryptedSecretKey});
-  }
-
   static Future<Response> getEncryptedSecretKey() async {
-    return await Api.client(serviceUrl: ServiceUrl.walletService).get('/encrypted-secretkey');
+    return await Api.client(serviceUrl: ServiceUrl.goWalletService).get('/solana/encrypted-secretkey');
   }
 
   static Future<Response> getSolanaWalletBalance() async {
-    return await Api.client(serviceUrl: ServiceUrl.walletService).get('/wallet/balance');
+    return await Api.client(serviceUrl: ServiceUrl.goWalletService).get('/wallet/balance');
   }
 
   static Future<Response> getSolanaWalletTransaction(String publicKey) async {
-    return await Api.client(serviceUrl: ServiceUrl.walletService).get('/wallet/$publicKey/transactions');
+    return await Api.client(serviceUrl: ServiceUrl.goWalletService).get('/wallet/$publicKey/transactions');
   }
 
   static Future<Response> getTokenMetaData(String publicKey) async {
-    return await Api.client(serviceUrl: ServiceUrl.walletService).get('/token/$publicKey');
+    return await Api.client(serviceUrl: ServiceUrl.goWalletService).get('/token/$publicKey');
   }
 
   static Future<Response> getNftMetaData(String publicKey) async {
-    return await Api.client(serviceUrl: ServiceUrl.walletService).get('/nft/$publicKey');
+    return await Api.client(serviceUrl: ServiceUrl.goWalletService).get('/nft/$publicKey');
+  }
+
+  static Future<Response> getSolanaWallet(String? userId) async{
+    return await Api.client(serviceUrl: ServiceUrl.goWalletService).get('/solana/wallet/$userId');
+  }
+
+  static Future<Response> createSolanaWallet(String publicKey, String encryptedSecretKey) async {
+    return await Api.client(serviceUrl: ServiceUrl.goWalletService).post('/solana/wallet', data: {"publicKey": publicKey, "encryptedSecretKey": encryptedSecretKey});
+  }
+
+  static Future<Response> transferSolana(Map<String, String> body) async {
+    return await Api.client(serviceUrl: ServiceUrl.goWalletService).post('/solana/transfer', data: body);
   }
 }
