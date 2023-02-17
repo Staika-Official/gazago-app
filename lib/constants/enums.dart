@@ -294,3 +294,10 @@ enum ItemType {
   drink,
   bottom,
 }
+
+enum CalendarCellType {
+  today,
+  focusedDay,
+  monthDay,
+  outsideDay,
+}

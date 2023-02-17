@@ -19,7 +19,6 @@ import 'package:gaza_go/presentations/views/inventory/inventory_badge_detail.dar
 import 'package:gaza_go/presentations/views/inventory/inventory_item_detail.dart';
 import 'package:gaza_go/presentations/views/inventory/synthetic_badge.dart';
 import 'package:gaza_go/presentations/views/join/join_terms.dart';
-import 'package:gaza_go/presentations/views/leaderboard/calendar_statistics.dart';
 import 'package:gaza_go/presentations/views/loading.dart';
 import 'package:gaza_go/presentations/views/login.dart';
 import 'package:gaza_go/presentations/views/on_boarding.dart';
@@ -88,7 +87,6 @@ class Routes {
   static const itemDetail = '/inventory/item/detail';
   static const badgeDetail = '/inventory/badge/detail';
   static const syntheticBadge = '/inventory/synthetic_badge';
-  static const calendarStatistics = '/leaderboard/calendar_statistics';
   static const signupComplete = '/auth/signup_complete';
   static const accountRestore = '/account/restore';
   static const permissions = '/permissions';
@@ -127,14 +125,12 @@ class Routes {
     stepPage(name: Routes.preferenceBoard, page: const PreferenceBoard()),
     stepPage(name: Routes.noticeList, page: const NoticeList()),
     stepPage(name: Routes.noticeDetail, page: const NoticeDetail()),
-    stepPage(
-        name: Routes.preferenceNotification, page: const NotificationAlert()),
+    stepPage(name: Routes.preferenceNotification, page: const NotificationAlert()),
     stepPage(name: Routes.verificationTerms, page: const VerificationTerms()),
     stepPage(name: Routes.verificationName, page: const VerificationName()),
     stepPage(name: Routes.verificationDetail, page: const VerificationDetail()),
     stepPage(name: Routes.verificationPhone, page: const VerificationPhone()),
-    stepPage(
-        name: Routes.verificationCertCode, page: const VerificationCertCode()),
+    stepPage(name: Routes.verificationCertCode, page: const VerificationCertCode()),
     stepPage(name: Routes.myPage, page: const MyPage()),
     stepPage(name: Routes.editBiometrics, page: const EditBiometrics()),
     stepPage(name: Routes.withdrawConfirm, page: const WithdrawConfirm()),
@@ -148,7 +144,6 @@ class Routes {
     stepPage(name: Routes.itemDetail, page: const InventoryItemDetail()),
     stepPage(name: Routes.badgeDetail, page: const InventoryBadgeDetail()),
     stepPage(name: Routes.syntheticBadge, page: const SyntheticBadge()),
-    stepPage(name: Routes.calendarStatistics, page: const CalendarStatistics()),
     stepPage(name: Routes.signupComplete, page: const SignupComplete()),
     stepPage(name: Routes.accountRestore, page: const AccountRestore()),
     stepPage(name: Routes.equippedItems, page: const EquippedItems()),
@@ -156,28 +151,16 @@ class Routes {
     stepPage(name: Routes.requestInfo, page: const RequestInfo()),
     stepPage(name: Routes.responseErrorLogs, page: const ResponseErrorLogs()),
     stepPage(name: Routes.activityLogs, page: const ActivityLogs()),
-    stepPage(
-        name: Routes.userExerciseDataLogs, page: const UserExerciseDataLogs()),
-    stepPage(
-        name: Routes.positionLowDataLogs, page: const PositionLowDataLogs()),
+    stepPage(name: Routes.userExerciseDataLogs, page: const UserExerciseDataLogs()),
+    stepPage(name: Routes.positionLowDataLogs, page: const PositionLowDataLogs()),
     stepPage(name: Routes.shopItemDetail, page: const ShopItemDetail()),
   ];
 }
 
-GetPage stepPage(
-    {required String name,
-    required Widget page,
-    Transition? transition,
-    Duration? transitionDuration,
-    List<GetMiddleware>? middlewares}) {
-  return GetPage(
-      name: name,
-      page: () => _flavorBanner(child: page, show: F.name != 'prod'),
-      transition: transition,
-      transitionDuration: transitionDuration,
-      middlewares: [
-        AuthMiddleware(),
-      ]);
+GetPage stepPage({required String name, required Widget page, Transition? transition, Duration? transitionDuration, List<GetMiddleware>? middlewares}) {
+  return GetPage(name: name, page: () => _flavorBanner(child: page, show: F.name != 'prod'), transition: transition, transitionDuration: transitionDuration, middlewares: [
+    AuthMiddleware(),
+  ]);
 }
 
 Widget _flavorBanner({
@@ -189,10 +172,7 @@ Widget _flavorBanner({
             location: BannerLocation.topStart,
             message: F.name,
             color: Colors.green.withOpacity(0.6),
-            textStyle: const TextStyle(
-                fontWeight: FontWeight.w700,
-                fontSize: 12.0,
-                letterSpacing: 1.0),
+            textStyle: const TextStyle(fontWeight: FontWeight.w700, fontSize: 12.0, letterSpacing: 1.0),
             textDirection: TextDirection.ltr,
             child: child,
           )

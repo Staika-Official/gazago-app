@@ -1,12 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:gaza_go/constants/enums.dart';
 import 'package:gaza_go/platform/controllers/activity_controller.dart';
 import 'package:gaza_go/platform/controllers/leaderboard_controller.dart';
 import 'package:gaza_go/platform/helpers/base_helper.dart';
 import 'package:gaza_go/platform/models/ranker_model.dart';
+import 'package:gaza_go/presentations/components/alert_ui_list.dart';
 import 'package:gaza_go/presentations/styles/colors.dart';
 import 'package:gaza_go/presentations/styles/icons.dart';
 import 'package:gaza_go/presentations/styles/styled_text.dart';
+import 'package:gaza_go/presentations/views/leaderboard/calendar_cell.dart';
 import 'package:get/get.dart';
 import 'package:modal_bottom_sheet/modal_bottom_sheet.dart' as bs;
 import 'package:table_calendar/table_calendar.dart';
@@ -14,67 +17,183 @@ import 'package:table_calendar/table_calendar.dart';
 class LeaderboardHome extends StatelessWidget {
   const LeaderboardHome({Key? key}) : super(key: key);
 
-  Widget showBottomCalender(context, controller) {
-    return Obx(() {
+  Widget showBottomCalender(BuildContext context, LeaderboardController controller) {
+    return LayoutBuilder(builder: (context, constraints) {
       return Container(
-        height: 400,
+        height: constraints.maxHeight - 100,
         decoration: BoxDecoration(
-          color: subBg01Color,
+          color: popupBgColor,
           borderRadius: BorderRadius.only(
             topLeft: Radius.circular(15.sp),
             topRight: Radius.circular(15.sp),
           ),
         ),
-        child: TableCalendar(
-          locale: 'ko-KR',
-          firstDay: controller.firstDay.value!,
-          lastDay: controller.lastDay.value!,
-          focusedDay: controller.selectedDate.value!,
-          selectedDayPredicate: (day) => isSameDay(day, controller.selectedDate.value!),
-          headerStyle: HeaderStyle(
-            titleTextStyle: TextStyle(fontSize: 18.sp, color: Colors.white, fontWeight: FontWeight.w500),
-            titleCentered: true,
-            formatButtonVisible: false,
-            leftChevronIcon: const Icon(Icons.chevron_left, color: Colors.white),
-            rightChevronIcon: const Icon(
-              Icons.chevron_right,
-              color: Colors.white,
-            ),
-            leftChevronPadding: EdgeInsets.only(left: 60.sp, top: 10.sp, bottom: 10.sp),
-            rightChevronPadding: EdgeInsets.only(right: 60.sp, top: 10.sp, bottom: 10.sp),
+        child: SafeArea(
+          child: Column(
+            mainAxisSize: MainAxisSize.max,
+            children: [
+              Obx(() {
+                return TableCalendar(
+                  rowHeight: 83,
+                  locale: 'ko-KR',
+                  firstDay: controller.firstDay.value!,
+                  lastDay: controller.lastDay.value!,
+                  focusedDay: controller.selectedDate.value!,
+                  selectedDayPredicate: (day) => isSameDay(day, controller.selectedDate.value!),
+                  calendarBuilders: CalendarBuilders(
+                    defaultBuilder: (context, date, focusedDate) {
+                      return CalendarCell(
+                        date: date,
+                        cellType: CalendarCellType.monthDay,
+                        controller: controller,
+                      );
+                    },
+                    selectedBuilder: (context, date, focusedDate) {
+                      return CalendarCell(
+                        date: date,
+                        cellType: CalendarCellType.focusedDay,
+                        controller: controller,
+                      );
+                    },
+                    todayBuilder: (context, date, focusedDate) {
+                      return CalendarCell(
+                        date: date,
+                        cellType: CalendarCellType.today,
+                        controller: controller,
+                      );
+                    },
+                    outsideBuilder: (context, date, focusedDate) {
+                      return CalendarCell(
+                        date: date,
+                        cellType: CalendarCellType.outsideDay,
+                        controller: controller,
+                      );
+                    },
+                  ),
+                  headerStyle: HeaderStyle(
+                    titleTextStyle: TextStyle(fontSize: 18.sp, color: Colors.white, fontWeight: FontWeight.w500),
+                    titleCentered: true,
+                    formatButtonVisible: false,
+                    leftChevronIcon: const Icon(Icons.chevron_left, color: Colors.white),
+                    rightChevronIcon: const Icon(
+                      Icons.chevron_right,
+                      color: Colors.white,
+                    ),
+                    leftChevronPadding: EdgeInsets.only(left: 60.sp, top: 10.sp, bottom: 10.sp),
+                    rightChevronPadding: EdgeInsets.only(right: 60.sp, top: 10.sp, bottom: 10.sp),
+                  ),
+                  calendarFormat: controller.calendarFormat,
+                  calendarStyle: const CalendarStyle(
+                      /*todayDecoration: BoxDecoration(
+                          color: skyBlueColor,
+                          shape: BoxShape.circle,
+                          border: Border.all(
+                              width: 14,
+                              style: BorderStyle.solid,
+                              color: popupBgColor,
+                              strokeAlign: StrokeAlign.center
+                          )
+                      ),*/
+                      ),
+                  onDaySelected: (selectedDay, focusedDay) {
+                    controller.calendarSelectedChanged(selectedDay);
+                    Navigator.of(context).pop();
+                  },
+                );
+              }),
+              const Spacer(),
+              Align(
+                alignment: Alignment.bottomCenter,
+                child: Container(
+                  margin: const EdgeInsets.only(
+                    left: 30,
+                    right: 30,
+                  ),
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 30,
+                    vertical: 10,
+                  ),
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(60),
+                    color: subBg01Color,
+                  ),
+                  child: Column(
+                    children: [
+                      StyledText(
+                        'TOTAL',
+                        fontSize: 14,
+                        lineHeight: 20,
+                        fontWeight: 600,
+                        letterSpacing: 3,
+                        color: lightGrayColor,
+                      ),
+                      Obx(() {
+                        return Padding(
+                          padding: const EdgeInsets.only(top: 8),
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              Row(
+                                children: [
+                                  iconTikCalendar,
+                                  Padding(
+                                    padding: const EdgeInsets.only(left: 5),
+                                    child: Text.rich(
+                                      textAlign: TextAlign.center,
+                                      style: TextStyle(
+                                        fontSize: 16.sp,
+                                        height: 20.sp / 16.sp,
+                                        fontWeight: FontWeight.w700,
+                                        letterSpacing: -0.5,
+                                        color: tikColor,
+                                      ),
+                                      TextSpan(
+                                        text: formatDecimalPlaces(controller.totalTikRewarded.value.toDouble(), 0),
+                                        children: [
+                                          TextSpan(text: ' TIK', style: TextStyle(fontWeight: FontWeight.w400)),
+                                        ],
+                                      ),
+                                    ),
+                                  ),
+                                ],
+                              ),
+                              Padding(
+                                padding: const EdgeInsets.only(left: 20),
+                                child: Row(
+                                  children: [
+                                    iconStikCalendar,
+                                    Padding(
+                                      padding: const EdgeInsets.only(left: 5),
+                                      child: Text.rich(
+                                        textAlign: TextAlign.center,
+                                        style: TextStyle(
+                                          fontSize: 16.sp,
+                                          height: 20.sp / 16.sp,
+                                          fontWeight: FontWeight.w700,
+                                          letterSpacing: -0.5,
+                                          color: stikColor,
+                                        ),
+                                        TextSpan(
+                                          text: formatDecimalPlaces(controller.totalStikRewarded.value, 2),
+                                          children: [
+                                            TextSpan(text: ' STIK', style: TextStyle(fontWeight: FontWeight.w400)),
+                                          ],
+                                        ),
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              )
+                            ],
+                          ),
+                        );
+                      })
+                    ],
+                  ),
+                ),
+              )
+            ],
           ),
-          calendarFormat: controller.calendarFormat,
-          calendarStyle: CalendarStyle(
-            /*todayDecoration: BoxDecoration(
-                color: skyBlueColor,
-                shape: BoxShape.circle,
-                border: Border.all(
-                    width: 14,
-                    style: BorderStyle.solid,
-                    color: popupBgColor,
-                    strokeAlign: StrokeAlign.center
-                )
-            ),*/
-            todayTextStyle: TextStyle(
-              color: Colors.black,
-              fontSize: 16.0.sp,
-            ),
-            defaultTextStyle: const TextStyle(color: Colors.white),
-            weekendTextStyle: const TextStyle(color: Colors.white),
-            selectedDecoration:
-                BoxDecoration(color: skyBlueColor, shape: BoxShape.circle, border: Border.all(width: 14.sp, style: BorderStyle.solid, color: popupBgColor, strokeAlign: BorderSide.strokeAlignCenter)),
-            selectedTextStyle: TextStyle(
-              color: Colors.black,
-              fontSize: 16.0.sp,
-            ),
-          ),
-          onDaySelected: (selectedDay, focusedDay) {
-            controller.calendarSelectedChanged(selectedDay);
-            Navigator.of(context).pop();
-          },
-          onPageChanged: (focusedDay) {
-            //controller.calendarChanged(focusedDay);
-          },
         ),
       );
     });
@@ -91,17 +210,22 @@ class LeaderboardHome extends StatelessWidget {
         mainAxisAlignment: MainAxisAlignment.start,
         children: [
           iconMyRankArrow,
-          SizedBox(
-            width: 20,
-            child: Text(
-              myRank.rank.toString(),
-              style: TextStyle(color: skyBlueColor, fontSize: 14.sp, fontWeight: FontWeight.w600),
-              textAlign: TextAlign.center,
+          ConstrainedBox(
+            constraints: BoxConstraints(maxWidth: 60, minWidth: 60),
+            child: FittedBox(
+              fit: BoxFit.scaleDown,
+              child: Padding(
+                padding: const EdgeInsets.only(right: 10),
+                child: Text(
+                  formatDecimalPlaces(myRank.rank!.toDouble(), 0),
+                  style: TextStyle(color: skyBlueColor, fontSize: 14.sp, fontWeight: FontWeight.w600),
+                  textAlign: TextAlign.center,
+                ),
+              ),
             ),
           ),
-          Padding(padding: EdgeInsets.only(left: 4.sp)),
           Expanded(
-            flex: 2,
+            flex: 7,
             child: Row(
               children: [
                 (myRank.profileImageUrl != null)
@@ -172,31 +296,47 @@ class LeaderboardHome extends StatelessWidget {
       child: Row(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          Expanded(
-            child: SizedBox(
-              child: Align(
-                alignment: Alignment.centerRight,
+          ConstrainedBox(
+            constraints: BoxConstraints(maxWidth: 60, minWidth: 60),
+            child: FittedBox(
+              fit: BoxFit.scaleDown,
+              child: Padding(
+                padding: const EdgeInsets.only(right: 10),
                 child: Text(
-                  ranker.rank.toString(),
+                  formatDecimalPlaces(ranker.rank!.toDouble(), 0),
                   style: TextStyle(
                     color: Colors.white,
                     fontSize: 14.sp,
                     fontWeight: FontWeight.w600,
                   ),
-                  textAlign: TextAlign.right,
+                  textAlign: TextAlign.center,
                 ),
               ),
             ),
           ),
-          Padding(padding: EdgeInsets.only(left: 12.sp)),
           Expanded(
-            flex: 7,
             child: Row(
               children: [
                 (ranker.profileImageUrl != null)
-                    ? CircleAvatar(
-                        radius: 15.sp,
-                        foregroundImage: NetworkImage(ranker.profileImageUrl!),
+                    ? Container(
+                        width: 45.0.sp,
+                        child: Stack(
+                          children: [
+                            if (ranker.rank! < 11)
+                              Center(
+                                child: Image.asset(
+                                  'assets/images/leaderboard/ranker_${ranker.rank}.png',
+                                  width: 45.sp,
+                                ),
+                              ),
+                            Center(
+                              child: CircleAvatar(
+                                radius: 15.sp,
+                                foregroundImage: NetworkImage(ranker.profileImageUrl!),
+                              ),
+                            ),
+                          ],
+                        ),
                       )
                     : CircleAvatar(
                         radius: 15.sp,
@@ -204,40 +344,46 @@ class LeaderboardHome extends StatelessWidget {
                       ),
                 Padding(
                   padding: EdgeInsets.only(left: 10.0.sp),
-                  child: Text((ranker.nickname.contains('@') ? ranker.nickname.substring(0, ranker.nickname.indexOf('@')) : ranker.nickname),
-                      overflow: TextOverflow.ellipsis, style: const TextStyle(color: Colors.white, fontSize: 14, fontWeight: FontWeight.w600), textAlign: TextAlign.left),
-                ),
-              ],
-            ),
-          ),
-          Expanded(
-            flex: 2,
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              crossAxisAlignment: CrossAxisAlignment.end,
-              children: [
-                StyledText(
-                  '${formatDecimalPlaces(ranker.rewardGo, 2)} GO',
-                  textAlign: TextAlign.right,
-                  fontSize: 14,
-                  lineHeight: 14,
-                  fontWeight: 600,
-                  softWrap: false,
-                ),
-                Padding(
-                  padding: EdgeInsets.only(top: 3.sp),
-                  child: StyledText(
-                    '${formatDecimalPlaces(ranker.rewardTik, 1)} TIK',
-                    textAlign: TextAlign.right,
-                    fontSize: 14,
-                    lineHeight: 14,
-                    fontWeight: 500,
-                    color: const Color(0xFFBABABA),
-                    softWrap: false,
+                  child: Text(
+                    (ranker.nickname.contains('@')
+                        ? ranker.nickname.substring(
+                            0,
+                            ranker.nickname.indexOf('@'),
+                          )
+                        : ranker.nickname),
+                    overflow: TextOverflow.ellipsis,
+                    style: const TextStyle(color: Colors.white, fontSize: 14, fontWeight: FontWeight.w600),
+                    textAlign: TextAlign.left,
                   ),
                 ),
               ],
             ),
+          ),
+          Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            crossAxisAlignment: CrossAxisAlignment.end,
+            children: [
+              StyledText(
+                '${formatDecimalPlaces(ranker.rewardGo, 2)} GO',
+                textAlign: TextAlign.right,
+                fontSize: 14,
+                lineHeight: 14,
+                fontWeight: 600,
+                softWrap: false,
+              ),
+              Padding(
+                padding: EdgeInsets.only(top: 3.sp),
+                child: StyledText(
+                  '${formatDecimalPlaces(ranker.rewardTik, 0)} TIK',
+                  textAlign: TextAlign.right,
+                  fontSize: 14,
+                  lineHeight: 14,
+                  fontWeight: 500,
+                  color: const Color(0xFFBABABA),
+                  softWrap: false,
+                ),
+              ),
+            ],
           ),
         ],
       ),
@@ -253,56 +399,29 @@ class LeaderboardHome extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         mainAxisSize: MainAxisSize.min,
         children: [
-          Padding(
-            padding: EdgeInsets.only(left: 24.sp),
-            child: StyledText(
-              '오늘의 GO',
-              color: skyBlueColor,
-              fontWeight: 700,
-              fontSize: 24,
-              lineHeight: 32,
-            ),
-          ),
-          Padding(
-            padding: EdgeInsets.only(left: 23.0.sp, top: 6.0.sp),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.start,
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                iconStatisticsTokenGo,
-                Padding(
-                  padding: EdgeInsets.only(left: 10.0.sp),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Obx(() {
-                        return Row(
-                          children: [
-                            StyledText(
-                              activityController.userState.value.state != null ? formatDecimalPlaces(activityController.userState.value.state!.dailyGoReward!, 2) : formatDecimalPlaces(0, 2),
-                              color: Colors.white,
-                              fontWeight: 600,
-                              fontSize: 30,
-                              lineHeight: 28,
-                            ),
-                            Padding(
-                              padding: EdgeInsets.only(left: 2.0.sp),
-                              child: const StyledText(
-                                'GO',
-                                color: Colors.white,
-                                fontWeight: 500,
-                                fontSize: 18,
-                                lineHeight: 20,
-                              ),
-                            ),
-                          ],
-                        );
-                      }),
-                    ],
-                  ),
-                )
-              ],
-            ),
+          Row(
+            children: [
+              Padding(
+                padding: EdgeInsets.only(left: 24.sp, right: 10.sp),
+                child: StyledText(
+                  '오늘의 리워드',
+                  color: Colors.white,
+                  fontWeight: 700,
+                  fontSize: 24.sp,
+                  lineHeight: 32.sp,
+                ),
+              ),
+              SizedBox(
+                width: 20,
+                height: 20,
+                child: IconButton(
+                  padding: EdgeInsets.zero,
+                  onPressed: () => showLeaderboardInfo(),
+                  icon: iconInfo,
+                  splashRadius: 15.sp,
+                ),
+              )
+            ],
           ),
           Container(
             margin: EdgeInsets.only(top: 18.sp, left: 18.sp, right: 22.sp),
@@ -317,43 +436,149 @@ class LeaderboardHome extends StatelessWidget {
               ),
             ),
             child: Padding(
-              padding: EdgeInsets.all(20.0.sp),
-              child: Column(
+              padding: EdgeInsets.all(10),
+              child: Row(
                 mainAxisAlignment: MainAxisAlignment.start,
-                crossAxisAlignment: CrossAxisAlignment.start,
+                crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
-                  Row(
-                    children: const [
-                      StyledText(
-                        'TIK은 매일 자정(KST)에 배분됩니다.',
-                        color: Colors.white,
-                        fontWeight: 500,
-                        fontSize: 16,
-                        lineHeight: 21,
+                  iconTodayTik,
+                  Padding(
+                    padding: EdgeInsets.only(left: 10.0.sp),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Obx(() {
+                          return Row(
+                            crossAxisAlignment: CrossAxisAlignment.end,
+                            children: [
+                              StyledText(
+                                controller.todayTikAmount.value > 0 ? formatDecimalPlaces(controller.todayTikAmount.value.toDouble(), 0) : 0.toString(),
+                                color: Colors.white,
+                                fontWeight: 600,
+                                fontSize: 30,
+                                lineHeight: 30,
+                              ),
+                              Padding(
+                                padding: EdgeInsets.only(left: 2.0.sp),
+                                child: const StyledText(
+                                  'TIK',
+                                  color: Colors.white,
+                                  fontWeight: 500,
+                                  fontSize: 18,
+                                  lineHeight: 20,
+                                ),
+                              ),
+                            ],
+                          );
+                        }),
+                      ],
+                    ),
+                  )
+                ],
+              ),
+            ),
+          ),
+          Padding(
+            padding: EdgeInsets.only(top: 20.sp, left: 18.sp, right: 18.sp),
+            child: Column(
+              children: [
+                Row(
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    Container(
+                      margin: EdgeInsets.only(left: 5, right: 5),
+                      width: 4,
+                      height: 4,
+                      decoration: BoxDecoration(
+                        color: deepGrayColor,
+                        borderRadius: BorderRadius.circular(4),
+                      ),
+                    ),
+                    Text.rich(
+                      style: TextStyle(
+                        color: deepGrayColor,
+                        fontSize: 12.sp,
+                        fontWeight: FontWeight.w500,
+                        height: 1,
+                      ),
+                      TextSpan(
+                        text: '리더보드 참여자에게 ',
+                        children: [
+                          TextSpan(
+                              text: '오늘의 리워드를',
+                              style: TextStyle(
+                                color: lightGrayColor,
+                                fontWeight: FontWeight.w700,
+                              )),
+                          TextSpan(text: ' 모두 분배해요.')
+                        ],
+                      ),
+                    ),
+                  ],
+                ),
+                Padding(
+                  padding: const EdgeInsets.only(top: 8),
+                  child: Row(
+                    children: [
+                      Container(
+                        margin: EdgeInsets.only(left: 5, right: 5),
+                        width: 4,
+                        height: 4,
+                        decoration: BoxDecoration(
+                          color: deepGrayColor,
+                          borderRadius: BorderRadius.circular(4),
+                        ),
+                      ),
+                      Text.rich(
+                        style: TextStyle(
+                          color: deepGrayColor,
+                          fontSize: 12.sp,
+                          fontWeight: FontWeight.w500,
+                          height: 1,
+                        ),
+                        TextSpan(
+                          children: [
+                            TextSpan(
+                                text: '오늘의 리워드',
+                                style: TextStyle(
+                                  color: lightGrayColor,
+                                  fontWeight: FontWeight.w700,
+                                )),
+                            TextSpan(text: '는 확정되었습니다!')
+                          ],
+                        ),
                       ),
                     ],
                   ),
-                  InkWell(
-                    onTap: () => controller.goPageCalendarStatistics(),
-                    child: Row(
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      children: [
-                        StyledText(
-                          'TIK 획득내역',
-                          color: skyBlueColor,
-                          fontWeight: 400,
-                          fontSize: 14,
-                          lineHeight: 21,
+                ),
+                Padding(
+                  padding: const EdgeInsets.only(top: 8),
+                  child: Row(
+                    children: [
+                      Container(
+                        margin: EdgeInsets.only(left: 5, right: 5),
+                        width: 4,
+                        height: 4,
+                        decoration: BoxDecoration(
+                          color: deepGrayColor,
+                          borderRadius: BorderRadius.circular(4),
                         ),
-                        Padding(
-                          padding: EdgeInsets.only(top: 2.5.sp),
-                          child: iconLeaderboardRightArrow,
-                        )
-                      ],
-                    ),
+                      ),
+                      Text.rich(
+                        style: TextStyle(
+                          color: deepGrayColor,
+                          fontSize: 12.sp,
+                          fontWeight: FontWeight.w500,
+                          height: 1,
+                        ),
+                        TextSpan(
+                          text: 'TIK은 매일 자정(KST)에 확정되어 분배해요.',
+                        ),
+                      ),
+                    ],
                   ),
-                ],
-              ),
+                ),
+              ],
             ),
           ),
           Container(
@@ -362,11 +587,27 @@ class LeaderboardHome extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
-                const StyledText(
-                  '리더보드',
-                  color: Colors.white,
-                  fontSize: 20,
-                  fontWeight: 600,
+                Row(
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    const StyledText(
+                      '리더보드',
+                      color: Colors.white,
+                      fontSize: 20,
+                      lineHeight: 20,
+                      fontWeight: 600,
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.only(left: 5),
+                      child: StyledText(
+                        '실시간 예측 리워드',
+                        color: deepGrayColor,
+                        fontSize: 12,
+                        lineHeight: 12,
+                        fontWeight: 500,
+                      ),
+                    ),
+                  ],
                 ),
                 InkWell(
                   onTap: () => {
@@ -427,24 +668,25 @@ class LeaderboardHome extends StatelessWidget {
                         mainAxisSize: MainAxisSize.min,
                         children: [
                           Flexible(
-                              child: ListView.separated(
-                            controller: controller.scroll,
-                            separatorBuilder: (context, index) => const Divider(
-                              thickness: 2,
-                              indent: 0,
-                              endIndent: 0,
-                              height: 1,
-                              color: Color(0xFF26272F),
+                            child: ListView.separated(
+                              controller: controller.scroll,
+                              separatorBuilder: (context, index) => const Divider(
+                                thickness: 2,
+                                indent: 0,
+                                endIndent: 0,
+                                height: 1,
+                                color: Color(0xFF26272F),
+                              ),
+                              itemCount: controller.rankings.length + 1,
+                              itemBuilder: (context, index) {
+                                if (index < controller.rankings.length) {
+                                  return renderRanker(controller.rankings[index], context);
+                                } else {
+                                  return (controller.hasMore.value) ? Padding(padding: EdgeInsets.symmetric(vertical: 20.0.sp), child: const Center(child: CircularProgressIndicator())) : Container();
+                                }
+                              },
                             ),
-                            itemCount: controller.rankings.length + 1,
-                            itemBuilder: (context, index) {
-                              if (index < controller.rankings.length) {
-                                return renderRanker(controller.rankings[index], context);
-                              } else {
-                                return (controller.hasMore.value) ? Padding(padding: EdgeInsets.symmetric(vertical: 20.0.sp), child: const Center(child: CircularProgressIndicator())) : Container();
-                              }
-                            },
-                          )),
+                          ),
                         ],
                       ),
           )

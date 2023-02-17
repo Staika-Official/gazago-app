@@ -6,6 +6,7 @@ import 'package:get/get.dart';
 import 'package:intl/intl.dart';
 import 'package:table_calendar/table_calendar.dart';
 
+// TODO. 삭제 예정
 class CalendarStatisticsController extends GetxController {
   RxList<UserRewardStatisticsModel> userMonthlyRewardList = RxList.empty();
   CalendarFormat calendarFormat = CalendarFormat.month;

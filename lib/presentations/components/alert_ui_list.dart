@@ -1778,7 +1778,7 @@ void alreadyConnectedDeviceAlert(LoginController controller, LoginType socialTyp
     contentWidget: Padding(
       padding: EdgeInsets.only(top: 20.0.sp, bottom: 40.sp),
       child: const StyledText(
-        '댜른 기기에 로그인 되어 있어요.\n해당 기기의 로그인 해제 후 로그인할께요.',
+        '댜른 기기에 로그인 되어 있어요.\n해당 기기의 로그인 해제 후 로그인할게요.',
         fontSize: 18,
         lineHeight: 24,
         fontWeight: 500,
@@ -2023,6 +2023,237 @@ void showAdTipAlert() {
                 ),
               ],
             ),
+          ),
+        ),
+      ),
+    ),
+  );
+}
+
+void showLeaderboardInfo() {
+  Get.dialog(
+    barrierColor: Colors.transparent,
+    Material(
+      color: Colors.black.withOpacity(0.6),
+      child: Padding(
+        padding: EdgeInsets.symmetric(horizontal: 25.0.sp),
+        child: Center(
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Stack(
+                children: [
+                  Container(
+                    width: double.infinity,
+                    padding: EdgeInsets.only(top: 19.sp, left: 18.sp, right: 18.sp, bottom: 50.sp),
+                    decoration: BoxDecoration(
+                      color: popupBgColor,
+                      borderRadius: BorderRadius.circular(10.sp),
+                    ),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Align(
+                          alignment: Alignment.center,
+                          child: StyledText(
+                            '오늘의 리워드 TIP',
+                            fontSize: 18.sp,
+                            lineHeight: 28.sp,
+                            fontWeight: 500,
+                            textAlign: TextAlign.center,
+                          ),
+                        ),
+                        Padding(
+                          padding: EdgeInsets.only(top: 29.0.sp),
+                          child: Container(
+                            padding: EdgeInsets.all(10),
+                            width: double.infinity,
+                            decoration: BoxDecoration(
+                              color: subBg01Color,
+                              borderRadius: BorderRadius.circular(7.sp),
+                            ),
+                            child: Center(
+                              child: SizedBox(
+                                width: 84.sp,
+                                child: Image.asset(
+                                  'assets/images/leaderboard/ico_info_tik.png',
+                                ),
+                              ),
+                            ),
+                          ),
+                        ),
+                        Container(
+                          padding: EdgeInsets.only(left: 20, right: 20, top: 10),
+                          child: Column(
+                            children: [
+                              SizedBox(
+                                width: double.infinity,
+                                child: Text.rich(
+                                  textAlign: TextAlign.center,
+                                  style: TextStyle(
+                                    fontSize: 18.sp,
+                                    height: 22.sp / 18.sp,
+                                    fontWeight: FontWeight.w500,
+                                    color: Colors.white,
+                                  ),
+                                  TextSpan(
+                                    text: 'TIK의 총액 항목은 ',
+                                    children: [
+                                      TextSpan(
+                                        text: '7가지',
+                                        style: TextStyle(
+                                          color: tikColor,
+                                          fontWeight: FontWeight.w700,
+                                        ),
+                                      ),
+                                      const TextSpan(
+                                        text: ' 입니다!',
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                              ),
+                              Padding(
+                                padding: EdgeInsets.only(
+                                  left: 20.sp,
+                                  top: 20.sp,
+                                  bottom: 10.sp,
+                                ),
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Padding(
+                                      padding: const EdgeInsets.only(bottom: 5),
+                                      child: Row(
+                                        crossAxisAlignment: CrossAxisAlignment.center,
+                                        children: [
+                                          Container(
+                                            width: 16.sp,
+                                            height: 16.sp,
+                                            margin: EdgeInsets.only(right: 10),
+                                            decoration: BoxDecoration(
+                                              color: numberedBoxGrayColor,
+                                              borderRadius: BorderRadius.circular(2),
+                                              border: Border.all(
+                                                color: Colors.black,
+                                              ),
+                                              boxShadow: [
+                                                BoxShadow(
+                                                  color: const Color.fromRGBO(0, 0, 0, 1),
+                                                  offset: const Offset(1, 1),
+                                                  blurRadius: 0,
+                                                  spreadRadius: 0.sp,
+                                                )
+                                              ],
+                                            ),
+                                            child: Center(
+                                              child: StyledText(
+                                                '1',
+                                                fontSize: 10.sp,
+                                                lineHeight: 10.sp,
+                                                fontWeight: 500,
+                                              ),
+                                            ),
+                                          ),
+                                          StyledText(
+                                            '어제 사용자가 사용한 TIK의 합계',
+                                            fontSize: 14.sp,
+                                            lineHeight: 16.sp,
+                                            fontWeight: 500,
+                                          ),
+                                        ],
+                                      ),
+                                    ),
+                                    StyledText(
+                                      '· 체력 충전 총합',
+                                      fontSize: 14.sp,
+                                      lineHeight: 22.sp,
+                                      fontWeight: 500,
+                                      color: tikColor,
+                                    ),
+                                    StyledText(
+                                      ' · 내구도 충전',
+                                      fontSize: 14.sp,
+                                      lineHeight: 22.sp,
+                                      fontWeight: 500,
+                                      color: tikColor,
+                                    ),
+                                    StyledText(
+                                      '· 아이템 구매',
+                                      fontSize: 14.sp,
+                                      lineHeight: 22.sp,
+                                      fontWeight: 500,
+                                      color: tikColor,
+                                    ),
+                                    StyledText(
+                                      '· 기프티콘 구매 일부 비용',
+                                      fontSize: 14.sp,
+                                      lineHeight: 22.sp,
+                                      fontWeight: 500,
+                                      color: tikColor,
+                                    ),
+                                    StyledText(
+                                      '· 2달 전의 광고 수익을 Day로 나눈 값',
+                                      fontSize: 14.sp,
+                                      lineHeight: 22.sp,
+                                      fontWeight: 500,
+                                      color: tikColor,
+                                    ),
+                                    Padding(
+                                      padding: const EdgeInsets.only(top: 10),
+                                      child: Row(
+                                        crossAxisAlignment: CrossAxisAlignment.center,
+                                        children: [
+                                          Container(
+                                            width: 16.sp,
+                                            height: 16.sp,
+                                            margin: EdgeInsets.only(right: 10),
+                                            decoration: BoxDecoration(
+                                              color: numberedBoxGrayColor,
+                                              borderRadius: BorderRadius.circular(2),
+                                              border: Border.all(
+                                                color: Colors.black,
+                                              ),
+                                              boxShadow: [
+                                                BoxShadow(
+                                                  color: const Color.fromRGBO(0, 0, 0, 1),
+                                                  offset: const Offset(1, 1),
+                                                  blurRadius: 0,
+                                                  spreadRadius: 0.sp,
+                                                )
+                                              ],
+                                            ),
+                                            child: Center(
+                                              child: StyledText(
+                                                '2',
+                                                fontSize: 10.sp,
+                                                lineHeight: 10.sp,
+                                                fontWeight: 500,
+                                              ),
+                                            ),
+                                          ),
+                                          StyledText(
+                                            '가자고 팀이 추가 제공한 TIK',
+                                            fontSize: 14.sp,
+                                            lineHeight: 16.sp,
+                                            fontWeight: 500,
+                                          ),
+                                        ],
+                                      ),
+                                    )
+                                  ],
+                                ),
+                              )
+                            ],
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                  Positioned(right: 22, top: 22, child: InkWell(onTap: () => Get.back(), child: iconCloseWhite)),
+                ],
+              ),
+            ],
           ),
         ),
       ),

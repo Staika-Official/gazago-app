@@ -9,6 +9,7 @@ import 'package:gaza_go/presentations/styles/styled_text.dart';
 import 'package:get/get.dart';
 import 'package:table_calendar/table_calendar.dart';
 
+//TODO. 삭제 예정
 class CalendarStatistics extends StatelessWidget {
   const CalendarStatistics({Key? key}) : super(key: key);
 
@@ -63,7 +64,7 @@ class CalendarStatistics extends StatelessWidget {
                           UserRewardStatisticsModel reward = events.first as UserRewardStatisticsModel;
                           return StyledText(
                             '+${formatDecimalPlaces(reward.tik, 1)}',
-                            color: const Color(0xFFFF8FB4),
+                            color: tikColor,
                           );
                         }
                         return null;
@@ -117,7 +118,7 @@ class CalendarStatistics extends StatelessWidget {
                     ),
                     StyledText(
                       '${formatDecimalPlaces(controller.total.value, 1)} TIK',
-                      color: const Color(0xFFFF8FB4),
+                      color: tikColor,
                       fontWeight: 600,
                       fontSize: 18,
                       lineHeight: 20,
