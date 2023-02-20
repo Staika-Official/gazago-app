@@ -123,6 +123,10 @@ class Preferences extends StatelessWidget {
               //   onTap: () => Get.toNamed(Routes.preferenceNotification),
               // ),
               PreferenceItem(
+                title: 'How to GO',
+                onTap: () => Get.toNamed(Routes.howToGo),
+              ),
+              PreferenceItem(
                 title: '공지사항',
                 onTap: () => Get.toNamed(Routes.noticeList, arguments: {'boardType': 'NOTICE'}),
               ),
@@ -167,10 +171,12 @@ class Preferences extends StatelessWidget {
                 height: 6.sp,
                 color: const Color(0xFF23232D),
               ),
-              (F.isDev) ? PreferenceItem(
-                title: '실험실',
-                onTap: () => Get.toNamed(Routes.laboratory),
-              ) : Container(),
+              (F.isDev)
+                  ? PreferenceItem(
+                      title: '실험실',
+                      onTap: () => Get.toNamed(Routes.laboratory),
+                    )
+                  : Container(),
               Obx(() {
                 if (debuggingController.isShowDebuggingMenu.value) {
                   return Column(

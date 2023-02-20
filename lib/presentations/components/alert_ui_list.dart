@@ -2029,3 +2029,61 @@ void showAdTipAlert() {
     ),
   );
 }
+
+Future<void> showMainPopupAlert(ActivityController activityController) async {
+  await Get.bottomSheet(
+    isDismissible: false,
+    isScrollControlled: true,
+    WillPopScope(
+      onWillPop: () async => false,
+      child: Container(
+        decoration: BoxDecoration(
+          color: popupBgColor,
+        ),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            InkWell(
+              onTap: () => activityController.moveToHowToGo(),
+              child: Image.asset('assets/images/common/img_main_popup.png'),
+            ),
+            Padding(
+              padding: EdgeInsets.symmetric(horizontal: 20.0.sp),
+              child: Row(
+                mainAxisSize: MainAxisSize.max,
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  InkWell(
+                    onTap: () => activityController.onSavePopupCloseDate(),
+                    child: Padding(
+                      padding: EdgeInsets.symmetric(vertical: 28.0.sp, horizontal: 10.sp),
+                      child: StyledText(
+                        '오늘 그만 보기',
+                        color: Color(0xFFB6B6B6),
+                        fontSize: 16,
+                        lineHeight: 16,
+                        fontWeight: 500,
+                      ),
+                    ),
+                  ),
+                  InkWell(
+                    onTap: () => Get.back(),
+                    child: Padding(
+                      padding: EdgeInsets.symmetric(vertical: 28.0.sp, horizontal: 10.sp),
+                      child: StyledText(
+                        '닫기',
+                        fontWeight: 700,
+                        fontSize: 16,
+                        lineHeight: 16,
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ],
+        ),
+      ),
+    ),
+  );
+}

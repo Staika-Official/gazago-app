@@ -44,7 +44,7 @@ import 'package:throttling/throttling.dart';
 
 class ActivityController extends SuperController with ActivityMixin, ChallengeMixin, GetTickerProviderStateMixin, AdmobMixin {
   final WalletMasterController walletMasterController = Get.find();
-
+  final GlobalKey webViewKey = GlobalKey();
   //rewarded.dart
   RxList<StatModel> get statList {
     return RxList([
@@ -117,6 +117,7 @@ class ActivityController extends SuperController with ActivityMixin, ChallengeMi
   Future<void> initializeController() async {
     challengeGuideController = AnimationController(vsync: this);
     await initController();
+    checkPopupExpired();
     // 타이머 시작
     // adLoadTimerStart();
     checkConnectivityStatus();
@@ -773,6 +774,22 @@ class ActivityController extends SuperController with ActivityMixin, ChallengeMi
     } else {
       await getChallengeList();
     }
+  }
+
+  void moveToHowToGo() {
+    Get.toNamed(Routes.howToGo);
+  }
+
+  void checkPopupExpired() {
+    if (globalController.isPopupOpen.value) {
+      showMainPopupAlert(this);
+    }
+  }
+
+  void onSavePopupCloseDate() {
+    DateTime now = DateTime.now();
+    HiveStore.save(key: HiveKey.closePopupDate.name, value: now);
+    Get.back();
   }
 
   void checkConnectivityStatus() async {

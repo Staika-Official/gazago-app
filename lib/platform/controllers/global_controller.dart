@@ -18,11 +18,14 @@ class GlobalController extends SuperController {
     checkTimeout: const Duration(seconds: 1),
     checkInterval: const Duration(seconds: 1),
   );
+  final RxBool isPopupOpen = RxBool(true);
   @override
   void onInit() async {
+    checkMainPopupExpiredDate();
     await execute(InternetConnectionChecker());
     await execute(customInstance);
     await checkLoginStatus();
+
     // await getConnectivity();
     // initConnectivityStream();
 
@@ -109,6 +112,17 @@ class GlobalController extends SuperController {
           if (Get.currentRoute != Routes.login) Get.offAllNamed(Routes.login);
         },
       );
+    }
+  }
+
+  void checkMainPopupExpiredDate() {
+    DateTime? date = HiveStore.load(key: HiveKey.closePopupDate.name);
+    DateTime? viewableTime = date?.add(const Duration(hours: 24));
+    DateTime now = DateTime.now();
+    if (date == null || viewableTime!.isBefore(now)) {
+      isPopupOpen.value = true;
+    } else {
+      isPopupOpen.value = false;
     }
   }
 }

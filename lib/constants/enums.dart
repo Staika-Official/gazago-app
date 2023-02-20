@@ -85,6 +85,7 @@ enum HiveKey {
   endHikingAd,
   endWalkingAd,
   solanaSecretKey,
+  closePopupDate,
 }
 
 enum ResponseStatus {

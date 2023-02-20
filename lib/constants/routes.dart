@@ -14,6 +14,7 @@ import 'package:gaza_go/presentations/views/debugging/request_info.dart';
 import 'package:gaza_go/presentations/views/debugging/response_error_logs.dart';
 import 'package:gaza_go/presentations/views/debugging/user_exercise_data_logs.dart';
 import 'package:gaza_go/presentations/views/home.dart';
+import 'package:gaza_go/presentations/views/how_to_go.dart';
 import 'package:gaza_go/presentations/views/inventory/index.dart';
 import 'package:gaza_go/presentations/views/inventory/inventory_badge_detail.dart';
 import 'package:gaza_go/presentations/views/inventory/inventory_item_detail.dart';
@@ -87,6 +88,7 @@ class Routes {
   static const walletDetail = '/wallet/detail';
   static const walletActions = '/wallet/action';
   static const taikaPay = '/wallet/taika_pay';
+  static const howToGo = '/activity/how_to_go';
   static const inventory = '/inventory';
   static const itemDetail = '/inventory/item/detail';
   static const badgeDetail = '/inventory/badge/detail';
@@ -133,14 +135,12 @@ class Routes {
     stepPage(name: Routes.preferenceBoard, page: const PreferenceBoard()),
     stepPage(name: Routes.noticeList, page: const NoticeList()),
     stepPage(name: Routes.noticeDetail, page: const NoticeDetail()),
-    stepPage(
-        name: Routes.preferenceNotification, page: const NotificationAlert()),
+    stepPage(name: Routes.preferenceNotification, page: const NotificationAlert()),
     stepPage(name: Routes.verificationTerms, page: const VerificationTerms()),
     stepPage(name: Routes.verificationName, page: const VerificationName()),
     stepPage(name: Routes.verificationDetail, page: const VerificationDetail()),
     stepPage(name: Routes.verificationPhone, page: const VerificationPhone()),
-    stepPage(
-        name: Routes.verificationCertCode, page: const VerificationCertCode()),
+    stepPage(name: Routes.verificationCertCode, page: const VerificationCertCode()),
     stepPage(name: Routes.myPage, page: const MyPage()),
     stepPage(name: Routes.editBiometrics, page: const EditBiometrics()),
     stepPage(name: Routes.withdrawConfirm, page: const WithdrawConfirm()),
@@ -150,6 +150,7 @@ class Routes {
     stepPage(name: Routes.buyTik, page: const BuyTik()),
     stepPage(name: Routes.walletActions, page: const WalletActions()),
     stepPage(name: Routes.taikaPay, page: const TaikaPay()),
+    stepPage(name: Routes.howToGo, page: const HowToGo()),
     stepPage(name: Routes.inventory, page: const InventoryHome()),
     stepPage(name: Routes.itemDetail, page: const InventoryItemDetail()),
     stepPage(name: Routes.badgeDetail, page: const InventoryBadgeDetail()),
@@ -162,10 +163,8 @@ class Routes {
     stepPage(name: Routes.requestInfo, page: const RequestInfo()),
     stepPage(name: Routes.responseErrorLogs, page: const ResponseErrorLogs()),
     stepPage(name: Routes.activityLogs, page: const ActivityLogs()),
-    stepPage(
-        name: Routes.userExerciseDataLogs, page: const UserExerciseDataLogs()),
-    stepPage(
-        name: Routes.positionLowDataLogs, page: const PositionLowDataLogs()),
+    stepPage(name: Routes.userExerciseDataLogs, page: const UserExerciseDataLogs()),
+    stepPage(name: Routes.positionLowDataLogs, page: const PositionLowDataLogs()),
     stepPage(name: Routes.shopItemDetail, page: const ShopItemDetail()),
     stepPage(name: Routes.laboratory, page: const Laboratory()),
     stepPage(name: Routes.laboratorySolanaCreateWallet, page: const LaboratorySolanaCreateWallet()),
@@ -173,20 +172,10 @@ class Routes {
   ];
 }
 
-GetPage stepPage(
-    {required String name,
-    required Widget page,
-    Transition? transition,
-    Duration? transitionDuration,
-    List<GetMiddleware>? middlewares}) {
-  return GetPage(
-      name: name,
-      page: () => _flavorBanner(child: page, show: F.name != 'prod'),
-      transition: transition,
-      transitionDuration: transitionDuration,
-      middlewares: [
-        AuthMiddleware(),
-      ]);
+GetPage stepPage({required String name, required Widget page, Transition? transition, Duration? transitionDuration, List<GetMiddleware>? middlewares}) {
+  return GetPage(name: name, page: () => _flavorBanner(child: page, show: F.name != 'prod'), transition: transition, transitionDuration: transitionDuration, middlewares: [
+    AuthMiddleware(),
+  ]);
 }
 
 Widget _flavorBanner({
@@ -198,10 +187,7 @@ Widget _flavorBanner({
             location: BannerLocation.topStart,
             message: F.name,
             color: Colors.green.withOpacity(0.6),
-            textStyle: const TextStyle(
-                fontWeight: FontWeight.w700,
-                fontSize: 12.0,
-                letterSpacing: 1.0),
+            textStyle: const TextStyle(fontWeight: FontWeight.w700, fontSize: 12.0, letterSpacing: 1.0),
             textDirection: TextDirection.ltr,
             child: child,
           )
