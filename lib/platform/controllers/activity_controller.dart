@@ -591,6 +591,10 @@ class ActivityController extends SuperController with ActivityMixin, ChallengeMi
     );
   }
 
+  void passThrowActivityLoading() {
+    loadingTime.value = 3;
+  }
+
   void selectExerciseType(ExerciseType exerciseType) async {
     selectedExerciseType.value = exerciseType;
 

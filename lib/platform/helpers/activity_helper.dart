@@ -40,9 +40,9 @@ double highestClimbed(List<double> altitudeList) {
 
 bool batchIsInProgress() {
   DateTime currentDateTime = DateTime.now().toUtc().add(const Duration(hours: 9));
-  DateTime batchProcessStartDateTime = DateTime(currentDateTime.year, currentDateTime.month, currentDateTime.day).toUtc().add(const Duration(days: 1, hours: 1));
-  DateTime batchProcessEndDateTime = DateTime(currentDateTime.year, currentDateTime.month, currentDateTime.day).toUtc().add(const Duration(days: 1, hours: 1, minutes: 5));
-  if (currentDateTime.isAfter(batchProcessStartDateTime) && currentDateTime.isBefore(batchProcessEndDateTime)) {
+  int batchProcessStartDateTime = currentDateTime.hour;
+  int batchProcessEndDateTime = currentDateTime.minute;
+  if (batchProcessStartDateTime == 0 && batchProcessEndDateTime <= 6) {
     return true;
   } else {
     return false;
