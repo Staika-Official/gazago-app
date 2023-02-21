@@ -786,6 +786,7 @@ class ActivityController extends SuperController with ActivityMixin, ChallengeMi
   }
 
   void checkPopupExpired() {
+    // HiveStore.save(key: HiveKey.closePopupDate.name, value: null);
     if (globalController.isPopupOpen.value) {
       showMainPopupAlert(this);
     }
