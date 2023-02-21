@@ -523,7 +523,11 @@ mixin ActivityMixin {
             showEndExerciseAdDialog(challenge, controller);
             controller.adLoadTimerStart();
           } else {
-            showEndExerciseDialog(challenge);
+            if (source != null && source == 'pendingExerciseDialog') {
+              endExercise(challenge, source: source);
+            } else {
+              showEndExerciseDialog(challenge);
+            }
           }
         } else {
           if (source != null && source == 'pendingExerciseDialog') {

@@ -33,7 +33,7 @@ class ActivityLoading extends StatelessWidget {
               },
               child: Padding(
                 padding: EdgeInsets.all(20.sp),
-                child: Image.asset('assets/images/activity/ico_loading_${controller.loadingTime.value}.png'),
+                child: controller.loadingTime.value < 4 ? Image.asset('assets/images/activity/ico_loading_${controller.loadingTime.value}.png') : Container(),
               ),
             )),
             Positioned(
