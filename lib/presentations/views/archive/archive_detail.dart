@@ -50,7 +50,7 @@ class ArchiveDetail extends StatelessWidget {
                             CircleAvatar(
                               radius: 21.sp,
                               backgroundColor: Colors.transparent,
-                              foregroundImage: controller.getArchiveTypeImage(controller.selectedItem.value.type),
+                              foregroundImage: controller.getArchiveTypeImage(controller.selectedItem.value),
                             ),
                             if (controller.selectedItem.value.badgeIssueId != null)
                               Positioned(

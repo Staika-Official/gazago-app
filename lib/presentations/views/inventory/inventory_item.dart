@@ -56,8 +56,7 @@ class InventoryItem extends StatelessWidget {
                                   opacity: item.equipped == true ? 0.5 : 1,
                                   child: item.itemImageUrl.contains('.svg')
                                       ? SvgPicture.network(
-                                          fit: BoxFit.fitWidth,
-                                          width: 170.sp,
+                                          fit: BoxFit.fitHeight,
                                           controller.selectedItem.value.itemImageUrl,
                                           placeholderBuilder: (BuildContext context) => Container(padding: const EdgeInsets.all(30.0), child: const CircularProgressIndicator()),
                                         )

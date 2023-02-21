@@ -604,10 +604,10 @@ class ActivityController extends SuperController with ActivityMixin, ChallengeMi
       moveToChallengeMap();
     } else {
       await handleSelectAdType(selectedExerciseType.value == ExerciseType.hiking
-          ? 'startHikingAd'
-          : selectedExerciseType.value == ExerciseType.walking
-              ? 'startWalkingAd'
-              : 'startFamousAd');
+          ? selectedChallenge.value.id != null
+              ? 'startFamousAd'
+              : 'startHikingAd'
+          : 'startWalkingAd');
       DateTime? date = HiveStore.load(key: selectedAd.value);
       DateTime? viewableTime = date?.add(const Duration(hours: 1));
       DateTime now = DateTime.now();

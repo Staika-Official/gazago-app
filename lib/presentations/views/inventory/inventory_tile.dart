@@ -75,7 +75,7 @@ class InventoryTile extends StatelessWidget {
                             errorWidget: (context, url, error) => iconNoBadge,
                             fit: BoxFit.contain,
                           )
-                        : Image.asset("assets/images/@temp_badge.png"),
+                        : Image.asset("assets/images/inventory/ico_no_badge.svg"),
                   ),
                 ],
               ),

@@ -52,7 +52,7 @@ class ArchiveHome extends StatelessWidget {
                               CircleAvatar(
                                 radius: 21.sp,
                                 backgroundColor: Colors.transparent,
-                                foregroundImage: controller.getArchiveTypeImage(archive.type),
+                                foregroundImage: controller.getArchiveTypeImage(archive),
                                 // foregroundImage: archive.type == ExerciseType.hiking.name.toUpperCase()
                                 // const sp.Svg('assets/images/archive/ico_archive_hiking.svg')
                                 //     : const sp.Svg('assets/images/archive/ico_archive_walking.svg'),

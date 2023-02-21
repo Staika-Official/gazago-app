@@ -486,16 +486,16 @@ mixin ActivityMixin {
     print(controller.userState.value.exercise?.type);
     await controller.checkActivityType(controller.userState.value.exercise?.type);
     await controller.handleSelectAdType(controller.userState.value.exercise?.type == 'HIKING'
-        ? 'endHikingAd'
-        : controller.userState.value.exercise?.type == 'WALKING'
-            ? 'endWalkingAd'
-            : 'endFamousAd');
+        ? controller.selectedChallenge.value.id != null
+            ? 'endFamousAd'
+            : 'endHikingAd'
+        : 'endWalkingAd');
     DateTime? date = HiveStore.load(
         key: controller.userState.value.exercise?.type == 'HIKING'
-            ? 'endHikingAd'
-            : controller.userState.value.exercise?.type == 'WALKING'
-                ? 'endWalkingAd'
-                : 'endFamousAd');
+            ? controller.selectedChallenge.value.id != null
+                ? 'endFamousAd'
+                : 'endHikingAd'
+            : 'endWalkingAd');
 
     DateTime? viewableTime = date?.add(const Duration(hours: 1));
     DateTime now = DateTime.now();
@@ -586,6 +586,7 @@ mixin ActivityMixin {
         },
       );
     }
+    print(adId);
     if (!batchIsInProgress()) {
       await ActivityService.fetchEndUserExercises(
         userExerciseData.value,

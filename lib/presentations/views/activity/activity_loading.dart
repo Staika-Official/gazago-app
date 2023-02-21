@@ -43,23 +43,27 @@ class ActivityLoading extends StatelessWidget {
               child: Center(
                 child: InkWell(
                   onTap: () => controller.passThrowActivityLoading(),
-                  child: Container(
-                    decoration: BoxDecoration(
-                      border: Border(
-                        bottom: BorderSide(
-                          // POINT
-                          color: lightGrayColor,
-                          width: 1.0,
+                  child: Padding(
+                    padding: EdgeInsets.all(8.0.sp),
+                    child: Container(
+                      decoration: BoxDecoration(
+                        border: Border(
+                          bottom: BorderSide(
+                            // POINT
+                            color: lightGrayColor,
+                            width: 1.0,
+                          ),
                         ),
                       ),
-                    ),
-                    child: Padding(
-                      padding: EdgeInsets.only(bottom: 4.0.sp),
-                      child: StyledText(
-                        '건너뛰기',
-                        color: lightGrayColor,
-                        fontSize: 18,
-                        fontWeight: 500,
+                      child: Padding(
+                        padding: EdgeInsets.only(bottom: 4.0.sp),
+                        child: StyledText(
+                          '건너뛰기',
+                          color: lightGrayColor,
+                          fontSize: 18,
+                          lineHeight: 20,
+                          fontWeight: 500,
+                        ),
                       ),
                     ),
                   ),

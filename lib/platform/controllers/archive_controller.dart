@@ -102,14 +102,15 @@ class ArchiveController extends GetxController with ScrollMixin {
     showDeleteRecordAlert(this, id);
   }
 
-  getArchiveTypeImage(archiveType) {
-    switch (archiveType) {
-      case 'FAMOUS_MOUNTAIN_100':
+  getArchiveTypeImage(archive) {
+    if (archive.type == 'HIKING') {
+      if (archive.challengeId != null) {
         return const Svg('assets/images/archive/ico_mountain_100.svg');
-      case 'WALKING':
-        return const Svg('assets/images/archive/ico_walking.svg');
-      case 'HIKING':
+      } else {
         return const Svg('assets/images/archive/ico_hiking.svg');
+      }
+    } else {
+      return const Svg('assets/images/archive/ico_walking.svg');
     }
   }
 

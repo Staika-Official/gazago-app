@@ -81,10 +81,11 @@ mixin AdmobMixin {
 
   // 운동 시작 광고
   void exerciseStartRewardedAdInit(String adType, {successCallback, errorCallback}) async {
+    print(adType);
     print('adType: ${adType}, ${startAdid}');
     await RewardedAd.load(
-        adUnitId: Platform.isIOS ? 'ca-app-pub-3940256099942544/1712485313' : 'ca-app-pub-3940256099942544/5224354917',
-        // adUnitId: startAdid,
+        // adUnitId: Platform.isIOS ? 'ca-app-pub-3940256099942544/1712485313' : 'ca-app-pub-3940256099942544/5224354917',
+        adUnitId: startAdid,
         request: const AdRequest(),
         rewardedAdLoadCallback: RewardedAdLoadCallback(onAdLoaded: (RewardedAd ad) {
           print('RewardedAd loaded');
@@ -104,9 +105,10 @@ mixin AdmobMixin {
 
   // 운동 종료 광고
   Future exerciseEndRewardedAdInit(String adType, {successCallback, errorCallback}) async {
+    print(adType);
     await RewardedAd.load(
-        adUnitId: Platform.isIOS ? 'ca-app-pub-3940256099942544/1712485313' : 'ca-app-pub-3940256099942544/5224354917',
-        // adUnitId: endAdid,
+        // adUnitId: Platform.isIOS ? 'ca-app-pub-3940256099942544/1712485313' : 'ca-app-pub-3940256099942544/5224354917',
+        adUnitId: endAdid,
         request: const AdRequest(),
         rewardedAdLoadCallback: RewardedAdLoadCallback(onAdLoaded: (RewardedAd ad) {
           print('RewardedAd loaded');
@@ -125,6 +127,7 @@ mixin AdmobMixin {
   }
 
   void showExerciseStartAd(ActivityController activityController, String adType) {
+    print(adType);
     if (startAd == null) {
       print('Warning: attempt to show rewarded before loaded.');
       return;
