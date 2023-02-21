@@ -1,6 +1,7 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:gaza_go/platform/controllers/inventory_controller.dart';
 import 'package:gaza_go/platform/helpers/inventory_helper.dart';
 import 'package:gaza_go/presentations/styles/colors.dart';
@@ -69,13 +70,19 @@ class InventoryTile extends StatelessWidget {
                   AspectRatio(
                     aspectRatio: index == 1 ? 1 / 1 : 1.2 / 1,
                     child: imageUrl != ''
-                        ? CachedNetworkImage(
-                            imageUrl: imageUrl,
-                            placeholder: (context, url) => const Center(child: SizedBox.square(dimension: 40, child: CircularProgressIndicator())),
-                            errorWidget: (context, url, error) => iconNoBadge,
-                            fit: BoxFit.contain,
-                          )
-                        : Image.asset("assets/images/inventory/ico_no_badge.svg"),
+                        ? imageUrl.contains('.svg')
+                            ? SvgPicture.network(
+                      fit: BoxFit.contain,
+                      imageUrl,
+                      placeholderBuilder: (BuildContext context) => Container(padding: const EdgeInsets.all(30.0), child: const CircularProgressIndicator()),
+                    )
+                            : CachedNetworkImage(
+                      imageUrl: imageUrl,
+                      placeholder: (context, url) => const Center(child: SizedBox.square(dimension: 40, child: CircularProgressIndicator())),
+                      errorWidget: (context, url, error) => iconNoBadge,
+                      fit: BoxFit.contain,
+                    )
+                        : iconNoBadge,
                   ),
                 ],
               ),

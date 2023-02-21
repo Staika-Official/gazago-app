@@ -91,12 +91,29 @@ class LeaderboardHome extends StatelessWidget {
         mainAxisAlignment: MainAxisAlignment.start,
         children: [
           iconMyRankArrow,
+          // SizedBox(
+          //   width: 20,
+          //   child: Text(
+          //     myRank.rank.toString(),
+          //     style: TextStyle(color: skyBlueColor, fontSize: 14.sp, fontWeight: FontWeight.w600),
+          //     textAlign: TextAlign.center,
+          //   ),
+          // ),
           SizedBox(
-            width: 20,
-            child: Text(
-              myRank.rank.toString(),
-              style: TextStyle(color: skyBlueColor, fontSize: 14.sp, fontWeight: FontWeight.w600),
-              textAlign: TextAlign.center,
+            child: Align(
+              alignment: Alignment.centerRight,
+              child: Padding(
+                padding: EdgeInsets.symmetric(horizontal: 8.0.sp),
+                child: Text(
+                  myRank.rank.toString(),
+                  style: TextStyle(
+                    color: skyBlueColor,
+                    fontSize: 14.sp,
+                    fontWeight: FontWeight.w600,
+                  ),
+                  textAlign: TextAlign.right,
+                ),
+              ),
             ),
           ),
           Padding(padding: EdgeInsets.only(left: 4.sp)),
