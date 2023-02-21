@@ -202,6 +202,44 @@ class ArchiveDetail extends StatelessWidget {
               child: Row(
                 children: [
                   const StyledText(
+                    '활동 보상',
+                    fontWeight: 600,
+                    fontSize: 16,
+                  ),
+                  const Spacer(),
+                  StyledText(
+                    '${controller.selectedItem.value.rewardGoExerciseSum!} GO',
+                    fontWeight: 500,
+                    fontSize: 16,
+                    color: const Color(0xFF7D7D84),
+                  ),
+                ],
+              ),
+            ),
+            Padding(
+              padding: EdgeInsets.symmetric(vertical: 10.0.sp, horizontal: 20.0.sp),
+              child: Row(
+                children: [
+                  const StyledText(
+                    '광고 보상',
+                    fontWeight: 600,
+                    fontSize: 16,
+                  ),
+                  const Spacer(),
+                  StyledText(
+                    '${controller.selectedItem.value.rewardGoAdSum!} GO',
+                    fontWeight: 500,
+                    fontSize: 16,
+                    color: const Color(0xFF7D7D84),
+                  ),
+                ],
+              ),
+            ),
+            Padding(
+              padding: EdgeInsets.symmetric(vertical: 10.0.sp, horizontal: 20.0.sp),
+              child: Row(
+                children: [
+                  const StyledText(
                     '소비 체력',
                     fontWeight: 600,
                     fontSize: 16,

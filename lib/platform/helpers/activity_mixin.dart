@@ -500,7 +500,7 @@ mixin ActivityMixin {
     DateTime? viewableTime = date?.add(const Duration(hours: 1));
     DateTime now = DateTime.now();
     // HiveStore.save(key: 'endWalkingAd', value: null);
-    stopTimer = Timer.periodic(const Duration(milliseconds: 10), (timer) {
+    stopTimer = Timer.periodic(const Duration(milliseconds: 10), (timer) async {
       if (counter == const Duration(milliseconds: 500)) {
         initializeStopTimer();
 
@@ -510,7 +510,7 @@ mixin ActivityMixin {
         if (date == null || viewableTime!.isBefore(now)) {
           controller.initEndAdmobAdId(controller.selectedAd.value);
 
-          controller.exerciseEndRewardedAdInit(
+          await controller.exerciseEndRewardedAdInit(
             controller.selectedAd.value,
             successCallback: () {
               controller.updateAbleViewAd();
@@ -519,9 +519,16 @@ mixin ActivityMixin {
               controller.updateNotAbleViewAd();
             },
           );
-
-          showEndExerciseAdDialog(challenge, controller);
-          controller.adLoadTimerStart();
+          if (controller.userState.value.exercise!.rewardGo! > 0) {
+            showEndExerciseAdDialog(challenge, controller);
+            controller.adLoadTimerStart();
+          } else {
+            if (source != null && source == 'pendingExerciseDialog') {
+              endExercise(challenge, source: source);
+            } else {
+              showEndExerciseDialog(challenge);
+            }
+          }
         } else {
           if (source != null && source == 'pendingExerciseDialog') {
             endExercise(challenge, source: source);

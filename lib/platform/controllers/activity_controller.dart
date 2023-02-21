@@ -580,7 +580,7 @@ class ActivityController extends SuperController with ActivityMixin, ChallengeMi
     loadingTimer = Timer.periodic(
       const Duration(seconds: 1),
       (timer) {
-        if (loadingTime.value == 3) {
+        if (loadingTime.value >= 3) {
           timer.cancel();
           loadingTimer = null;
           thr.throttle(() => startExercise(exerciseType, challenge, adId: adId));
@@ -590,6 +590,11 @@ class ActivityController extends SuperController with ActivityMixin, ChallengeMi
         }
       },
     );
+  }
+
+  void passThrowActivityLoading() {
+    loadingTime.value = 4;
+    Get.back();
   }
 
   void selectExerciseType(ExerciseType exerciseType) async {
