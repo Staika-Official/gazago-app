@@ -18,8 +18,8 @@ class ArchiveDetailItemModel {
   String? state;
   int? badgeIssueId;
   int? challengeId;
-  int? rewardGoExerciseSum;
-  int? rewardGoAdSum;
+  double? rewardGoExerciseSum;
+  double? rewardGoAdSum;
   String? badgeName;
   String? challengeTitle;
   String? locations;

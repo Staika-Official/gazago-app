@@ -208,7 +208,7 @@ class ArchiveDetail extends StatelessWidget {
                   ),
                   const Spacer(),
                   StyledText(
-                    '${controller.selectedItem.value.rewardGoExerciseSum!} GO',
+                    '${formatDecimalPlaces(controller.selectedItem.value.rewardGoExerciseSum!, 2)} GO',
                     fontWeight: 500,
                     fontSize: 16,
                     color: const Color(0xFF7D7D84),
@@ -227,7 +227,7 @@ class ArchiveDetail extends StatelessWidget {
                   ),
                   const Spacer(),
                   StyledText(
-                    '${controller.selectedItem.value.rewardGoAdSum!} GO',
+                    '${formatDecimalPlaces(controller.selectedItem.value.rewardGoAdSum!, 2)} GO',
                     fontWeight: 500,
                     fontSize: 16,
                     color: const Color(0xFF7D7D84),
