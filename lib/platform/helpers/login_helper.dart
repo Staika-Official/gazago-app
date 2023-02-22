@@ -5,6 +5,7 @@ import 'package:gaza_go/constants/routes.dart';
 import 'package:gaza_go/platform/stores/hive_store.dart';
 import 'package:gaza_go/presentations/styles/icons.dart';
 import 'package:get/get.dart';
+import 'package:google_sign_in/google_sign_in.dart';
 
 Color getLoginButtonColor(String loginType) {
   switch (loginType) {
@@ -53,6 +54,9 @@ void handleKeysOnLogout() {
 
 void forceLogout() async {
   handleKeysOnLogout();
+  if (await GoogleSignIn().isSignedIn()) {
+    GoogleSignIn().signOut();
+  }
 
   Get.offAllNamed(Routes.login);
 }
