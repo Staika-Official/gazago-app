@@ -482,23 +482,25 @@ mixin ActivityMixin {
     if (stopTimer != null) {
       initializeStopTimer();
     }
+
     print(controller.userState.value.exercise?.type);
     await controller.checkActivityType(controller.userState.value.exercise?.type);
     await controller.handleSelectAdType(controller.userState.value.exercise?.type == 'HIKING'
-        ? 'endHikingAd'
-        : controller.userState.value.exercise?.type == 'WALKING'
-            ? 'endWalkingAd'
-            : 'endFamousAd');
+        ? controller.selectedChallenge.value.id != null
+            ? 'endFamousAd'
+            : 'endHikingAd'
+        : 'endWalkingAd');
     DateTime? date = HiveStore.load(
         key: controller.userState.value.exercise?.type == 'HIKING'
-            ? 'endHikingAd'
-            : controller.userState.value.exercise?.type == 'WALKING'
-                ? 'endWalkingAd'
-                : 'endFamousAd');
+            ? controller.selectedChallenge.value.id != null
+                ? 'endFamousAd'
+                : 'endHikingAd'
+            : 'endWalkingAd');
 
     DateTime? viewableTime = date?.add(const Duration(hours: 1));
     DateTime now = DateTime.now();
-    stopTimer = Timer.periodic(const Duration(milliseconds: 10), (timer) {
+    // HiveStore.save(key: 'endWalkingAd', value: null);
+    stopTimer = Timer.periodic(const Duration(milliseconds: 10), (timer) async {
       if (counter == const Duration(milliseconds: 500)) {
         initializeStopTimer();
 
@@ -508,7 +510,7 @@ mixin ActivityMixin {
         if (date == null || viewableTime!.isBefore(now)) {
           controller.initEndAdmobAdId(controller.selectedAd.value);
 
-          controller.exerciseEndRewardedAdInit(
+          await controller.exerciseEndRewardedAdInit(
             controller.selectedAd.value,
             successCallback: () {
               controller.updateAbleViewAd();
@@ -517,9 +519,16 @@ mixin ActivityMixin {
               controller.updateNotAbleViewAd();
             },
           );
-
-          showEndExerciseAdDialog(challenge, controller);
-          controller.adLoadTimerStart();
+          if (controller.userState.value.exercise!.rewardGo! > 0) {
+            showEndExerciseAdDialog(challenge, controller);
+            controller.adLoadTimerStart();
+          } else {
+            if (source != null && source == 'pendingExerciseDialog') {
+              endExercise(challenge, source: source);
+            } else {
+              showEndExerciseDialog(challenge);
+            }
+          }
         } else {
           if (source != null && source == 'pendingExerciseDialog') {
             endExercise(challenge, source: source);
@@ -562,6 +571,7 @@ mixin ActivityMixin {
 
   void showEndExerciseAdDialog(ChallengeModel challenge, ActivityController controller) {
     showEndExerciseAdAlert(challenge, controller);
+    controller.adLoadTimerStop();
   }
 
   void showEndExerciseDialog(ChallengeModel challenge) {
@@ -576,6 +586,7 @@ mixin ActivityMixin {
         },
       );
     }
+    print(adId);
     if (!batchIsInProgress()) {
       await ActivityService.fetchEndUserExercises(
         userExerciseData.value,

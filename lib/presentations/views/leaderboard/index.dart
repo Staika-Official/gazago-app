@@ -268,14 +268,14 @@ class LeaderboardHome extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.end,
             children: [
               StyledText(
-                '${myRank.rewardGo.toString()} GO',
+                '${formatDecimalPlaces(myRank.rewardGo, 2)} GO',
                 textAlign: TextAlign.right,
                 fontSize: 14,
                 fontWeight: 600,
               ),
               Padding(padding: EdgeInsets.only(top: 7.sp)),
               StyledText(
-                '${formatDecimalPlaces(myRank.rewardTik, 1)} TIK',
+                '${formatDecimalPlaces(myRank.rewardTik, 0)} TIK',
                 textAlign: TextAlign.right,
                 color: deepGrayColor,
                 fontSize: 14,

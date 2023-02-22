@@ -510,15 +510,15 @@ void showEndExerciseAdAlert(ChallengeModel challenge, ActivityController control
       Expanded(
         child: Column(
           children: [
-            Obx(() {
-              return InkWell(
-                  onTap: () => controller.endAd == null ? null : controller.showExerciseEndAd(challenge, controller),
-                  child: Container(
+            InkWell(
+                onTap: () => controller.endAd.value == null ? null : controller.showExerciseEndAd(challenge, controller),
+                child: Obx(() {
+                  return Container(
                     width: double.infinity,
                     height: 52.sp,
                     alignment: Alignment.center,
                     decoration: BoxDecoration(
-                      color: controller.endAd == null ? popupBgColor : skyBlueColor,
+                      color: controller.endAd.value == null ? popupBgColor : skyBlueColor,
                       border: Border.all(width: 2.sp, color: Colors.black),
                       borderRadius: BorderRadius.circular(8.sp),
                       boxShadow: [
@@ -528,7 +528,7 @@ void showEndExerciseAdAlert(ChallengeModel challenge, ActivityController control
                         )
                       ],
                     ),
-                    child: controller.endAd == null
+                    child: controller.endAd.value == null
                         ? controller.time.value != 0
                             ? Stack(
                                 children: [
@@ -581,8 +581,8 @@ void showEndExerciseAdAlert(ChallengeModel challenge, ActivityController control
                               ),
                             ],
                           ),
-                  ));
-            }),
+                  );
+                })),
             Padding(
               padding: EdgeInsets.only(top: 8.0.sp),
               child: GazagoButton(
@@ -2030,6 +2030,7 @@ void showAdTipAlert() {
   );
 }
 
+
 void showLeaderboardInfo() {
   Get.dialog(
     barrierColor: Colors.transparent,
@@ -2255,6 +2256,68 @@ void showLeaderboardInfo() {
               ),
             ],
           ),
+
+        ),
+      ),
+    ),
+  );
+}
+
+Future<void> showMainPopupAlert(ActivityController activityController) async {
+  await Get.bottomSheet(
+    isDismissible: false,
+    isScrollControlled: true,
+    WillPopScope(
+      onWillPop: () async => false,
+      child: Container(
+        decoration: const BoxDecoration(
+          color: Colors.transparent,
+        ),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            InkWell(
+              onTap: () => activityController.moveToHowToGo(),
+              child: Image.asset('assets/images/common/img_main_popup.png'),
+            ),
+            Container(
+              color: popupBgColor,
+              child: Padding(
+                padding: EdgeInsets.symmetric(horizontal: 20.0.sp),
+                child: Row(
+                  mainAxisSize: MainAxisSize.max,
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    InkWell(
+                      onTap: () => activityController.onSavePopupCloseDate(),
+                      child: Padding(
+                        padding: EdgeInsets.symmetric(vertical: 28.0.sp, horizontal: 10.sp),
+                        child: const StyledText(
+                          '오늘 그만 보기',
+                          color: Color(0xFFB6B6B6),
+                          fontSize: 16,
+                          lineHeight: 16,
+                          fontWeight: 500,
+                        ),
+                      ),
+                    ),
+                    InkWell(
+                      onTap: () => Get.back(),
+                      child: Padding(
+                        padding: EdgeInsets.symmetric(vertical: 28.0.sp, horizontal: 10.sp),
+                        child: const StyledText(
+                          '닫기',
+                          fontWeight: 700,
+                          fontSize: 16,
+                          lineHeight: 16,
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ),
+          ],      
         ),
       ),
     ),

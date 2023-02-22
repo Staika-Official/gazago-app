@@ -1,7 +1,5 @@
 import 'package:gaza_go/constants/base_urls.dart';
 import 'package:solana/solana.dart';
-import 'package:solana_web3/solana_web3.dart' as web3;
-import 'package:solana_web3/solana_web3.dart';
 
 enum Flavor {
   dev,
@@ -54,6 +52,19 @@ class F {
         return 'https://taikapay.com';
       default:
         return 'https://stage.taikapay.com';
+    }
+  }
+
+  static String get howToGoUrl {
+    switch (appFlavor) {
+      case Flavor.dev:
+        return 'https://eztechfin.notion.site/How-to-GO-61129dcb96324b0cb282d7743e19b043';
+      case Flavor.stage:
+        return 'https://eztechfin.notion.site/How-to-GO-61129dcb96324b0cb282d7743e19b043';
+      case Flavor.prod:
+        return 'https://eztechfin.notion.site/How-to-GO-61129dcb96324b0cb282d7743e19b043';
+      default:
+        return 'https://eztechfin.notion.site/How-to-GO-61129dcb96324b0cb282d7743e19b043';
     }
   }
 

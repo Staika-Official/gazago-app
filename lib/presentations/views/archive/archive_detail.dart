@@ -50,7 +50,7 @@ class ArchiveDetail extends StatelessWidget {
                             CircleAvatar(
                               radius: 21.sp,
                               backgroundColor: Colors.transparent,
-                              foregroundImage: controller.getArchiveTypeImage(controller.selectedItem.value.type),
+                              foregroundImage: controller.getArchiveTypeImage(controller.selectedItem.value),
                             ),
                             if (controller.selectedItem.value.badgeIssueId != null)
                               Positioned(
@@ -190,6 +190,44 @@ class ArchiveDetail extends StatelessWidget {
                   const Spacer(),
                   StyledText(
                     '${formatDecimalPlaces(controller.selectedItem.value.rewardGo!, 2)} GO',
+                    fontWeight: 500,
+                    fontSize: 16,
+                    color: const Color(0xFF7D7D84),
+                  ),
+                ],
+              ),
+            ),
+            Padding(
+              padding: EdgeInsets.symmetric(vertical: 10.0.sp, horizontal: 20.0.sp),
+              child: Row(
+                children: [
+                  const StyledText(
+                    '활동 보상',
+                    fontWeight: 600,
+                    fontSize: 16,
+                  ),
+                  const Spacer(),
+                  StyledText(
+                    '${formatDecimalPlaces(controller.selectedItem.value.rewardGoExerciseSum!, 2)} GO',
+                    fontWeight: 500,
+                    fontSize: 16,
+                    color: const Color(0xFF7D7D84),
+                  ),
+                ],
+              ),
+            ),
+            Padding(
+              padding: EdgeInsets.symmetric(vertical: 10.0.sp, horizontal: 20.0.sp),
+              child: Row(
+                children: [
+                  const StyledText(
+                    '광고 보상',
+                    fontWeight: 600,
+                    fontSize: 16,
+                  ),
+                  const Spacer(),
+                  StyledText(
+                    '${formatDecimalPlaces(controller.selectedItem.value.rewardGoAdSum!, 2)} GO',
                     fontWeight: 500,
                     fontSize: 16,
                     color: const Color(0xFF7D7D84),

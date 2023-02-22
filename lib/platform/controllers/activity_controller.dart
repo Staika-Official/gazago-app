@@ -44,7 +44,7 @@ import 'package:throttling/throttling.dart';
 
 class ActivityController extends SuperController with ActivityMixin, ChallengeMixin, GetTickerProviderStateMixin, AdmobMixin {
   final WalletMasterController walletMasterController = Get.find();
-
+  final GlobalKey webViewKey = GlobalKey();
   //rewarded.dart
   RxList<StatModel> get statList {
     return RxList([
@@ -117,6 +117,7 @@ class ActivityController extends SuperController with ActivityMixin, ChallengeMi
   Future<void> initializeController() async {
     challengeGuideController = AnimationController(vsync: this);
     await initController();
+    checkPopupExpired();
     // 타이머 시작
     // adLoadTimerStart();
     checkConnectivityStatus();
@@ -578,8 +579,8 @@ class ActivityController extends SuperController with ActivityMixin, ChallengeMi
 
     loadingTimer = Timer.periodic(
       const Duration(seconds: 1),
-          (timer) {
-        if (loadingTime.value == 3) {
+      (timer) {
+        if (loadingTime.value >= 3) {
           timer.cancel();
           loadingTimer = null;
           thr.throttle(() => startExercise(exerciseType, challenge, adId: adId));
@@ -591,6 +592,11 @@ class ActivityController extends SuperController with ActivityMixin, ChallengeMi
     );
   }
 
+  void passThrowActivityLoading() {
+    loadingTime.value = 4;
+    Get.back();
+  }
+
   void selectExerciseType(ExerciseType exerciseType) async {
     selectedExerciseType.value = exerciseType;
 
@@ -598,10 +604,10 @@ class ActivityController extends SuperController with ActivityMixin, ChallengeMi
       moveToChallengeMap();
     } else {
       await handleSelectAdType(selectedExerciseType.value == ExerciseType.hiking
-          ? 'startHikingAd'
-          : selectedExerciseType.value == ExerciseType.walking
-          ? 'startWalkingAd'
-          : 'startFamousAd');
+          ? selectedChallenge.value.id != null
+              ? 'startFamousAd'
+              : 'startHikingAd'
+          : 'startWalkingAd');
       DateTime? date = HiveStore.load(key: selectedAd.value);
       DateTime? viewableTime = date?.add(const Duration(hours: 1));
       DateTime now = DateTime.now();
@@ -775,6 +781,23 @@ class ActivityController extends SuperController with ActivityMixin, ChallengeMi
     }
   }
 
+  void moveToHowToGo() {
+    Get.toNamed(Routes.howToGo);
+  }
+
+  void checkPopupExpired() {
+    // HiveStore.save(key: HiveKey.closePopupDate.name, value: null);
+    if (globalController.isPopupOpen.value) {
+      showMainPopupAlert(this);
+    }
+  }
+
+  void onSavePopupCloseDate() {
+    DateTime now = DateTime.now();
+    HiveStore.save(key: HiveKey.closePopupDate.name, value: now);
+    Get.back();
+  }
+
   void checkConnectivityStatus() async {
     // globalController.connectivityResult.listen((value) async {
     //   if (value != ConnectivityResult.none) {
@@ -823,7 +846,7 @@ class ActivityController extends SuperController with ActivityMixin, ChallengeMi
     adLoadTimerStop();
     Get.back();
     startAd = null;
-    endAd = null;
+    endAd.value = null;
     updateNotAbleViewAd();
   }
 

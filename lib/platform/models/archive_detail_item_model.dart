@@ -18,6 +18,8 @@ class ArchiveDetailItemModel {
   String? state;
   int? badgeIssueId;
   int? challengeId;
+  double? rewardGoExerciseSum;
+  double? rewardGoAdSum;
   String? badgeName;
   String? challengeTitle;
   String? locations;
@@ -47,6 +49,8 @@ class ArchiveDetailItemModel {
     this.state,
     this.badgeIssueId,
     this.challengeId,
+    this.rewardGoExerciseSum,
+    this.rewardGoAdSum,
     this.badgeName,
     this.challengeTitle,
     this.locations,
