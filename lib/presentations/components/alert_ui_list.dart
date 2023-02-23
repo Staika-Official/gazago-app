@@ -433,6 +433,41 @@ Future<void> showGpsAlert() async {
   );
 }
 
+void showFakeGpsAlert() async {
+  await showAlert(
+    title: '알림',
+    contentWidget: Padding(
+      padding: EdgeInsets.only(top: 30.sp, bottom: 50.sp),
+      child: Text.rich(
+        textAlign: TextAlign.center,
+        style: TextStyle(
+          fontSize: 18.sp,
+          height: 24.sp / 18.sp,
+          fontWeight: FontWeight.w500,
+          color: Colors.white,
+        ),
+        TextSpan(
+          text: '비정상적인 ',
+          children: [
+            TextSpan(text: 'GPS 활동', style: TextStyle(color: skyBlueColor)),
+            const TextSpan(text: '이 감지되었습니다.'),
+          ],
+        ),
+      ),
+    ),
+    actions: [
+      Expanded(
+        child: GazagoButton(
+          buttonText: '확인',
+          onTap: () {
+            Get.back();
+          },
+        ),
+      ),
+    ],
+  );
+}
+
 Future<bool> showGalleryPermissionAlert(MyPageController controller) async {
   Completer<bool> photoPermissionCompleter = Completer();
   bool permissionGranted = false;
