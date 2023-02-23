@@ -121,7 +121,7 @@ class ActivityController extends SuperController with ActivityMixin, ChallengeMi
     // 타이머 시작
     // adLoadTimerStart();
     checkConnectivityStatus();
-    if ([ExerciseState.ongoing, ExerciseState.paused].any((state) => state == exerciseState.value)) {
+    if ([ExerciseState.ongoing, ExerciseState.paused].any((state) => state == exerciseState.value) && !isFakeGps.value) {
       showPendingExerciseAlert(this);
     }
     disableActivityButton.value = false;
@@ -675,6 +675,8 @@ class ActivityController extends SuperController with ActivityMixin, ChallengeMi
 
     locationSubscription ??= Geolocator.getPositionStream(locationSettings: locationSettings).listen((Position position) {
       currentLocation.value = position;
+      isFakeGps.value = position.isMocked;
+      detectFakeGps();
 
       if (HiveStore.load(key: HiveKey.isDebuggingMode.name) && exerciseState.value == ExerciseState.ongoing) {
         List positionLowData = HiveStore.load(key: HiveKey.positionLowDataLogs.name) ?? [];
@@ -720,7 +722,14 @@ class ActivityController extends SuperController with ActivityMixin, ChallengeMi
     });
   }
 
-  initGpsServiceStream() {
+  void detectFakeGps() {
+    //안드로이드만 탐지 가능
+    if (isFakeGps.value && Get.isBottomSheetOpen != true) {
+      showFakeGpsAlert();
+    }
+  }
+
+  void initGpsServiceStream() {
     _serviceStatusStream ??= Geolocator.getServiceStatusStream().listen((ServiceStatus status) {
       if (status == ServiceStatus.disabled) {
         showGpsAlert();
