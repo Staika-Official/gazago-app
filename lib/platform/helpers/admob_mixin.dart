@@ -28,8 +28,8 @@ mixin AdmobMixin {
     print(adType);
 
     await RewardedAd.load(
-        adUnitId: Platform.isIOS ? 'ca-app-pub-3940256099942544/1712485313' : 'ca-app-pub-3940256099942544/5224354917',
-        // adUnitId: Platform.isIOS ? 'ca-app-pub-4234536720874912/7717252030' : 'ca-app-pub-4234536720874912/8417209744',
+        // adUnitId: Platform.isIOS ? 'ca-app-pub-3940256099942544/1712485313' : 'ca-app-pub-3940256099942544/5224354917',
+        adUnitId: Platform.isIOS ? 'ca-app-pub-4234536720874912/7717252030' : 'ca-app-pub-4234536720874912/8417209744',
         request: const AdRequest(),
         rewardedAdLoadCallback: RewardedAdLoadCallback(onAdLoaded: (RewardedAd ad) {
           print('RewardedAd loaded');
@@ -51,8 +51,8 @@ mixin AdmobMixin {
   Future exerciseEndRewardedAdInit(String adType, {successCallback, errorCallback}) async {
     print(adType);
     await RewardedAd.load(
-        adUnitId: Platform.isIOS ? 'ca-app-pub-3940256099942544/1712485313' : 'ca-app-pub-3940256099942544/5224354917',
-        // adUnitId: Platform.isIOS ? 'ca-app-pub-4234536720874912/6348330049' : 'ca-app-pub-4234536720874912/9538719725',
+        // adUnitId: Platform.isIOS ? 'ca-app-pub-3940256099942544/1712485313' : 'ca-app-pub-3940256099942544/5224354917',
+        adUnitId: Platform.isIOS ? 'ca-app-pub-4234536720874912/6348330049' : 'ca-app-pub-4234536720874912/9538719725',
         request: const AdRequest(),
         rewardedAdLoadCallback: RewardedAdLoadCallback(onAdLoaded: (RewardedAd ad) {
           print('RewardedAd loaded');
