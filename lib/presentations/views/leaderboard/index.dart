@@ -99,19 +99,16 @@ class LeaderboardHome extends StatelessWidget {
           //     textAlign: TextAlign.center,
           //   ),
           // ),
-          SizedBox(
-            child: Align(
-              alignment: Alignment.centerRight,
+          ConstrainedBox(
+            constraints: BoxConstraints(maxWidth: 60, minWidth: 60),
+            child: FittedBox(
+              fit: BoxFit.scaleDown,
               child: Padding(
-                padding: EdgeInsets.symmetric(horizontal: 8.0.sp),
+                padding: const EdgeInsets.only(right: 10),
                 child: Text(
-                  myRank.rank.toString(),
-                  style: TextStyle(
-                    color: skyBlueColor,
-                    fontSize: 14.sp,
-                    fontWeight: FontWeight.w600,
-                  ),
-                  textAlign: TextAlign.right,
+                  myRank.rank!.toString(),
+                  style: TextStyle(color: skyBlueColor, fontSize: 14.sp, fontWeight: FontWeight.w600),
+                  textAlign: TextAlign.center,
                 ),
               ),
             ),
@@ -189,18 +186,20 @@ class LeaderboardHome extends StatelessWidget {
       child: Row(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          Expanded(
-            child: SizedBox(
-              child: Align(
-                alignment: Alignment.centerRight,
+          ConstrainedBox(
+            constraints: BoxConstraints(maxWidth: 60, minWidth: 60),
+            child: FittedBox(
+              fit: BoxFit.scaleDown,
+              child: Padding(
+                padding: const EdgeInsets.only(right: 10),
                 child: Text(
-                  ranker.rank.toString(),
+                  ranker.rank!.toString(),
                   style: TextStyle(
                     color: Colors.white,
                     fontSize: 14.sp,
                     fontWeight: FontWeight.w600,
                   ),
-                  textAlign: TextAlign.right,
+                  textAlign: TextAlign.center,
                 ),
               ),
             ),
