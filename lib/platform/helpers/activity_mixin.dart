@@ -483,20 +483,7 @@ mixin ActivityMixin {
       initializeStopTimer();
     }
 
-    print(controller.userState.value.exercise?.type);
-    await controller.checkActivityType(controller.userState.value.exercise?.type);
-    await controller.handleSelectAdType(controller.userState.value.exercise?.type == 'HIKING'
-        ? controller.selectedChallenge.value.id != null
-            ? 'endFamousAd'
-            : 'endHikingAd'
-        : 'endWalkingAd');
-    DateTime? date = HiveStore.load(
-        key: controller.userState.value.exercise?.type == 'HIKING'
-            ? controller.selectedChallenge.value.id != null
-                ? 'endFamousAd'
-                : 'endHikingAd'
-            : 'endWalkingAd');
-
+    DateTime? date = HiveStore.load(key: 'exerciseEndAd');
     DateTime? viewableTime = date?.add(const Duration(hours: 1));
     DateTime now = DateTime.now();
     // HiveStore.save(key: 'endWalkingAd', value: null);
@@ -508,16 +495,8 @@ mixin ActivityMixin {
           Get.back();
         }
         if (date == null || viewableTime!.isBefore(now)) {
-          controller.initEndAdmobAdId(controller.selectedAd.value);
-
           await controller.exerciseEndRewardedAdInit(
-            controller.selectedAd.value,
-            successCallback: () {
-              controller.updateAbleViewAd();
-            },
-            errorCallback: () {
-              controller.updateNotAbleViewAd();
-            },
+            'exerciseEndAd',
           );
           if (controller.userState.value.exercise!.rewardGo! > 0) {
             showEndExerciseAdDialog(challenge, controller);
@@ -541,6 +520,14 @@ mixin ActivityMixin {
         stopProgress.value += (10 / 500);
       }
     });
+  }
+
+  void checkShowEndPopup(source, challenge) {
+    if (source != null && source == 'pendingExerciseDialog') {
+      endExercise(challenge, source: source);
+    } else {
+      showEndExerciseDialog(challenge);
+    }
   }
 
   void onTapUpStop(TapUpDetails tapUpDetails, {String? source}) {

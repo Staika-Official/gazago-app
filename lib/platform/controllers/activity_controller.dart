@@ -279,19 +279,6 @@ class ActivityController extends SuperController with ActivityMixin, ChallengeMi
     showNotEnoughTaikaAlert();
   }
 
-  void updateAbleViewAd() {
-    // isAbleAdView.value = true;
-    if (userState.value.exercise!.rewardGo! > 0) {
-      isAbleAdView.value = true;
-    } else {
-      isAbleAdView.value = false;
-    }
-  }
-
-  void updateNotAbleViewAd() {
-    isAbleAdView.value = false;
-  }
-
   void fetchRechargeStamina(type) async {
     disableButton.value = true;
     if (walletMasterController.tik.value.amount! >= costTik.value) {
@@ -600,32 +587,22 @@ class ActivityController extends SuperController with ActivityMixin, ChallengeMi
   void selectExerciseType(ExerciseType exerciseType) async {
     selectedExerciseType.value = exerciseType;
 
-    if (selectedExerciseType.value == ExerciseType.dulle) {
-      moveToChallengeMap();
-    } else {
-      await handleSelectAdType(selectedExerciseType.value == ExerciseType.hiking
-          ? selectedChallenge.value.id != null
-              ? 'startFamousAd'
-              : 'startHikingAd'
-          : 'startWalkingAd');
-      DateTime? date = HiveStore.load(key: selectedAd.value);
-      DateTime? viewableTime = date?.add(const Duration(hours: 1));
-      DateTime now = DateTime.now();
-      // HiveStore.save(key: selectedAd.value, value: null);
+    DateTime? date = HiveStore.load(key: 'exerciseStartAd');
+    DateTime? viewableTime = date?.add(const Duration(hours: 1));
+    DateTime now = DateTime.now();
+    // HiveStore.save(key: 'exerciseStartAd', value: null);
 
-      if (date == null || viewableTime!.isBefore(now)) {
-        Get.back();
-        Get.dialog(const AdSelect(), barrierDismissible: false, barrierColor: const Color.fromRGBO(0, 0, 0, 0.85));
-        if (startAd == null) {
-          await initStartAdmobAdId(selectedAd.value);
-          adLoadTimerStart();
-          exerciseStartRewardedAdInit(
-            selectedAd.value,
-          );
-        }
-      } else {
-        handleMoveExerciseActive(exerciseType);
+    if (date == null || viewableTime!.isBefore(now)) {
+      Get.back();
+      Get.dialog(const AdSelect(), barrierDismissible: false, barrierColor: const Color.fromRGBO(0, 0, 0, 0.85));
+      if (startAd == null) {
+        adLoadTimerStart();
+        exerciseStartRewardedAdInit(
+          'exerciseStartAd',
+        );
       }
+    } else {
+      handleMoveExerciseActive(exerciseType);
     }
 
     // if (selectedExerciseType.value == ExerciseType.walking) selectedChallenge.value = ChallengeModel();
@@ -651,9 +628,8 @@ class ActivityController extends SuperController with ActivityMixin, ChallengeMi
     );
   }
 
-  void moveToChallengeSelection(adType) {
+  void moveToChallengeSelection() {
     selectedChallenge.value = ChallengeModel();
-    handleSelectAdType(adType);
     Get.toNamed(Routes.activityChallenges);
   }
 
@@ -847,7 +823,6 @@ class ActivityController extends SuperController with ActivityMixin, ChallengeMi
     Get.back();
     startAd = null;
     endAd.value = null;
-    updateNotAbleViewAd();
   }
 
   @override
