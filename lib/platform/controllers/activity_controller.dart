@@ -615,7 +615,7 @@ class ActivityController extends SuperController with ActivityMixin, ChallengeMi
   }
 
   void showAdTip() {
-    showAdTipAlert();
+    showAdTipAlert(selectedExerciseType.value);
   }
 
   void handleMoveExerciseActive(ExerciseType exerciseType, {String? adId}) {

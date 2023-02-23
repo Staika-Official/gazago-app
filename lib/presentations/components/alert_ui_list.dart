@@ -1838,7 +1838,7 @@ Future<void> showForceLogoutAlert() {
   return forceLogoutAlertCompleter.future;
 }
 
-void showAdTipAlert() {
+void showAdTipAlert(ExerciseType exerciseType) {
   Get.dialog(
     barrierColor: Colors.transparent,
     WillPopScope(
@@ -1893,7 +1893,7 @@ void showAdTipAlert() {
                                         color: const Color.fromRGBO(0, 0, 0, 0.85),
                                         offset: const Offset(0, 2),
                                         blurRadius: 0,
-                                        spreadRadius: 2.sp,
+                                        spreadRadius: 1.sp,
                                       )
                                     ],
                                     borderRadius: BorderRadius.circular(14.sp),
@@ -1907,13 +1907,22 @@ void showAdTipAlert() {
                                           padding: EdgeInsets.only(top: 12.sp),
                                           child: FittedBox(
                                             alignment: Alignment.topCenter,
-                                            child: StyledText(
-                                              '5GO 획득하고 시작하기',
-                                              color: Colors.black,
-                                              fontSize: 20,
-                                              fontWeight: 600,
-                                              lineHeight: 20,
-                                              fontFamily: 'Montserrat',
+                                            child: Text.rich(
+                                              textAlign: TextAlign.center,
+                                              style: TextStyle(
+                                                fontSize: 20.sp,
+                                                height: 24.sp / 18.sp,
+                                                fontWeight: FontWeight.w600,
+                                                color: Colors.black,
+                                                fontFamily: 'Montserrat',
+                                              ),
+                                              TextSpan(
+                                                text: exerciseType == ExerciseType.walking ? '1' : '3',
+                                                children: const [
+                                                  TextSpan(text: 'GO', style: TextStyle(fontWeight: FontWeight.w800)),
+                                                  TextSpan(text: ' 획득하고 시작하기'),
+                                                ],
+                                              ),
                                             ),
                                           ),
                                         ),

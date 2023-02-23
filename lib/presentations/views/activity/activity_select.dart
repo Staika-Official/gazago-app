@@ -271,7 +271,7 @@ class ActivitySelect extends StatelessWidget {
                                   Padding(
                                     padding: EdgeInsets.only(top: 5.sp),
                                     child: StyledText(
-                                      '뱃지 획득에 도전해보세요!',
+                                      '뱃지 획득 도전',
                                       fontWeight: 600,
                                       fontSize: 10,
                                       color: Colors.white.withOpacity(.8),

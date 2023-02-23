@@ -175,9 +175,9 @@ class AdSelect extends StatelessWidget {
                     decoration: BoxDecoration(
                       color: popupBgColor,
                       border: Border.all(
-                        width: 1,
+                        width: 2,
                         style: BorderStyle.solid,
-                        color: Colors.black,
+                        color: skyBlueColor,
                       ),
                       boxShadow: [
                         BoxShadow(
