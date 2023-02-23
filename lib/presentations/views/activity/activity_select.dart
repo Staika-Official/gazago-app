@@ -3,6 +3,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:gaza_go/constants/enums.dart';
 import 'package:gaza_go/platform/controllers/activity_controller.dart';
+import 'package:gaza_go/presentations/components/alert_ui_list.dart';
 import 'package:gaza_go/presentations/styles/colors.dart';
 import 'package:gaza_go/presentations/styles/styled_text.dart';
 import 'package:get/get.dart';
@@ -229,8 +230,7 @@ class ActivitySelect extends StatelessWidget {
                               controller.moveToChallengeSelection();
                             }
                           : () {
-                              Get.back();
-                              controller.moveToChallengeMap();
+                              showNotChallangeAbleAlert(controller);
                             },
                       borderRadius: BorderRadius.circular(14.sp),
                       child: Padding(

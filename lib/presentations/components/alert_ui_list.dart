@@ -5,6 +5,7 @@ import 'package:another_xlider/another_xlider.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:gaza_go/constants/enums.dart';
 import 'package:gaza_go/constants/routes.dart';
 import 'package:gaza_go/platform/controllers/activity_controller.dart';
@@ -2132,5 +2133,53 @@ Future<void> showMainPopupAlert(ActivityController activityController) async {
         ),
       ),
     ),
+  );
+}
+
+void showNotChallangeAbleAlert(ActivityController controller) {
+  showAlert(
+    contentWidget: Padding(
+      padding: EdgeInsets.only(top: 20.0.sp, bottom: 40.sp),
+      child: Column(
+        children: [
+          Padding(
+            padding: EdgeInsets.only(bottom: 20.0.sp),
+            child: SvgPicture.asset(
+              'assets/images/common/ico_challange_marker.svg',
+              width: 40.sp,
+              height: 40.sp,
+            ),
+          ),
+          const StyledText(
+            '현재 챌린시 시작점 위치가 아닙니다.\n시작점은 챌린지 가이드에서 확인해보세요!',
+            fontSize: 18,
+            lineHeight: 24,
+            fontWeight: 500,
+            letterSpacing: .2,
+            textAlign: TextAlign.center,
+          ),
+        ],
+      ),
+    ),
+    actions: [
+      Expanded(
+        child: GazagoButton(
+          onTap: () => Get.back(),
+          buttonText: '취소',
+          textColor: Colors.white,
+          buttonColor: popupBgColor,
+        ),
+      ),
+      SizedBox(
+        width: 9.sp,
+      ),
+      Expanded(
+        child: GazagoButton(
+          onTap: () => {Get.back(), controller.moveToChallengeMap()},
+          buttonText: '챌린지 가이드',
+          buttonColor: skyBlueColor,
+        ),
+      ),
+    ],
   );
 }
