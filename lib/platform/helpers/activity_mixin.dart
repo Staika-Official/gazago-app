@@ -32,6 +32,7 @@ mixin ActivityMixin {
   final Rx<CurrentUserStateModel> userState = Rx(CurrentUserStateModel());
   final RxInt loadingTime = RxInt(1);
   final Rx<Position> currentLocation = Rx(Position(speed: 0, altitude: 0, accuracy: 0, heading: 0, latitude: 0, longitude: 0, speedAccuracy: 0, timestamp: DateTime.now()));
+  final RxBool isFakeGps = RxBool(false);
   final RxList<UserExerciseModel> exerciseData = RxList.empty();
   final RxList<LatLng> coordinates = RxList.empty();
   final RxInt exerciseTime = RxInt(0);
@@ -311,6 +312,10 @@ mixin ActivityMixin {
   void startExercise(ExerciseType exerciseType, ChallengeModel? challenge, {String? adId}) async {
     if (Get.isDialogOpen != null && Get.isDialogOpen!) Get.until((route) => Get.isDialogOpen == false);
     print(globalController.internetConnection.value);
+    if (isFakeGps.value) {
+      return;
+    }
+
     if (!batchIsInProgress()) {
       // if (globalController.connectivityResult.value != ConnectivityResult.none) {
       if (globalController.internetConnection.value) {
@@ -363,6 +368,10 @@ mixin ActivityMixin {
   }
 
   void continueExercise({String? source}) {
+    if (isFakeGps.value) {
+      return;
+    }
+
     exerciseData.value = List.empty(growable: true);
     exerciseState.value = ExerciseState.ongoing;
     userState.value.exercise!.locationUpdateTime = DateTime.now();
@@ -483,20 +492,7 @@ mixin ActivityMixin {
       initializeStopTimer();
     }
 
-    print(controller.userState.value.exercise?.type);
-    await controller.checkActivityType(controller.userState.value.exercise?.type);
-    await controller.handleSelectAdType(controller.userState.value.exercise?.type == 'HIKING'
-        ? controller.selectedChallenge.value.id != null
-            ? 'endFamousAd'
-            : 'endHikingAd'
-        : 'endWalkingAd');
-    DateTime? date = HiveStore.load(
-        key: controller.userState.value.exercise?.type == 'HIKING'
-            ? controller.selectedChallenge.value.id != null
-                ? 'endFamousAd'
-                : 'endHikingAd'
-            : 'endWalkingAd');
-
+    DateTime? date = HiveStore.load(key: 'exerciseEndAd');
     DateTime? viewableTime = date?.add(const Duration(hours: 1));
     DateTime now = DateTime.now();
     // HiveStore.save(key: 'endWalkingAd', value: null);
@@ -508,16 +504,8 @@ mixin ActivityMixin {
           Get.back();
         }
         if (date == null || viewableTime!.isBefore(now)) {
-          controller.initEndAdmobAdId(controller.selectedAd.value);
-
           await controller.exerciseEndRewardedAdInit(
-            controller.selectedAd.value,
-            successCallback: () {
-              controller.updateAbleViewAd();
-            },
-            errorCallback: () {
-              controller.updateNotAbleViewAd();
-            },
+            'exerciseEndAd',
           );
           if (controller.userState.value.exercise!.rewardGo! > 0) {
             showEndExerciseAdDialog(challenge, controller);
@@ -541,6 +529,14 @@ mixin ActivityMixin {
         stopProgress.value += (10 / 500);
       }
     });
+  }
+
+  void checkShowEndPopup(source, challenge) {
+    if (source != null && source == 'pendingExerciseDialog') {
+      endExercise(challenge, source: source);
+    } else {
+      showEndExerciseDialog(challenge);
+    }
   }
 
   void onTapUpStop(TapUpDetails tapUpDetails, {String? source}) {
@@ -579,6 +575,10 @@ mixin ActivityMixin {
   }
 
   Future<void> endExercise(ChallengeModel challenge, {String? source, String? adId}) async {
+    if (isFakeGps.value) {
+      return;
+    }
+
     if (adId != null) {
       userState.update(
         (state) {

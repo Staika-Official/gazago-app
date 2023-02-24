@@ -5,6 +5,7 @@ import 'package:another_xlider/another_xlider.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:gaza_go/constants/enums.dart';
 import 'package:gaza_go/constants/routes.dart';
 import 'package:gaza_go/platform/controllers/activity_controller.dart';
@@ -416,6 +417,41 @@ Future<void> showGpsAlert() async {
           children: [
             TextSpan(text: 'GPS', style: TextStyle(color: skyBlueColor)),
             const TextSpan(text: ' 기능을 활성화 시켜주세요.'),
+          ],
+        ),
+      ),
+    ),
+    actions: [
+      Expanded(
+        child: GazagoButton(
+          buttonText: '확인',
+          onTap: () {
+            Get.back();
+          },
+        ),
+      ),
+    ],
+  );
+}
+
+void showFakeGpsAlert() async {
+  await showAlert(
+    title: '알림',
+    contentWidget: Padding(
+      padding: EdgeInsets.only(top: 30.sp, bottom: 50.sp),
+      child: Text.rich(
+        textAlign: TextAlign.center,
+        style: TextStyle(
+          fontSize: 18.sp,
+          height: 24.sp / 18.sp,
+          fontWeight: FontWeight.w500,
+          color: Colors.white,
+        ),
+        TextSpan(
+          text: '비정상적인 ',
+          children: [
+            TextSpan(text: 'GPS 활동', style: TextStyle(color: skyBlueColor)),
+            const TextSpan(text: '이 감지되었습니다.'),
           ],
         ),
       ),
@@ -1838,7 +1874,7 @@ Future<void> showForceLogoutAlert() {
   return forceLogoutAlertCompleter.future;
 }
 
-void showAdTipAlert() {
+void showAdTipAlert(ExerciseType exerciseType) {
   Get.dialog(
     barrierColor: Colors.transparent,
     WillPopScope(
@@ -1893,7 +1929,7 @@ void showAdTipAlert() {
                                         color: const Color.fromRGBO(0, 0, 0, 0.85),
                                         offset: const Offset(0, 2),
                                         blurRadius: 0,
-                                        spreadRadius: 2.sp,
+                                        spreadRadius: 1.sp,
                                       )
                                     ],
                                     borderRadius: BorderRadius.circular(14.sp),
@@ -1907,13 +1943,22 @@ void showAdTipAlert() {
                                           padding: EdgeInsets.only(top: 12.sp),
                                           child: FittedBox(
                                             alignment: Alignment.topCenter,
-                                            child: StyledText(
-                                              '5GO 획득하고 시작하기',
-                                              color: Colors.black,
-                                              fontSize: 20,
-                                              fontWeight: 600,
-                                              lineHeight: 20,
-                                              fontFamily: 'Montserrat',
+                                            child: Text.rich(
+                                              textAlign: TextAlign.center,
+                                              style: TextStyle(
+                                                fontSize: 20.sp,
+                                                height: 24.sp / 18.sp,
+                                                fontWeight: FontWeight.w600,
+                                                color: Colors.black,
+                                                fontFamily: 'Montserrat',
+                                              ),
+                                              TextSpan(
+                                                text: exerciseType == ExerciseType.walking ? '1' : '3',
+                                                children: const [
+                                                  TextSpan(text: 'GO', style: TextStyle(fontWeight: FontWeight.w800)),
+                                                  TextSpan(text: ' 획득하고 시작하기'),
+                                                ],
+                                              ),
                                             ),
                                           ),
                                         ),
@@ -1922,7 +1967,7 @@ void showAdTipAlert() {
                                   ),
                                 ),
                               ),
-                              Positioned(right: 20, top: 120, child: iconHand),
+                              Positioned(right: 20, top: 100, child: iconHand),
                             ]),
                           ),
                           Text.rich(
@@ -2321,5 +2366,53 @@ Future<void> showMainPopupAlert(ActivityController activityController) async {
         ),
       ),
     ),
+  );
+}
+
+void showNotChallangeAbleAlert(ActivityController controller) {
+  showAlert(
+    contentWidget: Padding(
+      padding: EdgeInsets.only(top: 20.0.sp, bottom: 40.sp),
+      child: Column(
+        children: [
+          Padding(
+            padding: EdgeInsets.only(bottom: 20.0.sp),
+            child: SvgPicture.asset(
+              'assets/images/common/ico_challange_marker.svg',
+              width: 40.sp,
+              height: 40.sp,
+            ),
+          ),
+          const StyledText(
+            '현재 챌린시 시작점 위치가 아닙니다.\n시작점은 챌린지 가이드에서 확인해보세요!',
+            fontSize: 18,
+            lineHeight: 24,
+            fontWeight: 500,
+            letterSpacing: .2,
+            textAlign: TextAlign.center,
+          ),
+        ],
+      ),
+    ),
+    actions: [
+      Expanded(
+        child: GazagoButton(
+          onTap: () => Get.back(),
+          buttonText: '취소',
+          textColor: Colors.white,
+          buttonColor: popupBgColor,
+        ),
+      ),
+      SizedBox(
+        width: 9.sp,
+      ),
+      Expanded(
+        child: GazagoButton(
+          onTap: () => {Get.back(), controller.moveToChallengeMap()},
+          buttonText: '챌린지 가이드',
+          buttonColor: skyBlueColor,
+        ),
+      ),
+    ],
   );
 }

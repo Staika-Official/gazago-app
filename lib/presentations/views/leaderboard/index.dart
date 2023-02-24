@@ -210,6 +210,14 @@ class LeaderboardHome extends StatelessWidget {
         mainAxisAlignment: MainAxisAlignment.start,
         children: [
           iconMyRankArrow,
+          // SizedBox(
+          //   width: 20,
+          //   child: Text(
+          //     myRank.rank.toString(),
+          //     style: TextStyle(color: skyBlueColor, fontSize: 14.sp, fontWeight: FontWeight.w600),
+          //     textAlign: TextAlign.center,
+          //   ),
+          // ),
           ConstrainedBox(
             constraints: BoxConstraints(maxWidth: 60, minWidth: 60),
             child: FittedBox(
@@ -217,7 +225,7 @@ class LeaderboardHome extends StatelessWidget {
               child: Padding(
                 padding: const EdgeInsets.only(right: 10),
                 child: Text(
-                  formatDecimalPlaces(myRank.rank!.toDouble(), 0),
+                  myRank.rank!.toString(),
                   style: TextStyle(color: skyBlueColor, fontSize: 14.sp, fontWeight: FontWeight.w600),
                   textAlign: TextAlign.center,
                 ),
@@ -303,7 +311,7 @@ class LeaderboardHome extends StatelessWidget {
               child: Padding(
                 padding: const EdgeInsets.only(right: 10),
                 child: Text(
-                  formatDecimalPlaces(ranker.rank!.toDouble(), 0),
+                  ranker.rank!.toString(),
                   style: TextStyle(
                     color: Colors.white,
                     fontSize: 14.sp,
