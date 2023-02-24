@@ -1967,7 +1967,7 @@ void showAdTipAlert(ExerciseType exerciseType) {
                                   ),
                                 ),
                               ),
-                              Positioned(right: 20, top: 120, child: iconHand),
+                              Positioned(right: 20, top: 100, child: iconHand),
                             ]),
                           ),
                           Text.rich(

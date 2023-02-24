@@ -35,7 +35,7 @@ class AdSelect extends StatelessWidget {
                     fontFamily: 'Montserrat',
                   ),
                   Padding(
-                    padding: EdgeInsets.only(bottom: 2.0.sp, left: 7.0.sp),
+                    padding: EdgeInsets.only(bottom: 0.sp, left: 7.0.sp),
                     child: InkWell(
                       onTap: () => controller.showAdTip(),
                       child: iconExclamation,
