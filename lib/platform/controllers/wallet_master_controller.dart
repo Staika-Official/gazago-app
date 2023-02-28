@@ -17,8 +17,10 @@ import 'package:gaza_go/platform/models/user_account_model.dart';
 import 'package:gaza_go/platform/services/uaa_service.dart';
 import 'package:gaza_go/platform/services/wallet_service.dart';
 import 'package:gaza_go/presentations/components/gazago_button.dart';
+import 'package:gaza_go/presentations/components/product_list_dialog.dart';
 import 'package:gaza_go/presentations/styles/colors.dart';
 import 'package:get/get.dart';
+import 'package:in_app_purchase/in_app_purchase.dart';
 
 class WalletMasterController extends GetxController {
   final RxList<AssetTokenBalanceModel> spendingTokens = RxList.empty();
@@ -33,6 +35,11 @@ class WalletMasterController extends GetxController {
   final ScrollController transactionScrollController = ScrollController();
   final RxDouble transactionScrollPosition = RxDouble(0);
   final GlobalKey webViewKey = GlobalKey();
+
+  late StreamSubscription<List<PurchaseDetails>> subscription;
+  final RxBool storeUnavailable = RxBool(false);
+  final RxBool showPendingPurchaseUI = RxBool(false);
+  final RxList<ProductDetails> inAppProducts = RxList.empty();
 
   RxList<AssetTokenBalanceModel> get spendingTokenUiList {
     List<AssetTokenBalanceModel> balanceUiList = List.empty(growable: true);
@@ -113,6 +120,13 @@ class WalletMasterController extends GetxController {
     }
 
     return RxList(transactionsList);
+  }
+
+  @override
+  onInit() {
+    initInAppPurchaseStream();
+    connectToStores();
+    super.onInit();
   }
 
   Future<void> initializeController() async {
@@ -215,5 +229,91 @@ class WalletMasterController extends GetxController {
   void moveToWallet() async {
     getSpendingWalletBalances();
     Get.toNamed(Routes.wallet);
+  }
+
+  void initInAppPurchaseStream() {
+    final Stream<List<PurchaseDetails>> purchaseUpdated = InAppPurchase.instance.purchaseStream;
+    subscription = purchaseUpdated.listen((purchaseDetailsList) {
+      _listenToPurchaseUpdated(purchaseDetailsList);
+    }, onDone: () {
+      subscription.cancel();
+    }, onError: (error) {
+      // handle error here.
+    });
+  }
+
+  void _listenToPurchaseUpdated(List<PurchaseDetails> purchaseDetailsList) {
+    purchaseDetailsList.forEach((PurchaseDetails purchaseDetails) async {
+      if (purchaseDetails.status == PurchaseStatus.pending) {
+        showPendingPurchaseUI.value = true;
+      } else {
+        if (purchaseDetails.status == PurchaseStatus.error) {
+          _handlePurchaseError(purchaseDetails.error!);
+        } else if (purchaseDetails.status == PurchaseStatus.purchased || purchaseDetails.status == PurchaseStatus.restored) {
+          bool valid = await _verifyPurchase(purchaseDetails);
+          if (valid) {
+            _deliverProduct(purchaseDetails);
+          } else {
+            _handleInvalidPurchase(purchaseDetails);
+          }
+        }
+
+        if (purchaseDetails.pendingCompletePurchase) {
+          await _completePurchaseInAppItem(purchaseDetails);
+        }
+      }
+    });
+  }
+
+  void connectToStores() async {
+    final bool available = await InAppPurchase.instance.isAvailable();
+    if (!available) {
+      storeUnavailable.value = true;
+    } else {
+      const Set<String> _kIds = <String>{'ptik_purchase', 'ptik_purchase_1'};
+      final ProductDetailsResponse response = await InAppPurchase.instance.queryProductDetails(_kIds);
+      if (response.notFoundIDs.isNotEmpty) {
+        showToastPopup('구매할 수 있는 상품을 찾지 못했습니다.');
+      }
+      inAppProducts.value = response.productDetails;
+    }
+  }
+
+  void showProductDialog() {
+    showProductList(this);
+  }
+
+  void purchaseInAppItem(ProductDetails product) {
+    InAppPurchase.instance.buyConsumable(purchaseParam: PurchaseParam(productDetails: product));
+  }
+
+  void _handlePurchaseError(IAPError error) {
+    showPendingPurchaseUI.value = false;
+    showToastPopup('구매에 실패했습니다.\n잠시후 다시 요청해주세요');
+  }
+
+  Future<bool> _verifyPurchase(PurchaseDetails purchaseDetails) {
+    // IMPORTANT!! Always verify a purchase before delivering the product.
+    // For the purpose of an example, we directly return true.
+    return Future<bool>.value(true);
+  }
+
+  void _deliverProduct(PurchaseDetails purchaseDetails) {
+    showPendingPurchaseUI.value = false;
+    showToastPopup('타이카 구매 요청!!!!!!');
+  }
+
+  void _handleInvalidPurchase(PurchaseDetails purchaseDetails) {
+    // handle invalid purchase here if  _verifyPurchase` failed.
+    showPendingPurchaseUI.value = false;
+    showToastPopup('구매할 수 없는 상품입니다.');
+  }
+
+  Future<void> _completePurchaseInAppItem(PurchaseDetails purchaseDetails) async {
+    showPendingPurchaseUI.value = false;
+    await InAppPurchase.instance.completePurchase(purchaseDetails);
+    Get.until((route) => Get.isDialogOpen == false);
+    showToastPopup('구매가 완료되었습니다.');
+    getSpendingWalletBalances();
   }
 }

@@ -20,9 +20,8 @@ class SpendingWallet extends StatelessWidget {
             child: AssetItemCoin(
               asset: asset,
               onTap: () => controller.moveToWalletDetail(asset: asset, walletType: WalletType.inventory, assetType: asset.name!.toUpperCase() == 'TAIKA' ? AssetType.token : AssetType.coin),
-              // TODO. 외부지갑 기능 연동시 다시 기능 개선 / 주석 해제
-              // onTapButton: asset.meta!.name.toUpperCase() == 'TAIKA' ? () => controller.toBuyTik() : null,
-              // buttonText: asset.meta!.name.toUpperCase() == 'TAIKA' ? '충전' : null,
+              onTapButton: asset.name!.toUpperCase() == 'TAIKA' ? () => controller.showProductDialog() : null,
+              buttonText: asset.name!.toUpperCase() == 'TAIKA' ? 'TIK 충전하기' : null,
               showPrice: false,
             ),
           ),
