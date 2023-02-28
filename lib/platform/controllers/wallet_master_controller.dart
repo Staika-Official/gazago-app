@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:io';
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -36,7 +37,7 @@ class WalletMasterController extends GetxController {
   final RxDouble transactionScrollPosition = RxDouble(0);
   final GlobalKey webViewKey = GlobalKey();
 
-  late StreamSubscription<List<PurchaseDetails>> subscription;
+  StreamSubscription<List<PurchaseDetails>>? subscription;
   final RxBool storeUnavailable = RxBool(false);
   final RxBool showPendingPurchaseUI = RxBool(false);
   final RxList<ProductDetails> inAppProducts = RxList.empty();
@@ -233,10 +234,10 @@ class WalletMasterController extends GetxController {
 
   void initInAppPurchaseStream() {
     final Stream<List<PurchaseDetails>> purchaseUpdated = InAppPurchase.instance.purchaseStream;
-    subscription = purchaseUpdated.listen((purchaseDetailsList) {
+    subscription ??= purchaseUpdated.listen((purchaseDetailsList) {
       _listenToPurchaseUpdated(purchaseDetailsList);
     }, onDone: () {
-      subscription.cancel();
+      subscription!.cancel();
     }, onError: (error) {
       // handle error here.
     });
@@ -270,7 +271,7 @@ class WalletMasterController extends GetxController {
     if (!available) {
       storeUnavailable.value = true;
     } else {
-      const Set<String> _kIds = <String>{'ptik_purchase', 'ptik_purchase_1'};
+      Set<String> _kIds = Platform.isIOS ? <String>{'ptik_purchase'} : <String>{'ptik_purchase_1'};
       final ProductDetailsResponse response = await InAppPurchase.instance.queryProductDetails(_kIds);
       if (response.notFoundIDs.isNotEmpty) {
         showToastPopup('구매할 수 있는 상품을 찾지 못했습니다.');

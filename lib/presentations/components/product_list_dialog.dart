@@ -61,66 +61,77 @@ void showProductList(WalletMasterController controller) {
     barrierDismissible: false,
     Dialog(
       insetPadding: EdgeInsets.zero,
-      child: Container(
-        width: double.infinity,
-        color: popupBgColor,
-        child: Column(
-          mainAxisSize: MainAxisSize.max,
-          children: [
-            Stack(
-              alignment: Alignment.center,
-              children: [
-                Container(
-                  width: double.infinity,
-                  padding: const EdgeInsets.symmetric(vertical: 20),
-                  child: StyledText(
-                    'TIK 충전하기',
-                    fontSize: 20,
-                    color: Colors.white,
-                    textAlign: TextAlign.center,
-                  ),
-                ),
-                Positioned(
-                  right: 14,
-                  top: 14,
-                  child: InkWell(
-                    onTap: () => Get.back(),
-                    child: iconCloseWhite,
-                  ),
-                ),
-              ],
-            ),
-            Expanded(
-              child: SingleChildScrollView(
-                child: Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: Obx(() {
-                    if (controller.storeUnavailable.value) {
-                      return SizedBox(
-                        width: double.infinity,
-                        child: StyledText(
-                          '상점과 연결에 실패했습니다.',
-                          fontSize: 16,
-                          textAlign: TextAlign.center,
+      child: Obx(() {
+        return Container(
+          width: double.infinity,
+          color: popupBgColor,
+          child: controller.showPendingPurchaseUI.value
+              ? Center(
+                  child: WillPopScope(
+                    onWillPop: () async => false,
+                    child: Column(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        Padding(
+                          padding: const EdgeInsets.all(8.0),
+                          child: StyledText('결제요청을 처리중입니다.'),
                         ),
-                      );
-                    }
-                    return controller.showPendingPurchaseUI.value
-                        ? Center(
-                            child: CircularProgressIndicator(),
-                          )
-                        : Column(
-                            children: [
-                              ...renderProductList(controller),
-                            ],
-                          );
-                  }),
+                        CircularProgressIndicator(),
+                      ],
+                    ),
+                  ),
+                )
+              : Column(
+                  mainAxisSize: MainAxisSize.max,
+                  children: [
+                    Stack(
+                      alignment: Alignment.center,
+                      children: [
+                        Container(
+                          width: double.infinity,
+                          padding: const EdgeInsets.symmetric(vertical: 20),
+                          child: StyledText(
+                            'TIK 충전하기',
+                            fontSize: 20,
+                            color: Colors.white,
+                            textAlign: TextAlign.center,
+                          ),
+                        ),
+                        Positioned(
+                          right: 14,
+                          top: 14,
+                          child: InkWell(
+                            onTap: () => Get.back(),
+                            child: iconCloseWhite,
+                          ),
+                        ),
+                      ],
+                    ),
+                    Expanded(
+                      child: SingleChildScrollView(
+                        child: Padding(
+                          padding: const EdgeInsets.all(8.0),
+                          child: controller.storeUnavailable.value
+                              ? SizedBox(
+                                  width: double.infinity,
+                                  child: StyledText(
+                                    '상점과 연결에 실패했습니다.',
+                                    fontSize: 16,
+                                    textAlign: TextAlign.center,
+                                  ),
+                                )
+                              : Column(
+                                  children: [
+                                    ...renderProductList(controller),
+                                  ],
+                                ),
+                        ),
+                      ),
+                    ),
+                  ],
                 ),
-              ),
-            ),
-          ],
-        ),
-      ),
+        );
+      }),
     ),
   );
 }
