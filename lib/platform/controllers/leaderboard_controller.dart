@@ -56,6 +56,13 @@ class LeaderboardController extends GetxController with ScrollMixin {
     return RxString(DateFormat('yyyy-MM-dd').format(selectedDate.value!.toLocal()).toString());
   }
 
+  RxString get checkRewardDate {
+    if (DateFormat('yyyy-MM-dd').format(selectedDate.value!.toLocal()) == DateFormat('yyyy-MM-dd').format(today.value!.toLocal())) {
+      return RxString('실시간 예측 리워드');
+    }
+    return RxString('확정 리워드');
+  }
+
   RxInt page = RxInt(0);
   RxInt size = RxInt(100);
 

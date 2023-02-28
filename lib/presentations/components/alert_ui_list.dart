@@ -2075,7 +2075,6 @@ void showAdTipAlert(ExerciseType exerciseType) {
   );
 }
 
-
 void showLeaderboardInfo() {
   Get.dialog(
     barrierColor: Colors.transparent,
@@ -2159,136 +2158,142 @@ void showLeaderboardInfo() {
                                   ),
                                 ),
                               ),
-                              Padding(
-                                padding: EdgeInsets.only(
-                                  left: 20.sp,
-                                  top: 20.sp,
-                                  bottom: 10.sp,
-                                ),
-                                child: Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    Padding(
-                                      padding: const EdgeInsets.only(bottom: 5),
-                                      child: Row(
-                                        crossAxisAlignment: CrossAxisAlignment.center,
+                              Row(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  Padding(
+                                    padding: EdgeInsets.only(
+                                      top: 20.sp,
+                                      bottom: 10.sp,
+                                    ),
+                                    child: Align(
+                                      child: Column(
+                                        crossAxisAlignment: CrossAxisAlignment.start,
                                         children: [
-                                          Container(
-                                            width: 16.sp,
-                                            height: 16.sp,
-                                            margin: EdgeInsets.only(right: 10),
-                                            decoration: BoxDecoration(
-                                              color: numberedBoxGrayColor,
-                                              borderRadius: BorderRadius.circular(2),
-                                              border: Border.all(
-                                                color: Colors.black,
-                                              ),
-                                              boxShadow: [
-                                                BoxShadow(
-                                                  color: const Color.fromRGBO(0, 0, 0, 1),
-                                                  offset: const Offset(1, 1),
-                                                  blurRadius: 0,
-                                                  spreadRadius: 0.sp,
-                                                )
+                                          Padding(
+                                            padding: const EdgeInsets.only(bottom: 5),
+                                            child: Row(
+                                              crossAxisAlignment: CrossAxisAlignment.center,
+                                              children: [
+                                                Container(
+                                                  width: 16.sp,
+                                                  height: 16.sp,
+                                                  margin: EdgeInsets.only(right: 10),
+                                                  decoration: BoxDecoration(
+                                                    color: numberedBoxGrayColor,
+                                                    borderRadius: BorderRadius.circular(2),
+                                                    border: Border.all(
+                                                      color: Colors.black,
+                                                    ),
+                                                    boxShadow: [
+                                                      BoxShadow(
+                                                        color: const Color.fromRGBO(0, 0, 0, 1),
+                                                        offset: const Offset(1, 1),
+                                                        blurRadius: 0,
+                                                        spreadRadius: 0.sp,
+                                                      )
+                                                    ],
+                                                  ),
+                                                  child: Center(
+                                                    child: StyledText(
+                                                      '1',
+                                                      fontSize: 10.sp,
+                                                      lineHeight: 10.sp,
+                                                      fontWeight: 500,
+                                                    ),
+                                                  ),
+                                                ),
+                                                StyledText(
+                                                  '어제 사용자가 사용한 TIK의 합계',
+                                                  fontSize: 14.sp,
+                                                  lineHeight: 16.sp,
+                                                  fontWeight: 500,
+                                                ),
                                               ],
-                                            ),
-                                            child: Center(
-                                              child: StyledText(
-                                                '1',
-                                                fontSize: 10.sp,
-                                                lineHeight: 10.sp,
-                                                fontWeight: 500,
-                                              ),
                                             ),
                                           ),
                                           StyledText(
-                                            '어제 사용자가 사용한 TIK의 합계',
+                                            '· 체력 충전 총합',
                                             fontSize: 14.sp,
-                                            lineHeight: 16.sp,
+                                            lineHeight: 22.sp,
                                             fontWeight: 500,
-                                          ),
-                                        ],
-                                      ),
-                                    ),
-                                    StyledText(
-                                      '· 체력 충전 총합',
-                                      fontSize: 14.sp,
-                                      lineHeight: 22.sp,
-                                      fontWeight: 500,
-                                      color: tikColor,
-                                    ),
-                                    StyledText(
-                                      ' · 내구도 충전',
-                                      fontSize: 14.sp,
-                                      lineHeight: 22.sp,
-                                      fontWeight: 500,
-                                      color: tikColor,
-                                    ),
-                                    StyledText(
-                                      '· 아이템 구매',
-                                      fontSize: 14.sp,
-                                      lineHeight: 22.sp,
-                                      fontWeight: 500,
-                                      color: tikColor,
-                                    ),
-                                    StyledText(
-                                      '· 기프티콘 구매 일부 비용',
-                                      fontSize: 14.sp,
-                                      lineHeight: 22.sp,
-                                      fontWeight: 500,
-                                      color: tikColor,
-                                    ),
-                                    StyledText(
-                                      '· 2달 전의 광고 수익을 Day로 나눈 값',
-                                      fontSize: 14.sp,
-                                      lineHeight: 22.sp,
-                                      fontWeight: 500,
-                                      color: tikColor,
-                                    ),
-                                    Padding(
-                                      padding: const EdgeInsets.only(top: 10),
-                                      child: Row(
-                                        crossAxisAlignment: CrossAxisAlignment.center,
-                                        children: [
-                                          Container(
-                                            width: 16.sp,
-                                            height: 16.sp,
-                                            margin: EdgeInsets.only(right: 10),
-                                            decoration: BoxDecoration(
-                                              color: numberedBoxGrayColor,
-                                              borderRadius: BorderRadius.circular(2),
-                                              border: Border.all(
-                                                color: Colors.black,
-                                              ),
-                                              boxShadow: [
-                                                BoxShadow(
-                                                  color: const Color.fromRGBO(0, 0, 0, 1),
-                                                  offset: const Offset(1, 1),
-                                                  blurRadius: 0,
-                                                  spreadRadius: 0.sp,
-                                                )
-                                              ],
-                                            ),
-                                            child: Center(
-                                              child: StyledText(
-                                                '2',
-                                                fontSize: 10.sp,
-                                                lineHeight: 10.sp,
-                                                fontWeight: 500,
-                                              ),
-                                            ),
+                                            color: tikColor,
                                           ),
                                           StyledText(
-                                            '가자고 팀이 추가 제공한 TIK',
+                                            '· 내구도 충전',
                                             fontSize: 14.sp,
-                                            lineHeight: 16.sp,
+                                            lineHeight: 22.sp,
                                             fontWeight: 500,
+                                            color: tikColor,
                                           ),
+                                          StyledText(
+                                            '· 아이템 구매',
+                                            fontSize: 14.sp,
+                                            lineHeight: 22.sp,
+                                            fontWeight: 500,
+                                            color: tikColor,
+                                          ),
+                                          StyledText(
+                                            '· 기프티콘 구매 일부 비용',
+                                            fontSize: 14.sp,
+                                            lineHeight: 22.sp,
+                                            fontWeight: 500,
+                                            color: tikColor,
+                                          ),
+                                          StyledText(
+                                            '· 2달 전의 광고 수익을 Day로 나눈 값',
+                                            fontSize: 14.sp,
+                                            lineHeight: 22.sp,
+                                            fontWeight: 500,
+                                            color: tikColor,
+                                          ),
+                                          Padding(
+                                            padding: const EdgeInsets.only(top: 10),
+                                            child: Row(
+                                              crossAxisAlignment: CrossAxisAlignment.center,
+                                              children: [
+                                                Container(
+                                                  width: 16.sp,
+                                                  height: 16.sp,
+                                                  margin: EdgeInsets.only(right: 10),
+                                                  decoration: BoxDecoration(
+                                                    color: numberedBoxGrayColor,
+                                                    borderRadius: BorderRadius.circular(2),
+                                                    border: Border.all(
+                                                      color: Colors.black,
+                                                    ),
+                                                    boxShadow: [
+                                                      BoxShadow(
+                                                        color: const Color.fromRGBO(0, 0, 0, 1),
+                                                        offset: const Offset(1, 1),
+                                                        blurRadius: 0,
+                                                        spreadRadius: 0.sp,
+                                                      )
+                                                    ],
+                                                  ),
+                                                  child: Center(
+                                                    child: StyledText(
+                                                      '2',
+                                                      fontSize: 10.sp,
+                                                      lineHeight: 10.sp,
+                                                      fontWeight: 500,
+                                                    ),
+                                                  ),
+                                                ),
+                                                StyledText(
+                                                  '가자고 팀이 추가 제공한 TIK',
+                                                  fontSize: 14.sp,
+                                                  lineHeight: 16.sp,
+                                                  fontWeight: 500,
+                                                ),
+                                              ],
+                                            ),
+                                          )
                                         ],
                                       ),
-                                    )
-                                  ],
-                                ),
+                                    ),
+                                  ),
+                                ],
                               )
                             ],
                           ),
@@ -2296,12 +2301,11 @@ void showLeaderboardInfo() {
                       ],
                     ),
                   ),
-                  Positioned(right: 22, top: 22, child: InkWell(onTap: () => Get.back(), child: iconCloseWhite)),
+                  Positioned(right: 12, top: 20, child: InkWell(onTap: () => Get.back(), child: iconCloseWhite)),
                 ],
               ),
             ],
           ),
-
         ),
       ),
     ),
@@ -2362,7 +2366,7 @@ Future<void> showMainPopupAlert(ActivityController activityController) async {
                 ),
               ),
             ),
-          ],      
+          ],
         ),
       ),
     ),

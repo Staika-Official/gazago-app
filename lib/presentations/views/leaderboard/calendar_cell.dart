@@ -55,12 +55,16 @@ class CalendarCell extends StatelessWidget {
           if (dailyReward.tikAmount != null)
             FittedBox(
               fit: BoxFit.scaleDown,
-              child: StyledText(
-                '+${formatDecimalPlaces(dailyReward.tikAmount!.toDouble(), 0)}',
-                fontSize: 12.sp,
-                lineHeight: 16.sp,
-                fontWeight: 600,
-                color: tikColor,
+              child: Column(
+                children: [
+                  StyledText(
+                    '+${formatDecimalPlaces(dailyReward.tikAmount!.toDouble(), 0)}',
+                    fontSize: 12.sp,
+                    lineHeight: 16.sp,
+                    fontWeight: 600,
+                    color: tikColor,
+                  ),
+                ],
               ),
             ),
           if (dailyReward.stikAmount != null)
