@@ -271,7 +271,7 @@ class WalletMasterController extends GetxController {
     if (!available) {
       storeUnavailable.value = true;
     } else {
-      Set<String> _kIds = Platform.isIOS ? <String>{'ptik_purchase'} : <String>{'ptik_purchase_1'};
+      Set<String> _kIds = Platform.isIOS ? <String>{'ptik_purchase', 'ptik_purchase_test'} : <String>{'ptik_purchase_1'};
       final ProductDetailsResponse response = await InAppPurchase.instance.queryProductDetails(_kIds);
       if (response.notFoundIDs.isNotEmpty) {
         showToastPopup('구매할 수 있는 상품을 찾지 못했습니다.');
