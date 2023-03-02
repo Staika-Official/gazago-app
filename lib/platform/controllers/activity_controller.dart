@@ -310,9 +310,18 @@ class ActivityController extends SuperController with ActivityMixin, ChallengeMi
     costTik.value = 0;
   }
 
+  void initRepairButton() {
+    if (disableButton.value) {
+      Timer(const Duration(seconds: 1), () {
+        disableButton.value = false;
+      });
+    }
+  }
+
   void closeRepairPopup() {
     initRepairInfo();
     Get.back();
+    initRepairButton();
   }
 
   void onClickRepairStat(stat) {
@@ -327,6 +336,7 @@ class ActivityController extends SuperController with ActivityMixin, ChallengeMi
 
   void handleNotEnoughTaikaPopup() {
     showNotEnoughTaikaAlert();
+    initRepairButton();
   }
 
   void fetchRechargeStamina(type) async {
@@ -347,20 +357,16 @@ class ActivityController extends SuperController with ActivityMixin, ChallengeMi
           showToastPopup('체력이 충전되었습니다.');
           closeRepairPopup();
         }, errorCallback: () {
-          Timer(const Duration(milliseconds: 500), () {
-            disableButton.value = false;
-          });
+          showToastPopup('충전 요청이 실패했습니다.');
+          initRepairButton();
         });
       } else {
         showToastPopup('충전할 게이지를 확인해주세요.');
+        initRepairButton();
       }
     } else {
       handleNotEnoughTaikaPopup();
     }
-
-    Timer(const Duration(milliseconds: 500), () {
-      disableButton.value = false;
-    });
   }
 
   void fetchRepairShoes() async {
@@ -381,20 +387,16 @@ class ActivityController extends SuperController with ActivityMixin, ChallengeMi
           showToastPopup('내구도 충전이 완료되었습니다.');
           closeRepairPopup();
         }, errorCallback: () {
-          Timer(const Duration(milliseconds: 500), () {
-            disableButton.value = false;
-          });
+          showToastPopup('충전 요청이 실패했습니다.');
+          initRepairButton();
         });
       } else {
         showToastPopup('충전할 게이지를 확인해주세요.');
+        initRepairButton();
       }
     } else {
       handleNotEnoughTaikaPopup();
     }
-
-    Timer(const Duration(milliseconds: 500), () {
-      disableButton.value = false;
-    });
   }
 
   Future<void> getUserState() async {

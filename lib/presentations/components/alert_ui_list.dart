@@ -301,12 +301,14 @@ void showRepairStatSlider(ActivityController controller, StatModel stat, int fee
         width: 9.sp,
       ),
       Expanded(
-        child: GazagoButton(
-          onTap: () => stat.type == 'STAMINA' ? controller.fetchRechargeStamina(stat.type) : controller.fetchRepairShoes(),
-          disableButton: controller.disableButton.value,
-          buttonText: '네',
-          buttonColor: skyBlueColor,
-        ),
+        child: Obx(() {
+          return GazagoButton(
+            onTap: () => stat.type == 'STAMINA' ? controller.fetchRechargeStamina(stat.type) : controller.fetchRepairShoes(),
+            disableButton: controller.disableButton.value,
+            buttonText: '네',
+            buttonColor: skyBlueColor,
+          );
+        }),
       ),
     ],
   );
