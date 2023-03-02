@@ -18,6 +18,8 @@ class ShopItemModel {
   double price;
   String? itemLabel;
   String? description;
+  String? publishType;
+  String? tradeSymbol;
 
   ShopItemModel({
     required this.id,
@@ -34,6 +36,8 @@ class ShopItemModel {
     required this.price,
     this.itemLabel,
     this.description,
+    this.publishType,
+    this.tradeSymbol,
   });
 
   factory ShopItemModel.fromJson(Map<String, dynamic> json) => _$ShopItemModelFromJson(json);

@@ -25,6 +25,7 @@ import 'package:gaza_go/presentations/views/laboratory/laboratory_solana_transfe
 import 'package:gaza_go/presentations/views/leaderboard/calendar_statistics.dart';
 import 'package:gaza_go/presentations/views/loading.dart';
 import 'package:gaza_go/presentations/views/login.dart';
+import 'package:gaza_go/presentations/views/mountain_warning.dart';
 import 'package:gaza_go/presentations/views/on_boarding.dart';
 import 'package:gaza_go/presentations/views/permissions.dart';
 import 'package:gaza_go/presentations/views/preferences/edit_biometrics.dart';
@@ -89,6 +90,7 @@ class Routes {
   static const walletActions = '/wallet/action';
   static const taikaPay = '/wallet/taika_pay';
   static const howToGo = '/activity/how_to_go';
+  static const mountainWarning = '/activity/mountain_warning';
   static const inventory = '/inventory';
   static const itemDetail = '/inventory/item/detail';
   static const badgeDetail = '/inventory/badge/detail';
@@ -151,6 +153,7 @@ class Routes {
     stepPage(name: Routes.walletActions, page: const WalletActions()),
     stepPage(name: Routes.taikaPay, page: const TaikaPay()),
     stepPage(name: Routes.howToGo, page: const HowToGo()),
+    stepPage(name: Routes.mountainWarning, page: const MountainWarning()),
     stepPage(name: Routes.inventory, page: const InventoryHome()),
     stepPage(name: Routes.itemDetail, page: const InventoryItemDetail()),
     stepPage(name: Routes.badgeDetail, page: const InventoryBadgeDetail()),

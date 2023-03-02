@@ -8,6 +8,7 @@ import 'package:flutter_naver_map/flutter_naver_map.dart';
 import 'package:gaza_go/constants/config.dart';
 import 'package:gaza_go/constants/enums.dart';
 import 'package:gaza_go/constants/routes.dart';
+import 'package:gaza_go/platform/controllers/home_menu_controller.dart';
 import 'package:gaza_go/platform/controllers/loading_controller.dart';
 import 'package:gaza_go/platform/controllers/wallet_master_controller.dart';
 import 'package:gaza_go/platform/helpers/activity_helper.dart';
@@ -62,6 +63,21 @@ class ActivityController extends SuperController with ActivityMixin, ChallengeMi
     ]);
   }
 
+  final List<Map<String, dynamic>> popupList = [
+    {
+      'imageUrl': 'assets/images/common/img_main_popup.png',
+      'type': 'HOWTOGO',
+    },
+    {
+      'imageUrl': 'assets/images/common/img_main_popup_02.png',
+      'type': 'WARNING',
+    },
+    {
+      'imageUrl': 'assets/images/common/img_main_popup_03.png',
+      'type': 'NEWITEM',
+    },
+  ];
+
   final RxDouble currentSliderValue = RxDouble(0);
   final RxInt remainDurability = RxInt(0);
   final RxInt repairDurability = RxInt(0);
@@ -91,6 +107,37 @@ class ActivityController extends SuperController with ActivityMixin, ChallengeMi
   final RxInt time = RxInt(5);
   String? advertisingId = '';
   bool? isLimitAdTrackingEnabled;
+  final RxInt _current = 0.obs;
+  late final int pageSize;
+  RxList<double> ops = [1.0, 0.0, 0.0].obs;
+  RxList<double> offsets = [0.0, 0.0, 0.0].obs;
+
+  setValue(double op) {
+    if (op > 0 && op < 1) {
+      ops[0] = 1 - op;
+      ops[1] = op;
+    } else if (op > 1 && op < 2) {
+      ops[1] = 2 - op;
+      ops[2] = -1 + op;
+    }
+
+    if (op == 0.0) {
+      ops[0] = 1;
+      ops[1] = ops[2] = 0;
+    } else if (op == 1.0) {
+      ops[1] = 1;
+      ops[0] = ops[2] = 0;
+    } else if (op == 2.0) {
+      ops[2] = 1;
+      ops[0] = ops[1] = 0;
+    }
+  }
+
+  get current => _current;
+
+  setCurrent(int index) {
+    _current.value = index;
+  }
 
   initPlatformState() async {
     // Platform messages may fail, so we use a try/catch PlatformException.
@@ -766,8 +813,19 @@ class ActivityController extends SuperController with ActivityMixin, ChallengeMi
     }
   }
 
-  void moveToHowToGo() {
-    Get.toNamed(Routes.howToGo);
+  void moveToWebView(type) {
+    switch (type) {
+      case 'HOWTOGO':
+        Get.toNamed(Routes.howToGo);
+        break;
+      case 'WARNING':
+        Get.toNamed(Routes.mountainWarning);
+        break;
+      case 'NEWITEM':
+        Get.back();
+        Get.find<HomeMenuController>().selectMenu(3);
+        break;
+    }
   }
 
   void checkPopupExpired() {

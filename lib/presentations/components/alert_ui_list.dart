@@ -3,6 +3,7 @@ import 'dart:ui';
 
 import 'package:another_xlider/another_xlider.dart';
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/flutter_svg.dart';
@@ -954,8 +955,8 @@ void itemPurchaseAlert(ShopController controller, double remainMyTik) {
                   lineHeight: 32,
                   fontWeight: 600,
                 ),
-                const StyledText(
-                  'TIK',
+                StyledText(
+                  controller.selectedItem.value.tradeSymbol!,
                   fontSize: 30,
                   lineHeight: 32,
                   fontWeight: 400,
@@ -1030,7 +1031,7 @@ void itemPurchaseAlert(ShopController controller, double remainMyTik) {
                 fontWeight: 600,
               ),
               StyledText(
-                '${formatDecimalPlaces(remainMyTik, 0)} TIK',
+                '${formatDecimalPlaces(remainMyTik, 0)} ${controller.selectedItem.value.tradeSymbol!}',
                 fontSize: 18,
                 lineHeight: 18,
                 fontWeight: 400,
@@ -1092,8 +1093,8 @@ void itemPurchaseShortBalanceAlert(ShopController controller, double remainMyTik
                   lineHeight: 32,
                   fontWeight: 600,
                 ),
-                const StyledText(
-                  'TIK',
+                StyledText(
+                  controller.selectedItem.value.tradeSymbol!,
                   fontSize: 30,
                   lineHeight: 32,
                   fontWeight: 400,
@@ -1169,7 +1170,7 @@ void itemPurchaseShortBalanceAlert(ShopController controller, double remainMyTik
                 color: dangerColor,
               ),
               StyledText(
-                '${formatDecimalPlaces(remainMyTik, 0)} TIK',
+                '${formatDecimalPlaces(remainMyTik, 0)} ${controller.selectedItem.value.tradeSymbol}',
                 fontSize: 18,
                 lineHeight: 18,
                 fontWeight: 400,
@@ -1180,7 +1181,7 @@ void itemPurchaseShortBalanceAlert(ShopController controller, double remainMyTik
           Padding(
             padding: EdgeInsets.only(top: 55.0.sp, bottom: 25.sp),
             child: StyledText(
-              '· TIK 충전 후 재시도 해주세요',
+              '· ${controller.selectedItem.value.tradeSymbol} 충전 후 재시도 해주세요',
               fontSize: 14,
               lineHeight: 14,
               fontWeight: 500,
@@ -1215,12 +1216,18 @@ void itemPurchaseCompleteAlert(ShopController controller) {
               children: [
                 SizedBox(
                   width: 150.sp,
-                  child: CachedNetworkImage(
-                    imageUrl: controller.purchaseCompleteItem.value.itemImageUrl,
-                    fit: BoxFit.fitWidth,
-                    placeholder: (context, url) => const CircularProgressIndicator(),
-                    errorWidget: (context, url, error) => Image.asset("assets/images/@temp_badge.png"),
-                  ),
+                  child: controller.purchaseCompleteItem.value.itemImageUrl.contains('.svg')
+                      ? SvgPicture.network(
+                          fit: BoxFit.contain,
+                          controller.purchaseCompleteItem.value.itemImageUrl,
+                          placeholderBuilder: (BuildContext context) => Container(padding: const EdgeInsets.all(30.0), child: const CircularProgressIndicator()),
+                        )
+                      : CachedNetworkImage(
+                          imageUrl: controller.purchaseCompleteItem.value.itemImageUrl,
+                          fit: BoxFit.fitWidth,
+                          placeholder: (context, url) => const CircularProgressIndicator(),
+                          errorWidget: (context, url, error) => Image.asset("assets/images/@temp_badge.png"),
+                        ),
                 ),
               ],
             ),
@@ -2076,6 +2083,19 @@ void showAdTipAlert(ExerciseType exerciseType) {
 }
 
 Future<void> showMainPopupAlert(ActivityController activityController) async {
+  final CarouselController carouselController = CarouselController();
+  List<Widget> getImageSliders(controller) {
+    return controller.popupList
+        .map((item) => Container(
+              width: double.infinity,
+              child: InkWell(
+                onTap: () => controller.moveToWebView(item['type']),
+                child: Image.asset(item['imageUrl']),
+              ),
+            ))
+        .toList();
+  }
+
   await Get.bottomSheet(
     isDismissible: false,
     isScrollControlled: true,
@@ -2086,12 +2106,61 @@ Future<void> showMainPopupAlert(ActivityController activityController) async {
           color: Colors.transparent,
         ),
         child: Column(
-          mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: CrossAxisAlignment.end,
+          mainAxisAlignment: MainAxisAlignment.end,
+          mainAxisSize: MainAxisSize.max,
           children: [
-            InkWell(
-              onTap: () => activityController.moveToHowToGo(),
-              child: Image.asset('assets/images/common/img_main_popup.png'),
-            ),
+            Stack(children: [
+              CarouselSlider(
+                key: const Key('Slider'),
+                items: activityController.popupList
+                    .map((item) => Container(
+                          width: double.infinity,
+                          child: InkWell(
+                            onTap: () => activityController.moveToWebView(item['type']),
+                            child: Image.asset(
+                              item['imageUrl'],
+                              width: double.infinity,
+                            ),
+                          ),
+                        ))
+                    .toList(),
+                carouselController: carouselController,
+                options: CarouselOptions(
+                  aspectRatio: 1,
+                  viewportFraction: 1,
+                  autoPlay: true,
+                  enlargeCenterPage: false,
+                  enableInfiniteScroll: false,
+                  onPageChanged: (index, reason) {
+                    activityController.setCurrent(index);
+                  },
+                  onScrolled: (op) {
+                    activityController.setValue(op!);
+                  },
+                ),
+              ),
+              Positioned(
+                  right: 20.sp,
+                  top: 12.sp,
+                  child: Obx(() {
+                    return Container(
+                      decoration: BoxDecoration(
+                        color: popupBgColor,
+                        borderRadius: BorderRadius.circular(20.sp),
+                      ),
+                      child: Padding(
+                        padding: EdgeInsets.symmetric(horizontal: 8.0.sp, vertical: 4.0.sp),
+                        child: StyledText(
+                          '${(activityController.current.value + 1).toString()}/${activityController.popupList.length}',
+                          fontSize: 16,
+                          lineHeight: 17,
+                          fontWeight: 500,
+                        ),
+                      ),
+                    );
+                  })),
+            ]),
             Container(
               color: popupBgColor,
               child: Padding(
