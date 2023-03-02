@@ -2,6 +2,7 @@ import 'dart:async';
 import 'dart:io';
 
 import 'package:advertising_id/advertising_id.dart';
+import 'package:device_info_plus/device_info_plus.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_naver_map/flutter_naver_map.dart';
@@ -27,6 +28,7 @@ import 'package:gaza_go/platform/models/user_stamina_recharge_model.dart';
 import 'package:gaza_go/platform/models/user_state_model.dart';
 import 'package:gaza_go/platform/services/activity_service.dart';
 import 'package:gaza_go/platform/services/item_service.dart';
+import 'package:gaza_go/platform/services/member_service.dart';
 import 'package:gaza_go/platform/services/uaa_service.dart';
 import 'package:gaza_go/platform/stores/hive_store.dart';
 import 'package:gaza_go/presentations/components/alert_ui_list.dart';
@@ -38,6 +40,7 @@ import 'package:gaza_go/presentations/views/activity/ad_select.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:get/get.dart';
 import 'package:health/health.dart';
+import 'package:package_info_plus/package_info_plus.dart';
 import 'package:permission_handler/permission_handler.dart' as ph;
 import 'package:simple_animations/animation_builder/custom_animation_builder.dart';
 import 'package:throttling/throttling.dart';
@@ -722,10 +725,22 @@ class ActivityController extends SuperController with ActivityMixin, ChallengeMi
     });
   }
 
-  void detectFakeGps() {
+  void detectFakeGps() async {
     //안드로이드만 탐지 가능
     if (isFakeGps.value && Get.isBottomSheetOpen != true) {
       showFakeGpsAlert();
+      PackageInfo packageInfo = await PackageInfo.fromPlatform();
+      String platform = Platform.isIOS ? 'IOS' : 'AOS';
+      DeviceInfoPlugin deviceInfo = DeviceInfoPlugin();
+      String deviceModel;
+      if (Platform.isIOS) {
+        IosDeviceInfo iosInfo = await deviceInfo.iosInfo;
+        deviceModel = iosInfo.utsname.machine ?? 'ios model unknown';
+      } else {
+        AndroidDeviceInfo androidInfo = await deviceInfo.androidInfo;
+        deviceModel = androidInfo.model;
+      }
+      MemberService.reportAbuse(description: 'Fake GPS 사용 감지', appVersion: packageInfo.version, deviceModel: deviceModel, platform: platform);
     }
   }
 
