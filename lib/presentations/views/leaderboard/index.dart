@@ -444,7 +444,7 @@ class LeaderboardHome extends StatelessWidget {
                         children: [
                           Flexible(
                               child: ListView.separated(
-                            controller: controller.scroll,
+                            controller: controller.leaderboardScrollController,
                             separatorBuilder: (context, index) => const Divider(
                               thickness: 2,
                               indent: 0,
