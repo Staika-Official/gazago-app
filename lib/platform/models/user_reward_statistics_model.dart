@@ -5,14 +5,16 @@ part 'user_reward_statistics_model.g.dart';
 //TODO. 삭제 / DailyRewardModel 와 통합
 @JsonSerializable(explicitToJson: true)
 class UserRewardStatisticsModel {
-  double go;
-  double tik;
+  int? id;
+  double? stik;
+  double? tik;
   String? date;
 
   UserRewardStatisticsModel({
-    required this.go,
-    required this.tik,
+    this.stik,
+    this.tik,
     this.date,
+    this.id,
   });
 
   factory UserRewardStatisticsModel.fromJson(Map<String, dynamic> json) => _$UserRewardStatisticsModelFromJson(json);

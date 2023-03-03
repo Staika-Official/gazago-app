@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:gaza_go/constants/enums.dart';
-import 'package:gaza_go/platform/controllers/activity_controller.dart';
 import 'package:gaza_go/platform/controllers/leaderboard_controller.dart';
 import 'package:gaza_go/platform/helpers/base_helper.dart';
 import 'package:gaza_go/platform/models/ranker_model.dart';
@@ -124,6 +123,9 @@ class LeaderboardHome extends StatelessWidget {
                   onDaySelected: (selectedDay, focusedDay) {
                     controller.calendarSelectedChanged(selectedDay);
                     Navigator.of(context).pop();
+                  },
+                  onPageChanged: (focusedDay) {
+                    controller.calendarChanged(focusedDay);
                   },
                 ),
               );
@@ -489,7 +491,7 @@ class LeaderboardHome extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     LeaderboardController controller = Get.put(LeaderboardController());
-    ActivityController activityController = Get.find();
+
     return Obx(() {
       return Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -551,7 +553,7 @@ class LeaderboardHome extends StatelessWidget {
                             crossAxisAlignment: CrossAxisAlignment.end,
                             children: [
                               StyledText(
-                                controller.todayTikAmount.value > 0 ? formatDecimalPlaces(controller.todayTikAmount.value.toDouble(), 0) : 0.toString(),
+                                controller.todayTikAmount.value > 0 ? formatDecimalPlaces(controller.todayTikAmount.value, 0) : 0.toString(),
                                 color: Colors.white,
                                 fontWeight: 600,
                                 fontSize: 30,

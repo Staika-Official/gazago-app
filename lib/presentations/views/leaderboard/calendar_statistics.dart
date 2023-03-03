@@ -63,7 +63,7 @@ class CalendarStatistics extends StatelessWidget {
                         if (events.isNotEmpty) {
                           UserRewardStatisticsModel reward = events.first as UserRewardStatisticsModel;
                           return StyledText(
-                            '+${formatDecimalPlaces(reward.tik, 1)}',
+                            '+${formatDecimalPlaces(reward.tik!.toDouble(), 1)}',
                             color: tikColor,
                           );
                         }
@@ -117,7 +117,7 @@ class CalendarStatistics extends StatelessWidget {
                       child: iconCalendarStatisticsTokenTik,
                     ),
                     StyledText(
-                      '${formatDecimalPlaces(controller.total.value, 1)} TIK',
+                      '${formatDecimalPlaces(controller.totalTik.value, 0)} TIK',
                       color: tikColor,
                       fontWeight: 600,
                       fontSize: 18,

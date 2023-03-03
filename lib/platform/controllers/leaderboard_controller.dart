@@ -1,8 +1,8 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
-import 'package:gaza_go/platform/models/daily_reward_model.dart';
 import 'package:gaza_go/platform/models/ranker_model.dart';
+import 'package:gaza_go/platform/models/user_reward_statistics_model.dart';
 import 'package:gaza_go/platform/services/dashboard_service.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
@@ -19,32 +19,13 @@ class LeaderboardController extends GetxController {
   RxList<RankerModel> rankings = RxList.empty();
   RxBool hasMore = RxBool(true);
   RxBool dataGetLoading = RxBool(false);
-  RxList<DailyRewardModel> dailyRewardList = RxList(
-    [
-      DailyRewardModel(
-        id: 1,
-        rewardedDate: DateTime(2023, 2, 6),
-        stikAmount: 100,
-        tikAmount: 500000,
-      ),
-      DailyRewardModel(
-        id: 2,
-        rewardedDate: DateTime(2023, 2, 7),
-        stikAmount: 20,
-        tikAmount: 1000000,
-      ),
-      DailyRewardModel(
-        id: 3,
-        rewardedDate: DateTime(2023, 2, 10),
-        stikAmount: 300,
-        tikAmount: 10000,
-      ),
-    ],
-  );
-  RxInt todayTikAmount = RxInt(59456);
+  RxMap<String, List<UserRewardStatisticsModel>> userMonthlyRewardMap = RxMap();
+  StreamController<RxList> streamController = StreamController();
+  RxList<UserRewardStatisticsModel> dailyRewardList = RxList.empty(growable: true);
+  RxDouble todayTikAmount = RxDouble(0.0);
 
   RxDouble totalStikRewarded = RxDouble(19.9293184);
-  RxInt totalTikRewarded = RxInt(4839679456);
+  RxDouble totalTikRewarded = RxDouble(4839679456);
   ScrollController leaderboardScrollController = ScrollController();
 
   RxString get formattedDate {
@@ -87,7 +68,11 @@ class LeaderboardController extends GetxController {
 
   Future<void> initController() async {
     _fetchMyRank();
+    _fetchTodayTik();
     _fetchRankerList(true);
+    streamController.add(dailyRewardList);
+    String month = DateFormat('yyyy-MM-dd').format(today.value!);
+    getCalendarStatistics(month);
   }
 
   Future<void> refreshController() async {
@@ -128,9 +113,41 @@ class LeaderboardController extends GetxController {
     );
   }
 
+  void _fetchTodayTik() {
+    DashboardService.getTodayRewardTik(
+      formattedDate.value,
+      successCallback: (data) {
+        todayTikAmount.value = data.rewardTik;
+      },
+    );
+  }
+
   void calendarSelectedChanged(selectedDay) {
     selectedDate.value = selectedDay;
     _fetchMyRank();
     _fetchRankerList(true);
+  }
+
+  void calendarChanged(focusedDay) {
+    today.value = focusedDay;
+    String month = DateFormat('yyyy-MM-dd').format(focusedDay);
+    getCalendarStatistics(month);
+  }
+
+  void getCalendarStatistics(month) async {
+    await DashboardService.getUserRewardStatistics(
+      month,
+      successCallback: (data) {
+        totalTikRewarded.value = data.totalTik;
+        totalStikRewarded.value = data.totalStik;
+
+        // print(rewardList);
+
+        dailyRewardList.value = data.rewards;
+        // dailyRewardList.assignAll(data.rewards);
+        dailyRewardList.refresh();
+        streamController.add(dailyRewardList);
+      },
+    );
   }
 }

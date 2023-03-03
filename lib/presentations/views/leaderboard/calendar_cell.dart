@@ -3,7 +3,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:gaza_go/constants/enums.dart';
 import 'package:gaza_go/platform/controllers/leaderboard_controller.dart';
 import 'package:gaza_go/platform/helpers/base_helper.dart';
-import 'package:gaza_go/platform/models/daily_reward_model.dart';
+import 'package:gaza_go/platform/models/user_reward_statistics_model.dart';
 import 'package:gaza_go/presentations/styles/colors.dart';
 import 'package:gaza_go/presentations/styles/styled_text.dart';
 import 'package:intl/intl.dart';
@@ -21,9 +21,9 @@ class CalendarCell extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    DailyRewardModel dailyReward = controller.dailyRewardList.singleWhere((reward) {
-      return DateFormat('yyyy-MM-dd').format(reward.rewardedDate!) == DateFormat('yyyy-MM-dd').format(date);
-    }, orElse: () => DailyRewardModel(id: -1));
+    UserRewardStatisticsModel dailyReward = controller.dailyRewardList.singleWhere((reward) {
+      return DateFormat('yyyy-MM-dd').format(DateTime.parse(reward.date!)) == DateFormat('yyyy-MM-dd').format(date);
+    }, orElse: () => UserRewardStatisticsModel(id: -1));
 
     return Padding(
       padding: EdgeInsets.symmetric(horizontal: 2, vertical: 10),
@@ -52,13 +52,13 @@ class CalendarCell extends StatelessWidget {
               ),
             ),
           ),
-          if (dailyReward.tikAmount != null)
+          if (dailyReward.tik != null)
             FittedBox(
               fit: BoxFit.scaleDown,
               child: Column(
                 children: [
                   StyledText(
-                    '+${formatDecimalPlaces(dailyReward.tikAmount!.toDouble(), 0)}',
+                    '+${formatDecimalPlaces(dailyReward.tik!.toDouble(), 0)}',
                     fontSize: 12.sp,
                     lineHeight: 16.sp,
                     fontWeight: 600,
@@ -67,11 +67,11 @@ class CalendarCell extends StatelessWidget {
                 ],
               ),
             ),
-          if (dailyReward.stikAmount != null)
+          if (dailyReward.stik != null)
             FittedBox(
               fit: BoxFit.scaleDown,
               child: StyledText(
-                '+${formatDecimalPlaces(dailyReward.stikAmount!, 2)}',
+                '+${formatDecimalPlaces(dailyReward.stik!, 2)}',
                 fontSize: 12.sp,
                 lineHeight: 16.sp,
                 fontWeight: 600,
