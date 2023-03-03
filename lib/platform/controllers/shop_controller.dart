@@ -131,28 +131,28 @@ class ShopController extends GetxController {
     }, errorCallback: (statusCode) {
       if (statusCode == 422) {
         isShortBalance.value = true;
-        showTikShortBalancePopup();
+        showTikShortBalancePopup(selectedItem.value.tradeSymbol);
       } else {
         itemPurchaseImpossibleAlert();
       }
     });
   }
 
-  void onClickPurchaseItem() {
-    if (walletMasterController.tik.value.amount! < selectedItem.value.price) {
+  void onClickPurchaseItem(tradeSymbol) {
+    if ((tradeSymbol == 'STIK' ? walletMasterController.stik.value.amount! : walletMasterController.tik.value.amount!) < selectedItem.value.price) {
       isShortBalance.value = true;
-      showTikShortBalancePopup();
+      showTikShortBalancePopup(tradeSymbol);
     } else {
-      showItemPurchasePopup();
+      showItemPurchasePopup(tradeSymbol);
     }
   }
 
-  void showItemPurchasePopup() {
-    itemPurchaseAlert(this, walletMasterController.tik.value.amount!);
+  void showItemPurchasePopup(tradeSymbol) {
+    itemPurchaseAlert(this, tradeSymbol == 'STIK' ? walletMasterController.stik.value.amount! : walletMasterController.tik.value.amount!);
   }
 
-  void showTikShortBalancePopup() {
-    itemPurchaseShortBalanceAlert(this, walletMasterController.tik.value.amount!);
+  void showTikShortBalancePopup(tradeSymbol) {
+    itemPurchaseShortBalanceAlert(this, tradeSymbol == 'STIK' ? walletMasterController.stik.value.amount! : walletMasterController.tik.value.amount!);
   }
 
   void showItemPurchaseCompletePopup() {

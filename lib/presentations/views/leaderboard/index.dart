@@ -134,6 +134,7 @@ class LeaderboardHome extends StatelessWidget {
                 margin: const EdgeInsets.only(
                   left: 30,
                   right: 30,
+                  bottom: 30,
                 ),
                 padding: const EdgeInsets.only(
                   left: 30,
@@ -432,7 +433,7 @@ class LeaderboardHome extends StatelessWidget {
                                       )),
                                   const TextSpan(text: ' + '),
                                   TextSpan(
-                                      text: '${ranker.additionTik ?? '0'}',
+                                      text: '${formatDecimalPlaces(ranker.additionTik ?? 0, 0)}',
                                       style: const TextStyle(
                                         fontWeight: FontWeight.w700,
                                       )),
@@ -773,7 +774,7 @@ class LeaderboardHome extends StatelessWidget {
                         children: [
                           Flexible(
                             child: ListView.separated(
-                              controller: controller.scroll,
+                              controller: controller.leaderboardScrollController,
                               separatorBuilder: (context, index) => const Divider(
                                 thickness: 2,
                                 indent: 0,

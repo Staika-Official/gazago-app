@@ -2,6 +2,7 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:custom_rounded_rectangle_border/custom_rounded_rectangle_border.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:gaza_go/platform/controllers/shop_controller.dart';
 import 'package:gaza_go/platform/helpers/base_helper.dart';
 import 'package:gaza_go/platform/helpers/inventory_helper.dart';
@@ -63,7 +64,7 @@ class ShopItemDetail extends StatelessWidget {
                                   return Column(
                                     children: [
                                       Padding(
-                                        padding: EdgeInsets.only(top: 40.0.sp, bottom: 25.sp),
+                                        padding: EdgeInsets.only(top: 5.0.sp, bottom: 10.sp),
                                         child: Column(
                                           children: [
                                             // Image(
@@ -71,24 +72,54 @@ class ShopItemDetail extends StatelessWidget {
                                             //   width: 150.sp,
                                             //   fit: BoxFit.fill,
                                             // ),
-                                            SizedBox(
-                                              height: 180.sp,
-                                              child: CachedNetworkImage(
-                                                imageUrl: controller.selectedItem.value.itemImageUrl!,
-                                                fit: BoxFit.fitWidth,
-                                                placeholder: (context, url) => const Center(child: SizedBox.square(dimension: 40, child: CircularProgressIndicator())),
-                                                errorWidget: (context, url, error) => Image.asset("assets/images/@temp_shoes.png"),
+
+                                            Container(
+                                              width: double.infinity,
+                                              child: Stack(
+                                                children: [
+                                                  if (controller.selectedItem.value.publishType == 'NFT')
+                                                    Positioned.fill(left: 24.sp, right: 24.sp, child: SvgPicture.asset('assets/images/shop/ico_nft_detail.svg')),
+                                                  Center(
+                                                    child: SizedBox(
+                                                      width: 150.sp,
+                                                      child: controller.selectedItem.value.itemImageUrl!.contains('.svg')
+                                                          ? SvgPicture.network(
+                                                              fit: BoxFit.contain,
+                                                              controller.selectedItem.value.itemImageUrl!,
+                                                              placeholderBuilder: (BuildContext context) => Container(padding: const EdgeInsets.all(30.0), child: const CircularProgressIndicator()),
+                                                            )
+                                                          : CachedNetworkImage(
+                                                              imageUrl: controller.selectedItem.value.itemImageUrl!,
+                                                              fit: BoxFit.fitWidth,
+                                                              placeholder: (context, url) => const Center(child: SizedBox.square(dimension: 40, child: CircularProgressIndicator())),
+                                                              errorWidget: (context, url, error) => Image.asset("assets/images/@temp_shoes.png"),
+                                                            ),
+                                                    ),
+                                                  ),
+                                                ],
                                               ),
-                                            )
+                                            ),
                                           ],
                                         ),
                                       ),
                                       Padding(
                                         padding: const EdgeInsets.only(bottom: 15.0),
-                                        child: StyledText(
-                                          controller.selectedItem.value.name,
-                                          fontSize: 18,
-                                          fontWeight: 500,
+                                        child: Row(
+                                          crossAxisAlignment: CrossAxisAlignment.center,
+                                          mainAxisAlignment: MainAxisAlignment.center,
+                                          children: [
+                                            if (controller.selectedItem.value.publishType == 'NFT')
+                                              Padding(
+                                                padding: EdgeInsets.only(right: 5.0.sp),
+                                                child: SvgPicture.asset('assets/images/shop/ico_nft_label.svg'),
+                                              ),
+                                            StyledText(
+                                              controller.selectedItem.value.name,
+                                              fontSize: 18,
+                                              lineHeight: 19,
+                                              fontWeight: 500,
+                                            ),
+                                          ],
                                         ),
                                       ),
                                       Container(
@@ -327,7 +358,7 @@ class ShopItemDetail extends StatelessWidget {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           StyledText(
-                            '${formatDecimalPlaces(controller.selectedItem.value.price.toDouble(), 0)} TIK',
+                            '${formatDecimalPlaces(controller.selectedItem.value.price.toDouble(), 0)} ${controller.selectedItem.value.tradeSymbol ?? 'TIK'}',
                             fontWeight: 500,
                             fontSize: 22,
                             lineHeight: 24,
@@ -346,7 +377,7 @@ class ShopItemDetail extends StatelessWidget {
                         ],
                       ),
                       InkWell(
-                        onTap: () => controller.onClickPurchaseItem(),
+                        onTap: () => controller.onClickPurchaseItem(controller.selectedItem.value.tradeSymbol),
                         child: Container(
                           decoration: BoxDecoration(
                             border: Border.all(width: 2.sp, color: skyBlueColor),

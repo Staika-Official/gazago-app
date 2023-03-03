@@ -68,6 +68,19 @@ class F {
     }
   }
 
+  static String get mountainWarningUrl {
+    switch (appFlavor) {
+      case Flavor.dev:
+        return 'https://blog.naver.com/gaza-go_crew/223015634731';
+      case Flavor.stage:
+        return 'https://blog.naver.com/gaza-go_crew/223015634731';
+      case Flavor.prod:
+        return 'https://blog.naver.com/gaza-go_crew/223015634731';
+      default:
+        return 'https://blog.naver.com/gaza-go_crew/223015634731';
+    }
+  }
+
   static SolanaClient get solanaClient {
     switch (appFlavor) {
       case Flavor.dev:
@@ -103,6 +116,58 @@ class F {
         return Ed25519HDPublicKey.fromBase58("92RJbkjWhnqpKMepWGe6WXo94XeAQszX2PTStS7weZLc");
       default:
         return Ed25519HDPublicKey.fromBase58("92RJbkjWhnqpKMepWGe6WXo94XeAQszX2PTStS7weZLc");
+    }
+  }
+
+  static String get startAdIos {
+    switch (appFlavor) {
+      case Flavor.dev:
+        return 'ca-app-pub-3940256099942544/1712485313';
+      case Flavor.stage:
+        return 'ca-app-pub-3940256099942544/1712485313';
+      case Flavor.prod:
+        return 'ca-app-pub-4234536720874912/7717252030';
+      default:
+        return 'ca-app-pub-3940256099942544/1712485313';
+    }
+  }
+
+  static String get startAdAndroid {
+    switch (appFlavor) {
+      case Flavor.dev:
+        return 'ca-app-pub-3940256099942544/5224354917';
+      case Flavor.stage:
+        return 'ca-app-pub-3940256099942544/5224354917';
+      case Flavor.prod:
+        return 'ca-app-pub-4234536720874912/8417209744';
+      default:
+        return 'ca-app-pub-3940256099942544/5224354917';
+    }
+  }
+
+  static String get endAdIos {
+    switch (appFlavor) {
+      case Flavor.dev:
+        return 'ca-app-pub-3940256099942544/1712485313';
+      case Flavor.stage:
+        return 'ca-app-pub-3940256099942544/1712485313';
+      case Flavor.prod:
+        return 'ca-app-pub-4234536720874912/6348330049';
+      default:
+        return 'ca-app-pub-3940256099942544/1712485313';
+    }
+  }
+
+  static String get endAdAndroid {
+    switch (appFlavor) {
+      case Flavor.dev:
+        return 'ca-app-pub-3940256099942544/5224354917';
+      case Flavor.stage:
+        return 'ca-app-pub-3940256099942544/5224354917';
+      case Flavor.prod:
+        return 'ca-app-pub-4234536720874912/9538719725';
+      default:
+        return 'ca-app-pub-3940256099942544/5224354917';
     }
   }
 }
