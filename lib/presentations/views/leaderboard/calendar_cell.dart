@@ -12,6 +12,7 @@ class CalendarCell extends StatelessWidget {
   final CalendarCellType cellType;
   final DateTime date;
   final LeaderboardController controller;
+
   const CalendarCell({
     super.key,
     this.cellType = CalendarCellType.monthDay,

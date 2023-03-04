@@ -29,107 +29,111 @@ class LeaderboardHome extends StatelessWidget {
       child: SafeArea(
         child: Wrap(
           children: [
-            Obx(() {
-              return Padding(
-                padding: EdgeInsets.only(bottom: 28.0.sp),
-                child: TableCalendar(
-                  rowHeight: 86,
-                  daysOfWeekHeight: 30,
-                  locale: 'ko-KR',
-                  firstDay: controller.firstDay.value!,
-                  lastDay: controller.lastDay.value!,
-                  focusedDay: controller.selectedDate.value!,
-                  selectedDayPredicate: (day) => isSameDay(day, controller.selectedDate.value!),
-                  calendarBuilders: CalendarBuilders(
-                    dowBuilder: (context, day) {
-                      final text = DateFormat.E().format(day);
+            StreamBuilder<RxList>(
+                stream: controller.streamController.stream,
+                builder: (context, snapshot) {
+                  return Padding(
+                    padding: EdgeInsets.only(bottom: 28.0.sp),
+                    child: Obx(() {
+                      return TableCalendar(
+                        rowHeight: 94,
+                        daysOfWeekHeight: 30,
+                        locale: 'ko-KR',
+                        firstDay: controller.firstDay.value!,
+                        lastDay: controller.lastDay.value!,
+                        focusedDay: controller.selectedDate.value!,
+                        selectedDayPredicate: (day) => isSameDay(day, controller.selectedDate.value!),
+                        calendarBuilders: CalendarBuilders(
+                          dowBuilder: (context, day) {
+                            final text = DateFormat.E().format(day);
 
-                      if (day.weekday == DateTime.sunday || day.weekday == DateTime.saturday) {
-                        return Center(
-                          child: Text(
-                            text,
-                            style: const TextStyle(
-                              color: Color(0xFFB5BEC6),
-                              fontWeight: FontWeight.w600,
-                            ),
-                          ),
-                        );
-                      }
-                      return Center(
-                        child: Text(
-                          text,
-                          style: const TextStyle(
-                            color: Color(0xFFB5BEC6),
-                            fontWeight: FontWeight.w200,
-                          ),
+                            if (day.weekday == DateTime.sunday || day.weekday == DateTime.saturday) {
+                              return Center(
+                                child: Text(
+                                  text,
+                                  style: const TextStyle(
+                                    color: Color(0xFFB5BEC6),
+                                    fontWeight: FontWeight.w600,
+                                  ),
+                                ),
+                              );
+                            }
+                            return Center(
+                              child: Text(
+                                text,
+                                style: const TextStyle(
+                                  color: Color(0xFFB5BEC6),
+                                  fontWeight: FontWeight.w200,
+                                ),
+                              ),
+                            );
+                          },
+                          defaultBuilder: (context, date, focusedDate) {
+                            return CalendarCell(
+                              date: date,
+                              cellType: CalendarCellType.monthDay,
+                              controller: controller,
+                            );
+                          },
+                          selectedBuilder: (context, date, focusedDate) {
+                            return CalendarCell(
+                              date: date,
+                              cellType: CalendarCellType.focusedDay,
+                              controller: controller,
+                            );
+                          },
+                          todayBuilder: (context, date, focusedDate) {
+                            return CalendarCell(
+                              date: date,
+                              cellType: CalendarCellType.today,
+                              controller: controller,
+                            );
+                          },
+                          outsideBuilder: (context, date, focusedDate) {
+                            return CalendarCell(
+                              date: date,
+                              cellType: CalendarCellType.outsideDay,
+                              controller: controller,
+                            );
+                          },
                         ),
+                        headerStyle: HeaderStyle(
+                          titleTextStyle: TextStyle(fontSize: 18.sp, color: Colors.white, fontWeight: FontWeight.w500),
+                          titleCentered: true,
+                          formatButtonVisible: false,
+                          leftChevronIcon: const Icon(Icons.chevron_left, color: Colors.white),
+                          rightChevronIcon: const Icon(
+                            Icons.chevron_right,
+                            color: Colors.white,
+                          ),
+                          headerPadding: EdgeInsets.only(top: 30.sp, bottom: 20.sp),
+                          leftChevronPadding: EdgeInsets.only(left: 60.sp, top: 10.sp, bottom: 10.sp),
+                          rightChevronPadding: EdgeInsets.only(right: 60.sp, top: 10.sp, bottom: 10.sp),
+                        ),
+                        calendarFormat: controller.calendarFormat,
+                        calendarStyle: const CalendarStyle(
+                            /*todayDecoration: BoxDecoration(
+                                color: skyBlueColor,
+                                shape: BoxShape.circle,
+                                border: Border.all(
+                                    width: 14,
+                                    style: BorderStyle.solid,
+                                    color: popupBgColor,
+                                    strokeAlign: StrokeAlign.center
+                                )
+                            ),*/
+                            ),
+                        onDaySelected: (selectedDay, focusedDay) {
+                          controller.calendarSelectedChanged(selectedDay);
+                          Navigator.of(context).pop();
+                        },
+                        onPageChanged: (focusedDay) {
+                          controller.calendarChanged(focusedDay);
+                        },
                       );
-                    },
-                    defaultBuilder: (context, date, focusedDate) {
-                      return CalendarCell(
-                        date: date,
-                        cellType: CalendarCellType.monthDay,
-                        controller: controller,
-                      );
-                    },
-                    selectedBuilder: (context, date, focusedDate) {
-                      return CalendarCell(
-                        date: date,
-                        cellType: CalendarCellType.focusedDay,
-                        controller: controller,
-                      );
-                    },
-                    todayBuilder: (context, date, focusedDate) {
-                      return CalendarCell(
-                        date: date,
-                        cellType: CalendarCellType.today,
-                        controller: controller,
-                      );
-                    },
-                    outsideBuilder: (context, date, focusedDate) {
-                      return CalendarCell(
-                        date: date,
-                        cellType: CalendarCellType.outsideDay,
-                        controller: controller,
-                      );
-                    },
-                  ),
-                  headerStyle: HeaderStyle(
-                    titleTextStyle: TextStyle(fontSize: 18.sp, color: Colors.white, fontWeight: FontWeight.w500),
-                    titleCentered: true,
-                    formatButtonVisible: false,
-                    leftChevronIcon: const Icon(Icons.chevron_left, color: Colors.white),
-                    rightChevronIcon: const Icon(
-                      Icons.chevron_right,
-                      color: Colors.white,
-                    ),
-                    headerPadding: EdgeInsets.only(top: 30.sp, bottom: 20.sp),
-                    leftChevronPadding: EdgeInsets.only(left: 60.sp, top: 10.sp, bottom: 10.sp),
-                    rightChevronPadding: EdgeInsets.only(right: 60.sp, top: 10.sp, bottom: 10.sp),
-                  ),
-                  calendarFormat: controller.calendarFormat,
-                  calendarStyle: const CalendarStyle(
-                      /*todayDecoration: BoxDecoration(
-                            color: skyBlueColor,
-                            shape: BoxShape.circle,
-                            border: Border.all(
-                                width: 14,
-                                style: BorderStyle.solid,
-                                color: popupBgColor,
-                                strokeAlign: StrokeAlign.center
-                            )
-                        ),*/
-                      ),
-                  onDaySelected: (selectedDay, focusedDay) {
-                    controller.calendarSelectedChanged(selectedDay);
-                    Navigator.of(context).pop();
-                  },
-                  onPageChanged: (focusedDay) {
-                    controller.calendarChanged(focusedDay);
-                  },
-                ),
-              );
-            }),
+                    }),
+                  );
+                }),
             Align(
               alignment: Alignment.bottomCenter,
               child: Container(

@@ -21,7 +21,8 @@ class LeaderboardController extends GetxController {
   RxBool dataGetLoading = RxBool(false);
   RxMap<String, List<UserRewardStatisticsModel>> userMonthlyRewardMap = RxMap();
   StreamController<RxList> streamController = StreamController();
-  RxList<UserRewardStatisticsModel> dailyRewardList = RxList.empty(growable: true);
+  RxList<UserRewardStatisticsModel> dailyRewardList = RxList.empty();
+  // RxList get dailyRewardList => _dailyRewardList;
   RxDouble todayTikAmount = RxDouble(0.0);
 
   RxDouble totalStikRewarded = RxDouble(19.9293184);
@@ -70,9 +71,10 @@ class LeaderboardController extends GetxController {
     _fetchMyRank();
     _fetchTodayTik();
     _fetchRankerList(true);
-    streamController.add(dailyRewardList);
+
     String month = DateFormat('yyyy-MM-dd').format(today.value!);
     getCalendarStatistics(month);
+    streamController.add(dailyRewardList);
   }
 
   Future<void> refreshController() async {
@@ -135,6 +137,8 @@ class LeaderboardController extends GetxController {
   }
 
   void getCalendarStatistics(month) async {
+    print('aaaaaaaaaaaaaaaaaaaaaaaa');
+    // dailyRewardList.clear();
     await DashboardService.getUserRewardStatistics(
       month,
       successCallback: (data) {
@@ -143,11 +147,28 @@ class LeaderboardController extends GetxController {
 
         // print(rewardList);
 
+        // _dailyRewardList.addAll(data.rewards);
+        // print(data.rewards);
         dailyRewardList.value = data.rewards;
         // dailyRewardList.assignAll(data.rewards);
         dailyRewardList.refresh();
-        streamController.add(dailyRewardList);
+        // streamController.add(dailyRewardList);
+        // for (var item in data.rewards) {
+        //   userMonthlyRewardMap[item.date!] = [item];
+        // }
+        // print(dailyRewardList);
+        // streamController.add(dailyRewardList);
+        // update();
       },
     );
+    print(dailyRewardList);
+  }
+
+  List<UserRewardStatisticsModel> findCalendarStatisticsData(date) {
+    String day = DateFormat('yyyy-MM-dd').format(date);
+    if (userMonthlyRewardMap[day] != null) {
+      return userMonthlyRewardMap[day]!;
+    }
+    return [];
   }
 }

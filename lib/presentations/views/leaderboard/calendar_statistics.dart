@@ -59,16 +59,18 @@ class CalendarStatistics extends StatelessWidget {
                         rightChevronPadding: EdgeInsets.only(right: 60.sp, top: 10.sp, bottom: 10.sp),
                       ),
                       calendarFormat: controller.calendarFormat,
-                      calendarBuilders: CalendarBuilders(markerBuilder: (context, date, events) {
-                        if (events.isNotEmpty) {
-                          UserRewardStatisticsModel reward = events.first as UserRewardStatisticsModel;
-                          return StyledText(
-                            '+${formatDecimalPlaces(reward.tik!.toDouble(), 1)}',
-                            color: tikColor,
-                          );
-                        }
-                        return null;
-                      }),
+                      calendarBuilders: CalendarBuilders(
+                        markerBuilder: (context, date, events) {
+                          if (events.isNotEmpty) {
+                            UserRewardStatisticsModel reward = events.first as UserRewardStatisticsModel;
+                            return StyledText(
+                              '+${formatDecimalPlaces(reward.tik!.toDouble(), 1)}',
+                              color: tikColor,
+                            );
+                          }
+                          return null;
+                        },
+                      ),
                       eventLoader: (day) {
                         return controller.findCalendarStatisticsData(day);
                       },
