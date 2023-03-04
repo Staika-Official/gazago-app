@@ -151,14 +151,14 @@ class LeaderboardController extends GetxController {
         // print(data.rewards);
         dailyRewardList.value = data.rewards;
         // dailyRewardList.assignAll(data.rewards);
-        dailyRewardList.refresh();
+        // dailyRewardList.refresh();
         // streamController.add(dailyRewardList);
         // for (var item in data.rewards) {
         //   userMonthlyRewardMap[item.date!] = [item];
         // }
         // print(dailyRewardList);
         // streamController.add(dailyRewardList);
-        // update();
+        update();
       },
     );
     print(dailyRewardList);
