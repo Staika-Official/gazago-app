@@ -4,6 +4,7 @@ import 'package:gaza_go/constants/enums.dart';
 import 'package:gaza_go/platform/controllers/leaderboard_controller.dart';
 import 'package:gaza_go/platform/helpers/base_helper.dart';
 import 'package:gaza_go/platform/models/ranker_model.dart';
+import 'package:gaza_go/platform/models/user_reward_statistics_model.dart';
 import 'package:gaza_go/presentations/components/alert_ui_list.dart';
 import 'package:gaza_go/presentations/styles/colors.dart';
 import 'package:gaza_go/presentations/styles/icons.dart';
@@ -29,89 +30,129 @@ class LeaderboardHome extends StatelessWidget {
       child: SafeArea(
         child: Wrap(
           children: [
-            StreamBuilder<RxList>(
+            StreamBuilder<RxMap>(
                 stream: controller.streamController.stream,
                 builder: (context, snapshot) {
-                  return Padding(
-                    padding: EdgeInsets.only(bottom: 28.0.sp),
-                    child: TableCalendar(
-                      rowHeight: 94,
-                      daysOfWeekHeight: 30,
-                      locale: 'ko-KR',
-                      firstDay: controller.firstDay.value!,
-                      lastDay: controller.lastDay.value!,
-                      focusedDay: controller.selectedDate.value!,
-                      selectedDayPredicate: (day) => isSameDay(day, controller.selectedDate.value!),
-                      calendarBuilders: CalendarBuilders(
-                        dowBuilder: (context, day) {
-                          final text = DateFormat.E().format(day);
+                  return Obx(() {
+                    return Padding(
+                      padding: EdgeInsets.only(bottom: 28.0.sp),
+                      child: TableCalendar(
+                        rowHeight: 94,
+                        daysOfWeekHeight: 30,
+                        locale: 'ko-KR',
+                        firstDay: controller.firstDay.value!,
+                        lastDay: controller.lastDay.value!,
+                        focusedDay: controller.today.value!,
+                        eventLoader: (day) {
+                          return controller.findCalendarStatisticsData(day);
+                        },
+                        // selectedDayPredicate: (day) => isSameDay(day, controller.selectedDate.value!),
+                        calendarBuilders: CalendarBuilders(
+                          markerBuilder: (context, date, events) {
+                            if (events.isNotEmpty) {
+                              UserRewardStatisticsModel reward = events.first as UserRewardStatisticsModel;
+                              return Padding(
+                                padding: EdgeInsets.only(top: 48.0),
+                                child: Column(
+                                  children: [
+                                    FittedBox(
+                                      fit: BoxFit.scaleDown,
+                                      child: Column(
+                                        children: [
+                                          StyledText(
+                                            '+${formatDecimalPlaces(reward.tik!.toDouble(), 0)}',
+                                            fontSize: 12.sp,
+                                            lineHeight: 16.sp,
+                                            fontWeight: 600,
+                                            color: tikColor,
+                                          ),
+                                        ],
+                                      ),
+                                    ),
+                                    FittedBox(
+                                      fit: BoxFit.scaleDown,
+                                      child: StyledText(
+                                        '+${formatDecimalPlaces(reward.stik!, 2)}',
+                                        fontSize: 12.sp,
+                                        lineHeight: 16.sp,
+                                        fontWeight: 600,
+                                        color: stikColor,
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              );
+                            }
+                            return null;
+                          },
+                          dowBuilder: (context, day) {
+                            final text = DateFormat.E().format(day);
 
-                          if (day.weekday == DateTime.sunday || day.weekday == DateTime.saturday) {
+                            if (day.weekday == DateTime.sunday || day.weekday == DateTime.saturday) {
+                              return Center(
+                                child: Text(
+                                  text,
+                                  style: const TextStyle(
+                                    color: Color(0xFFB5BEC6),
+                                    fontWeight: FontWeight.w600,
+                                  ),
+                                ),
+                              );
+                            }
                             return Center(
                               child: Text(
                                 text,
                                 style: const TextStyle(
                                   color: Color(0xFFB5BEC6),
-                                  fontWeight: FontWeight.w600,
+                                  fontWeight: FontWeight.w200,
                                 ),
                               ),
                             );
-                          }
-                          return Center(
-                            child: Text(
-                              text,
-                              style: const TextStyle(
-                                color: Color(0xFFB5BEC6),
-                                fontWeight: FontWeight.w200,
-                              ),
-                            ),
-                          );
-                        },
-                        defaultBuilder: (context, date, focusedDate) {
-                          return CalendarCell(
-                            date: date,
-                            cellType: CalendarCellType.monthDay,
-                            controller: controller,
-                          );
-                        },
-                        selectedBuilder: (context, date, focusedDate) {
-                          return CalendarCell(
-                            date: date,
-                            cellType: CalendarCellType.focusedDay,
-                            controller: controller,
-                          );
-                        },
-                        todayBuilder: (context, date, focusedDate) {
-                          return CalendarCell(
-                            date: date,
-                            cellType: CalendarCellType.today,
-                            controller: controller,
-                          );
-                        },
-                        outsideBuilder: (context, date, focusedDate) {
-                          return CalendarCell(
-                            date: date,
-                            cellType: CalendarCellType.outsideDay,
-                            controller: controller,
-                          );
-                        },
-                      ),
-                      headerStyle: HeaderStyle(
-                        titleTextStyle: TextStyle(fontSize: 18.sp, color: Colors.white, fontWeight: FontWeight.w500),
-                        titleCentered: true,
-                        formatButtonVisible: false,
-                        leftChevronIcon: const Icon(Icons.chevron_left, color: Colors.white),
-                        rightChevronIcon: const Icon(
-                          Icons.chevron_right,
-                          color: Colors.white,
+                          },
+                          defaultBuilder: (context, date, focusedDate) {
+                            return CalendarCell(
+                              date: date,
+                              cellType: CalendarCellType.monthDay,
+                            );
+                          },
+                          // selectedBuilder: (context, date, focusedDate) {
+                          //   return CalendarCell(
+                          //     date: date,
+                          //     cellType: CalendarCellType.focusedDay,
+                          //     controller: controller,
+                          //   );
+                          // },
+                          // todayBuilder: (context, date, focusedDate) {
+                          //   return CalendarCell(
+                          //     date: date,
+                          //     cellType: CalendarCellType.today,
+                          //     controller: controller,
+                          //   );
+                          // },
+                          // outsideBuilder: (context, date, focusedDate) {
+                          //   return CalendarCell(
+                          //     date: date,
+                          //     cellType: CalendarCellType.outsideDay,
+                          //     controller: controller,
+                          //   );
+                          // },
                         ),
-                        headerPadding: EdgeInsets.only(top: 30.sp, bottom: 20.sp),
-                        leftChevronPadding: EdgeInsets.only(left: 60.sp, top: 10.sp, bottom: 10.sp),
-                        rightChevronPadding: EdgeInsets.only(right: 60.sp, top: 10.sp, bottom: 10.sp),
-                      ),
-                      calendarFormat: controller.calendarFormat,
-                      calendarStyle: const CalendarStyle(
-                          /*todayDecoration: BoxDecoration(
+                        headerStyle: HeaderStyle(
+                          titleTextStyle: TextStyle(fontSize: 18.sp, color: Colors.white, fontWeight: FontWeight.w500),
+                          titleCentered: true,
+                          formatButtonVisible: false,
+                          leftChevronIcon: const Icon(Icons.chevron_left, color: Colors.white),
+                          rightChevronIcon: const Icon(
+                            Icons.chevron_right,
+                            color: Colors.white,
+                          ),
+                          headerPadding: EdgeInsets.only(top: 30.sp, bottom: 20.sp),
+                          leftChevronPadding: EdgeInsets.only(left: 60.sp, top: 10.sp, bottom: 10.sp),
+                          rightChevronPadding: EdgeInsets.only(right: 60.sp, top: 10.sp, bottom: 10.sp),
+                        ),
+                        calendarFormat: controller.calendarFormat,
+                        calendarStyle: const CalendarStyle(
+                            /*todayDecoration: BoxDecoration(
                                     color: skyBlueColor,
                                     shape: BoxShape.circle,
                                     border: Border.all(
@@ -121,16 +162,17 @@ class LeaderboardHome extends StatelessWidget {
                                         strokeAlign: StrokeAlign.center
                                     )
                                 ),*/
-                          ),
-                      onDaySelected: (selectedDay, focusedDay) {
-                        controller.calendarSelectedChanged(selectedDay);
-                        Navigator.of(context).pop();
-                      },
-                      onPageChanged: (focusedDay) {
-                        controller.calendarChanged(focusedDay);
-                      },
-                    ),
-                  );
+                            ),
+                        onDaySelected: (selectedDay, focusedDay) {
+                          controller.calendarSelectedChanged(selectedDay);
+                          Navigator.of(context).pop();
+                        },
+                        onPageChanged: (focusedDay) {
+                          controller.calendarChanged(focusedDay);
+                        },
+                      ),
+                    );
+                  });
                 }),
             Align(
               alignment: Alignment.bottomCenter,
@@ -720,10 +762,15 @@ class LeaderboardHome extends StatelessWidget {
                 ),
                 InkWell(
                   onTap: () => {
-                    bs.showBarModalBottomSheet(
+                    bs
+                        .showBarModalBottomSheet(
                       context: context,
                       builder: (context) => showBottomCalender(context, controller),
                     )
+                        .whenComplete(() {
+                      controller.cancelStreamController();
+                      print('Hey there, I\'m calling after hide bottomSheet');
+                    })
                   },
                   child: Row(
                     mainAxisSize: MainAxisSize.min,
