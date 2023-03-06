@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:developer';
 import 'dart:io';
 
 import 'package:flutter/cupertino.dart';
@@ -271,7 +272,7 @@ class WalletMasterController extends GetxController {
     if (!available) {
       storeUnavailable.value = true;
     } else {
-      Set<String> _kIds = Platform.isIOS ? <String>{'ptik_purchase', 'ptik_purchase_test'} : <String>{'ptik_purchase_1'};
+      Set<String> _kIds = Platform.isIOS ? <String>{'ptik_purchase', 'ptik_purchase_test'} : <String>{'ptik_purchase_1', 'ptik_purchase_1000'};
       final ProductDetailsResponse response = await InAppPurchase.instance.queryProductDetails(_kIds);
       if (response.notFoundIDs.isNotEmpty) {
         showToastPopup('구매할 수 있는 상품을 찾지 못했습니다.');
@@ -296,6 +297,15 @@ class WalletMasterController extends GetxController {
   Future<bool> _verifyPurchase(PurchaseDetails purchaseDetails) {
     // IMPORTANT!! Always verify a purchase before delivering the product.
     // For the purpose of an example, we directly return true.
+
+    // 백앤드 검증
+    print('#################################################');
+    print('purchaseDetails.productID : ${purchaseDetails.productID}');
+    print('purchaseDetails.purchaseID : ${purchaseDetails.purchaseID}');
+    inspect(purchaseDetails);
+
+    print('#################################################');
+
     return Future<bool>.value(true);
   }
 
@@ -312,6 +322,7 @@ class WalletMasterController extends GetxController {
 
   Future<void> _completePurchaseInAppItem(PurchaseDetails purchaseDetails) async {
     showPendingPurchaseUI.value = false;
+
     await InAppPurchase.instance.completePurchase(purchaseDetails);
     Get.until((route) => Get.isDialogOpen == false);
     showToastPopup('구매가 완료되었습니다.');
