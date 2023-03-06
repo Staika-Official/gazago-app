@@ -112,3 +112,11 @@ String formatSeconds(int time) {
   Duration seconds = Duration(seconds: time);
   return seconds.toString().split('.').first.padLeft(8, "0");
 }
+
+String generateRandomString(int length) {
+  final random = Random();
+  const availableChars = 'AaBbCcDdEeFfGgHhIiJjKkLlMmNnOoPpQqRrSsTtUuVvWwXxYyZz1234567890';
+  final randomString = List.generate(length, (index) => availableChars[random.nextInt(availableChars.length)]).join();
+
+  return randomString;
+}

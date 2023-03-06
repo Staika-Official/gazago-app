@@ -310,12 +310,11 @@ mixin ActivityMixin {
   }
 
   void startExercise(ExerciseType exerciseType, ChallengeModel? challenge, {String? adId}) async {
+    String deviceId = HiveStore.loadString(key: HiveKey.uuid.name)!;
     if (Get.isDialogOpen != null && Get.isDialogOpen!) Get.until((route) => Get.isDialogOpen == false);
-    print(globalController.internetConnection.value);
     if (isFakeGps.value) {
       return;
     }
-
     if (!batchIsInProgress()) {
       // if (globalController.connectivityResult.value != ConnectivityResult.none) {
       if (globalController.internetConnection.value) {
@@ -337,7 +336,7 @@ mixin ActivityMixin {
             startPoint: challenge != null ? challenge.firstName : '${currentLocation.value.longitude}, ${currentLocation.value.latitude}',
             challengeId: challenge?.id,
             locationUpdateTime: DateTime.now(),
-            adId: adId,
+            adId: adId != null ? '${adId}_${deviceId}_${DateTime.now().millisecondsSinceEpoch}' : null,
           ),
           Platform.operatingSystem,
           successCallback: (UserExerciseModel userExerciseData) {
@@ -575,6 +574,7 @@ mixin ActivityMixin {
   }
 
   Future<void> endExercise(ChallengeModel challenge, {String? source, String? adId}) async {
+    String deviceId = HiveStore.loadString(key: HiveKey.uuid.name)!;
     if (isFakeGps.value) {
       return;
     }
@@ -582,7 +582,7 @@ mixin ActivityMixin {
     if (adId != null) {
       userState.update(
         (state) {
-          state?.exercise?.adId = adId;
+          state?.exercise?.adId = '${adId}_${deviceId}_${DateTime.now().millisecondsSinceEpoch}';
         },
       );
     }
