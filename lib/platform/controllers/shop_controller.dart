@@ -139,7 +139,8 @@ class ShopController extends GetxController {
   }
 
   void onClickPurchaseItem(tradeSymbol) {
-    if ((tradeSymbol == 'STIK' ? walletMasterController.stik.value.amount! : walletMasterController.tik.value.amount!) < selectedItem.value.price) {
+    print(walletMasterController.stik.value.uiAmountString!);
+    if ((tradeSymbol == 'STIK' ? double.parse(walletMasterController.stik.value.uiAmountString!) : walletMasterController.tik.value.amount!) < selectedItem.value.price) {
       isShortBalance.value = true;
       showTikShortBalancePopup(tradeSymbol);
     } else {
@@ -148,11 +149,11 @@ class ShopController extends GetxController {
   }
 
   void showItemPurchasePopup(tradeSymbol) {
-    itemPurchaseAlert(this, tradeSymbol == 'STIK' ? walletMasterController.stik.value.amount! : walletMasterController.tik.value.amount!);
+    itemPurchaseAlert(this, tradeSymbol == 'STIK' ? double.parse(walletMasterController.stik.value.uiAmountString!) : walletMasterController.tik.value.amount!, tradeSymbol);
   }
 
   void showTikShortBalancePopup(tradeSymbol) {
-    itemPurchaseShortBalanceAlert(this, tradeSymbol == 'STIK' ? walletMasterController.stik.value.amount! : walletMasterController.tik.value.amount!);
+    itemPurchaseShortBalanceAlert(this, tradeSymbol == 'STIK' ? double.parse(walletMasterController.stik.value.uiAmountString!) : walletMasterController.tik.value.amount!, tradeSymbol);
   }
 
   void showItemPurchaseCompletePopup() {

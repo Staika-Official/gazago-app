@@ -939,7 +939,7 @@ void showPendingExerciseAlert(ActivityController controller) {
   );
 }
 
-void itemPurchaseAlert(ShopController controller, double remainMyTik) {
+void itemPurchaseAlert(ShopController controller, double remainMyTik, tradeSymbol) {
   showAlert(
     title: '구매 하시겠습니까?',
     isScrollControlled: true,
@@ -1033,7 +1033,7 @@ void itemPurchaseAlert(ShopController controller, double remainMyTik) {
                 fontWeight: 600,
               ),
               StyledText(
-                '${formatDecimalPlaces(remainMyTik, 0)} ${controller.selectedItem.value.tradeSymbol!}',
+                '${formatDecimalPlaces(remainMyTik, tradeSymbol == 'STIK' ? 9 : 0, isAutoDecimal: true)} ${controller.selectedItem.value.tradeSymbol!}',
                 fontSize: 18,
                 lineHeight: 18,
                 fontWeight: 400,
@@ -1076,7 +1076,7 @@ void itemPurchaseAlert(ShopController controller, double remainMyTik) {
   );
 }
 
-void itemPurchaseShortBalanceAlert(ShopController controller, double remainMyTik) {
+void itemPurchaseShortBalanceAlert(ShopController controller, double remainMyTik, tradeSymbol) {
   showAlert(
     title: '잔액이 부족합니다',
     isDangerTitle: true,
@@ -1172,7 +1172,7 @@ void itemPurchaseShortBalanceAlert(ShopController controller, double remainMyTik
                 color: dangerColor,
               ),
               StyledText(
-                '${formatDecimalPlaces(remainMyTik, 0)} ${controller.selectedItem.value.tradeSymbol}',
+                '${formatDecimalPlaces(remainMyTik, tradeSymbol == 'STIK' ? 9 : 0, isAutoDecimal: true)} ${controller.selectedItem.value.tradeSymbol}',
                 fontSize: 18,
                 lineHeight: 18,
                 fontWeight: 400,

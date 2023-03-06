@@ -20,7 +20,7 @@ class LeaderboardController extends GetxController {
   RxBool hasMore = RxBool(true);
   RxBool dataGetLoading = RxBool(false);
   RxMap<String, List<UserRewardStatisticsModel>> userMonthlyRewardMap = RxMap();
-  StreamController<RxList> streamController = StreamController();
+  StreamController<RxList> streamController = StreamController.broadcast();
   RxList<UserRewardStatisticsModel> dailyRewardList = RxList.empty();
   // RxList get dailyRewardList => _dailyRewardList;
   RxDouble todayTikAmount = RxDouble(0.0);
@@ -81,6 +81,9 @@ class LeaderboardController extends GetxController {
     selectedDate.value = DateTime.now();
     _fetchMyRank();
     _fetchRankerList(true);
+    String month = DateFormat('yyyy-MM-dd').format(today.value!);
+    getCalendarStatistics(month);
+    streamController.add(dailyRewardList);
   }
 
   Future<void> _fetchRankerList(bool reset) async {
@@ -136,20 +139,29 @@ class LeaderboardController extends GetxController {
     getCalendarStatistics(month);
   }
 
-  void getCalendarStatistics(month) async {
+  Future<void> getCalendarStatistics(month) async {
     print('aaaaaaaaaaaaaaaaaaaaaaaa');
-    // dailyRewardList.clear();
+
     await DashboardService.getUserRewardStatistics(
       month,
       successCallback: (data) {
         totalTikRewarded.value = data.totalTik;
         totalStikRewarded.value = data.totalStik;
 
-        // print(rewardList);
-
+        print(data);
+        dailyRewardList.clear();
         // _dailyRewardList.addAll(data.rewards);
         // print(data.rewards);
+        // List<UserRewardStatisticsModel> newRewards = data.rewards;
         dailyRewardList.value = data.rewards;
+        // dailyRewardList.addAll(data.rewards);
+
+        // dailyRewardList.refresh();
+        // for (var item in data.rewards) {
+        //   // print(UserRewardStatisticsModel.fromJson(item));
+        //   dailyRewardList.add(item);
+        // }
+        // dailyRewardList.add(data.rewards);
         // dailyRewardList.assignAll(data.rewards);
         // dailyRewardList.refresh();
         // streamController.add(dailyRewardList);
@@ -157,11 +169,10 @@ class LeaderboardController extends GetxController {
         //   userMonthlyRewardMap[item.date!] = [item];
         // }
         // print(dailyRewardList);
-        // streamController.add(dailyRewardList);
+        streamController.add(dailyRewardList);
         update();
       },
     );
-    print(dailyRewardList);
   }
 
   List<UserRewardStatisticsModel> findCalendarStatisticsData(date) {

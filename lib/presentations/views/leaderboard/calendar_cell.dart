@@ -6,6 +6,7 @@ import 'package:gaza_go/platform/helpers/base_helper.dart';
 import 'package:gaza_go/platform/models/user_reward_statistics_model.dart';
 import 'package:gaza_go/presentations/styles/colors.dart';
 import 'package:gaza_go/presentations/styles/styled_text.dart';
+import 'package:get/get.dart';
 import 'package:intl/intl.dart';
 
 class CalendarCell extends StatelessWidget {
@@ -22,10 +23,12 @@ class CalendarCell extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    // LeaderboardController leaderboardController = Get.put(LeaderboardController());
+    // print('showBottom${leaderboardController.dailyRewardList}');
     UserRewardStatisticsModel dailyReward = controller.dailyRewardList.singleWhere((reward) {
       return DateFormat('yyyy-MM-dd').format(DateTime.parse(reward.date!)) == DateFormat('yyyy-MM-dd').format(date);
     }, orElse: () => UserRewardStatisticsModel(id: -1));
-
+    print(dailyReward.toJson());
     return Padding(
       padding: EdgeInsets.symmetric(horizontal: 2, vertical: 10),
       child: Column(

@@ -75,7 +75,7 @@ List<LatLng> locationStringToLatLng(String locationString) {
   return coordinates;
 }
 
-String formatDecimalPlaces(double val, int decimalPlaces, {RoundType roundType = RoundType.round}) {
+String formatDecimalPlaces(double val, int decimalPlaces, {RoundType roundType = RoundType.round, bool isAutoDecimal = false}) {
   num mod = pow(10.0, decimalPlaces);
   double? formattedNumber;
   switch (roundType) {
@@ -95,7 +95,11 @@ String formatDecimalPlaces(double val, int decimalPlaces, {RoundType roundType =
     if (val == 0) {
       formatter = NumberFormat('0');
     } else {
-      formatter = NumberFormat('#,##0.${"0" * decimalPlaces}');
+      if (isAutoDecimal) {
+        formatter = NumberFormat('#,##0.${"#" * decimalPlaces}');
+      } else {
+        formatter = NumberFormat('#,##0.${"0" * decimalPlaces}');
+      }
     }
   } else {
     formatter = NumberFormat('#,###');
