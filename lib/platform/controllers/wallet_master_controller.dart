@@ -302,6 +302,13 @@ class WalletMasterController extends GetxController {
     print('#################################################');
     print('purchaseDetails.productID : ${purchaseDetails.productID}');
     print('purchaseDetails.purchaseID : ${purchaseDetails.purchaseID}');
+
+    print('verificationData.localVerificationData : ${purchaseDetails.verificationData.localVerificationData}');
+    print('verificationData.serverVerificationData : ${purchaseDetails.verificationData.serverVerificationData}');
+    print('verificationData.source : ${purchaseDetails.verificationData.source}');
+
+
+
     inspect(purchaseDetails);
 
     print('#################################################');
