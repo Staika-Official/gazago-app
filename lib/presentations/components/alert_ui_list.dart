@@ -3,6 +3,7 @@ import 'dart:ui';
 
 import 'package:another_xlider/another_xlider.dart';
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/flutter_svg.dart';
@@ -300,12 +301,14 @@ void showRepairStatSlider(ActivityController controller, StatModel stat, int fee
         width: 9.sp,
       ),
       Expanded(
-        child: GazagoButton(
-          onTap: () => stat.type == 'STAMINA' ? controller.fetchRechargeStamina(stat.type) : controller.fetchRepairShoes(),
-          disableButton: controller.disableButton.value,
-          buttonText: '네',
-          buttonColor: skyBlueColor,
-        ),
+        child: Obx(() {
+          return GazagoButton(
+            onTap: () => stat.type == 'STAMINA' ? controller.fetchRechargeStamina(stat.type) : controller.fetchRepairShoes(),
+            disableButton: controller.disableButton.value,
+            buttonText: '네',
+            buttonColor: skyBlueColor,
+          );
+        }),
       ),
     ],
   );
@@ -936,7 +939,7 @@ void showPendingExerciseAlert(ActivityController controller) {
   );
 }
 
-void itemPurchaseAlert(ShopController controller, double remainMyTik) {
+void itemPurchaseAlert(ShopController controller, double remainMyTik, tradeSymbol) {
   showAlert(
     title: '구매 하시겠습니까?',
     isScrollControlled: true,
@@ -954,8 +957,8 @@ void itemPurchaseAlert(ShopController controller, double remainMyTik) {
                   lineHeight: 32,
                   fontWeight: 600,
                 ),
-                const StyledText(
-                  'TIK',
+                StyledText(
+                  controller.selectedItem.value.tradeSymbol!,
                   fontSize: 30,
                   lineHeight: 32,
                   fontWeight: 400,
@@ -1030,7 +1033,7 @@ void itemPurchaseAlert(ShopController controller, double remainMyTik) {
                 fontWeight: 600,
               ),
               StyledText(
-                '${formatDecimalPlaces(remainMyTik, 0)} TIK',
+                '${formatDecimalPlaces(remainMyTik, tradeSymbol == 'STIK' ? 9 : 0, isAutoDecimal: true)} ${controller.selectedItem.value.tradeSymbol!}',
                 fontSize: 18,
                 lineHeight: 18,
                 fontWeight: 400,
@@ -1073,7 +1076,7 @@ void itemPurchaseAlert(ShopController controller, double remainMyTik) {
   );
 }
 
-void itemPurchaseShortBalanceAlert(ShopController controller, double remainMyTik) {
+void itemPurchaseShortBalanceAlert(ShopController controller, double remainMyTik, tradeSymbol) {
   showAlert(
     title: '잔액이 부족합니다',
     isDangerTitle: true,
@@ -1092,8 +1095,8 @@ void itemPurchaseShortBalanceAlert(ShopController controller, double remainMyTik
                   lineHeight: 32,
                   fontWeight: 600,
                 ),
-                const StyledText(
-                  'TIK',
+                StyledText(
+                  controller.selectedItem.value.tradeSymbol!,
                   fontSize: 30,
                   lineHeight: 32,
                   fontWeight: 400,
@@ -1169,7 +1172,7 @@ void itemPurchaseShortBalanceAlert(ShopController controller, double remainMyTik
                 color: dangerColor,
               ),
               StyledText(
-                '${formatDecimalPlaces(remainMyTik, 0)} TIK',
+                '${formatDecimalPlaces(remainMyTik, tradeSymbol == 'STIK' ? 9 : 0, isAutoDecimal: true)} ${controller.selectedItem.value.tradeSymbol}',
                 fontSize: 18,
                 lineHeight: 18,
                 fontWeight: 400,
@@ -1180,7 +1183,7 @@ void itemPurchaseShortBalanceAlert(ShopController controller, double remainMyTik
           Padding(
             padding: EdgeInsets.only(top: 55.0.sp, bottom: 25.sp),
             child: StyledText(
-              '· TIK 충전 후 재시도 해주세요',
+              '· ${controller.selectedItem.value.tradeSymbol} 충전 후 재시도 해주세요',
               fontSize: 14,
               lineHeight: 14,
               fontWeight: 500,
@@ -1215,12 +1218,18 @@ void itemPurchaseCompleteAlert(ShopController controller) {
               children: [
                 SizedBox(
                   width: 150.sp,
-                  child: CachedNetworkImage(
-                    imageUrl: controller.purchaseCompleteItem.value.itemImageUrl,
-                    fit: BoxFit.fitWidth,
-                    placeholder: (context, url) => const CircularProgressIndicator(),
-                    errorWidget: (context, url, error) => Image.asset("assets/images/@temp_badge.png"),
-                  ),
+                  child: controller.purchaseCompleteItem.value.itemImageUrl.contains('.svg')
+                      ? SvgPicture.network(
+                          fit: BoxFit.contain,
+                          controller.purchaseCompleteItem.value.itemImageUrl,
+                          placeholderBuilder: (BuildContext context) => Container(padding: const EdgeInsets.all(30.0), child: const CircularProgressIndicator()),
+                        )
+                      : CachedNetworkImage(
+                          imageUrl: controller.purchaseCompleteItem.value.itemImageUrl,
+                          fit: BoxFit.fitWidth,
+                          placeholder: (context, url) => const CircularProgressIndicator(),
+                          errorWidget: (context, url, error) => Image.asset("assets/images/@temp_badge.png"),
+                        ),
                 ),
               ],
             ),
@@ -1814,7 +1823,7 @@ void alreadyConnectedDeviceAlert(LoginController controller, LoginType socialTyp
     contentWidget: Padding(
       padding: EdgeInsets.only(top: 20.0.sp, bottom: 40.sp),
       child: const StyledText(
-        '댜른 기기에 로그인 되어 있어요.\n해당 기기의 로그인 해제 후 로그인할께요.',
+        '댜른 기기에 로그인 되어 있어요.\n해당 기기의 로그인 해제 후 로그인할게요.',
         fontSize: 18,
         lineHeight: 24,
         fontWeight: 500,
@@ -2075,7 +2084,257 @@ void showAdTipAlert(ExerciseType exerciseType) {
   );
 }
 
+void showLeaderboardInfo() {
+  Get.dialog(
+    barrierColor: Colors.transparent,
+    Material(
+      color: Colors.black.withOpacity(0.6),
+      child: Padding(
+        padding: EdgeInsets.symmetric(horizontal: 25.0.sp),
+        child: Center(
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Stack(
+                children: [
+                  Container(
+                    width: double.infinity,
+                    padding: EdgeInsets.only(top: 19.sp, left: 18.sp, right: 18.sp, bottom: 50.sp),
+                    decoration: BoxDecoration(
+                      color: popupBgColor,
+                      borderRadius: BorderRadius.circular(10.sp),
+                    ),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Align(
+                          alignment: Alignment.center,
+                          child: StyledText(
+                            '오늘의 리워드 TIP',
+                            fontSize: 18.sp,
+                            lineHeight: 28.sp,
+                            fontWeight: 500,
+                            textAlign: TextAlign.center,
+                          ),
+                        ),
+                        Padding(
+                          padding: EdgeInsets.only(top: 29.0.sp),
+                          child: Container(
+                            padding: EdgeInsets.all(10),
+                            width: double.infinity,
+                            decoration: BoxDecoration(
+                              color: subBg01Color,
+                              borderRadius: BorderRadius.circular(7.sp),
+                            ),
+                            child: Center(
+                              child: SizedBox(
+                                width: 84.sp,
+                                child: Image.asset(
+                                  'assets/images/leaderboard/ico_info_tik.png',
+                                ),
+                              ),
+                            ),
+                          ),
+                        ),
+                        Container(
+                          padding: EdgeInsets.only(left: 20, right: 20, top: 10),
+                          child: Column(
+                            children: [
+                              SizedBox(
+                                width: double.infinity,
+                                child: Text.rich(
+                                  textAlign: TextAlign.center,
+                                  style: TextStyle(
+                                    fontSize: 18.sp,
+                                    height: 22.sp / 18.sp,
+                                    fontWeight: FontWeight.w500,
+                                    color: Colors.white,
+                                  ),
+                                  TextSpan(
+                                    text: 'TIK의 총액 항목은 ',
+                                    children: [
+                                      TextSpan(
+                                        text: '7가지',
+                                        style: TextStyle(
+                                          color: tikColor,
+                                          fontWeight: FontWeight.w700,
+                                        ),
+                                      ),
+                                      const TextSpan(
+                                        text: ' 입니다!',
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                              ),
+                              Row(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  Padding(
+                                    padding: EdgeInsets.only(
+                                      top: 20.sp,
+                                      bottom: 10.sp,
+                                    ),
+                                    child: Align(
+                                      child: Column(
+                                        crossAxisAlignment: CrossAxisAlignment.start,
+                                        children: [
+                                          Padding(
+                                            padding: const EdgeInsets.only(bottom: 5),
+                                            child: Row(
+                                              crossAxisAlignment: CrossAxisAlignment.center,
+                                              children: [
+                                                Container(
+                                                  width: 16.sp,
+                                                  height: 16.sp,
+                                                  margin: EdgeInsets.only(right: 10),
+                                                  decoration: BoxDecoration(
+                                                    color: numberedBoxGrayColor,
+                                                    borderRadius: BorderRadius.circular(2),
+                                                    border: Border.all(
+                                                      color: Colors.black,
+                                                    ),
+                                                    boxShadow: [
+                                                      BoxShadow(
+                                                        color: const Color.fromRGBO(0, 0, 0, 1),
+                                                        offset: const Offset(1, 1),
+                                                        blurRadius: 0,
+                                                        spreadRadius: 0.sp,
+                                                      )
+                                                    ],
+                                                  ),
+                                                  child: Center(
+                                                    child: StyledText(
+                                                      '1',
+                                                      fontSize: 10.sp,
+                                                      lineHeight: 10.sp,
+                                                      fontWeight: 500,
+                                                    ),
+                                                  ),
+                                                ),
+                                                StyledText(
+                                                  '어제 사용자가 사용한 TIK의 합계',
+                                                  fontSize: 14.sp,
+                                                  lineHeight: 16.sp,
+                                                  fontWeight: 500,
+                                                ),
+                                              ],
+                                            ),
+                                          ),
+                                          StyledText(
+                                            '· 체력 충전 총합',
+                                            fontSize: 14.sp,
+                                            lineHeight: 22.sp,
+                                            fontWeight: 500,
+                                            color: tikColor,
+                                          ),
+                                          StyledText(
+                                            '· 내구도 충전',
+                                            fontSize: 14.sp,
+                                            lineHeight: 22.sp,
+                                            fontWeight: 500,
+                                            color: tikColor,
+                                          ),
+                                          StyledText(
+                                            '· 아이템 구매',
+                                            fontSize: 14.sp,
+                                            lineHeight: 22.sp,
+                                            fontWeight: 500,
+                                            color: tikColor,
+                                          ),
+                                          StyledText(
+                                            '· 기프티콘 구매 일부 비용',
+                                            fontSize: 14.sp,
+                                            lineHeight: 22.sp,
+                                            fontWeight: 500,
+                                            color: tikColor,
+                                          ),
+                                          StyledText(
+                                            '· 2달 전의 광고 수익을 Day로 나눈 값',
+                                            fontSize: 14.sp,
+                                            lineHeight: 22.sp,
+                                            fontWeight: 500,
+                                            color: tikColor,
+                                          ),
+                                          Padding(
+                                            padding: const EdgeInsets.only(top: 10),
+                                            child: Row(
+                                              crossAxisAlignment: CrossAxisAlignment.center,
+                                              children: [
+                                                Container(
+                                                  width: 16.sp,
+                                                  height: 16.sp,
+                                                  margin: EdgeInsets.only(right: 10),
+                                                  decoration: BoxDecoration(
+                                                    color: numberedBoxGrayColor,
+                                                    borderRadius: BorderRadius.circular(2),
+                                                    border: Border.all(
+                                                      color: Colors.black,
+                                                    ),
+                                                    boxShadow: [
+                                                      BoxShadow(
+                                                        color: const Color.fromRGBO(0, 0, 0, 1),
+                                                        offset: const Offset(1, 1),
+                                                        blurRadius: 0,
+                                                        spreadRadius: 0.sp,
+                                                      )
+                                                    ],
+                                                  ),
+                                                  child: Center(
+                                                    child: StyledText(
+                                                      '2',
+                                                      fontSize: 10.sp,
+                                                      lineHeight: 10.sp,
+                                                      fontWeight: 500,
+                                                    ),
+                                                  ),
+                                                ),
+                                                StyledText(
+                                                  '가자고 팀이 추가 제공한 TIK',
+                                                  fontSize: 14.sp,
+                                                  lineHeight: 16.sp,
+                                                  fontWeight: 500,
+                                                ),
+                                              ],
+                                            ),
+                                          )
+                                        ],
+                                      ),
+                                    ),
+                                  ),
+                                ],
+                              )
+                            ],
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                  Positioned(right: 12, top: 20, child: InkWell(onTap: () => Get.back(), child: iconCloseWhite)),
+                ],
+              ),
+            ],
+          ),
+        ),
+      ),
+    ),
+  );
+}
+
 Future<void> showMainPopupAlert(ActivityController activityController) async {
+  final CarouselController carouselController = CarouselController();
+  List<Widget> getImageSliders(controller) {
+    return controller.popupList
+        .map((item) => Container(
+              width: double.infinity,
+              child: InkWell(
+                onTap: () => controller.moveToWebView(item['type']),
+                child: Image.asset(item['imageUrl']),
+              ),
+            ))
+        .toList();
+  }
+
   await Get.bottomSheet(
     isDismissible: false,
     isScrollControlled: true,
@@ -2086,12 +2345,61 @@ Future<void> showMainPopupAlert(ActivityController activityController) async {
           color: Colors.transparent,
         ),
         child: Column(
-          mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: CrossAxisAlignment.end,
+          mainAxisAlignment: MainAxisAlignment.end,
+          mainAxisSize: MainAxisSize.max,
           children: [
-            InkWell(
-              onTap: () => activityController.moveToHowToGo(),
-              child: Image.asset('assets/images/common/img_main_popup.png'),
-            ),
+            Stack(children: [
+              CarouselSlider(
+                key: const Key('Slider'),
+                items: activityController.popupList
+                    .map((item) => Container(
+                          width: double.infinity,
+                          child: InkWell(
+                            onTap: () => activityController.moveToWebView(item['type']),
+                            child: Image.asset(
+                              item['imageUrl'],
+                              width: double.infinity,
+                            ),
+                          ),
+                        ))
+                    .toList(),
+                carouselController: carouselController,
+                options: CarouselOptions(
+                  aspectRatio: 1,
+                  viewportFraction: 1,
+                  autoPlay: true,
+                  enlargeCenterPage: false,
+                  enableInfiniteScroll: false,
+                  onPageChanged: (index, reason) {
+                    activityController.setCurrent(index);
+                  },
+                  onScrolled: (op) {
+                    activityController.setValue(op!);
+                  },
+                ),
+              ),
+              Positioned(
+                  right: 20.sp,
+                  top: 12.sp,
+                  child: Obx(() {
+                    return Container(
+                      decoration: BoxDecoration(
+                        color: popupBgColor,
+                        borderRadius: BorderRadius.circular(20.sp),
+                      ),
+                      child: Padding(
+                        padding: EdgeInsets.symmetric(horizontal: 8.0.sp, vertical: 4.0.sp),
+                        child: StyledText(
+                          '${(activityController.current.value + 1).toString()}/${activityController.popupList.length}',
+                          fontSize: 16,
+                          lineHeight: 17,
+                          fontWeight: 500,
+                        ),
+                      ),
+                    );
+                  })),
+            ]),
             Container(
               color: popupBgColor,
               child: Padding(
