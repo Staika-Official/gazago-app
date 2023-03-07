@@ -1,5 +1,3 @@
-import 'dart:math';
-
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -28,11 +26,17 @@ class SecondaryAppbar extends StatelessWidget implements PreferredSizeWidget {
             ),
             Padding(
               padding: EdgeInsets.only(left: 4.sp),
-              child: StyledText(
-                token.symbol! == 'STIK' ? formatDecimalPlaces((token.amount! / pow(10.0, 9)), 9, isAutoDecimal: true) : formatDecimalPlaces(token.amount!, 0),
-                color: Colors.white,
-                fontSize: 12,
-                fontWeight: 600,
+              child: ConstrainedBox(
+                constraints: BoxConstraints(maxWidth: 90),
+                child: FittedBox(
+                  fit: BoxFit.scaleDown,
+                  child: StyledText(
+                    token.symbol! == 'STIK' ? formatDecimalPlaces(double.parse(token.uiAmountString!), 9, isAutoDecimal: true) : formatDecimalPlaces(double.parse(token.uiAmountString!), 0),
+                    color: Colors.white,
+                    fontSize: 12,
+                    fontWeight: 600,
+                  ),
+                ),
               ),
             ),
           ],
