@@ -2086,9 +2086,9 @@ void showAdTipAlert(ExerciseType exerciseType) {
 
 void showLeaderboardInfo() {
   Get.dialog(
-    barrierColor: Colors.transparent,
+    barrierColor: Colors.black.withOpacity(.8),
     Material(
-      color: Colors.black.withOpacity(0.6),
+      color: Colors.transparent,
       child: Padding(
         padding: EdgeInsets.symmetric(horizontal: 25.0.sp),
         child: Center(
