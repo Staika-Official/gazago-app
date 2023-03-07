@@ -552,34 +552,42 @@ class LeaderboardHome extends StatelessWidget {
         mainAxisSize: MainAxisSize.min,
         children: [
           Padding(
-            padding: EdgeInsets.only(top: 8.0.sp),
+            padding: EdgeInsets.only(top: 8.0.sp, left: 26.sp, right: 30.sp),
             child: Row(
+              crossAxisAlignment: CrossAxisAlignment.center,
               children: [
-                Padding(
-                  padding: EdgeInsets.only(left: 24.sp, right: 10.sp),
-                  child: StyledText(
-                    '오늘의 리워드',
-                    color: Colors.white,
-                    fontWeight: 700,
-                    fontSize: 24.sp,
-                    lineHeight: 32.sp,
-                  ),
+                StyledText(
+                  '오늘 분배할',
+                  color: Colors.white,
+                  fontWeight: 600,
+                  fontSize: 20.sp,
+                  lineHeight: 24.sp,
                 ),
-                SizedBox(
-                  width: 20,
-                  height: 20,
-                  child: IconButton(
-                    padding: EdgeInsets.zero,
-                    onPressed: () => showLeaderboardInfo(),
-                    icon: iconInfo,
-                    splashRadius: 15.sp,
+                StyledText(
+                  ' 전체 리워드',
+                  color: Colors.white,
+                  fontWeight: 600,
+                  fontSize: 20.sp,
+                  lineHeight: 24.sp,
+                ),
+                Padding(
+                  padding: EdgeInsets.only(left: 5.0.sp),
+                  child: SizedBox(
+                    width: 20,
+                    height: 20,
+                    child: IconButton(
+                      padding: EdgeInsets.zero,
+                      onPressed: () => showLeaderboardInfo(),
+                      icon: iconInfo,
+                      splashRadius: 15.sp,
+                    ),
                   ),
                 )
               ],
             ),
           ),
           Container(
-            margin: EdgeInsets.only(top: 18.sp, left: 18.sp, right: 22.sp),
+            margin: EdgeInsets.only(top: 8.sp, left: 25.sp, right: 25.sp),
             decoration: BoxDecoration(
               color: const Color(0xFF2E3038),
               border: Border.all(
@@ -591,7 +599,7 @@ class LeaderboardHome extends StatelessWidget {
               ),
             ),
             child: Padding(
-              padding: EdgeInsets.all(10),
+              padding: EdgeInsets.all(10.sp),
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.start,
                 crossAxisAlignment: CrossAxisAlignment.center,
@@ -633,117 +641,117 @@ class LeaderboardHome extends StatelessWidget {
               ),
             ),
           ),
-          Padding(
-            padding: EdgeInsets.only(top: 20.sp, left: 18.sp, right: 18.sp),
-            child: Column(
-              children: [
-                Row(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Padding(
-                      padding: EdgeInsets.only(top: 4.0.sp),
-                      child: Container(
-                        margin: EdgeInsets.only(left: 5, right: 5),
-                        width: 4,
-                        height: 4,
-                        decoration: BoxDecoration(
-                          color: deepGrayColor,
-                          borderRadius: BorderRadius.circular(4),
-                        ),
-                      ),
-                    ),
-                    Expanded(
-                      child: Text.rich(
-                        style: TextStyle(
-                          color: deepGrayColor,
-                          fontSize: 12.sp,
-                          fontWeight: FontWeight.w500,
-                          height: 1.2,
-                          letterSpacing: -0.2,
-                        ),
-                        TextSpan(
-                          text: '리더보드 참여자 모두에게 획득한 GO만큼 ',
-                          children: [
-                            TextSpan(
-                                text: '오늘의 리워드를',
-                                style: TextStyle(
-                                  color: lightGrayColor,
-                                  fontWeight: FontWeight.w700,
-                                )),
-                            TextSpan(text: ' 모두 분배해요.')
-                          ],
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
-                Padding(
-                  padding: const EdgeInsets.only(top: 8),
-                  child: Row(
-                    children: [
-                      Container(
-                        margin: EdgeInsets.only(left: 5, right: 5),
-                        width: 4,
-                        height: 4,
-                        decoration: BoxDecoration(
-                          color: deepGrayColor,
-                          borderRadius: BorderRadius.circular(4),
-                        ),
-                      ),
-                      Text.rich(
-                        style: TextStyle(
-                          color: deepGrayColor,
-                          fontSize: 12.sp,
-                          fontWeight: FontWeight.w500,
-                          height: 1.2,
-                        ),
-                        TextSpan(
-                          children: [
-                            TextSpan(
-                                text: '오늘의 리워드',
-                                style: TextStyle(
-                                  color: lightGrayColor,
-                                  fontWeight: FontWeight.w700,
-                                )),
-                            TextSpan(text: '는 확정되었습니다!')
-                          ],
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-                Padding(
-                  padding: const EdgeInsets.only(top: 8),
-                  child: Row(
-                    children: [
-                      Container(
-                        margin: EdgeInsets.only(left: 5, right: 5),
-                        width: 4,
-                        height: 4,
-                        decoration: BoxDecoration(
-                          color: deepGrayColor,
-                          borderRadius: BorderRadius.circular(4),
-                        ),
-                      ),
-                      Text.rich(
-                        style: TextStyle(
-                          color: deepGrayColor,
-                          fontSize: 12.sp,
-                          fontWeight: FontWeight.w500,
-                          height: 1.2,
-                        ),
-                        TextSpan(
-                          text: 'TIK은 매일 자정(KST)에 확정되어 분배해요.',
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-              ],
-            ),
-          ),
+          // Padding(
+          //   padding: EdgeInsets.only(top: 20.sp, left: 18.sp, right: 18.sp),
+          //   child: Column(
+          //     children: [
+          //       Row(
+          //         crossAxisAlignment: CrossAxisAlignment.start,
+          //         children: [
+          //           Padding(
+          //             padding: EdgeInsets.only(top: 4.0.sp),
+          //             child: Container(
+          //               margin: EdgeInsets.only(left: 5, right: 5),
+          //               width: 4,
+          //               height: 4,
+          //               decoration: BoxDecoration(
+          //                 color: deepGrayColor,
+          //                 borderRadius: BorderRadius.circular(4),
+          //               ),
+          //             ),
+          //           ),
+          //           Expanded(
+          //             child: Text.rich(
+          //               style: TextStyle(
+          //                 color: deepGrayColor,
+          //                 fontSize: 12.sp,
+          //                 fontWeight: FontWeight.w500,
+          //                 height: 1.2,
+          //                 letterSpacing: -0.2,
+          //               ),
+          //               TextSpan(
+          //                 text: '리더보드 참여자 모두에게 획득한 GO만큼 ',
+          //                 children: [
+          //                   TextSpan(
+          //                       text: '오늘의 리워드를',
+          //                       style: TextStyle(
+          //                         color: lightGrayColor,
+          //                         fontWeight: FontWeight.w700,
+          //                       )),
+          //                   TextSpan(text: ' 모두 분배해요.')
+          //                 ],
+          //               ),
+          //             ),
+          //           ),
+          //         ],
+          //       ),
+          //       Padding(
+          //         padding: const EdgeInsets.only(top: 8),
+          //         child: Row(
+          //           children: [
+          //             Container(
+          //               margin: EdgeInsets.only(left: 5, right: 5),
+          //               width: 4,
+          //               height: 4,
+          //               decoration: BoxDecoration(
+          //                 color: deepGrayColor,
+          //                 borderRadius: BorderRadius.circular(4),
+          //               ),
+          //             ),
+          //             Text.rich(
+          //               style: TextStyle(
+          //                 color: deepGrayColor,
+          //                 fontSize: 12.sp,
+          //                 fontWeight: FontWeight.w500,
+          //                 height: 1.2,
+          //               ),
+          //               TextSpan(
+          //                 children: [
+          //                   TextSpan(
+          //                       text: '오늘의 리워드',
+          //                       style: TextStyle(
+          //                         color: lightGrayColor,
+          //                         fontWeight: FontWeight.w700,
+          //                       )),
+          //                   TextSpan(text: '는 확정되었습니다!')
+          //                 ],
+          //               ),
+          //             ),
+          //           ],
+          //         ),
+          //       ),
+          //       Padding(
+          //         padding: const EdgeInsets.only(top: 8),
+          //         child: Row(
+          //           children: [
+          //             Container(
+          //               margin: EdgeInsets.only(left: 5, right: 5),
+          //               width: 4,
+          //               height: 4,
+          //               decoration: BoxDecoration(
+          //                 color: deepGrayColor,
+          //                 borderRadius: BorderRadius.circular(4),
+          //               ),
+          //             ),
+          //             Text.rich(
+          //               style: TextStyle(
+          //                 color: deepGrayColor,
+          //                 fontSize: 12.sp,
+          //                 fontWeight: FontWeight.w500,
+          //                 height: 1.2,
+          //               ),
+          //               TextSpan(
+          //                 text: 'TIK은 매일 자정(KST)에 확정되어 분배해요.',
+          //               ),
+          //             ),
+          //           ],
+          //         ),
+          //       ),
+          //     ],
+          //   ),
+          // ),
           Container(
-            padding: EdgeInsets.only(top: 38.sp, left: 25.sp, right: 18.sp, bottom: 12.sp),
+            padding: EdgeInsets.only(top: 40.sp, left: 25.sp, right: 18.sp, bottom: 12.sp),
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               crossAxisAlignment: CrossAxisAlignment.center,
