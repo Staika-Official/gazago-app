@@ -2,7 +2,8 @@ import 'package:dio/dio.dart';
 import 'package:gaza_go/constants/enums.dart';
 import 'package:gaza_go/platform/apis/dashboard.dart';
 import 'package:gaza_go/platform/models/ranker_model.dart';
-import 'package:gaza_go/platform/models/user_reward_statistics_model.dart';
+import 'package:gaza_go/platform/models/today_reward_tik_model.dart';
+import 'package:gaza_go/platform/models/user_monthly_reward_statistics_model.dart';
 import 'package:gaza_go/platform/stores/hive_store.dart';
 
 class DashboardService {
@@ -23,14 +24,10 @@ class DashboardService {
     }
   }
 
-  static Future<void> getUserRewardStatistics(String dateFormat, String value, {required Function successCallback, Function? errorCallback}) async {
-    Response res = await DashboardApi.getUserRewardStatistics(userId!, dateFormat, value);
+  static Future<void> getUserRewardStatistics(String dateFormat, {required Function successCallback, Function? errorCallback}) async {
+    Response res = await DashboardApi.getUserRewardStatistics(userId!, dateFormat);
     if (res.statusCode == 200) {
-      List<UserRewardStatisticsModel> list = [];
-      if (res.data.length > 0) {
-        res.data.forEach((item) => list.add(UserRewardStatisticsModel.fromJson(item)));
-      }
-      successCallback(list);
+      successCallback(UserMonthlyRewardStatisticsModel.fromJson(res.data));
     } else {
       if (errorCallback != null) errorCallback();
     }
@@ -40,6 +37,15 @@ class DashboardService {
     Response res = await DashboardApi.getDailyRankingMyRank(date, userId!);
     if (res.statusCode == 200) {
       successCallback(res.data is Map<String, dynamic> ? RankerModel.fromJson(res.data) : null);
+    } else {
+      if (errorCallback != null) errorCallback();
+    }
+  }
+
+  static Future<void> getTodayRewardTik(String date, {required Function successCallback, Function? errorCallback}) async {
+    Response res = await DashboardApi.getTodayRewardTik(date);
+    if (res.statusCode == 200) {
+      successCallback(res.data is Map<String, dynamic> ? TodayRewardTikModel.fromJson(res.data) : null);
     } else {
       if (errorCallback != null) errorCallback();
     }

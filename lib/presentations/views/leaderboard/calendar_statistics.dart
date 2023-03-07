@@ -9,6 +9,7 @@ import 'package:gaza_go/presentations/styles/styled_text.dart';
 import 'package:get/get.dart';
 import 'package:table_calendar/table_calendar.dart';
 
+//TODO. 삭제 예정
 class CalendarStatistics extends StatelessWidget {
   const CalendarStatistics({Key? key}) : super(key: key);
 
@@ -58,16 +59,18 @@ class CalendarStatistics extends StatelessWidget {
                         rightChevronPadding: EdgeInsets.only(right: 60.sp, top: 10.sp, bottom: 10.sp),
                       ),
                       calendarFormat: controller.calendarFormat,
-                      calendarBuilders: CalendarBuilders(markerBuilder: (context, date, events) {
-                        if (events.isNotEmpty) {
-                          UserRewardStatisticsModel reward = events.first as UserRewardStatisticsModel;
-                          return StyledText(
-                            '+${formatDecimalPlaces(reward.tik, 1)}',
-                            color: const Color(0xFFFF8FB4),
-                          );
-                        }
-                        return null;
-                      }),
+                      calendarBuilders: CalendarBuilders(
+                        markerBuilder: (context, date, events) {
+                          if (events.isNotEmpty) {
+                            UserRewardStatisticsModel reward = events.first as UserRewardStatisticsModel;
+                            return StyledText(
+                              '+${formatDecimalPlaces(reward.tik!.toDouble(), 1)}',
+                              color: tikColor,
+                            );
+                          }
+                          return null;
+                        },
+                      ),
                       eventLoader: (day) {
                         return controller.findCalendarStatisticsData(day);
                       },
@@ -116,8 +119,8 @@ class CalendarStatistics extends StatelessWidget {
                       child: iconCalendarStatisticsTokenTik,
                     ),
                     StyledText(
-                      '${formatDecimalPlaces(controller.total.value, 1)} TIK',
-                      color: const Color(0xFFFF8FB4),
+                      '${formatDecimalPlaces(controller.totalTik.value, 0)} TIK',
+                      color: tikColor,
                       fontWeight: 600,
                       fontSize: 18,
                       lineHeight: 20,

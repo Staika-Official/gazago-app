@@ -57,7 +57,7 @@ class InventoryItem extends StatelessWidget {
                                   child: item.itemImageUrl.contains('.svg')
                                       ? SvgPicture.network(
                                           fit: BoxFit.fitHeight,
-                                          controller.selectedItem.value.itemImageUrl,
+                                          item.itemImageUrl,
                                           placeholderBuilder: (BuildContext context) => Container(padding: const EdgeInsets.all(30.0), child: const CircularProgressIndicator()),
                                         )
                                       : CachedNetworkImage(

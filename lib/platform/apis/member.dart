@@ -21,4 +21,24 @@ class MemberApi {
       '/api/terms-histories/users/$userId/GAZAGO',
     );
   }
+
+  static Future<Response> reportAbuse(
+    String userId, {
+    required String description,
+    required String appVersion,
+    required String deviceModel,
+    required String platform,
+  }) async {
+    return await Api.client(serviceUrl: ServiceUrl.memberService).post(
+      '/api/abusings',
+      data: {
+        "clientId": "GAZAGO",
+        "userId": userId,
+        "deviceModel": deviceModel,
+        "platform": platform,
+        "appVersion": appVersion,
+        "description": description,
+      },
+    );
+  }
 }

@@ -1,6 +1,7 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:gaza_go/platform/controllers/inventory_controller.dart';
 import 'package:gaza_go/platform/controllers/synthetic_badge_controller.dart';
 import 'package:gaza_go/platform/helpers/base_helper.dart';
@@ -124,11 +125,17 @@ class InventoryBadgeDetail extends StatelessWidget {
                               padding: EdgeInsets.only(top: 40.0.sp),
                               child: SizedBox(
                                 width: 150.sp,
-                                child: CachedNetworkImage(
-                                  imageUrl: controller.selectedBadge.value.imageUrl!,
-                                  fit: BoxFit.fill,
-                                  placeholder: (context, url) => const CircularProgressIndicator(),
-                                ),
+                                child: controller.selectedBadge.value.imageUrl!.contains('.svg')
+                                    ? SvgPicture.network(
+                                        fit: BoxFit.fitWidth,
+                                        controller.selectedBadge.value.imageUrl!,
+                                        placeholderBuilder: (BuildContext context) => Container(padding: const EdgeInsets.all(30.0), child: const CircularProgressIndicator()),
+                                      )
+                                    : CachedNetworkImage(
+                                        imageUrl: controller.selectedBadge.value.imageUrl!,
+                                        fit: BoxFit.fill,
+                                        placeholder: (context, url) => const CircularProgressIndicator(),
+                                      ),
                               ),
                             ),
                             Wrap(

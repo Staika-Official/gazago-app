@@ -10,6 +10,7 @@ Color purpleColor = const Color(0xFFB85DFF);
 Color skyBlueColor = const Color(0xFF0EE6F3);
 Color lightGrayColor = const Color(0xFFBFBFBF);
 Color deepGrayColor = const Color(0xFF8A8A8A);
+Color numberedBoxGrayColor = const Color(0xFF484A54);
 
 Color textRedColor = const Color(0xffFF2525);
 Color textYellowColor = const Color(0xffFBCB24);
@@ -32,3 +33,5 @@ Color gradeLegendColor = const Color(0xFFFCFF5C);
 
 Color deepBlackColor = const Color(0xFF08080B);
 Color dangerColor = const Color(0xFFFF4D4D);
+Color stikColor = const Color(0xFFFF8A43);
+Color tikColor = const Color(0xFFFF8FB4);

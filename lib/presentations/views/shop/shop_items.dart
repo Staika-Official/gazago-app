@@ -2,6 +2,7 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:custom_rounded_rectangle_border/custom_rounded_rectangle_border.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:gaza_go/platform/controllers/shop_controller.dart';
 import 'package:gaza_go/platform/helpers/base_helper.dart';
 import 'package:gaza_go/platform/helpers/inventory_helper.dart';
@@ -20,7 +21,7 @@ class ShopItems extends StatelessWidget {
             onTap: () => shopController.toItemDetail(item.id),
             child: Container(
               decoration: BoxDecoration(
-                color: subBg01Color,
+                color: item.publishType == 'NFT' ? Color(0xFF151519) : subBg01Color,
                 border: Border.all(
                   width: 2,
                   color: Colors.black,
@@ -32,6 +33,7 @@ class ShopItems extends StatelessWidget {
               child: Stack(
                 alignment: Alignment.bottomCenter,
                 children: [
+                  if (item.publishType == 'NFT') Positioned(right: 10.sp, top: 10.sp, child: SvgPicture.asset('assets/images/shop/ico_nft.svg')),
                   Center(
                     child: Column(
                       mainAxisAlignment: MainAxisAlignment.start,
@@ -49,12 +51,18 @@ class ShopItems extends StatelessWidget {
                               child: item.itemImageUrl != null
                                   ? AspectRatio(
                                       aspectRatio: 1.5,
-                                      child: CachedNetworkImage(
-                                        imageUrl: item.itemImageUrl!,
-                                        fit: BoxFit.fitHeight,
-                                        placeholder: (context, url) => const Center(child: SizedBox.square(dimension: 40, child: CircularProgressIndicator())),
-                                        errorWidget: (context, url, error) => Image.asset("assets/images/@temp_bal.png"),
-                                      ),
+                                      child: item.itemImageUrl!.contains('.svg')
+                                          ? SvgPicture.network(
+                                              fit: BoxFit.contain,
+                                              item.itemImageUrl!,
+                                              placeholderBuilder: (BuildContext context) => Container(padding: const EdgeInsets.all(30.0), child: const CircularProgressIndicator()),
+                                            )
+                                          : CachedNetworkImage(
+                                              imageUrl: item.itemImageUrl!,
+                                              fit: BoxFit.fitHeight,
+                                              placeholder: (context, url) => const Center(child: SizedBox.square(dimension: 40, child: CircularProgressIndicator())),
+                                              errorWidget: (context, url, error) => Image.asset("assets/images/@temp_bal.png"),
+                                            ),
                                     )
                                   : Container(),
                             ),
@@ -158,24 +166,30 @@ class ShopItems extends StatelessWidget {
                       ),
                       child: Padding(
                         padding: EdgeInsets.symmetric(vertical: 14.0.sp, horizontal: 12.sp),
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            item.itemLabel != null
-                                ? StyledText(
-                                    item.itemLabel! == 'CLOSE_DEADLINE' ? '마감임박' : '품절',
-                                    fontSize: 12.sp,
-                                    fontWeight: 600,
-                                    color: skyBlueColor,
-                                  )
-                                : Container(),
-                            StyledText(
-                              '${formatDecimalPlaces(item.price.toDouble(), 0)} TIK',
-                              fontSize: 14.sp,
-                              fontWeight: 700,
-                              letterSpacing: .3,
-                            ),
-                          ],
+                        child: FittedBox(
+                          fit: BoxFit.scaleDown,
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              item.itemLabel != null
+                                  ? Padding(
+                                      padding: EdgeInsets.only(right: 5.0.sp),
+                                      child: StyledText(
+                                        item.itemLabel! == 'CLOSE_DEADLINE' ? '마감임박' : '품절',
+                                        fontSize: 12.sp,
+                                        fontWeight: 600,
+                                        color: skyBlueColor,
+                                      ),
+                                    )
+                                  : Container(),
+                              StyledText(
+                                '${formatDecimalPlaces(item.price.toDouble(), 0)} ${item.tradeSymbol}',
+                                fontSize: 14.sp,
+                                fontWeight: 700,
+                                letterSpacing: .3,
+                              ),
+                            ],
+                          ),
                         ),
                       ),
                     ),
