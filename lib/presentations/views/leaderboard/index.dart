@@ -35,14 +35,18 @@ class LeaderboardHome extends StatelessWidget {
                 builder: (context, snapshot) {
                   return Obx(() {
                     return Padding(
-                      padding: EdgeInsets.only(bottom: 28.0.sp),
+                      padding: EdgeInsets.only(bottom: 20.sp),
                       child: TableCalendar(
-                        rowHeight: 94,
+                        rowHeight: 88,
                         daysOfWeekHeight: 30,
                         locale: 'ko-KR',
                         firstDay: controller.firstDay.value!,
                         lastDay: controller.lastDay.value!,
                         focusedDay: controller.today.value!,
+                        selectedDayPredicate: (day) {
+                          return isSameDay(controller.selectedDate.value, day);
+                        },
+
                         eventLoader: (day) {
                           return controller.findCalendarStatisticsData(day);
                         },
@@ -52,35 +56,41 @@ class LeaderboardHome extends StatelessWidget {
                             if (events.isNotEmpty) {
                               UserRewardStatisticsModel reward = events.first as UserRewardStatisticsModel;
                               return Padding(
-                                padding: EdgeInsets.only(top: 48.0),
-                                child: Column(
-                                  children: [
-                                    FittedBox(
-                                      fit: BoxFit.scaleDown,
-                                      child: Column(
+                                padding: EdgeInsets.only(top: 42.0.sp),
+                                child: date.day != controller.today.value?.day
+                                    ? Column(
                                         children: [
-                                          StyledText(
-                                            '+${formatDecimalPlaces(reward.tik!.toDouble(), 0)}',
-                                            fontSize: 12.sp,
-                                            lineHeight: 16.sp,
-                                            fontWeight: 600,
-                                            color: tikColor,
-                                          ),
+                                          if (reward.tik != null)
+                                            FittedBox(
+                                              fit: BoxFit.scaleDown,
+                                              child: Column(
+                                                children: [
+                                                  StyledText(
+                                                    '+${formatDecimalPlaces(reward.tik!.toDouble(), 0)}',
+                                                    fontSize: 12.sp,
+                                                    lineHeight: 16.sp,
+                                                    fontWeight: 600,
+                                                    letterSpacing: -.1,
+                                                    color: Color(0xFFFF6B9C),
+                                                  ),
+                                                ],
+                                              ),
+                                            ),
+                                          if (reward.stik != null)
+                                            FittedBox(
+                                              fit: BoxFit.scaleDown,
+                                              child: StyledText(
+                                                '+${formatDecimalPlaces(reward.stik!, 2)}',
+                                                fontSize: 12.sp,
+                                                lineHeight: 16.sp,
+                                                fontWeight: 600,
+                                                letterSpacing: -.1,
+                                                color: Color(0xFFFFB443),
+                                              ),
+                                            ),
                                         ],
-                                      ),
-                                    ),
-                                    FittedBox(
-                                      fit: BoxFit.scaleDown,
-                                      child: StyledText(
-                                        '+${formatDecimalPlaces(reward.stik!, 2)}',
-                                        fontSize: 12.sp,
-                                        lineHeight: 16.sp,
-                                        fontWeight: 600,
-                                        color: stikColor,
-                                      ),
-                                    ),
-                                  ],
-                                ),
+                                      )
+                                    : Container(),
                               );
                             }
                             return null;
@@ -115,27 +125,27 @@ class LeaderboardHome extends StatelessWidget {
                               cellType: CalendarCellType.monthDay,
                             );
                           },
-                          // selectedBuilder: (context, date, focusedDate) {
-                          //   return CalendarCell(
-                          //     date: date,
-                          //     cellType: CalendarCellType.focusedDay,
-                          //     controller: controller,
-                          //   );
-                          // },
-                          // todayBuilder: (context, date, focusedDate) {
-                          //   return CalendarCell(
-                          //     date: date,
-                          //     cellType: CalendarCellType.today,
-                          //     controller: controller,
-                          //   );
-                          // },
-                          // outsideBuilder: (context, date, focusedDate) {
-                          //   return CalendarCell(
-                          //     date: date,
-                          //     cellType: CalendarCellType.outsideDay,
-                          //     controller: controller,
-                          //   );
-                          // },
+                          selectedBuilder: (context, date, focusedDate) {
+                            return CalendarCell(
+                              date: date,
+                              cellType: CalendarCellType.focusedDay,
+                              // controller: controller,
+                            );
+                          },
+                          todayBuilder: (context, date, focusedDate) {
+                            return CalendarCell(
+                              date: date,
+                              cellType: CalendarCellType.today,
+                              // controller: controller,
+                            );
+                          },
+                          outsideBuilder: (context, date, focusedDate) {
+                            return CalendarCell(
+                              date: date,
+                              cellType: CalendarCellType.outsideDay,
+                              // controller: controller,
+                            );
+                          },
                         ),
                         headerStyle: HeaderStyle(
                           titleTextStyle: TextStyle(fontSize: 18.sp, color: Colors.white, fontWeight: FontWeight.w500),
@@ -180,7 +190,7 @@ class LeaderboardHome extends StatelessWidget {
                 margin: const EdgeInsets.only(
                   left: 30,
                   right: 30,
-                  bottom: 30,
+                  bottom: 10,
                 ),
                 padding: const EdgeInsets.only(
                   left: 30,
