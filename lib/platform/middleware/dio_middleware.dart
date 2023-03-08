@@ -14,6 +14,7 @@ import 'package:logger/logger.dart';
 
 class Api {
   static final Logger _logger = Logger(printer: PrettyPrinter(colors: true, printEmojis: true));
+  static int retryAttempt = 0;
 
   static final Dio _dio = Dio()
     ..interceptors.addAll([
@@ -36,9 +37,9 @@ class Api {
 
   static Dio client({required String serviceUrl, bool needsToken = true, Map<String, dynamic>? queryParams, bool? isPatch = false, bool? isFile = false}) {
     _dio.options.baseUrl = '${F.baseUrl}$serviceUrl';
-    // _dio.options.connectTimeout = 10000;
-    _dio.options.receiveTimeout = 10000;
+    // _dio.options.connectTimeout = 2000;
     _dio.options.sendTimeout = 10000;
+    _dio.options.receiveTimeout = 10000;
 
     if (needsToken) {
       String? accessToken = HiveStore.loadString(key: HiveKey.accessToken.name);
@@ -175,6 +176,11 @@ class Api {
           if (errorData.errorMessage != null) {
             showToastPopup(errorData.errorMessage!);
           }
+          if (e.response != null) {
+            handler.resolve(e.response!);
+          } else {
+            handler.next(e);
+          }
         }
       } else if ([DioErrorType.connectTimeout, DioErrorType.sendTimeout, DioErrorType.receiveTimeout, DioErrorType.other].any((element) => element == e.type)) {
         handler.resolve(
@@ -200,6 +206,13 @@ class Api {
     String? accessToken = HiveStore.loadString(key: HiveKey.accessToken.name);
     if (accessToken == null) return;
 
+    retryAttempt++;
+    if (retryAttempt > 5) {
+      showToastPopup('토큰이 만료되었습니다.\n다시 로그인해주세요');
+      resetToLogin();
+      return;
+    }
+
     Dio dio = Dio();
     e.requestOptions.headers['Authorization'] = 'Bearer $accessToken';
     dio
@@ -217,6 +230,7 @@ class Api {
         handler.resolve(
           response,
         );
+        retryAttempt = 0;
       },
     ).onError((error, stackTrace) async {
       if (error is DioError) {
@@ -248,11 +262,16 @@ class Api {
 
         await _retryFailedRequest(e, handler);
       }).onError((error, stacktrace) {
-        HiveStore.deleteMultipleKeys(keys: [
-          HiveKey.accessToken.name,
-          HiveKey.refreshToken.name,
-        ]);
-        if (getx.Get.currentRoute != Routes.login) getx.Get.offAllNamed(Routes.login);
+        resetToLogin();
       });
+  }
+
+  static void resetToLogin() {
+    retryAttempt = 0;
+    HiveStore.deleteMultipleKeys(keys: [
+      HiveKey.accessToken.name,
+      HiveKey.refreshToken.name,
+    ]);
+    if (getx.Get.currentRoute != Routes.login) getx.Get.offAllNamed(Routes.login);
   }
 }
