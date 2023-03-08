@@ -79,7 +79,7 @@ dependencies:
   percent_indicator: ^4.2.2
   infinite_scroll_pagination: ^3.2.0
   table_calendar: ^3.0.7
-  modal_bottom_sheet: ^2.1.2
+  modal_bottom_sheet: ^3.0.0-pre
   smooth_page_indicator: ^1.0.0+2
   fluttertoast: ^8.0.9
   custom_rounded_rectangle_border: ^0.2.0-nullsafety.0
@@ -128,11 +128,6 @@ dev_dependencies:
 # following page: https://dart.dev/tools/pub/pubspec
 
 dependency_overrides:
-  modal_bottom_sheet:
-    git:
-      url: https://github.com/danReynolds/modal_bottom_sheet.git
-      path: modal_bottom_sheet
-
 # The following section is specific to Flutter packages.
 flutter:
 
