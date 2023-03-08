@@ -89,4 +89,13 @@ class UaaService {
       if (errorCallback != null) errorCallback(res.data);
     }
   }
+
+  static Future<void> pingConnection(int seconds, {Function? successCallback, Function? errorCallback}) async {
+    Response res = await UaaApi.pingConnection(seconds);
+    if (res.statusCode == 200) {
+      if (successCallback != null) successCallback(res.data);
+    } else {
+      if (errorCallback != null) errorCallback(res.data);
+    }
+  }
 }
