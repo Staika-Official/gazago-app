@@ -17,6 +17,7 @@ import 'package:gaza_go/platform/controllers/login_controller.dart';
 import 'package:gaza_go/platform/controllers/my_page_controller.dart';
 import 'package:gaza_go/platform/controllers/preference_controller.dart';
 import 'package:gaza_go/platform/controllers/shop_controller.dart';
+import 'package:gaza_go/platform/controllers/wallet_master_controller.dart';
 import 'package:gaza_go/platform/controllers/withdraw_confirm_controller.dart';
 import 'package:gaza_go/platform/helpers/activity_mixin.dart';
 import 'package:gaza_go/platform/helpers/alert_helper.dart';
@@ -2488,6 +2489,96 @@ void showNotChallangeAbleAlert(ActivityController controller) {
           buttonColor: skyBlueColor,
         ),
       ),
+    ],
+  );
+}
+
+void showStoreNotAvailableAlert() {
+  showAlert(
+    contentText: '스토어와 연결 중에 예상하지\n못한 오류가 발생했습니다.\n잠시 후 다시 시도해 주세요',
+    actions: [
+      Expanded(
+        child: GazagoButton(
+          onTap: () => Get.until((route) => Get.isBottomSheetOpen == false && Get.isDialogOpen == false),
+          buttonText: '확인',
+          buttonColor: skyBlueColor,
+        ),
+      ),
+    ],
+  );
+}
+
+void showInAppPurchaseProgressAlert(WalletMasterController controller) {
+  showAlert(
+    contentWidget: Obx(() {
+      return Container(
+          child: controller.showPendingPurchaseUI.value
+              ? Center(
+                  child: Column(
+                    children: [
+                      Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: StyledText(
+                          '결제를 처리중입니다.',
+                          fontSize: 18.sp,
+                          fontWeight: 500,
+                          lineHeight: 24.sp,
+                        ),
+                      ),
+                      SizedBox(
+                        width: 30,
+                        height: 30,
+                        child: CircularProgressIndicator(),
+                      ),
+                    ],
+                  ),
+                )
+              : Center(
+                  child: controller.isPurchaseSuccessful.value
+                      ? Column(
+                          children: [
+                            iconTiks,
+                            Padding(
+                              padding: const EdgeInsets.only(top: 14, bottom: 30),
+                              child: StyledText(
+                                'TIK 충전이 완료되었습니다.',
+                                fontSize: 18.sp,
+                                fontWeight: 500,
+                                lineHeight: 24.sp,
+                              ),
+                            ),
+                          ],
+                        )
+                      : Column(
+                          children: [
+                            iconTiks,
+                            Padding(
+                              padding: const EdgeInsets.only(top: 14, bottom: 30),
+                              child: StyledText(
+                                '결제를 하던 중 오류가 발생했습니다.\n잠시 후 다시 시도해 주세요.',
+                                fontSize: 18.sp,
+                                fontWeight: 500,
+                                lineHeight: 24.sp,
+                              ),
+                            ),
+                          ],
+                        ),
+                ));
+    }),
+    actions: [
+      Obx(() {
+        if (controller.showPendingPurchaseUI.value != true) {
+          return Expanded(
+            child: GazagoButton(
+              onTap: () => Get.back(),
+              buttonText: '확인',
+              buttonColor: skyBlueColor,
+            ),
+          );
+        } else {
+          return Container();
+        }
+      }),
     ],
   );
 }

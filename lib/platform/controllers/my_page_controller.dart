@@ -2,10 +2,12 @@ import 'dart:async';
 
 import 'package:dio/dio.dart' as dio;
 import 'package:flutter/cupertino.dart';
+import 'package:gaza_go/constants/enums.dart';
 import 'package:gaza_go/platform/controllers/preference_controller.dart';
 import 'package:gaza_go/platform/helpers/alert_helper.dart';
 import 'package:gaza_go/platform/models/user_account_model.dart';
 import 'package:gaza_go/platform/services/uaa_service.dart';
+import 'package:gaza_go/platform/stores/hive_store.dart';
 import 'package:gaza_go/presentations/components/alert_ui_list.dart';
 import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart';
@@ -75,8 +77,9 @@ class MyPageController extends GetxController {
     await UaaService.modifyAccountInfo(
       profile.value.nickname!,
       profile.value.profileImageUrl,
-      successCallback: (account) {
+      successCallback: (UserAccountModel account) {
         preferenceController.onInit();
+        HiveStore.save(key: HiveKey.profileImageUrl.name, value: account.profileImageUrl);
         showToastPopup('프로필이 수정되었습니다.');
         Get.back();
       },

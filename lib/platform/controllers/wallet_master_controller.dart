@@ -6,6 +6,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:gaza_go/constants/enums.dart';
 import 'package:gaza_go/constants/routes.dart';
+import 'package:gaza_go/flavors.dart';
 import 'package:gaza_go/platform/controllers/loading_controller.dart';
 import 'package:gaza_go/platform/helpers/alert_helper.dart';
 import 'package:gaza_go/platform/models/asset_detail_model.dart';
@@ -18,6 +19,7 @@ import 'package:gaza_go/platform/models/token_info_model.dart';
 import 'package:gaza_go/platform/models/user_account_model.dart';
 import 'package:gaza_go/platform/services/uaa_service.dart';
 import 'package:gaza_go/platform/services/wallet_service.dart';
+import 'package:gaza_go/presentations/components/alert_ui_list.dart';
 import 'package:gaza_go/presentations/components/gazago_button.dart';
 import 'package:gaza_go/presentations/components/product_list_dialog.dart';
 import 'package:gaza_go/presentations/styles/colors.dart';
@@ -41,6 +43,7 @@ class WalletMasterController extends GetxController {
   StreamSubscription<List<PurchaseDetails>>? subscription;
   final RxBool storeUnavailable = RxBool(false);
   final RxBool showPendingPurchaseUI = RxBool(false);
+  final RxBool isPurchaseSuccessful = RxBool(false);
   final RxList<ProductDetails> inAppProducts = RxList.empty();
 
   RxList<AssetTokenBalanceModel> get spendingTokenUiList {
@@ -248,6 +251,7 @@ class WalletMasterController extends GetxController {
     purchaseDetailsList.forEach((PurchaseDetails purchaseDetails) async {
       if (purchaseDetails.status == PurchaseStatus.pending) {
         showPendingPurchaseUI.value = true;
+        showInAppPurchaseProgressAlert(this);
       } else {
         if (purchaseDetails.status == PurchaseStatus.error) {
           _handlePurchaseError(purchaseDetails.error!);
@@ -272,7 +276,11 @@ class WalletMasterController extends GetxController {
     if (!available) {
       storeUnavailable.value = true;
     } else {
-      Set<String> _kIds = Platform.isIOS ? <String>{'ptik_purchase', 'ptik_purchase_test'} : <String>{'ptik_purchase_1', 'ptik_purchase_1000'};
+      Set<String> _kIds = Platform.isIOS
+          ? F.isDev
+              ? <String>{'ptik_purchase_test'}
+              : <String>{'ptik_purchase'}
+          : <String>{'ptik_purchase_1', 'ptik_purchase_1000'};
       final ProductDetailsResponse response = await InAppPurchase.instance.queryProductDetails(_kIds);
       if (response.notFoundIDs.isNotEmpty) {
         showToastPopup('구매할 수 있는 상품을 찾지 못했습니다.');
@@ -290,8 +298,9 @@ class WalletMasterController extends GetxController {
   }
 
   void _handlePurchaseError(IAPError error) {
+    isPurchaseSuccessful.value = false;
     showPendingPurchaseUI.value = false;
-    showToastPopup('구매에 실패했습니다.\n잠시후 다시 요청해주세요');
+    // showToastPopup('구매에 실패했습니다.\n잠시후 다시 요청해주세요');
   }
 
   Future<bool> _verifyPurchase(PurchaseDetails purchaseDetails) {
@@ -307,8 +316,6 @@ class WalletMasterController extends GetxController {
     print('verificationData.serverVerificationData : ${purchaseDetails.verificationData.serverVerificationData}');
     print('verificationData.source : ${purchaseDetails.verificationData.source}');
 
-
-
     inspect(purchaseDetails);
 
     print('#################################################');
@@ -323,16 +330,16 @@ class WalletMasterController extends GetxController {
 
   void _handleInvalidPurchase(PurchaseDetails purchaseDetails) {
     // handle invalid purchase here if  _verifyPurchase` failed.
+    isPurchaseSuccessful.value = false;
     showPendingPurchaseUI.value = false;
     showToastPopup('구매할 수 없는 상품입니다.');
   }
 
   Future<void> _completePurchaseInAppItem(PurchaseDetails purchaseDetails) async {
+    isPurchaseSuccessful.value = true;
     showPendingPurchaseUI.value = false;
 
     await InAppPurchase.instance.completePurchase(purchaseDetails);
-    Get.until((route) => Get.isDialogOpen == false);
-    showToastPopup('구매가 완료되었습니다.');
     getSpendingWalletBalances();
   }
 }
