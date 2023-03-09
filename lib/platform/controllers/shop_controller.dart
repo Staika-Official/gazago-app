@@ -14,8 +14,8 @@ class ShopController extends GetxController {
 
   final List<Map<String, String>> sortingList = [
     {'title': '최근 등록 순', 'value': 'id,DESC'},
-    {'title': '높은 가격 순', 'value': 'price,DESC'},
-    {'title': '낮은 가격 순', 'value': 'price,ASC'}
+    // {'title': '높은 가격 순', 'value': 'price,DESC'},
+    // {'title': '낮은 가격 순', 'value': 'price,ASC'}
   ];
 
   final List<Map<String, String>> categoryFilterList = [
