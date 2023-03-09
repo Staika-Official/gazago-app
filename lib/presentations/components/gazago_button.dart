@@ -42,13 +42,21 @@ class GazagoButton extends StatelessWidget {
             child: Padding(
               padding: EdgeInsets.symmetric(vertical: 12.0.sp),
               child: Center(
-                child: StyledText(
-                  buttonText,
-                  fontSize: 18,
-                  lineHeight: 18,
-                  fontWeight: 600,
-                  color: textColor,
-                ),
+                child: disableButton
+                    ? SizedBox(
+                        height: 18.sp,
+                        width: 18.sp,
+                        child: CircularProgressIndicator(
+                          color: textColor,
+                        ),
+                      )
+                    : StyledText(
+                        buttonText,
+                        fontSize: 18,
+                        lineHeight: 18,
+                        fontWeight: 600,
+                        color: textColor,
+                      ),
               ),
             ),
           ),

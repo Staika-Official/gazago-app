@@ -1,17 +1,19 @@
 import 'package:json_annotation/json_annotation.dart';
+
 part 'user_reward_statistics_model.g.dart';
 
 @JsonSerializable(explicitToJson: true)
 class UserRewardStatisticsModel {
-
-  double go;
-  double tik;
+  int? id;
+  double? stik;
+  double? tik;
   String? date;
 
   UserRewardStatisticsModel({
-    required this.go,
-    required this.tik,
+    this.stik,
+    this.tik,
     this.date,
+    this.id,
   });
 
   factory UserRewardStatisticsModel.fromJson(Map<String, dynamic> json) => _$UserRewardStatisticsModelFromJson(json);

@@ -74,7 +74,7 @@ class AssetItemCoin extends StatelessWidget {
                         mainAxisSize: MainAxisSize.min,
                         children: [
                           StyledText(
-                            formatDecimalPlaces(double.parse(asset.uiAmountString!), asset.decimals!),
+                            formatDecimalPlaces(double.parse(asset.uiAmountString!), asset.decimals!, isAutoDecimal: true),
                             fontSize: 18,
                             lineHeight: 20,
                             letterSpacing: 0.5,

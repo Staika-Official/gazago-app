@@ -14,8 +14,8 @@ class ShopController extends GetxController {
 
   final List<Map<String, String>> sortingList = [
     {'title': '최근 등록 순', 'value': 'id,DESC'},
-    {'title': '높은 가격 순', 'value': 'price,DESC'},
-    {'title': '낮은 가격 순', 'value': 'price,ASC'}
+    // {'title': '높은 가격 순', 'value': 'price,DESC'},
+    // {'title': '낮은 가격 순', 'value': 'price,ASC'}
   ];
 
   final List<Map<String, String>> categoryFilterList = [
@@ -131,28 +131,29 @@ class ShopController extends GetxController {
     }, errorCallback: (statusCode) {
       if (statusCode == 422) {
         isShortBalance.value = true;
-        showTikShortBalancePopup();
+        showTikShortBalancePopup(selectedItem.value.tradeSymbol);
       } else {
         itemPurchaseImpossibleAlert();
       }
     });
   }
 
-  void onClickPurchaseItem() {
-    if (walletMasterController.tik.value.amount! < selectedItem.value.price) {
+  void onClickPurchaseItem(tradeSymbol) {
+    print(walletMasterController.stik.value.uiAmountString!);
+    if ((tradeSymbol == 'STIK' ? double.parse(walletMasterController.stik.value.uiAmountString!) : walletMasterController.tik.value.amount!) < selectedItem.value.price) {
       isShortBalance.value = true;
-      showTikShortBalancePopup();
+      showTikShortBalancePopup(tradeSymbol);
     } else {
-      showItemPurchasePopup();
+      showItemPurchasePopup(tradeSymbol);
     }
   }
 
-  void showItemPurchasePopup() {
-    itemPurchaseAlert(this, walletMasterController.tik.value.amount!);
+  void showItemPurchasePopup(tradeSymbol) {
+    itemPurchaseAlert(this, tradeSymbol == 'STIK' ? double.parse(walletMasterController.stik.value.uiAmountString!) : walletMasterController.tik.value.amount!, tradeSymbol);
   }
 
-  void showTikShortBalancePopup() {
-    itemPurchaseShortBalanceAlert(this, walletMasterController.tik.value.amount!);
+  void showTikShortBalancePopup(tradeSymbol) {
+    itemPurchaseShortBalanceAlert(this, tradeSymbol == 'STIK' ? double.parse(walletMasterController.stik.value.uiAmountString!) : walletMasterController.tik.value.amount!, tradeSymbol);
   }
 
   void showItemPurchaseCompletePopup() {

@@ -3,6 +3,7 @@ import 'dart:ui';
 
 import 'package:another_xlider/another_xlider.dart';
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/flutter_svg.dart';
@@ -16,6 +17,7 @@ import 'package:gaza_go/platform/controllers/login_controller.dart';
 import 'package:gaza_go/platform/controllers/my_page_controller.dart';
 import 'package:gaza_go/platform/controllers/preference_controller.dart';
 import 'package:gaza_go/platform/controllers/shop_controller.dart';
+import 'package:gaza_go/platform/controllers/wallet_master_controller.dart';
 import 'package:gaza_go/platform/controllers/withdraw_confirm_controller.dart';
 import 'package:gaza_go/platform/helpers/activity_mixin.dart';
 import 'package:gaza_go/platform/helpers/alert_helper.dart';
@@ -163,11 +165,14 @@ void showShoeRepairSlider(InventoryController controller, int feeTikDurability) 
         width: 9.sp,
       ),
       Expanded(
-        child: GazagoButton(
-          onTap: () => controller.fetchRepairShoes(controller.equippedShoe.value.id),
-          buttonText: '네',
-          buttonColor: skyBlueColor,
-        ),
+        child: Obx(() {
+          return GazagoButton(
+            onTap: () => controller.fetchRepairShoes(controller.equippedShoe.value.id),
+            disableButton: controller.disableButton.value,
+            buttonText: '네',
+            buttonColor: skyBlueColor,
+          );
+        }),
       ),
     ],
   );
@@ -300,12 +305,14 @@ void showRepairStatSlider(ActivityController controller, StatModel stat, int fee
         width: 9.sp,
       ),
       Expanded(
-        child: GazagoButton(
-          onTap: () => stat.type == 'STAMINA' ? controller.fetchRechargeStamina(stat.type) : controller.fetchRepairShoes(),
-          disableButton: controller.disableButton.value,
-          buttonText: '네',
-          buttonColor: skyBlueColor,
-        ),
+        child: Obx(() {
+          return GazagoButton(
+            onTap: () => stat.type == 'STAMINA' ? controller.fetchRechargeStamina(stat.type) : controller.fetchRepairShoes(),
+            disableButton: controller.disableButton.value,
+            buttonText: '네',
+            buttonColor: skyBlueColor,
+          );
+        }),
       ),
     ],
   );
@@ -936,7 +943,7 @@ void showPendingExerciseAlert(ActivityController controller) {
   );
 }
 
-void itemPurchaseAlert(ShopController controller, double remainMyTik) {
+void itemPurchaseAlert(ShopController controller, double remainMyTik, tradeSymbol) {
   showAlert(
     title: '구매 하시겠습니까?',
     isScrollControlled: true,
@@ -954,8 +961,8 @@ void itemPurchaseAlert(ShopController controller, double remainMyTik) {
                   lineHeight: 32,
                   fontWeight: 600,
                 ),
-                const StyledText(
-                  'TIK',
+                StyledText(
+                  controller.selectedItem.value.tradeSymbol!,
                   fontSize: 30,
                   lineHeight: 32,
                   fontWeight: 400,
@@ -1030,7 +1037,7 @@ void itemPurchaseAlert(ShopController controller, double remainMyTik) {
                 fontWeight: 600,
               ),
               StyledText(
-                '${formatDecimalPlaces(remainMyTik, 0)} TIK',
+                '${formatDecimalPlaces(remainMyTik, tradeSymbol == 'STIK' ? 9 : 0, isAutoDecimal: true)} ${controller.selectedItem.value.tradeSymbol!}',
                 fontSize: 18,
                 lineHeight: 18,
                 fontWeight: 400,
@@ -1073,7 +1080,7 @@ void itemPurchaseAlert(ShopController controller, double remainMyTik) {
   );
 }
 
-void itemPurchaseShortBalanceAlert(ShopController controller, double remainMyTik) {
+void itemPurchaseShortBalanceAlert(ShopController controller, double remainMyTik, tradeSymbol) {
   showAlert(
     title: '잔액이 부족합니다',
     isDangerTitle: true,
@@ -1092,8 +1099,8 @@ void itemPurchaseShortBalanceAlert(ShopController controller, double remainMyTik
                   lineHeight: 32,
                   fontWeight: 600,
                 ),
-                const StyledText(
-                  'TIK',
+                StyledText(
+                  controller.selectedItem.value.tradeSymbol!,
                   fontSize: 30,
                   lineHeight: 32,
                   fontWeight: 400,
@@ -1169,7 +1176,7 @@ void itemPurchaseShortBalanceAlert(ShopController controller, double remainMyTik
                 color: dangerColor,
               ),
               StyledText(
-                '${formatDecimalPlaces(remainMyTik, 0)} TIK',
+                '${formatDecimalPlaces(remainMyTik, tradeSymbol == 'STIK' ? 9 : 0, isAutoDecimal: true)} ${controller.selectedItem.value.tradeSymbol}',
                 fontSize: 18,
                 lineHeight: 18,
                 fontWeight: 400,
@@ -1180,7 +1187,7 @@ void itemPurchaseShortBalanceAlert(ShopController controller, double remainMyTik
           Padding(
             padding: EdgeInsets.only(top: 55.0.sp, bottom: 25.sp),
             child: StyledText(
-              '· TIK 충전 후 재시도 해주세요',
+              '· ${controller.selectedItem.value.tradeSymbol} 충전 후 재시도 해주세요',
               fontSize: 14,
               lineHeight: 14,
               fontWeight: 500,
@@ -1215,12 +1222,18 @@ void itemPurchaseCompleteAlert(ShopController controller) {
               children: [
                 SizedBox(
                   width: 150.sp,
-                  child: CachedNetworkImage(
-                    imageUrl: controller.purchaseCompleteItem.value.itemImageUrl,
-                    fit: BoxFit.fitWidth,
-                    placeholder: (context, url) => const CircularProgressIndicator(),
-                    errorWidget: (context, url, error) => Image.asset("assets/images/@temp_badge.png"),
-                  ),
+                  child: controller.purchaseCompleteItem.value.itemImageUrl.contains('.svg')
+                      ? SvgPicture.network(
+                          fit: BoxFit.contain,
+                          controller.purchaseCompleteItem.value.itemImageUrl,
+                          placeholderBuilder: (BuildContext context) => Container(padding: const EdgeInsets.all(30.0), child: const CircularProgressIndicator()),
+                        )
+                      : CachedNetworkImage(
+                          imageUrl: controller.purchaseCompleteItem.value.itemImageUrl,
+                          fit: BoxFit.fitWidth,
+                          placeholder: (context, url) => const CircularProgressIndicator(),
+                          errorWidget: (context, url, error) => Image.asset("assets/images/@temp_badge.png"),
+                        ),
                 ),
               ],
             ),
@@ -1814,7 +1827,7 @@ void alreadyConnectedDeviceAlert(LoginController controller, LoginType socialTyp
     contentWidget: Padding(
       padding: EdgeInsets.only(top: 20.0.sp, bottom: 40.sp),
       child: const StyledText(
-        '댜른 기기에 로그인 되어 있어요.\n해당 기기의 로그인 해제 후 로그인할께요.',
+        '댜른 기기에 로그인 되어 있어요.\n해당 기기의 로그인 해제 후 로그인할게요.',
         fontSize: 18,
         lineHeight: 24,
         fontWeight: 500,
@@ -2075,7 +2088,323 @@ void showAdTipAlert(ExerciseType exerciseType) {
   );
 }
 
+void showLeaderboardInfo() {
+  Get.dialog(
+    barrierColor: Colors.black.withOpacity(.8),
+    Material(
+      color: Colors.transparent,
+      child: Padding(
+        padding: EdgeInsets.symmetric(horizontal: 25.0.sp),
+        child: Center(
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Stack(
+                children: [
+                  Container(
+                    width: double.infinity,
+                    padding: EdgeInsets.only(top: 49.sp, left: 29.sp, right: 29.sp, bottom: 50.sp),
+                    decoration: BoxDecoration(
+                      color: popupBgColor,
+                      borderRadius: BorderRadius.circular(10.sp),
+                    ),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        SizedBox(
+                          width: 84.sp,
+                          child: Image.asset(
+                            'assets/images/leaderboard/ico_info_tik.png',
+                          ),
+                        ),
+                        Padding(
+                          padding: EdgeInsets.only(top: 20.0.sp),
+                          child: Text.rich(
+                            TextSpan(
+                              style: TextStyle(
+                                fontWeight: FontWeight.w700,
+                                fontSize: 20.sp,
+                                color: Colors.white,
+                                // height: 18.sp,
+                              ),
+                              children: [
+                                TextSpan(
+                                  text: '오늘 분배할',
+                                ),
+                                TextSpan(
+                                    text: ' 전체 리워드',
+                                    style: TextStyle(
+                                      color: Color(0xFFFF87B5),
+                                      // height: 18.sp,
+                                    )),
+                                TextSpan(
+                                  text: '란?',
+                                )
+                              ],
+                            ),
+                          ),
+                        ),
+                        Padding(
+                          padding: EdgeInsets.only(top: 8.0.sp),
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              StyledText(
+                                '어제 가자고에서의 활동을 기준으로 확정돼요!',
+                                color: lightGrayColor,
+                                fontSize: 11,
+                                lineHeight: 16,
+                              ),
+                              StyledText(
+                                '오늘 리더보드 참여자에게 획득한 GO만큼 돌려드려요!',
+                                color: lightGrayColor,
+                                fontSize: 11,
+                                lineHeight: 16,
+                              ),
+                              StyledText(
+                                '매일 자정(한국시간기준)에 확정되고 돌려드려요!',
+                                color: lightGrayColor,
+                                fontSize: 11,
+                                lineHeight: 16,
+                              ),
+                              Text.rich(
+                                style: TextStyle(
+                                  fontSize: 11.sp,
+                                  height: 18.sp / 11.sp,
+                                  fontWeight: FontWeight.w400,
+                                  color: lightGrayColor,
+                                ),
+                                TextSpan(
+                                  text: '가자고 팀은 매출의 50~70%를 보상',
+                                  style: TextStyle(
+                                    fontWeight: FontWeight.w700,
+                                    color: Colors.white,
+                                  ),
+                                  children: [
+                                    TextSpan(
+                                      text: '으로 돌려드리고 있어요',
+                                      style: TextStyle(
+                                        fontWeight: FontWeight.w400,
+                                        color: lightGrayColor,
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                              StyledText(
+                                '오늘 분배할 전체 리워드는 아래 항목으로 구성됩니다!',
+                                color: lightGrayColor,
+                                fontSize: 11,
+                                lineHeight: 16,
+                              ),
+                            ],
+                          ),
+                        ),
+                        Container(
+                          padding: EdgeInsets.only(top: 36.sp),
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              SizedBox(
+                                width: double.infinity,
+                                child: Text.rich(
+                                  style: TextStyle(
+                                    fontSize: 14.sp,
+                                    height: 22.sp / 14.sp,
+                                    fontWeight: FontWeight.w500,
+                                    color: Colors.white,
+                                  ),
+                                  TextSpan(
+                                    text: '1. 어제 사용된',
+                                    children: [
+                                      TextSpan(
+                                        text: ' TIK의 합',
+                                        style: TextStyle(
+                                          color: tikColor,
+                                          fontWeight: FontWeight.w700,
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                              ),
+                              Padding(
+                                padding: EdgeInsets.only(top: 5.0.sp, left: 7.0.sp),
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: const [
+                                    StyledText(
+                                      '· 체력 충전',
+                                      fontSize: 12,
+                                      lineHeight: 18,
+                                      fontWeight: 400,
+                                    ),
+                                    StyledText(
+                                      '· 신발 내구도 충전',
+                                      fontSize: 12,
+                                      lineHeight: 18,
+                                      fontWeight: 400,
+                                    ),
+                                    StyledText(
+                                      '· 일반 아이템 구매',
+                                      fontSize: 12,
+                                      lineHeight: 18,
+                                      fontWeight: 400,
+                                    ),
+                                    StyledText(
+                                      '· 상품권 교환에 사용된 일부 비용',
+                                      fontSize: 12,
+                                      lineHeight: 18,
+                                      fontWeight: 400,
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                        Container(
+                          padding: EdgeInsets.only(top: 12.sp),
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              SizedBox(
+                                width: double.infinity,
+                                child: Text.rich(
+                                  style: TextStyle(
+                                    fontSize: 14.sp,
+                                    height: 22.sp / 14.sp,
+                                    fontWeight: FontWeight.w500,
+                                    color: Colors.white,
+                                  ),
+                                  TextSpan(
+                                    text: '2. 리더보드 참여자 ',
+                                    children: [
+                                      TextSpan(
+                                        text: '추가 제공 보상',
+                                        style: TextStyle(
+                                          color: tikColor,
+                                          fontWeight: FontWeight.w700,
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                              ),
+                              Padding(
+                                padding: EdgeInsets.only(top: 5.0.sp, left: 7.0.sp),
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: const [
+                                    StyledText(
+                                      '· 참여자 수 보상(TIK)',
+                                      fontSize: 12,
+                                      lineHeight: 18,
+                                      fontWeight: 400,
+                                    ),
+                                    StyledText(
+                                      '· 상위 순위 보상(STIK + TIK)',
+                                      fontSize: 12,
+                                      lineHeight: 18,
+                                      fontWeight: 400,
+                                    ),
+                                    StyledText(
+                                      '· 깜짝 순위 보상(STIK + TIK)',
+                                      fontSize: 12,
+                                      lineHeight: 18,
+                                      fontWeight: 400,
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                        Container(
+                          padding: EdgeInsets.only(top: 12.sp),
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              SizedBox(
+                                width: double.infinity,
+                                child: Text.rich(
+                                  style: TextStyle(
+                                    fontSize: 14.sp,
+                                    height: 22.sp / 14.sp,
+                                    fontWeight: FontWeight.w500,
+                                    color: Colors.white,
+                                  ),
+                                  TextSpan(
+                                    text: '3. ',
+                                    children: [
+                                      TextSpan(
+                                        text: '2달 전 사용된 STIK의 합',
+                                        style: TextStyle(
+                                          color: tikColor,
+                                          fontWeight: FontWeight.w700,
+                                        ),
+                                      ),
+                                      TextSpan(
+                                        text: '을 TIK으로 제공',
+                                        style: TextStyle(
+                                          fontWeight: FontWeight.w700,
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                              ),
+                              Padding(
+                                padding: EdgeInsets.only(top: 5.0.sp, left: 7.0.sp),
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: const [
+                                    StyledText(
+                                      '· NFT 아이템 구매',
+                                      fontSize: 12,
+                                      lineHeight: 18,
+                                      fontWeight: 400,
+                                    ),
+                                    StyledText(
+                                      '· STIK으로 사용된 비용의 일부',
+                                      fontSize: 12,
+                                      lineHeight: 18,
+                                      fontWeight: 400,
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                  Positioned(right: 12, top: 20, child: InkWell(onTap: () => Get.back(), child: iconCloseWhite)),
+                ],
+              ),
+            ],
+          ),
+        ),
+      ),
+    ),
+  );
+}
+
 Future<void> showMainPopupAlert(ActivityController activityController) async {
+  final CarouselController carouselController = CarouselController();
+  List<Widget> getImageSliders(controller) {
+    return controller.popupList
+        .map((item) => Container(
+              width: double.infinity,
+              child: InkWell(
+                onTap: () => controller.moveToWebView(item['type']),
+                child: Image.asset(item['imageUrl']),
+              ),
+            ))
+        .toList();
+  }
+
   await Get.bottomSheet(
     isDismissible: false,
     isScrollControlled: true,
@@ -2086,12 +2415,61 @@ Future<void> showMainPopupAlert(ActivityController activityController) async {
           color: Colors.transparent,
         ),
         child: Column(
-          mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: CrossAxisAlignment.end,
+          mainAxisAlignment: MainAxisAlignment.end,
+          mainAxisSize: MainAxisSize.max,
           children: [
-            InkWell(
-              onTap: () => activityController.moveToHowToGo(),
-              child: Image.asset('assets/images/common/img_main_popup.png'),
-            ),
+            Stack(children: [
+              CarouselSlider(
+                key: const Key('Slider'),
+                items: activityController.popupList
+                    .map((item) => Container(
+                          width: double.infinity,
+                          child: InkWell(
+                            onTap: () => activityController.moveToWebView(item['type']),
+                            child: Image.asset(
+                              item['imageUrl'],
+                              width: double.infinity,
+                            ),
+                          ),
+                        ))
+                    .toList(),
+                carouselController: carouselController,
+                options: CarouselOptions(
+                  aspectRatio: 1,
+                  viewportFraction: 1,
+                  autoPlay: true,
+                  enlargeCenterPage: false,
+                  enableInfiniteScroll: false,
+                  onPageChanged: (index, reason) {
+                    activityController.setCurrent(index);
+                  },
+                  onScrolled: (op) {
+                    activityController.setValue(op!);
+                  },
+                ),
+              ),
+              Positioned(
+                  right: 20.sp,
+                  top: 12.sp,
+                  child: Obx(() {
+                    return Container(
+                      decoration: BoxDecoration(
+                        color: popupBgColor,
+                        borderRadius: BorderRadius.circular(20.sp),
+                      ),
+                      child: Padding(
+                        padding: EdgeInsets.symmetric(horizontal: 8.0.sp, vertical: 4.0.sp),
+                        child: StyledText(
+                          '${(activityController.current.value + 1).toString()}/${activityController.popupList.length}',
+                          fontSize: 16,
+                          lineHeight: 17,
+                          fontWeight: 500,
+                        ),
+                      ),
+                    );
+                  })),
+            ]),
             Container(
               color: popupBgColor,
               child: Padding(
@@ -2180,6 +2558,96 @@ void showNotChallangeAbleAlert(ActivityController controller) {
           buttonColor: skyBlueColor,
         ),
       ),
+    ],
+  );
+}
+
+void showStoreNotAvailableAlert() {
+  showAlert(
+    contentText: '스토어와 연결 중에 예상하지\n못한 오류가 발생했습니다.\n잠시 후 다시 시도해 주세요',
+    actions: [
+      Expanded(
+        child: GazagoButton(
+          onTap: () => Get.until((route) => Get.isBottomSheetOpen == false && Get.isDialogOpen == false),
+          buttonText: '확인',
+          buttonColor: skyBlueColor,
+        ),
+      ),
+    ],
+  );
+}
+
+void showInAppPurchaseProgressAlert(WalletMasterController controller) {
+  showAlert(
+    contentWidget: Obx(() {
+      return Container(
+          child: controller.showPendingPurchaseUI.value
+              ? Center(
+                  child: Column(
+                    children: [
+                      Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: StyledText(
+                          '결제를 처리중입니다.',
+                          fontSize: 18.sp,
+                          fontWeight: 500,
+                          lineHeight: 24.sp,
+                        ),
+                      ),
+                      SizedBox(
+                        width: 30,
+                        height: 30,
+                        child: CircularProgressIndicator(),
+                      ),
+                    ],
+                  ),
+                )
+              : Center(
+                  child: controller.isPurchaseSuccessful.value
+                      ? Column(
+                          children: [
+                            iconTiks,
+                            Padding(
+                              padding: const EdgeInsets.only(top: 14, bottom: 30),
+                              child: StyledText(
+                                'TIK 충전이 완료되었습니다.',
+                                fontSize: 18.sp,
+                                fontWeight: 500,
+                                lineHeight: 24.sp,
+                              ),
+                            ),
+                          ],
+                        )
+                      : Column(
+                          children: [
+                            iconTiks,
+                            Padding(
+                              padding: const EdgeInsets.only(top: 14, bottom: 30),
+                              child: StyledText(
+                                '결제를 하던 중 오류가 발생했습니다.\n잠시 후 다시 시도해 주세요.',
+                                fontSize: 18.sp,
+                                fontWeight: 500,
+                                lineHeight: 24.sp,
+                              ),
+                            ),
+                          ],
+                        ),
+                ));
+    }),
+    actions: [
+      Obx(() {
+        if (controller.showPendingPurchaseUI.value != true) {
+          return Expanded(
+            child: GazagoButton(
+              onTap: () => Get.back(),
+              buttonText: '확인',
+              buttonColor: skyBlueColor,
+            ),
+          );
+        } else {
+          return Container();
+        }
+      }),
     ],
   );
 }

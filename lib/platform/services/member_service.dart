@@ -45,4 +45,26 @@ class MemberService {
       if (errorCallback != null) errorCallback();
     }
   }
+
+  static Future<void> reportAbuse({
+    required String description,
+    required String appVersion,
+    required String deviceModel,
+    required String platform,
+    Function? successCallback,
+    Function? errorCallback,
+  }) async {
+    Response res = await MemberApi.reportAbuse(
+      userId!,
+      appVersion: appVersion,
+      description: description,
+      deviceModel: deviceModel,
+      platform: platform,
+    );
+    if (res.statusCode == 201) {
+      if (successCallback != null) successCallback();
+    } else {
+      if (errorCallback != null) errorCallback();
+    }
+  }
 }

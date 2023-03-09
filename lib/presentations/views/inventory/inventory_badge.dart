@@ -1,6 +1,7 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:gaza_go/platform/controllers/inventory_controller.dart';
 import 'package:gaza_go/presentations/styles/colors.dart';
 import 'package:gaza_go/presentations/styles/icons.dart';
@@ -30,14 +31,21 @@ class InventoryBadge extends StatelessWidget {
                   children: [
                     Opacity(
                       opacity: item.state == 'EQUIPPED' ? 0.5 : 1,
-                      child: Padding(
+                      child: Container(
+                        height: 95.sp,
                         padding: EdgeInsets.all(10.0.sp),
-                        child: CachedNetworkImage(
-                          imageUrl: item.imageUrl!,
-                          fit: BoxFit.fitWidth,
-                          placeholder: (context, url) => const CircularProgressIndicator(),
-                          errorWidget: (context, url, error) => Image.asset("assets/images/@temp_badge.png"),
-                        ),
+                        child: item.imageUrl!.contains('.svg')
+                            ? SvgPicture.network(
+                                fit: BoxFit.fitWidth,
+                                item.imageUrl!,
+                                placeholderBuilder: (BuildContext context) => Container(padding: const EdgeInsets.all(30.0), child: const CircularProgressIndicator()),
+                              )
+                            : CachedNetworkImage(
+                                imageUrl: item.imageUrl!,
+                                fit: BoxFit.fitWidth,
+                                placeholder: (context, url) => const CircularProgressIndicator(),
+                                errorWidget: (context, url, error) => Image.asset("assets/images/@temp_badge.png"),
+                              ),
                       ),
                     ),
                     // if (item.name != null)

@@ -75,7 +75,7 @@ List<LatLng> locationStringToLatLng(String locationString) {
   return coordinates;
 }
 
-String formatDecimalPlaces(double val, int decimalPlaces, {RoundType roundType = RoundType.round}) {
+String formatDecimalPlaces(double val, int decimalPlaces, {RoundType roundType = RoundType.round, bool isAutoDecimal = false}) {
   num mod = pow(10.0, decimalPlaces);
   double? formattedNumber;
   switch (roundType) {
@@ -95,7 +95,11 @@ String formatDecimalPlaces(double val, int decimalPlaces, {RoundType roundType =
     if (val == 0) {
       formatter = NumberFormat('0');
     } else {
-      formatter = NumberFormat('#,##0.${"0" * decimalPlaces}');
+      if (isAutoDecimal) {
+        formatter = NumberFormat('#,##0.${"#" * decimalPlaces}');
+      } else {
+        formatter = NumberFormat('#,##0.${"0" * decimalPlaces}');
+      }
     }
   } else {
     formatter = NumberFormat('#,###');
@@ -107,4 +111,12 @@ String formatDecimalPlaces(double val, int decimalPlaces, {RoundType roundType =
 String formatSeconds(int time) {
   Duration seconds = Duration(seconds: time);
   return seconds.toString().split('.').first.padLeft(8, "0");
+}
+
+String generateRandomString(int length) {
+  final random = Random();
+  const availableChars = 'AaBbCcDdEeFfGgHhIiJjKkLlMmNnOoPpQqRrSsTtUuVvWwXxYyZz1234567890';
+  final randomString = List.generate(length, (index) => availableChars[random.nextInt(availableChars.length)]).join();
+
+  return randomString;
 }

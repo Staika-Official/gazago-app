@@ -2,12 +2,14 @@ import 'dart:async';
 import 'dart:io';
 
 import 'package:advertising_id/advertising_id.dart';
+import 'package:device_info_plus/device_info_plus.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_naver_map/flutter_naver_map.dart';
 import 'package:gaza_go/constants/config.dart';
 import 'package:gaza_go/constants/enums.dart';
 import 'package:gaza_go/constants/routes.dart';
+import 'package:gaza_go/platform/controllers/home_menu_controller.dart';
 import 'package:gaza_go/platform/controllers/loading_controller.dart';
 import 'package:gaza_go/platform/controllers/wallet_master_controller.dart';
 import 'package:gaza_go/platform/helpers/activity_helper.dart';
@@ -27,6 +29,7 @@ import 'package:gaza_go/platform/models/user_stamina_recharge_model.dart';
 import 'package:gaza_go/platform/models/user_state_model.dart';
 import 'package:gaza_go/platform/services/activity_service.dart';
 import 'package:gaza_go/platform/services/item_service.dart';
+import 'package:gaza_go/platform/services/member_service.dart';
 import 'package:gaza_go/platform/services/uaa_service.dart';
 import 'package:gaza_go/platform/stores/hive_store.dart';
 import 'package:gaza_go/presentations/components/alert_ui_list.dart';
@@ -38,6 +41,7 @@ import 'package:gaza_go/presentations/views/activity/ad_select.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:get/get.dart';
 import 'package:health/health.dart';
+import 'package:package_info_plus/package_info_plus.dart';
 import 'package:permission_handler/permission_handler.dart' as ph;
 import 'package:simple_animations/animation_builder/custom_animation_builder.dart';
 import 'package:throttling/throttling.dart';
@@ -61,6 +65,21 @@ class ActivityController extends SuperController with ActivityMixin, ChallengeMi
       {'title': '총 획득 타이카', 'unit': 'TIK', 'content': 200.toString(), 'icon': iconActivityStoryTaika},
     ]);
   }
+
+  final List<Map<String, dynamic>> popupList = [
+    {
+      'imageUrl': 'assets/images/common/img_main_popup.png',
+      'type': 'HOWTOGO',
+    },
+    {
+      'imageUrl': 'assets/images/common/img_main_popup_02.png',
+      'type': 'WARNING',
+    },
+    {
+      'imageUrl': 'assets/images/common/img_main_popup_03.png',
+      'type': 'NEWITEM',
+    },
+  ];
 
   final RxDouble currentSliderValue = RxDouble(0);
   final RxInt remainDurability = RxInt(0);
@@ -91,6 +110,37 @@ class ActivityController extends SuperController with ActivityMixin, ChallengeMi
   final RxInt time = RxInt(5);
   String? advertisingId = '';
   bool? isLimitAdTrackingEnabled;
+  final RxInt _current = 0.obs;
+  late final int pageSize;
+  RxList<double> ops = [1.0, 0.0, 0.0].obs;
+  RxList<double> offsets = [0.0, 0.0, 0.0].obs;
+
+  setValue(double op) {
+    if (op > 0 && op < 1) {
+      ops[0] = 1 - op;
+      ops[1] = op;
+    } else if (op > 1 && op < 2) {
+      ops[1] = 2 - op;
+      ops[2] = -1 + op;
+    }
+
+    if (op == 0.0) {
+      ops[0] = 1;
+      ops[1] = ops[2] = 0;
+    } else if (op == 1.0) {
+      ops[1] = 1;
+      ops[0] = ops[2] = 0;
+    } else if (op == 2.0) {
+      ops[2] = 1;
+      ops[0] = ops[1] = 0;
+    }
+  }
+
+  get current => _current;
+
+  setCurrent(int index) {
+    _current.value = index;
+  }
 
   initPlatformState() async {
     // Platform messages may fail, so we use a try/catch PlatformException.
@@ -260,9 +310,18 @@ class ActivityController extends SuperController with ActivityMixin, ChallengeMi
     costTik.value = 0;
   }
 
+  void initRepairButton() {
+    if (disableButton.value) {
+      Timer(const Duration(seconds: 1), () {
+        disableButton.value = false;
+      });
+    }
+  }
+
   void closeRepairPopup() {
     initRepairInfo();
     Get.back();
+    initRepairButton();
   }
 
   void onClickRepairStat(stat) {
@@ -277,6 +336,7 @@ class ActivityController extends SuperController with ActivityMixin, ChallengeMi
 
   void handleNotEnoughTaikaPopup() {
     showNotEnoughTaikaAlert();
+    initRepairButton();
   }
 
   void fetchRechargeStamina(type) async {
@@ -297,20 +357,16 @@ class ActivityController extends SuperController with ActivityMixin, ChallengeMi
           showToastPopup('체력이 충전되었습니다.');
           closeRepairPopup();
         }, errorCallback: () {
-          Timer(const Duration(milliseconds: 500), () {
-            disableButton.value = false;
-          });
+          showToastPopup('충전 요청이 실패했습니다.');
+          initRepairButton();
         });
       } else {
         showToastPopup('충전할 게이지를 확인해주세요.');
+        initRepairButton();
       }
     } else {
       handleNotEnoughTaikaPopup();
     }
-
-    Timer(const Duration(milliseconds: 500), () {
-      disableButton.value = false;
-    });
   }
 
   void fetchRepairShoes() async {
@@ -331,20 +387,16 @@ class ActivityController extends SuperController with ActivityMixin, ChallengeMi
           showToastPopup('내구도 충전이 완료되었습니다.');
           closeRepairPopup();
         }, errorCallback: () {
-          Timer(const Duration(milliseconds: 500), () {
-            disableButton.value = false;
-          });
+          showToastPopup('충전 요청이 실패했습니다.');
+          initRepairButton();
         });
       } else {
         showToastPopup('충전할 게이지를 확인해주세요.');
+        initRepairButton();
       }
     } else {
       handleNotEnoughTaikaPopup();
     }
-
-    Timer(const Duration(milliseconds: 500), () {
-      disableButton.value = false;
-    });
   }
 
   Future<void> getUserState() async {
@@ -722,10 +774,22 @@ class ActivityController extends SuperController with ActivityMixin, ChallengeMi
     });
   }
 
-  void detectFakeGps() {
+  void detectFakeGps() async {
     //안드로이드만 탐지 가능
     if (isFakeGps.value && Get.isBottomSheetOpen != true) {
       showFakeGpsAlert();
+      PackageInfo packageInfo = await PackageInfo.fromPlatform();
+      String platform = Platform.operatingSystem;
+      DeviceInfoPlugin deviceInfo = DeviceInfoPlugin();
+      String deviceModel;
+      if (Platform.isIOS) {
+        IosDeviceInfo iosInfo = await deviceInfo.iosInfo;
+        deviceModel = iosInfo.utsname.machine ?? 'ios model unknown';
+      } else {
+        AndroidDeviceInfo androidInfo = await deviceInfo.androidInfo;
+        deviceModel = androidInfo.model;
+      }
+      MemberService.reportAbuse(description: 'Fake GPS 사용 감지', appVersion: packageInfo.version, deviceModel: deviceModel, platform: platform);
     }
   }
 
@@ -766,8 +830,19 @@ class ActivityController extends SuperController with ActivityMixin, ChallengeMi
     }
   }
 
-  void moveToHowToGo() {
-    Get.toNamed(Routes.howToGo);
+  void moveToWebView(type) {
+    switch (type) {
+      case 'HOWTOGO':
+        Get.toNamed(Routes.howToGo);
+        break;
+      case 'WARNING':
+        Get.toNamed(Routes.mountainWarning);
+        break;
+      case 'NEWITEM':
+        Get.back();
+        Get.find<HomeMenuController>().selectMenu(3);
+        break;
+    }
   }
 
   void checkPopupExpired() {
