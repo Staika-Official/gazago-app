@@ -206,13 +206,6 @@ class Api {
     String? accessToken = HiveStore.loadString(key: HiveKey.accessToken.name);
     if (accessToken == null) return;
 
-    retryAttempt++;
-    if (retryAttempt > 5) {
-      showToastPopup('토큰이 만료되었습니다.\n다시 로그인해주세요');
-      resetToLogin();
-      return;
-    }
-
     Dio dio = Dio();
     e.requestOptions.headers['Authorization'] = 'Bearer $accessToken';
     dio
@@ -230,7 +223,6 @@ class Api {
         handler.resolve(
           response,
         );
-        retryAttempt = 0;
       },
     ).onError((error, stackTrace) async {
       if (error is DioError) {
