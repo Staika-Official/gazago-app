@@ -86,7 +86,7 @@ class EquippedItemsGrid extends StatelessWidget {
           mainAxisSpacing: 6,
           crossAxisSpacing: 6,
           axisDirection: AxisDirection.down,
-          children: [
+          children: const [
             StaggeredGridTile.count(
               crossAxisCellCount: 2,
               mainAxisCellCount: 2,

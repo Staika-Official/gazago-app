@@ -787,7 +787,6 @@ class LeaderboardHome extends StatelessWidget {
                     )
                         .whenComplete(() {
                       controller.cancelStreamController();
-                      print('Hey there, I\'m calling after hide bottomSheet');
                     })
                   },
                   child: Row(

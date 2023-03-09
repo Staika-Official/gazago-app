@@ -12,6 +12,7 @@ import 'package:gaza_go/platform/helpers/base_helper.dart';
 import 'package:gaza_go/platform/helpers/login_helper.dart';
 import 'package:gaza_go/platform/models/terms_status_model.dart';
 import 'package:gaza_go/platform/services/member_service.dart';
+import 'package:gaza_go/platform/services/uaa_service.dart';
 import 'package:gaza_go/platform/stores/hive_store.dart';
 import 'package:gaza_go/presentations/components/alert_ui_list.dart';
 import 'package:gaza_go/presentations/components/gazago_button.dart';
@@ -27,21 +28,34 @@ class LoadingController extends GetxController {
   final RxInt time = RxInt(0);
   final RxList<TermsStatusModel> termsList = RxList.empty();
   RxBool get allRequiredAgreed {
-   /* if (termsList.isNotEmpty &&
+    if (termsList.isNotEmpty &&
         termsList.singleWhere((term) => term.boardType == 'TERMS', orElse: () => TermsStatusModel(activated: false, boardType: 'TERMS')).activated &&
         termsList.singleWhere((term) => term.boardType == 'LOCATION', orElse: () => TermsStatusModel(activated: false, boardType: 'LOCATION')).activated &&
         termsList.singleWhere((term) => term.boardType == 'PRIVACY', orElse: () => TermsStatusModel(activated: false, boardType: 'PRIVACY')).activated) {
       return RxBool(true);
     } else {
       return RxBool(false);
-    }*/
-    return RxBool(true);
+    }
   }
 
   @override
   void onInit() async {
     String userId = HiveStore.loadString(key: HiveKey.userId.name)!;
     FirebaseCrashlytics.instance.setUserIdentifier(userId);
+    // 커넥션 타임아웃 체크를 위한 api 테스트 코드
+    // int time = 0;
+    // Timer connectionTimer = Timer.periodic(Duration(milliseconds: 1), (timer) {
+    //   time = timer.tick;
+    // });
+    // await UaaService.pingConnection(11, successCallback: (data) {
+    //   print(data);
+    //   connectionTimer.cancel();
+    //   print(time);
+    // }, errorCallback: (data) {
+    //   print(data);
+    //   connectionTimer.cancel();
+    //   print(time);
+    // });
     await checkTermsAgreeStatus();
 
     super.onInit();

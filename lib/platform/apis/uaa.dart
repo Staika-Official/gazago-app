@@ -65,4 +65,8 @@ class UaaApi {
   static Future<Response> fetchWithdrawCancel() async {
     return await Api.client(serviceUrl: ServiceUrl.uaaService).put('/account/activation?clientId=GAZAGO');
   }
+
+  static Future<Response> pingConnection(int seconds) async {
+    return await Api.client(serviceUrl: '/services/gazago/api').get('/ping/wait/$seconds');
+  }
 }

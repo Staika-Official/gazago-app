@@ -164,11 +164,14 @@ void showShoeRepairSlider(InventoryController controller, int feeTikDurability) 
         width: 9.sp,
       ),
       Expanded(
-        child: GazagoButton(
-          onTap: () => controller.fetchRepairShoes(controller.equippedShoe.value.id),
-          buttonText: '네',
-          buttonColor: skyBlueColor,
-        ),
+        child: Obx(() {
+          return GazagoButton(
+            onTap: () => controller.fetchRepairShoes(controller.equippedShoe.value.id),
+            disableButton: controller.disableButton.value,
+            buttonText: '네',
+            buttonColor: skyBlueColor,
+          );
+        }),
       ),
     ],
   );
