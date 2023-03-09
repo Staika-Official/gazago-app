@@ -165,11 +165,14 @@ void showShoeRepairSlider(InventoryController controller, int feeTikDurability) 
         width: 9.sp,
       ),
       Expanded(
-        child: GazagoButton(
-          onTap: () => controller.fetchRepairShoes(controller.equippedShoe.value.id),
-          buttonText: '네',
-          buttonColor: skyBlueColor,
-        ),
+        child: Obx(() {
+          return GazagoButton(
+            onTap: () => controller.fetchRepairShoes(controller.equippedShoe.value.id),
+            disableButton: controller.disableButton.value,
+            buttonText: '네',
+            buttonColor: skyBlueColor,
+          );
+        }),
       ),
     ],
   );
@@ -2087,9 +2090,9 @@ void showAdTipAlert(ExerciseType exerciseType) {
 
 void showLeaderboardInfo() {
   Get.dialog(
-    barrierColor: Colors.transparent,
+    barrierColor: Colors.black.withOpacity(.8),
     Material(
-      color: Colors.black.withOpacity(0.6),
+      color: Colors.transparent,
       child: Padding(
         padding: EdgeInsets.symmetric(horizontal: 25.0.sp),
         child: Center(
@@ -2100,7 +2103,7 @@ void showLeaderboardInfo() {
                 children: [
                   Container(
                     width: double.infinity,
-                    padding: EdgeInsets.only(top: 19.sp, left: 18.sp, right: 18.sp, bottom: 50.sp),
+                    padding: EdgeInsets.only(top: 49.sp, left: 29.sp, right: 29.sp, bottom: 50.sp),
                     decoration: BoxDecoration(
                       color: popupBgColor,
                       borderRadius: BorderRadius.circular(10.sp),
@@ -2108,203 +2111,269 @@ void showLeaderboardInfo() {
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Align(
-                          alignment: Alignment.center,
-                          child: StyledText(
-                            '오늘의 리워드 TIP',
-                            fontSize: 18.sp,
-                            lineHeight: 28.sp,
-                            fontWeight: 500,
-                            textAlign: TextAlign.center,
+                        SizedBox(
+                          width: 84.sp,
+                          child: Image.asset(
+                            'assets/images/leaderboard/ico_info_tik.png',
                           ),
                         ),
                         Padding(
-                          padding: EdgeInsets.only(top: 29.0.sp),
-                          child: Container(
-                            padding: EdgeInsets.all(10),
-                            width: double.infinity,
-                            decoration: BoxDecoration(
-                              color: subBg01Color,
-                              borderRadius: BorderRadius.circular(7.sp),
-                            ),
-                            child: Center(
-                              child: SizedBox(
-                                width: 84.sp,
-                                child: Image.asset(
-                                  'assets/images/leaderboard/ico_info_tik.png',
-                                ),
+                          padding: EdgeInsets.only(top: 20.0.sp),
+                          child: Text.rich(
+                            TextSpan(
+                              style: TextStyle(
+                                fontWeight: FontWeight.w700,
+                                fontSize: 20.sp,
+                                color: Colors.white,
+                                // height: 18.sp,
                               ),
+                              children: [
+                                TextSpan(
+                                  text: '오늘 분배할',
+                                ),
+                                TextSpan(
+                                    text: ' 전체 리워드',
+                                    style: TextStyle(
+                                      color: Color(0xFFFF87B5),
+                                      // height: 18.sp,
+                                    )),
+                                TextSpan(
+                                  text: '란?',
+                                )
+                              ],
                             ),
                           ),
                         ),
-                        Container(
-                          padding: EdgeInsets.only(left: 20, right: 20, top: 10),
+                        Padding(
+                          padding: EdgeInsets.only(top: 8.0.sp),
                           child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              StyledText(
+                                '어제 가자고에서의 활동을 기준으로 확정돼요!',
+                                color: lightGrayColor,
+                                fontSize: 11,
+                                lineHeight: 16,
+                              ),
+                              StyledText(
+                                '오늘 리더보드 참여자에게 획득한 GO만큼 돌려드려요!',
+                                color: lightGrayColor,
+                                fontSize: 11,
+                                lineHeight: 16,
+                              ),
+                              StyledText(
+                                '매일 자정(한국시간기준)에 확정되고 돌려드려요!',
+                                color: lightGrayColor,
+                                fontSize: 11,
+                                lineHeight: 16,
+                              ),
+                              Text.rich(
+                                style: TextStyle(
+                                  fontSize: 11.sp,
+                                  height: 18.sp / 11.sp,
+                                  fontWeight: FontWeight.w400,
+                                  color: lightGrayColor,
+                                ),
+                                TextSpan(
+                                  text: '가자고 팀은 매출의 50~70%를 보상',
+                                  style: TextStyle(
+                                    fontWeight: FontWeight.w700,
+                                    color: Colors.white,
+                                  ),
+                                  children: [
+                                    TextSpan(
+                                      text: '으로 돌려드리고 있어요',
+                                      style: TextStyle(
+                                        fontWeight: FontWeight.w400,
+                                        color: lightGrayColor,
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                              StyledText(
+                                '오늘 분배할 전체 리워드는 아래 항목으로 구성됩니다!',
+                                color: lightGrayColor,
+                                fontSize: 11,
+                                lineHeight: 16,
+                              ),
+                            ],
+                          ),
+                        ),
+                        Container(
+                          padding: EdgeInsets.only(top: 36.sp),
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
                               SizedBox(
                                 width: double.infinity,
                                 child: Text.rich(
-                                  textAlign: TextAlign.center,
                                   style: TextStyle(
-                                    fontSize: 18.sp,
-                                    height: 22.sp / 18.sp,
+                                    fontSize: 14.sp,
+                                    height: 22.sp / 14.sp,
                                     fontWeight: FontWeight.w500,
                                     color: Colors.white,
                                   ),
                                   TextSpan(
-                                    text: 'TIK의 총액 항목은 ',
+                                    text: '1. 어제 사용된',
                                     children: [
                                       TextSpan(
-                                        text: '7가지',
+                                        text: ' TIK의 합',
                                         style: TextStyle(
                                           color: tikColor,
                                           fontWeight: FontWeight.w700,
                                         ),
                                       ),
-                                      const TextSpan(
-                                        text: ' 입니다!',
+                                    ],
+                                  ),
+                                ),
+                              ),
+                              Padding(
+                                padding: EdgeInsets.only(top: 5.0.sp, left: 7.0.sp),
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: const [
+                                    StyledText(
+                                      '· 체력 충전',
+                                      fontSize: 12,
+                                      lineHeight: 18,
+                                      fontWeight: 400,
+                                    ),
+                                    StyledText(
+                                      '· 신발 내구도 충전',
+                                      fontSize: 12,
+                                      lineHeight: 18,
+                                      fontWeight: 400,
+                                    ),
+                                    StyledText(
+                                      '· 일반 아이템 구매',
+                                      fontSize: 12,
+                                      lineHeight: 18,
+                                      fontWeight: 400,
+                                    ),
+                                    StyledText(
+                                      '· 상품권 교환에 사용된 일부 비용',
+                                      fontSize: 12,
+                                      lineHeight: 18,
+                                      fontWeight: 400,
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                        Container(
+                          padding: EdgeInsets.only(top: 12.sp),
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              SizedBox(
+                                width: double.infinity,
+                                child: Text.rich(
+                                  style: TextStyle(
+                                    fontSize: 14.sp,
+                                    height: 22.sp / 14.sp,
+                                    fontWeight: FontWeight.w500,
+                                    color: Colors.white,
+                                  ),
+                                  TextSpan(
+                                    text: '2. 리더보드 참여자 ',
+                                    children: [
+                                      TextSpan(
+                                        text: '추가 제공 보상',
+                                        style: TextStyle(
+                                          color: tikColor,
+                                          fontWeight: FontWeight.w700,
+                                        ),
                                       ),
                                     ],
                                   ),
                                 ),
                               ),
-                              Row(
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                children: [
-                                  Padding(
-                                    padding: EdgeInsets.only(
-                                      top: 20.sp,
-                                      bottom: 10.sp,
+                              Padding(
+                                padding: EdgeInsets.only(top: 5.0.sp, left: 7.0.sp),
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: const [
+                                    StyledText(
+                                      '· 참여자 수 보상(TIK)',
+                                      fontSize: 12,
+                                      lineHeight: 18,
+                                      fontWeight: 400,
                                     ),
-                                    child: Align(
-                                      child: Column(
-                                        crossAxisAlignment: CrossAxisAlignment.start,
-                                        children: [
-                                          Padding(
-                                            padding: const EdgeInsets.only(bottom: 5),
-                                            child: Row(
-                                              crossAxisAlignment: CrossAxisAlignment.center,
-                                              children: [
-                                                Container(
-                                                  width: 16.sp,
-                                                  height: 16.sp,
-                                                  margin: EdgeInsets.only(right: 10),
-                                                  decoration: BoxDecoration(
-                                                    color: numberedBoxGrayColor,
-                                                    borderRadius: BorderRadius.circular(2),
-                                                    border: Border.all(
-                                                      color: Colors.black,
-                                                    ),
-                                                    boxShadow: [
-                                                      BoxShadow(
-                                                        color: const Color.fromRGBO(0, 0, 0, 1),
-                                                        offset: const Offset(1, 1),
-                                                        blurRadius: 0,
-                                                        spreadRadius: 0.sp,
-                                                      )
-                                                    ],
-                                                  ),
-                                                  child: Center(
-                                                    child: StyledText(
-                                                      '1',
-                                                      fontSize: 10.sp,
-                                                      lineHeight: 10.sp,
-                                                      fontWeight: 500,
-                                                    ),
-                                                  ),
-                                                ),
-                                                StyledText(
-                                                  '어제 사용자가 사용한 TIK의 합계',
-                                                  fontSize: 14.sp,
-                                                  lineHeight: 16.sp,
-                                                  fontWeight: 500,
-                                                ),
-                                              ],
-                                            ),
-                                          ),
-                                          StyledText(
-                                            '· 체력 충전 총합',
-                                            fontSize: 14.sp,
-                                            lineHeight: 22.sp,
-                                            fontWeight: 500,
-                                            color: tikColor,
-                                          ),
-                                          StyledText(
-                                            '· 내구도 충전',
-                                            fontSize: 14.sp,
-                                            lineHeight: 22.sp,
-                                            fontWeight: 500,
-                                            color: tikColor,
-                                          ),
-                                          StyledText(
-                                            '· 아이템 구매',
-                                            fontSize: 14.sp,
-                                            lineHeight: 22.sp,
-                                            fontWeight: 500,
-                                            color: tikColor,
-                                          ),
-                                          StyledText(
-                                            '· 기프티콘 구매 일부 비용',
-                                            fontSize: 14.sp,
-                                            lineHeight: 22.sp,
-                                            fontWeight: 500,
-                                            color: tikColor,
-                                          ),
-                                          StyledText(
-                                            '· 2달 전의 광고 수익을 Day로 나눈 값',
-                                            fontSize: 14.sp,
-                                            lineHeight: 22.sp,
-                                            fontWeight: 500,
-                                            color: tikColor,
-                                          ),
-                                          Padding(
-                                            padding: const EdgeInsets.only(top: 10),
-                                            child: Row(
-                                              crossAxisAlignment: CrossAxisAlignment.center,
-                                              children: [
-                                                Container(
-                                                  width: 16.sp,
-                                                  height: 16.sp,
-                                                  margin: EdgeInsets.only(right: 10),
-                                                  decoration: BoxDecoration(
-                                                    color: numberedBoxGrayColor,
-                                                    borderRadius: BorderRadius.circular(2),
-                                                    border: Border.all(
-                                                      color: Colors.black,
-                                                    ),
-                                                    boxShadow: [
-                                                      BoxShadow(
-                                                        color: const Color.fromRGBO(0, 0, 0, 1),
-                                                        offset: const Offset(1, 1),
-                                                        blurRadius: 0,
-                                                        spreadRadius: 0.sp,
-                                                      )
-                                                    ],
-                                                  ),
-                                                  child: Center(
-                                                    child: StyledText(
-                                                      '2',
-                                                      fontSize: 10.sp,
-                                                      lineHeight: 10.sp,
-                                                      fontWeight: 500,
-                                                    ),
-                                                  ),
-                                                ),
-                                                StyledText(
-                                                  '가자고 팀이 추가 제공한 TIK',
-                                                  fontSize: 14.sp,
-                                                  lineHeight: 16.sp,
-                                                  fontWeight: 500,
-                                                ),
-                                              ],
-                                            ),
-                                          )
-                                        ],
-                                      ),
+                                    StyledText(
+                                      '· 상위 순위 보상(STIK + TIK)',
+                                      fontSize: 12,
+                                      lineHeight: 18,
+                                      fontWeight: 400,
                                     ),
+                                    StyledText(
+                                      '· 깜짝 순위 보상(STIK + TIK)',
+                                      fontSize: 12,
+                                      lineHeight: 18,
+                                      fontWeight: 400,
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                        Container(
+                          padding: EdgeInsets.only(top: 12.sp),
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              SizedBox(
+                                width: double.infinity,
+                                child: Text.rich(
+                                  style: TextStyle(
+                                    fontSize: 14.sp,
+                                    height: 22.sp / 14.sp,
+                                    fontWeight: FontWeight.w500,
+                                    color: Colors.white,
                                   ),
-                                ],
-                              )
+                                  TextSpan(
+                                    text: '3. ',
+                                    children: [
+                                      TextSpan(
+                                        text: '2달 전 사용된 STIK의 합',
+                                        style: TextStyle(
+                                          color: tikColor,
+                                          fontWeight: FontWeight.w700,
+                                        ),
+                                      ),
+                                      TextSpan(
+                                        text: '을 TIK으로 제공',
+                                        style: TextStyle(
+                                          fontWeight: FontWeight.w700,
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                              ),
+                              Padding(
+                                padding: EdgeInsets.only(top: 5.0.sp, left: 7.0.sp),
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: const [
+                                    StyledText(
+                                      '· NFT 아이템 구매',
+                                      fontSize: 12,
+                                      lineHeight: 18,
+                                      fontWeight: 400,
+                                    ),
+                                    StyledText(
+                                      '· STIK으로 사용된 비용의 일부',
+                                      fontSize: 12,
+                                      lineHeight: 18,
+                                      fontWeight: 400,
+                                    ),
+                                  ],
+                                ),
+                              ),
                             ],
                           ),
                         ),

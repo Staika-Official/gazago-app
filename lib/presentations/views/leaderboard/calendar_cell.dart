@@ -32,7 +32,7 @@ class CalendarCell extends StatelessWidget {
             height: 32,
             decoration: [CalendarCellType.today, CalendarCellType.focusedDay].any((element) => element == cellType)
                 ? BoxDecoration(
-                    color: CalendarCellType.focusedDay == cellType ? skyBlueColor : skyBlueColor.withOpacity(0.8),
+                    color: CalendarCellType.focusedDay == cellType ? skyBlueColor : Colors.black,
                     shape: BoxShape.circle,
                   )
                 : null,
@@ -46,7 +46,9 @@ class CalendarCell extends StatelessWidget {
                     ? Colors.white
                     : cellType == CalendarCellType.outsideDay
                         ? Colors.white.withOpacity(0.5)
-                        : Colors.black,
+                        : cellType == CalendarCellType.today
+                            ? skyBlueColor
+                            : Colors.black,
               ),
             ),
           ),

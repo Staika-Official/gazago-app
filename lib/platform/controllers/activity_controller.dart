@@ -779,7 +779,7 @@ class ActivityController extends SuperController with ActivityMixin, ChallengeMi
     if (isFakeGps.value && Get.isBottomSheetOpen != true) {
       showFakeGpsAlert();
       PackageInfo packageInfo = await PackageInfo.fromPlatform();
-      String platform = Platform.isIOS ? 'IOS' : 'AOS';
+      String platform = Platform.operatingSystem;
       DeviceInfoPlugin deviceInfo = DeviceInfoPlugin();
       String deviceModel;
       if (Platform.isIOS) {

@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:gaza_go/constants/enums.dart';
 import 'package:gaza_go/constants/routes.dart';
@@ -36,6 +38,7 @@ class InventoryController extends GetxController with ScrollMixin, LinearProgres
   final RxInt costTik = RxInt(0);
 
   final RxDouble currentSliderValue = RxDouble(0);
+  final RxBool disableButton = RxBool(false);
   final RxList<InventoryItemModel> equippedItemList = RxList.empty();
 
   ScrollController singleChildScrollController = ScrollController();
@@ -344,6 +347,7 @@ class InventoryController extends GetxController with ScrollMixin, LinearProgres
   void fetchRepairShoes(shoeId) async {
     if (walletMasterController.tik.value.amount! >= costTik.value) {
       if (costTik.value > 0) {
+        disableButton.value = true;
         await ItemService.fetchRepairItemShoes(
           RepairShoesModel(
             id: shoeId,
@@ -373,6 +377,11 @@ class InventoryController extends GetxController with ScrollMixin, LinearProgres
 
   void initRepairInfo() {
     costTik.value = 0;
+    if (disableButton.value) {
+      Timer(const Duration(seconds: 1), () {
+        disableButton.value = false;
+      });
+    }
   }
 
   void showShoesRepairPopup(id) async {

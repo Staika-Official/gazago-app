@@ -35,14 +35,18 @@ class LeaderboardHome extends StatelessWidget {
                 builder: (context, snapshot) {
                   return Obx(() {
                     return Padding(
-                      padding: EdgeInsets.only(bottom: 28.0.sp),
+                      padding: EdgeInsets.only(bottom: 20.sp),
                       child: TableCalendar(
-                        rowHeight: 94,
+                        rowHeight: 88,
                         daysOfWeekHeight: 30,
                         locale: 'ko-KR',
                         firstDay: controller.firstDay.value!,
                         lastDay: controller.lastDay.value!,
-                        focusedDay: controller.today.value!,
+                        focusedDay: controller.focusDay.value!,
+                        selectedDayPredicate: (day) {
+                          return isSameDay(controller.selectedDate.value, day);
+                        },
+
                         eventLoader: (day) {
                           return controller.findCalendarStatisticsData(day);
                         },
@@ -52,35 +56,41 @@ class LeaderboardHome extends StatelessWidget {
                             if (events.isNotEmpty) {
                               UserRewardStatisticsModel reward = events.first as UserRewardStatisticsModel;
                               return Padding(
-                                padding: EdgeInsets.only(top: 48.0),
-                                child: Column(
-                                  children: [
-                                    FittedBox(
-                                      fit: BoxFit.scaleDown,
-                                      child: Column(
+                                padding: EdgeInsets.only(top: 42.0.sp),
+                                child: date.day != controller.today.value?.day
+                                    ? Column(
                                         children: [
-                                          StyledText(
-                                            '+${formatDecimalPlaces(reward.tik!.toDouble(), 0)}',
-                                            fontSize: 12.sp,
-                                            lineHeight: 16.sp,
-                                            fontWeight: 600,
-                                            color: tikColor,
-                                          ),
+                                          if (reward.tik != null)
+                                            FittedBox(
+                                              fit: BoxFit.scaleDown,
+                                              child: Column(
+                                                children: [
+                                                  StyledText(
+                                                    '+${formatDecimalPlaces(reward.tik!.toDouble(), 0)}',
+                                                    fontSize: 12.sp,
+                                                    lineHeight: 16.sp,
+                                                    fontWeight: 600,
+                                                    letterSpacing: -.1,
+                                                    color: Color(0xFFFF6B9C),
+                                                  ),
+                                                ],
+                                              ),
+                                            ),
+                                          if (reward.stik != null)
+                                            FittedBox(
+                                              fit: BoxFit.scaleDown,
+                                              child: StyledText(
+                                                '+${formatDecimalPlaces(reward.stik!, 2, isAutoDecimal: true)}',
+                                                fontSize: 12.sp,
+                                                lineHeight: 16.sp,
+                                                fontWeight: 600,
+                                                letterSpacing: -.1,
+                                                color: Color(0xFFFFB443),
+                                              ),
+                                            ),
                                         ],
-                                      ),
-                                    ),
-                                    FittedBox(
-                                      fit: BoxFit.scaleDown,
-                                      child: StyledText(
-                                        '+${formatDecimalPlaces(reward.stik!, 2)}',
-                                        fontSize: 12.sp,
-                                        lineHeight: 16.sp,
-                                        fontWeight: 600,
-                                        color: stikColor,
-                                      ),
-                                    ),
-                                  ],
-                                ),
+                                      )
+                                    : Container(),
                               );
                             }
                             return null;
@@ -115,27 +125,27 @@ class LeaderboardHome extends StatelessWidget {
                               cellType: CalendarCellType.monthDay,
                             );
                           },
-                          // selectedBuilder: (context, date, focusedDate) {
-                          //   return CalendarCell(
-                          //     date: date,
-                          //     cellType: CalendarCellType.focusedDay,
-                          //     controller: controller,
-                          //   );
-                          // },
-                          // todayBuilder: (context, date, focusedDate) {
-                          //   return CalendarCell(
-                          //     date: date,
-                          //     cellType: CalendarCellType.today,
-                          //     controller: controller,
-                          //   );
-                          // },
-                          // outsideBuilder: (context, date, focusedDate) {
-                          //   return CalendarCell(
-                          //     date: date,
-                          //     cellType: CalendarCellType.outsideDay,
-                          //     controller: controller,
-                          //   );
-                          // },
+                          selectedBuilder: (context, date, focusedDate) {
+                            return CalendarCell(
+                              date: date,
+                              cellType: CalendarCellType.focusedDay,
+                              // controller: controller,
+                            );
+                          },
+                          todayBuilder: (context, date, focusedDate) {
+                            return CalendarCell(
+                              date: date,
+                              cellType: CalendarCellType.today,
+                              // controller: controller,
+                            );
+                          },
+                          outsideBuilder: (context, date, focusedDate) {
+                            return CalendarCell(
+                              date: date,
+                              cellType: CalendarCellType.outsideDay,
+                              // controller: controller,
+                            );
+                          },
                         ),
                         headerStyle: HeaderStyle(
                           titleTextStyle: TextStyle(fontSize: 18.sp, color: Colors.white, fontWeight: FontWeight.w500),
@@ -180,7 +190,7 @@ class LeaderboardHome extends StatelessWidget {
                 margin: const EdgeInsets.only(
                   left: 30,
                   right: 30,
-                  bottom: 30,
+                  bottom: 10,
                 ),
                 padding: const EdgeInsets.only(
                   left: 30,
@@ -249,7 +259,7 @@ class LeaderboardHome extends StatelessWidget {
                                         color: stikColor,
                                       ),
                                       TextSpan(
-                                        text: formatDecimalPlaces(controller.totalStikRewarded.value, 2),
+                                        text: formatDecimalPlaces(controller.totalStikRewarded.value, 2, isAutoDecimal: true),
                                         children: [
                                           TextSpan(text: ' STIK', style: TextStyle(fontWeight: FontWeight.w400)),
                                         ],
@@ -542,34 +552,42 @@ class LeaderboardHome extends StatelessWidget {
         mainAxisSize: MainAxisSize.min,
         children: [
           Padding(
-            padding: EdgeInsets.only(top: 8.0.sp),
+            padding: EdgeInsets.only(top: 8.0.sp, left: 26.sp, right: 30.sp),
             child: Row(
+              crossAxisAlignment: CrossAxisAlignment.center,
               children: [
-                Padding(
-                  padding: EdgeInsets.only(left: 24.sp, right: 10.sp),
-                  child: StyledText(
-                    '오늘의 리워드',
-                    color: Colors.white,
-                    fontWeight: 700,
-                    fontSize: 24.sp,
-                    lineHeight: 32.sp,
-                  ),
+                StyledText(
+                  '오늘 분배할',
+                  color: Colors.white,
+                  fontWeight: 600,
+                  fontSize: 20.sp,
+                  lineHeight: 24.sp,
                 ),
-                SizedBox(
-                  width: 20,
-                  height: 20,
-                  child: IconButton(
-                    padding: EdgeInsets.zero,
-                    onPressed: () => showLeaderboardInfo(),
-                    icon: iconInfo,
-                    splashRadius: 15.sp,
+                StyledText(
+                  ' 전체 리워드',
+                  color: Colors.white,
+                  fontWeight: 600,
+                  fontSize: 20.sp,
+                  lineHeight: 24.sp,
+                ),
+                Padding(
+                  padding: EdgeInsets.only(left: 5.0.sp),
+                  child: SizedBox(
+                    width: 20,
+                    height: 20,
+                    child: IconButton(
+                      padding: EdgeInsets.zero,
+                      onPressed: () => showLeaderboardInfo(),
+                      icon: iconInfo,
+                      splashRadius: 15.sp,
+                    ),
                   ),
                 )
               ],
             ),
           ),
           Container(
-            margin: EdgeInsets.only(top: 18.sp, left: 18.sp, right: 22.sp),
+            margin: EdgeInsets.only(top: 8.sp, left: 25.sp, right: 25.sp),
             decoration: BoxDecoration(
               color: const Color(0xFF2E3038),
               border: Border.all(
@@ -581,7 +599,7 @@ class LeaderboardHome extends StatelessWidget {
               ),
             ),
             child: Padding(
-              padding: EdgeInsets.all(10),
+              padding: EdgeInsets.all(10.sp),
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.start,
                 crossAxisAlignment: CrossAxisAlignment.center,
@@ -623,117 +641,117 @@ class LeaderboardHome extends StatelessWidget {
               ),
             ),
           ),
-          Padding(
-            padding: EdgeInsets.only(top: 20.sp, left: 18.sp, right: 18.sp),
-            child: Column(
-              children: [
-                Row(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Padding(
-                      padding: EdgeInsets.only(top: 4.0.sp),
-                      child: Container(
-                        margin: EdgeInsets.only(left: 5, right: 5),
-                        width: 4,
-                        height: 4,
-                        decoration: BoxDecoration(
-                          color: deepGrayColor,
-                          borderRadius: BorderRadius.circular(4),
-                        ),
-                      ),
-                    ),
-                    Expanded(
-                      child: Text.rich(
-                        style: TextStyle(
-                          color: deepGrayColor,
-                          fontSize: 12.sp,
-                          fontWeight: FontWeight.w500,
-                          height: 1.2,
-                          letterSpacing: -0.2,
-                        ),
-                        TextSpan(
-                          text: '리더보드 참여자 모두에게 획득한 GO만큼 ',
-                          children: [
-                            TextSpan(
-                                text: '오늘의 리워드를',
-                                style: TextStyle(
-                                  color: lightGrayColor,
-                                  fontWeight: FontWeight.w700,
-                                )),
-                            TextSpan(text: ' 모두 분배해요.')
-                          ],
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
-                Padding(
-                  padding: const EdgeInsets.only(top: 8),
-                  child: Row(
-                    children: [
-                      Container(
-                        margin: EdgeInsets.only(left: 5, right: 5),
-                        width: 4,
-                        height: 4,
-                        decoration: BoxDecoration(
-                          color: deepGrayColor,
-                          borderRadius: BorderRadius.circular(4),
-                        ),
-                      ),
-                      Text.rich(
-                        style: TextStyle(
-                          color: deepGrayColor,
-                          fontSize: 12.sp,
-                          fontWeight: FontWeight.w500,
-                          height: 1.2,
-                        ),
-                        TextSpan(
-                          children: [
-                            TextSpan(
-                                text: '오늘의 리워드',
-                                style: TextStyle(
-                                  color: lightGrayColor,
-                                  fontWeight: FontWeight.w700,
-                                )),
-                            TextSpan(text: '는 확정되었습니다!')
-                          ],
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-                Padding(
-                  padding: const EdgeInsets.only(top: 8),
-                  child: Row(
-                    children: [
-                      Container(
-                        margin: EdgeInsets.only(left: 5, right: 5),
-                        width: 4,
-                        height: 4,
-                        decoration: BoxDecoration(
-                          color: deepGrayColor,
-                          borderRadius: BorderRadius.circular(4),
-                        ),
-                      ),
-                      Text.rich(
-                        style: TextStyle(
-                          color: deepGrayColor,
-                          fontSize: 12.sp,
-                          fontWeight: FontWeight.w500,
-                          height: 1.2,
-                        ),
-                        TextSpan(
-                          text: 'TIK은 매일 자정(KST)에 확정되어 분배해요.',
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-              ],
-            ),
-          ),
+          // Padding(
+          //   padding: EdgeInsets.only(top: 20.sp, left: 18.sp, right: 18.sp),
+          //   child: Column(
+          //     children: [
+          //       Row(
+          //         crossAxisAlignment: CrossAxisAlignment.start,
+          //         children: [
+          //           Padding(
+          //             padding: EdgeInsets.only(top: 4.0.sp),
+          //             child: Container(
+          //               margin: EdgeInsets.only(left: 5, right: 5),
+          //               width: 4,
+          //               height: 4,
+          //               decoration: BoxDecoration(
+          //                 color: deepGrayColor,
+          //                 borderRadius: BorderRadius.circular(4),
+          //               ),
+          //             ),
+          //           ),
+          //           Expanded(
+          //             child: Text.rich(
+          //               style: TextStyle(
+          //                 color: deepGrayColor,
+          //                 fontSize: 12.sp,
+          //                 fontWeight: FontWeight.w500,
+          //                 height: 1.2,
+          //                 letterSpacing: -0.2,
+          //               ),
+          //               TextSpan(
+          //                 text: '리더보드 참여자 모두에게 획득한 GO만큼 ',
+          //                 children: [
+          //                   TextSpan(
+          //                       text: '오늘의 리워드를',
+          //                       style: TextStyle(
+          //                         color: lightGrayColor,
+          //                         fontWeight: FontWeight.w700,
+          //                       )),
+          //                   TextSpan(text: ' 모두 분배해요.')
+          //                 ],
+          //               ),
+          //             ),
+          //           ),
+          //         ],
+          //       ),
+          //       Padding(
+          //         padding: const EdgeInsets.only(top: 8),
+          //         child: Row(
+          //           children: [
+          //             Container(
+          //               margin: EdgeInsets.only(left: 5, right: 5),
+          //               width: 4,
+          //               height: 4,
+          //               decoration: BoxDecoration(
+          //                 color: deepGrayColor,
+          //                 borderRadius: BorderRadius.circular(4),
+          //               ),
+          //             ),
+          //             Text.rich(
+          //               style: TextStyle(
+          //                 color: deepGrayColor,
+          //                 fontSize: 12.sp,
+          //                 fontWeight: FontWeight.w500,
+          //                 height: 1.2,
+          //               ),
+          //               TextSpan(
+          //                 children: [
+          //                   TextSpan(
+          //                       text: '오늘의 리워드',
+          //                       style: TextStyle(
+          //                         color: lightGrayColor,
+          //                         fontWeight: FontWeight.w700,
+          //                       )),
+          //                   TextSpan(text: '는 확정되었습니다!')
+          //                 ],
+          //               ),
+          //             ),
+          //           ],
+          //         ),
+          //       ),
+          //       Padding(
+          //         padding: const EdgeInsets.only(top: 8),
+          //         child: Row(
+          //           children: [
+          //             Container(
+          //               margin: EdgeInsets.only(left: 5, right: 5),
+          //               width: 4,
+          //               height: 4,
+          //               decoration: BoxDecoration(
+          //                 color: deepGrayColor,
+          //                 borderRadius: BorderRadius.circular(4),
+          //               ),
+          //             ),
+          //             Text.rich(
+          //               style: TextStyle(
+          //                 color: deepGrayColor,
+          //                 fontSize: 12.sp,
+          //                 fontWeight: FontWeight.w500,
+          //                 height: 1.2,
+          //               ),
+          //               TextSpan(
+          //                 text: 'TIK은 매일 자정(KST)에 확정되어 분배해요.',
+          //               ),
+          //             ),
+          //           ],
+          //         ),
+          //       ),
+          //     ],
+          //   ),
+          // ),
           Container(
-            padding: EdgeInsets.only(top: 38.sp, left: 25.sp, right: 18.sp, bottom: 12.sp),
+            padding: EdgeInsets.only(top: 40.sp, left: 25.sp, right: 18.sp, bottom: 12.sp),
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               crossAxisAlignment: CrossAxisAlignment.center,
@@ -769,7 +787,6 @@ class LeaderboardHome extends StatelessWidget {
                     )
                         .whenComplete(() {
                       controller.cancelStreamController();
-                      print('Hey there, I\'m calling after hide bottomSheet');
                     })
                   },
                   child: Row(
