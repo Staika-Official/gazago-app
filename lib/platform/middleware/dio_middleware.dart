@@ -178,8 +178,6 @@ class Api {
           }
           if (e.response != null) {
             handler.resolve(e.response!);
-          } else {
-            handler.next(e);
           }
         }
       } else if ([DioErrorType.connectTimeout, DioErrorType.sendTimeout, DioErrorType.receiveTimeout, DioErrorType.other].any((element) => element == e.type)) {
@@ -195,11 +193,11 @@ class Api {
       } else {
         if (e.response != null) {
           handler.resolve(e.response!);
-        } else {
-          handler.next(e);
         }
       }
     }
+
+    handler.next(e);
   }
 
   static Future<void> _retryFailedRequest(DioError e, ErrorInterceptorHandler handler) async {
