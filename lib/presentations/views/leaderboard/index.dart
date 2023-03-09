@@ -259,7 +259,7 @@ class LeaderboardHome extends StatelessWidget {
                                         color: stikColor,
                                       ),
                                       TextSpan(
-                                        text: formatDecimalPlaces(controller.totalStikRewarded.value, 2),
+                                        text: formatDecimalPlaces(controller.totalStikRewarded.value, 2, isAutoDecimal: true),
                                         children: [
                                           TextSpan(text: ' STIK', style: TextStyle(fontWeight: FontWeight.w400)),
                                         ],
