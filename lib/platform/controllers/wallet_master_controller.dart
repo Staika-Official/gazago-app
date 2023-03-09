@@ -13,9 +13,11 @@ import 'package:gaza_go/platform/models/asset_token_balance_model.dart';
 import 'package:gaza_go/platform/models/asset_token_detail_balance_model.dart';
 import 'package:gaza_go/platform/models/asset_token_transaction_model.dart';
 import 'package:gaza_go/platform/models/buy_tik_response_model.dart';
+import 'package:gaza_go/platform/models/iap_valid_model.dart';
 import 'package:gaza_go/platform/models/pay_info_model.dart';
 import 'package:gaza_go/platform/models/token_info_model.dart';
 import 'package:gaza_go/platform/models/user_account_model.dart';
+import 'package:gaza_go/platform/services/iap_service.dart';
 import 'package:gaza_go/platform/services/uaa_service.dart';
 import 'package:gaza_go/platform/services/wallet_service.dart';
 import 'package:gaza_go/presentations/components/gazago_button.dart';
@@ -294,9 +296,11 @@ class WalletMasterController extends GetxController {
     showToastPopup('구매에 실패했습니다.\n잠시후 다시 요청해주세요');
   }
 
-  Future<bool> _verifyPurchase(PurchaseDetails purchaseDetails) {
+  Future<bool> _verifyPurchase(PurchaseDetails purchaseDetails) async {
     // IMPORTANT!! Always verify a purchase before delivering the product.
     // For the purpose of an example, we directly return true.
+
+    IapValidModel response = await IapService.validateReceipt({});
 
     // 백앤드 검증
     print('#################################################');
@@ -305,8 +309,7 @@ class WalletMasterController extends GetxController {
     inspect(purchaseDetails);
 
     print('#################################################');
-
-    return Future<bool>.value(true);
+    return Future<bool>.value(response.valid);
   }
 
   void _deliverProduct(PurchaseDetails purchaseDetails) {
