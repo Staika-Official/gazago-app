@@ -26,8 +26,8 @@ class LeaderboardController extends GetxController {
   // RxList get dailyRewardList => _dailyRewardList;
   RxDouble todayTikAmount = RxDouble(0.0);
 
-  RxDouble totalStikRewarded = RxDouble(19.9293184);
-  RxDouble totalTikRewarded = RxDouble(4839679456);
+  RxDouble totalStikRewarded = RxDouble(0.0);
+  RxDouble totalTikRewarded = RxDouble(0);
   ScrollController leaderboardScrollController = ScrollController();
 
   RxString get formattedDate {
@@ -54,6 +54,7 @@ class LeaderboardController extends GetxController {
   @override
   void onInit() {
     initController();
+
     leaderboardScrollController.addListener(() {
       double scrollBottom = leaderboardScrollController.positions.last.maxScrollExtent;
       double scrollPosition = leaderboardScrollController.positions.last.pixels;
@@ -134,7 +135,7 @@ class LeaderboardController extends GetxController {
   }
 
   void calendarChanged(focusedDay) {
-    today.value = focusedDay;
+    focusDay.value = focusedDay;
     String month = DateFormat('yyyy-MM-dd').format(focusedDay);
     getCalendarStatistics(month);
   }

@@ -2158,7 +2158,7 @@ void showLeaderboardInfo() {
                                 lineHeight: 16,
                               ),
                               StyledText(
-                                '매일 자정(KST)에 확정되고 돌려드려요!',
+                                '매일 자정(한국시간기준)에 확정되고 돌려드려요!',
                                 color: lightGrayColor,
                                 fontSize: 11,
                                 lineHeight: 16,

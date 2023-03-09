@@ -42,7 +42,7 @@ class LeaderboardHome extends StatelessWidget {
                         locale: 'ko-KR',
                         firstDay: controller.firstDay.value!,
                         lastDay: controller.lastDay.value!,
-                        focusedDay: controller.today.value!,
+                        focusedDay: controller.focusDay.value!,
                         selectedDayPredicate: (day) {
                           return isSameDay(controller.selectedDate.value, day);
                         },
@@ -80,7 +80,7 @@ class LeaderboardHome extends StatelessWidget {
                                             FittedBox(
                                               fit: BoxFit.scaleDown,
                                               child: StyledText(
-                                                '+${formatDecimalPlaces(reward.stik!, 2)}',
+                                                '+${formatDecimalPlaces(reward.stik!, 2, isAutoDecimal: true)}',
                                                 fontSize: 12.sp,
                                                 lineHeight: 16.sp,
                                                 fontWeight: 600,
