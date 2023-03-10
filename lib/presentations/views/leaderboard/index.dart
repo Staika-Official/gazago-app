@@ -345,11 +345,53 @@ class LeaderboardHome extends StatelessWidget {
                       ),
                 Padding(
                   padding: EdgeInsets.only(left: 8.0.sp),
-                  child: Text(
-                    (myRank.nickname.contains('@') ? myRank.nickname.substring(0, myRank.nickname.indexOf('@')) : myRank.nickname),
-                    overflow: TextOverflow.ellipsis,
-                    style: TextStyle(color: Colors.white, fontSize: 14.sp, fontWeight: FontWeight.w600),
-                    textAlign: TextAlign.left,
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        (myRank.nickname.contains('@') ? myRank.nickname.substring(0, myRank.nickname.indexOf('@')) : myRank.nickname),
+                        overflow: TextOverflow.ellipsis,
+                        style: TextStyle(color: Colors.white, fontSize: 14.sp, fontWeight: FontWeight.w600),
+                        textAlign: TextAlign.left,
+                      ),
+                      if (myRank.additionTik! > 0 || myRank.additionStik! > 0)
+                        Padding(
+                          padding: EdgeInsets.only(top: 4.0.sp),
+                          child: Text.rich(
+                            textAlign: TextAlign.start,
+                            style: TextStyle(
+                              fontSize: 10.sp,
+                              height: 11.sp / 10.sp,
+                              fontWeight: FontWeight.w700,
+                              color: skyBlueColor,
+                            ),
+                            TextSpan(
+                              text: '${myRank.additionStik ?? '0'}',
+                              children: [
+                                const TextSpan(
+                                    text: ' STIK',
+                                    style: TextStyle(
+                                      fontWeight: FontWeight.w400,
+                                    )),
+                                if (myRank.additionTik! > 0) const TextSpan(text: ' + '),
+                                if (myRank.additionTik! > 0)
+                                  TextSpan(
+                                      text: formatDecimalPlaces(myRank.additionTik ?? 0, 0),
+                                      style: const TextStyle(
+                                        fontWeight: FontWeight.w700,
+                                      )),
+                                if (myRank.additionTik! > 0)
+                                  const TextSpan(
+                                      text: ' TIK',
+                                      style: TextStyle(
+                                        fontWeight: FontWeight.w400,
+                                      )),
+                              ],
+                            ),
+                          ),
+                        )
+                    ],
                   ),
                 ),
               ],
@@ -468,7 +510,7 @@ class LeaderboardHome extends StatelessWidget {
                           style: const TextStyle(color: Colors.white, fontSize: 16, height: 1.6, fontWeight: FontWeight.w500),
                           textAlign: TextAlign.left,
                         ),
-                        if (ranker.rank! < 11)
+                        if (ranker.additionTik! > 0 || ranker.additionStik! > 0)
                           Padding(
                             padding: EdgeInsets.only(top: 4.0.sp),
                             child: Text.rich(
@@ -480,24 +522,26 @@ class LeaderboardHome extends StatelessWidget {
                                 color: skyBlueColor,
                               ),
                               TextSpan(
-                                text: '${ranker.additionStik != null ? ranker.additionStik : '0'}',
+                                text: '${ranker.additionStik ?? '0'}',
                                 children: [
                                   const TextSpan(
                                       text: ' STIK',
                                       style: TextStyle(
                                         fontWeight: FontWeight.w400,
                                       )),
-                                  const TextSpan(text: ' + '),
-                                  TextSpan(
-                                      text: '${formatDecimalPlaces(ranker.additionTik ?? 0, 0)}',
-                                      style: const TextStyle(
-                                        fontWeight: FontWeight.w700,
-                                      )),
-                                  const TextSpan(
-                                      text: ' TIK',
-                                      style: TextStyle(
-                                        fontWeight: FontWeight.w400,
-                                      )),
+                                  if (ranker.additionTik! > 0) const TextSpan(text: ' + '),
+                                  if (ranker.additionTik! > 0)
+                                    TextSpan(
+                                        text: formatDecimalPlaces(ranker.additionTik ?? 0, 0),
+                                        style: const TextStyle(
+                                          fontWeight: FontWeight.w700,
+                                        )),
+                                  if (ranker.additionTik! > 0)
+                                    const TextSpan(
+                                        text: ' TIK',
+                                        style: TextStyle(
+                                          fontWeight: FontWeight.w400,
+                                        )),
                                 ],
                               ),
                             ),
