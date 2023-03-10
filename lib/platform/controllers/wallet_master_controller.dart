@@ -251,18 +251,24 @@ class WalletMasterController extends GetxController {
 
   void _listenToPurchaseUpdated(List<PurchaseDetails> purchaseDetailsList) {
     purchaseDetailsList.forEach((PurchaseDetails purchaseDetails) async {
+      print('==========================>>');
+      print(purchaseDetails.status.name);
+      print(purchaseDetails.pendingCompletePurchase);
+      print('==========================>>');
       if (purchaseDetails.status == PurchaseStatus.pending) {
         showPendingPurchaseUI.value = true;
         showInAppPurchaseProgressAlert(this);
       } else {
         if (purchaseDetails.status == PurchaseStatus.error) {
           _handlePurchaseError(purchaseDetails.error!);
+        } else if (purchaseDetails.status == PurchaseStatus.canceled) {
+          Get.until((route) => Get.isBottomSheetOpen == false);
         } else if (purchaseDetails.status == PurchaseStatus.purchased || purchaseDetails.status == PurchaseStatus.restored) {
           bool valid = await _verifyPurchase(purchaseDetails);
           if (valid) {
-            _deliverProduct(purchaseDetails);
+            await _deliverProduct(purchaseDetails);
           } else {
-            _handleInvalidPurchase(purchaseDetails);
+            await _handleInvalidPurchase(purchaseDetails);
           }
         }
 
@@ -280,9 +286,27 @@ class WalletMasterController extends GetxController {
     } else {
       Set<String> _kIds = Platform.isIOS
           ? F.isDev
-              ? <String>{'ptik_purchase_test'}
-              : <String>{'ptik_purchase'}
-          : <String>{'ptik_purchase_1', 'ptik_purchase_1000'};
+              ? <String>{
+                  'ptik_purchase_dev_1',
+                  'ptik_purchase_dev_2',
+                  'ptik_purchase_dev_3',
+                  'ptik_purchase_dev_4',
+                  'ptik_purchase_dev_5',
+                }
+              : <String>{
+                  'ptik_purchase_1',
+                  'ptik_purchase_2',
+                  'ptik_purchase_3',
+                  'ptik_purchase_4',
+                  'ptik_purchase_5',
+                }
+          : <String>{
+              'ptik_purchase_1',
+              'ptik_purchase_2',
+              'ptik_purchase_3',
+              'ptik_purchase_4',
+              'ptik_purchase_5',
+            };
       final ProductDetailsResponse response = await InAppPurchase.instance.queryProductDetails(_kIds);
       if (response.notFoundIDs.isNotEmpty) {
         showToastPopup('구매할 수 있는 상품을 찾지 못했습니다.');
@@ -295,8 +319,8 @@ class WalletMasterController extends GetxController {
     showProductList(this);
   }
 
-  void purchaseInAppItem(ProductDetails product) {
-    InAppPurchase.instance.buyConsumable(purchaseParam: PurchaseParam(productDetails: product));
+  void purchaseInAppItem(ProductDetails product) async {
+    await InAppPurchase.instance.buyConsumable(purchaseParam: PurchaseParam(productDetails: product));
   }
 
   void _handlePurchaseError(IAPError error) {
@@ -326,12 +350,12 @@ class WalletMasterController extends GetxController {
     return Future<bool>.value(response.valid);
   }
 
-  void _deliverProduct(PurchaseDetails purchaseDetails) {
+  Future<void> _deliverProduct(PurchaseDetails purchaseDetails) async {
     showPendingPurchaseUI.value = false;
     showToastPopup('타이카 구매 요청!!!!!!');
   }
 
-  void _handleInvalidPurchase(PurchaseDetails purchaseDetails) {
+  Future<void> _handleInvalidPurchase(PurchaseDetails purchaseDetails) async {
     // handle invalid purchase here if  _verifyPurchase` failed.
     isPurchaseSuccessful.value = false;
     showPendingPurchaseUI.value = false;
@@ -339,6 +363,7 @@ class WalletMasterController extends GetxController {
   }
 
   Future<void> _completePurchaseInAppItem(PurchaseDetails purchaseDetails) async {
+    if (purchaseDetails.status == PurchaseStatus.canceled) return;
     isPurchaseSuccessful.value = true;
     showPendingPurchaseUI.value = false;
 

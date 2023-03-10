@@ -16,6 +16,8 @@ import 'package:get/get.dart';
 
 List<Widget> renderProductList(WalletMasterController controller) {
   return controller.inAppProducts
+      .asMap()
+      .entries
       .map(
         (product) => Padding(
           padding: EdgeInsets.only(left: 25.sp, top: 17.sp, right: 17.sp, bottom: 17.sp),
@@ -29,11 +31,23 @@ List<Widget> renderProductList(WalletMasterController controller) {
                     child: iconTik,
                   ),
                   Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
+                      if (product.key > 2)
+                        Padding(
+                          padding: const EdgeInsets.only(bottom: 7),
+                          child: StyledText(
+                            '인기',
+                            fontSize: 10,
+                            lineHeight: 10,
+                            fontWeight: 800,
+                            color: skyBlueColor,
+                          ),
+                        ),
                       Row(
                         children: [
                           StyledText(
-                            formatDecimalPlaces(product.rawPrice * 0.7, 0),
+                            formatDecimalPlaces(product.value.rawPrice * 0.7, 0),
                             fontSize: 18.sp,
                             fontWeight: 700,
                             lineHeight: 18.sp,
@@ -46,35 +60,65 @@ List<Widget> renderProductList(WalletMasterController controller) {
                             lineHeight: 18.sp,
                             letterSpacing: -0.5,
                           ),
+                          if (product.key > 1)
+                            Padding(
+                              padding: const EdgeInsets.only(left: 8),
+                              child: Row(
+                                children: [
+                                  StyledText(
+                                    '+ ${formatDecimalPlaces(product.value.rawPrice * 0.1, 0)}',
+                                    fontSize: 14.sp,
+                                    fontWeight: 700,
+                                    lineHeight: 16.sp,
+                                    color: bonusTikColor,
+                                  ),
+                                  StyledText(
+                                    ' TIK',
+                                    fontSize: 14.sp,
+                                    fontWeight: 500,
+                                    lineHeight: 16.sp,
+                                    color: bonusTikColor,
+                                  ),
+                                ],
+                              ),
+                            )
                         ],
                       ),
                     ],
                   ),
                 ],
               ),
-              Ink(
-                width: 105.sp,
-                decoration: BoxDecoration(
-                  color: subBg02Color,
-                  border: Border.all(),
-                  borderRadius: BorderRadius.circular(50),
-                  boxShadow: [
-                    BoxShadow(
-                      color: Colors.black,
-                      offset: Offset(0, 3.sp),
-                    )
-                  ],
-                ),
-                child: InkWell(
-                  onTap: () => controller.purchaseInAppItem(product),
-                  borderRadius: BorderRadius.circular(50),
-                  child: Padding(
-                    padding: EdgeInsets.symmetric(horizontal: 25.sp, vertical: 15.sp),
-                    child: StyledText(
-                      product.price,
-                      fontSize: 14.sp,
-                      fontWeight: 500,
-                      lineHeight: 16.sp,
+              Material(
+                clipBehavior: Clip.none,
+                color: Colors.transparent,
+                child: Container(
+                  margin: EdgeInsets.only(bottom: 3.sp),
+                  child: Ink(
+                    width: 120.sp,
+                    decoration: BoxDecoration(
+                      color: subBg02Color,
+                      border: Border.all(),
+                      borderRadius: BorderRadius.circular(50),
+                      boxShadow: [
+                        BoxShadow(
+                          color: Colors.black,
+                          offset: Offset(0, 3.sp),
+                        )
+                      ],
+                    ),
+                    child: InkWell(
+                      onTap: () => controller.purchaseInAppItem(product.value),
+                      borderRadius: BorderRadius.circular(50),
+                      child: Padding(
+                        padding: EdgeInsets.symmetric(horizontal: 25.sp, vertical: 15.sp),
+                        child: StyledText(
+                          product.value.price,
+                          fontSize: 14.sp,
+                          fontWeight: 500,
+                          lineHeight: 16.sp,
+                          textAlign: TextAlign.center,
+                        ),
+                      ),
                     ),
                   ),
                 ),
@@ -159,16 +203,17 @@ void showProductList(WalletMasterController controller) {
               ),
               Expanded(
                 child: SingleChildScrollView(
+                  physics: const ClampingScrollPhysics(),
                   child: Column(
                     children: [
                       ...renderProductList(controller),
                       Container(
-                        padding: EdgeInsets.symmetric(horizontal: 25, vertical: 30),
+                        padding: const EdgeInsets.symmetric(horizontal: 25, vertical: 30),
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            Padding(
-                              padding: const EdgeInsets.only(bottom: 9),
+                            const Padding(
+                              padding: EdgeInsets.only(bottom: 9),
                               child: StyledText(
                                 '이용안내',
                                 fontSize: 14,
@@ -182,7 +227,7 @@ void showProductList(WalletMasterController controller) {
                                 Container(
                                   width: 2,
                                   height: 2,
-                                  margin: EdgeInsets.all(5),
+                                  margin: const EdgeInsets.all(5),
                                   decoration: BoxDecoration(
                                     color: lightGrayColor,
                                     borderRadius: BorderRadius.circular(2),
@@ -203,7 +248,7 @@ void showProductList(WalletMasterController controller) {
                                           text: ' 상품권 교환은 불가',
                                           style: TextStyle(fontWeight: FontWeight.w700, color: lightGrayColor),
                                         ),
-                                        TextSpan(
+                                        const TextSpan(
                                           text: '하며, 아이템 구매나 체력 및 내구도 충전만 가능합니다.',
                                         ),
                                       ],
@@ -220,7 +265,7 @@ void showProductList(WalletMasterController controller) {
                                   Container(
                                     width: 2,
                                     height: 2,
-                                    margin: EdgeInsets.all(5),
+                                    margin: const EdgeInsets.all(5),
                                     decoration: BoxDecoration(
                                       color: lightGrayColor,
                                       borderRadius: BorderRadius.circular(2),
@@ -246,7 +291,7 @@ void showProductList(WalletMasterController controller) {
                                   Container(
                                     width: 2,
                                     height: 2,
-                                    margin: EdgeInsets.all(5),
+                                    margin: const EdgeInsets.all(5),
                                     decoration: BoxDecoration(
                                       color: lightGrayColor,
                                       borderRadius: BorderRadius.circular(2),
@@ -272,7 +317,7 @@ void showProductList(WalletMasterController controller) {
                                   Container(
                                     width: 2,
                                     height: 2,
-                                    margin: EdgeInsets.all(5),
+                                    margin: const EdgeInsets.all(5),
                                     decoration: BoxDecoration(
                                       color: lightGrayColor,
                                       borderRadius: BorderRadius.circular(2),
@@ -298,7 +343,7 @@ void showProductList(WalletMasterController controller) {
                                   Container(
                                     width: 2,
                                     height: 2,
-                                    margin: EdgeInsets.all(5),
+                                    margin: const EdgeInsets.all(5),
                                     decoration: BoxDecoration(
                                       color: lightGrayColor,
                                       borderRadius: BorderRadius.circular(2),
@@ -324,7 +369,7 @@ void showProductList(WalletMasterController controller) {
                                   Container(
                                     width: 2,
                                     height: 2,
-                                    margin: EdgeInsets.all(5),
+                                    margin: const EdgeInsets.all(5),
                                     decoration: BoxDecoration(
                                       color: lightGrayColor,
                                       borderRadius: BorderRadius.circular(2),
@@ -352,7 +397,7 @@ void showProductList(WalletMasterController controller) {
                                   Container(
                                     width: 2,
                                     height: 2,
-                                    margin: EdgeInsets.all(5),
+                                    margin: const EdgeInsets.all(5),
                                     decoration: BoxDecoration(
                                       color: lightGrayColor,
                                       borderRadius: BorderRadius.circular(2),
@@ -372,7 +417,7 @@ void showProductList(WalletMasterController controller) {
                             )
                           ],
                         ),
-                      )
+                      ),
                     ],
                   ),
                 ),
