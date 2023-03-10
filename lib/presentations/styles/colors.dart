@@ -35,3 +35,4 @@ Color deepBlackColor = const Color(0xFF08080B);
 Color dangerColor = const Color(0xFFFF4D4D);
 Color stikColor = const Color(0xFFFF8A43);
 Color tikColor = const Color(0xFFFF8FB4);
+Color bonusTikColor = const Color(0xFFFFB6CE);

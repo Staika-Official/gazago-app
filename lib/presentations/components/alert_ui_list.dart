@@ -2606,7 +2606,11 @@ void showInAppPurchaseProgressAlert(WalletMasterController controller) {
                   child: controller.isPurchaseSuccessful.value
                       ? Column(
                           children: [
-                            iconTiks,
+                            SizedBox(
+                              width: 85.sp,
+                              height: 85.sp,
+                              child: Image.asset("assets/images/wallet/ico_tiks.png"),
+                            ),
                             Padding(
                               padding: const EdgeInsets.only(top: 14, bottom: 30),
                               child: StyledText(
@@ -2620,7 +2624,11 @@ void showInAppPurchaseProgressAlert(WalletMasterController controller) {
                         )
                       : Column(
                           children: [
-                            iconTiks,
+                            SizedBox(
+                              width: 85.sp,
+                              height: 85.sp,
+                              child: Image.asset("assets/images/wallet/ico_tiks.png"),
+                            ),
                             Padding(
                               padding: const EdgeInsets.only(top: 14, bottom: 30),
                               child: StyledText(
