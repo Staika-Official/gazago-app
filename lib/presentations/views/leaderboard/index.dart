@@ -355,7 +355,7 @@ class LeaderboardHome extends StatelessWidget {
                         style: TextStyle(color: Colors.white, fontSize: 14.sp, fontWeight: FontWeight.w600),
                         textAlign: TextAlign.left,
                       ),
-                      if (myRank.additionTik! > 0 || myRank.additionStik! > 0)
+                      if (myRank.additionStik != null || myRank.additionTik != null)
                         Padding(
                           padding: EdgeInsets.only(top: 4.0.sp),
                           child: Text.rich(
@@ -366,29 +366,44 @@ class LeaderboardHome extends StatelessWidget {
                               fontWeight: FontWeight.w700,
                               color: skyBlueColor,
                             ),
-                            TextSpan(
-                              text: '${myRank.additionStik ?? '0'}',
-                              children: [
-                                const TextSpan(
-                                    text: ' STIK',
-                                    style: TextStyle(
-                                      fontWeight: FontWeight.w400,
-                                    )),
-                                if (myRank.additionTik! > 0) const TextSpan(text: ' + '),
-                                if (myRank.additionTik! > 0)
-                                  TextSpan(
-                                      text: formatDecimalPlaces(myRank.additionTik ?? 0, 0),
-                                      style: const TextStyle(
-                                        fontWeight: FontWeight.w700,
-                                      )),
-                                if (myRank.additionTik! > 0)
-                                  const TextSpan(
-                                      text: ' TIK',
-                                      style: TextStyle(
-                                        fontWeight: FontWeight.w400,
-                                      )),
-                              ],
-                            ),
+                            myRank.additionStik != null
+                                ? TextSpan(
+                                    text: '${myRank.additionStik! ?? '0'}',
+                                    children: [
+                                      const TextSpan(
+                                          text: ' STIK',
+                                          style: TextStyle(
+                                            fontWeight: FontWeight.w400,
+                                          )),
+                                      if (myRank.additionTik != null) const TextSpan(text: ' + '),
+                                      if (myRank.additionTik != null)
+                                        TextSpan(
+                                            text: formatDecimalPlaces(myRank.additionTik! ?? 0, 0),
+                                            style: const TextStyle(
+                                              fontWeight: FontWeight.w700,
+                                            )),
+                                      if (myRank.additionTik != null)
+                                        const TextSpan(
+                                            text: ' TIK',
+                                            style: TextStyle(
+                                              fontWeight: FontWeight.w400,
+                                            )),
+                                    ],
+                                  )
+                                : myRank.additionTik != null
+                                    ? TextSpan(
+                                        text: '${myRank.additionTik! ?? '0'}',
+                                        children: const [
+                                          TextSpan(
+                                              text: ' TIK',
+                                              style: TextStyle(
+                                                fontWeight: FontWeight.w400,
+                                              )),
+                                        ],
+                                      )
+                                    : const TextSpan(
+                                        text: '',
+                                      ),
                           ),
                         )
                     ],
@@ -510,7 +525,7 @@ class LeaderboardHome extends StatelessWidget {
                           style: const TextStyle(color: Colors.white, fontSize: 16, height: 1.6, fontWeight: FontWeight.w500),
                           textAlign: TextAlign.left,
                         ),
-                        if (ranker.additionTik! > 0 || ranker.additionStik! > 0)
+                        if (ranker.additionStik != null || ranker.additionTik != null)
                           Padding(
                             padding: EdgeInsets.only(top: 4.0.sp),
                             child: Text.rich(
@@ -521,29 +536,44 @@ class LeaderboardHome extends StatelessWidget {
                                 fontWeight: FontWeight.w700,
                                 color: skyBlueColor,
                               ),
-                              TextSpan(
-                                text: '${ranker.additionStik ?? '0'}',
-                                children: [
-                                  const TextSpan(
-                                      text: ' STIK',
-                                      style: TextStyle(
-                                        fontWeight: FontWeight.w400,
-                                      )),
-                                  if (ranker.additionTik! > 0) const TextSpan(text: ' + '),
-                                  if (ranker.additionTik! > 0)
-                                    TextSpan(
-                                        text: formatDecimalPlaces(ranker.additionTik ?? 0, 0),
-                                        style: const TextStyle(
-                                          fontWeight: FontWeight.w700,
-                                        )),
-                                  if (ranker.additionTik! > 0)
-                                    const TextSpan(
-                                        text: ' TIK',
-                                        style: TextStyle(
-                                          fontWeight: FontWeight.w400,
-                                        )),
-                                ],
-                              ),
+                              ranker.additionStik != null
+                                  ? TextSpan(
+                                      text: '${ranker.additionStik! ?? '0'}',
+                                      children: [
+                                        const TextSpan(
+                                            text: ' STIK',
+                                            style: TextStyle(
+                                              fontWeight: FontWeight.w400,
+                                            )),
+                                        if (ranker.additionTik != null) const TextSpan(text: ' + '),
+                                        if (ranker.additionTik != null)
+                                          TextSpan(
+                                              text: formatDecimalPlaces(ranker.additionTik! ?? 0, 0),
+                                              style: const TextStyle(
+                                                fontWeight: FontWeight.w700,
+                                              )),
+                                        if (ranker.additionTik != null)
+                                          const TextSpan(
+                                              text: ' TIK',
+                                              style: TextStyle(
+                                                fontWeight: FontWeight.w400,
+                                              )),
+                                      ],
+                                    )
+                                  : ranker.additionTik != null
+                                      ? TextSpan(
+                                          text: '${ranker.additionTik! ?? '0'}',
+                                          children: const [
+                                            TextSpan(
+                                                text: ' TIK',
+                                                style: TextStyle(
+                                                  fontWeight: FontWeight.w400,
+                                                )),
+                                          ],
+                                        )
+                                      : const TextSpan(
+                                          text: '',
+                                        ),
                             ),
                           )
                       ],
