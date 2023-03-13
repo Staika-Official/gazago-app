@@ -49,6 +49,7 @@ import 'package:throttling/throttling.dart';
 class ActivityController extends SuperController with ActivityMixin, ChallengeMixin, GetTickerProviderStateMixin, AdmobMixin {
   final WalletMasterController walletMasterController = Get.find();
   final GlobalKey webViewKey = GlobalKey();
+  final RxString noticeUrl = RxString('');
   //rewarded.dart
   RxList<StatModel> get statList {
     return RxList([
@@ -68,12 +69,24 @@ class ActivityController extends SuperController with ActivityMixin, ChallengeMi
 
   final List<Map<String, dynamic>> popupList = [
     {
+      'imageUrl': 'assets/images/common/img_main_popup_04.png',
+      'type': 'GATEIO',
+      'url': 'https://blog.naver.com/staika/223038831424',
+    },
+    {
+      'imageUrl': 'assets/images/common/img_main_popup_05.png',
+      'type': 'ABUSES',
+      'url': 'https://eztechfin.notion.site/939f54ae65b94a74984497903d414aad',
+    },
+    {
       'imageUrl': 'assets/images/common/img_main_popup.png',
       'type': 'HOWTOGO',
+      'url': 'https://eztechfin.notion.site/How-to-GO-61129dcb96324b0cb282d7743e19b043',
     },
     {
       'imageUrl': 'assets/images/common/img_main_popup_02.png',
       'type': 'WARNING',
+      'url': 'https://blog.naver.com/gaza-go_crew/223015634731',
     },
     {
       'imageUrl': 'assets/images/common/img_main_popup_03.png',
@@ -830,18 +843,15 @@ class ActivityController extends SuperController with ActivityMixin, ChallengeMi
     }
   }
 
-  void moveToWebView(type) {
+  void moveToWebView(String type, {String? url}) {
     switch (type) {
-      case 'HOWTOGO':
-        Get.toNamed(Routes.howToGo);
-        break;
-      case 'WARNING':
-        Get.toNamed(Routes.mountainWarning);
-        break;
       case 'NEWITEM':
         Get.back();
         Get.find<HomeMenuController>().selectMenu(3);
         break;
+      default:
+        noticeUrl.value = url!;
+        Get.toNamed(Routes.noticeWebview);
     }
   }
 

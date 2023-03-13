@@ -2427,7 +2427,7 @@ Future<void> showMainPopupAlert(ActivityController activityController) async {
                     .map((item) => Container(
                           width: double.infinity,
                           child: InkWell(
-                            onTap: () => activityController.moveToWebView(item['type']),
+                            onTap: () => activityController.moveToWebView(item['type'], url: item['url']),
                             child: Image.asset(
                               item['imageUrl'],
                               width: double.infinity,
