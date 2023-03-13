@@ -32,6 +32,7 @@ import 'package:gaza_go/presentations/styles/colors.dart';
 import 'package:gaza_go/presentations/styles/icons.dart';
 import 'package:gaza_go/presentations/styles/styled_text.dart';
 import 'package:get/get.dart';
+import 'package:lottie/lottie.dart';
 
 void showRetryAlert(LoadingController controller) {
   showAlert(
@@ -2564,7 +2565,24 @@ void showNotChallangeAbleAlert(ActivityController controller) {
 
 void showStoreNotAvailableAlert() {
   showAlert(
-    contentText: '스토어와 연결 중에 예상하지\n못한 오류가 발생했습니다.\n잠시 후 다시 시도해 주세요',
+    contentWidget: Container(
+      child: Center(
+        child: Column(
+          children: [
+            iconNoConnection,
+            Padding(
+              padding: const EdgeInsets.only(top: 14, bottom: 30),
+              child: StyledText(
+                '스토어와 연결 중에 예상하지\n못한 오류가 발생했습니다.\n잠시 후 다시 시도해 주세요',
+                fontSize: 18.sp,
+                fontWeight: 500,
+                lineHeight: 24.sp,
+              ),
+            ),
+          ],
+        ),
+      ),
+    ),
     actions: [
       Expanded(
         child: GazagoButton(
@@ -2585,19 +2603,20 @@ void showInAppPurchaseProgressAlert(WalletMasterController controller) {
               ? Center(
                   child: Column(
                     children: [
+                      Lottie.asset(
+                        'assets/lottie/purchase_pending.json',
+                        width: 40,
+                        height: 40,
+                        repeat: true,
+                      ),
                       Padding(
                         padding: const EdgeInsets.all(8.0),
                         child: StyledText(
-                          '결제를 처리중입니다.',
+                          'TIK을 충전하고 있습니다.',
                           fontSize: 18.sp,
                           fontWeight: 500,
                           lineHeight: 24.sp,
                         ),
-                      ),
-                      SizedBox(
-                        width: 30,
-                        height: 30,
-                        child: CircularProgressIndicator(),
                       ),
                     ],
                   ),
@@ -2606,10 +2625,11 @@ void showInAppPurchaseProgressAlert(WalletMasterController controller) {
                   child: controller.isPurchaseSuccessful.value
                       ? Column(
                           children: [
-                            SizedBox(
-                              width: 85.sp,
-                              height: 85.sp,
-                              child: Image.asset("assets/images/wallet/ico_tiks.png"),
+                            Lottie.asset(
+                              'assets/lottie/purchase_success.json',
+                              width: 40,
+                              height: 40,
+                              repeat: true,
                             ),
                             Padding(
                               padding: const EdgeInsets.only(top: 14, bottom: 30),
@@ -2624,11 +2644,7 @@ void showInAppPurchaseProgressAlert(WalletMasterController controller) {
                         )
                       : Column(
                           children: [
-                            SizedBox(
-                              width: 85.sp,
-                              height: 85.sp,
-                              child: Image.asset("assets/images/wallet/ico_tiks.png"),
-                            ),
+                            iconError,
                             Padding(
                               padding: const EdgeInsets.only(top: 14, bottom: 30),
                               child: StyledText(
