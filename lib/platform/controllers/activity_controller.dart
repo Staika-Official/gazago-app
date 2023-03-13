@@ -45,6 +45,7 @@ import 'package:package_info_plus/package_info_plus.dart';
 import 'package:permission_handler/permission_handler.dart' as ph;
 import 'package:simple_animations/animation_builder/custom_animation_builder.dart';
 import 'package:throttling/throttling.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class ActivityController extends SuperController with ActivityMixin, ChallengeMixin, GetTickerProviderStateMixin, AdmobMixin {
   final WalletMasterController walletMasterController = Get.find();
@@ -67,6 +68,14 @@ class ActivityController extends SuperController with ActivityMixin, ChallengeMi
   }
 
   final List<Map<String, dynamic>> popupList = [
+    {
+      'imageUrl': 'assets/images/common/img_main_popup_04.png',
+      'type': 'GATEIO',
+    },
+    {
+      'imageUrl': 'assets/images/common/img_main_popup_05.png',
+      'type': 'ABUSES',
+    },
     {
       'imageUrl': 'assets/images/common/img_main_popup.png',
       'type': 'HOWTOGO',
@@ -832,6 +841,18 @@ class ActivityController extends SuperController with ActivityMixin, ChallengeMi
 
   void moveToWebView(type) {
     switch (type) {
+      case 'GATEIO':
+        launchUrl(
+          Uri.parse('https://blog.naver.com/staika/223038831424'),
+          mode: LaunchMode.inAppWebView,
+        );
+        break;
+      case 'ABUSES':
+        launchUrl(
+          Uri.parse('https://eztechfin.notion.site/939f54ae65b94a74984497903d414aad'),
+          mode: LaunchMode.inAppWebView,
+        );
+        break;
       case 'HOWTOGO':
         Get.toNamed(Routes.howToGo);
         break;
