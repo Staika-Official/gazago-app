@@ -315,6 +315,7 @@ mixin ActivityMixin {
     if (isFakeGps.value) {
       return;
     }
+
     if (!batchIsInProgress()) {
       // if (globalController.connectivityResult.value != ConnectivityResult.none) {
       if (globalController.internetConnection.value) {
@@ -553,8 +554,8 @@ mixin ActivityMixin {
   void pauseExercise() {
     updateTimer?.cancel();
     updateTimer = null;
-    //exerciseTimer?.cancel();
-    //exerciseTimer = null;
+    exerciseTimer?.cancel();
+    exerciseTimer = null;
     stepSubscription?.cancel();
     stepSubscription = null;
     pedestrianStatusSubscription?.cancel();
@@ -586,8 +587,13 @@ mixin ActivityMixin {
         },
       );
     }
-    print(adId);
+
     if (!batchIsInProgress()) {
+      // 업데이트 타이머에 의해서 미세한 차이로 운동 종료 요청후 즉시 운동 업데이트 요청이 나가지 않도록 타이머를 우선 스탑한다.
+      updateTimer?.cancel();
+      exerciseTimer?.cancel();
+
+      //타이머 멈춘 후 종료 요청
       await ActivityService.fetchEndUserExercises(
         userExerciseData.value,
         source: source,
@@ -620,7 +626,6 @@ mixin ActivityMixin {
   }
 
   void endExerciseLocally(ChallengeModel challenge) {
-    print('endedLocally');
     exerciseState.value = ExerciseState.ready;
     CurrentUserStateModel? savedState = HiveStore.loadCurrentUserState();
     if (savedState != null) {
@@ -636,7 +641,6 @@ mixin ActivityMixin {
     resetVariables(challenge);
     resetTimer();
     resetSubscriptions();
-    print(HiveStore.load(key: HiveKey.endExerciseRequested.name));
     Get.until((route) => route.isFirst);
   }
 
