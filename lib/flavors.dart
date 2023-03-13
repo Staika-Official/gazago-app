@@ -68,19 +68,6 @@ class F {
     }
   }
 
-  static String get mountainWarningUrl {
-    switch (appFlavor) {
-      case Flavor.dev:
-        return 'https://blog.naver.com/gaza-go_crew/223015634731';
-      case Flavor.stage:
-        return 'https://blog.naver.com/gaza-go_crew/223015634731';
-      case Flavor.prod:
-        return 'https://blog.naver.com/gaza-go_crew/223015634731';
-      default:
-        return 'https://blog.naver.com/gaza-go_crew/223015634731';
-    }
-  }
-
   static SolanaClient get solanaClient {
     switch (appFlavor) {
       case Flavor.dev:
