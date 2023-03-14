@@ -92,7 +92,7 @@ class ActivitySelect extends StatelessWidget {
                                 Padding(
                                   padding: EdgeInsets.only(top: 18.sp),
                                   child: Text(
-                                    '등산',
+                                    '오르기',
                                     style: TextStyle(
                                       color: Colors.black,
                                       fontWeight: FontWeight.w800,
@@ -104,7 +104,7 @@ class ActivitySelect extends StatelessWidget {
                                 Padding(
                                   padding: EdgeInsets.only(top: 6.sp),
                                   child: Text(
-                                    '동네 산 올라가요!',
+                                    '뒷동산 YES 뱃지 NO',
                                     style: TextStyle(
                                       color: Colors.black,
                                       fontWeight: FontWeight.w600,

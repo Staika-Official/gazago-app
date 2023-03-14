@@ -12,7 +12,6 @@ import 'package:gaza_go/platform/helpers/base_helper.dart';
 import 'package:gaza_go/platform/helpers/login_helper.dart';
 import 'package:gaza_go/platform/models/terms_status_model.dart';
 import 'package:gaza_go/platform/services/member_service.dart';
-import 'package:gaza_go/platform/services/uaa_service.dart';
 import 'package:gaza_go/platform/stores/hive_store.dart';
 import 'package:gaza_go/presentations/components/alert_ui_list.dart';
 import 'package:gaza_go/presentations/components/gazago_button.dart';
@@ -94,7 +93,6 @@ class LoadingController extends GetxController {
     _timer = Timer.periodic(const Duration(seconds: 1), (timer) {
       time.value++;
 
-      print(Get.isRegistered<LoadingController>());
       if (!Get.isRegistered<LoadingController>()) {
         timerStop();
       }

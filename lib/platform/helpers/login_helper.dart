@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:gaza_go/constants/enums.dart';
 import 'package:gaza_go/constants/routes.dart';
+import 'package:gaza_go/platform/controllers/activity_controller.dart';
 import 'package:gaza_go/platform/stores/hive_store.dart';
 import 'package:gaza_go/presentations/styles/icons.dart';
 import 'package:get/get.dart';
@@ -57,6 +58,16 @@ void forceLogout() async {
   handleKeysOnLogout();
   if (await GoogleSignIn().isSignedIn()) {
     GoogleSignIn().signOut();
+  }
+
+  if (Get.isRegistered<ActivityController>()) {
+    ActivityController activityController = Get.find<ActivityController>();
+    if (activityController.exerciseTimer != null) {
+      activityController.exerciseTimer!.cancel();
+      activityController.updateTimer!.cancel();
+      activityController.exerciseTimer = null;
+      activityController.updateTimer = null;
+    }
   }
 
   Get.offAllNamed(Routes.login);

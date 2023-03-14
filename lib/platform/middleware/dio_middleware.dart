@@ -5,6 +5,7 @@ import 'package:dio/dio.dart';
 import 'package:gaza_go/constants/enums.dart';
 import 'package:gaza_go/constants/routes.dart';
 import 'package:gaza_go/flavors.dart';
+import 'package:gaza_go/platform/controllers/activity_controller.dart';
 import 'package:gaza_go/platform/helpers/alert_helper.dart';
 import 'package:gaza_go/platform/models/access_token_model.dart';
 import 'package:gaza_go/platform/models/error_response_data_model.dart';
@@ -44,14 +45,14 @@ class Api {
     if (needsToken) {
       String? accessToken = HiveStore.loadString(key: HiveKey.accessToken.name);
 
-      if (accessToken != null) {
-        _dio.options.headers = {'Authorization': 'Bearer $accessToken'};
-      }
       if (isPatch!) {
         _dio.options.headers = {'Authorization': 'Bearer ${accessToken!}', 'Content-type': 'application/merge-patch+json'};
       }
       if (isFile!) {
         _dio.options.headers = {'Authorization': 'Bearer ${accessToken!}'};
+      }
+      if (accessToken != null) {
+        _dio.options.headers = {'Authorization': 'Bearer $accessToken'};
       }
     } else {
       _dio.options.headers = {'Authorization': ''};
@@ -125,6 +126,8 @@ class Api {
   }
 
   static _onErrorInterceptor(DioError e, ErrorInterceptorHandler handler) async {
+    // handler.resolve를 써야지만 errorCallback이 실행된다!
+
     _logger.e(
       '------------->'
       '\nERROR'
@@ -157,8 +160,7 @@ class Api {
       final String refreshToken = HiveStore.loadString(key: HiveKey.refreshToken.name) ?? '';
 
       if (refreshToken == '') {
-        if (getx.Get.currentRoute != Routes.login) getx.Get.offAllNamed(Routes.login);
-        handler.reject(e);
+        resetToLogin(e, handler);
       }
 
       await _retryFailedRequest(e, handler);
@@ -166,47 +168,43 @@ class Api {
       if (e.response?.data != null && e.response?.data != '') {
         ErrorResponseDataModel errorData = ErrorResponseDataModel.fromJson(e.response?.data);
 
-        if (e.response?.statusCode == 404 && e.response!.requestOptions.path.contains('user-states/user/')) {
+        if (errorData.errorMessage != null) {
           showToastPopup(errorData.errorMessage!);
-          handler.reject(e);
-        }
-        if (e.response!.requestOptions.path.contains('user-identities') || e.response!.requestOptions.path.contains('/buy')) {
-          handler.resolve(e.response!);
-        } else {
-          if (errorData.errorMessage != null) {
-            showToastPopup(errorData.errorMessage!);
-          }
-          if (e.response != null) {
-            handler.resolve(e.response!);
-          }
         }
       } else if ([DioErrorType.connectTimeout, DioErrorType.sendTimeout, DioErrorType.receiveTimeout, DioErrorType.other].any((element) => element == e.type)) {
-        handler.resolve(
-          Response(
-            requestOptions: RequestOptions(
-              path: e.requestOptions.path,
-              data: 'unknown',
-            ),
+        e.response = Response(
+          requestOptions: RequestOptions(
+            path: e.requestOptions.path,
+            data: 'unknown',
           ),
         );
-        showToastPopup('통신이 원활하지 않습니다. 잠시후 다시 시도해주세요');
-      } else {
-        if (e.response != null) {
-          handler.resolve(e.response!);
-        }
+
+        showToastPopup('통신이 원활하지 않습니다.\n잠시후 다시 시도해주세요');
       }
     }
 
-    handler.next(e);
+    if (!handler.isCompleted) {
+      e.response != null ? handler.resolve(e.response!) : handler.next(e);
+    }
   }
 
   static Future<void> _retryFailedRequest(DioError e, ErrorInterceptorHandler handler) async {
     String? accessToken = HiveStore.loadString(key: HiveKey.accessToken.name);
-    if (accessToken == null) return;
+    if (accessToken == null) {
+      resetToLogin(e, handler);
+      return;
+    }
+
+    retryAttempt++;
+    if (retryAttempt > 5) {
+      showToastPopup('토큰이 만료되었습니다.\n다시 로그인해주세요.');
+      resetToLogin(e, handler);
+      return;
+    }
 
     Dio dio = Dio();
     e.requestOptions.headers['Authorization'] = 'Bearer $accessToken';
-    dio
+    await dio
         .request(
       e.requestOptions.baseUrl + e.requestOptions.path,
       options: Options(
@@ -221,12 +219,14 @@ class Api {
         handler.resolve(
           response,
         );
+        retryAttempt = 0;
       },
     ).onError((error, stackTrace) async {
       if (error is DioError) {
         _logger.e(
           '------------->'
           '\nRETRY ERROR'
+          '\n${e.requestOptions.baseUrl + e.requestOptions.path}'
           '\n${error.response}',
         );
         await _getNewAccessToken(e, handler);
@@ -237,31 +237,39 @@ class Api {
   static Future<void> _getNewAccessToken(DioError e, ErrorInterceptorHandler handler) async {
     final String refreshToken = HiveStore.loadString(key: HiveKey.refreshToken.name) ?? '';
 
-    print('refreshToken $refreshToken');
-
     Dio refreshDio = Dio();
-    refreshDio
-      ..options.headers['Authorization'] = 'Bearer $refreshToken'
-      ..post('${F.baseUrl}/services/uaa/api/sign-in/token', data: {'clientId': 'GAZAGO'}).then((Response res) async {
-        AccessTokenModel newToken = AccessTokenModel.fromJson(res.data);
+    refreshDio.options.headers['Authorization'] = 'Bearer $refreshToken';
+    await refreshDio.post('${F.baseUrl}/services/uaa/api/sign-in/token', data: {'clientId': 'GAZAGO'}).then((Response res) async {
+      AccessTokenModel newToken = AccessTokenModel.fromJson(res.data);
 
-        HiveStore.save(key: HiveKey.accessToken.name, value: newToken.accessToken);
-        HiveStore.save(key: HiveKey.refreshToken.name, value: newToken.refreshToken);
+      HiveStore.save(key: HiveKey.accessToken.name, value: newToken.accessToken);
+      HiveStore.save(key: HiveKey.refreshToken.name, value: newToken.refreshToken);
 
-        print('new refreshToken ${newToken.refreshToken}');
-
-        await _retryFailedRequest(e, handler);
-      }).onError((error, stacktrace) {
-        resetToLogin();
-      });
+      await _retryFailedRequest(e, handler);
+    }).onError((error, stacktrace) {
+      resetToLogin(e, handler);
+    });
   }
 
-  static void resetToLogin() {
+  static void resetToLogin(DioError e, ErrorInterceptorHandler handler) {
+    if (!handler.isCompleted) {
+      e.response != null ? handler.resolve(e.response!) : handler.next(e);
+    }
     retryAttempt = 0;
     HiveStore.deleteMultipleKeys(keys: [
       HiveKey.accessToken.name,
       HiveKey.refreshToken.name,
     ]);
+
+    if (getx.Get.isRegistered<ActivityController>()) {
+      ActivityController activityController = getx.Get.find<ActivityController>();
+      if (activityController.exerciseTimer != null) {
+        activityController.exerciseTimer!.cancel();
+        activityController.updateTimer!.cancel();
+        activityController.exerciseTimer = null;
+        activityController.updateTimer = null;
+      }
+    }
     if (getx.Get.currentRoute != Routes.login) getx.Get.offAllNamed(Routes.login);
   }
 }
