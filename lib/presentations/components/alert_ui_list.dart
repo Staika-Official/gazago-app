@@ -2577,6 +2577,7 @@ void showStoreNotAvailableAlert() {
                 fontSize: 18.sp,
                 fontWeight: 500,
                 lineHeight: 24.sp,
+                textAlign: TextAlign.center,
               ),
             ),
           ],
@@ -2612,10 +2613,11 @@ void showInAppPurchaseProgressAlert(WalletMasterController controller) {
                       Padding(
                         padding: const EdgeInsets.all(8.0),
                         child: StyledText(
-                          'TIK을 충전하고 있습니다.',
+                          controller.showVerifyingPurchaseText.value ? 'TIK을 충전하고 있습니다.' : '결제 요청중입니다.',
                           fontSize: 18.sp,
                           fontWeight: 500,
                           lineHeight: 24.sp,
+                          textAlign: TextAlign.center,
                         ),
                       ),
                     ],
@@ -2629,7 +2631,7 @@ void showInAppPurchaseProgressAlert(WalletMasterController controller) {
                               'assets/lottie/purchase_success.json',
                               width: 40,
                               height: 40,
-                              repeat: true,
+                              repeat: false,
                             ),
                             Padding(
                               padding: const EdgeInsets.only(top: 14, bottom: 30),
@@ -2638,6 +2640,7 @@ void showInAppPurchaseProgressAlert(WalletMasterController controller) {
                                 fontSize: 18.sp,
                                 fontWeight: 500,
                                 lineHeight: 24.sp,
+                                textAlign: TextAlign.center,
                               ),
                             ),
                           ],
@@ -2648,10 +2651,11 @@ void showInAppPurchaseProgressAlert(WalletMasterController controller) {
                             Padding(
                               padding: const EdgeInsets.only(top: 14, bottom: 30),
                               child: StyledText(
-                                '결제를 하던 중 오류가 발생했습니다.\n잠시 후 다시 시도해 주세요.',
+                                controller.showStoreErrorText.value ? '결제를 하던 중 오류가 발생했습니다.\n잠시 후 다시 시도해 주세요.' : '결제는 완료 되었으나 TIK 충전에 실패하였습니다.\n고객센터(cs@staika.io)에 문의해 주세요.',
                                 fontSize: 18.sp,
                                 fontWeight: 500,
                                 lineHeight: 24.sp,
+                                textAlign: TextAlign.center,
                               ),
                             ),
                           ],

@@ -1,5 +1,4 @@
 import 'dart:async';
-import 'dart:developer';
 import 'dart:io';
 
 import 'package:flutter/cupertino.dart';
@@ -46,6 +45,8 @@ class WalletMasterController extends GetxController {
   StreamSubscription<List<PurchaseDetails>>? subscription;
   final RxBool storeUnavailable = RxBool(false);
   final RxBool showPendingPurchaseUI = RxBool(false);
+  final RxBool showVerifyingPurchaseText = RxBool(false);
+  final RxBool showStoreErrorText = RxBool(false);
   final RxBool isPurchaseSuccessful = RxBool(false);
   final RxList<ProductDetails> inAppProducts = RxList.empty();
 
@@ -256,26 +257,24 @@ class WalletMasterController extends GetxController {
       print(purchaseDetails.status.name);
       print(purchaseDetails.pendingCompletePurchase);
       print('==========================>>');
-      if (purchaseDetails.status == PurchaseStatus.pending) {
-        showPendingPurchaseUI.value = true;
-        showInAppPurchaseProgressAlert(this);
-      } else {
-        if (purchaseDetails.status == PurchaseStatus.error) {
-          _handlePurchaseError(purchaseDetails.error!);
-        } else if (purchaseDetails.status == PurchaseStatus.canceled) {
-          Get.until((route) => Get.isBottomSheetOpen == false);
-        } else if (purchaseDetails.status == PurchaseStatus.purchased || purchaseDetails.status == PurchaseStatus.restored) {
-          bool valid = await _verifyPurchase(purchaseDetails);
-          if (valid) {
-            await _deliverProduct(purchaseDetails);
-          } else {
-            await _handleInvalidPurchase(purchaseDetails);
-          }
-        }
 
-        if (purchaseDetails.pendingCompletePurchase) {
-          await _completePurchaseInAppItem(purchaseDetails);
+      if (purchaseDetails.status == PurchaseStatus.error) {
+        _handlePurchaseError(purchaseDetails);
+      } else if (purchaseDetails.status == PurchaseStatus.canceled) {
+        Get.until((route) => Get.isBottomSheetOpen == false);
+      } else if (purchaseDetails.status == PurchaseStatus.purchased || purchaseDetails.status == PurchaseStatus.restored) {
+        showVerifyingPurchaseText.value = true;
+        bool valid = await _verifyPurchase(purchaseDetails);
+        if (valid) {
+          await _deliverProduct(purchaseDetails);
+        } else {
+          await _handleInvalidPurchase(purchaseDetails);
         }
+        showVerifyingPurchaseText.value = false;
+      }
+
+      if (purchaseDetails.pendingCompletePurchase) {
+        await _completePurchaseInAppItem(purchaseDetails);
       }
     });
   }
@@ -310,7 +309,8 @@ class WalletMasterController extends GetxController {
             };
       final ProductDetailsResponse response = await InAppPurchase.instance.queryProductDetails(_kIds);
       if (response.notFoundIDs.isNotEmpty) {
-        showToastPopup('구매할 수 있는 상품을 찾지 못했습니다.');
+        // id 를 찾을 수 없을 때 처리
+        // showToastPopup('구매할 수 있는 상품을 찾지 못했습니다.');
       }
       inAppProducts.value = response.productDetails;
     }
@@ -321,19 +321,23 @@ class WalletMasterController extends GetxController {
   }
 
   void purchaseInAppItem(ProductDetails product) async {
-    await InAppPurchase.instance.buyConsumable(purchaseParam: PurchaseParam(productDetails: product));
+    showPendingPurchaseUI.value = true;
+    showInAppPurchaseProgressAlert(this);
+    try {
+      await InAppPurchase.instance.buyConsumable(purchaseParam: PurchaseParam(productDetails: product));
+    } catch (e) {
+      showPendingPurchaseUI.value = false;
+      showStoreErrorText.value = true;
+    }
   }
 
-  void _handlePurchaseError(IAPError error) {
-    isPurchaseSuccessful.value = false;
+  void _handlePurchaseError(PurchaseDetails purchaseDetails) {
     showPendingPurchaseUI.value = false;
-    // showToastPopup('구매에 실패했습니다.\n잠시후 다시 요청해주세요');
+    isPurchaseSuccessful.value = false;
+    showStoreErrorText.value = true;
   }
 
   Future<bool> _verifyPurchase(PurchaseDetails purchaseDetails) async {
-    // IMPORTANT!! Always verify a purchase before delivering the product.
-    // For the purpose of an example, we directly return true.
-
     final data = {
       'platform': Platform.operatingSystem,
       'productId': purchaseDetails.productID,
@@ -346,45 +350,34 @@ class WalletMasterController extends GetxController {
     print('#################################################');
     print('purchaseDetails.productID : ${purchaseDetails.productID}');
     print('purchaseDetails.purchaseID : ${purchaseDetails.purchaseID}');
-
     print('verificationData.localVerificationData : ${purchaseDetails.verificationData.localVerificationData}');
     print('verificationData.serverVerificationData : ${purchaseDetails.verificationData.serverVerificationData}');
     print('verificationData.source : ${purchaseDetails.verificationData.source}');
-
-    inspect(purchaseDetails);
-
     print('#################################################');
+
     return Future<bool>.value(response.valid);
   }
 
   Future<void> _deliverProduct(PurchaseDetails purchaseDetails) async {
-    showPendingPurchaseUI.value = false;
-
     final data = {
       'purchaseId': purchaseDetails.purchaseID,
     };
     IapPayModel response = await IapService.pay(data);
 
     if (response.payed) {
-      showToastPopup('타이카 구매 완료되었습니다.');
-
-      // 월렛 새로고침
+      isPurchaseSuccessful.value = true;
+      showPendingPurchaseUI.value = false;
+      getSpendingWalletBalances();
     }
   }
 
   Future<void> _handleInvalidPurchase(PurchaseDetails purchaseDetails) async {
-    // handle invalid purchase here if  _verifyPurchase` failed.
     isPurchaseSuccessful.value = false;
+    showStoreErrorText.value = false;
     showPendingPurchaseUI.value = false;
-    showToastPopup('구매할 수 없는 상품입니다.');
   }
 
   Future<void> _completePurchaseInAppItem(PurchaseDetails purchaseDetails) async {
-    if (purchaseDetails.status == PurchaseStatus.canceled) return;
-    isPurchaseSuccessful.value = true;
-    showPendingPurchaseUI.value = false;
-
     await InAppPurchase.instance.completePurchase(purchaseDetails);
-    getSpendingWalletBalances();
   }
 }
