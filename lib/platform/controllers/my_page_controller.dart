@@ -1,5 +1,7 @@
 import 'dart:async';
+import 'dart:io';
 
+import 'package:device_info_plus/device_info_plus.dart';
 import 'package:dio/dio.dart' as dio;
 import 'package:flutter/cupertino.dart';
 import 'package:gaza_go/constants/enums.dart';
@@ -99,7 +101,13 @@ class MyPageController extends GetxController {
 
   void pickImage() async {
     bool hasPhotoPermission = false;
-    ph.PermissionStatus permissionStatus = await ph.Permission.photos.status;
+    ph.PermissionStatus permissionStatus;
+    final androidInfo = await DeviceInfoPlugin().androidInfo;
+    if (Platform.isAndroid && androidInfo.version.sdkInt <= 32) {
+      permissionStatus = await ph.Permission.storage.status;
+    } else {
+      permissionStatus = await ph.Permission.photos.status;
+    }
     hasPhotoPermission = [ph.PermissionStatus.granted, ph.PermissionStatus.restricted, ph.PermissionStatus.limited].any((permission) => permission == permissionStatus);
     if (!hasPhotoPermission) {
       hasPhotoPermission = await showGalleryPermissionAlert(this);
@@ -115,7 +123,12 @@ class MyPageController extends GetxController {
 
   Future<bool> requestPhotoPermission() async {
     ph.PermissionStatus permissionStatus;
-    permissionStatus = await ph.Permission.photos.request();
+    final androidInfo = await DeviceInfoPlugin().androidInfo;
+    if (Platform.isAndroid && androidInfo.version.sdkInt <= 32) {
+      permissionStatus = await ph.Permission.storage.request();
+    } else {
+      permissionStatus = await ph.Permission.photos.request();
+    }
     if ([ph.PermissionStatus.granted, ph.PermissionStatus.restricted, ph.PermissionStatus.limited].any((permission) => permission == permissionStatus)) {
       return true;
     } else {
