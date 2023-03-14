@@ -8,7 +8,6 @@ class IdentityApi {
   }
 
   static Future<Response> verifyIdentityCode(userId, verifyData) async {
-    print(verifyData);
     return await Api.client(serviceUrl: ServiceUrl.uaaService).post('/user-identities/users/$userId/sms/verify', data: verifyData);
   }
 }

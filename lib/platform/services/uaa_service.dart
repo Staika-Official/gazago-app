@@ -50,7 +50,7 @@ class UaaService {
     if (res.statusCode == 200) {
       successCallback();
     } else {
-      if (errorCallback != null) errorCallback(res.data);
+      if (errorCallback != null) errorCallback();
     }
   }
 
