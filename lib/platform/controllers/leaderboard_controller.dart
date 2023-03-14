@@ -81,6 +81,7 @@ class LeaderboardController extends GetxController {
   Future<void> refreshController() async {
     selectedDate.value = DateTime.now();
     _fetchMyRank();
+    _fetchTodayTik();
     _fetchRankerList(true);
     // String month = DateFormat('yyyy-MM-dd').format(today.value!);
     // getCalendarStatistics(month);
