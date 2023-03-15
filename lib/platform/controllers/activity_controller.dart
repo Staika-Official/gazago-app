@@ -149,7 +149,7 @@ class ActivityController extends SuperController with ActivityMixin, ChallengeMi
     }
   }
 
-  get current => _current;
+  RxInt get current => _current;
 
   setCurrent(int index) {
     _current.value = index;
@@ -858,6 +858,7 @@ class ActivityController extends SuperController with ActivityMixin, ChallengeMi
   void checkPopupExpired() {
     // HiveStore.save(key: HiveKey.closePopupDate.name, value: null);
     if (globalController.isPopupOpen.value) {
+      setCurrent(0);
       showMainPopupAlert(this);
     }
   }
