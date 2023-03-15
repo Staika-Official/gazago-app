@@ -68,7 +68,7 @@ class UaaService {
     if (res.statusCode == 201) {
       successCallback(UploadProfileImageModel.fromJson(res.data));
     } else {
-      if (errorCallback != null) errorCallback(res.data);
+      if (errorCallback != null) errorCallback();
     }
   }
 

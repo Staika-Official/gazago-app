@@ -12,6 +12,7 @@ import 'package:gaza_go/platform/services/uaa_service.dart';
 import 'package:gaza_go/platform/stores/hive_store.dart';
 import 'package:gaza_go/presentations/components/alert_ui_list.dart';
 import 'package:get/get.dart';
+import 'package:http_parser/http_parser.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:permission_handler/permission_handler.dart' as ph;
 
@@ -59,33 +60,31 @@ class MyPageController extends GetxController {
 
   Future<void> modifyMyAccountInfo() async {
     if (pickedImage.value != null) {
-      dynamic imagePath = pickedImage.value!.path;
-      dio.MultipartFile profileImage = await dio.MultipartFile.fromFile(imagePath);
+      String imagePath = pickedImage.value!.path;
+      dio.MultipartFile profileImage = await dio.MultipartFile.fromFile(imagePath, contentType: MediaType('image', imagePath.split('.').last));
       dio.FormData formData = dio.FormData.fromMap({
         'profileImage': profileImage,
       });
-      await UaaService.fetchUploadImage(
-        formData,
-        successCallback: (res) {
-          profile.value.profileImageUrl = res?.profileImageUrl;
-        },
-      );
+      await UaaService.fetchUploadImage(formData, successCallback: (res) {
+        profile.value.profileImageUrl = res?.profileImageUrl;
+      }, errorCallback: () {
+        showToastPopup('이미지 업로드에 실패했습니다.');
+        return;
+      });
     }
 
     if (profile.value.profileImageUrl == null || profile.value.profileImageUrl == '') {
       profile.value.profileImageUrl = 'https://image.staika.io/ic_launcher.png';
     }
 
-    await UaaService.modifyAccountInfo(
-      profile.value.nickname!,
-      profile.value.profileImageUrl,
-      successCallback: (UserAccountModel account) {
-        preferenceController.onInit();
-        HiveStore.save(key: HiveKey.profileImageUrl.name, value: account.profileImageUrl);
-        showToastPopup('프로필이 수정되었습니다.');
-        Get.back();
-      },
-    );
+    await UaaService.modifyAccountInfo(profile.value.nickname!, profile.value.profileImageUrl, successCallback: (UserAccountModel account) {
+      preferenceController.onInit();
+      HiveStore.save(key: HiveKey.profileImageUrl.name, value: account.profileImageUrl);
+      showToastPopup('프로필이 수정되었습니다.');
+      Get.back();
+    }, errorCallback: (res) {
+      showToastPopup(res.message);
+    });
   }
 
   void toggleEditMode() {

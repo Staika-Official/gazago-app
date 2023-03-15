@@ -36,7 +36,7 @@ class Api {
       // )
     ]);
 
-  static Dio client({required String serviceUrl, bool needsToken = true, Map<String, dynamic>? queryParams, bool? isPatch = false, bool? isFile = false}) {
+  static Dio client({required String serviceUrl, bool needsToken = true, Map<String, dynamic>? queryParams, bool isPatch = false, bool isFile = false}) {
     _dio.options.baseUrl = '${F.baseUrl}$serviceUrl';
     // _dio.options.connectTimeout = 2000;
     _dio.options.sendTimeout = 10000;
@@ -45,17 +45,27 @@ class Api {
     if (needsToken) {
       String? accessToken = HiveStore.loadString(key: HiveKey.accessToken.name);
 
-      if (isPatch!) {
-        _dio.options.headers = {'Authorization': 'Bearer ${accessToken!}', 'Content-type': 'application/merge-patch+json'};
+      if (isPatch) {
+        _dio.options.headers['Content-Type'] = 'application/merge-patch+json';
       }
-      if (isFile!) {
-        _dio.options.headers = {'Authorization': 'Bearer ${accessToken!}'};
+
+      if (isFile) {
+        _dio.options.headers['Content-Type'] = 'multipart/form-data';
       }
+
+      if (!isPatch && !isFile) {
+        _dio.options.headers['Content-Type'] = 'application/json';
+      }
+
+      print(_dio.options.headers['Content-Type']);
+
       if (accessToken != null) {
-        _dio.options.headers = {'Authorization': 'Bearer $accessToken'};
+        _dio.options.headers['Authorization'] = 'Bearer $accessToken';
+      } else {
+        _dio.options.headers.remove('Authorization');
       }
     } else {
-      _dio.options.headers = {'Authorization': ''};
+      _dio.options.headers.remove('Authorization');
     }
 
     if (queryParams != null) {
@@ -70,7 +80,7 @@ class Api {
     if (HiveStore.load(key: HiveKey.isDebuggingMode.name)) {
       List requestLogs = HiveStore.load(key: HiveKey.requestLogs.name) ?? [];
       dynamic logForm;
-      if (options.data != null) {
+      if (options.data != null && options.headers['Content-Type'] != null && options.headers['Content-Type'].contains('multipart')) {
         final Map optData = json.decode(json.encode(options.data));
         if (optData["locations"] != null) {
           optData["locations"] = null;
@@ -105,10 +115,11 @@ class Api {
       '------------->'
       '\nREQUEST'
       '\nMethods: ${options.method}'
+      '\nHeader Content-Type: ${options.headers['Content-Type']}'
       '\nHeader Authorization: ${options.headers['Authorization']}'
       '\nPath: ${options.baseUrl + options.path}'
       '\nQueries: ${(options.queryParameters)}'
-      '\nData: ${jsonEncode(options.data)}',
+      '\nData: ${options.headers['Content-Type'] != null && options.headers['Content-Type'].contains('multipart') ? 'multipart data!' : jsonEncode(options.data)}',
     );
     return handler.next(options);
   }

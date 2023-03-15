@@ -1,11 +1,9 @@
 import 'package:dio/dio.dart';
 import 'package:gaza_go/constants/base_urls.dart';
-import 'package:gaza_go/flavors.dart';
+import 'package:gaza_go/constants/enums.dart';
 import 'package:gaza_go/platform/middleware/dio_middleware.dart';
 import 'package:gaza_go/platform/models/social_login_info_model.dart';
-
-import '../../constants/enums.dart';
-import '../stores/hive_store.dart';
+import 'package:gaza_go/platform/stores/hive_store.dart';
 
 class UaaApi {
   static Future<Response> emailLogin() async {
@@ -44,15 +42,7 @@ class UaaApi {
   }
 
   static Future<Response> fetchUploadImage(String userId, FormData imageFile) async {
-    Dio dio = Dio();
-    String? accessToken = HiveStore.loadString(key: HiveKey.accessToken.name);
-
-    if (accessToken != null) {
-      dio.options.headers = {'Authorization': 'Bearer $accessToken'};
-    }
-    return await dio.post('${F.baseUrl}${ServiceUrl.uaaService}/users/$userId/upload-profile-image', data: imageFile);
-
-    //return await Api.client(serviceUrl: ServiceUrl.uaaService, isFile: true).post('/users/$userId/upload-profile-image', data: imageFile);
+    return await Api.client(serviceUrl: ServiceUrl.uaaService, isFile: true).post('/users/$userId/upload-profile-image', data: imageFile);
   }
 
   static Future<Response> fetchWithdrawMember() async {
