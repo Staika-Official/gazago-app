@@ -417,7 +417,7 @@ class LeaderboardHome extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.end,
             children: [
               StyledText(
-                '${formatDecimalPlaces(myRank.rewardGo, 2)} GO',
+                '${formatDecimalPlaces(myRank.rewardGo, 2, isAutoDecimal: true)} GO',
                 textAlign: TextAlign.right,
                 fontSize: 14,
                 fontWeight: 600,
@@ -588,7 +588,7 @@ class LeaderboardHome extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.end,
             children: [
               StyledText(
-                '${formatDecimalPlaces(ranker.rewardGo, 2)} GO',
+                '${formatDecimalPlaces(ranker.rewardGo, 2, isAutoDecimal: true)} GO',
                 textAlign: TextAlign.right,
                 fontSize: 14,
                 lineHeight: 14,
