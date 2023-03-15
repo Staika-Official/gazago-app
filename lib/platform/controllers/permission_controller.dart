@@ -126,8 +126,8 @@ class PermissionController extends GetxController {
   Future<bool> checkPhotoPermission() async {
     bool hasPhotoPermission = false;
     ph.PermissionStatus permissionStatus;
-    final androidInfo = await DeviceInfoPlugin().androidInfo;
-    if (Platform.isAndroid && androidInfo.version.sdkInt <= 32) {
+    final AndroidDeviceInfo? androidInfo = Platform.isAndroid ? await DeviceInfoPlugin().androidInfo : null;
+    if (Platform.isAndroid && androidInfo != null && androidInfo.version.sdkInt <= 32) {
       permissionStatus = await ph.Permission.storage.status;
     } else {
       permissionStatus = await ph.Permission.photos.status;
@@ -151,11 +151,11 @@ class PermissionController extends GetxController {
   Future<bool> requestPhotoPermission() async {
     Completer<bool> photoPermissionCompleter = Completer();
     bool permissionGranted = false;
-    final androidInfo = await DeviceInfoPlugin().androidInfo;
-    if (Platform.isAndroid && androidInfo.version.sdkInt <= 32) {
-      permissionGranted = ph.PermissionStatus.granted == await ph.Permission.storage.status;
+    final AndroidDeviceInfo? androidInfo = Platform.isAndroid ? await DeviceInfoPlugin().androidInfo : null;
+    if (Platform.isAndroid && androidInfo != null && androidInfo.version.sdkInt <= 32) {
+      permissionGranted = ph.PermissionStatus.granted == await ph.Permission.storage.request();
     } else {
-      permissionGranted = ph.PermissionStatus.granted == await ph.Permission.photos.status;
+      permissionGranted = ph.PermissionStatus.granted == await ph.Permission.photos.request();
     }
     photoPermissionCompleter.complete(permissionGranted);
 
