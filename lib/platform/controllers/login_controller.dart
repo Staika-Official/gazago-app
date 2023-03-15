@@ -137,6 +137,7 @@ class LoginController extends GetxController {
           HiveStore.save(key: HiveKey.refreshToken.name, value: token.refreshToken);
 
           if (token.accountStatus == 'TERMINATION_REQUESTED') {
+            HiveStore.save(key: HiveKey.isAccountLocked.name, value: true);
             Get.offNamed(Routes.accountRestore);
           } else if (token.accountStatus == 'ALREADY_CONNECTED_DEVICE') {
             showDuplicateLoginWarning(loginType, accessToken);
@@ -179,6 +180,7 @@ class LoginController extends GetxController {
   void handleFetchWithdrawCancel() async {
     await UaaService.fetchWithdrawCancel(
       successCallback: () async {
+        HiveStore.save(key: HiveKey.isAccountLocked.name, value: false);
         await initUserInfo();
         Get.offNamed(Routes.loading);
       },

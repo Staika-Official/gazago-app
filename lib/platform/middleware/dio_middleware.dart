@@ -57,8 +57,6 @@ class Api {
         _dio.options.headers['Content-Type'] = 'application/json';
       }
 
-      print(_dio.options.headers['Content-Type']);
-
       if (accessToken != null) {
         _dio.options.headers['Authorization'] = 'Bearer $accessToken';
       } else {

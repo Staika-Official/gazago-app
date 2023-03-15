@@ -8,13 +8,18 @@ class AuthMiddleware extends GetMiddleware {
   @override
   RouteSettings? redirect(String? route) {
     String? accessToken = HiveStore.loadString(key: HiveKey.accessToken.name);
+    bool? redirectToRestore = HiveStore.load(key: HiveKey.isAccountLocked.name);
     if (accessToken == null) {
       if (route != Routes.login) {
         return const RouteSettings(name: Routes.login);
-      } else {
+      }
+
+      return null;
+    } else if (route == Routes.login) {
+      if (redirectToRestore != null && redirectToRestore) {
         return null;
       }
-    } else if (route == Routes.login) {
+
       return const RouteSettings(name: Routes.loading);
     } else {
       return null;

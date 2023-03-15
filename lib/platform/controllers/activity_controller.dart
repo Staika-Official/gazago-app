@@ -922,8 +922,6 @@ class ActivityController extends SuperController with ActivityMixin, ChallengeMi
 
   @override
   void onDetached() {
-    print('onDetached');
-
     updateTimer?.cancel();
     updateTimer = null;
     exerciseTimer?.cancel();

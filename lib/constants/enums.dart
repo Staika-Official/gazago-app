@@ -79,6 +79,7 @@ enum HiveKey {
   exerciseEndAd,
   solanaSecretKey,
   closePopupDate,
+  isAccountLocked,
 }
 
 enum ResponseStatus {
