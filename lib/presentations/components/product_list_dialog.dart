@@ -274,8 +274,8 @@ void showProductList(WalletMasterController controller) {
                                   Expanded(
                                     child: StyledText(
                                       '이미 사용한 TIK은 환불할 수 없으며, 이미 사용한 TIK을 환불받은 경우 사전통지 없이 회원이 보유한 TIK에서 환불받은 금액을 회수할 수 있습니다.',
-                                      fontSize: 10.sp,
-                                      lineHeight: 14.sp,
+                                      fontSize: 10,
+                                      lineHeight: 14,
                                       fontWeight: 500,
                                       color: deepGrayColor,
                                     ),
@@ -300,8 +300,8 @@ void showProductList(WalletMasterController controller) {
                                   Expanded(
                                     child: StyledText(
                                       '결제된 가격은 부가가치세가 포함된 가격입니다.',
-                                      fontSize: 10.sp,
-                                      lineHeight: 14.sp,
+                                      fontSize: 10,
+                                      lineHeight: 14,
                                       fontWeight: 500,
                                       color: deepGrayColor,
                                     ),
@@ -326,8 +326,8 @@ void showProductList(WalletMasterController controller) {
                                   Expanded(
                                     child: StyledText(
                                       '법정대리인의 동의 없는 미성년자의 결제는 취소될 수 있습니다.',
-                                      fontSize: 10.sp,
-                                      lineHeight: 14.sp,
+                                      fontSize: 10,
+                                      lineHeight: 14,
                                       fontWeight: 500,
                                       color: deepGrayColor,
                                     ),
@@ -352,8 +352,8 @@ void showProductList(WalletMasterController controller) {
                                   Expanded(
                                     child: StyledText(
                                       Platform.isIOS ? 'iOS앱에서 충전한 TIK은 Apple 고객센터에서 환불 가능합니다.' : '안드로이드 앱에서 충전한 TIK은 Play 스토어고객센터에서 환불 가능합니다.',
-                                      fontSize: 10.sp,
-                                      lineHeight: 14.sp,
+                                      fontSize: 10,
+                                      lineHeight: 14,
                                       fontWeight: 500,
                                       color: deepGrayColor,
                                     ),
@@ -380,8 +380,8 @@ void showProductList(WalletMasterController controller) {
                                       Platform.isIOS
                                           ? 'iOS앱에서 충전한 TIK은 모바일 기기에서는 \‘OS설정 > 계정\’에서, 데스크탑에서는 \‘iTunes > 계정 > 나의 계정보기 > 구입내역\' 메뉴에서 확인 가능합니다.'
                                           : '안드로이드 앱에서 충전한 TIK은 모바일 기기에서는 \‘Play 스토어 > 프로필 > 결제 및 정기 결제 > 예산 및 내역\’에서, 데스크탑에서는 \‘play.google.com > 프로필 > 결제 및 정기 결제 > 예산 및 주문 내역\’ 메뉴에서 확인 가능합니다.',
-                                      fontSize: 10.sp,
-                                      lineHeight: 14.sp,
+                                      fontSize: 10,
+                                      lineHeight: 14,
                                       fontWeight: 500,
                                       color: deepGrayColor,
                                     ),
@@ -406,8 +406,8 @@ void showProductList(WalletMasterController controller) {
                                   Expanded(
                                     child: StyledText(
                                       '이미 사용한 TIK은 환불할 수 없으며, 이미 사용한 TIK을 환불받은 경우 사전통지 없이 회원이 보유한 TIK에서 환불받은 금액을 회수할 수 있습니다.',
-                                      fontSize: 10.sp,
-                                      lineHeight: 14.sp,
+                                      fontSize: 10,
+                                      lineHeight: 14,
                                       fontWeight: 500,
                                       color: deepGrayColor,
                                     ),
