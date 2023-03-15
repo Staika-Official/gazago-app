@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'dart:io';
 
+import 'package:device_info_plus/device_info_plus.dart';
 import 'package:gaza_go/constants/enums.dart';
 import 'package:gaza_go/constants/routes.dart';
 import 'package:gaza_go/platform/helpers/alert_helper.dart';
@@ -124,7 +125,13 @@ class PermissionController extends GetxController {
 
   Future<bool> checkPhotoPermission() async {
     bool hasPhotoPermission = false;
-    ph.PermissionStatus permissionStatus = await ph.Permission.photos.status;
+    ph.PermissionStatus permissionStatus;
+    final androidInfo = await DeviceInfoPlugin().androidInfo;
+    if (Platform.isAndroid && androidInfo.version.sdkInt <= 32) {
+      permissionStatus = await ph.Permission.storage.status;
+    } else {
+      permissionStatus = await ph.Permission.photos.status;
+    }
     hasPhotoPermission = [ph.PermissionStatus.granted, ph.PermissionStatus.restricted, ph.PermissionStatus.limited].any((permission) => permission == permissionStatus);
     if (!hasPhotoPermission) {
       hasPhotoPermission = await requestPhotoPermission();
@@ -144,7 +151,12 @@ class PermissionController extends GetxController {
   Future<bool> requestPhotoPermission() async {
     Completer<bool> photoPermissionCompleter = Completer();
     bool permissionGranted = false;
-    permissionGranted = ph.PermissionStatus.granted == await ph.Permission.photos.request();
+    final androidInfo = await DeviceInfoPlugin().androidInfo;
+    if (Platform.isAndroid && androidInfo.version.sdkInt <= 32) {
+      permissionGranted = ph.PermissionStatus.granted == await ph.Permission.storage.status;
+    } else {
+      permissionGranted = ph.PermissionStatus.granted == await ph.Permission.photos.status;
+    }
     photoPermissionCompleter.complete(permissionGranted);
 
     return photoPermissionCompleter.future;
