@@ -84,9 +84,6 @@ SvgPicture iconTikCalendar = SvgPicture.asset('assets/images/leaderboard/ico_tik
 SvgPicture iconTodayTik = SvgPicture.asset('assets/images/leaderboard/ico_today_tik.svg', width: 30.sp, height: 30.sp);
 SvgPicture iconInfo = SvgPicture.asset('assets/images/leaderboard/ico_info.svg', width: 18.sp, height: 18.sp);
 
-SvgPicture iconArchiveWalking = SvgPicture.asset('assets/images/archive/ico_archive_walking.svg', width: 42.sp, height: 42.sp);
-SvgPicture iconArchiveHiking = SvgPicture.asset('assets/images/archive/ico_archive_hiking.svg', width: 42.sp, height: 42.sp);
-
 // inventory
 SvgPicture iconGoReward = SvgPicture.asset('assets/images/inventory/ico_go_reward.svg', width: 20.sp, height: 16.sp);
 SvgPicture iconItemAbrasion = SvgPicture.asset('assets/images/inventory/ico_item_abrasion.svg', width: 18.sp, height: 14.sp);
