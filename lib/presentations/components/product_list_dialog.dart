@@ -112,7 +112,7 @@ List<Widget> renderProductList(WalletMasterController controller) {
                       child: Padding(
                         padding: EdgeInsets.symmetric(horizontal: 25.sp, vertical: 15.sp),
                         child: StyledText(
-                          product.value.price,
+                          '${product.value.currencySymbol}${formatDecimalPlaces(product.value.rawPrice, 2, isAutoDecimal: true)}',
                           fontSize: 14.sp,
                           fontWeight: 500,
                           lineHeight: 16.sp,
