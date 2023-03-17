@@ -47,7 +47,7 @@ List<Widget> renderProductList(WalletMasterController controller) {
                       Row(
                         children: [
                           StyledText(
-                            formatDecimalPlaces(product.value.rawPrice * 0.7, 0),
+                            formatDecimalPlaces(controller.getProductPrice(product.value.id) * 0.7, 0),
                             fontSize: 18.sp,
                             fontWeight: 700,
                             lineHeight: 18.sp,
@@ -66,7 +66,7 @@ List<Widget> renderProductList(WalletMasterController controller) {
                               child: Row(
                                 children: [
                                   StyledText(
-                                    '+ ${formatDecimalPlaces(product.value.rawPrice * 0.1, 0)}',
+                                    '+ ${formatDecimalPlaces(controller.getProductPrice(product.value.id) * 0.1, 0)}',
                                     fontSize: 14.sp,
                                     fontWeight: 700,
                                     lineHeight: 16.sp,
@@ -94,7 +94,7 @@ List<Widget> renderProductList(WalletMasterController controller) {
                 child: Container(
                   margin: EdgeInsets.only(bottom: 3.sp),
                   child: Ink(
-                    width: 120.sp,
+                    width: 125.sp,
                     decoration: BoxDecoration(
                       color: subBg02Color,
                       border: Border.all(),
@@ -389,32 +389,6 @@ void showProductList(WalletMasterController controller) {
                                 ],
                               ),
                             ),
-                            Padding(
-                              padding: const EdgeInsets.only(top: 5),
-                              child: Row(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Container(
-                                    width: 2,
-                                    height: 2,
-                                    margin: const EdgeInsets.all(5),
-                                    decoration: BoxDecoration(
-                                      color: lightGrayColor,
-                                      borderRadius: BorderRadius.circular(2),
-                                    ),
-                                  ),
-                                  Expanded(
-                                    child: StyledText(
-                                      '이미 사용한 TIK은 환불할 수 없으며, 이미 사용한 TIK을 환불받은 경우 사전통지 없이 회원이 보유한 TIK에서 환불받은 금액을 회수할 수 있습니다.',
-                                      fontSize: 10,
-                                      lineHeight: 14,
-                                      fontWeight: 500,
-                                      color: deepGrayColor,
-                                    ),
-                                  ),
-                                ],
-                              ),
-                            )
                           ],
                         ),
                       ),

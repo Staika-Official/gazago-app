@@ -312,6 +312,7 @@ class WalletMasterController extends GetxController {
         // id 를 찾을 수 없을 때 처리
         // showToastPopup('구매할 수 있는 상품을 찾지 못했습니다.');
       }
+      response.productDetails.sort((a, b) => a.rawPrice.compareTo(b.rawPrice));
       inAppProducts.value = response.productDetails;
     }
   }
@@ -379,5 +380,28 @@ class WalletMasterController extends GetxController {
 
   Future<void> _completePurchaseInAppItem(PurchaseDetails purchaseDetails) async {
     await InAppPurchase.instance.completePurchase(purchaseDetails);
+  }
+
+  double getProductPrice(String productId) {
+    String idNumber = productId.substring(productId.length - 1);
+    double rewardTikAmount = 0;
+    switch (idNumber) {
+      case '1':
+        rewardTikAmount = 1500;
+        break;
+      case '2':
+        rewardTikAmount = 3000;
+        break;
+      case '3':
+        rewardTikAmount = 6000;
+        break;
+      case '4':
+        rewardTikAmount = 9900;
+        break;
+      case '5':
+        rewardTikAmount = 12000;
+        break;
+    }
+    return rewardTikAmount;
   }
 }
