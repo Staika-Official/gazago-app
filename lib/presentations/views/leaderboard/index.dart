@@ -368,7 +368,7 @@ class LeaderboardHome extends StatelessWidget {
                             ),
                             myRank.additionStik != null
                                 ? TextSpan(
-                                    text: formatDecimalPlaces(myRank.additionStik! ?? 0, 9, isAutoDecimal: true),
+                                    text: formatDecimalPlaces(myRank.additionStik ?? 0, 9, isAutoDecimal: true),
                                     children: [
                                       const TextSpan(
                                           text: ' STIK',
@@ -378,7 +378,7 @@ class LeaderboardHome extends StatelessWidget {
                                       if (myRank.additionTik != null) const TextSpan(text: ' + '),
                                       if (myRank.additionTik != null)
                                         TextSpan(
-                                            text: formatDecimalPlaces(myRank.additionTik! ?? 0, 0),
+                                            text: formatDecimalPlaces(myRank.additionTik ?? 0, 0),
                                             style: const TextStyle(
                                               fontWeight: FontWeight.w700,
                                             )),
@@ -392,7 +392,7 @@ class LeaderboardHome extends StatelessWidget {
                                   )
                                 : myRank.additionTik != null
                                     ? TextSpan(
-                                        text: '${myRank.additionTik! ?? '0'}',
+                                        text: '${myRank.additionTik ?? '0'}',
                                         children: const [
                                           TextSpan(
                                               text: ' TIK',
@@ -538,7 +538,7 @@ class LeaderboardHome extends StatelessWidget {
                               ),
                               ranker.additionStik != null
                                   ? TextSpan(
-                                      text: formatDecimalPlaces(ranker.additionStik! ?? 0, 9, isAutoDecimal: true),
+                                      text: formatDecimalPlaces(ranker.additionStik ?? 0, 9, isAutoDecimal: true),
                                       children: [
                                         const TextSpan(
                                             text: ' STIK',
@@ -548,7 +548,7 @@ class LeaderboardHome extends StatelessWidget {
                                         if (ranker.additionTik != null) const TextSpan(text: ' + '),
                                         if (ranker.additionTik != null)
                                           TextSpan(
-                                              text: formatDecimalPlaces(ranker.additionTik! ?? 0, 0),
+                                              text: formatDecimalPlaces(ranker.additionTik ?? 0, 0),
                                               style: const TextStyle(
                                                 fontWeight: FontWeight.w700,
                                               )),
@@ -562,7 +562,7 @@ class LeaderboardHome extends StatelessWidget {
                                     )
                                   : ranker.additionTik != null
                                       ? TextSpan(
-                                          text: '${ranker.additionTik! ?? '0'}',
+                                          text: '${ranker.additionTik ?? '0'}',
                                           children: const [
                                             TextSpan(
                                                 text: ' TIK',

@@ -1,21 +1,10 @@
-import 'dart:io';
-
-import 'package:gaza_go/constants/enums.dart';
-import 'package:gaza_go/platform/helpers/security_helper.dart';
 import 'package:gaza_go/platform/models/wallet_solana_model.dart';
 import 'package:gaza_go/platform/models/wallet_solana_transfer_model.dart';
 import 'package:gaza_go/platform/services/wallet_service.dart';
-import 'package:gaza_go/platform/stores/hive_store.dart';
 import 'package:get/get.dart';
-import 'package:solana_web3/solana_web3.dart' as web3;
-import 'package:solana_web3/programs/system.dart';
-import 'package:solana_web3/solana_web3.dart';
-import 'package:solana_web3/types/health_status.dart';
-import 'package:gaza_go/flavors.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class SolanaController extends GetxController {
-
   final RxString symbol = RxString('SOL');
   final RxString toAddress = RxString('4L3ScUzhGu9onoZ6bbXCeFKFhkJ6tMAUHunj9akLu2P1');
   final RxDouble uiAmount = RxDouble(0.5);

@@ -452,7 +452,7 @@ class ActivityController extends SuperController with ActivityMixin, ChallengeMi
           exerciseDistance.value = userState.value.exercise!.distance!;
 
           coordinates.value = List.empty(growable: true);
-          if (userState.value.exercise!.locations != null && userState.value.exercise!.locations!.length > 0) {
+          if (userState.value.exercise!.locations != null && userState.value.exercise!.locations!.isNotEmpty) {
             coordinates.addAll(parseCoordinates());
           }
         }

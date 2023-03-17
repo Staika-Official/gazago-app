@@ -2,7 +2,6 @@ import 'package:dio/dio.dart';
 import 'package:gaza_go/constants/base_urls.dart';
 import 'package:gaza_go/platform/middleware/dio_middleware.dart';
 import 'package:gaza_go/platform/models/pay_info_model.dart';
-import 'package:solana/src/encoder/signed_tx.dart';
 
 class WalletApi {
   // - 스펜딩 월렛 api
@@ -74,7 +73,7 @@ class WalletApi {
     return await Api.client(serviceUrl: ServiceUrl.goWalletService).get('/nft/$publicKey');
   }
 
-  static Future<Response> getSolanaWallet(String? userId) async{
+  static Future<Response> getSolanaWallet(String? userId) async {
     return await Api.client(serviceUrl: ServiceUrl.goWalletService).get('/solana/wallet/$userId');
   }
 
