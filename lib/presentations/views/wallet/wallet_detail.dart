@@ -83,7 +83,7 @@ class WalletDetail extends StatelessWidget {
                             fontWeight: 500,
                           ),
                           StyledText(
-                            '${transaction.type == 'IN' ? '+' : '-'} ${formatDecimalPlaces(double.parse(transaction.uiAmountString!), transaction.decimals!, isAutoDecimal: true)} ${transaction.symbol!}',
+                            '${transaction.type == 'IN' ? '+' : '-'} ${formatDecimalPlaces(double.parse(transaction.uiAmountString!), transaction.decimals!, isAutoDecimal: true)} ${transaction.symbol! == 'PTIK' ? 'TIK' : transaction.symbol!}',
                             fontSize: 18,
                             lineHeight: 20,
                             letterSpacing: -0.5,
