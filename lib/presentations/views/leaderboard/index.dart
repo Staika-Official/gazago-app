@@ -854,14 +854,13 @@ class LeaderboardHome extends StatelessWidget {
                 ),
                 InkWell(
                   onTap: () => {
-                    bs
-                        .showBarModalBottomSheet(
+                    bs.showBarModalBottomSheet(
                       context: context,
-                      builder: (context) => showBottomCalender(context, controller),
+                      builder: (context) {
+                        controller.getCalendarStatisticsToday();
+                        return showBottomCalender(context, controller);
+                      },
                     )
-                        .whenComplete(() {
-                      controller.cancelStreamController();
-                    })
                   },
                   child: Row(
                     mainAxisSize: MainAxisSize.min,
