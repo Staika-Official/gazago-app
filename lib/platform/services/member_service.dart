@@ -1,6 +1,7 @@
 import 'package:dio/dio.dart';
 import 'package:gaza_go/constants/enums.dart';
 import 'package:gaza_go/platform/apis/member.dart';
+import 'package:gaza_go/platform/models/error_response_data_model.dart';
 import 'package:gaza_go/platform/models/member_user_model.dart';
 import 'package:gaza_go/platform/models/terms_history_model.dart';
 import 'package:gaza_go/platform/models/terms_status_model.dart';
@@ -42,7 +43,7 @@ class MemberService {
       List<TermsStatusModel> terms = res.data.map<TermsStatusModel>((term) => TermsStatusModel.fromJson(term)).toList();
       successCallback(terms);
     } else {
-      if (errorCallback != null) errorCallback();
+      if (errorCallback != null) errorCallback(ErrorResponseDataModel.fromJson(res.data));
     }
   }
 
