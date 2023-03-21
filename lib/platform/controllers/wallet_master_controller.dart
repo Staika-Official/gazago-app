@@ -210,7 +210,7 @@ class WalletMasterController extends GetxController {
     await UaaService.getAccountInfo(
       successCallback: (UserAccountModel user) {
         if (user.authorities!.contains('ROLE_CERTIFIED_USER')) {
-          Get.toNamed(Routes.taikaPay);
+          Get.toNamed(Routes.webView, arguments: {'linkUrl': F.taikaPayUrl});
         } else {
           showAlert(
             title: '본인인증이 필요합니다.',

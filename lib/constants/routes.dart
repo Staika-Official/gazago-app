@@ -14,7 +14,6 @@ import 'package:gaza_go/presentations/views/debugging/request_info.dart';
 import 'package:gaza_go/presentations/views/debugging/response_error_logs.dart';
 import 'package:gaza_go/presentations/views/debugging/user_exercise_data_logs.dart';
 import 'package:gaza_go/presentations/views/home.dart';
-import 'package:gaza_go/presentations/views/how_to_go.dart';
 import 'package:gaza_go/presentations/views/inventory/index.dart';
 import 'package:gaza_go/presentations/views/inventory/inventory_badge_detail.dart';
 import 'package:gaza_go/presentations/views/inventory/inventory_item_detail.dart';
@@ -24,7 +23,6 @@ import 'package:gaza_go/presentations/views/laboratory/laboratory_solana_create_
 import 'package:gaza_go/presentations/views/laboratory/laboratory_solana_transfer.dart';
 import 'package:gaza_go/presentations/views/loading.dart';
 import 'package:gaza_go/presentations/views/login.dart';
-import 'package:gaza_go/presentations/views/notice_webview.dart';
 import 'package:gaza_go/presentations/views/on_boarding.dart';
 import 'package:gaza_go/presentations/views/permissions.dart';
 import 'package:gaza_go/presentations/views/preferences/edit_biometrics.dart';
@@ -48,6 +46,7 @@ import 'package:gaza_go/presentations/views/wallet/index.dart';
 import 'package:gaza_go/presentations/views/wallet/taika_pay.dart';
 import 'package:gaza_go/presentations/views/wallet/wallet_actions.dart';
 import 'package:gaza_go/presentations/views/wallet/wallet_detail.dart';
+import 'package:gaza_go/presentations/views/webview.dart';
 import 'package:get/get_navigation/get_navigation.dart';
 
 import '../presentations/views/debugging/activity_logs.dart';
@@ -88,8 +87,6 @@ class Routes {
   static const walletDetail = '/wallet/detail';
   static const walletActions = '/wallet/action';
   static const taikaPay = '/wallet/taika_pay';
-  static const noticeWebview = '/notice/webview';
-  static const howToGo = '/activity/how_to_go';
   static const inventory = '/inventory';
   static const itemDetail = '/inventory/item/detail';
   static const badgeDetail = '/inventory/badge/detail';
@@ -108,6 +105,7 @@ class Routes {
   static const shopItemDetail = '/shop/item/detail';
   static const adMobRewarded = '/admob/reward';
   static const adMobRewardedInterstitial = '/admob/interstitial';
+  static const webView = '/webview/:id';
 
   static List<GetPage> pages = [
     stepPage(name: Routes.login, page: const Login()),
@@ -150,8 +148,6 @@ class Routes {
     stepPage(name: Routes.buyTik, page: const BuyTik()),
     stepPage(name: Routes.walletActions, page: const WalletActions()),
     stepPage(name: Routes.taikaPay, page: const TaikaPay()),
-    stepPage(name: Routes.noticeWebview, page: const NoticeWebview()),
-    stepPage(name: Routes.howToGo, page: const HowToGo()),
     stepPage(name: Routes.inventory, page: const InventoryHome()),
     stepPage(name: Routes.itemDetail, page: const InventoryItemDetail()),
     stepPage(name: Routes.badgeDetail, page: const InventoryBadgeDetail()),
@@ -169,6 +165,7 @@ class Routes {
     stepPage(name: Routes.laboratory, page: const Laboratory()),
     stepPage(name: Routes.laboratorySolanaCreateWallet, page: const LaboratorySolanaCreateWallet()),
     stepPage(name: Routes.laboratorySolanaTransfer, page: const LaboratorySolanaTransfer()),
+    stepPage(name: Routes.webView, page: const WebView()),
   ];
 }
 

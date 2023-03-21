@@ -124,7 +124,7 @@ class Preferences extends StatelessWidget {
               // ),
               PreferenceItem(
                 title: 'How to GO',
-                onTap: () => Get.toNamed(Routes.howToGo),
+                onTap: () => Get.toNamed(Routes.webView, arguments: {'linkUrl': F.howToGoUrl}),
               ),
               PreferenceItem(
                 title: '공지사항',

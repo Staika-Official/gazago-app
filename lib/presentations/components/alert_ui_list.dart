@@ -2394,17 +2394,6 @@ void showLeaderboardInfo() {
 
 Future<void> showMainPopupAlert(ActivityController activityController) async {
   final CarouselController carouselController = CarouselController();
-  List<Widget> getImageSliders(controller) {
-    return controller.popupList
-        .map((item) => Container(
-              width: double.infinity,
-              child: InkWell(
-                onTap: () => controller.moveToWebView(item['type']),
-                child: Image.asset(item['imageUrl']),
-              ),
-            ))
-        .toList();
-  }
 
   await Get.bottomSheet(
     isDismissible: false,
@@ -2427,7 +2416,7 @@ Future<void> showMainPopupAlert(ActivityController activityController) async {
                     .map((item) => Container(
                           width: double.infinity,
                           child: InkWell(
-                            onTap: () => activityController.moveToWebView(item['type'], url: item['url']),
+                            onTap: () => activityController.moveToWebView(item),
                             child: Image.asset(
                               item['imageUrl'],
                               width: double.infinity,

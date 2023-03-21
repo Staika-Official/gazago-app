@@ -69,28 +69,33 @@ class ActivityController extends SuperController with ActivityMixin, ChallengeMi
 
   final List<Map<String, dynamic>> popupList = [
     {
+      'id': 1,
       'imageUrl': 'assets/images/common/img_main_popup_04.png',
       'type': 'GATEIO',
-      'url': 'https://blog.naver.com/staika/223038831424',
+      'linkUrl': 'https://blog.naver.com/staika/223038831424',
     },
     {
+      'id': 2,
       'imageUrl': 'assets/images/common/img_main_popup_05.png',
       'type': 'ABUSES',
-      'url': 'https://eztechfin.notion.site/939f54ae65b94a74984497903d414aad',
+      'linkUrl': 'https://eztechfin.notion.site/939f54ae65b94a74984497903d414aad',
     },
     {
+      'id': 3,
       'imageUrl': 'assets/images/common/img_main_popup.png',
       'type': 'HOWTOGO',
-      'url': 'https://eztechfin.notion.site/How-to-GO-61129dcb96324b0cb282d7743e19b043',
+      'linkUrl': 'https://eztechfin.notion.site/How-to-GO-61129dcb96324b0cb282d7743e19b043',
     },
     {
+      'id': 4,
       'imageUrl': 'assets/images/common/img_main_popup_02.png',
       'type': 'WARNING',
-      'url': 'https://blog.naver.com/gaza-go_crew/223015634731',
+      'linkUrl': 'https://blog.naver.com/gaza-go_crew/223015634731',
     },
     {
+      'id': 5,
       'imageUrl': 'assets/images/common/img_main_popup_03.png',
-      'type': 'NEWITEM',
+      'linkUrl': 'NEWITEM',
     },
   ];
 
@@ -843,15 +848,12 @@ class ActivityController extends SuperController with ActivityMixin, ChallengeMi
     }
   }
 
-  void moveToWebView(String type, {String? url}) {
-    switch (type) {
-      case 'NEWITEM':
-        Get.back();
-        Get.find<HomeMenuController>().selectMenu(3);
-        break;
-      default:
-        noticeUrl.value = url!;
-        Get.toNamed(Routes.noticeWebview);
+  void moveToWebView(item) {
+    if (item['linkUrl'].contains('http')) {
+      Get.toNamed(Routes.webView, arguments: {'id': item['id'], 'linkUrl': item['linkUrl']});
+    } else {
+      Get.back();
+      Get.find<HomeMenuController>().selectMenu(3);
     }
   }
 
