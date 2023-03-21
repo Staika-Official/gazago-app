@@ -74,6 +74,7 @@ enum HiveKey {
   positionLowDataLogs,
   needRouteToGoWallet,
   needToForceLogout,
+  needToForceStopExercise,
   hasForcedLogout,
   exerciseStartAd,
   exerciseEndAd,

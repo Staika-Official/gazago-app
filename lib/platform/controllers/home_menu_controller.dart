@@ -48,11 +48,11 @@ class HomeMenuController extends SuperController {
 
   @override
   void onReady() {
-    handleRewardNotification();
+    handleAppNotification();
     super.onReady();
   }
 
-  void handleRewardNotification() async {
+  void handleAppNotification() async {
     RemoteMessage? initialMessage = await FirebaseMessaging.instance.getInitialMessage();
 
     if (initialMessage != null) {
@@ -124,6 +124,9 @@ class HomeMenuController extends SuperController {
       HiveStore.save(key: HiveKey.hasForcedLogout.name, value: true); //getInitialMessage가 중복처리되어서 처리 여부를 구분하기 위해 필요
       await showForceLogoutAlert();
       forceLogout();
+    } else if (HiveStore.load(key: HiveKey.needToForceStopExercise.name) != null && HiveStore.load(key: HiveKey.needToForceStopExercise.name)) {
+      Get.find<ActivityController>().handleAlreadyFinishedExercise();
+      HiveStore.deleteKey(key: HiveKey.needToForceStopExercise.name);
     }
   }
 }

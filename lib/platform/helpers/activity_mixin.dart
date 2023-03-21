@@ -16,6 +16,7 @@ import 'package:gaza_go/platform/helpers/alert_helper.dart';
 import 'package:gaza_go/platform/helpers/base_helper.dart';
 import 'package:gaza_go/platform/models/challenge_model.dart';
 import 'package:gaza_go/platform/models/current_user_state_model.dart';
+import 'package:gaza_go/platform/models/error_response_data_model.dart';
 import 'package:gaza_go/platform/models/user_exercise_model.dart';
 import 'package:gaza_go/platform/services/activity_service.dart';
 import 'package:gaza_go/platform/stores/hive_store.dart';
@@ -395,7 +396,7 @@ mixin ActivityMixin {
   }
 
   void updateExercise({bool? isPaused, String? source}) async {
-    void errorHandler() {
+    void errorHandler(ErrorResponseDataModel? errorData) {
       CurrentUserStateModel? savedState = HiveStore.loadCurrentUserState();
       if (savedState != null) {
         userState.update((state) {
@@ -403,6 +404,10 @@ mixin ActivityMixin {
           state?.exercise = savedState.exercise;
           state?.shoes = savedState.shoes;
         });
+      }
+
+      if (errorData != null && errorData.errorCode == 'ALREADY_EXERCISE_ENDED') {
+        handleAlreadyFinishedExercise();
       }
     }
 
@@ -467,7 +472,7 @@ mixin ActivityMixin {
               errorCallback: errorHandler,
             );
     } else {
-      errorHandler();
+      errorHandler;
     }
   }
 
@@ -511,18 +516,10 @@ mixin ActivityMixin {
             showEndExerciseAdDialog(challenge, controller);
             controller.adLoadTimerStart();
           } else {
-            if (source != null && source == 'pendingExerciseDialog') {
-              endExercise(challenge, source: source);
-            } else {
-              showEndExerciseDialog(challenge);
-            }
+            checkShowEndPopup(source, challenge, controller);
           }
         } else {
-          if (source != null && source == 'pendingExerciseDialog') {
-            endExercise(challenge, source: source);
-          } else {
-            showEndExerciseDialog(challenge);
-          }
+          checkShowEndPopup(source, challenge, controller);
         }
       } else {
         counter = counter + const Duration(milliseconds: 10);
@@ -531,9 +528,9 @@ mixin ActivityMixin {
     });
   }
 
-  void checkShowEndPopup(source, challenge) {
+  void checkShowEndPopup(String? source, ChallengeModel challenge, ActivityController controller) {
     if (source != null && source == 'pendingExerciseDialog') {
-      endExercise(challenge, source: source);
+      controller.thr.throttle(() => endExercise(challenge, source: source));
     } else {
       showEndExerciseDialog(challenge);
     }
@@ -574,7 +571,7 @@ mixin ActivityMixin {
     showEndExerciseAlert(this, challenge);
   }
 
-  Future<void> endExercise(ChallengeModel challenge, {String? source, String? adId}) async {
+  Future<void> endExercise(ChallengeModel challenge, {String? source, String? adId, int retryAttempt = 0}) async {
     String deviceId = HiveStore.loadString(key: HiveKey.uuid.name)!;
     if (isFakeGps.value) {
       return;
@@ -598,21 +595,38 @@ mixin ActivityMixin {
         userExerciseData.value,
         source: source,
         successCallback: (CurrentUserStateModel newUserState) {
+          userState.update(
+            (state) {
+              state?.state = newUserState.state;
+              state?.exercise = newUserState.exercise;
+              state?.shoes = newUserState.shoes;
+            },
+          );
+
           if (newUserState.exercise!.state == 'ENDED') {
             exerciseState.value = ExerciseState.ready;
-            userState.update(
-              (state) {
-                state?.state = newUserState.state;
-                state?.exercise = newUserState.exercise;
-                state?.shoes = newUserState.shoes;
-              },
-            );
             HiveStore.deleteMultipleKeys(keys: [HiveKey.userState.name, HiveKey.endExerciseRequested.name]);
             resetVariables(challenge);
             resetTimer();
             resetSubscriptions();
             if (['showEndExerciseAlert', 'showEndADExerciseAlert', 'pendingExerciseDialog'].any((src) => src == source)) {
               moveToExerciseDetail(userState.value.exercise!.id!);
+            }
+          }
+
+          if (newUserState.exercise!.recordState == 'ABNORMAL') {
+            HiveStore.saveCurrentUserState(
+              userState: CurrentUserStateModel(
+                state: newUserState.state,
+                exercise: newUserState.exercise,
+                shoes: newUserState.shoes,
+              ),
+            );
+
+            if (retryAttempt > 4) {
+              showToastPopup('운동 종료에 실패했습니다.\n다시 시도해주세요.');
+            } else {
+              endExercise(challenge, source: source, adId: adId, retryAttempt: retryAttempt + 1);
             }
           }
         },
@@ -684,6 +698,16 @@ mixin ActivityMixin {
     } else {
       Get.put(ArchiveController()).toDetail(exerciseId);
     }
+  }
+
+  void handleAlreadyFinishedExercise() {
+    ActivityController controller = Get.find<ActivityController>();
+    exerciseState.value = ExerciseState.ready;
+    HiveStore.deleteMultipleKeys(keys: [HiveKey.userState.name, HiveKey.endExerciseRequested.name]);
+    resetVariables(controller.selectedChallenge.value);
+    resetTimer();
+    resetSubscriptions();
+    Get.until((route) => route.isFirst);
   }
 
   void showExerciseMap(Widget mapWidget) {
