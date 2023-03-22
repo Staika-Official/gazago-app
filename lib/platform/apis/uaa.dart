@@ -8,8 +8,8 @@ import 'package:gaza_go/platform/stores/hive_store.dart';
 class UaaApi {
   static Future<Response> emailLogin() async {
     return await Api.client(serviceUrl: ServiceUrl.uaaService, needsToken: false).post('/sign-in/email', data: {
-      "username": "admin",
-      "password": "admin",
+      "username": "app-stage",
+      "password": "fadfRt4#00",
       "clientId": "GAZAGO",
     });
   }

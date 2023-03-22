@@ -24,7 +24,7 @@ class GlobalController extends SuperController {
     checkMainPopupExpiredDate();
     await execute(InternetConnectionChecker());
     await execute(customInstance);
-    await checkLoginStatus();
+    // await checkLoginStatus();
 
     // await getConnectivity();
     // initConnectivityStream();
