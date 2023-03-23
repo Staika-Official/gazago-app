@@ -14,11 +14,13 @@ import 'package:gaza_go/platform/firebase/cloud_messaging.dart';
 import 'package:gaza_go/platform/helpers/activity_helper.dart';
 import 'package:gaza_go/platform/helpers/alert_helper.dart';
 import 'package:gaza_go/platform/helpers/base_helper.dart';
+import 'package:gaza_go/platform/helpers/location_filter.dart';
 import 'package:gaza_go/platform/models/challenge_model.dart';
 import 'package:gaza_go/platform/models/current_user_state_model.dart';
 import 'package:gaza_go/platform/models/error_response_data_model.dart';
 import 'package:gaza_go/platform/models/user_exercise_model.dart';
 import 'package:gaza_go/platform/services/activity_service.dart';
+import 'package:gaza_go/platform/services/member_service.dart';
 import 'package:gaza_go/platform/stores/hive_store.dart';
 import 'package:gaza_go/presentations/components/alert_ui_list.dart';
 import 'package:gaza_go/presentations/styles/colors.dart';
@@ -164,7 +166,7 @@ mixin ActivityMixin {
         steps: exerciseSteps.value,
         speed: avgSpeed.value,
         distance: convertKmToMeters(totalDistance.value),
-        altitude: highestAltitude.value,
+        altitude: exerciseData.isNotEmpty ? exerciseData.last.altitude : 0,
         time: exerciseTime.value,
         locations: coordinatesToString(coordinates),
         locationUpdateTime: DateTime.now(),
@@ -209,7 +211,7 @@ mixin ActivityMixin {
         exerciseModel.steps = exerciseSteps.value;
         exerciseModel.speed = avgSpeed.value;
         exerciseModel.distance = convertKmToMeters(totalDistance.value);
-        exerciseModel.altitude = highestAltitude.value;
+        exerciseModel.altitude = exerciseData.isNotEmpty ? exerciseData.last.altitude : 0;
         exerciseModel.time = exerciseTime.value;
         exerciseModel.locations = coordinatesToString(coordinates);
         exerciseModel.locationUpdateTime = exerciseData.isNotEmpty ? exerciseData.last.locationUpdateTime : DateTime.now();
@@ -237,6 +239,13 @@ mixin ActivityMixin {
           };
           userExerciseDataLogs.add(logForm);
           HiveStore.saveUserExerciseData(value: userExerciseDataLogs);
+        }
+
+        //abuse 갑지
+        if (exerciseTime.value % abusingReportTime == 0) {
+          if (catchSinglePointAbuse(coordinates)) {
+            MemberService.reportAbuse(description: '[exerciseId: ${exerciseModel.id}] 좌표 데이터의 $abusingInsideRadiusRatio% 이상이 $abusingRadius미터 반경 안에 들었습니다.');
+          }
         }
       }
     });
@@ -289,7 +298,6 @@ mixin ActivityMixin {
     // int currentStep = 10;
 
     // 15초 이상 걷기 감지가 되지 않을 경우에는 속도 0으로 표시
-    print('$currentStep - $prevStep > $stepDifference');
     if (currentStep - prevStep > stepDifference) {
       calRealtimeSpeed.value = (exerciseState.value != ExerciseState.ongoing) ? 0 : speed;
     }

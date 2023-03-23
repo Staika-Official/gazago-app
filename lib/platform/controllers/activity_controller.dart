@@ -2,7 +2,6 @@ import 'dart:async';
 import 'dart:io';
 
 import 'package:advertising_id/advertising_id.dart';
-import 'package:device_info_plus/device_info_plus.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_naver_map/flutter_naver_map.dart';
@@ -41,7 +40,6 @@ import 'package:gaza_go/presentations/views/activity/ad_select.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:get/get.dart';
 import 'package:health/health.dart';
-import 'package:package_info_plus/package_info_plus.dart';
 import 'package:permission_handler/permission_handler.dart' as ph;
 import 'package:simple_animations/animation_builder/custom_animation_builder.dart';
 import 'package:throttling/throttling.dart';
@@ -716,7 +714,7 @@ class ActivityController extends SuperController with ActivityMixin, ChallengeMi
     if (Platform.isAndroid) {
       locationSettings = AndroidSettings(
           accuracy: locationAccuracyQuality,
-          distanceFilter: 1,
+          distanceFilter: 5,
           forceLocationManager: false,
           intervalDuration: const Duration(seconds: 5),
           useMSLAltitude: true,
@@ -731,8 +729,8 @@ class ActivityController extends SuperController with ActivityMixin, ChallengeMi
       locationSettings = AppleSettings(
         accuracy: locationAccuracyQuality,
         activityType: ActivityType.fitness,
-        distanceFilter: 1,
-        pauseLocationUpdatesAutomatically: false,
+        distanceFilter: 5,
+        pauseLocationUpdatesAutomatically: true,
         // Only set to true if our app will be started up in the background.
         showBackgroundLocationIndicator: false,
       );
@@ -791,18 +789,7 @@ class ActivityController extends SuperController with ActivityMixin, ChallengeMi
     //안드로이드만 탐지 가능
     if (isFakeGps.value && Get.isBottomSheetOpen != true) {
       showFakeGpsAlert();
-      PackageInfo packageInfo = await PackageInfo.fromPlatform();
-      String platform = Platform.operatingSystem;
-      DeviceInfoPlugin deviceInfo = DeviceInfoPlugin();
-      String deviceModel;
-      if (Platform.isIOS) {
-        IosDeviceInfo iosInfo = await deviceInfo.iosInfo;
-        deviceModel = iosInfo.utsname.machine ?? 'ios model unknown';
-      } else {
-        AndroidDeviceInfo androidInfo = await deviceInfo.androidInfo;
-        deviceModel = androidInfo.model;
-      }
-      MemberService.reportAbuse(description: 'Fake GPS 사용 감지', appVersion: packageInfo.version, deviceModel: deviceModel, platform: platform);
+      MemberService.reportAbuse(description: 'Fake GPS 사용 감지');
     }
   }
 
