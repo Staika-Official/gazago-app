@@ -9,7 +9,6 @@ import 'package:flutter_naver_map/flutter_naver_map.dart';
 import 'package:gaza_go/constants/config.dart';
 import 'package:gaza_go/constants/enums.dart';
 import 'package:gaza_go/constants/routes.dart';
-import 'package:gaza_go/platform/controllers/home_menu_controller.dart';
 import 'package:gaza_go/platform/controllers/loading_controller.dart';
 import 'package:gaza_go/platform/controllers/wallet_master_controller.dart';
 import 'package:gaza_go/platform/helpers/activity_helper.dart';
@@ -48,6 +47,7 @@ import 'package:throttling/throttling.dart';
 
 class ActivityController extends SuperController with ActivityMixin, ChallengeMixin, GetTickerProviderStateMixin, AdmobMixin {
   final WalletMasterController walletMasterController = Get.find();
+
   final GlobalKey webViewKey = GlobalKey();
   final RxString noticeUrl = RxString('');
   //rewarded.dart
@@ -128,37 +128,6 @@ class ActivityController extends SuperController with ActivityMixin, ChallengeMi
   final RxInt time = RxInt(5);
   String? advertisingId = '';
   bool? isLimitAdTrackingEnabled;
-  final RxInt _current = 0.obs;
-  late final int pageSize;
-  RxList<double> ops = [1.0, 0.0, 0.0].obs;
-  RxList<double> offsets = [0.0, 0.0, 0.0].obs;
-
-  setValue(double op) {
-    if (op > 0 && op < 1) {
-      ops[0] = 1 - op;
-      ops[1] = op;
-    } else if (op > 1 && op < 2) {
-      ops[1] = 2 - op;
-      ops[2] = -1 + op;
-    }
-
-    if (op == 0.0) {
-      ops[0] = 1;
-      ops[1] = ops[2] = 0;
-    } else if (op == 1.0) {
-      ops[1] = 1;
-      ops[0] = ops[2] = 0;
-    } else if (op == 2.0) {
-      ops[2] = 1;
-      ops[0] = ops[1] = 0;
-    }
-  }
-
-  RxInt get current => _current;
-
-  setCurrent(int index) {
-    _current.value = index;
-  }
 
   initPlatformState() async {
     // Platform messages may fail, so we use a try/catch PlatformException.
@@ -185,7 +154,7 @@ class ActivityController extends SuperController with ActivityMixin, ChallengeMi
   Future<void> initializeController() async {
     challengeGuideController = AnimationController(vsync: this);
     await initController();
-    checkPopupExpired();
+
     // 타이머 시작
     // adLoadTimerStart();
     checkConnectivityStatus();
@@ -848,28 +817,20 @@ class ActivityController extends SuperController with ActivityMixin, ChallengeMi
     }
   }
 
-  void moveToWebView(item) {
-    if (item['linkUrl'].contains('http')) {
-      Get.toNamed(Routes.webView, arguments: {'id': item['id'], 'linkUrl': item['linkUrl']});
-    } else {
-      Get.back();
-      Get.find<HomeMenuController>().selectMenu(3);
-    }
-  }
+  // void moveToWebView(item) {
+  //   if (item['linkUrl'].contains('http')) {
+  //     Get.toNamed(Routes.webView, arguments: {'id': item.id, 'linkUrl': item.linkUrl});
+  //   } else {
+  //     Get.back();
+  //     Get.find<HomeMenuController>().selectMenu(3);
+  //   }
+  // }
 
-  void checkPopupExpired() {
-    // HiveStore.save(key: HiveKey.closePopupDate.name, value: null);
-    if (globalController.isPopupOpen.value) {
-      setCurrent(0);
-      showMainPopupAlert(this);
-    }
-  }
-
-  void onSavePopupCloseDate() {
-    DateTime now = DateTime.now();
-    HiveStore.save(key: HiveKey.closePopupDate.name, value: now);
-    Get.back();
-  }
+  // void onSavePopupCloseDate() {
+  //   DateTime now = DateTime.now();
+  //   HiveStore.save(key: HiveKey.closePopupDate.name, value: now);
+  //   Get.back();
+  // }
 
   void checkConnectivityStatus() async {
     // globalController.connectivityResult.listen((value) async {

@@ -15,6 +15,7 @@ import 'package:gaza_go/platform/controllers/inventory_controller.dart';
 import 'package:gaza_go/platform/controllers/loading_controller.dart';
 import 'package:gaza_go/platform/controllers/login_controller.dart';
 import 'package:gaza_go/platform/controllers/my_page_controller.dart';
+import 'package:gaza_go/platform/controllers/notice_popup_controller.dart';
 import 'package:gaza_go/platform/controllers/preference_controller.dart';
 import 'package:gaza_go/platform/controllers/shop_controller.dart';
 import 'package:gaza_go/platform/controllers/wallet_master_controller.dart';
@@ -2392,7 +2393,7 @@ void showLeaderboardInfo() {
   );
 }
 
-Future<void> showMainPopupAlert(ActivityController activityController) async {
+Future<void> showMainPopupAlert(NoticePopupController noticePopupController) async {
   final CarouselController carouselController = CarouselController();
 
   await Get.bottomSheet(
@@ -2412,13 +2413,13 @@ Future<void> showMainPopupAlert(ActivityController activityController) async {
             Stack(children: [
               CarouselSlider(
                 key: const Key('Slider'),
-                items: activityController.popupList
+                items: noticePopupController.noticePopupList
                     .map((item) => Container(
                           width: double.infinity,
                           child: InkWell(
-                            onTap: () => activityController.moveToWebView(item),
-                            child: Image.asset(
-                              item['imageUrl'],
+                            onTap: () => noticePopupController.moveToWebView(item),
+                            child: Image.network(
+                              item.imageUrlKo!,
                               width: double.infinity,
                             ),
                           ),
@@ -2432,10 +2433,10 @@ Future<void> showMainPopupAlert(ActivityController activityController) async {
                   enlargeCenterPage: false,
                   enableInfiniteScroll: false,
                   onPageChanged: (index, reason) {
-                    activityController.setCurrent(index);
+                    noticePopupController.setCurrent(index);
                   },
                   onScrolled: (op) {
-                    activityController.setValue(op!);
+                    noticePopupController.setValue(op!);
                   },
                 ),
               ),
@@ -2451,7 +2452,7 @@ Future<void> showMainPopupAlert(ActivityController activityController) async {
                       child: Padding(
                         padding: EdgeInsets.symmetric(horizontal: 8.0.sp, vertical: 4.0.sp),
                         child: StyledText(
-                          '${(activityController.current.value + 1).toString()}/${activityController.popupList.length}',
+                          '${(noticePopupController.current.value + 1).toString()}/${noticePopupController.noticePopupList.length}',
                           fontSize: 16,
                           lineHeight: 17,
                           fontWeight: 500,
@@ -2469,7 +2470,7 @@ Future<void> showMainPopupAlert(ActivityController activityController) async {
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     InkWell(
-                      onTap: () => activityController.onSavePopupCloseDate(),
+                      onTap: () => noticePopupController.onSavePopupCloseDate(),
                       child: Padding(
                         padding: EdgeInsets.symmetric(vertical: 28.0.sp, horizontal: 10.sp),
                         child: const StyledText(
