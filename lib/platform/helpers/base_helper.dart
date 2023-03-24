@@ -1,9 +1,11 @@
+import 'dart:async';
 import 'dart:convert';
 import 'dart:math';
 
 import 'package:flutter_naver_map/flutter_naver_map.dart';
 import 'package:gaza_go/constants/enums.dart';
 import 'package:gaza_go/platform/firebase/remote_config.dart';
+import 'package:gaza_go/platform/stores/hive_store.dart';
 import 'package:intl/intl.dart';
 import 'package:package_info_plus/package_info_plus.dart';
 
@@ -119,4 +121,12 @@ String generateRandomString(int length) {
   final randomString = List.generate(length, (index) => availableChars[random.nextInt(availableChars.length)]).join();
 
   return randomString;
+}
+
+void validateTimer(Timer timer, HiveKey hiveKey) {
+  int? timerHash = HiveStore.load(key: hiveKey.name);
+
+  if (timerHash != null && timer.hashCode != timerHash) {
+    timer.cancel();
+  }
 }

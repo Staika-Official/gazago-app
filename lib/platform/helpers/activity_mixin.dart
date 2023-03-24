@@ -198,6 +198,8 @@ mixin ActivityMixin {
     }
 
     exerciseTimer = Timer.periodic(const Duration(seconds: 1), (timer) {
+      validateTimer(timer, HiveKey.exerciseTimer);
+
       // 스피드 계산
       calRealtimeSpeed();
 
@@ -240,6 +242,8 @@ mixin ActivityMixin {
         }
       }
     });
+
+    HiveStore.save(key: HiveKey.exerciseTimer.name, value: exerciseTimer.hashCode);
   }
 
   void initStepStream() {
@@ -485,9 +489,11 @@ mixin ActivityMixin {
     updateTimer = Timer.periodic(
       Duration(milliseconds: updateInterval),
       (timer) {
+        validateTimer(timer, HiveKey.updateTimer);
         updateExercise(source: 'startPeriodicUpdate_${updateTimer.hashCode}');
       },
     );
+    HiveStore.save(key: HiveKey.updateTimer.name, value: updateTimer.hashCode);
   }
 
   void onTapDownStop(TapDownDetails tapDownDetails, ChallengeModel challenge, {String? source, required ActivityController controller}) async {
@@ -678,6 +684,10 @@ mixin ActivityMixin {
     updateTimer = null;
     exerciseTimer?.cancel();
     exerciseTimer = null;
+    HiveStore.deleteMultipleKeys(keys: [
+      HiveKey.exerciseTimer.name,
+      HiveKey.updateTimer.name,
+    ]);
   }
 
   void resetSubscriptions() {
