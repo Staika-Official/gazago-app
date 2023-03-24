@@ -1,3 +1,6 @@
+import 'dart:io';
+
+import 'package:device_info_plus/device_info_plus.dart';
 import 'package:dio/dio.dart';
 import 'package:gaza_go/constants/enums.dart';
 import 'package:gaza_go/platform/apis/member.dart';
@@ -6,6 +9,7 @@ import 'package:gaza_go/platform/models/member_user_model.dart';
 import 'package:gaza_go/platform/models/terms_history_model.dart';
 import 'package:gaza_go/platform/models/terms_status_model.dart';
 import 'package:gaza_go/platform/stores/hive_store.dart';
+import 'package:package_info_plus/package_info_plus.dart';
 
 class MemberService {
   static String? get userId {
@@ -14,7 +18,7 @@ class MemberService {
 
   static Future<void> initializeUserData(String? email, String? nickname, String? profileImageUrl, {required Function errorCallback}) async {
     Response res = await MemberApi.initializeUserData(userId!, email, nickname, profileImageUrl);
-    if (res.statusCode != 200) {
+    if (![200, 201].any((statusCode) => statusCode == res.statusCode)) {
       errorCallback();
     }
   }
@@ -49,16 +53,29 @@ class MemberService {
 
   static Future<void> reportAbuse({
     required String description,
-    required String appVersion,
-    required String deviceModel,
-    required String platform,
+    required String abusingType, //GPS, ADS, EXERCISE
+    int? exerciseId,
     Function? successCallback,
     Function? errorCallback,
   }) async {
+    PackageInfo packageInfo = await PackageInfo.fromPlatform();
+    String platform = Platform.operatingSystem;
+    DeviceInfoPlugin deviceInfo = DeviceInfoPlugin();
+    String deviceModel;
+    if (Platform.isIOS) {
+      IosDeviceInfo iosInfo = await deviceInfo.iosInfo;
+      deviceModel = iosInfo.utsname.machine ?? 'ios model unknown';
+    } else {
+      AndroidDeviceInfo androidInfo = await deviceInfo.androidInfo;
+      deviceModel = androidInfo.model;
+    }
+
     Response res = await MemberApi.reportAbuse(
       userId!,
-      appVersion: appVersion,
       description: description,
+      exerciseId: exerciseId,
+      abusingType: abusingType,
+      appVersion: packageInfo.version,
       deviceModel: deviceModel,
       platform: platform,
     );
