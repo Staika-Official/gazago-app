@@ -53,6 +53,8 @@ class MemberService {
 
   static Future<void> reportAbuse({
     required String description,
+    required String abusingType, //GPS, ADS, EXERCISE
+    int? exerciseId,
     Function? successCallback,
     Function? errorCallback,
   }) async {
@@ -71,6 +73,8 @@ class MemberService {
     Response res = await MemberApi.reportAbuse(
       userId!,
       description: description,
+      exerciseId: exerciseId,
+      abusingType: abusingType,
       appVersion: packageInfo.version,
       deviceModel: deviceModel,
       platform: platform,

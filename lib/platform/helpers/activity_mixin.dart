@@ -244,7 +244,7 @@ mixin ActivityMixin {
         //abuse 갑지
         if (exerciseTime.value % abusingReportTime == 0) {
           if (catchSinglePointAbuse(coordinates)) {
-            MemberService.reportAbuse(description: '[exerciseId: ${exerciseModel.id}] 좌표 데이터의 $abusingInsideRadiusRatio% 이상이 $abusingRadius미터 반경 안에 들었습니다.');
+            MemberService.reportAbuse(abusingType: "EXERCISE", exerciseId: exerciseModel.id, description: '좌표 데이터의 $abusingInsideRadiusRatio% 이상이 $abusingRadius미터 반경 안에 들었습니다.');
           }
         }
       }
@@ -699,8 +699,12 @@ mixin ActivityMixin {
 
   void moveToExerciseDetail(int exerciseId) {
     Get.until((route) => route.isFirst);
-    Get.find<HomeMenuController>().selectMenu(0);
-    // Get.put(HomeMenuController()).selectMenu(0);
+    if (Get.isRegistered<HomeMenuController>()) {
+      Get.find<HomeMenuController>().selectMenu(0);
+    } else {
+      Get.put(HomeMenuController()).selectMenu(0);
+    }
+
     if (Get.isRegistered<ArchiveController>()) {
       Get.find<ArchiveController>().toDetail(exerciseId);
     } else {

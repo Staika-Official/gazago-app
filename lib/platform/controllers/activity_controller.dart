@@ -789,7 +789,7 @@ class ActivityController extends SuperController with ActivityMixin, ChallengeMi
     //안드로이드만 탐지 가능
     if (isFakeGps.value && Get.isBottomSheetOpen != true) {
       showFakeGpsAlert();
-      MemberService.reportAbuse(description: 'Fake GPS 사용 감지');
+      MemberService.reportAbuse(description: 'Fake GPS 사용 감지', abusingType: 'GPS');
     }
   }
 

@@ -24,6 +24,8 @@ class MemberApi {
 
   static Future<Response> reportAbuse(
     String userId, {
+    int? exerciseId,
+    required String abusingType,
     required String description,
     required String appVersion,
     required String deviceModel,
@@ -34,6 +36,8 @@ class MemberApi {
       data: {
         "clientId": "GAZAGO",
         "userId": userId,
+        "exerciseId": exerciseId,
+        "abusingType": abusingType,
         "deviceModel": deviceModel,
         "platform": platform,
         "appVersion": appVersion,
