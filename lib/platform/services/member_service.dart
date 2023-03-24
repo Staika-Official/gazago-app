@@ -18,7 +18,7 @@ class MemberService {
 
   static Future<void> initializeUserData(String? email, String? nickname, String? profileImageUrl, {required Function errorCallback}) async {
     Response res = await MemberApi.initializeUserData(userId!, email, nickname, profileImageUrl);
-    if (res.statusCode != 200 || res.statusCode != 201) {
+    if (![200, 201].any((statusCode) => statusCode == res.statusCode)) {
       errorCallback();
     }
   }
