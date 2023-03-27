@@ -7,6 +7,7 @@ import 'package:gaza_go/platform/controllers/wallet_master_controller.dart';
 import 'package:gaza_go/platform/stores/hive_store.dart';
 import 'package:get/get.dart';
 
+// Todo 웹뷰 통합으로 삭제 예정
 class TaikaPay extends StatelessWidget {
   const TaikaPay({Key? key}) : super(key: key);
 
