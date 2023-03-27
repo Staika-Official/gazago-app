@@ -1,21 +1,18 @@
-import 'dart:convert';
-import 'dart:math';
-
 import 'package:dio/dio.dart';
 import 'package:gaza_go/constants/enums.dart';
+import 'package:gaza_go/flavors.dart';
 import 'package:gaza_go/platform/apis/wallet.dart';
 import 'package:gaza_go/platform/helpers/security_helper.dart';
 import 'package:gaza_go/platform/helpers/solana_helper.dart';
 import 'package:gaza_go/platform/models/asset_detail_model.dart';
 import 'package:gaza_go/platform/models/asset_token_balance_model.dart';
 import 'package:gaza_go/platform/models/buy_tik_response_model.dart';
+import 'package:gaza_go/platform/models/on_chain_wallet_model.dart';
 import 'package:gaza_go/platform/models/pay_info_model.dart';
 import 'package:gaza_go/platform/models/pay_response_model.dart';
 import 'package:gaza_go/platform/models/wallet_solana_model.dart';
 import 'package:gaza_go/platform/models/wallet_solana_transfer_model.dart';
 import 'package:gaza_go/platform/stores/hive_store.dart';
-import 'package:gaza_go/flavors.dart';
-import 'package:solana/base58.dart';
 import 'package:solana/encoder.dart';
 import 'package:solana/solana.dart';
 import 'package:solana/solana.dart' as solana;
@@ -114,9 +111,7 @@ class WalletService {
     String? decryptPrivateKey = decrypt(accountSecretkey, email!, walletPassword);
     print('decryptPrivateKey: ${decryptPrivateKey}');
 
-    if (decryptPrivateKey == null) {
-
-    }
+    if (decryptPrivateKey == null) {}
 
     final sender = await Ed25519HDKeyPair.fromPrivateKeyBytes(
       privateKey: base58.decode(decryptPrivateKey!).sublist(0, 32),
@@ -153,11 +148,27 @@ class WalletService {
     );
 
     // API Call
-    Map<String, String> body = {
-      'clientId': 'GAZAGO',
-      'encodeTransaction': tx.encode()
-    };
+    Map<String, String> body = {'clientId': 'GAZAGO', 'encodeTransaction': tx.encode()};
     Response res = await WalletApi.transferSolana(body);
     return WalletSolanaTransferModel.fromJson(res.data);
+  }
+
+  //onchain apis
+  static Future<void> getOnChainWallet({required Function successCallback, Function? errorCallback}) async {
+    Response res = await WalletApi.getOnChainWallet(userId);
+    if (res.statusCode == 200) {
+      successCallback(OnChainWalletModel.fromJson(res.data));
+    } else {
+      if (errorCallback != null) errorCallback();
+    }
+  }
+
+  static Future<void> createOnChainWallet({required String publicKey, required String secretKey, required Function successCallback, Function? errorCallback}) async {
+    Response res = await WalletApi.createOnChainWallet(userId, publicKey: publicKey, secretKey: secretKey);
+    if (res.statusCode == 201) {
+      successCallback(OnChainWalletModel.fromJson(res.data));
+    } else {
+      if (errorCallback != null) errorCallback();
+    }
   }
 }

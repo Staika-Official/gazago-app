@@ -84,4 +84,14 @@ class WalletApi {
   static Future<Response> transferSolana(Map<String, String> body) async {
     return await Api.client(serviceUrl: ServiceUrl.goWalletService).post('/solana/transfer', data: body);
   }
+
+  //onchain apis
+  static Future<Response> getOnChainWallet(String? userId) async {
+    return await Api.client(serviceUrl: ServiceUrl.onChainWalletService).get('/wallets/users/$userId');
+  }
+
+  //onchain apis
+  static Future<Response> createOnChainWallet(String? userId, {required String publicKey, required String secretKey}) async {
+    return await Api.client(serviceUrl: ServiceUrl.onChainWalletService).post('/wallets/users/$userId');
+  }
 }

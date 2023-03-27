@@ -300,3 +300,13 @@ enum CalendarCellType {
   monthDay,
   outsideDay,
 }
+
+enum TransactionStatus {
+  highVolatility,
+  offerExpired,
+  otherErrors,
+  success,
+  withdrawRequested,
+  swapRequested,
+  blockchainNetworkError,
+}
