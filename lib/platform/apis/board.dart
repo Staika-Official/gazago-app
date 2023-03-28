@@ -14,6 +14,6 @@ class BoardApi {
   }
 
   static Future<Response> getNoticePopupList() async {
-    return await Api.client(serviceUrl: ServiceUrl.boardService).get('/popups?clientId=GAZAGO');
+    return await Api.client(serviceUrl: ServiceUrl.boardService).get('/popups/clients/GAZAGO');
   }
 }

@@ -57,7 +57,6 @@ class NoticePopupController extends GetxController {
   Future<void> getNoticePopupList() async {
     await BoardService.getNoticePopupList(
       successCallback: (records) {
-        print(records);
         noticePopupList.addAll(records);
       },
     );
