@@ -136,7 +136,10 @@ class LoginController extends GetxController {
           HiveStore.save(key: HiveKey.accessToken.name, value: token.accessToken);
           HiveStore.save(key: HiveKey.refreshToken.name, value: token.refreshToken);
 
-          if (token.accountStatus == 'TERMINATION_REQUESTED') {
+          if (token.accountStatus == 'TERMINATION_COMPLETED') {
+            showToastPopup('탈퇴처리된 계정입니다.');
+            forceLogout();
+          } else if (token.accountStatus == 'TERMINATION_REQUESTED') {
             HiveStore.save(key: HiveKey.isAccountLocked.name, value: true);
             Get.offNamed(Routes.accountRestore);
           } else if (token.accountStatus == 'ALREADY_CONNECTED_DEVICE') {

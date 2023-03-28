@@ -18,6 +18,7 @@ import 'package:gaza_go/platform/stores/hive_store.dart';
 import 'package:gaza_go/presentations/components/alert_ui_list.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:get/get.dart';
+import 'package:throttling/throttling.dart';
 
 mixin ChallengeMixin {
   GlobalController globalController = Get.find();
@@ -134,7 +135,7 @@ mixin ChallengeMixin {
           Geolocator.distanceBetween(selectedChallenge.value.endLat!, selectedChallenge.value.endLon!, currentLocation.latitude, currentLocation.longitude) < selectedChallenge.value.endRadius!;
       if (hasArrived && userState.exercise!.badgeIssueId == null) {
         if (globalController.internetConnection.value) {
-          requestBadgeIssuance(userState);
+          Throttling(duration: const Duration(milliseconds: 500)).throttle(() => requestBadgeIssuance(userState));
         } else {
           HiveStore.save(key: HiveKey.badgeIssuanceRequested.name, value: true);
         }
