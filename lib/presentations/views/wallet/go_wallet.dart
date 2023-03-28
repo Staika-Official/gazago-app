@@ -9,8 +9,8 @@ import 'package:gaza_go/presentations/styles/styled_text.dart';
 import 'package:gaza_go/presentations/views/wallet/asset_item_coin.dart';
 import 'package:get/get.dart';
 
-class SpendingWallet extends StatelessWidget {
-  const SpendingWallet({Key? key}) : super(key: key);
+class GoWallet extends StatelessWidget {
+  const GoWallet({Key? key}) : super(key: key);
 
   List<Widget> renderInventoryList(WalletMasterController controller) {
     return controller.spendingTokenUiList
@@ -38,6 +38,24 @@ class SpendingWallet extends StatelessWidget {
       child: Obx(() {
         return Column(
           children: [
+            SizedBox(
+              width: double.infinity,
+              child: Padding(
+                padding: EdgeInsets.only(left: 33.sp, right: 33.sp, top: 18.sp),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: const [
+                    StyledText(
+                      '디지털 자산',
+                      fontSize: 16,
+                      fontWeight: 600,
+                      lineHeight: 20,
+                      letterSpacing: -0.5,
+                    ),
+                  ],
+                ),
+              ),
+            ),
             ...renderInventoryList(controller),
             Container(
               width: double.infinity,

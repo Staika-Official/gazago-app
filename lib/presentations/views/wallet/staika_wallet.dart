@@ -5,8 +5,8 @@ import 'package:gaza_go/platform/controllers/wallet_asset_controller.dart';
 import 'package:gaza_go/presentations/views/wallet/asset_item_nft.dart';
 import 'package:get/get.dart';
 
-class AssetWallet extends StatelessWidget {
-  const AssetWallet({Key? key}) : super(key: key);
+class StaikaWallet extends StatelessWidget {
+  const StaikaWallet({Key? key}) : super(key: key);
 
   // List<Widget> renderCoinAssetList(AssetWalletController controller) {
   //   return controller.coinAssetList
