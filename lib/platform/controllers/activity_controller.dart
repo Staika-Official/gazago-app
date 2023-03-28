@@ -16,6 +16,7 @@ import 'package:gaza_go/platform/helpers/admob_mixin.dart';
 import 'package:gaza_go/platform/helpers/alert_helper.dart';
 import 'package:gaza_go/platform/helpers/challenge_mixin.dart';
 import 'package:gaza_go/platform/helpers/login_helper.dart';
+import 'package:gaza_go/platform/models/ad_watch_available_model.dart';
 import 'package:gaza_go/platform/models/challenge_hierarchy_model.dart';
 import 'package:gaza_go/platform/models/challenge_model.dart';
 import 'package:gaza_go/platform/models/current_user_state_model.dart';
@@ -26,6 +27,7 @@ import 'package:gaza_go/platform/models/user_exercise_model.dart';
 import 'package:gaza_go/platform/models/user_stamina_recharge_model.dart';
 import 'package:gaza_go/platform/models/user_state_model.dart';
 import 'package:gaza_go/platform/services/activity_service.dart';
+import 'package:gaza_go/platform/services/admob_service.dart';
 import 'package:gaza_go/platform/services/item_service.dart';
 import 'package:gaza_go/platform/services/member_service.dart';
 import 'package:gaza_go/platform/services/uaa_service.dart';
@@ -622,15 +624,12 @@ class ActivityController extends SuperController with ActivityMixin, ChallengeMi
     Get.back();
   }
 
-  void selectExerciseType(ExerciseType exerciseType) async {
+  Future<void> selectExerciseType(ExerciseType exerciseType) async {
     selectedExerciseType.value = exerciseType;
 
-    DateTime? date = HiveStore.load(key: 'exerciseStartAd');
-    DateTime? viewableTime = date?.add(const Duration(hours: 1));
-    DateTime now = DateTime.now();
-    // HiveStore.save(key: 'exerciseStartAd', value: null);
+    AdWatchAvailableModel response = await AdmobService.getAdWatchAvailableTime('EXERCISE_START');
 
-    if (date == null || viewableTime!.isBefore(now)) {
+    if (response.watchAvailable!) {
       Get.back();
       Get.dialog(const AdSelect(), barrierDismissible: false, barrierColor: const Color.fromRGBO(0, 0, 0, 0.85));
       if (startAd == null) {
@@ -642,10 +641,6 @@ class ActivityController extends SuperController with ActivityMixin, ChallengeMi
     } else {
       handleMoveExerciseActive(exerciseType);
     }
-
-    // if (selectedExerciseType.value == ExerciseType.walking) selectedChallenge.value = ChallengeModel();
-    // Get.offNamed(Routes.activityActive);
-    // loadExercise(selectedExerciseType.value, selectedChallenge.value.id != null ? selectedChallenge.value : null);
   }
 
   void showAdAndMoveActivity() {

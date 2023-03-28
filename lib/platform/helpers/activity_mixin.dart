@@ -15,11 +15,13 @@ import 'package:gaza_go/platform/helpers/activity_helper.dart';
 import 'package:gaza_go/platform/helpers/alert_helper.dart';
 import 'package:gaza_go/platform/helpers/base_helper.dart';
 import 'package:gaza_go/platform/helpers/location_filter.dart';
+import 'package:gaza_go/platform/models/ad_watch_available_model.dart';
 import 'package:gaza_go/platform/models/challenge_model.dart';
 import 'package:gaza_go/platform/models/current_user_state_model.dart';
 import 'package:gaza_go/platform/models/error_response_data_model.dart';
 import 'package:gaza_go/platform/models/user_exercise_model.dart';
 import 'package:gaza_go/platform/services/activity_service.dart';
+import 'package:gaza_go/platform/services/admob_service.dart';
 import 'package:gaza_go/platform/services/member_service.dart';
 import 'package:gaza_go/platform/stores/hive_store.dart';
 import 'package:gaza_go/presentations/components/alert_ui_list.dart';
@@ -511,10 +513,6 @@ mixin ActivityMixin {
       initializeStopTimer();
     }
 
-    DateTime? date = HiveStore.load(key: 'exerciseEndAd');
-    DateTime? viewableTime = date?.add(const Duration(hours: 1));
-    DateTime now = DateTime.now();
-    // HiveStore.save(key: 'endWalkingAd', value: null);
     stopTimer = Timer.periodic(const Duration(milliseconds: 10), (timer) async {
       if (counter == const Duration(milliseconds: 500)) {
         initializeStopTimer();
@@ -522,7 +520,8 @@ mixin ActivityMixin {
         if (source != null && source == 'pendingExerciseDialog') {
           Get.back();
         }
-        if (date == null || viewableTime!.isBefore(now)) {
+        AdWatchAvailableModel response = await AdmobService.getAdWatchAvailableTime('EXERCISE_END');
+        if (response.watchAvailable!) {
           await controller.exerciseEndRewardedAdInit(
             'exerciseEndAd',
           );
