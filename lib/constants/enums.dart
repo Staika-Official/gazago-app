@@ -83,6 +83,7 @@ enum HiveKey {
   isAccountLocked,
   exerciseTimer,
   updateTimer,
+  endPointType,
 }
 
 enum ResponseStatus {
@@ -299,4 +300,10 @@ enum CalendarCellType {
   focusedDay,
   monthDay,
   outsideDay,
+}
+
+enum EndPointType {
+  dev,
+  stage,
+  prod,
 }
