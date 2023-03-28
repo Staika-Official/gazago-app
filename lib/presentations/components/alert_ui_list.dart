@@ -682,12 +682,19 @@ void showBadgeAcquisitionAlert(InventoryBadgeModel badge, ChallengeModel selecte
       children: [
         Padding(
           padding: EdgeInsets.only(top: 30.sp, bottom: 30.sp),
-          child: CachedNetworkImage(
-            imageUrl: badge.badge.imageUrl,
-            placeholder: (context, url) => const CircularProgressIndicator(),
-            fit: BoxFit.contain,
-            width: 150.sp,
-          ),
+          child: badge.badge.imageUrl.contains('.svg')
+              ? SvgPicture.network(
+                  fit: BoxFit.contain,
+                  badge.badge.imageUrl,
+                  width: 150.sp,
+                  placeholderBuilder: (BuildContext context) => Container(padding: const EdgeInsets.all(30.0), child: const CircularProgressIndicator()),
+                )
+              : CachedNetworkImage(
+                  imageUrl: badge.badge.imageUrl,
+                  placeholder: (context, url) => const CircularProgressIndicator(),
+                  fit: BoxFit.fitWidth,
+                  width: 150.sp,
+                ),
         ),
         Container(
           padding: EdgeInsets.symmetric(horizontal: 25.sp, vertical: 14.sp),
