@@ -1,4 +1,6 @@
 import 'package:gaza_go/constants/base_urls.dart';
+import 'package:gaza_go/constants/enums.dart';
+import 'package:gaza_go/platform/stores/hive_store.dart';
 import 'package:solana/solana.dart';
 
 enum Flavor {
@@ -34,9 +36,19 @@ class F {
       case Flavor.dev:
         return BaseUrl.dev;
       case Flavor.stage:
-        return BaseUrl.stage;
+        String? endPointType = HiveStore.load(key: HiveKey.endPointType.name);
+        if (endPointType == null || endPointType == EndPointType.stage.name) {
+          return BaseUrl.stage;
+        } else {
+          return BaseUrl.prod;
+        }
       case Flavor.prod:
-        return BaseUrl.prod;
+        String? endPointType = HiveStore.load(key: HiveKey.endPointType.name);
+        if (endPointType == null || endPointType == EndPointType.prod.name) {
+          return BaseUrl.prod;
+        } else {
+          return BaseUrl.stage;
+        }
       default:
         return BaseUrl.dev;
     }

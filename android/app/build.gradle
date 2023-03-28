@@ -98,11 +98,7 @@ android {
     }
 
     buildTypes {
-        debug {
-            buildConfigField 'boolean', 'UPDATE_ENABLED', 'false'
-        }
         release {
-            buildConfigField 'boolean', 'UPDATE_ENABLED', 'true'
             signingConfig signingConfigs.release
         }
     }

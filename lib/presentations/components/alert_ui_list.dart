@@ -11,6 +11,7 @@ import 'package:gaza_go/constants/enums.dart';
 import 'package:gaza_go/constants/routes.dart';
 import 'package:gaza_go/platform/controllers/activity_controller.dart';
 import 'package:gaza_go/platform/controllers/archive_controller.dart';
+import 'package:gaza_go/platform/controllers/debugging_controller.dart';
 import 'package:gaza_go/platform/controllers/inventory_controller.dart';
 import 'package:gaza_go/platform/controllers/loading_controller.dart';
 import 'package:gaza_go/platform/controllers/login_controller.dart';
@@ -2675,4 +2676,81 @@ void showInAppPurchaseProgressAlert(WalletMasterController controller) {
       }),
     ],
   );
+}
+
+Future<bool> verifyEndPointPasswordAlert(DebuggingController controller) {
+  Completer<bool> passwordInputCompleter = Completer();
+  controller.endPointPasswordController.text = '';
+  showAlert(
+    contentWidget: Center(
+      child: Column(
+        children: [
+          Padding(
+            padding: const EdgeInsets.only(top: 14, bottom: 30),
+            child: StyledText(
+              '비밀번호를 입력해주세요.',
+              fontSize: 18.sp,
+              fontWeight: 500,
+              lineHeight: 24.sp,
+              textAlign: TextAlign.center,
+            ),
+          ),
+          Padding(
+            padding: const EdgeInsets.only(bottom: 10),
+            child: TextField(
+              onSubmitted: (String text) async {
+                passwordInputCompleter.complete(await controller.verifyEndPointPassword());
+              },
+              decoration: InputDecoration(
+                focusColor: skyBlueColor,
+                enabledBorder: OutlineInputBorder(
+                  borderSide: BorderSide(
+                    color: Colors.white,
+                  ),
+                ),
+                focusedBorder: OutlineInputBorder(
+                  borderSide: BorderSide(
+                    color: skyBlueColor,
+                  ),
+                ),
+              ),
+              textAlign: TextAlign.center,
+              textInputAction: TextInputAction.go,
+              controller: controller.endPointPasswordController,
+              style: TextStyle(
+                color: Colors.white,
+              ),
+            ),
+          ),
+        ],
+      ),
+    ),
+    actions: [
+      Expanded(
+        child: GazagoButton(
+          onTap: () {
+            Get.back();
+            passwordInputCompleter.complete(false);
+          },
+          buttonText: '취소',
+          textColor: Colors.white,
+          buttonColor: popupBgColor,
+        ),
+      ),
+      SizedBox(
+        width: 9.sp,
+      ),
+      Expanded(
+        child: GazagoButton(
+          onTap: () async {
+            passwordInputCompleter.complete(await controller.verifyEndPointPassword());
+          },
+          buttonText: '확인',
+          buttonColor: skyBlueColor,
+        ),
+      ),
+    ],
+  );
+
+  return passwordInputCompleter.future;
 }
