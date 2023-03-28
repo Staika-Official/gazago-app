@@ -2,7 +2,6 @@ import 'dart:io';
 
 import 'package:gaza_go/flavors.dart';
 import 'package:gaza_go/platform/controllers/activity_controller.dart';
-import 'package:gaza_go/platform/stores/hive_store.dart';
 import 'package:get/get.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
 
@@ -99,8 +98,8 @@ mixin AdmobMixin {
     startAd!.setImmersiveMode(true);
     startAd!.show(onUserEarnedReward: (AdWithoutView ad, RewardItem reward) {
       print('$ad with reward $RewardItem(${reward.amount}, ${reward.type})');
-      DateTime now = DateTime.now();
-      HiveStore.save(key: 'exerciseStartAd', value: now);
+      // DateTime now = DateTime.now();
+      // HiveStore.save(key: 'exerciseStartAd', value: now);
     });
     startAd = null;
   }
@@ -137,8 +136,8 @@ mixin AdmobMixin {
     endAd.value!.setImmersiveMode(true);
     endAd.value!.show(onUserEarnedReward: (AdWithoutView ad, RewardItem reward) {
       print('$ad with reward $RewardItem(${reward.amount}, ${reward.type})');
-      DateTime now = DateTime.now();
-      HiveStore.save(key: 'exerciseEndAd', value: now);
+      // DateTime now = DateTime.now();
+      // HiveStore.save(key: 'exerciseEndAd', value: now);
     });
     endAd.value = null;
   }

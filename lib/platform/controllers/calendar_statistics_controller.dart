@@ -40,7 +40,6 @@ class CalendarStatisticsController extends GetxController {
   }
 
   void getCalendarStatistics(month) async {
-    print('asdasdasdasdasds');
     await DashboardService.getUserRewardStatistics(
       month,
       successCallback: (list) {
