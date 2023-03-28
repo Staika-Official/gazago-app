@@ -1,5 +1,6 @@
 import 'package:dio/dio.dart';
 import 'package:gaza_go/platform/apis/board.dart';
+import 'package:gaza_go/platform/models/notice_popup_model.dart';
 import 'package:gaza_go/platform/models/term_item_model.dart';
 
 class BoardService {
@@ -22,6 +23,20 @@ class BoardService {
     Response res = await BoardApi.getPostById(id);
     if (res.statusCode == 200) {
       successCallback(TermItemModel.fromJson(res.data));
+    } else {
+      if (errorCallback != null) errorCallback();
+    }
+  }
+
+  static Future<void> getNoticePopupList({required Function successCallback, Function? errorCallback}) async {
+    Response res = await BoardApi.getNoticePopupList();
+    if (res.statusCode == 200) {
+      List<NoticePopupModel> noticePopupList = List.empty(growable: true);
+      res.data.forEach((term) {
+        NoticePopupModel noticePopupItem = NoticePopupModel.fromJson(term);
+        noticePopupList.add(noticePopupItem);
+      });
+      successCallback(noticePopupList);
     } else {
       if (errorCallback != null) errorCallback();
     }

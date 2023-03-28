@@ -83,6 +83,7 @@ enum HiveKey {
   isAccountLocked,
   exerciseTimer,
   updateTimer,
+  endPointType,
 }
 
 enum ResponseStatus {
@@ -309,4 +310,10 @@ enum TransactionStatus {
   withdrawRequested,
   swapRequested,
   blockchainNetworkError,
+}
+
+enum EndPointType {
+  dev,
+  stage,
+  prod,
 }

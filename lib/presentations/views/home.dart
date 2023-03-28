@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:gaza_go/platform/controllers/home_menu_controller.dart';
+import 'package:gaza_go/platform/controllers/notice_popup_controller.dart';
 import 'package:gaza_go/platform/helpers/alert_helper.dart';
 import 'package:gaza_go/presentations/components/gazago_button.dart';
 import 'package:gaza_go/presentations/styles/colors.dart';
@@ -74,6 +75,8 @@ class Home extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     HomeMenuController controller = Get.put(HomeMenuController());
+    Get.put(NoticePopupController());
+
     final GlobalKey<NavigatorState> navigatorKey = GlobalKey<NavigatorState>();
     return WillPopScope(
       onWillPop: () async {

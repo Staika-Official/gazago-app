@@ -154,26 +154,29 @@ class LoadingController extends GetxController {
       AppUpdateInfo? _appAndroidUpdateInfo;
       VersionStatus? _appIOSUpdateInfo;
 
-      if (Platform.isAndroid) {
-        _appAndroidUpdateInfo = await InAppUpdate.checkForUpdate().catchError((e) {
-          showToastPopup(e.toString());
-        });
-      } else {
-        _appIOSUpdateInfo = await NewVersion(
-          iOSId: F.isDev ? 'kr.co.eztechfin.gazaGo.dev' : 'kr.co.eztechfin.gazaGo',
-        ).getVersionStatus().catchError((e) {
-          showToastPopup(e.toString());
-          return null;
-        });
+      Future<void> checkAppStores() async {
+        if (Platform.isAndroid) {
+          _appAndroidUpdateInfo = await InAppUpdate.checkForUpdate().catchError((e) {
+            showToastPopup(e.toString());
+          });
+        } else {
+          _appIOSUpdateInfo = await NewVersion(
+            iOSId: F.isDev ? 'kr.co.eztechfin.gazaGo.dev' : 'kr.co.eztechfin.gazaGo',
+          ).getVersionStatus().catchError((e) {
+            showToastPopup(e.toString());
+            return null;
+          });
+        }
       }
 
       bool needForceUpgrade = await isForceUpdateTarget();
       if (needForceUpgrade) {
+        checkAppStores();
         if (Platform.isAndroid && _appAndroidUpdateInfo?.updateAvailability == UpdateAvailability.updateAvailable) {
           await InAppUpdate.performImmediateUpdate().catchError((e) {
             showToastPopup(e.toString());
           });
-        } else if (_appIOSUpdateInfo != null && _appIOSUpdateInfo.canUpdate) {
+        } else if (_appIOSUpdateInfo != null && _appIOSUpdateInfo!.canUpdate) {
           showAlert(
             title: '새 업데이트가 있습니다.',
             contentText: '앱을 사용하기 위해서 업데이트가 필요합니다.',
@@ -201,11 +204,12 @@ class LoadingController extends GetxController {
       } else {
         bool needRecommendedUpgrade = await isRecommendUpdateTarget();
         if (needRecommendedUpgrade) {
+          checkAppStores();
           if (Platform.isAndroid && _appAndroidUpdateInfo?.updateAvailability == UpdateAvailability.updateAvailable) {
             await InAppUpdate.completeFlexibleUpdate().catchError((e) {
               showToastPopup(e.toString());
             });
-          } else if (_appIOSUpdateInfo != null && _appIOSUpdateInfo.canUpdate) {
+          } else if (_appIOSUpdateInfo != null && _appIOSUpdateInfo!.canUpdate) {
             showAlert(
               title: '새 업데이트가 있습니다.',
               contentText: '앱을 사용하기 위해서 업데이트가 필요합니다.',
