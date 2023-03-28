@@ -1,10 +1,15 @@
+import 'dart:async';
 import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:gaza_go/constants/enums.dart';
+import 'package:gaza_go/constants/routes.dart';
 import 'package:gaza_go/flavors.dart';
+import 'package:gaza_go/platform/controllers/login_controller.dart';
 import 'package:gaza_go/platform/helpers/alert_helper.dart';
 import 'package:gaza_go/platform/helpers/login_helper.dart';
+import 'package:gaza_go/platform/models/access_token_model.dart';
+import 'package:gaza_go/platform/services/uaa_service.dart';
 import 'package:gaza_go/platform/stores/hive_store.dart';
 import 'package:gaza_go/presentations/components/alert_ui_list.dart';
 import 'package:get/get.dart';
@@ -68,34 +73,47 @@ class DebuggingController extends GetxController {
   }
 
   void verifyLabPassword() {
-    if (labPasswordController.text == 'Eztechfin') {
-      labPasswordController.text = '';
-      isLabPasswordConfirmed.value = true;
-    }
+    UaaService.verifyLabPassword(
+      labPasswordController.text,
+      successCallback: () {
+        labPasswordController.text = '';
+        isLabPasswordConfirmed.value = true;
+      },
+      errorCallback: () {
+        isLabPasswordConfirmed.value = false;
+        // showToastPopup('비밀번호가 틀렸습니다.');
+      },
+    );
   }
 
   Future<bool> verifyEndPointPassword() async {
     bool passwordVerified = false;
-    if (endPointPasswordController.text == 'Eztechfin') {
-      await Future.delayed(Duration(seconds: 2), () {
-        passwordVerified = true;
-      });
-    } else {
-      await Future.delayed(Duration(seconds: 2), () {
-        passwordVerified = false;
-      });
-    }
-
+    await UaaService.requestLabSignIn(endPointPasswordController.text, successCallback: (AccessTokenModel token) {
+      passwordVerified = true;
+      HiveStore.save(key: HiveKey.accessToken.name, value: token.accessToken);
+      HiveStore.save(key: HiveKey.refreshToken.name, value: token.refreshToken);
+    }, errorCallback: () {
+      passwordVerified = false;
+      // showToastPopup('비밀번호가 틀렸습니다.');
+    });
     Get.back();
     return passwordVerified;
   }
 
   void setEndPoint(EndPointType val) async {
     if (F.isDev && val != EndPointType.stage || !F.isDev && val != EndPointType.prod) {
+      String savedEndPoint = HiveStore.load(key: HiveKey.endPointType.name) ?? (F.isDev ? EndPointType.stage.name : EndPointType.prod.name);
+      HiveStore.save(key: HiveKey.endPointType.name, value: val.name);
       bool isPasswordConfirmed = await verifyEndPointPasswordAlert(this);
       if (isPasswordConfirmed) {
         endPointType.value = val;
-        HiveStore.save(key: HiveKey.endPointType.name, value: val.name);
+        showToastPopup('2초 후 로딩화면으로 이동합니다.');
+        Timer(Duration(seconds: 2), () async {
+          await Get.put(LoginController()).getUserInfo();
+          Get.offAllNamed(Routes.loading);
+        });
+      } else {
+        HiveStore.save(key: HiveKey.endPointType.name, value: savedEndPoint);
       }
     } else {
       endPointType.value = val;

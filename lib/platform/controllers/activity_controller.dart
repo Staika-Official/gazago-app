@@ -602,7 +602,8 @@ class ActivityController extends SuperController with ActivityMixin, ChallengeMi
   Future<bool> requestLocationPermission() async {
     Completer<bool> locationPermissionCompleter = Completer();
     LocationPermission locationPermission = await Geolocator.requestPermission();
-    bool gotPermission = [LocationPermission.always, LocationPermission.whileInUse].any((permission) => permission == locationPermission);
+    LocationAccuracyStatus accuracyStatus = await Geolocator.getLocationAccuracy();
+    bool gotPermission = [LocationPermission.always, LocationPermission.whileInUse].any((permission) => permission == locationPermission) && LocationAccuracyStatus.precise == accuracyStatus;
     if (!gotPermission) {
       Geolocator.openAppSettings();
     }

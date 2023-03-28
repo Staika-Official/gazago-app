@@ -59,4 +59,18 @@ class UaaApi {
   static Future<Response> pingConnection(int seconds) async {
     return await Api.client(serviceUrl: '/services/gazago/api').get('/ping/wait/$seconds');
   }
+
+  static Future<Response> verifyLabPassword(String password) async {
+    return await Api.client(serviceUrl: ServiceUrl.uaaService).post('/lab/verify', data: {
+      'password': password,
+    });
+  }
+
+  static Future<Response> requestLabSignIn(String email, String password) async {
+    return await Api.client(serviceUrl: ServiceUrl.uaaService, needsToken: false).post('/lab/sign-in', data: {
+      "clientId": "GAZAGO",
+      "username": email,
+      "password": password,
+    });
+  }
 }

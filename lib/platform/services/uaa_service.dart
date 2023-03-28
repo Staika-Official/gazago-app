@@ -98,4 +98,23 @@ class UaaService {
       if (errorCallback != null) errorCallback(res.data);
     }
   }
+
+  static Future<void> verifyLabPassword(String password, {Function? successCallback, Function? errorCallback}) async {
+    Response res = await UaaApi.verifyLabPassword(password);
+    if (res.statusCode == 200) {
+      if (successCallback != null) successCallback();
+    } else {
+      if (errorCallback != null) errorCallback();
+    }
+  }
+
+  static Future<void> requestLabSignIn(String password, {Function? successCallback, Function? errorCallback}) async {
+    String? email = HiveStore.loadString(key: HiveKey.email.name);
+    Response res = await UaaApi.requestLabSignIn(email!, password);
+    if (res.statusCode == 200) {
+      if (successCallback != null) successCallback(AccessTokenModel.fromJson(res.data));
+    } else {
+      if (errorCallback != null) errorCallback();
+    }
+  }
 }
