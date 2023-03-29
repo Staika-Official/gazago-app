@@ -87,7 +87,7 @@ class WalletApi {
 
   //onchain apis
   static Future<Response> getOnChainWallet(String? userId) async {
-    return await Api.client(serviceUrl: ServiceUrl.onChainWalletService).get('/wallets/users/$userId');
+    return await Api.client(serviceUrl: ServiceUrl.onChainWalletService, allowCustomErrorHandler: true).get('/wallets/users/$userId');
   }
 
   //onchain apis
