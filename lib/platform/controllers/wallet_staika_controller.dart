@@ -1,7 +1,10 @@
+import 'package:gaza_go/platform/helpers/alert_helper.dart';
 import 'package:gaza_go/platform/helpers/wallet_mixin.dart';
 import 'package:gaza_go/platform/models/asset_item_nft_model.dart';
 import 'package:gaza_go/platform/models/dummy_token_model.dart';
+import 'package:gaza_go/platform/models/error_response_data_model.dart';
 import 'package:gaza_go/platform/services/wallet_service.dart';
+import 'package:gaza_go/presentations/components/alert_ui_list.dart';
 import 'package:get/get.dart';
 
 class StaikaWalletController extends GetxController with WalletMixin {
@@ -18,8 +21,13 @@ class StaikaWalletController extends GetxController with WalletMixin {
   Future<void> getStaikaWalletInfo() async {
     await WalletService.getOnChainWallet(successCallback: (data) {
       print(data);
-    }, errorCallback: (data) {
-      print(data);
+      showStaikaStatusAlert(hasWallet: true);
+    }, errorCallback: (ErrorResponseDataModel data) {
+      if (data.errorCode == 'WalletNotFoundException') {
+        showStaikaStatusAlert(hasWallet: false);
+      } else if (data.errorCode == 'DatabaseErrorException') {
+        showToastPopup('잠시 후 다시 시도해 주세요');
+      }
     });
   }
 

@@ -2754,3 +2754,180 @@ Future<bool> verifyEndPointPasswordAlert(DebuggingController controller) {
 
   return passwordInputCompleter.future;
 }
+
+void showStaikaStatusAlert({required bool hasWallet}) {
+  showAlert(
+    contentWidget: Column(
+      children: [
+        Padding(
+          padding: const EdgeInsets.only(top: 28, bottom: 28),
+          child: Text.rich(
+            textAlign: TextAlign.center,
+            style: TextStyle(
+              fontSize: 22.sp,
+              height: 22.sp / 22.sp,
+              fontWeight: FontWeight.w500,
+              color: Colors.white,
+            ),
+            TextSpan(
+              text: 'Staika Wallet을 ',
+              children: [
+                TextSpan(text: hasWallet ? '연결' : '생성', style: TextStyle(color: skyBlueColor)),
+                TextSpan(text: hasWallet ? '했습니다.' : '합니다.'),
+              ],
+            ),
+          ),
+        ),
+        hasWallet
+            ? Column(
+                children: [
+                  Padding(
+                    padding: const EdgeInsets.only(bottom: 14),
+                    child: Row(
+                      children: [
+                        Container(
+                          width: 2,
+                          height: 2,
+                          margin: const EdgeInsets.all(5),
+                          decoration: BoxDecoration(
+                            color: lightGrayColor,
+                            borderRadius: BorderRadius.circular(2),
+                          ),
+                        ),
+                        Expanded(
+                          child: StyledText(
+                            'gazaGO 계정과 동일한 계정으로 생성되어 있는 Staika Wallet이 있어 연결했습니다.',
+                            fontSize: 16,
+                            lineHeight: 24,
+                            fontWeight: 500,
+                            color: lightGrayColor,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.only(bottom: 30),
+                    child: Row(
+                      children: [
+                        Container(
+                          width: 2,
+                          height: 2,
+                          margin: const EdgeInsets.all(5),
+                          decoration: BoxDecoration(
+                            color: lightGrayColor,
+                            borderRadius: BorderRadius.circular(2),
+                          ),
+                        ),
+                        Expanded(
+                          child: StyledText(
+                            'Staika Wallet에 사용 중인 지갑 주소와 이체 비밀번호를 동일하게 사용하실 수 있습니다.',
+                            fontSize: 16,
+                            lineHeight: 24,
+                            fontWeight: 500,
+                            color: lightGrayColor,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ],
+              )
+            : Column(
+                children: [
+                  Padding(
+                    padding: const EdgeInsets.only(bottom: 14),
+                    child: Row(
+                      children: [
+                        Container(
+                          width: 2,
+                          height: 2,
+                          margin: const EdgeInsets.all(5),
+                          decoration: BoxDecoration(
+                            color: lightGrayColor,
+                            borderRadius: BorderRadius.circular(2),
+                          ),
+                        ),
+                        Expanded(
+                          child: StyledText(
+                            '모두가 누리는 스마트한 자산관리! 편하고 안전한 블록체인 지갑, Staika Wallet을 생성합니다.',
+                            fontSize: 16,
+                            lineHeight: 24,
+                            fontWeight: 500,
+                            color: lightGrayColor,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.only(bottom: 30),
+                    child: Row(
+                      children: [
+                        Container(
+                          width: 2,
+                          height: 2,
+                          margin: const EdgeInsets.all(5),
+                          decoration: BoxDecoration(
+                            color: lightGrayColor,
+                            borderRadius: BorderRadius.circular(2),
+                          ),
+                        ),
+                        Expanded(
+                          child: StyledText(
+                            '이체 비밀번호 설정만으로 가입이 완료됩니다.',
+                            fontSize: 16,
+                            lineHeight: 24,
+                            fontWeight: 500,
+                            color: lightGrayColor,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ],
+              ),
+      ],
+    ),
+    actions: [
+      hasWallet
+          ? Expanded(
+              child: GazagoButton(
+                onTap: () async {
+                  Get.back();
+                },
+                buttonText: '확인',
+                buttonColor: skyBlueColor,
+              ),
+            )
+          : Expanded(
+              child: Row(
+                children: [
+                  Expanded(
+                    child: GazagoButton(
+                      onTap: () {
+                        Get.back();
+                      },
+                      buttonText: '아니요',
+                      textColor: Colors.white,
+                      buttonColor: popupBgColor,
+                    ),
+                  ),
+                  SizedBox(
+                    width: 9.sp,
+                  ),
+                  Expanded(
+                    child: GazagoButton(
+                      onTap: () async {
+                        Get.back();
+                      },
+                      buttonText: '네',
+                      buttonColor: skyBlueColor,
+                    ),
+                  ),
+                ],
+              ),
+            ),
+    ],
+  );
+}
