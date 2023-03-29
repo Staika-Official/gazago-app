@@ -30,7 +30,7 @@ class _WalletHomeState extends State<WalletHome> with SingleTickerProviderStateM
   Widget build(BuildContext context) {
     return DefaultContainer(
       backgroundColor: subBg01Color,
-      titleText: _tabController.index == 0 ? 'GO 지갑' : '지갑',
+      titleText: '지갑',
       child: Column(
         children: [
           Padding(

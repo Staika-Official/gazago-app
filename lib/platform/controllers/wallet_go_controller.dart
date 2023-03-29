@@ -2,7 +2,7 @@ import 'package:gaza_go/platform/helpers/wallet_mixin.dart';
 import 'package:gaza_go/platform/models/dummy_token_model.dart';
 import 'package:get/get.dart';
 
-class SpendingWalletController extends GetxController with WalletMixin {
+class GoWalletController extends GetxController with WalletMixin {
   final RxList<DummyTokenModel> inventoryList = RxList.empty();
 
   @override

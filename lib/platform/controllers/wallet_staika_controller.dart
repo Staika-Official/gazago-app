@@ -1,16 +1,26 @@
 import 'package:gaza_go/platform/helpers/wallet_mixin.dart';
 import 'package:gaza_go/platform/models/asset_item_nft_model.dart';
 import 'package:gaza_go/platform/models/dummy_token_model.dart';
+import 'package:gaza_go/platform/services/wallet_service.dart';
 import 'package:get/get.dart';
 
-class AssetWalletController extends GetxController with WalletMixin {
+class StaikaWalletController extends GetxController with WalletMixin {
   final RxList<DummyTokenModel> coinAssetList = RxList.empty();
   final RxList<AssetItemNftModel> nftAssetList = RxList.empty();
 
   @override
-  void onInit() {
+  void onInit() async {
     getAssetList();
+    await getStaikaWalletInfo();
     super.onInit();
+  }
+
+  Future<void> getStaikaWalletInfo() async {
+    await WalletService.getOnChainWallet(successCallback: (data) {
+      print(data);
+    }, errorCallback: (data) {
+      print(data);
+    });
   }
 
   void getAssetList() {

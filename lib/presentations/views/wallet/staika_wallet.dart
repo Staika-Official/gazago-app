@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:gaza_go/constants/enums.dart';
-import 'package:gaza_go/platform/controllers/wallet_asset_controller.dart';
+import 'package:gaza_go/platform/controllers/wallet_staika_controller.dart';
 import 'package:gaza_go/presentations/views/wallet/asset_item_nft.dart';
 import 'package:get/get.dart';
 
@@ -19,7 +19,7 @@ class StaikaWallet extends StatelessWidget {
   //       .toList();
   // }
 
-  List<Widget> renderNftAssetList(AssetWalletController controller) {
+  List<Widget> renderNftAssetList(StaikaWalletController controller) {
     return controller.nftAssetList
         .map(
           (asset) => AssetItemNft(
@@ -32,7 +32,7 @@ class StaikaWallet extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    AssetWalletController controller = Get.put(AssetWalletController());
+    StaikaWalletController controller = Get.put(StaikaWalletController());
 
     return SingleChildScrollView(
       physics: const ClampingScrollPhysics(),
