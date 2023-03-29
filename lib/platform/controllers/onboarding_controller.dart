@@ -61,6 +61,6 @@ class OnBoardingController extends GetxController {
   get current => _current;
 
   void nextStep() {
-    Get.toNamed(Routes.joinTerms);
+    Get.toNamed(Routes.joinTerms, arguments: {'platform': 'gazago'});
   }
 }

@@ -158,7 +158,7 @@ class LoginController extends GetxController {
           HiveStore.save(key: HiveKey.refreshToken.name, value: token.refreshToken);
           HiveStore.save(key: HiveKey.isNewUser.name, value: true);
           await initUserInfo();
-          Get.offNamed(Routes.joinTerms);
+          Get.offNamed(Routes.joinTerms, arguments: {'platform': 'gazago'});
         }
       },
       errorCallback: (int statusCode, String statusMessage) {

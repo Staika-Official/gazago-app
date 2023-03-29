@@ -2920,6 +2920,7 @@ void showStaikaStatusAlert({required bool hasWallet}) {
                     child: GazagoButton(
                       onTap: () async {
                         Get.back();
+                        Get.toNamed(Routes.joinTerms, arguments: {'platform': 'wallet'});
                       },
                       buttonText: '네',
                       buttonColor: skyBlueColor,

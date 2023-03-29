@@ -43,6 +43,7 @@ import 'package:gaza_go/presentations/views/verification/verification_detail.dar
 import 'package:gaza_go/presentations/views/verification/verification_name.dart';
 import 'package:gaza_go/presentations/views/verification/verification_phone.dart';
 import 'package:gaza_go/presentations/views/wallet/buy_tik.dart';
+import 'package:gaza_go/presentations/views/wallet/create_wallet.dart';
 import 'package:gaza_go/presentations/views/wallet/index.dart';
 import 'package:gaza_go/presentations/views/wallet/taika_pay.dart';
 import 'package:gaza_go/presentations/views/wallet/wallet_actions.dart';
@@ -57,10 +58,10 @@ import '../presentations/views/verification/verification_terms.dart';
 class Routes {
   static const login = '/login';
   static const onBoarding = '/on_boarding';
-  static const joinTerms = '/join_terms';
+  static const joinTerms = '/join_terms/:platform';
   static const loading = '/loading';
   static const home = '/home';
-  static const term = '/term/:termType';
+  static const term = '/term/:platform/:termType/:termId';
   static const termsList = '/terms_list';
   static const archiveDetail = '/archive/detail';
   static const activityChallenges = '/activity/challenges';
@@ -108,6 +109,7 @@ class Routes {
   static const adMobRewarded = '/admob/reward';
   static const adMobRewardedInterstitial = '/admob/interstitial';
   static const webView = '/webview/:id';
+  static const createWallet = '/wallet/create';
 
   static List<GetPage> pages = [
     stepPage(name: Routes.login, page: const Login()),
@@ -168,7 +170,8 @@ class Routes {
     stepPage(name: Routes.laboratorySolanaCreateWallet, page: const LaboratorySolanaCreateWallet()),
     stepPage(name: Routes.laboratorySolanaTransfer, page: const LaboratorySolanaTransfer()),
     stepPage(name: Routes.webView, page: const WebView()),
-    stepPage(name: Routes.laboratoryEndPoint, page: LaboratoryEndPoint()),
+    stepPage(name: Routes.laboratoryEndPoint, page: const LaboratoryEndPoint()),
+    stepPage(name: Routes.createWallet, page: const CreateWallet()),
   ];
 }
 

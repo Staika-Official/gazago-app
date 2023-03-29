@@ -13,7 +13,6 @@ class StaikaWalletController extends GetxController with WalletMixin {
 
   @override
   void onInit() async {
-    getAssetList();
     await getStaikaWalletInfo();
     super.onInit();
   }

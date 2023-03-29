@@ -66,7 +66,7 @@ class JoinTerms extends StatelessWidget {
                         padding: EdgeInsets.only(top: 2.0.sp),
                         child: SizedBox(
                           child: GestureDetector(
-                            onTap: () => Get.toNamed(Routes.term, arguments: {'termType': term.boardType, 'termId': term.id}),
+                            onTap: () => Get.toNamed(Routes.term, arguments: {'platform': controller.platform.value, 'termType': term.boardType, 'termId': term.id}),
                             child: Icon(
                               Icons.chevron_right,
                               color: deepGrayColor,
@@ -108,14 +108,16 @@ class JoinTerms extends StatelessWidget {
                 ),
                 Row(
                   children: [
-                    StyledText(
-                      'gazaGO',
-                      fontSize: 24,
-                      fontWeight: 700,
-                      lineHeight: 32,
-                      fontFamily: 'Montserrat',
-                      color: skyBlueColor,
-                    ),
+                    Obx(() {
+                      return StyledText(
+                        controller.platform.value == 'gazago' ? 'gazaGO' : '스타이카 월렛',
+                        fontSize: 24,
+                        fontWeight: 700,
+                        lineHeight: 32,
+                        fontFamily: 'Montserrat',
+                        color: skyBlueColor,
+                      );
+                    }),
                     const StyledText(
                       ' 입니다.',
                       fontSize: 24,
@@ -184,34 +186,36 @@ class JoinTerms extends StatelessWidget {
               ),
             ),
             const Spacer(),
-            Container(
-              height: 55.sp,
-              decoration: BoxDecoration(
-                color: skyBlueColor,
-                border: Border.all(width: 2.sp, color: Colors.black),
-                borderRadius: BorderRadius.circular(8.sp),
-                boxShadow: [
-                  BoxShadow(
-                    color: Colors.black,
-                    offset: Offset(0, 3.sp),
-                  )
-                ],
-              ),
-              child: InkWell(
-                onTap: () => controller.requestJoin(),
-                child: Padding(
-                  padding: EdgeInsets.symmetric(vertical: 12.0.sp),
-                  child: const Center(
-                      child: StyledText(
-                    '다음',
-                    fontSize: 18,
-                    lineHeight: 18,
-                    fontWeight: 500,
-                    color: Colors.black,
-                  )),
+            Obx(() {
+              return Container(
+                height: 55.sp,
+                decoration: BoxDecoration(
+                  color: controller.allRequiredAgreed.value ? skyBlueColor : popupBgColor,
+                  border: Border.all(width: 2.sp, color: Colors.black),
+                  borderRadius: BorderRadius.circular(8.sp),
+                  boxShadow: [
+                    BoxShadow(
+                      color: Colors.black,
+                      offset: Offset(0, 3.sp),
+                    )
+                  ],
                 ),
-              ),
-            ),
+                child: InkWell(
+                  onTap: () => controller.requestJoin(),
+                  child: Padding(
+                    padding: EdgeInsets.symmetric(vertical: 12.0.sp),
+                    child: Center(
+                        child: StyledText(
+                      '다음',
+                      fontSize: 18,
+                      lineHeight: 18,
+                      fontWeight: 500,
+                      color: controller.allRequiredAgreed.value ? Colors.black : Colors.white,
+                    )),
+                  ),
+                ),
+              );
+            }),
           ],
         ),
       ),

@@ -6,6 +6,7 @@ import 'package:gaza_go/platform/services/member_service.dart';
 import 'package:get/get.dart';
 
 class TermController extends GetxController {
+  final RxString platform = RxString('');
   final RxString termType = RxString('');
   final RxInt termId = RxInt(0);
   final RxString termTitle = RxString('');
@@ -14,6 +15,8 @@ class TermController extends GetxController {
 
   @override
   void onInit() async {
+    print(Get.arguments['platform']);
+    platform.value = Get.arguments['platform'] ?? 'gazago';
     termType.value = Get.arguments['termType'] ?? '';
     termId.value = Get.arguments['termId'] ?? 0;
     initMarketingAgreeStatus();
@@ -22,7 +25,7 @@ class TermController extends GetxController {
   }
 
   Future<void> getTermInfo() async {
-    await BoardService.getPostListByType(termType.value, successCallback: (List<TermItemModel> termItems) {
+    await BoardService.getPostListByType(termType.value, platform: platform.value, successCallback: (List<TermItemModel> termItems) {
       termTitle.value = termItems.first.title!;
       termContent.value = termItems.first.content!;
       termId.value = termItems.first.id!;
@@ -32,6 +35,7 @@ class TermController extends GetxController {
 
   void initMarketingAgreeStatus() async {
     await MemberService.getMemberUserInfo(
+      clientId: platform.value.toUpperCase(),
       successCallback: (memberUserModel) {
         agreeMarketing.value = memberUserModel.marketingChecked;
       },
@@ -43,7 +47,8 @@ class TermController extends GetxController {
 
   void toggleSwitch(val, {Function(String)? error}) async {
     agreeMarketing.value = val;
-    await MemberService.fetchTermsAgree([TermsHistoryModel(terms: termTitle.value, postId: termId.value, boardType: termType.value, activated: val)], successCallback: (effectedCount) async {
+    await MemberService.fetchTermsAgree([TermsHistoryModel(terms: termTitle.value, postId: termId.value, boardType: termType.value, activated: val, clientId: platform.value.toUpperCase())],
+        successCallback: (effectedCount) async {
       if (agreeMarketing.value) {
         showToastPopup('마케팅 정보 수신 동의를 하였습니다.');
       } else {
