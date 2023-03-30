@@ -1976,7 +1976,7 @@ void showAdTipAlert(ExerciseType exerciseType) {
                                                 fontFamily: 'Montserrat',
                                               ),
                                               TextSpan(
-                                                text: exerciseType == ExerciseType.walking ? '1' : '3',
+                                                text: [ExerciseType.walking, ExerciseType.hiking].any((type) => exerciseType == type) ? '1' : '3',
                                                 children: const [
                                                   TextSpan(text: 'GO', style: TextStyle(fontWeight: FontWeight.w800)),
                                                   TextSpan(text: ' 획득하고 시작하기'),

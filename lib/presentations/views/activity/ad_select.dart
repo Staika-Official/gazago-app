@@ -136,7 +136,7 @@ class AdSelect extends StatelessWidget {
                                           fontFamily: 'Montserrat',
                                         )
                                       : StyledText(
-                                          '${controller.selectedExerciseType.value == ExerciseType.walking ? '1' : '3'}GO 획득하고 시작하기',
+                                          '${[ExerciseType.walking, ExerciseType.hiking].any((type) => controller.selectedExerciseType.value == type) ? '1' : '3'}GO 획득하고 시작하기',
                                           color: controller.startAd == null ? Color(0xFF767883) : Colors.black,
                                           fontSize: 20,
                                           fontWeight: 600,

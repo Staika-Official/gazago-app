@@ -9,7 +9,7 @@ import 'package:gaza_go/presentations/views/activity/equipped_item.dart';
 import 'package:gaza_go/presentations/views/archive/archive_detail.dart';
 import 'package:gaza_go/presentations/views/auth/account_restore.dart';
 import 'package:gaza_go/presentations/views/auth/signup_complete.dart';
-import 'package:gaza_go/presentations/views/debugging/position_low_data_logs.dart';
+import 'package:gaza_go/presentations/views/debugging/position_raw_data_logs.dart';
 import 'package:gaza_go/presentations/views/debugging/request_info.dart';
 import 'package:gaza_go/presentations/views/debugging/response_error_logs.dart';
 import 'package:gaza_go/presentations/views/debugging/user_exercise_data_logs.dart';
@@ -100,7 +100,7 @@ class Routes {
   static const activityLogs = '/debugging/activity_logs';
   static const responseErrorLogs = '/debugging/response_error_logs';
   static const userExerciseDataLogs = '/debugging/user_exercise_data_logs';
-  static const positionLowDataLogs = '/debugging/position_low_data_logs';
+  static const positionRawDataLogs = '/debugging/position_raw_data_logs';
   static const laboratory = '/laboratory';
   static const laboratorySolanaCreateWallet = '/laboratory/laboratory_solana_create_wallet';
   static const laboratorySolanaTransfer = '/laboratory/laboratory_solana_transfer';
@@ -164,7 +164,7 @@ class Routes {
     stepPage(name: Routes.responseErrorLogs, page: const ResponseErrorLogs()),
     stepPage(name: Routes.activityLogs, page: const ActivityLogs()),
     stepPage(name: Routes.userExerciseDataLogs, page: const UserExerciseDataLogs()),
-    stepPage(name: Routes.positionLowDataLogs, page: const PositionLowDataLogs()),
+    stepPage(name: Routes.positionRawDataLogs, page: const PositionRawDataLogs()),
     stepPage(name: Routes.shopItemDetail, page: const ShopItemDetail()),
     stepPage(name: Routes.laboratory, page: const Laboratory()),
     stepPage(name: Routes.laboratorySolanaCreateWallet, page: const LaboratorySolanaCreateWallet()),
