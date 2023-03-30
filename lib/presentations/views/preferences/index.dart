@@ -199,7 +199,7 @@ class Preferences extends StatelessWidget {
                       ),
                       PreferenceItem(
                         title: 'Position Low Data Logs',
-                        onTap: () => Get.toNamed(Routes.positionLowDataLogs),
+                        onTap: () => Get.toNamed(Routes.positionRawDataLogs),
                       )
                     ],
                   );

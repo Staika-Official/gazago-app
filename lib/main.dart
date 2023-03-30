@@ -39,7 +39,7 @@ void initDebuggingMode() {
   HiveStore.save(key: HiveKey.isDebuggingMode.name, value: false);
   HiveStore.save(key: HiveKey.requestLogs.name, value: []);
   HiveStore.save(key: HiveKey.userExerciseDataLogs.name, value: []);
-  HiveStore.save(key: HiveKey.positionLowDataLogs.name, value: []);
+  HiveStore.save(key: HiveKey.positionRawDataLogs.name, value: []);
   HiveStore.save(key: HiveKey.responseErrorLogs.name, value: []);
 }
 

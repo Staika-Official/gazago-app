@@ -8,8 +8,8 @@ import 'package:gaza_go/presentations/styles/styled_text.dart';
 import 'package:get/get.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 
-class PositionLowDataLogs extends StatelessWidget {
-  const PositionLowDataLogs({Key? key}) : super(key: key);
+class PositionRawDataLogs extends StatelessWidget {
+  const PositionRawDataLogs({Key? key}) : super(key: key);
 
   List<Widget> renderPositionLowDataList(List<dynamic> logs) {
     return logs.isNotEmpty
@@ -43,7 +43,7 @@ class PositionLowDataLogs extends StatelessWidget {
                 children: [
                   Expanded(
                     child: GazagoButton(
-                      onTap: () => debuggingController.handleInitLogs(HiveKey.positionLowDataLogs.name),
+                      onTap: () => debuggingController.handleInitLogs(HiveKey.positionRawDataLogs.name),
                       buttonText: '초기화',
                       buttonColor: skyBlueColor,
                     ),
@@ -76,7 +76,7 @@ class PositionLowDataLogs extends StatelessWidget {
                 builder: (context, box, widget) {
                   return Column(
                     children: [
-                      ...renderPositionLowDataList(box.get(HiveKey.positionLowDataLogs.name) ?? []),
+                      ...renderPositionLowDataList(box.get(HiveKey.positionRawDataLogs.name) ?? []),
                     ],
                   );
                 },

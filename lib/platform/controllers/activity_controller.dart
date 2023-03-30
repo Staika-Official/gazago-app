@@ -712,10 +712,10 @@ class ActivityController extends SuperController with ActivityMixin, ChallengeMi
       detectFakeGps();
 
       if (HiveStore.load(key: HiveKey.isDebuggingMode.name) && exerciseState.value == ExerciseState.ongoing) {
-        List positionLowData = HiveStore.load(key: HiveKey.positionLowDataLogs.name) ?? [];
+        List positionRawData = HiveStore.load(key: HiveKey.positionRawDataLogs.name) ?? [];
 
         var logForm = {
-          'positionLowDataInfo': '===================================='
+          'positionRawDataInfo': '===================================='
               '\nAltitude: ${position.altitude}'
               '\nSpeed: ${convertMStoKMH(position.speed)}'
               '\nSteps: ${exerciseSteps.value}'
@@ -724,8 +724,8 @@ class ActivityController extends SuperController with ActivityMixin, ChallengeMi
               '\nLongitude: ${position.longitude}'
               '\nLocationUpdateTime: ${DateTime.now()}'
         };
-        positionLowData.add(logForm);
-        HiveStore.savePositionLowData(value: positionLowData);
+        positionRawData.add(logForm);
+        HiveStore.savePositionRawData(value: positionRawData);
       }
       if (exerciseState.value == ExerciseState.ongoing && position.accuracy < gpsAccuracy) {
         exerciseData.add(UserExerciseModel(
