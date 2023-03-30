@@ -173,6 +173,8 @@ mixin ActivityMixin {
         locations: coordinatesToString(coordinates),
         locationUpdateTime: DateTime.now(),
         adId: userState.value.exercise!.adId,
+        lastLatitude: coordinates.isNotEmpty ? coordinates.last.latitude : null,
+        lastLongitude: coordinates.isNotEmpty ? coordinates.last.longitude : null,
       ),
     );
   }
