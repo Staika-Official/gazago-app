@@ -26,7 +26,12 @@ class WebView extends StatelessWidget {
             initialSettings: InAppWebViewSettings(
               disableContextMenu: true,
               javaScriptEnabled: true,
+              resourceCustomSchemes: ['intent'],
             ),
+            onLoadResourceWithCustomScheme: (controller, url) async {
+              await controller.stopLoading();
+              return null;
+            },
             onWebViewCreated: (controller) {
               // register a JavaScript handler with name "myHandlerName"
               if (webViewController.linkUrl.value.contains('taikapay')) {
