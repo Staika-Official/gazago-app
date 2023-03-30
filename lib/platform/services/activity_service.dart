@@ -5,6 +5,7 @@ import 'package:gaza_go/platform/models/challenge_hierarchy_model.dart';
 import 'package:gaza_go/platform/models/challenge_model.dart';
 import 'package:gaza_go/platform/models/current_user_state_model.dart';
 import 'package:gaza_go/platform/models/equipped_item_model.dart';
+import 'package:gaza_go/platform/models/error_response_data_model.dart';
 import 'package:gaza_go/platform/models/user_exercise_model.dart';
 import 'package:gaza_go/platform/models/user_stamina_recharge_model.dart';
 import 'package:gaza_go/platform/models/user_state_model.dart';
@@ -102,7 +103,7 @@ class ActivityService {
     if (res.statusCode == 200) {
       successCallback(CurrentUserStateModel.fromJson(res.data));
     } else {
-      if (errorCallback != null) errorCallback();
+      if (errorCallback != null) errorCallback(ErrorResponseDataModel.fromJson(res.data));
     }
   }
 
@@ -111,7 +112,7 @@ class ActivityService {
     if (res.statusCode == 200) {
       successCallback(CurrentUserStateModel.fromJson(res.data));
     } else {
-      if (errorCallback != null) errorCallback();
+      if (errorCallback != null) errorCallback(ErrorResponseDataModel.fromJson(res.data));
     }
   }
 

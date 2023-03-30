@@ -2,14 +2,12 @@ import 'dart:async';
 import 'dart:io';
 
 import 'package:advertising_id/advertising_id.dart';
-import 'package:device_info_plus/device_info_plus.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_naver_map/flutter_naver_map.dart';
 import 'package:gaza_go/constants/config.dart';
 import 'package:gaza_go/constants/enums.dart';
 import 'package:gaza_go/constants/routes.dart';
-import 'package:gaza_go/platform/controllers/home_menu_controller.dart';
 import 'package:gaza_go/platform/controllers/loading_controller.dart';
 import 'package:gaza_go/platform/controllers/wallet_master_controller.dart';
 import 'package:gaza_go/platform/helpers/activity_helper.dart';
@@ -18,6 +16,7 @@ import 'package:gaza_go/platform/helpers/admob_mixin.dart';
 import 'package:gaza_go/platform/helpers/alert_helper.dart';
 import 'package:gaza_go/platform/helpers/challenge_mixin.dart';
 import 'package:gaza_go/platform/helpers/login_helper.dart';
+import 'package:gaza_go/platform/models/ad_watch_available_model.dart';
 import 'package:gaza_go/platform/models/challenge_hierarchy_model.dart';
 import 'package:gaza_go/platform/models/challenge_model.dart';
 import 'package:gaza_go/platform/models/current_user_state_model.dart';
@@ -28,6 +27,7 @@ import 'package:gaza_go/platform/models/user_exercise_model.dart';
 import 'package:gaza_go/platform/models/user_stamina_recharge_model.dart';
 import 'package:gaza_go/platform/models/user_state_model.dart';
 import 'package:gaza_go/platform/services/activity_service.dart';
+import 'package:gaza_go/platform/services/admob_service.dart';
 import 'package:gaza_go/platform/services/item_service.dart';
 import 'package:gaza_go/platform/services/member_service.dart';
 import 'package:gaza_go/platform/services/uaa_service.dart';
@@ -41,13 +41,13 @@ import 'package:gaza_go/presentations/views/activity/ad_select.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:get/get.dart';
 import 'package:health/health.dart';
-import 'package:package_info_plus/package_info_plus.dart';
 import 'package:permission_handler/permission_handler.dart' as ph;
 import 'package:simple_animations/animation_builder/custom_animation_builder.dart';
 import 'package:throttling/throttling.dart';
 
 class ActivityController extends SuperController with ActivityMixin, ChallengeMixin, GetTickerProviderStateMixin, AdmobMixin {
   final WalletMasterController walletMasterController = Get.find();
+
   final GlobalKey webViewKey = GlobalKey();
   final RxString noticeUrl = RxString('');
   //rewarded.dart
@@ -69,28 +69,33 @@ class ActivityController extends SuperController with ActivityMixin, ChallengeMi
 
   final List<Map<String, dynamic>> popupList = [
     {
+      'id': 1,
       'imageUrl': 'assets/images/common/img_main_popup_04.png',
       'type': 'GATEIO',
-      'url': 'https://blog.naver.com/staika/223038831424',
+      'linkUrl': 'https://blog.naver.com/staika/223038831424',
     },
     {
+      'id': 2,
       'imageUrl': 'assets/images/common/img_main_popup_05.png',
       'type': 'ABUSES',
-      'url': 'https://eztechfin.notion.site/939f54ae65b94a74984497903d414aad',
+      'linkUrl': 'https://eztechfin.notion.site/939f54ae65b94a74984497903d414aad',
     },
     {
+      'id': 3,
       'imageUrl': 'assets/images/common/img_main_popup.png',
       'type': 'HOWTOGO',
-      'url': 'https://eztechfin.notion.site/How-to-GO-61129dcb96324b0cb282d7743e19b043',
+      'linkUrl': 'https://eztechfin.notion.site/How-to-GO-61129dcb96324b0cb282d7743e19b043',
     },
     {
+      'id': 4,
       'imageUrl': 'assets/images/common/img_main_popup_02.png',
       'type': 'WARNING',
-      'url': 'https://blog.naver.com/gaza-go_crew/223015634731',
+      'linkUrl': 'https://blog.naver.com/gaza-go_crew/223015634731',
     },
     {
+      'id': 5,
       'imageUrl': 'assets/images/common/img_main_popup_03.png',
-      'type': 'NEWITEM',
+      'linkUrl': 'NEWITEM',
     },
   ];
 
@@ -123,37 +128,6 @@ class ActivityController extends SuperController with ActivityMixin, ChallengeMi
   final RxInt time = RxInt(5);
   String? advertisingId = '';
   bool? isLimitAdTrackingEnabled;
-  final RxInt _current = 0.obs;
-  late final int pageSize;
-  RxList<double> ops = [1.0, 0.0, 0.0].obs;
-  RxList<double> offsets = [0.0, 0.0, 0.0].obs;
-
-  setValue(double op) {
-    if (op > 0 && op < 1) {
-      ops[0] = 1 - op;
-      ops[1] = op;
-    } else if (op > 1 && op < 2) {
-      ops[1] = 2 - op;
-      ops[2] = -1 + op;
-    }
-
-    if (op == 0.0) {
-      ops[0] = 1;
-      ops[1] = ops[2] = 0;
-    } else if (op == 1.0) {
-      ops[1] = 1;
-      ops[0] = ops[2] = 0;
-    } else if (op == 2.0) {
-      ops[2] = 1;
-      ops[0] = ops[1] = 0;
-    }
-  }
-
-  RxInt get current => _current;
-
-  setCurrent(int index) {
-    _current.value = index;
-  }
 
   initPlatformState() async {
     // Platform messages may fail, so we use a try/catch PlatformException.
@@ -180,7 +154,7 @@ class ActivityController extends SuperController with ActivityMixin, ChallengeMi
   Future<void> initializeController() async {
     challengeGuideController = AnimationController(vsync: this);
     await initController();
-    checkPopupExpired();
+
     // 타이머 시작
     // adLoadTimerStart();
     checkConnectivityStatus();
@@ -602,7 +576,8 @@ class ActivityController extends SuperController with ActivityMixin, ChallengeMi
   Future<bool> requestLocationPermission() async {
     Completer<bool> locationPermissionCompleter = Completer();
     LocationPermission locationPermission = await Geolocator.requestPermission();
-    bool gotPermission = [LocationPermission.always, LocationPermission.whileInUse].any((permission) => permission == locationPermission);
+    LocationAccuracyStatus accuracyStatus = await Geolocator.getLocationAccuracy();
+    bool gotPermission = [LocationPermission.always, LocationPermission.whileInUse].any((permission) => permission == locationPermission) && LocationAccuracyStatus.precise == accuracyStatus;
     if (!gotPermission) {
       Geolocator.openAppSettings();
     }
@@ -649,15 +624,12 @@ class ActivityController extends SuperController with ActivityMixin, ChallengeMi
     Get.back();
   }
 
-  void selectExerciseType(ExerciseType exerciseType) async {
+  Future<void> selectExerciseType(ExerciseType exerciseType) async {
     selectedExerciseType.value = exerciseType;
 
-    DateTime? date = HiveStore.load(key: 'exerciseStartAd');
-    DateTime? viewableTime = date?.add(const Duration(hours: 1));
-    DateTime now = DateTime.now();
-    // HiveStore.save(key: 'exerciseStartAd', value: null);
+    AdWatchAvailableModel response = await AdmobService.getAdWatchAvailableTime('EXERCISE_START');
 
-    if (date == null || viewableTime!.isBefore(now)) {
+    if (response.watchAvailable!) {
       Get.back();
       Get.dialog(const AdSelect(), barrierDismissible: false, barrierColor: const Color.fromRGBO(0, 0, 0, 0.85));
       if (startAd == null) {
@@ -669,10 +641,6 @@ class ActivityController extends SuperController with ActivityMixin, ChallengeMi
     } else {
       handleMoveExerciseActive(exerciseType);
     }
-
-    // if (selectedExerciseType.value == ExerciseType.walking) selectedChallenge.value = ChallengeModel();
-    // Get.offNamed(Routes.activityActive);
-    // loadExercise(selectedExerciseType.value, selectedChallenge.value.id != null ? selectedChallenge.value : null);
   }
 
   void showAdAndMoveActivity() {
@@ -716,7 +684,7 @@ class ActivityController extends SuperController with ActivityMixin, ChallengeMi
     if (Platform.isAndroid) {
       locationSettings = AndroidSettings(
           accuracy: locationAccuracyQuality,
-          distanceFilter: 1,
+          distanceFilter: 5,
           forceLocationManager: false,
           intervalDuration: const Duration(seconds: 5),
           useMSLAltitude: true,
@@ -731,8 +699,8 @@ class ActivityController extends SuperController with ActivityMixin, ChallengeMi
       locationSettings = AppleSettings(
         accuracy: locationAccuracyQuality,
         activityType: ActivityType.fitness,
-        distanceFilter: 1,
-        pauseLocationUpdatesAutomatically: false,
+        distanceFilter: 5,
+        pauseLocationUpdatesAutomatically: true,
         // Only set to true if our app will be started up in the background.
         showBackgroundLocationIndicator: false,
       );
@@ -744,10 +712,10 @@ class ActivityController extends SuperController with ActivityMixin, ChallengeMi
       detectFakeGps();
 
       if (HiveStore.load(key: HiveKey.isDebuggingMode.name) && exerciseState.value == ExerciseState.ongoing) {
-        List positionLowData = HiveStore.load(key: HiveKey.positionLowDataLogs.name) ?? [];
+        List positionRawData = HiveStore.load(key: HiveKey.positionRawDataLogs.name) ?? [];
 
         var logForm = {
-          'positionLowDataInfo': '===================================='
+          'positionRawDataInfo': '===================================='
               '\nAltitude: ${position.altitude}'
               '\nSpeed: ${convertMStoKMH(position.speed)}'
               '\nSteps: ${exerciseSteps.value}'
@@ -756,8 +724,8 @@ class ActivityController extends SuperController with ActivityMixin, ChallengeMi
               '\nLongitude: ${position.longitude}'
               '\nLocationUpdateTime: ${DateTime.now()}'
         };
-        positionLowData.add(logForm);
-        HiveStore.savePositionLowData(value: positionLowData);
+        positionRawData.add(logForm);
+        HiveStore.savePositionRawData(value: positionRawData);
       }
       if (exerciseState.value == ExerciseState.ongoing && position.accuracy < gpsAccuracy) {
         exerciseData.add(UserExerciseModel(
@@ -791,18 +759,7 @@ class ActivityController extends SuperController with ActivityMixin, ChallengeMi
     //안드로이드만 탐지 가능
     if (isFakeGps.value && Get.isBottomSheetOpen != true) {
       showFakeGpsAlert();
-      PackageInfo packageInfo = await PackageInfo.fromPlatform();
-      String platform = Platform.operatingSystem;
-      DeviceInfoPlugin deviceInfo = DeviceInfoPlugin();
-      String deviceModel;
-      if (Platform.isIOS) {
-        IosDeviceInfo iosInfo = await deviceInfo.iosInfo;
-        deviceModel = iosInfo.utsname.machine ?? 'ios model unknown';
-      } else {
-        AndroidDeviceInfo androidInfo = await deviceInfo.androidInfo;
-        deviceModel = androidInfo.model;
-      }
-      MemberService.reportAbuse(description: 'Fake GPS 사용 감지', appVersion: packageInfo.version, deviceModel: deviceModel, platform: platform);
+      MemberService.reportAbuse(description: 'Fake GPS 사용 감지', abusingType: 'GPS');
     }
   }
 
@@ -843,31 +800,20 @@ class ActivityController extends SuperController with ActivityMixin, ChallengeMi
     }
   }
 
-  void moveToWebView(String type, {String? url}) {
-    switch (type) {
-      case 'NEWITEM':
-        Get.back();
-        Get.find<HomeMenuController>().selectMenu(3);
-        break;
-      default:
-        noticeUrl.value = url!;
-        Get.toNamed(Routes.noticeWebview);
-    }
-  }
+  // void moveToWebView(item) {
+  //   if (item['linkUrl'].contains('http')) {
+  //     Get.toNamed(Routes.webView, arguments: {'id': item.id, 'linkUrl': item.linkUrl});
+  //   } else {
+  //     Get.back();
+  //     Get.find<HomeMenuController>().selectMenu(3);
+  //   }
+  // }
 
-  void checkPopupExpired() {
-    // HiveStore.save(key: HiveKey.closePopupDate.name, value: null);
-    if (globalController.isPopupOpen.value) {
-      setCurrent(0);
-      showMainPopupAlert(this);
-    }
-  }
-
-  void onSavePopupCloseDate() {
-    DateTime now = DateTime.now();
-    HiveStore.save(key: HiveKey.closePopupDate.name, value: now);
-    Get.back();
-  }
+  // void onSavePopupCloseDate() {
+  //   DateTime now = DateTime.now();
+  //   HiveStore.save(key: HiveKey.closePopupDate.name, value: now);
+  //   Get.back();
+  // }
 
   void checkConnectivityStatus() async {
     // globalController.connectivityResult.listen((value) async {

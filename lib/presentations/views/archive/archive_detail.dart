@@ -23,6 +23,7 @@ class ArchiveDetail extends StatelessWidget {
         child: IconButton(
           onPressed: () => controller.showConfirmDelete(controller.selectedItem.value.id!),
           icon: iconWasteBasket,
+          splashRadius: 20.sp,
           constraints: BoxConstraints(
             minWidth: 20.sp,
           ),

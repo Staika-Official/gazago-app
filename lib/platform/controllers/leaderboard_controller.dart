@@ -83,9 +83,9 @@ class LeaderboardController extends GetxController {
     _fetchMyRank();
     _fetchTodayTik();
     _fetchRankerList(true);
-    // String month = DateFormat('yyyy-MM-dd').format(today.value!);
-    // getCalendarStatistics(month);
-    // streamController.add(userMonthlyRewardMap);
+    streamController.add(userMonthlyRewardMap);
+    String month = DateFormat('yyyy-MM-dd').format(today.value!);
+    getCalendarStatistics(month);
   }
 
   Future<void> _fetchRankerList(bool reset) async {
@@ -142,7 +142,6 @@ class LeaderboardController extends GetxController {
   }
 
   void getCalendarStatistics(month) async {
-    print('aaaaaaaaaaaaaaaaaaaaaaaa');
     streamController.add(RxMap());
     await DashboardService.getUserRewardStatistics(
       month,
@@ -150,36 +149,18 @@ class LeaderboardController extends GetxController {
         totalTikRewarded.value = data.totalTik;
         totalStikRewarded.value = data.totalStik;
 
-        // print(data);
-        // dailyRewardList.clear();
-        // _dailyRewardList.addAll(data.rewards);
-        // print(data.rewards);
-        // List<UserRewardStatisticsModel> newRewards = data.rewards;
-        // dailyRewardList.value = data.rewards;
-        // dailyRewardList.addAll(data.rewards);
-
-        // dailyRewardList.refresh();
-        // for (var item in data.rewards) {
-        //   // print(UserRewardStatisticsModel.fromJson(item));
-        //   dailyRewardList.add(item);
-        // }
-        // dailyRewardList.add(data.rewards);
-        // dailyRewardList.assignAll(data.rewards);
-        // dailyRewardList.refresh();
-        // streamController.add(dailyRewardList);
         for (var item in data.rewards) {
           userMonthlyRewardMap[item.date!] = [item];
         }
-        // print(dailyRewardList);
-        streamController.add(userMonthlyRewardMap);
 
-        // update();
+        streamController.add(userMonthlyRewardMap);
       },
     );
   }
 
-  void cancelStreamController() {
-    // streamController.close();
+  void getCalendarStatisticsToday() {
+    String month = DateFormat('yyyy-MM-dd').format(today.value!);
+    getCalendarStatistics(month);
   }
 
   List<UserRewardStatisticsModel> findCalendarStatisticsData(date) {

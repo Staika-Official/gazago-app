@@ -12,4 +12,8 @@ class BoardApi {
   static Future<Response> getPostById(int id) async {
     return await Api.client(serviceUrl: ServiceUrl.boardService).get('/gazago/posts/$id');
   }
+
+  static Future<Response> getNoticePopupList() async {
+    return await Api.client(serviceUrl: ServiceUrl.boardService).get('/popups/clients/GAZAGO');
+  }
 }

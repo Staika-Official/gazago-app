@@ -174,6 +174,7 @@ class InventoryController extends GetxController with ScrollMixin, LinearProgres
     page.value = 0;
     stopLoading.value = false;
     await getUserAllItems();
+    await getUserEquippedItems();
     await getUserBadgesList();
   }
 

@@ -5,11 +5,13 @@ import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:flutter/material.dart';
 import 'package:gaza_go/constants/enums.dart';
 import 'package:gaza_go/constants/routes.dart';
+import 'package:gaza_go/flavors.dart';
 import 'package:gaza_go/platform/controllers/activity_controller.dart';
 import 'package:gaza_go/platform/controllers/wallet_master_controller.dart';
 import 'package:gaza_go/platform/helpers/alert_helper.dart';
 import 'package:gaza_go/platform/helpers/base_helper.dart';
 import 'package:gaza_go/platform/helpers/login_helper.dart';
+import 'package:gaza_go/platform/models/error_response_data_model.dart';
 import 'package:gaza_go/platform/models/terms_status_model.dart';
 import 'package:gaza_go/platform/services/member_service.dart';
 import 'package:gaza_go/platform/stores/hive_store.dart';
@@ -17,6 +19,8 @@ import 'package:gaza_go/presentations/components/alert_ui_list.dart';
 import 'package:gaza_go/presentations/components/gazago_button.dart';
 import 'package:gaza_go/presentations/styles/colors.dart';
 import 'package:get/get.dart';
+import 'package:in_app_update/in_app_update.dart';
+import 'package:new_version/new_version.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class LoadingController extends GetxController {
@@ -127,8 +131,8 @@ class LoadingController extends GetxController {
         timerStop();
         Get.offNamed(Routes.joinTerms);
       }
-    }, errorCallback: () {
-      showToastPopup('약관 동의 여부를 확인할 수 없습니다.');
+    }, errorCallback: (ErrorResponseDataModel error) {
+      if (error.status != 401) showToastPopup('약관 동의 여부를 확인할 수 없습니다.');
       timerStop();
       HiveStore.deleteMultipleKeys(keys: [
         HiveKey.accessToken.name,
@@ -145,51 +149,38 @@ class LoadingController extends GetxController {
     print('progressMessage ${progressMessage.value}');
 
     if (progress.value >= 0.9) {
+      timerStop();
+
+      AppUpdateInfo? _appAndroidUpdateInfo;
+      VersionStatus? _appIOSUpdateInfo;
+
+      Future<void> checkAppStores() async {
+        if (Platform.isAndroid) {
+          _appAndroidUpdateInfo = await InAppUpdate.checkForUpdate().catchError((e) {
+            showToastPopup(e.toString());
+          });
+        } else {
+          _appIOSUpdateInfo = await NewVersion(
+            iOSId: F.isDev ? 'kr.co.eztechfin.gazaGo.dev' : 'kr.co.eztechfin.gazaGo',
+          ).getVersionStatus().catchError((e) {
+            showToastPopup(e.toString());
+            return null;
+          });
+        }
+      }
+
       bool needForceUpgrade = await isForceUpdateTarget();
       if (needForceUpgrade) {
-        timerStop();
-        showAlert(
-          title: '새 업데이트가 있습니다.',
-          contentText: '앱을 사용하기 위해서 업데이트가 필요합니다.',
-          actions: [
-            Expanded(
-              child: GazagoButton(
-                onTap: () {
-                  if (Platform.isAndroid || Platform.isIOS) {
-                    final url = Uri.parse(
-                      Platform.isAndroid ? "https://gazago.page.link/update_android" : "https://gazago.page.link/update_ios",
-                    );
-                    launchUrl(
-                      url,
-                      mode: LaunchMode.externalApplication,
-                    );
-                  }
-                },
-                buttonText: '업데이트',
-                buttonColor: skyBlueColor,
-              ),
-            ),
-          ],
-        );
-      } else {
-        bool needRecommendedUpgrade = await isRecommendUpdateTarget();
-        if (needRecommendedUpgrade) {
-          timerStop();
+        checkAppStores();
+        if (Platform.isAndroid && _appAndroidUpdateInfo?.updateAvailability == UpdateAvailability.updateAvailable) {
+          await InAppUpdate.performImmediateUpdate().catchError((e) {
+            showToastPopup(e.toString());
+          });
+        } else if (_appIOSUpdateInfo != null && _appIOSUpdateInfo!.canUpdate) {
           showAlert(
             title: '새 업데이트가 있습니다.',
             contentText: '앱을 사용하기 위해서 업데이트가 필요합니다.',
             actions: [
-              Expanded(
-                child: GazagoButton(
-                  onTap: () => Get.offAllNamed(Routes.home),
-                  buttonText: '무시하기',
-                  textColor: Colors.white,
-                  buttonColor: popupBgColor,
-                ),
-              ),
-              const SizedBox(
-                width: 9,
-              ),
               Expanded(
                 child: GazagoButton(
                   onTap: () {
@@ -209,8 +200,52 @@ class LoadingController extends GetxController {
               ),
             ],
           );
+        }
+      } else {
+        bool needRecommendedUpgrade = await isRecommendUpdateTarget();
+        if (needRecommendedUpgrade) {
+          checkAppStores();
+          if (Platform.isAndroid && _appAndroidUpdateInfo?.updateAvailability == UpdateAvailability.updateAvailable) {
+            await InAppUpdate.completeFlexibleUpdate().catchError((e) {
+              showToastPopup(e.toString());
+            });
+          } else if (_appIOSUpdateInfo != null && _appIOSUpdateInfo!.canUpdate) {
+            showAlert(
+              title: '새 업데이트가 있습니다.',
+              contentText: '앱을 사용하기 위해서 업데이트가 필요합니다.',
+              actions: [
+                Expanded(
+                  child: GazagoButton(
+                    onTap: () => Get.offAllNamed(Routes.home),
+                    buttonText: '무시하기',
+                    textColor: Colors.white,
+                    buttonColor: popupBgColor,
+                  ),
+                ),
+                const SizedBox(
+                  width: 9,
+                ),
+                Expanded(
+                  child: GazagoButton(
+                    onTap: () {
+                      if (Platform.isAndroid || Platform.isIOS) {
+                        final url = Uri.parse(
+                          Platform.isAndroid ? "https://gazago.page.link/update_android" : "https://gazago.page.link/update_ios",
+                        );
+                        launchUrl(
+                          url,
+                          mode: LaunchMode.externalApplication,
+                        );
+                      }
+                    },
+                    buttonText: '업데이트',
+                    buttonColor: skyBlueColor,
+                  ),
+                ),
+              ],
+            );
+          }
         } else {
-          timerStop();
           Get.offAllNamed(Routes.home);
         }
       }

@@ -124,7 +124,7 @@ class Preferences extends StatelessWidget {
               // ),
               PreferenceItem(
                 title: 'How to GO',
-                onTap: () => Get.toNamed(Routes.howToGo),
+                onTap: () => Get.toNamed(Routes.webView, arguments: {'linkUrl': F.howToGoUrl}),
               ),
               PreferenceItem(
                 title: '공지사항',
@@ -171,7 +171,7 @@ class Preferences extends StatelessWidget {
                 height: 6.sp,
                 color: const Color(0xFF23232D),
               ),
-              (F.isDev)
+              (F.isDev || debuggingController.isShowDebuggingMenu.value)
                   ? PreferenceItem(
                       title: '실험실',
                       onTap: () => Get.toNamed(Routes.laboratory),
@@ -199,7 +199,7 @@ class Preferences extends StatelessWidget {
                       ),
                       PreferenceItem(
                         title: 'Position Low Data Logs',
-                        onTap: () => Get.toNamed(Routes.positionLowDataLogs),
+                        onTap: () => Get.toNamed(Routes.positionRawDataLogs),
                       )
                     ],
                   );

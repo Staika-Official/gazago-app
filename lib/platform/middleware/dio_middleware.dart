@@ -11,6 +11,7 @@ import 'package:gaza_go/platform/models/access_token_model.dart';
 import 'package:gaza_go/platform/models/error_response_data_model.dart';
 import 'package:gaza_go/platform/stores/hive_store.dart';
 import 'package:get/get.dart' as getx;
+import 'package:google_sign_in/google_sign_in.dart';
 import 'package:logger/logger.dart';
 
 class Api {
@@ -260,7 +261,7 @@ class Api {
     });
   }
 
-  static void resetToLogin(DioError e, ErrorInterceptorHandler handler) {
+  static void resetToLogin(DioError e, ErrorInterceptorHandler handler) async {
     if (!handler.isCompleted) {
       e.response != null ? handler.resolve(e.response!) : handler.next(e);
     }
@@ -269,6 +270,10 @@ class Api {
       HiveKey.accessToken.name,
       HiveKey.refreshToken.name,
     ]);
+
+    if (await GoogleSignIn().isSignedIn()) {
+      GoogleSignIn().signOut();
+    }
 
     if (getx.Get.isRegistered<ActivityController>()) {
       ActivityController activityController = getx.Get.find<ActivityController>();

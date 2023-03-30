@@ -11,10 +11,12 @@ import 'package:gaza_go/constants/enums.dart';
 import 'package:gaza_go/constants/routes.dart';
 import 'package:gaza_go/platform/controllers/activity_controller.dart';
 import 'package:gaza_go/platform/controllers/archive_controller.dart';
+import 'package:gaza_go/platform/controllers/debugging_controller.dart';
 import 'package:gaza_go/platform/controllers/inventory_controller.dart';
 import 'package:gaza_go/platform/controllers/loading_controller.dart';
 import 'package:gaza_go/platform/controllers/login_controller.dart';
 import 'package:gaza_go/platform/controllers/my_page_controller.dart';
+import 'package:gaza_go/platform/controllers/notice_popup_controller.dart';
 import 'package:gaza_go/platform/controllers/preference_controller.dart';
 import 'package:gaza_go/platform/controllers/shop_controller.dart';
 import 'package:gaza_go/platform/controllers/wallet_master_controller.dart';
@@ -681,12 +683,19 @@ void showBadgeAcquisitionAlert(InventoryBadgeModel badge, ChallengeModel selecte
       children: [
         Padding(
           padding: EdgeInsets.only(top: 30.sp, bottom: 30.sp),
-          child: CachedNetworkImage(
-            imageUrl: badge.badge.imageUrl,
-            placeholder: (context, url) => const CircularProgressIndicator(),
-            fit: BoxFit.contain,
-            width: 150.sp,
-          ),
+          child: badge.badge.imageUrl.contains('.svg')
+              ? SvgPicture.network(
+                  fit: BoxFit.contain,
+                  badge.badge.imageUrl,
+                  width: 150.sp,
+                  placeholderBuilder: (BuildContext context) => Container(padding: const EdgeInsets.all(30.0), child: const CircularProgressIndicator()),
+                )
+              : CachedNetworkImage(
+                  imageUrl: badge.badge.imageUrl,
+                  placeholder: (context, url) => const CircularProgressIndicator(),
+                  fit: BoxFit.fitWidth,
+                  width: 150.sp,
+                ),
         ),
         Container(
           padding: EdgeInsets.symmetric(horizontal: 25.sp, vertical: 14.sp),
@@ -1967,7 +1976,7 @@ void showAdTipAlert(ExerciseType exerciseType) {
                                                 fontFamily: 'Montserrat',
                                               ),
                                               TextSpan(
-                                                text: exerciseType == ExerciseType.walking ? '1' : '3',
+                                                text: [ExerciseType.walking, ExerciseType.hiking].any((type) => exerciseType == type) ? '1' : '3',
                                                 children: const [
                                                   TextSpan(text: 'GO', style: TextStyle(fontWeight: FontWeight.w800)),
                                                   TextSpan(text: ' 획득하고 시작하기'),
@@ -2392,19 +2401,8 @@ void showLeaderboardInfo() {
   );
 }
 
-Future<void> showMainPopupAlert(ActivityController activityController) async {
+Future<void> showMainPopupAlert(NoticePopupController noticePopupController) async {
   final CarouselController carouselController = CarouselController();
-  List<Widget> getImageSliders(controller) {
-    return controller.popupList
-        .map((item) => Container(
-              width: double.infinity,
-              child: InkWell(
-                onTap: () => controller.moveToWebView(item['type']),
-                child: Image.asset(item['imageUrl']),
-              ),
-            ))
-        .toList();
-  }
 
   await Get.bottomSheet(
     isDismissible: false,
@@ -2423,13 +2421,13 @@ Future<void> showMainPopupAlert(ActivityController activityController) async {
             Stack(children: [
               CarouselSlider(
                 key: const Key('Slider'),
-                items: activityController.popupList
+                items: noticePopupController.noticePopupList
                     .map((item) => Container(
                           width: double.infinity,
                           child: InkWell(
-                            onTap: () => activityController.moveToWebView(item['type'], url: item['url']),
-                            child: Image.asset(
-                              item['imageUrl'],
+                            onTap: () => noticePopupController.moveToWebView(item),
+                            child: Image.network(
+                              item.imageUrlKo!,
                               width: double.infinity,
                             ),
                           ),
@@ -2443,10 +2441,10 @@ Future<void> showMainPopupAlert(ActivityController activityController) async {
                   enlargeCenterPage: false,
                   enableInfiniteScroll: false,
                   onPageChanged: (index, reason) {
-                    activityController.setCurrent(index);
+                    noticePopupController.setCurrent(index);
                   },
                   onScrolled: (op) {
-                    activityController.setValue(op!);
+                    noticePopupController.setValue(op!);
                   },
                 ),
               ),
@@ -2462,7 +2460,7 @@ Future<void> showMainPopupAlert(ActivityController activityController) async {
                       child: Padding(
                         padding: EdgeInsets.symmetric(horizontal: 8.0.sp, vertical: 4.0.sp),
                         child: StyledText(
-                          '${(activityController.current.value + 1).toString()}/${activityController.popupList.length}',
+                          '${(noticePopupController.current.value + 1).toString()}/${noticePopupController.noticePopupList.length}',
                           fontSize: 16,
                           lineHeight: 17,
                           fontWeight: 500,
@@ -2480,7 +2478,7 @@ Future<void> showMainPopupAlert(ActivityController activityController) async {
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     InkWell(
-                      onTap: () => activityController.onSavePopupCloseDate(),
+                      onTap: () => noticePopupController.onSavePopupCloseDate(),
                       child: Padding(
                         padding: EdgeInsets.symmetric(vertical: 28.0.sp, horizontal: 10.sp),
                         child: const StyledText(
@@ -2678,4 +2676,81 @@ void showInAppPurchaseProgressAlert(WalletMasterController controller) {
       }),
     ],
   );
+}
+
+Future<bool> verifyEndPointPasswordAlert(DebuggingController controller) {
+  Completer<bool> passwordInputCompleter = Completer();
+  controller.endPointPasswordController.text = '';
+  showAlert(
+    contentWidget: Center(
+      child: Column(
+        children: [
+          Padding(
+            padding: const EdgeInsets.only(top: 14, bottom: 30),
+            child: StyledText(
+              '비밀번호를 입력해주세요.',
+              fontSize: 18.sp,
+              fontWeight: 500,
+              lineHeight: 24.sp,
+              textAlign: TextAlign.center,
+            ),
+          ),
+          Padding(
+            padding: const EdgeInsets.only(bottom: 10),
+            child: TextField(
+              onSubmitted: (String text) async {
+                passwordInputCompleter.complete(await controller.verifyEndPointPassword());
+              },
+              decoration: InputDecoration(
+                focusColor: skyBlueColor,
+                enabledBorder: OutlineInputBorder(
+                  borderSide: BorderSide(
+                    color: Colors.white,
+                  ),
+                ),
+                focusedBorder: OutlineInputBorder(
+                  borderSide: BorderSide(
+                    color: skyBlueColor,
+                  ),
+                ),
+              ),
+              textAlign: TextAlign.center,
+              textInputAction: TextInputAction.go,
+              controller: controller.endPointPasswordController,
+              style: TextStyle(
+                color: Colors.white,
+              ),
+            ),
+          ),
+        ],
+      ),
+    ),
+    actions: [
+      Expanded(
+        child: GazagoButton(
+          onTap: () {
+            Get.back();
+            passwordInputCompleter.complete(false);
+          },
+          buttonText: '취소',
+          textColor: Colors.white,
+          buttonColor: popupBgColor,
+        ),
+      ),
+      SizedBox(
+        width: 9.sp,
+      ),
+      Expanded(
+        child: GazagoButton(
+          onTap: () async {
+            passwordInputCompleter.complete(await controller.verifyEndPointPassword());
+          },
+          buttonText: '확인',
+          buttonColor: skyBlueColor,
+        ),
+      ),
+    ],
+  );
+
+  return passwordInputCompleter.future;
 }

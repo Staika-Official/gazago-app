@@ -2,9 +2,11 @@ import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/foundation.dart' show defaultTargetPlatform, TargetPlatform;
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:gaza_go/constants/enums.dart';
+import 'package:gaza_go/platform/controllers/activity_controller.dart';
 import 'package:gaza_go/platform/helpers/login_helper.dart';
 import 'package:gaza_go/platform/stores/hive_store.dart';
 import 'package:gaza_go/presentations/components/alert_ui_list.dart';
+import 'package:get/get.dart';
 import 'package:logger/logger.dart';
 
 AndroidNotificationChannel channel = const AndroidNotificationChannel(
@@ -45,6 +47,7 @@ void handleMessage() {
     AndroidNotification? android = message.notification?.android;
 
     print('FCM Foreground handleMessage ${notification!.title}');
+    print('FCM Foreground handleMessage ${message.data['notificationKey']}');
 
     if (android != null) {
       flutterLocalNotificationsPlugin.show(
@@ -66,6 +69,11 @@ void handleMessage() {
       await showForceLogoutAlert();
       forceLogout();
     }
+
+    if (message.data['notificationKey'] == 'EXERCISE_RESTRICTION') {
+      ActivityController controller = Get.find<ActivityController>();
+      controller.handleAlreadyFinishedExercise();
+    }
   });
 
   FirebaseMessaging.onMessageOpenedApp.listen((RemoteMessage message) {
@@ -80,6 +88,10 @@ void handleNotification(RemoteMessage message) {
 
   if (message.data['notificationKey'] == 'FORCE_LOGOUT') {
     HiveStore.save(key: HiveKey.needToForceLogout.name, value: true);
+  }
+
+  if (message.data['notificationKey'] == 'EXERCISE_RESTRICTION') {
+    HiveStore.save(key: HiveKey.needToForceStopExercise.name, value: true);
   }
 }
 
