@@ -66,8 +66,8 @@ class DebuggingController extends GetxController {
       case 'userExerciseDataLogs':
         HiveStore.save(key: HiveKey.userExerciseDataLogs.name, value: []);
         break;
-      case 'positionLowDataLogs':
-        HiveStore.save(key: HiveKey.positionLowDataLogs.name, value: []);
+      case 'positionRawDataLogs':
+        HiveStore.save(key: HiveKey.positionRawDataLogs.name, value: []);
         break;
     }
   }

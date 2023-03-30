@@ -9,7 +9,7 @@ import 'package:gaza_go/presentations/views/activity/equipped_item.dart';
 import 'package:gaza_go/presentations/views/archive/archive_detail.dart';
 import 'package:gaza_go/presentations/views/auth/account_restore.dart';
 import 'package:gaza_go/presentations/views/auth/signup_complete.dart';
-import 'package:gaza_go/presentations/views/debugging/position_low_data_logs.dart';
+import 'package:gaza_go/presentations/views/debugging/position_raw_data_logs.dart';
 import 'package:gaza_go/presentations/views/debugging/request_info.dart';
 import 'package:gaza_go/presentations/views/debugging/response_error_logs.dart';
 import 'package:gaza_go/presentations/views/debugging/user_exercise_data_logs.dart';
@@ -43,6 +43,7 @@ import 'package:gaza_go/presentations/views/verification/verification_detail.dar
 import 'package:gaza_go/presentations/views/verification/verification_name.dart';
 import 'package:gaza_go/presentations/views/verification/verification_phone.dart';
 import 'package:gaza_go/presentations/views/wallet/buy_tik.dart';
+import 'package:gaza_go/presentations/views/wallet/create_wallet.dart';
 import 'package:gaza_go/presentations/views/wallet/index.dart';
 import 'package:gaza_go/presentations/views/wallet/taika_pay.dart';
 import 'package:gaza_go/presentations/views/wallet/wallet_actions.dart';
@@ -57,10 +58,10 @@ import '../presentations/views/verification/verification_terms.dart';
 class Routes {
   static const login = '/login';
   static const onBoarding = '/on_boarding';
-  static const joinTerms = '/join_terms';
+  static const joinTerms = '/join_terms/:platform';
   static const loading = '/loading';
   static const home = '/home';
-  static const term = '/term/:termType';
+  static const term = '/term/:platform/:termType/:termId';
   static const termsList = '/terms_list';
   static const archiveDetail = '/archive/detail';
   static const activityChallenges = '/activity/challenges';
@@ -99,7 +100,7 @@ class Routes {
   static const activityLogs = '/debugging/activity_logs';
   static const responseErrorLogs = '/debugging/response_error_logs';
   static const userExerciseDataLogs = '/debugging/user_exercise_data_logs';
-  static const positionLowDataLogs = '/debugging/position_low_data_logs';
+  static const positionRawDataLogs = '/debugging/position_raw_data_logs';
   static const laboratory = '/laboratory';
   static const laboratorySolanaCreateWallet = '/laboratory/laboratory_solana_create_wallet';
   static const laboratorySolanaTransfer = '/laboratory/laboratory_solana_transfer';
@@ -108,6 +109,7 @@ class Routes {
   static const adMobRewarded = '/admob/reward';
   static const adMobRewardedInterstitial = '/admob/interstitial';
   static const webView = '/webview/:id';
+  static const createWallet = '/wallet/create';
 
   static List<GetPage> pages = [
     stepPage(name: Routes.login, page: const Login()),
@@ -162,13 +164,14 @@ class Routes {
     stepPage(name: Routes.responseErrorLogs, page: const ResponseErrorLogs()),
     stepPage(name: Routes.activityLogs, page: const ActivityLogs()),
     stepPage(name: Routes.userExerciseDataLogs, page: const UserExerciseDataLogs()),
-    stepPage(name: Routes.positionLowDataLogs, page: const PositionLowDataLogs()),
+    stepPage(name: Routes.positionRawDataLogs, page: const PositionRawDataLogs()),
     stepPage(name: Routes.shopItemDetail, page: const ShopItemDetail()),
     stepPage(name: Routes.laboratory, page: const Laboratory()),
     stepPage(name: Routes.laboratorySolanaCreateWallet, page: const LaboratorySolanaCreateWallet()),
     stepPage(name: Routes.laboratorySolanaTransfer, page: const LaboratorySolanaTransfer()),
     stepPage(name: Routes.webView, page: const WebView()),
-    stepPage(name: Routes.laboratoryEndPoint, page: LaboratoryEndPoint()),
+    stepPage(name: Routes.laboratoryEndPoint, page: const LaboratoryEndPoint()),
+    stepPage(name: Routes.createWallet, page: const CreateWallet()),
   ];
 }
 

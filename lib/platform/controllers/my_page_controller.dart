@@ -117,6 +117,15 @@ class MyPageController extends GetxController {
         source: ImageSource.gallery,
         imageQuality: 50,
       );
+
+      if (pickedImage.value != null) {
+        double mbSize = await getImageSizeMB(pickedImage.value!);
+
+        if (mbSize > 2) {
+          showToastPopup('첨부된 사진의 크기가 너무 큽니다.');
+          pickedImage.value = null;
+        }
+      }
     }
   }
 
@@ -150,5 +159,12 @@ class MyPageController extends GetxController {
 
   void updateBiometrics() {
     Get.back();
+  }
+
+  Future<double> getImageSizeMB(XFile image) async {
+    final bytes = await image.length();
+    final kb = bytes / 1024;
+    final mb = kb / 1024;
+    return mb;
   }
 }
