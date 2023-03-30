@@ -1,20 +1,31 @@
-import 'package:gaza_go/platform/helpers/wallet_mixin.dart';
-import 'package:gaza_go/platform/models/dummy_token_model.dart';
+import 'package:gaza_go/platform/helpers/solana_mixin.dart';
+import 'package:gaza_go/platform/services/solana_service.dart';
 import 'package:get/get.dart';
 
-class GoWalletController extends GetxController with WalletMixin {
-  final RxList<DummyTokenModel> inventoryList = RxList.empty();
+class GoWalletController extends GetxController with SolanaMixin {
+  RxList productList = RxList.empty();
 
   @override
   void onInit() {
-    getInventoryList();
+    getProductList();
     super.onInit();
   }
 
-  void getInventoryList() {
-    inventoryList.value = [
-      DummyTokenModel(name: 'taika', balance: 1000.00, tokenImageUrl: 'https://placeimg.com/20/20/any'),
-      DummyTokenModel(name: 'staika', balance: 10.00, tokenImageUrl: 'https://placeimg.com/20/20/any'),
-    ];
+  void purchaseInAppItem(product) async {
+    // showPendingPurchaseUI.value = true;
+    // showInAppPurchaseProgressAlert(this);
+    try {
+      // await InAppPurchase.instance.buyConsumable(purchaseParam: PurchaseParam(productDetails: product));
+    } catch (e) {
+      // showPendingPurchaseUI.value = false;
+      // showStoreErrorText.value = true;
+    }
+  }
+
+  Future<void> getProductList() async {
+    await SolanaService.getExchangeStikPriceInfo(successCallback: (data) {
+      print(data);
+      productList.value = data.prices;
+    });
   }
 }

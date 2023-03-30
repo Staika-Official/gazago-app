@@ -6,9 +6,11 @@ import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:gaza_go/constants/enums.dart';
 import 'package:gaza_go/platform/controllers/global_controller.dart';
+import 'package:gaza_go/platform/controllers/loader_controller.dart';
 import 'package:gaza_go/platform/firebase/core.dart';
 import 'package:gaza_go/platform/firebase/crashlytics.dart';
 import 'package:gaza_go/platform/stores/hive_store.dart';
+import 'package:gaza_go/presentations/components/loader.dart';
 import 'package:gaza_go/presentations/styles/colors.dart';
 import 'package:get/get.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
@@ -99,6 +101,7 @@ class MyApp extends StatelessWidget {
     );
 
     Get.put(GlobalController(), permanent: true);
+    LoaderController loaderController = Get.put(LoaderController(), permanent: true);
 
     return ScreenUtilInit(
       designSize: const Size(390, 844),
@@ -112,7 +115,12 @@ class MyApp extends StatelessWidget {
               behavior: const MaterialScrollBehavior().copyWith(overscroll: false),
               child: MediaQuery(
                 data: MediaQuery.of(context).copyWith(textScaleFactor: 1), //텍스트가 시스템 설정에 영향받지 않음
-                child: child!,
+                child: Obx(() {
+                  return Stack(children: [
+                    child!,
+                    loaderController.isLoading.value ? const Loader() : Container(),
+                  ]);
+                }),
               ),
             );
           },

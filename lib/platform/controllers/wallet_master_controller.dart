@@ -6,8 +6,10 @@ import 'package:flutter/material.dart';
 import 'package:gaza_go/constants/enums.dart';
 import 'package:gaza_go/constants/routes.dart';
 import 'package:gaza_go/flavors.dart';
+import 'package:gaza_go/platform/controllers/loader_controller.dart';
 import 'package:gaza_go/platform/controllers/loading_controller.dart';
 import 'package:gaza_go/platform/helpers/alert_helper.dart';
+import 'package:gaza_go/platform/helpers/solana_mixin.dart';
 import 'package:gaza_go/platform/models/asset_detail_model.dart';
 import 'package:gaza_go/platform/models/asset_token_balance_model.dart';
 import 'package:gaza_go/platform/models/asset_token_detail_balance_model.dart';
@@ -23,12 +25,15 @@ import 'package:gaza_go/platform/services/uaa_service.dart';
 import 'package:gaza_go/platform/services/wallet_service.dart';
 import 'package:gaza_go/presentations/components/alert_ui_list.dart';
 import 'package:gaza_go/presentations/components/gazago_button.dart';
+import 'package:gaza_go/presentations/components/loader.dart';
 import 'package:gaza_go/presentations/components/product_list_dialog.dart';
+import 'package:gaza_go/presentations/components/product_list_stik_dialog.dart';
 import 'package:gaza_go/presentations/styles/colors.dart';
 import 'package:get/get.dart';
 import 'package:in_app_purchase/in_app_purchase.dart';
 
-class WalletMasterController extends GetxController {
+class WalletMasterController extends GetxController with SolanaMixin {
+  LoaderController loaderController = Get.put(LoaderController());
   final RxList<AssetTokenBalanceModel> spendingTokens = RxList.empty();
   final RxList<TokenInfoModel> spendingTokenInfoList = RxList.empty();
   final Rx<AssetTokenBalanceModel> selectedAsset = Rx(AssetTokenBalanceModel());
@@ -307,7 +312,9 @@ class WalletMasterController extends GetxController {
               'ptik_purchase_4',
               'ptik_purchase_5',
             };
+
       final ProductDetailsResponse response = await InAppPurchase.instance.queryProductDetails(_kIds);
+
       if (response.notFoundIDs.isNotEmpty) {
         // id 를 찾을 수 없을 때 처리
         // showToastPopup('구매할 수 있는 상품을 찾지 못했습니다.');
@@ -319,6 +326,19 @@ class WalletMasterController extends GetxController {
 
   void showProductDialog() {
     showProductList(this);
+  }
+
+  void showProductStikDialog() async {
+    // onLoaderShow();
+    loaderController.isLoading.value = true;
+    await getStikPriceInfo();
+    loaderController.isLoading.value = false;
+    // Get.back();
+    showProductStikList(this);
+  }
+
+  void onLoaderShow() {
+    Get.dialog(const Loader());
   }
 
   void purchaseInAppItem(ProductDetails product) async {
