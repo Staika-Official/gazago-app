@@ -122,7 +122,7 @@ class MyPageController extends GetxController {
         double mbSize = await getImageSizeMB(pickedImage.value!);
 
         if (mbSize > 2) {
-          showToastPopup('2MB이하의 사진을 첨부해주세요');
+          showToastPopup('첨부된 사진의 크기가 너무 큽니다.');
           pickedImage.value = null;
         }
       }
