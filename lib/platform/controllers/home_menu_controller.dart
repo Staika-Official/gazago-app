@@ -1,12 +1,17 @@
+import 'dart:io';
+
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:gaza_go/constants/enums.dart';
+import 'package:gaza_go/flavors.dart';
 import 'package:gaza_go/platform/controllers/activity_controller.dart';
 import 'package:gaza_go/platform/controllers/archive_controller.dart';
 import 'package:gaza_go/platform/controllers/inventory_controller.dart';
 import 'package:gaza_go/platform/controllers/leaderboard_controller.dart';
 import 'package:gaza_go/platform/controllers/shop_controller.dart';
 import 'package:gaza_go/platform/controllers/wallet_master_controller.dart';
+import 'package:gaza_go/platform/helpers/alert_helper.dart';
+import 'package:gaza_go/platform/helpers/base_helper.dart';
 import 'package:gaza_go/platform/helpers/login_helper.dart';
 import 'package:gaza_go/platform/stores/hive_store.dart';
 import 'package:gaza_go/presentations/components/alert_ui_list.dart';
@@ -18,6 +23,8 @@ import 'package:gaza_go/presentations/views/inventory/index.dart';
 import 'package:gaza_go/presentations/views/leaderboard/index.dart';
 import 'package:gaza_go/presentations/views/shop/index.dart';
 import 'package:get/get.dart';
+import 'package:in_app_update/in_app_update.dart';
+import 'package:new_version/new_version.dart';
 
 class HomeMenuController extends SuperController {
   final RxInt selectedIndex = RxInt(2);
@@ -47,8 +54,9 @@ class HomeMenuController extends SuperController {
   }
 
   @override
-  void onReady() {
+  void onReady() async {
     handleAppNotification();
+    await checkUpdates();
     super.onReady();
   }
 
@@ -96,6 +104,61 @@ class HomeMenuController extends SuperController {
       }
     } else {
       visitedTabs.add(index);
+    }
+  }
+
+  Future<void> checkUpdates() async {
+    AppUpdateInfo? _appAndroidUpdateInfo;
+    VersionStatus? _appIOSUpdateInfo;
+
+    Future<void> checkAppStores() async {
+      if (Platform.isAndroid) {
+        _appAndroidUpdateInfo = await InAppUpdate.checkForUpdate().catchError((e) {
+          showToastPopup(e.toString());
+        });
+      } else if (_appIOSUpdateInfo != null && _appIOSUpdateInfo!.canUpdate) {
+        _appIOSUpdateInfo = await NewVersion(
+          iOSId: F.isDev ? 'kr.co.eztechfin.gazaGo.dev' : 'kr.co.eztechfin.gazaGo',
+        ).getVersionStatus().catchError((e) {
+          showToastPopup(e.toString());
+          return null;
+        });
+      }
+    }
+
+    bool needForceUpgrade = await isForceUpdateTarget();
+    if (needForceUpgrade) {
+      await checkAppStores();
+      if (Platform.isAndroid && _appAndroidUpdateInfo?.updateAvailability == UpdateAvailability.updateAvailable) {
+        await InAppUpdate.performImmediateUpdate().catchError((e) {
+          showToastPopup(e.toString());
+        });
+      } else if (_appIOSUpdateInfo != null && _appIOSUpdateInfo!.canUpdate) {
+        showForceUpdateWallet();
+      }
+    } else {
+      bool needRecommendedUpgrade = await isRecommendUpdateTarget();
+      if (needRecommendedUpgrade) {
+        await checkAppStores();
+        if (Platform.isAndroid &&
+            _appAndroidUpdateInfo != null &&
+            _appAndroidUpdateInfo!.flexibleUpdateAllowed &&
+            [UpdateAvailability.updateAvailable, UpdateAvailability.developerTriggeredUpdateInProgress].any((result) => result == _appAndroidUpdateInfo?.updateAvailability)) {
+          if (_appAndroidUpdateInfo!.installStatus == InstallStatus.downloaded) {
+            InAppUpdate.completeFlexibleUpdate();
+          } else {
+            AppUpdateResult appUpdateResult = await InAppUpdate.startFlexibleUpdate().catchError((e) {
+              showToastPopup(e.toString());
+            });
+
+            if (appUpdateResult == AppUpdateResult.success) {
+              InAppUpdate.completeFlexibleUpdate();
+            }
+          }
+        } else if (_appIOSUpdateInfo != null && _appIOSUpdateInfo!.canUpdate) {
+          showRecommendUpdateWallet();
+        }
+      }
     }
   }
 
