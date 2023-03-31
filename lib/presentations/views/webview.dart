@@ -15,52 +15,56 @@ class WebView extends StatelessWidget {
     WebViewController webViewController = Get.put(WebViewController());
     WalletMasterController walletController = Get.find();
 
-    return WillPopScope(
-        onWillPop: () async => webViewController.linkUrl.value.contains('taikapay') ? await walletController.getSpendingWalletBalances().then((value) => true) : true,
-        child: AnnotatedRegion(
-          value: SystemUiOverlayStyle.dark,
-          child: Container(
-            color: Colors.white,
-            child: SafeArea(
-              child: InAppWebView(
-                key: webViewController.webViewKey,
-                initialUrlRequest: URLRequest(url: WebUri(webViewController.linkUrl.value)),
-                initialSettings: InAppWebViewSettings(
-                  disableContextMenu: true,
-                  javaScriptEnabled: true,
-                ),
-                onWebViewCreated: (controller) {
-                  // register a JavaScript handler with name "myHandlerName"
-                  webViewController.linkUrl.value.contains('taikapay')
-                      ? controller.addJavaScriptHandler(
-                          handlerName: 'app',
-                          callback: (args) {
-                            // print arguments coming from the JavaScript side!
-                            Map result = {};
-
-                            switch (args[0]) {
-                              case 'closeWebview':
-                                walletController.getSpendingWalletBalances();
-                                Get.back();
-                                break;
-
-                              case 'getToken':
-                                String token = HiveStore.loadString(key: HiveKey.accessToken.name)!;
-                                result = {'appToken': token};
-                                break;
-
-                              case 'refreshBalance':
-                                walletController.getSpendingWalletBalances();
-                                break;
-                            }
-
-                            return result;
-                          })
-                      : Container();
-                },
-              ),
+    return AnnotatedRegion(
+      value: SystemUiOverlayStyle.dark,
+      child: Container(
+        color: Colors.white,
+        child: SafeArea(
+          child: InAppWebView(
+            key: webViewController.webViewKey,
+            initialUrlRequest: URLRequest(url: WebUri(webViewController.linkUrl.value)),
+            initialSettings: InAppWebViewSettings(
+              disableContextMenu: true,
+              javaScriptEnabled: true,
+              resourceCustomSchemes: ['intent'],
             ),
+            onLoadResourceWithCustomScheme: (controller, url) async {
+              await controller.stopLoading();
+              return null;
+            },
+            onWebViewCreated: (controller) {
+              // register a JavaScript handler with name "myHandlerName"
+              if (webViewController.linkUrl.value.contains('taikapay')) {
+                controller.addJavaScriptHandler(
+                  handlerName: 'app',
+                  callback: (args) {
+                    // print arguments coming from the JavaScript side!
+                    Map result = {};
+
+                    switch (args[0]) {
+                      case 'closeWebview':
+                        walletController.getSpendingWalletBalances();
+                        Get.back();
+                        break;
+
+                      case 'getToken':
+                        String token = HiveStore.loadString(key: HiveKey.accessToken.name)!;
+                        result = {'appToken': token};
+                        break;
+
+                      case 'refreshBalance':
+                        walletController.getSpendingWalletBalances();
+                        break;
+                    }
+
+                    return result;
+                  },
+                );
+              }
+            },
           ),
-        ));
+        ),
+      ),
+    );
   }
 }
