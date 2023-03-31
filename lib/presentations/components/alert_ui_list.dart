@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:io';
 import 'dart:ui';
 
 import 'package:another_xlider/another_xlider.dart';
@@ -35,6 +36,7 @@ import 'package:gaza_go/presentations/styles/icons.dart';
 import 'package:gaza_go/presentations/styles/styled_text.dart';
 import 'package:get/get.dart';
 import 'package:lottie/lottie.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 void showRetryAlert(LoadingController controller) {
   showAlert(
@@ -2753,4 +2755,83 @@ Future<bool> verifyEndPointPasswordAlert(DebuggingController controller) {
   );
 
   return passwordInputCompleter.future;
+}
+
+void showNeedVerificationAlert(WalletMasterController controller) {
+  showAlert(
+    title: '본인인증이 필요합니다.',
+    contentText: '상품권 교환을 위해서는 본인인증이 필요하여\n인증페이지로 이동합니다.',
+    actions: [
+      Expanded(
+        child: GazagoButton(
+          onTap: () => controller.moveToVerification(),
+          buttonText: '확인',
+          buttonColor: skyBlueColor,
+        ),
+      ),
+    ],
+  );
+}
+
+void showForceUpdateWallet() {
+  showAlert(
+    title: '새 업데이트가 있습니다.',
+    contentText: '앱을 사용하기 위해서 업데이트가 필요합니다.',
+    actions: [
+      Expanded(
+        child: GazagoButton(
+          onTap: () {
+            if (Platform.isAndroid || Platform.isIOS) {
+              final url = Uri.parse(
+                Platform.isAndroid ? "https://gazago.page.link/update_android" : "https://gazago.page.link/update_ios",
+              );
+              launchUrl(
+                url,
+                mode: LaunchMode.externalApplication,
+              );
+            }
+          },
+          buttonText: '업데이트',
+          buttonColor: skyBlueColor,
+        ),
+      ),
+    ],
+  );
+}
+
+void showRecommendUpdateWallet() {
+  showAlert(
+    title: '새 업데이트가 있습니다.',
+    contentText: '앱을 사용하기 위해서 업데이트가 필요합니다.',
+    actions: [
+      Expanded(
+        child: GazagoButton(
+          onTap: () => Get.offAllNamed(Routes.home),
+          buttonText: '무시하기',
+          textColor: Colors.white,
+          buttonColor: popupBgColor,
+        ),
+      ),
+      const SizedBox(
+        width: 9,
+      ),
+      Expanded(
+        child: GazagoButton(
+          onTap: () {
+            if (Platform.isAndroid || Platform.isIOS) {
+              final url = Uri.parse(
+                Platform.isAndroid ? "https://gazago.page.link/update_android" : "https://gazago.page.link/update_ios",
+              );
+              launchUrl(
+                url,
+                mode: LaunchMode.externalApplication,
+              );
+            }
+          },
+          buttonText: '업데이트',
+          buttonColor: skyBlueColor,
+        ),
+      ),
+    ],
+  );
 }
