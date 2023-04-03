@@ -233,22 +233,12 @@ class CreateWalletPassword extends StatelessWidget {
           Container(
             padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 15),
             width: double.infinity,
-            // child: Obx(() {
-            //   return GazagoButton(
-            //     onTap: () {
-            //       print('click');
-            //     },
-            //     disableButton: true,
-            //     buttonText: '네',
-            //     buttonColor: skyBlueColor,
-            //   );
-            // }),
             child: GazagoButton(
               onTap: () {
                 // print('click');
                 controller.nextStep();
               },
-              buttonText: '네',
+              buttonText: '확인',
               buttonColor: skyBlueColor,
               // textColor: Colors.white,
               // buttonColor: popupBgColor,
