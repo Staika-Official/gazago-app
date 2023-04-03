@@ -169,7 +169,6 @@ class WalletMasterController extends GetxController with SolanaMixin {
   Future<void> getSpendingWalletBalances() async {
     await WalletService.getSpendingWalletBalances(successCallback: (balances) {
       spendingTokens.value = balances;
-      print(stik.value.uiAmountString);
     });
 
     if (Get.isRegistered<LoadingController>()) Get.find<LoadingController>().updateProgress("서비스를 위해 정보를 불러오는 중입니다.");

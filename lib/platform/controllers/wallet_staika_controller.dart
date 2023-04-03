@@ -1,3 +1,4 @@
+import 'package:flutter/services.dart';
 import 'package:gaza_go/platform/helpers/alert_helper.dart';
 import 'package:gaza_go/platform/helpers/wallet_mixin.dart';
 import 'package:gaza_go/platform/models/asset_item_nft_model.dart';
@@ -10,6 +11,7 @@ import 'package:get/get.dart';
 class StaikaWalletController extends GetxController with WalletMixin {
   final RxList<DummyTokenModel> coinAssetList = RxList.empty();
   final RxList<AssetItemNftModel> nftAssetList = RxList.empty();
+  final RxString userWalletAddress = RxString('');
 
   @override
   void onInit() async {
@@ -19,7 +21,7 @@ class StaikaWalletController extends GetxController with WalletMixin {
 
   Future<void> getStaikaWalletInfo() async {
     await WalletService.getOnChainWallet(successCallback: (data) {
-      print(data);
+      userWalletAddress.value = data.publicKey;
       showStaikaStatusAlert(hasWallet: true);
     }, errorCallback: (ErrorResponseDataModel data) {
       if (data.errorCode == 'WalletNotFoundException') {
@@ -42,5 +44,9 @@ class StaikaWalletController extends GetxController with WalletMixin {
       AssetItemNftModel(name: 'LV.1 소월산 등정 뱃지', balance: 1, tokenImageUrl: 'https://placeimg.com/20/20/any'),
       AssetItemNftModel(name: 'LV.1 대월산 등정 뱃지', balance: 1, tokenImageUrl: 'https://placeimg.com/20/20/any'),
     ];
+  }
+
+  void handleCopyWalletAddress() async {
+    await Clipboard.setData(ClipboardData(text: userWalletAddress.value));
   }
 }
