@@ -1,9 +1,8 @@
-
-import 'package:flutter/services.dart';
-
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
+import 'package:gaza_go/constants/enums.dart';
+import 'package:gaza_go/constants/routes.dart';
 import 'package:gaza_go/platform/controllers/wallet_master_controller.dart';
-
 import 'package:gaza_go/platform/helpers/alert_helper.dart';
 import 'package:gaza_go/platform/helpers/wallet_mixin.dart';
 import 'package:gaza_go/platform/models/asset_item_nft_model.dart';
@@ -17,6 +16,12 @@ class StaikaWalletController extends GetxController with WalletMixin {
   final RxList<DummyTokenModel> coinAssetList = RxList.empty();
   final RxList<AssetItemNftModel> nftAssetList = RxList.empty();
   final RxString userWalletAddress = RxString('');
+  final Rxn<AnimationController> switchAnimation = Rxn();
+  final Rx<Currency> currency = Rx(Currency.krw);
+
+  RxBool get isKRW {
+    return RxBool(currency.value.name == 'krw');
+  }
 
   @override
   void onInit() async {
@@ -58,5 +63,17 @@ class StaikaWalletController extends GetxController with WalletMixin {
 
   void handleCopyWalletAddress() async {
     await Clipboard.setData(ClipboardData(text: userWalletAddress.value));
+    showToastPopup('주소가 복사 되었습니다.');
+  }
+
+  void onOpenSolScanWallet() {
+    Get.toNamed(Routes.webView, arguments: {'linkUrl': 'https://solscan.io/account/${userWalletAddress}'});
+  }
+
+  void setSwitchValue(bool value) {
+    currency.value = value ? Currency.krw : Currency.usd;
+    // _localSaveUseCase.saveDisplayCurrency(currency: currency.value);
+    switchAnimation.value?.reset();
+    switchAnimation.value?.forward();
   }
 }

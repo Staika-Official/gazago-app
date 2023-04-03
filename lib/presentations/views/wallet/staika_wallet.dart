@@ -1,3 +1,4 @@
+import 'package:animate_do/animate_do.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -6,6 +7,7 @@ import 'package:gaza_go/platform/controllers/wallet_staika_controller.dart';
 import 'package:gaza_go/platform/stores/hive_store.dart';
 import 'package:gaza_go/presentations/styles/colors.dart';
 import 'package:gaza_go/presentations/styles/icons.dart';
+import 'package:gaza_go/presentations/styles/styled_text.dart';
 import 'package:get/get.dart';
 
 class StaikaWallet extends StatelessWidget {
@@ -88,7 +90,7 @@ class StaikaWallet extends StatelessWidget {
                             padding: EdgeInsets.only(left: 12.0.sp),
                             child: InkWell(
                               child: iconCopy,
-                              onTap: () => controller.handleCopyWalletAddress,
+                              onTap: () => controller.handleCopyWalletAddress(),
                             ),
                           ),
                         ],
@@ -96,7 +98,73 @@ class StaikaWallet extends StatelessWidget {
                     ),
                   ),
                 ),
-              )
+              ),
+            Padding(
+              padding: EdgeInsets.only(top: 12.0.sp),
+              child: SizedBox(
+                child: InkWell(
+                  onTap: () => controller.onOpenSolScanWallet(),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      StyledText(
+                        '거래내역',
+                        fontSize: 12,
+                        fontWeight: 500,
+                        color: lightGrayColor,
+                      ),
+                      iconTransactionHistory,
+                    ],
+                  ),
+                ),
+              ),
+            ),
+            Padding(
+              padding: EdgeInsets.only(top: 26.0.sp, left: 26.0.sp, right: 26.0.sp),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  StyledText(
+                    '디지털 자산',
+                    fontWeight: 500,
+                    fontSize: 16,
+                    lineHeight: 18,
+                  ),
+                  GestureDetector(
+                    onTap: () {
+                      controller.setSwitchValue(!controller.isKRW.value);
+                    },
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.end,
+                      children: [
+                        Spin(
+                          spins: 0.5,
+                          duration: const Duration(milliseconds: 500),
+                          animate: false,
+                          manualTrigger: true,
+                          controller: (con) {
+                            controller.switchAnimation.value = con;
+                          },
+                          child: SizedBox(
+                            height: 14,
+                            child: iconSwitch,
+                          ),
+                        ),
+                        Container(
+                          margin: const EdgeInsets.only(left: 3),
+                          child: Text(
+                            controller.isKRW.value ? 'KRW' : 'USD',
+                            textAlign: TextAlign.end,
+                            style: const TextStyle(fontSize: 12, color: Color.fromARGB(255, 165, 165, 165), fontWeight: FontWeight.w500),
+                          ),
+                        )
+                      ],
+                    ),
+                  ),
+                ],
+              ),
+            )
             // ...renderCoinAssetList(controller),
           ],
         );

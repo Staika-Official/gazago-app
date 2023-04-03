@@ -317,3 +317,5 @@ enum EndPointType {
   stage,
   prod,
 }
+
+enum Currency { krw, usd }
