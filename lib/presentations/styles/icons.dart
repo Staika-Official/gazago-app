@@ -19,6 +19,7 @@ SvgPicture iconShopEmpty = SvgPicture.asset('assets/images/common/ico_shop_list_
 SvgPicture iconSkyBlueCheck = SvgPicture.asset('assets/images/common/ico_check_sky_blue.svg', width: 48.sp, height: 26.sp);
 SvgPicture iconCloseWhite = SvgPicture.asset('assets/images/common/ico_close_white.svg', width: 28.sp, height: 28.sp);
 SvgPicture iconHand = SvgPicture.asset('assets/images/common/ico_hand.svg', width: 65.sp, height: 65.sp);
+SvgPicture iconCircleSkyBlueCheck = SvgPicture.asset('assets/images/common/ico_circle_check_skyblue.svg', width: 40.sp, height: 40.sp);
 
 // Bottom Navigation Icon
 SvgPicture iconMenuHome = SvgPicture.asset('assets/images/common/ico_menu_home.svg', width: 20.5.sp, height: 20.sp, color: lightGrayColor);

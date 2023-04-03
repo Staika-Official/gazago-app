@@ -7,7 +7,7 @@ class ExchangeStikPriceModel {
   String? fromSymbol;
   double? fromUiAmount;
   String? toSymbol;
-  double? toUiAmount;
+  int? toUiAmount;
 
   ExchangeStikPriceModel({
     this.fromSymbol,

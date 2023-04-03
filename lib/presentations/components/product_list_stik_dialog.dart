@@ -30,7 +30,7 @@ List<Widget> renderProductStikList(GoWalletController controller) {
                     child: iconTik,
                   ),
                   StyledText(
-                    '${formatDecimalPlaces(product.value.toUiAmount, 0)} ${product.value.toSymbol}',
+                    '${product.value.toUiAmount.toString()} ${product.value.toSymbol}',
                     fontSize: 18.sp,
                     fontWeight: 700,
                     lineHeight: 18.sp,
@@ -56,7 +56,7 @@ List<Widget> renderProductStikList(GoWalletController controller) {
                       ],
                     ),
                     child: InkWell(
-                      onTap: () => controller.purchaseInAppItem(product.value),
+                      onTap: () => exchangeStikToTikAlert(controller, product.value),
                       borderRadius: BorderRadius.circular(50),
                       child: Padding(
                         padding: EdgeInsets.symmetric(horizontal: 15.sp, vertical: 15.sp),
@@ -162,7 +162,7 @@ void showProductStikList(WalletMasterController controller) {
                               child: Row(
                                 children: [
                                   StyledText(
-                                    formatDecimalPlaces(double.parse(controller.stik.value.uiAmountString!), 0),
+                                    formatDecimalPlaces(double.parse(controller.stik.value.uiAmountString!), 9, isAutoDecimal: true),
                                     fontSize: 16.sp,
                                     fontWeight: 700,
                                     lineHeight: 18.sp,

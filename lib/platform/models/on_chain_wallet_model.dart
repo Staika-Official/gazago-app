@@ -5,12 +5,12 @@ part 'on_chain_wallet_model.g.dart';
 @JsonSerializable(explicitToJson: true)
 class OnChainWalletModel {
   int id;
-  String publickKey;
+  String? publickKey;
   String secretKey;
 
   OnChainWalletModel({
     required this.id,
-    required this.publickKey,
+    this.publickKey,
     required this.secretKey,
   });
 

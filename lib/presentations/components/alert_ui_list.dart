@@ -19,6 +19,7 @@ import 'package:gaza_go/platform/controllers/my_page_controller.dart';
 import 'package:gaza_go/platform/controllers/notice_popup_controller.dart';
 import 'package:gaza_go/platform/controllers/preference_controller.dart';
 import 'package:gaza_go/platform/controllers/shop_controller.dart';
+import 'package:gaza_go/platform/controllers/wallet_go_controller.dart';
 import 'package:gaza_go/platform/controllers/wallet_master_controller.dart';
 import 'package:gaza_go/platform/controllers/withdraw_confirm_controller.dart';
 import 'package:gaza_go/platform/helpers/activity_mixin.dart';
@@ -26,6 +27,7 @@ import 'package:gaza_go/platform/helpers/alert_helper.dart';
 import 'package:gaza_go/platform/helpers/base_helper.dart';
 import 'package:gaza_go/platform/helpers/inventory_helper.dart';
 import 'package:gaza_go/platform/models/challenge_model.dart';
+import 'package:gaza_go/platform/models/exchange_stik_price_model.dart';
 import 'package:gaza_go/platform/models/inventory_badge_model.dart';
 import 'package:gaza_go/platform/models/stat_model.dart';
 import 'package:gaza_go/presentations/components/circular_button.dart';
@@ -2929,6 +2931,211 @@ void showStaikaStatusAlert({required bool hasWallet}) {
                 ],
               ),
             ),
+    ],
+  );
+}
+
+void exchangeStikToTikAlert(GoWalletController controller, ExchangeStikPriceModel exchangeProduct) {
+  WalletMasterController walletMasterController = Get.find();
+  showAlert(
+    title: '충전 하시겠습니까?',
+    isScrollControlled: true,
+    contentWidget: Obx(() {
+      return Column(
+        children: [
+          Padding(
+            padding: EdgeInsets.only(top: 34.0.sp, bottom: 43.sp),
+            child: Column(
+              children: [
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    SvgPicture.asset('assets/images/wallet/ico_stik.svg', width: 24, height: 24),
+                    Padding(
+                      padding: EdgeInsets.only(left: 7.0.sp),
+                      child: StyledText(
+                        formatDecimalPlaces(exchangeProduct.fromUiAmount!, 9, isAutoDecimal: true),
+                        fontSize: 30,
+                        lineHeight: 32,
+                        fontWeight: 600,
+                      ),
+                    ),
+                    Padding(
+                      padding: EdgeInsets.only(left: 7.0.sp),
+                      child: StyledText(
+                        exchangeProduct.fromSymbol!,
+                        fontSize: 30,
+                        lineHeight: 32,
+                        fontWeight: 400,
+                      ),
+                    ),
+                  ],
+                ),
+                Padding(
+                  padding: EdgeInsets.symmetric(vertical: 15.0.sp),
+                  child: SvgPicture.asset('assets/images/wallet/ico_arrow_bottom.svg', width: 20, height: 20),
+                ),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    SvgPicture.asset('assets/images/wallet/ico_tik.svg', width: 24, height: 24),
+                    Padding(
+                      padding: EdgeInsets.only(left: 7.0.sp),
+                      child: StyledText(
+                        exchangeProduct.toUiAmount.toString(),
+                        fontSize: 30,
+                        lineHeight: 32,
+                        fontWeight: 600,
+                      ),
+                    ),
+                    Padding(
+                      padding: EdgeInsets.only(left: 7.0.sp),
+                      child: StyledText(
+                        exchangeProduct.toSymbol!,
+                        fontSize: 30,
+                        lineHeight: 32,
+                        fontWeight: 400,
+                      ),
+                    ),
+                  ],
+                ),
+              ],
+            ),
+          ),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              StyledText(
+                '기준 가격',
+                fontWeight: 500,
+                fontSize: 14,
+                color: lightGrayColor,
+              ),
+              StyledText(
+                '1 STIK = ₩${formatDecimalPlaces(walletMasterController.stikPriceInfoKRW.value.price!, 0)}',
+                fontWeight: 500,
+                fontSize: 14,
+                color: lightGrayColor,
+              ),
+            ],
+          ),
+          Padding(
+            padding: EdgeInsets.only(top: 15.0.sp, bottom: 23.0.sp),
+            child: const Divider(color: Color(0xFF474950), height: 3),
+          ),
+          Padding(
+            padding: EdgeInsets.only(bottom: 10.sp),
+            child: StyledText(
+              '충전이 완료되면 취소할 수 없습니다.',
+              fontSize: 14,
+              lineHeight: 15,
+              fontWeight: 500,
+              letterSpacing: -0.02,
+              color: lightGrayColor,
+            ),
+          ),
+          Padding(
+            padding: EdgeInsets.only(bottom: 20.0.sp),
+            child: StyledText(
+              '1 STIK = ₩ ${formatDecimalPlaces(walletMasterController.stikPriceInfoKRW.value.price!, 0)} / ${formatDate(walletMasterController.stikPriceInfoKRW.value.lastUpdated)} (CoinMarket Cap)',
+              fontSize: 13,
+              lineHeight: 15,
+              fontWeight: 500,
+              color: deepGrayColor,
+              letterSpacing: -0.02,
+            ),
+          ),
+        ],
+      );
+    }),
+    actions: [
+      Expanded(
+        child: GazagoButton(
+          onTap: () => Get.back(),
+          buttonText: '취소',
+          textColor: Colors.white,
+          buttonColor: popupBgColor,
+        ),
+      ),
+      SizedBox(
+        width: 9.sp,
+      ),
+      Expanded(
+        child: GazagoButton(
+          onTap: () {
+            Get.back();
+            controller.exchangeStikToTik(exchangeProduct);
+          },
+          buttonText: '충전',
+          buttonColor: skyBlueColor,
+        ),
+      ),
+    ],
+  );
+}
+
+void failureChargeStikToTikAlert(GoWalletController controller, String errorMsg) {
+  showAlert(
+    title: '잠시 후 다시 시도해 주세요.',
+    contentWidget: Padding(
+      padding: EdgeInsets.only(top: 20.0.sp, bottom: 40.sp),
+      child: StyledText(
+        errorMsg,
+        fontSize: 14,
+        lineHeight: 20,
+        fontWeight: 500,
+        letterSpacing: .2,
+        color: lightGrayColor,
+        textAlign: TextAlign.center,
+      ),
+    ),
+    actions: [
+      Expanded(
+        child: GazagoButton(
+          onTap: () {
+            Get.back();
+            controller.handleReGetStikPriceAndProductList();
+          },
+          buttonText: '확인',
+          buttonColor: skyBlueColor,
+        ),
+      ),
+    ],
+  );
+}
+
+void successChargeStikToTikAlert(GoWalletController controller) {
+  showAlert(
+    contentWidget: Padding(
+      padding: EdgeInsets.only(top: 20.0.sp, bottom: 40.sp),
+      child: Column(
+        children: [
+          iconCircleSkyBlueCheck,
+          Padding(
+            padding: EdgeInsets.only(top: 20.0.sp),
+            child: const StyledText(
+              'TIK 충전이 완료 되었습니다.',
+              fontSize: 18,
+              lineHeight: 24,
+              fontWeight: 500,
+              letterSpacing: .2,
+              textAlign: TextAlign.center,
+            ),
+          ),
+        ],
+      ),
+    ),
+    actions: [
+      Expanded(
+        child: GazagoButton(
+          onTap: () {
+            Get.back();
+            controller.handleSuccessChargeTik();
+          },
+          buttonText: '확인',
+          buttonColor: skyBlueColor,
+        ),
+      ),
     ],
   );
 }

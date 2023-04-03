@@ -1,25 +1,68 @@
+import 'package:gaza_go/platform/controllers/loader_controller.dart';
+import 'package:gaza_go/platform/controllers/wallet_master_controller.dart';
+import 'package:gaza_go/platform/helpers/alert_helper.dart';
 import 'package:gaza_go/platform/helpers/solana_mixin.dart';
+import 'package:gaza_go/platform/models/charge_tik_model.dart';
+import 'package:gaza_go/platform/models/exchange_stik_price_model.dart';
 import 'package:gaza_go/platform/services/solana_service.dart';
+import 'package:gaza_go/presentations/components/alert_ui_list.dart';
 import 'package:get/get.dart';
 
 class GoWalletController extends GetxController with SolanaMixin {
+  WalletMasterController walletMasterController = Get.find();
+  LoaderController loaderController = Get.find();
   RxList productList = RxList.empty();
+  Rx<ChargeTikModel> chargeTikData = Rx(ChargeTikModel(title: "STIK_TO_TIK", fromSymbol: "", fromUiAmount: 0.0, toSymbol: "", toUiAmount: 0, priceKRW: 0.0, priceUSD: 0.0));
 
   @override
   void onInit() {
+    walletMasterController.getStikPriceInfo();
     getProductList();
     super.onInit();
   }
 
-  void purchaseInAppItem(product) async {
-    // showPendingPurchaseUI.value = true;
-    // showInAppPurchaseProgressAlert(this);
-    try {
-      // await InAppPurchase.instance.buyConsumable(purchaseParam: PurchaseParam(productDetails: product));
-    } catch (e) {
-      // showPendingPurchaseUI.value = false;
-      // showStoreErrorText.value = true;
+  void exchangeStikToTik(ExchangeStikPriceModel exchangeProduct) async {
+    DateTime today = DateTime.now();
+    int differenceTime = int.parse(today.difference(DateTime.parse(walletMasterController.stikPriceInfoKRW.value.lastUpdated!)).inSeconds.toString());
+    // 현재 시간과 가격정보 받아온 시간이 5분이상 차이나면
+    if (differenceTime > 300) {
+      failureChargeStikToTikAlert(this, '거래 기준가의 유효시간이 지나 더이상 해당 가격으로\n거래가 불가합니다. 다시 시도해 주시기 바랍니다.');
+    } else {
+      if (walletMasterController.stik.value.amount! >= exchangeProduct.fromUiAmount!) {
+        loaderController.isLoading.value = true;
+        await SolanaService.fetchChargeStikToTik(
+          ChargeTikModel(
+            title: "STIK_TO_TIK",
+            fromSymbol: exchangeProduct.fromSymbol!,
+            fromUiAmount: exchangeProduct.fromUiAmount!,
+            toSymbol: exchangeProduct.toSymbol!,
+            // toUiAmount: exchangeProduct.toUiAmount!,
+            toUiAmount: 1000000,
+            priceKRW: walletMasterController.stikPriceInfoKRW.value.price!,
+            priceUSD: walletMasterController.stikPriceInfoUSD.value.price!,
+          ),
+          successCallback: (data) {
+            successChargeStikToTikAlert(this);
+          },
+          errorCallback: (err) {
+            failureChargeStikToTikAlert(this, err.errorMessage);
+          },
+        );
+        loaderController.isLoading.value = false;
+      } else {
+        showToastPopup('보유중인 STIK이 충분하지 않습니다.');
+      }
     }
+  }
+
+  void handleSuccessChargeTik() {
+    walletMasterController.getSpendingWalletBalances();
+    handleReGetStikPriceAndProductList();
+  }
+
+  void handleReGetStikPriceAndProductList() {
+    getProductList();
+    walletMasterController.getStikPriceInfo();
   }
 
   Future<void> getProductList() async {
