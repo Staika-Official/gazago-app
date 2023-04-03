@@ -63,7 +63,26 @@ class CreateWallet extends StatelessWidget {
                             child: Column(
                               mainAxisSize: MainAxisSize.min,
                               children: [
-                                Image.asset('assets/images/wallet/staika_logo.png', width: 122.sp, height: 122.sp),
+                                SizedBox(
+                                  width: 122.sp,
+                                  height: 122.sp,
+                                  child: Stack(
+                                    clipBehavior: Clip.none,
+                                    children: [
+                                      Positioned(
+                                        top: -80.sp,
+                                        left: -10.sp,
+                                        child: Lottie.asset(
+                                          'assets/lottie/fireworks.json',
+                                          width: 140,
+                                          height: 120,
+                                          repeat: true,
+                                        ),
+                                      ),
+                                      Image.asset('assets/images/wallet/staika_logo.png', width: 122.sp, height: 122.sp),
+                                    ],
+                                  ),
+                                ),
                                 const Padding(
                                   padding: EdgeInsets.only(top: 54),
                                   child: StyledText(
