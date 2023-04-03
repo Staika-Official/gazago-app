@@ -2757,7 +2757,7 @@ Future<bool> verifyEndPointPasswordAlert(DebuggingController controller) {
   return passwordInputCompleter.future;
 }
 
-void showStaikaStatusAlert({required bool hasWallet}) {
+void showStaikaStatusAlert({required bool hasWallet, TabController? tabController}) {
   showAlert(
     contentWidget: Column(
       children: [
@@ -2908,6 +2908,7 @@ void showStaikaStatusAlert({required bool hasWallet}) {
                   Expanded(
                     child: GazagoButton(
                       onTap: () {
+                        tabController?.animateTo(0);
                         Get.back();
                       },
                       buttonText: '아니요',

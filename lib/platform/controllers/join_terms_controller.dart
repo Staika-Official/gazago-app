@@ -10,7 +10,7 @@ class JoinTermsController extends GetxController {
   final RxString platform = RxString('');
   final RxList<TermItemModel> termsList = RxList.empty();
   RxBool get allAgreed {
-    return RxBool(termsList.every((term) => term.isChecked == true));
+    return RxBool(termsList.isNotEmpty ? termsList.every((term) => term.isChecked == true) : false);
   }
 
   RxBool get allRequiredAgreed {
@@ -58,7 +58,7 @@ class JoinTermsController extends GetxController {
           if (platform.value == 'gazago') {
             Get.toNamed(Routes.permissions);
           } else {
-            Get.offNamed(Routes.createWallet);
+            Get.offNamed(Routes.createWalletPassword);
           }
         }
       }, errorCallback: () {

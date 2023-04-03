@@ -44,6 +44,7 @@ import 'package:gaza_go/presentations/views/verification/verification_name.dart'
 import 'package:gaza_go/presentations/views/verification/verification_phone.dart';
 import 'package:gaza_go/presentations/views/wallet/buy_tik.dart';
 import 'package:gaza_go/presentations/views/wallet/create_wallet.dart';
+import 'package:gaza_go/presentations/views/wallet/create_wallet_password.dart';
 import 'package:gaza_go/presentations/views/wallet/index.dart';
 import 'package:gaza_go/presentations/views/wallet/taika_pay.dart';
 import 'package:gaza_go/presentations/views/wallet/wallet_actions.dart';
@@ -109,6 +110,7 @@ class Routes {
   static const adMobRewarded = '/admob/reward';
   static const adMobRewardedInterstitial = '/admob/interstitial';
   static const webView = '/webview/:id';
+  static const createWalletPassword = '/wallet/create/password';
   static const createWallet = '/wallet/create';
 
   static List<GetPage> pages = [
@@ -131,7 +133,7 @@ class Routes {
     stepPage(
       name: Routes.preferences,
       page: const Preferences(),
-      transition: Transition.leftToRight,
+      transition: Transition.rightToLeft,
       transitionDuration: const Duration(milliseconds: 200),
     ),
     stepPage(name: Routes.preferenceBoard, page: const PreferenceBoard()),
@@ -171,6 +173,7 @@ class Routes {
     stepPage(name: Routes.laboratorySolanaTransfer, page: const LaboratorySolanaTransfer()),
     stepPage(name: Routes.webView, page: const WebView()),
     stepPage(name: Routes.laboratoryEndPoint, page: const LaboratoryEndPoint()),
+    stepPage(name: Routes.createWalletPassword, page: const CreateWalletPassword()),
     stepPage(name: Routes.createWallet, page: const CreateWallet()),
   ];
 }

@@ -112,6 +112,9 @@ SvgPicture iconTik = SvgPicture.asset('assets/images/wallet/ico_tik.svg', width:
 SvgPicture iconNoConnection = SvgPicture.asset('assets/images/wallet/ico_no_connection.svg', width: 40.sp, height: 40.sp);
 SvgPicture iconError = SvgPicture.asset('assets/images/wallet/ico_error.svg', width: 40.sp, height: 40.sp);
 SvgPicture iconStikMini = SvgPicture.asset('assets/images/wallet/ico_product_list_stik.svg', width: 11.sp, height: 11.sp);
+SvgPicture iconPasswordValid = SvgPicture.asset('assets/images/wallet/ico_password_valid.svg', width: 18.sp, height: 18.sp);
+SvgPicture iconPasswordInvalid = SvgPicture.asset('assets/images/wallet/ico_password_invalid.svg', width: 18.sp, height: 18.sp);
+SvgPicture iconAlert = SvgPicture.asset('assets/images/wallet/ico_alert.svg', width: 104.sp, height: 104.sp);
 
 //shop
 SvgPicture iconShopStamina = SvgPicture.asset('assets/images/shop/ico_stat_stamina.svg', width: 14.sp, height: 14.sp, color: Colors.black);
