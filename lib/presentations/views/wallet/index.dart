@@ -1,33 +1,18 @@
 import 'package:flutter/material.dart';
+import 'package:gaza_go/platform/controllers/wallet_master_controller.dart';
 import 'package:gaza_go/presentations/components/default_container.dart';
 import 'package:gaza_go/presentations/styles/colors.dart';
 import 'package:gaza_go/presentations/views/wallet/go_wallet.dart';
 import 'package:gaza_go/presentations/views/wallet/staika_wallet.dart';
+import 'package:get/get.dart';
 
-class WalletHome extends StatefulWidget {
+class WalletHome extends StatelessWidget {
   const WalletHome({Key? key}) : super(key: key);
 
   @override
-  State<WalletHome> createState() => _WalletHomeState();
-}
-
-class _WalletHomeState extends State<WalletHome> with SingleTickerProviderStateMixin {
-  late TabController _tabController;
-
-  @override
-  void initState() {
-    super.initState();
-    _tabController = TabController(vsync: this, length: 2, initialIndex: 0);
-  }
-
-  @override
-  void dispose() {
-    _tabController.dispose();
-    super.dispose();
-  }
-
-  @override
   Widget build(BuildContext context) {
+    WalletMasterController walletMasterController = Get.find<WalletMasterController>();
+
     return DefaultContainer(
       backgroundColor: subBg01Color,
       titleText: '지갑',
@@ -46,7 +31,7 @@ class _WalletHomeState extends State<WalletHome> with SingleTickerProviderStateM
                 borderRadius: BorderRadius.circular(50),
               ),
               child: TabBar(
-                controller: _tabController,
+                controller: walletMasterController.tabController,
                 padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 5),
                 indicator: BoxDecoration(
                   color: popupBgColor,
@@ -83,7 +68,7 @@ class _WalletHomeState extends State<WalletHome> with SingleTickerProviderStateM
           Expanded(
             child: TabBarView(
               physics: NeverScrollableScrollPhysics(),
-              controller: _tabController,
+              controller: walletMasterController.tabController,
               children: const [
                 GoWallet(),
                 StaikaWallet(),

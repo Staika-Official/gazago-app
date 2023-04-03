@@ -1,4 +1,9 @@
+
 import 'package:flutter/services.dart';
+
+import 'package:flutter/material.dart';
+import 'package:gaza_go/platform/controllers/wallet_master_controller.dart';
+
 import 'package:gaza_go/platform/helpers/alert_helper.dart';
 import 'package:gaza_go/platform/helpers/wallet_mixin.dart';
 import 'package:gaza_go/platform/models/asset_item_nft_model.dart';
@@ -20,16 +25,21 @@ class StaikaWalletController extends GetxController with WalletMixin {
   }
 
   Future<void> getStaikaWalletInfo() async {
-    await WalletService.getOnChainWallet(successCallback: (data) {
-      userWalletAddress.value = data.publicKey;
-      showStaikaStatusAlert(hasWallet: true);
-    }, errorCallback: (ErrorResponseDataModel data) {
-      if (data.errorCode == 'WalletNotFoundException') {
-        showStaikaStatusAlert(hasWallet: false);
-      } else if (data.errorCode == 'DatabaseErrorException') {
-        showToastPopup('잠시 후 다시 시도해 주세요');
-      }
-    });
+    await WalletService.getOnChainWallet(
+      successCallback: (data) {
+        print(data);
+        userWalletAddress.value = data.publicKey;
+        showStaikaStatusAlert(hasWallet: true);
+      },
+      errorCallback: (ErrorResponseDataModel data) {
+        if (data.errorCode == 'WalletNotFoundException') {
+          TabController controller = Get.find<WalletMasterController>().tabController;
+          showStaikaStatusAlert(hasWallet: false, tabController: controller);
+        } else if (data.errorCode == 'DatabaseErrorException') {
+          showToastPopup('잠시 후 다시 시도해 주세요');
+        }
+      },
+    );
   }
 
   void getAssetList() {

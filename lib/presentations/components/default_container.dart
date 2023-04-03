@@ -6,6 +6,7 @@ class DefaultContainer extends StatelessWidget {
   final Color? backgroundColor;
   final bool disableSafeArea;
   final Widget? customHeader;
+  final bool resizeToAvoidBottomInset;
 
   //default header settings
   final bool isLeadingShow;
@@ -31,12 +32,14 @@ class DefaultContainer extends StatelessWidget {
     this.titleWidget,
     this.headerBackgroundColor,
     this.onBackButtonTap,
+    this.resizeToAvoidBottomInset = true,
   }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: backgroundColor,
+      resizeToAvoidBottomInset: resizeToAvoidBottomInset,
       appBar: AppBar(
         automaticallyImplyLeading: false,
         backgroundColor: headerBackgroundColor ?? backgroundColor,
