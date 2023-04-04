@@ -1,7 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:gaza_go/presentations/components/bottom_sheet_alert.dart';
+import 'package:gaza_go/presentations/styles/colors.dart';
+import 'package:gaza_go/presentations/styles/styled_text.dart';
 import 'package:get/get.dart';
+import 'package:in_app_update/in_app_update.dart';
 
 Future<void> showAlert({
   String? title,
@@ -38,5 +41,34 @@ void showToastPopup(String message) {
     backgroundColor: Colors.black.withOpacity(0.9),
     textColor: Colors.white,
     fontSize: 18.0,
+  );
+}
+
+void showUpdateSnackbar() {
+  Get.showSnackbar(
+    GetSnackBar(
+      isDismissible: false,
+      snackPosition: SnackPosition.BOTTOM,
+      backgroundColor: Colors.black.withOpacity(0.9),
+      titleText: StyledText(
+        '다운로드 완료',
+        fontSize: 14,
+      ),
+      messageText: StyledText(
+        '업데이트 해주세요',
+        fontSize: 12,
+      ),
+      mainButton: TextButton(
+        onPressed: () => InAppUpdate.completeFlexibleUpdate(),
+        child: StyledText(
+          '업데이트',
+          fontSize: 12,
+          color: skyBlueColor,
+        ),
+      ),
+      onTap: (snackbar) {
+        InAppUpdate.completeFlexibleUpdate();
+      },
+    ),
   );
 }

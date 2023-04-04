@@ -129,8 +129,14 @@ class HomeMenuController extends SuperController {
     bool needForceUpgrade = await isForceUpdateTarget();
     if (needForceUpgrade) {
       await checkAppStores();
-      if (Platform.isAndroid && _appAndroidUpdateInfo?.updateAvailability == UpdateAvailability.updateAvailable) {
-        await InAppUpdate.performImmediateUpdate().catchError((e) {
+      if (Platform.isAndroid &&
+          _appAndroidUpdateInfo != null &&
+          [UpdateAvailability.updateAvailable, UpdateAvailability.developerTriggeredUpdateInProgress].any((result) => result == _appAndroidUpdateInfo?.updateAvailability)) {
+        await InAppUpdate.performImmediateUpdate().then((result) {
+          if ([AppUpdateResult.userDeniedUpdate, AppUpdateResult.inAppUpdateFailed].any((resultStatus) => resultStatus == result)) {
+            showForceUpdateWallet();
+          }
+        }).catchError((e) {
           showToastPopup(e.toString());
         });
       } else if (_appIOSUpdateInfo != null && _appIOSUpdateInfo!.canUpdate) {
@@ -142,18 +148,17 @@ class HomeMenuController extends SuperController {
         await checkAppStores();
         if (Platform.isAndroid &&
             _appAndroidUpdateInfo != null &&
-            _appAndroidUpdateInfo!.flexibleUpdateAllowed &&
             [UpdateAvailability.updateAvailable, UpdateAvailability.developerTriggeredUpdateInProgress].any((result) => result == _appAndroidUpdateInfo?.updateAvailability)) {
-          if (_appAndroidUpdateInfo!.installStatus == InstallStatus.downloaded) {
-            InAppUpdate.completeFlexibleUpdate();
-          } else {
-            AppUpdateResult appUpdateResult = await InAppUpdate.startFlexibleUpdate().catchError((e) {
+          if (_appAndroidUpdateInfo!.flexibleUpdateAllowed) {
+            await InAppUpdate.startFlexibleUpdate().then((value) {
+              if (value == AppUpdateResult.success) {
+                showUpdateSnackbar();
+              }
+            }).catchError((e) {
               showToastPopup(e.toString());
             });
-
-            if (appUpdateResult == AppUpdateResult.success) {
-              InAppUpdate.completeFlexibleUpdate();
-            }
+          } else if (_appAndroidUpdateInfo!.installStatus == InstallStatus.downloaded) {
+            showUpdateSnackbar();
           }
         } else if (_appIOSUpdateInfo != null && _appIOSUpdateInfo!.canUpdate) {
           showRecommendUpdateWallet();
