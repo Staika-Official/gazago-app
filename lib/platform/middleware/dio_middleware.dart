@@ -232,6 +232,7 @@ class Api {
         retryAttempt = 0;
       },
     ).onError((error, stackTrace) async {
+      ErrorResponseDataModel? errorResponseDataModel = e.response != null ? ErrorResponseDataModel.fromJson(e.response!.data) : null;
       if (error is DioError) {
         _logger.e(
           '------------->'
@@ -239,7 +240,12 @@ class Api {
           '\n${e.requestOptions.baseUrl + e.requestOptions.path}'
           '\n${error.response}',
         );
-        await _getNewAccessToken(e, handler);
+
+        if (errorResponseDataModel != null && errorResponseDataModel.errorCode == 401) {
+          await _getNewAccessToken(e, handler);
+        } else if (!handler.isCompleted) {
+          e.response != null ? handler.resolve(e.response!) : handler.next(e);
+        }
       }
     });
   }
