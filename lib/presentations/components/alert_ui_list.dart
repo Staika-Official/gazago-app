@@ -2911,7 +2911,6 @@ void showStaikaStatusAlert({required bool hasWallet, TabController? tabControlle
                       onTap: () {
                         tabController?.animateTo(0);
                         Get.back();
-                        showConfirmPasswordDialog(Get.find<WalletMasterController>());
                       },
                       buttonText: '아니요',
                       textColor: Colors.white,

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:gaza_go/constants/enums.dart';
 import 'package:gaza_go/platform/controllers/confirm_wallet_password_controller.dart';
 import 'package:gaza_go/platform/controllers/wallet_master_controller.dart';
 import 'package:gaza_go/presentations/components/default_container.dart';
@@ -9,30 +10,8 @@ import 'package:gaza_go/presentations/styles/icons.dart';
 import 'package:gaza_go/presentations/styles/styled_text.dart';
 import 'package:get/get.dart';
 
-enum FormStatus { empty, insufficient, sufficient }
-
-enum ErrorStatus { basic, insufficient, notSame, sufficient }
-
-Widget validatePassword(FormStatus status) {
-  return Visibility(
-    visible: status != FormStatus.empty,
-    child: Padding(
-      padding: const EdgeInsets.only(right: 15),
-      child: status == FormStatus.insufficient ? failedSVG() : confirmedSVG(),
-    ),
-  );
-}
-
-Widget confirmedSVG() {
-  return iconPasswordValid;
-}
-
-Widget failedSVG() {
-  return iconPasswordInvalid;
-}
-
 void showConfirmPasswordDialog(WalletMasterController controller) {
-  ConfirmWalletPasswordController confirmWalletPassword = Get.put(ConfirmWalletPasswordController());
+  ConfirmWalletPasswordController controller = Get.put(ConfirmWalletPasswordController());
   Get.dialog(
     barrierDismissible: false,
     useSafeArea: false,
@@ -122,10 +101,18 @@ void showConfirmPasswordDialog(WalletMasterController controller) {
                               style: TextStyle(
                                 color: Colors.white,
                               ),
-                              onChanged: (password) => confirmWalletPassword.updatePassword(password),
+                              onChanged: (password) => controller.updatePassword(password),
                             ),
                           ),
-                          // Obx(() => validatePassword(confirmWalletPassword.passwordFormStatus.value)),
+                          Obx(
+                            () => Visibility(
+                              visible: controller.passwordFormStatus.value != FormStatus.empty,
+                              child: Padding(
+                                padding: const EdgeInsets.only(right: 15),
+                                child: controller.passwordFormStatus.value == FormStatus.insufficient ? iconPasswordInvalid : iconPasswordValid,
+                              ),
+                            ),
+                          ),
                         ],
                       ),
                     ),
@@ -149,7 +136,7 @@ void showConfirmPasswordDialog(WalletMasterController controller) {
               width: double.infinity,
               child: GazagoButton(
                 onTap: () {
-                  confirmWalletPassword.nextStep();
+                  controller.nextStep();
                 },
                 buttonText: '확인',
                 buttonColor: skyBlueColor,

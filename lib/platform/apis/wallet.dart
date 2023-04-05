@@ -86,17 +86,22 @@ class WalletApi {
   }
 
   //onchain apis
-  static Future<Response> getOnChainWallet(String? userId) async {
-    return await Api.client(serviceUrl: ServiceUrl.onChainWalletService, allowCustomErrorHandler: true).get('/wallets/users/$userId');
+  static Future<Response> getOnChainWallet(String userId) async {
+    return await Api.client(serviceUrl: ServiceUrl.onChainWalletService, allowCustomErrorHandler: true).get('/solana/wallets/users/$userId');
   }
 
-  //onchain apis
-  static Future<Response> createOnChainWallet(String? userId, {required String publicKey, required String secretKey}) async {
-    return await Api.client(serviceUrl: ServiceUrl.onChainWalletService).post('/wallets/users/$userId');
+  static Future<Response> createOnChainWallet(String userId, {required String publicKey, required String secretKey}) async {
+    return await Api.client(serviceUrl: ServiceUrl.onChainWalletService, allowCustomErrorHandler: true).post('/solana/wallets/users/$userId', data: {
+      "publicKey": publicKey,
+      "secretKey": secretKey,
+    });
   }
 
-  //onchain apis
+  static Future<Response> getOnChainBalanceByToken(String userId, String symbol) async {
+    return await Api.client(serviceUrl: ServiceUrl.onChainWalletService).get('/solana/wallets/tokens/$symbol/users/$userId');
+  }
+
   static Future<Response> getOnChainTokenBalance(String? userId) async {
-    return await Api.client(serviceUrl: ServiceUrl.onChainWalletService, allowCustomErrorHandler: true).get('/users/$userId/balances');
+    return await Api.client(serviceUrl: ServiceUrl.onChainWalletService, allowCustomErrorHandler: true).get('/solana/users/$userId/balances');
   }
 }

@@ -84,6 +84,7 @@ enum HiveKey {
   exerciseTimer,
   updateTimer,
   endPointType,
+  walletConnectionPrompted,
 }
 
 enum ResponseStatus {
@@ -319,3 +320,7 @@ enum EndPointType {
 }
 
 enum Currency { krw, usd }
+
+enum FormStatus { empty, insufficient, sufficient }
+
+enum ErrorStatus { basic, insufficient, notSame, sufficient }

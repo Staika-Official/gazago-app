@@ -94,8 +94,8 @@ class F {
         );
       case Flavor.prod:
         return SolanaClient(
-          rpcUrl: Uri.parse('https://api.devnet.solana.com'),
-          websocketUrl: Uri.parse('wss://api.devnet.solana.com'),
+          rpcUrl: Uri.parse('https://api.solana.com'),
+          websocketUrl: Uri.parse('wss://api.solana.com'),
         );
       default:
         return SolanaClient(
