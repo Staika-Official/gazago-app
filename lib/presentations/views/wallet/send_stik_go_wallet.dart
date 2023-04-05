@@ -32,7 +32,7 @@ class SendStikGoWallet extends StatelessWidget {
                     radius: 19.sp,
                     foregroundImage: controller.assetStik.value != null
                         ? CachedNetworkImageProvider(
-                            controller.assetStik.value.logoUrl!,
+                            controller.assetStik.value!.logoUrl,
                           )
                         : Image.asset(
                             'assets/images/ic_launcher.png',
@@ -54,7 +54,7 @@ class SendStikGoWallet extends StatelessWidget {
                         Padding(
                           padding: EdgeInsets.only(top: 6.0.sp),
                           child: StyledText(
-                            '${controller.assetStik.value.uiAmount} STIK',
+                            '${controller.assetStik.value!.uiAmount} STIK',
                             fontSize: 18,
                             lineHeight: 19,
                             fontWeight: 500,

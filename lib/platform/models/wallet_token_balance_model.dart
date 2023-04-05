@@ -5,18 +5,18 @@ part 'wallet_token_balance_model.g.dart';
 
 @JsonSerializable(explicitToJson: true)
 class WalletTokenBalanceModel {
-  String? symbol;
-  String? name;
-  String? logoUrl;
-  int? amount;
-  double? uiAmount;
+  String symbol;
+  String name;
+  String logoUrl;
+  int amount;
+  double uiAmount;
 
   WalletTokenBalanceModel({
-    this.name,
-    this.symbol,
-    this.logoUrl,
-    this.amount,
-    this.uiAmount,
+    required this.name,
+    required this.symbol,
+    required this.logoUrl,
+    required this.amount,
+    required this.uiAmount,
   });
 
   factory WalletTokenBalanceModel.fromJson(Map<String, dynamic> json) => _$WalletTokenBalanceModelFromJson(json);

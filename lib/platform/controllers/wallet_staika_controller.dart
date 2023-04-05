@@ -17,7 +17,7 @@ import 'package:get/get.dart';
 
 class StaikaWalletController extends GetxController with WalletMixin, SolanaMixin {
   final RxList<WalletTokenBalanceModel> coinAssetList = RxList.empty();
-  final Rx<WalletTokenBalanceModel> assetStik = Rx(WalletTokenBalanceModel());
+  final Rxn<WalletTokenBalanceModel> assetStik = Rxn();
   final RxList<AssetItemNftModel> nftAssetList = RxList.empty();
   final RxString userWalletAddress = RxString('');
   final RxString explorerUrl = RxString('');
@@ -39,8 +39,6 @@ class StaikaWalletController extends GetxController with WalletMixin, SolanaMixi
   void onInit() async {
     focusNode.addListener(_onFocusChange);
     await getStaikaWalletInfo();
-    getStikPriceInfo();
-    getOnChainTokenBalance();
     super.onInit();
   }
 
@@ -78,6 +76,7 @@ class StaikaWalletController extends GetxController with WalletMixin, SolanaMixi
           showStaikaStatusAlert(hasWallet: true);
         }
 
+        await getStikPriceInfo();
         await getOnChainTokenBalance();
       },
       errorCallback: (ErrorResponseDataModel data) {
@@ -107,10 +106,14 @@ class StaikaWalletController extends GetxController with WalletMixin, SolanaMixi
   }
 
   Future<void> getOnChainTokenBalance() async {
-    await WalletService.getOnChainTokenBalance(successCallback: (tokenData) {
+    await WalletService.getOnChainTokenBalance(successCallback: (List<WalletTokenBalanceModel> tokenData) {
       coinAssetList.clear();
       coinAssetList.addAll(tokenData);
-      assetStik.value = tokenData.firstWhere((data) => data.symbol == 'STIK');
+      try {
+        assetStik.value = tokenData.singleWhere((data) => data.symbol == 'STIK');
+      } catch (e) {
+        assetStik.value = null;
+      }
 
       // setCurrentSumPriceUI(tokenData, currency.value);
       // coinAssetList.add(WalletTokenBalanceModel(symbol: "STIK", name: "Staika", amount: 4998310000, uiAmount: 4.99831));
