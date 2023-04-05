@@ -46,6 +46,7 @@ import 'package:gaza_go/presentations/views/wallet/buy_tik.dart';
 import 'package:gaza_go/presentations/views/wallet/create_wallet.dart';
 import 'package:gaza_go/presentations/views/wallet/create_wallet_password.dart';
 import 'package:gaza_go/presentations/views/wallet/index.dart';
+import 'package:gaza_go/presentations/views/wallet/send_stik_go_wallet.dart';
 import 'package:gaza_go/presentations/views/wallet/taika_pay.dart';
 import 'package:gaza_go/presentations/views/wallet/wallet_actions.dart';
 import 'package:gaza_go/presentations/views/wallet/wallet_detail.dart';
@@ -112,6 +113,7 @@ class Routes {
   static const webView = '/webview/:id';
   static const createWalletPassword = '/wallet/create/password';
   static const createWallet = '/wallet/create';
+  static const sendStikGoWallet = '/wallet/send_stik_go_wallet';
 
   static List<GetPage> pages = [
     stepPage(name: Routes.login, page: const Login()),
@@ -175,6 +177,7 @@ class Routes {
     stepPage(name: Routes.laboratoryEndPoint, page: const LaboratoryEndPoint()),
     stepPage(name: Routes.createWalletPassword, page: const CreateWalletPassword()),
     stepPage(name: Routes.createWallet, page: const CreateWallet()),
+    stepPage(name: Routes.sendStikGoWallet, page: const SendStikGoWallet()),
   ];
 }
 

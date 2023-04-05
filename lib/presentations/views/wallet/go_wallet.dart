@@ -4,7 +4,7 @@ import 'package:gaza_go/constants/enums.dart';
 import 'package:gaza_go/platform/controllers/wallet_master_controller.dart';
 import 'package:gaza_go/presentations/styles/colors.dart';
 import 'package:gaza_go/presentations/styles/styled_text.dart';
-import 'package:gaza_go/presentations/views/wallet/asset_item_coin.dart';
+import 'package:gaza_go/presentations/views/wallet/go_asset_item_coin.dart';
 import 'package:get/get.dart';
 
 class GoWallet extends StatelessWidget {
@@ -15,7 +15,7 @@ class GoWallet extends StatelessWidget {
         .map(
           (asset) => Padding(
             padding: EdgeInsets.only(top: 14.sp, left: 21.sp, right: 21.sp),
-            child: AssetItemCoin(
+            child: GoAssetItemCoin(
               asset: asset,
               onTap: () => controller.moveToWalletDetail(asset: asset, walletType: WalletType.inventory, assetType: asset.name!.toUpperCase() == 'TAIKA' ? AssetType.token : AssetType.coin),
               onTapButton: asset.name!.toUpperCase() == 'TAIKA' ? () => controller.showProductDialog() : () => controller.showProductStikDialog(),

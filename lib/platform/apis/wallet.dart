@@ -94,4 +94,9 @@ class WalletApi {
   static Future<Response> createOnChainWallet(String? userId, {required String publicKey, required String secretKey}) async {
     return await Api.client(serviceUrl: ServiceUrl.onChainWalletService).post('/wallets/users/$userId');
   }
+
+  //onchain apis
+  static Future<Response> getOnChainTokenBalance(String? userId) async {
+    return await Api.client(serviceUrl: ServiceUrl.onChainWalletService, allowCustomErrorHandler: true).get('/users/$userId/balances');
+  }
 }

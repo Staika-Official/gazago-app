@@ -13,6 +13,7 @@ import 'package:gaza_go/platform/models/pay_info_model.dart';
 import 'package:gaza_go/platform/models/pay_response_model.dart';
 import 'package:gaza_go/platform/models/wallet_solana_model.dart';
 import 'package:gaza_go/platform/models/wallet_solana_transfer_model.dart';
+import 'package:gaza_go/platform/models/wallet_token_balance_model.dart';
 import 'package:gaza_go/platform/stores/hive_store.dart';
 import 'package:solana/encoder.dart';
 import 'package:solana/solana.dart';
@@ -170,6 +171,19 @@ class WalletService {
       successCallback(OnChainWalletModel.fromJson(res.data));
     } else {
       if (errorCallback != null) errorCallback();
+    }
+  }
+
+  static Future<void> getOnChainTokenBalance({required Function successCallback, Function? errorCallback}) async {
+    Response res = await WalletApi.getOnChainTokenBalance(userId);
+    if (res.statusCode == 200) {
+      List<WalletTokenBalanceModel> balanceList = [];
+      if (res.data.length > 0) {
+        res.data.forEach((item) => balanceList.add(WalletTokenBalanceModel.fromJson(item)));
+      }
+      successCallback(balanceList);
+    } else {
+      if (errorCallback != null) errorCallback(ErrorResponseDataModel.fromJson(res.data));
     }
   }
 }

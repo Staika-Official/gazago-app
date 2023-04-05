@@ -117,6 +117,7 @@ SvgPicture iconPasswordInvalid = SvgPicture.asset('assets/images/wallet/ico_pass
 SvgPicture iconAlert = SvgPicture.asset('assets/images/wallet/ico_alert.svg', width: 104.sp, height: 104.sp);
 SvgPicture iconTransactionHistory = SvgPicture.asset('assets/images/wallet/ico_transaction_history.svg', width: 12.sp, height: 12.sp);
 SvgPicture iconSwitch = SvgPicture.asset('assets/images/wallet/ico_switch.svg', width: 16.sp, height: 14.sp);
+SvgPicture iconOutCoin = SvgPicture.asset('assets/images/wallet/ico_out_coin.svg', width: 20.sp, height: 20.sp);
 
 //shop
 SvgPicture iconShopStamina = SvgPicture.asset('assets/images/shop/ico_stat_stamina.svg', width: 14.sp, height: 14.sp, color: Colors.black);

@@ -18,12 +18,9 @@ import 'package:gaza_go/platform/models/buy_tik_response_model.dart';
 import 'package:gaza_go/platform/models/iap_pay_model.dart';
 import 'package:gaza_go/platform/models/iap_valid_model.dart';
 import 'package:gaza_go/platform/models/pay_info_model.dart';
-import 'package:gaza_go/platform/models/stik_token_model.dart';
-import 'package:gaza_go/platform/models/stik_token_quotes_model.dart';
 import 'package:gaza_go/platform/models/token_info_model.dart';
 import 'package:gaza_go/platform/models/user_account_model.dart';
 import 'package:gaza_go/platform/services/iap_service.dart';
-import 'package:gaza_go/platform/services/solana_service.dart';
 import 'package:gaza_go/platform/services/uaa_service.dart';
 import 'package:gaza_go/platform/services/wallet_service.dart';
 import 'package:gaza_go/presentations/components/alert_ui_list.dart';
@@ -58,9 +55,6 @@ class WalletMasterController extends GetxController with SolanaMixin, GetTickerP
   final RxBool showStoreErrorText = RxBool(false);
   final RxBool isPurchaseSuccessful = RxBool(false);
   final RxList<ProductDetails> inAppProducts = RxList.empty();
-  final Rx<StikTokenModel> stikPriceInfo = Rx(StikTokenModel());
-  final Rx<StikTokenQuotesModel> stikPriceInfoKRW = Rx(StikTokenQuotesModel());
-  final Rx<StikTokenQuotesModel> stikPriceInfoUSD = Rx(StikTokenQuotesModel());
 
   RxList<AssetTokenBalanceModel> get spendingTokenUiList {
     List<AssetTokenBalanceModel> balanceUiList = List.empty(growable: true);
@@ -167,17 +161,10 @@ class WalletMasterController extends GetxController with SolanaMixin, GetTickerP
     onInit();
   }
 
-  Future<void> getStikPriceInfo() async {
-    await SolanaService.getStikPriceInfo(successCallback: (data) {
-      stikPriceInfo.value = data;
-      stikPriceInfoKRW.value = data.quotes.firstWhere((item) => item.currency == 'KRW');
-      stikPriceInfoUSD.value = data.quotes.firstWhere((item) => item.currency == 'USD');
-    });
-  }
-
   Future<void> getSpendingWalletBalances() async {
     await WalletService.getSpendingWalletBalances(successCallback: (balances) {
       spendingTokens.value = balances;
+      print('123123123$balances');
     });
 
     if (Get.isRegistered<LoadingController>()) Get.find<LoadingController>().updateProgress("서비스를 위해 정보를 불러오는 중입니다.");

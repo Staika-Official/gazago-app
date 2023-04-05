@@ -8,21 +8,27 @@ import 'package:gaza_go/platform/stores/hive_store.dart';
 import 'package:gaza_go/presentations/styles/colors.dart';
 import 'package:gaza_go/presentations/styles/icons.dart';
 import 'package:gaza_go/presentations/styles/styled_text.dart';
+import 'package:gaza_go/presentations/views/wallet/staika_asset_item_coin.dart';
 import 'package:get/get.dart';
 
 class StaikaWallet extends StatelessWidget {
   const StaikaWallet({Key? key}) : super(key: key);
 
-  // List<Widget> renderCoinAssetList(AssetWalletController controller) {
-  //   return controller.coinAssetList
-  //       .map(
-  //         (asset) => AssetItemCoin(
-  //           asset: asset,
-  //           onTap: () => controller.moveToWalletDetail(asset: asset, walletType: WalletType.asset, assetType: AssetType.coin),
-  //         ),
-  //       )
-  //       .toList();
-  // }
+  List<Widget> renderCoinAssetList(StaikaWalletController controller) {
+    return controller.coinAssetList
+        .map(
+          (asset) => Padding(
+            padding: EdgeInsets.only(top: 14.sp, left: 21.sp, right: 21.sp),
+            child: StaikaAssetItemCoin(
+              asset: asset,
+              onTapButton: asset.symbol!.toUpperCase() == 'STIK' ? () => controller.moveToSendToGoWallet() : null,
+              buttonText: asset.symbol!.toUpperCase() == 'STIK' ? 'GO지갑으로 보내기' : '',
+              showPrice: false,
+            ),
+          ),
+        )
+        .toList();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -164,8 +170,8 @@ class StaikaWallet extends StatelessWidget {
                   ),
                 ],
               ),
-            )
-            // ...renderCoinAssetList(controller),
+            ),
+            if (controller.coinAssetList.isNotEmpty) ...renderCoinAssetList(controller),
           ],
         );
       }),

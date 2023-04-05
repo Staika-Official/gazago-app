@@ -10,13 +10,13 @@ import 'package:gaza_go/presentations/styles/colors.dart';
 import 'package:gaza_go/presentations/styles/icons.dart';
 import 'package:gaza_go/presentations/styles/styled_text.dart';
 
-class AssetItemCoin extends StatelessWidget {
+class GoAssetItemCoin extends StatelessWidget {
   final AssetTokenBalanceModel asset;
   final VoidCallback onTap;
   final VoidCallback? onTapButton;
   final String? buttonText;
   final bool showPrice;
-  const AssetItemCoin({Key? key, required this.asset, required this.onTap, this.onTapButton, this.buttonText, this.showPrice = true}) : super(key: key);
+  const GoAssetItemCoin({Key? key, required this.asset, required this.onTap, this.onTapButton, this.buttonText, this.showPrice = true}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
