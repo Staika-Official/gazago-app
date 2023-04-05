@@ -35,6 +35,7 @@ import 'package:gaza_go/presentations/components/gazago_button.dart';
 import 'package:gaza_go/presentations/styles/colors.dart';
 import 'package:gaza_go/presentations/styles/icons.dart';
 import 'package:gaza_go/presentations/styles/styled_text.dart';
+import 'package:gaza_go/presentations/views/wallet/confirm_wallet_password.dart';
 import 'package:get/get.dart';
 import 'package:lottie/lottie.dart';
 
@@ -2910,6 +2911,7 @@ void showStaikaStatusAlert({required bool hasWallet, TabController? tabControlle
                       onTap: () {
                         tabController?.animateTo(0);
                         Get.back();
+                        showConfirmPasswordDialog(Get.find<WalletMasterController>());
                       },
                       buttonText: '아니요',
                       textColor: Colors.white,

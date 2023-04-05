@@ -38,7 +38,7 @@ extension ErrorStatusExtension on ErrorStatus {
 
 //TODO 전체적인 로직 수정 필요
 
-class CreateWalletPasswordController extends GetxController {
+class ConfirmWalletPasswordController extends GetxController {
   final RegExp _regExp = RegExp(r'^(?=.*[A-Za-z])(?=.*\d)(?=.*[$@$!%*#?&])[A-Za-z\d$@$!%*#?&]{8,16}$');
   final RxString _password = ''.obs;
   final RxString _confirmPassword = ''.obs;
