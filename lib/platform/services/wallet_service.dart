@@ -157,7 +157,7 @@ class WalletService {
 
   //onchain apis
   static Future<void> getOnChainWallet({required Function successCallback, Function? errorCallback}) async {
-    Response res = await WalletApi.getOnChainWallet(userId);
+    Response res = await WalletApi.getOnChainWallet(userId!);
     if (res.statusCode == 200) {
       successCallback(OnChainWalletModel.fromJson(res.data));
     } else {
@@ -165,8 +165,15 @@ class WalletService {
     }
   }
 
-  static Future<void> createOnChainWallet({required String publicKey, required String secretKey, required Function successCallback, Function? errorCallback}) async {
-    Response res = await WalletApi.createOnChainWallet(userId, publicKey: publicKey, secretKey: secretKey);
+  static Future<void> createOnChainWallet({required String walletPassword, required Function successCallback, Function? errorCallback}) async {
+    final wallet = Keypair.generateSync();
+    String? email = HiveStore.loadString(key: HiveKey.email.name);
+
+    String publicKey = wallet.publicKey.toBase58();
+    // 암호화된 시크릿키
+    String encryptSecretKey = encrypt(base58.encode(wallet.secretKey), email!, walletPassword);
+
+    Response res = await WalletApi.createOnChainWallet(userId!, publicKey: publicKey, secretKey: encryptSecretKey);
     if (res.statusCode == 201) {
       successCallback(OnChainWalletModel.fromJson(res.data));
     } else {
@@ -175,13 +182,22 @@ class WalletService {
   }
 
   static Future<void> getOnChainTokenBalance({required Function successCallback, Function? errorCallback}) async {
-    Response res = await WalletApi.getOnChainTokenBalance(userId);
+    Response res = await WalletApi.getOnChainTokenBalance(userId!);
     if (res.statusCode == 200) {
       List<WalletTokenBalanceModel> balanceList = [];
       if (res.data.length > 0) {
         res.data.forEach((item) => balanceList.add(WalletTokenBalanceModel.fromJson(item)));
       }
       successCallback(balanceList);
+    } else {
+      if (errorCallback != null) errorCallback(ErrorResponseDataModel.fromJson(res.data));
+    }
+  }
+
+  static Future<void> getOnChainBalanceByToken(String symbol, {required Function successCallback, Function? errorCallback}) async {
+    Response res = await WalletApi.getOnChainBalanceByToken(userId!, symbol);
+    if (res.statusCode == 200) {
+      successCallback(WalletTokenBalanceModel.fromJson(res.data));
     } else {
       if (errorCallback != null) errorCallback(ErrorResponseDataModel.fromJson(res.data));
     }

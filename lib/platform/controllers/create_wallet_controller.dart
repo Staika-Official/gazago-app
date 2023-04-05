@@ -1,5 +1,7 @@
-import 'dart:async';
-
+import 'package:gaza_go/constants/enums.dart';
+import 'package:gaza_go/platform/models/on_chain_wallet_model.dart';
+import 'package:gaza_go/platform/services/wallet_service.dart';
+import 'package:gaza_go/platform/stores/hive_store.dart';
 import 'package:get/get.dart';
 
 class CreateWalletController extends GetxController {
@@ -9,18 +11,29 @@ class CreateWalletController extends GetxController {
   @override
   void onInit() {
     isCreatingWallet.value = true;
-    Timer(Duration(seconds: 5), () {
-      isCreatingWallet.value = false;
-      Timer(Duration(seconds: 5), () {
-        isCreationSuccessful.value = true;
-      });
-    });
     super.onInit();
   }
 
   @override
-  void onReady() {}
+  void onReady() {
+    createWallet();
+  }
 
   @override
   void onClose() {}
+
+  void createWallet() async {
+    await WalletService.createOnChainWallet(
+      walletPassword: Get.arguments['password'],
+      successCallback: (OnChainWalletModel onChainWallet) {
+        HiveStore.save(key: HiveKey.solanaSecretKey.name, value: onChainWallet.secretKey);
+        isCreationSuccessful.value = true;
+        isCreatingWallet.value = false;
+      },
+      errorCallback: () {
+        isCreationSuccessful.value = false;
+        isCreatingWallet.value = false;
+      },
+    );
+  }
 }

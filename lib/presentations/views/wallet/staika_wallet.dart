@@ -1,4 +1,3 @@
-import 'package:animate_do/animate_do.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -7,7 +6,6 @@ import 'package:gaza_go/platform/controllers/wallet_staika_controller.dart';
 import 'package:gaza_go/platform/stores/hive_store.dart';
 import 'package:gaza_go/presentations/styles/colors.dart';
 import 'package:gaza_go/presentations/styles/icons.dart';
-import 'package:gaza_go/presentations/styles/styled_text.dart';
 import 'package:gaza_go/presentations/views/wallet/staika_asset_item_coin.dart';
 import 'package:get/get.dart';
 
@@ -34,147 +32,78 @@ class StaikaWallet extends StatelessWidget {
   Widget build(BuildContext context) {
     StaikaWalletController controller = Get.put(StaikaWalletController());
 
-    return SingleChildScrollView(
-      physics: const ClampingScrollPhysics(),
-      child: Obx(() {
-        return Column(
-          children: [
-            Padding(
-              padding: EdgeInsets.only(top: 28.0.sp),
-              child: CircleAvatar(
-                radius: 23.sp,
-                foregroundImage: HiveStore.loadString(key: HiveKey.profileImageUrl.name) != null && HiveStore.loadString(key: HiveKey.profileImageUrl.name) != ''
-                    ? CachedNetworkImageProvider(
-                        HiveStore.loadString(key: HiveKey.profileImageUrl.name)!,
-                      )
-                    : Image.asset(
-                        'assets/images/ic_launcher.png',
-                        width: 23.sp,
-                      ).image,
-              ),
+    return Obx(() {
+      return Column(
+        children: [
+          Padding(
+            padding: EdgeInsets.only(top: 28.0.sp),
+            child: CircleAvatar(
+              radius: 23.sp,
+              foregroundImage: HiveStore.loadString(key: HiveKey.profileImageUrl.name) != null && HiveStore.loadString(key: HiveKey.profileImageUrl.name) != ''
+                  ? CachedNetworkImageProvider(
+                      HiveStore.loadString(key: HiveKey.profileImageUrl.name)!,
+                    )
+                  : Image.asset(
+                      'assets/images/ic_launcher.png',
+                      width: 23.sp,
+                    ).image,
             ),
-            if (controller.userWalletAddress.value != '')
-              Padding(
-                padding: EdgeInsets.only(top: 10.0.sp),
-                child: SizedBox(
-                  child: Container(
-                    decoration: BoxDecoration(
-                      color: popupBgColor,
-                      borderRadius: BorderRadius.all(
-                        Radius.circular(30.sp),
-                      ),
-                    ),
-                    child: Padding(
-                      padding: EdgeInsets.symmetric(vertical: 11.0.sp, horizontal: 22.0.sp),
-                      child: Row(
-                        mainAxisSize: MainAxisSize.min,
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          RichText(
-                            text: TextSpan(
-                              style: TextStyle(
-                                color: Colors.white,
-                                fontSize: 16.sp,
-                                fontWeight: FontWeight.w500,
-                                height: (16 / 14).sp,
-                                letterSpacing: -0.2,
-                              ),
-                              children: [
-                                TextSpan(
-                                  text: '${controller.userWalletAddress.value.substring(0, 4)}',
-                                ),
-                                TextSpan(
-                                  text: '...',
-                                ),
-                                TextSpan(
-                                  text: '${controller.userWalletAddress.value.substring(controller.userWalletAddress.value.length - 4)}',
-                                ),
-                              ],
-                            ),
-                          ),
-                          Padding(
-                            padding: EdgeInsets.only(left: 12.0.sp),
-                            child: InkWell(
-                              child: iconCopy,
-                              onTap: () => controller.handleCopyWalletAddress(),
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                  ),
-                ),
-              ),
+          ),
+          if (controller.userWalletAddress.value != '')
             Padding(
-              padding: EdgeInsets.only(top: 12.0.sp),
+              padding: EdgeInsets.only(top: 10.0.sp),
               child: SizedBox(
-                child: InkWell(
-                  onTap: () => controller.onOpenSolScanWallet(),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      StyledText(
-                        '거래내역',
-                        fontSize: 12,
-                        fontWeight: 500,
-                        color: lightGrayColor,
-                      ),
-                      iconTransactionHistory,
-                    ],
+                child: Container(
+                  decoration: BoxDecoration(
+                    color: popupBgColor,
+                    borderRadius: BorderRadius.all(
+                      Radius.circular(30.sp),
+                    ),
                   ),
-                ),
-              ),
-            ),
-            Padding(
-              padding: EdgeInsets.only(top: 26.0.sp, left: 26.0.sp, right: 26.0.sp),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: [
-                  StyledText(
-                    '디지털 자산',
-                    fontWeight: 500,
-                    fontSize: 16,
-                    lineHeight: 18,
-                  ),
-                  GestureDetector(
-                    onTap: () {
-                      controller.setSwitchValue(!controller.isKRW.value);
-                    },
+                  child: Padding(
+                    padding: EdgeInsets.symmetric(vertical: 11.0.sp, horizontal: 22.0.sp),
                     child: Row(
-                      mainAxisAlignment: MainAxisAlignment.end,
+                      mainAxisSize: MainAxisSize.min,
+                      mainAxisAlignment: MainAxisAlignment.center,
                       children: [
-                        Spin(
-                          spins: 0.5,
-                          duration: const Duration(milliseconds: 500),
-                          animate: false,
-                          manualTrigger: true,
-                          controller: (con) {
-                            controller.switchAnimation.value = con;
-                          },
-                          child: SizedBox(
-                            height: 14,
-                            child: iconSwitch,
+                        RichText(
+                          text: TextSpan(
+                            style: TextStyle(
+                              color: Colors.white,
+                              fontSize: 16.sp,
+                              fontWeight: FontWeight.w500,
+                              height: (16 / 14).sp,
+                              letterSpacing: -0.2,
+                            ),
+                            children: [
+                              TextSpan(
+                                text: '${controller.userWalletAddress.value.substring(0, 4)}',
+                              ),
+                              TextSpan(
+                                text: '...',
+                              ),
+                              TextSpan(
+                                text: '${controller.userWalletAddress.value.substring(controller.userWalletAddress.value.length - 4)}',
+                              ),
+                            ],
                           ),
                         ),
-                        Container(
-                          margin: const EdgeInsets.only(left: 3),
-                          child: Text(
-                            controller.isKRW.value ? 'KRW' : 'USD',
-                            textAlign: TextAlign.end,
-                            style: const TextStyle(fontSize: 12, color: Color.fromARGB(255, 165, 165, 165), fontWeight: FontWeight.w500),
+                        Padding(
+                          padding: EdgeInsets.only(left: 12.0.sp),
+                          child: InkWell(
+                            child: iconCopy,
+                            onTap: () => controller.handleCopyWalletAddress(),
                           ),
-                        )
+                        ),
                       ],
                     ),
                   ),
-                ],
+                ),
               ),
             ),
-            if (controller.coinAssetList.isNotEmpty) ...renderCoinAssetList(controller),
-          ],
-        );
-      }),
-    );
+          if (controller.coinAssetList.isNotEmpty) ...renderCoinAssetList(controller),
+        ],
+      );
+    });
   }
 }

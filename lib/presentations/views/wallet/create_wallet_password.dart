@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:gaza_go/constants/enums.dart';
 import 'package:gaza_go/platform/controllers/create_wallet_password_controller.dart';
+import 'package:gaza_go/platform/controllers/wallet_master_controller.dart';
 import 'package:gaza_go/presentations/components/default_container.dart';
 import 'package:gaza_go/presentations/components/gazago_button.dart';
 import 'package:gaza_go/presentations/styles/colors.dart';
@@ -16,17 +18,9 @@ class CreateWalletPassword extends StatelessWidget {
       visible: status != FormStatus.empty,
       child: Padding(
         padding: const EdgeInsets.only(right: 15),
-        child: status == FormStatus.insufficient ? failedSVG() : confirmedSVG(),
+        child: status == FormStatus.insufficient ? iconPasswordInvalid : iconPasswordValid,
       ),
     );
-  }
-
-  Widget confirmedSVG() {
-    return iconPasswordValid;
-  }
-
-  Widget failedSVG() {
-    return iconPasswordInvalid;
   }
 
   @override
@@ -35,6 +29,10 @@ class CreateWalletPassword extends StatelessWidget {
     return DefaultContainer(
       backgroundColor: subBg01Color,
       resizeToAvoidBottomInset: false,
+      onBackButtonTap: () {
+        Get.find<WalletMasterController>().tabController.animateTo(0);
+        Get.back();
+      },
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -157,7 +155,7 @@ class CreateWalletPassword extends StatelessWidget {
                               color: Colors.white,
                             ),
                             onChanged: (password) => controller.updateConfirmPassword(password),
-                            onSubmitted: (password) => controller.isEnableNext.value ? () => {controller.nextStep()} : null,
+                            onSubmitted: (password) => controller.nextStep(),
                           ),
                         ),
                         Obx(() => validatePassword(controller.confirmPasswordFormStatus.value)),

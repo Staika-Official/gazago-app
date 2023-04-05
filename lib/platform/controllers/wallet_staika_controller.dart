@@ -8,8 +8,10 @@ import 'package:gaza_go/platform/helpers/solana_mixin.dart';
 import 'package:gaza_go/platform/helpers/wallet_mixin.dart';
 import 'package:gaza_go/platform/models/asset_item_nft_model.dart';
 import 'package:gaza_go/platform/models/error_response_data_model.dart';
+import 'package:gaza_go/platform/models/on_chain_wallet_model.dart';
 import 'package:gaza_go/platform/models/wallet_token_balance_model.dart';
 import 'package:gaza_go/platform/services/wallet_service.dart';
+import 'package:gaza_go/platform/stores/hive_store.dart';
 import 'package:gaza_go/presentations/components/alert_ui_list.dart';
 import 'package:get/get.dart';
 
@@ -18,6 +20,7 @@ class StaikaWalletController extends GetxController with WalletMixin, SolanaMixi
   final Rx<WalletTokenBalanceModel> assetStik = Rx(WalletTokenBalanceModel());
   final RxList<AssetItemNftModel> nftAssetList = RxList.empty();
   final RxString userWalletAddress = RxString('');
+  final RxString explorerUrl = RxString('');
   final Rxn<AnimationController> switchAnimation = Rxn();
   final RxString currentSumPriceUI = RxString('0');
   final RxDouble sendStikAmount = RxDouble(0.0);
@@ -65,9 +68,17 @@ class StaikaWalletController extends GetxController with WalletMixin, SolanaMixi
 
   Future<void> getStaikaWalletInfo() async {
     await WalletService.getOnChainWallet(
-      successCallback: (data) {
+      successCallback: (OnChainWalletModel data) async {
+        HiveStore.save(key: HiveKey.solanaSecretKey.name, value: data.secretKey);
         userWalletAddress.value = data.publicKey;
-        showStaikaStatusAlert(hasWallet: true);
+        explorerUrl.value = data.explorerUrl;
+        bool isWalletConnectionPrompted = HiveStore.load(key: HiveKey.walletConnectionPrompted.name) ?? false;
+        if (!isWalletConnectionPrompted) {
+          HiveStore.save(key: HiveKey.walletConnectionPrompted.name, value: true);
+          showStaikaStatusAlert(hasWallet: true);
+        }
+
+        await getOnChainTokenBalance();
       },
       errorCallback: (ErrorResponseDataModel data) {
         if (data.errorCode == 'WalletNotFoundException') {
@@ -86,7 +97,7 @@ class StaikaWalletController extends GetxController with WalletMixin, SolanaMixi
   }
 
   void onOpenSolScanWallet() {
-    Get.toNamed(Routes.webView, arguments: {'linkUrl': 'https://solscan.io/account/${userWalletAddress}'});
+    Get.toNamed(Routes.webView, arguments: {'linkUrl': explorerUrl.value});
   }
 
   void setSwitchValue(bool value) {
@@ -95,10 +106,10 @@ class StaikaWalletController extends GetxController with WalletMixin, SolanaMixi
     switchAnimation.value?.forward();
   }
 
-  void getOnChainTokenBalance() async {
+  Future<void> getOnChainTokenBalance() async {
     await WalletService.getOnChainTokenBalance(successCallback: (tokenData) {
-      print(tokenData);
-      coinAssetList.value = tokenData;
+      coinAssetList.clear();
+      coinAssetList.addAll(tokenData);
       assetStik.value = tokenData.firstWhere((data) => data.symbol == 'STIK');
 
       // setCurrentSumPriceUI(tokenData, currency.value);
