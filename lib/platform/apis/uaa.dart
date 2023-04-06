@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:dio/dio.dart';
 import 'package:gaza_go/constants/base_urls.dart';
 import 'package:gaza_go/constants/enums.dart';
@@ -43,6 +45,24 @@ class UaaApi {
 
   static Future<Response> fetchUploadImage(String userId, FormData imageFile) async {
     return await Api.client(serviceUrl: ServiceUrl.uaaService, isFile: true).post('/users/$userId/upload-profile-image', data: imageFile);
+  }
+
+  static Future<Response> fetchUploadImageUrl(String fileName) async {
+    return await Api.client(serviceUrl: ServiceUrl.uaaService, isFile: true).get('/images/presigned-url/profile?fileName=$fileName');
+  }
+
+  static Future<Response> uploadToS3bucket(String presignedUrl, File profileImage, String contentType) async {
+    Dio dio = Dio();
+    return await dio.put(
+      presignedUrl,
+      data: profileImage.openRead(),
+      options: Options(
+        contentType: 'image/$contentType',
+        headers: {
+          "Content-Length": profileImage.lengthSync(),
+        },
+      ),
+    );
   }
 
   static Future<Response> fetchWithdrawMember() async {

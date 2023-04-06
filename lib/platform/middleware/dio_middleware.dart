@@ -241,7 +241,7 @@ class Api {
           '\n${error.response}',
         );
 
-        if (errorResponseDataModel != null && errorResponseDataModel.errorCode == 401) {
+        if (errorResponseDataModel != null && errorResponseDataModel.status == 401) {
           await _getNewAccessToken(e, handler);
         } else if (!handler.isCompleted) {
           e.response != null ? handler.resolve(e.response!) : handler.next(e);

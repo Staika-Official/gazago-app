@@ -7,6 +7,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:gaza_go/constants/enums.dart';
 import 'package:gaza_go/platform/controllers/preference_controller.dart';
 import 'package:gaza_go/platform/helpers/alert_helper.dart';
+import 'package:gaza_go/platform/models/error_response_data_model.dart';
 import 'package:gaza_go/platform/models/user_account_model.dart';
 import 'package:gaza_go/platform/services/uaa_service.dart';
 import 'package:gaza_go/platform/stores/hive_store.dart';
@@ -59,32 +60,46 @@ class MyPageController extends GetxController {
   }
 
   Future<void> modifyMyAccountInfo() async {
+    String? uploadUrl;
+
     if (pickedImage.value != null) {
       String imagePath = pickedImage.value!.path;
       dio.MultipartFile profileImage = await dio.MultipartFile.fromFile(imagePath, contentType: MediaType('image', imagePath.split('.').last));
-      dio.FormData formData = dio.FormData.fromMap({
-        'profileImage': profileImage,
-      });
-      await UaaService.fetchUploadImage(formData, successCallback: (res) {
-        profile.value.profileImageUrl = res?.profileImageUrl;
-      }, errorCallback: () {
-        showToastPopup('이미지 업로드에 실패했습니다.');
-        return;
-      });
+      File file = File(imagePath);
+
+      await UaaService.fetchUploadImageUrl(
+        profileImage.filename!,
+        successCallback: (Map<String, dynamic> data) async {
+          uploadUrl = data['uploadUrl'];
+          await UaaService.uploadToS3bucket(
+            uploadUrl!,
+            file,
+            imagePath.split('.').last,
+          );
+        },
+        errorCallback: () {
+          showToastPopup('이미지 업로드에 실패했습니다.');
+          return;
+        },
+      );
     }
 
-    if (profile.value.profileImageUrl == null || profile.value.profileImageUrl == '') {
-      profile.value.profileImageUrl = 'https://image.staika.io/ic_launcher.png';
-    }
+    Uri profileImageUrl = Uri.parse(uploadUrl ?? 'https://image.staika.io/ic_launcher.png');
+    profile.value.profileImageUrl = profileImageUrl.origin + profileImageUrl.path;
 
-    await UaaService.modifyAccountInfo(profile.value.nickname!, profile.value.profileImageUrl, successCallback: (UserAccountModel account) {
-      preferenceController.onInit();
-      HiveStore.save(key: HiveKey.profileImageUrl.name, value: account.profileImageUrl);
-      showToastPopup('프로필이 수정되었습니다.');
-      Get.back();
-    }, errorCallback: (res) {
-      showToastPopup(res.message);
-    });
+    await UaaService.modifyAccountInfo(
+      profile.value.nickname!,
+      profile.value.profileImageUrl,
+      successCallback: (UserAccountModel account) {
+        preferenceController.onInit();
+        HiveStore.save(key: HiveKey.profileImageUrl.name, value: account.profileImageUrl);
+        showToastPopup('프로필이 수정되었습니다.');
+        Get.back();
+      },
+      errorCallback: (ErrorResponseDataModel data) {
+        showToastPopup(data.errorMessage!);
+      },
+    );
   }
 
   void toggleEditMode() {
