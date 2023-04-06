@@ -70,5 +70,5 @@ void forceLogout() async {
     }
   }
 
-  Get.offAllNamed(Routes.login);
+  if (Get.currentRoute != Routes.login) Get.offAllNamed(Routes.login);
 }

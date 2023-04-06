@@ -161,8 +161,8 @@ class LoginController extends GetxController {
           Get.offNamed(Routes.joinTerms);
         }
       },
-      errorCallback: (int statusCode, String statusMessage) {
-        showToastPopup(statusMessage);
+      errorCallback: () {
+        forceLogout();
       },
     );
   }
