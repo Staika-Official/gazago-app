@@ -7,6 +7,7 @@ import 'package:gaza_go/platform/services/board_service.dart';
 import 'package:gaza_go/platform/stores/hive_store.dart';
 import 'package:gaza_go/presentations/components/alert_ui_list.dart';
 import 'package:get/get.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class NoticePopupController extends GetxController {
   GlobalController globalController = Get.find();
@@ -62,9 +63,10 @@ class NoticePopupController extends GetxController {
     );
   }
 
-  void moveToWebView(item) {
+  void moveToWebView(item) async {
     if (item.linkUrl.contains('http')) {
-      Get.toNamed(Routes.webView, arguments: {'id': item.id, 'linkUrl': item.linkUrl});
+      // Get.toNamed(Routes.webView, arguments: {'id': item.id, 'linkUrl': item.linkUrl});
+      await launchUrl(item.linkUrl);
     } else {
       switch (item.linkUrl) {
         case 'ARCHIVE':
