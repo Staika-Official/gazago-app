@@ -1249,7 +1249,7 @@ void itemPurchaseCompleteAlert(ShopController controller) {
             ),
           ),
           Padding(
-            padding: EdgeInsets.only(bottom: 15.0.sp),
+            padding: EdgeInsets.only(bottom: 10.0.sp),
             child: Row(
               mainAxisAlignment: MainAxisAlignment.center,
               crossAxisAlignment: CrossAxisAlignment.center,
@@ -1267,9 +1267,24 @@ void itemPurchaseCompleteAlert(ShopController controller) {
               ],
             ),
           ),
+          if (controller.purchaseCompleteItem.value.nftId != null)
+            Container(
+              padding: EdgeInsets.symmetric(horizontal: 15.sp, vertical: 8.sp),
+              decoration: BoxDecoration(
+                border: Border.all(color: deepGrayColor),
+                borderRadius: BorderRadius.circular(30),
+              ),
+              child: StyledText(
+                '#${controller.purchaseCompleteItem.value.nftId!}',
+                fontSize: 14,
+                lineHeight: 14,
+                fontWeight: 600,
+                color: deepGrayColor,
+              ),
+            ),
           Container(
             width: double.infinity,
-            margin: EdgeInsets.only(top: 5.sp),
+            margin: EdgeInsets.only(top: controller.purchaseCompleteItem.value.nftId != null ? 20.sp : 10.sp),
             decoration: BoxDecoration(
               color: subBg01Color,
               borderRadius: BorderRadius.all(

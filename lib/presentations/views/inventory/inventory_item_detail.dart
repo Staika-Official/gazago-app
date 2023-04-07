@@ -76,6 +76,22 @@ class InventoryItemDetail extends StatelessWidget {
                                             fit: BoxFit.fitWidth,
                                             placeholder: (context, url) => const Center(child: SizedBox.square(dimension: 40, child: CircularProgressIndicator())),
                                           ),
+                                    if (controller.selectedItem.value.nftId != null)
+                                      Container(
+                                        margin: EdgeInsets.only(top: 10.sp, bottom: 10.sp),
+                                        padding: EdgeInsets.symmetric(horizontal: 15.sp, vertical: 8.sp),
+                                        decoration: BoxDecoration(
+                                          border: Border.all(color: deepGrayColor),
+                                          borderRadius: BorderRadius.circular(30),
+                                        ),
+                                        child: StyledText(
+                                          '#${controller.selectedItem.value.nftId!}',
+                                          fontSize: 14,
+                                          lineHeight: 14,
+                                          fontWeight: 600,
+                                          color: deepGrayColor,
+                                        ),
+                                      ),
                                     if (controller.isShoe.value)
                                       SizedBox(
                                         height: 42.sp,

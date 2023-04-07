@@ -6,8 +6,10 @@ part 'inventory_item_model.g.dart';
 class InventoryItemModel {
   int id;
   int? userId;
+  int? nftId;
   String serialNumber;
   String itemName;
+  String? publishType;
   String itemCategory;
   String itemGrade;
   double durability;
@@ -24,9 +26,11 @@ class InventoryItemModel {
   InventoryItemModel({
     required this.id,
     this.userId,
+    this.nftId,
     required this.serialNumber,
     required this.itemGrade,
     required this.itemName,
+    this.publishType,
     required this.itemCategory,
     required this.durability,
     required this.abrasionRate,

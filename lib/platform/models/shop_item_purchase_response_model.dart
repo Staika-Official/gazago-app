@@ -6,9 +6,11 @@ part 'shop_item_purchase_response_model.g.dart';
 class ShopItemPurchaseResponseModel {
   int id;
   int userId;
+  int? nftId;
   String serialNumber;
   String itemName;
   String itemImageUrl;
+  String? publishType;
   String itemCategory;
   String itemGrade;
   double durability;
@@ -20,9 +22,11 @@ class ShopItemPurchaseResponseModel {
   ShopItemPurchaseResponseModel({
     required this.id,
     required this.userId,
+    this.nftId,
     required this.serialNumber,
     required this.itemName,
     required this.itemImageUrl,
+    this.publishType,
     required this.itemCategory,
     required this.itemGrade,
     required this.durability,
