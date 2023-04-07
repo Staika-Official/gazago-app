@@ -66,7 +66,10 @@ class NoticePopupController extends GetxController {
   void moveToWebView(item) async {
     if (item.linkUrl.contains('http')) {
       // Get.toNamed(Routes.webView, arguments: {'id': item.id, 'linkUrl': item.linkUrl});
-      await launchUrl(item.linkUrl);
+      Uri url = Uri.parse(item.linkUrl);
+      if (await canLaunchUrl(url)) {
+        await launchUrl(url, mode: LaunchMode.externalApplication);
+      }
     } else {
       switch (item.linkUrl) {
         case 'ARCHIVE':
