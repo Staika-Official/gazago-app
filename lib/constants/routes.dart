@@ -132,12 +132,7 @@ class Routes {
     stepPage(name: Routes.activityLoading, page: const ActivityLoading()),
     stepPage(name: Routes.activityActive, page: const ActivityActive()),
     stepPage(name: Routes.challengeMap, page: const ChallengeMap()),
-    stepPage(
-      name: Routes.preferences,
-      page: const Preferences(),
-      transition: Transition.rightToLeft,
-      transitionDuration: const Duration(milliseconds: 200),
-    ),
+    stepPage(name: Routes.preferences, page: const Preferences()),
     stepPage(name: Routes.preferenceBoard, page: const PreferenceBoard()),
     stepPage(name: Routes.noticeList, page: const NoticeList()),
     stepPage(name: Routes.noticeDetail, page: const NoticeDetail()),

@@ -67,38 +67,6 @@ class ActivityController extends SuperController with ActivityMixin, ChallengeMi
     ]);
   }
 
-  final List<Map<String, dynamic>> popupList = [
-    {
-      'id': 1,
-      'imageUrl': 'assets/images/common/img_main_popup_04.png',
-      'type': 'GATEIO',
-      'linkUrl': 'https://blog.naver.com/staika/223038831424',
-    },
-    {
-      'id': 2,
-      'imageUrl': 'assets/images/common/img_main_popup_05.png',
-      'type': 'ABUSES',
-      'linkUrl': 'https://eztechfin.notion.site/939f54ae65b94a74984497903d414aad',
-    },
-    {
-      'id': 3,
-      'imageUrl': 'assets/images/common/img_main_popup.png',
-      'type': 'HOWTOGO',
-      'linkUrl': 'https://eztechfin.notion.site/How-to-GO-61129dcb96324b0cb282d7743e19b043',
-    },
-    {
-      'id': 4,
-      'imageUrl': 'assets/images/common/img_main_popup_02.png',
-      'type': 'WARNING',
-      'linkUrl': 'https://blog.naver.com/gaza-go_crew/223015634731',
-    },
-    {
-      'id': 5,
-      'imageUrl': 'assets/images/common/img_main_popup_03.png',
-      'linkUrl': 'NEWITEM',
-    },
-  ];
-
   final RxDouble currentSliderValue = RxDouble(0);
   final RxInt remainDurability = RxInt(0);
   final RxInt repairDurability = RxInt(0);
@@ -684,7 +652,7 @@ class ActivityController extends SuperController with ActivityMixin, ChallengeMi
     if (Platform.isAndroid) {
       locationSettings = AndroidSettings(
           accuracy: locationAccuracyQuality,
-          distanceFilter: 5,
+          distanceFilter: 1,
           forceLocationManager: false,
           intervalDuration: const Duration(seconds: 5),
           useMSLAltitude: true,
@@ -699,8 +667,8 @@ class ActivityController extends SuperController with ActivityMixin, ChallengeMi
       locationSettings = AppleSettings(
         accuracy: locationAccuracyQuality,
         activityType: ActivityType.fitness,
-        distanceFilter: 5,
-        pauseLocationUpdatesAutomatically: true,
+        distanceFilter: 1,
+        pauseLocationUpdatesAutomatically: false,
         // Only set to true if our app will be started up in the background.
         showBackgroundLocationIndicator: false,
       );
