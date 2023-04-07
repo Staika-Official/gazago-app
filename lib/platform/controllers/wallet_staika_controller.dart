@@ -1,21 +1,28 @@
+import 'dart:math';
+
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:gaza_go/constants/enums.dart';
 import 'package:gaza_go/constants/routes.dart';
+import 'package:gaza_go/platform/controllers/loader_controller.dart';
 import 'package:gaza_go/platform/controllers/wallet_master_controller.dart';
 import 'package:gaza_go/platform/helpers/alert_helper.dart';
+import 'package:gaza_go/platform/helpers/base_helper.dart';
 import 'package:gaza_go/platform/helpers/solana_mixin.dart';
 import 'package:gaza_go/platform/helpers/wallet_mixin.dart';
 import 'package:gaza_go/platform/models/asset_item_nft_model.dart';
 import 'package:gaza_go/platform/models/error_response_data_model.dart';
 import 'package:gaza_go/platform/models/on_chain_wallet_model.dart';
+import 'package:gaza_go/platform/models/wallet_solana_model.dart';
 import 'package:gaza_go/platform/models/wallet_token_balance_model.dart';
 import 'package:gaza_go/platform/services/wallet_service.dart';
 import 'package:gaza_go/platform/stores/hive_store.dart';
 import 'package:gaza_go/presentations/components/alert_ui_list.dart';
 import 'package:get/get.dart';
+import 'package:solana/solana.dart';
 
 class StaikaWalletController extends GetxController with WalletMixin, SolanaMixin {
+  LoaderController loaderController = Get.find();
   final RxList<WalletTokenBalanceModel> coinAssetList = RxList.empty();
   final Rxn<WalletTokenBalanceModel> assetStik = Rxn();
   final RxList<AssetItemNftModel> nftAssetList = RxList.empty();
@@ -23,10 +30,19 @@ class StaikaWalletController extends GetxController with WalletMixin, SolanaMixi
   final RxString explorerUrl = RxString('');
   final Rxn<AnimationController> switchAnimation = Rxn();
   final RxString currentSumPriceUI = RxString('0');
-  final RxDouble sendStikAmount = RxDouble(0.0);
+  final RxString sendStikUiAmount = RxString('0');
+  final RxDouble fee = RxDouble(0.0);
   final Rx<Currency> currency = Rx(Currency.krw);
   final TextEditingController stikAmountTextController = TextEditingController();
   final FocusNode focusNode = FocusNode();
+
+  RxBool get isValid {
+    if (sendStikUiAmount.value != '') {
+      return RxBool(double.parse(sendStikUiAmount.value) != 0 && sendStikUiAmount.value != '0.');
+    }
+    return RxBool(false);
+  }
+
   RxBool get isKRW {
     return RxBool(currency.value.name == 'krw');
   }
@@ -125,7 +141,38 @@ class StaikaWalletController extends GetxController with WalletMixin, SolanaMixi
   }
 
   void setAmount(String changeAmount) {
-    print(changeAmount);
-    sendStikAmount.value = double.parse(changeAmount);
+    sendStikUiAmount.value = changeAmount;
+  }
+
+  void openSendStikGoWalletAlert() {
+    sendStikToGoWalletAlert(this);
+  }
+
+  void showWalletPasswordAlert() {}
+  void confirmSendStikToGoWallet(String password) async {
+    print(sendStikUiAmount.value);
+    print(formatDecimalPlaces(double.parse(sendStikUiAmount.value), 9));
+    print('보낼거야');
+    WalletSolanaModel? wallet = await WalletService.getSolanaWallet();
+    num mod = pow(10.0, 9);
+    print(Ed25519HDPublicKey.fromBase58("E3hFsYympX61jvzMuJjrQ7bJkqpUXqc1F7q3QCGsF9ui"));
+    // loaderController.isLoading.value = true;
+    // await WalletService.fetchStikMoveToGoWallet(
+    //     symbol: 'STIK',
+    //     accountSecretkey: wallet!.secretkey,
+    //     walletPassword: password,
+    //     // 회사 계정 지갑
+    //     toAddress: '',
+    //     // 토큰 민트 주소
+    //     tokenAddress: userWalletAddress.value,
+    //     // decimals: assetStik.value.decimals,
+    //     decimals: 9,
+    //     amount: (double.parse(sendStikUiAmount.value) * mod).toInt(),
+    //     successCallback: (boolean) {
+    //       print('고지갑으로 옮겨졌다');
+    //       Get.back();
+    //       getStaikaWalletInfo();
+    //     });
+    // loaderController.isLoading.value = false;
   }
 }

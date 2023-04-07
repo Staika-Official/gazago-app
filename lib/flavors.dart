@@ -108,13 +108,13 @@ class F {
   static Ed25519HDPublicKey get solanaFeePayer {
     switch (appFlavor) {
       case Flavor.dev:
-        return Ed25519HDPublicKey.fromBase58("92RJbkjWhnqpKMepWGe6WXo94XeAQszX2PTStS7weZLc");
+        return Ed25519HDPublicKey.fromBase58("E3hFsYympX61jvzMuJjrQ7bJkqpUXqc1F7q3QCGsF9ui");
       case Flavor.stage:
-        return Ed25519HDPublicKey.fromBase58("92RJbkjWhnqpKMepWGe6WXo94XeAQszX2PTStS7weZLc");
+        return Ed25519HDPublicKey.fromBase58("E3hFsYympX61jvzMuJjrQ7bJkqpUXqc1F7q3QCGsF9ui");
       case Flavor.prod:
-        return Ed25519HDPublicKey.fromBase58("92RJbkjWhnqpKMepWGe6WXo94XeAQszX2PTStS7weZLc");
+        return Ed25519HDPublicKey.fromBase58("jfMvdqtgQ4VnnhYgHEa1KEQSobiqy7dAFepr1CZRZ4A");
       default:
-        return Ed25519HDPublicKey.fromBase58("92RJbkjWhnqpKMepWGe6WXo94XeAQszX2PTStS7weZLc");
+        return Ed25519HDPublicKey.fromBase58("E3hFsYympX61jvzMuJjrQ7bJkqpUXqc1F7q3QCGsF9ui");
     }
   }
 

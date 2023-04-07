@@ -1,6 +1,7 @@
 import 'package:dio/dio.dart';
 import 'package:gaza_go/constants/base_urls.dart';
 import 'package:gaza_go/platform/middleware/dio_middleware.dart';
+import 'package:gaza_go/platform/models/exchange_token_withdrawal_model.dart';
 import 'package:gaza_go/platform/models/pay_info_model.dart';
 
 class WalletApi {
@@ -103,5 +104,9 @@ class WalletApi {
 
   static Future<Response> getOnChainTokenBalance(String? userId) async {
     return await Api.client(serviceUrl: ServiceUrl.onChainWalletService, allowCustomErrorHandler: true).get('/solana/users/$userId/balances');
+  }
+
+  static Future<Response> exchangeStikToGoWallet(String userId, String symbol, ExchangeTokenWithdrawalModel data) async {
+    return await Api.client(serviceUrl: ServiceUrl.onChainWalletService).post('/solana/tokens/${symbol}/users/${userId}/exchange?clientId=GAZAGO', data: data);
   }
 }

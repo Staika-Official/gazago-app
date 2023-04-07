@@ -4,6 +4,7 @@ import 'package:gaza_go/platform/helpers/alert_helper.dart';
 import 'package:gaza_go/platform/helpers/solana_mixin.dart';
 import 'package:gaza_go/platform/models/charge_tik_model.dart';
 import 'package:gaza_go/platform/models/exchange_stik_price_model.dart';
+import 'package:gaza_go/platform/models/exchange_stik_token_model.dart';
 import 'package:gaza_go/platform/services/solana_service.dart';
 import 'package:gaza_go/presentations/components/alert_ui_list.dart';
 import 'package:get/get.dart';
@@ -33,9 +34,9 @@ class GoWalletController extends GetxController with SolanaMixin {
         await SolanaService.fetchChargeStikToTik(
           ChargeTikModel(
             title: "STIK_TO_TIK",
-            fromSymbol: exchangeProduct.fromSymbol!,
+            fromSymbol: exchangeProduct.fromTokenSymbol!,
             fromUiAmount: exchangeProduct.fromUiAmount!,
-            toSymbol: exchangeProduct.toSymbol!,
+            toSymbol: exchangeProduct.toTokenSymbol!,
             // toUiAmount: exchangeProduct.toUiAmount!,
             toUiAmount: 1000000,
             priceKRW: walletMasterController.stikPriceInfoKRW.value.price!,
@@ -66,7 +67,7 @@ class GoWalletController extends GetxController with SolanaMixin {
   }
 
   Future<void> getProductList() async {
-    await SolanaService.getExchangeStikPriceInfo(successCallback: (data) {
+    await SolanaService.getExchangeStikPriceInfo(successCallback: (ExchangeStikTokenModel data) {
       print(data);
       productList.value = data.prices;
     });

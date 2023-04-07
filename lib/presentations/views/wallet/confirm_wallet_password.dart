@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:gaza_go/constants/enums.dart';
@@ -10,8 +12,9 @@ import 'package:gaza_go/presentations/styles/icons.dart';
 import 'package:gaza_go/presentations/styles/styled_text.dart';
 import 'package:get/get.dart';
 
-void showConfirmPasswordDialog(WalletMasterController controller) {
+Future<String> showConfirmPasswordDialog(WalletMasterController controller) {
   ConfirmWalletPasswordController controller = Get.put(ConfirmWalletPasswordController());
+  Completer<String> completer = Completer();
   Get.dialog(
     barrierDismissible: false,
     useSafeArea: false,
@@ -136,7 +139,8 @@ void showConfirmPasswordDialog(WalletMasterController controller) {
               width: double.infinity,
               child: GazagoButton(
                 onTap: () {
-                  controller.nextStep();
+                  String? password = controller.nextStep();
+                  completer.complete(password);
                 },
                 buttonText: '확인',
                 buttonColor: skyBlueColor,
@@ -149,4 +153,6 @@ void showConfirmPasswordDialog(WalletMasterController controller) {
       ),
     ),
   );
+
+  return completer.future;
 }

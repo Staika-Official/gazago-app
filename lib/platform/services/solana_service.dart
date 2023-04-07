@@ -30,6 +30,15 @@ class SolanaService {
   static Future<void> getExchangeStikPriceInfo({required Function successCallback, Function? errorCallback}) async {
     Response res = await TokenApi.getExchangeStikPriceInfo();
     if (res.statusCode == 200) {
+      // List<ExchangeStikPriceModel> products = List.empty(growable: true);
+      // if (res.data.products.length > 0) {
+      //   res.data.products.forEach((product) {
+      //     products.add(ExchangeStikPriceModel.fromJson(product));
+      //   });
+      // }
+      // successCallback(products);
+      // print(res.data['products']);
+      // successCallback(res.data.products is Map<String, dynamic> ? ExchangeStikPriceModel.fromJson(res.data.products) : null);
       successCallback(ExchangeStikTokenModel.fromJson(res.data));
     } else {
       if (errorCallback != null) errorCallback();

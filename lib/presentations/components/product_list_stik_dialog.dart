@@ -30,7 +30,7 @@ List<Widget> renderProductStikList(GoWalletController controller) {
                     child: iconTik,
                   ),
                   StyledText(
-                    '${product.value.toUiAmount.toString()} ${product.value.toSymbol}',
+                    '${product.value.toUiAmount.toString()} ${product.value.toTokenSymbol}',
                     fontSize: 18.sp,
                     fontWeight: 700,
                     lineHeight: 18.sp,
@@ -67,7 +67,7 @@ List<Widget> renderProductStikList(GoWalletController controller) {
                             Padding(
                               padding: EdgeInsets.only(left: 5.0.sp),
                               child: StyledText(
-                                '${formatDecimalPlaces(product.value.fromUiAmount, 9, isAutoDecimal: true)} ${product.value.fromSymbol}',
+                                '${formatDecimalPlaces(product.value.fromUiAmount, 9, isAutoDecimal: true)} ${product.value.fromTokenSymbol}',
                                 fontSize: 14.sp,
                                 fontWeight: 500,
                                 lineHeight: 16.sp,

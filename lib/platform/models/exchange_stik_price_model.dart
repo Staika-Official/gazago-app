@@ -4,15 +4,15 @@ part 'exchange_stik_price_model.g.dart';
 
 @JsonSerializable(explicitToJson: true)
 class ExchangeStikPriceModel {
-  String? fromSymbol;
+  String? fromTokenSymbol;
   double? fromUiAmount;
-  String? toSymbol;
+  String? toTokenSymbol;
   int? toUiAmount;
 
   ExchangeStikPriceModel({
-    this.fromSymbol,
+    this.fromTokenSymbol,
     this.fromUiAmount,
-    this.toSymbol,
+    this.toTokenSymbol,
     this.toUiAmount,
   });
 

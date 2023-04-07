@@ -21,6 +21,7 @@ import 'package:gaza_go/platform/controllers/preference_controller.dart';
 import 'package:gaza_go/platform/controllers/shop_controller.dart';
 import 'package:gaza_go/platform/controllers/wallet_go_controller.dart';
 import 'package:gaza_go/platform/controllers/wallet_master_controller.dart';
+import 'package:gaza_go/platform/controllers/wallet_staika_controller.dart';
 import 'package:gaza_go/platform/controllers/withdraw_confirm_controller.dart';
 import 'package:gaza_go/platform/helpers/activity_mixin.dart';
 import 'package:gaza_go/platform/helpers/alert_helper.dart';
@@ -2965,7 +2966,7 @@ void exchangeStikToTikAlert(GoWalletController controller, ExchangeStikPriceMode
                     Padding(
                       padding: EdgeInsets.only(left: 7.0.sp),
                       child: StyledText(
-                        exchangeProduct.fromSymbol!,
+                        exchangeProduct.fromTokenSymbol!,
                         fontSize: 30,
                         lineHeight: 32,
                         fontWeight: 400,
@@ -2993,7 +2994,7 @@ void exchangeStikToTikAlert(GoWalletController controller, ExchangeStikPriceMode
                     Padding(
                       padding: EdgeInsets.only(left: 7.0.sp),
                       child: StyledText(
-                        exchangeProduct.toSymbol!,
+                        exchangeProduct.toTokenSymbol!,
                         fontSize: 30,
                         lineHeight: 32,
                         fontWeight: 400,
@@ -3133,6 +3134,185 @@ void successChargeStikToTikAlert(GoWalletController controller) {
           onTap: () {
             Get.back();
             controller.handleSuccessChargeTik();
+          },
+          buttonText: '확인',
+          buttonColor: skyBlueColor,
+        ),
+      ),
+    ],
+  );
+}
+
+void sendStikToGoWalletAlert(StaikaWalletController controller) {
+  WalletMasterController walletMasterController = Get.find();
+  showAlert(
+    title: '전송 하시겠습니까?',
+    isScrollControlled: true,
+    contentWidget: Obx(() {
+      return Column(
+        children: [
+          Padding(
+            padding: EdgeInsets.only(top: 34.0.sp, bottom: 30.sp),
+            child: Column(
+              children: [
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    SvgPicture.asset('assets/images/wallet/ico_stik.svg', width: 24, height: 24),
+                    Padding(
+                      padding: EdgeInsets.only(left: 7.0.sp),
+                      child: StyledText(
+                        controller.sendStikUiAmount.value,
+                        fontSize: 30,
+                        lineHeight: 32,
+                        fontWeight: 600,
+                      ),
+                    ),
+                    Padding(
+                      padding: EdgeInsets.only(left: 7.0.sp),
+                      child: StyledText(
+                        'STIK',
+                        fontSize: 30,
+                        lineHeight: 32,
+                        fontWeight: 400,
+                      ),
+                    ),
+                  ],
+                ),
+              ],
+            ),
+          ),
+          Padding(
+            padding: EdgeInsets.only(bottom: 23.0.sp),
+            child: const Divider(color: Color(0xFF474950), height: 3),
+          ),
+          Padding(
+            padding: EdgeInsets.only(bottom: 30.sp),
+            child: StyledText(
+              '· 전송이 완료되면 취소할 수 없습니다.',
+              fontSize: 14,
+              lineHeight: 15,
+              fontWeight: 500,
+              letterSpacing: -0.02,
+              color: lightGrayColor,
+            ),
+          ),
+        ],
+      );
+    }),
+    actions: [
+      Expanded(
+        child: GazagoButton(
+          onTap: () => Get.back(),
+          buttonText: '아니요',
+          textColor: Colors.white,
+          buttonColor: popupBgColor,
+        ),
+      ),
+      SizedBox(
+        width: 9.sp,
+      ),
+      Expanded(
+        child: GazagoButton(
+          onTap: () async {
+            Get.back();
+            // successExchangeStikToGoWalletAlert();
+            String? password = await showConfirmPasswordDialog(walletMasterController);
+            controller.confirmSendStikToGoWallet(password);
+          },
+          buttonText: '네',
+          buttonColor: skyBlueColor,
+        ),
+      ),
+    ],
+  );
+}
+
+void successExchangeStikToGoWalletAlert() {
+  showAlert(
+    contentWidget: Padding(
+      padding: EdgeInsets.only(top: 20.0.sp, bottom: 40.sp),
+      child: Column(
+        children: [
+          Column(
+            children: [
+              const StyledText(
+                '보내기 신청이 완료 되었습니다.',
+                fontSize: 18,
+                lineHeight: 24,
+                fontWeight: 500,
+                letterSpacing: .2,
+                textAlign: TextAlign.center,
+              ),
+              Padding(
+                padding: EdgeInsets.only(top: 10.0.sp),
+                child: StyledText(
+                  '결과는 잠시 후 거래 내역에서 조회 가능합니다.',
+                  fontSize: 16,
+                  lineHeight: 24,
+                  fontWeight: 500,
+                  letterSpacing: .2,
+                  color: lightGrayColor,
+                  textAlign: TextAlign.center,
+                ),
+              ),
+            ],
+          ),
+        ],
+      ),
+    ),
+    actions: [
+      Expanded(
+        child: GazagoButton(
+          onTap: () {
+            Get.back();
+          },
+          buttonText: '확인',
+          buttonColor: skyBlueColor,
+        ),
+      ),
+    ],
+  );
+}
+
+void failureExchangeStikToGoWalletAlert() {
+  showAlert(
+    contentWidget: Padding(
+      padding: EdgeInsets.only(top: 20.0.sp, bottom: 40.sp),
+      child: Column(
+        children: [
+          Column(
+            children: [
+              const StyledText(
+                '잠시 후 다시 시도해 주세요.',
+                fontSize: 18,
+                lineHeight: 24,
+                fontWeight: 500,
+                letterSpacing: .2,
+                textAlign: TextAlign.center,
+              ),
+              Padding(
+                padding: EdgeInsets.only(top: 10.0.sp),
+                child: StyledText(
+                  '블록체인 네트워크 이상으로 완료하지 못했습니다.',
+                  fontSize: 16,
+                  lineHeight: 24,
+                  fontWeight: 500,
+                  letterSpacing: .2,
+                  color: lightGrayColor,
+                  textAlign: TextAlign.center,
+                ),
+              ),
+            ],
+          ),
+        ],
+      ),
+    ),
+    actions: [
+      Expanded(
+        child: GazagoButton(
+          onTap: () {
+            Get.back();
           },
           buttonText: '확인',
           buttonColor: skyBlueColor,

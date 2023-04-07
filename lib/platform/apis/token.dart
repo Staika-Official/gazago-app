@@ -9,7 +9,7 @@ class TokenApi {
   }
 
   static Future<Response> getExchangeStikPriceInfo() async {
-    return await Api.client(serviceUrl: ServiceUrl.goWalletService).get('/tokens/STIK/markets/cmc?platform=solana&transactionTitle=STIK_TO_TIK');
+    return await Api.client(serviceUrl: ServiceUrl.goWalletService).get('/spending/tokens/swap?action=STIK_TO_TIK&markets=cmc');
   }
 
   static Future<Response> fetchChargeStikToTik(

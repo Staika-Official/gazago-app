@@ -1,5 +1,6 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:gaza_go/platform/controllers/wallet_staika_controller.dart';
 import 'package:gaza_go/presentations/components/default_container.dart';
@@ -33,7 +34,7 @@ class SendStikGoWallet extends StatelessWidget {
                       radius: 19.sp,
                       foregroundImage: controller.assetStik.value != null
                           ? CachedNetworkImageProvider(
-                              controller.assetStik.value.logoUrl!,
+                              controller.assetStik.value!.logoUrl,
                             )
                           : Image.asset(
                               'assets/images/ic_launcher.png',
@@ -55,7 +56,7 @@ class SendStikGoWallet extends StatelessWidget {
                           Padding(
                             padding: EdgeInsets.only(top: 6.0.sp),
                             child: StyledText(
-                              '${controller.assetStik.value.uiAmount} STIK',
+                              '${controller.assetStik.value!.uiAmount} STIK',
                               fontSize: 18,
                               lineHeight: 19,
                               fontWeight: 500,
@@ -107,7 +108,24 @@ class SendStikGoWallet extends StatelessWidget {
                         ),
                       ),
                       controller: controller.stikAmountTextController,
-                      keyboardType: TextInputType.number,
+                      keyboardType: TextInputType.numberWithOptions(decimal: true, signed: false),
+                      inputFormatters: [
+                        FilteringTextInputFormatter.allow(RegExp(r'(\d*\.?\d*)')),
+                        TextInputFormatter.withFunction((oldValue, newValue) {
+                          if (newValue.text.isEmpty) {
+                            return newValue.copyWith(text: '');
+                          } else if (newValue.text.compareTo(oldValue.text) != 0) {
+                            RegExp exp = RegExp("^(([1-9]\\d{0,8})|0)(\\.\\d{0,9}0?)?\$");
+                            if (exp.hasMatch(newValue.text)) {
+                              return newValue;
+                            } else {
+                              return oldValue;
+                            }
+                          } else {
+                            return newValue;
+                          }
+                        }),
+                      ],
                       style: TextStyle(
                         color: Colors.white,
                         fontSize: 24.sp,
@@ -119,15 +137,6 @@ class SendStikGoWallet extends StatelessWidget {
                       focusNode: controller.focusNode,
                       onChanged: (value) => controller.setAmount(value),
                     ),
-                    Padding(
-                      padding: EdgeInsets.only(top: 15.0.sp),
-                      child: StyledText(
-                        '* 보내는 STIK의 0.5%가 전송수수료로 추가 사용됩니다.',
-                        fontSize: 12,
-                        lineHeight: 20,
-                        color: deepGrayColor,
-                      ),
-                    ),
                   ],
                 ),
               ),
@@ -137,17 +146,17 @@ class SendStikGoWallet extends StatelessWidget {
                     child: Align(
                       alignment: Alignment.bottomCenter,
                       child: Container(
-                        color: controller.sendStikAmount == 0.0 ? popupBgColor : skyBlueColor,
+                        color: controller.isValid.value ? skyBlueColor : popupBgColor,
                         height: 60.sp,
                         alignment: Alignment.center,
                         child: InkWell(
-                          onTap: () => null,
+                          onTap: () => controller.openSendStikGoWalletAlert(),
                           child: Padding(
                             padding: EdgeInsets.symmetric(vertical: 8.0.sp),
                             child: Center(
                               child: StyledText(
                                 '보내기',
-                                color: controller.sendStikAmount == 0.0 ? deepGrayColor : Colors.black,
+                                color: controller.isValid.value ? Colors.black : deepGrayColor,
                                 fontSize: 18,
                                 fontWeight: 500,
                               ),
