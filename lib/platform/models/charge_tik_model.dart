@@ -4,19 +4,21 @@ part 'charge_tik_model.g.dart';
 
 @JsonSerializable(explicitToJson: true)
 class ChargeTikModel {
+  int userId;
   String title;
-  String fromSymbol;
+  String fromTokenSymbol;
   double fromUiAmount;
-  String toSymbol;
+  String toTokenSymbol;
   int toUiAmount;
   double priceKRW;
   double priceUSD;
 
   ChargeTikModel({
+    required this.userId,
     required this.title,
-    required this.fromSymbol,
+    required this.fromTokenSymbol,
     required this.fromUiAmount,
-    required this.toSymbol,
+    required this.toTokenSymbol,
     required this.toUiAmount,
     required this.priceKRW,
     required this.priceUSD,

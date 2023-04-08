@@ -74,6 +74,7 @@ class WalletApi {
     return await Api.client(serviceUrl: ServiceUrl.goWalletService).get('/nft/$publicKey');
   }
 
+  // Todo 오래된 api 삭제해야 함
   static Future<Response> getSolanaWallet(String? userId) async {
     return await Api.client(serviceUrl: ServiceUrl.goWalletService).get('/solana/wallet/$userId');
   }

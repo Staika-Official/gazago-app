@@ -118,6 +118,32 @@ class F {
     }
   }
 
+  static Ed25519HDPublicKey get solanaTokenMint {
+    switch (appFlavor) {
+      case Flavor.dev:
+        return Ed25519HDPublicKey.fromBase58("7sc5sRrmPC3oz8rq1cJn28GGr2ezqeBLNEjy8LXkHY9U");
+      case Flavor.stage:
+        return Ed25519HDPublicKey.fromBase58("7sc5sRrmPC3oz8rq1cJn28GGr2ezqeBLNEjy8LXkHY9U");
+      case Flavor.prod:
+        return Ed25519HDPublicKey.fromBase58("8BMzMi2XxZn9afRaMx5Z6fauk9foHXqV5cLTCYWRcVje");
+      default:
+        return Ed25519HDPublicKey.fromBase58("7sc5sRrmPC3oz8rq1cJn28GGr2ezqeBLNEjy8LXkHY9U");
+    }
+  }
+
+  static Ed25519HDPublicKey get solanaTokenMasterWallet {
+    switch (appFlavor) {
+      case Flavor.dev:
+        return Ed25519HDPublicKey.fromBase58("6ShEHhBuv6VNNQy4Tw4jYBS6Rq99gNBRHpQ5HDkTfvdy");
+      case Flavor.stage:
+        return Ed25519HDPublicKey.fromBase58("6ShEHhBuv6VNNQy4Tw4jYBS6Rq99gNBRHpQ5HDkTfvdy");
+      case Flavor.prod:
+        return Ed25519HDPublicKey.fromBase58("");
+      default:
+        return Ed25519HDPublicKey.fromBase58("6ShEHhBuv6VNNQy4Tw4jYBS6Rq99gNBRHpQ5HDkTfvdy");
+    }
+  }
+
   static String get startAdIos {
     switch (appFlavor) {
       case Flavor.dev:

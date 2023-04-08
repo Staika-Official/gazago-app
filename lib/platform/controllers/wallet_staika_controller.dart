@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:gaza_go/constants/enums.dart';
 import 'package:gaza_go/constants/routes.dart';
+import 'package:gaza_go/flavors.dart';
 import 'package:gaza_go/platform/controllers/loader_controller.dart';
 import 'package:gaza_go/platform/controllers/wallet_master_controller.dart';
 import 'package:gaza_go/platform/helpers/alert_helper.dart';
@@ -13,13 +14,11 @@ import 'package:gaza_go/platform/helpers/wallet_mixin.dart';
 import 'package:gaza_go/platform/models/asset_item_nft_model.dart';
 import 'package:gaza_go/platform/models/error_response_data_model.dart';
 import 'package:gaza_go/platform/models/on_chain_wallet_model.dart';
-import 'package:gaza_go/platform/models/wallet_solana_model.dart';
 import 'package:gaza_go/platform/models/wallet_token_balance_model.dart';
 import 'package:gaza_go/platform/services/wallet_service.dart';
 import 'package:gaza_go/platform/stores/hive_store.dart';
 import 'package:gaza_go/presentations/components/alert_ui_list.dart';
 import 'package:get/get.dart';
-import 'package:solana/solana.dart';
 
 class StaikaWalletController extends GetxController with WalletMixin, SolanaMixin {
   LoaderController loaderController = Get.find();
@@ -153,26 +152,27 @@ class StaikaWalletController extends GetxController with WalletMixin, SolanaMixi
     print(sendStikUiAmount.value);
     print(formatDecimalPlaces(double.parse(sendStikUiAmount.value), 9));
     print('보낼거야');
-    WalletSolanaModel? wallet = await WalletService.getSolanaWallet();
+    // WalletSolanaModel? wallet = await WalletService.getOnChainWallet(successCallback: null);
+    String secretKey = HiveStore.load(key: HiveKey.solanaSecretKey.name);
     num mod = pow(10.0, 9);
-    print(Ed25519HDPublicKey.fromBase58("E3hFsYympX61jvzMuJjrQ7bJkqpUXqc1F7q3QCGsF9ui"));
-    // loaderController.isLoading.value = true;
-    // await WalletService.fetchStikMoveToGoWallet(
-    //     symbol: 'STIK',
-    //     accountSecretkey: wallet!.secretkey,
-    //     walletPassword: password,
-    //     // 회사 계정 지갑
-    //     toAddress: '',
-    //     // 토큰 민트 주소
-    //     tokenAddress: userWalletAddress.value,
-    //     // decimals: assetStik.value.decimals,
-    //     decimals: 9,
-    //     amount: (double.parse(sendStikUiAmount.value) * mod).toInt(),
-    //     successCallback: (boolean) {
-    //       print('고지갑으로 옮겨졌다');
-    //       Get.back();
-    //       getStaikaWalletInfo();
-    //     });
-    // loaderController.isLoading.value = false;
+
+    loaderController.isLoading.value = true;
+    await WalletService.fetchStikMoveToGoWallet(
+        symbol: 'STIK',
+        accountSecretkey: secretKey,
+        walletPassword: password,
+        // 회사 계정 지갑
+        toAddress: F.solanaTokenMasterWallet,
+        // 토큰 민트 주소
+        tokenAddress: F.solanaTokenMint,
+        decimals: assetStik.value!.decimals,
+        // decimals: 9,
+        amount: (double.parse(sendStikUiAmount.value) * mod).toInt(),
+        successCallback: (boolean) {
+          print('고지갑으로 옮겨졌다');
+          Get.back();
+          getStaikaWalletInfo();
+        });
+    loaderController.isLoading.value = false;
   }
 }

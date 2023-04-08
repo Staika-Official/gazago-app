@@ -16,6 +16,6 @@ class TokenApi {
     ChargeTikModel chargeData,
     String userId,
   ) async {
-    return await Api.client(serviceUrl: ServiceUrl.goWalletService).post('/spending/transactions/users/${userId}/swap?clientId=GAZAGO', data: chargeData);
+    return await Api.client(serviceUrl: ServiceUrl.goWalletService).post('/spending/tokens/swap?clientId=GAZAGO', data: chargeData);
   }
 }

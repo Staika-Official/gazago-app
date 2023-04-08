@@ -7,11 +7,11 @@ part 'exchange_stik_token_model.g.dart';
 @JsonSerializable(explicitToJson: true)
 class ExchangeStikTokenModel {
   ExchangeStikQuotesModel? quotes;
-  List<ExchangeStikPriceModel> prices;
+  List<ExchangeStikPriceModel> products;
 
   ExchangeStikTokenModel({
     this.quotes,
-    required this.prices,
+    required this.products,
   });
 
   factory ExchangeStikTokenModel.fromJson(Map<String, dynamic> json) => _$ExchangeStikTokenModelFromJson(json);

@@ -209,9 +209,9 @@ class WalletService {
     Function? errorCallback,
     required String accountSecretkey,
     required String walletPassword,
-    required String toAddress,
+    required Ed25519HDPublicKey toAddress,
     required String symbol,
-    required String tokenAddress,
+    required Ed25519HDPublicKey tokenAddress,
     required int decimals,
     required int amount,
   }) async {
@@ -229,13 +229,13 @@ class WalletService {
     final sender = await Ed25519HDKeyPair.fromPrivateKeyBytes(
       privateKey: base58.decode(decryptPrivateKey!).sublist(0, 32),
     );
-    final receiver = Ed25519HDPublicKey.fromBase58(toAddress);
+    final receiver = toAddress;
 
     solana.Message message;
     if (symbol == 'SOL') {
       message = getSolTransferMessage(sender.publicKey, receiver, amount);
     } else {
-      final mint = Ed25519HDPublicKey.fromBase58(tokenAddress);
+      final mint = tokenAddress;
       message = await getSplTransferMessage(solanaClient, sender, receiver, mint, amount);
     }
 

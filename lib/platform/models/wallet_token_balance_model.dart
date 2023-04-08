@@ -9,6 +9,7 @@ class WalletTokenBalanceModel {
   String name;
   String logoUrl;
   int amount;
+  int decimals;
   double uiAmount;
 
   WalletTokenBalanceModel({
@@ -16,6 +17,7 @@ class WalletTokenBalanceModel {
     required this.symbol,
     required this.logoUrl,
     required this.amount,
+    required this.decimals,
     required this.uiAmount,
   });
 

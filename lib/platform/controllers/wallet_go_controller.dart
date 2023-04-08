@@ -1,3 +1,4 @@
+import 'package:gaza_go/constants/enums.dart';
 import 'package:gaza_go/platform/controllers/loader_controller.dart';
 import 'package:gaza_go/platform/controllers/wallet_master_controller.dart';
 import 'package:gaza_go/platform/helpers/alert_helper.dart';
@@ -6,6 +7,7 @@ import 'package:gaza_go/platform/models/charge_tik_model.dart';
 import 'package:gaza_go/platform/models/exchange_stik_price_model.dart';
 import 'package:gaza_go/platform/models/exchange_stik_token_model.dart';
 import 'package:gaza_go/platform/services/solana_service.dart';
+import 'package:gaza_go/platform/stores/hive_store.dart';
 import 'package:gaza_go/presentations/components/alert_ui_list.dart';
 import 'package:get/get.dart';
 
@@ -13,7 +15,7 @@ class GoWalletController extends GetxController with SolanaMixin {
   WalletMasterController walletMasterController = Get.find();
   LoaderController loaderController = Get.find();
   RxList productList = RxList.empty();
-  Rx<ChargeTikModel> chargeTikData = Rx(ChargeTikModel(title: "STIK_TO_TIK", fromSymbol: "", fromUiAmount: 0.0, toSymbol: "", toUiAmount: 0, priceKRW: 0.0, priceUSD: 0.0));
+  Rx<ChargeTikModel> chargeTikData = Rx(ChargeTikModel(userId: -1, title: "STIK_TO_TIK", fromTokenSymbol: "", fromUiAmount: 0.0, toTokenSymbol: "", toUiAmount: 0, priceKRW: 0.0, priceUSD: 0.0));
 
   @override
   void onInit() {
@@ -23,6 +25,7 @@ class GoWalletController extends GetxController with SolanaMixin {
   }
 
   void exchangeStikToTik(ExchangeStikPriceModel exchangeProduct) async {
+    String? userId = HiveStore.loadString(key: HiveKey.userId.name);
     DateTime today = DateTime.now();
     int differenceTime = int.parse(today.difference(DateTime.parse(walletMasterController.stikPriceInfoKRW.value.lastUpdated!)).inSeconds.toString());
     // 현재 시간과 가격정보 받아온 시간이 5분이상 차이나면
@@ -33,12 +36,12 @@ class GoWalletController extends GetxController with SolanaMixin {
         loaderController.isLoading.value = true;
         await SolanaService.fetchChargeStikToTik(
           ChargeTikModel(
+            userId: int.parse(userId!),
             title: "STIK_TO_TIK",
-            fromSymbol: exchangeProduct.fromTokenSymbol!,
+            fromTokenSymbol: exchangeProduct.fromTokenSymbol!,
             fromUiAmount: exchangeProduct.fromUiAmount!,
-            toSymbol: exchangeProduct.toTokenSymbol!,
-            // toUiAmount: exchangeProduct.toUiAmount!,
-            toUiAmount: 1000000,
+            toTokenSymbol: exchangeProduct.toTokenSymbol!,
+            toUiAmount: exchangeProduct.toUiAmount!,
             priceKRW: walletMasterController.stikPriceInfoKRW.value.price!,
             priceUSD: walletMasterController.stikPriceInfoUSD.value.price!,
           ),
@@ -69,7 +72,7 @@ class GoWalletController extends GetxController with SolanaMixin {
   Future<void> getProductList() async {
     await SolanaService.getExchangeStikPriceInfo(successCallback: (ExchangeStikTokenModel data) {
       print(data);
-      productList.value = data.prices;
+      productList.value = data.products;
     });
   }
 }
