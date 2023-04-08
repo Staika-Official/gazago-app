@@ -227,25 +227,13 @@ class WalletMasterController extends GetxController with SolanaMixin, GetTickerP
         if (user.authorities!.contains('ROLE_CERTIFIED_USER')) {
           Get.toNamed(Routes.webView, arguments: {'linkUrl': F.taikaPayUrl});
         } else {
-          showAlert(
-            title: '본인인증이 필요합니다.',
-            contentText: '상품권 교환을 위해서는 본인인증이 필요하여\n인증페이지로 이동합니다.',
-            actions: [
-              Expanded(
-                child: GazagoButton(
-                  onTap: () => moveToTaikaPay(),
-                  buttonText: '확인',
-                  buttonColor: skyBlueColor,
-                ),
-              ),
-            ],
-          );
+          showNeedVerificationAlert(this);
         }
       },
     );
   }
 
-  void moveToTaikaPay() async {
+  void moveToVerification() async {
     Get.back();
     Get.toNamed(Routes.verificationTerms);
   }

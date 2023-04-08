@@ -53,7 +53,7 @@ class StaikaWalletController extends GetxController with WalletMixin, SolanaMixi
   @override
   void onInit() async {
     focusNode.addListener(_onFocusChange);
-    await getStaikaWalletInfo();
+    // await getStaikaWalletInfo();
     super.onInit();
   }
 

@@ -149,11 +149,12 @@ class ShopController extends GetxController {
   }
 
   void showItemPurchasePopup(tradeSymbol) {
-    itemPurchaseAlert(this, tradeSymbol == 'STIK' ? double.parse(walletMasterController.stik.value.uiAmountString!) : walletMasterController.tik.value.amount!, tradeSymbol);
+    itemPurchaseAlert(this, tradeSymbol == 'STIK' ? double.parse(walletMasterController.stik.value.uiAmountString!) : double.parse(walletMasterController.tik.value.amount!.toString()), tradeSymbol);
   }
 
   void showTikShortBalancePopup(tradeSymbol) {
-    itemPurchaseShortBalanceAlert(this, tradeSymbol == 'STIK' ? double.parse(walletMasterController.stik.value.uiAmountString!) : walletMasterController.tik.value.amount!, tradeSymbol);
+    itemPurchaseShortBalanceAlert(
+        this, tradeSymbol == 'STIK' ? double.parse(walletMasterController.stik.value.uiAmountString!) : double.parse(walletMasterController.tik.value.amount!.toString()), tradeSymbol);
   }
 
   void showItemPurchaseCompletePopup() {
