@@ -161,6 +161,19 @@ mixin ActivityMixin {
     return RxDouble(highestClimbed(altitudeList));
   }
 
+  List<List<double>> get partialCoordinates {
+    int lastUpdatedCoordinateIndex = HiveStore.load(key: HiveKey.lastUpdatedCoordinateIndex.name) ?? 0;
+    if (coordinates.isEmpty) {
+      return RxList.empty();
+    } else {
+      List<List<double>> partialList = List.empty(growable: true);
+      for (LatLng coordinate in RxList.from(coordinates.sublist(lastUpdatedCoordinateIndex))) {
+        partialList.add([coordinate.latitude, coordinate.longitude]);
+      }
+      return partialList;
+    }
+  }
+
   Rx<UserExerciseModel> get userExerciseData {
     return Rx(
       UserExerciseModel(
@@ -170,11 +183,12 @@ mixin ActivityMixin {
         distance: convertKmToMeters(totalDistance.value),
         altitude: exerciseData.isNotEmpty ? exerciseData.last.altitude : 0,
         time: exerciseTime.value,
-        locations: coordinatesToString(coordinates),
+        // locations: coordinatesToString(coordinates),
         locationUpdateTime: DateTime.now(),
         adId: userState.value.exercise!.adId,
         lastLatitude: coordinates.isNotEmpty ? coordinates.last.latitude : null,
         lastLongitude: coordinates.isNotEmpty ? coordinates.last.longitude : null,
+        lastLocations: partialCoordinates,
       ),
     );
   }
@@ -195,6 +209,7 @@ mixin ActivityMixin {
     exerciseTime.value = 0;
     exerciseDistance.value = 0;
     pedestrianStatus.value = 'STOPPED';
+    HiveStore.initializeExerciseCoordinates();
   }
 
   void initExerciseTimer() {
@@ -219,8 +234,10 @@ mixin ActivityMixin {
         exerciseModel.distance = convertKmToMeters(totalDistance.value);
         exerciseModel.altitude = exerciseData.isNotEmpty ? exerciseData.last.altitude : 0;
         exerciseModel.time = exerciseTime.value;
-        exerciseModel.locations = coordinatesToString(coordinates);
+        // exerciseModel.locations = coordinatesToString(coordinates);
         exerciseModel.locationUpdateTime = exerciseData.isNotEmpty ? exerciseData.last.locationUpdateTime : DateTime.now();
+        exerciseModel.lastLatitude = coordinates.isNotEmpty ? coordinates.last.latitude : null;
+        exerciseModel.lastLongitude = coordinates.isNotEmpty ? coordinates.last.longitude : null;
 
         HiveStore.saveCurrentUserState(
           userState: CurrentUserStateModel(
@@ -398,9 +415,7 @@ mixin ActivityMixin {
     exerciseDistance.value = userState.value.exercise!.distance!;
 
     coordinates.value = List.empty(growable: true);
-    if (userState.value.exercise!.locations != null && userState.value.exercise!.locations!.isNotEmpty) {
-      coordinates.addAll(parseCoordinates());
-    }
+    coordinates.addAll(parseCoordinates());
 
     initStream();
     updateExercise(source: source);
@@ -408,7 +423,8 @@ mixin ActivityMixin {
   }
 
   RxList<LatLng> parseCoordinates() {
-    return RxList(locationStringToLatLng(userState.value.exercise!.locations!));
+    List<dynamic>? locationsList = HiveStore.load(key: HiveKey.exerciseCoordinates.name);
+    return locationsList != null ? RxList(locationListToLatLng(locationsList)) : RxList.empty();
   }
 
   void updateExercise({bool? isPaused, String? source}) async {
@@ -428,6 +444,8 @@ mixin ActivityMixin {
     }
 
     void updateLocalUserState(CurrentUserStateModel newUserState) {
+      HiveStore.saveExerciseCoordinate(coordinates);
+
       newUserState.exercise!.locationUpdateTime = DateTime.now();
       userState.update((state) {
         state?.state = newUserState.state;
@@ -704,6 +722,7 @@ mixin ActivityMixin {
     stepSubscription = null;
     HiveStore.save(key: HiveKey.savedStepInitialized.name, value: false);
     HiveStore.save(key: HiveKey.savedStepCount.name, value: 0);
+    HiveStore.initializeExerciseCoordinates();
     pedestrianStatusSubscription?.cancel();
     pedestrianStatusSubscription = null;
   }

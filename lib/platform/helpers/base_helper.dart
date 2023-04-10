@@ -1,5 +1,4 @@
 import 'dart:async';
-import 'dart:convert';
 import 'dart:math';
 
 import 'package:flutter_naver_map/flutter_naver_map.dart';
@@ -60,17 +59,16 @@ String formatDateUntilDay(String? isoDateString) {
 }
 
 String coordinatesToString(List<LatLng> coordinates) {
-  List<List<String>> coordinateStringList = List.empty(growable: true);
+  List<List<double>> coordinateStringList = List.empty(growable: true);
   for (LatLng coordinate in coordinates) {
-    coordinateStringList.add([coordinate.latitude.toString(), coordinate.longitude.toString()]);
+    coordinateStringList.add([coordinate.latitude, coordinate.longitude]);
   }
   return coordinateStringList.toString();
 }
 
-List<LatLng> locationStringToLatLng(String locationString) {
+List<LatLng> locationListToLatLng(List<dynamic> locationList) {
   List<LatLng> coordinates = List.empty(growable: true);
-  List<dynamic> locationArray = json.decode(locationString);
-  for (List location in locationArray) {
+  for (List location in locationList) {
     LatLng coordination = LatLng(location[0], location[1]);
     coordinates.add(coordination);
   }

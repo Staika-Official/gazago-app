@@ -84,6 +84,8 @@ enum HiveKey {
   exerciseTimer,
   updateTimer,
   endPointType,
+  lastUpdatedCoordinateIndex,
+  exerciseCoordinates,
 }
 
 enum ResponseStatus {

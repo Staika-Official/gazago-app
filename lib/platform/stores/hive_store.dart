@@ -1,3 +1,4 @@
+import 'package:flutter_naver_map/flutter_naver_map.dart';
 import 'package:gaza_go/constants/enums.dart';
 import 'package:gaza_go/platform/models/current_user_state_model.dart';
 import 'package:gaza_go/platform/models/user_exercise_model.dart';
@@ -75,5 +76,22 @@ class HiveStore {
   static Future<void> clear() async {
     final Box box = Hive.box('gazaGo');
     await box.clear();
+  }
+
+  static void saveExerciseCoordinate(List<LatLng> coordinates) {
+    final Box box = Hive.box('gazaGo');
+    List<List> untypedCoordinateList = List.empty(growable: true);
+    for (LatLng coordinate in coordinates) {
+      untypedCoordinateList.add([coordinate.latitude, coordinate.longitude]);
+    }
+
+    box.put(HiveKey.lastUpdatedCoordinateIndex.name, coordinates.length);
+    box.put(HiveKey.exerciseCoordinates.name, untypedCoordinateList);
+  }
+
+  static void initializeExerciseCoordinates() {
+    final Box box = Hive.box('gazaGo');
+    box.put(HiveKey.lastUpdatedCoordinateIndex.name, 0);
+    box.put(HiveKey.exerciseCoordinates.name, []);
   }
 }

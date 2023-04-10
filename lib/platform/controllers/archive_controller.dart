@@ -1,10 +1,10 @@
+import 'dart:convert';
 import 'dart:io';
 
 import 'package:flutter_naver_map/flutter_naver_map.dart';
 import 'package:flutter_svg_provider/flutter_svg_provider.dart';
 import 'package:gaza_go/constants/routes.dart';
 import 'package:gaza_go/platform/helpers/alert_helper.dart';
-import 'package:gaza_go/platform/helpers/base_helper.dart';
 import 'package:gaza_go/platform/models/archive_detail_item_model.dart';
 import 'package:gaza_go/platform/models/archive_list_item_model.dart';
 import 'package:gaza_go/platform/services/archive_service.dart';
@@ -18,9 +18,16 @@ class ArchiveController extends GetxController with ScrollMixin {
   RxBool dataGetLoading = RxBool(false);
   Rx<ArchiveDetailItemModel> selectedItem = Rx(ArchiveDetailItemModel());
   RxList<LatLng> get locations {
-    List<LatLng> locations = locationStringToLatLng(selectedItem.value.locations!);
-    if (selectedItem.value.locations != null && locations.length > 1) {
-      return RxList(locations);
+    List<LatLng> coordinates = List.empty(growable: true);
+    if (selectedItem.value.locations != null) {
+      List<dynamic> locationArray = json.decode(selectedItem.value.locations!);
+      for (List location in locationArray) {
+        LatLng coordination = LatLng(location[0], location[1]);
+        coordinates.add(coordination);
+      }
+    }
+    if (selectedItem.value.locations != null && coordinates.length > 1) {
+      return RxList(coordinates);
     } else {
       return RxList.empty();
     }
