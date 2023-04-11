@@ -188,7 +188,7 @@ mixin ActivityMixin {
         adId: userState.value.exercise!.adId,
         lastLatitude: coordinates.isNotEmpty ? coordinates.last.latitude : null,
         lastLongitude: coordinates.isNotEmpty ? coordinates.last.longitude : null,
-        lastLocations: partialCoordinates,
+        latestLocations: partialCoordinates,
       ),
     );
   }

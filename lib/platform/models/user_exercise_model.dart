@@ -1,4 +1,3 @@
-import 'package:flutter_naver_map/flutter_naver_map.dart';
 import 'package:hive/hive.dart';
 import 'package:json_annotation/json_annotation.dart';
 
@@ -71,7 +70,7 @@ class UserExerciseModel {
   @HiveField(30)
   double? lastLongitude;
   @HiveField(31)
-  List<List>? lastLocations;
+  List<List>? latestLocations;
 
   UserExerciseModel({
     this.id,
@@ -105,7 +104,7 @@ class UserExerciseModel {
     this.adId,
     this.lastLatitude,
     this.lastLongitude,
-    this.lastLocations,
+    this.latestLocations,
   });
 
   factory UserExerciseModel.fromJson(Map<String, dynamic> json) => _$UserExerciseModelFromJson(json);
