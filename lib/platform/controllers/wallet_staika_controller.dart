@@ -8,7 +8,6 @@ import 'package:gaza_go/flavors.dart';
 import 'package:gaza_go/platform/controllers/loader_controller.dart';
 import 'package:gaza_go/platform/controllers/wallet_master_controller.dart';
 import 'package:gaza_go/platform/helpers/alert_helper.dart';
-import 'package:gaza_go/platform/helpers/base_helper.dart';
 import 'package:gaza_go/platform/helpers/solana_mixin.dart';
 import 'package:gaza_go/platform/helpers/wallet_mixin.dart';
 import 'package:gaza_go/platform/models/asset_item_nft_model.dart';
@@ -30,9 +29,10 @@ class StaikaWalletController extends GetxController with WalletMixin, SolanaMixi
   final Rxn<AnimationController> switchAnimation = Rxn();
   final RxString currentSumPriceUI = RxString('0');
   final RxString sendStikUiAmount = RxString('0');
+  final RxString shortStikUiAmount = RxString('0');
   final RxDouble fee = RxDouble(0.0);
   final Rx<Currency> currency = Rx(Currency.krw);
-  final TextEditingController stikAmountTextController = TextEditingController();
+  final TextEditingController stikAmountTextController = TextEditingController(text: '');
   final FocusNode focusNode = FocusNode();
 
   RxBool get isValid {
@@ -53,7 +53,9 @@ class StaikaWalletController extends GetxController with WalletMixin, SolanaMixi
   @override
   void onInit() async {
     focusNode.addListener(_onFocusChange);
-    // await getStaikaWalletInfo();
+
+    await getStaikaWalletInfo();
+
     super.onInit();
   }
 
@@ -121,6 +123,7 @@ class StaikaWalletController extends GetxController with WalletMixin, SolanaMixi
   }
 
   Future<void> getOnChainTokenBalance() async {
+    loaderController.isLoading.value = true;
     await WalletService.getOnChainTokenBalance(successCallback: (List<WalletTokenBalanceModel> tokenData) {
       coinAssetList.clear();
       coinAssetList.addAll(tokenData);
@@ -133,6 +136,7 @@ class StaikaWalletController extends GetxController with WalletMixin, SolanaMixi
       // setCurrentSumPriceUI(tokenData, currency.value);
       // coinAssetList.add(WalletTokenBalanceModel(symbol: "STIK", name: "Staika", amount: 4998310000, uiAmount: 4.99831));
     });
+    loaderController.isLoading.value = false;
   }
 
   void moveToSendToGoWallet() {
@@ -144,20 +148,20 @@ class StaikaWalletController extends GetxController with WalletMixin, SolanaMixi
   }
 
   void openSendStikGoWalletAlert() {
-    sendStikToGoWalletAlert(this);
+    shortStikUiAmount.value = (double.parse(sendStikUiAmount.value) - assetStik.value!.uiAmount).toString();
+    if (double.parse(sendStikUiAmount.value) < assetStik.value!.uiAmount) {
+      sendStikToGoWalletAlert(this);
+    } else {
+      exchangeStikShortBalanceAlert(this);
+    }
   }
 
-  void showWalletPasswordAlert() {}
   void confirmSendStikToGoWallet(String password) async {
-    print(sendStikUiAmount.value);
-    print(formatDecimalPlaces(double.parse(sendStikUiAmount.value), 9));
-    print('보낼거야');
-    // WalletSolanaModel? wallet = await WalletService.getOnChainWallet(successCallback: null);
     String secretKey = HiveStore.load(key: HiveKey.solanaSecretKey.name);
     num mod = pow(10.0, 9);
-
-    loaderController.isLoading.value = true;
-    await WalletService.fetchStikMoveToGoWallet(
+    if (double.parse(sendStikUiAmount.value) < assetStik.value!.uiAmount) {
+      loaderController.isLoading.value = true;
+      await WalletService.fetchStikMoveToGoWallet(
         symbol: 'STIK',
         accountSecretkey: secretKey,
         walletPassword: password,
@@ -166,13 +170,19 @@ class StaikaWalletController extends GetxController with WalletMixin, SolanaMixi
         // 토큰 민트 주소
         tokenAddress: F.solanaTokenMint,
         decimals: assetStik.value!.decimals,
-        // decimals: 9,
         amount: (double.parse(sendStikUiAmount.value) * mod).toInt(),
         successCallback: (boolean) {
-          print('고지갑으로 옮겨졌다');
-          Get.back();
-          getStaikaWalletInfo();
-        });
-    loaderController.isLoading.value = false;
+          print('성공');
+          loaderController.isLoading.value = false;
+          successExchangeStikToGoWalletAlert(this);
+          sendStikUiAmount.value = '0';
+          stikAmountTextController.text = '';
+        },
+        errorCallback: () {
+          failureExchangeStikToGoWalletAlert();
+        },
+      );
+      loaderController.isLoading.value = false;
+    }
   }
 }

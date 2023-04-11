@@ -2,6 +2,7 @@ import 'package:dio/dio.dart';
 import 'package:gaza_go/constants/enums.dart';
 import 'package:gaza_go/flavors.dart';
 import 'package:gaza_go/platform/apis/wallet.dart';
+import 'package:gaza_go/platform/helpers/base_helper.dart';
 import 'package:gaza_go/platform/helpers/security_helper.dart';
 import 'package:gaza_go/platform/helpers/solana_helper.dart';
 import 'package:gaza_go/platform/models/asset_detail_model.dart';
@@ -259,17 +260,17 @@ class WalletService {
       messageBytes: compiledMessage.data,
       signatures: signatures,
     );
-
+    String uiAmount = getUiAmountString(amount, decimals);
     // API Call
     // Map<String, String> body = {'clientId': 'GAZAGO', 'encodeTransaction': tx.encode()};
     ExchangeTokenWithdrawalModel params = ExchangeTokenWithdrawalModel(
       type: 'withdrawal',
-      uiAmount: double.parse(amount.toString()),
+      uiAmount: double.parse(uiAmount),
       fee: 0,
       encodedTransaction: tx.encode(),
     );
     Response res = await WalletApi.exchangeStikToGoWallet(userId!, symbol, params);
-    if (res.statusCode == 200) {
+    if (res.statusCode == 201) {
       successCallback(true);
     } else {
       if (errorCallback != null) errorCallback();

@@ -15,6 +15,7 @@ class WalletHome extends StatelessWidget {
 
     return DefaultContainer(
       backgroundColor: subBg01Color,
+      resizeToAvoidBottomInset: false,
       titleText: '지갑',
       child: Column(
         children: [

@@ -109,6 +109,7 @@ class SendStikGoWallet extends StatelessWidget {
                       ),
                       controller: controller.stikAmountTextController,
                       keyboardType: TextInputType.numberWithOptions(decimal: true, signed: false),
+                      textInputAction: TextInputAction.go,
                       inputFormatters: [
                         FilteringTextInputFormatter.allow(RegExp(r'(\d*\.?\d*)')),
                         TextInputFormatter.withFunction((oldValue, newValue) {
@@ -136,6 +137,7 @@ class SendStikGoWallet extends StatelessWidget {
                       cursorColor: Colors.white,
                       focusNode: controller.focusNode,
                       onChanged: (value) => controller.setAmount(value),
+                      onSubmitted: (val) => controller.openSendStikGoWalletAlert(),
                     ),
                   ],
                 ),

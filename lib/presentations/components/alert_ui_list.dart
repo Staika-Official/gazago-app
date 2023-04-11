@@ -3233,9 +3233,13 @@ void sendStikToGoWalletAlert(StaikaWalletController controller) {
         child: GazagoButton(
           onTap: () async {
             Get.back();
-            // successExchangeStikToGoWalletAlert();
-            String? password = await showConfirmPasswordDialog(walletMasterController);
-            controller.confirmSendStikToGoWallet(password);
+            if (double.parse(controller.shortStikUiAmount.value) >= 0) {
+              String? password = await showConfirmPasswordDialog(walletMasterController);
+              controller.confirmSendStikToGoWallet(password);
+            } else {
+              String? password = await showConfirmPasswordDialog(walletMasterController);
+              controller.confirmSendStikToGoWallet(password);
+            }
           },
           buttonText: '네',
           buttonColor: skyBlueColor,
@@ -3245,7 +3249,121 @@ void sendStikToGoWalletAlert(StaikaWalletController controller) {
   );
 }
 
-void successExchangeStikToGoWalletAlert() {
+void exchangeStikShortBalanceAlert(StaikaWalletController controller) {
+  WalletMasterController walletMasterController = Get.find();
+  showAlert(
+    title: '잔액이 부족해 진행할 수 없습니다.',
+    isScrollControlled: true,
+    contentWidget: Obx(() {
+      return Column(
+        children: [
+          Padding(
+            padding: EdgeInsets.only(top: 34.0.sp, bottom: 30.sp),
+            child: Column(
+              children: [
+                Opacity(
+                  opacity: 0.4,
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      SvgPicture.asset('assets/images/wallet/ico_stik.svg', width: 24, height: 24),
+                      Padding(
+                        padding: EdgeInsets.only(left: 7.0.sp),
+                        child: StyledText(
+                          controller.sendStikUiAmount.value,
+                          fontSize: 30,
+                          lineHeight: 32,
+                          fontWeight: 600,
+                        ),
+                      ),
+                      Padding(
+                        padding: EdgeInsets.only(left: 7.0.sp),
+                        child: StyledText(
+                          'STIK',
+                          fontSize: 30,
+                          lineHeight: 32,
+                          fontWeight: 400,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+                Padding(
+                  padding: EdgeInsets.only(top: 60.0.sp),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      StyledText(
+                        '필요한 STIK',
+                        fontWeight: 500,
+                        fontSize: 16,
+                        letterSpacing: -.2,
+                      ),
+                      StyledText(
+                        '${formatDecimalPlaces(double.parse(controller.shortStikUiAmount.value), controller.assetStik.value!.decimals, isAutoDecimal: true)} STIK',
+                        fontWeight: 500,
+                        fontSize: 16,
+                        letterSpacing: -.2,
+                      ),
+                    ],
+                  ),
+                ),
+                Padding(
+                  padding: EdgeInsets.only(top: 24.0.sp),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      StyledText(
+                        '잔액 STIK',
+                        fontWeight: 500,
+                        fontSize: 16,
+                        letterSpacing: -.2,
+                      ),
+                      StyledText(
+                        '${controller.assetStik.value!.uiAmount.toString()} STIK',
+                        fontWeight: 500,
+                        fontSize: 16,
+                        letterSpacing: -.2,
+                      ),
+                    ],
+                  ),
+                )
+              ],
+            ),
+          ),
+          Padding(
+            padding: EdgeInsets.only(bottom: 23.0.sp),
+            child: const Divider(color: Color(0xFF474950), height: 3),
+          ),
+          Padding(
+            padding: EdgeInsets.only(bottom: 30.sp),
+            child: StyledText(
+              '· 부족한 STIK을 충전한 후 다시 시도해 주세요.',
+              fontSize: 14,
+              lineHeight: 15,
+              fontWeight: 500,
+              letterSpacing: -0.02,
+              color: lightGrayColor,
+            ),
+          ),
+        ],
+      );
+    }),
+    actions: [
+      Expanded(
+        child: GazagoButton(
+          onTap: () async {
+            Get.back();
+          },
+          buttonText: '확인',
+          buttonColor: skyBlueColor,
+        ),
+      ),
+    ],
+  );
+}
+
+void successExchangeStikToGoWalletAlert(StaikaWalletController controller) {
   showAlert(
     contentWidget: Padding(
       padding: EdgeInsets.only(top: 20.0.sp, bottom: 40.sp),
@@ -3282,7 +3400,10 @@ void successExchangeStikToGoWalletAlert() {
       Expanded(
         child: GazagoButton(
           onTap: () {
-            Get.back();
+            // Todo 메인에서 넘어온 화면이여야함, controller도 재시작
+            Get.until((route) => Get.currentRoute == Routes.wallet);
+            controller.getStaikaWalletInfo();
+            // Get.toNamed(Routes.wallet);
           },
           buttonText: '확인',
           buttonColor: skyBlueColor,
@@ -3351,7 +3472,32 @@ void showNeedVerificationAlert(WalletMasterController controller) {
           buttonColor: skyBlueColor,
         ),
       ),
+    ],
+  );
+}
 
+void showForceUpdateWallet() {
+  showAlert(
+    title: '새 업데이트가 있습니다.',
+    contentText: '앱을 사용하기 위해서 업데이트가 필요합니다.',
+    actions: [
+      Expanded(
+        child: GazagoButton(
+          onTap: () {
+            if (Platform.isAndroid || Platform.isIOS) {
+              final url = Uri.parse(
+                Platform.isAndroid ? "https://gazago.page.link/update_android" : "https://gazago.page.link/update_ios",
+              );
+              launchUrl(
+                url,
+                mode: LaunchMode.externalApplication,
+              );
+            }
+          },
+          buttonText: '업데이트',
+          buttonColor: skyBlueColor,
+        ),
+      ),
     ],
   );
 }

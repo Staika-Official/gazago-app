@@ -67,27 +67,29 @@ class GoAssetItemCoin extends StatelessWidget {
                             StyledText(asset.name!, fontSize: 14, lineHeight: 14, fontWeight: 500, color: lightGrayColor),
                             Padding(
                               padding: EdgeInsets.only(top: 3.0.sp),
-                              child: Row(
-                                mainAxisSize: MainAxisSize.min,
-                                children: [
-                                  StyledText(
-                                    formatDecimalPlaces(double.parse(asset.uiAmountString!), asset.decimals!, isAutoDecimal: true),
-                                    fontSize: 18,
-                                    lineHeight: 20,
-                                    letterSpacing: 0.5,
-                                    fontWeight: 700,
-                                  ),
-                                  Padding(
-                                    padding: const EdgeInsets.only(left: 3),
-                                    child: StyledText(
-                                      asset.symbol == 'TOTAL_TIK' ? 'TIK' : asset.symbol!,
+                              child: FittedBox(
+                                child: Row(
+                                  mainAxisSize: MainAxisSize.min,
+                                  children: [
+                                    StyledText(
+                                      formatDecimalPlaces(double.parse(asset.uiAmountString!), asset.decimals!, isAutoDecimal: true),
                                       fontSize: 18,
                                       lineHeight: 20,
                                       letterSpacing: 0.5,
-                                      fontWeight: 400,
+                                      fontWeight: 700,
                                     ),
-                                  ),
-                                ],
+                                    Padding(
+                                      padding: const EdgeInsets.only(left: 3),
+                                      child: StyledText(
+                                        asset.symbol == 'TOTAL_TIK' ? 'TIK' : asset.symbol!,
+                                        fontSize: 18,
+                                        lineHeight: 20,
+                                        letterSpacing: 0.5,
+                                        fontWeight: 400,
+                                      ),
+                                    ),
+                                  ],
+                                ),
                               ),
                             ),
                             showPrice

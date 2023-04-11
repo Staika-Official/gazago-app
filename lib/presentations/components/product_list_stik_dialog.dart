@@ -107,82 +107,87 @@ void showProductStikList(WalletMasterController controller) {
                 children: [
                   Padding(
                     padding: EdgeInsets.only(left: 24.sp, top: 16.sp, right: 24.sp, bottom: 28.sp),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Row(
-                          children: [
-                            CircleAvatar(
-                              foregroundImage: HiveStore.loadString(key: HiveKey.profileImageUrl.name) != null && HiveStore.loadString(key: HiveKey.profileImageUrl.name) != ''
-                                  ? CachedNetworkImageProvider(
-                                      HiveStore.loadString(key: HiveKey.profileImageUrl.name)!,
-                                    )
-                                  : Image.asset(
-                                      'assets/images/ic_launcher.png',
-                                      width: 30.sp,
-                                    ).image,
-                              radius: 25,
-                            ),
-                            const Padding(
-                              padding: EdgeInsets.only(left: 12),
-                              child: StyledText(
-                                '보유 중',
-                                fontSize: 18,
-                                fontWeight: 600,
-                                lineHeight: 18,
+                    child: FittedBox(
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Row(
+                            children: [
+                              CircleAvatar(
+                                foregroundImage: HiveStore.loadString(key: HiveKey.profileImageUrl.name) != null && HiveStore.loadString(key: HiveKey.profileImageUrl.name) != ''
+                                    ? CachedNetworkImageProvider(
+                                        HiveStore.loadString(key: HiveKey.profileImageUrl.name)!,
+                                      )
+                                    : Image.asset(
+                                        'assets/images/ic_launcher.png',
+                                        width: 30.sp,
+                                      ).image,
+                                radius: 25,
                               ),
-                            ),
-                          ],
-                        ),
-                        Column(
-                          crossAxisAlignment: CrossAxisAlignment.end,
-                          children: [
-                            Row(
-                              children: [
-                                StyledText(
-                                  formatDecimalPlaces(double.parse(controller.tik.value.uiAmountString!), 0),
-                                  fontSize: 16.sp,
-                                  fontWeight: 700,
-                                  lineHeight: 18.sp,
-                                  letterSpacing: -0.5,
-                                  color: lightGrayColor,
+                              const Padding(
+                                padding: EdgeInsets.only(left: 12),
+                                child: StyledText(
+                                  '보유 중',
+                                  fontSize: 18,
+                                  fontWeight: 600,
+                                  lineHeight: 18,
                                 ),
-                                StyledText(
-                                  ' TIK',
-                                  fontSize: 16.sp,
-                                  fontWeight: 400,
-                                  lineHeight: 18.sp,
-                                  letterSpacing: -0.5,
-                                  color: lightGrayColor,
+                              ),
+                            ],
+                          ),
+                          Padding(
+                            padding: EdgeInsets.only(left: 20.0),
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.end,
+                              children: [
+                                Row(
+                                  children: [
+                                    StyledText(
+                                      formatDecimalPlaces(double.parse(controller.tik.value.uiAmountString!), 0),
+                                      fontSize: 16.sp,
+                                      fontWeight: 700,
+                                      lineHeight: 18.sp,
+                                      letterSpacing: -0.5,
+                                      color: lightGrayColor,
+                                    ),
+                                    StyledText(
+                                      ' TIK',
+                                      fontSize: 16.sp,
+                                      fontWeight: 400,
+                                      lineHeight: 18.sp,
+                                      letterSpacing: -0.5,
+                                      color: lightGrayColor,
+                                    ),
+                                  ],
+                                ),
+                                Padding(
+                                  padding: EdgeInsets.only(top: 6.0.sp),
+                                  child: Row(
+                                    children: [
+                                      StyledText(
+                                        formatDecimalPlaces(double.parse(controller.stik.value.uiAmountString!), 9, isAutoDecimal: true),
+                                        fontSize: 16.sp,
+                                        fontWeight: 700,
+                                        lineHeight: 18.sp,
+                                        letterSpacing: -0.5,
+                                        color: lightGrayColor,
+                                      ),
+                                      StyledText(
+                                        ' STIK',
+                                        fontSize: 16.sp,
+                                        fontWeight: 400,
+                                        lineHeight: 18.sp,
+                                        letterSpacing: -0.5,
+                                        color: lightGrayColor,
+                                      ),
+                                    ],
+                                  ),
                                 ),
                               ],
                             ),
-                            Padding(
-                              padding: EdgeInsets.only(top: 6.0.sp),
-                              child: Row(
-                                children: [
-                                  StyledText(
-                                    formatDecimalPlaces(double.parse(controller.stik.value.uiAmountString!), 9, isAutoDecimal: true),
-                                    fontSize: 16.sp,
-                                    fontWeight: 700,
-                                    lineHeight: 18.sp,
-                                    letterSpacing: -0.5,
-                                    color: lightGrayColor,
-                                  ),
-                                  StyledText(
-                                    ' STIK',
-                                    fontSize: 16.sp,
-                                    fontWeight: 400,
-                                    lineHeight: 18.sp,
-                                    letterSpacing: -0.5,
-                                    color: lightGrayColor,
-                                  ),
-                                ],
-                              ),
-                            ),
-                          ],
-                        ),
-                      ],
+                          ),
+                        ],
+                      ),
                     ),
                   ),
                   Divider(
