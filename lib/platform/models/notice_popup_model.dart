@@ -10,11 +10,13 @@ class NoticePopupModel {
   bool? displayed;
   bool? activated;
   int? listOrder;
+  String? openType; //IN_APP, INTERNAL_WEB_VIEW, EXTERNAL_BROWSER
   String? label;
   String? contentKo;
   String? contentEn;
   String? imageUrlKo;
   String? imageUrlEn;
+  String? subImageUrl;
   String? linkUrl;
   String? eventId;
   String? displayFromDate;
@@ -31,11 +33,13 @@ class NoticePopupModel {
     this.displayed,
     this.activated,
     this.listOrder,
+    this.openType,
     this.label,
     this.contentKo,
     this.contentEn,
     this.imageUrlKo,
     this.imageUrlEn,
+    this.subImageUrl,
     this.linkUrl,
     this.eventId,
     this.displayFromDate,

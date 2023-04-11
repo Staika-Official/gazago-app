@@ -63,41 +63,46 @@ class NoticePopupController extends GetxController {
     );
   }
 
-  void moveToWebView(item) async {
-    if (item.linkUrl.contains('http')) {
-      // Get.toNamed(Routes.webView, arguments: {'id': item.id, 'linkUrl': item.linkUrl});
-      Uri url = Uri.parse(item.linkUrl);
-      if (await canLaunchUrl(url)) {
-        await launchUrl(url, mode: LaunchMode.externalApplication);
-      }
-    } else {
-      switch (item.linkUrl) {
-        case 'ARCHIVE':
-          Get.back();
-          Get.find<HomeMenuController>().selectMenu(0);
-          break;
-        case 'ITEM':
-          Get.back();
-          Get.find<HomeMenuController>().selectMenu(1);
-          break;
-        case 'SHOP':
-          Get.back();
-          Get.find<HomeMenuController>().selectMenu(3);
-          break;
-        case 'RANKING':
-          Get.back();
-          Get.find<HomeMenuController>().selectMenu(4);
-          break;
-        case 'WALLET':
-          Get.toNamed(Routes.wallet);
-          break;
-        case 'NOTICE':
-          Get.toNamed(Routes.noticeList);
-          break;
-        case 'FAQ':
-          Get.toNamed(Routes.preferenceBoard);
-          break;
-      }
+  void moveToWebView(NoticePopupModel item) async {
+    switch (item.openType) {
+      case 'IN_APP':
+        switch (item.linkUrl) {
+          case 'ARCHIVE':
+            Get.back();
+            Get.find<HomeMenuController>().selectMenu(0);
+            break;
+          case 'ITEM':
+            Get.back();
+            Get.find<HomeMenuController>().selectMenu(1);
+            break;
+          case 'SHOP':
+            Get.back();
+            Get.find<HomeMenuController>().selectMenu(3);
+            break;
+          case 'RANKING':
+            Get.back();
+            Get.find<HomeMenuController>().selectMenu(4);
+            break;
+          case 'WALLET':
+            Get.toNamed(Routes.wallet);
+            break;
+          case 'NOTICE':
+            Get.toNamed(Routes.noticeList);
+            break;
+          case 'FAQ':
+            Get.toNamed(Routes.preferenceBoard);
+            break;
+        }
+        break;
+      case 'INTERNAL_WEB_VIEW':
+        Get.toNamed(Routes.webView, arguments: {'id': item.id, 'linkUrl': item.linkUrl});
+        break;
+      case 'EXTERNAL_BROWSER':
+        Uri url = Uri.parse(item.linkUrl!);
+        if (await canLaunchUrl(url)) {
+          await launchUrl(url, mode: LaunchMode.externalApplication);
+        }
+        break;
     }
   }
 
