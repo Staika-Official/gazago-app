@@ -16,7 +16,8 @@ class GoAssetItemCoin extends StatelessWidget {
   final VoidCallback? onTapButton;
   final String? buttonText;
   final bool showPrice;
-  const GoAssetItemCoin({Key? key, required this.asset, required this.onTap, this.onTapButton, this.buttonText, this.showPrice = true}) : super(key: key);
+  final Widget? buttonIcon;
+  const GoAssetItemCoin({Key? key, required this.asset, required this.onTap, this.onTapButton, this.buttonText, this.buttonIcon, this.showPrice = true}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -131,12 +132,21 @@ class GoAssetItemCoin extends StatelessWidget {
                             ],
                           ),
                           child: Center(
-                            child: StyledText(
-                              buttonText!,
-                              color: Colors.white,
-                              fontWeight: 600,
-                              fontSize: 16,
-                              lineHeight: 16,
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                Padding(
+                                  padding: EdgeInsets.only(right: 6.0.sp),
+                                  child: buttonIcon!,
+                                ),
+                                StyledText(
+                                  buttonText!,
+                                  color: Colors.white,
+                                  fontWeight: 600,
+                                  fontSize: 16,
+                                  lineHeight: 16,
+                                ),
+                              ],
                             ),
                           ),
                         ),

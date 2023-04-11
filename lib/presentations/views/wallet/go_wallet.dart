@@ -3,6 +3,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:gaza_go/constants/enums.dart';
 import 'package:gaza_go/platform/controllers/wallet_master_controller.dart';
 import 'package:gaza_go/presentations/styles/colors.dart';
+import 'package:gaza_go/presentations/styles/icons.dart';
 import 'package:gaza_go/presentations/styles/styled_text.dart';
 import 'package:gaza_go/presentations/views/wallet/go_asset_item_coin.dart';
 import 'package:get/get.dart';
@@ -20,6 +21,7 @@ class GoWallet extends StatelessWidget {
               onTap: () => controller.moveToWalletDetail(asset: asset, walletType: WalletType.inventory, assetType: asset.name!.toUpperCase() == 'TAIKA' ? AssetType.token : AssetType.coin),
               onTapButton: asset.name!.toUpperCase() == 'TAIKA' ? () => controller.showProductDialog() : () => controller.showProductStikDialog(),
               buttonText: asset.name!.toUpperCase() == 'TAIKA' ? 'TIK 충전' : 'TIK 으로 교환',
+              buttonIcon: asset.name!.toUpperCase() == 'TAIKA' ? iconTikCharge : iconStikExchange,
               showPrice: false,
             ),
           ),
@@ -31,9 +33,9 @@ class GoWallet extends StatelessWidget {
   Widget build(BuildContext context) {
     WalletMasterController controller = Get.find();
 
-    return SingleChildScrollView(
-      physics: const ClampingScrollPhysics(),
-      child: Obx(() {
+    return Scaffold(
+      backgroundColor: mainBg01Color,
+      body: Obx(() {
         return Column(
           children: [
             SizedBox(
@@ -136,6 +138,21 @@ class GoWallet extends StatelessWidget {
                         ),
                       ),
                     ],
+                  ),
+                ),
+              ),
+            ),
+            Expanded(
+              child: Align(
+                alignment: Alignment.bottomCenter,
+                child: Padding(
+                  padding: EdgeInsets.only(bottom: 20.0.sp),
+                  child: StyledText(
+                    '· GO 지갑은 가자고 내에서 TIK과 STIK을 관리하는 지갑입니다.',
+                    fontWeight: 500,
+                    fontSize: 10,
+                    letterSpacing: -.1,
+                    color: deepGrayColor,
                   ),
                 ),
               ),
