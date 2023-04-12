@@ -3043,7 +3043,11 @@ void exchangeStikToTikAlert(GoWalletController controller, ExchangeStikPriceMode
           ),
           Padding(
             padding: EdgeInsets.only(top: 15.0.sp, bottom: 23.0.sp),
-            child: const Divider(color: Color(0xFF474950), height: 3),
+            child: const Divider(
+              color: Color(0xFF474950),
+              height: 3,
+              thickness: 1,
+            ),
           ),
           Padding(
             padding: EdgeInsets.only(bottom: 10.sp),
@@ -3207,7 +3211,11 @@ void sendStikToGoWalletAlert(StaikaWalletController controller) {
           ),
           Padding(
             padding: EdgeInsets.only(bottom: 23.0.sp),
-            child: const Divider(color: Color(0xFF474950), height: 3),
+            child: const Divider(
+              color: Color(0xFF1D1D26),
+              height: 3,
+              thickness: 1,
+            ),
           ),
           Padding(
             padding: EdgeInsets.only(bottom: 30.sp),
@@ -3376,7 +3384,11 @@ void exchangeStikShortBalanceAlert(StaikaWalletController controller) {
           ),
           Padding(
             padding: EdgeInsets.only(bottom: 23.0.sp),
-            child: const Divider(color: Color(0xFF474950), height: 3),
+            child: const Divider(
+              color: Color(0xFF1D1D26),
+              height: 3,
+              thickness: 1,
+            ),
           ),
           Padding(
             padding: EdgeInsets.only(bottom: 30.sp),

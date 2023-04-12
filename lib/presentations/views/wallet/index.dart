@@ -34,7 +34,7 @@ class WalletHome extends StatelessWidget {
               ),
               child: TabBar(
                 controller: walletMasterController.tabController,
-                padding: EdgeInsets.symmetric(horizontal: 7.sp, vertical: 6.sp),
+                padding: EdgeInsets.symmetric(horizontal: 6.sp, vertical: 5.sp),
                 indicator: BoxDecoration(
                   color: popupBgColor,
                   borderRadius: BorderRadius.circular(60),

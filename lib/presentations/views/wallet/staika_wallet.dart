@@ -155,9 +155,10 @@ class StaikaWallet extends StatelessWidget {
                         Spin(
                           spins: 0.5,
                           duration: const Duration(milliseconds: 500),
-                          animate: false,
+                          animate: true,
                           manualTrigger: true,
                           controller: (con) {
+                            print(con);
                             controller.switchAnimation.value = con;
                           },
                           child: SizedBox(

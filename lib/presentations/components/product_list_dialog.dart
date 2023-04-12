@@ -67,14 +67,14 @@ List<Widget> renderProductList(WalletMasterController controller) {
                                 children: [
                                   StyledText(
                                     '+ ${formatDecimalPlaces(controller.getProductPrice(product.value.id) * 0.1, 0)}',
-                                    fontSize: 14.sp,
+                                    fontSize: 12.sp,
                                     fontWeight: 700,
                                     lineHeight: 16.sp,
                                     color: bonusTikColor,
                                   ),
                                   StyledText(
                                     ' TIK',
-                                    fontSize: 14.sp,
+                                    fontSize: 12.sp,
                                     fontWeight: 500,
                                     lineHeight: 16.sp,
                                     color: bonusTikColor,
