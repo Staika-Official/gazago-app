@@ -64,49 +64,56 @@ class StaikaAssetItemCoin extends StatelessWidget {
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
-                          StyledText(
-                            asset.name!,
-                            fontSize: 18,
-                            lineHeight: 18,
-                            fontWeight: 500,
-                            color: Colors.white,
-                          ),
                           Padding(
-                            padding: EdgeInsets.only(top: 3.0.sp),
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.end,
-                              children: [
-                                Row(
-                                  mainAxisSize: MainAxisSize.min,
-                                  children: [
-                                    StyledText(
-                                      '${formatDecimalPlaces(asset.uiAmount!, 9, isAutoDecimal: true)}',
-                                      fontSize: 18,
-                                      lineHeight: 20,
-                                      letterSpacing: 0.5,
-                                      fontWeight: 700,
+                            padding: EdgeInsets.only(right: 20.0.sp),
+                            child: StyledText(
+                              asset.name!,
+                              fontSize: 18,
+                              lineHeight: 18,
+                              fontWeight: 500,
+                              color: Colors.white,
+                            ),
+                          ),
+                          Expanded(
+                            child: Padding(
+                              padding: EdgeInsets.only(top: 3.0.sp),
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.end,
+                                children: [
+                                  FittedBox(
+                                    child: Row(
+                                      mainAxisSize: MainAxisSize.min,
+                                      children: [
+                                        StyledText(
+                                          '${formatDecimalPlaces(asset.uiAmount!, 9, isAutoDecimal: true)}',
+                                          fontSize: 18,
+                                          lineHeight: 20,
+                                          letterSpacing: 0.5,
+                                          fontWeight: 700,
+                                        ),
+                                        Padding(
+                                          padding: const EdgeInsets.only(left: 3),
+                                          child: StyledText(
+                                            asset.symbol!,
+                                            fontSize: 18,
+                                            lineHeight: 20,
+                                            letterSpacing: 0.5,
+                                            fontWeight: 400,
+                                          ),
+                                        ),
+                                      ],
                                     ),
-                                    Padding(
-                                      padding: const EdgeInsets.only(left: 3),
-                                      child: StyledText(
-                                        asset.symbol!,
-                                        fontSize: 18,
-                                        lineHeight: 20,
-                                        letterSpacing: 0.5,
-                                        fontWeight: 400,
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                                StyledText(
-                                  '${staikaWalletController.currencyString.value} ${formatDecimalPlaces(double.parse(staikaWalletController.getCurrencyPrice(asset.uiAmount!)), staikaWalletController.isKRW.value ? 0 : 2)}',
-                                  fontSize: 14,
-                                  lineHeight: 16,
-                                  letterSpacing: 0.5,
-                                  fontWeight: 500,
-                                  color: const Color(0xFFA5A5A5),
-                                ),
-                              ],
+                                  ),
+                                  StyledText(
+                                    '${staikaWalletController.currencyString.value} ${formatDecimalPlaces(double.parse(staikaWalletController.getCurrencyPrice(asset.uiAmount!)), staikaWalletController.isKRW.value ? 0 : 2)}',
+                                    fontSize: 14,
+                                    lineHeight: 16,
+                                    letterSpacing: 0.5,
+                                    fontWeight: 500,
+                                    color: const Color(0xFFA5A5A5),
+                                  ),
+                                ],
+                              ),
                             ),
                           ),
                           // showPrice

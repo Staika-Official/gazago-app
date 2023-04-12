@@ -32,13 +32,13 @@ class InventoryBadge extends StatelessWidget {
                     Opacity(
                       opacity: item.state == 'EQUIPPED' ? 0.5 : 1,
                       child: Container(
-                        height: 95.sp,
+                        height: 105.sp,
                         padding: EdgeInsets.all(10.0.sp),
                         child: item.imageUrl!.contains('.svg')
                             ? SvgPicture.network(
                                 fit: BoxFit.fitWidth,
                                 item.imageUrl!,
-                                placeholderBuilder: (BuildContext context) => Container(padding: const EdgeInsets.all(30.0), child: const CircularProgressIndicator()),
+                                placeholderBuilder: (BuildContext context) => Container(padding: const EdgeInsets.all(20.0), child: const CircularProgressIndicator()),
                               )
                             : CachedNetworkImage(
                                 imageUrl: item.imageUrl!,

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:gaza_go/constants/enums.dart';
+import 'package:gaza_go/constants/routes.dart';
 import 'package:gaza_go/platform/controllers/wallet_master_controller.dart';
 import 'package:gaza_go/presentations/styles/colors.dart';
 import 'package:gaza_go/presentations/styles/icons.dart';
@@ -20,6 +21,7 @@ class GoWallet extends StatelessWidget {
               asset: asset,
               onTap: () => controller.moveToWalletDetail(asset: asset, walletType: WalletType.inventory, assetType: asset.name!.toUpperCase() == 'TAIKA' ? AssetType.token : AssetType.coin),
               onTapButton: asset.name!.toUpperCase() == 'TAIKA' ? () => controller.showProductDialog() : () => controller.showProductStikDialog(),
+              // onTapButton: asset.name!.toUpperCase() == 'TAIKA' ? () => controller.showProductDialog() : () => Get.toNamed(Routes.createWallet),
               buttonText: asset.name!.toUpperCase() == 'TAIKA' ? 'TIK 충전' : 'TIK 으로 교환',
               buttonIcon: asset.name!.toUpperCase() == 'TAIKA' ? iconTikCharge : iconStikExchange,
               showPrice: false,
@@ -34,7 +36,7 @@ class GoWallet extends StatelessWidget {
     WalletMasterController controller = Get.find();
 
     return Scaffold(
-      backgroundColor: mainBg01Color,
+      backgroundColor: subBg01Color,
       body: Obx(() {
         return Column(
           children: [
@@ -80,12 +82,6 @@ class GoWallet extends StatelessWidget {
                   color: subBg02Color,
                   border: Border.all(width: 2.sp, color: Colors.black),
                   borderRadius: BorderRadius.circular(12.sp),
-                  boxShadow: [
-                    BoxShadow(
-                      color: Colors.black,
-                      offset: Offset(2.sp, 4.sp),
-                    )
-                  ],
                 ),
                 child: InkWell(
                   onTap: () => controller.onClickMoveToTaikaPay(),

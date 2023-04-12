@@ -114,6 +114,7 @@ dependencies:
   in_app_update: ^4.0.1
   animate_do: ^3.0.2
 
+
 dev_dependencies:
   flutter_test:
     sdk: flutter

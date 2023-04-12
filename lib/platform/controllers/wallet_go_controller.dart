@@ -49,7 +49,11 @@ class GoWalletController extends GetxController with SolanaMixin {
             successChargeStikToTikAlert(this);
           },
           errorCallback: (err) {
-            failureChargeStikToTikAlert(this, err.errorMessage);
+            if (err.status == 500) {
+              failureShortBalanceStikToTikAlert(this);
+            } else {
+              failureChargeStikToTikAlert(this, err.errorMessage);
+            }
           },
         );
         loaderController.isLoading.value = false;
@@ -66,6 +70,7 @@ class GoWalletController extends GetxController with SolanaMixin {
 
   void handleReGetStikPriceAndProductList() {
     getProductList();
+    walletMasterController.getSpendingWalletBalances();
     walletMasterController.getStikPriceInfo();
   }
 

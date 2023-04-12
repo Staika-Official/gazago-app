@@ -21,6 +21,7 @@ import 'package:get/get.dart';
 
 class StaikaWalletController extends GetxController with WalletMixin, SolanaMixin {
   LoaderController loaderController = Get.find();
+  WalletMasterController walletMasterController = Get.find();
   final RxList<WalletTokenBalanceModel> coinAssetList = RxList.empty();
   final Rxn<WalletTokenBalanceModel> assetStik = Rxn();
   final RxList<AssetItemNftModel> nftAssetList = RxList.empty();
@@ -53,21 +54,23 @@ class StaikaWalletController extends GetxController with WalletMixin, SolanaMixi
   @override
   void onInit() async {
     focusNode.addListener(_onFocusChange);
-
     await getStaikaWalletInfo();
 
     super.onInit();
   }
 
   @override
-  void onClose() {
+  void onClose() async {
+    walletMasterController.tabController.animateTo(0);
     focusNode.removeListener(_onFocusChange);
     focusNode.unfocus();
+
     super.onClose();
   }
 
   void dispose() {
     super.dispose();
+
     focusNode.removeListener(_onFocusChange);
     focusNode.unfocus();
     focusNode.dispose();

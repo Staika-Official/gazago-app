@@ -24,11 +24,9 @@ import 'package:gaza_go/platform/services/iap_service.dart';
 import 'package:gaza_go/platform/services/uaa_service.dart';
 import 'package:gaza_go/platform/services/wallet_service.dart';
 import 'package:gaza_go/presentations/components/alert_ui_list.dart';
-import 'package:gaza_go/presentations/components/gazago_button.dart';
 import 'package:gaza_go/presentations/components/loader.dart';
 import 'package:gaza_go/presentations/components/product_list_dialog.dart';
 import 'package:gaza_go/presentations/components/product_list_stik_dialog.dart';
-import 'package:gaza_go/presentations/styles/colors.dart';
 import 'package:get/get.dart';
 import 'package:in_app_purchase/in_app_purchase.dart';
 
@@ -327,11 +325,9 @@ class WalletMasterController extends GetxController with SolanaMixin, GetTickerP
   }
 
   void showProductStikDialog() async {
-    // onLoaderShow();
     loaderController.isLoading.value = true;
     await getStikPriceInfo();
     loaderController.isLoading.value = false;
-    // Get.back();
     showProductStikList(this);
   }
 

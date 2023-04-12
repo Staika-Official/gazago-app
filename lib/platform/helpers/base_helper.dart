@@ -84,7 +84,7 @@ String getUiAmountString(int val, int decimalPlaces) {
   return formattedNumber.toString();
 }
 
-String formatDecimalPlaces(double val, int decimalPlaces, {RoundType roundType = RoundType.round, bool isAutoDecimal = false, bool omitComma = false}) {
+String formatDecimalPlaces(double val, int decimalPlaces, {RoundType roundType = RoundType.round, bool isAutoDecimal = false}) {
   num mod = pow(10.0, decimalPlaces);
 
   double? formattedNumber;
@@ -114,7 +114,6 @@ String formatDecimalPlaces(double val, int decimalPlaces, {RoundType roundType =
   } else {
     formatter = NumberFormat('#,###');
   }
-
 
   return formatter.format(formattedNumber);
 }

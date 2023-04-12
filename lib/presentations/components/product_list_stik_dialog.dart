@@ -13,7 +13,7 @@ import 'package:gaza_go/presentations/styles/icons.dart';
 import 'package:gaza_go/presentations/styles/styled_text.dart';
 import 'package:get/get.dart';
 
-List<Widget> renderProductStikList(GoWalletController controller) {
+List<Widget> renderProductStikList(GoWalletController controller, WalletMasterController walletMasterController) {
   return controller.productList
       .asMap()
       .entries
@@ -30,7 +30,7 @@ List<Widget> renderProductStikList(GoWalletController controller) {
                     child: iconTik,
                   ),
                   StyledText(
-                    '${product.value.toUiAmount.toString()} ${product.value.toTokenSymbol}',
+                    '${formatDecimalPlaces(double.parse(product.value.toUiAmount.toString()), 0)} ${product.value.toTokenSymbol}',
                     fontSize: 18.sp,
                     fontWeight: 700,
                     lineHeight: 18.sp,
@@ -56,7 +56,9 @@ List<Widget> renderProductStikList(GoWalletController controller) {
                       ],
                     ),
                     child: InkWell(
-                      onTap: () => exchangeStikToTikAlert(controller, product.value),
+                      onTap: () => double.parse(walletMasterController.stik.value.uiAmountString!) < product.value.fromUiAmount
+                          ? failureShortBalanceStikToTikAlert(controller)
+                          : exchangeStikToTikAlert(controller, product.value),
                       borderRadius: BorderRadius.circular(50),
                       child: Padding(
                         padding: EdgeInsets.symmetric(horizontal: 15.sp, vertical: 15.sp),
@@ -99,7 +101,32 @@ void showProductStikList(WalletMasterController controller) {
       child: Obx(() {
         return DefaultContainer(
           backgroundColor: subBg01Color,
-          titleText: 'TIK 충전하기',
+
+          titleWidget: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Padding(
+                padding: EdgeInsets.only(top: 15.0.sp, bottom: 5.sp),
+                child: StyledText(
+                  'TIK으로 교환',
+                  fontSize: 18,
+                  lineHeight: 18,
+                  fontWeight: 500,
+                  letterSpacing: -0.02,
+                  color: Colors.white,
+                ),
+              ),
+              StyledText(
+                '1 STIK = ₩ ${formatDecimalPlaces(controller.stikPriceInfoKRW.value.price!, 0)} / ${formatDate(controller.stikPriceInfoKRW.value.lastUpdated)} (CoinMarket Cap)',
+                fontSize: 10,
+                lineHeight: 14,
+                fontWeight: 500,
+                color: deepGrayColor,
+                letterSpacing: -0.02,
+              ),
+            ],
+          ),
+          // titleText: 'TIK으로 교환',
           child: Column(
             mainAxisSize: MainAxisSize.max,
             children: [
@@ -107,65 +134,44 @@ void showProductStikList(WalletMasterController controller) {
                 children: [
                   Padding(
                     padding: EdgeInsets.only(left: 24.sp, top: 16.sp, right: 24.sp, bottom: 28.sp),
-                    child: FittedBox(
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          Row(
-                            children: [
-                              CircleAvatar(
-                                foregroundImage: HiveStore.loadString(key: HiveKey.profileImageUrl.name) != null && HiveStore.loadString(key: HiveKey.profileImageUrl.name) != ''
-                                    ? CachedNetworkImageProvider(
-                                        HiveStore.loadString(key: HiveKey.profileImageUrl.name)!,
-                                      )
-                                    : Image.asset(
-                                        'assets/images/ic_launcher.png',
-                                        width: 30.sp,
-                                      ).image,
-                                radius: 25,
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Row(
+                          children: [
+                            CircleAvatar(
+                              foregroundImage: HiveStore.loadString(key: HiveKey.profileImageUrl.name) != null && HiveStore.loadString(key: HiveKey.profileImageUrl.name) != ''
+                                  ? CachedNetworkImageProvider(
+                                      HiveStore.loadString(key: HiveKey.profileImageUrl.name)!,
+                                    )
+                                  : Image.asset(
+                                      'assets/images/ic_launcher.png',
+                                      width: 30.sp,
+                                    ).image,
+                              radius: 25,
+                            ),
+                            const Padding(
+                              padding: EdgeInsets.only(left: 12),
+                              child: StyledText(
+                                '보유 중',
+                                fontSize: 18,
+                                fontWeight: 600,
+                                lineHeight: 18,
                               ),
-                              const Padding(
-                                padding: EdgeInsets.only(left: 12),
-                                child: StyledText(
-                                  '보유 중',
-                                  fontSize: 18,
-                                  fontWeight: 600,
-                                  lineHeight: 18,
-                                ),
-                              ),
-                            ],
-                          ),
-                          Padding(
+                            ),
+                          ],
+                        ),
+                        Expanded(
+                          child: Padding(
                             padding: EdgeInsets.only(left: 20.0),
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.end,
-                              children: [
-                                Row(
-                                  children: [
-                                    StyledText(
-                                      formatDecimalPlaces(double.parse(controller.tik.value.uiAmountString!), 0),
-                                      fontSize: 16.sp,
-                                      fontWeight: 700,
-                                      lineHeight: 18.sp,
-                                      letterSpacing: -0.5,
-                                      color: lightGrayColor,
-                                    ),
-                                    StyledText(
-                                      ' TIK',
-                                      fontSize: 16.sp,
-                                      fontWeight: 400,
-                                      lineHeight: 18.sp,
-                                      letterSpacing: -0.5,
-                                      color: lightGrayColor,
-                                    ),
-                                  ],
-                                ),
-                                Padding(
-                                  padding: EdgeInsets.only(top: 6.0.sp),
-                                  child: Row(
+                            child: FittedBox(
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.end,
+                                children: [
+                                  Row(
                                     children: [
                                       StyledText(
-                                        formatDecimalPlaces(double.parse(controller.stik.value.uiAmountString!), 9, isAutoDecimal: true),
+                                        formatDecimalPlaces(double.parse(controller.tik.value.uiAmountString!), 0),
                                         fontSize: 16.sp,
                                         fontWeight: 700,
                                         lineHeight: 18.sp,
@@ -173,7 +179,7 @@ void showProductStikList(WalletMasterController controller) {
                                         color: lightGrayColor,
                                       ),
                                       StyledText(
-                                        ' STIK',
+                                        ' TIK',
                                         fontSize: 16.sp,
                                         fontWeight: 400,
                                         lineHeight: 18.sp,
@@ -182,12 +188,36 @@ void showProductStikList(WalletMasterController controller) {
                                       ),
                                     ],
                                   ),
-                                ),
-                              ],
+                                  Padding(
+                                    padding: EdgeInsets.only(top: 6.0.sp),
+                                    child: Row(
+                                      children: [
+                                        StyledText(
+                                          // '111',
+                                          formatDecimalPlaces(double.parse(controller.stik.value.uiAmountString!), 9, isAutoDecimal: true),
+                                          fontSize: 16.sp,
+                                          fontWeight: 700,
+                                          lineHeight: 18.sp,
+                                          letterSpacing: -0.5,
+                                          color: lightGrayColor,
+                                        ),
+                                        StyledText(
+                                          ' STIK',
+                                          fontSize: 16.sp,
+                                          fontWeight: 400,
+                                          lineHeight: 18.sp,
+                                          letterSpacing: -0.5,
+                                          color: lightGrayColor,
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                ],
+                              ),
                             ),
                           ),
-                        ],
-                      ),
+                        ),
+                      ],
                     ),
                   ),
                   Divider(
@@ -201,7 +231,7 @@ void showProductStikList(WalletMasterController controller) {
                   physics: const ClampingScrollPhysics(),
                   child: Column(
                     children: [
-                      ...renderProductStikList(goWalletController),
+                      ...renderProductStikList(goWalletController, controller),
                       Container(
                         padding: const EdgeInsets.symmetric(horizontal: 25, vertical: 30),
                         child: Column(
@@ -257,32 +287,6 @@ void showProductStikList(WalletMasterController controller) {
                                   Expanded(
                                     child: StyledText(
                                       '위에 안내한 금액이 5분간 유지되며 해당 가격으로 거래가 진행됩니다.',
-                                      fontSize: 10,
-                                      lineHeight: 14,
-                                      fontWeight: 500,
-                                      color: deepGrayColor,
-                                    ),
-                                  ),
-                                ],
-                              ),
-                            ),
-                            Padding(
-                              padding: const EdgeInsets.only(top: 5),
-                              child: Row(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Container(
-                                    width: 2,
-                                    height: 2,
-                                    margin: const EdgeInsets.all(5),
-                                    decoration: BoxDecoration(
-                                      color: lightGrayColor,
-                                      borderRadius: BorderRadius.circular(2),
-                                    ),
-                                  ),
-                                  Expanded(
-                                    child: StyledText(
-                                      '사용되는 TIK의 10%가 교환 수수료로 추가 사용됩니다.',
                                       fontSize: 10,
                                       lineHeight: 14,
                                       fontWeight: 500,

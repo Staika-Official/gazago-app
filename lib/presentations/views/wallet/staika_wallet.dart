@@ -35,7 +35,8 @@ class StaikaWallet extends StatelessWidget {
     StaikaWalletController controller = Get.put(StaikaWalletController());
 
     return Scaffold(
-      backgroundColor: mainBg01Color,
+      backgroundColor: subBg01Color,
+      resizeToAvoidBottomInset: false,
       body: Obx(() {
         return Column(
           children: [
@@ -107,22 +108,29 @@ class StaikaWallet extends StatelessWidget {
               ),
             Padding(
               padding: EdgeInsets.only(top: 12.0.sp),
-              child: SizedBox(
-                child: InkWell(
-                  onTap: () => controller.onOpenSolScanWallet(),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      StyledText(
-                        '거래내역',
-                        fontSize: 12,
-                        fontWeight: 500,
-                        color: lightGrayColor,
-                      ),
-                      iconTransactionHistory,
-                    ],
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  InkWell(
+                    onTap: () => controller.onOpenSolScanWallet(),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        StyledText(
+                          '거래내역',
+                          fontSize: 14,
+                          lineHeight: 15,
+                          fontWeight: 500,
+                          color: lightGrayColor,
+                        ),
+                        Padding(
+                          padding: EdgeInsets.only(left: 3.0),
+                          child: iconTransactionHistory,
+                        ),
+                      ],
+                    ),
                   ),
-                ),
+                ],
               ),
             ),
             Padding(

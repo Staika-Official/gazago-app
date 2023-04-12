@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:gaza_go/platform/controllers/wallet_master_controller.dart';
 import 'package:gaza_go/presentations/components/default_container.dart';
 import 'package:gaza_go/presentations/styles/colors.dart';
@@ -15,16 +16,16 @@ class WalletHome extends StatelessWidget {
 
     return DefaultContainer(
       backgroundColor: subBg01Color,
-      resizeToAvoidBottomInset: false,
       titleText: '지갑',
+      resizeToAvoidBottomInset: false,
       child: Column(
         children: [
           Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 28),
+            padding: EdgeInsets.symmetric(horizontal: 28.0.sp),
             child: Container(
               height: 54,
               decoration: BoxDecoration(
-                color: Color(0xff0E0E0F),
+                color: const Color(0xff0E0E0F),
                 border: Border.all(
                   color: Colors.black,
                   width: 2,
@@ -33,7 +34,7 @@ class WalletHome extends StatelessWidget {
               ),
               child: TabBar(
                 controller: walletMasterController.tabController,
-                padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 5),
+                padding: EdgeInsets.symmetric(horizontal: 7.sp, vertical: 6.sp),
                 indicator: BoxDecoration(
                   color: popupBgColor,
                   borderRadius: BorderRadius.circular(60),
