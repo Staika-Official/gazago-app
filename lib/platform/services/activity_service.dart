@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:dio/dio.dart';
 import 'package:gaza_go/constants/enums.dart';
 import 'package:gaza_go/platform/apis/activity.dart';
@@ -129,6 +131,15 @@ class ActivityService {
     Response res = await ActivityApi.fetchUserStaminaRecharge(userId!, rechargeInfo);
     if (res.statusCode == 200) {
       successCallback(UserStateModel.fromJson(res.data));
+    } else {
+      if (errorCallback != null) errorCallback();
+    }
+  }
+
+  static Future<void> fetchLocations(int exerciseId, int page, int size, {required Function successCallback, Function? errorCallback}) async {
+    Response res = await ActivityApi.fetchLocations(userId!, exerciseId, page, size);
+    if (res.statusCode == 200) {
+      successCallback(json.decode(res.data));
     } else {
       if (errorCallback != null) errorCallback();
     }

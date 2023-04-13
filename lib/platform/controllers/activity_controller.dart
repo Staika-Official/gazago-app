@@ -355,7 +355,7 @@ class ActivityController extends SuperController with ActivityMixin, ChallengeMi
   }
 
   Future<void> getUserState() async {
-    await ActivityService.getCurrentUserState(successCallback: (currentUserState) async {
+    await ActivityService.getCurrentUserState(successCallback: (CurrentUserStateModel currentUserState) async {
       currentUserState.exercise?.locationUpdateTime = DateTime.now();
       userState.update((state) {
         state?.state = currentUserState.state;
