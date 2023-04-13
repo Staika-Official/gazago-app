@@ -5,6 +5,7 @@ import 'package:flutter_naver_map/flutter_naver_map.dart';
 import 'package:flutter_svg_provider/flutter_svg_provider.dart';
 import 'package:gaza_go/constants/routes.dart';
 import 'package:gaza_go/platform/helpers/alert_helper.dart';
+import 'package:gaza_go/platform/helpers/location_helper.dart';
 import 'package:gaza_go/platform/models/archive_detail_item_model.dart';
 import 'package:gaza_go/platform/models/archive_list_item_model.dart';
 import 'package:gaza_go/platform/services/archive_service.dart';
@@ -17,21 +18,7 @@ class ArchiveController extends GetxController with ScrollMixin {
   RxBool stopLoading = RxBool(false);
   RxBool dataGetLoading = RxBool(false);
   Rx<ArchiveDetailItemModel> selectedItem = Rx(ArchiveDetailItemModel());
-  RxList<LatLng> get locations {
-    List<LatLng> coordinates = List.empty(growable: true);
-    if (selectedItem.value.locations != null) {
-      List<dynamic> locationArray = json.decode(selectedItem.value.locations!);
-      for (List location in locationArray) {
-        LatLng coordination = LatLng(location[0], location[1]);
-        coordinates.add(coordination);
-      }
-    }
-    if (selectedItem.value.locations != null && coordinates.length > 1) {
-      return RxList(coordinates);
-    } else {
-      return RxList.empty();
-    }
-  }
+  RxList<LatLng> locations = RxList.empty();
 
   @override
   void onInit() async {
@@ -65,8 +52,9 @@ class ArchiveController extends GetxController with ScrollMixin {
   }
 
   void toDetail(int id) async {
-    await ArchiveService.getArchiveItem(id, Platform.operatingSystem, successCallback: (archive) {
+    await ArchiveService.getArchiveItem(id, Platform.operatingSystem, successCallback: (archive) async {
       selectedItem.value = archive;
+      await initialiseLocations();
       Get.toNamed(Routes.archiveDetail);
     });
   }
@@ -119,6 +107,22 @@ class ArchiveController extends GetxController with ScrollMixin {
     } else {
       return const Svg('assets/images/archive/ico_walking.svg');
     }
+  }
+
+  Future<void> initialiseLocations() async {
+    locations.value = RxList.empty();
+    List<dynamic> locationArray = List.empty(growable: true);
+    List<LatLng> coordinates = List.empty(growable: true);
+    if (selectedItem.value.locationsStr != null) {
+      locationArray = json.decode(selectedItem.value.locationsStr!);
+    } else {
+      locationArray = await getLocationsData(selectedItem.value.id!);
+    }
+    for (List location in locationArray) {
+      LatLng coordinate = LatLng(double.parse(location[0]), double.parse(location[1]));
+      coordinates.add(coordinate);
+    }
+    locations.addAll(coordinates);
   }
 
   @override

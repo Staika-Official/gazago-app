@@ -14,7 +14,7 @@ import 'package:gaza_go/platform/firebase/cloud_messaging.dart';
 import 'package:gaza_go/platform/helpers/activity_helper.dart';
 import 'package:gaza_go/platform/helpers/alert_helper.dart';
 import 'package:gaza_go/platform/helpers/base_helper.dart';
-import 'package:gaza_go/platform/helpers/location_filter.dart';
+import 'package:gaza_go/platform/helpers/location_helper.dart';
 import 'package:gaza_go/platform/models/ad_watch_available_model.dart';
 import 'package:gaza_go/platform/models/challenge_model.dart';
 import 'package:gaza_go/platform/models/current_user_state_model.dart';
@@ -401,7 +401,7 @@ mixin ActivityMixin {
     continueExercise(source: 'pendingExerciseDialog');
   }
 
-  void continueExercise({String? source}) {
+  void continueExercise({String? source}) async {
     if (isFakeGps.value) {
       return;
     }
@@ -415,16 +415,32 @@ mixin ActivityMixin {
     exerciseDistance.value = userState.value.exercise!.distance!;
 
     coordinates.value = List.empty(growable: true);
-    coordinates.addAll(parseCoordinates());
+    coordinates.addAll(await parseCoordinates(userState.value.exercise!.id));
 
     initStream();
     updateExercise(source: source);
     startPeriodicUpdate();
   }
 
-  RxList<LatLng> parseCoordinates() {
+  Future<RxList<LatLng>> parseCoordinates(int? exerciseId) async {
     List<dynamic>? locationsList = HiveStore.load(key: HiveKey.exerciseCoordinates.name);
-    return locationsList != null ? RxList(locationListToLatLng(locationsList)) : RxList.empty();
+    if (locationsList != null) {
+      return RxList(locationListToLatLng(locationsList));
+    } else if (exerciseId != null) {
+      List<dynamic> locationArray = List.empty(growable: true);
+      List<LatLng> coordinates = List.empty(growable: true);
+
+      locationArray = await getLocationsData(exerciseId);
+
+      for (List location in locationArray) {
+        LatLng coordinate = LatLng(double.parse(location[0]), double.parse(location[1]));
+        coordinates.add(coordinate);
+      }
+
+      return RxList(coordinates);
+    } else {
+      return RxList.empty();
+    }
   }
 
   void updateExercise({bool? isPaused, String? source}) async {

@@ -15,6 +15,7 @@ import 'package:gaza_go/platform/helpers/activity_mixin.dart';
 import 'package:gaza_go/platform/helpers/admob_mixin.dart';
 import 'package:gaza_go/platform/helpers/alert_helper.dart';
 import 'package:gaza_go/platform/helpers/challenge_mixin.dart';
+import 'package:gaza_go/platform/helpers/location_helper.dart';
 import 'package:gaza_go/platform/helpers/login_helper.dart';
 import 'package:gaza_go/platform/models/ad_watch_available_model.dart';
 import 'package:gaza_go/platform/models/challenge_hierarchy_model.dart';
@@ -394,7 +395,7 @@ class ActivityController extends SuperController with ActivityMixin, ChallengeMi
           exerciseDistance.value = userState.value.exercise!.distance!;
 
           coordinates.value = List.empty(growable: true);
-          coordinates.addAll(parseCoordinates());
+          coordinates.addAll(await parseCoordinates(userState.value.exercise!.id));
         }
 
         final state = userState.value.exercise!.state!;
@@ -701,6 +702,9 @@ class ActivityController extends SuperController with ActivityMixin, ChallengeMi
           locationUpdateTime: DateTime.now(),
         ));
 
+        //TODO. need to edit filter test
+        filterCoordinates(coordinates.last, LatLng(position.latitude, position.longitude), userState.value.exercise!.id!);
+
         coordinates.add(LatLng(position.latitude, position.longitude));
         if (coordinates.isNotEmpty && coordinates.length > 1) {
           exerciseDistance.value = exerciseDistance.value +
@@ -716,8 +720,10 @@ class ActivityController extends SuperController with ActivityMixin, ChallengeMi
         }
       }
 
-      detectChallengeZone(position);
-      autoFinishChallenge(position, userState.value);
+      Throttling(duration: const Duration(milliseconds: 1000)).throttle(() {
+        detectChallengeZone(position);
+        autoFinishChallenge(position, userState.value);
+      });
     });
   }
 
