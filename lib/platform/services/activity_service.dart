@@ -133,4 +133,13 @@ class ActivityService {
       if (errorCallback != null) errorCallback();
     }
   }
+
+  static Future<dynamic> fetchLocations(int exerciseId, int page, int size) async {
+    Response res = await ActivityApi.fetchLocations(userId!, exerciseId, page, size);
+    if (res.statusCode == 200) {
+      return res.data;
+    } else {
+      return [];
+    }
+  }
 }

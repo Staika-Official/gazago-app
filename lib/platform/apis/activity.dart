@@ -85,4 +85,8 @@ class ActivityApi {
   static Future<Response> fetchUserStaminaRecharge(String userId, UserStaminaRechargeModel rechargeInfo) async {
     return await Api.client(serviceUrl: ServiceUrl.staminaService).post('/users/$userId', data: rechargeInfo);
   }
+
+  static Future<Response> fetchLocations(String userId, int exerciseId, int page, int size) async {
+    return await Api.client(serviceUrl: ServiceUrl.exerciseService).get('/users/$userId/locations/$exerciseId?page=$page&size=$size');
+  }
 }

@@ -22,7 +22,7 @@ class ArchiveDetailItemModel {
   double? rewardGoAdSum;
   String? badgeName;
   String? challengeTitle;
-  String? locations;
+  String? locationsStr;
   double? spendDurability;
   double? spendStamina;
   String? title;
@@ -53,7 +53,7 @@ class ArchiveDetailItemModel {
     this.rewardGoAdSum,
     this.badgeName,
     this.challengeTitle,
-    this.locations,
+    this.locationsStr,
     this.spendDurability,
     this.spendStamina,
     this.title,

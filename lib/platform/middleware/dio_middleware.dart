@@ -195,7 +195,7 @@ class Api {
     }
 
     if (!handler.isCompleted) {
-      e.response != null ? handler.resolve(e.response!) : handler.next(e);
+      e.response != null && e.response!.data != 'unknown' ? handler.resolve(e.response!) : handler.next(e);
     }
   }
 

@@ -69,6 +69,8 @@ class UserExerciseModel {
   double? lastLatitude;
   @HiveField(30)
   double? lastLongitude;
+  @HiveField(31)
+  List<List>? latestLocations;
 
   UserExerciseModel({
     this.id,
@@ -102,6 +104,7 @@ class UserExerciseModel {
     this.adId,
     this.lastLatitude,
     this.lastLongitude,
+    this.latestLocations,
   });
 
   factory UserExerciseModel.fromJson(Map<String, dynamic> json) => _$UserExerciseModelFromJson(json);

@@ -14,7 +14,7 @@ import 'package:gaza_go/platform/firebase/cloud_messaging.dart';
 import 'package:gaza_go/platform/helpers/activity_helper.dart';
 import 'package:gaza_go/platform/helpers/alert_helper.dart';
 import 'package:gaza_go/platform/helpers/base_helper.dart';
-import 'package:gaza_go/platform/helpers/location_filter.dart';
+import 'package:gaza_go/platform/helpers/location_helper.dart';
 import 'package:gaza_go/platform/models/ad_watch_available_model.dart';
 import 'package:gaza_go/platform/models/challenge_model.dart';
 import 'package:gaza_go/platform/models/current_user_state_model.dart';
@@ -161,6 +161,19 @@ mixin ActivityMixin {
     return RxDouble(highestClimbed(altitudeList));
   }
 
+  List<List<double>> get partialCoordinates {
+    int lastUpdatedCoordinateIndex = HiveStore.load(key: HiveKey.lastUpdatedCoordinateIndex.name) ?? 0;
+    if (coordinates.isEmpty) {
+      return RxList.empty();
+    } else {
+      List<List<double>> partialList = List.empty(growable: true);
+      for (LatLng coordinate in RxList.from(coordinates.sublist(lastUpdatedCoordinateIndex))) {
+        partialList.add([coordinate.latitude, coordinate.longitude]);
+      }
+      return partialList;
+    }
+  }
+
   Rx<UserExerciseModel> get userExerciseData {
     return Rx(
       UserExerciseModel(
@@ -170,11 +183,12 @@ mixin ActivityMixin {
         distance: convertKmToMeters(totalDistance.value),
         altitude: exerciseData.isNotEmpty ? exerciseData.last.altitude : 0,
         time: exerciseTime.value,
-        locations: coordinatesToString(coordinates),
+        // locations: coordinatesToString(coordinates),
         locationUpdateTime: DateTime.now(),
         adId: userState.value.exercise!.adId,
         lastLatitude: coordinates.isNotEmpty ? coordinates.last.latitude : null,
         lastLongitude: coordinates.isNotEmpty ? coordinates.last.longitude : null,
+        latestLocations: partialCoordinates,
       ),
     );
   }
@@ -195,6 +209,7 @@ mixin ActivityMixin {
     exerciseTime.value = 0;
     exerciseDistance.value = 0;
     pedestrianStatus.value = 'STOPPED';
+    HiveStore.initializeExerciseCoordinates();
   }
 
   void initExerciseTimer() {
@@ -219,8 +234,10 @@ mixin ActivityMixin {
         exerciseModel.distance = convertKmToMeters(totalDistance.value);
         exerciseModel.altitude = exerciseData.isNotEmpty ? exerciseData.last.altitude : 0;
         exerciseModel.time = exerciseTime.value;
-        exerciseModel.locations = coordinatesToString(coordinates);
+        // exerciseModel.locations = coordinatesToString(coordinates);
         exerciseModel.locationUpdateTime = exerciseData.isNotEmpty ? exerciseData.last.locationUpdateTime : DateTime.now();
+        exerciseModel.lastLatitude = coordinates.isNotEmpty ? coordinates.last.latitude : null;
+        exerciseModel.lastLongitude = coordinates.isNotEmpty ? coordinates.last.longitude : null;
 
         HiveStore.saveCurrentUserState(
           userState: CurrentUserStateModel(
@@ -384,7 +401,7 @@ mixin ActivityMixin {
     continueExercise(source: 'pendingExerciseDialog');
   }
 
-  void continueExercise({String? source}) {
+  void continueExercise({String? source}) async {
     if (isFakeGps.value) {
       return;
     }
@@ -398,17 +415,32 @@ mixin ActivityMixin {
     exerciseDistance.value = userState.value.exercise!.distance!;
 
     coordinates.value = List.empty(growable: true);
-    if (userState.value.exercise!.locations != null && userState.value.exercise!.locations!.isNotEmpty) {
-      coordinates.addAll(parseCoordinates());
-    }
+    coordinates.addAll(await parseCoordinates(userState.value.exercise!.id));
 
     initStream();
     updateExercise(source: source);
     startPeriodicUpdate();
   }
 
-  RxList<LatLng> parseCoordinates() {
-    return RxList(locationStringToLatLng(userState.value.exercise!.locations!));
+  Future<RxList<LatLng>> parseCoordinates(int? exerciseId) async {
+    List<dynamic>? locationsList = HiveStore.load(key: HiveKey.exerciseCoordinates.name);
+    if (locationsList != null) {
+      return RxList(locationListToLatLng(locationsList));
+    } else if (exerciseId != null) {
+      List<dynamic> locationArray = List.empty(growable: true);
+      List<LatLng> coordinates = List.empty(growable: true);
+
+      locationArray = await getLocationsData(exerciseId);
+
+      for (List location in locationArray) {
+        LatLng coordinate = LatLng(double.parse(location[0]), double.parse(location[1]));
+        coordinates.add(coordinate);
+      }
+
+      return RxList(coordinates);
+    } else {
+      return RxList.empty();
+    }
   }
 
   void updateExercise({bool? isPaused, String? source}) async {
@@ -428,6 +460,8 @@ mixin ActivityMixin {
     }
 
     void updateLocalUserState(CurrentUserStateModel newUserState) {
+      HiveStore.saveExerciseCoordinate(coordinates);
+
       newUserState.exercise!.locationUpdateTime = DateTime.now();
       userState.update((state) {
         state?.state = newUserState.state;
@@ -704,6 +738,7 @@ mixin ActivityMixin {
     stepSubscription = null;
     HiveStore.save(key: HiveKey.savedStepInitialized.name, value: false);
     HiveStore.save(key: HiveKey.savedStepCount.name, value: 0);
+    HiveStore.initializeExerciseCoordinates();
     pedestrianStatusSubscription?.cancel();
     pedestrianStatusSubscription = null;
   }

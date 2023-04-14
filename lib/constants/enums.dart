@@ -85,6 +85,8 @@ enum HiveKey {
   updateTimer,
   endPointType,
   walletConnectionPrompted,
+  lastUpdatedCoordinateIndex,
+  exerciseCoordinates,
 }
 
 enum ResponseStatus {
