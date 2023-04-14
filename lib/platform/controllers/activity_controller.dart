@@ -702,11 +702,10 @@ class ActivityController extends SuperController with ActivityMixin, ChallengeMi
           locationUpdateTime: DateTime.now(),
         ));
 
-        //TODO. need to edit filter test
-        filterCoordinates(coordinates.last, LatLng(position.latitude, position.longitude), userState.value.exercise!.id!);
-
         coordinates.add(LatLng(position.latitude, position.longitude));
         if (coordinates.isNotEmpty && coordinates.length > 1) {
+          //TODO. need to edit filter test
+          filterCoordinates(coordinates.last, LatLng(position.latitude, position.longitude), userState.value.exercise!.id!);
           exerciseDistance.value = exerciseDistance.value +
               Geolocator.distanceBetween(coordinates[coordinates.length - 2].latitude, coordinates[coordinates.length - 2].longitude, coordinates.last.latitude, coordinates.last.longitude);
         }

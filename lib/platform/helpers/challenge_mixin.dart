@@ -1,5 +1,4 @@
 import 'dart:async';
-import 'dart:developer';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_naver_map/flutter_naver_map.dart';
@@ -110,16 +109,8 @@ mixin ChallengeMixin {
   }
 
   void detectChallengeZone(Position location) {
-    print('######################## detectChallengeZone');
-    print(location.speed);
-    print(location);
-
     doableChallenges.value = challengeList.where((challenge) {
-      inspect('시작경도점${challenge.startLat}');
-      inspect('시작위도점${challenge.startLon}');
       double distance = calculateDistance(location.latitude, location.longitude, challenge.startLat, challenge.startLon);
-      inspect('거리$distance');
-      inspect('반경${convertMetersToKm(challenge.startRadius!)}');
       return distance <= convertMetersToKm(challenge.startRadius!);
     }).toList();
     // inspect('가능한 챌린지 리스트${doableChallenges.value}');
