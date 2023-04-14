@@ -19,6 +19,7 @@ class NoticePopupController extends GetxController {
 
   @override
   void onInit() async {
+    // HiveStore.save(key: HiveKey.closePopupDate.name, value: null);
     await initController();
     super.onInit();
   }

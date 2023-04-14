@@ -1,139 +1,79 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:gaza_go/platform/controllers/wallet_master_controller.dart';
 import 'package:gaza_go/presentations/components/default_container.dart';
 import 'package:gaza_go/presentations/styles/colors.dart';
-import 'package:gaza_go/presentations/styles/styled_text.dart';
-import 'package:gaza_go/presentations/views/wallet/spending_wallet.dart';
+import 'package:gaza_go/presentations/views/wallet/go_wallet.dart';
+import 'package:gaza_go/presentations/views/wallet/staika_wallet.dart';
+import 'package:get/get.dart';
 
-class WalletHome extends StatefulWidget {
+class WalletHome extends StatelessWidget {
   const WalletHome({Key? key}) : super(key: key);
 
   @override
-  State<WalletHome> createState() => _WalletHomeState();
-}
-
-class _WalletHomeState extends State<WalletHome> with SingleTickerProviderStateMixin {
-  late TabController _tabController;
-
-  @override
-  void initState() {
-    super.initState();
-    _tabController = TabController(vsync: this, length: 1, initialIndex: 0);
-  }
-
-  @override
-  void dispose() {
-    _tabController.dispose();
-    super.dispose();
-  }
-
-  @override
   Widget build(BuildContext context) {
+    WalletMasterController walletMasterController = Get.find<WalletMasterController>();
+
     return DefaultContainer(
       backgroundColor: subBg01Color,
-      titleText: _tabController.index == 0 ? 'GO 지갑' : '지갑',
-      // child: Column(
-      //   children: [
-      //     SizedBox(
-      //       width: double.infinity,
-      //       child: Row(
-      //         mainAxisAlignment: MainAxisAlignment.spaceBetween,
-      //         children: [
-      //           Text('디지털 자산'),
-      //           Row(
-      //             children: [
-      //               Icon(Icons.change_circle),
-      //               Padding(
-      //                 padding: const EdgeInsets.only(left: 8.0),
-      //                 child: Text('KRW'),
-      //               )
-      //             ],
-      //           )
-      //         ],
-      //       ),
-      //     ),
-      //     SpendingWallet(),
-      //   ],
-      // ),
+      titleText: '지갑',
+      resizeToAvoidBottomInset: false,
       child: Column(
         children: [
-          // Padding(
-          //   padding: const EdgeInsets.symmetric(horizontal: 28),
-          //   child: Container(
-          //     height: 50,
-          //     decoration: BoxDecoration(
-          //       color: Colors.black,
-          //       border: Border.all(
-          //         color: subBg02Color,
-          //         width: 2,
-          //       ),
-          //       borderRadius: BorderRadius.circular(50),
-          //     ),
-          //     child: TabBar(
-          //       controller: _tabController,
-          //       padding: EdgeInsets.symmetric(horizontal: 7, vertical: 5),
-          //       indicator: BoxDecoration(
-          //         color: subBg02Color,
-          //         borderRadius: BorderRadius.circular(50),
-          //       ),
-          //       labelColor: Colors.white,
-          //       unselectedLabelColor: Color(0xffcccccc),
-          //       labelStyle: TextStyle(
-          //         fontWeight: FontWeight.w500,
-          //         fontSize: 18,
-          //         height: 20 / 18,
-          //         letterSpacing: 0.5,
-          //       ),
-          //       tabs: [
-          //         Tab(
-          //           text: 'gazaGO 지갑',
-          //         ),
-          //         Tab(
-          //           text: 'Staika 지갑',
-          //         ),
-          //       ],
-          //     ),
-          //   ),
-          // ),
-          SizedBox(
-            width: double.infinity,
-            child: Padding(
-              padding: EdgeInsets.only(left: 33.sp, right: 33.sp, top: 18.sp),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: const [
-                  StyledText(
-                    '디지털 자산',
-                    fontSize: 16,
-                    fontWeight: 600,
-                    lineHeight: 20,
-                    letterSpacing: -0.5,
+          Padding(
+            padding: EdgeInsets.symmetric(horizontal: 28.0.sp),
+            child: Container(
+              height: 54,
+              decoration: BoxDecoration(
+                color: const Color(0xff0E0E0F),
+                border: Border.all(
+                  color: Colors.black,
+                  width: 2,
+                ),
+                borderRadius: BorderRadius.circular(50),
+              ),
+              child: TabBar(
+                controller: walletMasterController.tabController,
+                padding: EdgeInsets.symmetric(horizontal: 6.sp, vertical: 5.sp),
+                indicator: BoxDecoration(
+                  color: popupBgColor,
+                  borderRadius: BorderRadius.circular(60),
+                  boxShadow: const [
+                    BoxShadow(
+                      color: Colors.black,
+                      offset: Offset(2, 2),
+                      blurRadius: 0.0,
+                      spreadRadius: 0.0,
+                    ),
+                  ],
+                ),
+                indicatorPadding: EdgeInsets.only(bottom: 2),
+                labelColor: Colors.white,
+                unselectedLabelColor: const Color(0xFFA5A5A5),
+                labelStyle: TextStyle(
+                  fontWeight: FontWeight.w500,
+                  fontSize: 18,
+                  height: 20 / 18,
+                  letterSpacing: 0.5,
+                ),
+                tabs: [
+                  Tab(
+                    text: 'GO 지갑',
                   ),
-                  // Row(
-                  //   children: [
-                  //     SvgPicture.asset('assets/images/wallet/ico_change.svg'),
-                  //     Padding(
-                  //       padding: const EdgeInsets.only(left: 6.0),
-                  //       child: Text(
-                  //         'KRW',
-                  //         style: TextStyle(
-                  //           fontSize: 10,
-                  //           color: Color(0xffA5A5A5),
-                  //         ),
-                  //       ),
-                  //     )
-                  //   ],
-                  // )
+                  Tab(
+                    text: 'Staika 지갑',
+                  ),
                 ],
               ),
             ),
           ),
           Expanded(
             child: TabBarView(
-              controller: _tabController,
+              physics: NeverScrollableScrollPhysics(),
+              controller: walletMasterController.tabController,
               children: const [
-                SpendingWallet(),
-                // AssetWallet(),
+                GoWallet(),
+                StaikaWallet(),
               ],
             ),
           ),

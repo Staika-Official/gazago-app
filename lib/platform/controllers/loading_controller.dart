@@ -121,7 +121,7 @@ class LoadingController extends GetxController {
         if (Get.isRegistered<ActivityController>()) Get.find<ActivityController>().initializeController();
       } else {
         timerStop();
-        Get.offNamed(Routes.joinTerms);
+        Get.offNamed(Routes.joinTerms, arguments: {'platform': 'gazago'});
       }
     }, errorCallback: (ErrorResponseDataModel error) {
       if (error.status != 401) showToastPopup('약관 동의 여부를 확인할 수 없습니다.');

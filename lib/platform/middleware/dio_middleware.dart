@@ -37,11 +37,12 @@ class Api {
       // )
     ]);
 
-  static Dio client({required String serviceUrl, bool needsToken = true, Map<String, dynamic>? queryParams, bool isPatch = false, bool isFile = false}) {
+  static Dio client({required String serviceUrl, bool needsToken = true, Map<String, dynamic>? queryParams, bool isPatch = false, bool isFile = false, bool allowCustomErrorHandler = false}) {
     _dio.options.baseUrl = '${F.baseUrl}$serviceUrl';
     // _dio.options.connectTimeout = 2000;
     _dio.options.sendTimeout = 10000;
     _dio.options.receiveTimeout = 10000;
+    _dio.options.extra = {'allowCustomErrorHandler': allowCustomErrorHandler};
 
     if (needsToken) {
       String? accessToken = HiveStore.loadString(key: HiveKey.accessToken.name);
@@ -178,7 +179,7 @@ class Api {
       if (e.response?.data != null && e.response?.data != '') {
         ErrorResponseDataModel errorData = ErrorResponseDataModel.fromJson(e.response?.data);
 
-        if (errorData.errorMessage != null) {
+        if (errorData.errorMessage != null && !e.requestOptions.extra['allowCustomErrorHandler']) {
           showToastPopup(errorData.errorMessage!);
         }
       } else if ([DioErrorType.connectTimeout, DioErrorType.sendTimeout, DioErrorType.receiveTimeout, DioErrorType.other].any((element) => element == e.type)) {

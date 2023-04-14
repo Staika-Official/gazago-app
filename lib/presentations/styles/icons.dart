@@ -19,6 +19,7 @@ SvgPicture iconShopEmpty = SvgPicture.asset('assets/images/common/ico_shop_list_
 SvgPicture iconSkyBlueCheck = SvgPicture.asset('assets/images/common/ico_check_sky_blue.svg', width: 48.sp, height: 26.sp);
 SvgPicture iconCloseWhite = SvgPicture.asset('assets/images/common/ico_close_white.svg', width: 28.sp, height: 28.sp);
 SvgPicture iconHand = SvgPicture.asset('assets/images/common/ico_hand.svg', width: 65.sp, height: 65.sp);
+SvgPicture iconCircleSkyBlueCheck = SvgPicture.asset('assets/images/common/ico_circle_check_skyblue.svg', width: 40.sp, height: 40.sp);
 
 // Bottom Navigation Icon
 SvgPicture iconMenuHome = SvgPicture.asset('assets/images/common/ico_menu_home.svg', width: 20.5.sp, height: 20.sp, color: lightGrayColor);
@@ -105,10 +106,20 @@ SvgPicture iconEmpty = SvgPicture.asset('assets/images/wallet/ico_empty.svg', wi
 SvgPicture iconIn = SvgPicture.asset('assets/images/wallet/ico_in.svg', width: 20.sp, height: 20.sp);
 SvgPicture iconOut = SvgPicture.asset('assets/images/wallet/ico_out.svg', width: 20.sp, height: 20.sp);
 SvgPicture iconArrowRight = SvgPicture.asset('assets/images/wallet/ico_arrow_right.svg', width: 20.sp, height: 20.sp);
+SvgPicture iconArrowRightTriangle = SvgPicture.asset('assets/images/wallet/ico_arrow_right_triangle.svg', width: 12.sp, height: 12.sp);
 SvgPicture iconCoupon = SvgPicture.asset('assets/images/wallet/ico_coupon.svg', width: 38.sp, height: 38.sp);
 SvgPicture iconTik = SvgPicture.asset('assets/images/wallet/ico_tik.svg', width: 20.sp, height: 20.sp);
 SvgPicture iconNoConnection = SvgPicture.asset('assets/images/wallet/ico_no_connection.svg', width: 40.sp, height: 40.sp);
 SvgPicture iconError = SvgPicture.asset('assets/images/wallet/ico_error.svg', width: 40.sp, height: 40.sp);
+SvgPicture iconStikMini = SvgPicture.asset('assets/images/wallet/ico_product_list_stik.svg', width: 11.sp, height: 11.sp);
+SvgPicture iconPasswordValid = SvgPicture.asset('assets/images/wallet/ico_password_valid.svg', width: 18.sp, height: 18.sp);
+SvgPicture iconPasswordInvalid = SvgPicture.asset('assets/images/wallet/ico_password_invalid.svg', width: 18.sp, height: 18.sp);
+SvgPicture iconAlert = SvgPicture.asset('assets/images/wallet/ico_alert.svg', width: 104.sp, height: 104.sp);
+SvgPicture iconTransactionHistory = SvgPicture.asset('assets/images/wallet/ico_transaction_history.svg', width: 12.sp, height: 12.sp);
+SvgPicture iconSwitch = SvgPicture.asset('assets/images/wallet/ico_switch.svg', width: 16.sp, height: 14.sp);
+SvgPicture iconOutCoin = SvgPicture.asset('assets/images/wallet/ico_out_coin.svg', width: 20.sp, height: 20.sp);
+SvgPicture iconTikCharge = SvgPicture.asset('assets/images/wallet/ico_tik_charge.svg', width: 16.sp, height: 16.sp);
+SvgPicture iconStikExchange = SvgPicture.asset('assets/images/wallet/ico_stik_exchange.svg', width: 20.sp, height: 16.sp);
 
 //shop
 SvgPicture iconShopStamina = SvgPicture.asset('assets/images/shop/ico_stat_stamina.svg', width: 14.sp, height: 14.sp, color: Colors.black);

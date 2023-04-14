@@ -1,21 +1,22 @@
-import 'dart:convert';
-import 'dart:math';
-
 import 'package:dio/dio.dart';
 import 'package:gaza_go/constants/enums.dart';
+import 'package:gaza_go/flavors.dart';
 import 'package:gaza_go/platform/apis/wallet.dart';
+import 'package:gaza_go/platform/helpers/base_helper.dart';
 import 'package:gaza_go/platform/helpers/security_helper.dart';
 import 'package:gaza_go/platform/helpers/solana_helper.dart';
 import 'package:gaza_go/platform/models/asset_detail_model.dart';
 import 'package:gaza_go/platform/models/asset_token_balance_model.dart';
 import 'package:gaza_go/platform/models/buy_tik_response_model.dart';
+import 'package:gaza_go/platform/models/error_response_data_model.dart';
+import 'package:gaza_go/platform/models/exchange_token_withdrawal_model.dart';
+import 'package:gaza_go/platform/models/on_chain_wallet_model.dart';
 import 'package:gaza_go/platform/models/pay_info_model.dart';
 import 'package:gaza_go/platform/models/pay_response_model.dart';
 import 'package:gaza_go/platform/models/wallet_solana_model.dart';
 import 'package:gaza_go/platform/models/wallet_solana_transfer_model.dart';
+import 'package:gaza_go/platform/models/wallet_token_balance_model.dart';
 import 'package:gaza_go/platform/stores/hive_store.dart';
-import 'package:gaza_go/flavors.dart';
-import 'package:solana/base58.dart';
 import 'package:solana/encoder.dart';
 import 'package:solana/solana.dart';
 import 'package:solana/solana.dart' as solana;
@@ -114,9 +115,7 @@ class WalletService {
     String? decryptPrivateKey = decrypt(accountSecretkey, email!, walletPassword);
     print('decryptPrivateKey: ${decryptPrivateKey}');
 
-    if (decryptPrivateKey == null) {
-
-    }
+    if (decryptPrivateKey == null) {}
 
     final sender = await Ed25519HDKeyPair.fromPrivateKeyBytes(
       privateKey: base58.decode(decryptPrivateKey!).sublist(0, 32),
@@ -153,11 +152,128 @@ class WalletService {
     );
 
     // API Call
-    Map<String, String> body = {
-      'clientId': 'GAZAGO',
-      'encodeTransaction': tx.encode()
-    };
+    Map<String, String> body = {'clientId': 'GAZAGO', 'encodeTransaction': tx.encode()};
     Response res = await WalletApi.transferSolana(body);
     return WalletSolanaTransferModel.fromJson(res.data);
+  }
+
+  //onchain apis
+  static Future<void> getOnChainWallet({required Function successCallback, Function? errorCallback}) async {
+    Response res = await WalletApi.getOnChainWallet(userId!);
+    if (res.statusCode == 200) {
+      successCallback(OnChainWalletModel.fromJson(res.data));
+    } else {
+      if (errorCallback != null) errorCallback(ErrorResponseDataModel.fromJson(res.data));
+    }
+  }
+
+  static Future<void> createOnChainWallet({required String walletPassword, required Function successCallback, Function? errorCallback}) async {
+    final wallet = Keypair.generateSync();
+    String? email = HiveStore.loadString(key: HiveKey.email.name);
+
+    String publicKey = wallet.publicKey.toBase58();
+    // 암호화된 시크릿키
+    String encryptSecretKey = encrypt(base58.encode(wallet.secretKey), email!, walletPassword);
+
+    Response res = await WalletApi.createOnChainWallet(userId!, publicKey: publicKey, secretKey: encryptSecretKey);
+    if (res.statusCode == 201) {
+      successCallback(OnChainWalletModel.fromJson(res.data));
+    } else {
+      if (errorCallback != null) errorCallback();
+    }
+  }
+
+  static Future<void> getOnChainTokenBalance({required Function successCallback, Function? errorCallback}) async {
+    Response res = await WalletApi.getOnChainTokenBalance(userId!);
+    if (res.statusCode == 200) {
+      List<WalletTokenBalanceModel> balanceList = [];
+      if (res.data.length > 0) {
+        res.data.forEach((item) => balanceList.add(WalletTokenBalanceModel.fromJson(item)));
+      }
+      successCallback(balanceList);
+    } else {
+      if (errorCallback != null) errorCallback(ErrorResponseDataModel.fromJson(res.data));
+    }
+  }
+
+  static Future<void> getOnChainBalanceByToken(String symbol, {required Function successCallback, Function? errorCallback}) async {
+    Response res = await WalletApi.getOnChainBalanceByToken(userId!, symbol);
+    if (res.statusCode == 200) {
+      successCallback(WalletTokenBalanceModel.fromJson(res.data));
+    } else {
+      if (errorCallback != null) errorCallback(ErrorResponseDataModel.fromJson(res.data));
+    }
+  }
+
+  static Future<void> fetchStikMoveToGoWallet({
+    required Function successCallback,
+    Function? errorCallback,
+    required String accountSecretkey,
+    required String walletPassword,
+    required Ed25519HDPublicKey toAddress,
+    required String symbol,
+    required Ed25519HDPublicKey tokenAddress,
+    required int decimals,
+    required int amount,
+  }) async {
+    final SolanaClient solanaClient = F.solanaClient;
+
+    String? email = HiveStore.loadString(key: HiveKey.email.name);
+
+    print('##############');
+    print('accountSecretkey: ${accountSecretkey}');
+    String? decryptPrivateKey = decrypt(accountSecretkey, email!, walletPassword);
+    print('decryptPrivateKey: ${decryptPrivateKey}');
+
+    if (decryptPrivateKey == null) {}
+
+    final sender = await Ed25519HDKeyPair.fromPrivateKeyBytes(
+      privateKey: base58.decode(decryptPrivateKey!).sublist(0, 32),
+    );
+    final receiver = toAddress;
+
+    solana.Message message;
+    if (symbol == 'SOL') {
+      message = getSolTransferMessage(sender.publicKey, receiver, amount);
+    } else {
+      final mint = tokenAddress;
+      message = await getSplTransferMessage(solanaClient, sender, receiver, mint, amount);
+    }
+
+    print('sender: ${sender.address}');
+
+    // FeePayer
+    final feePayer = F.solanaFeePayer;
+
+    final recentBlockhash = await solanaClient.rpcClient.getRecentBlockhash(commitment: Commitment.confirmed);
+    final CompiledMessage compiledMessage = message.compile(
+      recentBlockhash: recentBlockhash.blockhash,
+      feePayer: feePayer,
+    );
+
+    final List<Signature> signatures = [];
+    final feePayerSign = Signature(List.filled(64, 0), publicKey: feePayer);
+    signatures.add(feePayerSign);
+    signatures.add(await sender.sign(compiledMessage.data));
+
+    SignedTx tx = SignedTx(
+      messageBytes: compiledMessage.data,
+      signatures: signatures,
+    );
+    String uiAmount = getUiAmountString(amount, decimals);
+    // API Call
+    // Map<String, String> body = {'clientId': 'GAZAGO', 'encodeTransaction': tx.encode()};
+    ExchangeTokenWithdrawalModel params = ExchangeTokenWithdrawalModel(
+      type: 'withdrawal',
+      uiAmount: double.parse(uiAmount),
+      fee: 0,
+      encodedTransaction: tx.encode(),
+    );
+    Response res = await WalletApi.exchangeStikToGoWallet(userId!, symbol, params);
+    if (res.statusCode == 201) {
+      successCallback(true);
+    } else {
+      if (errorCallback != null) errorCallback();
+    }
   }
 }

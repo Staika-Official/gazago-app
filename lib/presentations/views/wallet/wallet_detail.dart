@@ -157,26 +157,28 @@ class WalletDetail extends StatelessWidget {
               ),
             ),
             Padding(
-              padding: EdgeInsets.only(top: 18.sp),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  StyledText(
-                    formatDecimalPlaces(double.parse(controller.assetDetail.value.balance.uiAmountString!), controller.assetDetail.value.balance.decimals!, isAutoDecimal: true),
-                    fontSize: 28,
-                    lineHeight: 28,
-                    fontWeight: 600,
-                  ),
-                  Padding(
-                    padding: EdgeInsets.only(left: 5.sp),
-                    child: StyledText(
-                      controller.selectedAsset.value.symbol! == 'TOTAL_TIK' ? 'TIK' : controller.selectedAsset.value.symbol!,
+              padding: EdgeInsets.only(top: 18.sp, left: 25.sp, right: 25.sp),
+              child: FittedBox(
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    StyledText(
+                      formatDecimalPlaces(double.parse(controller.assetDetail.value.balance.uiAmountString!), controller.assetDetail.value.balance.decimals!, isAutoDecimal: true),
                       fontSize: 28,
                       lineHeight: 28,
-                      fontWeight: 500,
+                      fontWeight: 600,
                     ),
-                  ),
-                ],
+                    Padding(
+                      padding: EdgeInsets.only(left: 5.sp),
+                      child: StyledText(
+                        controller.selectedAsset.value.symbol! == 'TOTAL_TIK' ? 'TIK' : controller.selectedAsset.value.symbol!,
+                        fontSize: 28,
+                        lineHeight: 28,
+                        fontWeight: 500,
+                      ),
+                    ),
+                  ],
+                ),
               ),
             ),
             // SizedBox(

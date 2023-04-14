@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:gaza_go/presentations/components/gazago_button.dart';
 import 'package:gaza_go/presentations/styles/colors.dart';
 import 'package:gaza_go/presentations/styles/styled_text.dart';
+import 'package:get/get.dart';
 
 class BottomSheetAlert extends StatelessWidget {
   final String? title;
@@ -55,7 +57,17 @@ class BottomSheetAlert extends StatelessWidget {
                 ),
             Row(
               mainAxisSize: MainAxisSize.max,
-              children: actions,
+              children: actions.isNotEmpty
+                  ? actions
+                  : [
+                      Expanded(
+                        child: GazagoButton(
+                          onTap: () => Get.until((route) => Get.isBottomSheetOpen == false && Get.isDialogOpen == false),
+                          buttonText: '확인',
+                          buttonColor: skyBlueColor,
+                        ),
+                      ),
+                    ],
             )
           ],
         ),

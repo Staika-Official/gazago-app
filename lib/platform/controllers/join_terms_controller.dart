@@ -7,9 +7,10 @@ import 'package:gaza_go/platform/services/member_service.dart';
 import 'package:get/get.dart';
 
 class JoinTermsController extends GetxController {
+  final RxString platform = RxString('');
   final RxList<TermItemModel> termsList = RxList.empty();
   RxBool get allAgreed {
-    return RxBool(termsList.every((term) => term.isChecked == true));
+    return RxBool(termsList.isNotEmpty ? termsList.every((term) => term.isChecked == true) : false);
   }
 
   RxBool get allRequiredAgreed {
@@ -18,12 +19,13 @@ class JoinTermsController extends GetxController {
 
   @override
   void onInit() {
+    platform.value = Get.arguments['platform'] ?? 'gazago';
     getTermsList();
     super.onInit();
   }
 
   void getTermsList() async {
-    await BoardService.getPostListByType('TERMS,PRIVACY,LOCATION,MARKETING', successCallback: (List<TermItemModel> terms) {
+    await BoardService.getPostListByType('TERMS,PRIVACY,LOCATION,MARKETING', platform: platform.value, successCallback: (List<TermItemModel> terms) {
       termsList.value = terms;
     });
   }
@@ -49,10 +51,15 @@ class JoinTermsController extends GetxController {
 
   void requestJoin() async {
     if (allRequiredAgreed.value) {
-      await MemberService.fetchTermsAgree(termsList.map((term) => TermsHistoryModel(terms: term.title!, postId: term.id!, activated: term.isChecked, boardType: term.boardType!)).toList(),
+      await MemberService.fetchTermsAgree(
+          termsList.map((term) => TermsHistoryModel(terms: term.title!, postId: term.id!, activated: term.isChecked, boardType: term.boardType!, clientId: platform.value.toUpperCase())).toList(),
           successCallback: (effectedCount) async {
         if (effectedCount == termsList.length) {
-          Get.toNamed(Routes.permissions);
+          if (platform.value == 'gazago') {
+            Get.toNamed(Routes.permissions);
+          } else {
+            Get.offNamed(Routes.createWalletPassword);
+          }
         }
       }, errorCallback: () {
         showToastPopup('약관 동의에 실패하였습니다.');

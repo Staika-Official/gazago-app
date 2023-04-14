@@ -84,6 +84,7 @@ enum HiveKey {
   exerciseTimer,
   updateTimer,
   endPointType,
+  walletConnectionPrompted,
 }
 
 enum ResponseStatus {
@@ -302,8 +303,24 @@ enum CalendarCellType {
   outsideDay,
 }
 
+enum TransactionStatus {
+  highVolatility,
+  offerExpired,
+  otherErrors,
+  success,
+  withdrawRequested,
+  swapRequested,
+  blockchainNetworkError,
+}
+
 enum EndPointType {
   dev,
   stage,
   prod,
 }
+
+enum Currency { krw, usd }
+
+enum FormStatus { empty, insufficient, sufficient }
+
+enum ErrorStatus { basic, insufficient, notSame, sufficient }

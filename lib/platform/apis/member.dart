@@ -8,8 +8,8 @@ class MemberApi {
     return await Api.client(serviceUrl: ServiceUrl.stateService).post('/users/$userId/init', data: {'email': email, 'nickname': nickname, 'profileImageUrl': profileImageUrl});
   }
 
-  static Future<Response> getMemberUserInfo(String userId) async {
-    return await Api.client(serviceUrl: ServiceUrl.memberService).get('/api/users/$userId?clientId=GAZAGO');
+  static Future<Response> getMemberUserInfo(String userId, String clientId) async {
+    return await Api.client(serviceUrl: ServiceUrl.memberService).get('/api/users/$userId?clientId=$clientId');
   }
 
   static Future<Response> fetchTermsAgree(String userId, List<TermsHistoryModel> termsHistoryList) async {

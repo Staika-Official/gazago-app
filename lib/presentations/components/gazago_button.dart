@@ -40,7 +40,7 @@ class GazagoButton extends StatelessWidget {
             onTap: disableButton ? null : onTap,
             borderRadius: BorderRadius.circular(8.sp),
             child: Padding(
-              padding: EdgeInsets.symmetric(vertical: 12.0.sp),
+              padding: EdgeInsets.symmetric(vertical: 15.0.sp),
               child: Center(
                 child: disableButton
                     ? SizedBox(
