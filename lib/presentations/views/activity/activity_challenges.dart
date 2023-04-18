@@ -264,7 +264,7 @@ class ActivityChallenges extends StatelessWidget {
                       child: InkWell(
                         onTap: () {
                           if (controller.selectedChallenge.value.id != null) {
-                            controller.selectExerciseType(ExerciseType.hiking);
+                            controller.selectExerciseType(ExerciseType.famous);
                           } else {
                             showToastPopup('도전할 챌린지를 선택해주세요.');
                           }

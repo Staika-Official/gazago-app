@@ -362,7 +362,7 @@ mixin ActivityMixin {
             ),
             userNickname: HiveStore.loadString(key: HiveKey.nickname.name),
             userProfileImageUrl: HiveStore.loadString(key: HiveKey.profileImageUrl.name),
-            type: exerciseType.value,
+            type: exerciseType.value == ExerciseType.walking.value ? ExerciseType.walking.value : ExerciseType.hiking.value,
             steps: 0,
             speed: 0,
             distance: 0,
