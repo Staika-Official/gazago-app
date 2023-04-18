@@ -18,9 +18,10 @@ class WalletApi {
     });
   }
 
-  static Future<Response> getSpendingWalletTransactions(String symbol, int size) async {
+  static Future<Response> getSpendingWalletTransactions(String symbol, int page, int size) async {
     return await Api.client(serviceUrl: ServiceUrl.goWalletService).get('/spending/transactions/$symbol', queryParameters: {
       'clientId': 'GAZAGO',
+      'page': page,
       'size': size,
     });
   }

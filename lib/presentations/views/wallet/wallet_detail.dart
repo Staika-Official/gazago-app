@@ -224,7 +224,14 @@ class WalletDetail extends StatelessWidget {
                           child: Padding(
                             padding: EdgeInsets.symmetric(horizontal: 16.sp),
                             child: Column(
-                              children: [...renderTransactionList(controller)],
+                              children: [
+                                ...renderTransactionList(controller),
+                                if (controller.dataGetLoading.value)
+                                  Padding(
+                                    padding: EdgeInsets.symmetric(vertical: 20.0.sp),
+                                    child: const Center(child: CircularProgressIndicator()),
+                                  )
+                              ],
                             ),
                           ),
                         ),

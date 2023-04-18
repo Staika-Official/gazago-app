@@ -29,6 +29,7 @@ import 'package:gaza_go/presentations/components/product_list_dialog.dart';
 import 'package:gaza_go/presentations/components/product_list_stik_dialog.dart';
 import 'package:get/get.dart';
 import 'package:in_app_purchase/in_app_purchase.dart';
+import 'package:throttling/throttling.dart';
 
 class WalletMasterController extends GetxController with SolanaMixin, GetTickerProviderStateMixin {
   LoaderController loaderController = Get.put(LoaderController());
@@ -37,6 +38,8 @@ class WalletMasterController extends GetxController with SolanaMixin, GetTickerP
   final RxList<TokenInfoModel> spendingTokenInfoList = RxList.empty();
   final Rx<AssetTokenBalanceModel> selectedAsset = Rx(AssetTokenBalanceModel());
   final Rx<AssetDetailModel> assetDetail = Rx(AssetDetailModel(balance: AssetTokenDetailBalanceModel(), transactions: []));
+  final RxList<AssetTokenTransactionModel> rawTransactionList = RxList.empty();
+  final RxBool dataGetLoading = RxBool(false);
   final Rx<AssetTokenBalanceModel> buyTikCommission = Rx(AssetTokenBalanceModel());
   final RxString buyTikAmount = RxString('0');
   final Rx<BuyTikResponseModel> buyTikResult = Rx(BuyTikResponseModel());
@@ -85,13 +88,11 @@ class WalletMasterController extends GetxController with SolanaMixin, GetTickerP
   RxList<AssetTokenTransactionModel> get transactionsList {
     List<AssetTokenTransactionModel> transactionsList = List.empty(growable: true);
 
-    List<AssetTokenTransactionModel> rawList = assetDetail.value.transactions;
-    if (rawList.isNotEmpty) {
-      int id = rawList.first.transactionId!;
+    if (rawTransactionList.isNotEmpty) {
+      int id = rawTransactionList.first.transactionId!;
       List<List<AssetTokenTransactionModel>> listsById = List.empty(growable: true);
       List<AssetTokenTransactionModel> tempList = List.empty(growable: true);
-      for (AssetTokenTransactionModel transaction in rawList) {
-        print(transaction.transactionId);
+      for (AssetTokenTransactionModel transaction in rawTransactionList) {
         if (id != transaction.transactionId) {
           id = transaction.transactionId!;
           listsById.add(tempList);
@@ -100,7 +101,7 @@ class WalletMasterController extends GetxController with SolanaMixin, GetTickerP
 
         tempList.add(transaction);
 
-        if (id == rawList.last.transactionId) {
+        if (id == rawTransactionList.last.transactionId) {
           listsById.add(tempList);
         }
       }
@@ -135,6 +136,8 @@ class WalletMasterController extends GetxController with SolanaMixin, GetTickerP
     return RxList(transactionsList);
   }
 
+  bool hasMoreTransactions = false;
+
   @override
   onInit() {
     initInAppPurchaseStream();
@@ -154,6 +157,13 @@ class WalletMasterController extends GetxController with SolanaMixin, GetTickerP
     await getSpendingWalletBalances();
     transactionScrollController.addListener(() {
       transactionScrollPosition.value = transactionScrollController.position.pixels;
+      if (transactionScrollController.position.atEdge && transactionScrollController.position.pixels != 0) {
+        if (hasMoreTransactions && !dataGetLoading.value) {
+          Throttling(duration: const Duration(milliseconds: 1000)).throttle(() {
+            getSpendingWalletTransactions(selectedAsset.value);
+          });
+        }
+      }
     });
 
     onInit();
@@ -162,15 +172,22 @@ class WalletMasterController extends GetxController with SolanaMixin, GetTickerP
   Future<void> getSpendingWalletBalances() async {
     await WalletService.getSpendingWalletBalances(successCallback: (balances) {
       spendingTokens.value = balances;
-      print('123123123$balances');
     });
 
     if (Get.isRegistered<LoadingController>()) Get.find<LoadingController>().updateProgress("서비스를 위해 정보를 불러오는 중입니다.");
   }
 
   Future<void> getSpendingWalletTransactions(AssetTokenBalanceModel asset) async {
+    dataGetLoading.value = true;
     selectedAsset.value = asset;
-    assetDetail.value = await WalletService.getSpendingWalletTransactions(asset.symbol!);
+    assetDetail.value = await WalletService.getSpendingWalletTransactions(asset.symbol!, page: rawTransactionList.isEmpty ? 0 : (rawTransactionList.length / 10).floor());
+    rawTransactionList.addAll(assetDetail.value.transactions);
+    if (assetDetail.value.transactions.isEmpty || !(assetDetail.value.transactions.length % 10 == 0)) {
+      hasMoreTransactions = false;
+    } else {
+      hasMoreTransactions = true;
+    }
+    dataGetLoading.value = false;
   }
 
   Future<void> buyTik(int tikAmount) async {
@@ -194,8 +211,9 @@ class WalletMasterController extends GetxController with SolanaMixin, GetTickerP
   }
 
   void moveToWalletDetail({required AssetTokenBalanceModel asset, required WalletType walletType, required AssetType assetType}) async {
-    await getSpendingWalletTransactions(asset);
+    rawTransactionList.value = RxList.empty();
     transactionScrollPosition.value = 0;
+    await getSpendingWalletTransactions(asset);
     Get.toNamed(Routes.walletDetail, arguments: {'asset': asset, 'walletType': walletType, 'assetType': assetType});
   }
 
