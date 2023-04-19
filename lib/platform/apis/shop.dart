@@ -16,6 +16,7 @@ class ShopApi {
     return await Api.client(
       serviceUrl: ServiceUrl.shopService,
       queryParams: mapQuery,
+      showLoading: false,
     ).get('/items');
   }
 

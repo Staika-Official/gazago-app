@@ -5,7 +5,6 @@ import 'package:flutter/services.dart';
 import 'package:gaza_go/constants/enums.dart';
 import 'package:gaza_go/constants/routes.dart';
 import 'package:gaza_go/flavors.dart';
-import 'package:gaza_go/platform/controllers/loader_controller.dart';
 import 'package:gaza_go/platform/controllers/wallet_master_controller.dart';
 import 'package:gaza_go/platform/helpers/alert_helper.dart';
 import 'package:gaza_go/platform/helpers/solana_mixin.dart';
@@ -20,7 +19,7 @@ import 'package:gaza_go/presentations/components/alert_ui_list.dart';
 import 'package:get/get.dart';
 
 class StaikaWalletController extends GetxController with WalletMixin, SolanaMixin {
-  LoaderController loaderController = Get.find();
+  // LoaderController loaderController = Get.find();
   WalletMasterController walletMasterController = Get.find();
   final RxList<WalletTokenBalanceModel> coinAssetList = RxList.empty();
   final Rxn<WalletTokenBalanceModel> assetStik = Rxn();
@@ -126,7 +125,7 @@ class StaikaWalletController extends GetxController with WalletMixin, SolanaMixi
   }
 
   Future<void> getOnChainTokenBalance() async {
-    loaderController.isLoading.value = true;
+    // loaderController.isLoading.value = true;
     await WalletService.getOnChainTokenBalance(successCallback: (List<WalletTokenBalanceModel> tokenData) {
       coinAssetList.clear();
       coinAssetList.addAll(tokenData);
@@ -139,7 +138,7 @@ class StaikaWalletController extends GetxController with WalletMixin, SolanaMixi
       // setCurrentSumPriceUI(tokenData, currency.value);
       // coinAssetList.add(WalletTokenBalanceModel(symbol: "STIK", name: "Staika", amount: 4998310000, uiAmount: 4.99831));
     });
-    loaderController.isLoading.value = false;
+    // loaderController.isLoading.value = false;
   }
 
   void moveToSendToGoWallet() {
@@ -163,7 +162,7 @@ class StaikaWalletController extends GetxController with WalletMixin, SolanaMixi
     String secretKey = HiveStore.load(key: HiveKey.solanaSecretKey.name);
     num mod = pow(10.0, 9);
     if (double.parse(sendStikUiAmount.value) < assetStik.value!.uiAmount) {
-      loaderController.isLoading.value = true;
+      // loaderController.isLoading.value = true;
       await WalletService.fetchStikMoveToGoWallet(
         symbol: 'STIK',
         accountSecretkey: secretKey,
@@ -176,7 +175,7 @@ class StaikaWalletController extends GetxController with WalletMixin, SolanaMixi
         amount: (double.parse(sendStikUiAmount.value) * mod).toInt(),
         successCallback: (boolean) {
           print('성공');
-          loaderController.isLoading.value = false;
+          // loaderController.isLoading.value = false;
           successExchangeStikToGoWalletAlert(this);
           sendStikUiAmount.value = '0';
           stikAmountTextController.text = '';
@@ -185,7 +184,7 @@ class StaikaWalletController extends GetxController with WalletMixin, SolanaMixi
           failureExchangeStikToGoWalletAlert();
         },
       );
-      loaderController.isLoading.value = false;
+      // loaderController.isLoading.value = false;
     }
   }
 }

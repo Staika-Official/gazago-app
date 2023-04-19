@@ -19,6 +19,7 @@ class GlobalController extends SuperController {
     checkInterval: const Duration(seconds: 1),
   );
   final RxBool isPopupOpen = RxBool(true);
+  final RxBool showLoadingDialog = RxBool(false);
   @override
   void onInit() async {
     checkMainPopupExpiredDate();
@@ -28,6 +29,7 @@ class GlobalController extends SuperController {
 
     // await getConnectivity();
     // initConnectivityStream();
+    showLoadingDialog.listen((isShow) {});
 
     super.onInit();
   }

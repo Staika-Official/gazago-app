@@ -31,8 +31,8 @@ class WalletService {
     return HiveStore.loadString(key: HiveKey.solanaSecretKey.name);
   }
 
-  static Future<void> getSpendingWalletBalances({required Function successCallback, Function? errorCallback}) async {
-    Response res = await WalletApi.getSpendingWalletBalances();
+  static Future<void> getSpendingWalletBalances({bool showLoading = false, required Function successCallback, Function? errorCallback}) async {
+    Response res = await WalletApi.getSpendingWalletBalances(showLoading: showLoading);
     if (res.statusCode == 200) {
       List<AssetTokenBalanceModel> balanceList = [];
       if (res.data.length > 0) {

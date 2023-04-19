@@ -17,7 +17,7 @@ class MemberApi {
   }
 
   static Future<Response> getTermsAgreeStatus(String userId) async {
-    return await Api.client(serviceUrl: ServiceUrl.memberService).get(
+    return await Api.client(serviceUrl: ServiceUrl.memberService, showLoading: false).get(
       '/api/terms-histories/users/$userId/GAZAGO',
     );
   }
@@ -31,7 +31,10 @@ class MemberApi {
     required String deviceModel,
     required String platform,
   }) async {
-    return await Api.client(serviceUrl: ServiceUrl.memberService).post(
+    return await Api.client(
+      serviceUrl: ServiceUrl.memberService,
+      showLoading: false,
+    ).post(
       '/api/abusings',
       data: {
         "clientId": "GAZAGO",

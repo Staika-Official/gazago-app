@@ -7,28 +7,40 @@ import 'package:geolocator/geolocator.dart';
 
 class ActivityApi {
   static Future<Response> getChallenges() async {
-    return await Api.client(serviceUrl: '/services/gazago/api').get('/challenges?size=9999&page=0');
+    return await Api.client(
+      serviceUrl: '/services/gazago/api',
+      showLoading: false,
+    ).get('/challenges?size=9999&page=0');
   }
 
   static Future<Response> getChallengesHierarchy(Position currentLocation) async {
-    return await Api.client(serviceUrl: '/services/gazago/api').get(
+    return await Api.client(
+      serviceUrl: '/services/gazago/api',
+      showLoading: false,
+    ).get(
       '/challenges/hierarchy/lat/${currentLocation.latitude}/lon/${currentLocation.longitude}',
     );
   }
 
   static Future<Response> getChallenge(int id) async {
-    return await Api.client(serviceUrl: '/services/gazago/api').get('/challenges/$id');
+    return await Api.client(
+      serviceUrl: '/services/gazago/api',
+      showLoading: false,
+    ).get('/challenges/$id');
   }
 
   // static Future<Response> getNearByChallenges(LocationData currentLocation) async {
   static Future<Response> getNearByChallenges(Position currentLocation) async {
-    return await Api.client(serviceUrl: '/services/gazago/api').get(
+    return await Api.client(
+      serviceUrl: '/services/gazago/api',
+      showLoading: false,
+    ).get(
       '/challenges/geolocation/lat/${currentLocation.latitude}/lon/${currentLocation.longitude}',
     );
   }
 
-  static Future<Response> getCurrentUserState(String userId) async {
-    return await Api.client(serviceUrl: ServiceUrl.stateService).get('/users/$userId');
+  static Future<Response> getCurrentUserState(String userId, {required bool showLoading}) async {
+    return await Api.client(serviceUrl: ServiceUrl.stateService, showLoading: showLoading).get('/users/$userId');
   }
 
   static Future<Response> getUserEquippedItem(String userId) async {
@@ -37,7 +49,10 @@ class ActivityApi {
 
   static Future<Response> fetchStartUserExercises(String userId, UserExerciseModel exerciseInfo, String platform) async {
     exerciseInfo.state = 'ONGOING';
-    return await Api.client(serviceUrl: ServiceUrl.exerciseService).post(
+    return await Api.client(
+      serviceUrl: ServiceUrl.exerciseService,
+      showLoading: false,
+    ).post(
       '/users/$userId',
       data: exerciseInfo,
       queryParameters: {
@@ -49,7 +64,10 @@ class ActivityApi {
 
   static Future<Response> fetchUpdateUserExercises(String userId, UserExerciseModel exerciseInfo, String platform, {String? source}) async {
     exerciseInfo.state = 'ONGOING';
-    return await Api.client(serviceUrl: ServiceUrl.exerciseService).put(
+    return await Api.client(
+      serviceUrl: ServiceUrl.exerciseService,
+      showLoading: false,
+    ).put(
       '/users/$userId',
       data: exerciseInfo,
       queryParameters: {
@@ -61,7 +79,10 @@ class ActivityApi {
 
   static Future<Response> fetchPausedUserExercises(String userId, UserExerciseModel exerciseInfo, String platform) async {
     exerciseInfo.state = 'PAUSED';
-    return await Api.client(serviceUrl: ServiceUrl.exerciseService).put(
+    return await Api.client(
+      serviceUrl: ServiceUrl.exerciseService,
+      showLoading: false,
+    ).put(
       '/users/$userId',
       data: exerciseInfo,
       queryParameters: {
@@ -73,7 +94,10 @@ class ActivityApi {
 
   static Future<Response> fetchEndUserExercises(String userId, UserExerciseModel exerciseInfo, {String? source}) async {
     exerciseInfo.state = 'ENDED';
-    return await Api.client(serviceUrl: ServiceUrl.exerciseService).put(
+    return await Api.client(
+      serviceUrl: ServiceUrl.exerciseService,
+      showLoading: false,
+    ).put(
       '/users/$userId',
       data: exerciseInfo,
       queryParameters: {

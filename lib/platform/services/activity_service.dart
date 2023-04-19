@@ -71,8 +71,8 @@ class ActivityService {
     }
   }
 
-  static Future<void> getCurrentUserState({required Function successCallback, Function? errorCallback}) async {
-    Response res = await ActivityApi.getCurrentUserState(userId!);
+  static Future<void> getCurrentUserState({bool showLoading = false, required Function successCallback, Function? errorCallback}) async {
+    Response res = await ActivityApi.getCurrentUserState(userId!, showLoading: showLoading);
     if (res.statusCode == 200) {
       successCallback(CurrentUserStateModel.fromJson(res.data));
     } else {

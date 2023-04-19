@@ -114,24 +114,27 @@ class LoadingController extends GetxController {
   }
 
   Future<void> checkTermsAgreeStatus() async {
-    await MemberService.getTermsAgreeStatus(successCallback: (termsList) {
-      this.termsList.value = termsList;
-      if (allRequiredAgreed.value) {
-        if (Get.isRegistered<WalletMasterController>()) Get.find<WalletMasterController>().initializeController();
-        if (Get.isRegistered<ActivityController>()) Get.find<ActivityController>().initializeController();
-      } else {
+    await MemberService.getTermsAgreeStatus(
+      successCallback: (termsList) {
+        this.termsList.value = termsList;
+        if (allRequiredAgreed.value) {
+          if (Get.isRegistered<WalletMasterController>()) Get.find<WalletMasterController>().initializeController();
+          if (Get.isRegistered<ActivityController>()) Get.find<ActivityController>().initializeController();
+        } else {
+          timerStop();
+          Get.offNamed(Routes.joinTerms, arguments: {'platform': 'gazago'});
+        }
+      },
+      errorCallback: (ErrorResponseDataModel error) {
+        if (error.status != 401) showToastPopup('약관 동의 여부를 확인할 수 없습니다.');
         timerStop();
-        Get.offNamed(Routes.joinTerms, arguments: {'platform': 'gazago'});
-      }
-    }, errorCallback: (ErrorResponseDataModel error) {
-      if (error.status != 401) showToastPopup('약관 동의 여부를 확인할 수 없습니다.');
-      timerStop();
-      HiveStore.deleteMultipleKeys(keys: [
-        HiveKey.accessToken.name,
-        HiveKey.refreshToken.name,
-      ]);
-      Get.offNamed(Routes.login);
-    });
+        HiveStore.deleteMultipleKeys(keys: [
+          HiveKey.accessToken.name,
+          HiveKey.refreshToken.name,
+        ]);
+        Get.offNamed(Routes.login);
+      },
+    );
   }
 
   void updateProgress(String message) async {

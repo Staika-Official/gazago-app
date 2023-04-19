@@ -47,7 +47,7 @@ class MemberService {
       List<TermsStatusModel> terms = res.data.map<TermsStatusModel>((term) => TermsStatusModel.fromJson(term)).toList();
       successCallback(terms);
     } else {
-      if (errorCallback != null) errorCallback(ErrorResponseDataModel.fromJson(res.data));
+      if (errorCallback != null) errorCallback(res.data != null ? ErrorResponseDataModel.fromJson(res.data) : ErrorResponseDataModel());
     }
   }
 

@@ -6,17 +6,26 @@ import 'package:gaza_go/platform/models/repair_shoes_model.dart';
 
 class ItemApi {
   static Future<List<InventoryItemModel>> getMyEquipmentItemsList(userId) async {
-    Response res = await Api.client(serviceUrl: ServiceUrl.itemService).get('/users/$userId');
+    Response res = await Api.client(
+      serviceUrl: ServiceUrl.itemService,
+      showLoading: false,
+    ).get('/users/$userId');
     List<InventoryItemModel> items = res.data.map((item) => InventoryItemModel.fromJson(item));
     return items;
   }
 
   static Future<Response> getAllMyItems(String userId, int page) async {
-    return await Api.client(serviceUrl: ServiceUrl.itemService).get('/users/$userId', queryParameters: {'size': 100, 'page': page});
+    return await Api.client(
+      serviceUrl: ServiceUrl.itemService,
+      showLoading: false,
+    ).get('/users/$userId', queryParameters: {'size': 100, 'page': page});
   }
 
   static Future<Response> getMyItemsByCategory(String userId, String itemCategory, int page) async {
-    return await Api.client(serviceUrl: ServiceUrl.itemService).get('/users/$userId/categories/$itemCategory', queryParameters: {'size': 100, 'page': page});
+    return await Api.client(
+      serviceUrl: ServiceUrl.itemService,
+      showLoading: false,
+    ).get('/users/$userId/categories/$itemCategory', queryParameters: {'size': 100, 'page': page});
   }
 
   static Future<Response> getItemDetailInfo(String userId, int itemId) async {

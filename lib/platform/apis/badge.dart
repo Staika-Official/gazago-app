@@ -4,7 +4,10 @@ import 'package:gaza_go/platform/middleware/dio_middleware.dart';
 
 class BadgeApi {
   static Future<Response> getUserBadgesList(String userId) async {
-    return await Api.client(serviceUrl: ServiceUrl.badgeService).get('/users/$userId');
+    return await Api.client(
+      serviceUrl: ServiceUrl.badgeService,
+      showLoading: false,
+    ).get('/users/$userId');
   }
 
   static Future<Response> fetchUserEquipBadge(String userId) async {
@@ -12,7 +15,10 @@ class BadgeApi {
   }
 
   static Future<Response> fetchUserIssuanceBadge(String userId, int exerciseId) async {
-    return await Api.client(serviceUrl: ServiceUrl.badgeService).post('/users/$userId/issues/challenge', data: {
+    return await Api.client(
+      serviceUrl: ServiceUrl.badgeService,
+      showLoading: false,
+    ).post('/users/$userId/issues/challenge', data: {
       'userExerciseId': exerciseId,
     });
   }

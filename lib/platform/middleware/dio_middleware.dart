@@ -2,6 +2,7 @@ import 'dart:async';
 import 'dart:convert';
 
 import 'package:dio/dio.dart';
+import 'package:flutter/material.dart';
 import 'package:gaza_go/constants/enums.dart';
 import 'package:gaza_go/constants/routes.dart';
 import 'package:gaza_go/flavors.dart';
@@ -37,12 +38,22 @@ class Api {
       // )
     ]);
 
-  static Dio client({required String serviceUrl, bool needsToken = true, Map<String, dynamic>? queryParams, bool isPatch = false, bool isFile = false, bool allowCustomErrorHandler = false}) {
+  static Dio client(
+      {required String serviceUrl,
+      bool needsToken = true,
+      Map<String, dynamic>? queryParams,
+      bool isPatch = false,
+      bool isFile = false,
+      bool allowCustomErrorHandler = false,
+      bool showLoading = true}) {
     _dio.options.baseUrl = '${F.baseUrl}$serviceUrl';
     // _dio.options.connectTimeout = 2000;
     _dio.options.sendTimeout = 10000;
     _dio.options.receiveTimeout = 10000;
-    _dio.options.extra = {'allowCustomErrorHandler': allowCustomErrorHandler};
+    _dio.options.extra = {
+      'allowCustomErrorHandler': allowCustomErrorHandler,
+      'showLoading': showLoading,
+    };
 
     if (needsToken) {
       String? accessToken = HiveStore.loadString(key: HiveKey.accessToken.name);
@@ -77,6 +88,22 @@ class Api {
   }
 
   static _requestInterceptor(RequestOptions options, RequestInterceptorHandler handler) {
+    if (options.extra['showLoading'] && getx.Get.isDialogOpen != true) {
+      getx.Get.dialog(
+        Dialog(
+          shadowColor: Colors.transparent,
+          backgroundColor: Colors.transparent,
+          child: Center(
+            child: SizedBox(
+              width: 20,
+              height: 20,
+              child: CircularProgressIndicator(),
+            ),
+          ),
+        ),
+      );
+    }
+
     if (HiveStore.load(key: HiveKey.isDebuggingMode.name)) {
       List requestLogs = HiveStore.load(key: HiveKey.requestLogs.name) ?? [];
       dynamic logForm;
@@ -121,10 +148,11 @@ class Api {
       '\nQueries: ${(options.queryParameters)}'
       '\nData: ${options.headers['Content-Type'] != null && options.headers['Content-Type'].contains('multipart') ? 'multipart data!' : jsonEncode(options.data)}',
     );
-    return handler.next(options);
+
+    handler.next(options);
   }
 
-  static _responseInterceptor(Response response, ResponseInterceptorHandler handler) {
+  static _responseInterceptor(Response response, ResponseInterceptorHandler handler) async {
     _logger.d(
       '------------->'
       '\nRESPONSE'
@@ -133,7 +161,14 @@ class Api {
       '\nResponseCode: ${response.statusCode}'
       '\nResponse: ${response.data}',
     );
-    return handler.next(response);
+
+    if (response.requestOptions.extra['showLoading'] && getx.Get.isDialogOpen == true) {
+      getx.Get.back();
+    }
+
+    Timer(Duration.zero, () {
+      handler.next(response);
+    });
   }
 
   static _onErrorInterceptor(DioError e, ErrorInterceptorHandler handler) async {
@@ -195,6 +230,9 @@ class Api {
     }
 
     if (!handler.isCompleted) {
+      if (e.requestOptions.extra['showLoading'] && getx.Get.isDialogOpen == true) {
+        getx.Get.back();
+      }
       e.response != null && e.response!.data != 'unknown' ? handler.resolve(e.response!) : handler.next(e);
     }
   }
@@ -227,6 +265,9 @@ class Api {
     )
         .then(
       (response) {
+        if (e.requestOptions.extra['showLoading'] && getx.Get.isDialogOpen == true) {
+          getx.Get.back();
+        }
         handler.resolve(
           response,
         );
@@ -245,6 +286,9 @@ class Api {
         if (errorResponseDataModel != null && errorResponseDataModel.status == 401) {
           await _getNewAccessToken(e, handler);
         } else if (!handler.isCompleted) {
+          if (e.requestOptions.extra['showLoading'] && getx.Get.isDialogOpen == true) {
+            getx.Get.back();
+          }
           e.response != null ? handler.resolve(e.response!) : handler.next(e);
         }
       }

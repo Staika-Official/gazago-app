@@ -6,8 +6,8 @@ import 'package:gaza_go/platform/models/pay_info_model.dart';
 
 class WalletApi {
   // - 스펜딩 월렛 api
-  static Future<Response> getSpendingWalletBalances() async {
-    return await Api.client(serviceUrl: ServiceUrl.goWalletService).get('/spending/balances', queryParameters: {
+  static Future<Response> getSpendingWalletBalances({bool showLoading = false}) async {
+    return await Api.client(serviceUrl: ServiceUrl.goWalletService, showLoading: showLoading).get('/spending/balances', queryParameters: {
       'clientId': 'GAZAGO',
     });
   }
