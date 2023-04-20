@@ -5,7 +5,6 @@ import 'package:flutter/material.dart';
 import 'package:gaza_go/constants/enums.dart';
 import 'package:gaza_go/constants/routes.dart';
 import 'package:gaza_go/flavors.dart';
-import 'package:gaza_go/platform/controllers/loader_controller.dart';
 import 'package:gaza_go/platform/controllers/loading_controller.dart';
 import 'package:gaza_go/platform/controllers/wallet_staika_controller.dart';
 import 'package:gaza_go/platform/helpers/alert_helper.dart';
@@ -24,7 +23,6 @@ import 'package:gaza_go/platform/services/iap_service.dart';
 import 'package:gaza_go/platform/services/uaa_service.dart';
 import 'package:gaza_go/platform/services/wallet_service.dart';
 import 'package:gaza_go/presentations/components/alert_ui_list.dart';
-import 'package:gaza_go/presentations/components/loader.dart';
 import 'package:gaza_go/presentations/components/product_list_dialog.dart';
 import 'package:gaza_go/presentations/components/product_list_stik_dialog.dart';
 import 'package:get/get.dart';
@@ -32,7 +30,7 @@ import 'package:in_app_purchase/in_app_purchase.dart';
 import 'package:throttling/throttling.dart';
 
 class WalletMasterController extends GetxController with SolanaMixin, GetTickerProviderStateMixin {
-  LoaderController loaderController = Get.put(LoaderController());
+  // LoaderController loaderController = Get.put(LoaderController());
   late TabController tabController;
   final RxList<AssetTokenBalanceModel> spendingTokens = RxList.empty();
   final RxList<TokenInfoModel> spendingTokenInfoList = RxList.empty();
@@ -169,10 +167,13 @@ class WalletMasterController extends GetxController with SolanaMixin, GetTickerP
     onInit();
   }
 
-  Future<void> getSpendingWalletBalances() async {
-    await WalletService.getSpendingWalletBalances(successCallback: (balances) {
-      spendingTokens.value = balances;
-    });
+  Future<void> getSpendingWalletBalances({bool showLoading = false}) async {
+    await WalletService.getSpendingWalletBalances(
+      showLoading: showLoading,
+      successCallback: (balances) {
+        spendingTokens.value = balances;
+      },
+    );
 
     if (Get.isRegistered<LoadingController>()) Get.find<LoadingController>().updateProgress("서비스를 위해 정보를 불러오는 중입니다.");
   }
@@ -343,15 +344,15 @@ class WalletMasterController extends GetxController with SolanaMixin, GetTickerP
   }
 
   void showProductStikDialog() async {
-    loaderController.isLoading.value = true;
+    // loaderController.isLoading.value = true;
     await getStikPriceInfo();
-    loaderController.isLoading.value = false;
+    // loaderController.isLoading.value = false;
     showProductStikList(this);
   }
 
-  void onLoaderShow() {
-    Get.dialog(const Loader());
-  }
+  // void onLoaderShow() {
+  //   Get.dialog(const Loader());
+  // }
 
   void purchaseInAppItem(ProductDetails product) async {
     showPendingPurchaseUI.value = true;

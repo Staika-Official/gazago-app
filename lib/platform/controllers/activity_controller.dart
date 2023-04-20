@@ -127,7 +127,7 @@ class ActivityController extends SuperController with ActivityMixin, ChallengeMi
     // 타이머 시작
     // adLoadTimerStart();
     checkConnectivityStatus();
-    if ([ExerciseState.ongoing, ExerciseState.paused].any((state) => state == exerciseState.value) && !isFakeGps.value) {
+    if ([ExerciseState.ongoing, ExerciseState.paused].any((state) => state == exerciseState.value) && !isFakeGps.value && !isTestingFakeGps()) {
       showPendingExerciseAlert(this);
     }
     disableActivityButton.value = false;
@@ -145,7 +145,7 @@ class ActivityController extends SuperController with ActivityMixin, ChallengeMi
   }
 
   Future<void> refreshController() async {
-    getUserState();
+    getUserState(showLoading: true);
   }
 
   Future<void> initActivityStatus() async {
@@ -355,67 +355,71 @@ class ActivityController extends SuperController with ActivityMixin, ChallengeMi
     }
   }
 
-  Future<void> getUserState() async {
-    await ActivityService.getCurrentUserState(successCallback: (CurrentUserStateModel currentUserState) async {
-      currentUserState.exercise?.locationUpdateTime = DateTime.now();
-      userState.update((state) {
-        state?.state = currentUserState.state;
-        state?.exercise = currentUserState.exercise;
-        state?.shoes = currentUserState.shoes;
-      });
+  Future<void> getUserState({bool showLoading = false}) async {
+    await ActivityService.getCurrentUserState(
+      showLoading: showLoading,
+      successCallback: (CurrentUserStateModel currentUserState) async {
+        currentUserState.exercise?.locationUpdateTime = DateTime.now();
+        userState.update((state) {
+          state?.state = currentUserState.state;
+          state?.exercise = currentUserState.exercise;
+          state?.shoes = currentUserState.shoes;
+        });
 
-      if (userState.value.exercise == null) {
-        exerciseState.value = ExerciseState.ready;
-      } else {
-        CurrentUserStateModel? savedUserState = HiveStore.loadCurrentUserState();
-        if (savedUserState != null && savedUserState.exercise != null && savedUserState.exercise!.recordState != null && savedUserState.exercise!.recordState! == 'NORMAL') {
-          savedUserState.exercise!.locationUpdateTime = DateTime.now();
-          userState.update((state) {
-            state?.exercise = savedUserState.exercise;
-          });
+        if (userState.value.exercise == null) {
+          exerciseState.value = ExerciseState.ready;
+        } else {
+          CurrentUserStateModel? savedUserState = HiveStore.loadCurrentUserState();
+          if (savedUserState != null && savedUserState.exercise != null && savedUserState.exercise!.recordState != null && savedUserState.exercise!.recordState! == 'NORMAL') {
+            savedUserState.exercise!.locationUpdateTime = DateTime.now();
+            userState.update((state) {
+              state?.exercise = savedUserState.exercise;
+            });
 
-          int savedSteps = HiveStore.load(key: HiveKey.savedStepCount.name) ?? 0;
-          if (savedUserState.exercise!.steps! > savedSteps) {
-            HiveStore.save(key: HiveKey.savedStepCount.name, value: savedUserState.exercise!.steps!);
+            int savedSteps = HiveStore.load(key: HiveKey.savedStepCount.name) ?? 0;
+            if (savedUserState.exercise!.steps! > savedSteps) {
+              HiveStore.save(key: HiveKey.savedStepCount.name, value: savedUserState.exercise!.steps!);
+            }
+          }
+
+          if (userState.value.exercise?.challengeId != null) {
+            //  산행중인 정보 가져오기
+            ChallengeModel challenge = await getChallenge(userState.value.exercise!.challengeId!);
+            if (challenge.id != null) {
+              selectedChallenge.value = challenge;
+            }
+          }
+          if (updateTimer == null) {
+            exerciseData.value = List.empty(growable: true);
+            exerciseData.add(userState.value.exercise!);
+            exerciseTime.value = userState.value.exercise!.time!;
+            exerciseSteps.value = userState.value.exercise!.steps!;
+            exerciseDistance.value = userState.value.exercise!.distance!;
+
+            coordinates.value = List.empty(growable: true);
+            coordinates.addAll(await parseCoordinates(userState.value.exercise!.id));
+          }
+
+          final state = userState.value.exercise!.state!;
+
+          if (state == 'ONGOING' && updateTimer != null) {
+            exerciseState.value = ExerciseState.ongoing;
+          } else if (state == 'PAUSED' || updateTimer == null) {
+            exerciseState.value = ExerciseState.paused;
           }
         }
 
-        if (userState.value.exercise?.challengeId != null) {
-          //  산행중인 정보 가져오기
-          ChallengeModel challenge = await getChallenge(userState.value.exercise!.challengeId!);
-          if (challenge.id != null) {
-            selectedChallenge.value = challenge;
-          }
+        await retrySavedRequests(source: 'getUserState');
+
+        if (Get.isRegistered<LoadingController>()) Get.find<LoadingController>().updateProgress("곧 가자고와 가자고~!");
+      },
+      errorCallback: (statusCode) {
+        if (statusCode == 404) {
+          onLogout();
         }
-        if (updateTimer == null) {
-          exerciseData.value = List.empty(growable: true);
-          exerciseData.add(userState.value.exercise!);
-          exerciseTime.value = userState.value.exercise!.time!;
-          exerciseSteps.value = userState.value.exercise!.steps!;
-          exerciseDistance.value = userState.value.exercise!.distance!;
-
-          coordinates.value = List.empty(growable: true);
-          coordinates.addAll(await parseCoordinates(userState.value.exercise!.id));
-        }
-
-        final state = userState.value.exercise!.state!;
-
-        if (state == 'ONGOING' && updateTimer != null) {
-          exerciseState.value = ExerciseState.ongoing;
-        } else if (state == 'PAUSED' || updateTimer == null) {
-          exerciseState.value = ExerciseState.paused;
-        }
-      }
-
-      await retrySavedRequests(source: 'getUserState');
-
-      if (Get.isRegistered<LoadingController>()) Get.find<LoadingController>().updateProgress("곧 가자고와 가자고~!");
-    }, errorCallback: (statusCode) {
-      if (statusCode == 404) {
-        onLogout();
-      }
-      throw statusCode;
-    });
+        throw statusCode;
+      },
+    );
   }
 
   void onLogout() async {
@@ -728,7 +732,7 @@ class ActivityController extends SuperController with ActivityMixin, ChallengeMi
 
   void detectFakeGps() async {
     //안드로이드만 탐지 가능
-    if (isFakeGps.value && Get.isBottomSheetOpen != true) {
+    if (isFakeGps.value && Get.isBottomSheetOpen != true && !isTestingFakeGps()) {
       showFakeGpsAlert();
       MemberService.reportAbuse(description: 'Fake GPS 사용 감지', abusingType: 'GPS');
     }
@@ -745,7 +749,6 @@ class ActivityController extends SuperController with ActivityMixin, ChallengeMi
   Future<void> getCurrentLocation() async {
     print('getCurrentLocation');
     await Geolocator.getCurrentPosition(desiredAccuracy: locationAccuracyQuality, timeLimit: const Duration(seconds: 5)).then((location) {
-      print('getCurrentLocation 위치정보 가져옴');
       currentLocation.value = location;
       isListeningToLocation.value = true;
     }).onError((error, stackTrace) {

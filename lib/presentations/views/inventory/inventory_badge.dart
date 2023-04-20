@@ -43,7 +43,7 @@ class InventoryBadge extends StatelessWidget {
                             : CachedNetworkImage(
                                 imageUrl: item.imageUrl!,
                                 fit: BoxFit.fitWidth,
-                                placeholder: (context, url) => const CircularProgressIndicator(),
+                                placeholder: (context, url) => const Center(child: SizedBox.square(dimension: 40, child: CircularProgressIndicator())),
                                 errorWidget: (context, url, error) => Image.asset("assets/images/@temp_badge.png"),
                               ),
                       ),

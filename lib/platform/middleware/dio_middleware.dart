@@ -2,6 +2,7 @@ import 'dart:async';
 import 'dart:convert';
 
 import 'package:dio/dio.dart';
+import 'package:flutter/material.dart';
 import 'package:gaza_go/constants/enums.dart';
 import 'package:gaza_go/constants/routes.dart';
 import 'package:gaza_go/flavors.dart';
@@ -37,12 +38,23 @@ class Api {
       // )
     ]);
 
-  static Dio client({required String serviceUrl, bool needsToken = true, Map<String, dynamic>? queryParams, bool isPatch = false, bool isFile = false, bool allowCustomErrorHandler = false}) {
+  static Dio client({
+    required String serviceUrl,
+    bool needsToken = true,
+    Map<String, dynamic>? queryParams,
+    bool isPatch = false,
+    bool isFile = false,
+    bool allowCustomErrorHandler = false,
+    bool showLoading = true,
+  }) {
     _dio.options.baseUrl = '${F.baseUrl}$serviceUrl';
     // _dio.options.connectTimeout = 2000;
     _dio.options.sendTimeout = 10000;
     _dio.options.receiveTimeout = 10000;
-    _dio.options.extra = {'allowCustomErrorHandler': allowCustomErrorHandler};
+    _dio.options.extra = {
+      'allowCustomErrorHandler': allowCustomErrorHandler,
+      'showLoading': showLoading,
+    };
 
     if (needsToken) {
       String? accessToken = HiveStore.loadString(key: HiveKey.accessToken.name);
@@ -77,6 +89,22 @@ class Api {
   }
 
   static _requestInterceptor(RequestOptions options, RequestInterceptorHandler handler) {
+    if (options.extra['showLoading'] && getx.Get.isDialogOpen != true) {
+      getx.Get.dialog(
+        Dialog(
+          shadowColor: Colors.transparent,
+          backgroundColor: Colors.transparent,
+          child: Center(
+            child: SizedBox(
+              width: 20,
+              height: 20,
+              child: CircularProgressIndicator(),
+            ),
+          ),
+        ),
+      );
+    }
+
     if (HiveStore.load(key: HiveKey.isDebuggingMode.name)) {
       List requestLogs = HiveStore.load(key: HiveKey.requestLogs.name) ?? [];
       dynamic logForm;
@@ -121,10 +149,11 @@ class Api {
       '\nQueries: ${(options.queryParameters)}'
       '\nData: ${options.headers['Content-Type'] != null && options.headers['Content-Type'].contains('multipart') ? 'multipart data!' : jsonEncode(options.data)}',
     );
-    return handler.next(options);
+
+    handler.next(options);
   }
 
-  static _responseInterceptor(Response response, ResponseInterceptorHandler handler) {
+  static _responseInterceptor(Response response, ResponseInterceptorHandler handler) async {
     _logger.d(
       '------------->'
       '\nRESPONSE'
@@ -133,7 +162,14 @@ class Api {
       '\nResponseCode: ${response.statusCode}'
       '\nResponse: ${response.data}',
     );
-    return handler.next(response);
+
+    if (response.requestOptions.extra['showLoading'] && getx.Get.isDialogOpen == true) {
+      getx.Get.back();
+    }
+
+    Timer(Duration.zero, () {
+      handler.next(response);
+    });
   }
 
   static _onErrorInterceptor(DioError e, ErrorInterceptorHandler handler) async {
@@ -174,7 +210,7 @@ class Api {
         resetToLogin(e, handler);
       }
 
-      await _retryFailedRequest(e, handler);
+      await _getNewAccessToken(e, handler);
     } else {
       if (e.response?.data != null && e.response?.data != '') {
         ErrorResponseDataModel errorData = ErrorResponseDataModel.fromJson(e.response?.data);
@@ -195,6 +231,9 @@ class Api {
     }
 
     if (!handler.isCompleted) {
+      if (e.requestOptions.extra['showLoading'] && getx.Get.isDialogOpen == true) {
+        getx.Get.back();
+      }
       e.response != null && e.response!.data != 'unknown' ? handler.resolve(e.response!) : handler.next(e);
     }
   }
@@ -202,13 +241,6 @@ class Api {
   static Future<void> _retryFailedRequest(DioError e, ErrorInterceptorHandler handler) async {
     String? accessToken = HiveStore.loadString(key: HiveKey.accessToken.name);
     if (accessToken == null) {
-      resetToLogin(e, handler);
-      return;
-    }
-
-    retryAttempt++;
-    if (retryAttempt > 5) {
-      showToastPopup('토큰이 만료되었습니다.\n다시 로그인해주세요.');
       resetToLogin(e, handler);
       return;
     }
@@ -227,27 +259,58 @@ class Api {
     )
         .then(
       (response) {
+        _logger.d(
+          '------------->'
+          '\nRESPONSE'
+          '\nPath: ${response.requestOptions.baseUrl + response.requestOptions.path}'
+          '\nQueries: ${response.requestOptions.queryParameters}'
+          '\nResponseCode: ${response.statusCode}'
+          '\nResponse: ${response.data}',
+        );
+
+        if (e.requestOptions.extra['showLoading'] && getx.Get.isDialogOpen == true) {
+          getx.Get.back();
+        }
+        retryAttempt = 0;
         handler.resolve(
           response,
         );
-        retryAttempt = 0;
       },
-    ).onError((error, stackTrace) async {
-      ErrorResponseDataModel? errorResponseDataModel = e.response != null ? ErrorResponseDataModel.fromJson(e.response!.data) : null;
-      if (error is DioError) {
-        _logger.e(
-          '------------->'
-          '\nRETRY ERROR'
-          '\n${e.requestOptions.baseUrl + e.requestOptions.path}'
-          '\n${error.response}',
-        );
+    ).onError((DioError error, stackTrace) async {
+      _logger.e(
+        '------------->'
+        '\nERROR'
+        '\nError: ${error.error}'
+        '\nErrorPath: ${error.response?.requestOptions.baseUrl}${error.response?.requestOptions.path}'
+        '\nErrorQuery: ${error.response?.requestOptions.queryParameters}'
+        '\nError ResponseCode: ${error.response?.statusCode}'
+        '\nError ResponseMessage: ${error.response?.statusMessage}'
+        '\nError ResponseData: ${error.response?.data}',
+      );
 
-        if (errorResponseDataModel != null && errorResponseDataModel.status == 401) {
-          await _getNewAccessToken(e, handler);
-        } else if (!handler.isCompleted) {
+      retryAttempt++;
+      if (retryAttempt > 5) {
+        showToastPopup('토큰이 만료되었습니다.\n다시 로그인해주세요.');
+        resetToLogin(e, handler);
+        if (error is DioError) {
+          _logger.e(
+            '------------->'
+            '\nRETRY ERROR'
+            '\n${e.requestOptions.baseUrl + e.requestOptions.path}'
+            '\n${error.response}',
+          );
+        }
+
+        if (!handler.isCompleted) {
+          if (e.requestOptions.extra['showLoading'] && getx.Get.isDialogOpen == true) {
+            getx.Get.back();
+          }
           e.response != null ? handler.resolve(e.response!) : handler.next(e);
         }
+        return;
       }
+
+      await _retryFailedRequest(e, handler);
     });
   }
 
@@ -257,22 +320,48 @@ class Api {
     Dio refreshDio = Dio();
     refreshDio.options.headers['Authorization'] = 'Bearer $refreshToken';
     await refreshDio.post('${F.baseUrl}/services/uaa/api/sign-in/token', data: {'clientId': 'GAZAGO'}).then((Response res) async {
+      _logger.d(
+        '------------->'
+        '\nRESPONSE'
+        '\nPath: ${res.requestOptions.baseUrl + res.requestOptions.path}'
+        '\nQueries: ${res.requestOptions.queryParameters}'
+        '\nResponseCode: ${res.statusCode}'
+        '\nResponse: ${res.data}',
+      );
+
       AccessTokenModel newToken = AccessTokenModel.fromJson(res.data);
 
       HiveStore.save(key: HiveKey.accessToken.name, value: newToken.accessToken);
       HiveStore.save(key: HiveKey.refreshToken.name, value: newToken.refreshToken);
 
       await _retryFailedRequest(e, handler);
-    }).onError((error, stacktrace) {
+    }).onError((DioError error, stacktrace) {
+      _logger.e(
+        '------------->'
+        '\nERROR'
+        '\nError: ${error.error}'
+        '\nErrorPath: ${error.response?.requestOptions.baseUrl}${error.response?.requestOptions.path}'
+        '\nErrorQuery: ${error.response?.requestOptions.queryParameters}'
+        '\nError ResponseCode: ${error.response?.statusCode}'
+        '\nError ResponseMessage: ${error.response?.statusMessage}'
+        '\nError ResponseData: ${error.response?.data}',
+      );
+
       resetToLogin(e, handler);
     });
   }
 
   static void resetToLogin(DioError e, ErrorInterceptorHandler handler) async {
+    if (e.requestOptions.extra['showLoading'] && getx.Get.isDialogOpen == true) {
+      getx.Get.back();
+    }
+
     if (!handler.isCompleted) {
       e.response != null ? handler.resolve(e.response!) : handler.next(e);
     }
+
     retryAttempt = 0;
+
     HiveStore.deleteMultipleKeys(keys: [
       HiveKey.accessToken.name,
       HiveKey.refreshToken.name,
@@ -291,6 +380,7 @@ class Api {
         activityController.updateTimer = null;
       }
     }
+
     if (getx.Get.currentRoute != Routes.login) getx.Get.offAllNamed(Routes.login);
   }
 }

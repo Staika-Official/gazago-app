@@ -22,11 +22,13 @@ class DebuggingController extends GetxController {
   final TextEditingController labPasswordController = TextEditingController();
   final TextEditingController endPointPasswordController = TextEditingController();
   final Rx<EndPointType> endPointType = Rx(EndPointType.stage);
+  final RxBool allowFakeGps = RxBool(false);
 
   @override
   void onInit() async {
     isShowDebuggingMenu.value = HiveStore.load(key: HiveKey.isDebuggingMode.name);
     endPointType.value = F.baseUrl.contains('api.stage') ? EndPointType.stage : EndPointType.prod;
+    allowFakeGps.value = HiveStore.load(key: HiveKey.allowFakeGpsTest.name) ?? false;
     super.onInit();
   }
 
@@ -120,5 +122,10 @@ class DebuggingController extends GetxController {
       HiveStore.save(key: HiveKey.endPointType.name, value: val.name);
       forceLogout();
     }
+  }
+
+  void setGpsPermission(bool val) {
+    allowFakeGps.value = val;
+    HiveStore.save(key: HiveKey.allowFakeGpsTest.name, value: val);
   }
 }

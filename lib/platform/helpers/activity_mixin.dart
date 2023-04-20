@@ -219,6 +219,9 @@ mixin ActivityMixin {
     }
 
     exerciseTimer = Timer.periodic(const Duration(seconds: 1), (timer) {
+      if (isFakeGps.value && !isTestingFakeGps()) {
+        pauseExercise();
+      }
       validateTimer(timer, HiveKey.exerciseTimer);
 
       // 스피드 계산
@@ -346,7 +349,7 @@ mixin ActivityMixin {
   void startExercise(ExerciseType exerciseType, ChallengeModel? challenge, {String? adId}) async {
     String deviceId = HiveStore.loadString(key: HiveKey.uuid.name)!;
     if (Get.isDialogOpen != null && Get.isDialogOpen!) Get.until((route) => Get.isDialogOpen == false);
-    if (isFakeGps.value) {
+    if (isFakeGps.value && !isTestingFakeGps()) {
       return;
     }
 
@@ -402,7 +405,7 @@ mixin ActivityMixin {
   }
 
   void continueExercise({String? source}) async {
-    if (isFakeGps.value) {
+    if (isFakeGps.value && !isTestingFakeGps()) {
       return;
     }
 
@@ -622,7 +625,7 @@ mixin ActivityMixin {
 
   Future<void> endExercise(ChallengeModel challenge, {String? source, String? adId, int retryAttempt = 0}) async {
     String deviceId = HiveStore.loadString(key: HiveKey.uuid.name)!;
-    if (isFakeGps.value) {
+    if (isFakeGps.value && !isTestingFakeGps()) {
       return;
     }
 
@@ -775,5 +778,9 @@ mixin ActivityMixin {
   Future<void> setMarkerImages() async {
     startMarkerImage.value = await OverlayImage.fromAssetImage(assetName: 'assets/icons/start.png');
     finishMarkerImage.value = await OverlayImage.fromAssetImage(assetName: 'assets/icons/finish.png');
+  }
+
+  bool isTestingFakeGps() {
+    return HiveStore.load(key: HiveKey.allowFakeGpsTest.name) ?? false;
   }
 }

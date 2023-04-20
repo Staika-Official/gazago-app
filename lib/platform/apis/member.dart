@@ -9,15 +9,25 @@ class MemberApi {
   }
 
   static Future<Response> getMemberUserInfo(String userId, String clientId) async {
-    return await Api.client(serviceUrl: ServiceUrl.memberService).get('/api/users/$userId?clientId=$clientId');
+    return await Api.client(
+      serviceUrl: ServiceUrl.memberService,
+      allowCustomErrorHandler: true,
+    ).get('/api/users/$userId?clientId=$clientId');
   }
 
   static Future<Response> fetchTermsAgree(String userId, List<TermsHistoryModel> termsHistoryList) async {
-    return await Api.client(serviceUrl: ServiceUrl.memberService).post('/api/terms-histories/users/$userId', data: termsHistoryList);
+    return await Api.client(
+      serviceUrl: ServiceUrl.memberService,
+      allowCustomErrorHandler: true,
+    ).post('/api/terms-histories/users/$userId', data: termsHistoryList);
   }
 
   static Future<Response> getTermsAgreeStatus(String userId) async {
-    return await Api.client(serviceUrl: ServiceUrl.memberService).get(
+    return await Api.client(
+      serviceUrl: ServiceUrl.memberService,
+      showLoading: false,
+      allowCustomErrorHandler: true,
+    ).get(
       '/api/terms-histories/users/$userId/GAZAGO',
     );
   }
@@ -30,8 +40,13 @@ class MemberApi {
     required String appVersion,
     required String deviceModel,
     required String platform,
+    required String deviceId,
+    required String fcmToken,
   }) async {
-    return await Api.client(serviceUrl: ServiceUrl.memberService).post(
+    return await Api.client(
+      serviceUrl: ServiceUrl.memberService,
+      showLoading: false,
+    ).post(
       '/api/abusings',
       data: {
         "clientId": "GAZAGO",
@@ -42,6 +57,8 @@ class MemberApi {
         "platform": platform,
         "appVersion": appVersion,
         "description": description,
+        "deviceId": deviceId,
+        "fcmToken": fcmToken,
       },
     );
   }
