@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:gaza_go/constants/enums.dart';
 import 'package:gaza_go/constants/routes.dart';
 import 'package:gaza_go/platform/controllers/wallet_master_controller.dart';
+import 'package:gaza_go/platform/firebase/remote_config.dart';
 import 'package:gaza_go/platform/helpers/alert_helper.dart';
 import 'package:gaza_go/platform/helpers/inventory_mixin.dart';
 import 'package:gaza_go/platform/helpers/linear_progress_mixin.dart';
@@ -11,6 +12,7 @@ import 'package:gaza_go/platform/models/inventory_badge_item_model.dart';
 import 'package:gaza_go/platform/models/inventory_badge_list_model.dart';
 import 'package:gaza_go/platform/models/inventory_badge_model.dart';
 import 'package:gaza_go/platform/models/inventory_item_model.dart';
+import 'package:gaza_go/platform/models/inventory_item_stat_model.dart';
 import 'package:gaza_go/platform/models/repair_shoes_model.dart';
 import 'package:gaza_go/platform/models/stat_model.dart';
 import 'package:gaza_go/platform/services/activity_service.dart';
@@ -20,7 +22,8 @@ import 'package:get/get.dart';
 
 class InventoryController extends GetxController with ScrollMixin, LinearProgressMixin, InventoryMixin {
   final WalletMasterController walletMasterController = Get.find();
-
+  final RxDouble listHeight = RxDouble(0);
+  final GlobalKey itemDetailViewKey = GlobalKey();
   RxInt page = RxInt(0);
   RxInt totalItemCount = RxInt(0);
   RxBool stopLoading = RxBool(false);
@@ -78,17 +81,22 @@ class InventoryController extends GetxController with ScrollMixin, LinearProgres
   final Rx<RepairShoesModel> shoesDurability = Rx(RepairShoesModel());
   Rx<InventoryItemModel> selectedItem = Rx(
     InventoryItemModel(
-      id: -1,
-      serialNumber: '',
-      itemGrade: '',
-      itemName: '',
-      itemCategory: '',
-      durability: 0.0,
-      abrasionRate: 0.0,
-      rewardRate: 0.0,
-      staminaReduceRate: 0.0,
-      itemImageUrl: '',
-    ),
+        id: -1,
+        serialNumber: '',
+        itemGrade: '',
+        itemName: '',
+        itemCategory: '',
+        durability: 0.0,
+        abrasionRate: 0.0,
+        rewardRate: 0.0,
+        staminaReduceRate: 0.0,
+        itemImageUrl: '',
+        itemStat: InventoryItemStatModel(
+          goProfit: 0.0,
+          durability: 0.0,
+          stamina: 0.0,
+          luck: 0.0,
+        )),
   );
   Rx<InventoryBadgeListModel> selectedBadge = Rx(
     InventoryBadgeListModel(
@@ -141,16 +149,27 @@ class InventoryController extends GetxController with ScrollMixin, LinearProgres
   }
 
   double get equippedAbrasionRate {
-    return equippedItemList.fold(0.0, (summedValue, element) => summedValue + element.abrasionRate);
+    return equippedItemList.fold(0.0, (summedValue, element) => summedValue + element.itemStat.durability!);
   }
 
   double get equippedRewardRate {
-    return equippedItemList.fold(0.0, (summedValue, element) => summedValue + element.rewardRate) + equippedBadge.value.badge.rewardRate;
+    return equippedItemList.fold(0.0, (summedValue, element) => summedValue + element.itemStat.goProfit!) + equippedBadge.value.badge.rewardRate;
   }
 
   double get equippedStaminaReduceRate {
-    return equippedItemList.fold(0.0, (summedValue, element) => summedValue + element.staminaReduceRate);
+    return equippedItemList.fold(0.0, (summedValue, element) => summedValue + element.itemStat.stamina!);
   }
+
+  double get equippedLuckRate {
+    return equippedItemList.fold(0.0, (summedValue, element) => summedValue + element.itemStat.luck!) + equippedBadge.value.badge.luckRate;
+  }
+
+  final RxString itemGoMax = RxString('0');
+  final RxString itemDurabilityMax = RxString('0');
+  final RxString itemHealthMax = RxString('0');
+  final RxString itemLuckMax = RxString('0');
+  final RxString badgeGoMax = RxString('0');
+  final RxString badgeLuckMax = RxString('0');
 
   @override
   void onInit() async {
@@ -162,11 +181,28 @@ class InventoryController extends GetxController with ScrollMixin, LinearProgres
 
   Future<void> initController() async {
     initStats();
+    getItemMaxValue();
     await getUserAllItems();
     await getUserEquippedItems();
     getSyntheticBadgeList();
     await getUserBadgesList();
     scrollControl(); // 스크롤 제어(아이템, 뱃지)
+    getHeight();
+  }
+
+  void getHeight() {
+    if (itemDetailViewKey.currentContext != null) {
+      listHeight.value = itemDetailViewKey.currentContext!.size!.height;
+    }
+  }
+
+  void getItemMaxValue() {
+    itemGoMax.value = getConfig(dataType: ConfigType.string, configKey: 'item_go_max');
+    itemDurabilityMax.value = getConfig(dataType: ConfigType.string, configKey: 'item_durability_max');
+    itemHealthMax.value = getConfig(dataType: ConfigType.string, configKey: 'item_health_max');
+    itemLuckMax.value = getConfig(dataType: ConfigType.string, configKey: 'item_luck_max');
+    badgeGoMax.value = getConfig(dataType: ConfigType.string, configKey: 'badge_go_max');
+    badgeLuckMax.value = getConfig(dataType: ConfigType.string, configKey: 'badge_luck_max');
   }
 
   Future<void> refreshController() async {

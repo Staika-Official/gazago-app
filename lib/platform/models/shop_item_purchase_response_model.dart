@@ -1,3 +1,4 @@
+import 'package:gaza_go/platform/models/inventory_item_stat_model.dart';
 import 'package:json_annotation/json_annotation.dart';
 
 part 'shop_item_purchase_response_model.g.dart';
@@ -18,6 +19,7 @@ class ShopItemPurchaseResponseModel {
   double rewardRate;
   double staminaReduceRate;
   String description;
+  InventoryItemStatModel itemStat;
 
   ShopItemPurchaseResponseModel({
     required this.id,
@@ -34,6 +36,7 @@ class ShopItemPurchaseResponseModel {
     required this.rewardRate,
     required this.staminaReduceRate,
     required this.description,
+    required this.itemStat,
   });
 
   factory ShopItemPurchaseResponseModel.fromJson(Map<String, dynamic> json) => _$ShopItemPurchaseResponseModelFromJson(json);

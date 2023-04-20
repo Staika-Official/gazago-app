@@ -156,7 +156,7 @@ class ChallengeMap extends StatelessWidget {
                 onMapCreated: controller.onChallengeMapCreated,
               ),
               Padding(
-                padding: EdgeInsets.only(top: 70.sp),
+                padding: EdgeInsets.only(top: 68.sp),
                 child: Container(
                   padding: EdgeInsets.only(top: 10.sp, bottom: 10.sp, right: 20.sp, left: 20.sp),
                   decoration: BoxDecoration(
@@ -173,7 +173,7 @@ class ChallengeMap extends StatelessWidget {
                     ],
                   ),
                   child: const StyledText(
-                    '챌린지 가이드',
+                    '100대 명산 챌린지 가이드',
                     fontSize: 16,
                     fontWeight: 500,
                     lineHeight: 22,

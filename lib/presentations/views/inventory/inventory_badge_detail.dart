@@ -67,6 +67,7 @@ class InventoryBadgeDetail extends StatelessWidget {
       child: Padding(
         padding: EdgeInsets.all(22.sp),
         child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
           mainAxisSize: MainAxisSize.max,
           children: [
             Container(
@@ -91,7 +92,9 @@ class InventoryBadgeDetail extends StatelessWidget {
               child: Column(
                 children: [
                   SizedBox(
+                    width: double.infinity,
                     child: Stack(
+                      alignment: Alignment.center,
                       children: [
                         Positioned(
                           top: 12.sp,
@@ -124,10 +127,10 @@ class InventoryBadgeDetail extends StatelessWidget {
                             Padding(
                               padding: EdgeInsets.only(top: 40.0.sp),
                               child: SizedBox(
-                                width: 150.sp,
+                                height: 150.sp,
                                 child: controller.selectedBadge.value.imageUrl!.contains('.svg')
                                     ? SvgPicture.network(
-                                        fit: BoxFit.fitWidth,
+                                        fit: BoxFit.fitHeight,
                                         controller.selectedBadge.value.imageUrl!,
                                         placeholderBuilder: (BuildContext context) => Container(padding: const EdgeInsets.all(30.0), child: const CircularProgressIndicator()),
                                       )
@@ -138,127 +141,9 @@ class InventoryBadgeDetail extends StatelessWidget {
                                       ),
                               ),
                             ),
-                            Wrap(
-                              direction: Axis.vertical,
-                              children: [
-                                Container(
-                                  margin: EdgeInsets.only(
-                                    top: 12.sp,
-                                  ),
-                                  padding: EdgeInsets.symmetric(
-                                    vertical: 20.sp,
-                                    horizontal: 45.sp,
-                                  ),
-                                  decoration: BoxDecoration(
-                                    color: subBg01Color,
-                                    borderRadius: BorderRadius.all(
-                                      Radius.circular(10.sp),
-                                    ),
-                                  ),
-                                  child: Column(
-                                    children: [
-                                      Row(
-                                        crossAxisAlignment: CrossAxisAlignment.center,
-                                        mainAxisAlignment: MainAxisAlignment.center,
-                                        children: [
-                                          Padding(
-                                            padding: EdgeInsets.only(right: 20.0.sp),
-                                            child: Column(
-                                              children: [
-                                                Row(
-                                                  mainAxisAlignment: MainAxisAlignment.center,
-                                                  children: [
-                                                    StyledText(
-                                                      '${controller.selectedBadge.value.rewardRate.toInt()}',
-                                                      fontSize: 28,
-                                                      lineHeight: 28,
-                                                      fontWeight: 500,
-                                                      color: skyBlueColor,
-                                                    ),
-                                                    StyledText(
-                                                      '%',
-                                                      fontSize: 16,
-                                                      lineHeight: 24,
-                                                      fontWeight: 500,
-                                                      color: skyBlueColor,
-                                                    ),
-                                                  ],
-                                                ),
-                                                Padding(
-                                                  padding: EdgeInsets.only(top: 5.0.sp),
-                                                  child: Row(
-                                                    mainAxisAlignment: MainAxisAlignment.center,
-                                                    children: [
-                                                      Padding(
-                                                        padding: EdgeInsets.only(top: 2.0.sp, right: 2.0.sp),
-                                                        child: iconGoReward,
-                                                      ),
-                                                      StyledText(
-                                                        'GO 보상율',
-                                                        color: deepGrayColor,
-                                                        fontSize: 11,
-                                                        lineHeight: 12,
-                                                        fontWeight: 500,
-                                                      ),
-                                                    ],
-                                                  ),
-                                                ),
-                                              ],
-                                            ),
-                                          ),
-                                          Column(
-                                            children: [
-                                              Row(
-                                                mainAxisAlignment: MainAxisAlignment.center,
-                                                children: [
-                                                  StyledText(
-                                                    '${controller.selectedBadge.value.luckRate.toInt()}',
-                                                    fontSize: 28,
-                                                    lineHeight: 28,
-                                                    fontWeight: 500,
-                                                    color: const Color(0xFFFF41CA),
-                                                  ),
-                                                  const StyledText(
-                                                    '%',
-                                                    fontSize: 16,
-                                                    lineHeight: 24,
-                                                    fontWeight: 500,
-                                                    color: Color(0xFFFF41CA),
-                                                  ),
-                                                ],
-                                              ),
-                                              Padding(
-                                                padding: EdgeInsets.only(top: 5.0.sp),
-                                                child: Row(
-                                                  mainAxisAlignment: MainAxisAlignment.center,
-                                                  crossAxisAlignment: CrossAxisAlignment.center,
-                                                  children: [
-                                                    Padding(
-                                                      padding: EdgeInsets.only(top: 1.0.sp, right: 3.0.sp),
-                                                      child: iconLucky,
-                                                    ),
-                                                    StyledText(
-                                                      '행운 지수율',
-                                                      color: deepGrayColor,
-                                                      fontSize: 11,
-                                                      lineHeight: 12,
-                                                      fontWeight: 500,
-                                                    ),
-                                                  ],
-                                                ),
-                                              ),
-                                            ],
-                                          ),
-                                        ],
-                                      ),
-                                    ],
-                                  ),
-                                ),
-                              ],
-                            ),
                             Obx(() {
                               return Padding(
-                                padding: EdgeInsets.only(top: 20.0.sp),
+                                padding: EdgeInsets.only(top: 20.0.sp, bottom: 20.sp),
                                 child: Column(
                                   children: [
                                     controller.selectedBadge.value.state == 'EQUIPPED'
@@ -343,70 +228,6 @@ class InventoryBadgeDetail extends StatelessWidget {
                                 ),
                               );
                             }),
-
-                            Padding(
-                              padding: EdgeInsets.symmetric(vertical: 20.0.sp),
-                              child: Divider(thickness: 1, height: 1, color: popupBgColor),
-                            ),
-
-                            Padding(
-                              padding: EdgeInsets.symmetric(horizontal: 15.0.sp),
-                              child: Column(
-                                children: [
-                                  Row(children: [
-                                    StyledText(
-                                      '획득 정보',
-                                      color: lightGrayColor,
-                                      fontSize: 14,
-                                      fontWeight: 500,
-                                    )
-                                  ]),
-                                  Obx(() {
-                                    return Padding(
-                                      padding: EdgeInsets.only(top: 10.sp, bottom: 15.sp),
-                                      child: Row(children: [
-                                        StyledText(
-                                          syntheticBadgeController.badgeType.value,
-                                          color: deepGrayColor,
-                                          fontSize: 14,
-                                          fontWeight: 500,
-                                        ),
-                                        Container(
-                                          padding: EdgeInsets.only(left: 5.sp),
-                                          child: StyledText(
-                                            '·',
-                                            fontSize: 14,
-                                            fontWeight: 500,
-                                            color: deepGrayColor,
-                                          ),
-                                        ),
-                                        Container(
-                                          padding: EdgeInsets.only(left: 5.sp),
-                                          child: StyledText(
-                                            formatDate(controller.getBadgeDate.value),
-                                            fontSize: 14,
-                                            fontWeight: 500,
-                                            color: deepGrayColor,
-                                          ),
-                                        ),
-                                      ]),
-                                    );
-                                  }),
-                                ],
-                              ),
-                            ),
-                            // SizedBox(
-                            //   height: 200,
-                            //   child: Padding(
-                            //     padding: const EdgeInsets.only(top: 10),
-                            //     child: Column(
-                            //       mainAxisSize: MainAxisSize.min,
-                            //       children: [
-                            //         ...renderBadgeList(controller),
-                            //       ],
-                            //     ),
-                            //   ),
-                            // ),
                           ],
                         )
                       ],
@@ -415,43 +236,193 @@ class InventoryBadgeDetail extends StatelessWidget {
                 ],
               ),
             ),
-            // Spacer(),
-            // Align(
-            //   alignment: Alignment.bottomCenter,
-            //   child: InkWell(
-            //     onTap: () => controller.toSyntheticBadgeDetail(controller.selectedBadge.value.badge.id),
-            //     child: Container(
-            //       padding: const EdgeInsets.all(20),
-            //       width: double.infinity,
-            //       decoration: BoxDecoration(
-            //         color: skyBlueColor,
-            //         borderRadius: BorderRadius.circular(12),
-            //         border: Border.all(
-            //           width: 2,
-            //           style: BorderStyle.solid,
-            //           color: Colors.black,
-            //         ),
-            //         boxShadow: const [
-            //           BoxShadow(
-            //             offset: Offset(0, 4),
-            //             blurRadius: 0,
-            //             spreadRadius: 0,
-            //             color: Colors.black,
-            //           ),
-            //         ],
-            //       ),
-            //       child: const Text(
-            //         '합성',
-            //         textAlign: TextAlign.center,
-            //         style: TextStyle(
-            //           fontSize: 18,
-            //           fontWeight: FontWeight.w600,
-            //           height: 16 / 18,
-            //         ),
-            //       ),
-            //     ),
-            //   ),
-            // ),
+            Padding(
+              padding: EdgeInsets.only(top: 25.0.sp),
+              child: StyledText(
+                '능력치',
+                fontWeight: 600,
+                fontSize: 18,
+                lineHeight: 18,
+              ),
+            ),
+
+            // Go 보상
+            if (controller.selectedBadge.value.rewardRate > 0)
+              Padding(
+                padding: EdgeInsets.only(top: 16.0.sp),
+                child: Column(
+                  children: [
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Row(
+                          children: [
+                            iconStatGo,
+                            Padding(
+                              padding: EdgeInsets.only(left: 3.0),
+                              child: StyledText(
+                                'GO 보상',
+                                fontWeight: 500,
+                                fontSize: 14,
+                                lineHeight: 15,
+                              ),
+                            ),
+                          ],
+                        ),
+                        StyledText(
+                          formatDecimalPlaces(controller.selectedBadge.value.rewardRate, 0),
+                          fontSize: 12,
+                          fontWeight: 500,
+                          color: skyBlueColor,
+                          letterSpacing: -.1,
+                        ),
+                      ],
+                    ),
+                    Padding(
+                      padding: EdgeInsets.only(top: 8.0.sp),
+                      child: ClipRRect(
+                        child: SizedBox(
+                          height: 11,
+                          child: Stack(
+                            children: [
+                              Container(
+                                decoration: BoxDecoration(
+                                  color: subBg02Color,
+                                  borderRadius: BorderRadius.all(
+                                    Radius.circular(50.sp),
+                                  ),
+                                ),
+                              ),
+                              LayoutBuilder(
+                                builder: (context, constraints) {
+                                  return Container(
+                                    width: constraints.maxWidth / (double.parse(controller.badgeGoMax.value) / controller.selectedBadge.value.rewardRate),
+                                    decoration: BoxDecoration(
+                                      color: skyBlueColor,
+                                      borderRadius: BorderRadius.circular(30),
+                                    ),
+                                  );
+                                },
+                              ),
+                            ],
+                          ),
+                        ),
+                      ),
+                    )
+                  ],
+                ),
+              ),
+            // 행운
+            if (controller.selectedBadge.value.luckRate > 0)
+              Padding(
+                padding: EdgeInsets.only(top: 16.0.sp),
+                child: Column(
+                  children: [
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Row(
+                          children: [
+                            iconStatLuck,
+                            Padding(
+                              padding: EdgeInsets.only(left: 3.0),
+                              child: StyledText(
+                                '행운',
+                                fontWeight: 500,
+                                fontSize: 14,
+                                lineHeight: 15,
+                              ),
+                            ),
+                          ],
+                        ),
+                        StyledText(
+                          formatDecimalPlaces(controller.selectedBadge.value.luckRate, 0),
+                          fontSize: 12,
+                          fontWeight: 500,
+                          color: pinkColor,
+                          letterSpacing: -.1,
+                        ),
+                      ],
+                    ),
+                    Padding(
+                      padding: EdgeInsets.only(top: 8.0.sp),
+                      child: ClipRRect(
+                        child: SizedBox(
+                          height: 11,
+                          child: Stack(
+                            children: [
+                              Container(
+                                decoration: BoxDecoration(
+                                  color: subBg02Color,
+                                  borderRadius: BorderRadius.all(
+                                    Radius.circular(50.sp),
+                                  ),
+                                ),
+                              ),
+                              LayoutBuilder(
+                                builder: (context, constraints) {
+                                  return Container(
+                                    width: constraints.maxWidth / (double.parse(controller.badgeLuckMax.value) / controller.selectedBadge.value.luckRate),
+                                    decoration: BoxDecoration(
+                                      color: pinkColor,
+                                      borderRadius: BorderRadius.circular(30),
+                                    ),
+                                  );
+                                },
+                              ),
+                            ],
+                          ),
+                        ),
+                      ),
+                    )
+                  ],
+                ),
+              ),
+            Padding(
+              padding: EdgeInsets.only(top: 40.0.sp),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  StyledText(
+                    '획득 정보',
+                    fontSize: 18,
+                    lineHeight: 18,
+                    fontWeight: 500,
+                  ),
+                  Obx(() {
+                    return Padding(
+                      padding: EdgeInsets.only(top: 12.sp, bottom: 15.sp),
+                      child: Row(children: [
+                        StyledText(
+                          syntheticBadgeController.badgeType.value,
+                          color: lightGrayColor,
+                          fontSize: 14,
+                          fontWeight: 500,
+                        ),
+                        Container(
+                          padding: EdgeInsets.only(left: 5.sp),
+                          child: StyledText(
+                            '·',
+                            fontSize: 14,
+                            fontWeight: 500,
+                            color: lightGrayColor,
+                          ),
+                        ),
+                        Container(
+                          padding: EdgeInsets.only(left: 5.sp),
+                          child: StyledText(
+                            formatDate(controller.getBadgeDate.value),
+                            fontSize: 14,
+                            fontWeight: 500,
+                            color: lightGrayColor,
+                          ),
+                        ),
+                      ]),
+                    );
+                  }),
+                ],
+              ),
+            ),
           ],
         ),
       ),

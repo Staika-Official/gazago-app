@@ -10,8 +10,8 @@ class InventoryBadgeListModel {
   int level;
   String state;
   String? imageUrl;
-  num rewardRate;
-  num luckRate;
+  double rewardRate;
+  double luckRate;
   String? name;
   String issueType;
   String? issueEndedTime;

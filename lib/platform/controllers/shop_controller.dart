@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:gaza_go/constants/routes.dart';
 import 'package:gaza_go/platform/controllers/wallet_master_controller.dart';
+import 'package:gaza_go/platform/firebase/remote_config.dart';
+import 'package:gaza_go/platform/models/inventory_item_stat_model.dart';
 import 'package:gaza_go/platform/models/shop_item_model.dart';
 import 'package:gaza_go/platform/models/shop_item_purchase_response_model.dart';
 import 'package:gaza_go/platform/services/shop_service.dart';
@@ -56,23 +58,29 @@ class ShopController extends GetxController {
     return RxList(itemList);
   }
 
-  Rx<ShopItemModel> selectedItem = Rx(
-    ShopItemModel(
-      id: -1,
-      name: '',
-      itemImageUrl: '',
-      itemCategory: '',
-      itemGrade: '',
-      toRewardRate: 0,
-      fromRewardRate: 0,
-      toAbrasionRate: 0,
-      fromAbrasionRate: 0,
-      toStaminaReduceRate: 0,
-      fromStaminaReduceRate: 0,
-      price: 0,
-      description: '',
-    ),
-  );
+  Rx<ShopItemModel> selectedItem = Rx(ShopItemModel(
+    id: -1,
+    name: '',
+    itemImageUrl: '',
+    itemCategory: '',
+    itemGrade: '',
+    toRewardRate: 0,
+    fromRewardRate: 0,
+    toAbrasionRate: 0,
+    fromAbrasionRate: 0,
+    toStaminaReduceRate: 0,
+    fromStaminaReduceRate: 0,
+    minGoProfit: 0,
+    maxGoProfit: 0,
+    minDurability: 0,
+    maxDurability: 0,
+    minStamina: 0,
+    maxStamina: 0,
+    minLuck: 0,
+    maxLuck: 0,
+    price: 0,
+    description: '',
+  ));
 
   Rx<ShopItemPurchaseResponseModel> purchaseCompleteItem = Rx(
     ShopItemPurchaseResponseModel(
@@ -88,8 +96,19 @@ class ShopController extends GetxController {
       rewardRate: 0,
       staminaReduceRate: 0,
       description: '',
+      itemStat: InventoryItemStatModel(
+        goProfit: 0.0,
+        durability: 0.0,
+        stamina: 0.0,
+        luck: 0.0,
+      ),
     ),
   );
+
+  final RxString itemGoMax = RxString('0');
+  final RxString itemDurabilityMax = RxString('0');
+  final RxString itemHealthMax = RxString('0');
+  final RxString itemLuckMax = RxString('0');
 
   @override
   void onInit() {
@@ -100,10 +119,18 @@ class ShopController extends GetxController {
 
   Future<void> initController() async {
     getShopItemsList();
+    getItemMaxValue();
   }
 
   Future<void> refreshController() async {
     getShopItemsList();
+  }
+
+  void getItemMaxValue() {
+    itemGoMax.value = getConfig(dataType: ConfigType.string, configKey: 'item_go_max');
+    itemDurabilityMax.value = getConfig(dataType: ConfigType.string, configKey: 'item_durability_max');
+    itemHealthMax.value = getConfig(dataType: ConfigType.string, configKey: 'item_health_max');
+    itemLuckMax.value = getConfig(dataType: ConfigType.string, configKey: 'item_luck_max');
   }
 
   void toItemDetail(int itemId) async {

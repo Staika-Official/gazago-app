@@ -47,7 +47,7 @@ class ShopItems extends StatelessWidget {
                           crossAxisAlignment: CrossAxisAlignment.center,
                           children: [
                             Padding(
-                              padding: EdgeInsets.all(10.0.sp),
+                              padding: EdgeInsets.symmetric(horizontal: 20.0.sp, vertical: 20.0.sp),
                               child: item.itemImageUrl != null
                                   ? AspectRatio(
                                       aspectRatio: 1.5,
@@ -78,71 +78,93 @@ class ShopItems extends StatelessWidget {
                                 child: Row(
                                   mainAxisAlignment: MainAxisAlignment.center,
                                   children: [
-                                    Padding(
-                                      padding: const EdgeInsets.symmetric(horizontal: 4),
-                                      child: Row(
-                                        children: [
-                                          CircleAvatar(
-                                            radius: 7,
-                                            backgroundColor: skyBlueColor,
-                                            child: iconShopReward,
-                                          ),
-                                          Padding(
-                                            padding: EdgeInsets.only(left: 3.0.sp),
-                                            child: StyledText(
-                                              '${formatDecimalPlaces(item.fromRewardRate, 0)}-${formatDecimalPlaces(item.toRewardRate, 0)}',
-                                              fontSize: 12,
-                                              fontWeight: 600,
-                                              color: skyBlueColor,
+                                    if (item.maxGoProfit > 0)
+                                      Padding(
+                                        padding: const EdgeInsets.symmetric(horizontal: 4),
+                                        child: Row(
+                                          children: [
+                                            CircleAvatar(
+                                              radius: 6,
+                                              child: iconShopReward,
                                             ),
-                                          ),
-                                        ],
+                                            Padding(
+                                              padding: EdgeInsets.only(left: 3.0.sp),
+                                              child: StyledText(
+                                                '${formatDecimalPlaces(item.minGoProfit, 0)}-${formatDecimalPlaces(item.maxGoProfit, 0)}',
+                                                fontSize: 12,
+                                                fontWeight: 600,
+                                                color: skyBlueColor,
+                                              ),
+                                            ),
+                                          ],
+                                        ),
                                       ),
-                                    ),
-                                    item.itemCategory == 'SHOES'
-                                        ? Padding(
-                                            padding: const EdgeInsets.symmetric(horizontal: 4),
-                                            child: Row(
-                                              children: [
-                                                CircleAvatar(
-                                                  radius: 7,
-                                                  backgroundColor: purpleColor,
-                                                  child: iconShopDurability,
-                                                ),
-                                                Padding(
-                                                  padding: EdgeInsets.only(left: 3.0.sp),
-                                                  child: StyledText(
-                                                    '${formatDecimalPlaces(item.fromAbrasionRate, 0)}-${formatDecimalPlaces(item.toAbrasionRate, 0)}',
-                                                    fontSize: 12,
-                                                    fontWeight: 600,
-                                                    color: purpleColor,
-                                                  ),
-                                                ),
-                                              ],
+                                    if (item.maxDurability > 0)
+                                      Padding(
+                                        padding: const EdgeInsets.symmetric(horizontal: 4),
+                                        child: Row(
+                                          children: [
+                                            CircleAvatar(
+                                              radius: 6,
+                                              backgroundColor: purpleColor,
+                                              child: iconShopDurability,
                                             ),
-                                          )
-                                        : Container(),
-                                    Padding(
-                                      padding: const EdgeInsets.symmetric(horizontal: 4),
-                                      child: Row(
-                                        children: [
-                                          CircleAvatar(
-                                            radius: 7,
-                                            backgroundColor: lightGreenColor,
-                                            child: iconShopStamina,
-                                          ),
-                                          Padding(
-                                            padding: EdgeInsets.only(left: 3.0.sp),
-                                            child: StyledText(
-                                              '${formatDecimalPlaces(item.fromStaminaReduceRate, 0)}-${formatDecimalPlaces(item.toStaminaReduceRate, 0)}',
-                                              fontSize: 12,
-                                              fontWeight: 600,
-                                              color: lightGreenColor,
+                                            Padding(
+                                              padding: EdgeInsets.only(left: 3.0.sp),
+                                              child: StyledText(
+                                                '${formatDecimalPlaces(item.minDurability, 0)}-${formatDecimalPlaces(item.maxDurability, 0)}',
+                                                fontSize: 12,
+                                                fontWeight: 600,
+                                                color: purpleColor,
+                                              ),
                                             ),
-                                          ),
-                                        ],
+                                          ],
+                                        ),
                                       ),
-                                    ),
+                                    if (item.maxStamina > 0)
+                                      Padding(
+                                        padding: const EdgeInsets.symmetric(horizontal: 4),
+                                        child: Row(
+                                          children: [
+                                            CircleAvatar(
+                                              radius: 6,
+                                              backgroundColor: lightGreenColor,
+                                              child: iconShopStamina,
+                                            ),
+                                            Padding(
+                                              padding: EdgeInsets.only(left: 3.0.sp),
+                                              child: StyledText(
+                                                '${formatDecimalPlaces(item.minStamina, 0)}-${formatDecimalPlaces(item.maxStamina, 0)}',
+                                                fontSize: 12,
+                                                fontWeight: 600,
+                                                color: lightGreenColor,
+                                              ),
+                                            ),
+                                          ],
+                                        ),
+                                      ),
+                                    if (item.maxLuck > 0)
+                                      Padding(
+                                        padding: const EdgeInsets.symmetric(horizontal: 4),
+                                        child: Row(
+                                          children: [
+                                            CircleAvatar(
+                                              radius: 6,
+                                              backgroundColor: pinkColor,
+                                              child: iconShopLuck,
+                                            ),
+                                            Padding(
+                                              padding: EdgeInsets.only(left: 3.0.sp),
+                                              child: StyledText(
+                                                '${formatDecimalPlaces(item.minLuck, 0)}-${formatDecimalPlaces(item.maxLuck, 0)}',
+                                                fontSize: 12,
+                                                fontWeight: 600,
+                                                color: pinkColor,
+                                              ),
+                                            ),
+                                          ],
+                                        ),
+                                      ),
                                   ],
                                 ),
                               ),

@@ -92,6 +92,10 @@ SvgPicture iconStaminaReduce = SvgPicture.asset('assets/images/inventory/ico_sta
 SvgPicture iconLucky = SvgPicture.asset('assets/images/inventory/ico_lucky.svg', width: 12.sp, height: 9.sp);
 SvgPicture iconCirclePlus = SvgPicture.asset('assets/images/inventory/ico_circle_plus.svg', width: 37.sp, height: 37.sp);
 SvgPicture iconNoBadge = SvgPicture.asset('assets/images/inventory/ico_no_badge.svg', width: 92.sp, height: 112.sp);
+SvgPicture iconStatDurability = SvgPicture.asset('assets/images/inventory/ico_stat_durability.svg', width: 16.sp, height: 16.sp);
+SvgPicture iconStatStamina = SvgPicture.asset('assets/images/inventory/ico_stat_stamina.svg', width: 16.sp, height: 16.sp);
+SvgPicture iconStatGo = SvgPicture.asset('assets/images/inventory/ico_stat_go.svg', width: 16.sp, height: 16.sp);
+SvgPicture iconStatLuck = SvgPicture.asset('assets/images/inventory/ico_stat_luck.svg', width: 16.sp, height: 16.sp);
 
 //mypage
 SvgPicture iconCamera = SvgPicture.asset('assets/images/common/ico_camera.svg', width: 22.sp, height: 22.sp);
@@ -122,9 +126,31 @@ SvgPicture iconTikCharge = SvgPicture.asset('assets/images/wallet/ico_tik_charge
 SvgPicture iconStikExchange = SvgPicture.asset('assets/images/wallet/ico_stik_exchange.svg', width: 20.sp, height: 16.sp);
 
 //shop
-SvgPicture iconShopStamina = SvgPicture.asset('assets/images/shop/ico_stat_stamina.svg', width: 14.sp, height: 14.sp, color: Colors.black);
-SvgPicture iconShopDurability = SvgPicture.asset('assets/images/shop/ico_stat_durability.svg', width: 14.sp, height: 14.sp, color: Colors.black);
-SvgPicture iconShopReward = SvgPicture.asset('assets/images/shop/ico_go_reward.svg', width: 14.sp, height: 14.sp, color: Colors.black);
+SvgPicture iconShopStamina = SvgPicture.asset(
+  'assets/images/shop/ico_stat_stamina.svg',
+  width: 12.sp,
+  height: 12.sp,
+);
+SvgPicture iconShopDurability = SvgPicture.asset(
+  'assets/images/shop/ico_stat_durability.svg',
+  width: 12.sp,
+  height: 12.sp,
+);
+SvgPicture iconShopDurabilityLight = SvgPicture.asset(
+  'assets/images/shop/ico_stat_durability_light.svg',
+  width: 12.sp,
+  height: 12.sp,
+);
+SvgPicture iconShopReward = SvgPicture.asset(
+  'assets/images/shop/ico_stat_go.svg',
+  width: 12.sp,
+  height: 12.sp,
+);
+SvgPicture iconShopLuck = SvgPicture.asset(
+  'assets/images/shop/ico_stat_luck.svg',
+  width: 12.sp,
+  height: 12.sp,
+);
 SvgPicture iconUp = SvgPicture.asset('assets/images/wallet/ico_up.svg', width: 22.sp, height: 22.sp);
 
 //grade

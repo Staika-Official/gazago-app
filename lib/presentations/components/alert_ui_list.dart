@@ -60,7 +60,7 @@ void showRetryAlert(LoadingController controller) {
 
 void showShoeRepairSlider(InventoryController controller, int feeTikDurability) {
   showAlert(
-    title: '내구도 충전하기',
+    title: '신발 내구도 충전',
     contentWidget: Obx(() {
       return Column(
         children: [
@@ -144,7 +144,7 @@ void showShoeRepairSlider(InventoryController controller, int feeTikDurability) 
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
                 const StyledText(
-                  '신발 내구도 충전 비용 :',
+                  '충전 비용 :',
                   fontSize: 22,
                   fontWeight: 500,
                   color: Color(0xFFA7A7A7),
@@ -189,7 +189,7 @@ void showShoeRepairSlider(InventoryController controller, int feeTikDurability) 
 
 void showRepairStatSlider(ActivityController controller, StatModel stat, int feeTikStamina, int feeTikDurability) {
   showAlert(
-    title: stat.type == 'STAMINA' ? '체력 충전하기' : '내구도 충전하기',
+    title: stat.type == 'STAMINA' ? '체력 충전' : '신발 내구도 충전',
     contentWidget: Obx(() {
       return Column(
         children: [
@@ -284,7 +284,7 @@ void showRepairStatSlider(ActivityController controller, StatModel stat, int fee
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
                 StyledText(
-                  '${stat.type == 'STAMINA' ? '체력 충전 ' : '신발 내구도 충전 '}비용 :',
+                  '${stat.type == 'STAMINA' ? '충전 ' : '충전 '}비용 :',
                   fontSize: 22,
                   fontWeight: 500,
                   color: lightGrayColor,
@@ -986,52 +986,72 @@ void itemPurchaseAlert(ShopController controller, double remainMyTik, tradeSymbo
               ],
             ),
           ),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              const StyledText(
-                'GO 보상율',
-                fontSize: 18,
-                lineHeight: 32,
-                fontWeight: 600,
-              ),
-              StyledText(
-                '${formatDecimalPlaces(controller.selectedItem.value.fromRewardRate, 0)}-${formatDecimalPlaces(controller.selectedItem.value.toRewardRate, 0)}%',
-                fontSize: 18,
-                lineHeight: 32,
-                fontWeight: 400,
-              ),
-            ],
-          ),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              const StyledText(
-                '체력 감소율',
-                fontSize: 18,
-                lineHeight: 32,
-                fontWeight: 600,
-              ),
-              StyledText(
-                '${formatDecimalPlaces(controller.selectedItem.value.fromStaminaReduceRate, 0)}-${formatDecimalPlaces(controller.selectedItem.value.toStaminaReduceRate, 0)}%',
-                fontSize: 18,
-                lineHeight: 32,
-                fontWeight: 400,
-              ),
-            ],
-          ),
-          if (controller.selectedItem.value.itemCategory == 'SHOES')
+          if (controller.selectedItem.value.maxGoProfit > 0)
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 const StyledText(
-                  '내구도 감소율',
+                  'GO 보상',
+                  fontSize: 18,
+                  lineHeight: 32,
+                  fontWeight: 500,
+                ),
+                StyledText(
+                  '${formatDecimalPlaces(controller.selectedItem.value.minGoProfit, 0)}-${formatDecimalPlaces(controller.selectedItem.value.maxGoProfit, 0)}',
+                  fontSize: 18,
+                  lineHeight: 32,
+                  fontWeight: 400,
+                ),
+              ],
+            ),
+          if (controller.selectedItem.value.maxStamina > 0)
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                const StyledText(
+                  '체력',
+                  fontSize: 18,
+                  lineHeight: 32,
+                  fontWeight: 500,
+                ),
+                StyledText(
+                  '${formatDecimalPlaces(controller.selectedItem.value.minStamina, 0)}-${formatDecimalPlaces(controller.selectedItem.value.maxStamina, 0)}',
+                  fontSize: 18,
+                  lineHeight: 32,
+                  fontWeight: 400,
+                ),
+              ],
+            ),
+          if (controller.selectedItem.value.maxDurability > 0)
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                const StyledText(
+                  '내구도',
                   fontSize: 18,
                   lineHeight: 32,
                   fontWeight: 600,
                 ),
                 StyledText(
-                  '${formatDecimalPlaces(controller.selectedItem.value.fromAbrasionRate, 0)}-${formatDecimalPlaces(controller.selectedItem.value.toAbrasionRate, 0)}%',
+                  '${formatDecimalPlaces(controller.selectedItem.value.minDurability, 0)}-${formatDecimalPlaces(controller.selectedItem.value.maxDurability, 0)}',
+                  fontSize: 18,
+                  lineHeight: 32,
+                  fontWeight: 400,
+                ),
+              ],
+            ),
+          if (controller.selectedItem.value.maxLuck > 0)
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                const StyledText(
+                  '행운',
+                  fontSize: 18,
+                  lineHeight: 32,
+                  fontWeight: 600,
+                ),
+                StyledText(
+                  '${formatDecimalPlaces(controller.selectedItem.value.minLuck, 0)}-${formatDecimalPlaces(controller.selectedItem.value.maxLuck, 0)}',
                   fontSize: 18,
                   lineHeight: 32,
                   fontWeight: 400,
@@ -1233,7 +1253,7 @@ void itemPurchaseCompleteAlert(ShopController controller) {
       return Column(
         children: [
           Padding(
-            padding: EdgeInsets.symmetric(vertical: 40.0.sp),
+            padding: EdgeInsets.only(top: 20.0.sp, bottom: 15.sp),
             child: Column(
               children: [
                 SizedBox(
@@ -1255,12 +1275,17 @@ void itemPurchaseCompleteAlert(ShopController controller) {
             ),
           ),
           Padding(
-            padding: EdgeInsets.only(bottom: 10.0.sp),
+            padding: EdgeInsets.only(bottom: 15.0.sp),
             child: Row(
               mainAxisAlignment: MainAxisAlignment.center,
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
                 getItemGradeCircleIcon(controller.purchaseCompleteItem.value.itemGrade),
+                if (controller.selectedItem.value.publishType == 'NFT')
+                  Padding(
+                    padding: EdgeInsets.only(left: 5.0.sp),
+                    child: SvgPicture.asset('assets/images/shop/ico_nft_label.svg'),
+                  ),
                 Padding(
                   padding: EdgeInsets.only(left: 5.0.sp),
                   child: StyledText(
@@ -1288,163 +1313,282 @@ void itemPurchaseCompleteAlert(ShopController controller) {
                 color: deepGrayColor,
               ),
             ),
-          Container(
-            width: double.infinity,
-            margin: EdgeInsets.only(top: controller.purchaseCompleteItem.value.nftId != null ? 20.sp : 10.sp),
-            decoration: BoxDecoration(
-              color: subBg01Color,
-              borderRadius: BorderRadius.all(
-                Radius.circular(10.sp),
-              ),
-            ),
-            child: Padding(
-              padding: EdgeInsets.all(20.0.sp),
-              child: FittedBox(
-                fit: BoxFit.none,
-                child: Row(
-                  mainAxisSize: MainAxisSize.max,
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Padding(
-                      padding: EdgeInsets.only(right: 20.0.sp),
-                      child: Column(
-                        children: [
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              StyledText(
-                                formatDecimalPlaces(controller.purchaseCompleteItem.value.rewardRate, 0),
-                                fontSize: 22,
-                                lineHeight: 26,
-                                fontWeight: 500,
-                                color: skyBlueColor,
-                              ),
-                              StyledText(
-                                '%',
-                                fontSize: 16,
-                                lineHeight: 24,
-                                fontWeight: 500,
-                                color: skyBlueColor,
-                              ),
-                            ],
-                          ),
-                          Padding(
-                            padding: EdgeInsets.only(top: 5.0.sp),
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.center,
+          Padding(
+            padding: EdgeInsets.only(bottom: 20.0.sp),
+            child: Column(
+              children: [
+                if (controller.purchaseCompleteItem.value.itemStat.durability! > 0)
+                  Padding(
+                    padding: EdgeInsets.only(top: 20.0.sp),
+                    child: Column(
+                      children: [
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Row(
                               children: [
+                                iconStatDurability,
                                 Padding(
-                                  padding: EdgeInsets.only(top: 1.0.sp, right: 2.0.sp),
-                                  child: iconGoReward,
-                                ),
-                                StyledText(
-                                  'GO 보상율',
-                                  color: deepGrayColor,
-                                  fontSize: 12,
-                                  lineHeight: 12,
-                                  fontWeight: 600,
-                                  letterSpacing: .2,
+                                  padding: EdgeInsets.only(left: 3.0),
+                                  child: StyledText(
+                                    '내구도',
+                                    fontWeight: 500,
+                                    fontSize: 14,
+                                    lineHeight: 15,
+                                  ),
                                 ),
                               ],
                             ),
+                            StyledText(
+                              formatDecimalPlaces(controller.purchaseCompleteItem.value.itemStat.durability!, 0),
+                              fontSize: 12,
+                              fontWeight: 500,
+                              color: purpleColor,
+                              letterSpacing: -.1,
+                            ),
+                          ],
+                        ),
+                        Padding(
+                          padding: EdgeInsets.only(top: 8.0.sp),
+                          child: ClipRRect(
+                            child: SizedBox(
+                              height: 11,
+                              child: Stack(
+                                children: [
+                                  Container(
+                                    decoration: BoxDecoration(
+                                      color: subBg02Color,
+                                      borderRadius: BorderRadius.all(
+                                        Radius.circular(50.sp),
+                                      ),
+                                    ),
+                                  ),
+                                  LayoutBuilder(
+                                    builder: (context, constraints) {
+                                      return Container(
+                                        width: constraints.maxWidth / (double.parse(controller.itemDurabilityMax.value) / controller.purchaseCompleteItem.value.itemStat.durability!),
+                                        decoration: BoxDecoration(
+                                          color: purpleColor,
+                                          borderRadius: BorderRadius.all(
+                                            Radius.circular(30.sp),
+                                          ),
+                                        ),
+                                      );
+                                    },
+                                  )
+                                ],
+                              ),
+                            ),
                           ),
-                        ],
-                      ),
+                        )
+                      ],
                     ),
-                    if (controller.selectedItem.value.itemCategory == 'SHOES')
-                      Column(
-                        children: [
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              StyledText(
-                                formatDecimalPlaces(controller.purchaseCompleteItem.value.abrasionRate, 0),
-                                fontSize: 22,
-                                lineHeight: 26,
-                                fontWeight: 500,
-                                color: purpleColor,
-                              ),
-                              StyledText(
-                                '%',
-                                fontSize: 16,
-                                lineHeight: 24,
-                                fontWeight: 500,
-                                color: purpleColor,
-                              ),
-                            ],
-                          ),
-                          Padding(
-                            padding: EdgeInsets.only(top: 5.0.sp),
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              crossAxisAlignment: CrossAxisAlignment.center,
+                  ),
+                // 체력
+                if (controller.purchaseCompleteItem.value.itemStat.stamina! > 0)
+                  Padding(
+                    padding: EdgeInsets.only(top: 16.0.sp),
+                    child: Column(
+                      children: [
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Row(
                               children: [
+                                iconStatStamina,
                                 Padding(
-                                  padding: EdgeInsets.only(top: 1.0.sp, right: 5.0.sp),
-                                  child: iconItemAbrasion,
-                                ),
-                                StyledText(
-                                  '내구도 감소율',
-                                  color: deepGrayColor,
-                                  fontSize: 12,
-                                  lineHeight: 12,
-                                  fontWeight: 600,
-                                  letterSpacing: .2,
+                                  padding: EdgeInsets.only(left: 3.0),
+                                  child: StyledText(
+                                    '체력',
+                                    fontWeight: 500,
+                                    fontSize: 14,
+                                    lineHeight: 15,
+                                  ),
                                 ),
                               ],
                             ),
-                          ),
-                        ],
-                      ),
-                    Padding(
-                      padding: EdgeInsets.only(left: 20.0.sp),
-                      child: Column(
-                        children: [
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              StyledText(
-                                formatDecimalPlaces(controller.purchaseCompleteItem.value.staminaReduceRate, 0),
-                                fontSize: 22,
-                                lineHeight: 26,
-                                fontWeight: 500,
-                                color: lightGreenColor,
+                            StyledText(
+                              formatDecimalPlaces(controller.purchaseCompleteItem.value.itemStat.stamina!, 0),
+                              fontSize: 12,
+                              fontWeight: 500,
+                              color: lightGreenColor,
+                              letterSpacing: -.1,
+                            ),
+                          ],
+                        ),
+                        Padding(
+                          padding: EdgeInsets.only(top: 8.0.sp),
+                          child: ClipRRect(
+                            child: SizedBox(
+                              height: 11,
+                              child: Stack(
+                                children: [
+                                  Container(
+                                    decoration: BoxDecoration(
+                                      color: subBg02Color,
+                                      borderRadius: BorderRadius.all(
+                                        Radius.circular(50.sp),
+                                      ),
+                                    ),
+                                  ),
+                                  LayoutBuilder(
+                                    builder: (context, constraints) {
+                                      return Container(
+                                        width: constraints.maxWidth / (double.parse(controller.itemHealthMax.value) / controller.purchaseCompleteItem.value.itemStat.stamina!),
+                                        decoration: BoxDecoration(
+                                          color: lightGreenColor,
+                                          borderRadius: BorderRadius.all(
+                                            Radius.circular(30.sp),
+                                          ),
+                                        ),
+                                      );
+                                    },
+                                  )
+                                ],
                               ),
-                              StyledText(
-                                '%',
-                                fontSize: 16,
-                                lineHeight: 24,
-                                fontWeight: 500,
-                                color: lightGreenColor,
-                              ),
-                            ],
-                          ),
-                          Padding(
-                            padding: EdgeInsets.only(top: 5.0.sp),
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: [
-                                Padding(
-                                  padding: EdgeInsets.only(top: 1.0.sp, right: 2.0.sp),
-                                  child: iconStaminaReduce,
-                                ),
-                                StyledText(
-                                  '체력 감소율',
-                                  color: deepGrayColor,
-                                  fontSize: 12,
-                                  lineHeight: 12,
-                                  fontWeight: 600,
-                                  letterSpacing: .2,
-                                ),
-                              ],
                             ),
                           ),
-                        ],
-                      ),
+                        )
+                      ],
                     ),
-                  ],
-                ),
-              ),
+                  ),
+                // Go 보상
+                if (controller.purchaseCompleteItem.value.itemStat.goProfit! > 0)
+                  Padding(
+                    padding: EdgeInsets.only(top: 16.0.sp),
+                    child: Column(
+                      children: [
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Row(
+                              children: [
+                                iconStatGo,
+                                Padding(
+                                  padding: EdgeInsets.only(left: 3.0),
+                                  child: StyledText(
+                                    'GO 보상',
+                                    fontWeight: 500,
+                                    fontSize: 14,
+                                    lineHeight: 15,
+                                  ),
+                                ),
+                              ],
+                            ),
+                            StyledText(
+                              formatDecimalPlaces(controller.purchaseCompleteItem.value.itemStat.goProfit!, 0),
+                              fontSize: 12,
+                              fontWeight: 500,
+                              color: skyBlueColor,
+                              letterSpacing: -.1,
+                            ),
+                          ],
+                        ),
+                        Padding(
+                          padding: EdgeInsets.only(top: 8.0.sp),
+                          child: ClipRRect(
+                            child: SizedBox(
+                              height: 11,
+                              child: Stack(
+                                children: [
+                                  Container(
+                                    decoration: BoxDecoration(
+                                      color: subBg02Color,
+                                      borderRadius: BorderRadius.all(
+                                        Radius.circular(50.sp),
+                                      ),
+                                    ),
+                                  ),
+                                  LayoutBuilder(
+                                    builder: (context, constraints) {
+                                      return Container(
+                                        width: constraints.maxWidth / (double.parse(controller.itemGoMax.value) / controller.purchaseCompleteItem.value.itemStat.goProfit!),
+                                        decoration: BoxDecoration(
+                                          color: skyBlueColor,
+                                          borderRadius: BorderRadius.all(
+                                            Radius.circular(30.sp),
+                                          ),
+                                        ),
+                                      );
+                                    },
+                                  )
+                                ],
+                              ),
+                            ),
+                          ),
+                        )
+                      ],
+                    ),
+                  ),
+                // 행운
+                if (controller.purchaseCompleteItem.value.itemStat.luck! > 0)
+                  Padding(
+                    padding: EdgeInsets.only(top: 16.0.sp),
+                    child: Column(
+                      children: [
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Row(
+                              children: [
+                                iconStatLuck,
+                                Padding(
+                                  padding: EdgeInsets.only(left: 3.0),
+                                  child: StyledText(
+                                    '행운',
+                                    fontWeight: 500,
+                                    fontSize: 14,
+                                    lineHeight: 15,
+                                  ),
+                                ),
+                              ],
+                            ),
+                            StyledText(
+                              formatDecimalPlaces(controller.purchaseCompleteItem.value.itemStat.luck!, 0),
+                              fontSize: 12,
+                              fontWeight: 500,
+                              color: pinkColor,
+                              letterSpacing: -.1,
+                            ),
+                          ],
+                        ),
+                        Padding(
+                          padding: EdgeInsets.only(top: 8.0.sp),
+                          child: ClipRRect(
+                            child: SizedBox(
+                              height: 11,
+                              child: Stack(
+                                children: [
+                                  Container(
+                                    decoration: BoxDecoration(
+                                      color: subBg02Color,
+                                      borderRadius: BorderRadius.all(
+                                        Radius.circular(50.sp),
+                                      ),
+                                    ),
+                                  ),
+                                  LayoutBuilder(
+                                    builder: (context, constraints) {
+                                      return Container(
+                                        width: constraints.maxWidth / (double.parse(controller.itemLuckMax.value) / controller.purchaseCompleteItem.value.itemStat.luck!),
+                                        decoration: BoxDecoration(
+                                          color: pinkColor,
+                                          borderRadius: BorderRadius.all(
+                                            Radius.circular(30.sp),
+                                          ),
+                                        ),
+                                      );
+                                    },
+                                  )
+                                ],
+                              ),
+                            ),
+                          ),
+                        )
+                      ],
+                    ),
+                  ),
+              ],
             ),
           ),
           Padding(

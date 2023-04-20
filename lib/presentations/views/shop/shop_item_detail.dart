@@ -19,317 +19,586 @@ class ShopItemDetail extends StatelessWidget {
   Widget build(BuildContext context) {
     ShopController controller = Get.find();
     return Scaffold(
-      appBar: const SecondaryAppbar(isShowBackButton: true),
+      appBar: const SecondaryAppbar(
+        isShowBackButton: true,
+        isShowPreferencesButton: false,
+      ),
       backgroundColor: subBg01Color,
       body: Obx(() {
         return SizedBox(
           child: Stack(
+            fit: StackFit.expand,
             children: [
-              Padding(
-                padding: EdgeInsets.symmetric(horizontal: 22.0.sp),
-                child: Column(
-                  mainAxisSize: MainAxisSize.max,
-                  children: [
-                    Container(
-                      decoration: BoxDecoration(
-                        color: subBg02Color,
-                        border: Border.all(
-                          width: 2.sp,
-                          color: Colors.black,
-                        ),
-                        borderRadius: BorderRadius.all(
-                          Radius.circular(14.sp),
-                        ),
-                        boxShadow: [
-                          BoxShadow(
+              SingleChildScrollView(
+                child: Padding(
+                  padding: EdgeInsets.only(left: 22.0.sp, right: 22.0.sp),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    mainAxisSize: MainAxisSize.max,
+                    children: [
+                      Container(
+                        decoration: BoxDecoration(
+                          color: subBg02Color,
+                          border: Border.all(
+                            width: 2.sp,
                             color: Colors.black,
-                            offset: Offset(0, 1.sp),
-                            blurRadius: 1.0,
-                            spreadRadius: 0.0,
                           ),
-                        ],
-                      ),
-                      child: SizedBox(
-                        child: Stack(
-                          children: [
-                            Positioned(
-                              right: 32.sp,
-                              top: 0,
-                              child: getItemGradeIcon(controller.selectedItem.value.itemGrade),
+                          borderRadius: BorderRadius.all(
+                            Radius.circular(14.sp),
+                          ),
+                          boxShadow: [
+                            BoxShadow(
+                              color: Colors.black,
+                              offset: Offset(0, 1.sp),
+                              blurRadius: 1.0,
+                              spreadRadius: 0.0,
                             ),
-                            Padding(
-                              padding: EdgeInsets.symmetric(horizontal: 12.sp, vertical: 20.0.sp),
-                              child: Obx(
-                                () {
-                                  return Column(
-                                    children: [
-                                      Padding(
-                                        padding: EdgeInsets.only(top: 5.0.sp, bottom: 10.sp),
-                                        child: Column(
-                                          children: [
-                                            // Image(
-                                            //   image: AssetImage(controller.selectedItem.value.itemImageUrl!),
-                                            //   width: 150.sp,
-                                            //   fit: BoxFit.fill,
-                                            // ),
+                          ],
+                        ),
+                        child: SizedBox(
+                          child: Stack(
+                            children: [
+                              Positioned(
+                                right: 32.sp,
+                                top: 0,
+                                child: getItemGradeIcon(controller.selectedItem.value.itemGrade),
+                              ),
+                              Padding(
+                                padding: EdgeInsets.symmetric(horizontal: 12.sp, vertical: 20.0.sp),
+                                child: Obx(
+                                  () {
+                                    return Column(
+                                      children: [
+                                        Padding(
+                                          padding: EdgeInsets.only(top: 5.0.sp, bottom: 10.sp),
+                                          child: Column(
+                                            children: [
+                                              // Image(
+                                              //   image: AssetImage(controller.selectedItem.value.itemImageUrl!),
+                                              //   width: 150.sp,
+                                              //   fit: BoxFit.fill,
+                                              // ),
 
-                                            Container(
-                                              width: double.infinity,
-                                              child: Stack(
-                                                children: [
-                                                  if (controller.selectedItem.value.publishType == 'NFT')
-                                                    Positioned.fill(left: 24.sp, right: 24.sp, child: SvgPicture.asset('assets/images/shop/ico_nft_detail.svg')),
-                                                  Center(
-                                                    child: SizedBox(
-                                                      width: 150.sp,
-                                                      child: controller.selectedItem.value.itemImageUrl!.contains('.svg')
-                                                          ? SvgPicture.network(
-                                                              fit: BoxFit.contain,
-                                                              controller.selectedItem.value.itemImageUrl!,
-                                                              placeholderBuilder: (BuildContext context) => Container(padding: const EdgeInsets.all(30.0), child: const CircularProgressIndicator()),
-                                                            )
-                                                          : CachedNetworkImage(
-                                                              imageUrl: controller.selectedItem.value.itemImageUrl!,
-                                                              fit: BoxFit.fitWidth,
-                                                              placeholder: (context, url) => const Center(child: SizedBox.square(dimension: 40, child: CircularProgressIndicator())),
-                                                              errorWidget: (context, url, error) => Image.asset("assets/images/@temp_shoes.png"),
-                                                            ),
+                                              Container(
+                                                width: double.infinity,
+                                                child: Stack(
+                                                  children: [
+                                                    if (controller.selectedItem.value.publishType == 'NFT')
+                                                      Positioned.fill(left: 24.sp, right: 24.sp, child: SvgPicture.asset('assets/images/shop/ico_nft_detail.svg')),
+                                                    Padding(
+                                                      padding: EdgeInsets.symmetric(vertical: 20.0.sp),
+                                                      child: Center(
+                                                        child: SizedBox(
+                                                          width: 150.sp,
+                                                          child: controller.selectedItem.value.itemImageUrl!.contains('.svg')
+                                                              ? SvgPicture.network(
+                                                                  fit: BoxFit.contain,
+                                                                  controller.selectedItem.value.itemImageUrl!,
+                                                                  placeholderBuilder: (BuildContext context) =>
+                                                                      Container(padding: const EdgeInsets.all(30.0), child: const CircularProgressIndicator()),
+                                                                )
+                                                              : CachedNetworkImage(
+                                                                  imageUrl: controller.selectedItem.value.itemImageUrl!,
+                                                                  fit: BoxFit.fitWidth,
+                                                                  placeholder: (context, url) => const Center(child: SizedBox.square(dimension: 40, child: CircularProgressIndicator())),
+                                                                  errorWidget: (context, url, error) => Image.asset("assets/images/@temp_shoes.png"),
+                                                                ),
+                                                        ),
+                                                      ),
                                                     ),
-                                                  ),
-                                                ],
+                                                  ],
+                                                ),
                                               ),
-                                            ),
-                                          ],
-                                        ),
-                                      ),
-                                      Padding(
-                                        padding: const EdgeInsets.only(bottom: 15.0),
-                                        child: Row(
-                                          crossAxisAlignment: CrossAxisAlignment.center,
-                                          mainAxisAlignment: MainAxisAlignment.center,
-                                          children: [
-                                            if (controller.selectedItem.value.publishType == 'NFT')
-                                              Padding(
-                                                padding: EdgeInsets.only(right: 5.0.sp),
-                                                child: SvgPicture.asset('assets/images/shop/ico_nft_label.svg'),
-                                              ),
-                                            StyledText(
-                                              controller.selectedItem.value.name,
-                                              fontSize: 18,
-                                              lineHeight: 19,
-                                              fontWeight: 500,
-                                            ),
-                                          ],
-                                        ),
-                                      ),
-                                      Container(
-                                        width: double.infinity,
-                                        height: 85.sp,
-                                        margin: EdgeInsets.only(top: 5.sp),
-                                        decoration: BoxDecoration(
-                                          color: subBg01Color,
-                                          borderRadius: BorderRadius.all(
-                                            Radius.circular(10.sp),
+                                            ],
                                           ),
                                         ),
-                                        child: Padding(
-                                          padding: EdgeInsets.all(20.0.sp),
-                                          child: FittedBox(
-                                            fit: BoxFit.none,
-                                            child: Row(
-                                              mainAxisSize: MainAxisSize.min,
-                                              crossAxisAlignment: CrossAxisAlignment.start,
-                                              children: [
+                                        Padding(
+                                          padding: const EdgeInsets.only(bottom: 15.0),
+                                          child: Row(
+                                            crossAxisAlignment: CrossAxisAlignment.center,
+                                            mainAxisAlignment: MainAxisAlignment.center,
+                                            children: [
+                                              if (controller.selectedItem.value.publishType == 'NFT')
                                                 Padding(
-                                                  padding: EdgeInsets.only(right: 20.0.sp),
-                                                  child: Column(
-                                                    children: [
-                                                      Row(
-                                                        mainAxisAlignment: MainAxisAlignment.center,
-                                                        children: [
-                                                          StyledText(
-                                                            '${formatDecimalPlaces(controller.selectedItem.value.fromRewardRate, 0)}-${formatDecimalPlaces(controller.selectedItem.value.toRewardRate, 0)}',
-                                                            fontSize: 22,
-                                                            lineHeight: 26,
-                                                            fontWeight: 500,
-                                                            letterSpacing: .05,
-                                                            color: skyBlueColor,
-                                                          ),
-                                                          StyledText(
-                                                            '%',
-                                                            fontSize: 14,
-                                                            lineHeight: 24,
-                                                            fontWeight: 500,
-                                                            letterSpacing: .05,
-                                                            color: skyBlueColor,
-                                                          ),
-                                                        ],
-                                                      ),
-                                                      Padding(
-                                                        padding: EdgeInsets.only(top: 5.0.sp, right: 2.sp),
-                                                        child: Row(
-                                                          mainAxisAlignment: MainAxisAlignment.center,
-                                                          children: [
-                                                            Padding(
-                                                              padding: EdgeInsets.only(top: 1.0.sp, right: 2.0.sp),
-                                                              child: iconGoReward,
-                                                            ),
-                                                            StyledText(
-                                                              'GO 보상율',
-                                                              color: deepGrayColor,
-                                                              fontSize: 12,
-                                                              lineHeight: 12,
-                                                              fontWeight: 600,
-                                                              letterSpacing: .2,
-                                                            ),
-                                                          ],
-                                                        ),
-                                                      ),
-                                                    ],
-                                                  ),
+                                                  padding: EdgeInsets.only(right: 5.0.sp),
+                                                  child: SvgPicture.asset('assets/images/shop/ico_nft_label.svg'),
                                                 ),
-                                                if (controller.selectedItem.value.itemCategory == 'SHOES')
-                                                  Column(
-                                                    children: [
-                                                      Row(
-                                                        mainAxisAlignment: MainAxisAlignment.center,
-                                                        children: [
-                                                          StyledText(
-                                                            '${formatDecimalPlaces(controller.selectedItem.value.fromAbrasionRate, 0)}-${formatDecimalPlaces(controller.selectedItem.value.toAbrasionRate, 0)}',
-                                                            fontSize: 22,
-                                                            lineHeight: 26,
-                                                            fontWeight: 500,
-                                                            letterSpacing: .05,
-                                                            color: purpleColor,
-                                                          ),
-                                                          StyledText(
-                                                            '%',
-                                                            fontSize: 14,
-                                                            lineHeight: 24,
-                                                            fontWeight: 500,
-                                                            letterSpacing: .05,
-                                                            color: purpleColor,
-                                                          ),
-                                                        ],
-                                                      ),
-                                                      Padding(
-                                                        padding: EdgeInsets.only(top: 5.0.sp, right: 2.0.sp),
-                                                        child: Row(
-                                                          mainAxisAlignment: MainAxisAlignment.center,
-                                                          crossAxisAlignment: CrossAxisAlignment.center,
-                                                          children: [
-                                                            Padding(
-                                                              padding: EdgeInsets.only(top: 1.0.sp, right: 4.0.sp),
-                                                              child: iconItemAbrasion,
-                                                            ),
-                                                            StyledText(
-                                                              '내구도 감소율',
-                                                              color: deepGrayColor,
-                                                              fontSize: 12,
-                                                              lineHeight: 12,
-                                                              fontWeight: 600,
-                                                              letterSpacing: .2,
-                                                            ),
-                                                          ],
-                                                        ),
-                                                      ),
-                                                    ],
-                                                  ),
-                                                Padding(
-                                                  padding: EdgeInsets.only(left: 20.0.sp),
-                                                  child: Column(
-                                                    children: [
-                                                      Row(
-                                                        mainAxisAlignment: MainAxisAlignment.center,
-                                                        children: [
-                                                          StyledText(
-                                                            '${formatDecimalPlaces(controller.selectedItem.value.fromStaminaReduceRate, 0)}-${formatDecimalPlaces(controller.selectedItem.value.toStaminaReduceRate, 0)}',
-                                                            fontSize: 22,
-                                                            lineHeight: 26,
-                                                            letterSpacing: .05,
-                                                            fontWeight: 500,
-                                                            color: lightGreenColor,
-                                                          ),
-                                                          StyledText(
-                                                            '%',
-                                                            fontSize: 14,
-                                                            lineHeight: 24,
-                                                            letterSpacing: .05,
-                                                            fontWeight: 500,
-                                                            color: lightGreenColor,
-                                                          ),
-                                                        ],
-                                                      ),
-                                                      Padding(
-                                                        padding: EdgeInsets.only(top: 5.0.sp, right: 2.0.sp),
-                                                        child: Row(
-                                                          mainAxisAlignment: MainAxisAlignment.center,
-                                                          children: [
-                                                            Padding(
-                                                              padding: EdgeInsets.only(top: 1.0.sp, right: 2.0.sp),
-                                                              child: iconStaminaReduce,
-                                                            ),
-                                                            StyledText(
-                                                              '체력 감소율',
-                                                              color: deepGrayColor,
-                                                              fontSize: 12,
-                                                              lineHeight: 12,
-                                                              fontWeight: 600,
-                                                              letterSpacing: .2,
-                                                            ),
-                                                          ],
-                                                        ),
-                                                      ),
-                                                    ],
-                                                  ),
-                                                ),
-                                              ],
-                                            ),
+                                              StyledText(
+                                                controller.selectedItem.value.name,
+                                                fontSize: 18,
+                                                lineHeight: 19,
+                                                fontWeight: 500,
+                                              ),
+                                            ],
                                           ),
                                         ),
-                                      ),
+                                      ],
+                                    );
+                                  },
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                      ),
+                      Padding(
+                        padding: EdgeInsets.only(top: 25.0.sp),
+                        child: StyledText(
+                          '능력치',
+                          fontWeight: 600,
+                          fontSize: 18,
+                          lineHeight: 18,
+                        ),
+                      ),
+                      // Go 보상
+                      if (controller.selectedItem.value.maxGoProfit > 0)
+                        Padding(
+                          padding: EdgeInsets.only(top: 16.0.sp),
+                          child: Column(
+                            children: [
+                              Row(
+                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                children: [
+                                  Row(
+                                    children: [
+                                      iconStatGo,
                                       Padding(
-                                        padding: EdgeInsets.only(top: 30.sp, bottom: 20.sp),
-                                        child: Column(
-                                          crossAxisAlignment: CrossAxisAlignment.start,
-                                          children: [
-                                            Padding(
-                                              padding: EdgeInsets.only(bottom: 10.sp),
-                                              child: StyledText(
-                                                '제품 설명',
-                                                color: deepGrayColor,
-                                                fontSize: 14,
-                                              ),
-                                            ),
-                                            controller.selectedItem.value.description != null
-                                                ? SizedBox(
-                                                    height: 100.sp,
-                                                    child: ListView(
-                                                      children: [
-                                                        StyledText(
-                                                          controller.selectedItem.value.description!,
-                                                          color: const Color(0xFFE2E2E2),
-                                                          fontWeight: 500,
-                                                          fontSize: 14,
-                                                          lineHeight: 20,
-                                                        ),
-                                                      ],
-                                                    ),
-                                                  )
-                                                : Container(),
-                                          ],
+                                        padding: EdgeInsets.only(left: 8.0),
+                                        child: StyledText(
+                                          'GO 보상',
+                                          fontWeight: 500,
+                                          fontSize: 14,
+                                          lineHeight: 15,
                                         ),
                                       ),
                                     ],
-                                  );
-                                },
+                                  ),
+                                  Row(
+                                    children: [
+                                      StyledText(
+                                        formatDecimalPlaces(controller.selectedItem.value.minGoProfit, 0),
+                                        fontSize: 12,
+                                        fontWeight: 500,
+                                        color: skyBlueColor,
+                                        letterSpacing: -.1,
+                                      ),
+                                      StyledText(
+                                        ' - ',
+                                        fontSize: 12,
+                                        fontWeight: 500,
+                                        color: skyBlueColor,
+                                        letterSpacing: -.1,
+                                      ),
+                                      StyledText(
+                                        formatDecimalPlaces(controller.selectedItem.value.maxGoProfit, 0),
+                                        fontSize: 12,
+                                        fontWeight: 500,
+                                        color: skyBlueColor,
+                                        letterSpacing: -.1,
+                                      ),
+                                    ],
+                                  ),
+                                ],
                               ),
-                            )
+                              Padding(
+                                padding: EdgeInsets.only(top: 8.0.sp),
+                                child: ClipRRect(
+                                  child: SizedBox(
+                                    height: 11,
+                                    child: Stack(
+                                      children: [
+                                        Container(
+                                          decoration: BoxDecoration(
+                                            color: subBg02Color,
+                                            borderRadius: BorderRadius.all(
+                                              Radius.circular(50.sp),
+                                            ),
+                                          ),
+                                        ),
+                                        LayoutBuilder(
+                                          builder: (context, constraints) {
+                                            return Container(
+                                              width: controller.selectedItem.value.minGoProfit < 6
+                                                  ? 6
+                                                  : constraints.maxWidth / (double.parse(controller.itemGoMax.value) / controller.selectedItem.value.minGoProfit),
+                                              decoration: BoxDecoration(
+                                                color: skyBlueColor,
+                                                borderRadius: BorderRadius.only(topLeft: Radius.circular(30.sp), bottomLeft: Radius.circular(30.sp)),
+                                              ),
+                                            );
+                                          },
+                                        ),
+                                        LayoutBuilder(
+                                          builder: (context, constraints) {
+                                            return Container(
+                                              width: controller.selectedItem.value.maxGoProfit < 12
+                                                  ? 12
+                                                  : constraints.maxWidth / (double.parse(controller.itemGoMax.value) / controller.selectedItem.value.maxGoProfit),
+                                              decoration: BoxDecoration(
+                                                color: skyBlueColor.withOpacity(.5),
+                                                borderRadius: BorderRadius.all(
+                                                  Radius.circular(30.sp),
+                                                ),
+                                              ),
+                                            );
+                                          },
+                                        )
+                                      ],
+                                    ),
+                                  ),
+                                ),
+                              )
+                            ],
+                          ),
+                        ),
+                      // 신발 내구도
+                      if (controller.selectedItem.value.maxDurability > 0)
+                        Padding(
+                          padding: EdgeInsets.only(top: 20.0.sp),
+                          child: Column(
+                            children: [
+                              Row(
+                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                children: [
+                                  Row(
+                                    children: [
+                                      iconStatDurability,
+                                      Padding(
+                                        padding: EdgeInsets.only(left: 8.0),
+                                        child: StyledText(
+                                          '내구도',
+                                          fontWeight: 500,
+                                          fontSize: 14,
+                                          lineHeight: 15,
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                  Row(
+                                    children: [
+                                      StyledText(
+                                        formatDecimalPlaces(controller.selectedItem.value.minDurability, 0),
+                                        fontSize: 12,
+                                        fontWeight: 500,
+                                        color: purpleColor,
+                                        letterSpacing: -.1,
+                                      ),
+                                      StyledText(
+                                        ' - ',
+                                        fontSize: 12,
+                                        fontWeight: 500,
+                                        color: purpleColor,
+                                        letterSpacing: -.1,
+                                      ),
+                                      StyledText(
+                                        formatDecimalPlaces(controller.selectedItem.value.maxDurability, 0),
+                                        fontSize: 12,
+                                        fontWeight: 500,
+                                        color: purpleColor,
+                                        letterSpacing: -.1,
+                                      ),
+                                    ],
+                                  ),
+                                ],
+                              ),
+                              Padding(
+                                padding: EdgeInsets.only(top: 8.0.sp),
+                                child: ClipRRect(
+                                  child: SizedBox(
+                                    height: 11,
+                                    child: Stack(
+                                      children: [
+                                        Container(
+                                          decoration: BoxDecoration(
+                                            color: subBg02Color,
+                                            borderRadius: BorderRadius.all(
+                                              Radius.circular(50.sp),
+                                            ),
+                                          ),
+                                        ),
+                                        LayoutBuilder(
+                                          builder: (context, constraints) {
+                                            return Container(
+                                              width: controller.selectedItem.value.minDurability < 6
+                                                  ? 6
+                                                  : constraints.maxWidth / (double.parse(controller.itemDurabilityMax.value) / controller.selectedItem.value.minDurability),
+                                              decoration: BoxDecoration(
+                                                color: purpleColor,
+                                                borderRadius: BorderRadius.only(topLeft: Radius.circular(30.sp), bottomLeft: Radius.circular(30.sp)),
+                                              ),
+                                            );
+                                          },
+                                        ),
+                                        LayoutBuilder(
+                                          builder: (context, constraints) {
+                                            return Container(
+                                              width: controller.selectedItem.value.maxDurability < 12
+                                                  ? 12
+                                                  : constraints.maxWidth / (double.parse(controller.itemDurabilityMax.value) / controller.selectedItem.value.maxDurability),
+                                              decoration: BoxDecoration(
+                                                color: purpleColor.withOpacity(.5),
+                                                borderRadius: BorderRadius.all(
+                                                  Radius.circular(30.sp),
+                                                ),
+                                              ),
+                                            );
+                                          },
+                                        )
+                                      ],
+                                    ),
+                                  ),
+                                ),
+                              )
+                            ],
+                          ),
+                        ),
+                      // 체력
+                      if (controller.selectedItem.value.maxStamina > 0)
+                        Padding(
+                          padding: EdgeInsets.only(top: 16.0.sp),
+                          child: Column(
+                            children: [
+                              Row(
+                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                children: [
+                                  Row(
+                                    children: [
+                                      iconStatStamina,
+                                      Padding(
+                                        padding: EdgeInsets.only(left: 8.0),
+                                        child: StyledText(
+                                          '체력',
+                                          fontWeight: 500,
+                                          fontSize: 14,
+                                          lineHeight: 15,
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                  Row(
+                                    children: [
+                                      StyledText(
+                                        formatDecimalPlaces(controller.selectedItem.value.minStamina, 0),
+                                        fontSize: 12,
+                                        fontWeight: 500,
+                                        color: lightGreenColor,
+                                        letterSpacing: -.1,
+                                      ),
+                                      StyledText(
+                                        ' - ',
+                                        fontSize: 12,
+                                        fontWeight: 500,
+                                        color: lightGreenColor,
+                                        letterSpacing: -.1,
+                                      ),
+                                      StyledText(
+                                        formatDecimalPlaces(controller.selectedItem.value.maxStamina, 0),
+                                        fontSize: 12,
+                                        fontWeight: 500,
+                                        color: lightGreenColor,
+                                        letterSpacing: -.1,
+                                      ),
+                                    ],
+                                  ),
+                                ],
+                              ),
+                              Padding(
+                                padding: EdgeInsets.only(top: 8.0.sp),
+                                child: ClipRRect(
+                                  child: SizedBox(
+                                    height: 11,
+                                    child: Stack(
+                                      children: [
+                                        Container(
+                                          decoration: BoxDecoration(
+                                            color: subBg02Color,
+                                            borderRadius: BorderRadius.all(
+                                              Radius.circular(50.sp),
+                                            ),
+                                          ),
+                                        ),
+                                        LayoutBuilder(
+                                          builder: (context, constraints) {
+                                            return Container(
+                                              width: controller.selectedItem.value.minStamina < 6
+                                                  ? 6
+                                                  : constraints.maxWidth / (double.parse(controller.itemHealthMax.value) / controller.selectedItem.value.minStamina),
+                                              decoration: BoxDecoration(
+                                                color: lightGreenColor,
+                                                borderRadius: BorderRadius.only(topLeft: Radius.circular(30.sp), bottomLeft: Radius.circular(30.sp)),
+                                              ),
+                                            );
+                                          },
+                                        ),
+                                        LayoutBuilder(
+                                          builder: (context, constraints) {
+                                            return Container(
+                                              width: controller.selectedItem.value.maxStamina < 12
+                                                  ? 12
+                                                  : constraints.maxWidth / (double.parse(controller.itemHealthMax.value) / controller.selectedItem.value.maxStamina),
+                                              decoration: BoxDecoration(
+                                                color: lightGreenColor.withOpacity(.5),
+                                                borderRadius: BorderRadius.all(
+                                                  Radius.circular(30.sp),
+                                                ),
+                                              ),
+                                            );
+                                          },
+                                        )
+                                      ],
+                                    ),
+                                  ),
+                                ),
+                              )
+                            ],
+                          ),
+                        ),
+
+                      // 행운
+                      if (controller.selectedItem.value.maxLuck > 0)
+                        Padding(
+                          padding: EdgeInsets.only(top: 16.0.sp),
+                          child: Column(
+                            children: [
+                              Row(
+                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                children: [
+                                  Row(
+                                    children: [
+                                      iconStatLuck,
+                                      Padding(
+                                        padding: EdgeInsets.only(left: 8.0),
+                                        child: StyledText(
+                                          '행운',
+                                          fontWeight: 500,
+                                          fontSize: 14,
+                                          lineHeight: 15,
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                  Row(
+                                    children: [
+                                      StyledText(
+                                        formatDecimalPlaces(controller.selectedItem.value.minLuck, 0),
+                                        fontSize: 12,
+                                        fontWeight: 500,
+                                        color: pinkColor,
+                                        letterSpacing: -.1,
+                                      ),
+                                      StyledText(
+                                        ' - ',
+                                        fontSize: 12,
+                                        fontWeight: 500,
+                                        color: pinkColor,
+                                        letterSpacing: -.1,
+                                      ),
+                                      StyledText(
+                                        formatDecimalPlaces(controller.selectedItem.value.maxLuck, 0),
+                                        fontSize: 12,
+                                        fontWeight: 500,
+                                        color: pinkColor,
+                                        letterSpacing: -.1,
+                                      ),
+                                    ],
+                                  ),
+                                ],
+                              ),
+                              Padding(
+                                padding: EdgeInsets.only(top: 8.0.sp),
+                                child: ClipRRect(
+                                  child: SizedBox(
+                                    height: 11,
+                                    child: Stack(
+                                      children: [
+                                        Container(
+                                          decoration: BoxDecoration(
+                                            color: subBg02Color,
+                                            borderRadius: BorderRadius.all(
+                                              Radius.circular(50.sp),
+                                            ),
+                                          ),
+                                        ),
+                                        LayoutBuilder(
+                                          builder: (context, constraints) {
+                                            return Container(
+                                              width: controller.selectedItem.value.minLuck < 6
+                                                  ? 6
+                                                  : constraints.maxWidth / (double.parse(controller.itemLuckMax.value) / controller.selectedItem.value.minLuck),
+                                              decoration: BoxDecoration(
+                                                color: pinkColor,
+                                                borderRadius: BorderRadius.only(topLeft: Radius.circular(30.sp), bottomLeft: Radius.circular(30.sp)),
+                                              ),
+                                            );
+                                          },
+                                        ),
+                                        LayoutBuilder(
+                                          builder: (context, constraints) {
+                                            return Container(
+                                              width: controller.selectedItem.value.maxLuck < 12
+                                                  ? 12
+                                                  : constraints.maxWidth / (double.parse(controller.itemLuckMax.value) / controller.selectedItem.value.maxLuck),
+                                              decoration: BoxDecoration(
+                                                color: pinkColor.withOpacity(.5),
+                                                borderRadius: BorderRadius.all(
+                                                  Radius.circular(30.sp),
+                                                ),
+                                              ),
+                                            );
+                                          },
+                                        )
+                                      ],
+                                    ),
+                                  ),
+                                ),
+                              )
+                            ],
+                          ),
+                        ),
+                      Container(
+                        margin: EdgeInsets.only(top: 5.sp),
+                        decoration: BoxDecoration(
+                          color: subBg01Color,
+                          borderRadius: BorderRadius.all(
+                            Radius.circular(10.sp),
+                          ),
+                          boxShadow: const [
+                            BoxShadow(
+                              color: Colors.black,
+                              offset: Offset(0, 1),
+                              blurRadius: 1.0,
+                              spreadRadius: 0.0,
+                            ),
                           ],
                         ),
                       ),
-                    ),
-                  ],
+                      Padding(
+                        padding: EdgeInsets.only(top: 30.sp, bottom: 100.sp),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Padding(
+                              padding: EdgeInsets.only(bottom: 10.sp),
+                              child: StyledText(
+                                '제품 설명',
+                                fontWeight: 600,
+                                fontSize: 18,
+                                lineHeight: 18,
+                              ),
+                            ),
+                            StyledText(
+                              controller.selectedItem.value.description.toString(),
+                              color: lightGrayColor,
+                              fontWeight: 500,
+                              fontSize: 14,
+                              lineHeight: 22,
+                              letterSpacing: -.1,
+                            ),
+                          ],
+                        ),
+                      ),
+                    ],
+                  ),
                 ),
               ),
               Positioned(

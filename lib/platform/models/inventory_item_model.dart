@@ -1,3 +1,4 @@
+import 'package:gaza_go/platform/models/inventory_item_stat_model.dart';
 import 'package:json_annotation/json_annotation.dart';
 
 part 'inventory_item_model.g.dart';
@@ -22,6 +23,7 @@ class InventoryItemModel {
   int? listOrder;
   int? tik;
   bool? isShoe;
+  InventoryItemStatModel itemStat;
 
   InventoryItemModel({
     required this.id,
@@ -37,6 +39,7 @@ class InventoryItemModel {
     required this.rewardRate,
     required this.staminaReduceRate,
     required this.itemImageUrl,
+    required this.itemStat,
     this.description,
     this.equipped,
     this.listOrder,

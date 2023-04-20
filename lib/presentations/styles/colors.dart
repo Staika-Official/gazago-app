@@ -10,6 +10,7 @@ Color purpleColor = const Color(0xFFB85DFF);
 Color skyBlueColor = const Color(0xFF0EE6F3);
 Color lightGrayColor = const Color(0xFFBFBFBF);
 Color deepGrayColor = const Color(0xFF8A8A8A);
+Color pinkColor = const Color(0xFFFF74B7);
 Color numberedBoxGrayColor = const Color(0xFF484A54);
 
 Color textRedColor = const Color(0xffFF2525);

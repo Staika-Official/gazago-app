@@ -149,8 +149,10 @@ class ActivityHome extends StatelessWidget {
                   ),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    crossAxisAlignment: CrossAxisAlignment.center,
                     children: [
                       Row(
+                        crossAxisAlignment: CrossAxisAlignment.center,
                         children: [
                           stat.type == 'STAMINA'
                               ? Padding(
@@ -166,7 +168,7 @@ class ActivityHome extends StatelessWidget {
                             fontFamily: 'Montserrat',
                             fontWeight: 800,
                             fontSize: 15,
-                            lineHeight: 15,
+                            lineHeight: 18,
                             color: stat.currentStat <= 30 ? Colors.white : Colors.black,
                           ),
                           Padding(

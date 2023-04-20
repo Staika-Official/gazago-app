@@ -32,109 +32,84 @@ class InventoryHome extends StatelessWidget {
               child: EquippedItemsGrid(controller: controller),
             ),
             Padding(
-                padding: EdgeInsets.symmetric(vertical: 20.0.sp),
+                padding: EdgeInsets.only(top: 20.0.sp, bottom: 15.sp, left: 30.0.sp, right: 30.0.sp),
                 child: Obx(() {
                   return Row(
                     mainAxisSize: MainAxisSize.max,
                     crossAxisAlignment: CrossAxisAlignment.center,
-                    mainAxisAlignment: MainAxisAlignment.center,
+                    mainAxisAlignment: MainAxisAlignment.spaceAround,
                     children: [
                       Column(
                         children: [
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              StyledText(
-                                '${controller.equippedRewardRate.toInt()}',
-                                fontSize: 28,
-                                fontWeight: 500,
-                              ),
-                              const StyledText(
-                                '%',
-                                fontSize: 16,
-                                fontWeight: 500,
-                              ),
-                            ],
+                          StyledText(
+                            '${controller.equippedRewardRate.toInt()}',
+                            fontSize: 30,
+                            color: skyBlueColor,
+                            fontWeight: 500,
+                            letterSpacing: -.1,
                           ),
                           Padding(
                             padding: EdgeInsets.only(top: 12.0.sp),
                             child: Row(
                               mainAxisAlignment: MainAxisAlignment.center,
                               children: [
+                                iconShopReward,
                                 Padding(
-                                  padding: EdgeInsets.only(top: 3.0.sp, right: 2.0.sp),
-                                  child: iconGoReward,
-                                ),
-                                StyledText(
-                                  'GO 보상율',
-                                  color: deepGrayColor,
-                                  fontSize: 11,
-                                  lineHeight: 12,
-                                  fontWeight: 500,
+                                  padding: EdgeInsets.only(left: 4.0.sp),
+                                  child: StyledText(
+                                    'GO 보상',
+                                    color: skyBlueColor,
+                                    fontSize: 12,
+                                    lineHeight: 14,
+                                    fontWeight: 500,
+                                    letterSpacing: -.1,
+                                  ),
                                 ),
                               ],
                             ),
                           ),
                         ],
                       ),
-                      Padding(
-                        padding: EdgeInsets.symmetric(horizontal: 25.0.sp),
-                        child: Column(
-                          children: [
-                            Row(
+                      Column(
+                        children: [
+                          StyledText(
+                            '${controller.equippedAbrasionRate.toInt()}',
+                            fontSize: 30,
+                            fontWeight: 500,
+                            letterSpacing: -.1,
+                            color: const Color(0xFFB0A3FF),
+                          ),
+                          Padding(
+                            padding: EdgeInsets.only(top: 12.0.sp),
+                            child: Row(
                               mainAxisAlignment: MainAxisAlignment.center,
+                              crossAxisAlignment: CrossAxisAlignment.center,
                               children: [
-                                StyledText(
-                                  '${controller.equippedAbrasionRate.toInt()}',
-                                  fontSize: 28,
-                                  fontWeight: 500,
-                                ),
-                                const StyledText(
-                                  '%',
-                                  fontSize: 16,
-                                  fontWeight: 500,
+                                iconShopDurabilityLight,
+                                Padding(
+                                  padding: EdgeInsets.only(left: 4.0.sp),
+                                  child: StyledText(
+                                    '내구도',
+                                    color: const Color(0xFFB0A3FF),
+                                    fontSize: 12,
+                                    lineHeight: 12,
+                                    letterSpacing: -.1,
+                                    fontWeight: 600,
+                                  ),
                                 ),
                               ],
                             ),
-                            Padding(
-                              padding: EdgeInsets.only(top: 12.0.sp),
-                              child: Row(
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                crossAxisAlignment: CrossAxisAlignment.center,
-                                children: [
-                                  Padding(
-                                    padding: EdgeInsets.only(top: 1.0.sp, right: 3.0.sp),
-                                    child: iconItemAbrasion,
-                                  ),
-                                  StyledText(
-                                    '내구도 감소율',
-                                    color: deepGrayColor,
-                                    fontSize: 12,
-                                    lineHeight: 12,
-                                    fontWeight: 600,
-                                  ),
-                                ],
-                              ),
-                            ),
-                          ],
-                        ),
+                          ),
+                        ],
                       ),
                       Column(
                         children: [
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              StyledText(
-                                '${controller.equippedStaminaReduceRate.toInt()}',
-                                fontSize: 28,
-                                fontWeight: 500,
-                              ),
-                              const StyledText(
-                                '%',
-                                fontSize: 16,
-                                fontWeight: 500,
-                              ),
-                            ],
+                          StyledText(
+                            '${controller.equippedStaminaReduceRate.toInt()}',
+                            fontSize: 30,
+                            fontWeight: 500,
+                            color: lightGreenColor,
+                            letterSpacing: -.1,
                           ),
                           Padding(
                             padding: EdgeInsets.only(top: 12.0.sp),
@@ -142,15 +117,47 @@ class InventoryHome extends StatelessWidget {
                               mainAxisAlignment: MainAxisAlignment.center,
                               children: [
                                 Padding(
-                                  padding: EdgeInsets.only(top: 1.0.sp, right: 3.0.sp),
-                                  child: iconStaminaReduce,
+                                  padding: EdgeInsets.only(right: 4.0.sp),
+                                  child: iconShopStamina,
                                 ),
                                 StyledText(
-                                  '체력 감소율',
-                                  color: deepGrayColor,
-                                  fontSize: 11,
+                                  '체력',
+                                  color: lightGreenColor,
+                                  fontSize: 12,
                                   lineHeight: 12,
                                   fontWeight: 500,
+                                  letterSpacing: -.1,
+                                ),
+                              ],
+                            ),
+                          ),
+                        ],
+                      ),
+                      Column(
+                        children: [
+                          StyledText(
+                            '${controller.equippedLuckRate.toInt()}',
+                            fontSize: 30,
+                            fontWeight: 500,
+                            color: pinkColor,
+                            letterSpacing: -.1,
+                          ),
+                          Padding(
+                            padding: EdgeInsets.only(top: 12.0.sp),
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                Padding(
+                                  padding: EdgeInsets.only(right: 4.0.sp),
+                                  child: iconShopLuck,
+                                ),
+                                StyledText(
+                                  '행운',
+                                  color: pinkColor,
+                                  fontSize: 12,
+                                  lineHeight: 12,
+                                  fontWeight: 500,
+                                  letterSpacing: -.1,
                                 ),
                               ],
                             ),
@@ -160,8 +167,26 @@ class InventoryHome extends StatelessWidget {
                     ],
                   );
                 })),
+            Container(
+              decoration: BoxDecoration(
+                color: const Color(0xFF0E0E10),
+                borderRadius: BorderRadius.all(
+                  Radius.circular(30.sp),
+                ),
+              ),
+              child: Padding(
+                padding: EdgeInsets.symmetric(vertical: 8.0.sp, horizontal: 15.sp),
+                child: StyledText(
+                  '능력치는 수치가 높을수록 좋아요!',
+                  fontWeight: 400,
+                  fontSize: 10,
+                  lineHeight: 10,
+                  color: Color(0xFF898B92),
+                ),
+              ),
+            ),
             Padding(
-              padding: EdgeInsets.only(top: 10.sp),
+              padding: EdgeInsets.only(top: 15.sp),
               child: TabBar(
                 controller: inventoryMenuController.tabController,
                 labelColor: Colors.white,
