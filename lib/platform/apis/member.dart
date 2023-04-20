@@ -9,15 +9,25 @@ class MemberApi {
   }
 
   static Future<Response> getMemberUserInfo(String userId, String clientId) async {
-    return await Api.client(serviceUrl: ServiceUrl.memberService).get('/api/users/$userId?clientId=$clientId');
+    return await Api.client(
+      serviceUrl: ServiceUrl.memberService,
+      allowCustomErrorHandler: true,
+    ).get('/api/users/$userId?clientId=$clientId');
   }
 
   static Future<Response> fetchTermsAgree(String userId, List<TermsHistoryModel> termsHistoryList) async {
-    return await Api.client(serviceUrl: ServiceUrl.memberService).post('/api/terms-histories/users/$userId', data: termsHistoryList);
+    return await Api.client(
+      serviceUrl: ServiceUrl.memberService,
+      allowCustomErrorHandler: true,
+    ).post('/api/terms-histories/users/$userId', data: termsHistoryList);
   }
 
   static Future<Response> getTermsAgreeStatus(String userId) async {
-    return await Api.client(serviceUrl: ServiceUrl.memberService, showLoading: false).get(
+    return await Api.client(
+      serviceUrl: ServiceUrl.memberService,
+      showLoading: false,
+      allowCustomErrorHandler: true,
+    ).get(
       '/api/terms-histories/users/$userId/GAZAGO',
     );
   }

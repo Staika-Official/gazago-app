@@ -52,6 +52,7 @@ class ActivityApi {
     return await Api.client(
       serviceUrl: ServiceUrl.exerciseService,
       showLoading: false,
+      allowCustomErrorHandler: true,
     ).post(
       '/users/$userId',
       data: exerciseInfo,
@@ -107,7 +108,10 @@ class ActivityApi {
   }
 
   static Future<Response> fetchUserStaminaRecharge(String userId, UserStaminaRechargeModel rechargeInfo) async {
-    return await Api.client(serviceUrl: ServiceUrl.staminaService).post('/users/$userId', data: rechargeInfo);
+    return await Api.client(
+      serviceUrl: ServiceUrl.staminaService,
+      allowCustomErrorHandler: true,
+    ).post('/users/$userId', data: rechargeInfo);
   }
 
   static Future<Response> fetchLocations(String userId, int exerciseId, int page, int size) async {

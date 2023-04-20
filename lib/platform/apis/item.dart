@@ -45,6 +45,9 @@ class ItemApi {
   }
 
   static Future<Response> fetchRepairItemShoes(String userId, RepairShoesModel repairInfo) async {
-    return await Api.client(serviceUrl: ServiceUrl.itemService).patch('/users/$userId/repair/${repairInfo.id}', data: repairInfo);
+    return await Api.client(
+      serviceUrl: ServiceUrl.itemService,
+      allowCustomErrorHandler: true,
+    ).patch('/users/$userId/repair/${repairInfo.id}', data: repairInfo);
   }
 }

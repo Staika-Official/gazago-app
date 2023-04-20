@@ -18,6 +18,7 @@ class BadgeApi {
     return await Api.client(
       serviceUrl: ServiceUrl.badgeService,
       showLoading: false,
+      allowCustomErrorHandler: true,
     ).post('/users/$userId/issues/challenge', data: {
       'userExerciseId': exerciseId,
     });

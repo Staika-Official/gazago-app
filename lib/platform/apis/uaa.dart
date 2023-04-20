@@ -33,7 +33,10 @@ class UaaApi {
   }
 
   static Future<Response> checkLoginStatus() async {
-    return await Api.client(serviceUrl: '/services/gazago').get('/api/ping');
+    return await Api.client(
+      serviceUrl: '/services/gazago',
+      allowCustomErrorHandler: true,
+    ).get('/api/ping');
   }
 
   static Future<Response> modifyAccountInfo(String userId, String? nickname, String? profileImageUrl) async {
@@ -48,7 +51,11 @@ class UaaApi {
   }
 
   static Future<Response> fetchUploadImageUrl(String fileName) async {
-    return await Api.client(serviceUrl: ServiceUrl.uaaService, isFile: true).get('/images/presigned-url/profile?fileName=$fileName');
+    return await Api.client(
+      serviceUrl: ServiceUrl.uaaService,
+      isFile: true,
+      allowCustomErrorHandler: true,
+    ).get('/images/presigned-url/profile?fileName=$fileName');
   }
 
   static Future<Response> uploadToS3bucket(String presignedUrl, File profileImage, String contentType) async {
