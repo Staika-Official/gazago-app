@@ -127,7 +127,7 @@ class ActivityController extends SuperController with ActivityMixin, ChallengeMi
     // 타이머 시작
     // adLoadTimerStart();
     checkConnectivityStatus();
-    if ([ExerciseState.ongoing, ExerciseState.paused].any((state) => state == exerciseState.value) && !isFakeGps.value) {
+    if ([ExerciseState.ongoing, ExerciseState.paused].any((state) => state == exerciseState.value) && !isFakeGps.value && !isTestingFakeGps()) {
       showPendingExerciseAlert(this);
     }
     disableActivityButton.value = false;
@@ -732,7 +732,7 @@ class ActivityController extends SuperController with ActivityMixin, ChallengeMi
 
   void detectFakeGps() async {
     //안드로이드만 탐지 가능
-    if (isFakeGps.value && Get.isBottomSheetOpen != true) {
+    if (isFakeGps.value && Get.isBottomSheetOpen != true && !isTestingFakeGps()) {
       showFakeGpsAlert();
       MemberService.reportAbuse(description: 'Fake GPS 사용 감지', abusingType: 'GPS');
     }

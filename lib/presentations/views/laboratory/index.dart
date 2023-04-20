@@ -76,6 +76,11 @@ class Laboratory extends StatelessWidget {
                       buttonText: '엔드포인트 변경',
                       buttonColor: skyBlueColor,
                     ),
+                    GazagoButton(
+                      onTap: () => Get.toNamed(Routes.laboratoryFakeGps),
+                      buttonText: 'FAKE GPS 사용하기',
+                      buttonColor: skyBlueColor,
+                    ),
                   ],
                 ),
               ),
