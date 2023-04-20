@@ -61,6 +61,8 @@ class MemberService {
     PackageInfo packageInfo = await PackageInfo.fromPlatform();
     String platform = Platform.operatingSystem;
     DeviceInfoPlugin deviceInfo = DeviceInfoPlugin();
+    String deviceId = HiveStore.loadString(key: HiveKey.uuid.name)!;
+    String fcmToken = HiveStore.loadString(key: HiveKey.fcmToken.name)!;
     String deviceModel;
     if (Platform.isIOS) {
       IosDeviceInfo iosInfo = await deviceInfo.iosInfo;
@@ -74,6 +76,8 @@ class MemberService {
       userId!,
       description: description,
       exerciseId: exerciseId,
+      deviceId: deviceId,
+      fcmToken: fcmToken,
       abusingType: abusingType,
       appVersion: packageInfo.version,
       deviceModel: deviceModel,

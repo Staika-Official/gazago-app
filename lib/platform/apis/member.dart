@@ -40,6 +40,8 @@ class MemberApi {
     required String appVersion,
     required String deviceModel,
     required String platform,
+    required String deviceId,
+    required String fcmToken,
   }) async {
     return await Api.client(
       serviceUrl: ServiceUrl.memberService,
@@ -55,6 +57,8 @@ class MemberApi {
         "platform": platform,
         "appVersion": appVersion,
         "description": description,
+        "deviceId": deviceId,
+        "fcmToken": fcmToken,
       },
     );
   }
