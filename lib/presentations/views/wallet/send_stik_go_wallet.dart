@@ -56,7 +56,7 @@ class SendStikGoWallet extends StatelessWidget {
                           Padding(
                             padding: EdgeInsets.only(top: 6.0.sp),
                             child: StyledText(
-                              '${controller.assetStik.value!.uiAmount} STIK',
+                              '${controller.assetStik.value!.uiAmountString} STIK',
                               fontSize: 18,
                               lineHeight: 19,
                               fontWeight: 500,
@@ -143,30 +143,55 @@ class SendStikGoWallet extends StatelessWidget {
                 ),
               ),
               Expanded(
-                child: Container(
-                    color: subBg01Color,
-                    child: Align(
-                      alignment: Alignment.bottomCenter,
-                      child: Container(
-                        color: controller.isValid.value ? skyBlueColor : popupBgColor,
-                        height: 60.sp,
-                        alignment: Alignment.center,
-                        child: InkWell(
-                          onTap: () => controller.openSendStikGoWalletAlert(),
-                          child: Padding(
-                            padding: EdgeInsets.symmetric(vertical: 8.0.sp),
-                            child: Center(
-                              child: StyledText(
-                                '보내기',
-                                color: controller.isValid.value ? Colors.black : deepGrayColor,
-                                fontSize: 18,
-                                fontWeight: 500,
+                child: controller.isFetching.value
+                    ? Container(
+                        color: subBg01Color,
+                        child: Align(
+                          alignment: Alignment.bottomCenter,
+                          child: Container(
+                            color: popupBgColor,
+                            height: 60.sp,
+                            alignment: Alignment.center,
+                            child: InkWell(
+                              onTap: () => null,
+                              child: Padding(
+                                padding: EdgeInsets.symmetric(vertical: 8.0.sp),
+                                child: Center(
+                                  child: StyledText(
+                                    '보내기',
+                                    color: deepGrayColor,
+                                    fontSize: 18,
+                                    fontWeight: 500,
+                                  ),
+                                ),
                               ),
                             ),
                           ),
-                        ),
-                      ),
-                    )),
+                        ))
+                    : Container(
+                        color: subBg01Color,
+                        child: Align(
+                          alignment: Alignment.bottomCenter,
+                          child: Container(
+                            color: controller.isValid.value ? skyBlueColor : popupBgColor,
+                            height: 60.sp,
+                            alignment: Alignment.center,
+                            child: InkWell(
+                              onTap: () => controller.openSendStikGoWalletAlert(),
+                              child: Padding(
+                                padding: EdgeInsets.symmetric(vertical: 8.0.sp),
+                                child: Center(
+                                  child: StyledText(
+                                    '보내기',
+                                    color: controller.isValid.value ? Colors.black : deepGrayColor,
+                                    fontSize: 18,
+                                    fontWeight: 500,
+                                  ),
+                                ),
+                              ),
+                            ),
+                          ),
+                        )),
               )
             ],
           );

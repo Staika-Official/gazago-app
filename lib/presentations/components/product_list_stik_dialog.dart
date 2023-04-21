@@ -30,7 +30,7 @@ List<Widget> renderProductStikList(GoWalletController controller, WalletMasterCo
                     child: iconTik,
                   ),
                   StyledText(
-                    '${formatDecimalPlaces(double.parse(product.value.toUiAmount.toString()), 0)} ${product.value.toTokenSymbol}',
+                    '${formatDecimalPlaces(double.parse(product.value.toUiAmountString!), 0)} ${product.value!.toTokenSymbol!}',
                     fontSize: 18.sp,
                     fontWeight: 700,
                     lineHeight: 18.sp,
@@ -56,7 +56,7 @@ List<Widget> renderProductStikList(GoWalletController controller, WalletMasterCo
                       ],
                     ),
                     child: InkWell(
-                      onTap: () => double.parse(walletMasterController.stik.value.uiAmountString!) < product.value.fromUiAmount
+                      onTap: () => double.parse(walletMasterController.stik.value.uiAmountString!) < double.parse(product.value!.fromUiAmountString!)
                           ? failureShortBalanceStikToTikAlert(controller)
                           : exchangeStikToTikAlert(controller, product.value),
                       borderRadius: BorderRadius.circular(50),
@@ -69,7 +69,7 @@ List<Widget> renderProductStikList(GoWalletController controller, WalletMasterCo
                             Padding(
                               padding: EdgeInsets.only(left: 5.0.sp),
                               child: StyledText(
-                                '${formatDecimalPlaces(product.value.fromUiAmount, 9, isAutoDecimal: true)} ${product.value.fromTokenSymbol}',
+                                '${formatDecimalPlaces(double.parse(product.value!.fromUiAmountString!), 9, isAutoDecimal: true)} ${product.value.fromTokenSymbol}',
                                 fontSize: 14.sp,
                                 fontWeight: 500,
                                 lineHeight: 16.sp,

@@ -5,6 +5,7 @@ import 'package:flutter/services.dart';
 import 'package:gaza_go/constants/enums.dart';
 import 'package:gaza_go/constants/routes.dart';
 import 'package:gaza_go/flavors.dart';
+import 'package:gaza_go/platform/controllers/loader_controller.dart';
 import 'package:gaza_go/platform/controllers/wallet_master_controller.dart';
 import 'package:gaza_go/platform/helpers/alert_helper.dart';
 import 'package:gaza_go/platform/helpers/solana_mixin.dart';
@@ -19,7 +20,7 @@ import 'package:gaza_go/presentations/components/alert_ui_list.dart';
 import 'package:get/get.dart';
 
 class StaikaWalletController extends GetxController with WalletMixin, SolanaMixin {
-  // LoaderController loaderController = Get.find();
+  LoaderController loaderController = Get.put(LoaderController());
   WalletMasterController walletMasterController = Get.find();
   final RxList<WalletTokenBalanceModel> coinAssetList = RxList.empty();
   final Rxn<WalletTokenBalanceModel> assetStik = Rxn();
@@ -34,6 +35,7 @@ class StaikaWalletController extends GetxController with WalletMixin, SolanaMixi
   final Rx<Currency> currency = Rx(Currency.krw);
   final TextEditingController stikAmountTextController = TextEditingController(text: '');
   final FocusNode focusNode = FocusNode();
+  final RxBool isFetching = RxBool(false);
 
   RxBool get isValid {
     if (sendStikUiAmount.value != '') {
@@ -150,8 +152,8 @@ class StaikaWalletController extends GetxController with WalletMixin, SolanaMixi
   }
 
   void openSendStikGoWalletAlert() {
-    shortStikUiAmount.value = (double.parse(sendStikUiAmount.value) - assetStik.value!.uiAmount).toString();
-    if (double.parse(sendStikUiAmount.value) < assetStik.value!.uiAmount) {
+    shortStikUiAmount.value = (double.parse(sendStikUiAmount.value) - double.parse(assetStik.value!.uiAmountString)).toString();
+    if (double.parse(sendStikUiAmount.value) < double.parse(assetStik.value!.uiAmountString)) {
       sendStikToGoWalletAlert(this);
     } else {
       exchangeStikShortBalanceAlert(this);
@@ -161,8 +163,8 @@ class StaikaWalletController extends GetxController with WalletMixin, SolanaMixi
   void confirmSendStikToGoWallet(String password) async {
     String secretKey = HiveStore.load(key: HiveKey.solanaSecretKey.name);
     num mod = pow(10.0, 9);
-    if (double.parse(sendStikUiAmount.value) < assetStik.value!.uiAmount) {
-      // loaderController.isLoading.value = true;
+    if (double.parse(sendStikUiAmount.value) < double.parse(assetStik.value!.uiAmountString)) {
+      isFetching.value = true;
       await WalletService.fetchStikMoveToGoWallet(
         symbol: 'STIK',
         accountSecretkey: secretKey,
@@ -184,6 +186,7 @@ class StaikaWalletController extends GetxController with WalletMixin, SolanaMixi
           failureExchangeStikToGoWalletAlert();
         },
       );
+      isFetching.value = false;
       // loaderController.isLoading.value = false;
     }
   }

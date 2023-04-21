@@ -31,16 +31,16 @@ class GoWalletController extends GetxController with SolanaMixin {
     if (differenceTime > 300) {
       failureChargeStikToTikAlert(this, '거래 기준가의 유효시간이 지나 더이상 해당 가격으로\n거래가 불가합니다. 다시 시도해 주시기 바랍니다.');
     } else {
-      if (walletMasterController.stik.value.amount! >= exchangeProduct.fromUiAmount!) {
+      if (walletMasterController.stik.value.amount! >= double.parse(exchangeProduct.fromUiAmountString!)) {
         // loaderController.isLoading.value = true;
         await SolanaService.fetchChargeStikToTik(
           ChargeTikModel(
             userId: int.parse(userId!),
             title: "STIK_TO_TIK",
             fromTokenSymbol: exchangeProduct.fromTokenSymbol!,
-            fromUiAmount: exchangeProduct.fromUiAmount!,
+            fromUiAmount: double.parse(exchangeProduct.fromUiAmountString!),
             toTokenSymbol: exchangeProduct.toTokenSymbol!,
-            toUiAmount: exchangeProduct.toUiAmount!,
+            toUiAmount: int.parse(exchangeProduct.toUiAmountString!),
             priceKRW: walletMasterController.stikPriceInfoKRW.value.price!,
             priceUSD: walletMasterController.stikPriceInfoUSD.value.price!,
           ),

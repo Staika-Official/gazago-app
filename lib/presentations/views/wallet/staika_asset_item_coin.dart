@@ -85,7 +85,7 @@ class StaikaAssetItemCoin extends StatelessWidget {
                                       mainAxisSize: MainAxisSize.min,
                                       children: [
                                         StyledText(
-                                          '${formatDecimalPlaces(asset.uiAmount!, 9, isAutoDecimal: true)}',
+                                          '${formatDecimalPlaces(double.parse(asset.uiAmountString!), 9, isAutoDecimal: true)}',
                                           fontSize: 18,
                                           lineHeight: 20,
                                           letterSpacing: 0.5,
@@ -105,7 +105,7 @@ class StaikaAssetItemCoin extends StatelessWidget {
                                     ),
                                   ),
                                   StyledText(
-                                    '${staikaWalletController.currencyString.value} ${formatDecimalPlaces(double.parse(staikaWalletController.getCurrencyPrice(asset.uiAmount!)), staikaWalletController.isKRW.value ? 0 : 2)}',
+                                    '${staikaWalletController.currencyString.value} ${formatDecimalPlaces(double.parse(staikaWalletController.getCurrencyPrice(double.parse(asset.uiAmountString!))), staikaWalletController.isKRW.value ? 0 : 2)}',
                                     fontSize: 14,
                                     lineHeight: 16,
                                     letterSpacing: 0.5,

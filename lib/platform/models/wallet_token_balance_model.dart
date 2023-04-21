@@ -10,7 +10,7 @@ class WalletTokenBalanceModel {
   String logoUrl;
   int amount;
   int decimals;
-  double uiAmount;
+  String uiAmountString;
 
   WalletTokenBalanceModel({
     required this.name,
@@ -18,7 +18,7 @@ class WalletTokenBalanceModel {
     required this.logoUrl,
     required this.amount,
     required this.decimals,
-    required this.uiAmount,
+    required this.uiAmountString,
   });
 
   factory WalletTokenBalanceModel.fromJson(Map<String, dynamic> json) => _$WalletTokenBalanceModelFromJson(json);

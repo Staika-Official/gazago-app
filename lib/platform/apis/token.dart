@@ -5,11 +5,17 @@ import 'package:gaza_go/platform/models/charge_tik_model.dart';
 
 class TokenApi {
   static Future<Response> getStikPriceInfo() async {
-    return await Api.client(serviceUrl: ServiceUrl.goWalletService).get('/on-chains/quotes/markets/cmc/solana/tokens/STIK');
+    return await Api.client(
+      serviceUrl: ServiceUrl.goWalletService,
+      showLoading: false,
+    ).get('/on-chains/quotes/markets/cmc/solana/tokens/STIK');
   }
 
   static Future<Response> getExchangeStikPriceInfo() async {
-    return await Api.client(serviceUrl: ServiceUrl.goWalletService).get('/spending/tokens/swap?action=STIK_TO_TIK&markets=cmc');
+    return await Api.client(
+      serviceUrl: ServiceUrl.goWalletService,
+      showLoading: false,
+    ).get('/spending/tokens/swap?action=STIK_TO_TIK&markets=cmc');
   }
 
   static Future<Response> fetchChargeStikToTik(

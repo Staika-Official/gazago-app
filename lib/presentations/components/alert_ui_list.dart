@@ -3140,7 +3140,7 @@ void exchangeStikToTikAlert(GoWalletController controller, ExchangeStikPriceMode
                     Padding(
                       padding: EdgeInsets.only(left: 7.0.sp),
                       child: StyledText(
-                        formatDecimalPlaces(exchangeProduct.fromUiAmount!, 9, isAutoDecimal: true),
+                        formatDecimalPlaces(double.parse(exchangeProduct.fromUiAmountString!), 9, isAutoDecimal: true),
                         fontSize: 30,
                         lineHeight: 32,
                         fontWeight: 600,
@@ -3169,7 +3169,7 @@ void exchangeStikToTikAlert(GoWalletController controller, ExchangeStikPriceMode
                     Padding(
                       padding: EdgeInsets.only(left: 7.0.sp),
                       child: StyledText(
-                        formatDecimalPlaces(double.parse(exchangeProduct.toUiAmount.toString()), 0),
+                        formatDecimalPlaces(double.parse(exchangeProduct.toUiAmountString!), 0),
                         fontSize: 30,
                         lineHeight: 32,
                         fontWeight: 600,
@@ -3537,7 +3537,7 @@ void exchangeStikShortBalanceAlert(StaikaWalletController controller) {
                         letterSpacing: -.2,
                       ),
                       StyledText(
-                        '${controller.assetStik.value!.uiAmount.toString()} STIK',
+                        '${controller.assetStik.value!.uiAmountString} STIK',
                         fontWeight: 500,
                         fontSize: 16,
                         letterSpacing: -.2,
