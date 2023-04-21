@@ -260,7 +260,7 @@ class ArchiveDetail extends StatelessWidget {
               child: Row(
                 children: [
                   const StyledText(
-                    '소비 내구도',
+                    '소비 신발 내구도',
                     fontWeight: 600,
                     fontSize: 16,
                   ),
