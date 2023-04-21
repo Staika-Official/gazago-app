@@ -193,8 +193,10 @@ mixin ActivityMixin {
     );
   }
 
-  late final Rx<OverlayImage?> startMarkerImage = Rx(null);
-  late final Rx<OverlayImage?> finishMarkerImage = Rx(null);
+  bool get isSameStepCount {
+    int lastStepCount = HiveStore.load(key: HiveKey.lastUpdatedStepCount.name) ?? 0;
+    return lastStepCount == userExerciseData.value.steps;
+  }
 
   void initStream() {
     initExerciseTimer();
@@ -210,6 +212,7 @@ mixin ActivityMixin {
     exerciseDistance.value = 0;
     pedestrianStatus.value = 'STOPPED';
     HiveStore.initializeExerciseCoordinates();
+    HiveStore.save(key: HiveKey.lastUpdatedStepCount.name, value: 0);
   }
 
   void initExerciseTimer() {
@@ -348,6 +351,7 @@ mixin ActivityMixin {
 
   void startExercise(ExerciseType exerciseType, ChallengeModel? challenge, {String? adId}) async {
     String deviceId = HiveStore.loadString(key: HiveKey.uuid.name)!;
+    HiveStore.save(key: HiveKey.lastUpdatedStepCount.name, value: 0);
     if (Get.isDialogOpen != null && Get.isDialogOpen!) Get.until((route) => Get.isDialogOpen == false);
     if (isFakeGps.value && !isTestingFakeGps()) {
       return;
@@ -485,45 +489,51 @@ mixin ActivityMixin {
 
     // if (globalController.connectivityResult.value != ConnectivityResult.none && !batchIsInProgress()) {
     if (globalController.internetConnection.value && !batchIsInProgress()) {
-      isPaused != null && isPaused
-          ? await ActivityService.fetchPausedUserExercises(
-              userExerciseData.value,
-              Platform.operatingSystem,
-              successCallback: (CurrentUserStateModel newUserState) {
-                updateLocalUserState(newUserState);
-              },
-              errorCallback: errorHandler,
-            )
-          : await ActivityService.fetchUpdateUserExercises(
-              userExerciseData.value,
-              Platform.operatingSystem,
-              source: source,
-              successCallback: (CurrentUserStateModel newUserState) {
-                updateLocalUserState(newUserState);
+      if (isPaused != null && isPaused) {
+        await ActivityService.fetchPausedUserExercises(
+          userExerciseData.value,
+          Platform.operatingSystem,
+          successCallback: (CurrentUserStateModel newUserState) {
+            updateLocalUserState(newUserState);
+          },
+          errorCallback: errorHandler,
+        );
+      } else {
+        if (!isSameStepCount) {
+          HiveStore.save(key: HiveKey.lastUpdatedStepCount.name, value: userExerciseData.value.steps);
 
-                if (userState.value.state!.stamina! < 30) {
-                  if (userState.value.state!.stamina! == 0 && !zeroStaminaNotified.value) {
-                    showLocalNotification(notificationType: NotificationType.staminaDepleted, title: '체력 충전 알림', message: '지금 체력이 0이 되어 GO보상이 되지 않고 있어요. 체력 충전하러 가자GO~~');
-                    zeroStaminaNotified.value = true;
-                  } else if (!lowStaminaNotified.value) {
-                    showLocalNotification(notificationType: NotificationType.staminaLow, title: '체력 충전 알림', message: '체력이 부족하면 GO보상이 되지 않아요. 체력 충전하러 가자GO~~');
-                    lowStaminaNotified.value = true;
-                  }
+          await ActivityService.fetchUpdateUserExercises(
+            userExerciseData.value,
+            Platform.operatingSystem,
+            source: source,
+            successCallback: (CurrentUserStateModel newUserState) {
+              updateLocalUserState(newUserState);
+
+              if (userState.value.state!.stamina! < 30) {
+                if (userState.value.state!.stamina! == 0 && !zeroStaminaNotified.value) {
+                  showLocalNotification(notificationType: NotificationType.staminaDepleted, title: '체력 충전 알림', message: '지금 체력이 0이 되어 GO보상이 되지 않고 있어요. 체력 충전하러 가자GO~~');
+                  zeroStaminaNotified.value = true;
+                } else if (!lowStaminaNotified.value) {
+                  showLocalNotification(notificationType: NotificationType.staminaLow, title: '체력 충전 알림', message: '체력이 부족하면 GO보상이 되지 않아요. 체력 충전하러 가자GO~~');
+                  lowStaminaNotified.value = true;
                 }
-                if (userState.value.shoes!.durability! < 30 && !zeroDurabilityNotified.value) {
-                  if (userState.value.shoes!.durability! == 0) {
-                    showLocalNotification(notificationType: NotificationType.durabilityDepleted, title: '아이템 수리 알림', message: '지금 내구도(신발)가 0이 되어 GO보상이 되지 않고 있어요. 내구도 보충하러 가자GO~~');
-                    zeroDurabilityNotified.value = true;
-                  } else if (!lowDurabilityNotified.value) {
-                    showLocalNotification(notificationType: NotificationType.durabilityLow, title: '아이템 수리 알림', message: '내구도(신발)가 부족하면 GO보상이 되지 않아요. 내구도 보충하러 가자GO~~');
-                    lowDurabilityNotified.value = true;
-                  }
+              }
+              if (userState.value.shoes!.durability! < 30 && !zeroDurabilityNotified.value) {
+                if (userState.value.shoes!.durability! == 0) {
+                  showLocalNotification(notificationType: NotificationType.durabilityDepleted, title: '아이템 수리 알림', message: '지금 내구도(신발)가 0이 되어 GO보상이 되지 않고 있어요. 내구도 보충하러 가자GO~~');
+                  zeroDurabilityNotified.value = true;
+                } else if (!lowDurabilityNotified.value) {
+                  showLocalNotification(notificationType: NotificationType.durabilityLow, title: '아이템 수리 알림', message: '내구도(신발)가 부족하면 GO보상이 되지 않아요. 내구도 보충하러 가자GO~~');
+                  lowDurabilityNotified.value = true;
                 }
-                // updateCount.value = updateCount.value + 1;
-                // lastUpdateTime.value = DateTime.now().toIso8601String();
-              },
-              errorCallback: errorHandler,
-            );
+              }
+              // updateCount.value = updateCount.value + 1;
+              // lastUpdateTime.value = DateTime.now().toIso8601String();
+            },
+            errorCallback: errorHandler,
+          );
+        }
+      }
     } else {
       errorHandler;
     }
@@ -773,11 +783,6 @@ mixin ActivityMixin {
 
   void showExerciseMap(Widget mapWidget) {
     Get.dialog(mapWidget, barrierDismissible: false);
-  }
-
-  Future<void> setMarkerImages() async {
-    startMarkerImage.value = await OverlayImage.fromAssetImage(assetName: 'assets/icons/start.png');
-    finishMarkerImage.value = await OverlayImage.fromAssetImage(assetName: 'assets/icons/finish.png');
   }
 
   bool isTestingFakeGps() {

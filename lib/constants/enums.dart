@@ -86,6 +86,7 @@ enum HiveKey {
   endPointType,
   walletConnectionPrompted,
   lastUpdatedCoordinateIndex,
+  lastUpdatedStepCount,
   exerciseCoordinates,
   allowFakeGpsTest,
 }

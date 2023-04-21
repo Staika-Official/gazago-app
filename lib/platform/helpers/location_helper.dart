@@ -23,7 +23,7 @@ bool catchSinglePointAbuse(List<LatLng> locationData) {
 
 Future<List<dynamic>> getLocationsData(int exerciseId) async {
   int page = 0;
-  const int size = 100;
+  const int size = 200;
   List<dynamic> locationsDataList = List.empty(growable: true);
 
   Completer<List<dynamic>> completer = Completer();

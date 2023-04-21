@@ -115,6 +115,9 @@ class ActivityApi {
   }
 
   static Future<Response> fetchLocations(String userId, int exerciseId, int page, int size) async {
-    return await Api.client(serviceUrl: ServiceUrl.exerciseService).get('/users/$userId/locations/$exerciseId?page=$page&size=$size');
+    return await Api.client(
+      serviceUrl: ServiceUrl.exerciseService,
+      showLoading: false,
+    ).get('/users/$userId/locations/$exerciseId?page=$page&size=$size');
   }
 }
