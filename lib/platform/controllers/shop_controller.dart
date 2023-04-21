@@ -165,6 +165,10 @@ class ShopController extends GetxController {
     });
   }
 
+  void showItemTip() {
+    showItemTipAlert();
+  }
+
   void onClickPurchaseItem(tradeSymbol) {
     if ((tradeSymbol == 'STIK' ? double.parse(walletMasterController.stik.value.uiAmountString!) : walletMasterController.tik.value.amount!) < selectedItem.value.price) {
       isShortBalance.value = true;

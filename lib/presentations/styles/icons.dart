@@ -10,6 +10,7 @@ SvgPicture iconSliderShoe = SvgPicture.asset('assets/images/common/ico_slider_sh
 SvgPicture iconSliderStamina = SvgPicture.asset('assets/images/common/ico_slider_stamina.svg', width: 13.33.sp, height: 20.8.sp);
 SvgPicture iconCopy = SvgPicture.asset('assets/images/common/ico_copy.svg', width: 12.33.sp, height: 14.2.sp);
 SvgPicture iconExclamationMark = SvgPicture.asset('assets/images/common/ico_circle_exclamation_mark.svg', width: 78.sp, height: 78.sp);
+SvgPicture iconExclamationMarkSmall = SvgPicture.asset('assets/images/common/ico_circle_exclamention_small.svg', width: 18.sp, height: 18.sp);
 SvgPicture iconArrowDown = SvgPicture.asset('assets/images/common/ico_arrow_down.svg', width: 6.2.sp, height: 6.2.sp);
 SvgPicture iconSelectArrowDown = SvgPicture.asset('assets/images/common/ico_select_arrow_down.svg', width: 7.sp, height: 7.sp);
 SvgPicture iconSortChecked = SvgPicture.asset('assets/images/common/ico_sort_checked.svg', width: 16.sp, height: 11.sp);
@@ -96,7 +97,11 @@ SvgPicture iconStatDurability = SvgPicture.asset('assets/images/inventory/ico_st
 SvgPicture iconStatStamina = SvgPicture.asset('assets/images/inventory/ico_stat_stamina.svg', width: 16.sp, height: 16.sp);
 SvgPicture iconStatGo = SvgPicture.asset('assets/images/inventory/ico_stat_go.svg', width: 16.sp, height: 16.sp);
 SvgPicture iconStatLuck = SvgPicture.asset('assets/images/inventory/ico_stat_luck.svg', width: 16.sp, height: 16.sp);
-
+SvgPicture iconStatDurabilityLight = SvgPicture.asset(
+  'assets/images/shop/ico_stat_durability_light.svg',
+  width: 16.sp,
+  height: 16.sp,
+);
 //mypage
 SvgPicture iconCamera = SvgPicture.asset('assets/images/common/ico_camera.svg', width: 22.sp, height: 22.sp);
 SvgPicture iconApple = SvgPicture.asset('assets/images/preference/ico_apple.svg', width: 12.sp, height: 14.sp);
