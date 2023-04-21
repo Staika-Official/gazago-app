@@ -293,7 +293,9 @@ class InventoryItemDetail extends StatelessWidget {
                                                             ],
                                                           ),
                                                         ),
-                                                      if (controller.selectedItem.value.itemStat.goProfit! > 0 && controller.selectedItem.value.itemStat.luck! < 1)
+                                                      if (controller.selectedItem.value.itemStat.goProfit! > 0 &&
+                                                          controller.selectedItem.value.itemStat.luck! < 1 &&
+                                                          (controller.selectedItem.value.itemStat.durability! > 0 || controller.selectedItem.value.itemStat.stamina! > 0))
                                                         Container(
                                                           height: 35.sp,
                                                           child: VerticalDivider(
