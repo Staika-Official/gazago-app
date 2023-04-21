@@ -58,7 +58,8 @@ class NoticePopupController extends GetxController {
 
   Future<void> getNoticePopupList() async {
     await BoardService.getNoticePopupList(
-      successCallback: (records) {
+      successCallback: (List<NoticePopupModel> records) {
+        records.removeWhere((element) => element.type == 'INSPECTION');
         noticePopupList.addAll(records);
       },
     );

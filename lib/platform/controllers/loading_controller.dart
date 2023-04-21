@@ -5,10 +5,13 @@ import 'package:gaza_go/constants/enums.dart';
 import 'package:gaza_go/constants/routes.dart';
 import 'package:gaza_go/platform/controllers/activity_controller.dart';
 import 'package:gaza_go/platform/controllers/wallet_master_controller.dart';
+import 'package:gaza_go/platform/firebase/remote_config.dart';
 import 'package:gaza_go/platform/helpers/alert_helper.dart';
 import 'package:gaza_go/platform/helpers/login_helper.dart';
 import 'package:gaza_go/platform/models/error_response_data_model.dart';
+import 'package:gaza_go/platform/models/notice_popup_model.dart';
 import 'package:gaza_go/platform/models/terms_status_model.dart';
+import 'package:gaza_go/platform/services/board_service.dart';
 import 'package:gaza_go/platform/services/member_service.dart';
 import 'package:gaza_go/platform/stores/hive_store.dart';
 import 'package:gaza_go/presentations/components/alert_ui_list.dart';
@@ -32,32 +35,56 @@ class LoadingController extends GetxController {
     }
   }
 
+  bool underMaintenance = getConfig(dataType: ConfigType.bool, configKey: 'under_maintenance');
+  bool hasEmergencyNotice = getConfig(dataType: ConfigType.bool, configKey: 'has_emergency_notice');
+
   @override
-  void onInit() async {
+  void onInit() {
     String userId = HiveStore.loadString(key: HiveKey.userId.name)!;
     FirebaseCrashlytics.instance.setUserIdentifier(userId);
-    // 커넥션 타임아웃 체크를 위한 api 테스트 코드
-    // int time = 0;
-    // Timer connectionTimer = Timer.periodic(Duration(milliseconds: 1), (timer) {
-    //   time = timer.tick;
-    // });
-    // await UaaService.pingConnection(11, successCallback: (data) {
-    //   print(data);
-    //   connectionTimer.cancel();
-    //   print(time);
-    // }, errorCallback: (data) {
-    //   print(data);
-    //   connectionTimer.cancel();
-    //   print(time);
-    // });
-    await checkTermsAgreeStatus();
 
     super.onInit();
   }
 
   @override
-  void onReady() {
-    Future.delayed(Duration.zero, () => timerStart());
+  void onReady() async {
+    if (isUnderMaintenance()) {
+      String emergencyNoticeContent = getConfig(dataType: ConfigType.string, configKey: 'emergency_notice_content');
+      if (underMaintenance) {
+        await BoardService.getNoticePopupList(
+          successCallback: (List<NoticePopupModel> records) {
+            NoticePopupModel popup = records.firstWhere((element) => element.type == 'INSPECTION', orElse: () => NoticePopupModel(id: -1));
+            if (popup.id != -1) {
+              String rawText = popup.label!;
+              String type = rawText.contains('|') ? rawText.split('|')[0] : 'ING';
+              String contentText = rawText.contains('|') ? rawText.split('|')[1] : rawText;
+
+              showMaintenanceAlert(
+                type: type,
+                contentText: contentText,
+                callback: type == 'PREVIEW'
+                    ? () async {
+                        Get.back();
+                        await checkTermsAgreeStatus();
+                        Future.delayed(Duration.zero, () => timerStart());
+                      }
+                    : null,
+              );
+            } else {
+              showMaintenanceAlert(type: 'EMERGENCY', contentText: emergencyNoticeContent);
+            }
+          },
+          errorCallback: () {
+            showMaintenanceAlert(type: 'EMERGENCY', contentText: emergencyNoticeContent);
+          },
+        );
+      } else if (hasEmergencyNotice) {
+        showMaintenanceAlert(type: 'EMERGENCY', contentText: emergencyNoticeContent);
+      }
+    } else {
+      await checkTermsAgreeStatus();
+      Future.delayed(Duration.zero, () => timerStart());
+    }
     super.onReady();
   }
 
@@ -147,5 +174,9 @@ class LoadingController extends GetxController {
       timerStop();
       Get.offAllNamed(Routes.home);
     }
+  }
+
+  bool isUnderMaintenance() {
+    return underMaintenance || hasEmergencyNotice;
   }
 }
