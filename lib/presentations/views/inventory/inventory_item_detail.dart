@@ -17,70 +17,48 @@ class InventoryItemDetail extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     InventoryController controller = Get.put(InventoryController());
-
     return DefaultContainer(
-      // titleText: controller.selectedItem.value.itemName,
-      titleWidget: Row(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          if (controller.selectedItem.value.publishType == 'NFT')
-            Padding(
-              padding: EdgeInsets.only(right: 8.0.sp),
-              child: SvgPicture.asset('assets/images/shop/ico_nft_label.svg'),
-            ),
-          StyledText(
-            controller.selectedItem.value.itemName,
-            fontSize: 18,
-            lineHeight: 20,
-            fontWeight: 500,
-            letterSpacing: -0.02,
-          ),
-        ],
-      ),
+      titleText: controller.selectedItem.value.itemName,
       backgroundColor: subBg01Color,
-      child: Stack(
-        fit: StackFit.expand,
-        children: [
-          SingleChildScrollView(
-            physics: const ClampingScrollPhysics(),
-            child: Column(
-              children: [
-                Padding(
-                  padding: EdgeInsets.symmetric(horizontal: 22.0.sp),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Container(
-                        decoration: BoxDecoration(
-                          color: subBg02Color,
-                          border: Border.all(
-                            width: 2.sp,
-                            color: Colors.black,
-                          ),
-                          borderRadius: BorderRadius.all(
-                            Radius.circular(14.sp),
-                          ),
-                          boxShadow: [
-                            BoxShadow(
-                              color: Colors.black,
-                              offset: Offset(0, 1.sp),
-                              blurRadius: 1.0,
-                              spreadRadius: 0.0,
-                            ),
-                          ],
-                        ),
-                        child: SizedBox(
-                          width: double.infinity,
-                          child: Stack(
-                            alignment: Alignment.center,
+      child: Padding(
+        padding: EdgeInsets.symmetric(horizontal: 22.0.sp),
+        child: Column(
+          children: [
+            Container(
+              decoration: BoxDecoration(
+                color: subBg02Color,
+                border: Border.all(
+                  width: 2.sp,
+                  color: Colors.black,
+                ),
+                borderRadius: BorderRadius.all(
+                  Radius.circular(14.sp),
+                ),
+                boxShadow: [
+                  BoxShadow(
+                    color: Colors.black,
+                    offset: Offset(0, 1.sp),
+                    blurRadius: 1.0,
+                    spreadRadius: 0.0,
+                  ),
+                ],
+              ),
+              child: SizedBox(
+                child: Stack(
+                  children: [
+                    Positioned(
+                      right: 18.sp,
+                      top: 0,
+                      child: Container(
+                        child: getItemGradeIcon(controller.selectedItem.value.itemGrade),
+                      ),
+                    ),
+                    Padding(
+                      padding: EdgeInsets.symmetric(horizontal: 12.sp, vertical: 20.0.sp),
+                      child: Obx(
+                        () {
+                          return Column(
                             children: [
-                              Positioned(
-                                right: 18.sp,
-                                top: 0,
-                                child: Container(
-                                  child: getItemGradeIcon(controller.selectedItem.value.itemGrade),
-                                ),
-                              ),
                               Padding(
                                 padding: EdgeInsets.symmetric(vertical: 30.0.sp),
                                 child: Obx(
@@ -144,104 +122,94 @@ class InventoryItemDetail extends StatelessWidget {
                                                         crossAxisAlignment: CrossAxisAlignment.center,
                                                         mainAxisAlignment: MainAxisAlignment.center,
                                                         children: [
-                                                          Expanded(
-                                                            child: ClipRRect(
-                                                              child: SizedBox(
-                                                                child: Stack(
-                                                                  children: [
-                                                                    Container(
+                                                          Container(
+                                                            decoration: BoxDecoration(
+                                                              color: gaugeGrayColor,
+                                                              border: Border.all(
+                                                                width: 2.sp,
+                                                                color: Colors.black,
+                                                              ),
+                                                              borderRadius: BorderRadius.all(
+                                                                Radius.circular(50.sp),
+                                                              ),
+                                                              boxShadow: const [
+                                                                BoxShadow(
+                                                                  color: Colors.black,
+                                                                  offset: Offset(0, 0),
+                                                                  blurRadius: 0.0,
+                                                                  spreadRadius: 0.0,
+                                                                ),
+                                                              ],
+                                                            ),
+                                                          ),
+                                                          controller.selectedItem.value.durability > 1.0
+                                                              ? LayoutBuilder(
+                                                                  builder: (context, constraints) {
+                                                                    return Container(
+                                                                      width: controller.selectedItem.value.durability > 20
+                                                                          ? constraints.maxWidth / (100 / controller.selectedItem.value.durability)
+                                                                          : controller.selectedItem.value.durability < 2
+                                                                              ? 0
+                                                                              : 34,
                                                                       decoration: BoxDecoration(
-                                                                        color: gaugeGrayColor,
+                                                                        color: controller.selectedItem.value.durability <= 30 ? textRedColor : purpleColor,
                                                                         border: Border.all(
                                                                           width: 2.sp,
                                                                           color: Colors.black,
                                                                         ),
                                                                         borderRadius: BorderRadius.all(
-                                                                          Radius.circular(50.sp),
+                                                                          Radius.circular(30.sp),
                                                                         ),
-                                                                        boxShadow: const [
+                                                                        boxShadow: [
                                                                           BoxShadow(
-                                                                            color: Colors.black,
-                                                                            offset: Offset(0, 0),
-                                                                            blurRadius: 0.0,
+                                                                            color: Colors.black.withOpacity(0.5),
+                                                                            offset: Offset(4.sp, 0),
+                                                                            blurRadius: 4.0,
                                                                             spreadRadius: 0.0,
                                                                           ),
                                                                         ],
                                                                       ),
-                                                                    ),
-                                                                    controller.selectedItem.value.durability > 1.0
-                                                                        ? LayoutBuilder(
-                                                                            builder: (context, constraints) {
-                                                                              return Container(
-                                                                                width: controller.selectedItem.value.durability > 20
-                                                                                    ? constraints.maxWidth / (100 / controller.selectedItem.value.durability)
-                                                                                    : controller.selectedItem.value.durability < 2
-                                                                                        ? 0
-                                                                                        : 34,
-                                                                                decoration: BoxDecoration(
-                                                                                  color: controller.selectedItem.value.durability <= 30 ? textRedColor : purpleColor,
-                                                                                  border: Border.all(
-                                                                                    width: 2.sp,
-                                                                                    color: Colors.black,
-                                                                                  ),
-                                                                                  borderRadius: BorderRadius.all(
-                                                                                    Radius.circular(30.sp),
-                                                                                  ),
-                                                                                  boxShadow: [
-                                                                                    BoxShadow(
-                                                                                      color: Colors.black.withOpacity(0.5),
-                                                                                      offset: Offset(4.sp, 0),
-                                                                                      blurRadius: 4.0,
-                                                                                      spreadRadius: 0.0,
-                                                                                    ),
-                                                                                  ],
-                                                                                ),
-                                                                              );
-                                                                            },
-                                                                          )
-                                                                        : Container(),
-                                                                  ],
-                                                                ),
-                                                              ),
-                                                            ),
-                                                          ),
+                                                                    );
+                                                                  },
+                                                                )
+                                                              : Container(),
                                                         ],
                                                       ),
-                                                      Row(
-                                                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                                        crossAxisAlignment: CrossAxisAlignment.center,
-                                                        children: [
-                                                          Align(
-                                                            alignment: Alignment.center,
-                                                            child: Row(
-                                                              crossAxisAlignment: CrossAxisAlignment.center,
-                                                              children: [
-                                                                Padding(
-                                                                  padding: EdgeInsets.only(left: 12.0.sp, right: 7.sp),
-                                                                  child: iconShoes,
-                                                                ),
-                                                                StyledText(
-                                                                  '신발 내구도',
-                                                                  fontFamily: 'Montserrat',
-                                                                  fontWeight: 800,
-                                                                  fontSize: 15,
-                                                                  lineHeight: 21,
-                                                                  color: controller.selectedItem.value.durability.toInt() <= 30 ? Colors.white : Colors.black,
-                                                                ),
-                                                                Padding(
-                                                                  padding: EdgeInsets.only(left: 5.0.sp),
-                                                                  child: StyledText(
-                                                                    formatDecimalPlaces(controller.selectedItem.value.durability, 2),
-                                                                    fontWeight: 800,
-                                                                    fontSize: 14,
-                                                                    lineHeight: 15,
-                                                                    color: controller.selectedItem.value.durability.toInt() <= 30 ? Colors.white : Colors.black,
-                                                                  ),
-                                                                ),
-                                                              ],
-                                                            ),
-                                                          ),
-                                                        ],
+                                                    ),
+                                                  ),
+                                                ),
+                                              ],
+                                            ),
+                                            Row(
+                                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                              crossAxisAlignment: CrossAxisAlignment.center,
+                                              children: [
+                                                Align(
+                                                  alignment: Alignment.center,
+                                                  child: Row(
+                                                    crossAxisAlignment: CrossAxisAlignment.center,
+                                                    children: [
+                                                      Padding(
+                                                        padding: EdgeInsets.only(left: 12.0.sp, right: 7.sp),
+                                                        child: iconShoes,
+                                                      ),
+                                                      StyledText(
+                                                        '내구도',
+                                                        fontFamily: 'Montserrat',
+                                                        fontWeight: 800,
+                                                        fontSize: 15,
+                                                        lineHeight: 21,
+                                                        color: controller.selectedItem.value.durability.toInt() <= 30 ? Colors.white : Colors.black,
+                                                      ),
+                                                      Padding(
+                                                        padding: EdgeInsets.only(left: 5.0.sp),
+                                                        child: StyledText(
+                                                          formatDecimalPlaces(controller.selectedItem.value.durability, 2),
+                                                          fontWeight: 800,
+                                                          fontSize: 14,
+                                                          lineHeight: 15,
+                                                          color: controller.selectedItem.value.durability.toInt() <= 30 ? Colors.white : Colors.black,
+                                                        ),
                                                       ),
                                                     ],
                                                   ),
@@ -832,50 +800,50 @@ class InventoryItemDetail extends StatelessWidget {
                     ],
                   ),
                 ),
-              ],
+              ),
             ),
-          ),
-          if (controller.isShoe.value)
-            Positioned(
-              left: 20,
-              right: 20,
-              bottom: 10,
-              child: InkWell(
-                onTap: () => controller.showShoesRepairPopup(controller.selectedItem.value.id),
-                child: Container(
-                  padding: EdgeInsets.all(20.sp),
-                  margin: const EdgeInsets.only(bottom: 20),
-                  width: double.infinity,
-                  decoration: BoxDecoration(
-                    color: skyBlueColor,
-                    borderRadius: BorderRadius.circular(12.sp),
-                    border: Border.all(
-                      width: 2,
-                      style: BorderStyle.solid,
-                      color: Colors.black,
-                    ),
-                    boxShadow: [
-                      BoxShadow(
-                        offset: Offset(0, 4.sp),
-                        blurRadius: 0,
-                        spreadRadius: 0,
-                        color: Colors.black,
+            if (controller.isShoe.value)
+              Expanded(
+                child: Align(
+                  alignment: Alignment.bottomCenter,
+                  child: InkWell(
+                    onTap: () => controller.showShoesRepairPopup(controller.selectedItem.value.id),
+                    child: Container(
+                      padding: EdgeInsets.all(20.sp),
+                      margin: EdgeInsets.only(bottom: 20),
+                      width: double.infinity,
+                      decoration: BoxDecoration(
+                        color: skyBlueColor,
+                        borderRadius: BorderRadius.circular(12.sp),
+                        border: Border.all(
+                          width: 2,
+                          style: BorderStyle.solid,
+                          color: Colors.black,
+                        ),
+                        boxShadow: [
+                          BoxShadow(
+                            offset: Offset(0, 4.sp),
+                            blurRadius: 0,
+                            spreadRadius: 0,
+                            color: Colors.black,
+                          ),
+                        ],
                       ),
-                    ],
-                  ),
-                  child: Text(
-                    '내구도 충전하기',
-                    textAlign: TextAlign.center,
-                    style: TextStyle(
-                      fontSize: 18.sp,
-                      fontWeight: FontWeight.w600,
-                      height: 16.sp / 18.sp,
+                      child: Text(
+                        '신발 내구도 충전하기',
+                        textAlign: TextAlign.center,
+                        style: TextStyle(
+                          fontSize: 18.sp,
+                          fontWeight: FontWeight.w600,
+                          height: 16.sp / 18.sp,
+                        ),
+                      ),
                     ),
                   ),
                 ),
               ),
-            ),
-        ],
+          ],
+        ),
       ),
     );
   }

@@ -279,7 +279,7 @@ class Api {
     ).onError((DioError error, stackTrace) async {
       _logger.e(
         '------------->'
-        '\nERROR'
+        '\nRETRY FAILED REQUEST ERROR'
         '\nError: ${error.error}'
         '\nErrorPath: ${error.response?.requestOptions.baseUrl}${error.response?.requestOptions.path}'
         '\nErrorQuery: ${error.response?.requestOptions.queryParameters}'
@@ -292,14 +292,12 @@ class Api {
       if (retryAttempt > 5) {
         showToastPopup('토큰이 만료되었습니다.\n다시 로그인해주세요.');
         resetToLogin(e, handler);
-        if (error is DioError) {
-          _logger.e(
-            '------------->'
-            '\nRETRY ERROR'
-            '\n${e.requestOptions.baseUrl + e.requestOptions.path}'
-            '\n${error.response}',
-          );
-        }
+        _logger.e(
+          '------------->'
+          '\nRETRY ERROR'
+          '\n${e.requestOptions.baseUrl + e.requestOptions.path}'
+          '\n${error.response}',
+        );
 
         if (!handler.isCompleted) {
           if (e.requestOptions.extra['showLoading'] && getx.Get.isDialogOpen == true) {

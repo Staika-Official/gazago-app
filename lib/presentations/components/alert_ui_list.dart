@@ -3962,5 +3962,160 @@ void showItemTipAlert() {
         ),
       ),
     ),
+void showMaintenanceAlert({String type = 'ING', required String contentText, Function? callback}) {
+  List<Widget> setWidgets() {
+    Widget image;
+    Widget title;
+    Widget description;
+    switch (type) {
+      case 'PREVIEW':
+        image = Image.asset(
+          'assets/images/maintenance/maintenance_preview.png',
+          width: 150,
+          height: 160,
+        );
+        title = Padding(
+          padding: const EdgeInsets.only(top: 30, bottom: 13),
+          child: SvgPicture.asset(
+            'assets/images/maintenance/maintenance_preview_text.svg',
+          ),
+        );
+        description = Padding(
+          padding: const EdgeInsets.only(top: 28, bottom: 28),
+          child: StyledText(
+            '플레이 중인 운동은 점검 시작 전에 완료해 주세요.\n점검이 시작되면 모든 운동이 강제 종료돼요.',
+            fontWeight: 500,
+            fontSize: 16,
+            lineHeight: 24,
+            textAlign: TextAlign.center,
+          ),
+        );
+        break;
+      case 'ING':
+        image = Image.asset(
+          'assets/images/maintenance/maintenance_in_progress.png',
+          width: 150,
+          height: 180,
+        );
+        title = Padding(
+          padding: const EdgeInsets.only(top: 30, bottom: 13),
+          child: SvgPicture.asset(
+            'assets/images/maintenance/maintenance_in_progress_text.svg',
+          ),
+        );
+
+        description = Padding(
+          padding: const EdgeInsets.only(top: 28, bottom: 28),
+          child: StyledText(
+            '안녕하세요 가자고 팀입니다.\n새로운 기능 업데이트를 위해 시스템 점검중입니다.\n양해 부탁드립니다.',
+            fontWeight: 500,
+            fontSize: 16,
+            lineHeight: 24,
+            textAlign: TextAlign.center,
+          ),
+        );
+        break;
+      case 'EMERGENCY':
+        image = Image.asset(
+          'assets/images/maintenance/maintenance_siren.png',
+          width: 56,
+          height: 83,
+        );
+        title = Padding(
+          padding: const EdgeInsets.only(top: 30, bottom: 13),
+          child: SvgPicture.asset(
+            'assets/images/maintenance/maintenance_siren_text.svg',
+          ),
+        );
+        description = Padding(
+          padding: const EdgeInsets.only(top: 28, bottom: 28),
+          child: StyledText(
+            '긴급 점검 진행 중입니다.\n서비스 이용에 불편을 드려 대단히 죄송합니다.',
+            fontWeight: 500,
+            fontSize: 16,
+            lineHeight: 24,
+            textAlign: TextAlign.center,
+          ),
+        );
+        break;
+      default:
+        image = Image.asset(
+          'assets/images/maintenance/maintenance_in_progress.png',
+          width: 150,
+          height: 180,
+        );
+        title = Padding(
+          padding: const EdgeInsets.only(top: 30, bottom: 13),
+          child: SvgPicture.asset(
+            'assets/images/maintenance/maintenance_in_progress_text.svg',
+          ),
+        );
+        description = Padding(
+          padding: const EdgeInsets.only(top: 28, bottom: 28),
+          child: StyledText(
+            '안녕하세요 가자고 팀입니다.\n새로운 기능 업데이트를 위해 시스템 점검중입니다.\n양해 부탁드립니다.',
+            fontWeight: 500,
+            fontSize: 16,
+            lineHeight: 24,
+            textAlign: TextAlign.center,
+          ),
+        );
+    }
+    return [image, title, description];
+  }
+
+  Get.dialog(
+    WillPopScope(
+      onWillPop: () async => false,
+      child: Dialog(
+        insetPadding: EdgeInsets.zero,
+        backgroundColor: subBg01Color,
+        child: Stack(
+          children: [
+            Positioned(
+              top: 25,
+              left: 25,
+              child: SvgPicture.asset(
+                'assets/images/gazago_logo_text.svg',
+              ),
+            ),
+            Center(
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  setWidgets()[0],
+                  setWidgets()[1],
+                  if (type != 'EMERGENCY')
+                    Padding(
+                      padding: const EdgeInsets.only(top: 8.0),
+                      child: StyledText(
+                        contentText.replaceAll('\\n', '\n'),
+                        fontWeight: 500,
+                        fontSize: 16,
+                        lineHeight: 22,
+                        color: deepGrayColor,
+                      ),
+                    ),
+                  setWidgets()[2],
+                  if (callback != null)
+                    SizedBox(
+                      width: 180,
+                      child: GazagoButton(
+                        buttonText: '닫기',
+                        buttonColor: popupBgColor,
+                        textColor: Colors.white,
+                        onTap: () => callback(),
+                      ),
+                    ),
+                ],
+              ),
+            ),
+          ],
+        ),
+      ),
+    ),
+    barrierColor: subBg01Color,
+    useSafeArea: true,
+    barrierDismissible: false,
   );
 }

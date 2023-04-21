@@ -591,7 +591,7 @@ class ActivityHome extends StatelessWidget {
                                                           top: 15,
                                                         ),
                                                         child: StyledText(
-                                                          '도전할 챌린지를\n찾아보세요',
+                                                          '도전할 100대 명산\n챌린지를 찾아보세요',
                                                           fontSize: 16,
                                                           lineHeight: 20,
                                                           fontWeight: 600,
