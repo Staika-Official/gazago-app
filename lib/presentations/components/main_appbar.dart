@@ -32,8 +32,8 @@ class MainAppbar extends StatelessWidget implements PreferredSizeWidget {
           Row(
             children: [
               IconButton(
-                onPressed: () => Get.toNamed(Routes.preferences),
-                icon: iconHeaderGear,
+                onPressed: () => Get.find<WalletMasterController>().moveToWallet(),
+                icon: iconHeaderWallet,
                 splashRadius: 20.sp,
                 iconSize: 30,
                 constraints: BoxConstraints(
@@ -41,8 +41,8 @@ class MainAppbar extends StatelessWidget implements PreferredSizeWidget {
                 ),
               ),
               IconButton(
-                onPressed: () => Get.find<WalletMasterController>().moveToWallet(),
-                icon: iconHeaderWallet,
+                onPressed: () => Get.toNamed(Routes.preferences),
+                icon: iconHeaderGear,
                 splashRadius: 20.sp,
                 iconSize: 30,
                 constraints: BoxConstraints(
