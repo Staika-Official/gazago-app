@@ -3962,6 +3962,9 @@ void showItemTipAlert() {
         ),
       ),
     ),
+  );
+}
+
 void showMaintenanceAlert({String type = 'ING', required String contentText, Function? callback}) {
   List<Widget> setWidgets() {
     Widget image;
