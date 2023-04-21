@@ -32,7 +32,7 @@ class SecondaryAppbar extends StatelessWidget implements PreferredSizeWidget {
                 child: FittedBox(
                   fit: BoxFit.scaleDown,
                   child: StyledText(
-                    token.symbol! == 'STIK' ? formatDecimalPlaces(double.parse(token.uiAmountString!), 9, isAutoDecimal: true) : formatDecimalPlaces(double.parse(token.uiAmountString!), 0),
+                    token.symbol! == 'STIK' ? formatDecimalPlaces(double.parse(token.uiAmountString!), 2, isAutoDecimal: true) : formatDecimalPlaces(double.parse(token.uiAmountString!), 0),
                     color: Colors.white,
                     fontSize: 12,
                     fontWeight: 600,
