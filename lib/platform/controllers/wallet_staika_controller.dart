@@ -55,6 +55,7 @@ class StaikaWalletController extends GetxController with WalletMixin, SolanaMixi
   @override
   void onInit() async {
     focusNode.addListener(_onFocusChange);
+
     await getStaikaWalletInfo();
 
     super.onInit();
@@ -127,7 +128,7 @@ class StaikaWalletController extends GetxController with WalletMixin, SolanaMixi
   }
 
   Future<void> getOnChainTokenBalance() async {
-    // loaderController.isLoading.value = true;
+    loaderController.isLoading.value = true;
     await WalletService.getOnChainTokenBalance(successCallback: (List<WalletTokenBalanceModel> tokenData) {
       coinAssetList.clear();
       coinAssetList.addAll(tokenData);
@@ -140,7 +141,7 @@ class StaikaWalletController extends GetxController with WalletMixin, SolanaMixi
       // setCurrentSumPriceUI(tokenData, currency.value);
       // coinAssetList.add(WalletTokenBalanceModel(symbol: "STIK", name: "Staika", amount: 4998310000, uiAmount: 4.99831));
     });
-    // loaderController.isLoading.value = false;
+    loaderController.isLoading.value = false;
   }
 
   void moveToSendToGoWallet() {

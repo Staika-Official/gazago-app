@@ -119,15 +119,19 @@ class ArchiveController extends GetxController with ScrollMixin {
     locations.value = RxList.empty();
     List<dynamic> locationArray = List.empty(growable: true);
     List<LatLng> coordinates = List.empty(growable: true);
+    LatLng coordinate;
     if (selectedItem.value.locationsStr != null) {
       locationArray = json.decode(selectedItem.value.locationsStr!);
     } else {
       locationArray = await getLocationsData(selectedItem.value.id!);
     }
     for (List location in locationArray) {
-      // print(location[0]);
-      LatLng coordinate = LatLng(double.parse(location[0]), double.parse(location[1]));
-      // LatLng coordinate = LatLng(location[0], location[1]);
+      if (location[0].runtimeType == String || location[1].runtimeType == String) {
+        coordinate = LatLng(double.parse(location[0]), double.parse(location[1]));
+      } else {
+        coordinate = LatLng(location[0], location[1]);
+      }
+
       coordinates.add(coordinate);
     }
     locations.addAll(coordinates);
