@@ -1,4 +1,5 @@
 import 'package:gaza_go/constants/enums.dart';
+import 'package:gaza_go/platform/controllers/loader_controller.dart';
 import 'package:gaza_go/platform/controllers/wallet_master_controller.dart';
 import 'package:gaza_go/platform/helpers/alert_helper.dart';
 import 'package:gaza_go/platform/helpers/solana_mixin.dart';
@@ -13,6 +14,7 @@ import 'package:get/get.dart';
 class GoWalletController extends GetxController with SolanaMixin {
   WalletMasterController walletMasterController = Get.find();
   // LoaderController loaderController = Get.find();
+  LoaderController loaderController = Get.put(LoaderController());
   RxList productList = RxList.empty();
   Rx<ChargeTikModel> chargeTikData = Rx(ChargeTikModel(userId: -1, title: "STIK_TO_TIK", fromTokenSymbol: "", fromUiAmount: 0.0, toTokenSymbol: "", toUiAmount: 0, priceKRW: 0.0, priceUSD: 0.0));
 
@@ -32,7 +34,7 @@ class GoWalletController extends GetxController with SolanaMixin {
       failureChargeStikToTikAlert(this, '거래 기준가의 유효시간이 지나 더이상 해당 가격으로\n거래가 불가합니다. 다시 시도해 주시기 바랍니다.');
     } else {
       if (walletMasterController.stik.value.amount! >= double.parse(exchangeProduct.fromUiAmountString!)) {
-        // loaderController.isLoading.value = true;
+        loaderController.isLoading.value = true;
         await SolanaService.fetchChargeStikToTik(
           ChargeTikModel(
             userId: int.parse(userId!),
@@ -45,9 +47,11 @@ class GoWalletController extends GetxController with SolanaMixin {
             priceUSD: walletMasterController.stikPriceInfoUSD.value.price!,
           ),
           successCallback: (data) {
+            loaderController.isLoading.value = false;
             successChargeStikToTikAlert(this);
           },
           errorCallback: (err) {
+            loaderController.isLoading.value = false;
             if (err.status == 500) {
               failureShortBalanceStikToTikAlert(this);
             } else {
@@ -55,7 +59,6 @@ class GoWalletController extends GetxController with SolanaMixin {
             }
           },
         );
-        // loaderController.isLoading.value = false;
       } else {
         showToastPopup('보유중인 STIK이 충분하지 않습니다.');
       }

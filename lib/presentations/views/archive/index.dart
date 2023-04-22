@@ -15,7 +15,7 @@ class ArchiveHome extends StatelessWidget {
     return controller.archiveList
         .map(
           (archive) => InkWell(
-            onTap: () => controller.toDetail(archive.id!),
+            onTap: () => controller.dataGetLoading.value ? null : controller.toDetail(archive.id!),
             child: Container(
               margin: EdgeInsets.only(bottom: 15.sp),
               decoration: BoxDecoration(

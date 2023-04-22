@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:gaza_go/constants/routes.dart';
+import 'package:gaza_go/platform/controllers/loader_controller.dart';
 import 'package:gaza_go/platform/controllers/wallet_master_controller.dart';
 import 'package:gaza_go/platform/firebase/remote_config.dart';
 import 'package:gaza_go/platform/models/inventory_item_stat_model.dart';
@@ -11,7 +12,7 @@ import 'package:get/get.dart';
 
 class ShopController extends GetxController {
   final WalletMasterController walletMasterController = Get.find();
-
+  LoaderController loaderController = Get.put(LoaderController());
   final RxList<ShopItemModel> shopItemsList = RxList.empty();
 
   final List<Map<String, String>> sortingList = [
@@ -149,13 +150,16 @@ class ShopController extends GetxController {
 
   void handlePurchaseShopItem(int itemId) async {
     Get.back();
+    loaderController.isLoading.value = true;
     await ShopService.fetchPurchaseShopItem(itemId, successCallback: (ShopItemPurchaseResponseModel items) {
+      loaderController.isLoading.value = false;
       purchaseCompleteItem.value = items;
       showItemPurchaseCompletePopup();
       walletMasterController.getSpendingWalletBalances();
       getShopItemsList();
       getItemDetail(itemId);
     }, errorCallback: (statusCode) {
+      loaderController.isLoading.value = false;
       if (statusCode == 422) {
         isShortBalance.value = true;
         showTikShortBalancePopup(selectedItem.value.tradeSymbol);

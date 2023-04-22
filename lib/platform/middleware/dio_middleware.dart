@@ -2,7 +2,6 @@ import 'dart:async';
 import 'dart:convert';
 
 import 'package:dio/dio.dart';
-import 'package:flutter/material.dart';
 import 'package:gaza_go/constants/enums.dart';
 import 'package:gaza_go/constants/routes.dart';
 import 'package:gaza_go/flavors.dart';
@@ -89,21 +88,21 @@ class Api {
   }
 
   static _requestInterceptor(RequestOptions options, RequestInterceptorHandler handler) {
-    if (options.extra['showLoading'] && getx.Get.isDialogOpen != true) {
-      getx.Get.dialog(
-        Dialog(
-          shadowColor: Colors.transparent,
-          backgroundColor: Colors.transparent,
-          child: Center(
-            child: SizedBox(
-              width: 20,
-              height: 20,
-              child: CircularProgressIndicator(),
-            ),
-          ),
-        ),
-      );
-    }
+    // if (options.extra['showLoading'] && getx.Get.isDialogOpen != true) {
+    //   getx.Get.dialog(
+    //     Dialog(
+    //       shadowColor: Colors.transparent,
+    //       backgroundColor: Colors.transparent,
+    //       child: Center(
+    //         child: SizedBox(
+    //           width: 20,
+    //           height: 20,
+    //           child: CircularProgressIndicator(),
+    //         ),
+    //       ),
+    //     ),
+    //   );
+    // }
 
     if (HiveStore.load(key: HiveKey.isDebuggingMode.name)) {
       List requestLogs = HiveStore.load(key: HiveKey.requestLogs.name) ?? [];
@@ -163,9 +162,9 @@ class Api {
       '\nResponse: ${response.data}',
     );
 
-    if (response.requestOptions.extra['showLoading'] && getx.Get.isDialogOpen == true) {
-      getx.Get.back();
-    }
+    // if (response.requestOptions.extra['showLoading'] && getx.Get.isDialogOpen == true) {
+    //   getx.Get.back();
+    // }
 
     Timer(Duration.zero, () {
       handler.next(response);

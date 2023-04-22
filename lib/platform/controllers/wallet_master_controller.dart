@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:gaza_go/constants/enums.dart';
 import 'package:gaza_go/constants/routes.dart';
 import 'package:gaza_go/flavors.dart';
+import 'package:gaza_go/platform/controllers/loader_controller.dart';
 import 'package:gaza_go/platform/controllers/loading_controller.dart';
 import 'package:gaza_go/platform/controllers/wallet_staika_controller.dart';
 import 'package:gaza_go/platform/helpers/alert_helper.dart';
@@ -30,7 +31,8 @@ import 'package:in_app_purchase/in_app_purchase.dart';
 import 'package:throttling/throttling.dart';
 
 class WalletMasterController extends GetxController with SolanaMixin, GetTickerProviderStateMixin {
-  // LoaderController loaderController = Get.put(LoaderController());
+  LoaderController loaderController = Get.put(LoaderController());
+  // LoaderController loaderController = Get.find();
   late TabController tabController;
   final RxList<AssetTokenBalanceModel> spendingTokens = RxList.empty();
   final RxList<TokenInfoModel> spendingTokenInfoList = RxList.empty();
@@ -344,9 +346,9 @@ class WalletMasterController extends GetxController with SolanaMixin, GetTickerP
   }
 
   void showProductStikDialog() async {
-    // loaderController.isLoading.value = true;
+    loaderController.isLoading.value = true;
     await getStikPriceInfo();
-    // loaderController.isLoading.value = false;
+    loaderController.isLoading.value = false;
     showProductStikList(this);
   }
 

@@ -12,12 +12,31 @@ class LoaderController extends GetxController {
     isLoading.listen((val) {
       if (val == true) {
         print('열어');
-        if (!Get.isDialogOpen!) {
-          Get.dialog(Loader(), name: 'progressCircle');
-        }
+        print(Get.isDialogOpen!);
+        Get.dialog(Dialog(
+                  shadowColor: Colors.transparent,
+                  backgroundColor: Colors.transparent,
+                  child: Center(
+                    child: SizedBox(
+                      width: 20,
+                      height: 20,
+                      child: CircularProgressIndicator(),
+                    ),
+                  ),
+                ), name: 'progressCircle');
+        // if (!Get.isDialogOpen!) {
+        //   Get.dialog(Loader(), name: 'progressCircle');
+        // }
       } else {
         print('닫어');
-        Navigator.of(dialogKey.currentContext!).pop();
+        print(dialogKey);
+
+        if (dialogKey.currentContext != null) {
+          Navigator.of(dialogKey.currentContext!).pop();
+        } else {
+          Get.back();
+        }
+
         // dialogKey.currentState?.pop();
         // Navigator.pop()
       }

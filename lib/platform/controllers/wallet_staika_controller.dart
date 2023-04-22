@@ -165,6 +165,7 @@ class StaikaWalletController extends GetxController with WalletMixin, SolanaMixi
     num mod = pow(10.0, 9);
     if (double.parse(sendStikUiAmount.value) < double.parse(assetStik.value!.uiAmountString)) {
       isFetching.value = true;
+      loaderController.isLoading.value = true;
       await WalletService.fetchStikMoveToGoWallet(
         symbol: 'STIK',
         accountSecretkey: secretKey,
@@ -176,13 +177,13 @@ class StaikaWalletController extends GetxController with WalletMixin, SolanaMixi
         decimals: assetStik.value!.decimals,
         amount: (double.parse(sendStikUiAmount.value) * mod).toInt(),
         successCallback: (boolean) {
-          print('성공');
-          // loaderController.isLoading.value = false;
+          loaderController.isLoading.value = false;
           successExchangeStikToGoWalletAlert(this);
           sendStikUiAmount.value = '0';
           stikAmountTextController.text = '';
         },
         errorCallback: () {
+          loaderController.isLoading.value = false;
           failureExchangeStikToGoWalletAlert();
         },
       );

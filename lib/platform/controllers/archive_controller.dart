@@ -4,6 +4,7 @@ import 'dart:io';
 import 'package:flutter_naver_map/flutter_naver_map.dart';
 import 'package:flutter_svg_provider/flutter_svg_provider.dart';
 import 'package:gaza_go/constants/routes.dart';
+import 'package:gaza_go/platform/controllers/loader_controller.dart';
 import 'package:gaza_go/platform/helpers/alert_helper.dart';
 import 'package:gaza_go/platform/helpers/location_helper.dart';
 import 'package:gaza_go/platform/models/archive_detail_item_model.dart';
@@ -13,6 +14,7 @@ import 'package:gaza_go/presentations/components/alert_ui_list.dart';
 import 'package:get/get.dart';
 
 class ArchiveController extends GetxController with ScrollMixin {
+  LoaderController loaderController = Get.put(LoaderController());
   RxList<ArchiveListItemModel> archiveList = RxList.empty();
   RxInt page = RxInt(0);
   RxBool stopLoading = RxBool(false);
@@ -52,7 +54,11 @@ class ArchiveController extends GetxController with ScrollMixin {
   }
 
   void toDetail(int id) async {
+    loaderController.isLoading.value = true;
+    dataGetLoading.value = true;
     await ArchiveService.getArchiveItem(id, Platform.operatingSystem, successCallback: (archive) async {
+      loaderController.isLoading.value = false;
+      dataGetLoading.value = false;
       selectedItem.value = archive;
       await initialiseLocations();
       Get.toNamed(Routes.archiveDetail);
@@ -119,7 +125,9 @@ class ArchiveController extends GetxController with ScrollMixin {
       locationArray = await getLocationsData(selectedItem.value.id!);
     }
     for (List location in locationArray) {
+      // print(location[0]);
       LatLng coordinate = LatLng(double.parse(location[0]), double.parse(location[1]));
+      // LatLng coordinate = LatLng(location[0], location[1]);
       coordinates.add(coordinate);
     }
     locations.addAll(coordinates);
