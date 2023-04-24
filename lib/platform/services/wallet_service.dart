@@ -135,19 +135,19 @@ class WalletService {
     // FeePayer
     final feePayer = F.solanaFeePayer;
 
-    final recentBlockhash = await solanaClient.rpcClient.getRecentBlockhash(commitment: Commitment.confirmed);
+    final recentBlockhash = await solanaClient.rpcClient.getLatestBlockhash(commitment: Commitment.confirmed);
     final CompiledMessage compiledMessage = message.compile(
-      recentBlockhash: recentBlockhash.blockhash,
+      recentBlockhash: recentBlockhash.value.blockhash,
       feePayer: feePayer,
     );
 
     final List<Signature> signatures = [];
     final feePayerSign = Signature(List.filled(64, 0), publicKey: feePayer);
     signatures.add(feePayerSign);
-    signatures.add(await sender.sign(compiledMessage.data));
+    signatures.add(await sender.sign(compiledMessage.toByteArray()));
 
     SignedTx tx = SignedTx(
-      messageBytes: compiledMessage.data,
+      compiledMessage: compiledMessage,
       signatures: signatures,
     );
 
@@ -247,17 +247,17 @@ class WalletService {
 
     final recentBlockhash = await solanaClient.rpcClient.getRecentBlockhash(commitment: Commitment.confirmed);
     final CompiledMessage compiledMessage = message.compile(
-      recentBlockhash: recentBlockhash.blockhash,
+      recentBlockhash: recentBlockhash.value.blockhash,
       feePayer: feePayer,
     );
 
     final List<Signature> signatures = [];
     final feePayerSign = Signature(List.filled(64, 0), publicKey: feePayer);
     signatures.add(feePayerSign);
-    signatures.add(await sender.sign(compiledMessage.data));
+    signatures.add(await sender.sign(compiledMessage.toByteArray()));
 
     SignedTx tx = SignedTx(
-      messageBytes: compiledMessage.data,
+      compiledMessage: compiledMessage,
       signatures: signatures,
     );
     String uiAmount = getUiAmountString(amount, decimals);
