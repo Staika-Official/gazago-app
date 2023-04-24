@@ -986,7 +986,7 @@ void itemPurchaseAlert(ShopController controller, double remainMyTik, tradeSymbo
               ],
             ),
           ),
-          if (controller.selectedItem.value.maxGoProfit > 0)
+          if (controller.selectedItem.value.maxGoProfit! > 0)
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
@@ -997,14 +997,14 @@ void itemPurchaseAlert(ShopController controller, double remainMyTik, tradeSymbo
                   fontWeight: 500,
                 ),
                 StyledText(
-                  '${formatDecimalPlaces(controller.selectedItem.value.minGoProfit, 0)}-${formatDecimalPlaces(controller.selectedItem.value.maxGoProfit, 0)}',
+                  '${formatDecimalPlaces(controller.selectedItem.value.minGoProfit!, 0)}-${formatDecimalPlaces(controller.selectedItem.value.maxGoProfit!, 0)}',
                   fontSize: 18,
                   lineHeight: 32,
                   fontWeight: 400,
                 ),
               ],
             ),
-          if (controller.selectedItem.value.maxDurability > 0)
+          if (controller.selectedItem.value.maxDurability! > 0)
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
@@ -1015,14 +1015,14 @@ void itemPurchaseAlert(ShopController controller, double remainMyTik, tradeSymbo
                   fontWeight: 600,
                 ),
                 StyledText(
-                  '${formatDecimalPlaces(controller.selectedItem.value.minDurability, 0)}-${formatDecimalPlaces(controller.selectedItem.value.maxDurability, 0)}',
+                  '${formatDecimalPlaces(controller.selectedItem.value.minDurability!, 0)}-${formatDecimalPlaces(controller.selectedItem.value.maxDurability!, 0)}',
                   fontSize: 18,
                   lineHeight: 32,
                   fontWeight: 400,
                 ),
               ],
             ),
-          if (controller.selectedItem.value.maxStamina > 0)
+          if (controller.selectedItem.value.maxStamina! > 0)
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
@@ -1033,14 +1033,14 @@ void itemPurchaseAlert(ShopController controller, double remainMyTik, tradeSymbo
                   fontWeight: 500,
                 ),
                 StyledText(
-                  '${formatDecimalPlaces(controller.selectedItem.value.minStamina, 0)}-${formatDecimalPlaces(controller.selectedItem.value.maxStamina, 0)}',
+                  '${formatDecimalPlaces(controller.selectedItem.value.minStamina!, 0)}-${formatDecimalPlaces(controller.selectedItem.value.maxStamina!, 0)}',
                   fontSize: 18,
                   lineHeight: 32,
                   fontWeight: 400,
                 ),
               ],
             ),
-          if (controller.selectedItem.value.maxLuck > 0)
+          if (controller.selectedItem.value.maxLuck! > 0)
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
@@ -1051,7 +1051,7 @@ void itemPurchaseAlert(ShopController controller, double remainMyTik, tradeSymbo
                   fontWeight: 600,
                 ),
                 StyledText(
-                  '${formatDecimalPlaces(controller.selectedItem.value.minLuck, 0)}-${formatDecimalPlaces(controller.selectedItem.value.maxLuck, 0)}',
+                  '${formatDecimalPlaces(controller.selectedItem.value.minLuck!, 0)}-${formatDecimalPlaces(controller.selectedItem.value.maxLuck!, 0)}',
                   fontSize: 18,
                   lineHeight: 32,
                   fontWeight: 400,
@@ -1144,7 +1144,7 @@ void itemPurchaseShortBalanceAlert(ShopController controller, double remainMyTik
               ],
             ),
           ),
-          if (controller.selectedItem.value.maxGoProfit > 0)
+          if (controller.selectedItem.value.maxGoProfit! > 0)
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
@@ -1155,14 +1155,14 @@ void itemPurchaseShortBalanceAlert(ShopController controller, double remainMyTik
                   fontWeight: 600,
                 ),
                 StyledText(
-                  '${formatDecimalPlaces(controller.selectedItem.value.minGoProfit, 0)}-${formatDecimalPlaces(controller.selectedItem.value.maxGoProfit, 0)}',
+                  '${formatDecimalPlaces(controller.selectedItem.value.minGoProfit!, 0)}-${formatDecimalPlaces(controller.selectedItem.value.maxGoProfit!, 0)}',
                   fontSize: 18,
                   lineHeight: 32,
                   fontWeight: 400,
                 ),
               ],
             ),
-          if (controller.selectedItem.value.maxDurability > 0)
+          if (controller.selectedItem.value.maxDurability! > 0)
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
@@ -1173,14 +1173,14 @@ void itemPurchaseShortBalanceAlert(ShopController controller, double remainMyTik
                   fontWeight: 600,
                 ),
                 StyledText(
-                  '${formatDecimalPlaces(controller.selectedItem.value.minDurability, 0)}-${formatDecimalPlaces(controller.selectedItem.value.maxDurability, 0)}',
+                  '${formatDecimalPlaces(controller.selectedItem.value.minDurability!, 0)}-${formatDecimalPlaces(controller.selectedItem.value.maxDurability!, 0)}',
                   fontSize: 18,
                   lineHeight: 32,
                   fontWeight: 400,
                 ),
               ],
             ),
-          if (controller.selectedItem.value.maxStamina > 0)
+          if (controller.selectedItem.value.maxStamina! > 0)
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
@@ -1191,14 +1191,14 @@ void itemPurchaseShortBalanceAlert(ShopController controller, double remainMyTik
                   fontWeight: 600,
                 ),
                 StyledText(
-                  '${formatDecimalPlaces(controller.selectedItem.value.minStamina, 0)}-${formatDecimalPlaces(controller.selectedItem.value.maxStamina, 0)}',
+                  '${formatDecimalPlaces(controller.selectedItem.value.minStamina!, 0)}-${formatDecimalPlaces(controller.selectedItem.value.maxStamina!, 0)}',
                   fontSize: 18,
                   lineHeight: 32,
                   fontWeight: 400,
                 ),
               ],
             ),
-          if (controller.selectedItem.value.maxLuck > 0)
+          if (controller.selectedItem.value.maxLuck! > 0)
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
@@ -1209,7 +1209,7 @@ void itemPurchaseShortBalanceAlert(ShopController controller, double remainMyTik
                   fontWeight: 600,
                 ),
                 StyledText(
-                  '${formatDecimalPlaces(controller.selectedItem.value.minLuck, 0)}-${formatDecimalPlaces(controller.selectedItem.value.maxLuck, 0)}',
+                  '${formatDecimalPlaces(controller.selectedItem.value.minLuck!, 0)}-${formatDecimalPlaces(controller.selectedItem.value.maxLuck!, 0)}',
                   fontSize: 18,
                   lineHeight: 32,
                   fontWeight: 400,
@@ -4175,7 +4175,7 @@ void showMaintenanceAlert({String type = 'ING', required String contentText, Fun
         description = Padding(
           padding: const EdgeInsets.only(top: 28, bottom: 28),
           child: StyledText(
-            '플레이 중인 운동은 점검 시작 전에 완료해 주세요.\n점검이 시작되면 모든 운동이 강제 종료돼요.',
+            '플레이 중인 운동은 점검 시작 전에 완료해 주세요.\n점검이 시작되면 모든 운동이 강제 종료돼요.\n운영상황에 따라 점검일정은 변경될 수 있습니다.',
             fontWeight: 500,
             fontSize: 16,
             lineHeight: 24,
@@ -4199,7 +4199,7 @@ void showMaintenanceAlert({String type = 'ING', required String contentText, Fun
         description = Padding(
           padding: const EdgeInsets.only(top: 28, bottom: 28),
           child: StyledText(
-            '안녕하세요 가자고 팀입니다.\n새로운 기능 업데이트를 위해 시스템 점검중입니다.\n양해 부탁드립니다.',
+            '안녕하세요 가자고 팀입니다.\n새로운 기능 업데이트를 위해 시스템 점검중입니다.\n양해 부탁드립니다.\n운영상황에 따라 점검일정은 변경될 수 있습니다.',
             fontWeight: 500,
             fontSize: 16,
             lineHeight: 24,
@@ -4245,7 +4245,7 @@ void showMaintenanceAlert({String type = 'ING', required String contentText, Fun
         description = Padding(
           padding: const EdgeInsets.only(top: 28, bottom: 28),
           child: StyledText(
-            '안녕하세요 가자고 팀입니다.\n새로운 기능 업데이트를 위해 시스템 점검중입니다.\n양해 부탁드립니다.',
+            '안녕하세요 가자고 팀입니다.\n새로운 기능 업데이트를 위해 시스템 점검중입니다.\n양해 부탁드립니다.\n운영상황에 따라 점검일정은 변경될 수 있습니다.',
             fontWeight: 500,
             fontSize: 16,
             lineHeight: 24,

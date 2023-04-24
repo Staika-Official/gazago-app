@@ -164,7 +164,7 @@ class ShopItemDetail extends StatelessWidget {
                         ),
                       ),
                       // Go 보상
-                      if (controller.selectedItem.value.maxGoProfit > 0)
+                      if (controller.selectedItem.value.maxGoProfit! > 0)
                         Padding(
                           padding: EdgeInsets.only(top: 16.0.sp),
                           child: Column(
@@ -189,7 +189,7 @@ class ShopItemDetail extends StatelessWidget {
                                   Row(
                                     children: [
                                       StyledText(
-                                        formatDecimalPlaces(controller.selectedItem.value.minGoProfit, 0),
+                                        formatDecimalPlaces(controller.selectedItem.value.minGoProfit!, 0),
                                         fontSize: 12,
                                         fontWeight: 500,
                                         color: skyBlueColor,
@@ -203,7 +203,7 @@ class ShopItemDetail extends StatelessWidget {
                                         letterSpacing: -.1,
                                       ),
                                       StyledText(
-                                        formatDecimalPlaces(controller.selectedItem.value.maxGoProfit, 0),
+                                        formatDecimalPlaces(controller.selectedItem.value.maxGoProfit!, 0),
                                         fontSize: 12,
                                         fontWeight: 500,
                                         color: skyBlueColor,
@@ -231,7 +231,7 @@ class ShopItemDetail extends StatelessWidget {
                                         LayoutBuilder(
                                           builder: (context, constraints) {
                                             return Container(
-                                              width: constraints.maxWidth / (controller.selectedItem.value.maxGoProfit / controller.selectedItem.value.minGoProfit),
+                                              width: constraints.maxWidth / (controller.selectedItem.value.maxGoProfit! / controller.selectedItem.value.minGoProfit!),
                                               decoration: BoxDecoration(
                                                 color: skyBlueColor,
                                                 borderRadius: controller.selectedItem.value.minGoProfit == controller.selectedItem.value.maxGoProfit
@@ -246,7 +246,7 @@ class ShopItemDetail extends StatelessWidget {
                                         LayoutBuilder(
                                           builder: (context, constraints) {
                                             return Container(
-                                              width: constraints.maxWidth / (controller.selectedItem.value.maxGoProfit / controller.selectedItem.value.maxGoProfit),
+                                              width: constraints.maxWidth / (controller.selectedItem.value.maxGoProfit! / controller.selectedItem.value.maxGoProfit!),
                                               decoration: BoxDecoration(
                                                 color: skyBlueColor.withOpacity(.5),
                                                 borderRadius: BorderRadius.all(
@@ -265,7 +265,7 @@ class ShopItemDetail extends StatelessWidget {
                           ),
                         ),
                       // 신발 내구도
-                      if (controller.selectedItem.value.maxDurability > 0)
+                      if (controller.selectedItem.value.maxDurability! > 0)
                         Padding(
                           padding: EdgeInsets.only(top: 20.0.sp),
                           child: Column(
@@ -290,7 +290,7 @@ class ShopItemDetail extends StatelessWidget {
                                   Row(
                                     children: [
                                       StyledText(
-                                        formatDecimalPlaces(controller.selectedItem.value.minDurability, 0),
+                                        formatDecimalPlaces(controller.selectedItem.value.minDurability!, 0),
                                         fontSize: 12,
                                         fontWeight: 500,
                                         color: lightPurpleColor,
@@ -304,7 +304,7 @@ class ShopItemDetail extends StatelessWidget {
                                         letterSpacing: -.1,
                                       ),
                                       StyledText(
-                                        formatDecimalPlaces(controller.selectedItem.value.maxDurability, 0),
+                                        formatDecimalPlaces(controller.selectedItem.value.maxDurability!, 0),
                                         fontSize: 12,
                                         fontWeight: 500,
                                         color: lightPurpleColor,
@@ -332,7 +332,7 @@ class ShopItemDetail extends StatelessWidget {
                                         LayoutBuilder(
                                           builder: (context, constraints) {
                                             return Container(
-                                              width: constraints.maxWidth / (controller.selectedItem.value.maxDurability / controller.selectedItem.value.minDurability),
+                                              width: constraints.maxWidth / (controller.selectedItem.value.maxDurability! / controller.selectedItem.value.minDurability!),
                                               decoration: BoxDecoration(
                                                 color: lightPurpleColor,
                                                 borderRadius: controller.selectedItem.value.maxDurability == controller.selectedItem.value.minDurability
@@ -347,7 +347,7 @@ class ShopItemDetail extends StatelessWidget {
                                         LayoutBuilder(
                                           builder: (context, constraints) {
                                             return Container(
-                                              width: constraints.maxWidth / (controller.selectedItem.value.maxDurability / controller.selectedItem.value.maxDurability),
+                                              width: constraints.maxWidth / (controller.selectedItem.value.maxDurability! / controller.selectedItem.value.maxDurability!),
                                               decoration: BoxDecoration(
                                                 color: lightPurpleColor.withOpacity(.5),
                                                 borderRadius: BorderRadius.all(
@@ -366,7 +366,7 @@ class ShopItemDetail extends StatelessWidget {
                           ),
                         ),
                       // 체력
-                      if (controller.selectedItem.value.maxStamina > 0)
+                      if (controller.selectedItem.value.maxStamina! > 0)
                         Padding(
                           padding: EdgeInsets.only(top: 16.0.sp),
                           child: Column(
@@ -391,7 +391,7 @@ class ShopItemDetail extends StatelessWidget {
                                   Row(
                                     children: [
                                       StyledText(
-                                        formatDecimalPlaces(controller.selectedItem.value.minStamina, 0),
+                                        formatDecimalPlaces(controller.selectedItem.value.minStamina!, 0),
                                         fontSize: 12,
                                         fontWeight: 500,
                                         color: lightGreenColor,
@@ -405,7 +405,7 @@ class ShopItemDetail extends StatelessWidget {
                                         letterSpacing: -.1,
                                       ),
                                       StyledText(
-                                        formatDecimalPlaces(controller.selectedItem.value.maxStamina, 0),
+                                        formatDecimalPlaces(controller.selectedItem.value.maxStamina!, 0),
                                         fontSize: 12,
                                         fontWeight: 500,
                                         color: lightGreenColor,
@@ -433,7 +433,7 @@ class ShopItemDetail extends StatelessWidget {
                                         LayoutBuilder(
                                           builder: (context, constraints) {
                                             return Container(
-                                              width: constraints.maxWidth / (controller.selectedItem.value.maxStamina / controller.selectedItem.value.minStamina),
+                                              width: constraints.maxWidth / (controller.selectedItem.value.maxStamina! / controller.selectedItem.value.minStamina!),
                                               decoration: BoxDecoration(
                                                 color: lightGreenColor,
                                                 borderRadius: controller.selectedItem.value.maxStamina == controller.selectedItem.value.minStamina
@@ -448,7 +448,7 @@ class ShopItemDetail extends StatelessWidget {
                                         LayoutBuilder(
                                           builder: (context, constraints) {
                                             return Container(
-                                              width: constraints.maxWidth / (controller.selectedItem.value.maxStamina / controller.selectedItem.value.maxStamina),
+                                              width: constraints.maxWidth / (controller.selectedItem.value.maxStamina! / controller.selectedItem.value.maxStamina!),
                                               decoration: BoxDecoration(
                                                 color: lightGreenColor.withOpacity(.5),
                                                 borderRadius: BorderRadius.all(
@@ -468,7 +468,7 @@ class ShopItemDetail extends StatelessWidget {
                         ),
 
                       // 행운
-                      if (controller.selectedItem.value.maxLuck > 0)
+                      if (controller.selectedItem.value.maxLuck! > 0)
                         Padding(
                           padding: EdgeInsets.only(top: 16.0.sp),
                           child: Column(
@@ -493,7 +493,7 @@ class ShopItemDetail extends StatelessWidget {
                                   Row(
                                     children: [
                                       StyledText(
-                                        formatDecimalPlaces(controller.selectedItem.value.minLuck, 0),
+                                        formatDecimalPlaces(controller.selectedItem.value.minLuck!, 0),
                                         fontSize: 12,
                                         fontWeight: 500,
                                         color: pinkColor,
@@ -507,7 +507,7 @@ class ShopItemDetail extends StatelessWidget {
                                         letterSpacing: -.1,
                                       ),
                                       StyledText(
-                                        formatDecimalPlaces(controller.selectedItem.value.maxLuck, 0),
+                                        formatDecimalPlaces(controller.selectedItem.value.maxLuck!, 0),
                                         fontSize: 12,
                                         fontWeight: 500,
                                         color: pinkColor,
@@ -535,7 +535,7 @@ class ShopItemDetail extends StatelessWidget {
                                         LayoutBuilder(
                                           builder: (context, constraints) {
                                             return Container(
-                                              width: constraints.maxWidth / (controller.selectedItem.value.maxLuck / controller.selectedItem.value.minLuck),
+                                              width: constraints.maxWidth / (controller.selectedItem.value.maxLuck! / controller.selectedItem.value.minLuck!),
                                               decoration: BoxDecoration(
                                                 color: pinkColor,
                                                 borderRadius: controller.selectedItem.value.maxLuck == controller.selectedItem.value.minLuck
@@ -550,7 +550,7 @@ class ShopItemDetail extends StatelessWidget {
                                         LayoutBuilder(
                                           builder: (context, constraints) {
                                             return Container(
-                                              width: constraints.maxWidth / (controller.selectedItem.value.maxLuck / controller.selectedItem.value.maxLuck),
+                                              width: constraints.maxWidth / (controller.selectedItem.value.maxLuck! / controller.selectedItem.value.maxLuck!),
                                               decoration: BoxDecoration(
                                                 color: pinkColor.withOpacity(.5),
                                                 borderRadius: BorderRadius.all(
