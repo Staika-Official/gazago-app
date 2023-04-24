@@ -340,7 +340,7 @@ class ActivityHome extends StatelessWidget {
 
     final challengeMovie = MovieTween()
       ..scene(begin: const Duration(seconds: 1), duration: const Duration(seconds: 2))
-          .thenTween('width', Tween<double>(begin: 70, end: 250), duration: const Duration(milliseconds: 300), curve: Curves.easeOut)
+          .thenTween('width', Tween<double>(begin: 70, end: 270), duration: const Duration(milliseconds: 300), curve: Curves.easeOut)
           .tween('opacity', Tween<double>(begin: 0, end: 1), curve: Curves.easeOut)
           .thenFor(duration: const Duration(seconds: 3))
           .thenTween('opacity', Tween<double>(begin: 1, end: 0), duration: const Duration(milliseconds: 300), curve: Curves.easeOut)
