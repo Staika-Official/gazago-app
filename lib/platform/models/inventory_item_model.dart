@@ -23,7 +23,7 @@ class InventoryItemModel {
   int? listOrder;
   int? tik;
   bool? isShoe;
-  InventoryItemStatModel itemStat;
+  InventoryItemStatModel? itemStat;
 
   InventoryItemModel({
     required this.id,
@@ -39,7 +39,7 @@ class InventoryItemModel {
     required this.rewardRate,
     required this.staminaReduceRate,
     required this.itemImageUrl,
-    required this.itemStat,
+    this.itemStat,
     this.description,
     this.equipped,
     this.listOrder,

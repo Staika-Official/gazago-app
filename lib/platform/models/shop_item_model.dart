@@ -15,14 +15,14 @@ class ShopItemModel {
   double fromAbrasionRate;
   double toStaminaReduceRate;
   double fromStaminaReduceRate;
-  double minGoProfit;
-  double maxGoProfit;
-  double minDurability;
-  double maxDurability;
-  double minStamina;
-  double maxStamina;
-  double minLuck;
-  double maxLuck;
+  double? minGoProfit;
+  double? maxGoProfit;
+  double? minDurability;
+  double? maxDurability;
+  double? minStamina;
+  double? maxStamina;
+  double? minLuck;
+  double? maxLuck;
   double price;
   String? itemLabel;
   String? description;
@@ -41,14 +41,14 @@ class ShopItemModel {
     required this.fromAbrasionRate,
     required this.toStaminaReduceRate,
     required this.fromStaminaReduceRate,
-    required this.minGoProfit,
-    required this.maxGoProfit,
-    required this.minDurability,
-    required this.maxDurability,
-    required this.minStamina,
-    required this.maxStamina,
-    required this.minLuck,
-    required this.maxLuck,
+    this.minGoProfit = 0,
+    this.maxGoProfit = 0,
+    this.minDurability = 0,
+    this.maxDurability = 0,
+    this.minStamina = 0,
+    this.maxStamina = 0,
+    this.minLuck = 0,
+    this.maxLuck = 0,
     required this.price,
     this.itemLabel,
     this.description,

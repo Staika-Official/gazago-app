@@ -149,19 +149,19 @@ class InventoryController extends GetxController with ScrollMixin, LinearProgres
   }
 
   double get equippedAbrasionRate {
-    return equippedItemList.fold(0.0, (summedValue, element) => summedValue + element.itemStat.durability!);
+    return equippedItemList.fold(0.0, (summedValue, element) => summedValue + (element.itemStat != null ? element.itemStat!.durability! : 0));
   }
 
   double get equippedRewardRate {
-    return equippedItemList.fold(0.0, (summedValue, element) => summedValue + element.itemStat.goProfit!) + equippedBadge.value.badge.rewardRate;
+    return equippedItemList.fold(0.0, (summedValue, element) => summedValue + (element.itemStat != null ? element.itemStat!.goProfit! : 0)) + equippedBadge.value.badge.rewardRate;
   }
 
   double get equippedStaminaReduceRate {
-    return equippedItemList.fold(0.0, (summedValue, element) => summedValue + element.itemStat.stamina!);
+    return equippedItemList.fold(0.0, (summedValue, element) => summedValue + (element.itemStat != null ? element.itemStat!.stamina! : 0));
   }
 
   double get equippedLuckRate {
-    return equippedItemList.fold(0.0, (summedValue, element) => summedValue + element.itemStat.luck!) + equippedBadge.value.badge.luckRate;
+    return equippedItemList.fold(0.0, (summedValue, element) => summedValue + (element.itemStat != null ? element.itemStat!.luck! : 0)) + equippedBadge.value.badge.luckRate;
   }
 
   final RxString itemGoMax = RxString('0');

@@ -260,12 +260,12 @@ class InventoryItemDetail extends StatelessWidget {
                                                     child: Row(
                                                       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                                                       children: [
-                                                        if (controller.selectedItem.value.itemStat.goProfit! > 0)
+                                                        if (controller.selectedItem.value.itemStat != null && controller.selectedItem.value.itemStat!.goProfit! > 0)
                                                           Expanded(
                                                             child: Column(
                                                               children: [
                                                                 StyledText(
-                                                                  formatDecimalPlaces(controller.selectedItem.value.itemStat.goProfit!, 0),
+                                                                  formatDecimalPlaces(controller.selectedItem.value.itemStat!.goProfit!, 0),
                                                                   fontSize: 26,
                                                                   lineHeight: 26,
                                                                   color: skyBlueColor,
@@ -295,9 +295,10 @@ class InventoryItemDetail extends StatelessWidget {
                                                               ],
                                                             ),
                                                           ),
-                                                        if (controller.selectedItem.value.itemStat.goProfit! > 0 &&
-                                                            controller.selectedItem.value.itemStat.luck! < 1 &&
-                                                            (controller.selectedItem.value.itemStat.durability! > 0 || controller.selectedItem.value.itemStat.stamina! > 0))
+                                                        if (controller.selectedItem.value.itemStat != null &&
+                                                            controller.selectedItem.value.itemStat!.goProfit! > 0 &&
+                                                            controller.selectedItem.value.itemStat!.luck! < 1 &&
+                                                            (controller.selectedItem.value.itemStat!.durability! > 0 || controller.selectedItem.value.itemStat!.stamina! > 0))
                                                           Container(
                                                             height: 35.sp,
                                                             child: VerticalDivider(
@@ -306,12 +307,12 @@ class InventoryItemDetail extends StatelessWidget {
                                                               thickness: 1,
                                                             ),
                                                           ),
-                                                        if (controller.selectedItem.value.itemStat.durability! > 0)
+                                                        if (controller.selectedItem.value.itemStat != null && controller.selectedItem.value.itemStat!.durability! > 0)
                                                           Expanded(
                                                             child: Column(
                                                               children: [
                                                                 StyledText(
-                                                                  formatDecimalPlaces(controller.selectedItem.value.itemStat.durability!, 0),
+                                                                  formatDecimalPlaces(controller.selectedItem.value.itemStat!.durability!, 0),
                                                                   fontSize: 26,
                                                                   lineHeight: 26,
                                                                   fontWeight: 500,
@@ -342,7 +343,9 @@ class InventoryItemDetail extends StatelessWidget {
                                                               ],
                                                             ),
                                                           ),
-                                                        if (controller.selectedItem.value.itemStat.durability! > 0 && controller.selectedItem.value.itemStat.goProfit! < 1)
+                                                        if (controller.selectedItem.value.itemStat != null &&
+                                                            controller.selectedItem.value.itemStat!.durability! > 0 &&
+                                                            controller.selectedItem.value.itemStat!.goProfit! < 1)
                                                           Container(
                                                             height: 35.sp,
                                                             child: VerticalDivider(
@@ -351,12 +354,12 @@ class InventoryItemDetail extends StatelessWidget {
                                                               thickness: 1,
                                                             ),
                                                           ),
-                                                        if (controller.selectedItem.value.itemStat.stamina! > 0)
+                                                        if (controller.selectedItem.value.itemStat != null && controller.selectedItem.value.itemStat!.stamina! > 0)
                                                           Expanded(
                                                             child: Column(
                                                               children: [
                                                                 StyledText(
-                                                                  formatDecimalPlaces(controller.selectedItem.value.itemStat.stamina!, 0),
+                                                                  formatDecimalPlaces(controller.selectedItem.value.itemStat!.stamina!, 0),
                                                                   fontSize: 26,
                                                                   lineHeight: 26,
                                                                   fontWeight: 500,
@@ -386,7 +389,7 @@ class InventoryItemDetail extends StatelessWidget {
                                                               ],
                                                             ),
                                                           ),
-                                                        if (controller.selectedItem.value.itemStat.luck! > 0)
+                                                        if (controller.selectedItem.value.itemStat != null && controller.selectedItem.value.itemStat!.luck! > 0)
                                                           Container(
                                                             height: 35.sp,
                                                             child: VerticalDivider(
@@ -395,12 +398,12 @@ class InventoryItemDetail extends StatelessWidget {
                                                               thickness: 1,
                                                             ),
                                                           ),
-                                                        if (controller.selectedItem.value.itemStat.luck! > 0)
+                                                        if (controller.selectedItem.value.itemStat != null && controller.selectedItem.value.itemStat!.luck! > 0)
                                                           Expanded(
                                                             child: Column(
                                                               children: [
                                                                 StyledText(
-                                                                  formatDecimalPlaces(controller.selectedItem.value.itemStat.luck!, 0),
+                                                                  formatDecimalPlaces(controller.selectedItem.value.itemStat!.luck!, 0),
                                                                   fontSize: 26,
                                                                   lineHeight: 26,
                                                                   fontWeight: 500,
@@ -562,7 +565,7 @@ class InventoryItemDetail extends StatelessWidget {
                       ),
 
                       // // Go 보상
-                      // if (controller.selectedItem.value.itemStat.goProfit! > 0)
+                      // if (controller.selectedItem.value.itemStat!.goProfit! > 0)
                       //   Padding(
                       //     padding: EdgeInsets.only(top: 16.0.sp),
                       //     child: Column(
@@ -585,7 +588,7 @@ class InventoryItemDetail extends StatelessWidget {
                       //               ],
                       //             ),
                       //             StyledText(
-                      //               formatDecimalPlaces(controller.selectedItem.value.itemStat.goProfit!, 0),
+                      //               formatDecimalPlaces(controller.selectedItem.value.itemStat!.goProfit!, 0),
                       //               fontSize: 12,
                       //               fontWeight: 500,
                       //               color: skyBlueColor,
@@ -611,7 +614,7 @@ class InventoryItemDetail extends StatelessWidget {
                       //                   LayoutBuilder(
                       //                     builder: (context, constraints) {
                       //                       return Container(
-                      //                         width: constraints.maxWidth / (double.parse(controller.itemGoMax.value) / controller.selectedItem.value.itemStat.goProfit!),
+                      //                         width: constraints.maxWidth / (double.parse(controller.itemGoMax.value) / controller.selectedItem.value.itemStat!.goProfit!),
                       //                         decoration: BoxDecoration(
                       //                           color: skyBlueColor,
                       //                           borderRadius: BorderRadius.all(
@@ -630,7 +633,7 @@ class InventoryItemDetail extends StatelessWidget {
                       //     ),
                       //   ),
                       // // 내구도
-                      // if (controller.selectedItem.value.itemStat.durability! > 0)
+                      // if (controller.selectedItem.value.itemStat!.durability! > 0)
                       //   Padding(
                       //     padding: EdgeInsets.only(top: 20.0.sp),
                       //     child: Column(
@@ -653,7 +656,7 @@ class InventoryItemDetail extends StatelessWidget {
                       //               ],
                       //             ),
                       //             StyledText(
-                      //               formatDecimalPlaces(controller.selectedItem.value.itemStat.durability!, 0),
+                      //               formatDecimalPlaces(controller.selectedItem.value.itemStat!.durability!, 0),
                       //               fontSize: 12,
                       //               fontWeight: 500,
                       //               color: lightPurpleColor,
@@ -679,7 +682,7 @@ class InventoryItemDetail extends StatelessWidget {
                       //                   LayoutBuilder(
                       //                     builder: (context, constraints) {
                       //                       return Container(
-                      //                         width: constraints.maxWidth / (double.parse(controller.itemDurabilityMax.value) / controller.selectedItem.value.itemStat.durability!),
+                      //                         width: constraints.maxWidth / (double.parse(controller.itemDurabilityMax.value) / controller.selectedItem.value.itemStat!.durability!),
                       //                         decoration: BoxDecoration(
                       //                           color: lightPurpleColor,
                       //                           borderRadius: BorderRadius.all(
@@ -698,7 +701,7 @@ class InventoryItemDetail extends StatelessWidget {
                       //     ),
                       //   ),
                       // // 체력
-                      // if (controller.selectedItem.value.itemStat.stamina! > 0)
+                      // if (controller.selectedItem.value.itemStat!.stamina! > 0)
                       //   Padding(
                       //     padding: EdgeInsets.only(top: 16.0.sp),
                       //     child: Column(
@@ -721,7 +724,7 @@ class InventoryItemDetail extends StatelessWidget {
                       //               ],
                       //             ),
                       //             StyledText(
-                      //               formatDecimalPlaces(controller.selectedItem.value.itemStat.stamina!, 0),
+                      //               formatDecimalPlaces(controller.selectedItem.value.itemStat!.stamina!, 0),
                       //               fontSize: 12,
                       //               fontWeight: 500,
                       //               color: lightGreenColor,
@@ -747,7 +750,7 @@ class InventoryItemDetail extends StatelessWidget {
                       //                   LayoutBuilder(
                       //                     builder: (context, constraints) {
                       //                       return Container(
-                      //                         width: constraints.maxWidth / (double.parse(controller.itemHealthMax.value) / controller.selectedItem.value.itemStat.stamina!),
+                      //                         width: constraints.maxWidth / (double.parse(controller.itemHealthMax.value) / controller.selectedItem.value.itemStat!.stamina!),
                       //                         decoration: BoxDecoration(
                       //                           color: lightGreenColor,
                       //                           borderRadius: BorderRadius.all(
@@ -767,7 +770,7 @@ class InventoryItemDetail extends StatelessWidget {
                       //   ),
                       //
                       // // 행운
-                      // if (controller.selectedItem.value.itemStat.luck! > 0)
+                      // if (controller.selectedItem.value.itemStat!.luck! > 0)
                       //   Padding(
                       //     padding: EdgeInsets.only(top: 16.0.sp),
                       //     child: Column(
@@ -790,7 +793,7 @@ class InventoryItemDetail extends StatelessWidget {
                       //               ],
                       //             ),
                       //             StyledText(
-                      //               formatDecimalPlaces(controller.selectedItem.value.itemStat.luck!, 0),
+                      //               formatDecimalPlaces(controller.selectedItem.value.itemStat!.luck!, 0),
                       //               fontSize: 12,
                       //               fontWeight: 500,
                       //               color: pinkColor,
@@ -816,7 +819,7 @@ class InventoryItemDetail extends StatelessWidget {
                       //                   LayoutBuilder(
                       //                     builder: (context, constraints) {
                       //                       return Container(
-                      //                         width: constraints.maxWidth / (double.parse(controller.itemLuckMax.value) / controller.selectedItem.value.itemStat.luck!),
+                      //                         width: constraints.maxWidth / (double.parse(controller.itemLuckMax.value) / controller.selectedItem.value.itemStat!.luck!),
                       //                         decoration: BoxDecoration(
                       //                           color: pinkColor,
                       //                           borderRadius: BorderRadius.all(
