@@ -1,10 +1,14 @@
 import 'dart:async';
 import 'dart:math';
 
+import 'package:flutter/cupertino.dart';
+import 'package:flutter/rendering.dart';
 import 'package:flutter_naver_map/flutter_naver_map.dart';
 import 'package:gaza_go/constants/enums.dart';
+import 'package:gaza_go/platform/controllers/home_menu_controller.dart';
 import 'package:gaza_go/platform/firebase/remote_config.dart';
 import 'package:gaza_go/platform/stores/hive_store.dart';
+import 'package:get/get.dart';
 import 'package:intl/intl.dart';
 import 'package:package_info_plus/package_info_plus.dart';
 
@@ -152,5 +156,14 @@ void validateTimer(Timer timer, HiveKey hiveKey) {
 
   if (timerHash != null && timer.hashCode != timerHash) {
     timer.cancel();
+  }
+}
+
+void toggleBottomNav(ScrollController scroll) {
+  HomeMenuController controller = Get.find<HomeMenuController>();
+  if (scroll.position.userScrollDirection == ScrollDirection.reverse) {
+    controller.hideBottomNav.value = true;
+  } else if (scroll.position.userScrollDirection == ScrollDirection.forward) {
+    controller.hideBottomNav.value = false;
   }
 }

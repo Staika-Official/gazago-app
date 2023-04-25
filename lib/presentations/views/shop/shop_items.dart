@@ -452,6 +452,7 @@ class ShopItems extends StatelessWidget {
                         padding: EdgeInsets.only(top: 15.0.sp),
                         child: Obx(() {
                           return GridView.count(
+                            controller: shopController.itemScrollController,
                             primary: false,
                             padding: EdgeInsets.only(bottom: 30.sp),
                             childAspectRatio: (1 / 1.4),

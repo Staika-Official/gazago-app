@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
+import 'package:gaza_go/platform/helpers/base_helper.dart';
 import 'package:gaza_go/platform/models/ranker_model.dart';
 import 'package:gaza_go/platform/models/user_reward_statistics_model.dart';
 import 'package:gaza_go/platform/services/dashboard_service.dart';
@@ -55,18 +56,16 @@ class LeaderboardController extends GetxController {
   void onInit() {
     initController();
 
-    leaderboardScrollController.addListener(() {
-      double scrollBottom = leaderboardScrollController.positions.last.maxScrollExtent;
-      double scrollPosition = leaderboardScrollController.positions.last.pixels;
-
-      if (scrollPosition == scrollBottom) {
-        if (hasMore.value) {
-          page.value = page.value + 1;
-          _fetchRankerList(false);
-        }
-      }
-    });
     super.onInit();
+  }
+
+  @override
+  void onClose() {
+    leaderboardScrollController.removeListener(() {
+      loadDataOnScroll();
+      toggleBottomNav(leaderboardScrollController);
+    });
+    super.onClose();
   }
 
   Future<void> initController() async {
@@ -76,6 +75,10 @@ class LeaderboardController extends GetxController {
     streamController.add(userMonthlyRewardMap);
     String month = DateFormat('yyyy-MM-dd').format(today.value!);
     getCalendarStatistics(month);
+    leaderboardScrollController.addListener(() {
+      loadDataOnScroll();
+      toggleBottomNav(leaderboardScrollController);
+    });
   }
 
   Future<void> refreshController() async {
@@ -169,5 +172,17 @@ class LeaderboardController extends GetxController {
       return userMonthlyRewardMap[day]!;
     }
     return [];
+  }
+
+  void loadDataOnScroll() {
+    double scrollBottom = leaderboardScrollController.positions.last.maxScrollExtent;
+    double scrollPosition = leaderboardScrollController.positions.last.pixels;
+
+    if (scrollPosition == scrollBottom) {
+      if (hasMore.value) {
+        page.value = page.value + 1;
+        _fetchRankerList(false);
+      }
+    }
   }
 }

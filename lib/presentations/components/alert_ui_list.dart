@@ -4199,7 +4199,7 @@ void showMaintenanceAlert({String type = 'ING', required String contentText, Fun
         description = Padding(
           padding: const EdgeInsets.only(top: 28, bottom: 28),
           child: StyledText(
-            '안녕하세요 가자고 팀입니다.\n새로운 기능 업데이트를 위해 시스템 점검중입니다.\n양해 부탁드립니다.\n운영상황에 따라 점검일정은 변경될 수 있습니다.',
+            '안녕하세요 가자고 팀입니다.\n새로운 기능 업데이트를 위해 시스템 점검중입니다.\n양해 부탁드립니다.',
             fontWeight: 500,
             fontSize: 16,
             lineHeight: 24,
@@ -4245,7 +4245,7 @@ void showMaintenanceAlert({String type = 'ING', required String contentText, Fun
         description = Padding(
           padding: const EdgeInsets.only(top: 28, bottom: 28),
           child: StyledText(
-            '안녕하세요 가자고 팀입니다.\n새로운 기능 업데이트를 위해 시스템 점검중입니다.\n양해 부탁드립니다.\n운영상황에 따라 점검일정은 변경될 수 있습니다.',
+            '안녕하세요 가자고 팀입니다.\n새로운 기능 업데이트를 위해 시스템 점검중입니다.\n양해 부탁드립니다.',
             fontWeight: 500,
             fontSize: 16,
             lineHeight: 24,
