@@ -80,6 +80,7 @@ enum HiveKey {
   exerciseEndAd,
   solanaSecretKey,
   closePopupDate,
+  closeMaintenancePreviewDate,
   isAccountLocked,
   exerciseTimer,
   updateTimer,

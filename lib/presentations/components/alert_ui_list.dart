@@ -4154,7 +4154,7 @@ void showItemTipAlert() {
   );
 }
 
-void showMaintenanceAlert({String type = 'ING', required String contentText, Function? callback}) {
+void showMaintenanceAlert({String type = 'ING', required String contentText, List<Function>? callbacks}) {
   List<Widget> setWidgets() {
     Widget image;
     Widget title;
@@ -4289,16 +4289,39 @@ void showMaintenanceAlert({String type = 'ING', required String contentText, Fun
                       ),
                     ),
                   setWidgets()[2],
-                  if (callback != null)
+                  if (callbacks != null) ...[
                     SizedBox(
                       width: 180,
                       child: GazagoButton(
                         buttonText: '닫기',
                         buttonColor: popupBgColor,
                         textColor: Colors.white,
-                        onTap: () => callback(),
+                        onTap: () => callbacks[0](),
                       ),
                     ),
+                    Padding(
+                      padding: EdgeInsets.only(top: 25),
+                      child: InkWell(
+                        onTap: () => callbacks[1](),
+                        child: Container(
+                          padding: EdgeInsets.only(bottom: 1),
+                          decoration: BoxDecoration(
+                            border: Border(
+                                bottom: BorderSide(
+                              color: deepGrayColor,
+                            )),
+                          ),
+                          child: StyledText(
+                            '오늘 그만 보기',
+                            color: deepGrayColor,
+                            fontSize: 16,
+                            fontWeight: 500,
+                            lineHeight: 24,
+                          ),
+                        ),
+                      ),
+                    )
+                  ]
                 ],
               ),
             ),
