@@ -180,6 +180,7 @@ class StaikaWalletController extends GetxController with WalletMixin, SolanaMixi
         successCallback: (boolean) {
           loaderController.isLoading.value = false;
           successExchangeStikToGoWalletAlert(this);
+          walletMasterController.getSpendingWalletBalances();
           sendStikUiAmount.value = '0';
           stikAmountTextController.text = '';
         },
