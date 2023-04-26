@@ -3602,6 +3602,7 @@ void sendStikToGoWalletAlert(StaikaWalletController controller) {
         child: GazagoButton(
           onTap: () async {
             Get.back();
+            print(controller.shortStikUiAmount.value);
             if (double.parse(controller.shortStikUiAmount.value) >= 0) {
               String? password = await showConfirmPasswordDialog(walletMasterController);
               controller.confirmSendStikToGoWallet(password);
@@ -3726,7 +3727,7 @@ void exchangeStikShortBalanceAlert(StaikaWalletController controller) {
                         letterSpacing: -.2,
                       ),
                       StyledText(
-                        '${controller.assetStik.value!.uiAmountString} STIK',
+                        '${formatDecimalPlaces(double.parse(controller.assetStik.value!.uiAmountString), controller.assetStik.value!.decimals, isAutoDecimal: true)} STIK',
                         fontWeight: 500,
                         fontSize: 16,
                         letterSpacing: -.2,

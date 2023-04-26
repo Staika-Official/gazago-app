@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:gaza_go/presentations/components/loader.dart';
 import 'package:get/get.dart';
 
 class LoaderController extends GetxController {
@@ -11,26 +10,23 @@ class LoaderController extends GetxController {
   void onInit() async {
     isLoading.listen((val) {
       if (val == true) {
-        print('열어');
-        print(Get.isDialogOpen!);
-        Get.dialog(Dialog(
-                  shadowColor: Colors.transparent,
-                  backgroundColor: Colors.transparent,
-                  child: Center(
-                    child: SizedBox(
-                      width: 20,
-                      height: 20,
-                      child: CircularProgressIndicator(),
-                    ),
-                  ),
-                ), name: 'progressCircle');
+        Get.dialog(
+            Dialog(
+              shadowColor: Colors.transparent,
+              backgroundColor: Colors.transparent,
+              child: Center(
+                child: SizedBox(
+                  width: 20,
+                  height: 20,
+                  child: CircularProgressIndicator(),
+                ),
+              ),
+            ),
+            name: 'progressCircle');
         // if (!Get.isDialogOpen!) {
         //   Get.dialog(Loader(), name: 'progressCircle');
         // }
       } else {
-        print('닫어');
-        print(dialogKey);
-
         if (dialogKey.currentContext != null) {
           Navigator.of(dialogKey.currentContext!).pop();
         } else {

@@ -94,8 +94,8 @@ class F {
         );
       case Flavor.prod:
         return SolanaClient(
-          rpcUrl: Uri.parse('https://api.solana.com'),
-          websocketUrl: Uri.parse('wss://api.solana.com'),
+          rpcUrl: Uri.parse('https://api.metaplex.solana.com'),
+          websocketUrl: Uri.parse('wss://api.metaplex.solana.com'),
         );
       default:
         return SolanaClient(
@@ -138,7 +138,7 @@ class F {
       case Flavor.stage:
         return Ed25519HDPublicKey.fromBase58("6ShEHhBuv6VNNQy4Tw4jYBS6Rq99gNBRHpQ5HDkTfvdy");
       case Flavor.prod:
-        return Ed25519HDPublicKey.fromBase58("");
+        return Ed25519HDPublicKey.fromBase58("Stik9LuN3nE7wB7tiKZMMNX7JuhY9fRrSWS8EU6RBMu");
       default:
         return Ed25519HDPublicKey.fromBase58("6ShEHhBuv6VNNQy4Tw4jYBS6Rq99gNBRHpQ5HDkTfvdy");
     }

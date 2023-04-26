@@ -164,11 +164,11 @@ void showProductStikList(WalletMasterController controller) {
                         Expanded(
                           child: Padding(
                             padding: EdgeInsets.only(left: 20.0),
-                            child: FittedBox(
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.end,
-                                children: [
-                                  Row(
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.end,
+                              children: [
+                                FittedBox(
+                                  child: Row(
                                     children: [
                                       StyledText(
                                         formatDecimalPlaces(double.parse(controller.tik.value.uiAmountString!), 0),
@@ -188,12 +188,13 @@ void showProductStikList(WalletMasterController controller) {
                                       ),
                                     ],
                                   ),
-                                  Padding(
-                                    padding: EdgeInsets.only(top: 6.0.sp),
+                                ),
+                                Padding(
+                                  padding: EdgeInsets.only(top: 6.0.sp),
+                                  child: FittedBox(
                                     child: Row(
                                       children: [
                                         StyledText(
-                                          // '111',
                                           formatDecimalPlaces(double.parse(controller.stik.value.uiAmountString!), 9, isAutoDecimal: true),
                                           fontSize: 16.sp,
                                           fontWeight: 700,
@@ -212,8 +213,8 @@ void showProductStikList(WalletMasterController controller) {
                                       ],
                                     ),
                                   ),
-                                ],
-                              ),
+                                ),
+                              ],
                             ),
                           ),
                         ),
