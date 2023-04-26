@@ -116,7 +116,7 @@ class SendStikGoWallet extends StatelessWidget {
                           if (newValue.text.isEmpty) {
                             return newValue.copyWith(text: '');
                           } else if (newValue.text.compareTo(oldValue.text) != 0) {
-                            RegExp exp = RegExp("^(([1-9]\\d{0,8})|0)(\\.\\d{0,9}0?)?\$");
+                            RegExp exp = RegExp("^(([1-9]\\d{0,8})|0)(\\.\\d{0,9}?)?\$");
                             if (exp.hasMatch(newValue.text)) {
                               return newValue;
                             } else {
