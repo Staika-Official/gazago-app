@@ -118,21 +118,23 @@ class Preferences extends StatelessWidget {
                       title: '본인인증',
                       onTap: () => Get.toNamed(Routes.verificationTerms),
                     ),
-              // PreferenceItem(
-              //   title: '알림',
-              //   onTap: () => Get.toNamed(Routes.preferenceNotification),
-              // ),
               PreferenceItem(
-                title: 'How to GO',
-                onTap: () => Get.toNamed(Routes.webView, arguments: {'linkUrl': F.howToGoUrl}),
+                title: '알림',
+                onTap: () => Get.toNamed(Routes.notifications),
               ),
               PreferenceItem(
                 title: '공지사항',
-                onTap: () => Get.toNamed(Routes.noticeList, arguments: {'boardType': 'NOTICE'}),
+                // onTap: () => Get.toNamed(Routes.noticeList, arguments: {'boardType': 'NOTICE'}),
+                onTap: () => Get.toNamed(Routes.webView, arguments: {'linkUrl': 'https://eztechfin.notion.site/c5103042de5d4e3a9a61c1101508ffed'}),
               ),
               PreferenceItem(
                 title: 'FAQ',
-                onTap: () => Get.toNamed(Routes.preferenceBoard, arguments: {'boardType': 'FAQ'}),
+                // onTap: () => Get.toNamed(Routes.preferenceBoard, arguments: {'boardType': 'FAQ'}),
+                onTap: () => Get.toNamed(Routes.webView, arguments: {'linkUrl': 'https://eztechfin.notion.site/FAQ-2f6b0ec4d6134fd398cd7a832bfa6cd3'}),
+              ),
+              PreferenceItem(
+                title: 'How to GO',
+                onTap: () => Get.toNamed(Routes.webView, arguments: {'linkUrl': F.howToGoUrl}),
               ),
               Container(
                 width: double.infinity,

@@ -12,14 +12,15 @@ import 'package:url_launcher/url_launcher.dart';
 class NoticePopupController extends GetxController {
   GlobalController globalController = Get.find();
   RxList<NoticePopupModel> noticePopupList = RxList.empty();
+  RxList<NoticePopupModel> noticeMainPopupList = RxList.empty();
   final RxInt _current = 0.obs;
   late final int pageSize;
   RxList<double> ops = [1.0, 0.0, 0.0].obs;
   RxList<double> offsets = [0.0, 0.0, 0.0].obs;
+  RxBool hasNewNotice = RxBool(false);
 
   @override
   void onInit() async {
-    // HiveStore.save(key: HiveKey.closePopupDate.name, value: null);
     await initController();
     super.onInit();
   }
@@ -53,7 +54,17 @@ class NoticePopupController extends GetxController {
 
   Future<void> initController() async {
     await getNoticePopupList();
+    await getMainNoticePopupList();
     checkPopupExpired();
+  }
+
+  Future<void> getMainNoticePopupList() async {
+    await BoardService.getMainNoticePopupList(
+      successCallback: (List<NoticePopupModel> records) {
+        records.removeWhere((element) => element.type == 'INSPECTION');
+        noticeMainPopupList.addAll(records);
+      },
+    );
   }
 
   Future<void> getNoticePopupList() async {
@@ -61,6 +72,15 @@ class NoticePopupController extends GetxController {
       successCallback: (List<NoticePopupModel> records) {
         records.removeWhere((element) => element.type == 'INSPECTION');
         noticePopupList.addAll(records);
+        List<int>? noticePopupListIds = HiveStore.load(key: HiveKey.noticePopupListIds.name);
+        if (noticePopupListIds != null && noticePopupListIds.isNotEmpty) {
+          for (NoticePopupModel notice in noticePopupList) {
+            if (!noticePopupListIds.contains(notice.id!)) {
+              hasNewNotice.value = true;
+              break;
+            }
+          }
+        }
       },
     );
   }
@@ -89,10 +109,12 @@ class NoticePopupController extends GetxController {
             Get.toNamed(Routes.wallet);
             break;
           case 'NOTICE':
-            Get.toNamed(Routes.noticeList);
+            // Get.toNamed(Routes.noticeList);
+            Get.toNamed(Routes.webView, arguments: {'linkUrl': 'https://eztechfin.notion.site/c5103042de5d4e3a9a61c1101508ffed'});
             break;
           case 'FAQ':
-            Get.toNamed(Routes.preferenceBoard);
+            // Get.toNamed(Routes.preferenceBoard);
+            Get.toNamed(Routes.webView, arguments: {'linkUrl': 'https://eztechfin.notion.site/FAQ-2f6b0ec4d6134fd398cd7a832bfa6cd3'});
             break;
         }
         break;
@@ -109,8 +131,7 @@ class NoticePopupController extends GetxController {
   }
 
   void checkPopupExpired() {
-    // HiveStore.save(key: HiveKey.closePopupDate.name, value: null);
-    if (globalController.isPopupOpen.value && noticePopupList.isNotEmpty) {
+    if (globalController.isPopupOpen.value && noticeMainPopupList.isNotEmpty) {
       setCurrent(0);
       showMainPopupAlert(this);
     }
@@ -120,5 +141,12 @@ class NoticePopupController extends GetxController {
     DateTime now = DateTime.now();
     HiveStore.save(key: HiveKey.closePopupDate.name, value: now);
     Get.back();
+  }
+
+  void moveToNotificationsListPage() {
+    List<int> noticePopupListIds = noticePopupList.map((element) => element.id!).toSet().toList();
+    HiveStore.save(key: HiveKey.noticePopupListIds.name, value: noticePopupListIds);
+    hasNewNotice.value = false;
+    Get.toNamed(Routes.notifications);
   }
 }

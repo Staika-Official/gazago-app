@@ -28,6 +28,20 @@ class BoardService {
     }
   }
 
+  static Future<void> getMainNoticePopupList({required Function successCallback, Function? errorCallback}) async {
+    Response res = await BoardApi.getMainNoticePopupList();
+    if (res.statusCode == 200) {
+      List<NoticePopupModel> noticePopupList = List.empty(growable: true);
+      res.data.forEach((term) {
+        NoticePopupModel noticePopupItem = NoticePopupModel.fromJson(term);
+        noticePopupList.add(noticePopupItem);
+      });
+      successCallback(noticePopupList);
+    } else {
+      if (errorCallback != null) errorCallback();
+    }
+  }
+
   static Future<void> getNoticePopupList({required Function successCallback, Function? errorCallback}) async {
     Response res = await BoardApi.getNoticePopupList();
     if (res.statusCode == 200) {

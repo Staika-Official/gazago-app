@@ -32,7 +32,7 @@ import 'package:gaza_go/presentations/views/preferences/index.dart';
 import 'package:gaza_go/presentations/views/preferences/my_page.dart';
 import 'package:gaza_go/presentations/views/preferences/notice_detail.dart';
 import 'package:gaza_go/presentations/views/preferences/notice_list.dart';
-import 'package:gaza_go/presentations/views/preferences/notification_alert.dart';
+import 'package:gaza_go/presentations/views/preferences/notifications.dart';
 import 'package:gaza_go/presentations/views/preferences/preference_board.dart';
 import 'package:gaza_go/presentations/views/preferences/terms_list.dart';
 import 'package:gaza_go/presentations/views/preferences/withdraw_completed.dart';
@@ -76,7 +76,7 @@ class Routes {
   static const preferenceBoard = '/preferences/board';
   static const noticeList = '/notice/list';
   static const noticeDetail = '/notice/detail';
-  static const preferenceNotification = '/preferences/notification';
+  static const notifications = '/preferences/notifications';
   static const verification = '/verification';
   static const verificationTerms = '/verification/terms';
   static const verificationName = '/verification/name';
@@ -138,7 +138,7 @@ class Routes {
     stepPage(name: Routes.preferenceBoard, page: const PreferenceBoard()),
     stepPage(name: Routes.noticeList, page: const NoticeList()),
     stepPage(name: Routes.noticeDetail, page: const NoticeDetail()),
-    stepPage(name: Routes.preferenceNotification, page: const NotificationAlert()),
+    stepPage(name: Routes.notifications, page: const Notifications()),
     stepPage(name: Routes.verificationTerms, page: const VerificationTerms()),
     stepPage(name: Routes.verificationName, page: const VerificationName()),
     stepPage(name: Routes.verificationDetail, page: const VerificationDetail()),

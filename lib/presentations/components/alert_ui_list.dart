@@ -2797,7 +2797,7 @@ Future<void> showMainPopupAlert(NoticePopupController noticePopupController) asy
             Stack(children: [
               CarouselSlider(
                 key: const Key('Slider'),
-                items: noticePopupController.noticePopupList
+                items: noticePopupController.noticeMainPopupList
                     .map((item) => Container(
                           width: double.infinity,
                           child: InkWell(
@@ -2836,7 +2836,7 @@ Future<void> showMainPopupAlert(NoticePopupController noticePopupController) asy
                       child: Padding(
                         padding: EdgeInsets.symmetric(horizontal: 8.0.sp, vertical: 4.0.sp),
                         child: StyledText(
-                          '${(noticePopupController.current.value + 1).toString()}/${noticePopupController.noticePopupList.length}',
+                          '${(noticePopupController.current.value + 1).toString()}/${noticePopupController.noticeMainPopupList.length}',
                           fontSize: 16,
                           lineHeight: 17,
                           fontWeight: 500,

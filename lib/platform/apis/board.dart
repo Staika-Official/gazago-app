@@ -13,6 +13,13 @@ class BoardApi {
     return await Api.client(serviceUrl: ServiceUrl.boardService).get('/$platform/posts/$id');
   }
 
+  static Future<Response> getMainNoticePopupList() async {
+    return await Api.client(
+      serviceUrl: ServiceUrl.boardService,
+      showLoading: false,
+    ).get('/popups/clients/GAZAGO?mainDisplayed=true');
+  }
+
   static Future<Response> getNoticePopupList() async {
     return await Api.client(
       serviceUrl: ServiceUrl.boardService,
