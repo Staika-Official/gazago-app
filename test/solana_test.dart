@@ -1,7 +1,3 @@
-
-
-import 'dart:math';
-
 import 'package:dio/dio.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:solana/base58.dart';
@@ -10,7 +6,6 @@ import 'package:solana/encoder.dart';
 import 'package:solana/solana.dart';
 
 void main() {
-
   final rpcUrl = 'https://api.devnet.solana.com';
 
   final subscriptionClient = SubscriptionClient.connect('wss://api.devnet.solana.com');
@@ -31,8 +26,6 @@ void main() {
     );
 
     print('address ${testKeyPair.address}');
-
-
   });
 
   test('airdrop', () async {
@@ -125,8 +118,7 @@ void main() {
 
     final instruction = TokenInstruction.transfer(
       source: Ed25519HDPublicKey.fromBase58(associatedSenderAccount.pubkey),
-      destination:
-      Ed25519HDPublicKey.fromBase58(associatedRecipientAccount.pubkey),
+      destination: Ed25519HDPublicKey.fromBase58(associatedRecipientAccount.pubkey),
       owner: sender.publicKey,
       amount: amount,
     );
@@ -149,13 +141,11 @@ void main() {
     print(signature);
   });
 
-
   // 솔라나 전송 연계
   test('sol11 transfer interface', () async {
     final rpcClient = RpcClient(rpcUrl);
 
     final sender = await getWalletA();
-
 
     final receiver = Ed25519HDPublicKey.fromBase58('4L3ScUzhGu9onoZ6bbXCeFKFhkJ6tMAUHunj9akLu2P1');
 
@@ -166,7 +156,7 @@ void main() {
     );
 
     final tx = await signTransaction(
-      await rpcClient.getRecentBlockhash(commitment: Commitment.confirmed),
+      await rpcClient.getRecentBlockhash(commitment: Commitment.confirmed).value,
       Message.only(instruction),
       [sender],
     );
@@ -176,20 +166,16 @@ void main() {
     print(sender.publicKey.toBase58());
     print('resignedTx ${tx.encode()}');
 
+    final accessToken =
+        'eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJhZG1pbiIsImF1dGgiOiJST0xFX0FETUlOLFJPTEVfVVNFUiIsImV4cCI6MTY3NjI2OTM3MSwidXNlcklkIjoiMyJ9.s9lJOVIOOuIBKAdRKxcyNnZoEvWVNga_dLISIMgAWDn5MvF8pdmAddqskGPHOVBlGg-nLq1IVudbcKJ_SWqxog';
 
-    final accessToken = 'eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJhZG1pbiIsImF1dGgiOiJST0xFX0FETUlOLFJPTEVfVVNFUiIsImV4cCI6MTY3NjI2OTM3MSwidXNlcklkIjoiMyJ9.s9lJOVIOOuIBKAdRKxcyNnZoEvWVNga_dLISIMgAWDn5MvF8pdmAddqskGPHOVBlGg-nLq1IVudbcKJ_SWqxog';
-
-    final send = {
-      'clientId': 'GAZAGO',
-      'endocdeTransction': tx.encode()
-    };
+    final send = {'clientId': 'GAZAGO', 'endocdeTransction': tx.encode()};
 
     try {
-      var response = await Dio().post('http://localhost:8080/services/gazago-wallet/api/solana/wallet/test/transfer', data: send,
+      var response = await Dio().post('http://localhost:8080/services/gazago-wallet/api/solana/wallet/test/transfer',
+          data: send,
           options: Options(
-            headers: {
-              'Authorization': 'Bearer $accessToken'
-            },
+            headers: {'Authorization': 'Bearer $accessToken'},
           ));
       print(response.data);
     } catch (e) {
@@ -200,11 +186,11 @@ void main() {
 
     print(signature.signatures.length);
 
-    *//* final signature = await rpcClient.signMessage(
+    */ /* final signature = await rpcClient.signMessage(
       Message.only(instruction),
       [owner],
       commitment: Commitment.confirmed,
-    );*//*
+    );*/ /*
     print('signature ${signature.encode()}');*/
   });
 
@@ -223,14 +209,14 @@ void main() {
 
     print(sender.publicKey.toBase58());
 
-    final recentBlockhash = await rpcClient.getRecentBlockhash(commitment: Commitment.confirmed);
+    final recentBlockhash = await rpcClient.getLatestBlockhash(commitment: Commitment.confirmed);
 
     Message message = Message.only(instruction);
 
     final feePayer = Ed25519HDPublicKey.fromBase58('92RJbkjWhnqpKMepWGe6WXo94XeAQszX2PTStS7weZLc');
 
     final CompiledMessage compiledMessage = message.compile(
-      recentBlockhash: recentBlockhash.blockhash,
+      recentBlockhash: recentBlockhash.value.blockhash,
       feePayer: feePayer,
     );
 
@@ -239,14 +225,15 @@ void main() {
     final feePayerSign = Signature(List.filled(64, 0), publicKey: sender.publicKey);
 
     signatures.add(feePayerSign);
-    signatures.add(await sender.sign(compiledMessage.data));
+    signatures.add(await sender.sign(compiledMessage.toByteArray()));
 
     SignedTx reSignedTx = SignedTx(
-      messageBytes: compiledMessage.data,
+      compiledMessage: compiledMessage,
       signatures: signatures,
     );
 
-    final accessToken = 'eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJhZG1pbiIsImF1dGgiOiJST0xFX0FETUlOLFJPTEVfVVNFUiIsImV4cCI6MTY3NjI3Njk1MiwidXNlcklkIjoiMyJ9.MDgxZSVg1rNKBLs_GrjBZFSp3bwKAiExvvO4R1ct5YyZFI9rWxYqRE2sD9071xUHWgYWlCeRGTR7cG9VCSKcFQ';
+    final accessToken =
+        'eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJhZG1pbiIsImF1dGgiOiJST0xFX0FETUlOLFJPTEVfVVNFUiIsImV4cCI6MTY3NjI3Njk1MiwidXNlcklkIjoiMyJ9.MDgxZSVg1rNKBLs_GrjBZFSp3bwKAiExvvO4R1ct5YyZFI9rWxYqRE2sD9071xUHWgYWlCeRGTR7cG9VCSKcFQ';
 
     /*
     SignedTx tx = SignedTx(
@@ -266,33 +253,24 @@ void main() {
 
     reSignedTx.signatures.toList(growable: true).add(await sender.sign(compiledMessage.data));
 */
-    final send = {
-      'clientId': 'GAZAGO',
-      'endocdeTransction': reSignedTx.encode()
-    };
+    final send = {'clientId': 'GAZAGO', 'endocdeTransction': reSignedTx.encode()};
 
     try {
-      var response = await Dio().post('http://localhost:8080/services/gazago-wallet/api/solana/wallet/test/transfer', data: send,
+      var response = await Dio().post('http://localhost:8080/services/gazago-wallet/api/solana/wallet/test/transfer',
+          data: send,
           options: Options(
-            headers: {
-              'Authorization': 'Bearer $accessToken'
-            },
+            headers: {'Authorization': 'Bearer $accessToken'},
           ));
       print(response.data);
     } catch (e) {
       print(e);
     }
-
   });
-
-
-
 
   test('Initialize Mint', () async {
     final rpcClient = RpcClient(rpcUrl);
 
-    final rent = await rpcClient
-        .getMinimumBalanceForRentExemption(TokenProgram.neededMintAccountSpace);
+    final rent = await rpcClient.getMinimumBalanceForRentExemption(TokenProgram.neededMintAccountSpace);
 
     final mint = await Ed25519HDKeyPair.random();
 
@@ -308,7 +286,6 @@ void main() {
       decimals: 5,
     );
 
-
     final signature = await rpcClient.signAndSendTransaction(
       Message(instructions: instructions),
       [mintAuthority, mint],
@@ -321,8 +298,7 @@ void main() {
   test('Create Token Account', () async {
     final rpcClient = RpcClient(rpcUrl);
 
-    final rent = await rpcClient
-        .getMinimumBalanceForRentExemption(TokenProgram.neededAccountSpace);
+    final rent = await rpcClient.getMinimumBalanceForRentExemption(TokenProgram.neededAccountSpace);
 
     print('rent $rent');
 
@@ -339,7 +315,6 @@ void main() {
       space: TokenProgram.neededAccountSpace,
     );
 
-
     final signature = await rpcClient.signAndSendTransaction(
       Message(instructions: instructions),
       [owner, tokensHolder],
@@ -350,7 +325,6 @@ void main() {
   });
 
   test('Mint To', () async {
-
     final rpcClient = RpcClient(rpcUrl);
 
     final owner = await getWalletA();
@@ -388,14 +362,9 @@ void main() {
     );
     print('instruction ${instruction}');
 
-
-
-    final recentBlockhash = await rpcClient.getRecentBlockhash(commitment: Commitment.confirmed);
+    final recentBlockhash = await rpcClient.getLatestBlockhash(commitment: Commitment.confirmed);
 
     SignedTx signature = await signTransactionCustom(recentBlockhash, Message.only(instruction), [owner], Ed25519HDPublicKey.fromBase58('47NHwdLy1u3er4kH9PycRNzowGN3oJtMoHRbJRhFX3MV'));
-
-
-
 
     /* final signature = await rpcClient.signMessage(
       Message.only(instruction),
@@ -404,13 +373,9 @@ void main() {
     );*/
     print('signature ${signature.encode()}');
 
-
     final token = '';
 
-    final send = {
-      'clientId': 'GAZAGO',
-      'transInfo': signature.encode()
-    };
+    final send = {'clientId': 'GAZAGO', 'transInfo': signature.encode()};
 
     print('3333333333333333333333333');
 
@@ -421,19 +386,11 @@ void main() {
       print(e);
     }
 
-
     /*refreshDio.post('http://localhost:8089/api/solana/wallet/test/transfer', data: send).then((Response res) {
         print('data ${res.data}');
       }).catchError((e) {
         print('catchError ${e.toString()}');
       });*/
-
-
-
-
-
-
-
 
     /*final SolanaClient solanaClient = SolanaClient(
       rpcUrl: Uri.parse('https://api.devnet.solana.com'),
@@ -452,24 +409,18 @@ void main() {
       commitment: Commitment.confirmed,
     );
     */
-
-
   });
 }
 
 Future<String> getFeeSign(accessToken, tx) async {
-  final send = {
-    'clientId': 'GAZAGO',
-    'endocdeTransction': tx
-  };
+  final send = {'clientId': 'GAZAGO', 'endocdeTransction': tx};
 
-  var response = await Dio().post('http://localhost:8080/services/gazago-wallet/api/solana/wallet/test/sign', data: send,
+  var response = await Dio().post('http://localhost:8080/services/gazago-wallet/api/solana/wallet/test/sign',
+      data: send,
       options: Options(
-      headers: {
-        'Authorization': 'Bearer $accessToken'
-      },
-    ));
-    print(response.data);
+        headers: {'Authorization': 'Bearer $accessToken'},
+      ));
+  print(response.data);
   return response.data['signature'];
 }
 
@@ -503,24 +454,22 @@ Ed25519HDPublicKey getWalletBTokenAccount() {
   return Ed25519HDPublicKey.fromBase58('9UZbKKQtfDjQwPaKWwasScjSiUqbYioGufyyh55KgwaK');
 }
 
-
 Ed25519HDPublicKey getTokenAddress() {
   return Ed25519HDPublicKey.fromBase58('DK7mBZtspjHP9LdPbZ3cT8tae2XNJvPgWsuEqqbE1tSL');
 }
 
-
 Future<SignedTx> signTransactionCustom(
-    RecentBlockhash recentBlockhash,
-    Message message,
-    List<Ed25519HDKeyPair> signers,
-    Ed25519HDPublicKey feePayer,
-    ) async {
+  LatestBlockhashResult recentBlockhash,
+  Message message,
+  List<Ed25519HDKeyPair> signers,
+  Ed25519HDPublicKey feePayer,
+) async {
   if (signers.isEmpty) {
     throw const FormatException('you must specify at least on signer');
   }
 
   final CompiledMessage compiledMessage = message.compile(
-    recentBlockhash: recentBlockhash.blockhash,
+    recentBlockhash: recentBlockhash.value.blockhash,
     feePayer: feePayer,
   );
 
@@ -536,11 +485,11 @@ Future<SignedTx> signTransactionCustom(
 
   // FIXME(IA): signatures must match signers in the message accounts sorting
   final List<Signature> signatures = await Future.wait(
-    signers.map((signer) => signer.sign(compiledMessage.data)),
+    signers.map((signer) => signer.sign(compiledMessage.toByteArray())),
   );
 
   return SignedTx(
-    messageBytes: compiledMessage.data,
+    compiledMessage: compiledMessage,
     signatures: signatures,
   );
 }

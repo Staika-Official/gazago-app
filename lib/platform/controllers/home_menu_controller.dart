@@ -30,6 +30,13 @@ class HomeMenuController extends SuperController {
   final RxInt selectedIndex = RxInt(2);
   final RxInt prevIndex = RxInt(0);
   final RxList<int> visitedTabs = RxList.empty();
+  final GlobalKey bottomNavKey = GlobalKey();
+  final RxnDouble bottomNavHeight = RxnDouble();
+  final RxBool hideBottomNav = RxBool(false);
+
+  RxDouble get kBottomNavHeight {
+    return bottomNavHeight.value == null ? RxDouble(0) : RxDouble(bottomNavHeight.value!);
+  }
 
   final List<PreferredSizeWidget> appbarList = [
     const MainAppbar(),
@@ -57,6 +64,7 @@ class HomeMenuController extends SuperController {
   void onReady() async {
     handleAppNotification();
     await checkUpdates();
+    bottomNavHeight.value = bottomNavKey.currentContext!.size!.height;
     super.onReady();
   }
 

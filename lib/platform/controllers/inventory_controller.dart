@@ -6,6 +6,7 @@ import 'package:gaza_go/constants/routes.dart';
 import 'package:gaza_go/platform/controllers/wallet_master_controller.dart';
 import 'package:gaza_go/platform/firebase/remote_config.dart';
 import 'package:gaza_go/platform/helpers/alert_helper.dart';
+import 'package:gaza_go/platform/helpers/base_helper.dart';
 import 'package:gaza_go/platform/helpers/inventory_mixin.dart';
 import 'package:gaza_go/platform/helpers/linear_progress_mixin.dart';
 import 'package:gaza_go/platform/models/inventory_badge_item_model.dart';
@@ -179,6 +180,12 @@ class InventoryController extends GetxController with ScrollMixin, LinearProgres
     super.onInit();
   }
 
+  @override
+  void onClose() {
+    singleChildScrollController.removeListener(() => toggleBottomNav(singleChildScrollController));
+    super.onClose();
+  }
+
   Future<void> initController() async {
     initStats();
     getItemMaxValue();
@@ -186,7 +193,8 @@ class InventoryController extends GetxController with ScrollMixin, LinearProgres
     await getUserEquippedItems();
     getSyntheticBadgeList();
     await getUserBadgesList();
-    scrollControl(); // 스크롤 제어(아이템, 뱃지)
+    singleChildScrollController.addListener(() => toggleBottomNav(singleChildScrollController));
+    // scrollControl(); // 스크롤 제어(아이템, 뱃지)
     getHeight();
   }
 
@@ -219,31 +227,31 @@ class InventoryController extends GetxController with ScrollMixin, LinearProgres
   }
 
   void scrollControl() {
-    itemScrollController.addListener(() {
-      if (itemScrollController.position.atEdge) {
-        bool isTop = itemScrollController.position.pixels == 0;
-        // if (isTop) {
-        //   //print('At the top');
-        //   singleChildScrollController.animateTo(0, duration: const Duration(milliseconds: 200), curve: Curves.easeInOut);
-        // } else {
-        //   //print('At the bottom');
-        //   singleChildScrollController.animateTo(singleChildScrollController.position.maxScrollExtent, duration: const Duration(milliseconds: 200), curve: Curves.easeInOut);
-        // }
-      }
-    });
-
-    badgeScrollController.addListener(() {
-      if (badgeScrollController.position.atEdge) {
-        bool isTop = badgeScrollController.position.pixels == 0;
-        // if (isTop) {
-        //   //print('At the top');
-        //   singleChildScrollController.animateTo(0, duration: const Duration(milliseconds: 200), curve: Curves.easeInOut);
-        // } else {
-        //   //print('At the bottom');
-        //   singleChildScrollController.animateTo(singleChildScrollController.position.maxScrollExtent, duration: const Duration(milliseconds: 200), curve: Curves.easeInOut);
-        // }
-      }
-    });
+    // itemScrollController.addListener(() {
+    //   if (itemScrollController.position.atEdge) {
+    //     bool isTop = itemScrollController.position.pixels == 0;
+    //     // if (isTop) {
+    //     //   //print('At the top');
+    //     //   singleChildScrollController.animateTo(0, duration: const Duration(milliseconds: 200), curve: Curves.easeInOut);
+    //     // } else {
+    //     //   //print('At the bottom');
+    //     //   singleChildScrollController.animateTo(singleChildScrollController.position.maxScrollExtent, duration: const Duration(milliseconds: 200), curve: Curves.easeInOut);
+    //     // }
+    //   }
+    // });
+    //
+    // badgeScrollController.addListener(() {
+    //   if (badgeScrollController.position.atEdge) {
+    //     bool isTop = badgeScrollController.position.pixels == 0;
+    //     // if (isTop) {
+    //     //   //print('At the top');
+    //     //   singleChildScrollController.animateTo(0, duration: const Duration(milliseconds: 200), curve: Curves.easeInOut);
+    //     // } else {
+    //     //   //print('At the bottom');
+    //     //   singleChildScrollController.animateTo(singleChildScrollController.position.maxScrollExtent, duration: const Duration(milliseconds: 200), curve: Curves.easeInOut);
+    //     // }
+    //   }
+    // });
   }
 
   void initStats() {

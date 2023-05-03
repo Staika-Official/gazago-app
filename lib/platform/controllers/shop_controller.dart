@@ -3,6 +3,7 @@ import 'package:gaza_go/constants/routes.dart';
 import 'package:gaza_go/platform/controllers/loader_controller.dart';
 import 'package:gaza_go/platform/controllers/wallet_master_controller.dart';
 import 'package:gaza_go/platform/firebase/remote_config.dart';
+import 'package:gaza_go/platform/helpers/base_helper.dart';
 import 'package:gaza_go/platform/models/inventory_item_stat_model.dart';
 import 'package:gaza_go/platform/models/shop_item_model.dart';
 import 'package:gaza_go/platform/models/shop_item_purchase_response_model.dart';
@@ -118,9 +119,16 @@ class ShopController extends GetxController {
     super.onInit();
   }
 
+  @override
+  void onClose() {
+    itemScrollController.removeListener(() => toggleBottomNav(itemScrollController));
+    super.onClose();
+  }
+
   Future<void> initController() async {
     getShopItemsList();
     getItemMaxValue();
+    itemScrollController.addListener(() => toggleBottomNav(itemScrollController));
   }
 
   Future<void> refreshController() async {

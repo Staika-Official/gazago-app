@@ -6,6 +6,7 @@ import 'package:flutter_svg_provider/flutter_svg_provider.dart';
 import 'package:gaza_go/constants/routes.dart';
 import 'package:gaza_go/platform/controllers/loader_controller.dart';
 import 'package:gaza_go/platform/helpers/alert_helper.dart';
+import 'package:gaza_go/platform/helpers/base_helper.dart';
 import 'package:gaza_go/platform/helpers/location_helper.dart';
 import 'package:gaza_go/platform/models/archive_detail_item_model.dart';
 import 'package:gaza_go/platform/models/archive_list_item_model.dart';
@@ -28,8 +29,16 @@ class ArchiveController extends GetxController with ScrollMixin {
     super.onInit();
   }
 
+  @override
+  void onClose() {
+    scroll.removeListener(() => toggleBottomNav(scroll));
+    super.onClose();
+  }
+
   Future<void> initController() async {
     await getArchiveList();
+
+    scroll.addListener(() => toggleBottomNav(scroll));
   }
 
   Future<void> refreshController() async {

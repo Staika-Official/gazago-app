@@ -32,7 +32,7 @@ class InventoryBadge extends StatelessWidget {
                     Opacity(
                       opacity: item.state == 'EQUIPPED' ? 0.5 : 1,
                       child: Container(
-                        height: 105.sp,
+                        height: 100.sp,
                         padding: EdgeInsets.all(10.0.sp),
                         child: item.imageUrl!.contains('.svg')
                             ? SvgPicture.network(

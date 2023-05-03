@@ -52,24 +52,35 @@ class LoadingController extends GetxController {
       String emergencyNoticeContent = getConfig(dataType: ConfigType.string, configKey: 'emergency_notice_content');
       if (underMaintenance) {
         await BoardService.getNoticePopupList(
-          successCallback: (List<NoticePopupModel> records) {
+          successCallback: (List<NoticePopupModel> records) async {
             NoticePopupModel popup = records.firstWhere((element) => element.type == 'INSPECTION', orElse: () => NoticePopupModel(id: -1));
             if (popup.id != -1) {
               String rawText = popup.label!;
               String type = rawText.contains('|') ? rawText.split('|')[0] : 'ING';
               String contentText = rawText.contains('|') ? rawText.split('|')[1] : rawText;
 
-              showMaintenanceAlert(
-                type: type,
-                contentText: contentText,
-                callback: type == 'PREVIEW'
-                    ? () async {
-                        Get.back();
-                        await checkTermsAgreeStatus();
-                        Future.delayed(Duration.zero, () => timerStart());
-                      }
-                    : null,
-              );
+              if (isShowMaintenancePreviewForToday()) {
+                showMaintenanceAlert(
+                  type: type,
+                  contentText: contentText,
+                  callbacks: type == 'PREVIEW'
+                      ? [
+                          () async {
+                            Get.back();
+                            await initLoading();
+                          },
+                          () async {
+                            DateTime now = DateTime.now();
+                            HiveStore.save(key: HiveKey.closeMaintenancePreviewDate.name, value: now);
+                            Get.back();
+                            await initLoading();
+                          },
+                        ]
+                      : null,
+                );
+              } else {
+                await initLoading();
+              }
             } else {
               showMaintenanceAlert(type: 'EMERGENCY', contentText: emergencyNoticeContent);
             }
@@ -82,8 +93,7 @@ class LoadingController extends GetxController {
         showMaintenanceAlert(type: 'EMERGENCY', contentText: emergencyNoticeContent);
       }
     } else {
-      await checkTermsAgreeStatus();
-      Future.delayed(Duration.zero, () => timerStart());
+      await initLoading();
     }
     super.onReady();
   }
@@ -97,6 +107,11 @@ class LoadingController extends GetxController {
   void showRestartAppPopup() {
     timerStop();
     showRetryAlert(this);
+  }
+
+  Future<void> initLoading() async {
+    await checkTermsAgreeStatus();
+    Future.delayed(Duration.zero, () => timerStart());
   }
 
   void handleRefreshApp() {
@@ -178,5 +193,16 @@ class LoadingController extends GetxController {
 
   bool isUnderMaintenance() {
     return underMaintenance || hasEmergencyNotice;
+  }
+
+  bool isShowMaintenancePreviewForToday() {
+    DateTime? date = HiveStore.load(key: HiveKey.closeMaintenancePreviewDate.name);
+    DateTime? viewableTime = date?.add(const Duration(hours: 24));
+    DateTime now = DateTime.now();
+    if (date == null || viewableTime!.isBefore(now)) {
+      return true;
+    }
+
+    return false;
   }
 }

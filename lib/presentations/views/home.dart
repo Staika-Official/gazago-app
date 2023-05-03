@@ -14,6 +14,7 @@ class Home extends StatelessWidget {
 
   Widget bottomNavigationBar(HomeMenuController controller) {
     return Container(
+      key: controller.bottomNavKey,
       decoration: BoxDecoration(
         color: controller.selectedIndex.value == 2
             ? const Color(0xFF252529)
@@ -116,9 +117,21 @@ class Home extends StatelessWidget {
           backgroundColor: subBg01Color,
           appBar: controller.appbar,
           body: controller.mainViewWidgetList.elementAt(controller.selectedIndex.value),
-          bottomNavigationBar: bottomNavigationBar(
-            controller,
-          ),
+          bottomNavigationBar: controller.selectedIndex.value == 2
+              ? bottomNavigationBar(
+                  controller,
+                )
+              : AnimatedContainer(
+                  duration: Duration(milliseconds: 300),
+                  height: controller.hideBottomNav.value ? 0 : controller.bottomNavHeight.value,
+                  child: Wrap(
+                    children: [
+                      bottomNavigationBar(
+                        controller,
+                      ),
+                    ],
+                  ),
+                ),
         );
       }),
     );

@@ -4155,7 +4155,7 @@ void showItemTipAlert() {
   );
 }
 
-void showMaintenanceAlert({String type = 'ING', required String contentText, Function? callback}) {
+void showMaintenanceAlert({String type = 'ING', required String contentText, List<Function>? callbacks}) {
   List<Widget> setWidgets() {
     Widget image;
     Widget title;
@@ -4200,7 +4200,7 @@ void showMaintenanceAlert({String type = 'ING', required String contentText, Fun
         description = Padding(
           padding: const EdgeInsets.only(top: 28, bottom: 28),
           child: StyledText(
-            '안녕하세요 가자고 팀입니다.\n새로운 기능 업데이트를 위해 시스템 점검중입니다.\n양해 부탁드립니다.\n운영상황에 따라 점검일정은 변경될 수 있습니다.',
+            '안녕하세요 가자고 팀입니다.\n새로운 기능 업데이트를 위해 시스템 점검중입니다.\n양해 부탁드립니다.',
             fontWeight: 500,
             fontSize: 16,
             lineHeight: 24,
@@ -4246,7 +4246,7 @@ void showMaintenanceAlert({String type = 'ING', required String contentText, Fun
         description = Padding(
           padding: const EdgeInsets.only(top: 28, bottom: 28),
           child: StyledText(
-            '안녕하세요 가자고 팀입니다.\n새로운 기능 업데이트를 위해 시스템 점검중입니다.\n양해 부탁드립니다.\n운영상황에 따라 점검일정은 변경될 수 있습니다.',
+            '안녕하세요 가자고 팀입니다.\n새로운 기능 업데이트를 위해 시스템 점검중입니다.\n양해 부탁드립니다.',
             fontWeight: 500,
             fontSize: 16,
             lineHeight: 24,
@@ -4290,16 +4290,39 @@ void showMaintenanceAlert({String type = 'ING', required String contentText, Fun
                       ),
                     ),
                   setWidgets()[2],
-                  if (callback != null)
+                  if (callbacks != null) ...[
                     SizedBox(
                       width: 180,
                       child: GazagoButton(
                         buttonText: '닫기',
                         buttonColor: popupBgColor,
                         textColor: Colors.white,
-                        onTap: () => callback(),
+                        onTap: () => callbacks[0](),
                       ),
                     ),
+                    Padding(
+                      padding: EdgeInsets.only(top: 25),
+                      child: InkWell(
+                        onTap: () => callbacks[1](),
+                        child: Container(
+                          padding: EdgeInsets.only(bottom: 1),
+                          decoration: BoxDecoration(
+                            border: Border(
+                                bottom: BorderSide(
+                              color: deepGrayColor,
+                            )),
+                          ),
+                          child: StyledText(
+                            '오늘 그만 보기',
+                            color: deepGrayColor,
+                            fontSize: 16,
+                            fontWeight: 500,
+                            lineHeight: 24,
+                          ),
+                        ),
+                      ),
+                    )
+                  ]
                 ],
               ),
             ),
