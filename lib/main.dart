@@ -100,7 +100,7 @@ class MyApp extends StatelessWidget {
     );
 
     Get.put(GlobalController(), permanent: true);
-    LoaderController loaderController = Get.put(LoaderController(), permanent: true);
+    Get.put(LoaderController(), permanent: true);
 
     return ScreenUtilInit(
       designSize: const Size(390, 844),
