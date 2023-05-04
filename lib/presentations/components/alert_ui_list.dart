@@ -3885,7 +3885,7 @@ void showNeedVerificationAlert(WalletMasterController controller) {
   );
 }
 
-void showForceUpdateWallet() {
+void showForceUpdateApp() {
   showAlert(
     title: '새 업데이트가 있습니다.',
     contentText: '앱을 사용하기 위해서 업데이트가 필요합니다.',
@@ -3911,7 +3911,7 @@ void showForceUpdateWallet() {
   );
 }
 
-void showRecommendUpdateWallet() {
+void showRecommendUpdateApp() {
   showAlert(
     title: '새 업데이트가 있습니다.',
     contentText: '앱을 사용하기 위해서 업데이트가 필요합니다.',

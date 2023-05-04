@@ -7,6 +7,7 @@ import 'package:gaza_go/constants/routes.dart';
 import 'package:gaza_go/platform/helpers/alert_helper.dart';
 import 'package:gaza_go/platform/helpers/login_helper.dart';
 import 'package:gaza_go/platform/models/access_token_model.dart';
+import 'package:gaza_go/platform/models/error_response_data_model.dart';
 import 'package:gaza_go/platform/models/social_login_info_model.dart';
 import 'package:gaza_go/platform/services/member_service.dart';
 import 'package:gaza_go/platform/services/uaa_service.dart';
@@ -161,8 +162,11 @@ class LoginController extends GetxController {
           Get.offNamed(Routes.joinTerms, arguments: {'platform': 'gazago'});
         }
       },
-      errorCallback: () {
+      errorCallback: (ErrorResponseDataModel res) {
         forceLogout();
+        if (res.errorCode != null && res.errorCode == 'APP_UPDATE_REQUIRED') {
+          showForceUpdateApp();
+        }
       },
     );
   }

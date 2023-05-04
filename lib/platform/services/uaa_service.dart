@@ -35,7 +35,7 @@ class UaaService {
     if ([200, 201].any((statusCode) => statusCode == res.statusCode)) {
       successCallback(AccessTokenModel.fromJson(res.data), res.statusCode);
     } else {
-      if (errorCallback != null) errorCallback();
+      if (errorCallback != null) errorCallback(ErrorResponseDataModel.fromJson(res.data));
     }
   }
 

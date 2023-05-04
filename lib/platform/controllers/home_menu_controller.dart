@@ -142,13 +142,13 @@ class HomeMenuController extends SuperController {
           [UpdateAvailability.updateAvailable, UpdateAvailability.developerTriggeredUpdateInProgress].any((result) => result == _appAndroidUpdateInfo?.updateAvailability)) {
         await InAppUpdate.performImmediateUpdate().then((result) {
           if ([AppUpdateResult.userDeniedUpdate, AppUpdateResult.inAppUpdateFailed].any((resultStatus) => resultStatus == result)) {
-            showForceUpdateWallet();
+            showForceUpdateApp();
           }
         }).catchError((e) {
           showToastPopup(e.toString());
         });
       } else if (_appIOSUpdateInfo != null && _appIOSUpdateInfo!.canUpdate) {
-        showForceUpdateWallet();
+        showForceUpdateApp();
       }
     } else {
       bool needRecommendedUpgrade = await isRecommendUpdateTarget();
@@ -169,7 +169,7 @@ class HomeMenuController extends SuperController {
             showUpdateSnackbar();
           }
         } else if (_appIOSUpdateInfo != null && _appIOSUpdateInfo!.canUpdate) {
-          showRecommendUpdateWallet();
+          showRecommendUpdateApp();
         }
       }
     }
