@@ -15,7 +15,7 @@ class ChallengeInfo extends StatelessWidget {
     ChallengesDetailController controller = Get.find();
 
     return SingleChildScrollView(
-      physics: const NeverScrollableScrollPhysics(),
+      physics: ClampingScrollPhysics(),
       child: Container(
         color: subBg01Color,
         child: Column(
@@ -258,7 +258,7 @@ class ChallengeInfo extends StatelessWidget {
               ),
             ),
             Padding(
-              padding: EdgeInsets.only(top: 30.0.sp, left: 20.sp, right: 20.sp, bottom: 0.sp),
+              padding: EdgeInsets.only(top: 30.0.sp, left: 20.sp, right: 20.sp, bottom: MediaQuery.of(context).padding.bottom),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
