@@ -9,7 +9,8 @@ import 'package:get/get.dart';
 import 'package:intl/intl.dart';
 import 'package:table_calendar/table_calendar.dart';
 
-class LeaderboardController extends GetxController {
+class LeaderboardController extends GetxController with GetTickerProviderStateMixin {
+  late TabController tabController;
   Rx<DateTime?> selectedDate = Rx(DateTime.now());
   CalendarFormat calendarFormat = CalendarFormat.month;
   Rx<DateTime?> today = Rx(DateTime.now());
@@ -55,7 +56,10 @@ class LeaderboardController extends GetxController {
   @override
   void onInit() {
     initController();
-
+    tabController = TabController(vsync: this, length: 2, initialIndex: 0)
+      ..addListener(() {
+        if (tabController.indexIsChanging && tabController.index == 1) {}
+      });
     super.onInit();
   }
 

@@ -42,9 +42,9 @@ class Home extends StatelessWidget {
             selectedIndex: controller.selectedIndex.value,
             destinations: [
               NavigationDestination(
-                icon: iconMenuArchive,
-                selectedIcon: iconMenuArchiveActive,
-                label: '기록',
+                icon: iconMenuChallenges,
+                selectedIcon: iconMenuChallengesActive,
+                label: '챌린지',
               ),
               NavigationDestination(
                 icon: iconMenuItems,

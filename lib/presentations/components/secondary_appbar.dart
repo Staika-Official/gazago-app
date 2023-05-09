@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg_provider/flutter_svg_provider.dart' as sp;
 import 'package:gaza_go/constants/routes.dart';
+import 'package:gaza_go/platform/controllers/home_menu_controller.dart';
 import 'package:gaza_go/platform/controllers/wallet_master_controller.dart';
 import 'package:gaza_go/platform/helpers/base_helper.dart';
 import 'package:gaza_go/presentations/styles/colors.dart';
@@ -52,6 +53,7 @@ class SecondaryAppbar extends StatelessWidget implements PreferredSizeWidget {
   @override
   Widget build(BuildContext context) {
     WalletMasterController walletMasterController = Get.find();
+    HomeMenuController homeMenuController = Get.find();
     return AppBar(
       backgroundColor: subBg01Color,
       automaticallyImplyLeading: false,
@@ -81,7 +83,12 @@ class SecondaryAppbar extends StatelessWidget implements PreferredSizeWidget {
                     constraints: BoxConstraints(
                       minWidth: 100.sp,
                     ),
-                    child: iconHeaderLogo,
+                    child: StyledText(
+                      homeMenuController.selectedMenuTitle(),
+                      fontWeight: 600,
+                      fontSize: 22,
+                      lineHeight: 30,
+                    ),
                   ),
             Row(
               mainAxisSize: MainAxisSize.min,

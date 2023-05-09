@@ -149,21 +149,11 @@ class ArchiveHome extends StatelessWidget {
       color: subBg01Color,
       child: Obx(() {
         return Padding(
-          padding: EdgeInsets.only(top: 20.sp, left: 20.sp, right: 20.sp),
+          padding: EdgeInsets.only(top: 0.sp, left: 20.sp, right: 20.sp),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             mainAxisSize: MainAxisSize.min,
             children: [
-              Padding(
-                padding: EdgeInsets.only(bottom: 15.0.sp),
-                child: const StyledText(
-                  '운동 기록',
-                  fontSize: 20,
-                  lineHeight: 20,
-                  fontWeight: 500,
-                ),
-              ),
-
               // Align(
               //   alignment: Alignment.centerRight,
               //   child: IconButton(
@@ -216,16 +206,19 @@ class ArchiveHome extends StatelessWidget {
                       child: SingleChildScrollView(
                         controller: controller.scroll,
                         physics: const ClampingScrollPhysics(),
-                        child: Column(
-                          mainAxisSize: MainAxisSize.min,
-                          children: [
-                            ...renderArchiveList(controller),
-                            if (controller.dataGetLoading.value)
-                              Padding(
-                                padding: EdgeInsets.symmetric(vertical: 20.0.sp),
-                                child: const Center(child: CircularProgressIndicator()),
-                              )
-                          ],
+                        child: Padding(
+                          padding: EdgeInsets.only(top: 20.0.sp),
+                          child: Column(
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              ...renderArchiveList(controller),
+                              if (controller.dataGetLoading.value)
+                                Padding(
+                                  padding: EdgeInsets.symmetric(vertical: 20.0.sp),
+                                  child: const Center(child: CircularProgressIndicator()),
+                                )
+                            ],
+                          ),
                         ),
                       ),
                     ),

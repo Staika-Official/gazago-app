@@ -113,6 +113,7 @@ dependencies:
   new_version: ^0.3.1
   in_app_update: ^4.0.1
   animate_do: ^3.0.2
+  intrinsic_dimension: ^0.3.1
 
 
 dev_dependencies:
@@ -156,6 +157,7 @@ flutter:
     - assets/images/permissions/
     - assets/images/shop/
     - assets/images/maintenance/
+    - assets/images/challenges/
     - assets/lottie/
 
 

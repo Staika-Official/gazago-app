@@ -9,6 +9,7 @@ import 'package:gaza_go/presentations/views/activity/equipped_item.dart';
 import 'package:gaza_go/presentations/views/archive/archive_detail.dart';
 import 'package:gaza_go/presentations/views/auth/account_restore.dart';
 import 'package:gaza_go/presentations/views/auth/signup_complete.dart';
+import 'package:gaza_go/presentations/views/challenges/challenge_detail.dart';
 import 'package:gaza_go/presentations/views/debugging/position_raw_data_logs.dart';
 import 'package:gaza_go/presentations/views/debugging/request_info.dart';
 import 'package:gaza_go/presentations/views/debugging/response_error_logs.dart';
@@ -116,6 +117,7 @@ class Routes {
   static const createWalletPassword = '/wallet/create/password';
   static const createWallet = '/wallet/create';
   static const sendStikGoWallet = '/wallet/send_stik_go_wallet';
+  static const challengeDetail = '/challenges/challenge_detail';
 
   static List<GetPage> pages = [
     stepPage(name: Routes.login, page: const Login()),
@@ -176,6 +178,7 @@ class Routes {
     stepPage(name: Routes.createWalletPassword, page: const CreateWalletPassword()),
     stepPage(name: Routes.createWallet, page: const CreateWallet()),
     stepPage(name: Routes.sendStikGoWallet, page: const SendStikGoWallet()),
+    stepPage(name: Routes.challengeDetail, page: const ChallengeDetail()),
   ];
 }
 

@@ -27,12 +27,14 @@ SvgPicture iconMenuHome = SvgPicture.asset('assets/images/common/ico_menu_home.s
 SvgPicture iconMenuHomeActive = SvgPicture.asset('assets/images/common/ico_menu_home.svg', width: 20.5.sp, height: 20.sp, color: skyBlueColor);
 SvgPicture iconMenuArchive = SvgPicture.asset('assets/images/common/ico_menu_archive.svg', width: 27.sp, height: 17.sp, color: lightGrayColor);
 SvgPicture iconMenuArchiveActive = SvgPicture.asset('assets/images/common/ico_menu_archive.svg', width: 27.sp, height: 17.sp, color: skyBlueColor);
-SvgPicture iconMenuItems = SvgPicture.asset('assets/images/common/ico_menu_items.svg', width: 29.sp, height: 16.sp, color: lightGrayColor);
-SvgPicture iconMenuItemsActive = SvgPicture.asset('assets/images/common/ico_menu_items.svg', width: 29.sp, height: 16.sp, color: skyBlueColor);
+SvgPicture iconMenuItems = SvgPicture.asset('assets/images/common/ico_menu_items.svg', width: 30.sp, height: 30.sp, color: lightGrayColor);
+SvgPicture iconMenuItemsActive = SvgPicture.asset('assets/images/common/ico_menu_items.svg', width: 30.sp, height: 30.sp, color: skyBlueColor);
 SvgPicture iconMenuRanking = SvgPicture.asset('assets/images/common/ico_menu_ranking.svg', width: 22.sp, height: 19.sp, color: lightGrayColor);
 SvgPicture iconMenuRankingActive = SvgPicture.asset('assets/images/common/ico_menu_ranking.svg', width: 22.sp, height: 19.sp, color: skyBlueColor);
 SvgPicture iconMenuShop = SvgPicture.asset('assets/images/common/ico_menu_shop.svg', width: 24.sp, height: 24.sp, color: lightGrayColor);
 SvgPicture iconMenuShopActive = SvgPicture.asset('assets/images/common/ico_menu_shop.svg', width: 24.sp, height: 24.sp, color: skyBlueColor);
+SvgPicture iconMenuChallenges = SvgPicture.asset('assets/images/common/ico_menu_challenges.svg', width: 30.sp, height: 30.sp, color: lightGrayColor);
+SvgPicture iconMenuChallengesActive = SvgPicture.asset('assets/images/common/ico_menu_challenges.svg', width: 30.sp, height: 30.sp, color: skyBlueColor);
 
 // Login
 SvgPicture iconLoginApple = SvgPicture.asset('assets/images/login/ico_apple.svg', width: 11.sp, height: 14.sp);
@@ -171,3 +173,7 @@ SvgPicture iconGradeCircleUncommon = SvgPicture.asset('assets/images/common/ico_
 SvgPicture iconGradeCircleRare = SvgPicture.asset('assets/images/common/ico_grade_circle_rare.svg', width: 18.sp, height: 18.sp);
 SvgPicture iconGradeCircleEpic = SvgPicture.asset('assets/images/common/ico_grade_circle_epic.svg', width: 18.sp, height: 18.sp);
 SvgPicture iconGradeCircleLegend = SvgPicture.asset('assets/images/common/ico_grade_circle_legend.svg', width: 18.sp, height: 18.sp);
+
+// Challenges
+SvgPicture iconPeople = SvgPicture.asset('assets/images/challenges/ico_people.svg', width: 16.sp, height: 12.sp);
+SvgPicture iconChallengeSuccess = SvgPicture.asset('assets/images/challenges/ico_challenge_success.svg', width: 76.sp, height: 76.sp);

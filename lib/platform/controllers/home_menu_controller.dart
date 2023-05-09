@@ -18,7 +18,7 @@ import 'package:gaza_go/presentations/components/alert_ui_list.dart';
 import 'package:gaza_go/presentations/components/main_appbar.dart';
 import 'package:gaza_go/presentations/components/secondary_appbar.dart';
 import 'package:gaza_go/presentations/views/activity/index.dart';
-import 'package:gaza_go/presentations/views/archive/index.dart';
+import 'package:gaza_go/presentations/views/challenges/index.dart';
 import 'package:gaza_go/presentations/views/inventory/index.dart';
 import 'package:gaza_go/presentations/views/leaderboard/index.dart';
 import 'package:gaza_go/presentations/views/shop/index.dart';
@@ -44,11 +44,11 @@ class HomeMenuController extends SuperController {
   ];
 
   final List<Widget> mainViewWidgetList = [
-    const ArchiveHome(),
+    const ChallengesHome(),
     const InventoryHome(),
     const ActivityHome(),
     const ShopHome(),
-    const LeaderboardHome(),
+    const RankingHome(),
   ];
 
   PreferredSizeWidget? get appbar {
@@ -95,7 +95,6 @@ class HomeMenuController extends SuperController {
     if (visitedTabs.any((tabIndex) => tabIndex == index) && prevIndex.value != index) {
       switch (index) {
         case 0:
-          if (Get.isRegistered<ArchiveController>()) Get.find<ArchiveController>().refreshController();
           break;
         case 1:
           if (Get.isRegistered<InventoryController>()) Get.find<InventoryController>().refreshController();
@@ -107,12 +106,27 @@ class HomeMenuController extends SuperController {
           if (Get.isRegistered<ShopController>()) Get.find<ShopController>().refreshController();
           break;
         case 4:
+          if (Get.isRegistered<ArchiveController>()) Get.find<ArchiveController>().refreshController();
           if (Get.isRegistered<LeaderboardController>()) Get.find<LeaderboardController>().refreshController();
           break;
       }
     } else {
       visitedTabs.add(index);
     }
+  }
+
+  String selectedMenuTitle() {
+    switch (selectedIndex.value) {
+      case 0:
+        return '챌린지';
+      case 1:
+        return '내 장비';
+      case 3:
+        return '상점';
+      case 4:
+        return '랭킹';
+    }
+    return '홈';
   }
 
   Future<void> checkUpdates() async {

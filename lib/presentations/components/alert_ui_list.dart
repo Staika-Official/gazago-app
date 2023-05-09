@@ -12,6 +12,7 @@ import 'package:gaza_go/constants/enums.dart';
 import 'package:gaza_go/constants/routes.dart';
 import 'package:gaza_go/platform/controllers/activity_controller.dart';
 import 'package:gaza_go/platform/controllers/archive_controller.dart';
+import 'package:gaza_go/platform/controllers/challenges_controller.dart';
 import 'package:gaza_go/platform/controllers/debugging_controller.dart';
 import 'package:gaza_go/platform/controllers/inventory_controller.dart';
 import 'package:gaza_go/platform/controllers/loading_controller.dart';
@@ -4333,5 +4334,177 @@ void showMaintenanceAlert({String type = 'ING', required String contentText, Lis
     barrierColor: subBg01Color,
     useSafeArea: true,
     barrierDismissible: false,
+  );
+}
+
+void challengesSortListAlert(ChallengesController controller) {
+  showAlert(
+    contentWidget: Padding(
+      padding: EdgeInsets.only(top: 20.0.sp, bottom: 40.sp),
+      child: Obx(
+        () {
+          return Column(
+            children: [
+              ...controller.sortingList.asMap().entries.map(
+                    (entry) => Padding(
+                      padding: EdgeInsets.only(top: entry.key > 0 ? 40.sp : 0),
+                      child: InkWell(
+                        onTap: () => controller.onClickSortingMenu(entry.value),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          children: [
+                            StyledText(
+                              entry.value['title']!,
+                              fontSize: 18,
+                              lineHeight: 20,
+                              fontWeight: 500,
+                              color: controller.isSelectedSortValue.value['value'] == entry.value['value'] ? skyBlueColor : Colors.white,
+                            ),
+                            if (controller.isSelectedSortValue.value['value'] == entry.value['value']) iconSortChecked
+                          ],
+                        ),
+                      ),
+                    ),
+                  ),
+            ],
+          );
+        },
+      ),
+    ),
+    actions: [
+      Expanded(
+        child: GazagoButton(
+          onTap: () => controller.closeSortingMenu(),
+          buttonText: '취소',
+          textColor: Colors.white,
+          buttonColor: popupBgColor,
+        ),
+      ),
+      SizedBox(
+        width: 9.sp,
+      ),
+      Expanded(
+        child: GazagoButton(
+          onTap: () => controller.onClickConfirmSortValue(controller.isSelectedSortValue.value),
+          buttonText: '적용하기',
+          buttonColor: skyBlueColor,
+        ),
+      ),
+    ],
+  );
+}
+
+void challengesFilterListAlert(ChallengesController controller) {
+  showAlert(
+    isScrollControlled: true,
+    contentWidget: Padding(
+      padding: EdgeInsets.only(bottom: 40.sp),
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.start,
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Obx(() {
+            return Padding(
+              padding: EdgeInsets.only(bottom: 10.0.sp),
+              child: Align(
+                alignment: Alignment.topRight,
+                child: InkWell(
+                  onTap: () => controller.onSelectAllItems(),
+                  child: Container(
+                    decoration: BoxDecoration(
+                      color: controller.isSelectAllItems.value ? Colors.white : popupBgColor,
+                      border: Border.all(
+                        width: 1,
+                        color: Colors.white,
+                      ),
+                      borderRadius: BorderRadius.circular(25.sp),
+                    ),
+                    child: Padding(
+                      padding: EdgeInsets.symmetric(horizontal: 12.0.sp, vertical: 6.sp),
+                      child: StyledText(
+                        '전체',
+                        fontSize: 14,
+                        lineHeight: 16,
+                        letterSpacing: .2,
+                        fontWeight: 500,
+                        color: controller.isSelectAllItems.value ? Colors.black : Colors.white,
+                      ),
+                    ),
+                  ),
+                ),
+              ),
+            );
+          }),
+          Padding(
+            padding: EdgeInsets.only(bottom: 20.0.sp),
+            child: const StyledText(
+              '운동모드',
+              fontWeight: 500,
+              fontSize: 20,
+              lineHeight: 22,
+            ),
+          ),
+          Obx(() {
+            return SizedBox(
+              width: double.infinity,
+              child: Wrap(
+                children: [
+                  ...controller.exerciseTypeFilterList.asMap().entries.map(
+                        (entry) => Padding(
+                          padding: EdgeInsets.only(right: 10.sp),
+                          child: InkWell(
+                            onTap: () => controller.onSelectCategory(entry.value['value']),
+                            child: Container(
+                              decoration: BoxDecoration(
+                                color: controller.selectedStatus.any((element) => element == entry.value['value']) ? Colors.white : popupBgColor,
+                                border: Border.all(
+                                  width: 1,
+                                  color: Colors.white,
+                                ),
+                                borderRadius: BorderRadius.circular(20.sp),
+                              ),
+                              child: Padding(
+                                padding: EdgeInsets.symmetric(horizontal: 12.0.sp, vertical: 6.sp),
+                                child: StyledText(
+                                  entry.value['title']!,
+                                  fontSize: 14,
+                                  lineHeight: 16,
+                                  letterSpacing: .2,
+                                  fontWeight: 500,
+                                  color: controller.selectedStatus.any((element) => element == entry.value['value']) ? Colors.black : Colors.white,
+                                ),
+                              ),
+                            ),
+                          ),
+                        ),
+                      ),
+                ],
+              ),
+            );
+          }),
+        ],
+      ),
+    ),
+    actions: [
+      Expanded(
+        child: GazagoButton(
+          onTap: () => controller.closeItemFilterPopup(),
+          buttonText: '취소',
+          textColor: Colors.white,
+          buttonColor: popupBgColor,
+        ),
+      ),
+      SizedBox(
+        width: 9.sp,
+      ),
+      Expanded(
+        child: GazagoButton(
+          onTap: () => controller.onClickConfirmFilterValue(),
+          buttonText: '적용하기',
+          buttonColor: skyBlueColor,
+        ),
+      ),
+    ],
   );
 }
