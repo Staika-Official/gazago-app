@@ -14,9 +14,9 @@ class ChallengeInfo extends StatelessWidget {
   Widget build(BuildContext context) {
     ChallengesDetailController controller = Get.find();
 
-    return Scaffold(
-      resizeToAvoidBottomInset: false,
-      body: Container(
+    return SingleChildScrollView(
+      physics: const NeverScrollableScrollPhysics(),
+      child: Container(
         color: subBg01Color,
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
