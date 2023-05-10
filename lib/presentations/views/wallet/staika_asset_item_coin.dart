@@ -85,7 +85,7 @@ class StaikaAssetItemCoin extends StatelessWidget {
                                       mainAxisSize: MainAxisSize.min,
                                       children: [
                                         StyledText(
-                                          '${formatDecimalPlaces(double.parse(asset.uiAmountString!), 9, isAutoDecimal: true)}',
+                                          '${formatDecimalPlaces(double.parse(asset.uiAmountString!), 4, isAutoDecimal: true)}',
                                           fontSize: 18,
                                           lineHeight: 20,
                                           letterSpacing: 0.5,
