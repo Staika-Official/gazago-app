@@ -45,13 +45,13 @@ class LeaderboardController extends GetxController with GetTickerProviderStateMi
 
   RxString get checkRewardDate {
     if (DateFormat('yyyy-MM-dd').format(selectedDate.value!.toLocal()) == DateFormat('yyyy-MM-dd').format(today.value!.toLocal())) {
-      return RxString('실시간 예측 리워드');
+      return RxString('실시간 TOP10');
     }
-    return RxString('확정 리워드');
+    return RxString('TOP10');
   }
 
   RxInt page = RxInt(0);
-  RxInt size = RxInt(100);
+  RxInt size = RxInt(10);
 
   @override
   void onInit() {

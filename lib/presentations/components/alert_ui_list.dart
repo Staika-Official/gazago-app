@@ -968,7 +968,7 @@ void itemPurchaseAlert(ShopController controller, double remainMyTik, tradeSymbo
       return Column(
         children: [
           Padding(
-            padding: EdgeInsets.only(top: 22.0.sp, bottom: 70.sp),
+            padding: EdgeInsets.only(top: 22.0.sp, bottom: 20.sp),
             child: Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
@@ -985,6 +985,85 @@ void itemPurchaseAlert(ShopController controller, double remainMyTik, tradeSymbo
                   fontWeight: 400,
                 ),
               ],
+            ),
+          ),
+          Padding(
+            padding: EdgeInsets.only(bottom: 30.0.sp),
+            child: Container(
+              decoration: BoxDecoration(
+                color: subBg02Color,
+                borderRadius: BorderRadius.circular(5.sp),
+              ),
+              child: Padding(
+                padding: EdgeInsets.symmetric(vertical: 13.0.sp, horizontal: 10.sp),
+                child: Column(
+                  children: [
+                    Row(
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Container(
+                          width: 3,
+                          height: 3,
+                          margin: const EdgeInsets.all(5),
+                          decoration: BoxDecoration(
+                            color: skyBlueColor,
+                            borderRadius: BorderRadius.circular(2),
+                          ),
+                        ),
+                        StyledText(
+                          '해당 아이템은 챌린지 대상 아이템입니다.',
+                          fontSize: 14,
+                          lineHeight: 20,
+                          color: skyBlueColor,
+                        )
+                      ],
+                    ),
+                    Row(
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Container(
+                          width: 3,
+                          height: 3,
+                          margin: const EdgeInsets.all(5),
+                          decoration: BoxDecoration(
+                            color: skyBlueColor,
+                            borderRadius: BorderRadius.circular(2),
+                          ),
+                        ),
+                        StyledText(
+                          '구매 후 자동으로 장착되고 챌린지에 자동 참여됩니다.',
+                          fontSize: 14,
+                          lineHeight: 20,
+                          color: skyBlueColor,
+                        )
+                      ],
+                    ),
+                    Row(
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Container(
+                          width: 3,
+                          height: 3,
+                          margin: const EdgeInsets.all(5),
+                          decoration: BoxDecoration(
+                            color: skyBlueColor,
+                            borderRadius: BorderRadius.circular(2),
+                          ),
+                        ),
+                        StyledText(
+                          '챌린지 대상 아이템은 1인 당 한개만 구매 가능합니다.',
+                          fontSize: 14,
+                          lineHeight: 20,
+                          color: skyBlueColor,
+                        )
+                      ],
+                    ),
+                  ],
+                ),
+              ),
             ),
           ),
           if (controller.selectedItem.value.maxGoProfit! > 0)
@@ -1830,7 +1909,7 @@ void itemPurchaseCompleteAlert(ShopController controller) {
                   ],
                 ),
                 StyledText(
-                  '획득한 뱃지를 확인하실수 있습니다.',
+                  '획득한 아이템을 확인하실수 있습니다.',
                   fontWeight: 500,
                   fontSize: 14,
                   lineHeight: 20,
@@ -1845,7 +1924,10 @@ void itemPurchaseCompleteAlert(ShopController controller) {
     actions: [
       Expanded(
         child: GazagoButton(
-          onTap: () => Get.back(),
+          onTap: () {
+            Get.back();
+            controller.fetchEquipItem(controller.purchaseCompleteItem.value.id);
+          },
           buttonText: '확인',
           buttonColor: skyBlueColor,
         ),
@@ -2516,10 +2598,7 @@ void showLeaderboardInfo() {
                               ),
                               children: [
                                 TextSpan(
-                                  text: '오늘 분배할',
-                                ),
-                                TextSpan(
-                                    text: ' 전체 리워드',
+                                    text: '오늘의 리워드',
                                     style: TextStyle(
                                       color: Color(0xFFFF87B5),
                                       // height: 18.sp,
@@ -2579,7 +2658,7 @@ void showLeaderboardInfo() {
                                 ),
                               ),
                               StyledText(
-                                '오늘 분배할 전체 리워드는 아래 항목으로 구성됩니다!',
+                                '오늘의 리워드는 아래 항목으로 구성됩니다!',
                                 color: lightGrayColor,
                                 fontSize: 11,
                                 lineHeight: 16,
@@ -2633,7 +2712,7 @@ void showLeaderboardInfo() {
                                       fontWeight: 400,
                                     ),
                                     StyledText(
-                                      '· 일반 아이템 구매',
+                                      '· 일반 장비 구매',
                                       fontSize: 12,
                                       lineHeight: 18,
                                       fontWeight: 400,
@@ -2747,7 +2826,7 @@ void showLeaderboardInfo() {
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   children: const [
                                     StyledText(
-                                      '· NFT 아이템 구매',
+                                      '· NFT 장비 구매',
                                       fontSize: 12,
                                       lineHeight: 18,
                                       fontWeight: 400,
@@ -4502,6 +4581,108 @@ void challengesFilterListAlert(ChallengesController controller) {
         child: GazagoButton(
           onTap: () => controller.onClickConfirmFilterValue(),
           buttonText: '적용하기',
+          buttonColor: skyBlueColor,
+        ),
+      ),
+    ],
+  );
+}
+
+void challengeItemSoldOutAlert() {
+  showAlert(
+    contentWidget: Padding(
+      padding: EdgeInsets.only(top: 20.0.sp, bottom: 40.sp),
+      child: Column(
+        children: const [
+          StyledText(
+            '해당 아이템은 판매가 완료되어\n챌린지 참여가 불가능합니다.',
+            fontSize: 20,
+            lineHeight: 28,
+            fontWeight: 500,
+            letterSpacing: .2,
+            textAlign: TextAlign.center,
+          ),
+        ],
+      ),
+    ),
+    actions: [
+      Expanded(
+        child: GazagoButton(
+          onTap: () {
+            Get.back();
+          },
+          buttonText: '확인',
+          buttonColor: skyBlueColor,
+        ),
+      ),
+    ],
+  );
+}
+
+void challengeEndedAlert() {
+  showAlert(
+    contentWidget: Padding(
+      padding: EdgeInsets.only(top: 20.0.sp, bottom: 40.sp),
+      child: Column(
+        children: const [
+          StyledText(
+            '챌린지가 종료되어 해당 아이템을\n구매할 수 없습니다.',
+            fontSize: 20,
+            lineHeight: 28,
+            fontWeight: 500,
+            letterSpacing: .2,
+            textAlign: TextAlign.center,
+          ),
+        ],
+      ),
+    ),
+    actions: [
+      Expanded(
+        child: GazagoButton(
+          onTap: () {
+            Get.back();
+          },
+          buttonText: '확인',
+          buttonColor: skyBlueColor,
+        ),
+      ),
+    ],
+  );
+}
+
+void moveBuyChallengeItemPageAlert() {
+  showAlert(
+    contentWidget: Padding(
+      padding: EdgeInsets.only(top: 20.0.sp, bottom: 40.sp),
+      child: Column(
+        children: const [
+          StyledText(
+            '해당 챌린지에 참여하기 위해\n아이템을 구매하러 가시겠습니까?',
+            fontSize: 20,
+            lineHeight: 28,
+            fontWeight: 500,
+            letterSpacing: .2,
+            textAlign: TextAlign.center,
+          ),
+        ],
+      ),
+    ),
+    actions: [
+      Expanded(
+        child: GazagoButton(
+          onTap: () => Get.back(),
+          buttonText: '아니요',
+          textColor: Colors.white,
+          buttonColor: popupBgColor,
+        ),
+      ),
+      SizedBox(
+        width: 9.sp,
+      ),
+      Expanded(
+        child: GazagoButton(
+          onTap: () {},
+          buttonText: '네',
           buttonColor: skyBlueColor,
         ),
       ),

@@ -329,3 +329,14 @@ enum Currency { krw, usd }
 enum FormStatus { empty, insufficient, sufficient }
 
 enum ErrorStatus { basic, insufficient, notSame, sufficient }
+
+enum ChallengeStatusType {
+  participating,
+  enter,
+  soldout,
+  success,
+  failure,
+  ended,
+  beforeOpenEnter,
+  beforeOpen,
+}

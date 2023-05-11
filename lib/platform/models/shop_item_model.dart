@@ -9,12 +9,6 @@ class ShopItemModel {
   String? itemImageUrl;
   String? itemCategory;
   String itemGrade;
-  double toRewardRate;
-  double fromRewardRate;
-  double toAbrasionRate;
-  double fromAbrasionRate;
-  double toStaminaReduceRate;
-  double fromStaminaReduceRate;
   double? minGoProfit;
   double? maxGoProfit;
   double? minDurability;
@@ -35,12 +29,6 @@ class ShopItemModel {
     this.itemImageUrl,
     this.itemCategory,
     required this.itemGrade,
-    required this.toRewardRate,
-    required this.fromRewardRate,
-    required this.toAbrasionRate,
-    required this.fromAbrasionRate,
-    required this.toStaminaReduceRate,
-    required this.fromStaminaReduceRate,
     this.minGoProfit = 0,
     this.maxGoProfit = 0,
     this.minDurability = 0,

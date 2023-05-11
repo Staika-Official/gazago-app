@@ -15,12 +15,11 @@ class ChallengeInfo extends StatelessWidget {
     ChallengesDetailController controller = Get.find();
 
     return SingleChildScrollView(
-      physics: ClampingScrollPhysics(),
       child: Container(
         color: subBg01Color,
+        padding: EdgeInsets.only(bottom: 80.0.sp),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
-          mainAxisSize: MainAxisSize.min,
           children: [
             Padding(
               padding: EdgeInsets.only(left: 20.0.sp, right: 20.0.sp, top: 20.0.sp),
@@ -258,7 +257,7 @@ class ChallengeInfo extends StatelessWidget {
               ),
             ),
             Padding(
-              padding: EdgeInsets.only(top: 30.0.sp, left: 20.sp, right: 20.sp, bottom: MediaQuery.of(context).padding.bottom),
+              padding: EdgeInsets.only(top: 30.0.sp, left: 20.sp, right: 20.sp),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
@@ -346,6 +345,14 @@ class ChallengeInfo extends StatelessWidget {
                           ),
                         ),
                       ],
+                    ),
+                  ),
+                  Padding(
+                    padding: EdgeInsets.only(top: 40.0.sp),
+                    child: Divider(
+                      color: Color(0xFF26272F),
+                      height: 3,
+                      thickness: 2,
                     ),
                   ),
                 ],

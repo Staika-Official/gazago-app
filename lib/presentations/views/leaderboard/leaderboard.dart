@@ -442,7 +442,7 @@ class LeaderboardHome extends StatelessWidget {
   Widget renderRanker(RankerModel ranker, BuildContext context) {
     return Container(
       color: subBg01Color,
-      height: 65.sp,
+      height: 60.sp,
       padding: EdgeInsets.only(left: 18.sp, right: 17.sp),
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.center,
@@ -525,12 +525,12 @@ class LeaderboardHome extends StatelessWidget {
                                   )
                                 : ranker.nickname),
                             overflow: TextOverflow.ellipsis,
-                            style: const TextStyle(color: Colors.white, fontSize: 16, height: 1.6, fontWeight: FontWeight.w500),
+                            style: TextStyle(color: Colors.white, fontSize: 16.sp, height: 18.sp / 16.sp, fontWeight: FontWeight.w500),
                             textAlign: TextAlign.left,
                           ),
                           if (ranker.additionStik != null || ranker.additionTik != null)
                             Padding(
-                              padding: EdgeInsets.only(top: 4.0.sp),
+                              padding: EdgeInsets.only(top: 2.0.sp),
                               child: Text.rich(
                                 textAlign: TextAlign.start,
                                 style: TextStyle(
@@ -635,7 +635,7 @@ class LeaderboardHome extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
                 StyledText(
-                  '오늘 분배할 전체 리워드',
+                  '오늘의 리워드',
                   color: Colors.white,
                   fontWeight: 600,
                   fontSize: 20.sp,
@@ -823,54 +823,21 @@ class LeaderboardHome extends StatelessWidget {
           // ),
           Container(
             padding: EdgeInsets.only(top: 30.sp, left: 25.sp, right: 18.sp, bottom: 12.sp),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                StyledText(
-                  controller.checkRewardDate.value,
-                  color: Colors.white,
-                  fontSize: 20,
-                  lineHeight: 20,
-                  fontWeight: 600,
-                ),
-                Padding(
-                  padding: EdgeInsets.only(top: 10.0.sp),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    children: [
-                      InkWell(
-                        onTap: () => {
-                          bs.showBarModalBottomSheet(
-                            context: context,
-                            builder: (context) {
-                              controller.getCalendarStatisticsToday();
-                              return showBottomCalender(context, controller);
-                            },
-                          )
-                        },
-                        child: Row(
-                          mainAxisSize: MainAxisSize.min,
-                          crossAxisAlignment: CrossAxisAlignment.center,
-                          children: [
-                            iconCalendar,
-                            Padding(padding: EdgeInsets.only(left: 8.sp)),
-                            Obx(() {
-                              return StyledText(
-                                controller.leaderboardDate.value,
-                                color: lightGrayColor,
-                                fontSize: 14,
-                                lineHeight: 14,
-                                fontWeight: 500,
-                              );
-                            }),
-                            //StyledText(controller.leaderboardDate.value!, color: const Color(0xFF747474), fontSize: 12, fontWeight: 600,),
-
-                            //Text(controller.formattedDate.value)
-                          ],
-                        ),
-                      ),
-                      InkWell(
+                Row(
+                  children: [
+                    StyledText(
+                      controller.checkRewardDate.value,
+                      color: Colors.white,
+                      fontSize: 20,
+                      lineHeight: 20,
+                      fontWeight: 600,
+                    ),
+                    Padding(
+                      padding: EdgeInsets.only(left: 10.0.sp),
+                      child: InkWell(
                         onTap: () => null,
                         child: Row(
                           children: [
@@ -889,8 +856,43 @@ class LeaderboardHome extends StatelessWidget {
                           ],
                         ),
                       ),
-                    ],
-                  ),
+                    ),
+                  ],
+                ),
+                Row(
+                  children: [
+                    InkWell(
+                      onTap: () => {
+                        bs.showBarModalBottomSheet(
+                          context: context,
+                          builder: (context) {
+                            controller.getCalendarStatisticsToday();
+                            return showBottomCalender(context, controller);
+                          },
+                        )
+                      },
+                      child: Row(
+                        mainAxisSize: MainAxisSize.min,
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children: [
+                          Obx(() {
+                            return StyledText(
+                              controller.leaderboardDate.value,
+                              color: lightGrayColor,
+                              fontSize: 14,
+                              lineHeight: 14,
+                              fontWeight: 500,
+                            );
+                          }),
+                          Padding(padding: EdgeInsets.only(left: 8.sp)),
+                          iconCalendar,
+                          //StyledText(controller.leaderboardDate.value!, color: const Color(0xFF747474), fontSize: 12, fontWeight: 600,),
+
+                          //Text(controller.formattedDate.value)
+                        ],
+                      ),
+                    ),
+                  ],
                 ),
               ],
             ),

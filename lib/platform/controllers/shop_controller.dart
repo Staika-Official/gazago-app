@@ -3,10 +3,13 @@ import 'package:gaza_go/constants/routes.dart';
 import 'package:gaza_go/platform/controllers/loader_controller.dart';
 import 'package:gaza_go/platform/controllers/wallet_master_controller.dart';
 import 'package:gaza_go/platform/firebase/remote_config.dart';
+import 'package:gaza_go/platform/helpers/alert_helper.dart';
 import 'package:gaza_go/platform/helpers/base_helper.dart';
+import 'package:gaza_go/platform/models/inventory_item_model.dart';
 import 'package:gaza_go/platform/models/inventory_item_stat_model.dart';
 import 'package:gaza_go/platform/models/shop_item_model.dart';
 import 'package:gaza_go/platform/models/shop_item_purchase_response_model.dart';
+import 'package:gaza_go/platform/services/item_service.dart';
 import 'package:gaza_go/platform/services/shop_service.dart';
 import 'package:gaza_go/presentations/components/alert_ui_list.dart';
 import 'package:get/get.dart';
@@ -66,12 +69,6 @@ class ShopController extends GetxController {
     itemImageUrl: '',
     itemCategory: '',
     itemGrade: '',
-    toRewardRate: 0,
-    fromRewardRate: 0,
-    toAbrasionRate: 0,
-    fromAbrasionRate: 0,
-    toStaminaReduceRate: 0,
-    fromStaminaReduceRate: 0,
     minGoProfit: 0,
     maxGoProfit: 0,
     minDurability: 0,
@@ -164,6 +161,7 @@ class ShopController extends GetxController {
       purchaseCompleteItem.value = items;
       showItemPurchaseCompletePopup();
       walletMasterController.getSpendingWalletBalances();
+
       getShopItemsList();
       getItemDetail(itemId);
     }, errorCallback: (statusCode) {
@@ -175,6 +173,15 @@ class ShopController extends GetxController {
         itemPurchaseImpossibleAlert();
       }
     });
+  }
+
+  void fetchEquipItem(int itemId) async {
+    await ItemService.fetchEquippedItem(
+      itemId,
+      successCallback: (InventoryItemModel item) {
+        showToastPopup('아이템이 장착되었습니다.');
+      },
+    );
   }
 
   void showItemTip() {

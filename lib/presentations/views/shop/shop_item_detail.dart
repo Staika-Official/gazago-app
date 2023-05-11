@@ -586,6 +586,60 @@ class ShopItemDetail extends StatelessWidget {
                         ),
                       ),
                       Padding(
+                        padding: EdgeInsets.only(top: 30.sp, bottom: 0.sp),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Padding(
+                              padding: EdgeInsets.only(bottom: 10.sp),
+                              child: Column(
+                                children: [
+                                  Row(
+                                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                    children: [
+                                      StyledText(
+                                        '챌린지 참가하기',
+                                        fontWeight: 600,
+                                        fontSize: 18,
+                                        lineHeight: 18,
+                                      ),
+                                      InkWell(
+                                        onTap: () => null,
+                                        child: Row(
+                                          children: [
+                                            StyledText(
+                                              '바로가기',
+                                              color: lightGrayColor,
+                                              fontSize: 14,
+                                              lineHeight: 16,
+                                              fontWeight: 600,
+                                              letterSpacing: -.1,
+                                            ),
+                                            Padding(
+                                              padding: EdgeInsets.only(left: 4.0.sp),
+                                              child: iconArrowRightTriangle,
+                                            )
+                                          ],
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                  Padding(
+                                    padding: EdgeInsets.only(top: 12.0.sp),
+                                    child: Image.asset(
+                                      'assets/images/challenges/@temp_shop_img.png',
+                                      width: double.infinity,
+                                      height: 82,
+                                      fit: BoxFit.fitWidth,
+                                    ),
+                                  )
+                                ],
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                      Padding(
                         padding: EdgeInsets.only(top: 30.sp, bottom: 100.sp),
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,

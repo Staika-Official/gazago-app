@@ -33,27 +33,6 @@ Future<void> showAlert({
   );
 }
 
-Future<void> showMiniAlert({
-  required List<Widget> actions,
-  String? contentText,
-  Widget? contentWidget,
-  bool isNonePaddingOuter = false,
-}) async {
-  await Get.bottomSheet(
-    WillPopScope(
-      onWillPop: () async => false,
-      child: BottomSheetAlert(
-        contentWidget: contentWidget,
-        contentText: contentText,
-        actions: actions,
-        isNonePaddingOuter: isNonePaddingOuter,
-      ),
-    ),
-    isDismissible: false,
-    enableDrag: false,
-  );
-}
-
 void showToastPopup(String message) {
   Fluttertoast.showToast(
     timeInSecForIosWeb: 2,

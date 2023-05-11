@@ -7,6 +7,7 @@ class ChallengesDetailController extends GetxController with GetTickerProviderSt
   final RxDouble backgroundBoxSize = RxDouble(0.0);
   ScrollController challengeDetailScrollController = ScrollController();
   RxBool isHeightCalculated = RxBool(false);
+  RxInt challengeTabIndex = RxInt(0);
 
   final List<Map<String, dynamic>> challengeList = [
     {
@@ -25,6 +26,7 @@ class ChallengesDetailController extends GetxController with GetTickerProviderSt
   @override
   void onInit() {
     tabController = TabController(length: 2, vsync: this);
+    tabController.addListener(_tabController);
     // _getSize(backgroundKey);
     // addListener(() {
     //   if (backgroundKey.currentContext != null) {
@@ -45,6 +47,10 @@ class ChallengesDetailController extends GetxController with GetTickerProviderSt
   @override
   void onClose() {
     super.onClose();
+  }
+
+  void _tabController() {
+    challengeTabIndex.value = tabController.index;
   }
 
   void getSize() {
