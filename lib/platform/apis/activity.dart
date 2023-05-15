@@ -18,7 +18,7 @@ class ActivityApi {
       serviceUrl: '/services/gazago/api',
       showLoading: false,
     ).get(
-      '/challenges/hierarchy/lat/${currentLocation.latitude}/lon/${currentLocation.longitude}',
+      '/challenge-courses/hierarchy/lat/${currentLocation.latitude}/lon/${currentLocation.longitude}',
     );
   }
 
@@ -30,12 +30,12 @@ class ActivityApi {
   }
 
   // static Future<Response> getNearByChallenges(LocationData currentLocation) async {
-  static Future<Response> getNearByChallenges(Position currentLocation) async {
+  static Future<Response> getNearByChallenge(Position currentLocation) async {
     return await Api.client(
       serviceUrl: '/services/gazago/api',
       showLoading: false,
     ).get(
-      '/challenges/geolocation/lat/${currentLocation.latitude}/lon/${currentLocation.longitude}',
+      '/challenge-courses/geolocation/lat/${currentLocation.latitude}/lon/${currentLocation.longitude}',
     );
   }
 

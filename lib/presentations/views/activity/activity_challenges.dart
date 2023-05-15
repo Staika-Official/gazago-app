@@ -135,10 +135,11 @@ class ActivityChallenges extends StatelessWidget {
   }
 
   List<Widget> renderChallengeList(ActivityController controller) {
-    return controller.doableChallenges.map((challenge) {
-      bool isSelected = challenge.id == controller.selectedChallenge.value.id;
-      return InkWell(
-        onTap: () => controller.selectChallenge(challenge),
+    bool isSelected = controller.doableChallenge.value!.id == controller.selectedChallenge.value.id;
+
+    return [
+      InkWell(
+        onTap: () => controller.selectChallenge(controller.doableChallenge.value!),
         child: Padding(
           padding: EdgeInsets.symmetric(horizontal: 30.sp, vertical: 15.sp),
           child: Row(
@@ -156,7 +157,7 @@ class ActivityChallenges extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     StyledText(
-                      challenge.secondName!,
+                      controller.doableChallenge.value!.secondName!,
                       fontSize: 18,
                       fontWeight: 500,
                       lineHeight: 18,
@@ -167,7 +168,9 @@ class ActivityChallenges extends StatelessWidget {
                         top: 7.sp,
                       ),
                       child: StyledText(
-                        challenge.startPointName != null ? '시작: ${challenge.startPointName!} - 도착: ${challenge.endPointName!}' : challenge.firstName!,
+                        controller.doableChallenge.value!.startPointName != null
+                            ? '시작: ${controller.doableChallenge.value!.startPointName!} - 도착: ${controller.doableChallenge.value!.endPointName!}'
+                            : controller.doableChallenge.value!.firstName!,
                         fontSize: 14,
                         fontWeight: 500,
                         lineHeight: 14,
@@ -180,8 +183,8 @@ class ActivityChallenges extends StatelessWidget {
             ],
           ),
         ),
-      );
-    }).toList();
+      ),
+    ];
   }
 
   @override

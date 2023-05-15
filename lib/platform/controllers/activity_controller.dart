@@ -633,7 +633,7 @@ class ActivityController extends SuperController with ActivityMixin, ChallengeMi
   }
 
   void moveToChallengeSelection() {
-    selectedChallenge.value = ChallengeModel();
+    selectedChallenge.value = ChallengeModel.fromJson(doableChallenge.value!.toJson());
     Get.toNamed(Routes.activityChallenges);
   }
 
@@ -677,7 +677,7 @@ class ActivityController extends SuperController with ActivityMixin, ChallengeMi
       );
     }
 
-    locationSubscription ??= Geolocator.getPositionStream(locationSettings: locationSettings).listen((Position position) {
+    locationSubscription ??= Geolocator.getPositionStream(locationSettings: locationSettings).listen((Position position) async {
       currentLocation.value = position;
       isFakeGps.value = position.isMocked;
       detectFakeGps();
@@ -718,7 +718,7 @@ class ActivityController extends SuperController with ActivityMixin, ChallengeMi
         DateTime now = DateTime.now();
 
         if (receiveLocationTime.value.add(const Duration(seconds: 30)).compareTo(now) < 0) {
-          findChallenge();
+          await findChallenge();
           receiveLocationTime.value = now;
         }
       }
@@ -768,7 +768,7 @@ class ActivityController extends SuperController with ActivityMixin, ChallengeMi
   // 챌린지 찾기
   Future<void> findChallenge() async {
     if (currentLocation.value.latitude != 0 && currentLocation.value.longitude != 0) {
-      await getNearByChallengeList(currentLocation.value, exerciseState.value);
+      await getNearByChallenge(currentLocation.value, exerciseState.value);
     } else {
       await getChallengeList();
     }

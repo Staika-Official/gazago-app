@@ -45,35 +45,29 @@ class ActivityMap extends StatelessWidget {
   }
 
   List<Marker> renderStartMarker(ActivityController controller) {
-    return controller.challengeList
-        .where((challenge) => challenge.id == controller.userState.value.exercise?.challengeId)
-        .map(
-          (challenge) => Marker(
-            markerId: 'StartMarker${challenge.id!}',
-            position: LatLng(challenge.startLat!, challenge.startLon!),
-            captionText: '${challenge.firstName!} 시작점',
-            // icon: controller.startMarkerImage.value,
-            // width: 10,
-            // height: 10,
-          ),
-        )
-        .toList();
+    return [
+      Marker(
+        markerId: 'StartMarker${controller.nearByChallenge.value!.id!}',
+        position: LatLng(controller.nearByChallenge.value!.startLat!, controller.nearByChallenge.value!.startLon!),
+        captionText: '${controller.nearByChallenge.value!.firstName!} 시작점',
+        // icon: controller.startMarkerImage.value,
+        // width: 10,
+        // height: 10,
+      ),
+    ];
   }
 
   List<Marker> renderEndMarker(ActivityController controller) {
-    return controller.challengeList
-        .where((challenge) => challenge.id == controller.userState.value.exercise?.challengeId)
-        .map(
-          (challenge) => Marker(
-            markerId: 'FinishMarker${challenge.id!}',
-            position: LatLng(challenge.endLat!, challenge.endLon!),
-            captionText: '${challenge.firstName!} 도착점',
-            // icon: controller.finishMarkerImage.value,
-            // width: 10,
-            // height: 10,
-          ),
-        )
-        .toList();
+    return [
+      Marker(
+        markerId: 'FinishMarker${controller.nearByChallenge.value!.id!}',
+        position: LatLng(controller.nearByChallenge.value!.endLat!, controller.nearByChallenge.value!.endLon!),
+        captionText: '${controller.nearByChallenge.value!.firstName!} 도착점',
+        // icon: controller.startMarkerImage.value,
+        // width: 10,
+        // height: 10,
+      ),
+    ];
   }
 
   @override
