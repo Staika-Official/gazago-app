@@ -21,7 +21,9 @@ class Notifications extends StatelessWidget {
               margin: EdgeInsets.only(top: 14),
               child: GestureDetector(
                 onTap: () => controller.moveToWebView(notice),
-                child: Image.network(notice.subImageUrl!),
+                child: Image.network(
+                  notice.subImageUrl!,
+                ),
               ),
             ),
           )
@@ -36,11 +38,13 @@ class Notifications extends StatelessWidget {
         child: SafeArea(
           child: Padding(
             padding: EdgeInsets.only(left: 22, right: 22),
-            child: Column(
-              children: [
-                ...renderSubPopupList(controller),
-              ],
-            ),
+            child: Obx(() {
+              return Column(
+                children: [
+                  ...renderSubPopupList(controller),
+                ],
+              );
+            }),
           ),
         ),
       ),

@@ -4,6 +4,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:gaza_go/constants/routes.dart';
 import 'package:gaza_go/flavors.dart';
 import 'package:gaza_go/platform/controllers/debugging_controller.dart';
+import 'package:gaza_go/platform/controllers/notice_popup_controller.dart';
 import 'package:gaza_go/platform/controllers/preference_controller.dart';
 import 'package:gaza_go/presentations/components/default_container.dart';
 import 'package:gaza_go/presentations/styles/colors.dart';
@@ -120,7 +121,9 @@ class Preferences extends StatelessWidget {
                     ),
               PreferenceItem(
                 title: '알림',
-                onTap: () => Get.toNamed(Routes.notifications),
+                onTap: () {
+                  Get.find<NoticePopupController>().moveToNotificationsListPage();
+                },
               ),
               PreferenceItem(
                 title: '공지사항',
