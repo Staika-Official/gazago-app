@@ -226,33 +226,33 @@ class InventoryController extends GetxController with ScrollMixin, LinearProgres
     syntheticBadgeList.value = [];
   }
 
-  void scrollControl() {
-    // itemScrollController.addListener(() {
-    //   if (itemScrollController.position.atEdge) {
-    //     bool isTop = itemScrollController.position.pixels == 0;
-    //     // if (isTop) {
-    //     //   //print('At the top');
-    //     //   singleChildScrollController.animateTo(0, duration: const Duration(milliseconds: 200), curve: Curves.easeInOut);
-    //     // } else {
-    //     //   //print('At the bottom');
-    //     //   singleChildScrollController.animateTo(singleChildScrollController.position.maxScrollExtent, duration: const Duration(milliseconds: 200), curve: Curves.easeInOut);
-    //     // }
-    //   }
-    // });
-    //
-    // badgeScrollController.addListener(() {
-    //   if (badgeScrollController.position.atEdge) {
-    //     bool isTop = badgeScrollController.position.pixels == 0;
-    //     // if (isTop) {
-    //     //   //print('At the top');
-    //     //   singleChildScrollController.animateTo(0, duration: const Duration(milliseconds: 200), curve: Curves.easeInOut);
-    //     // } else {
-    //     //   //print('At the bottom');
-    //     //   singleChildScrollController.animateTo(singleChildScrollController.position.maxScrollExtent, duration: const Duration(milliseconds: 200), curve: Curves.easeInOut);
-    //     // }
-    //   }
-    // });
-  }
+  // void scrollControl() {
+  // itemScrollController.addListener(() {
+  //   if (itemScrollController.position.atEdge) {
+  //     bool isTop = itemScrollController.position.pixels == 0;
+  //     // if (isTop) {
+  //     //   //print('At the top');
+  //     //   singleChildScrollController.animateTo(0, duration: const Duration(milliseconds: 200), curve: Curves.easeInOut);
+  //     // } else {
+  //     //   //print('At the bottom');
+  //     //   singleChildScrollController.animateTo(singleChildScrollController.position.maxScrollExtent, duration: const Duration(milliseconds: 200), curve: Curves.easeInOut);
+  //     // }
+  //   }
+  // });
+  //
+  // badgeScrollController.addListener(() {
+  //   if (badgeScrollController.position.atEdge) {
+  //     bool isTop = badgeScrollController.position.pixels == 0;
+  //     // if (isTop) {
+  //     //   //print('At the top');
+  //     //   singleChildScrollController.animateTo(0, duration: const Duration(milliseconds: 200), curve: Curves.easeInOut);
+  //     // } else {
+  //     //   //print('At the bottom');
+  //     //   singleChildScrollController.animateTo(singleChildScrollController.position.maxScrollExtent, duration: const Duration(milliseconds: 200), curve: Curves.easeInOut);
+  //     // }
+  //   }
+  // });
+  // }
 
   void initStats() {
     statList.value = [
