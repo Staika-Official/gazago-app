@@ -59,7 +59,9 @@ class ActivityService {
   static Future<void> getNearByChallenge(Position currentLocation, {required Function successCallback, Function? errorCallback}) async {
     Response res = await ActivityApi.getNearByChallenge(currentLocation);
     if (res.statusCode == 200) {
-      successCallback(ChallengeModel.fromJson(res.data));
+      if (res.data != null && res.data != '') {
+        successCallback(ChallengeModel.fromJson(res.data));
+      }
     } else {
       if (errorCallback != null) errorCallback();
     }
