@@ -54,7 +54,7 @@ class VerificationPhoneController extends GetxController {
       await IdentityService.sendIdentityCode(verificationUserModel, successCallback: (requestId) {
         Get.toNamed(Routes.verificationCertCode, arguments: {'requestId': requestId, 'verificationUserModel': verificationUserModel});
       }, errorCallback: (res) {
-        if (res.data['errorCode'] == 'REQUEST_LIMIT_EXCEEDED') {
+        if (['IDENTITY_REQUEST_BLOCKED_ABUSE', 'REQUEST_LIMIT_EXCEEDED'].any((element) => element == res.data['errorCode'])) {
           showToastPopup(res.data['errorMessage']);
         } else {
           showInvalidVerifyCode(res.data['errorMessage']);
