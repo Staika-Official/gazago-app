@@ -21,10 +21,15 @@ import 'package:gaza_go/platform/services/item_service.dart';
 import 'package:gaza_go/presentations/components/alert_ui_list.dart';
 import 'package:get/get.dart';
 
-class InventoryController extends GetxController with ScrollMixin, LinearProgressMixin, InventoryMixin {
+class InventoryController extends GetxController with LinearProgressMixin, InventoryMixin {
   final WalletMasterController walletMasterController = Get.find();
+  final RxDouble viewportWidth = RxDouble(0);
   final RxDouble listHeight = RxDouble(0);
   final GlobalKey itemDetailViewKey = GlobalKey();
+  final GlobalKey equippedInfoKey = GlobalKey();
+  final RxDouble equippedInfoHeight = RxDouble(0);
+  final RxBool isLoaded = RxBool(false);
+
   RxInt page = RxInt(0);
   RxInt totalItemCount = RxInt(0);
   RxBool stopLoading = RxBool(false);
@@ -35,7 +40,6 @@ class InventoryController extends GetxController with ScrollMixin, LinearProgres
   RxList<InventoryBadgeModel> syntheticBadgeList = RxList.empty();
 
   final RxBool isShoe = RxBool(false);
-  final RxInt count = 0.obs;
   final RxString getBadgeDate = RxString('');
   final RxInt remainDurability = RxInt(0);
   final RxInt repairDurability = RxInt(0);
@@ -174,10 +178,16 @@ class InventoryController extends GetxController with ScrollMixin, LinearProgres
 
   @override
   void onInit() async {
-    once(count, (_) => print('한번만 호출'));
     await initController();
 
     super.onInit();
+  }
+
+  @override
+  void onReady() {
+    equippedInfoHeight.value = equippedInfoKey.currentContext!.size!.height;
+    isLoaded.value = true;
+    super.onReady();
   }
 
   @override
@@ -193,7 +203,13 @@ class InventoryController extends GetxController with ScrollMixin, LinearProgres
     await getUserEquippedItems();
     getSyntheticBadgeList();
     await getUserBadgesList();
-    singleChildScrollController.addListener(() => toggleBottomNav(singleChildScrollController));
+    singleChildScrollController.addListener(() {
+      toggleBottomNav(singleChildScrollController);
+      if (singleChildScrollController.position.pixels == singleChildScrollController.position.maxScrollExtent) {
+        onEndScroll();
+      }
+    });
+    calculateTabHeight(0, ItemType.all.name);
     // scrollControl(); // 스크롤 제어(아이템, 뱃지)
   }
 
@@ -289,6 +305,7 @@ class InventoryController extends GetxController with ScrollMixin, LinearProgres
         }
 
         getUniqueItemList(allItems);
+        calculateTabHeight(0, ItemType.all.name);
         dataGetLoading.value = false;
       },
     );
@@ -307,6 +324,7 @@ class InventoryController extends GetxController with ScrollMixin, LinearProgres
           if (myAllItems.length == totalItemCount.value) {
             stopLoading.value = true;
           }
+          calculateTabHeight(0, subTabList[tabIndex]['itemType']!);
           dataGetLoading.value = false;
         },
       );
@@ -437,23 +455,11 @@ class InventoryController extends GetxController with ScrollMixin, LinearProgres
     Get.back();
   }
 
-  @override
   Future<void> onEndScroll() async {
     if (!stopLoading.value) {
       page.value++;
       await getUserAllItems();
     }
-    singleChildScrollController.animateTo(singleChildScrollController.position.maxScrollExtent, duration: const Duration(milliseconds: 200), curve: Curves.easeInOut);
-  }
-
-  @override
-  Future<void> onTopScroll() {
-    return Future.delayed(
-      const Duration(milliseconds: 10),
-      () {
-        singleChildScrollController.animateTo(0, duration: const Duration(milliseconds: 200), curve: Curves.easeInOut);
-      },
-    );
   }
 
   void getUniqueItemList(List<InventoryItemModel> targetList) {
@@ -462,5 +468,28 @@ class InventoryController extends GetxController with ScrollMixin, LinearProgres
     List<InventoryItemModel> uniqueItemList = targetList.where((item) => itemSet.add(item.id)).toList();
     myAllItems.value = [...myAllItems, ...uniqueItemList];
     myAllItems.refresh();
+  }
+
+  void _calculateListHeight(int listLength) {
+    int gridCount = viewportWidth.value < 350 ? 2 : 3;
+    int rowCount = (listLength / gridCount).ceil();
+    double totalPadding = (gridCount - 1) * 10 + 40;
+    double itemWidth = (viewportWidth.value - totalPadding) / gridCount;
+    double itemHeight = itemWidth * 1.4;
+    listHeight.value = itemHeight * rowCount + 70;
+  }
+
+  void calculateTabHeight(int tabIndex, String itemType) {
+    switch (tabIndex) {
+      case 0:
+        _calculateListHeight(allItems[itemType]!.length);
+        break;
+
+      case 1:
+        _calculateListHeight(userBadgesList.length);
+        break;
+      default:
+        _calculateListHeight(allItems[ItemType.all.name]!.length);
+    }
   }
 }

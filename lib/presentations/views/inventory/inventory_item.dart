@@ -20,12 +20,11 @@ class InventoryItem extends StatelessWidget {
         .toList();
   }
 
-  List<Widget> renderItemList(InventoryHomeController homeController, InventoryController controller, double width, double height) {
+  List<Widget> renderItemList(InventoryHomeController homeController, InventoryController controller, double width) {
     return homeController.itemSubTabList
         .map(
           (tab) => GridView.count(
             primary: false,
-            controller: controller.scroll,
             padding: EdgeInsets.only(left: 20.sp, right: 20.sp, bottom: 20.sp),
             childAspectRatio: (1 / 1.4),
             crossAxisSpacing: 10.sp,
@@ -171,14 +170,12 @@ class InventoryItem extends StatelessWidget {
   Widget build(BuildContext context) {
     InventoryHomeController controller = Get.find();
     InventoryController inventoryController = Get.find();
-    // InventoryController inventoryController = Get.put(InventoryController());
     double width = MediaQuery.of(context).size.width;
-    double height = MediaQuery.of(context).size.height;
 
     return Container(
       color: popupBgColor,
       child: Column(
-        mainAxisSize: MainAxisSize.max,
+        mainAxisSize: MainAxisSize.min,
         children: [
           Padding(
             padding: EdgeInsets.symmetric(vertical: 10.0.sp, horizontal: 20.0.sp),
@@ -208,9 +205,10 @@ class InventoryItem extends StatelessWidget {
               child: Padding(
                 padding: EdgeInsets.only(top: 5.0.sp),
                 child: TabBarView(
+                  physics: const NeverScrollableScrollPhysics(),
                   controller: controller.subTabController,
                   children: [
-                    ...renderItemList(controller, inventoryController, width, height),
+                    ...renderItemList(controller, inventoryController, width),
                   ],
                 ),
               ),
