@@ -563,7 +563,7 @@ void showEndExerciseAdAlert(ChallengeModel challenge, ActivityController control
         child: Column(
           children: [
             InkWell(
-                onTap: () => controller.endAd.value == null ? null : controller.showExerciseEndAd(challenge, controller),
+                onTap: () => controller.endAd.value == null && controller.time.value == 0 ? null : controller.showExerciseEndAd(challenge, controller),
                 child: Obx(() {
                   return Container(
                     width: double.infinity,

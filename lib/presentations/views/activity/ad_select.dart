@@ -71,7 +71,7 @@ class AdSelect extends StatelessWidget {
                         borderRadius: BorderRadius.circular(14.sp),
                       ),
                       child: InkWell(
-                        onTap: () => controller.startAd != null ? controller.showAdAndMoveActivity() : null,
+                        onTap: () => controller.startAd != null && controller.time.value != 0 ? controller.showAdAndMoveActivity() : null,
                         borderRadius: BorderRadius.circular(14.sp),
                         child: Padding(
                           padding: EdgeInsets.only(top: 22.sp, left: 10.sp, right: 10.sp),
