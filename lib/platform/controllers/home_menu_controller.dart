@@ -34,10 +34,6 @@ class HomeMenuController extends SuperController {
   final RxnDouble bottomNavHeight = RxnDouble();
   final RxBool hideBottomNav = RxBool(false);
 
-  RxDouble get kBottomNavHeight {
-    return bottomNavHeight.value == null ? RxDouble(0) : RxDouble(bottomNavHeight.value!);
-  }
-
   final List<PreferredSizeWidget> appbarList = [
     const MainAppbar(),
     const SecondaryAppbar(),

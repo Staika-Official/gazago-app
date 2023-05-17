@@ -42,8 +42,6 @@ class InventoryHomeController extends GetxController with GetTickerProviderState
     },
   ];
 
-  get selectedIndex => null;
-
   @override
   void onInit() {
     initController();

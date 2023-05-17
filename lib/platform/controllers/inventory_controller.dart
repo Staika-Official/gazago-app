@@ -195,13 +195,6 @@ class InventoryController extends GetxController with ScrollMixin, LinearProgres
     await getUserBadgesList();
     singleChildScrollController.addListener(() => toggleBottomNav(singleChildScrollController));
     // scrollControl(); // 스크롤 제어(아이템, 뱃지)
-    getHeight();
-  }
-
-  void getHeight() {
-    if (itemDetailViewKey.currentContext != null) {
-      listHeight.value = itemDetailViewKey.currentContext!.size!.height;
-    }
   }
 
   void getItemMaxValue() {
