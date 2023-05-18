@@ -73,8 +73,6 @@ class NoticePopupController extends GetxController {
         records.removeWhere((element) => element.type == 'INSPECTION');
         noticePopupList.addAll(records);
         List<int>? noticePopupListIds = HiveStore.load(key: HiveKey.noticePopupListIds.name);
-        print('noticePopupListIdsnoticePopupListIdsnoticePopupListIds');
-        print(noticePopupListIds);
         if (noticePopupListIds != null && noticePopupListIds.isNotEmpty) {
           for (NoticePopupModel notice in noticePopupList) {
             if (!noticePopupListIds.contains(notice.id!)) {
