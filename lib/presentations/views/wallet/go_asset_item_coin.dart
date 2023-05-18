@@ -73,7 +73,7 @@ class GoAssetItemCoin extends StatelessWidget {
                                   mainAxisSize: MainAxisSize.min,
                                   children: [
                                     StyledText(
-                                      formatDecimalPlaces(double.parse(asset.uiAmountString!), asset.decimals!, isAutoDecimal: true),
+                                      formatDecimalPlaces(double.parse(asset.uiAmountString!), asset.symbol == 'STIK' ? 4 : asset.decimals!, isAutoDecimal: true),
                                       fontSize: 18,
                                       lineHeight: 20,
                                       letterSpacing: 0.5,

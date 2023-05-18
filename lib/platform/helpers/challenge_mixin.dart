@@ -23,12 +23,11 @@ mixin ChallengeMixin {
   GlobalController globalController = Get.find();
   final GlobalKey listKey = GlobalKey();
 
-  final RxList<ChallengeModel> challengeList = RxList.empty();
+  final Rxn<ChallengeModel> nearByChallenge = Rxn();
   final RxDouble listHeight = RxDouble(0);
   final RxList<ChallengeModel> allChallengesList = RxList.empty();
   final RxList<ChallengeHierarchyModel> hierarchyChallengesList = RxList.empty();
-  final RxList<ChallengeModel> doableChallenges = RxList.empty();
-  final RxList<ChallengeModel> achievableChallenges = RxList.empty();
+  final Rxn<ChallengeModel> doableChallenge = Rxn();
   final Rx<ChallengeModel> selectedChallenge = Rx(ChallengeModel());
   late NaverMapController challengeMapController;
   final RxList<Marker> challengeMarkers = RxList.empty();
@@ -54,12 +53,12 @@ mixin ChallengeMixin {
     return challengeItem;
   }
 
-  Future<void> getNearByChallengeList(Position currentLocation, ExerciseState exerciseState) async {
-    await ActivityService.getNearByChallenges(
+  Future<void> getNearByChallenge(Position currentLocation, ExerciseState exerciseState) async {
+    await ActivityService.getNearByChallenge(
       currentLocation,
       successCallback: (result) {
         notificationOnChallenge(result, exerciseState);
-        challengeList.value = result;
+        nearByChallenge.value = result;
       },
     );
   }
@@ -73,15 +72,42 @@ mixin ChallengeMixin {
     );
   }
 
-  void notificationOnChallenge(List<ChallengeModel> result, ExerciseState exerciseState) {
+  void notificationOnChallenge(ChallengeModel? challenge, ExerciseState exerciseState) {
     bool notification = false;
-    if (result.isNotEmpty && result.length != challengeList.length && !([ExerciseState.ongoing, ExerciseState.paused].any((state) => state == exerciseState))) {
+    if (challenge != null && !([ExerciseState.ongoing, ExerciseState.paused].any((state) => state == exerciseState))) {
       notification = true;
     }
 
-    if (notification) {
-      showLocalNotification(notificationType: NotificationType.challenge, title: '등산 챌린지 시작 포인트 발견', message: '주변에 챌린지를 시작 할 수 있는 ${result.first.firstName}이 있어요. 뱃지 받으러 가자GO~~');
+    if (notification && validateChallengeNotification(challenge!.id!)) {
+      DateTime notifiedTime = DateTime.now();
+      List<int> notifiedChallengeList = HiveStore.load(key: HiveKey.challengeNotificationList.name) ?? [];
+      notifiedChallengeList.add(challenge.id!);
+      HiveStore.save(key: HiveKey.challengeNotificationList.name, value: notifiedChallengeList);
+      HiveStore.save(key: HiveKey.challengeNotificationTime.name, value: DateTime(notifiedTime.year, notifiedTime.month, notifiedTime.day));
+      showLocalNotification(notificationType: NotificationType.challenge, title: '등산 챌린지 시작 포인트 발견', message: '주변에 챌린지를 시작 할 수 있는 ${challenge!.firstName}이 있어요. 뱃지 받으러 가자GO~~');
       showToastPopup('등산 챌린지 시작 포인트 발견');
+    }
+  }
+
+  bool validateChallengeNotification(int challengeId) {
+    DateTime? notifiedTime = HiveStore.load(key: HiveKey.challengeNotificationTime.name);
+    bool isNextDay = notifiedTime != null ? DateTime.now().isAfter(notifiedTime.add(const Duration(hours: 24))) : true;
+    List<int>? notifiedChallengeList = HiveStore.load(key: HiveKey.challengeNotificationList.name);
+
+    if (isNextDay) {
+      HiveStore.save(key: HiveKey.challengeNotificationList.name, value: null);
+      return true;
+    } else {
+      if (notifiedChallengeList != null && notifiedChallengeList.isNotEmpty) {
+        bool challengeAlreadyNotified = notifiedChallengeList.contains(challengeId);
+        if (challengeAlreadyNotified) {
+          return false;
+        }
+
+        return true;
+      } else {
+        return true;
+      }
     }
   }
 
@@ -109,15 +135,12 @@ mixin ChallengeMixin {
   }
 
   void detectChallengeZone(Position location) {
-    doableChallenges.value = challengeList.where((challenge) {
-      double distance = calculateDistance(location.latitude, location.longitude, challenge.startLat, challenge.startLon);
-      return distance <= convertMetersToKm(challenge.startRadius!);
-    }).toList();
-    // inspect('가능한 챌린지 리스트${doableChallenges.value}');
-    // achievableChallenges.value = challengeList.where((challenge) {
-    //   double distance = calculateDistance(location.latitude, location.longitude, challenge.endLat, challenge.endLon);
-    //   return distance <= convertMetersToKm(challenge.endRadius!);
-    // }).toList();
+    if (nearByChallenge.value != null) {
+      double distance = calculateDistance(location.latitude, location.longitude, nearByChallenge.value!.startLat, nearByChallenge.value!.startLon);
+      if (distance <= convertMetersToKm(nearByChallenge.value!.startRadius!)) {
+        doableChallenge.value = nearByChallenge.value;
+      }
+    }
   }
 
   void autoFinishChallenge(Position currentLocation, CurrentUserStateModel userState) async {

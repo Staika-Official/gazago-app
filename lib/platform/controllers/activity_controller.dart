@@ -598,12 +598,18 @@ class ActivityController extends SuperController with ActivityMixin, ChallengeMi
   Future<void> selectExerciseType(ExerciseType exerciseType) async {
     selectedExerciseType.value = exerciseType;
 
-    AdWatchAvailableModel response = await AdmobService.getAdWatchAvailableTime('EXERCISE_START');
+    AdWatchAvailableModel adWatchAvailableModel = AdWatchAvailableModel();
+    await AdmobService.getAdWatchAvailableTime(
+      'EXERCISE_START',
+      callback: (AdWatchAvailableModel model) {
+        adWatchAvailableModel = model;
+      },
+    );
 
-    if (response.watchAvailable!) {
+    if (adWatchAvailableModel.watchAvailable!) {
       Get.back();
       Get.dialog(const AdSelect(), barrierDismissible: false, barrierColor: const Color.fromRGBO(0, 0, 0, 0.85));
-      if (startAd == null) {
+      if (startAd.value == null) {
         adLoadTimerStart();
         exerciseStartRewardedAdInit(
           'exerciseStartAd',
@@ -633,7 +639,7 @@ class ActivityController extends SuperController with ActivityMixin, ChallengeMi
   }
 
   void moveToChallengeSelection() {
-    selectedChallenge.value = ChallengeModel();
+    selectedChallenge.value = ChallengeModel.fromJson(doableChallenge.value!.toJson());
     Get.toNamed(Routes.activityChallenges);
   }
 
@@ -677,7 +683,7 @@ class ActivityController extends SuperController with ActivityMixin, ChallengeMi
       );
     }
 
-    locationSubscription ??= Geolocator.getPositionStream(locationSettings: locationSettings).listen((Position position) {
+    locationSubscription ??= Geolocator.getPositionStream(locationSettings: locationSettings).listen((Position position) async {
       currentLocation.value = position;
       isFakeGps.value = position.isMocked;
       detectFakeGps();
@@ -718,7 +724,7 @@ class ActivityController extends SuperController with ActivityMixin, ChallengeMi
         DateTime now = DateTime.now();
 
         if (receiveLocationTime.value.add(const Duration(seconds: 30)).compareTo(now) < 0) {
-          findChallenge();
+          await findChallenge();
           receiveLocationTime.value = now;
         }
       }
@@ -768,7 +774,7 @@ class ActivityController extends SuperController with ActivityMixin, ChallengeMi
   // 챌린지 찾기
   Future<void> findChallenge() async {
     if (currentLocation.value.latitude != 0 && currentLocation.value.longitude != 0) {
-      await getNearByChallengeList(currentLocation.value, exerciseState.value);
+      await getNearByChallenge(currentLocation.value, exerciseState.value);
     } else {
       await getChallengeList();
     }
@@ -813,6 +819,7 @@ class ActivityController extends SuperController with ActivityMixin, ChallengeMi
 
   void adLoadTimerStart() {
     time.value = 5;
+    adUpdateLocked = false;
     if (_adTimer != null) {
       _adTimer = null;
     }
@@ -820,6 +827,7 @@ class ActivityController extends SuperController with ActivityMixin, ChallengeMi
     _adTimer = Timer.periodic(const Duration(seconds: 1), (timer) {
       time.value--;
       if (time.value == 0) {
+        adUpdateLocked = true;
         timer.cancel();
         _adTimer = null;
       }
@@ -836,7 +844,7 @@ class ActivityController extends SuperController with ActivityMixin, ChallengeMi
   void closeAdSelectPopup() {
     adLoadTimerStop();
     Get.back();
-    startAd = null;
+    startAd.value = null;
     endAd.value = null;
   }
 

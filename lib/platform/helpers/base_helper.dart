@@ -161,9 +161,13 @@ void validateTimer(Timer timer, HiveKey hiveKey) {
 
 void toggleBottomNav(ScrollController scroll) {
   HomeMenuController controller = Get.find<HomeMenuController>();
-  if (scroll.position.userScrollDirection == ScrollDirection.reverse) {
-    controller.hideBottomNav.value = true;
-  } else if (scroll.position.userScrollDirection == ScrollDirection.forward) {
+  if (scroll.position.pixels.floor() == 0) {
     controller.hideBottomNav.value = false;
+  } else {
+    if (scroll.position.userScrollDirection == ScrollDirection.reverse) {
+      controller.hideBottomNav.value = true;
+    } else if (scroll.position.userScrollDirection == ScrollDirection.forward) {
+      controller.hideBottomNav.value = false;
+    }
   }
 }

@@ -54,7 +54,7 @@ class AdSelect extends StatelessWidget {
                       width: double.infinity,
                       height: 154.sp,
                       decoration: BoxDecoration(
-                        color: controller.startAd != null ? skyBlueColor : popupBgColor,
+                        color: controller.startAd.value != null ? skyBlueColor : popupBgColor,
                         border: Border.all(
                           width: 1,
                           style: BorderStyle.solid,
@@ -71,14 +71,14 @@ class AdSelect extends StatelessWidget {
                         borderRadius: BorderRadius.circular(14.sp),
                       ),
                       child: InkWell(
-                        onTap: () => controller.startAd != null ? controller.showAdAndMoveActivity() : null,
+                        onTap: () => controller.startAd.value != null ? controller.showAdAndMoveActivity() : null,
                         borderRadius: BorderRadius.circular(14.sp),
                         child: Padding(
                           padding: EdgeInsets.only(top: 22.sp, left: 10.sp, right: 10.sp),
                           child: Column(
                             children: [
                               controller.time.value == 0
-                                  ? controller.startAd != null
+                                  ? controller.startAd.value != null
                                       ? Padding(
                                           padding: EdgeInsets.only(top: 22.0.sp),
                                           child: iconGo,
@@ -89,7 +89,7 @@ class AdSelect extends StatelessWidget {
                                             padding: EdgeInsets.only(top: 22.0.sp),
                                             child: iconGo,
                                           ))
-                                  : controller.startAd == null
+                                  : controller.startAd.value == null
                                       ? Padding(
                                           padding: EdgeInsets.only(bottom: 5.0.sp),
                                           child: Stack(
@@ -126,7 +126,7 @@ class AdSelect extends StatelessWidget {
                                 padding: EdgeInsets.only(top: 12.sp),
                                 child: FittedBox(
                                   alignment: Alignment.topCenter,
-                                  child: controller.time.value == 0 && controller.startAd == null
+                                  child: controller.time.value == 0 && controller.startAd.value == null
                                       ? const StyledText(
                                           '아직 광고가 부족해요...',
                                           color: Color(0xFFC0C2C8),
@@ -137,7 +137,7 @@ class AdSelect extends StatelessWidget {
                                         )
                                       : StyledText(
                                           '${[ExerciseType.walking, ExerciseType.hiking].any((type) => controller.selectedExerciseType.value == type) ? '1' : '3'}GO 획득하고 시작하기',
-                                          color: controller.startAd == null ? Color(0xFF767883) : Colors.black,
+                                          color: controller.startAd.value == null ? Color(0xFF767883) : Colors.black,
                                           fontSize: 20,
                                           fontWeight: 600,
                                           lineHeight: 20,

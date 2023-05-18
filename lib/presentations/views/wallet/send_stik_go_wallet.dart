@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:gaza_go/platform/controllers/wallet_staika_controller.dart';
+import 'package:gaza_go/platform/helpers/base_helper.dart';
 import 'package:gaza_go/presentations/components/default_container.dart';
 import 'package:gaza_go/presentations/styles/colors.dart';
 import 'package:gaza_go/presentations/styles/styled_text.dart';
@@ -56,7 +57,7 @@ class SendStikGoWallet extends StatelessWidget {
                           Padding(
                             padding: EdgeInsets.only(top: 6.0.sp),
                             child: StyledText(
-                              '${controller.assetStik.value!.uiAmountString} STIK',
+                              '${formatDecimalPlaces(double.parse(controller.assetStik.value!.uiAmountString), 4, isAutoDecimal: true)} STIK',
                               fontSize: 18,
                               lineHeight: 19,
                               fontWeight: 500,

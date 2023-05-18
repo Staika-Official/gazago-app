@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:gaza_go/constants/routes.dart';
+import 'package:gaza_go/platform/controllers/notice_popup_controller.dart';
 import 'package:gaza_go/platform/controllers/wallet_master_controller.dart';
 import 'package:gaza_go/presentations/styles/colors.dart';
 import 'package:gaza_go/presentations/styles/icons.dart';
@@ -14,6 +15,8 @@ class MainAppbar extends StatelessWidget implements PreferredSizeWidget {
 
   @override
   Widget build(BuildContext context) {
+    NoticePopupController controller = Get.find<NoticePopupController>();
+
     return AppBar(
       backgroundColor: mainBg01Color,
       bottomOpacity: 0.0,
@@ -31,6 +34,35 @@ class MainAppbar extends StatelessWidget implements PreferredSizeWidget {
           ),
           Row(
             children: [
+              Stack(
+                children: [
+                  IconButton(
+                    onPressed: () => controller.moveToNotificationsListPage(),
+                    icon: iconHeaderBell,
+                    splashRadius: 20.sp,
+                    iconSize: 30,
+                    constraints: BoxConstraints(
+                      minWidth: 30.sp,
+                    ),
+                  ),
+                  Obx(() {
+                    return controller.hasNewNotice.value
+                        ? Positioned(
+                            top: 10,
+                            right: 10,
+                            child: Container(
+                              width: 8,
+                              height: 8,
+                              decoration: BoxDecoration(
+                                color: Color(0xffFF1414),
+                                borderRadius: BorderRadius.circular(8),
+                              ),
+                            ),
+                          )
+                        : Container();
+                  })
+                ],
+              ),
               IconButton(
                 onPressed: () => Get.find<WalletMasterController>().moveToWallet(),
                 icon: iconHeaderWallet,

@@ -564,7 +564,7 @@ void showEndExerciseAdAlert(ChallengeModel challenge, ActivityController control
         child: Column(
           children: [
             InkWell(
-                onTap: () => controller.endAd.value == null ? null : controller.showExerciseEndAd(challenge, controller),
+                onTap: () => controller.endAd.value != null ? controller.showExerciseEndAd(challenge, controller) : null,
                 child: Obx(() {
                   return Container(
                     width: double.infinity,
@@ -2877,7 +2877,7 @@ Future<void> showMainPopupAlert(NoticePopupController noticePopupController) asy
             Stack(children: [
               CarouselSlider(
                 key: const Key('Slider'),
-                items: noticePopupController.noticePopupList
+                items: noticePopupController.noticeMainPopupList
                     .map((item) => Container(
                           width: double.infinity,
                           child: InkWell(
@@ -2916,7 +2916,7 @@ Future<void> showMainPopupAlert(NoticePopupController noticePopupController) asy
                       child: Padding(
                         padding: EdgeInsets.symmetric(horizontal: 8.0.sp, vertical: 4.0.sp),
                         child: StyledText(
-                          '${(noticePopupController.current.value + 1).toString()}/${noticePopupController.noticePopupList.length}',
+                          '${(noticePopupController.current.value + 1).toString()}/${noticePopupController.noticeMainPopupList.length}',
                           fontSize: 16,
                           lineHeight: 17,
                           fontWeight: 500,
@@ -3965,7 +3965,7 @@ void showNeedVerificationAlert(WalletMasterController controller) {
   );
 }
 
-void showForceUpdateWallet() {
+void showForceUpdateApp() {
   showAlert(
     title: '새 업데이트가 있습니다.',
     contentText: '앱을 사용하기 위해서 업데이트가 필요합니다.',
@@ -3991,7 +3991,7 @@ void showForceUpdateWallet() {
   );
 }
 
-void showRecommendUpdateWallet() {
+void showRecommendUpdateApp() {
   showAlert(
     title: '새 업데이트가 있습니다.',
     contentText: '앱을 사용하기 위해서 업데이트가 필요합니다.',

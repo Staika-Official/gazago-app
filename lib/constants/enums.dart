@@ -90,6 +90,9 @@ enum HiveKey {
   lastUpdatedStepCount,
   exerciseCoordinates,
   allowFakeGpsTest,
+  noticePopupListIds,
+  challengeNotificationList,
+  challengeNotificationTime,
 }
 
 enum ResponseStatus {

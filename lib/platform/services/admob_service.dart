@@ -9,8 +9,12 @@ class AdmobService {
     return HiveStore.loadString(key: HiveKey.userId.name);
   }
 
-  static Future<AdWatchAvailableModel> getAdWatchAvailableTime(String exerciseType) async {
+  static Future<void> getAdWatchAvailableTime(String exerciseType, {required Function callback}) async {
     Response res = await AdmobApi.getAdWatchAvailableTime(userId!, exerciseType);
-    return AdWatchAvailableModel.fromJson(res.data);
+    if (res.statusCode == 200) {
+      callback(AdWatchAvailableModel.fromJson(res.data));
+    } else {
+      callback(AdWatchAvailableModel(watchAvailable: false, latestWatchTime: null));
+    }
   }
 }

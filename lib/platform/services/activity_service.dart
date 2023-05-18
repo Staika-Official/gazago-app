@@ -56,16 +56,12 @@ class ActivityService {
     }
   }
 
-  static Future<void> getNearByChallenges(Position currentLocation, {required Function successCallback, Function? errorCallback}) async {
-    Response res = await ActivityApi.getNearByChallenges(currentLocation);
+  static Future<void> getNearByChallenge(Position currentLocation, {required Function successCallback, Function? errorCallback}) async {
+    Response res = await ActivityApi.getNearByChallenge(currentLocation);
     if (res.statusCode == 200) {
-      List<ChallengeModel> challengeList = List.empty(growable: true);
-      if (res.data.length > 0) {
-        res.data.forEach((challenge) {
-          challengeList.add(ChallengeModel.fromJson(challenge));
-        });
+      if (res.data != null && res.data != '') {
+        successCallback(ChallengeModel.fromJson(res.data));
       }
-      successCallback(challengeList);
     } else {
       if (errorCallback != null) errorCallback();
     }

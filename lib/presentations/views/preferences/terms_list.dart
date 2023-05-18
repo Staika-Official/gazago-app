@@ -28,7 +28,7 @@ class TermsList extends StatelessWidget {
               onTap: () => Get.toNamed(Routes.term, arguments: {'termType': 'PRIVACY'}),
             ),
             TermsListItem(
-              title: '위치정보 이용 동의',
+              title: '위치기반서비스 이용약관',
               onTap: () => Get.toNamed(Routes.term, arguments: {'termType': 'LOCATION'}),
             ),
           ],

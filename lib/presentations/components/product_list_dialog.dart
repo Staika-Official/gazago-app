@@ -60,7 +60,7 @@ List<Widget> renderProductList(WalletMasterController controller) {
                             lineHeight: 18.sp,
                             letterSpacing: -0.5,
                           ),
-                          if (product.key > 1)
+                          if (product.key > 2)
                             Padding(
                               padding: const EdgeInsets.only(left: 8),
                               child: Row(
@@ -111,12 +111,14 @@ List<Widget> renderProductList(WalletMasterController controller) {
                       borderRadius: BorderRadius.circular(50),
                       child: Padding(
                         padding: EdgeInsets.symmetric(horizontal: 25.sp, vertical: 15.sp),
-                        child: StyledText(
-                          '${product.value.currencySymbol}${formatDecimalPlaces(product.value.rawPrice, 2, isAutoDecimal: true)}',
-                          fontSize: 14.sp,
-                          fontWeight: 500,
-                          lineHeight: 16.sp,
-                          textAlign: TextAlign.center,
+                        child: FittedBox(
+                          child: StyledText(
+                            '${product.value.currencySymbol}${formatDecimalPlaces(product.value.rawPrice, 2, isAutoDecimal: true)}',
+                            fontSize: 14.sp,
+                            fontWeight: 500,
+                            lineHeight: 16.sp,
+                            textAlign: TextAlign.center,
+                          ),
                         ),
                       ),
                     ),

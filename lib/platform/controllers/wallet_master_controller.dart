@@ -306,28 +306,20 @@ class WalletMasterController extends GetxController with SolanaMixin, GetTickerP
     if (!available) {
       storeUnavailable.value = true;
     } else {
-      Set<String> _kIds = Platform.isIOS
-          ? F.isDev
-              ? <String>{
-                  'ptik_purchase_dev_1',
-                  'ptik_purchase_dev_2',
-                  'ptik_purchase_dev_3',
-                  'ptik_purchase_dev_4',
-                  'ptik_purchase_dev_5',
-                }
-              : <String>{
-                  'ptik_purchase_1',
-                  'ptik_purchase_2',
-                  'ptik_purchase_3',
-                  'ptik_purchase_4',
-                  'ptik_purchase_5',
-                }
+      Set<String> _kIds = F.isDev
+          ? <String>{
+              'ptik_purchase_dev_6',
+              'ptik_purchase_dev_7',
+              'ptik_purchase_dev_8',
+              'ptik_purchase_dev_9',
+              'ptik_purchase_dev_10',
+            }
           : <String>{
-              'ptik_purchase_1',
-              'ptik_purchase_2',
-              'ptik_purchase_3',
-              'ptik_purchase_4',
-              'ptik_purchase_5',
+              'ptik_purchase_6',
+              'ptik_purchase_7',
+              'ptik_purchase_8',
+              'ptik_purchase_9',
+              'ptik_purchase_10',
             };
 
       final ProductDetailsResponse response = await InAppPurchase.instance.queryProductDetails(_kIds);
@@ -418,7 +410,7 @@ class WalletMasterController extends GetxController with SolanaMixin, GetTickerP
   }
 
   double getProductPrice(String productId) {
-    String idNumber = productId.substring(productId.length - 1);
+    String idNumber = productId.split('_').last;
     double rewardTikAmount = 0;
     switch (idNumber) {
       case '1':
@@ -435,6 +427,21 @@ class WalletMasterController extends GetxController with SolanaMixin, GetTickerP
         break;
       case '5':
         rewardTikAmount = 12000;
+        break;
+      case '6':
+        rewardTikAmount = 12000;
+        break;
+      case '7':
+        rewardTikAmount = 24000;
+        break;
+      case '8':
+        rewardTikAmount = 36000;
+        break;
+      case '9':
+        rewardTikAmount = 48000;
+        break;
+      case '10':
+        rewardTikAmount = 60000;
         break;
     }
     return rewardTikAmount;

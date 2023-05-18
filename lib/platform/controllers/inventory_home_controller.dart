@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:gaza_go/constants/enums.dart';
+import 'package:gaza_go/platform/controllers/inventory_controller.dart';
 import 'package:gaza_go/platform/models/inventory_item_model.dart';
 import 'package:get/get.dart';
 
@@ -8,13 +9,7 @@ class InventoryHomeController extends GetxController with GetTickerProviderState
 
   late TabController tabController;
   late TabController subTabController;
-  RxInt get containerHeight {
-    return RxInt(0);
-  }
 
-  late ScrollController scrollController = ScrollController();
-  bool fixedScroll = true;
-  final RxBool isShoe = RxBool(true);
   List<Map<String, String>> itemSubTabList = [
     {
       'title': '전체',
@@ -42,8 +37,6 @@ class InventoryHomeController extends GetxController with GetTickerProviderState
     },
   ];
 
-  get selectedIndex => null;
-
   @override
   void onInit() {
     initController();
@@ -51,22 +44,26 @@ class InventoryHomeController extends GetxController with GetTickerProviderState
   }
 
   @override
-  void dispose() {
+  void onClose() {
     tabController.dispose();
-    scrollController.dispose();
-    super.dispose();
-  }
-
-  void _scrollListener() {
-    if (fixedScroll) {
-      scrollController.jumpTo(0);
-    }
+    subTabController.dispose();
+    super.onClose();
   }
 
   void initController() {
     tabController = TabController(length: 2, vsync: this);
     subTabController = TabController(length: 6, vsync: this);
 
-    scrollController.addListener(_scrollListener);
+    tabController.addListener(() {
+      if (tabController.indexIsChanging) {
+        Get.find<InventoryController>().calculateTabHeight(tabController.index, itemSubTabList[subTabController.index]['itemType']!);
+      }
+    });
+
+    subTabController.addListener(() {
+      if (subTabController.indexIsChanging) {
+        Get.find<InventoryController>().calculateTabHeight(tabController.index, itemSubTabList[subTabController.index]['itemType']!);
+      }
+    });
   }
 }

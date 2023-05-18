@@ -4,6 +4,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:gaza_go/constants/routes.dart';
 import 'package:gaza_go/flavors.dart';
 import 'package:gaza_go/platform/controllers/debugging_controller.dart';
+import 'package:gaza_go/platform/controllers/notice_popup_controller.dart';
 import 'package:gaza_go/platform/controllers/preference_controller.dart';
 import 'package:gaza_go/presentations/components/default_container.dart';
 import 'package:gaza_go/presentations/styles/colors.dart';
@@ -118,21 +119,25 @@ class Preferences extends StatelessWidget {
                       title: '본인인증',
                       onTap: () => Get.toNamed(Routes.verificationTerms),
                     ),
-              // PreferenceItem(
-              //   title: '알림',
-              //   onTap: () => Get.toNamed(Routes.preferenceNotification),
-              // ),
               PreferenceItem(
-                title: 'How to GO',
-                onTap: () => Get.toNamed(Routes.webView, arguments: {'linkUrl': F.howToGoUrl}),
+                title: '알림',
+                onTap: () {
+                  Get.find<NoticePopupController>().moveToNotificationsListPage();
+                },
               ),
               PreferenceItem(
                 title: '공지사항',
-                onTap: () => Get.toNamed(Routes.noticeList, arguments: {'boardType': 'NOTICE'}),
+                // onTap: () => Get.toNamed(Routes.noticeList, arguments: {'boardType': 'NOTICE'}),
+                onTap: () => Get.toNamed(Routes.webView, arguments: {'linkUrl': 'https://eztechfin.notion.site/c5103042de5d4e3a9a61c1101508ffed'}),
               ),
               PreferenceItem(
                 title: 'FAQ',
-                onTap: () => Get.toNamed(Routes.preferenceBoard, arguments: {'boardType': 'FAQ'}),
+                // onTap: () => Get.toNamed(Routes.preferenceBoard, arguments: {'boardType': 'FAQ'}),
+                onTap: () => Get.toNamed(Routes.webView, arguments: {'linkUrl': 'https://eztechfin.notion.site/FAQ-2f6b0ec4d6134fd398cd7a832bfa6cd3'}),
+              ),
+              PreferenceItem(
+                title: 'How to GO',
+                onTap: () => Get.toNamed(Routes.webView, arguments: {'linkUrl': F.howToGoUrl}),
               ),
               Container(
                 width: double.infinity,

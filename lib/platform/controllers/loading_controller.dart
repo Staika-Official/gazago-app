@@ -39,9 +39,9 @@ class LoadingController extends GetxController {
   bool hasEmergencyNotice = getConfig(dataType: ConfigType.bool, configKey: 'has_emergency_notice');
 
   @override
-  void onInit() {
+  void onInit() async {
     String userId = HiveStore.loadString(key: HiveKey.userId.name)!;
-    FirebaseCrashlytics.instance.setUserIdentifier(userId);
+    await FirebaseCrashlytics.instance.setUserIdentifier(userId);
 
     super.onInit();
   }
@@ -104,8 +104,19 @@ class LoadingController extends GetxController {
     super.onClose();
   }
 
-  void showRestartAppPopup() {
+  void showRestartAppPopup() async {
     timerStop();
+    bool isInDebugMode = HiveStore.load(key: HiveKey.isDebuggingMode.name) ?? false;
+    if (isInDebugMode) {
+      await FirebaseCrashlytics.instance.recordError(Exception('LOADING ERROR'), StackTrace.current,
+          information: [
+            ...HiveStore.load(key: HiveKey.requestLogs.name),
+            ...HiveStore.load(key: HiveKey.responseErrorLogs.name),
+          ],
+          fatal: true);
+    } else {
+      initDebugMode();
+    }
     showRetryAlert(this);
   }
 
@@ -119,7 +130,7 @@ class LoadingController extends GetxController {
     retryCount.value = retryCount.value + 1;
     Get.back();
     if (Get.currentRoute != Routes.loading) Get.offAllNamed(Routes.loading);
-    timerStart();
+    initLoading();
   }
 
   void timerStart() {
@@ -187,6 +198,7 @@ class LoadingController extends GetxController {
 
     if (progress.value >= 0.9) {
       timerStop();
+      terminateDebugMode();
       Get.offAllNamed(Routes.home);
     }
   }
@@ -204,5 +216,17 @@ class LoadingController extends GetxController {
     }
 
     return false;
+  }
+
+  void initDebugMode() {
+    HiveStore.save(key: HiveKey.isDebuggingMode.name, value: true);
+  }
+
+  void terminateDebugMode() {
+    HiveStore.save(key: HiveKey.isDebuggingMode.name, value: false);
+    HiveStore.save(key: HiveKey.requestLogs.name, value: []);
+    HiveStore.save(key: HiveKey.responseErrorLogs.name, value: []);
+    HiveStore.save(key: HiveKey.userExerciseDataLogs.name, value: []);
+    HiveStore.save(key: HiveKey.positionRawDataLogs.name, value: []);
   }
 }
