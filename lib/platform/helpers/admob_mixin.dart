@@ -8,7 +8,7 @@ import 'package:google_mobile_ads/google_mobile_ads.dart';
 import '../models/challenge_model.dart';
 
 mixin AdmobMixin {
-  RewardedAd? startAd;
+  Rx<RewardedAd?> startAd = Rx(null);
   Rx<RewardedAd?> endAd = Rx(null);
 
   RxMap<String, int> adLoadAttempts = RxMap({
@@ -18,6 +18,7 @@ mixin AdmobMixin {
 
   RxString selectedAd = RxString('');
   RxBool isLoadedAd = RxBool(false);
+  bool adUpdateLocked = false;
 
   Future handleSelectAdType(adType) async {
     selectedAd.value = adType;
@@ -34,13 +35,15 @@ mixin AdmobMixin {
         rewardedAdLoadCallback: RewardedAdLoadCallback(onAdLoaded: (RewardedAd ad) {
           print('RewardedAd loaded');
 
-          startAd = ad;
+          if (!adUpdateLocked) {
+            startAd.value = ad;
+          }
           isLoadedAd.value = true;
           adLoadAttempts[adType] = 0;
           successCallback();
         }, onAdFailedToLoad: (error) {
           print('RewardedAd failed to load: $error adType ${adType}');
-          startAd = null;
+          startAd.value = null;
           isLoadedAd.value = false;
           adLoadAttempts[adType] = adLoadAttempts[adType]! + 1;
           errorCallback();
@@ -57,7 +60,9 @@ mixin AdmobMixin {
         rewardedAdLoadCallback: RewardedAdLoadCallback(onAdLoaded: (RewardedAd ad) {
           print('RewardedAd loaded');
 
-          endAd.value = ad;
+          if (!adUpdateLocked) {
+            endAd.value = ad;
+          }
           adLoadAttempts[adType] = 0;
 
           successCallback();
@@ -72,18 +77,18 @@ mixin AdmobMixin {
 
   void showExerciseStartAd(ActivityController activityController, String adType) {
     print(adType);
-    if (startAd == null) {
+    if (startAd.value == null) {
       print('Warning: attempt to show rewarded before loaded.');
       return;
     }
-    startAd!.fullScreenContentCallback = FullScreenContentCallback(
+    startAd.value!.fullScreenContentCallback = FullScreenContentCallback(
       onAdShowedFullScreenContent: (RewardedAd ad) => print('ad onAdShowedFullScreenContent.'),
       onAdDismissedFullScreenContent: (RewardedAd ad) {
         print('$ad onAdDismissedFullScreenContent.');
 
         if (ad.adUnitId.isNotEmpty) {
           activityController.handleMoveExerciseActive(activityController.selectedExerciseType.value, adId: ad.adUnitId);
-          startAd = null;
+          startAd.value = null;
         }
 
         ad.dispose();
@@ -95,13 +100,13 @@ mixin AdmobMixin {
       onAdImpression: (RewardedAd ad) => print('$ad impression occurred.'),
     );
 
-    startAd!.setImmersiveMode(true);
-    startAd!.show(onUserEarnedReward: (AdWithoutView ad, RewardItem reward) {
+    startAd.value!.setImmersiveMode(true);
+    startAd.value!.show(onUserEarnedReward: (AdWithoutView ad, RewardItem reward) {
       print('$ad with reward $RewardItem(${reward.amount}, ${reward.type})');
       // DateTime now = DateTime.now();
       // HiveStore.save(key: 'exerciseStartAd', value: now);
     });
-    startAd = null;
+    startAd.value = null;
   }
 
   void showExerciseEndAd(ChallengeModel challenge, ActivityController activityController) async {

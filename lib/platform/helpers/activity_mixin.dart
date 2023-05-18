@@ -569,8 +569,15 @@ mixin ActivityMixin {
         if (source != null && source == 'pendingExerciseDialog') {
           Get.back();
         }
-        AdWatchAvailableModel response = await AdmobService.getAdWatchAvailableTime('EXERCISE_END');
-        if (response.watchAvailable!) {
+        AdWatchAvailableModel adWatchAvailableModel = AdWatchAvailableModel();
+        await AdmobService.getAdWatchAvailableTime(
+          'EXERCISE_END',
+          callback: (AdWatchAvailableModel model) {
+            adWatchAvailableModel = model;
+          },
+        );
+
+        if (adWatchAvailableModel.watchAvailable!) {
           await controller.exerciseEndRewardedAdInit(
             'exerciseEndAd',
           );
