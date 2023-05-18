@@ -91,6 +91,8 @@ enum HiveKey {
   exerciseCoordinates,
   allowFakeGpsTest,
   noticePopupListIds,
+  challengeNotificationList,
+  challengeNotificationTime,
 }
 
 enum ResponseStatus {

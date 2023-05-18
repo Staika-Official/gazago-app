@@ -78,9 +78,36 @@ mixin ChallengeMixin {
       notification = true;
     }
 
-    if (notification) {
+    if (notification && validateChallengeNotification(challenge!.id!)) {
+      DateTime notifiedTime = DateTime.now();
+      List<int> notifiedChallengeList = HiveStore.load(key: HiveKey.challengeNotificationList.name) ?? [];
+      notifiedChallengeList.add(challenge.id!);
+      HiveStore.save(key: HiveKey.challengeNotificationList.name, value: notifiedChallengeList);
+      HiveStore.save(key: HiveKey.challengeNotificationTime.name, value: DateTime(notifiedTime.year, notifiedTime.month, notifiedTime.day));
       showLocalNotification(notificationType: NotificationType.challenge, title: '등산 챌린지 시작 포인트 발견', message: '주변에 챌린지를 시작 할 수 있는 ${challenge!.firstName}이 있어요. 뱃지 받으러 가자GO~~');
       showToastPopup('등산 챌린지 시작 포인트 발견');
+    }
+  }
+
+  bool validateChallengeNotification(int challengeId) {
+    DateTime? notifiedTime = HiveStore.load(key: HiveKey.challengeNotificationTime.name);
+    bool isNextDay = notifiedTime != null ? DateTime.now().isAfter(notifiedTime.add(const Duration(hours: 24))) : true;
+    List<int>? notifiedChallengeList = HiveStore.load(key: HiveKey.challengeNotificationList.name);
+
+    if (isNextDay) {
+      HiveStore.save(key: HiveKey.challengeNotificationList.name, value: null);
+      return true;
+    } else {
+      if (notifiedChallengeList != null && notifiedChallengeList.isNotEmpty) {
+        bool challengeAlreadyNotified = notifiedChallengeList.contains(challengeId);
+        if (challengeAlreadyNotified) {
+          return false;
+        }
+
+        return true;
+      } else {
+        return true;
+      }
     }
   }
 
