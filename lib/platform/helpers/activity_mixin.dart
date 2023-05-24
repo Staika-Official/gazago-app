@@ -357,6 +357,10 @@ mixin ActivityMixin {
       return;
     }
 
+    if (![ExerciseState.init, ExerciseState.ready].any((state) => state == exerciseState.value)) {
+      return;
+    }
+
     if (!batchIsInProgress()) {
       // if (globalController.connectivityResult.value != ConnectivityResult.none) {
       if (globalController.internetConnection.value) {

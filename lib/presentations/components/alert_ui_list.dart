@@ -1913,7 +1913,7 @@ void itemPurchaseCompleteAlert(ShopController controller) {
                   ],
                 ),
                 StyledText(
-                  '획득한 아이템을 확인하실수 있습니다.',
+                  '구매한 아이템을 확인하실수 있습니다.',
                   fontWeight: 500,
                   fontSize: 14,
                   lineHeight: 20,
