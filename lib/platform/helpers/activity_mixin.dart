@@ -9,7 +9,6 @@ import 'package:gaza_go/constants/routes.dart';
 import 'package:gaza_go/platform/controllers/activity_controller.dart';
 import 'package:gaza_go/platform/controllers/archive_controller.dart';
 import 'package:gaza_go/platform/controllers/global_controller.dart';
-import 'package:gaza_go/platform/controllers/home_menu_controller.dart';
 import 'package:gaza_go/platform/firebase/cloud_messaging.dart';
 import 'package:gaza_go/platform/helpers/activity_helper.dart';
 import 'package:gaza_go/platform/helpers/alert_helper.dart';
@@ -769,11 +768,11 @@ mixin ActivityMixin {
 
   void moveToExerciseDetail(int exerciseId) {
     Get.until((route) => route.isFirst);
-    if (Get.isRegistered<HomeMenuController>()) {
-      Get.find<HomeMenuController>().selectMenu(0);
-    } else {
-      Get.put(HomeMenuController()).selectMenu(0);
-    }
+    // if (Get.isRegistered<HomeMenuController>()) {
+    //   Get.find<HomeMenuController>().selectMenu(0);
+    // } else {
+    //   Get.put(HomeMenuController()).selectMenu(0);
+    // }
 
     if (Get.isRegistered<ArchiveController>()) {
       Get.find<ArchiveController>().toDetail(exerciseId);

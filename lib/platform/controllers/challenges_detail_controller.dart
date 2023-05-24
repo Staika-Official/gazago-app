@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:gaza_go/platform/controllers/home_menu_controller.dart';
 import 'package:gaza_go/platform/controllers/loader_controller.dart';
 import 'package:gaza_go/platform/helpers/challenge_mixin.dart';
 import 'package:gaza_go/platform/models/challenge_ranker_model.dart';
@@ -67,14 +66,6 @@ class ChallengesDetailController extends GetxController with GetTickerProviderSt
 
   void moveToShopItem() {
     moveBuyChallengeItemPageAlert(this, challengeDetails.value.itemTradeStoreId!);
-  }
-
-  void moveShopDetail() {
-    if (Get.isRegistered<HomeMenuController>()) {
-      Get.find<HomeMenuController>().selectMenu(0);
-    } else {
-      Get.put(HomeMenuController()).selectMenu(0);
-    }
   }
 
   Future<void> getChallengeDetail() async {

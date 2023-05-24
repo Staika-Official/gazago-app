@@ -184,6 +184,7 @@ class ShopController extends GetxController {
       purchaseCompleteItem.value = items;
       showItemPurchaseCompletePopup();
       walletMasterController.getSpendingWalletBalances();
+      print('challengesDetailController :${challengesDetailController.challengeId}');
       if (challengesDetailController.challengeId != 0) {
         challengesDetailController.refreshController();
       }

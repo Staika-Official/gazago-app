@@ -194,7 +194,7 @@ class ChallengeInfo extends StatelessWidget {
                         onTap: () {
                           if (controller.challengeDetails.value.challengeUserState != 'JOIN_CLOSED' && controller.challengeDetails.value.challengeState != 'CLOSED') {
                             Get.toNamed(Routes.shopItemDetail, arguments: {'id': controller.challengeDetails.value.itemTradeStoreId!});
-                            controller.moveShopDetail();
+                            // controller.moveShopDetail();
                           }
                         },
                         child: Container(
@@ -288,7 +288,8 @@ class ChallengeInfo extends StatelessWidget {
                                 top: 18.sp,
                                 child: iconArrowRightTriangle,
                               ),
-                              if (controller.challengeDetails.value.challengeUserState == 'JOIN_CLOSED' || controller.challengeDetails.value.challengeState == 'CLOSED')
+                              if ((controller.challengeDetails.value.challengeState == 'READY' && controller.challengeDetails.value.challengeUserState == 'REGISTER_READY') ||
+                                  controller.challengeDetails.value.challengeState == 'CLOSED')
                                 Positioned(
                                   left: 0,
                                   top: 0,
