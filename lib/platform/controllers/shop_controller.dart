@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:gaza_go/constants/routes.dart';
+import 'package:gaza_go/platform/controllers/challenges_detail_controller.dart';
+import 'package:gaza_go/platform/controllers/home_menu_controller.dart';
 import 'package:gaza_go/platform/controllers/loader_controller.dart';
 import 'package:gaza_go/platform/controllers/wallet_master_controller.dart';
 import 'package:gaza_go/platform/firebase/remote_config.dart';
@@ -16,6 +18,7 @@ import 'package:get/get.dart';
 
 class ShopController extends GetxController {
   final WalletMasterController walletMasterController = Get.find();
+  final ChallengesDetailController challengesDetailController = Get.find();
   LoaderController loaderController = Get.put(LoaderController());
   final RxList<ShopItemModel> shopItemsList = RxList.empty();
 
@@ -54,7 +57,7 @@ class ShopController extends GetxController {
 
   Rx isSelectedSortValue = Rx({'title': '최근 등록 순', 'value': 'id,DESC'});
   RxString isSelectedSortString = RxString('최근 등록 순');
-
+  RxInt challengeId = RxInt(0);
   ScrollController itemScrollController = ScrollController(keepScrollOffset: false);
   RxBool isShortBalance = RxBool(false);
   RxList<ShopItemModel> get sortingShopItemList {
@@ -110,7 +113,17 @@ class ShopController extends GetxController {
   final RxString itemLuckMax = RxString('0');
 
   @override
-  void onInit() {
+  void onInit() async {
+    challengeId.value = await Get.arguments['id'];
+    if (challengeId.value != 0) {
+      loaderController.isLoading.value = true;
+      await ShopService.getShopItemDetails(challengeId.value, successCallback: (ShopItemModel items) {
+        selectedItem.value = items;
+        loaderController.isLoading.value = false;
+      }, errorCallback: () {
+        loaderController.isLoading.value = false;
+      });
+    }
     initController();
 
     super.onInit();
@@ -132,6 +145,16 @@ class ShopController extends GetxController {
     getShopItemsList();
   }
 
+  void moveChallengeDetail() {
+    Get.until((route) => Get.currentRoute == Routes.challengeDetail);
+    // Get.offNamed(Routes.challengeDetail, arguments: {'id': selectedItem.value.challengeId});
+    if (Get.isRegistered<HomeMenuController>()) {
+      Get.find<HomeMenuController>().selectMenu(0);
+    } else {
+      Get.put(HomeMenuController()).selectMenu(0);
+    }
+  }
+
   void getItemMaxValue() {
     itemGoMax.value = getConfig(dataType: ConfigType.string, configKey: 'item_go_max');
     itemDurabilityMax.value = getConfig(dataType: ConfigType.string, configKey: 'item_durability_max');
@@ -142,7 +165,7 @@ class ShopController extends GetxController {
   void toItemDetail(int itemId) async {
     await ShopService.getShopItemDetails(itemId, successCallback: (ShopItemModel items) {
       selectedItem.value = items;
-      print(selectedItem.value);
+
       Get.toNamed(Routes.shopItemDetail);
     });
   }
@@ -161,16 +184,23 @@ class ShopController extends GetxController {
       purchaseCompleteItem.value = items;
       showItemPurchaseCompletePopup();
       walletMasterController.getSpendingWalletBalances();
+      if (challengesDetailController.challengeId != 0) {
+        challengesDetailController.refreshController();
+      }
 
       getShopItemsList();
       getItemDetail(itemId);
-    }, errorCallback: (statusCode) {
+    }, errorCallback: (statusCode, errorCode, errorMessage) {
       loaderController.isLoading.value = false;
       if (statusCode == 422) {
         isShortBalance.value = true;
         showTikShortBalancePopup(selectedItem.value.tradeSymbol);
       } else {
-        itemPurchaseImpossibleAlert();
+        if (errorCode == 'PURCHASE_LIMIT_EXCEEDED') {
+          itemPurchaseAvailableOnlyOneAlert(errorMessage);
+        } else {
+          itemPurchaseImpossibleAlert();
+        }
       }
     });
   }

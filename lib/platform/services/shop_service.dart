@@ -41,10 +41,9 @@ class ShopService {
     if (res.statusCode == 200) {
       successCallback(ShopItemPurchaseResponseModel.fromJson(res.data));
     } else if (res.statusCode == 422) {
-      if (errorCallback != null) errorCallback(res.statusCode);
+      if (errorCallback != null) errorCallback(res.statusCode, res.data.errorCode, res.data.errorMessage);
     } else {
-      print(res);
-      if (errorCallback != null) errorCallback(res.statusCode);
+      if (errorCallback != null) errorCallback(res.statusCode, res.data.errorCode, res.data.errorMessage);
     }
   }
 }

@@ -1,7 +1,8 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:gaza_go/constants/enums.dart';
 import 'package:gaza_go/platform/controllers/challenges_detail_controller.dart';
+import 'package:gaza_go/platform/helpers/base_helper.dart';
 import 'package:gaza_go/presentations/components/secondary_appbar.dart';
 import 'package:gaza_go/presentations/styles/colors.dart';
 import 'package:gaza_go/presentations/styles/icons.dart';
@@ -36,7 +37,7 @@ class ChallengeDetail extends StatelessWidget {
                 print(_.height);
                 print(__);
                 print(___);
-                controller.backgroundBoxSize.value = height + kToolbarHeight;
+                controller.backgroundBoxSize.value = height + kToolbarHeight + 40;
               },
               builder: (_, __, ___, ____) => Container(
                 color: subBg01Color,
@@ -63,7 +64,7 @@ class ChallengeDetail extends StatelessWidget {
                             child: Padding(
                               padding: EdgeInsets.symmetric(vertical: 8.0.sp, horizontal: 11.0.sp),
                               child: StyledText(
-                                '아이템 장착형',
+                                controller.challengeDetails.value.challengeActivationType == 'ITEM' ? '아이템 장착형' : '',
                                 fontWeight: 500,
                                 fontSize: 12,
                                 lineHeight: 14,
@@ -72,16 +73,17 @@ class ChallengeDetail extends StatelessWidget {
                               ),
                             ),
                           ),
-                          Padding(
-                            padding: EdgeInsets.only(top: 15.0.sp, bottom: 10.0.sp),
-                            child: StyledText(
-                              '[2월] 챌린저 트레킹슈즈 신고 매일 걷기',
-                              fontSize: 20,
-                              lineHeight: 23,
-                              fontWeight: 500,
-                              letterSpacing: -.1,
+                          if (controller.challengeDetails.value.title != null)
+                            Padding(
+                              padding: EdgeInsets.only(top: 15.0.sp, bottom: 10.0.sp),
+                              child: StyledText(
+                                controller.challengeDetails.value.title!,
+                                fontSize: 20,
+                                lineHeight: 23,
+                                fontWeight: 500,
+                                letterSpacing: -.1,
+                              ),
                             ),
-                          ),
                           Row(
                             children: [
                               StyledText(
@@ -114,48 +116,32 @@ class ChallengeDetail extends StatelessWidget {
                             padding: EdgeInsets.only(top: 10.0),
                             child: Row(
                               children: [
-                                Row(
-                                  children: [
-                                    Container(
-                                      decoration: BoxDecoration(
-                                        color: Colors.white,
-                                        border: Border.all(width: 1.sp, color: Colors.black),
-                                        borderRadius: BorderRadius.all(
-                                          Radius.circular(15.sp),
+                                if (controller.challengeDetails.value.exerciseTypes != null)
+                                  Row(
+                                    children: [
+                                      ...controller.challengeDetails.value.exerciseTypes!.map(
+                                        (type) => Container(
+                                          decoration: BoxDecoration(
+                                            color: Colors.white,
+                                            border: Border.all(width: 1.sp, color: Colors.black),
+                                            borderRadius: BorderRadius.all(
+                                              Radius.circular(15.sp),
+                                            ),
+                                          ),
+                                          child: Padding(
+                                            padding: EdgeInsets.symmetric(vertical: 3.0.sp, horizontal: 8.sp),
+                                            child: StyledText(
+                                              controller.getChallengeExerciseType(type),
+                                              color: subBg01Color,
+                                              fontSize: 10,
+                                              fontWeight: 500,
+                                              lineHeight: 12,
+                                            ),
+                                          ),
                                         ),
-                                      ),
-                                      child: Padding(
-                                        padding: EdgeInsets.symmetric(vertical: 3.0.sp, horizontal: 8.sp),
-                                        child: StyledText(
-                                          '걷기',
-                                          color: subBg01Color,
-                                          fontSize: 10,
-                                          fontWeight: 500,
-                                          lineHeight: 12,
-                                        ),
-                                      ),
-                                    ),
-                                    Container(
-                                      decoration: BoxDecoration(
-                                        color: Colors.white,
-                                        border: Border.all(width: 1.sp, color: Colors.black),
-                                        borderRadius: BorderRadius.all(
-                                          Radius.circular(15.sp),
-                                        ),
-                                      ),
-                                      child: Padding(
-                                        padding: EdgeInsets.symmetric(vertical: 3.0.sp, horizontal: 8.sp),
-                                        child: StyledText(
-                                          '100대 명산',
-                                          color: subBg01Color,
-                                          fontSize: 10,
-                                          fontWeight: 500,
-                                          lineHeight: 12,
-                                        ),
-                                      ),
-                                    ),
-                                  ],
-                                ),
+                                      )
+                                    ],
+                                  ),
                                 StyledText(
                                   ' · ',
                                   color: const Color(0xffd9d9d9),
@@ -261,8 +247,21 @@ class ChallengeDetail extends StatelessWidget {
                               Container(
                                 width: double.infinity,
                                 height: 290.sp,
-                                child: Image.asset("assets/images/challenges/@temp_img_big.png", fit: BoxFit.cover),
+                                child: controller.challengeDetails.value.imageUrl != null
+                                    ? CachedNetworkImage(
+                                        imageUrl: controller.challengeDetails.value.imageUrl!,
+                                        fit: BoxFit.cover,
+                                        placeholder: (context, url) => const Center(child: SizedBox.square(dimension: 40, child: CircularProgressIndicator())),
+                                        errorWidget: (context, url, error) => const Center(child: SizedBox.square(dimension: 40, child: CircularProgressIndicator())),
+                                      )
+                                    : const Center(child: SizedBox.square(dimension: 40, child: CircularProgressIndicator())),
                               ),
+                              // CachedNetworkImage(
+                              //   imageUrl: controller.challengeDetails.value.imageUrl!,
+                              //   fit: BoxFit.cover,
+                              //   placeholder: (context, url) => const Center(child: SizedBox.square(dimension: 40, child: CircularProgressIndicator())),
+                              //   errorWidget: (context, url, error) => Image.asset("assets/images/challenges/@temp_img.png", fit: BoxFit.cover),
+                              // )
                               Padding(
                                 padding: EdgeInsets.all(20.0.sp),
                                 child: Column(
@@ -278,7 +277,7 @@ class ChallengeDetail extends StatelessWidget {
                                       child: Padding(
                                         padding: EdgeInsets.symmetric(vertical: 8.0.sp, horizontal: 11.0.sp),
                                         child: StyledText(
-                                          '아이템 장착형',
+                                          controller.challengeDetails.value.challengeActivationType == 'ITEM' ? '아이템 장착형' : '',
                                           fontWeight: 500,
                                           fontSize: 12,
                                           lineHeight: 14,
@@ -287,20 +286,21 @@ class ChallengeDetail extends StatelessWidget {
                                         ),
                                       ),
                                     ),
-                                    Padding(
-                                      padding: EdgeInsets.only(top: 15.0.sp, bottom: 10.0.sp),
-                                      child: StyledText(
-                                        '[2월] 챌린저 트레킹슈즈 신고 매일 걷기',
-                                        fontSize: 20,
-                                        lineHeight: 23,
-                                        fontWeight: 500,
-                                        letterSpacing: -.1,
+                                    if (controller.challengeDetails.value.title != null)
+                                      Padding(
+                                        padding: EdgeInsets.only(top: 15.0.sp, bottom: 10.0.sp),
+                                        child: StyledText(
+                                          controller.challengeDetails.value.title!,
+                                          fontSize: 20,
+                                          lineHeight: 23,
+                                          fontWeight: 500,
+                                          letterSpacing: -.1,
+                                        ),
                                       ),
-                                    ),
                                     Row(
                                       children: [
                                         StyledText(
-                                          '2023/02/01 - 2023/02/01',
+                                          '${formatDateUntilDay(controller.challengeDetails.value.fromDate)} - ${formatDateUntilDay(controller.challengeDetails.value.toDate)}',
                                           color: lightGrayColor,
                                           fontWeight: 500,
                                           fontSize: 12,
@@ -315,62 +315,51 @@ class ChallengeDetail extends StatelessWidget {
                                           lineHeight: 14,
                                           letterSpacing: -.1,
                                         ),
-                                        StyledText(
-                                          '오픈예정',
-                                          color: lightGreenColor,
-                                          fontWeight: 500,
-                                          fontSize: 12,
-                                          lineHeight: 14,
-                                          letterSpacing: -.1,
-                                        ),
+                                        if (controller.challengeDetails.value.challengeState != null)
+                                          StyledText(
+                                            controller.getChallengeStatus(controller.challengeDetails.value.challengeState!),
+                                            color: controller.challengeDetails.value.challengeState == 'READY'
+                                                ? lightGreenColor
+                                                : controller.challengeDetails.value.challengeState == 'IN_PROGRESS'
+                                                    ? skyBlueColor
+                                                    : lightGrayColor,
+                                            fontWeight: 500,
+                                            fontSize: 12,
+                                            lineHeight: 14,
+                                            letterSpacing: -.1,
+                                          ),
                                       ],
                                     ),
                                     Padding(
                                       padding: EdgeInsets.only(top: 10.0),
                                       child: Row(
                                         children: [
-                                          Row(
-                                            children: [
-                                              Container(
-                                                decoration: BoxDecoration(
-                                                  color: Colors.white,
-                                                  border: Border.all(width: 1.sp, color: Colors.black),
-                                                  borderRadius: BorderRadius.all(
-                                                    Radius.circular(15.sp),
+                                          if (controller.challengeDetails.value.exerciseTypes != null)
+                                            Row(
+                                              children: [
+                                                ...controller.challengeDetails.value.exerciseTypes!.map(
+                                                  (type) => Container(
+                                                    decoration: BoxDecoration(
+                                                      color: Colors.white,
+                                                      border: Border.all(width: 1.sp, color: Colors.black),
+                                                      borderRadius: BorderRadius.all(
+                                                        Radius.circular(15.sp),
+                                                      ),
+                                                    ),
+                                                    child: Padding(
+                                                      padding: EdgeInsets.symmetric(vertical: 3.0.sp, horizontal: 8.sp),
+                                                      child: StyledText(
+                                                        controller.getChallengeExerciseType(type),
+                                                        color: subBg01Color,
+                                                        fontSize: 10,
+                                                        fontWeight: 500,
+                                                        lineHeight: 12,
+                                                      ),
+                                                    ),
                                                   ),
-                                                ),
-                                                child: Padding(
-                                                  padding: EdgeInsets.symmetric(vertical: 3.0.sp, horizontal: 8.sp),
-                                                  child: StyledText(
-                                                    '걷기',
-                                                    color: subBg01Color,
-                                                    fontSize: 10,
-                                                    fontWeight: 500,
-                                                    lineHeight: 12,
-                                                  ),
-                                                ),
-                                              ),
-                                              Container(
-                                                decoration: BoxDecoration(
-                                                  color: Colors.white,
-                                                  border: Border.all(width: 1.sp, color: Colors.black),
-                                                  borderRadius: BorderRadius.all(
-                                                    Radius.circular(15.sp),
-                                                  ),
-                                                ),
-                                                child: Padding(
-                                                  padding: EdgeInsets.symmetric(vertical: 3.0.sp, horizontal: 8.sp),
-                                                  child: StyledText(
-                                                    '100대 명산',
-                                                    color: subBg01Color,
-                                                    fontSize: 10,
-                                                    fontWeight: 500,
-                                                    lineHeight: 12,
-                                                  ),
-                                                ),
-                                              ),
-                                            ],
-                                          ),
+                                                )
+                                              ],
+                                            ),
                                           StyledText(
                                             ' · ',
                                             color: const Color(0xffd9d9d9),
@@ -385,7 +374,7 @@ class ChallengeDetail extends StatelessWidget {
                                               Padding(
                                                 padding: EdgeInsets.only(left: 5.0.sp),
                                                 child: StyledText(
-                                                  '80명 / 100명',
+                                                  '${controller.challengeDetails.value.soldQuantity}명 / ${controller.challengeDetails.value.quantity}명',
                                                   color: lightGrayColor,
                                                   fontWeight: 500,
                                                   fontSize: 12,
@@ -419,11 +408,19 @@ class ChallengeDetail extends StatelessWidget {
               ),
             ),
             if (controller.challengeTabIndex.value == 0)
+              if (controller.challengeDetails.value.challengeUserState != null)
+                Positioned.fill(
+                  top: null,
+                  left: 0,
+                  bottom: 0,
+                  child: renderParticipateInChallenge(controller.challengeDetails.value.challengeUserState!),
+                ),
+            if (controller.challengeDetails.value.challengeState != null && controller.challengeDetails.value.challengeUserState == null)
               Positioned.fill(
                 top: null,
                 left: 0,
                 bottom: 0,
-                child: renderParticipateInChallenge(ChallengeStatusType.failure),
+                child: renderParticipateInChallenge(controller.challengeDetails.value.challengeState!),
               )
           ],
         );

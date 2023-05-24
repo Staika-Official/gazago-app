@@ -5,8 +5,10 @@ part 'shop_item_model.g.dart';
 @JsonSerializable(explicitToJson: true)
 class ShopItemModel {
   int id;
+  int? challengeId;
   String name;
   String? itemImageUrl;
+  String? challengeBannerImageUrl;
   String? itemCategory;
   String itemGrade;
   double? minGoProfit;
@@ -26,6 +28,8 @@ class ShopItemModel {
   ShopItemModel({
     required this.id,
     required this.name,
+    this.challengeId,
+    this.challengeBannerImageUrl,
     this.itemImageUrl,
     this.itemCategory,
     required this.itemGrade,

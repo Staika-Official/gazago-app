@@ -114,6 +114,7 @@ dependencies:
   in_app_update: ^4.0.1
   animate_do: ^3.0.2
   intrinsic_dimension: ^0.3.1
+  flutter_html: ^3.0.0-beta.1
 
 
 dev_dependencies:

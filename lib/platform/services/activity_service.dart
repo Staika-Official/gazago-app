@@ -3,9 +3,13 @@ import 'package:gaza_go/constants/enums.dart';
 import 'package:gaza_go/platform/apis/activity.dart';
 import 'package:gaza_go/platform/models/challenge_hierarchy_model.dart';
 import 'package:gaza_go/platform/models/challenge_model.dart';
+import 'package:gaza_go/platform/models/challenge_ranker_model.dart';
+import 'package:gaza_go/platform/models/challenge_reward_model.dart';
 import 'package:gaza_go/platform/models/current_user_state_model.dart';
 import 'package:gaza_go/platform/models/equipped_item_model.dart';
 import 'package:gaza_go/platform/models/error_response_data_model.dart';
+import 'package:gaza_go/platform/models/new_challenge_detail_model.dart';
+import 'package:gaza_go/platform/models/new_challenge_model.dart';
 import 'package:gaza_go/platform/models/user_exercise_model.dart';
 import 'package:gaza_go/platform/models/user_stamina_recharge_model.dart';
 import 'package:gaza_go/platform/models/user_state_model.dart';
@@ -24,6 +28,21 @@ class ActivityService {
       if (res.data.length > 0) {
         res.data.forEach((challenge) {
           challengeList.add(ChallengeModel.fromJson(challenge));
+        });
+      }
+      successCallback(challengeList);
+    } else {
+      if (errorCallback != null) errorCallback();
+    }
+  }
+
+  static Future<void> getNewChallenges({required Function successCallback, Function? errorCallback}) async {
+    Response res = await ActivityApi.getNewChallenges(userId!);
+    if (res.statusCode == 200) {
+      List<NewChallengeModel> challengeList = List.empty(growable: true);
+      if (res.data.length > 0) {
+        res.data.forEach((challenge) {
+          challengeList.add(NewChallengeModel.fromJson(challenge));
         });
       }
       successCallback(challengeList);
@@ -51,6 +70,52 @@ class ActivityService {
     Response res = await ActivityApi.getChallenge(id);
     if (res.statusCode == 200) {
       successCallback(ChallengeModel.fromJson(res.data));
+    } else {
+      if (errorCallback != null) errorCallback();
+    }
+  }
+
+  static Future<void> getChallengeDetails(int id, {required Function successCallback, Function? errorCallback}) async {
+    Response res = await ActivityApi.getNewChallenge(userId!, id);
+    if (res.statusCode == 200) {
+      successCallback(NewChallengeDetailModel.fromJson(res.data));
+    } else {
+      if (errorCallback != null) errorCallback();
+    }
+  }
+
+  static Future<void> getChallengeLeaderboard(int id, {required Function successCallback, Function? errorCallback}) async {
+    Response res = await ActivityApi.getNewChallengeLeaderboard(id);
+    if (res.statusCode == 200) {
+      List<ChallengeRankerModel> challengeList = List.empty(growable: true);
+      if (res.data.length > 0) {
+        res.data.forEach((challenge) {
+          challengeList.add(ChallengeRankerModel.fromJson(challenge));
+        });
+      }
+      successCallback(challengeList);
+    } else {
+      if (errorCallback != null) errorCallback();
+    }
+  }
+
+  static Future<void> getChallengeRewardPool(int id, {required Function successCallback, Function? errorCallback}) async {
+    Response res = await ActivityApi.getNewChallengeRewardPool(id);
+    if (res.statusCode == 200) {
+      successCallback(ChallengeRewardModel.fromJson(res.data));
+    } else {
+      if (errorCallback != null) errorCallback();
+    }
+  }
+
+  static Future<void> getChallengeLeaderboardMyRanking(int id, {required Function successCallback, Function? errorCallback}) async {
+    Response res = await ActivityApi.getNewChallengeLeaderboardMyRanking(userId!, id);
+    if (res.statusCode == 200) {
+      if (res.data != '') {
+        successCallback(ChallengeRankerModel.fromJson(res.data));
+      } else {
+        successCallback(null);
+      }
     } else {
       if (errorCallback != null) errorCallback();
     }

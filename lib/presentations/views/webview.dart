@@ -60,6 +60,31 @@ class WebView extends StatelessWidget {
                     return result;
                   },
                 );
+              } else {
+                controller.addJavaScriptHandler(
+                  handlerName: 'app',
+                  callback: (args) {
+                    // print arguments coming from the JavaScript side!
+                    Map result = {};
+
+                    switch (args[0]) {
+                      case 'closeWebview':
+                        Get.back();
+                        break;
+
+                      // case 'getToken':
+                      //   String token = HiveStore.loadString(key: HiveKey.accessToken.name)!;
+                      //   result = {'appToken': token};
+                      //   break;
+                      //
+                      // case 'refreshBalance':
+                      //   walletController.getSpendingWalletBalances();
+                      //   break;
+                    }
+
+                    return result;
+                  },
+                );
               }
             },
           ),

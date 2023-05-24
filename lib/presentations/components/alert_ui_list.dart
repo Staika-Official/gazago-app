@@ -13,6 +13,7 @@ import 'package:gaza_go/constants/routes.dart';
 import 'package:gaza_go/platform/controllers/activity_controller.dart';
 import 'package:gaza_go/platform/controllers/archive_controller.dart';
 import 'package:gaza_go/platform/controllers/challenges_controller.dart';
+import 'package:gaza_go/platform/controllers/challenges_detail_controller.dart';
 import 'package:gaza_go/platform/controllers/debugging_controller.dart';
 import 'package:gaza_go/platform/controllers/inventory_controller.dart';
 import 'package:gaza_go/platform/controllers/loading_controller.dart';
@@ -995,73 +996,76 @@ void itemPurchaseAlert(ShopController controller, double remainMyTik, tradeSymbo
                 borderRadius: BorderRadius.circular(5.sp),
               ),
               child: Padding(
-                padding: EdgeInsets.symmetric(vertical: 13.0.sp, horizontal: 10.sp),
-                child: Column(
-                  children: [
-                    Row(
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Container(
-                          width: 3,
-                          height: 3,
-                          margin: const EdgeInsets.all(5),
-                          decoration: BoxDecoration(
-                            color: skyBlueColor,
-                            borderRadius: BorderRadius.circular(2),
+                padding: EdgeInsets.symmetric(vertical: 15.0.sp, horizontal: 20.sp),
+                child: FittedBox(
+                  fit: BoxFit.scaleDown,
+                  child: Column(
+                    children: [
+                      Row(
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Container(
+                            width: 3,
+                            height: 3,
+                            margin: const EdgeInsets.all(5),
+                            decoration: BoxDecoration(
+                              color: skyBlueColor,
+                              borderRadius: BorderRadius.circular(2),
+                            ),
                           ),
-                        ),
-                        StyledText(
-                          '해당 아이템은 챌린지 대상 아이템입니다.',
-                          fontSize: 14,
-                          lineHeight: 20,
-                          color: skyBlueColor,
-                        )
-                      ],
-                    ),
-                    Row(
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Container(
-                          width: 3,
-                          height: 3,
-                          margin: const EdgeInsets.all(5),
-                          decoration: BoxDecoration(
+                          StyledText(
+                            '해당 아이템은 챌린지 대상 아이템입니다.',
+                            fontSize: 14,
+                            lineHeight: 20,
                             color: skyBlueColor,
-                            borderRadius: BorderRadius.circular(2),
+                          )
+                        ],
+                      ),
+                      Row(
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Container(
+                            width: 3,
+                            height: 3,
+                            margin: const EdgeInsets.all(5),
+                            decoration: BoxDecoration(
+                              color: skyBlueColor,
+                              borderRadius: BorderRadius.circular(2),
+                            ),
                           ),
-                        ),
-                        StyledText(
-                          '구매 후 자동으로 장착되고 챌린지에 자동 참여됩니다.',
-                          fontSize: 14,
-                          lineHeight: 20,
-                          color: skyBlueColor,
-                        )
-                      ],
-                    ),
-                    Row(
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Container(
-                          width: 3,
-                          height: 3,
-                          margin: const EdgeInsets.all(5),
-                          decoration: BoxDecoration(
+                          StyledText(
+                            '구매 후 자동으로 장착되고 챌린지에 자동 참여됩니다.',
+                            fontSize: 14,
+                            lineHeight: 20,
                             color: skyBlueColor,
-                            borderRadius: BorderRadius.circular(2),
+                          )
+                        ],
+                      ),
+                      Row(
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Container(
+                            width: 3,
+                            height: 3,
+                            margin: const EdgeInsets.all(5),
+                            decoration: BoxDecoration(
+                              color: skyBlueColor,
+                              borderRadius: BorderRadius.circular(2),
+                            ),
                           ),
-                        ),
-                        StyledText(
-                          '챌린지 대상 아이템은 1인 당 한개만 구매 가능합니다.',
-                          fontSize: 14,
-                          lineHeight: 20,
-                          color: skyBlueColor,
-                        )
-                      ],
-                    ),
-                  ],
+                          StyledText(
+                            '챌린지 대상 아이템은 1인 당 한개만 구매 가능합니다.',
+                            fontSize: 14,
+                            lineHeight: 20,
+                            color: skyBlueColor,
+                          )
+                        ],
+                      ),
+                    ],
+                  ),
                 ),
               ),
             ),
@@ -1943,6 +1947,32 @@ void itemPurchaseImpossibleAlert() {
       padding: EdgeInsets.only(top: 20.0.sp, bottom: 40.sp),
       child: const StyledText(
         '재고가 모두 소진되었거나 관리자에 의해\n판매가 중지 되었습니다\n불편을 끼쳐드려  죄송합니다',
+        fontSize: 18,
+        lineHeight: 24,
+        fontWeight: 500,
+        letterSpacing: .2,
+        textAlign: TextAlign.center,
+      ),
+    ),
+    actions: [
+      Expanded(
+        child: GazagoButton(
+          onTap: () => Get.back(),
+          buttonText: '확인',
+          buttonColor: skyBlueColor,
+        ),
+      ),
+    ],
+  );
+}
+
+void itemPurchaseAvailableOnlyOneAlert(String errorMessage) {
+  showAlert(
+    title: errorMessage,
+    contentWidget: Padding(
+      padding: EdgeInsets.only(top: 20.0.sp, bottom: 40.sp),
+      child: const StyledText(
+        '챌린지 대상 아이템은 1인당 한개만 구매 가능합니다.',
         fontSize: 18,
         lineHeight: 24,
         fontWeight: 500,
@@ -4650,7 +4680,7 @@ void challengeEndedAlert() {
   );
 }
 
-void moveBuyChallengeItemPageAlert() {
+void moveBuyChallengeItemPageAlert(ChallengesDetailController controller, int itemId) {
   showAlert(
     contentWidget: Padding(
       padding: EdgeInsets.only(top: 20.0.sp, bottom: 40.sp),
@@ -4681,7 +4711,11 @@ void moveBuyChallengeItemPageAlert() {
       ),
       Expanded(
         child: GazagoButton(
-          onTap: () {},
+          onTap: () {
+            Get.back();
+            controller.moveShopDetail();
+            Get.toNamed(Routes.shopItemDetail, arguments: {'id': itemId});
+          },
           buttonText: '네',
           buttonColor: skyBlueColor,
         ),

@@ -80,6 +80,19 @@ class F {
     }
   }
 
+  static String get leaderboardUrl {
+    switch (appFlavor) {
+      case Flavor.dev:
+        return 'https://leaderboard.stage.gazago.io';
+      case Flavor.stage:
+        return 'https://leaderboard.stage.gazago.io';
+      case Flavor.prod:
+        return 'https://leaderboard.gazago.io';
+      default:
+        return 'https://leaderboard.stage.gazago.io';
+    }
+  }
+
   static SolanaClient get solanaClient {
     switch (appFlavor) {
       case Flavor.dev:

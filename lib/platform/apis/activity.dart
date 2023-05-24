@@ -29,6 +29,41 @@ class ActivityApi {
     ).get('/challenges/$id');
   }
 
+  static Future<Response> getNewChallenges(String userId) async {
+    return await Api.client(
+      serviceUrl: '/services/gazago/api',
+      showLoading: false,
+    ).get('/challenges/users/$userId?size=9999&page=0');
+  }
+
+  static Future<Response> getNewChallenge(String userId, int id) async {
+    return await Api.client(
+      serviceUrl: '/services/gazago/api',
+      showLoading: false,
+    ).get('/challenges/users/$userId/$id');
+  }
+
+  static Future<Response> getNewChallengeLeaderboard(int id) async {
+    return await Api.client(
+      serviceUrl: '/services/gazago/api',
+      showLoading: false,
+    ).get('/challenge-leaderboards/challenges/$id?size=10');
+  }
+
+  static Future<Response> getNewChallengeRewardPool(int id) async {
+    return await Api.client(
+      serviceUrl: '/services/gazago/api',
+      showLoading: false,
+    ).get('/challenge-leaderboards/challenges/$id/reward-pool');
+  }
+
+  static Future<Response> getNewChallengeLeaderboardMyRanking(String userId, int id) async {
+    return await Api.client(
+      serviceUrl: '/services/gazago/api',
+      showLoading: false,
+    ).get('/challenge-leaderboards/users/$userId/challenges/$id/ranking');
+  }
+
   // static Future<Response> getNearByChallenges(LocationData currentLocation) async {
   static Future<Response> getNearByChallenge(Position currentLocation) async {
     return await Api.client(

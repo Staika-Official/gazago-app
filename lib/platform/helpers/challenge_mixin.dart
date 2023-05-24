@@ -33,6 +33,56 @@ mixin ChallengeMixin {
   final RxList<Marker> challengeMarkers = RxList.empty();
   final RxList<Marker> selectedChallengeMarkers = RxList.empty();
 
+  String getChallengeExerciseType(String type) {
+    switch (type) {
+      case 'WALKING':
+        return '걷기';
+      case 'CLIMBING':
+        return '오르기';
+      case 'HIKING':
+        return '오르기';
+      default:
+        return '';
+    }
+  }
+
+  String getChallengeStatus(String status) {
+    print(status);
+    switch (status) {
+      case 'READY':
+        return '오픈예정';
+      case 'IN_PROGRESS':
+        return '진행중';
+      case 'CLOSED':
+        return '종료';
+      default:
+        return '';
+    }
+  }
+
+  String getChallengeUserStatus(status) {
+    String text = '';
+    print(status);
+    switch (status) {
+      case 'REGISTER_AVAILABLE':
+        text = '접수 중';
+        break;
+      case 'REGISTER_READY':
+        text = '접수 예정';
+        break;
+      case 'JOINED':
+        text = '참가 중';
+        break;
+      case 'JOIN_AVAILABLE':
+        text = '참가 가능';
+        break;
+      case 'JOIN_CLOSED':
+        text = '참가 마감';
+        break;
+    }
+    return text;
+  }
+
   Future<void> getChallengeList() async {
     await ActivityService.getChallenges(
       successCallback: (challengesList) {

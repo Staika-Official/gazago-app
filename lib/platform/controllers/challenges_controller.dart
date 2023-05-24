@@ -1,18 +1,22 @@
 import 'package:flutter/material.dart';
+import 'package:gaza_go/constants/routes.dart';
+import 'package:gaza_go/platform/helpers/challenge_mixin.dart';
+import 'package:gaza_go/platform/models/new_challenge_model.dart';
+import 'package:gaza_go/platform/services/activity_service.dart';
 import 'package:gaza_go/presentations/components/alert_ui_list.dart';
 import 'package:get/get.dart';
 
-class ChallengesController extends GetxController with GetTickerProviderStateMixin {
+class ChallengesController extends GetxController with GetTickerProviderStateMixin, ChallengeMixin {
   ScrollController challengesScrollController = ScrollController();
   // ScrollController itemScrollController = ScrollController(keepScrollOffset: false);
-  final RxList challengeItemsList = RxList.empty();
+  final RxList<NewChallengeModel> challengeList = RxList.empty();
   final List<Map<String, String>> sortingList = [
     {'title': '전체', 'value': 'id,DESC'},
     {'title': '참여가능', 'value': 'price,DESC'},
     {'title': '참여 중', 'value': 'price,ASC'},
     {'title': '종료', 'value': 'price,ASC'}
   ];
-
+  Rx<DateTime?> today = Rx(DateTime.now());
   final List<Map<String, String>> exerciseTypeFilterList = [
     {'title': '걷기', 'value': 'WALKING'},
     {'title': '오르기', 'value': 'HIKING'},
@@ -26,58 +30,59 @@ class ChallengesController extends GetxController with GetTickerProviderStateMix
 
   Rx isSelectedSortValue = Rx({'title': '전체', 'value': 'id,DESC'});
   RxString isSelectedSortString = RxString('전체');
-  final List<Map<String, dynamic>> challengeList = [
-    {
-      'title': '[2월] 챌린저 트레킹슈즈 신고 매일 걷기',
-      'openDate': '2023/02/01',
-      'closeDate': '2023/02/28',
-      'activityTypes': ['걷기', '100대 명산'],
-      'challengeTypes': 'ITEM',
-      'maxPeople': 100,
-      'participatePeople': 80,
-      'status': 'READY',
-      'imageUrl': '',
-      'userStatus': '참가중'
-    },
-    {
-      'title': '[2월] 챌린저 트레킹슈즈 신고 매일 걷기',
-      'openDate': '2023/02/01',
-      'closeDate': '2023/02/28',
-      'activityTypes': ['걷기', '100대 명산'],
-      'challengeTypes': 'ITEM',
-      'maxPeople': 100,
-      'participatePeople': 80,
-      'status': 'READY',
-      'imageUrl': '',
-      'userStatus': '참가중'
-    },
-    {
-      'title': '[2월] 챌린저 트레킹슈즈 신고 매일 걷기',
-      'openDate': '2023/02/01',
-      'closeDate': '2023/02/28',
-      'activityTypes': ['걷기', '100대 명산'],
-      'challengeTypes': 'ITEM',
-      'maxPeople': 100,
-      'participatePeople': 80,
-      'status': 'READY',
-      'imageUrl': '',
-      'userStatus': '참가중'
-    },
-    {
-      'title': '[2월] 챌린저 트레킹슈즈 신고 매일 걷기',
-      'openDate': '2023/02/01',
-      'closeDate': '2023/02/28',
-      'activityTypes': ['걷기', '100대 명산'],
-      'challengeTypes': 'ITEM',
-      'maxPeople': 100,
-      'participatePeople': 80,
-      'status': 'READY',
-      'imageUrl': '',
-      'userStatus': '참가중'
-    },
-  ];
+  // final List<Map<String, dynamic>> challengeList = [
+  //   {
+  //     'title': '[2월] 챌린저 트레킹슈즈 신고 매일 걷기',
+  //     'openDate': '2023/02/01',
+  //     'closeDate': '2023/02/28',
+  //     'activityTypes': ['걷기', '100대 명산'],
+  //     'challengeTypes': 'ITEM',
+  //     'maxPeople': 100,
+  //     'participatePeople': 80,
+  //     'status': 'READY',
+  //     'imageUrl': '',
+  //     'userStatus': '참가중'
+  //   },
+  //   {
+  //     'title': '[2월] 챌린저 트레킹슈즈 신고 매일 걷기',
+  //     'openDate': '2023/02/01',
+  //     'closeDate': '2023/02/28',
+  //     'activityTypes': ['걷기', '100대 명산'],
+  //     'challengeTypes': 'ITEM',
+  //     'maxPeople': 100,
+  //     'participatePeople': 80,
+  //     'status': 'READY',
+  //     'imageUrl': '',
+  //     'userStatus': '참가중'
+  //   },
+  //   {
+  //     'title': '[2월] 챌린저 트레킹슈즈 신고 매일 걷기',
+  //     'openDate': '2023/02/01',
+  //     'closeDate': '2023/02/28',
+  //     'activityTypes': ['걷기', '100대 명산'],
+  //     'challengeTypes': 'ITEM',
+  //     'maxPeople': 100,
+  //     'participatePeople': 80,
+  //     'status': 'READY',
+  //     'imageUrl': '',
+  //     'userStatus': '참가중'
+  //   },
+  //   {
+  //     'title': '[2월] 챌린저 트레킹슈즈 신고 매일 걷기',
+  //     'openDate': '2023/02/01',
+  //     'closeDate': '2023/02/28',
+  //     'activityTypes': ['걷기', '100대 명산'],
+  //     'challengeTypes': 'ITEM',
+  //     'maxPeople': 100,
+  //     'participatePeople': 80,
+  //     'status': 'READY',
+  //     'imageUrl': '',
+  //     'userStatus': '참가중'
+  //   },
+  // ];
   @override
-  void onInit() {
+  void onInit() async {
+    await getChallengesList();
     super.onInit();
   }
 
@@ -89,6 +94,25 @@ class ChallengesController extends GetxController with GetTickerProviderStateMix
   @override
   void onClose() {
     super.onClose();
+  }
+
+  Future<void> refreshController() async {
+    challengeList.value = RxList.empty();
+    await getChallengesList();
+  }
+
+  Future<void> getChallengesList() async {
+    dataGetLoading.value = true;
+    await ActivityService.getNewChallenges(successCallback: (List<NewChallengeModel> data) {
+      challengeList.value = data;
+      dataGetLoading.value = false;
+    }, errorCallback: () {
+      dataGetLoading.value = false;
+    });
+  }
+
+  void moveToDetail(id) {
+    Get.toNamed(Routes.challengeDetail, arguments: {'id': id});
   }
 
   void showChallengesSortingPopup() {

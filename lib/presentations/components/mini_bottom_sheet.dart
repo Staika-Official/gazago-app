@@ -1,16 +1,19 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:gaza_go/constants/enums.dart';
-import 'package:gaza_go/presentations/components/alert_ui_list.dart';
+import 'package:gaza_go/platform/controllers/challenges_detail_controller.dart';
 import 'package:gaza_go/presentations/styles/colors.dart';
 import 'package:gaza_go/presentations/styles/icons.dart';
 import 'package:gaza_go/presentations/styles/styled_text.dart';
+import 'package:get/get.dart';
+import 'package:intl/intl.dart';
 
-Widget renderParticipateInChallenge(ChallengeStatusType statusType) {
+Widget renderParticipateInChallenge(String statusType) {
+  ChallengesDetailController challengesDetailController = Get.find();
   Widget content;
   Widget suffixWidget;
   switch (statusType) {
-    case ChallengeStatusType.participating:
+    case 'JOINED':
       content = RichText(
         text: TextSpan(
           style: TextStyle(
@@ -59,7 +62,7 @@ Widget renderParticipateInChallenge(ChallengeStatusType statusType) {
             )),
       );
       break;
-    case ChallengeStatusType.enter:
+    case 'JOIN_AVAILABLE':
       content = RichText(
         text: TextSpan(
           style: TextStyle(
@@ -70,10 +73,10 @@ Widget renderParticipateInChallenge(ChallengeStatusType statusType) {
           ),
           children: [
             TextSpan(
-              text: '2.1 (일) - 3.1 (일)\n약 ',
+              text: '${challengesDetailController.fromDate} - ${challengesDetailController.toDate}\n약 ',
             ),
             TextSpan(
-              text: '10',
+              text: challengesDetailController.inDays.value.toString(),
               style: TextStyle(color: skyBlueColor),
             ),
             TextSpan(
@@ -84,7 +87,7 @@ Widget renderParticipateInChallenge(ChallengeStatusType statusType) {
       );
 
       suffixWidget = InkWell(
-        onTap: () => moveBuyChallengeItemPageAlert(),
+        onTap: () => challengesDetailController.moveToShopItem(),
         child: Container(
             decoration: BoxDecoration(
               color: popupBgColor,
@@ -112,7 +115,7 @@ Widget renderParticipateInChallenge(ChallengeStatusType statusType) {
             )),
       );
       break;
-    case ChallengeStatusType.soldout:
+    case 'JOIN_CLOSED':
       content = RichText(
         text: TextSpan(
           style: TextStyle(
@@ -163,7 +166,7 @@ Widget renderParticipateInChallenge(ChallengeStatusType statusType) {
             )),
       );
       break;
-    case ChallengeStatusType.success:
+    case 'COMPLETE':
       content = RichText(
         text: TextSpan(
           style: TextStyle(
@@ -185,7 +188,7 @@ Widget renderParticipateInChallenge(ChallengeStatusType statusType) {
 
       suffixWidget = iconChallengeSuccess;
       break;
-    case ChallengeStatusType.failure:
+    case 'INCOMPLETE':
       content = RichText(
         text: TextSpan(
           style: TextStyle(
@@ -207,7 +210,7 @@ Widget renderParticipateInChallenge(ChallengeStatusType statusType) {
 
       suffixWidget = iconChallengeFailure;
       break;
-    case ChallengeStatusType.ended:
+    case 'CLOSED':
       content = RichText(
         text: TextSpan(
           style: TextStyle(
@@ -257,7 +260,7 @@ Widget renderParticipateInChallenge(ChallengeStatusType statusType) {
             )),
       );
       break;
-    case ChallengeStatusType.beforeOpenEnter:
+    case 'REGISTER_AVAILABLE':
       content = RichText(
         text: TextSpan(
           style: TextStyle(
@@ -268,10 +271,10 @@ Widget renderParticipateInChallenge(ChallengeStatusType statusType) {
           ),
           children: [
             TextSpan(
-              text: '2.1 (일) - 3.1 (일)\n',
+              text: '${challengesDetailController.fromDate} - ${challengesDetailController.toDate}\n',
             ),
             TextSpan(
-              text: 'D-13 오픈예정',
+              text: '오픈일 : ${DateFormat('yyyy-MM-dd hh:mm').format(DateTime.parse(challengesDetailController.challengeDetails.value.fromDate!))}',
               style: TextStyle(color: skyBlueColor),
             ),
           ],
@@ -279,7 +282,7 @@ Widget renderParticipateInChallenge(ChallengeStatusType statusType) {
       );
 
       suffixWidget = InkWell(
-        onTap: () => null,
+        onTap: () => challengesDetailController.moveToShopItem(),
         child: Container(
             decoration: BoxDecoration(
               color: popupBgColor,
@@ -307,7 +310,7 @@ Widget renderParticipateInChallenge(ChallengeStatusType statusType) {
             )),
       );
       break;
-    case ChallengeStatusType.beforeOpen:
+    case 'REGISTER_READY':
       content = RichText(
         text: TextSpan(
           style: TextStyle(
@@ -318,10 +321,10 @@ Widget renderParticipateInChallenge(ChallengeStatusType statusType) {
           ),
           children: [
             TextSpan(
-              text: '2.1 (일) - 3.1 (일)\n',
+              text: '${challengesDetailController.fromDate} - ${challengesDetailController.toDate}\n',
             ),
             TextSpan(
-              text: 'D-13 오픈예정',
+              text: '오픈일 : ${DateFormat('yyyy-MM-dd hh:mm').format(DateTime.parse(challengesDetailController.challengeDetails.value.fromDate!))}',
               style: TextStyle(color: skyBlueColor),
             ),
           ],
