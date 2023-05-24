@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
 class LoaderController extends GetxController {
-  final GlobalKey<State<StatefulWidget>> dialogKey = GlobalKey();
+  GlobalKey<State<StatefulWidget>> dialogKey = GlobalKey();
   RxBool isLoading = RxBool(false);
   GlobalKey? loaderKey = GlobalKey();
 

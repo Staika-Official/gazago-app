@@ -78,7 +78,7 @@ class Home extends StatelessWidget {
     HomeMenuController controller = Get.put(HomeMenuController());
     Get.put(NoticePopupController());
 
-    final GlobalKey<NavigatorState> navigatorKey = GlobalKey<NavigatorState>();
+    GlobalKey<NavigatorState> navigatorKey = GlobalKey<NavigatorState>();
     return WillPopScope(
       onWillPop: () async {
         showAlert(

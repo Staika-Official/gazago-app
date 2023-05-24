@@ -30,7 +30,7 @@ class HomeMenuController extends SuperController {
   final RxInt selectedIndex = RxInt(2);
   final RxInt prevIndex = RxInt(0);
   final RxList<int> visitedTabs = RxList.empty();
-  final GlobalKey bottomNavKey = GlobalKey();
+  GlobalKey bottomNavKey = GlobalKey();
   final RxnDouble bottomNavHeight = RxnDouble();
   final RxBool hideBottomNav = RxBool(false);
 

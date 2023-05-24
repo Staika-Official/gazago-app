@@ -21,7 +21,7 @@ import 'package:throttling/throttling.dart';
 
 mixin ChallengeMixin {
   GlobalController globalController = Get.find();
-  final GlobalKey listKey = GlobalKey();
+  GlobalKey listKey = GlobalKey();
 
   final Rxn<ChallengeModel> nearByChallenge = Rxn();
   final RxDouble listHeight = RxDouble(0);
