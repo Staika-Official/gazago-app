@@ -139,6 +139,7 @@ class InventoryBadge extends StatelessWidget {
   Widget build(BuildContext context) {
     InventoryController controller = Get.put(InventoryController());
     double width = MediaQuery.of(context).size.width;
+
     return Container(
       color: popupBgColor,
       child: controller.userBadgesList.isEmpty

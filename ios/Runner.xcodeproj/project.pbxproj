@@ -212,6 +212,7 @@
 				3B06AD1E1E4923F5004D2608 /* Thin Binary */,
 				505D110A4C3257C6E3FA22C7 /* [firebase_crashlytics] Crashlytics Upload Symbols */,
 				9F33D9F533D774B5A89CB556 /* [CP] Embed Pods Frameworks */,
+				94959C98C08C65A66340316C /* [CP] Copy Pods Resources */,
 			);
 			buildRules = (
 			);
@@ -311,6 +312,23 @@
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
 			shellScript = "\nif [ \"$CONFIGURATION\" == \"Debug-dev\" ] || [ \"$CONFIGURATION\" == \"Release-dev\" ]; then\n\"$PODS_ROOT/FirebaseCrashlytics/upload-symbols\" --build-phase -ai \"1:232716676384:ios:c851d637fa6d71246f7b45\"\n\"$PODS_ROOT/FirebaseCrashlytics/upload-symbols\" -gsp \"Runner/GoogleService-Info.plist\" -p ios \"${DWARF_DSYM_FOLDER_PATH}/${DWARF_DSYM_FILE_NAME}\"  -ai \"1:232716676384:ios:c851d637fa6d71246f7b45\"\nelif [ \"$CONFIGURATION\" == \"Debug-stage\" ] || [ \"$CONFIGURATION\" == \"Release-stage\" ]; then\n\"$PODS_ROOT/FirebaseCrashlytics/upload-symbols\" --build-phase -ai \"1:232716676384:ios:c851d637fa6d71246f7b45\" \n\"$PODS_ROOT/FirebaseCrashlytics/upload-symbols\" -gsp \"Runner/GoogleService-Info.plist\" -p ios \"${DWARF_DSYM_FOLDER_PATH}/${DWARF_DSYM_FILE_NAME}\"  -ai \"1:232716676384:ios:c851d637fa6d71246f7b45\"\nelif [ \"$CONFIGURATION\" == \"Debug-prod\" ] || [ \"$CONFIGURATION\" == \"Release-prod\" ]; then\n\"$PODS_ROOT/FirebaseCrashlytics/upload-symbols\" --build-phase -ai \"1:321889905131:ios:fcd56d852edb7bc40a11ae\" \n\"$PODS_ROOT/FirebaseCrashlytics/upload-symbols\" -gsp \"Runner/GoogleService-Info.plist\" -p ios \"${DWARF_DSYM_FOLDER_PATH}/${DWARF_DSYM_FILE_NAME}\"  -ai \"1:321889905131:ios:fcd56d852edb7bc40a11ae\"\nfi\n\"$PODS_ROOT/FirebaseCrashlytics/upload-symbols\" -gsp \"Runner/GoogleService-Info.plist\" -p ios \"${DWARF_DSYM_FOLDER_PATH}/${DWARF_DSYM_FILE_NAME}/Contents/Resources/DWARF/${TARGET_NAME}\"  -ai \"1:232716676384:ios:c851d637fa6d71246f7b45\"\necho \"Successfully uploaded dSYMs to Firebase Crashlytics!\"\n";
+		};
+		94959C98C08C65A66340316C /* [CP] Copy Pods Resources */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-Runner/Pods-Runner-resources-${CONFIGURATION}-input-files.xcfilelist",
+			);
+			name = "[CP] Copy Pods Resources";
+			outputFileListPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-Runner/Pods-Runner-resources-${CONFIGURATION}-output-files.xcfilelist",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-Runner/Pods-Runner-resources.sh\"\n";
+			showEnvVarsInLog = 0;
 		};
 		9740EEB61CF901F6004384FC /* Run Script */ = {
 			isa = PBXShellScriptBuildPhase;
