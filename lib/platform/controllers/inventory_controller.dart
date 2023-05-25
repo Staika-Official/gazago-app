@@ -25,8 +25,8 @@ class InventoryController extends GetxController with LinearProgressMixin, Inven
   final WalletMasterController walletMasterController = Get.find();
   final RxDouble viewportWidth = RxDouble(0);
   final RxDouble listHeight = RxDouble(0);
-  final GlobalKey itemDetailViewKey = GlobalKey();
-  final GlobalKey equippedInfoKey = GlobalKey();
+  GlobalKey itemDetailViewKey = GlobalKey();
+  GlobalKey equippedInfoKey = GlobalKey();
   final RxDouble equippedInfoHeight = RxDouble(0);
   final RxBool isLoaded = RxBool(false);
 

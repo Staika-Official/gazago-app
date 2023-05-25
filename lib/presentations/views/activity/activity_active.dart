@@ -273,7 +273,7 @@ class ActivityActive extends StatelessWidget {
     return DefaultContainer(
       backgroundColor: subBg02Color,
       onBackButtonTap: () {
-        Get.offAllNamed(Routes.home);
+        Get.back();
       },
       titleWidget: Obx(() {
         return Row(

@@ -3,7 +3,7 @@ import 'package:gaza_go/platform/controllers/wallet_master_controller.dart';
 import 'package:get/get.dart';
 
 class WebViewController extends GetxController {
-  final GlobalKey webViewKey = GlobalKey();
+  GlobalKey webViewKey = GlobalKey();
   RxString linkUrl = RxString('');
   WalletMasterController walletController = Get.find();
 

@@ -49,7 +49,7 @@ import 'package:throttling/throttling.dart';
 class ActivityController extends SuperController with ActivityMixin, ChallengeMixin, GetTickerProviderStateMixin, AdmobMixin {
   final WalletMasterController walletMasterController = Get.find();
 
-  final GlobalKey webViewKey = GlobalKey();
+  GlobalKey webViewKey = GlobalKey();
   final RxString noticeUrl = RxString('');
   //rewarded.dart
   RxList<StatModel> get statList {

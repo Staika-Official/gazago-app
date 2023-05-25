@@ -47,7 +47,7 @@ class WalletMasterController extends GetxController with SolanaMixin, GetTickerP
   final RxInt feeTikDurability = RxInt(0);
   final ScrollController transactionScrollController = ScrollController();
   final RxDouble transactionScrollPosition = RxDouble(0);
-  final GlobalKey webViewKey = GlobalKey();
+  GlobalKey webViewKey = GlobalKey();
 
   StreamSubscription<List<PurchaseDetails>>? subscription;
   final RxBool storeUnavailable = RxBool(false);
