@@ -55,7 +55,7 @@ class ShopItems extends StatelessWidget {
                                           ? SvgPicture.network(
                                               fit: BoxFit.contain,
                                               item.itemImageUrl!,
-                                              placeholderBuilder: (BuildContext context) => Container(padding: const EdgeInsets.all(30.0), child: const CircularProgressIndicator()),
+                                              placeholderBuilder: (BuildContext context) => Center(child: SizedBox.square(dimension: 40, child: CircularProgressIndicator())),
                                             )
                                           : CachedNetworkImage(
                                               imageUrl: item.itemImageUrl!,
