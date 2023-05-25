@@ -130,18 +130,11 @@ class ShopDetailController extends GetxController {
   Future<void> refreshController() async {}
 
   void moveChallengeDetail() {
-    print(selectedItem.value.challengeId);
     if (Get.previousRoute == Routes.challengeDetail) {
       Get.back();
     } else {
       Get.toNamed(Routes.challengeDetail, arguments: {'id': selectedItem.value.challengeId});
     }
-
-    // if (itemId.value != 0) {
-    //   Get.until((route) => Get.currentRoute == Routes.challengeDetail);
-    // } else {
-    //   Get.toNamed(Routes.challengeDetail, arguments: {'id': selectedItem.value.challengeId});
-    // }
 
     // if (Get.isRegistered<HomeMenuController>()) {
     //   Get.find<HomeMenuController>().selectMenu(0);
@@ -173,10 +166,6 @@ class ShopDetailController extends GetxController {
       purchaseCompleteItem.value = items;
       showItemPurchaseCompletePopup();
       walletMasterController.getSpendingWalletBalances();
-      // print('challengesDetailController :${challengesDetailController.challengeId}');
-      // if (challengesDetailController.challengeId != 0) {
-      //   challengesDetailController.refreshController();
-      // }
 
       getItemDetail(itemId);
     }, errorCallback: (statusCode, errorCode, errorMessage) {
