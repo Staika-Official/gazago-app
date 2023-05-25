@@ -471,12 +471,16 @@ class InventoryController extends GetxController with LinearProgressMixin, Inven
   }
 
   void _calculateListHeight(int listLength) {
-    int gridCount = viewportWidth.value < 350 ? 2 : 3;
-    int rowCount = (listLength / gridCount).ceil();
-    double totalPadding = (gridCount - 1) * 10 + 40;
-    double itemWidth = (viewportWidth.value - totalPadding) / gridCount;
-    double itemHeight = itemWidth * 1.4;
-    listHeight.value = itemHeight * rowCount + 70;
+    if (listLength > 0) {
+      int gridCount = viewportWidth.value < 350 ? 2 : 3;
+      int rowCount = (listLength / gridCount).ceil();
+      double totalPadding = (gridCount - 1) * 10 + 40;
+      double itemWidth = (viewportWidth.value - totalPadding) / gridCount;
+      double itemHeight = itemWidth * 1.4;
+      listHeight.value = itemHeight * rowCount + 70;
+    } else {
+      listHeight.value = 165;
+    }
   }
 
   void calculateTabHeight(int tabIndex, String itemType) {
