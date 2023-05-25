@@ -133,13 +133,16 @@ class ChallengesHome extends StatelessWidget {
                                       ),
                                       child: Padding(
                                         padding: EdgeInsets.symmetric(vertical: 6.0, horizontal: 13.0),
-                                        child: StyledText(
-                                          controller.getChallengeUserStatus(item.challengeUserState!),
-                                          fontWeight: 600,
-                                          fontSize: 12,
-                                          lineHeight: 14,
-                                          color: Colors.black.withOpacity(.6),
-                                          letterSpacing: -.1,
+                                        child: FittedBox(
+                                          fit: BoxFit.scaleDown,
+                                          child: StyledText(
+                                            controller.getChallengeUserStatus(item.challengeUserState!),
+                                            fontWeight: 600,
+                                            fontSize: 12,
+                                            lineHeight: 14,
+                                            color: Colors.black.withOpacity(.6),
+                                            letterSpacing: -.1,
+                                          ),
                                         ),
                                       ),
                                     )
@@ -159,13 +162,16 @@ class ChallengesHome extends StatelessWidget {
                                           ),
                                           child: Padding(
                                             padding: EdgeInsets.symmetric(vertical: 6.0, horizontal: 13.0),
-                                            child: StyledText(
-                                              controller.getChallengeUserStatus(item.challengeUserState),
-                                              fontWeight: 600,
-                                              fontSize: 12,
-                                              lineHeight: 14,
-                                              color: Colors.black,
-                                              letterSpacing: -.1,
+                                            child: FittedBox(
+                                              fit: BoxFit.scaleDown,
+                                              child: StyledText(
+                                                controller.getChallengeUserStatus(item.challengeUserState),
+                                                fontWeight: 600,
+                                                fontSize: 12,
+                                                lineHeight: 14,
+                                                color: Colors.black,
+                                                letterSpacing: -.1,
+                                              ),
                                             ),
                                           ),
                                         )
@@ -310,7 +316,7 @@ class ChallengesHome extends StatelessWidget {
     ChallengesController challengesController = Get.put(ChallengesController());
     return Obx(() {
       return Padding(
-        padding: EdgeInsets.only(left: 23.sp, right: 23.sp),
+        padding: EdgeInsets.only(left: 23.sp, right: 23.sp, top: 20.sp),
         child: ConstrainedBox(
           constraints: BoxConstraints(maxHeight: MediaQuery.of(context).size.height),
           child: Column(

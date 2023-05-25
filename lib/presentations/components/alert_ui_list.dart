@@ -22,6 +22,7 @@ import 'package:gaza_go/platform/controllers/my_page_controller.dart';
 import 'package:gaza_go/platform/controllers/notice_popup_controller.dart';
 import 'package:gaza_go/platform/controllers/preference_controller.dart';
 import 'package:gaza_go/platform/controllers/shop_controller.dart';
+import 'package:gaza_go/platform/controllers/shop_detail_controller.dart';
 import 'package:gaza_go/platform/controllers/wallet_go_controller.dart';
 import 'package:gaza_go/platform/controllers/wallet_master_controller.dart';
 import 'package:gaza_go/platform/controllers/wallet_staika_controller.dart';
@@ -961,7 +962,7 @@ void showPendingExerciseAlert(ActivityController controller) {
   );
 }
 
-void itemPurchaseAlert(ShopController controller, double remainMyTik, tradeSymbol) {
+void itemPurchaseAlert(ShopDetailController controller, double remainMyTik, tradeSymbol) {
   showAlert(
     title: '구매 하시겠습니까?',
     isScrollControlled: true,
@@ -1200,7 +1201,7 @@ void itemPurchaseAlert(ShopController controller, double remainMyTik, tradeSymbo
   );
 }
 
-void itemPurchaseShortBalanceAlert(ShopController controller, double remainMyTik, tradeSymbol) {
+void itemPurchaseShortBalanceAlert(ShopDetailController controller, double remainMyTik, tradeSymbol) {
   showAlert(
     title: '잔액이 부족합니다',
     isDangerTitle: true,
@@ -1349,7 +1350,8 @@ void itemPurchaseShortBalanceAlert(ShopController controller, double remainMyTik
   );
 }
 
-void itemPurchaseCompleteAlert(ShopController controller) {
+void itemPurchaseCompleteAlert(ShopDetailController controller) {
+  ChallengesDetailController challengesDetailController = Get.find();
   showAlert(
     title: '구매가 완료되었습니다.',
     isScrollControlled: true,
@@ -1930,6 +1932,9 @@ void itemPurchaseCompleteAlert(ShopController controller) {
         child: GazagoButton(
           onTap: () {
             Get.back();
+            if (challengesDetailController.challengeId != 0) {
+              challengesDetailController.getChallengeDetail();
+            }
             controller.fetchEquipItem(controller.purchaseCompleteItem.value.id);
           },
           buttonText: '확인',
@@ -4713,7 +4718,10 @@ void moveBuyChallengeItemPageAlert(ChallengesDetailController controller, int it
         child: GazagoButton(
           onTap: () {
             Get.back();
+
+            // Get.until((route) => Get.currentRoute == Routes.shopItemDetail);
             // controller.moveShopDetail();
+            print(Get.previousRoute);
             Get.toNamed(Routes.shopItemDetail, arguments: {'id': itemId});
           },
           buttonText: '네',

@@ -87,7 +87,7 @@ Widget renderParticipateInChallenge(String statusType) {
       );
 
       suffixWidget = InkWell(
-        onTap: () => challengesDetailController.moveToShopItem(),
+        onTap: () => challengesDetailController.showMoveToShopItem(),
         child: Container(
             decoration: BoxDecoration(
               color: popupBgColor,
@@ -274,7 +274,7 @@ Widget renderParticipateInChallenge(String statusType) {
               text: '${challengesDetailController.fromDate} - ${challengesDetailController.toDate}\n',
             ),
             TextSpan(
-              text: '오픈일 : ${DateFormat('yyyy-MM-dd hh:mm').format(DateTime.parse(challengesDetailController.challengeDetails.value.fromDate!))}',
+              text: '오픈일 : ${DateFormat('yyyy-MM-dd HH:mm').format(DateTime.parse(challengesDetailController.challengeDetails.value.fromDate!).toLocal())}',
               style: TextStyle(color: skyBlueColor),
             ),
           ],
@@ -282,7 +282,7 @@ Widget renderParticipateInChallenge(String statusType) {
       );
 
       suffixWidget = InkWell(
-        onTap: () => challengesDetailController.moveToShopItem(),
+        onTap: () => challengesDetailController.showMoveToShopItem(),
         child: Container(
             decoration: BoxDecoration(
               color: popupBgColor,
@@ -324,7 +324,7 @@ Widget renderParticipateInChallenge(String statusType) {
               text: '${challengesDetailController.fromDate} - ${challengesDetailController.toDate}\n',
             ),
             TextSpan(
-              text: '오픈일 : ${DateFormat('yyyy-MM-dd hh:mm').format(DateTime.parse(challengesDetailController.challengeDetails.value.fromDate!))}',
+              text: '오픈일 : ${DateFormat('yyyy-MM-dd HH:mm', 'ko').format(DateTime.parse(challengesDetailController.challengeDetails.value.fromDate!).toLocal())}',
               style: TextStyle(color: skyBlueColor),
             ),
           ],

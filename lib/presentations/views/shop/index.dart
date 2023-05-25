@@ -9,7 +9,7 @@ class ShopHome extends StatelessWidget {
   Widget build(BuildContext context) {
     return Padding(
       padding: EdgeInsets.only(top: 12.0.sp),
-      child: Expanded(child: ShopItems()),
+      child: ShopItems(),
     );
   }
 }

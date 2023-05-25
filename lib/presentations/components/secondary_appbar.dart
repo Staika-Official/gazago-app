@@ -65,13 +65,13 @@ class SecondaryAppbar extends StatelessWidget implements PreferredSizeWidget {
           children: [
             isShowBackButton
                 ? Container(
-                    width: 20,
+                    width: 30,
                     padding: EdgeInsets.zero,
                     child: IconButton(
                       onPressed: () => Get.back(),
                       padding: EdgeInsets.zero,
                       iconSize: 30,
-                      splashRadius: 20.sp,
+                      splashRadius: 30.sp,
                       icon: const Icon(
                         Icons.chevron_left_sharp,
                         color: Colors.white,

@@ -64,15 +64,16 @@ class ChallengesDetailController extends GetxController with GetTickerProviderSt
     challengeTabIndex.value = tabController.index;
   }
 
-  void moveToShopItem() {
+  void showMoveToShopItem() {
+    print(challengeDetails.value.itemTradeStoreId!);
     moveBuyChallengeItemPageAlert(this, challengeDetails.value.itemTradeStoreId!);
   }
 
   Future<void> getChallengeDetail() async {
-    loaderController.isLoading.value = true;
+    // loaderController.isLoading.value = true;
     await ActivityService.getChallengeDetails(challengeId.value, successCallback: (NewChallengeDetailModel data) {
       challengeDetails.value = data;
-      loaderController.isLoading.value = false;
+      // loaderController.isLoading.value = false;
       fromDate.value = DateFormat('M.d (EEE)', 'ko').format(DateTime.parse(data.fromDate!));
       toDate.value = DateFormat('M.d (EEE)', 'ko').format(DateTime.parse(data.toDate!));
       inDays.value = DateTime.parse(data.toDate!).difference(DateTime.parse(data.fromDate!)).inDays;

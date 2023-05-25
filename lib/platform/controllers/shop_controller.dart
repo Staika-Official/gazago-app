@@ -1,7 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:gaza_go/constants/routes.dart';
-import 'package:gaza_go/platform/controllers/challenges_detail_controller.dart';
-import 'package:gaza_go/platform/controllers/home_menu_controller.dart';
 import 'package:gaza_go/platform/controllers/loader_controller.dart';
 import 'package:gaza_go/platform/controllers/wallet_master_controller.dart';
 import 'package:gaza_go/platform/firebase/remote_config.dart';
@@ -18,7 +16,7 @@ import 'package:get/get.dart';
 
 class ShopController extends GetxController {
   final WalletMasterController walletMasterController = Get.find();
-  final ChallengesDetailController challengesDetailController = Get.find();
+  // final ChallengesDetailController challengesDetailController = Get.put(ChallengesDetailController());
   LoaderController loaderController = Get.put(LoaderController());
   final RxList<ShopItemModel> shopItemsList = RxList.empty();
 
@@ -114,16 +112,6 @@ class ShopController extends GetxController {
 
   @override
   void onInit() async {
-    challengeId.value = await Get.arguments['id'];
-    if (challengeId.value != 0) {
-      loaderController.isLoading.value = true;
-      await ShopService.getShopItemDetails(challengeId.value, successCallback: (ShopItemModel items) {
-        selectedItem.value = items;
-        loaderController.isLoading.value = false;
-      }, errorCallback: () {
-        loaderController.isLoading.value = false;
-      });
-    }
     initController();
 
     super.onInit();
@@ -148,11 +136,11 @@ class ShopController extends GetxController {
   void moveChallengeDetail() {
     Get.until((route) => Get.currentRoute == Routes.challengeDetail);
     // Get.offNamed(Routes.challengeDetail, arguments: {'id': selectedItem.value.challengeId});
-    if (Get.isRegistered<HomeMenuController>()) {
-      Get.find<HomeMenuController>().selectMenu(0);
-    } else {
-      Get.put(HomeMenuController()).selectMenu(0);
-    }
+    // if (Get.isRegistered<HomeMenuController>()) {
+    //   Get.find<HomeMenuController>().selectMenu(0);
+    // } else {
+    //   Get.put(HomeMenuController()).selectMenu(0);
+    // }
   }
 
   void getItemMaxValue() {
@@ -163,11 +151,7 @@ class ShopController extends GetxController {
   }
 
   void toItemDetail(int itemId) async {
-    await ShopService.getShopItemDetails(itemId, successCallback: (ShopItemModel items) {
-      selectedItem.value = items;
-
-      Get.toNamed(Routes.shopItemDetail);
-    });
+    Get.toNamed(Routes.shopItemDetail, arguments: {'id': itemId});
   }
 
   void getItemDetail(int itemId) async {
@@ -176,35 +160,35 @@ class ShopController extends GetxController {
     });
   }
 
-  void handlePurchaseShopItem(int itemId) async {
-    Get.back();
-    loaderController.isLoading.value = true;
-    await ShopService.fetchPurchaseShopItem(itemId, successCallback: (ShopItemPurchaseResponseModel items) {
-      loaderController.isLoading.value = false;
-      purchaseCompleteItem.value = items;
-      showItemPurchaseCompletePopup();
-      walletMasterController.getSpendingWalletBalances();
-      print('challengesDetailController :${challengesDetailController.challengeId}');
-      if (challengesDetailController.challengeId != 0) {
-        challengesDetailController.refreshController();
-      }
-
-      getShopItemsList();
-      getItemDetail(itemId);
-    }, errorCallback: (statusCode, errorCode, errorMessage) {
-      loaderController.isLoading.value = false;
-      if (statusCode == 422) {
-        isShortBalance.value = true;
-        showTikShortBalancePopup(selectedItem.value.tradeSymbol);
-      } else {
-        if (errorCode == 'PURCHASE_LIMIT_EXCEEDED') {
-          itemPurchaseAvailableOnlyOneAlert(errorMessage);
-        } else {
-          itemPurchaseImpossibleAlert();
-        }
-      }
-    });
-  }
+  // void handlePurchaseShopItem(int itemId) async {
+  //   Get.back();
+  //   loaderController.isLoading.value = true;
+  //   await ShopService.fetchPurchaseShopItem(itemId, successCallback: (ShopItemPurchaseResponseModel items) {
+  //     loaderController.isLoading.value = false;
+  //     purchaseCompleteItem.value = items;
+  //     showItemPurchaseCompletePopup();
+  //     walletMasterController.getSpendingWalletBalances();
+  //     // print('challengesDetailController :${challengesDetailController.challengeId}');
+  //     // if (challengesDetailController.challengeId != 0) {
+  //     //   challengesDetailController.refreshController();
+  //     // }
+  //
+  //     getShopItemsList();
+  //     getItemDetail(itemId);
+  //   }, errorCallback: (statusCode, errorCode, errorMessage) {
+  //     loaderController.isLoading.value = false;
+  //     if (statusCode == 422) {
+  //       isShortBalance.value = true;
+  //       showTikShortBalancePopup(selectedItem.value.tradeSymbol);
+  //     } else {
+  //       if (errorCode == 'PURCHASE_LIMIT_EXCEEDED') {
+  //         itemPurchaseAvailableOnlyOneAlert(errorMessage);
+  //       } else {
+  //         itemPurchaseImpossibleAlert();
+  //       }
+  //     }
+  //   });
+  // }
 
   void fetchEquipItem(int itemId) async {
     await ItemService.fetchEquippedItem(
@@ -219,30 +203,30 @@ class ShopController extends GetxController {
     showItemTipAlert();
   }
 
-  void onClickPurchaseItem(tradeSymbol) {
-    print(double.parse(walletMasterController.stik.value.uiAmountString!));
-    print(walletMasterController.tik.value.uiAmountString);
-    if ((tradeSymbol == 'STIK' ? double.parse(walletMasterController.stik.value.uiAmountString!) : double.parse(walletMasterController.tik.value.uiAmountString!)) < selectedItem.value.price) {
-      isShortBalance.value = true;
-      showTikShortBalancePopup(tradeSymbol);
-    } else {
-      showItemPurchasePopup(tradeSymbol);
-    }
-  }
+  // void onClickPurchaseItem(tradeSymbol) {
+  //   print(double.parse(walletMasterController.stik.value.uiAmountString!));
+  //   print(walletMasterController.tik.value.uiAmountString);
+  //   if ((tradeSymbol == 'STIK' ? double.parse(walletMasterController.stik.value.uiAmountString!) : double.parse(walletMasterController.tik.value.uiAmountString!)) < selectedItem.value.price) {
+  //     isShortBalance.value = true;
+  //     showTikShortBalancePopup(tradeSymbol);
+  //   } else {
+  //     showItemPurchasePopup(tradeSymbol);
+  //   }
+  // }
 
-  void showItemPurchasePopup(tradeSymbol) {
-    itemPurchaseAlert(
-        this, tradeSymbol == 'STIK' ? double.parse(walletMasterController.stik.value.uiAmountString!) : double.parse(walletMasterController.tik.value.uiAmountString!.toString()), tradeSymbol);
-  }
-
-  void showTikShortBalancePopup(tradeSymbol) {
-    itemPurchaseShortBalanceAlert(
-        this, tradeSymbol == 'STIK' ? double.parse(walletMasterController.stik.value.uiAmountString!) : double.parse(walletMasterController.tik.value.amount!.toString()), tradeSymbol);
-  }
-
-  void showItemPurchaseCompletePopup() {
-    itemPurchaseCompleteAlert(this);
-  }
+  // void showItemPurchasePopup(tradeSymbol) {
+  //   itemPurchaseAlert(
+  //       this, tradeSymbol == 'STIK' ? double.parse(walletMasterController.stik.value.uiAmountString!) : double.parse(walletMasterController.tik.value.uiAmountString!.toString()), tradeSymbol);
+  // }
+  //
+  // void showTikShortBalancePopup(tradeSymbol) {
+  //   itemPurchaseShortBalanceAlert(
+  //       this, tradeSymbol == 'STIK' ? double.parse(walletMasterController.stik.value.uiAmountString!) : double.parse(walletMasterController.tik.value.amount!.toString()), tradeSymbol);
+  // }
+  //
+  // void showItemPurchaseCompletePopup() {
+  //   itemPurchaseCompleteAlert(this);
+  // }
 
   void showItemPurchaseImpossiblePopup() {
     itemPurchaseImpossibleAlert();

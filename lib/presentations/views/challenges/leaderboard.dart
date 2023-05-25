@@ -57,11 +57,11 @@ class ChallengeLeaderboard extends StatelessWidget {
                           backgroundColor: Colors.black,
                           child: CircleAvatar(
                             radius: 15.sp,
-                            foregroundImage:  (myRank.profileImageUrl == null || myRank.profileImageUrl == '')
+                            foregroundImage: (myRank.profileImageUrl == null || myRank.profileImageUrl == '')
                                 ? Image.asset(
-                              'assets/images/ic_launcher.png',
-                              width: 30.sp,
-                            ).image
+                                    'assets/images/ic_launcher.png',
+                                    width: 30.sp,
+                                  ).image
                                 : NetworkImage(myRank.profileImageUrl!),
                           ),
                         ),
@@ -357,6 +357,7 @@ class ChallengeLeaderboard extends StatelessWidget {
     return SingleChildScrollView(
       child: Obx(() {
         return Container(
+          height: MediaQuery.of(context).size.height - kBottomNavigationBarHeight,
           color: subBg01Color,
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,

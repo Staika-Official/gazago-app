@@ -2,6 +2,7 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_html/flutter_html.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:gaza_go/constants/routes.dart';
 import 'package:gaza_go/platform/controllers/challenges_detail_controller.dart';
 import 'package:gaza_go/platform/helpers/base_helper.dart';
@@ -21,7 +22,7 @@ class ChallengeInfo extends StatelessWidget {
       child: Obx(() {
         return Container(
           color: subBg01Color,
-          padding: EdgeInsets.only(bottom: 80.0.sp),
+          padding: EdgeInsets.only(bottom: 120.0.sp),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
@@ -31,9 +32,9 @@ class ChallengeInfo extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   mainAxisSize: MainAxisSize.max,
                   children: [
-                    if (controller.challengeDetails.value.description != null)
+                    if (controller.challengeDetails.value.introduce != null)
                       Html(
-                        data: controller.challengeDetails.value.description!,
+                        data: controller.challengeDetails.value.introduce!,
                         style: {
                           "p": Style(
                             color: Colors.white,
@@ -192,8 +193,15 @@ class ChallengeInfo extends StatelessWidget {
                       padding: EdgeInsets.only(top: 16.0.sp),
                       child: InkWell(
                         onTap: () {
-                          if (controller.challengeDetails.value.challengeUserState != 'JOIN_CLOSED' && controller.challengeDetails.value.challengeState != 'CLOSED') {
-                            Get.toNamed(Routes.shopItemDetail, arguments: {'id': controller.challengeDetails.value.itemTradeStoreId!});
+                          if (!(controller.challengeDetails.value.challengeState == 'READY' && controller.challengeDetails.value.challengeUserState == 'REGISTER_READY') ||
+                              !(controller.challengeDetails.value.challengeState == 'CLOSED')) {
+                            print(Get.previousRoute);
+                            if (Get.previousRoute == Routes.shopItemDetail) {
+                              Get.back();
+                            } else {
+                              Get.toNamed(Routes.shopItemDetail, arguments: {'id': controller.challengeDetails.value.itemTradeStoreId!});
+                            }
+
                             // controller.moveShopDetail();
                           }
                         },
@@ -227,14 +235,30 @@ class ChallengeInfo extends StatelessWidget {
                                         ),
                                         width: 107.sp,
                                         height: 87.sp,
-                                        child: controller.challengeDetails.value.item!.itemImageUrl != null
-                                            ? CachedNetworkImage(
+                                        // item.itemImageUrl!.contains('.svg')
+                                        // ? SvgPicture.network(
+                                        // fit: BoxFit.contain,
+                                        // item.itemImageUrl!,
+                                        // placeholderBuilder: (BuildContext context) => Container(padding: const EdgeInsets.all(30.0), child: const CircularProgressIndicator()),
+                                        // )
+                                        //     : CachedNetworkImage(
+                                        // imageUrl: item.itemImageUrl!,
+                                        // fit: BoxFit.fitHeight,
+                                        // placeholder: (context, url) => const Center(child: SizedBox.square(dimension: 40, child: CircularProgressIndicator())),
+                                        // errorWidget: (context, url, error) => Image.asset("assets/images/@temp_bal.png"),
+                                        // )
+                                        child: controller.challengeDetails.value.item!.itemImageUrl!.contains('.svg')
+                                            ? SvgPicture.network(
+                                                fit: BoxFit.contain,
+                                                controller.challengeDetails.value.item!.itemImageUrl!,
+                                                placeholderBuilder: (BuildContext context) => Container(padding: const EdgeInsets.all(30.0), child: const CircularProgressIndicator()),
+                                              )
+                                            : CachedNetworkImage(
                                                 imageUrl: controller.challengeDetails.value.item!.itemImageUrl!,
                                                 fit: BoxFit.fitHeight,
                                                 placeholder: (context, url) => const Center(child: SizedBox.square(dimension: 40, child: CircularProgressIndicator())),
                                                 errorWidget: (context, url, error) => const Center(child: SizedBox.square(dimension: 40, child: CircularProgressIndicator())),
-                                              )
-                                            : Container(),
+                                              ),
                                       ),
                                     if (controller.challengeDetails.value.item != null)
                                       Padding(
@@ -242,13 +266,14 @@ class ChallengeInfo extends StatelessWidget {
                                         child: Column(
                                           crossAxisAlignment: CrossAxisAlignment.start,
                                           children: [
-                                            StyledText(
-                                              controller.challengeDetails.value.item!.itemLabel == 'CLOSE_DEADLINE' ? '마감임박' : '품절',
-                                              color: skyBlueColor,
-                                              fontWeight: 600,
-                                              fontSize: 10,
-                                              lineHeight: 10,
-                                            ),
+                                            if (controller.challengeDetails.value.item!.itemLabel != null)
+                                              StyledText(
+                                                controller.challengeDetails.value.item!.itemLabel == 'CLOSE_DEADLINE' ? '마감임박' : '품절',
+                                                color: skyBlueColor,
+                                                fontWeight: 600,
+                                                fontSize: 10,
+                                                lineHeight: 10,
+                                              ),
                                             StyledText(
                                               controller.challengeDetails.value.item!.name,
                                               fontFamily: 'Montserrat',
@@ -320,7 +345,7 @@ class ChallengeInfo extends StatelessWidget {
                   thickness: 2,
                 ),
               ),
-              if (controller.challengeDetails.value.introduce != null)
+              if (controller.challengeDetails.value.description != null)
                 Padding(
                   padding: EdgeInsets.only(top: 30.0.sp, left: 20.sp, right: 20.sp),
                   child: Column(
@@ -336,7 +361,7 @@ class ChallengeInfo extends StatelessWidget {
                       Padding(
                         padding: EdgeInsets.only(top: 14.0),
                         child: Html(
-                          data: controller.challengeDetails.value.introduce!,
+                          data: controller.challengeDetails.value.description!,
                           style: {
                             "*": Style(
                               color: Colors.white,

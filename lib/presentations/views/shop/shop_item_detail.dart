@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:gaza_go/platform/controllers/shop_controller.dart';
+import 'package:gaza_go/platform/controllers/shop_detail_controller.dart';
 import 'package:gaza_go/platform/helpers/base_helper.dart';
 import 'package:gaza_go/platform/helpers/inventory_helper.dart';
 import 'package:gaza_go/presentations/components/secondary_appbar.dart';
@@ -17,7 +18,7 @@ class ShopItemDetail extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    ShopController controller = Get.put(ShopController());
+    ShopDetailController controller = Get.put(ShopDetailController());
     return Scaffold(
       appBar: const SecondaryAppbar(
         isShowBackButton: true,
@@ -633,6 +634,14 @@ class ShopItemDetail extends StatelessWidget {
                                           width: double.infinity,
                                           height: 82,
                                           fit: BoxFit.fitWidth,
+                                          imageBuilder: (context, imageProvider) => Container(
+                                            decoration: BoxDecoration(
+                                              borderRadius: BorderRadius.all(
+                                                Radius.circular(12.sp),
+                                              ),
+                                              image: DecorationImage(image: imageProvider, fit: BoxFit.cover),
+                                            ),
+                                          ),
                                           placeholder: (context, url) => const Center(child: SizedBox.square(dimension: 40, child: CircularProgressIndicator())),
                                           errorWidget: (context, url, error) => const Center(child: SizedBox.square(dimension: 40, child: CircularProgressIndicator())),
                                         ),
@@ -644,7 +653,7 @@ class ShopItemDetail extends StatelessWidget {
                           ),
                         ),
                       Padding(
-                        padding: EdgeInsets.only(top: 30.sp, bottom: 100.sp),
+                        padding: EdgeInsets.only(top: 30.sp, bottom: 120.sp),
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
