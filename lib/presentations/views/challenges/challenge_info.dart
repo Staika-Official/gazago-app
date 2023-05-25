@@ -195,7 +195,6 @@ class ChallengeInfo extends StatelessWidget {
                         onTap: () {
                           if (!(controller.challengeDetails.value.challengeState == 'READY' && controller.challengeDetails.value.challengeUserState == 'REGISTER_READY') ||
                               !(controller.challengeDetails.value.challengeState == 'CLOSED')) {
-                            print(Get.previousRoute);
                             if (Get.previousRoute == Routes.shopItemDetail) {
                               Get.back();
                             } else {

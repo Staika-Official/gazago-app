@@ -4718,10 +4718,6 @@ void moveBuyChallengeItemPageAlert(ChallengesDetailController controller, int it
         child: GazagoButton(
           onTap: () {
             Get.back();
-
-            // Get.until((route) => Get.currentRoute == Routes.shopItemDetail);
-            // controller.moveShopDetail();
-            print(Get.previousRoute);
             Get.toNamed(Routes.shopItemDetail, arguments: {'id': itemId});
           },
           buttonText: '네',
