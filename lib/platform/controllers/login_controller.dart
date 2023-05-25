@@ -4,6 +4,7 @@ import 'dart:io';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:gaza_go/constants/enums.dart';
 import 'package:gaza_go/constants/routes.dart';
+import 'package:gaza_go/flavors.dart';
 import 'package:gaza_go/platform/helpers/alert_helper.dart';
 import 'package:gaza_go/platform/helpers/login_helper.dart';
 import 'package:gaza_go/platform/models/access_token_model.dart';
@@ -71,6 +72,12 @@ class LoginController extends GetxController {
           AppleIDAuthorizationScopes.email,
           AppleIDAuthorizationScopes.fullName,
         ],
+        webAuthenticationOptions: WebAuthenticationOptions(
+          clientId: F.isDev ? 'io.gazago.stage' : 'io.gazago',
+          redirectUri: Uri.parse(
+            F.isDev ? 'https://apple-gazago-stage.glitch.me/callbacks/sign_in_with_apple' : 'https://apple-gazago.glitch.me/callbacks/sign_in_with_apple',
+          ),
+        ),
       );
 
       final credential = OAuthProvider("apple.com").credential(
@@ -130,9 +137,6 @@ class LoginController extends GetxController {
     await UaaService.socialLogin(
       loginInfo,
       successCallback: (AccessTokenModel token, int statusCode) async {
-        print('access token: ${token.accessToken}');
-        print('refresh token: ${token.refreshToken}');
-
         if (statusCode == 200) {
           HiveStore.save(key: HiveKey.accessToken.name, value: token.accessToken);
           HiveStore.save(key: HiveKey.refreshToken.name, value: token.refreshToken);

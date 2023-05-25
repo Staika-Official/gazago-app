@@ -1,5 +1,3 @@
-import 'dart:io';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:gaza_go/constants/enums.dart';
@@ -13,7 +11,6 @@ class Login extends StatelessWidget {
 
   List<Widget> renderLoginButtons(LoginController controller) {
     return LoginType.values.map((loginType) {
-      if (Platform.isAndroid && loginType == LoginType.apple) return Container();
       return Container(
         padding: EdgeInsets.symmetric(vertical: 8.sp, horizontal: 25.sp),
         width: double.infinity,
