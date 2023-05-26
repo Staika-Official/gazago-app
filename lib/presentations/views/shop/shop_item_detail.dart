@@ -599,7 +599,7 @@ class ShopItemDetail extends StatelessWidget {
                                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                       children: [
                                         StyledText(
-                                          '챌린지 참가하기',
+                                          '연관 챌린지',
                                           fontWeight: 600,
                                           fontSize: 18,
                                           lineHeight: 18,
