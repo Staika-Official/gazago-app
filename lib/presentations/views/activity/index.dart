@@ -558,7 +558,7 @@ class ActivityHome extends StatelessWidget {
                                           decoration: BoxDecoration(
                                             border: Border.all(color: Colors.black, width: 2),
                                             borderRadius: BorderRadius.circular(35),
-                                            color: skyBlueColor,
+                                            color: popupBgColor,
                                           ),
                                           child: Stack(
                                             clipBehavior: Clip.none,
@@ -579,7 +579,7 @@ class ActivityHome extends StatelessWidget {
                                                       child: Padding(
                                                         padding: const EdgeInsets.only(
                                                           left: 20,
-                                                          top: 20,
+                                                          top: 16,
                                                         ),
                                                         child: iconCloseChallenge,
                                                       ),
@@ -595,7 +595,7 @@ class ActivityHome extends StatelessWidget {
                                                           fontSize: 16,
                                                           lineHeight: 20,
                                                           fontWeight: 600,
-                                                          color: Colors.black,
+                                                          color: Colors.white,
                                                         ),
                                                       ),
                                                     )
@@ -613,9 +613,9 @@ class ActivityHome extends StatelessWidget {
                                               //   ),
                                               // ),
                                               Positioned(
-                                                bottom: 0,
-                                                right: 5,
-                                                child: iconChallengeFlag,
+                                                bottom: 18,
+                                                right: 15,
+                                                child: iconChallengeMap,
                                               ),
                                             ],
                                           ),

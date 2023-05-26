@@ -66,6 +66,7 @@ SvgPicture iconStamina = SvgPicture.asset('assets/images/activity/ico_stamina.sv
 SvgPicture iconShoes = SvgPicture.asset('assets/images/activity/ico_shoes.svg', width: 15.sp, height: 14.sp);
 SvgPicture iconChallengeList = SvgPicture.asset('assets/images/activity/ico_challenge_list.svg', width: 70.sp, height: 70.sp);
 SvgPicture iconChallengeFlag = SvgPicture.asset('assets/images/activity/ico_challenge_flag.svg', width: 58.sp, height: 55.sp);
+SvgPicture iconChallengeMap = SvgPicture.asset('assets/images/activity/ico_challenge_map.svg', width: 36.sp, height: 39.sp);
 SvgPicture iconCloseChallenge = SvgPicture.asset('assets/images/activity/ico_close.svg', width: 17.sp, height: 17.sp);
 SvgPicture iconChallengeCheckOn = SvgPicture.asset('assets/images/activity/ico_challenge_checked.svg', width: 16.sp, height: 11.sp);
 SvgPicture iconChallengeCheckOff = SvgPicture.asset('assets/images/activity/ico_challenge_unchecked.svg', width: 16.sp, height: 11.sp);
