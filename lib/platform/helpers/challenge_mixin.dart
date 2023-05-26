@@ -50,9 +50,9 @@ mixin ChallengeMixin {
     print(status);
     switch (status) {
       case 'READY':
-        return '오픈예정';
+        return '챌린지 전';
       case 'IN_PROGRESS':
-        return '진행중';
+        return '진행 중';
       case 'CLOSED':
         return '종료';
       default:
@@ -68,7 +68,7 @@ mixin ChallengeMixin {
         text = '접수 중';
         break;
       case 'REGISTER_READY':
-        text = '접수 예정';
+        text = '접수 ';
         break;
       case 'JOINED':
         text = '참가 중';

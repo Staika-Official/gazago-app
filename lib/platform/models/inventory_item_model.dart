@@ -14,9 +14,9 @@ class InventoryItemModel {
   String itemCategory;
   String itemGrade;
   double durability;
-  double abrasionRate;
-  double rewardRate;
-  double staminaReduceRate;
+  double? abrasionRate;
+  double? rewardRate;
+  double? staminaReduceRate;
   String itemImageUrl;
   String? description;
   bool? equipped;
@@ -24,6 +24,8 @@ class InventoryItemModel {
   int? tik;
   bool? isShoe;
   InventoryItemStatModel? itemStat;
+  bool? equippedChallengeItem;
+  bool? challengeItem;
 
   InventoryItemModel({
     required this.id,
@@ -35,9 +37,9 @@ class InventoryItemModel {
     this.publishType,
     required this.itemCategory,
     required this.durability,
-    required this.abrasionRate,
-    required this.rewardRate,
-    required this.staminaReduceRate,
+    this.abrasionRate,
+    this.rewardRate,
+    this.staminaReduceRate,
     required this.itemImageUrl,
     this.itemStat,
     this.description,
@@ -45,6 +47,8 @@ class InventoryItemModel {
     this.listOrder,
     this.tik = 0,
     this.isShoe = false,
+    this.equippedChallengeItem,
+    this.challengeItem
   });
 
   factory InventoryItemModel.fromJson(Map<String, dynamic> json) => _$InventoryItemModelFromJson(json);

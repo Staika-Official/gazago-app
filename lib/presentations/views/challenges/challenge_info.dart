@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_html/flutter_html.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:gaza_go/constants/routes.dart';
 import 'package:gaza_go/platform/controllers/challenges_detail_controller.dart';
 import 'package:gaza_go/platform/helpers/base_helper.dart';
 import 'package:gaza_go/presentations/styles/colors.dart';
@@ -22,7 +21,7 @@ class ChallengeInfo extends StatelessWidget {
       child: Obx(() {
         return Container(
           color: subBg01Color,
-          padding: EdgeInsets.only(bottom: 120.0.sp),
+          padding: EdgeInsets.only(bottom: 180.0.sp),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
@@ -192,18 +191,7 @@ class ChallengeInfo extends StatelessWidget {
                     Padding(
                       padding: EdgeInsets.only(top: 16.0.sp),
                       child: InkWell(
-                        onTap: () {
-                          if (!(controller.challengeDetails.value.challengeState == 'READY' && controller.challengeDetails.value.challengeUserState == 'REGISTER_READY') ||
-                              !(controller.challengeDetails.value.challengeState == 'CLOSED')) {
-                            if (Get.previousRoute == Routes.shopItemDetail) {
-                              Get.back();
-                            } else {
-                              Get.toNamed(Routes.shopItemDetail, arguments: {'id': controller.challengeDetails.value.itemTradeStoreId!});
-                            }
-
-                            // controller.moveShopDetail();
-                          }
-                        },
+                        onTap: () => null,
                         child: Container(
                           decoration: BoxDecoration(
                             color: const Color(0xFF2E3038),
@@ -307,27 +295,27 @@ class ChallengeInfo extends StatelessWidget {
                                   ],
                                 ),
                               ),
-                              Positioned(
-                                right: 23.sp,
-                                top: 18.sp,
-                                child: iconArrowRightTriangle,
-                              ),
-                              if ((controller.challengeDetails.value.challengeState == 'READY' && controller.challengeDetails.value.challengeUserState == 'REGISTER_READY') ||
-                                  controller.challengeDetails.value.challengeState == 'CLOSED')
-                                Positioned(
-                                  left: 0,
-                                  top: 0,
-                                  right: 0,
-                                  bottom: 0,
-                                  child: Container(
-                                    decoration: BoxDecoration(
-                                      color: Colors.black.withOpacity(.5),
-                                      borderRadius: BorderRadius.all(
-                                        Radius.circular(12.sp),
-                                      ),
-                                    ),
-                                  ),
-                                ),
+                              // Positioned(
+                              //   right: 23.sp,
+                              //   top: 18.sp,
+                              //   child: iconArrowRightTriangle,
+                              // ),
+                              // if ((controller.challengeDetails.value.challengeState == 'READY' && controller.challengeDetails.value.challengeUserState == 'REGISTER_READY') ||
+                              //     controller.challengeDetails.value.challengeState == 'CLOSED')
+                              //   Positioned(
+                              //     left: 0,
+                              //     top: 0,
+                              //     right: 0,
+                              //     bottom: 0,
+                              //     child: Container(
+                              //       decoration: BoxDecoration(
+                              //         color: Colors.black.withOpacity(.5),
+                              //         borderRadius: BorderRadius.all(
+                              //           Radius.circular(12.sp),
+                              //         ),
+                              //       ),
+                              //     ),
+                              //   ),
                             ],
                           ),
                         ),

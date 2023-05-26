@@ -92,9 +92,6 @@ class InventoryController extends GetxController with LinearProgressMixin, Inven
         itemName: '',
         itemCategory: '',
         durability: 0.0,
-        abrasionRate: 0.0,
-        rewardRate: 0.0,
-        staminaReduceRate: 0.0,
         itemImageUrl: '',
         itemStat: InventoryItemStatModel(
           goProfit: 0.0,
@@ -355,10 +352,28 @@ class InventoryController extends GetxController with LinearProgressMixin, Inven
     );
   }
 
+  void checkEquippedInventoryChallengeItem(int itemId, String category) {
+    InventoryItemModel filteredItem = equippedItemList.firstWhere((element) => element.itemCategory == category);
+
+    if (filteredItem.challengeItem!) {
+      checkChallengeItemEquip(this, itemId);
+    } else {
+      fetchEquipItem(itemId);
+    }
+  }
+
+  void checkEquippedChallengeItem(bool? isEquippedItem, int itemId) {
+    if (isEquippedItem!) {
+      checkChallengeItemEquip(this, itemId);
+    } else {
+      fetchEquipItem(itemId);
+    }
+  }
+
   void fetchEquipItem(int itemId) async {
     await ItemService.fetchEquippedItem(
       itemId,
-      successCallback: (InventoryItemModel item) {
+      successCallback: (InventoryItemModel item) async {
         selectedItem.value = item;
         int allItemsPrevEquippedIndex = myAllItems.indexWhere((element) => element.itemCategory == item.itemCategory && element.equipped!);
         int allItemsIndex = myAllItems.indexWhere((element) => element.id == item.id);
@@ -366,10 +381,10 @@ class InventoryController extends GetxController with LinearProgressMixin, Inven
         myAllItems[allItemsPrevEquippedIndex].equipped = false;
         myAllItems[allItemsIndex] = item;
         equippedItemList[equippedIndex] = item;
+        // await getUserEquippedItems();
         myAllItems.refresh();
         equippedItemList.refresh();
-        // getUserAllItemsAfterEquipped();
-        // getUserEquippedItems();
+
         showToastPopup('아이템이 장착되었습니다.');
       },
     );

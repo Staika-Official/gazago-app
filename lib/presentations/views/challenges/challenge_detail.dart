@@ -347,7 +347,7 @@ class ChallengeDetail extends StatelessWidget {
                                           Row(
                                             children: [
                                               StyledText(
-                                                '${formatDateUntilDay(controller.challengeDetails.value.fromDate)} - ${formatDateUntilDay(controller.challengeDetails.value.toDate)}',
+                                                '${formatDateUntilTime(controller.challengeDetails.value.fromDate)} - ${formatDateUntilTime(controller.challengeDetails.value.toDate)}',
                                                 color: lightGrayColor,
                                                 fontWeight: 500,
                                                 fontSize: 12,
@@ -421,7 +421,7 @@ class ChallengeDetail extends StatelessWidget {
                                                     Padding(
                                                       padding: EdgeInsets.only(left: 5.0.sp),
                                                       child: StyledText(
-                                                        '${controller.challengeDetails.value.soldQuantity}명 / ${controller.challengeDetails.value.quantity}명',
+                                                        '${formatDecimalPlaces(double.parse(controller.challengeDetails.value.soldQuantity.toString()), 0)}명 / ${formatDecimalPlaces(double.parse(controller.challengeDetails.value.quantity.toString()), 0)}명',
                                                         color: lightGrayColor,
                                                         fontWeight: 500,
                                                         fontSize: 12,
@@ -455,20 +455,27 @@ class ChallengeDetail extends StatelessWidget {
               ),
             ),
             if (controller.challengeTabIndex.value == 0)
-              if (controller.challengeDetails.value.challengeUserState != null)
+              // if (controller.challengeDetails.value.challengeUserState != null)
+              //   Positioned.fill(
+              //     top: null,
+              //     left: 0,
+              //     bottom: 0,
+              //     child: renderParticipateInChallenge(controller.challengeDetails.value.challengeUserState!),
+              //   ),
+
+              // Positioned.fill(
+              //   top: null,
+              //   left: 0,
+              //   bottom: 0,
+              //   child: renderParticipateInChallenge(controller.challengeDetails.value.challengeState!),
+              // )
+              if (controller.challengeDetails.value.challengeState != null)
                 Positioned.fill(
                   top: null,
                   left: 0,
                   bottom: 0,
-                  child: renderParticipateInChallenge(controller.challengeDetails.value.challengeUserState!),
-                ),
-            if (controller.challengeDetails.value.challengeState != null && controller.challengeDetails.value.challengeUserState == null)
-              Positioned.fill(
-                top: null,
-                left: 0,
-                bottom: 0,
-                child: renderParticipateInChallenge(controller.challengeDetails.value.challengeState!),
-              )
+                  child: renderParticipateInChallenge(),
+                )
           ],
         );
       }),

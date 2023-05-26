@@ -4727,3 +4727,88 @@ void moveBuyChallengeItemPageAlert(ChallengesDetailController controller, int it
     ],
   );
 }
+
+void challengeItemEquip(int itemId) {
+  ChallengesDetailController challengesDetailController = Get.find();
+  showAlert(
+    contentWidget: Padding(
+      padding: EdgeInsets.only(top: 20.0.sp, bottom: 40.sp),
+      child: Column(
+        children: [
+          const StyledText(
+            '챌린지 참가가 가능합니다.\n장착 하시겠어요?',
+            fontSize: 18,
+            lineHeight: 24,
+            fontWeight: 500,
+            letterSpacing: .2,
+            textAlign: TextAlign.center,
+          ),
+        ],
+      ),
+    ),
+    actions: [
+      Expanded(
+        child: GazagoButton(
+          onTap: () => Get.back(),
+          buttonText: '아니요',
+          textColor: Colors.white,
+          buttonColor: popupBgColor,
+        ),
+      ),
+      SizedBox(
+        width: 9.sp,
+      ),
+      Expanded(
+        child: GazagoButton(
+          onTap: () => {Get.back(), challengesDetailController.fetchEquipItem(itemId)},
+          buttonText: '장착하기',
+          buttonColor: skyBlueColor,
+        ),
+      ),
+    ],
+  );
+}
+
+void checkChallengeItemEquip(InventoryController controller, int itemId) {
+  showAlert(
+    title: '확인해주세요',
+    contentWidget: Padding(
+      padding: EdgeInsets.only(top: 30.sp, bottom: 50.sp),
+      child: Text.rich(
+        textAlign: TextAlign.center,
+        style: TextStyle(
+          fontSize: 18.sp,
+          height: 26.sp / 18.sp,
+          fontWeight: FontWeight.w500,
+          color: Colors.white,
+        ),
+        TextSpan(
+          text: '챌린지에 참여중인 아이템을\n장착중입니다. 다른 아이템을 착용하시면\n',
+          children: [
+            TextSpan(text: '챌린지 참여에 제외됩니다!', style: TextStyle(color: skyBlueColor)),
+          ],
+        ),
+      ),
+    ),
+    actions: [
+      Expanded(
+        child: GazagoButton(
+          onTap: () => Get.back(),
+          buttonText: '아니요',
+          textColor: Colors.white,
+          buttonColor: popupBgColor,
+        ),
+      ),
+      SizedBox(
+        width: 9.sp,
+      ),
+      Expanded(
+        child: GazagoButton(
+          onTap: () => {Get.back(), controller.fetchEquipItem(itemId)},
+          buttonText: '장착하기',
+          buttonColor: skyBlueColor,
+        ),
+      ),
+    ],
+  );
+}

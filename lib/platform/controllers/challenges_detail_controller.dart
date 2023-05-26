@@ -1,10 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:gaza_go/platform/controllers/loader_controller.dart';
+import 'package:gaza_go/platform/helpers/alert_helper.dart';
 import 'package:gaza_go/platform/helpers/challenge_mixin.dart';
 import 'package:gaza_go/platform/models/challenge_ranker_model.dart';
 import 'package:gaza_go/platform/models/challenge_reward_model.dart';
+import 'package:gaza_go/platform/models/inventory_item_model.dart';
 import 'package:gaza_go/platform/models/new_challenge_detail_model.dart';
 import 'package:gaza_go/platform/services/activity_service.dart';
+import 'package:gaza_go/platform/services/item_service.dart';
 import 'package:gaza_go/presentations/components/alert_ui_list.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
@@ -65,8 +68,17 @@ class ChallengesDetailController extends GetxController with GetTickerProviderSt
   }
 
   void showMoveToShopItem() {
-    print(challengeDetails.value.itemTradeStoreId!);
     moveBuyChallengeItemPageAlert(this, challengeDetails.value.itemTradeStoreId!);
+  }
+
+  void fetchEquipItem(int itemId) async {
+    await ItemService.fetchEquippedItem(
+      itemId,
+      successCallback: (InventoryItemModel item) {
+        showToastPopup('아이템이 장착되었습니다.');
+        getChallengeDetail();
+      },
+    );
   }
 
   Future<void> getChallengeDetail() async {
