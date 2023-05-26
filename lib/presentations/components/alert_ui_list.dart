@@ -1351,7 +1351,6 @@ void itemPurchaseShortBalanceAlert(ShopDetailController controller, double remai
 }
 
 void itemPurchaseCompleteAlert(ShopDetailController controller) {
-  ChallengesDetailController challengesDetailController = Get.find();
   showAlert(
     title: '구매가 완료되었습니다.',
     isScrollControlled: true,
@@ -1932,8 +1931,8 @@ void itemPurchaseCompleteAlert(ShopDetailController controller) {
         child: GazagoButton(
           onTap: () {
             Get.back();
-            if (challengesDetailController.challengeId != 0) {
-              challengesDetailController.getChallengeDetail();
+            if (Get.isRegistered<ChallengesDetailController>() && Get.find<ChallengesDetailController>().challengeId.value != 0) {
+              Get.find<ChallengesDetailController>().getChallengeDetail();
             }
             controller.fetchEquipItem(controller.purchaseCompleteItem.value.id);
           },
