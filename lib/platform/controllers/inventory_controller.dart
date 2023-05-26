@@ -491,7 +491,7 @@ class InventoryController extends GetxController with LinearProgressMixin, Inven
       int rowCount = (listLength / gridCount).ceil();
       double totalPadding = (gridCount - 1) * 10 + 40;
       double itemWidth = (viewportWidth.value - totalPadding) / gridCount;
-      double itemHeight = itemWidth * 1.4;
+      double itemHeight = itemWidth * 1.5;
       listHeight.value = itemHeight * rowCount + 70;
     } else {
       listHeight.value = 165;
