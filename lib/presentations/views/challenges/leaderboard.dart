@@ -357,7 +357,7 @@ class ChallengeLeaderboard extends StatelessWidget {
     return SingleChildScrollView(
       child: Obx(() {
         return Container(
-          height: MediaQuery.of(context).size.height - kBottomNavigationBarHeight,
+          height: MediaQuery.of(context).size.height,
           color: subBg01Color,
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,

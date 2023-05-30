@@ -212,6 +212,7 @@
 				3B06AD1E1E4923F5004D2608 /* Thin Binary */,
 				505D110A4C3257C6E3FA22C7 /* [firebase_crashlytics] Crashlytics Upload Symbols */,
 				9F33D9F533D774B5A89CB556 /* [CP] Embed Pods Frameworks */,
+				F18653CABE7DEDB85DEF1897 /* [CP] Copy Pods Resources */,
 			);
 			buildRules = (
 			);
@@ -361,6 +362,23 @@
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
 			shellScript = "if [ \"$CONFIGURATION\" == \"Debug-dev\" ] || [ \"$CONFIGURATION\" == \"Release-dev\" ]; then\n  cp Runner/dev/GoogleService-Info.plist Runner/GoogleService-Info.plist\n  cp Runner/dev/firebase_app_id_file.json Runner/firebase_app_id_file.json\nelif [ \"$CONFIGURATION\" == \"Debug-stage\" ] || [ \"$CONFIGURATION\" == \"Release-stage\" ]; then\n  cp Runner/stage/GoogleService-Info.plist Runner/GoogleService-Info.plist\n  cp Runner/stage/firebase_app_id_file.json Runner/firebase_app_id_file.json\nelif [ \"$CONFIGURATION\" == \"Debug-prod\" ] || [ \"$CONFIGURATION\" == \"Release-prod\" ]; then\n  cp Runner/prod/GoogleService-Info.plist Runner/GoogleService-Info.plist\n  cp Runner/prod/firebase_app_id_file.json Runner/firebase_app_id_file.json\nfi\n\n";
+		};
+		F18653CABE7DEDB85DEF1897 /* [CP] Copy Pods Resources */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-Runner/Pods-Runner-resources-${CONFIGURATION}-input-files.xcfilelist",
+			);
+			name = "[CP] Copy Pods Resources";
+			outputFileListPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-Runner/Pods-Runner-resources-${CONFIGURATION}-output-files.xcfilelist",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-Runner/Pods-Runner-resources.sh\"\n";
+			showEnvVarsInLog = 0;
 		};
 		F19ADAC24752E7736E18CB68 /* [CP] Check Pods Manifest.lock */ = {
 			isa = PBXShellScriptBuildPhase;

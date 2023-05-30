@@ -596,6 +596,8 @@ class ActivityHome extends StatelessWidget {
                                                           lineHeight: 20,
                                                           fontWeight: 600,
                                                           color: Colors.white,
+                                                          softWrap: false,
+                                                          overflowEllipsis: true,
                                                         ),
                                                       ),
                                                     )
