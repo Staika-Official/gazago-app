@@ -38,12 +38,6 @@ class ChallengeInfo extends StatelessWidget {
                           "p": Style(
                             color: Colors.white,
                           ),
-                          "strong": Style(
-                            color: Colors.white,
-                          ),
-                          "*": Style(
-                            color: Colors.white,
-                          ),
                         },
                       ),
                     // StyledText(
@@ -350,13 +344,7 @@ class ChallengeInfo extends StatelessWidget {
                         child: Html(
                           data: controller.challengeDetails.value.description!,
                           style: {
-                            "*": Style(
-                              color: Colors.white,
-                            ),
                             "p": Style(
-                              color: Colors.white,
-                            ),
-                            "strong": Style(
                               color: Colors.white,
                             ),
                           },

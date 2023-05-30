@@ -357,167 +357,176 @@ class ChallengeLeaderboard extends StatelessWidget {
     return SingleChildScrollView(
       child: Obx(() {
         return Container(
-          height: MediaQuery.of(context).size.height,
-          color: subBg01Color,
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Padding(
-                padding: EdgeInsets.only(top: 25.0.sp, left: 26.sp, right: 30.sp),
-                child: Row(
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  children: [
-                    StyledText(
-                      '챌린지 보상',
-                      color: Colors.white,
-                      fontWeight: 600,
-                      fontSize: 20,
-                      lineHeight: 24,
-                    ),
-                    Padding(
-                      padding: EdgeInsets.only(left: 4.0.sp),
-                      child: StyledText(
-                        '분배할 전체 리워드',
-                        color: deepGrayColor,
-                        fontWeight: 600,
-                        fontSize: 12,
-                        lineHeight: 12,
-                      ),
-                    ),
-                  ],
-                ),
+            color: subBg01Color,
+            child: ConstrainedBox(
+              constraints: BoxConstraints(
+                minHeight: MediaQuery.of(context).size.height - kBottomNavigationBarHeight,
               ),
-              Container(
-                margin: EdgeInsets.only(top: 8.sp, left: 25.sp, right: 25.sp),
-                decoration: BoxDecoration(
-                  color: const Color(0xFF2E3038),
-                  border: Border.all(
-                    width: 1,
-                    color: const Color(0xFF2E3038),
-                  ),
-                  borderRadius: BorderRadius.all(
-                    Radius.circular(12.sp),
-                  ),
-                ),
-                child: Padding(
-                  padding: EdgeInsets.all(10.sp),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.start,
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    children: [
-                      iconTodayTik,
-                      Padding(
-                        padding: EdgeInsets.only(left: 10.0.sp),
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Row(
-                              crossAxisAlignment: CrossAxisAlignment.end,
-                              children: [
-                                StyledText(
-                                  formatDecimalPlaces(double.parse(controller.challengeDetails.value.rewardAmount!.toString()), 0),
-                                  color: Colors.white,
-                                  fontWeight: 600,
-                                  fontSize: 30,
-                                  lineHeight: 34,
-                                ),
-                                Padding(
-                                  padding: EdgeInsets.only(left: 2.0.sp),
-                                  child: const StyledText(
-                                    'TIK',
-                                    color: Colors.white,
-                                    fontWeight: 500,
-                                    fontSize: 18,
-                                    lineHeight: 35,
-                                  ),
-                                ),
-                              ],
-                            )
-                          ],
-                        ),
-                      )
-                    ],
-                  ),
-                ),
-              ),
-              Container(
-                padding: EdgeInsets.only(top: 30.sp, left: 25.sp, right: 18.sp, bottom: 12.sp),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              child: Padding(
+                padding: EdgeInsets.only(bottom: 20.0.sp),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    StyledText(
-                      '실시간 TOP10',
-                      color: Colors.white,
-                      fontSize: 20,
-                      lineHeight: 20,
-                      fontWeight: 600,
-                    ),
                     Padding(
-                      padding: EdgeInsets.only(left: 10.0.sp),
-                      child: InkWell(
-                        onTap: () => Get.toNamed(Routes.webView, arguments: {'linkUrl': '${F.leaderboardUrl}/challenge/${controller.challengeDetails.value.id}'}),
-                        child: Row(
-                          children: [
-                            StyledText(
-                              '더보기',
-                              color: lightGrayColor,
-                              fontSize: 14,
-                              lineHeight: 16,
+                      padding: EdgeInsets.only(top: 25.0.sp, left: 26.sp, right: 30.sp),
+                      child: Row(
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children: [
+                          const StyledText(
+                            '챌린지 보상',
+                            color: Colors.white,
+                            fontWeight: 600,
+                            fontSize: 20,
+                            lineHeight: 24,
+                          ),
+                          Padding(
+                            padding: EdgeInsets.only(left: 4.0.sp),
+                            child: StyledText(
+                              '분배할 전체 리워드',
+                              color: deepGrayColor,
                               fontWeight: 600,
-                              letterSpacing: -.1,
+                              fontSize: 12,
+                              lineHeight: 12,
                             ),
+                          ),
+                        ],
+                      ),
+                    ),
+                    Container(
+                      margin: EdgeInsets.only(top: 8.sp, left: 25.sp, right: 25.sp),
+                      decoration: BoxDecoration(
+                        color: const Color(0xFF2E3038),
+                        border: Border.all(
+                          width: 1,
+                          color: const Color(0xFF2E3038),
+                        ),
+                        borderRadius: BorderRadius.all(
+                          Radius.circular(12.sp),
+                        ),
+                      ),
+                      child: Padding(
+                        padding: EdgeInsets.all(10.sp),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.start,
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          children: [
+                            iconTodayTik,
                             Padding(
-                              padding: EdgeInsets.only(left: 4.0.sp),
-                              child: iconArrowRightTriangle,
+                              padding: EdgeInsets.only(left: 10.0.sp),
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Row(
+                                    crossAxisAlignment: CrossAxisAlignment.end,
+                                    children: [
+                                      StyledText(
+                                        formatDecimalPlaces(double.parse(controller.challengeDetails.value.rewardAmount!.toString()), 0),
+                                        color: Colors.white,
+                                        fontWeight: 600,
+                                        fontSize: 30,
+                                        lineHeight: 34,
+                                      ),
+                                      Padding(
+                                        padding: EdgeInsets.only(left: 2.0.sp),
+                                        child: const StyledText(
+                                          'TIK',
+                                          color: Colors.white,
+                                          fontWeight: 500,
+                                          fontSize: 18,
+                                          lineHeight: 35,
+                                        ),
+                                      ),
+                                    ],
+                                  )
+                                ],
+                              ),
                             )
                           ],
                         ),
                       ),
                     ),
-                  ],
-                ),
-              ),
-              (controller.myRank.value != null) ? renderMyRank(controller) : Container(),
-              // Column(
-              //   mainAxisSize: MainAxisSize.min,
-              //   children: [...renderRanker(controller)],
-              // )
-              Container(
-                child: controller.dataGetLoading.value
-                    ? Padding(
-                        padding: EdgeInsets.symmetric(vertical: 20.0.sp),
-                        child: const Center(child: CircularProgressIndicator()),
-                      )
-                    : controller.challengeRankingList.isEmpty
-                        ? Container(
-                            height: 500,
-                            child: Center(
-                              child: Column(
-                                mainAxisSize: MainAxisSize.min,
+                    Container(
+                      padding: EdgeInsets.only(top: 30.sp, left: 25.sp, right: 18.sp, bottom: 12.sp),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          StyledText(
+                            '실시간 TOP10',
+                            color: Colors.white,
+                            fontSize: 20,
+                            lineHeight: 20,
+                            fontWeight: 600,
+                          ),
+                          Padding(
+                            padding: EdgeInsets.only(left: 10.0.sp),
+                            child: InkWell(
+                              onTap: () => Get.toNamed(Routes.webView, arguments: {'linkUrl': '${F.leaderboardUrl}/challenge/${controller.challengeDetails.value.id}'}),
+                              child: Row(
                                 children: [
-                                  iconEmpty,
-                                  Padding(
-                                    padding: EdgeInsets.only(top: 20.sp),
-                                    child: const StyledText(
-                                      '랭킹 기록이 없어요.',
-                                      color: Color(0xff7b7b7b),
-                                      fontSize: 16,
-                                      lineHeight: 10,
-                                      fontWeight: 500,
-                                    ),
+                                  StyledText(
+                                    '더보기',
+                                    color: lightGrayColor,
+                                    fontSize: 14,
+                                    lineHeight: 16,
+                                    fontWeight: 600,
+                                    letterSpacing: -.1,
                                   ),
+                                  Padding(
+                                    padding: EdgeInsets.only(left: 4.0.sp),
+                                    child: iconArrowRightTriangle,
+                                  )
                                 ],
                               ),
                             ),
-                          )
-                        : Column(
-                            mainAxisSize: MainAxisSize.min,
-                            children: [...renderRanker(controller)],
                           ),
-              )
-            ],
-          ),
-        );
+                        ],
+                      ),
+                    ),
+                    (controller.myRank.value != null) ? renderMyRank(controller) : Container(),
+                    // Column(
+                    //   mainAxisSize: MainAxisSize.min,
+                    //   children: [...renderRanker(controller)],
+                    // )
+                    Container(
+                      child: controller.dataGetLoading.value
+                          ? Padding(
+                              padding: EdgeInsets.symmetric(vertical: 20.0.sp),
+                              child: const Center(child: CircularProgressIndicator()),
+                            )
+                          : controller.challengeRankingList.isEmpty
+                              ? Container(
+                                  height: 500,
+                                  child: Center(
+                                    child: Column(
+                                      mainAxisSize: MainAxisSize.min,
+                                      children: [
+                                        iconEmpty,
+                                        Padding(
+                                          padding: EdgeInsets.only(top: 20.sp),
+                                          child: const StyledText(
+                                            '랭킹 기록이 없어요.',
+                                            color: Color(0xff7b7b7b),
+                                            fontSize: 16,
+                                            lineHeight: 10,
+                                            fontWeight: 500,
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                )
+                              : Column(
+                                  mainAxisSize: MainAxisSize.min,
+                                  children: [...renderRanker(controller)],
+                                ),
+                    )
+                  ],
+                ),
+              ),
+            )
+            // height: MediaQuery.of(context).size.height,
+
+            );
       }),
     );
   }

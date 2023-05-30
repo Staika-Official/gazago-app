@@ -446,9 +446,9 @@ class ChallengeDetail extends StatelessWidget {
                 ];
               },
               body: TabBarView(
-                physics: NeverScrollableScrollPhysics(),
+                physics: const NeverScrollableScrollPhysics(),
                 controller: controller.tabController,
-                children: [
+                children: const [
                   ChallengeInfo(),
                   ChallengeLeaderboard(),
                 ],
