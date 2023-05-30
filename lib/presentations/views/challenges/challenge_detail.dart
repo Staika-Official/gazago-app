@@ -38,7 +38,7 @@ class ChallengeDetail extends StatelessWidget {
                 print(_.height);
                 print(__);
                 print(___);
-                controller.backgroundBoxSize.value = height + kToolbarHeight + 40;
+                controller.backgroundBoxSize.value = height + kToolbarHeight + 80;
               },
               builder: (_, __, ___, ____) => Container(
                 color: subBg01Color,
@@ -77,12 +77,14 @@ class ChallengeDetail extends StatelessWidget {
                           if (controller.challengeDetails.value.title != null)
                             Padding(
                               padding: EdgeInsets.only(top: 15.0.sp, bottom: 10.0.sp),
-                              child: StyledText(
-                                controller.challengeDetails.value.title!,
-                                fontSize: 20,
-                                lineHeight: 23,
-                                fontWeight: 500,
-                                letterSpacing: -.1,
+                              child: Container(
+                                child: StyledText(
+                                  controller.challengeDetails.value.title!,
+                                  fontSize: 20,
+                                  lineHeight: 23,
+                                  fontWeight: 500,
+                                  letterSpacing: -.1,
+                                ),
                               ),
                             ),
                           Row(
@@ -226,15 +228,17 @@ class ChallengeDetail extends StatelessWidget {
                             unselectedLabelColor: const Color(0xFFA5A5A5),
                             labelStyle: TextStyle(
                               fontWeight: FontWeight.w500,
-                              fontSize: 18.sp,
-                              height: 20.sp / 18.sp,
+                              fontSize: 16.sp,
+                              height: 20.sp / 16.sp,
                               letterSpacing: 0.5,
                             ),
                             tabs: [
                               Tab(
+                                height: 50.sp,
                                 text: '챌린지 안내',
                               ),
                               Tab(
+                                height: 50.sp,
                                 text: '리더보드',
                               ),
                             ],
@@ -325,7 +329,7 @@ class ChallengeDetail extends StatelessWidget {
                                               padding: EdgeInsets.symmetric(vertical: 8.0.sp, horizontal: 11.0.sp),
                                               child: StyledText(
                                                 controller.challengeDetails.value.challengeActivationType == 'ITEM' ? '아이템 장착형' : '',
-                                                fontWeight: 500,
+                                                fontWeight: 600,
                                                 fontSize: 12,
                                                 lineHeight: 14,
                                                 color: Colors.black,
@@ -399,7 +403,7 @@ class ChallengeDetail extends StatelessWidget {
                                                               controller.getChallengeExerciseType(type),
                                                               color: subBg01Color,
                                                               fontSize: 10,
-                                                              fontWeight: 500,
+                                                              fontWeight: 600,
                                                               lineHeight: 12,
                                                             ),
                                                           ),

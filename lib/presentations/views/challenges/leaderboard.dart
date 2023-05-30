@@ -25,11 +25,11 @@ class ChallengeLeaderboard extends StatelessWidget {
         children: [
           iconMyRankArrow,
           ConstrainedBox(
-            constraints: BoxConstraints(maxWidth: 60, minWidth: 60),
+            constraints: BoxConstraints(maxWidth: 60, minWidth: 50),
             child: FittedBox(
               fit: BoxFit.scaleDown,
               child: Padding(
-                padding: const EdgeInsets.only(right: 10),
+                padding: const EdgeInsets.only(right: 5),
                 child: Text(
                   myRank.rank!.toString(),
                   style: TextStyle(color: skyBlueColor, fontSize: 14.sp, fontWeight: FontWeight.w600),
@@ -368,7 +368,7 @@ class ChallengeLeaderboard extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Padding(
-                      padding: EdgeInsets.only(top: 25.0.sp, left: 26.sp, right: 30.sp),
+                      padding: EdgeInsets.only(top: 25.0.sp, left: 20.sp, right: 20.sp),
                       child: Row(
                         crossAxisAlignment: CrossAxisAlignment.center,
                         children: [
@@ -393,7 +393,7 @@ class ChallengeLeaderboard extends StatelessWidget {
                       ),
                     ),
                     Container(
-                      margin: EdgeInsets.only(top: 8.sp, left: 25.sp, right: 25.sp),
+                      margin: EdgeInsets.only(top: 8.sp, left: 20.sp, right: 20.sp),
                       decoration: BoxDecoration(
                         color: const Color(0xFF2E3038),
                         border: Border.all(
@@ -446,15 +446,15 @@ class ChallengeLeaderboard extends StatelessWidget {
                       ),
                     ),
                     Container(
-                      padding: EdgeInsets.only(top: 30.sp, left: 25.sp, right: 18.sp, bottom: 12.sp),
+                      padding: EdgeInsets.only(top: 30.sp, left: 20.sp, right: 20.sp, bottom: 12.sp),
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
                           StyledText(
                             '실시간 TOP10',
                             color: Colors.white,
-                            fontSize: 20,
-                            lineHeight: 20,
+                            fontSize: 16,
+                            lineHeight: 16,
                             fontWeight: 600,
                           ),
                           Padding(

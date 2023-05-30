@@ -87,7 +87,7 @@ class ChallengesHome extends StatelessWidget {
                                   padding: EdgeInsets.symmetric(vertical: 8.0, horizontal: 11.0),
                                   child: StyledText(
                                     '아이템 장착형',
-                                    fontWeight: 500,
+                                    fontWeight: 600,
                                     fontSize: 12,
                                     lineHeight: 14,
                                     letterSpacing: -.1,
@@ -137,7 +137,7 @@ class ChallengesHome extends StatelessWidget {
                                           fit: BoxFit.scaleDown,
                                           child: StyledText(
                                             controller.getChallengeUserStatus(item.challengeUserState!),
-                                            fontWeight: 600,
+                                            fontWeight: 700,
                                             fontSize: 12,
                                             lineHeight: 14,
                                             color: Colors.black.withOpacity(.6),
@@ -166,7 +166,7 @@ class ChallengesHome extends StatelessWidget {
                                               fit: BoxFit.scaleDown,
                                               child: StyledText(
                                                 controller.getChallengeUserStatus(item.challengeUserState),
-                                                fontWeight: 600,
+                                                fontWeight: 700,
                                                 fontSize: 12,
                                                 lineHeight: 14,
                                                 color: Colors.black,
@@ -246,22 +246,25 @@ class ChallengesHome extends StatelessWidget {
                                   Row(
                                     children: [
                                       ...item.exerciseTypes!.map(
-                                        (type) => Container(
-                                          decoration: BoxDecoration(
-                                            color: Colors.white,
-                                            border: Border.all(width: 1.sp, color: Colors.black),
-                                            borderRadius: BorderRadius.all(
-                                              Radius.circular(15.sp),
+                                        (type) => Padding(
+                                          padding: EdgeInsets.only(right: 5.0.sp),
+                                          child: Container(
+                                            decoration: BoxDecoration(
+                                              color: Colors.white,
+                                              border: Border.all(width: 1.sp, color: Colors.black),
+                                              borderRadius: BorderRadius.all(
+                                                Radius.circular(15.sp),
+                                              ),
                                             ),
-                                          ),
-                                          child: Padding(
-                                            padding: EdgeInsets.symmetric(vertical: 3.0.sp, horizontal: 8.sp),
-                                            child: StyledText(
-                                              controller.getChallengeExerciseType(type),
-                                              color: subBg01Color,
-                                              fontSize: 10,
-                                              fontWeight: 500,
-                                              lineHeight: 12,
+                                            child: Padding(
+                                              padding: EdgeInsets.symmetric(vertical: 3.0.sp, horizontal: 8.sp),
+                                              child: StyledText(
+                                                controller.getChallengeExerciseType(type),
+                                                color: subBg01Color,
+                                                fontSize: 10,
+                                                fontWeight: 600,
+                                                lineHeight: 12,
+                                              ),
                                             ),
                                           ),
                                         ),
@@ -269,10 +272,10 @@ class ChallengesHome extends StatelessWidget {
                                     ],
                                   ),
                                   Padding(
-                                    padding: EdgeInsets.symmetric(horizontal: 3.0.sp),
-                                    child: StyledText(
+                                    padding: EdgeInsets.only(right: 5.0.sp),
+                                    child: const StyledText(
                                       ' · ',
-                                      color: const Color(0xffd9d9d9),
+                                      color: Color(0xffd9d9d9),
                                       fontWeight: 500,
                                       fontSize: 16,
                                       lineHeight: 18,
@@ -316,7 +319,7 @@ class ChallengesHome extends StatelessWidget {
     ChallengesController challengesController = Get.put(ChallengesController());
     return Obx(() {
       return Padding(
-        padding: EdgeInsets.only(left: 23.sp, right: 23.sp, top: 20.sp),
+        padding: EdgeInsets.only(left: 20.sp, right: 20.sp, top: 12.sp),
         child: ConstrainedBox(
           constraints: BoxConstraints(maxHeight: MediaQuery.of(context).size.height),
           child: Column(

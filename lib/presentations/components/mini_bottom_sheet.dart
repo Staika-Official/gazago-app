@@ -617,7 +617,7 @@ Widget renderParticipateInChallenge() {
         ),
         Container(
           width: double.infinity,
-          color: Colors.black,
+          color: subBg01Color,
           child: Padding(
             padding: EdgeInsets.only(top: 10.0.sp, bottom: Platform.isAndroid ? 10.0.sp : 24.sp),
             child: Row(

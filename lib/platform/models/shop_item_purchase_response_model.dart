@@ -15,11 +15,14 @@ class ShopItemPurchaseResponseModel {
   String itemCategory;
   String itemGrade;
   double durability;
-  double abrasionRate;
-  double rewardRate;
-  double staminaReduceRate;
-  String description;
-  InventoryItemStatModel itemStat;
+  double? abrasionRate;
+  double? rewardRate;
+  double? staminaReduceRate;
+  String? description;
+
+  InventoryItemStatModel? itemStat;
+  bool? equippedChallengeItem;
+  bool? challengeItem;
 
   ShopItemPurchaseResponseModel({
     required this.id,
@@ -32,11 +35,13 @@ class ShopItemPurchaseResponseModel {
     required this.itemCategory,
     required this.itemGrade,
     required this.durability,
-    required this.abrasionRate,
-    required this.rewardRate,
-    required this.staminaReduceRate,
-    required this.description,
-    required this.itemStat,
+    this.abrasionRate,
+    this.rewardRate,
+    this.staminaReduceRate,
+    this.description,
+    this.itemStat,
+    this.equippedChallengeItem,
+    this.challengeItem,
   });
 
   factory ShopItemPurchaseResponseModel.fromJson(Map<String, dynamic> json) => _$ShopItemPurchaseResponseModelFromJson(json);

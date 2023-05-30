@@ -989,88 +989,89 @@ void itemPurchaseAlert(ShopDetailController controller, double remainMyTik, trad
               ],
             ),
           ),
-          Padding(
-            padding: EdgeInsets.only(bottom: 30.0.sp),
-            child: Container(
-              decoration: BoxDecoration(
-                color: subBg02Color,
-                borderRadius: BorderRadius.circular(5.sp),
-              ),
-              child: Padding(
-                padding: EdgeInsets.symmetric(vertical: 15.0.sp, horizontal: 20.sp),
-                child: FittedBox(
-                  fit: BoxFit.scaleDown,
-                  child: Column(
-                    children: [
-                      Row(
-                        crossAxisAlignment: CrossAxisAlignment.center,
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          Container(
-                            width: 3,
-                            height: 3,
-                            margin: const EdgeInsets.all(5),
-                            decoration: BoxDecoration(
-                              color: skyBlueColor,
-                              borderRadius: BorderRadius.circular(2),
+          if (controller.selectedItem.value.challengeId != null)
+            Padding(
+              padding: EdgeInsets.only(bottom: 30.0.sp),
+              child: Container(
+                decoration: BoxDecoration(
+                  color: subBg02Color,
+                  borderRadius: BorderRadius.circular(5.sp),
+                ),
+                child: Padding(
+                  padding: EdgeInsets.symmetric(vertical: 15.0.sp, horizontal: 20.sp),
+                  child: FittedBox(
+                    fit: BoxFit.scaleDown,
+                    child: Column(
+                      children: [
+                        Row(
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Container(
+                              width: 3,
+                              height: 3,
+                              margin: const EdgeInsets.all(5),
+                              decoration: BoxDecoration(
+                                color: skyBlueColor,
+                                borderRadius: BorderRadius.circular(2),
+                              ),
                             ),
-                          ),
-                          StyledText(
-                            '해당 아이템은 챌린지 대상 아이템입니다.',
-                            fontSize: 14,
-                            lineHeight: 20,
-                            color: skyBlueColor,
-                          )
-                        ],
-                      ),
-                      Row(
-                        crossAxisAlignment: CrossAxisAlignment.center,
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          Container(
-                            width: 3,
-                            height: 3,
-                            margin: const EdgeInsets.all(5),
-                            decoration: BoxDecoration(
+                            StyledText(
+                              '해당 아이템은 챌린지 대상 아이템입니다.',
+                              fontSize: 14,
+                              lineHeight: 20,
                               color: skyBlueColor,
-                              borderRadius: BorderRadius.circular(2),
+                            )
+                          ],
+                        ),
+                        Row(
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Container(
+                              width: 3,
+                              height: 3,
+                              margin: const EdgeInsets.all(5),
+                              decoration: BoxDecoration(
+                                color: skyBlueColor,
+                                borderRadius: BorderRadius.circular(2),
+                              ),
                             ),
-                          ),
-                          StyledText(
-                            '구매 후 자동으로 장착되고 챌린지에 자동 참여됩니다.',
-                            fontSize: 14,
-                            lineHeight: 20,
-                            color: skyBlueColor,
-                          )
-                        ],
-                      ),
-                      Row(
-                        crossAxisAlignment: CrossAxisAlignment.center,
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          Container(
-                            width: 3,
-                            height: 3,
-                            margin: const EdgeInsets.all(5),
-                            decoration: BoxDecoration(
+                            StyledText(
+                              '구매 후 자동으로 장착되고 챌린지에 자동 참여됩니다.',
+                              fontSize: 14,
+                              lineHeight: 20,
                               color: skyBlueColor,
-                              borderRadius: BorderRadius.circular(2),
+                            )
+                          ],
+                        ),
+                        Row(
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Container(
+                              width: 3,
+                              height: 3,
+                              margin: const EdgeInsets.all(5),
+                              decoration: BoxDecoration(
+                                color: skyBlueColor,
+                                borderRadius: BorderRadius.circular(2),
+                              ),
                             ),
-                          ),
-                          StyledText(
-                            '챌린지 대상 아이템은 1인 당 한개만 구매 가능합니다.',
-                            fontSize: 14,
-                            lineHeight: 20,
-                            color: skyBlueColor,
-                          )
-                        ],
-                      ),
-                    ],
+                            StyledText(
+                              '챌린지 대상 아이템은 1인 당 한개만 구매 가능합니다.',
+                              fontSize: 14,
+                              lineHeight: 20,
+                              color: skyBlueColor,
+                            )
+                          ],
+                        ),
+                      ],
+                    ),
                   ),
                 ),
               ),
             ),
-          ),
           if (controller.selectedItem.value.maxGoProfit! > 0)
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -1436,12 +1437,12 @@ void itemPurchaseCompleteAlert(ShopDetailController controller) {
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                         children: [
-                          if (controller.purchaseCompleteItem.value.itemStat.goProfit! > 0)
+                          if (controller.purchaseCompleteItem.value.itemStat!.goProfit! > 0)
                             Expanded(
                               child: Column(
                                 children: [
                                   StyledText(
-                                    formatDecimalPlaces(controller.purchaseCompleteItem.value.itemStat.goProfit!, 0),
+                                    formatDecimalPlaces(controller.purchaseCompleteItem.value.itemStat!.goProfit!, 0),
                                     fontSize: 26,
                                     lineHeight: 26,
                                     color: skyBlueColor,
@@ -1471,9 +1472,9 @@ void itemPurchaseCompleteAlert(ShopDetailController controller) {
                                 ],
                               ),
                             ),
-                          if (controller.purchaseCompleteItem.value.itemStat.goProfit! > 0 &&
-                              controller.purchaseCompleteItem.value.itemStat.luck! < 1 &&
-                              (controller.purchaseCompleteItem.value.itemStat.durability! > 0 || controller.purchaseCompleteItem.value.itemStat.stamina! > 0))
+                          if (controller.purchaseCompleteItem.value.itemStat!.goProfit! > 0 &&
+                              controller.purchaseCompleteItem.value.itemStat!.luck! < 1 &&
+                              (controller.purchaseCompleteItem.value.itemStat!.durability! > 0 || controller.purchaseCompleteItem.value.itemStat!.stamina! > 0))
                             Container(
                               height: 35.sp,
                               child: VerticalDivider(
@@ -1482,12 +1483,12 @@ void itemPurchaseCompleteAlert(ShopDetailController controller) {
                                 thickness: 1,
                               ),
                             ),
-                          if (controller.purchaseCompleteItem.value.itemStat.durability! > 0)
+                          if (controller.purchaseCompleteItem.value.itemStat!.durability! > 0)
                             Expanded(
                               child: Column(
                                 children: [
                                   StyledText(
-                                    formatDecimalPlaces(controller.purchaseCompleteItem.value.itemStat.durability!, 0),
+                                    formatDecimalPlaces(controller.purchaseCompleteItem.value.itemStat!.durability!, 0),
                                     fontSize: 26,
                                     lineHeight: 26,
                                     fontWeight: 500,
@@ -1518,7 +1519,7 @@ void itemPurchaseCompleteAlert(ShopDetailController controller) {
                                 ],
                               ),
                             ),
-                          if (controller.purchaseCompleteItem.value.itemStat.durability! > 0 && controller.purchaseCompleteItem.value.itemStat.goProfit! < 1)
+                          if (controller.purchaseCompleteItem.value.itemStat!.durability! > 0 && controller.purchaseCompleteItem.value.itemStat!.goProfit! < 1)
                             Container(
                               height: 35.sp,
                               child: VerticalDivider(
@@ -1527,12 +1528,12 @@ void itemPurchaseCompleteAlert(ShopDetailController controller) {
                                 thickness: 1,
                               ),
                             ),
-                          if (controller.purchaseCompleteItem.value.itemStat.stamina! > 0)
+                          if (controller.purchaseCompleteItem.value.itemStat!.stamina! > 0)
                             Expanded(
                               child: Column(
                                 children: [
                                   StyledText(
-                                    formatDecimalPlaces(controller.purchaseCompleteItem.value.itemStat.stamina!, 0),
+                                    formatDecimalPlaces(controller.purchaseCompleteItem.value.itemStat!.stamina!, 0),
                                     fontSize: 26,
                                     lineHeight: 26,
                                     fontWeight: 500,
@@ -1562,7 +1563,7 @@ void itemPurchaseCompleteAlert(ShopDetailController controller) {
                                 ],
                               ),
                             ),
-                          if (controller.purchaseCompleteItem.value.itemStat.luck! > 0)
+                          if (controller.purchaseCompleteItem.value.itemStat!.luck! > 0)
                             Container(
                               height: 35.sp,
                               child: VerticalDivider(
@@ -1571,12 +1572,12 @@ void itemPurchaseCompleteAlert(ShopDetailController controller) {
                                 thickness: 1,
                               ),
                             ),
-                          if (controller.purchaseCompleteItem.value.itemStat.luck! > 0)
+                          if (controller.purchaseCompleteItem.value.itemStat!.luck! > 0)
                             Expanded(
                               child: Column(
                                 children: [
                                   StyledText(
-                                    formatDecimalPlaces(controller.purchaseCompleteItem.value.itemStat.luck!, 0),
+                                    formatDecimalPlaces(controller.purchaseCompleteItem.value.itemStat!.luck!, 0),
                                     fontSize: 26,
                                     lineHeight: 26,
                                     fontWeight: 500,

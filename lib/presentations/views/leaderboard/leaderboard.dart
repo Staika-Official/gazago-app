@@ -632,7 +632,7 @@ class LeaderboardHome extends StatelessWidget {
         mainAxisSize: MainAxisSize.min,
         children: [
           Padding(
-            padding: EdgeInsets.only(top: 25.0.sp, left: 26.sp, right: 30.sp),
+            padding: EdgeInsets.only(top: 25.0.sp, left: 20.sp, right: 20.sp),
             child: Row(
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
@@ -660,7 +660,7 @@ class LeaderboardHome extends StatelessWidget {
             ),
           ),
           Container(
-            margin: EdgeInsets.only(top: 8.sp, left: 25.sp, right: 25.sp),
+            margin: EdgeInsets.only(top: 8.sp, left: 20.sp, right: 20.sp),
             decoration: BoxDecoration(
               color: const Color(0xFF2E3038),
               border: Border.all(
@@ -824,7 +824,7 @@ class LeaderboardHome extends StatelessWidget {
           //   ),
           // ),
           Container(
-            padding: EdgeInsets.only(top: 30.sp, left: 25.sp, right: 18.sp, bottom: 12.sp),
+            padding: EdgeInsets.only(top: 30.sp, left: 20.sp, right: 20.sp, bottom: 12.sp),
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
@@ -833,8 +833,8 @@ class LeaderboardHome extends StatelessWidget {
                     StyledText(
                       controller.checkRewardDate.value,
                       color: Colors.white,
-                      fontSize: 20,
-                      lineHeight: 20,
+                      fontSize: 18,
+                      lineHeight: 18,
                       fontWeight: 600,
                     ),
                     Padding(
@@ -846,8 +846,8 @@ class LeaderboardHome extends StatelessWidget {
                             StyledText(
                               '더보기',
                               color: lightGrayColor,
-                              fontSize: 14,
-                              lineHeight: 16,
+                              fontSize: 12,
+                              lineHeight: 14,
                               fontWeight: 600,
                               letterSpacing: -.1,
                             ),
@@ -930,6 +930,7 @@ class LeaderboardHome extends StatelessWidget {
                         children: [
                           Flexible(
                             child: ListView.separated(
+                              padding: const EdgeInsets.only(bottom: kBottomNavigationBarHeight),
                               controller: controller.leaderboardScrollController,
                               separatorBuilder: (context, index) => const Divider(
                                 thickness: 2,
@@ -942,8 +943,6 @@ class LeaderboardHome extends StatelessWidget {
                               itemBuilder: (context, index) {
                                 if (index < controller.rankings.length) {
                                   return renderRanker(controller.rankings[index], context);
-                                } else {
-                                  return (controller.hasMore.value) ? Padding(padding: EdgeInsets.symmetric(vertical: 20.0.sp), child: const Center(child: CircularProgressIndicator())) : Container();
                                 }
                               },
                             ),

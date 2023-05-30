@@ -197,8 +197,6 @@ class ShopDetailController extends GetxController {
   }
 
   void onClickPurchaseItem(tradeSymbol) {
-    print(double.parse(walletMasterController.stik.value.uiAmountString!));
-    print(walletMasterController.tik.value.uiAmountString);
     if ((tradeSymbol == 'STIK' ? double.parse(walletMasterController.stik.value.uiAmountString!) : double.parse(walletMasterController.tik.value.uiAmountString!)) < selectedItem.value.price) {
       isShortBalance.value = true;
       showTikShortBalancePopup(tradeSymbol);

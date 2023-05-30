@@ -37,6 +37,7 @@ class ChallengeInfo extends StatelessWidget {
                         style: {
                           "p": Style(
                             color: Colors.white,
+                            lineHeight: LineHeight.percent(150),
                           ),
                         },
                       ),
@@ -90,7 +91,7 @@ class ChallengeInfo extends StatelessWidget {
                       ),
 
                     Padding(
-                      padding: EdgeInsets.only(top: 40.0.sp),
+                      padding: EdgeInsets.only(top: 45.0.sp),
                       child: Row(
                         crossAxisAlignment: CrossAxisAlignment.center,
                         children: [
@@ -156,7 +157,7 @@ class ChallengeInfo extends StatelessWidget {
                       ),
                     ),
                     Padding(
-                      padding: EdgeInsets.only(top: 40.0.sp),
+                      padding: EdgeInsets.only(top: 45.0.sp),
                       child: Row(
                         mainAxisSize: MainAxisSize.max,
                         crossAxisAlignment: CrossAxisAlignment.center,
@@ -346,6 +347,7 @@ class ChallengeInfo extends StatelessWidget {
                           style: {
                             "p": Style(
                               color: Colors.white,
+                              lineHeight: LineHeight.percent(150),
                             ),
                           },
                         ),

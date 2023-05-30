@@ -66,7 +66,7 @@ class LeaderboardController extends GetxController with GetTickerProviderStateMi
   @override
   void onClose() {
     leaderboardScrollController.removeListener(() {
-      loadDataOnScroll();
+      // loadDataOnScroll();
       toggleBottomNav(leaderboardScrollController);
     });
     super.onClose();
@@ -80,7 +80,7 @@ class LeaderboardController extends GetxController with GetTickerProviderStateMi
     String month = DateFormat('yyyy-MM-dd').format(today.value!);
     getCalendarStatistics(month);
     leaderboardScrollController.addListener(() {
-      loadDataOnScroll();
+      // loadDataOnScroll();
       toggleBottomNav(leaderboardScrollController);
     });
   }
@@ -99,13 +99,13 @@ class LeaderboardController extends GetxController with GetTickerProviderStateMi
     if (reset) {
       page.value = 0;
       rankings.clear();
-      hasMore.value = true;
+      // hasMore.value = true;
       dataGetLoading.value = true;
     }
     await DashboardService.getDailyRankingList(formattedDate.value, page.value, size.value, successCallback: (List<RankerModel> rankingList) {
-      if (rankingList.length < size.value) {
-        hasMore.value = false;
-      }
+      // if (rankingList.length < size.value) {
+      //   hasMore.value = false;
+      // }
 
       rankingList.asMap().forEach((index, ranker) {
         ranker.rank = (index + 1) + (page.value * size.value);

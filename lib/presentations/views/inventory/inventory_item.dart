@@ -205,7 +205,7 @@ class InventoryItem extends StatelessWidget {
               child: Padding(
                 padding: EdgeInsets.only(top: 5.0.sp),
                 child: TabBarView(
-                  // physics: const NeverScrollableScrollPhysics(),
+                  physics: const NeverScrollableScrollPhysics(),
                   controller: controller.subTabController,
                   children: [
                     ...renderItemList(controller, inventoryController, width),

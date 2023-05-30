@@ -34,15 +34,17 @@ class RankingHome extends StatelessWidget {
               unselectedLabelColor: const Color(0xFFA5A5A5),
               labelStyle: TextStyle(
                 fontWeight: FontWeight.w500,
-                fontSize: 18.sp,
-                height: 20.sp / 18.sp,
+                fontSize: 16.sp,
+                height: 20.sp / 16.sp,
                 letterSpacing: 0.5,
               ),
               tabs: [
                 Tab(
+                  height: 50.sp,
                   text: '통합 리더보드',
                 ),
                 Tab(
+                  height: 50.sp,
                   text: '운동기록',
                 ),
               ],

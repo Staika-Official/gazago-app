@@ -5,6 +5,7 @@ import 'package:gaza_go/constants/enums.dart';
 import 'package:gaza_go/platform/controllers/wallet_master_controller.dart';
 import 'package:gaza_go/platform/controllers/webview_controller.dart';
 import 'package:gaza_go/platform/stores/hive_store.dart';
+import 'package:gaza_go/presentations/styles/colors.dart';
 import 'package:get/get.dart';
 
 class WebView extends StatelessWidget {
@@ -18,7 +19,11 @@ class WebView extends StatelessWidget {
     return AnnotatedRegion(
       value: SystemUiOverlayStyle.dark,
       child: Container(
-        color: Colors.white,
+        color: webViewController.linkUrl.value.contains('leaderboard')
+            ? subBg01Color
+            : webViewController.linkUrl.value.contains('taika')
+                ? Colors.white
+                : Color(0xFF191919),
         child: SafeArea(
           child: InAppWebView(
             key: webViewController.webViewKey,
@@ -27,6 +32,7 @@ class WebView extends StatelessWidget {
               disableContextMenu: true,
               javaScriptEnabled: true,
               resourceCustomSchemes: ['intent'],
+              underPageBackgroundColor: Colors.red,
             ),
             onLoadResourceWithCustomScheme: (controller, url) async {
               await controller.stopLoading();
