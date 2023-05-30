@@ -29,6 +29,7 @@ import 'package:geolocator/geolocator.dart';
 import 'package:get/get.dart';
 import 'package:health/health.dart';
 import 'package:pedometer/pedometer.dart';
+import 'package:throttling/throttling.dart';
 
 mixin ActivityMixin {
   GlobalController globalController = Get.find();
@@ -62,6 +63,7 @@ mixin ActivityMixin {
   final RxBool zeroStaminaNotified = RxBool(false);
   final RxBool lowDurabilityNotified = RxBool(false);
   final RxBool zeroDurabilityNotified = RxBool(false);
+  final Throttling thr = Throttling(duration: const Duration(milliseconds: 1500));
 
   Rx<Color> get exerciseStateTextColor {
     Color color = Colors.white;
@@ -408,7 +410,7 @@ mixin ActivityMixin {
   void continueExerciseFromDialog() {
     Get.back();
     Get.toNamed(Routes.activityActive);
-    continueExercise(source: 'pendingExerciseDialog');
+    thr.throttle(() => continueExercise(source: 'pendingExerciseDialog'));
   }
 
   void continueExercise({String? source}) async {
@@ -428,7 +430,7 @@ mixin ActivityMixin {
     coordinates.addAll(await parseCoordinates(userState.value.exercise!.id));
 
     initStream();
-    updateExercise(source: source);
+    thr.throttle(() => updateExercise(source: source));
     startPeriodicUpdate();
   }
 
@@ -552,7 +554,7 @@ mixin ActivityMixin {
       Duration(milliseconds: updateInterval),
       (timer) {
         validateTimer(timer, HiveKey.updateTimer);
-        updateExercise(source: 'startPeriodicUpdate_${updateTimer.hashCode}');
+        thr.throttle(() => updateExercise(source: 'startPeriodicUpdate_${updateTimer.hashCode}'));
       },
     );
     HiveStore.save(key: HiveKey.updateTimer.name, value: updateTimer.hashCode);
