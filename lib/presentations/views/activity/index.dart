@@ -615,8 +615,8 @@ class ActivityHome extends StatelessWidget {
                                               //   ),
                                               // ),
                                               Positioned(
-                                                bottom: 18,
-                                                right: 15,
+                                                bottom: 12.sp,
+                                                right: 11.sp,
                                                 child: iconChallengeMap,
                                               ),
                                             ],
