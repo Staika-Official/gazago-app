@@ -79,6 +79,8 @@ mixin ChallengeMixin {
       case 'JOIN_CLOSED':
         text = '참가 마감';
         break;
+      default:
+        text = '이거야';
     }
     return text;
   }

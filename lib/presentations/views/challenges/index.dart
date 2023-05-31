@@ -118,7 +118,7 @@ class ChallengesHome extends StatelessWidget {
                                 ),
                               ),
                             ),
-                          if (item.challengeUserState != 'COMPLETE' || item.challengeUserState != 'INCOMPLETE')
+                          if (item.challengeUserState != 'COMPLETE' && item.challengeUserState != 'INCOMPLETE')
                             Positioned(
                               bottom: 12.sp,
                               left: 15.sp,
@@ -165,7 +165,7 @@ class ChallengesHome extends StatelessWidget {
                                             child: FittedBox(
                                               fit: BoxFit.scaleDown,
                                               child: StyledText(
-                                                controller.getChallengeUserStatus(item.challengeUserState),
+                                                controller.getChallengeUserStatus(item.challengeUserState!),
                                                 fontWeight: 700,
                                                 fontSize: 12,
                                                 lineHeight: 14,
@@ -288,7 +288,7 @@ class ChallengesHome extends StatelessWidget {
                                       Padding(
                                         padding: EdgeInsets.only(left: 5.0.sp),
                                         child: StyledText(
-                                          '${item.soldQuantity ?? 0}명 / ${item.quantity}명',
+                                          '${formatDecimalPlaces(item.soldQuantity!.toDouble(), 0) ?? 0}명 / ${formatDecimalPlaces(item.quantity.toDouble(), 0)}명',
                                           color: lightGrayColor,
                                           fontWeight: 500,
                                           fontSize: 12,

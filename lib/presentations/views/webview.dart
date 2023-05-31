@@ -32,7 +32,11 @@ class WebView extends StatelessWidget {
               disableContextMenu: true,
               javaScriptEnabled: true,
               resourceCustomSchemes: ['intent'],
-              underPageBackgroundColor: Colors.red,
+              underPageBackgroundColor: webViewController.linkUrl.value.contains('leaderboard')
+                  ? subBg01Color
+                  : webViewController.linkUrl.value.contains('taika')
+                  ? Colors.white
+                  : Color(0xFF191919),
             ),
             onLoadResourceWithCustomScheme: (controller, url) async {
               await controller.stopLoading();

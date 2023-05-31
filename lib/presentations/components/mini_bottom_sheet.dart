@@ -235,7 +235,6 @@ Widget renderParticipateInChallenge() {
   } else if (challengeState == 'IN_PROGRESS') {
     // 챌린지 진행 중
     if (userState == 'JOINED') {
-      // 참가중
       content = RichText(
         text: TextSpan(
           style: TextStyle(
@@ -284,7 +283,6 @@ Widget renderParticipateInChallenge() {
             )),
       );
     } else if (userState == 'JOIN_AVAILABLE') {
-      // 참가 가능
       if (challengesDetailController.challengeDetails.value.userItem != null) {
         content = RichText(
           text: TextSpan(
