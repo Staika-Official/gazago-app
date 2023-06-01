@@ -1,6 +1,7 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:flutter_svg_provider/flutter_svg_provider.dart' as sp;
 import 'package:gaza_go/platform/controllers/challenges_controller.dart';
 import 'package:gaza_go/platform/helpers/base_helper.dart';
@@ -63,14 +64,18 @@ class ChallengesHome extends StatelessWidget {
                         fit: StackFit.expand,
                         clipBehavior: Clip.none,
                         children: [
-                          item.thumbnailImageUrl != null
-                              ? CachedNetworkImage(
+                          item.thumbnailImageUrl != null && item.thumbnailImageUrl!.contains('.svg')
+                              ? SvgPicture.network(
+                                  fit: BoxFit.cover,
+                                  item.thumbnailImageUrl!,
+                                  placeholderBuilder: (BuildContext context) => const Center(child: SizedBox.square(dimension: 40, child: CircularProgressIndicator())),
+                                )
+                              : CachedNetworkImage(
                                   imageUrl: item.thumbnailImageUrl!,
                                   fit: BoxFit.cover,
                                   placeholder: (context, url) => const Center(child: SizedBox.square(dimension: 40, child: CircularProgressIndicator())),
                                   errorWidget: (context, url, error) => const Center(child: SizedBox.square(dimension: 40, child: CircularProgressIndicator())),
-                                )
-                              : Container(),
+                                ),
                           // Image.asset("assets/images/challenges/@temp_img.png", fit: BoxFit.cover),
                           if (item.challengeActivationType == 'ITEM')
                             Positioned(
@@ -287,13 +292,26 @@ class ChallengesHome extends StatelessWidget {
                                       iconPeople,
                                       Padding(
                                         padding: EdgeInsets.only(left: 5.0.sp),
-                                        child: StyledText(
-                                          '${formatDecimalPlaces(item.soldQuantity!.toDouble(), 0) ?? 0}명 / ${formatDecimalPlaces(item.quantity.toDouble(), 0)}명',
-                                          color: lightGrayColor,
-                                          fontWeight: 500,
-                                          fontSize: 12,
-                                          lineHeight: 13,
-                                          letterSpacing: -.1,
+                                        child: Row(
+                                          children: [
+                                            if (item.challengeState != 'READY')
+                                              StyledText(
+                                                '${formatDecimalPlaces(item.soldQuantity!.toDouble(), 0) ?? 0}명 /',
+                                                color: lightGrayColor,
+                                                fontWeight: 500,
+                                                fontSize: 12,
+                                                lineHeight: 13,
+                                                letterSpacing: -.1,
+                                              ),
+                                            StyledText(
+                                              ' ${formatDecimalPlaces(item.quantity.toDouble(), 0)}명',
+                                              color: lightGrayColor,
+                                              fontWeight: 500,
+                                              fontSize: 12,
+                                              lineHeight: 13,
+                                              letterSpacing: -.1,
+                                            ),
+                                          ],
                                         ),
                                       ),
                                     ],
@@ -416,13 +434,39 @@ class ChallengesHome extends StatelessWidget {
               //     ],
               //   ),
               // ),
+
               challengesController.challengeList.isEmpty
                   ? challengesController.dataGetLoading.value
                       ? Padding(
                           padding: EdgeInsets.symmetric(vertical: 120.0.sp),
                           child: const Center(child: CircularProgressIndicator()),
                         )
-                      : Container()
+                      : Container(
+                          width: double.infinity,
+                          height: 248.sp,
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(10),
+                            color: popupBgColor,
+                          ),
+                          child: Column(
+                            mainAxisSize: MainAxisSize.max,
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              iconNoneChallenges,
+                              Padding(
+                                padding: EdgeInsets.only(top: 22.0.sp),
+                                child: StyledText(
+                                  '진행중인 챌린지가 없습니다\n빠른시일에 만나요!',
+                                  color: deepGrayColor,
+                                  fontSize: 16,
+                                  lineHeight: 20,
+                                  fontWeight: 500,
+                                  textAlign: TextAlign.center,
+                                ),
+                              ),
+                            ],
+                          ),
+                        )
                   : Expanded(
                       child: SingleChildScrollView(
                         child: Padding(

@@ -1,6 +1,7 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:gaza_go/platform/controllers/challenges_detail_controller.dart';
 import 'package:gaza_go/platform/helpers/base_helper.dart';
 import 'package:gaza_go/presentations/components/secondary_appbar.dart';
@@ -249,18 +250,22 @@ class ChallengeDetail extends StatelessWidget {
                           color: subBg01Color,
                           child: Column(
                             children: [
-                              Container(
-                                width: double.infinity,
-                                height: 290.sp,
-                                child: controller.challengeDetails.value.imageUrl != null
-                                    ? CachedNetworkImage(
-                                        imageUrl: controller.challengeDetails.value.imageUrl!,
-                                        fit: BoxFit.cover,
-                                        placeholder: (context, url) => const Center(child: SizedBox.square(dimension: 40, child: CircularProgressIndicator())),
-                                        errorWidget: (context, url, error) => const Center(child: SizedBox.square(dimension: 40, child: CircularProgressIndicator())),
-                                      )
-                                    : const Center(child: SizedBox.square(dimension: 40, child: CircularProgressIndicator())),
-                              ),
+                              if (controller.challengeDetails.value.imageUrl != null)
+                                Container(
+                                    width: double.infinity,
+                                    height: 290.sp,
+                                    child: controller.challengeDetails.value.imageUrl!.contains('.svg')
+                                        ? SvgPicture.network(
+                                            fit: BoxFit.cover,
+                                            controller.challengeDetails.value.imageUrl!,
+                                            placeholderBuilder: (BuildContext context) => const Center(child: SizedBox.square(dimension: 40, child: CircularProgressIndicator())),
+                                          )
+                                        : CachedNetworkImage(
+                                            imageUrl: controller.challengeDetails.value.imageUrl!,
+                                            fit: BoxFit.cover,
+                                            placeholder: (context, url) => const Center(child: SizedBox.square(dimension: 40, child: CircularProgressIndicator())),
+                                            errorWidget: (context, url, error) => const Center(child: SizedBox.square(dimension: 40, child: CircularProgressIndicator())),
+                                          )),
                               // CachedNetworkImage(
                               //   imageUrl: controller.challengeDetails.value.imageUrl!,
                               //   fit: BoxFit.cover,
@@ -424,13 +429,26 @@ class ChallengeDetail extends StatelessWidget {
                                                     iconPeople,
                                                     Padding(
                                                       padding: EdgeInsets.only(left: 5.0.sp),
-                                                      child: StyledText(
-                                                        '${formatDecimalPlaces(double.parse(controller.challengeDetails.value.soldQuantity.toString()), 0)}명 / ${formatDecimalPlaces(double.parse(controller.challengeDetails.value.quantity.toString()), 0)}명',
-                                                        color: lightGrayColor,
-                                                        fontWeight: 500,
-                                                        fontSize: 12,
-                                                        lineHeight: 13,
-                                                        letterSpacing: -.1,
+                                                      child: Row(
+                                                        children: [
+                                                          if (controller.challengeDetails.value.challengeState != 'READY')
+                                                            StyledText(
+                                                              '${formatDecimalPlaces(double.parse(controller.challengeDetails.value.soldQuantity.toString()), 0)}명 /',
+                                                              color: lightGrayColor,
+                                                              fontWeight: 500,
+                                                              fontSize: 12,
+                                                              lineHeight: 13,
+                                                              letterSpacing: -.1,
+                                                            ),
+                                                          StyledText(
+                                                            ' ${formatDecimalPlaces(double.parse(controller.challengeDetails.value.quantity.toString()), 0)}명',
+                                                            color: lightGrayColor,
+                                                            fontWeight: 500,
+                                                            fontSize: 12,
+                                                            lineHeight: 13,
+                                                            letterSpacing: -.1,
+                                                          ),
+                                                        ],
                                                       ),
                                                     ),
                                                   ],

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:gaza_go/constants/routes.dart';
+import 'package:gaza_go/platform/controllers/challenges_detail_controller.dart';
 import 'package:gaza_go/platform/controllers/home_menu_controller.dart';
 import 'package:gaza_go/platform/controllers/loader_controller.dart';
 import 'package:gaza_go/platform/controllers/wallet_master_controller.dart';
@@ -188,6 +189,9 @@ class ShopDetailController extends GetxController {
       itemId,
       successCallback: (InventoryItemModel item) {
         showToastPopup('아이템이 장착되었습니다.');
+        if (Get.isRegistered<ChallengesDetailController>() && Get.find<ChallengesDetailController>().challengeId.value != 0) {
+          Get.find<ChallengesDetailController>().getChallengeDetail();
+        }
       },
     );
   }

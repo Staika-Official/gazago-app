@@ -35,7 +35,11 @@ class ChallengeInfo extends StatelessWidget {
                       Html(
                         data: controller.challengeDetails.value.introduce!,
                         style: {
+                          "*": Style(
+                            lineHeight: LineHeight.number(1),
+                          ),
                           "p": Style(
+                            margin: Margins.zero,
                             color: Colors.white,
                             lineHeight: LineHeight.percent(150),
                           ),
@@ -345,7 +349,11 @@ class ChallengeInfo extends StatelessWidget {
                         child: Html(
                           data: controller.challengeDetails.value.description!,
                           style: {
+                            "*": Style(
+                              lineHeight: LineHeight.number(1),
+                            ),
                             "p": Style(
+                              margin: Margins.zero,
                               color: Colors.white,
                               lineHeight: LineHeight.percent(150),
                             ),

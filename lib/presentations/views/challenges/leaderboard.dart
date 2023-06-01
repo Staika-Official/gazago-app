@@ -416,28 +416,13 @@ class ChallengeLeaderboard extends StatelessWidget {
                               child: Column(
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
-                                  Row(
-                                    crossAxisAlignment: CrossAxisAlignment.end,
-                                    children: [
-                                      StyledText(
-                                        formatDecimalPlaces(double.parse(controller.challengeDetails.value.rewardAmount!.toString()), 0),
-                                        color: Colors.white,
-                                        fontWeight: 600,
-                                        fontSize: 30,
-                                        lineHeight: 34,
-                                      ),
-                                      Padding(
-                                        padding: EdgeInsets.only(left: 2.0.sp),
-                                        child: const StyledText(
-                                          'TIK',
-                                          color: Colors.white,
-                                          fontWeight: 500,
-                                          fontSize: 18,
-                                          lineHeight: 35,
-                                        ),
-                                      ),
-                                    ],
-                                  )
+                                  StyledText(
+                                    formatDecimalPlaces(double.parse(controller.challengeDetails.value.rewardAmount!.toString()), 0),
+                                    color: Colors.white,
+                                    fontWeight: 600,
+                                    fontSize: 30,
+                                    lineHeight: 34,
+                                  ),
                                 ],
                               ),
                             )

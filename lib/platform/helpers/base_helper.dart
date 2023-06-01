@@ -182,6 +182,13 @@ void toggleBottomNav(ScrollController scroll) {
 }
 
 String formatMeterToKilometer(int meter) {
-  String kilometer = (meter / 1000).toString();
+  String kilometer;
+
+  if (meter == 0) {
+    kilometer = '0';
+  } else {
+    kilometer = (meter / 1000).toString();
+  }
+
   return kilometer;
 }

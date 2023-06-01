@@ -181,3 +181,4 @@ SvgPicture iconPeople = SvgPicture.asset('assets/images/challenges/ico_people.sv
 SvgPicture iconChallengeSuccess = SvgPicture.asset('assets/images/challenges/ico_challenge_success.svg', width: 76.sp, height: 76.sp);
 SvgPicture iconChallengeFailure = SvgPicture.asset('assets/images/challenges/ico_challenge_failure.svg', width: 76.sp, height: 76.sp);
 SvgPicture bgChallangeUserStateBox = SvgPicture.asset('assets/images/challenges/ico_challenge_failure.svg', width: 70.sp, height: 24.sp);
+SvgPicture iconNoneChallenges = SvgPicture.asset('assets/images/challenges/ico_none_challenge.svg', width: 82.sp, height: 37.sp);

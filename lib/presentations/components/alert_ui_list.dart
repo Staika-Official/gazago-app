@@ -1932,9 +1932,7 @@ void itemPurchaseCompleteAlert(ShopDetailController controller) {
         child: GazagoButton(
           onTap: () {
             Get.back();
-            if (Get.isRegistered<ChallengesDetailController>() && Get.find<ChallengesDetailController>().challengeId.value != 0) {
-              Get.find<ChallengesDetailController>().getChallengeDetail();
-            }
+
             controller.fetchEquipItem(controller.purchaseCompleteItem.value.id);
           },
           buttonText: '확인',
