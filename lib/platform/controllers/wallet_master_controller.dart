@@ -56,6 +56,7 @@ class WalletMasterController extends GetxController with SolanaMixin, GetTickerP
   final RxBool showStoreErrorText = RxBool(false);
   final RxBool isPurchaseSuccessful = RxBool(false);
   final RxList<ProductDetails> inAppProducts = RxList.empty();
+  final Throttling thr = Throttling(duration: const Duration(milliseconds: 1000));
 
   RxList<AssetTokenBalanceModel> get spendingTokenUiList {
     List<AssetTokenBalanceModel> balanceUiList = List.empty(growable: true);
@@ -159,7 +160,7 @@ class WalletMasterController extends GetxController with SolanaMixin, GetTickerP
       transactionScrollPosition.value = transactionScrollController.position.pixels;
       if (transactionScrollController.position.atEdge && transactionScrollController.position.pixels != 0) {
         if (hasMoreTransactions && !dataGetLoading.value) {
-          Throttling(duration: const Duration(milliseconds: 1000)).throttle(() {
+          thr.throttle(() {
             getSpendingWalletTransactions(selectedAsset.value);
           });
         }
