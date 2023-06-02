@@ -299,6 +299,12 @@ mixin ActivityMixin {
         savedSteps = HiveStore.load(key: HiveKey.savedStepCount.name) ?? 0;
       } else if (exerciseState.value == ExerciseState.ongoing) {
         int dummySteps = HiveStore.load(key: HiveKey.dummyStepCount.name);
+
+        // 모바일 재시작 시 event.steps 가 초기화 됨.
+        if (event.steps < dummySteps) {
+          dummySteps = event.steps;
+        }
+
         int actualSteps = (event.steps - dummySteps) + savedSteps;
         exerciseSteps.value = actualSteps;
         HiveStore.save(key: HiveKey.savedStepCount.name, value: actualSteps);
