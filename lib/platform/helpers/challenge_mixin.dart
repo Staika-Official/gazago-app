@@ -32,6 +32,7 @@ mixin ChallengeMixin {
   late NaverMapController challengeMapController;
   final RxList<Marker> challengeMarkers = RxList.empty();
   final RxList<Marker> selectedChallengeMarkers = RxList.empty();
+  final Throttling thr = Throttling(duration: const Duration(milliseconds: 500));
 
   String getChallengeExerciseType(String type) {
     switch (type) {
@@ -201,7 +202,7 @@ mixin ChallengeMixin {
           Geolocator.distanceBetween(selectedChallenge.value.endLat!, selectedChallenge.value.endLon!, currentLocation.latitude, currentLocation.longitude) < selectedChallenge.value.endRadius!;
       if (hasArrived && userState.exercise!.badgeIssueId == null) {
         if (globalController.internetConnection.value) {
-          Throttling(duration: const Duration(milliseconds: 500)).throttle(() => requestBadgeIssuance(userState));
+          thr.throttle(() => requestBadgeIssuance(userState));
         } else {
           HiveStore.save(key: HiveKey.badgeIssuanceRequested.name, value: true);
         }

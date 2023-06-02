@@ -729,7 +729,7 @@ class ActivityController extends SuperController with ActivityMixin, ChallengeMi
         }
       }
 
-      Throttling(duration: const Duration(milliseconds: 1000)).throttle(() {
+      thr.throttle(() {
         detectChallengeZone(position);
         autoFinishChallenge(position, userState.value);
       });
@@ -826,6 +826,12 @@ class ActivityController extends SuperController with ActivityMixin, ChallengeMi
 
     _adTimer = Timer.periodic(const Duration(seconds: 1), (timer) {
       time.value--;
+
+      if (startAd.value != null || endAd.value != null) {
+        timer.cancel();
+        _adTimer = null;
+      }
+
       if (time.value == 0) {
         adUpdateLocked = true;
         timer.cancel();
@@ -844,8 +850,10 @@ class ActivityController extends SuperController with ActivityMixin, ChallengeMi
   void closeAdSelectPopup() {
     adLoadTimerStop();
     Get.back();
-    startAd.value = null;
-    endAd.value = null;
+    Timer(const Duration(seconds: 1), () {
+      startAd.value = null;
+      endAd.value = null;
+    });
   }
 
   @override
