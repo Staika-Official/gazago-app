@@ -290,8 +290,8 @@ mixin ActivityMixin {
     }
 
     int savedSteps = HiveStore.load(key: HiveKey.savedStepCount.name) ?? 0;
+
     stepSubscription ??= Pedometer.stepCountStream.listen((StepCount event) async {
-      print(event.steps);
       bool isExerciseStarted = HiveStore.load(key: HiveKey.savedStepInitialized.name) ?? false;
       if (!isExerciseStarted) {
         HiveStore.save(key: HiveKey.dummyStepCount.name, value: event.steps);

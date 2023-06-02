@@ -10,7 +10,7 @@ class ActivityApi {
     return await Api.client(
       serviceUrl: '/services/gazago/api',
       showLoading: false,
-    ).get('/challenges?size=9999&page=0');
+    ).get('/challenge-courses?size=9999&page=0');
   }
 
   static Future<Response> getChallengesHierarchy(Position currentLocation) async {
@@ -26,7 +26,7 @@ class ActivityApi {
     return await Api.client(
       serviceUrl: '/services/gazago/api',
       showLoading: false,
-    ).get('/challenges/$id');
+    ).get('/challenge-courses/$id');
   }
 
   static Future<Response> getNewChallenges(String userId) async {
