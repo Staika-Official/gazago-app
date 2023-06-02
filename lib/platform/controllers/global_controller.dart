@@ -29,6 +29,8 @@ class GlobalController extends SuperController {
 
     // await getConnectivity();
     // initConnectivityStream();
+    // 핸드폰이 강제 종료 되었을 경우 새로 더미스텝을 초기화시키기 위한 코드
+    HiveStore.save(key: HiveKey.savedStepInitialized.name, value: false);
     showLoadingDialog.listen((isShow) {});
 
     super.onInit();
