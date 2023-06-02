@@ -433,7 +433,7 @@ class ChallengeDetail extends StatelessWidget {
                                                         children: [
                                                           if (controller.challengeDetails.value.challengeState != 'READY')
                                                             StyledText(
-                                                              '${formatDecimalPlaces(double.parse(controller.challengeDetails.value.soldQuantity.toString()), 0)}명 /',
+                                                              '${formatDecimalPlaces(controller.challengeDetails.value.soldQuantity!.toDouble(), 0)}명 /',
                                                               color: lightGrayColor,
                                                               fontWeight: 500,
                                                               fontSize: 12,
@@ -441,7 +441,7 @@ class ChallengeDetail extends StatelessWidget {
                                                               letterSpacing: -.1,
                                                             ),
                                                           StyledText(
-                                                            ' ${formatDecimalPlaces(double.parse(controller.challengeDetails.value.quantity.toString()), 0)}명',
+                                                            ' ${formatDecimalPlaces(controller.challengeDetails.value.quantity!.toDouble(), 0)}명',
                                                             color: lightGrayColor,
                                                             fontWeight: 500,
                                                             fontSize: 12,
