@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:gaza_go/platform/controllers/challenges_controller.dart';
 import 'package:gaza_go/platform/controllers/loader_controller.dart';
 import 'package:gaza_go/platform/helpers/alert_helper.dart';
 import 'package:gaza_go/platform/helpers/challenge_mixin.dart';
@@ -13,6 +14,7 @@ import 'package:get/get.dart';
 import 'package:intl/intl.dart';
 
 class ChallengesDetailController extends GetxController with GetTickerProviderStateMixin, ChallengeMixin {
+  ChallengesController challengesController = Get.find();
   LoaderController loaderController = Get.put(LoaderController());
   Rx<DateTime?> today = Rx(DateTime.now());
   RxString fromDate = RxString('');
@@ -56,6 +58,7 @@ class ChallengesDetailController extends GetxController with GetTickerProviderSt
 
   @override
   void onClose() {
+    challengesController.getChallengesList();
     super.onClose();
   }
 
