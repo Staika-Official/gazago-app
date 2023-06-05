@@ -340,13 +340,13 @@ class ActivityHome extends StatelessWidget {
 
     final challengeMovie = MovieTween()
       ..scene(begin: const Duration(seconds: 1), duration: const Duration(seconds: 2))
-          .thenTween('width', Tween<double>(begin: 70, end: 270), duration: const Duration(milliseconds: 300), curve: Curves.easeOut)
+          .thenTween('width', Tween<double>(begin: 70.sp, end: 270.sp), duration: const Duration(milliseconds: 300), curve: Curves.easeOut)
           .tween('opacity', Tween<double>(begin: 0, end: 1), curve: Curves.easeOut)
           .thenFor(duration: const Duration(seconds: 3))
-          .thenTween('opacity', Tween<double>(begin: 1, end: 0), duration: const Duration(milliseconds: 300), curve: Curves.easeOut)
-          .tween('width', Tween<double>(begin: 250, end: 70), curve: Curves.easeOut)
-          .thenTween('bottom', Tween<double>(begin: 0, end: 10), duration: const Duration(milliseconds: 300), curve: Curves.easeOut)
-          .thenTween('bottom', Tween<double>(begin: 10, end: 0), duration: const Duration(milliseconds: 300), curve: Curves.easeIn);
+          .thenTween('opacity', Tween<double>(begin: 1.sp, end: 0.sp), duration: const Duration(milliseconds: 300), curve: Curves.easeOut)
+          .tween('width', Tween<double>(begin: 250.sp, end: 70.sp), curve: Curves.easeOut)
+          .thenTween('bottom', Tween<double>(begin: 0, end: 10.sp), duration: const Duration(milliseconds: 300), curve: Curves.easeOut)
+          .thenTween('bottom', Tween<double>(begin: 10.sp, end: 0), duration: const Duration(milliseconds: 300), curve: Curves.easeIn);
 
     return LayoutBuilder(
       builder: (context, constraint) {
@@ -554,10 +554,10 @@ class ActivityHome extends StatelessWidget {
                                         },
                                         child: Container(
                                           width: value.get('width'),
-                                          height: 70,
+                                          height: 70.sp,
                                           decoration: BoxDecoration(
                                             border: Border.all(color: Colors.black, width: 2),
-                                            borderRadius: BorderRadius.circular(35),
+                                            borderRadius: BorderRadius.circular(40.sp),
                                             color: popupBgColor,
                                           ),
                                           child: Stack(
@@ -615,8 +615,8 @@ class ActivityHome extends StatelessWidget {
                                               //   ),
                                               // ),
                                               Positioned(
-                                                bottom: 12.sp,
-                                                right: 11.sp,
+                                                bottom: 14.sp,
+                                                right: 13.sp,
                                                 child: iconChallengeMap,
                                               ),
                                             ],
