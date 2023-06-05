@@ -140,6 +140,7 @@ class LeaderboardController extends GetxController with GetTickerProviderStateMi
     selectedDate.value = selectedDay;
     _fetchMyRank();
     _fetchRankerList(true);
+    toggleBottomNav(leaderboardScrollController);
   }
 
   void calendarChanged(focusedDay) {
