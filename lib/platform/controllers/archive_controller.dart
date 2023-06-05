@@ -101,7 +101,7 @@ class ArchiveController extends GetxController with ScrollMixin {
       Get.back();
       showToastPopup('기록을 성공적으로 삭제했습니다.');
       Timer(const Duration(milliseconds: 200), () {
-        toggleBottomNav(scroll);
+        if (scroll.hasClients) toggleBottomNav(scroll);
       });
     }
 
