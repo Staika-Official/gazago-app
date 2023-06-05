@@ -87,7 +87,7 @@ class ActivityController extends SuperController with ActivityMixin, ChallengeMi
   Control activityLoadControl = Control.play;
   RxBool disableButton = RxBool(false);
   RxBool disableActivityButton = RxBool(true);
-  final Throttling thr = Throttling(duration: const Duration(milliseconds: 1500));
+  final Throttling thr = Throttling(duration: const Duration(milliseconds: 500));
   late AnimationController challengeGuideController;
   final Rx<Control> challengeLoadControl = Rx(Control.play);
   final RxDouble challengeLoadControlPosition = RxDouble(0);
