@@ -581,8 +581,11 @@ class ActivityController extends SuperController with ActivityMixin, ChallengeMi
         if (loadingTime.value >= 3) {
           timer.cancel();
           loadingTimer = null;
+          print('1');
           thr.throttle(() => startExercise(exerciseType, challenge, adId: adId));
+          print('2');
         } else {
+          print('3');
           loadingTime.value++;
           activityLoadControl = Control.playFromStart;
         }

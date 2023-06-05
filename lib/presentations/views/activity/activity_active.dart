@@ -5,6 +5,7 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:gaza_go/constants/enums.dart';
 import 'package:gaza_go/constants/routes.dart';
 import 'package:gaza_go/platform/controllers/activity_controller.dart';
+import 'package:gaza_go/platform/controllers/global_controller.dart';
 import 'package:gaza_go/platform/helpers/base_helper.dart';
 import 'package:gaza_go/presentations/components/circular_button.dart';
 import 'package:gaza_go/presentations/components/default_container.dart';
@@ -268,12 +269,16 @@ class ActivityActive extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    GlobalController globalController = Get.find();
     ActivityController controller = Get.find();
-
     return DefaultContainer(
       backgroundColor: subBg02Color,
       onBackButtonTap: () {
-        Get.back();
+        if (globalController.internetConnection.value) {
+          Get.back();
+        } else {
+          Get.offNamed(Routes.home);
+        }
       },
       titleWidget: Obx(() {
         return Row(

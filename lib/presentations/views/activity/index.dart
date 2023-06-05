@@ -343,7 +343,7 @@ class ActivityHome extends StatelessWidget {
           .thenTween('width', Tween<double>(begin: 70.sp, end: 270.sp), duration: const Duration(milliseconds: 300), curve: Curves.easeOut)
           .tween('opacity', Tween<double>(begin: 0, end: 1), curve: Curves.easeOut)
           .thenFor(duration: const Duration(seconds: 3))
-          .thenTween('opacity', Tween<double>(begin: 1.sp, end: 0.sp), duration: const Duration(milliseconds: 300), curve: Curves.easeOut)
+          .thenTween('opacity', Tween<double>(begin: 1, end: 0), duration: const Duration(milliseconds: 300), curve: Curves.easeOut)
           .tween('width', Tween<double>(begin: 250.sp, end: 70.sp), curve: Curves.easeOut)
           .thenTween('bottom', Tween<double>(begin: 0, end: 10.sp), duration: const Duration(milliseconds: 300), curve: Curves.easeOut)
           .thenTween('bottom', Tween<double>(begin: 10.sp, end: 0), duration: const Duration(milliseconds: 300), curve: Curves.easeIn);
