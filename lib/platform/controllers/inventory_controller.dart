@@ -393,14 +393,16 @@ class InventoryController extends GetxController with LinearProgressMixin, Inven
   void fetchEquipBadge(int badgeId) async {
     await ItemService.fetchEquippedBadge(
       badgeId,
-      successCallback: (equippedBadgeItem) {
+      successCallback: (equippedBadgeItem) async {
         equippedBadge.value = equippedBadgeItem;
+        await getUserEquippedItems();
+        await getUserBadgesList();
         if (selectedBadge.value.badgeId == badgeId) {
           selectedBadge.update((state) {
             state?.state = 'EQUIPPED';
           });
         }
-        getUserBadgesList();
+
         showToastPopup('뱃지가 장착되었습니다.');
       },
     );

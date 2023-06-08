@@ -32,17 +32,17 @@ class InventoryBadge extends StatelessWidget {
                     Opacity(
                       opacity: item.state == 'EQUIPPED' ? 0.5 : 1,
                       child: Container(
-                        height: 100.sp,
-                        padding: EdgeInsets.all(10.0.sp),
+                        height: 90.sp,
+                        // padding: EdgeInsets.all(10.0.sp),
                         child: item.imageUrl!.contains('.svg')
                             ? SvgPicture.network(
-                                fit: BoxFit.fitWidth,
+                                fit: BoxFit.contain,
                                 item.imageUrl!,
                                 placeholderBuilder: (BuildContext context) => Container(padding: const EdgeInsets.all(20.0), child: const CircularProgressIndicator()),
                               )
                             : CachedNetworkImage(
                                 imageUrl: item.imageUrl!,
-                                fit: BoxFit.fitWidth,
+                                fit: BoxFit.contain,
                                 placeholder: (context, url) => const Center(child: SizedBox.square(dimension: 40, child: CircularProgressIndicator())),
                                 errorWidget: (context, url, error) => Image.asset("assets/images/@temp_badge.png"),
                               ),
@@ -54,7 +54,7 @@ class InventoryBadge extends StatelessWidget {
                     //     child: StyledText(item.name!),
                     //   ),
                     Padding(
-                      padding: EdgeInsets.only(top: 5.0.sp),
+                      padding: EdgeInsets.only(top: 10.0.sp),
                       child: item.state == 'EQUIPPED'
                           ? InkWell(
                               onTap: () => null,

@@ -45,8 +45,10 @@ class InventoryHomeController extends GetxController with GetTickerProviderState
 
   @override
   void onClose() {
-    tabController.dispose();
+    tabController.animateTo(0);
+    // tabController.dispose();
     subTabController.dispose();
+
     super.onClose();
   }
 

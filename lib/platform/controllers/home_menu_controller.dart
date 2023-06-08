@@ -8,6 +8,7 @@ import 'package:gaza_go/platform/controllers/activity_controller.dart';
 import 'package:gaza_go/platform/controllers/archive_controller.dart';
 import 'package:gaza_go/platform/controllers/challenges_controller.dart';
 import 'package:gaza_go/platform/controllers/inventory_controller.dart';
+import 'package:gaza_go/platform/controllers/inventory_home_controller.dart';
 import 'package:gaza_go/platform/controllers/leaderboard_controller.dart';
 import 'package:gaza_go/platform/controllers/shop_controller.dart';
 import 'package:gaza_go/platform/controllers/wallet_master_controller.dart';
@@ -90,6 +91,9 @@ class HomeMenuController extends SuperController {
     selectedIndex.value = index;
 
     if (visitedTabs.any((tabIndex) => tabIndex == index) && prevIndex.value != index) {
+      if (index != 1 && Get.isRegistered<InventoryController>()) {
+        Get.find<InventoryHomeController>().tabController.animateTo(0);
+      }
       switch (index) {
         case 0:
           if (Get.isRegistered<ChallengesController>()) Get.find<ChallengesController>().refreshController();
