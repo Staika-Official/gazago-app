@@ -88,7 +88,7 @@ class ChallengesDetailController extends GetxController with GetTickerProviderSt
     // loaderController.isLoading.value = true;
     await ActivityService.getChallengeDetails(challengeId.value, successCallback: (NewChallengeDetailModel data) {
       challengeDetails.value = data;
-
+      print(challengeDetails.value.introduce);
       fromDate.value = DateFormat('M.d (EEE)', 'ko').format(DateTime.parse(data.fromDate!));
       toDate.value = DateFormat('M.d (EEE)', 'ko').format(DateTime.parse(data.toDate!));
       inDays.value = DateTime.parse(data.toDate!).difference(DateTime.parse(data.fromDate!)).inDays;

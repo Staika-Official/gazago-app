@@ -337,41 +337,56 @@ class ActivityActive extends StatelessWidget {
           Obx(() {
             return Padding(
               padding: EdgeInsets.only(top: 30.0.sp, bottom: 20.sp),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.center,
+              child: Stack(
                 children: [
-                  SvgPicture.asset(
-                    'assets/images/common/ico_token_go.svg',
-                    width: 36.sp,
-                    height: 36.sp,
-                  ),
-                  Padding(
-                    padding: EdgeInsets.only(left: 14.0.sp),
-                    child: AnimatedFlipCounter(
-                      value: controller.userState.value.exercise != null ? controller.userState.value.exercise!.rewardGo! : 0,
-                      duration: const Duration(milliseconds: 500),
-                      fractionDigits: 2,
-                      thousandSeparator: ',',
-                      textStyle: TextStyle(
-                        fontWeight: FontWeight.w600,
-                        fontSize: 50.sp,
-                        height: 1,
-                        fontFamily: 'Monserrat',
-                        color: Colors.white,
+                  // Positioned(
+                  //   left: 0,
+                  //   top: 0,
+                  //   child: Lottie.asset(
+                  //     'assets/lottie/activity_luck.json',
+                  //     width: 120,
+                  //     height: 100,
+                  //     repeat: true,
+                  //     frameRate: FrameRate.max,
+                  //   ),
+                  // ),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      SvgPicture.asset(
+                        'assets/images/common/ico_token_go.svg',
+                        width: 36.sp,
+                        height: 36.sp,
                       ),
-                    ),
-                  ),
-                  Padding(
-                    padding: EdgeInsets.only(left: 3.0.sp),
-                    child: StyledText(
-                      'GO',
-                      fontWeight: 500,
-                      fontSize: 35,
-                      lineHeight: 35,
-                      fontFamily: 'Monserrat',
-                      color: deepGrayColor,
-                    ),
-                  ),
+                      Padding(
+                        padding: EdgeInsets.only(left: 14.0.sp),
+                        child: AnimatedFlipCounter(
+                          value: controller.userState.value.exercise != null ? controller.userState.value.exercise!.rewardGo! : 0,
+                          duration: const Duration(milliseconds: 500),
+                          fractionDigits: 2,
+                          thousandSeparator: ',',
+                          textStyle: TextStyle(
+                            fontWeight: FontWeight.w600,
+                            fontSize: 50.sp,
+                            height: 1,
+                            fontFamily: 'Monserrat',
+                            color: Colors.white,
+                          ),
+                        ),
+                      ),
+                      Padding(
+                        padding: EdgeInsets.only(left: 3.0.sp),
+                        child: StyledText(
+                          'GO',
+                          fontWeight: 500,
+                          fontSize: 35,
+                          lineHeight: 35,
+                          fontFamily: 'Monserrat',
+                          color: deepGrayColor,
+                        ),
+                      ),
+                    ],
+                  )
                 ],
               ),
             );

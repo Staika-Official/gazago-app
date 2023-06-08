@@ -33,15 +33,16 @@ class ChallengeInfo extends StatelessWidget {
                   children: [
                     if (controller.challengeDetails.value.introduce != null)
                       Html(
+                        shrinkWrap: true,
                         data: controller.challengeDetails.value.introduce!,
                         style: {
                           "*": Style(
-                            lineHeight: LineHeight.number(1),
+                            lineHeight: LineHeight.percent(130),
                           ),
                           "p": Style(
                             margin: Margins.zero,
                             color: Colors.white,
-                            lineHeight: LineHeight.percent(150),
+                            lineHeight: LineHeight.percent(130),
                           ),
                         },
                       ),
@@ -347,15 +348,16 @@ class ChallengeInfo extends StatelessWidget {
                       Padding(
                         padding: EdgeInsets.only(top: 14.0),
                         child: Html(
+                          shrinkWrap: true,
                           data: controller.challengeDetails.value.description!,
                           style: {
                             "*": Style(
-                              lineHeight: LineHeight.number(1),
+                              lineHeight: LineHeight.percent(130),
                             ),
                             "p": Style(
                               margin: Margins.zero,
                               color: Colors.white,
-                              lineHeight: LineHeight.percent(150),
+                              lineHeight: LineHeight.percent(130),
                             ),
                           },
                         ),

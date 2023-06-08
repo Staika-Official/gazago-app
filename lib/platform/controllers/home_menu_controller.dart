@@ -73,6 +73,8 @@ class HomeMenuController extends SuperController {
       if (initialMessage.data['notificationKey'] == 'DAILY_REWARD_COMPLETED') {
         Get.find<WalletMasterController>().moveToWallet();
       }
+      // 챌린지 보상 푸쉬 알림
+      if (initialMessage.data['notificationKey'] == 'CHALLENGE_REWARD_BADGE_COMPLETED') {}
 
       if (initialMessage.data['notificationKey'] == 'FORCE_LOGOUT') {
         if (HiveStore.load(key: HiveKey.hasForcedLogout.name) != null && HiveStore.load(key: HiveKey.hasForcedLogout.name)) {

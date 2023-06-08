@@ -752,6 +752,74 @@ void showBadgeAcquisitionAlert(InventoryBadgeModel badge, ChallengeModel selecte
   );
 }
 
+void showChallengeBadgeAcquisitionAlert(InventoryBadgeModel badge, ChallengeModel selectedChallenge) {
+  showAlert(
+    isScrollControlled: true,
+    title: '챌린지 뱃지 발급 타이틀',
+    contentWidget: Column(
+      children: [
+        Padding(
+          padding: EdgeInsets.only(top: 30.sp, bottom: 30.sp),
+          child: badge.badge.imageUrl.contains('.svg')
+              ? SvgPicture.network(
+                  fit: BoxFit.contain,
+                  badge.badge.imageUrl,
+                  width: 150.sp,
+                  placeholderBuilder: (BuildContext context) => Container(padding: const EdgeInsets.all(30.0), child: const CircularProgressIndicator()),
+                )
+              : CachedNetworkImage(
+                  imageUrl: badge.badge.imageUrl,
+                  placeholder: (context, url) => const CircularProgressIndicator(),
+                  fit: BoxFit.fitWidth,
+                  width: 150.sp,
+                ),
+        ),
+        Container(
+          padding: EdgeInsets.symmetric(horizontal: 25.sp, vertical: 14.sp),
+          decoration: BoxDecoration(
+            color: subBg01Color,
+            borderRadius: BorderRadius.circular(11.sp),
+          ),
+          child: StyledText(
+            '챌린지 뱃지 발급 서브타이틀',
+            fontSize: 18,
+            lineHeight: 18,
+            fontWeight: 500,
+          ),
+        ),
+        Padding(
+          padding: EdgeInsets.only(top: 20.sp, bottom: 30.sp),
+          child: Text.rich(
+            textAlign: TextAlign.center,
+            style: TextStyle(
+              fontSize: 14.sp,
+              height: 20.sp / 14.sp,
+              fontWeight: FontWeight.w500,
+              color: lightGrayColor,
+            ),
+            TextSpan(
+              children: [
+                TextSpan(text: '내 장비 > 뱃지', style: TextStyle(color: skyBlueColor)),
+                const TextSpan(text: ' 카테고리에서\n획득한 뱃지를 확인하실수 있습니다.'),
+              ],
+            ),
+          ),
+        ),
+      ],
+    ),
+    actions: [
+      Expanded(
+        child: GazagoButton(
+          buttonText: '확인',
+          onTap: () async {
+            Get.back();
+          },
+        ),
+      ),
+    ],
+  );
+}
+
 void showDeleteRecordAlert(ArchiveController controller, int id) {
   showAlert(
     title: '삭제',
