@@ -89,11 +89,11 @@ class HomeMenuController extends SuperController {
   void selectMenu(int index) {
     prevIndex.value = selectedIndex.value;
     selectedIndex.value = index;
-
+    print(index);
+    if (index != 1 && Get.isRegistered<InventoryHomeController>()) {
+      Get.find<InventoryHomeController>().tabController.animateTo(0);
+    }
     if (visitedTabs.any((tabIndex) => tabIndex == index) && prevIndex.value != index) {
-      if (index != 1 && Get.isRegistered<InventoryController>()) {
-        Get.find<InventoryHomeController>().tabController.animateTo(0);
-      }
       switch (index) {
         case 0:
           if (Get.isRegistered<ChallengesController>()) Get.find<ChallengesController>().refreshController();
