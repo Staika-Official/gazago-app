@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:gaza_go/constants/enums.dart';
 import 'package:gaza_go/constants/routes.dart';
+import 'package:gaza_go/platform/controllers/inventory_home_controller.dart';
 import 'package:gaza_go/platform/controllers/wallet_master_controller.dart';
 import 'package:gaza_go/platform/firebase/remote_config.dart';
 import 'package:gaza_go/platform/helpers/alert_helper.dart';
@@ -302,7 +303,8 @@ class InventoryController extends GetxController with LinearProgressMixin, Inven
         }
 
         getUniqueItemList(allItems);
-        calculateTabHeight(0, ItemType.all.name);
+        calculateTabHeight(
+            Get.find<InventoryHomeController>().tabController.index, Get.find<InventoryHomeController>().itemSubTabList[Get.find<InventoryHomeController>().subTabController.index]['itemType']!);
         dataGetLoading.value = false;
       },
     );
@@ -491,10 +493,10 @@ class InventoryController extends GetxController with LinearProgressMixin, Inven
     if (listLength > 0) {
       int gridCount = viewportWidth.value < 350 ? 2 : 3;
       int rowCount = (listLength / gridCount).ceil();
-      double totalPadding = (gridCount - 1) * 10 + 40;
-      double itemWidth = (viewportWidth.value - totalPadding) / gridCount;
+      double totalHorizontalPadding = (gridCount - 1) * 10 + 40;
+      double itemWidth = (viewportWidth.value - totalHorizontalPadding) / gridCount;
       double itemHeight = itemWidth * 1.5;
-      listHeight.value = itemHeight * rowCount + 70;
+      listHeight.value = itemHeight * rowCount + rowCount * 10 + 70;
     } else {
       listHeight.value = 165;
     }
