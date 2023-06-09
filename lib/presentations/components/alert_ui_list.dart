@@ -755,7 +755,7 @@ void showBadgeAcquisitionAlert(InventoryBadgeModel badge, ChallengeModel selecte
 void showChallengeBadgeAcquisitionAlert(InventoryBadgeModel badge, ChallengeModel selectedChallenge) {
   showAlert(
     isScrollControlled: true,
-    title: '챌린지 뱃지 발급 타이틀',
+    title: '완주 뱃지 발급!',
     contentWidget: Column(
       children: [
         Padding(
@@ -781,7 +781,7 @@ void showChallengeBadgeAcquisitionAlert(InventoryBadgeModel badge, ChallengeMode
             borderRadius: BorderRadius.circular(11.sp),
           ),
           child: StyledText(
-            '챌린지 뱃지 발급 서브타이틀',
+            '챌린지 완주 성공',
             fontSize: 18,
             lineHeight: 18,
             fontWeight: 500,
