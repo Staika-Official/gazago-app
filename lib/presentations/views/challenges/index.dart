@@ -77,7 +77,7 @@ class ChallengesHome extends StatelessWidget {
                                   errorWidget: (context, url, error) => const Center(child: SizedBox.square(dimension: 40, child: CircularProgressIndicator())),
                                 ),
                           // Image.asset("assets/images/challenges/@temp_img.png", fit: BoxFit.cover),
-                          if (item.challengeActivationType == 'ITEM')
+                          if (item.challengeActivationType != null)
                             Positioned(
                               top: 12.sp,
                               left: 15.sp,
@@ -89,9 +89,9 @@ class ChallengesHome extends StatelessWidget {
                                   ),
                                 ),
                                 child: Padding(
-                                  padding: EdgeInsets.symmetric(vertical: 8.0, horizontal: 11.0),
+                                  padding: EdgeInsets.symmetric(vertical: 8.0.sp, horizontal: 11.0.sp),
                                   child: StyledText(
-                                    '아이템 장착형',
+                                    item.challengeActivationType == 'ITEM' ? '아이템 장착형' : '참가비 납부형',
                                     fontWeight: 600,
                                     fontSize: 12,
                                     lineHeight: 14,
@@ -100,29 +100,7 @@ class ChallengesHome extends StatelessWidget {
                                 ),
                               ),
                             ),
-                          if (item.challengeActivationType == 'PAY')
-                            Positioned(
-                              top: 12.sp,
-                              left: 15.sp,
-                              child: Container(
-                                decoration: BoxDecoration(
-                                  color: subBg01Color,
-                                  borderRadius: BorderRadius.all(
-                                    Radius.circular(6.sp),
-                                  ),
-                                ),
-                                child: Padding(
-                                  padding: EdgeInsets.symmetric(vertical: 8.0, horizontal: 11.0),
-                                  child: StyledText(
-                                    '참가비 납부',
-                                    fontWeight: 500,
-                                    fontSize: 12,
-                                    lineHeight: 14,
-                                    letterSpacing: -.1,
-                                  ),
-                                ),
-                              ),
-                            ),
+
                           if (item.challengeUserState != 'COMPLETE' && item.challengeUserState != 'INCOMPLETE')
                             Positioned(
                               bottom: 12.sp,
@@ -193,12 +171,33 @@ class ChallengesHome extends StatelessWidget {
                     ),
                     Container(
                       width: double.infinity,
-                      height: 100.sp,
+                      height: 114.sp,
                       child: Padding(
                         padding: EdgeInsets.all(11.0.sp),
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
+                            Padding(
+                              padding: EdgeInsets.only(bottom: 8.0.sp),
+                              child: StyledText(
+                                item.subTitle!,
+                                fontSize: 12,
+                                lineHeight: 13,
+                                fontWeight: 500,
+                                overflowEllipsis: true,
+                                color: lightGrayColor,
+                              ),
+                            ),
+                            Padding(
+                              padding: EdgeInsets.only(bottom: 8.0.sp),
+                              child: StyledText(
+                                item.title,
+                                fontSize: 18,
+                                lineHeight: 20,
+                                fontWeight: 500,
+                                overflowEllipsis: true,
+                              ),
+                            ),
                             Row(
                               children: [
                                 StyledText(
@@ -235,17 +234,7 @@ class ChallengesHome extends StatelessWidget {
                               ],
                             ),
                             Padding(
-                              padding: EdgeInsets.only(top: 8.0.sp),
-                              child: StyledText(
-                                item.title,
-                                fontSize: 18,
-                                lineHeight: 20,
-                                fontWeight: 500,
-                                overflowEllipsis: true,
-                              ),
-                            ),
-                            Padding(
-                              padding: EdgeInsets.only(top: 10.0),
+                              padding: EdgeInsets.only(top: 6.0.sp),
                               child: Row(
                                 children: [
                                   Row(

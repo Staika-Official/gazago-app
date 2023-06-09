@@ -56,25 +56,6 @@ class ChallengeDetail extends StatelessWidget {
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          Container(
-                            decoration: BoxDecoration(
-                              color: Colors.white,
-                              borderRadius: BorderRadius.all(
-                                Radius.circular(6.sp),
-                              ),
-                            ),
-                            child: Padding(
-                              padding: EdgeInsets.symmetric(vertical: 8.0.sp, horizontal: 11.0.sp),
-                              child: StyledText(
-                                controller.challengeDetails.value.challengeActivationType == 'ITEM' ? '아이템 장착형' : '',
-                                fontWeight: 500,
-                                fontSize: 12,
-                                lineHeight: 14,
-                                color: Colors.black,
-                                letterSpacing: -.1,
-                              ),
-                            ),
-                          ),
                           if (controller.challengeDetails.value.title != null)
                             Padding(
                               padding: EdgeInsets.only(top: 15.0.sp, bottom: 10.0.sp),
@@ -250,22 +231,51 @@ class ChallengeDetail extends StatelessWidget {
                           color: subBg01Color,
                           child: Column(
                             children: [
-                              if (controller.challengeDetails.value.imageUrl != null)
-                                Container(
-                                    width: double.infinity,
-                                    height: 290.sp,
-                                    child: controller.challengeDetails.value.imageUrl!.contains('.svg')
-                                        ? SvgPicture.network(
-                                            fit: BoxFit.cover,
-                                            controller.challengeDetails.value.imageUrl!,
-                                            placeholderBuilder: (BuildContext context) => const Center(child: SizedBox.square(dimension: 40, child: CircularProgressIndicator())),
-                                          )
-                                        : CachedNetworkImage(
-                                            imageUrl: controller.challengeDetails.value.imageUrl!,
-                                            fit: BoxFit.cover,
-                                            placeholder: (context, url) => const Center(child: SizedBox.square(dimension: 40, child: CircularProgressIndicator())),
-                                            errorWidget: (context, url, error) => const Center(child: SizedBox.square(dimension: 40, child: CircularProgressIndicator())),
-                                          )),
+                              Container(
+                                width: double.infinity,
+                                height: 290.sp,
+                                child: Stack(
+                                  fit: StackFit.expand,
+                                  children: [
+                                    if (controller.challengeDetails.value.imageUrl != null)
+                                      controller.challengeDetails.value.imageUrl!.contains('.svg')
+                                          ? SvgPicture.network(
+                                              fit: BoxFit.cover,
+                                              controller.challengeDetails.value.imageUrl!,
+                                              placeholderBuilder: (BuildContext context) => const Center(child: SizedBox.square(dimension: 40, child: CircularProgressIndicator())),
+                                            )
+                                          : CachedNetworkImage(
+                                              imageUrl: controller.challengeDetails.value.imageUrl!,
+                                              fit: BoxFit.cover,
+                                              placeholder: (context, url) => const Center(child: SizedBox.square(dimension: 40, child: CircularProgressIndicator())),
+                                              errorWidget: (context, url, error) => const Center(child: SizedBox.square(dimension: 40, child: CircularProgressIndicator())),
+                                            ),
+                                    if (controller.challengeDetails.value.challengeActivationType != null)
+                                      Positioned(
+                                        top: 12.sp,
+                                        left: 15.sp,
+                                        child: Container(
+                                          decoration: BoxDecoration(
+                                            color: subBg01Color,
+                                            borderRadius: BorderRadius.all(
+                                              Radius.circular(6.sp),
+                                            ),
+                                          ),
+                                          child: Padding(
+                                            padding: EdgeInsets.symmetric(vertical: 8.0, horizontal: 11.0),
+                                            child: StyledText(
+                                              controller.challengeDetails.value.challengeActivationType == 'ITEM' ? '아이템 장착형' : '참가비 납부형',
+                                              fontWeight: 600,
+                                              fontSize: 12,
+                                              lineHeight: 14,
+                                              letterSpacing: -.1,
+                                            ),
+                                          ),
+                                        ),
+                                      ),
+                                  ],
+                                ),
+                              ),
                               // CachedNetworkImage(
                               //   imageUrl: controller.challengeDetails.value.imageUrl!,
                               //   fit: BoxFit.cover,
@@ -323,28 +333,21 @@ class ChallengeDetail extends StatelessWidget {
                                     : Column(
                                         crossAxisAlignment: CrossAxisAlignment.start,
                                         children: [
-                                          Container(
-                                            decoration: BoxDecoration(
-                                              color: Colors.white,
-                                              borderRadius: BorderRadius.all(
-                                                Radius.circular(6.sp),
-                                              ),
-                                            ),
-                                            child: Padding(
-                                              padding: EdgeInsets.symmetric(vertical: 8.0.sp, horizontal: 11.0.sp),
+                                          if (controller.challengeDetails.value.subTitle != null || controller.challengeDetails.value.subTitle == '')
+                                            Padding(
+                                              padding: EdgeInsets.only(top: 4.sp, bottom: 10.0.sp),
                                               child: StyledText(
-                                                controller.challengeDetails.value.challengeActivationType == 'ITEM' ? '아이템 장착형' : '',
-                                                fontWeight: 600,
-                                                fontSize: 12,
+                                                controller.challengeDetails.value.subTitle!,
+                                                fontSize: 14,
                                                 lineHeight: 14,
-                                                color: Colors.black,
+                                                fontWeight: 500,
                                                 letterSpacing: -.1,
+                                                color: lightGrayColor,
                                               ),
                                             ),
-                                          ),
                                           if (controller.challengeDetails.value.title != null)
                                             Padding(
-                                              padding: EdgeInsets.only(top: 15.0.sp, bottom: 10.0.sp),
+                                              padding: EdgeInsets.only(bottom: 10.0.sp),
                                               child: StyledText(
                                                 controller.challengeDetails.value.title!,
                                                 fontSize: 20,
@@ -387,7 +390,7 @@ class ChallengeDetail extends StatelessWidget {
                                             ],
                                           ),
                                           Padding(
-                                            padding: EdgeInsets.only(top: 10.0),
+                                            padding: EdgeInsets.only(top: 18.0),
                                             child: Row(
                                               children: [
                                                 if (controller.challengeDetails.value.exerciseTypes != null)
