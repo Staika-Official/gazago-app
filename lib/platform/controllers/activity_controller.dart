@@ -437,7 +437,11 @@ class ActivityController extends SuperController with ActivityMixin, ChallengeMi
       if (!isListeningToLocation.value) {
         initializeActivity();
       }
-      getActivityRoute();
+      if (globalController.internetConnection.value) {
+        getActivityRoute();
+      } else {
+        showToastPopup('원할한 네트워크에서 진행해주세요.');
+      }
     } else {
       await requestPermissionStepByStep();
     }
