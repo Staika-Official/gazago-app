@@ -409,7 +409,7 @@ mixin ActivityMixin {
         showToastPopup('인터넷 상태를 확인해주세요.');
       }
     } else {
-      showToastPopup('지금은 리워드 정산시간입니다.');
+      showToastPopup('리워드 정산 중(11:55~12:05) 입니다.\n잠시 후 시작해주세요.');
     }
   }
 
@@ -588,7 +588,7 @@ mixin ActivityMixin {
           },
         );
 
-        if (adWatchAvailableModel.watchAvailable!) {
+        if (adWatchAvailableModel.watchAvailable! && !batchIsInProgress()) {
           await controller.exerciseEndRewardedAdInit(
             'exerciseEndAd',
           );
@@ -715,7 +715,7 @@ mixin ActivityMixin {
         },
       );
     } else {
-      endExerciseLocally(challenge);
+      showToastPopup('리워드 정산 중(11:55~12:05) 입니다.\n잠시 후 종료해주세요.');
     }
   }
 

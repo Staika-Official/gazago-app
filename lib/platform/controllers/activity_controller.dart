@@ -606,7 +606,7 @@ class ActivityController extends SuperController with ActivityMixin, ChallengeMi
       },
     );
 
-    if (adWatchAvailableModel.watchAvailable!) {
+    if (adWatchAvailableModel.watchAvailable! && !batchIsInProgress()) {
       Get.back();
       Get.dialog(const AdSelect(), barrierDismissible: false, barrierColor: const Color.fromRGBO(0, 0, 0, 0.85));
       if (startAd.value == null) {
