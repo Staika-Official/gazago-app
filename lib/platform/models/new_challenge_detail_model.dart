@@ -1,3 +1,4 @@
+import 'package:gaza_go/platform/models/new_challenge_badge_model.dart';
 import 'package:gaza_go/platform/models/new_challenge_item_model.dart';
 import 'package:gaza_go/platform/models/new_challenge_user_item_model.dart';
 import 'package:json_annotation/json_annotation.dart';
@@ -33,6 +34,10 @@ class NewChallengeDetailModel {
   String? description;
   NewChallengeItemModel? item;
   NewChallengeUserItemModel? userItem;
+  NewChallengeBadgeModel? badge;
+  String? extBtnLabel;
+  String? extTxt;
+  String? extTxtDetail;
 
   NewChallengeDetailModel({
     this.id,
@@ -62,6 +67,10 @@ class NewChallengeDetailModel {
     this.description,
     this.item,
     this.userItem,
+    this.badge,
+    this.extBtnLabel,
+    this.extTxt,
+    this.extTxtDetail,
   });
 
   factory NewChallengeDetailModel.fromJson(Map<String, dynamic> json) => _$NewChallengeDetailModelFromJson(json);

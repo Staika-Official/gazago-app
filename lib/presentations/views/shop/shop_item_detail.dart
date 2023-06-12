@@ -3,6 +3,7 @@ import 'package:custom_rounded_rectangle_border/custom_rounded_rectangle_border.
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:gaza_go/constants/routes.dart';
 import 'package:gaza_go/platform/controllers/shop_detail_controller.dart';
 import 'package:gaza_go/platform/helpers/base_helper.dart';
 import 'package:gaza_go/platform/helpers/inventory_helper.dart';
@@ -466,7 +467,6 @@ class ShopItemDetail extends StatelessWidget {
                             ],
                           ),
                         ),
-
                       // 행운
                       if (controller.selectedItem.value.maxLuck! > 0)
                         Padding(
@@ -565,6 +565,115 @@ class ShopItemDetail extends StatelessWidget {
                                   ),
                                 ),
                               )
+                            ],
+                          ),
+                        ),
+                      if (controller.selectedItem.value.extTxt != null && controller.selectedItem.value.extTxt != '')
+                        Padding(
+                          padding: EdgeInsets.only(top: 20.0.sp),
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Row(
+                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                children: [
+                                  Row(
+                                    children: [
+                                      iconStatEtc,
+                                      Padding(
+                                        padding: EdgeInsets.only(left: 8.0),
+                                        child: StyledText(
+                                          controller.selectedItem.value.extTxt!,
+                                          fontWeight: 500,
+                                          fontSize: 14,
+                                          lineHeight: 15,
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                ],
+                              ),
+                              Padding(
+                                padding: EdgeInsets.only(top: 8.0.sp),
+                                child: ClipRRect(
+                                  child: SizedBox(
+                                    height: 11,
+                                    child: Stack(
+                                      children: [
+                                        Container(
+                                          decoration: BoxDecoration(
+                                            color: subBg02Color,
+                                            borderRadius: BorderRadius.all(
+                                              Radius.circular(50.sp),
+                                            ),
+                                          ),
+                                        ),
+                                        LayoutBuilder(
+                                          builder: (context, constraints) {
+                                            return Container(
+                                              width: double.infinity,
+                                              decoration: BoxDecoration(
+                                                color: Color(0xFFFF922E),
+                                                borderRadius: BorderRadius.all(
+                                                  Radius.circular(30.sp),
+                                                ),
+                                              ),
+                                            );
+                                          },
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                ),
+                              ),
+                              if (controller.selectedItem.value.extBtnLabel != null && controller.selectedItem.value.extBtnLabel != '')
+                                Padding(
+                                  padding: EdgeInsets.only(top: 28.0.sp),
+                                  child: Container(
+                                    width: double.infinity,
+                                    decoration: BoxDecoration(
+                                      color: popupBgColor,
+                                      border: Border.all(
+                                        width: 2,
+                                        style: BorderStyle.solid,
+                                        color: Colors.black,
+                                      ),
+                                      borderRadius: BorderRadius.all(Radius.circular(12.sp)),
+                                      boxShadow: [
+                                        BoxShadow(
+                                          color: Colors.black,
+                                          offset: Offset(0.sp, 3.sp),
+                                        )
+                                      ],
+                                    ),
+                                    child: InkWell(
+                                      onTap: () => Get.toNamed(Routes.webView, arguments: {'linkUrl': controller.selectedItem.value.linkUrl}),
+                                      child: Padding(
+                                        padding: EdgeInsets.symmetric(vertical: 20.0.sp, horizontal: 18.sp),
+                                        child: Center(
+                                          child: StyledText(
+                                            controller.selectedItem.value.extBtnLabel!,
+                                            fontSize: 18,
+                                            fontWeight: 500,
+                                            lineHeight: 18,
+                                            letterSpacing: -.1,
+                                          ),
+                                        ),
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                              if (controller.selectedItem.value.extTxtDetail != null)
+                                Padding(
+                                  padding: EdgeInsets.only(top: 8.0.sp),
+                                  child: StyledText(
+                                    controller.selectedItem.value.extTxtDetail!,
+                                    fontSize: 11,
+                                    letterSpacing: -.1,
+                                    lineHeight: 18,
+                                    color: deepGrayColor,
+                                  ),
+                                )
                             ],
                           ),
                         ),

@@ -24,6 +24,10 @@ class ShopItemModel {
   String? description;
   String? publishType;
   String? tradeSymbol;
+  String? extBtnLabel;
+  String? extTxt;
+  String? extTxtDetail;
+  String? linkUrl;
 
   ShopItemModel({
     required this.id,
@@ -46,6 +50,10 @@ class ShopItemModel {
     this.description,
     this.publishType,
     this.tradeSymbol,
+    this.extBtnLabel,
+    this.extTxt,
+    this.extTxtDetail,
+    this.linkUrl,
   });
 
   factory ShopItemModel.fromJson(Map<String, dynamic> json) => _$ShopItemModelFromJson(json);

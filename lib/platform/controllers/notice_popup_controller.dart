@@ -2,6 +2,7 @@ import 'package:gaza_go/constants/enums.dart';
 import 'package:gaza_go/constants/routes.dart';
 import 'package:gaza_go/platform/controllers/global_controller.dart';
 import 'package:gaza_go/platform/controllers/home_menu_controller.dart';
+import 'package:gaza_go/platform/controllers/leaderboard_controller.dart';
 import 'package:gaza_go/platform/models/notice_popup_model.dart';
 import 'package:gaza_go/platform/services/board_service.dart';
 import 'package:gaza_go/platform/stores/hive_store.dart';
@@ -91,7 +92,7 @@ class NoticePopupController extends GetxController {
     switch (item.openType) {
       case 'IN_APP':
         switch (item.linkUrl) {
-          case 'CHALLENGES':
+          case 'CHALLENGE':
             Get.back();
             Get.find<HomeMenuController>().selectMenu(0);
             break;
@@ -110,6 +111,12 @@ class NoticePopupController extends GetxController {
           case 'RANKING':
             Get.back();
             Get.find<HomeMenuController>().selectMenu(4);
+            if (Get.isRegistered<LeaderboardController>()) {
+              Get.find<LeaderboardController>().tabController.animateTo(1);
+            } else {
+              LeaderboardController leaderboardController = Get.put(LeaderboardController());
+              leaderboardController.tabController.animateTo(1);
+            }
             break;
           case 'WALLET':
             Get.toNamed(Routes.wallet);

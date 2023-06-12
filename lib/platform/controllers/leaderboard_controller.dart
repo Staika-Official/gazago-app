@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
+import 'package:gaza_go/platform/controllers/home_menu_controller.dart';
 import 'package:gaza_go/platform/helpers/base_helper.dart';
 import 'package:gaza_go/platform/models/ranker_model.dart';
 import 'package:gaza_go/platform/models/user_reward_statistics_model.dart';
@@ -55,10 +56,13 @@ class LeaderboardController extends GetxController with GetTickerProviderStateMi
 
   @override
   void onInit() {
+    HomeMenuController controller = Get.find<HomeMenuController>();
     initController();
     tabController = TabController(vsync: this, length: 2, initialIndex: 0)
       ..addListener(() {
-        if (tabController.indexIsChanging && tabController.index == 1) {}
+        if (tabController.indexIsChanging && tabController.index == 0) {
+          controller.hideBottomNav.value = false;
+        }
       });
     super.onInit();
   }

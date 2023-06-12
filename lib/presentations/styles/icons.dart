@@ -106,6 +106,11 @@ SvgPicture iconStatDurabilityLight = SvgPicture.asset(
   width: 16.sp,
   height: 16.sp,
 );
+SvgPicture iconStatEtc = SvgPicture.asset(
+  'assets/images/shop/ico_stat_etc.svg',
+  width: 16.sp,
+  height: 16.sp,
+);
 //mypage
 SvgPicture iconCamera = SvgPicture.asset('assets/images/common/ico_camera.svg', width: 22.sp, height: 22.sp);
 SvgPicture iconApple = SvgPicture.asset('assets/images/preference/ico_apple.svg', width: 12.sp, height: 14.sp);

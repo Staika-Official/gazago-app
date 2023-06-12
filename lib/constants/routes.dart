@@ -24,6 +24,7 @@ import 'package:gaza_go/presentations/views/laboratory/laboratory_end_point.dart
 import 'package:gaza_go/presentations/views/laboratory/laboratory_fake_gps.dart';
 import 'package:gaza_go/presentations/views/laboratory/laboratory_solana_create_wallet.dart';
 import 'package:gaza_go/presentations/views/laboratory/laboratory_solana_transfer.dart';
+import 'package:gaza_go/presentations/views/leaderboard/index.dart';
 import 'package:gaza_go/presentations/views/loading.dart';
 import 'package:gaza_go/presentations/views/login.dart';
 import 'package:gaza_go/presentations/views/on_boarding.dart';
@@ -118,6 +119,7 @@ class Routes {
   static const createWallet = '/wallet/create';
   static const sendStikGoWallet = '/wallet/send_stik_go_wallet';
   static const challengeDetail = '/challenges/challenge_detail';
+  static const leaderboard = '/leaderboard';
 
   static List<GetPage> pages = [
     stepPage(name: Routes.login, page: const Login()),
@@ -179,6 +181,7 @@ class Routes {
     stepPage(name: Routes.createWallet, page: const CreateWallet()),
     stepPage(name: Routes.sendStikGoWallet, page: const SendStikGoWallet()),
     stepPage(name: Routes.challengeDetail, page: const ChallengeDetail()),
+    stepPage(name: Routes.leaderboard, page: const RankingHome()),
   ];
 }
 

@@ -755,7 +755,7 @@ void showBadgeAcquisitionAlert(InventoryBadgeModel badge, ChallengeModel selecte
 void showChallengeBadgeAcquisitionAlert(InventoryBadgeModel badge, ChallengeModel selectedChallenge) {
   showAlert(
     isScrollControlled: true,
-    title: '완주 뱃지 발급!',
+    title: '챌린지 뱃지 발급!',
     contentWidget: Column(
       children: [
         Padding(
@@ -1675,6 +1675,54 @@ void itemPurchaseCompleteAlert(ShopDetailController controller) {
                                 ],
                               ),
                             ),
+                          if (controller.selectedItem.value.extBtnLabel != null && controller.selectedItem.value.extBtnLabel != '')
+                            Padding(
+                              padding: EdgeInsets.only(top: 28.0.sp),
+                              child: Container(
+                                width: double.infinity,
+                                decoration: BoxDecoration(
+                                  color: popupBgColor,
+                                  border: Border.all(
+                                    width: 2,
+                                    style: BorderStyle.solid,
+                                    color: Colors.black,
+                                  ),
+                                  borderRadius: BorderRadius.all(Radius.circular(12.sp)),
+                                  boxShadow: [
+                                    BoxShadow(
+                                      color: Colors.black,
+                                      offset: Offset(0.sp, 3.sp),
+                                    )
+                                  ],
+                                ),
+                                child: InkWell(
+                                  onTap: () => Get.toNamed(Routes.webView, arguments: {'linkUrl': controller.selectedItem.value.linkUrl}),
+                                  child: Padding(
+                                    padding: EdgeInsets.symmetric(vertical: 20.0.sp, horizontal: 18.sp),
+                                    child: Center(
+                                      child: StyledText(
+                                        controller.selectedItem.value.extBtnLabel!,
+                                        fontSize: 18,
+                                        fontWeight: 500,
+                                        lineHeight: 18,
+                                        letterSpacing: -.1,
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                              ),
+                            ),
+                          if (controller.selectedItem.value.extTxtDetail != null)
+                            Padding(
+                              padding: EdgeInsets.only(top: 8.0.sp),
+                              child: StyledText(
+                                controller.selectedItem.value.extTxtDetail!,
+                                fontSize: 11,
+                                letterSpacing: -.1,
+                                lineHeight: 18,
+                                color: deepGrayColor,
+                              ),
+                            )
                         ],
                       ),
                     ),
@@ -2983,10 +3031,12 @@ Future<void> showMainPopupAlert(NoticePopupController noticePopupController) asy
                           width: double.infinity,
                           child: InkWell(
                             onTap: () => noticePopupController.moveToWebView(item),
-                            child: Image.network(
-                              item.imageUrlKo!,
-                              width: double.infinity,
-                            ),
+                            child: item.imageUrlKo != null
+                                ? Image.network(
+                                    item.imageUrlKo!,
+                                    width: double.infinity,
+                                  )
+                                : Container(),
                           ),
                         ))
                     .toList(),
