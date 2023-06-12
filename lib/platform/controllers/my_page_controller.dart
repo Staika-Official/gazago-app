@@ -60,7 +60,7 @@ class MyPageController extends GetxController {
   }
 
   Future<void> modifyMyAccountInfo() async {
-    String? uploadUrl;
+    String? uploadUrl = profile.value.profileImageUrl;
 
     if (pickedImage.value != null) {
       String imagePath = pickedImage.value!.path;
