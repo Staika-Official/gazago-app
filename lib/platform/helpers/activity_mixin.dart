@@ -29,6 +29,7 @@ import 'package:geolocator/geolocator.dart';
 import 'package:get/get.dart';
 import 'package:health/health.dart';
 import 'package:pedometer/pedometer.dart';
+import 'package:simple_animations/animation_builder/custom_animation_builder.dart';
 import 'package:throttling/throttling.dart';
 
 mixin ActivityMixin {
@@ -64,6 +65,8 @@ mixin ActivityMixin {
   final RxBool lowDurabilityNotified = RxBool(false);
   final RxBool zeroDurabilityNotified = RxBool(false);
   final Throttling thr = Throttling(duration: const Duration(milliseconds: 1500));
+  final Rx<Control> luckLoadControl = Rx(Control.stop);
+  RxBool isShowLuckAnimation = RxBool(false);
 
   Rx<Color> get exerciseStateTextColor {
     Color color = Colors.white;
@@ -359,6 +362,7 @@ mixin ActivityMixin {
   void startExercise(ExerciseType exerciseType, ChallengeModel? challenge, {String? adId}) async {
     String deviceId = HiveStore.loadString(key: HiveKey.uuid.name)!;
     HiveStore.save(key: HiveKey.lastUpdatedStepCount.name, value: 0);
+
     if (Get.isDialogOpen != null && Get.isDialogOpen!) Get.until((route) => Get.isDialogOpen == false);
     if (isFakeGps.value && !isTestingFakeGps()) {
       return;
@@ -519,6 +523,9 @@ mixin ActivityMixin {
             source: source,
             successCallback: (CurrentUserStateModel newUserState) {
               updateLocalUserState(newUserState);
+              if (newUserState.exercise!.luckApplyRewardGo! > 0 && newUserState.exercise!.luckOccurred!) {
+                showLuckAnimation();
+              }
 
               if (userState.value.state!.stamina! < 30) {
                 if (userState.value.state!.stamina! == 0 && !zeroStaminaNotified.value) {
@@ -805,5 +812,15 @@ mixin ActivityMixin {
 
   bool isTestingFakeGps() {
     return HiveStore.load(key: HiveKey.allowFakeGpsTest.name) ?? false;
+  }
+
+  void showLuckAnimation() async {
+    luckLoadControl.value = Control.playReverseFromEnd;
+    isShowLuckAnimation.value = true;
+  }
+
+  void initLuckAnimation() async {
+    luckLoadControl.value = Control.stop;
+    isShowLuckAnimation.value = false;
   }
 }

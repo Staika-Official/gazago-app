@@ -71,6 +71,14 @@ class UserExerciseModel {
   double? lastLongitude;
   @HiveField(31)
   List<List>? latestLocations;
+  @HiveField(32)
+  int? luckOccurredCount;
+  @HiveField(33)
+  double? luckApplyTotalRewardGo;
+  @HiveField(34)
+  bool? luckOccurred;
+  @HiveField(35)
+  double? luckApplyRewardGo;
 
   UserExerciseModel({
     this.id,
@@ -105,6 +113,10 @@ class UserExerciseModel {
     this.lastLatitude,
     this.lastLongitude,
     this.latestLocations,
+    this.luckOccurredCount,
+    this.luckApplyTotalRewardGo,
+    this.luckOccurred,
+    this.luckApplyRewardGo,
   });
 
   factory UserExerciseModel.fromJson(Map<String, dynamic> json) => _$UserExerciseModelFromJson(json);

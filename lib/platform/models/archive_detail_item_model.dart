@@ -33,6 +33,8 @@ class ArchiveDetailItemModel {
   String? description;
   String? province;
   String? badgeImageUrl;
+  int? luckOccurredCount;
+  double? luckApplyRewardGo;
 
   ArchiveDetailItemModel({
     this.id,
@@ -64,6 +66,8 @@ class ArchiveDetailItemModel {
     this.description,
     this.province,
     this.badgeImageUrl,
+    this.luckOccurredCount,
+    this.luckApplyRewardGo,
   });
 
   factory ArchiveDetailItemModel.fromJson(Map<String, dynamic> json) => _$ArchiveDetailItemModelFromJson(json);

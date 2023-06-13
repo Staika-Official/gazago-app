@@ -49,6 +49,7 @@ import 'package:throttling/throttling.dart';
 class ActivityController extends SuperController with ActivityMixin, ChallengeMixin, GetTickerProviderStateMixin, AdmobMixin {
   final WalletMasterController walletMasterController = Get.find();
 
+  RxDouble testNum = RxDouble(0.0);
   GlobalKey webViewKey = GlobalKey();
   final RxString noticeUrl = RxString('');
   //rewarded.dart
@@ -141,6 +142,7 @@ class ActivityController extends SuperController with ActivityMixin, ChallengeMi
       }
       await loadChallenges();
     });
+
     await initPlatformState();
   }
 
