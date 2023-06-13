@@ -241,6 +241,25 @@ class ArchiveDetail extends StatelessWidget {
               child: Row(
                 children: [
                   const StyledText(
+                    '행운 효과',
+                    fontWeight: 600,
+                    fontSize: 16,
+                  ),
+                  const Spacer(),
+                  StyledText(
+                    '${controller.selectedItem.value.luckOccurredCount ?? 0} 회',
+                    fontWeight: 500,
+                    fontSize: 16,
+                    color: const Color(0xFF7D7D84),
+                  ),
+                ],
+              ),
+            ),
+            Padding(
+              padding: EdgeInsets.symmetric(vertical: 10.0.sp, horizontal: 20.0.sp),
+              child: Row(
+                children: [
+                  const StyledText(
                     '소비 체력',
                     fontWeight: 600,
                     fontSize: 16,

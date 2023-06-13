@@ -14,6 +14,9 @@ import 'package:gaza_go/presentations/styles/icons.dart';
 import 'package:gaza_go/presentations/styles/styled_text.dart';
 import 'package:gaza_go/presentations/views/activity/activity_map.dart';
 import 'package:get/get.dart';
+import 'package:lottie/lottie.dart';
+import 'package:simple_animations/animation_builder/custom_animation_builder.dart';
+import 'package:simple_animations/movie_tween/movie_tween.dart';
 
 class ActivityActive extends StatelessWidget {
   const ActivityActive({Key? key}) : super(key: key);
@@ -271,6 +274,13 @@ class ActivityActive extends StatelessWidget {
   Widget build(BuildContext context) {
     GlobalController globalController = Get.find();
     ActivityController controller = Get.find();
+
+    final luckMovie = MovieTween()
+      ..scene(begin: const Duration(seconds: 0), duration: const Duration(seconds: 2))
+          .tween('opacity', Tween<double>(begin: 0, end: 1), curve: Curves.easeOut)
+          .thenFor(duration: const Duration(seconds: 1))
+          .thenTween('opacity', Tween<double>(begin: 1, end: 0), duration: const Duration(milliseconds: 300), curve: Curves.easeOut);
+
     return DefaultContainer(
       backgroundColor: subBg02Color,
       onBackButtonTap: () {
@@ -312,318 +322,405 @@ class ActivityActive extends StatelessWidget {
           ],
         );
       }),
-      child: Column(
-        mainAxisSize: MainAxisSize.max,
-        children: [
-          Obx(() {
-            return Container(
-              child: controller.selectedChallenge.value.id != null
-                  ? Container(
-                      padding: EdgeInsets.symmetric(horizontal: 14.sp, vertical: 7.sp),
-                      decoration: BoxDecoration(
-                        color: const Color(0xff1b1b1b),
-                        borderRadius: BorderRadius.circular(50.sp),
-                      ),
-                      child: StyledText(
-                        '${controller.selectedChallenge.value.firstName} | ${controller.selectedChallenge.value.secondName}',
-                        fontSize: 14,
-                        fontWeight: 500,
-                        color: deepGrayColor,
-                      ),
-                    )
-                  : Container(),
-            );
-          }),
-          Obx(() {
-            return Padding(
-              padding: EdgeInsets.only(top: 30.0.sp, bottom: 20.sp),
-              child: Stack(
+      child: Container(
+          height: double.infinity,
+          child: Stack(
+            children: [
+              Column(
+                mainAxisSize: MainAxisSize.max,
                 children: [
-                  // Positioned(
-                  //   left: 0,
-                  //   top: 0,
-                  //   child: Lottie.asset(
-                  //     'assets/lottie/activity_luck.json',
-                  //     width: 120,
-                  //     height: 100,
-                  //     repeat: true,
-                  //     frameRate: FrameRate.max,
-                  //   ),
-                  // ),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      SvgPicture.asset(
-                        'assets/images/common/ico_token_go.svg',
-                        width: 36.sp,
-                        height: 36.sp,
-                      ),
-                      Padding(
-                        padding: EdgeInsets.only(left: 14.0.sp),
-                        child: AnimatedFlipCounter(
-                          value: controller.userState.value.exercise != null ? controller.userState.value.exercise!.rewardGo! : 0,
-                          duration: const Duration(milliseconds: 500),
-                          fractionDigits: 2,
-                          thousandSeparator: ',',
-                          textStyle: TextStyle(
-                            fontWeight: FontWeight.w600,
-                            fontSize: 50.sp,
-                            height: 1,
-                            fontFamily: 'Monserrat',
-                            color: Colors.white,
-                          ),
-                        ),
-                      ),
-                      Padding(
-                        padding: EdgeInsets.only(left: 3.0.sp),
-                        child: StyledText(
-                          'GO',
-                          fontWeight: 500,
-                          fontSize: 35,
-                          lineHeight: 35,
-                          fontFamily: 'Monserrat',
-                          color: deepGrayColor,
-                        ),
-                      ),
-                    ],
-                  )
-                ],
-              ),
-            );
-          }),
-          Padding(
-              padding: EdgeInsets.symmetric(horizontal: 20.0.sp, vertical: 10.sp),
-              child: Container(
-                width: double.infinity.sp,
-                padding: EdgeInsets.symmetric(vertical: 12.sp, horizontal: 24.sp),
-                decoration: BoxDecoration(
-                  color: speedBlackColor,
-                  borderRadius: BorderRadius.circular(50.sp),
-                ),
-                child: LayoutBuilder(builder: (context, constraints) {
-                  return Obx(() {
-                    return Stack(
-                      clipBehavior: Clip.none,
-                      children: [
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          crossAxisAlignment: CrossAxisAlignment.end,
-                          children: [
-                            ...renderGauge(controller.exerciseStateGaugeColor.value),
-                          ],
-                        ),
-                        Positioned(
-                          top: -26.sp,
-                          left: calculateGaugePosition(constraints, controller.realTimeSpeed.value),
-                          child: GaugeCursor(
-                            color: controller.exerciseStateGaugeColor.value,
-                            speed: controller.realTimeSpeed.value,
-                          ),
-                        ),
-                        Positioned(
-                          bottom: -30.sp,
-                          left: ((constraints.maxWidth / 60) * 8).sp,
-                          child: Row(
-                            children: [
-                              StyledText(
-                                '1-7',
-                                color: deepGrayColor,
+                  Obx(() {
+                    return Container(
+                      child: controller.selectedChallenge.value.id != null
+                          ? Container(
+                              padding: EdgeInsets.symmetric(horizontal: 14.sp, vertical: 7.sp),
+                              decoration: BoxDecoration(
+                                color: const Color(0xff1b1b1b),
+                                borderRadius: BorderRadius.circular(50.sp),
+                              ),
+                              child: StyledText(
+                                '${controller.selectedChallenge.value.firstName} | ${controller.selectedChallenge.value.secondName}',
                                 fontSize: 14,
-                                lineHeight: 12,
-                                fontWeight: 700,
-                                fontFamily: 'Monserrat',
+                                fontWeight: 500,
+                                color: deepGrayColor,
                               ),
-                              Padding(
-                                padding: EdgeInsets.only(left: 3.sp),
-                                child: StyledText(
-                                  'km/h',
-                                  color: deepGrayColor,
-                                  fontSize: 12,
-                                  lineHeight: 12,
-                                  fontWeight: 500,
-                                  fontFamily: 'Monserrat',
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
-                      ],
+                            )
+                          : Container(),
                     );
-                  });
-                }),
-              )),
-          Padding(
-            padding: EdgeInsets.only(
-              left: 30.sp,
-              right: 30.sp,
-              top: 60.sp,
-              bottom: 25.sp,
-            ),
-            child: LayoutBuilder(builder: (context, constraints) {
-              return Obx(() {
-                return Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    SizedBox(
-                      width: constraints.maxWidth / 3,
-                      child: Column(
-                        children: [
-                          SvgPicture.asset('assets/images/activity/ico_time.svg'),
-                          Padding(
-                            padding: EdgeInsets.only(top: 10.sp),
-                            child: StyledText(
-                              formatSeconds(controller.exerciseTime.value),
-                              fontWeight: 600,
-                              fontSize: 16,
-                              lineHeight: 16,
-                              color: Colors.white,
-                            ),
-                          )
-                        ],
-                      ),
-                    ),
-                    SizedBox(
-                      width: constraints.maxWidth / 3,
-                      child: Column(
-                        children: [
-                          SvgPicture.asset('assets/images/activity/ico_distance.svg'),
-                          Padding(
-                            padding: EdgeInsets.only(top: 10.sp),
-                            child: StyledText(
-                              '${formatDecimalPlaces(controller.totalDistance.value, 2)}km',
-                              fontWeight: 600,
-                              fontSize: 16,
-                              lineHeight: 16,
-                              color: Colors.white,
-                            ),
-                          )
-                        ],
-                      ),
-                    ),
-                    SizedBox(
-                      width: constraints.maxWidth / 3,
-                      child: Column(
-                        children: [
-                          SvgPicture.asset('assets/images/activity/ico_step.svg'),
-                          Padding(
-                            padding: EdgeInsets.only(top: 10.sp),
-                            child: StyledText(
-                              controller.exerciseSteps.value.toString(),
-                              fontWeight: 600,
-                              fontSize: 16,
-                              lineHeight: 16,
-                              color: Colors.white,
-                            ),
-                          )
-                        ],
-                      ),
-                    )
-                  ],
-                );
-              });
-            }),
-          ),
-          Padding(
-            padding: EdgeInsets.only(
-              left: 30.sp,
-              right: 30.sp,
-            ),
-            child: Obx(() {
-              return Column(
-                children: [
-                  ...renderStatList(controller, context),
-                ],
-              );
-            }),
-          ),
-          Expanded(
-            child: Align(
-              alignment: Alignment.bottomCenter,
-              child: Padding(
-                padding: EdgeInsets.only(left: 35.sp, right: 35.sp, bottom: 100.sp),
-                child: Obx(() {
-                  return Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      CircularButton(
-                        radius: 50,
-                        color: Colors.white,
-                        onTap: () => controller.showExerciseMap(const ActivityMap()),
-                        child: SvgPicture.asset(
-                          'assets/images/activity/ico_map.svg',
-                        ),
-                      ),
-                      [ExerciseState.ongoing].any((state) => controller.exerciseState.value == state)
-                          ? Row(
+                  }),
+                  Obx(() {
+                    return Stack(children: [
+                      Padding(
+                        padding: EdgeInsets.only(top: 0.0.sp, bottom: 20.sp),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Stack(
                               children: [
-                                GestureDetector(
-                                  onTapDown: (tapDownDetail) => controller.onTapDownStop(tapDownDetail, controller.selectedChallenge.value, controller: controller),
-                                  onTapUp: (tapUpDetail) => controller.onTapUpStop(tapUpDetail),
-                                  child: Stack(
+                                Obx(() {
+                                  return CustomAnimationBuilder<Movie>(
+                                      control: controller.luckLoadControl.value,
+                                      tween: luckMovie,
+                                      duration: luckMovie.duration,
+                                      onCompleted: () {
+                                        controller.initLuckAnimation();
+                                      },
+                                      builder: (context, value, _) {
+                                        return Container(
+                                          child: Opacity(
+                                            opacity: value.get('opacity'),
+                                            child: Column(
+                                              crossAxisAlignment: CrossAxisAlignment.start,
+                                              children: [
+                                                Container(
+                                                  decoration: BoxDecoration(
+                                                    color: Colors.black,
+                                                    borderRadius: BorderRadius.circular(50),
+                                                  ),
+                                                  child: Padding(
+                                                    padding: EdgeInsets.only(left: 14, right: 14, top: 10, bottom: 10.0),
+                                                    child: Row(
+                                                      children: [
+                                                        iconStatLuck,
+                                                        Padding(
+                                                          padding: EdgeInsets.only(left: 5.0.sp, right: 5.0.sp),
+                                                          child: StyledText(
+                                                            '행운효과',
+                                                            color: pinkColor,
+                                                            fontSize: 14,
+                                                            fontWeight: 500,
+                                                            letterSpacing: -.1,
+                                                          ),
+                                                        ),
+                                                        if (controller.userState.value.exercise != null)
+                                                          StyledText(
+                                                            '+${controller.userState.value.exercise!.luckApplyRewardGo}',
+                                                            fontSize: 14,
+                                                            fontWeight: 700,
+                                                            letterSpacing: -.1,
+                                                          ),
+                                                        StyledText(
+                                                          ' GO',
+                                                          fontSize: 14,
+                                                          fontWeight: 700,
+                                                          letterSpacing: -.1,
+                                                        ),
+                                                      ],
+                                                    ),
+                                                  ),
+                                                ),
+                                                Padding(
+                                                  padding: EdgeInsets.only(left: 25.0.sp),
+                                                  child: ClipPath(
+                                                    clipper: CustomShapeClipper(),
+                                                    clipBehavior: Clip.antiAlias,
+                                                    child: Container(
+                                                      width: 10.0.sp,
+                                                      height: 7.0.sp,
+                                                      color: Colors.black,
+                                                    ),
+                                                  ),
+                                                )
+                                              ],
+                                            ),
+                                          ),
+                                        );
+                                      });
+                                }),
+                                Padding(
+                                  padding: EdgeInsets.only(top: 43.0.sp, left: 12.sp, right: 12.sp),
+                                  child: Row(
+                                    mainAxisAlignment: MainAxisAlignment.center,
                                     children: [
-                                      CircularButton(
-                                        radius: 78.sp,
-                                        color: Colors.white,
-                                        child: Icon(Icons.stop, color: Colors.black, size: 35.sp),
+                                      SvgPicture.asset(
+                                        'assets/images/common/ico_token_go.svg',
+                                        width: 36.sp,
+                                        height: 36.sp,
                                       ),
-                                      Positioned(
-                                        top: 0,
-                                        left: 0,
-                                        child: Container(
-                                          width: 78.sp,
-                                          height: 78.sp,
-                                          padding: EdgeInsets.all(5.sp),
-                                          child: CircularProgressIndicator(
-                                            strokeWidth: 6.sp,
-                                            color: skyBlueColor,
-                                            value: controller.stopProgress.value,
+                                      Padding(
+                                        padding: EdgeInsets.only(left: 14.0.sp),
+                                        child: AnimatedFlipCounter(
+                                          value: controller.userState.value.exercise != null ? controller.userState.value.exercise!.rewardGo! : 0,
+                                          duration: const Duration(milliseconds: 500),
+                                          fractionDigits: 2,
+                                          thousandSeparator: ',',
+                                          textStyle: TextStyle(
+                                            fontWeight: FontWeight.w600,
+                                            fontSize: 50.sp,
+                                            height: 1,
+                                            fontFamily: 'Monserrat',
+                                            color: Colors.white,
                                           ),
                                         ),
-                                      )
+                                      ),
+                                      Padding(
+                                        padding: EdgeInsets.only(left: 3.0.sp),
+                                        child: StyledText(
+                                          'GO',
+                                          fontWeight: 500,
+                                          fontSize: 35,
+                                          lineHeight: 35,
+                                          fontFamily: 'Monserrat',
+                                          color: deepGrayColor,
+                                        ),
+                                      ),
                                     ],
                                   ),
                                 ),
-                                Padding(
-                                  padding: EdgeInsets.only(left: 11.sp),
-                                  child: CircularButton(
-                                    radius: 78.sp,
-                                    color: const Color(0xffFF2222),
-                                    onTap: () => controller.pauseExercise(),
-                                    child: Icon(Icons.pause, color: Colors.white, size: 35.sp),
-                                  ),
-                                )
                               ],
-                            )
-                          : CircularButton(
-                              radius: 90.sp,
-                              color: const Color(0xffFF2222),
-                              onTap: () {
-                                if (controller.exerciseState.value == ExerciseState.paused) {
-                                  controller.thr.throttle(() => controller.continueExercise());
-                                } else {
-                                  controller.thr.throttle(() => controller.startExercise(controller.selectedExerciseType.value, controller.selectedChallenge.value));
-                                }
-                              },
-                              child: Icon(Icons.play_arrow, color: Colors.white, size: 35.sp),
                             ),
-                      CircularButton(
-                        radius: 50,
-                        color: Colors.white,
-                        onTap: () {
-                          Get.toNamed(Routes.equippedItems);
-                        },
-                        child: SvgPicture.asset(
-                          'assets/images/activity/ico_item.svg',
+                          ],
                         ),
                       ),
-                    ],
-                  );
-                }),
+                      if (controller.isShowLuckAnimation.value)
+                        Positioned(
+                          left: 0.sp,
+                          top: 0,
+                          child: Lottie.asset(
+                            'assets/lottie/activity_luck.json',
+                            width: 250,
+                            height: 150,
+                            repeat: false,
+                            frameRate: FrameRate.max,
+                          ),
+                        ),
+                    ]);
+                  }),
+                  Padding(
+                      padding: EdgeInsets.symmetric(horizontal: 20.0.sp, vertical: 10.sp),
+                      child: Container(
+                        width: double.infinity.sp,
+                        padding: EdgeInsets.symmetric(vertical: 12.sp, horizontal: 24.sp),
+                        decoration: BoxDecoration(
+                          color: speedBlackColor,
+                          borderRadius: BorderRadius.circular(50.sp),
+                        ),
+                        child: LayoutBuilder(builder: (context, constraints) {
+                          return Obx(() {
+                            return Stack(
+                              clipBehavior: Clip.none,
+                              children: [
+                                Row(
+                                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                  crossAxisAlignment: CrossAxisAlignment.end,
+                                  children: [
+                                    ...renderGauge(controller.exerciseStateGaugeColor.value),
+                                  ],
+                                ),
+                                Positioned(
+                                  top: -26.sp,
+                                  left: calculateGaugePosition(constraints, controller.realTimeSpeed.value),
+                                  child: GaugeCursor(
+                                    color: controller.exerciseStateGaugeColor.value,
+                                    speed: controller.realTimeSpeed.value,
+                                  ),
+                                ),
+                                Positioned(
+                                  bottom: -30.sp,
+                                  left: ((constraints.maxWidth / 60) * 8).sp,
+                                  child: Row(
+                                    children: [
+                                      StyledText(
+                                        '1-7',
+                                        color: deepGrayColor,
+                                        fontSize: 14,
+                                        lineHeight: 12,
+                                        fontWeight: 700,
+                                        fontFamily: 'Monserrat',
+                                      ),
+                                      Padding(
+                                        padding: EdgeInsets.only(left: 3.sp),
+                                        child: StyledText(
+                                          'km/h',
+                                          color: deepGrayColor,
+                                          fontSize: 12,
+                                          lineHeight: 12,
+                                          fontWeight: 500,
+                                          fontFamily: 'Monserrat',
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                              ],
+                            );
+                          });
+                        }),
+                      )),
+                  Padding(
+                    padding: EdgeInsets.only(
+                      left: 30.sp,
+                      right: 30.sp,
+                      top: 60.sp,
+                      bottom: 25.sp,
+                    ),
+                    child: LayoutBuilder(builder: (context, constraints) {
+                      return Obx(() {
+                        return Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            SizedBox(
+                              width: constraints.maxWidth / 3,
+                              child: Column(
+                                children: [
+                                  SvgPicture.asset('assets/images/activity/ico_time.svg'),
+                                  Padding(
+                                    padding: EdgeInsets.only(top: 10.sp),
+                                    child: StyledText(
+                                      formatSeconds(controller.exerciseTime.value),
+                                      fontWeight: 600,
+                                      fontSize: 16,
+                                      lineHeight: 16,
+                                      color: Colors.white,
+                                    ),
+                                  )
+                                ],
+                              ),
+                            ),
+                            SizedBox(
+                              width: constraints.maxWidth / 3,
+                              child: Column(
+                                children: [
+                                  SvgPicture.asset('assets/images/activity/ico_distance.svg'),
+                                  Padding(
+                                    padding: EdgeInsets.only(top: 10.sp),
+                                    child: StyledText(
+                                      '${formatDecimalPlaces(controller.totalDistance.value, 2)}km',
+                                      fontWeight: 600,
+                                      fontSize: 16,
+                                      lineHeight: 16,
+                                      color: Colors.white,
+                                    ),
+                                  )
+                                ],
+                              ),
+                            ),
+                            SizedBox(
+                              width: constraints.maxWidth / 3,
+                              child: Column(
+                                children: [
+                                  SvgPicture.asset('assets/images/activity/ico_step.svg'),
+                                  Padding(
+                                    padding: EdgeInsets.only(top: 10.sp),
+                                    child: StyledText(
+                                      controller.exerciseSteps.value.toString(),
+                                      fontWeight: 600,
+                                      fontSize: 16,
+                                      lineHeight: 16,
+                                      color: Colors.white,
+                                    ),
+                                  )
+                                ],
+                              ),
+                            )
+                          ],
+                        );
+                      });
+                    }),
+                  ),
+                  Padding(
+                    padding: EdgeInsets.only(
+                      left: 30.sp,
+                      right: 30.sp,
+                    ),
+                    child: Obx(() {
+                      return Column(
+                        children: [
+                          ...renderStatList(controller, context),
+                        ],
+                      );
+                    }),
+                  ),
+                  Expanded(
+                    child: Align(
+                      alignment: Alignment.bottomCenter,
+                      child: Padding(
+                        padding: EdgeInsets.only(left: 35.sp, right: 35.sp, bottom: 100.sp),
+                        child: Obx(() {
+                          return Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              CircularButton(
+                                radius: 50,
+                                color: Colors.white,
+                                onTap: () => controller.showExerciseMap(const ActivityMap()),
+                                child: SvgPicture.asset(
+                                  'assets/images/activity/ico_map.svg',
+                                ),
+                              ),
+                              [ExerciseState.ongoing].any((state) => controller.exerciseState.value == state)
+                                  ? Row(
+                                      children: [
+                                        GestureDetector(
+                                          onTapDown: (tapDownDetail) => controller.onTapDownStop(tapDownDetail, controller.selectedChallenge.value, controller: controller),
+                                          onTapUp: (tapUpDetail) => controller.onTapUpStop(tapUpDetail),
+                                          child: Stack(
+                                            children: [
+                                              CircularButton(
+                                                radius: 78.sp,
+                                                color: Colors.white,
+                                                child: Icon(Icons.stop, color: Colors.black, size: 35.sp),
+                                              ),
+                                              Positioned(
+                                                top: 0,
+                                                left: 0,
+                                                child: Container(
+                                                  width: 78.sp,
+                                                  height: 78.sp,
+                                                  padding: EdgeInsets.all(5.sp),
+                                                  child: CircularProgressIndicator(
+                                                    strokeWidth: 6.sp,
+                                                    color: skyBlueColor,
+                                                    value: controller.stopProgress.value,
+                                                  ),
+                                                ),
+                                              )
+                                            ],
+                                          ),
+                                        ),
+                                        Padding(
+                                          padding: EdgeInsets.only(left: 11.sp),
+                                          child: CircularButton(
+                                            radius: 78.sp,
+                                            color: const Color(0xffFF2222),
+                                            onTap: () => controller.pauseExercise(),
+                                            child: Icon(Icons.pause, color: Colors.white, size: 35.sp),
+                                          ),
+                                        )
+                                      ],
+                                    )
+                                  : CircularButton(
+                                      radius: 90.sp,
+                                      color: const Color(0xffFF2222),
+                                      onTap: () {
+                                        if (controller.exerciseState.value == ExerciseState.paused) {
+                                          controller.thr.throttle(() => controller.continueExercise());
+                                        } else {
+                                          controller.thr.throttle(() => controller.startExercise(controller.selectedExerciseType.value, controller.selectedChallenge.value));
+                                        }
+                                      },
+                                      child: Icon(Icons.play_arrow, color: Colors.white, size: 35.sp),
+                                    ),
+                              CircularButton(
+                                radius: 50,
+                                color: Colors.white,
+                                onTap: () {
+                                  Get.toNamed(Routes.equippedItems);
+                                },
+                                child: SvgPicture.asset(
+                                  'assets/images/activity/ico_item.svg',
+                                ),
+                              ),
+                            ],
+                          );
+                        }),
+                      ),
+                    ),
+                  ),
+                ],
               ),
-            ),
-          )
-        ],
-      ),
+            ],
+          )),
     );
   }
 }
@@ -691,4 +788,20 @@ class GaugeCursor extends StatelessWidget {
       ),
     );
   }
+}
+
+class CustomShapeClipper extends CustomClipper<Path> {
+  @override
+  getClip(Size size) {
+    print(size.height);
+    final Path path = Path();
+    path.lineTo(size.width / 2, size.height);
+    path.lineTo(size.width, 0);
+
+    path.close();
+    return path;
+  }
+
+  @override
+  bool shouldReclip(CustomClipper oldClipper) => true;
 }

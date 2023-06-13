@@ -18,7 +18,7 @@ publish_to: 'none' # Remove this line if you wish to publish to pub.dev
 # In Windows, build-name is used as the major, minor, and patch parts
 # of the product and file versions while build-number is used as the build suffix.
 
-version: 1.2.8+71
+version: 1.2.8+72
 
 
 environment:
@@ -116,6 +116,7 @@ dependencies:
   intrinsic_dimension: ^0.3.1
   flutter_html: ^3.0.0-beta.1
   skeletons: ^0.0.3
+  shape_of_view_null_safe: ^2.0.0
 
 
 dev_dependencies:

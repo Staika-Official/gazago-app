@@ -49,6 +49,7 @@ import 'package:throttling/throttling.dart';
 class ActivityController extends SuperController with ActivityMixin, ChallengeMixin, GetTickerProviderStateMixin, AdmobMixin {
   final WalletMasterController walletMasterController = Get.find();
 
+  RxDouble testNum = RxDouble(0.0);
   GlobalKey webViewKey = GlobalKey();
   final RxString noticeUrl = RxString('');
   //rewarded.dart
@@ -141,6 +142,7 @@ class ActivityController extends SuperController with ActivityMixin, ChallengeMi
       }
       await loadChallenges();
     });
+
     await initPlatformState();
   }
 
@@ -437,7 +439,11 @@ class ActivityController extends SuperController with ActivityMixin, ChallengeMi
       if (!isListeningToLocation.value) {
         initializeActivity();
       }
-      getActivityRoute();
+      if (globalController.internetConnection.value) {
+        getActivityRoute();
+      } else {
+        showToastPopup('원할한 네트워크에서 진행해주세요.');
+      }
     } else {
       await requestPermissionStepByStep();
     }
@@ -606,7 +612,7 @@ class ActivityController extends SuperController with ActivityMixin, ChallengeMi
       },
     );
 
-    if (adWatchAvailableModel.watchAvailable!) {
+    if (adWatchAvailableModel.watchAvailable! && !batchIsInProgress()) {
       Get.back();
       Get.dialog(const AdSelect(), barrierDismissible: false, barrierColor: const Color.fromRGBO(0, 0, 0, 0.85));
       if (startAd.value == null) {

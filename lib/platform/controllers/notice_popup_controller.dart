@@ -92,7 +92,7 @@ class NoticePopupController extends GetxController {
     switch (item.openType) {
       case 'IN_APP':
         switch (item.linkUrl) {
-          case 'CHALLENGE':
+          case 'CHALLENGES':
             Get.back();
             Get.find<HomeMenuController>().selectMenu(0);
             break;
@@ -117,6 +117,7 @@ class NoticePopupController extends GetxController {
               LeaderboardController leaderboardController = Get.put(LeaderboardController());
               leaderboardController.tabController.animateTo(1);
             }
+            break;
             break;
           case 'WALLET':
             Get.toNamed(Routes.wallet);
