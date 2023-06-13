@@ -91,7 +91,6 @@ class HomeMenuController extends SuperController {
   void selectMenu(int index) {
     prevIndex.value = selectedIndex.value;
     selectedIndex.value = index;
-    print(index);
     if (index != 1 && Get.isRegistered<InventoryHomeController>()) {
       Get.find<InventoryHomeController>().tabController.animateTo(0);
     }

@@ -413,14 +413,18 @@ mixin ActivityMixin {
         showToastPopup('인터넷 상태를 확인해주세요.');
       }
     } else {
-      showToastPopup('지금은 리워드 정산시간입니다.');
+      showToastPopup('리워드 정산 중(11:55~12:05) 입니다.\n잠시 후 시작해주세요.');
     }
   }
 
   void continueExerciseFromDialog() {
-    Get.back();
-    Get.toNamed(Routes.activityActive);
-    thr.throttle(() => continueExercise(source: 'pendingExerciseDialog'));
+    if (globalController.internetConnection.value) {
+      Get.back();
+      Get.toNamed(Routes.activityActive);
+      thr.throttle(() => continueExercise(source: 'pendingExerciseDialog'));
+    } else {
+      showToastPopup('인터넷 상태를 확인해주세요.');
+    }
   }
 
   void continueExercise({String? source}) async {
@@ -584,9 +588,6 @@ mixin ActivityMixin {
       if (counter == const Duration(milliseconds: 500)) {
         initializeStopTimer();
 
-        if (source != null && source == 'pendingExerciseDialog') {
-          Get.back();
-        }
         AdWatchAvailableModel adWatchAvailableModel = AdWatchAvailableModel();
         await AdmobService.getAdWatchAvailableTime(
           'EXERCISE_END',
@@ -595,7 +596,7 @@ mixin ActivityMixin {
           },
         );
 
-        if (adWatchAvailableModel.watchAvailable!) {
+        if (adWatchAvailableModel.watchAvailable! && !batchIsInProgress()) {
           await controller.exerciseEndRewardedAdInit(
             'exerciseEndAd',
           );
@@ -617,7 +618,12 @@ mixin ActivityMixin {
 
   void checkShowEndPopup(String? source, ChallengeModel challenge, ActivityController controller) {
     if (source != null && source == 'pendingExerciseDialog') {
-      controller.thr.throttle(() => endExercise(challenge, source: source));
+      if (globalController.internetConnection.value) {
+        Get.back();
+        controller.thr.throttle(() => endExercise(challenge, source: source));
+      } else {
+        showToastPopup('인터넷 상태를 확인해주세요.');
+      }
     } else {
       showEndExerciseDialog(challenge);
     }
@@ -673,56 +679,60 @@ mixin ActivityMixin {
     }
 
     if (!batchIsInProgress()) {
-      // 업데이트 타이머에 의해서 미세한 차이로 운동 종료 요청후 즉시 운동 업데이트 요청이 나가지 않도록 타이머를 우선 스탑한다.
-      updateTimer?.cancel();
-      exerciseTimer?.cancel();
+      if (globalController.internetConnection.value) {
+        // 업데이트 타이머에 의해서 미세한 차이로 운동 종료 요청후 즉시 운동 업데이트 요청이 나가지 않도록 타이머를 우선 스탑한다.
+        updateTimer?.cancel();
+        exerciseTimer?.cancel();
 
-      //타이머 멈춘 후 종료 요청
-      await ActivityService.fetchEndUserExercises(
-        userExerciseData.value,
-        source: source,
-        successCallback: (CurrentUserStateModel newUserState) {
-          userState.update(
-            (state) {
-              state?.state = newUserState.state;
-              state?.exercise = newUserState.exercise;
-              state?.shoes = newUserState.shoes;
-            },
-          );
-
-          if (newUserState.exercise!.state == 'ENDED') {
-            exerciseState.value = ExerciseState.ready;
-            HiveStore.deleteMultipleKeys(keys: [HiveKey.userState.name, HiveKey.endExerciseRequested.name]);
-            resetVariables(challenge);
-            resetTimer();
-            resetSubscriptions();
-            if (['showEndExerciseAlert', 'showEndADExerciseAlert', 'pendingExerciseDialog'].any((src) => src == source)) {
-              moveToExerciseDetail(userState.value.exercise!.id!);
-            }
-          }
-
-          if (newUserState.exercise!.recordState == 'ABNORMAL') {
-            HiveStore.saveCurrentUserState(
-              userState: CurrentUserStateModel(
-                state: newUserState.state,
-                exercise: newUserState.exercise,
-                shoes: newUserState.shoes,
-              ),
+        //타이머 멈춘 후 종료 요청
+        await ActivityService.fetchEndUserExercises(
+          userExerciseData.value,
+          source: source,
+          successCallback: (CurrentUserStateModel newUserState) {
+            userState.update(
+              (state) {
+                state?.state = newUserState.state;
+                state?.exercise = newUserState.exercise;
+                state?.shoes = newUserState.shoes;
+              },
             );
 
-            if (retryAttempt > 4) {
-              showToastPopup('운동 종료에 실패했습니다.\n다시 시도해주세요.');
-            } else {
-              endExercise(challenge, source: source, adId: adId, retryAttempt: retryAttempt + 1);
+            if (newUserState.exercise!.state == 'ENDED') {
+              exerciseState.value = ExerciseState.ready;
+              HiveStore.deleteMultipleKeys(keys: [HiveKey.userState.name, HiveKey.endExerciseRequested.name]);
+              resetVariables(challenge);
+              resetTimer();
+              resetSubscriptions();
+              if (['showEndExerciseAlert', 'showEndADExerciseAlert', 'pendingExerciseDialog'].any((src) => src == source)) {
+                moveToExerciseDetail(userState.value.exercise!.id!);
+              }
             }
-          }
-        },
-        errorCallback: () {
-          endExerciseLocally(challenge);
-        },
-      );
+
+            if (newUserState.exercise!.recordState == 'ABNORMAL') {
+              HiveStore.saveCurrentUserState(
+                userState: CurrentUserStateModel(
+                  state: newUserState.state,
+                  exercise: newUserState.exercise,
+                  shoes: newUserState.shoes,
+                ),
+              );
+
+              if (retryAttempt > 4) {
+                showToastPopup('운동 종료에 실패했습니다.\n다시 시도해주세요.');
+              } else {
+                endExercise(challenge, source: source, adId: adId, retryAttempt: retryAttempt + 1);
+              }
+            }
+          },
+          errorCallback: () {
+            endExerciseLocally(challenge);
+          },
+        );
+      } else {
+        showToastPopup('인터넷 상태를 확인해주세요.');
+      }
     } else {
-      endExerciseLocally(challenge);
+      showToastPopup('리워드 정산 중(11:55~12:05) 입니다.\n잠시 후 종료해주세요.');
     }
   }
 
