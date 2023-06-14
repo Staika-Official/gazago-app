@@ -2852,7 +2852,7 @@ void showNotChallangeAbleAlert(ActivityController controller) {
             ),
           ),
           const StyledText(
-            '현재 챌린시 시작점 위치가 아닙니다.\n시작점은 챌린지 가이드에서 확인해보세요!',
+            '현재 챌린지 시작점 위치가 아닙니다.\n시작점은 챌린지 가이드에서 확인해보세요!',
             fontSize: 18,
             lineHeight: 24,
             fontWeight: 500,
