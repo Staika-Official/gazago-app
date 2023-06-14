@@ -45,7 +45,7 @@ class NoticeList extends StatelessWidget {
                             fontSize: 12,
                             lineHeight: 14,
                             fontWeight: 600,
-                            fontFamily: 'Monserrat',
+                            fontFamily: 'Montserrat',
                             letterSpacing: .2,
                           ),
                         ),

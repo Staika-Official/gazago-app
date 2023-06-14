@@ -94,6 +94,7 @@ enum HiveKey {
   noticePopupListIds,
   challengeNotificationList,
   challengeNotificationTime,
+  hasChallengeSuccessPushMessage,
 }
 
 enum ResponseStatus {

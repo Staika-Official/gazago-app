@@ -189,11 +189,20 @@ class ArchiveDetail extends StatelessWidget {
                     fontSize: 16,
                   ),
                   const Spacer(),
-                  StyledText(
-                    '${formatDecimalPlaces(controller.selectedItem.value.rewardGo!, 2)} GO',
-                    fontWeight: 500,
-                    fontSize: 16,
-                    color: const Color(0xFF7D7D84),
+                  Row(
+                    children: [
+                      StyledText(
+                        formatDecimalPlaces(controller.selectedItem.value.rewardGo!, 2),
+                        fontWeight: 500,
+                        fontSize: 16,
+                      ),
+                      const StyledText(
+                        ' GO',
+                        fontWeight: 500,
+                        fontSize: 16,
+                        color: Color(0xFF7D7D84),
+                      ),
+                    ],
                   ),
                 ],
               ),
@@ -208,11 +217,20 @@ class ArchiveDetail extends StatelessWidget {
                     fontSize: 16,
                   ),
                   const Spacer(),
-                  StyledText(
-                    '${formatDecimalPlaces(controller.selectedItem.value.rewardGoExerciseSum!, 2)} GO',
-                    fontWeight: 500,
-                    fontSize: 16,
-                    color: const Color(0xFF7D7D84),
+                  Row(
+                    children: [
+                      StyledText(
+                        formatDecimalPlaces(controller.selectedItem.value.rewardGoExerciseSum!, 2),
+                        fontWeight: 500,
+                        fontSize: 16,
+                      ),
+                      const StyledText(
+                        ' GO',
+                        fontWeight: 500,
+                        fontSize: 16,
+                        color: Color(0xFF7D7D84),
+                      ),
+                    ],
                   ),
                 ],
               ),
@@ -227,11 +245,20 @@ class ArchiveDetail extends StatelessWidget {
                     fontSize: 16,
                   ),
                   const Spacer(),
-                  StyledText(
-                    '${formatDecimalPlaces(controller.selectedItem.value.rewardGoAdSum!, 2)} GO',
-                    fontWeight: 500,
-                    fontSize: 16,
-                    color: const Color(0xFF7D7D84),
+                  Row(
+                    children: [
+                      StyledText(
+                        formatDecimalPlaces(controller.selectedItem.value.rewardGoAdSum!, 2),
+                        fontWeight: 500,
+                        fontSize: 16,
+                      ),
+                      const StyledText(
+                        ' GO',
+                        fontWeight: 500,
+                        fontSize: 16,
+                        color: Color(0xFF7D7D84),
+                      ),
+                    ],
                   ),
                 ],
               ),
@@ -246,11 +273,20 @@ class ArchiveDetail extends StatelessWidget {
                     fontSize: 16,
                   ),
                   const Spacer(),
-                  StyledText(
-                    '${controller.selectedItem.value.luckOccurredCount ?? 0} 회',
-                    fontWeight: 500,
-                    fontSize: 16,
-                    color: const Color(0xFF7D7D84),
+                  Row(
+                    children: [
+                      StyledText(
+                        '${controller.selectedItem.value.luckOccurredCount ?? 0}',
+                        fontWeight: 500,
+                        fontSize: 16,
+                      ),
+                      const StyledText(
+                        ' 회',
+                        fontWeight: 500,
+                        fontSize: 16,
+                        color: Color(0xFF7D7D84),
+                      ),
+                    ],
                   ),
                 ],
               ),

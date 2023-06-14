@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_html/flutter_html.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:gaza_go/constants/routes.dart';
 import 'package:gaza_go/platform/controllers/challenges_detail_controller.dart';
 import 'package:gaza_go/platform/helpers/base_helper.dart';
 import 'package:gaza_go/presentations/styles/colors.dart';
@@ -148,11 +147,11 @@ class ChallengeInfo extends StatelessWidget {
                                     child: controller.challengeDetails.value.badge!.imageUrl!.contains('.svg')
                                         ? SvgPicture.network(
                                             fit: BoxFit.contain,
-                                            controller.challengeDetails.value.item!.itemImageUrl!,
-                                            placeholderBuilder: (BuildContext context) => Container(padding: const EdgeInsets.all(30.0), child: const CircularProgressIndicator()),
+                                            controller.challengeDetails.value.badge!.imageUrl!,
+                                            placeholderBuilder: (BuildContext context) => const Center(child: SizedBox.square(dimension: 40, child: CircularProgressIndicator())),
                                           )
                                         : CachedNetworkImage(
-                                            imageUrl: controller.challengeDetails.value.item!.itemImageUrl!,
+                                            imageUrl: controller.challengeDetails.value.badge!.imageUrl!,
                                             fit: BoxFit.fitHeight,
                                             placeholder: (context, url) => const Center(child: SizedBox.square(dimension: 40, child: CircularProgressIndicator())),
                                             errorWidget: (context, url, error) => const Center(child: SizedBox.square(dimension: 40, child: CircularProgressIndicator())),
@@ -169,18 +168,29 @@ class ChallengeInfo extends StatelessWidget {
                                           fontWeight: 500,
                                           fontSize: 16,
                                           lineHeight: 22,
+                                          letterSpacing: -.1,
                                         ),
                                         Padding(
                                           padding: EdgeInsets.only(top: 9.0.sp),
                                           child: Row(
                                             children: [
-                                              StyledText(
-                                                '${formatDecimalPlaces(controller.challengeDetails.value.badge!.limitedCount!.toDouble(), 0)} 명',
-                                                fontFamily: 'Montserrat',
-                                                fontWeight: 600,
-                                                fontSize: 22,
-                                                lineHeight: 22,
-                                              ),
+                                              controller.challengeDetails.value.badge!.limitedCount! > 0
+                                                  ? StyledText(
+                                                      '${formatDecimalPlaces(controller.challengeDetails.value.badge!.limitedCount!.toDouble(), 0)} 명',
+                                                      fontFamily: 'Montserrat',
+                                                      fontWeight: 600,
+                                                      fontSize: 22,
+                                                      lineHeight: 22,
+                                                      letterSpacing: -.1,
+                                                    )
+                                                  : StyledText(
+                                                      '참여자 전원 뱃지 지급',
+                                                      fontFamily: 'Montserrat',
+                                                      fontWeight: 600,
+                                                      fontSize: 16,
+                                                      lineHeight: 17,
+                                                      letterSpacing: -.1,
+                                                    ),
                                             ],
                                           ),
                                         ),
@@ -199,7 +209,7 @@ class ChallengeInfo extends StatelessWidget {
                         mainAxisSize: MainAxisSize.max,
                         crossAxisAlignment: CrossAxisAlignment.center,
                         children: [
-                          StyledText(
+                          const StyledText(
                             '챌린지 참가 조건',
                             fontWeight: 500,
                             fontSize: 18,
@@ -400,7 +410,7 @@ class ChallengeInfo extends StatelessWidget {
                               borderRadius: BorderRadius.all(Radius.circular(12.sp)),
                             ),
                             child: InkWell(
-                              onTap: () => Get.toNamed(Routes.webView, arguments: {'linkUrl': controller.challengeDetails.value.linkUrl}),
+                              onTap: () => controller.moveToExternalBrowser(controller.challengeDetails.value.linkUrl),
                               child: Padding(
                                 padding: EdgeInsets.symmetric(vertical: 20.0.sp, horizontal: 18.sp),
                                 child: Center(

@@ -12,6 +12,7 @@ import 'package:gaza_go/platform/services/item_service.dart';
 import 'package:gaza_go/presentations/components/alert_ui_list.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class ChallengesDetailController extends GetxController with GetTickerProviderStateMixin, ChallengeMixin {
   ChallengesController challengesController = Get.find();
@@ -113,6 +114,13 @@ class ChallengesDetailController extends GetxController with GetTickerProviderSt
   void getSize() {
     if (backgroundKey.currentContext != null) {
       backgroundBoxSize.value = backgroundKey.currentContext!.size!.height;
+    }
+  }
+
+  void moveToExternalBrowser(linkUrl) async {
+    Uri url = Uri.parse(linkUrl!);
+    if (await canLaunchUrl(url)) {
+      await launchUrl(url, mode: LaunchMode.externalApplication);
     }
   }
 }

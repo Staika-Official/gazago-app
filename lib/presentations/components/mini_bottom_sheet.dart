@@ -100,7 +100,7 @@ Widget renderParticipateInChallenge() {
           );
 
           suffixWidget = InkWell(
-            onTap: () => challengesDetailController.showMoveToShopItem(),
+            onTap: () => null,
             child: Container(
                 decoration: BoxDecoration(
                   color: subBg01Color,

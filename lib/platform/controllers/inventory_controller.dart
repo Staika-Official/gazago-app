@@ -21,6 +21,7 @@ import 'package:gaza_go/platform/services/activity_service.dart';
 import 'package:gaza_go/platform/services/item_service.dart';
 import 'package:gaza_go/presentations/components/alert_ui_list.dart';
 import 'package:get/get.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class InventoryController extends GetxController with LinearProgressMixin, InventoryMixin {
   final WalletMasterController walletMasterController = Get.find();
@@ -233,6 +234,14 @@ class InventoryController extends GetxController with LinearProgressMixin, Inven
     syntheticBadgeList.value = [];
   }
 
+  void moveChallengeDetail() {
+    if (Get.previousRoute == Routes.challengeDetail) {
+      Get.back();
+    } else {
+      Get.toNamed(Routes.challengeDetail, arguments: {'id': selectedItem.value.challenge!.challengeId});
+    }
+  }
+
   // void scrollControl() {
   // itemScrollController.addListener(() {
   //   if (itemScrollController.position.atEdge) {
@@ -357,7 +366,7 @@ class InventoryController extends GetxController with LinearProgressMixin, Inven
   void checkEquippedInventoryChallengeItem(int itemId, String category) {
     InventoryItemModel filteredItem = equippedItemList.firstWhere((element) => element.itemCategory == category);
 
-    if (filteredItem.challengeItem!) {
+    if (filteredItem.challenge != null) {
       checkChallengeItemEquip(this, itemId);
     } else {
       fetchEquipItem(itemId);
@@ -377,10 +386,14 @@ class InventoryController extends GetxController with LinearProgressMixin, Inven
       itemId,
       successCallback: (InventoryItemModel item) async {
         selectedItem.value = item;
-        int allItemsPrevEquippedIndex = myAllItems.indexWhere((element) => element.itemCategory == item.itemCategory && element.equipped!);
+        int allItemsPrevEquippedIndex = myAllItems.indexWhere((element) => element.itemCategory == selectedItem.value.itemCategory && element.equipped!);
         int allItemsIndex = myAllItems.indexWhere((element) => element.id == item.id);
         int equippedIndex = equippedItemList.indexWhere((element) => element.itemCategory == item.itemCategory);
-        myAllItems[allItemsPrevEquippedIndex].equipped = false;
+
+        if (allItemsPrevEquippedIndex >= 0) {
+          myAllItems[allItemsPrevEquippedIndex].equipped = false;
+        }
+
         myAllItems[allItemsIndex] = item;
         equippedItemList[equippedIndex] = item;
         // await getUserEquippedItems();
@@ -513,6 +526,13 @@ class InventoryController extends GetxController with LinearProgressMixin, Inven
         break;
       default:
         _calculateListHeight(allItems[ItemType.all.name]!.length);
+    }
+  }
+
+  void moveToExternalBrowser(linkUrl) async {
+    Uri url = Uri.parse(linkUrl!);
+    if (await canLaunchUrl(url)) {
+      await launchUrl(url, mode: LaunchMode.externalApplication);
     }
   }
 }

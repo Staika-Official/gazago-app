@@ -3,7 +3,6 @@ import 'package:custom_rounded_rectangle_border/custom_rounded_rectangle_border.
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:gaza_go/constants/routes.dart';
 import 'package:gaza_go/platform/controllers/shop_detail_controller.dart';
 import 'package:gaza_go/platform/helpers/base_helper.dart';
 import 'package:gaza_go/platform/helpers/inventory_helper.dart';
@@ -568,7 +567,7 @@ class ShopItemDetail extends StatelessWidget {
                             ],
                           ),
                         ),
-                      if (controller.selectedItem.value.extTxt != null && controller.selectedItem.value.extTxt != '')
+                      if (controller.selectedItem.value.challenge != null && controller.selectedItem.value.challenge!.extTxt != null)
                         Padding(
                           padding: EdgeInsets.only(top: 20.0.sp),
                           child: Column(
@@ -583,7 +582,7 @@ class ShopItemDetail extends StatelessWidget {
                                       Padding(
                                         padding: EdgeInsets.only(left: 8.0),
                                         child: StyledText(
-                                          controller.selectedItem.value.extTxt!,
+                                          controller.selectedItem.value.challenge!.extTxt!,
                                           fontWeight: 500,
                                           fontSize: 14,
                                           lineHeight: 15,
@@ -626,7 +625,7 @@ class ShopItemDetail extends StatelessWidget {
                                   ),
                                 ),
                               ),
-                              if (controller.selectedItem.value.extBtnLabel != null && controller.selectedItem.value.extBtnLabel != '')
+                              if (controller.selectedItem.value.challenge != null && controller.selectedItem.value.challenge!.linkUrl != null)
                                 Padding(
                                   padding: EdgeInsets.only(top: 28.0.sp),
                                   child: Container(
@@ -647,27 +646,29 @@ class ShopItemDetail extends StatelessWidget {
                                       ],
                                     ),
                                     child: InkWell(
-                                      onTap: () => Get.toNamed(Routes.webView, arguments: {'linkUrl': controller.selectedItem.value.linkUrl}),
+                                      onTap: () => controller.moveToExternalBrowser(controller.selectedItem.value.challenge!.linkUrl),
                                       child: Padding(
                                         padding: EdgeInsets.symmetric(vertical: 20.0.sp, horizontal: 18.sp),
                                         child: Center(
-                                          child: StyledText(
-                                            controller.selectedItem.value.extBtnLabel!,
-                                            fontSize: 18,
-                                            fontWeight: 500,
-                                            lineHeight: 18,
-                                            letterSpacing: -.1,
-                                          ),
+                                          child: controller.selectedItem.value.challenge!.extBtnLabel != null
+                                              ? StyledText(
+                                                  controller.selectedItem.value.challenge!.extBtnLabel!,
+                                                  fontSize: 18,
+                                                  fontWeight: 500,
+                                                  lineHeight: 18,
+                                                  letterSpacing: -.1,
+                                                )
+                                              : Container(),
                                         ),
                                       ),
                                     ),
                                   ),
                                 ),
-                              if (controller.selectedItem.value.extTxtDetail != null)
+                              if (controller.selectedItem.value.challenge != null && controller.selectedItem.value.challenge!.extTxtDetail != null)
                                 Padding(
                                   padding: EdgeInsets.only(top: 8.0.sp),
                                   child: StyledText(
-                                    controller.selectedItem.value.extTxtDetail!,
+                                    controller.selectedItem.value.challenge!.extTxtDetail!,
                                     fontSize: 11,
                                     letterSpacing: -.1,
                                     lineHeight: 18,

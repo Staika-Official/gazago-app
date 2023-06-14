@@ -4,6 +4,7 @@ import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:gaza_go/constants/enums.dart';
 import 'package:gaza_go/platform/controllers/activity_controller.dart';
 import 'package:gaza_go/platform/helpers/login_helper.dart';
+import 'package:gaza_go/platform/models/push_message_challenge_success_model.dart';
 import 'package:gaza_go/platform/stores/hive_store.dart';
 import 'package:gaza_go/presentations/components/alert_ui_list.dart';
 import 'package:get/get.dart';
@@ -74,6 +75,11 @@ void handleMessage() {
       ActivityController controller = Get.find<ActivityController>();
       controller.handleAlreadyFinishedExercise();
     }
+
+    if (message.data['notificationKey'] == 'CHALLENGE_REWARD_BADGE_ISSUED') {
+      PushMessageChallengeSuccessModel data = PushMessageChallengeSuccessModel.fromJson(message.data);
+      showChallengeBadgeAcquisitionAlert(data);
+    }
   });
 
   FirebaseMessaging.onMessageOpenedApp.listen((RemoteMessage message) {
@@ -92,6 +98,11 @@ void handleNotification(RemoteMessage message) {
 
   if (message.data['notificationKey'] == 'EXERCISE_RESTRICTION') {
     HiveStore.save(key: HiveKey.needToForceStopExercise.name, value: true);
+  }
+
+  if (message.data['notificationKey'] == 'CHALLENGE_REWARD_BADGE_ISSUED') {
+    PushMessageChallengeSuccessModel data = PushMessageChallengeSuccessModel.fromJson(message.data);
+    showChallengeBadgeAcquisitionAlert(data);
   }
 }
 

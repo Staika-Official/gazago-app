@@ -1,4 +1,5 @@
 import 'package:gaza_go/platform/models/inventory_item_stat_model.dart';
+import 'package:gaza_go/platform/models/shop_item_challenge_model.dart';
 import 'package:json_annotation/json_annotation.dart';
 
 part 'inventory_item_model.g.dart';
@@ -20,12 +21,12 @@ class InventoryItemModel {
   String itemImageUrl;
   String? description;
   bool? equipped;
+  bool? equippedChallengeItem;
   int? listOrder;
   int? tik;
   bool? isShoe;
   InventoryItemStatModel? itemStat;
-  bool? equippedChallengeItem;
-  bool? challengeItem;
+  ShopItemChallengeModel? challenge;
 
   InventoryItemModel({
     required this.id,
@@ -45,10 +46,10 @@ class InventoryItemModel {
     this.description,
     this.equipped,
     this.listOrder,
+    this.equippedChallengeItem,
     this.tik = 0,
     this.isShoe = false,
-    this.equippedChallengeItem,
-    this.challengeItem
+    this.challenge,
   });
 
   factory InventoryItemModel.fromJson(Map<String, dynamic> json) => _$InventoryItemModelFromJson(json);

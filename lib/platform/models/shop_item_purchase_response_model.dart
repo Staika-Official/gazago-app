@@ -1,4 +1,5 @@
 import 'package:gaza_go/platform/models/inventory_item_stat_model.dart';
+import 'package:gaza_go/platform/models/shop_item_challenge_model.dart';
 import 'package:json_annotation/json_annotation.dart';
 
 part 'shop_item_purchase_response_model.g.dart';
@@ -19,10 +20,10 @@ class ShopItemPurchaseResponseModel {
   double? rewardRate;
   double? staminaReduceRate;
   String? description;
-
   InventoryItemStatModel? itemStat;
   bool? equippedChallengeItem;
-  bool? challengeItem;
+  bool? equipped;
+  ShopItemChallengeModel? challenge;
 
   ShopItemPurchaseResponseModel({
     required this.id,
@@ -41,7 +42,8 @@ class ShopItemPurchaseResponseModel {
     this.description,
     this.itemStat,
     this.equippedChallengeItem,
-    this.challengeItem,
+    this.equipped,
+    this.challenge,
   });
 
   factory ShopItemPurchaseResponseModel.fromJson(Map<String, dynamic> json) => _$ShopItemPurchaseResponseModelFromJson(json);

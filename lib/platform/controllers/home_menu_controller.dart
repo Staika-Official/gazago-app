@@ -15,6 +15,7 @@ import 'package:gaza_go/platform/controllers/wallet_master_controller.dart';
 import 'package:gaza_go/platform/helpers/alert_helper.dart';
 import 'package:gaza_go/platform/helpers/base_helper.dart';
 import 'package:gaza_go/platform/helpers/login_helper.dart';
+import 'package:gaza_go/platform/models/push_message_challenge_success_model.dart';
 import 'package:gaza_go/platform/stores/hive_store.dart';
 import 'package:gaza_go/presentations/components/alert_ui_list.dart';
 import 'package:gaza_go/presentations/components/main_appbar.dart';
@@ -59,6 +60,11 @@ class HomeMenuController extends SuperController {
   }
 
   @override
+  void onInit() async {
+    super.onInit();
+  }
+
+  @override
   void onReady() async {
     handleAppNotification();
     await checkUpdates();
@@ -68,13 +74,17 @@ class HomeMenuController extends SuperController {
 
   void handleAppNotification() async {
     RemoteMessage? initialMessage = await FirebaseMessaging.instance.getInitialMessage();
-
+    print('aasdlkhjaslkjdklajsfkljasklfklasjfkljaskljfdlksajlkfjalkfjklsa');
+    print(initialMessage);
     if (initialMessage != null) {
       if (initialMessage.data['notificationKey'] == 'DAILY_REWARD_COMPLETED') {
         Get.find<WalletMasterController>().moveToWallet();
       }
       // 챌린지 보상 푸쉬 알림
-      if (initialMessage.data['notificationKey'] == 'CHALLENGE_REWARD_BADGE_COMPLETED') {}
+      if (initialMessage.data['notificationKey'] == 'CHALLENGE_REWARD_BADGE_ISSUED') {
+        PushMessageChallengeSuccessModel data = PushMessageChallengeSuccessModel.fromJson(initialMessage.data);
+        showChallengeBadgeAcquisitionAlert(data);
+      }
 
       if (initialMessage.data['notificationKey'] == 'FORCE_LOGOUT') {
         if (HiveStore.load(key: HiveKey.hasForcedLogout.name) != null && HiveStore.load(key: HiveKey.hasForcedLogout.name)) {

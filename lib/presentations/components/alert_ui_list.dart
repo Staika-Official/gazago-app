@@ -34,6 +34,7 @@ import 'package:gaza_go/platform/helpers/inventory_helper.dart';
 import 'package:gaza_go/platform/models/challenge_model.dart';
 import 'package:gaza_go/platform/models/exchange_stik_price_model.dart';
 import 'package:gaza_go/platform/models/inventory_badge_model.dart';
+import 'package:gaza_go/platform/models/push_message_challenge_success_model.dart';
 import 'package:gaza_go/platform/models/stat_model.dart';
 import 'package:gaza_go/presentations/components/circular_button.dart';
 import 'package:gaza_go/presentations/components/gazago_button.dart';
@@ -752,7 +753,7 @@ void showBadgeAcquisitionAlert(InventoryBadgeModel badge, ChallengeModel selecte
   );
 }
 
-void showChallengeBadgeAcquisitionAlert(InventoryBadgeModel badge, ChallengeModel selectedChallenge) {
+Future<void> showChallengeBadgeAcquisitionAlert(PushMessageChallengeSuccessModel pushMessageData) async {
   showAlert(
     isScrollControlled: true,
     title: '챌린지 뱃지 발급!',
@@ -760,16 +761,16 @@ void showChallengeBadgeAcquisitionAlert(InventoryBadgeModel badge, ChallengeMode
       children: [
         Padding(
           padding: EdgeInsets.only(top: 30.sp, bottom: 30.sp),
-          child: badge.badge.imageUrl.contains('.svg')
+          child: pushMessageData.badgeImageUrl!.contains('.svg')
               ? SvgPicture.network(
                   fit: BoxFit.contain,
-                  badge.badge.imageUrl,
+                  pushMessageData.badgeImageUrl!,
                   width: 150.sp,
-                  placeholderBuilder: (BuildContext context) => Container(padding: const EdgeInsets.all(30.0), child: const CircularProgressIndicator()),
+                  placeholderBuilder: (BuildContext context) => const Center(child: SizedBox.square(dimension: 40, child: CircularProgressIndicator())),
                 )
               : CachedNetworkImage(
-                  imageUrl: badge.badge.imageUrl,
-                  placeholder: (context, url) => const CircularProgressIndicator(),
+                  imageUrl: pushMessageData.badgeImageUrl!,
+                  placeholder: (context, url) => const Center(child: SizedBox.square(dimension: 40, child: CircularProgressIndicator())),
                   fit: BoxFit.fitWidth,
                   width: 150.sp,
                 ),
@@ -781,10 +782,11 @@ void showChallengeBadgeAcquisitionAlert(InventoryBadgeModel badge, ChallengeMode
             borderRadius: BorderRadius.circular(11.sp),
           ),
           child: StyledText(
-            '챌린지 완주 성공',
-            fontSize: 18,
-            lineHeight: 18,
+            '${pushMessageData.challengeTitle} 달성',
+            fontSize: 16,
+            lineHeight: 22,
             fontWeight: 500,
+            textAlign: TextAlign.center,
           ),
         ),
         Padding(
@@ -1489,18 +1491,18 @@ void itemPurchaseCompleteAlert(ShopDetailController controller) {
             ),
           Padding(
             padding: EdgeInsets.only(bottom: 20.0.sp),
-            child: Column(
-              children: [
-                Padding(
-                  padding: EdgeInsets.only(top: 20.0.sp),
-                  child: Container(
-                    decoration: BoxDecoration(
-                      color: subBg01Color,
-                      borderRadius: const BorderRadius.all(
-                        Radius.circular(12),
-                      ),
-                    ),
-                    child: Padding(
+            child: Padding(
+              padding: EdgeInsets.only(top: 20.0.sp),
+              child: Container(
+                decoration: BoxDecoration(
+                  color: subBg01Color,
+                  borderRadius: const BorderRadius.all(
+                    Radius.circular(12),
+                  ),
+                ),
+                child: Column(
+                  children: [
+                    Padding(
                       padding: EdgeInsets.symmetric(vertical: 24.0.sp),
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
@@ -1675,333 +1677,23 @@ void itemPurchaseCompleteAlert(ShopDetailController controller) {
                                 ],
                               ),
                             ),
-                          if (controller.selectedItem.value.extBtnLabel != null && controller.selectedItem.value.extBtnLabel != '')
-                            Padding(
-                              padding: EdgeInsets.only(top: 28.0.sp),
-                              child: Container(
-                                width: double.infinity,
-                                decoration: BoxDecoration(
-                                  color: popupBgColor,
-                                  border: Border.all(
-                                    width: 2,
-                                    style: BorderStyle.solid,
-                                    color: Colors.black,
-                                  ),
-                                  borderRadius: BorderRadius.all(Radius.circular(12.sp)),
-                                  boxShadow: [
-                                    BoxShadow(
-                                      color: Colors.black,
-                                      offset: Offset(0.sp, 3.sp),
-                                    )
-                                  ],
-                                ),
-                                child: InkWell(
-                                  onTap: () => Get.toNamed(Routes.webView, arguments: {'linkUrl': controller.selectedItem.value.linkUrl}),
-                                  child: Padding(
-                                    padding: EdgeInsets.symmetric(vertical: 20.0.sp, horizontal: 18.sp),
-                                    child: Center(
-                                      child: StyledText(
-                                        controller.selectedItem.value.extBtnLabel!,
-                                        fontSize: 18,
-                                        fontWeight: 500,
-                                        lineHeight: 18,
-                                        letterSpacing: -.1,
-                                      ),
-                                    ),
-                                  ),
-                                ),
-                              ),
-                            ),
-                          if (controller.selectedItem.value.extTxtDetail != null)
-                            Padding(
-                              padding: EdgeInsets.only(top: 8.0.sp),
-                              child: StyledText(
-                                controller.selectedItem.value.extTxtDetail!,
-                                fontSize: 11,
-                                letterSpacing: -.1,
-                                lineHeight: 18,
-                                color: deepGrayColor,
-                              ),
-                            )
                         ],
                       ),
                     ),
-                  ),
+                    if (controller.purchaseCompleteItem.value.challenge != null && controller.purchaseCompleteItem.value.challenge!.extTxt != null)
+                      Padding(
+                        padding: EdgeInsets.only(bottom: 24.0.sp),
+                        child: StyledText(
+                          controller.purchaseCompleteItem.value.challenge!.extTxt!,
+                          fontSize: 14,
+                          letterSpacing: -.1,
+                          lineHeight: 22,
+                          color: lightGrayColor,
+                        ),
+                      )
+                  ],
                 ),
-                // // Go 보상
-                // if (controller.purchaseCompleteItem.value.itemStat.goProfit! > 0)
-                //   Padding(
-                //     padding: EdgeInsets.only(top: 16.0.sp),
-                //     child: Column(
-                //       children: [
-                //         Row(
-                //           mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                //           children: [
-                //             Row(
-                //               children: [
-                //                 iconStatGo,
-                //                 Padding(
-                //                   padding: EdgeInsets.only(left: 8.0.sp),
-                //                   child: StyledText(
-                //                     'GO 보상',
-                //                     fontWeight: 500,
-                //                     fontSize: 14,
-                //                     lineHeight: 15,
-                //                   ),
-                //                 ),
-                //               ],
-                //             ),
-                //             StyledText(
-                //               formatDecimalPlaces(controller.purchaseCompleteItem.value.itemStat.goProfit!, 0),
-                //               fontSize: 12,
-                //               fontWeight: 500,
-                //               color: skyBlueColor,
-                //               letterSpacing: -.1,
-                //             ),
-                //           ],
-                //         ),
-                //         Padding(
-                //           padding: EdgeInsets.only(top: 8.0.sp),
-                //           child: ClipRRect(
-                //             child: SizedBox(
-                //               height: 11,
-                //               child: Stack(
-                //                 children: [
-                //                   Container(
-                //                     decoration: BoxDecoration(
-                //                       color: subBg02Color,
-                //                       borderRadius: BorderRadius.all(
-                //                         Radius.circular(50.sp),
-                //                       ),
-                //                     ),
-                //                   ),
-                //                   LayoutBuilder(
-                //                     builder: (context, constraints) {
-                //                       return Container(
-                //                         width: constraints.maxWidth / (double.parse(controller.itemGoMax.value) / controller.purchaseCompleteItem.value.itemStat.goProfit!),
-                //                         decoration: BoxDecoration(
-                //                           color: skyBlueColor,
-                //                           borderRadius: BorderRadius.all(
-                //                             Radius.circular(30.sp),
-                //                           ),
-                //                         ),
-                //                       );
-                //                     },
-                //                   )
-                //                 ],
-                //               ),
-                //             ),
-                //           ),
-                //         )
-                //       ],
-                //     ),
-                //   ),
-                // // 내구도
-                // if (controller.purchaseCompleteItem.value.itemStat.durability! > 0)
-                //   Padding(
-                //     padding: EdgeInsets.only(top: 20.0.sp),
-                //     child: Column(
-                //       children: [
-                //         Row(
-                //           mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                //           children: [
-                //             Row(
-                //               children: [
-                //                 iconStatDurabilityLight,
-                //                 Padding(
-                //                   padding: EdgeInsets.only(left: 8.0.sp),
-                //                   child: StyledText(
-                //                     '내구도',
-                //                     fontWeight: 500,
-                //                     fontSize: 14,
-                //                     lineHeight: 15,
-                //                   ),
-                //                 ),
-                //               ],
-                //             ),
-                //             StyledText(
-                //               formatDecimalPlaces(controller.purchaseCompleteItem.value.itemStat.durability!, 0),
-                //               fontSize: 12,
-                //               fontWeight: 500,
-                //               color: lightPurpleColor,
-                //               letterSpacing: -.1,
-                //             ),
-                //           ],
-                //         ),
-                //         Padding(
-                //           padding: EdgeInsets.only(top: 8.0.sp),
-                //           child: ClipRRect(
-                //             child: SizedBox(
-                //               height: 11,
-                //               child: Stack(
-                //                 children: [
-                //                   Container(
-                //                     decoration: BoxDecoration(
-                //                       color: subBg02Color,
-                //                       borderRadius: BorderRadius.all(
-                //                         Radius.circular(50.sp),
-                //                       ),
-                //                     ),
-                //                   ),
-                //                   LayoutBuilder(
-                //                     builder: (context, constraints) {
-                //                       return Container(
-                //                         width: constraints.maxWidth / (double.parse(controller.itemDurabilityMax.value) / controller.purchaseCompleteItem.value.itemStat.durability!),
-                //                         decoration: BoxDecoration(
-                //                           color: lightPurpleColor,
-                //                           borderRadius: BorderRadius.all(
-                //                             Radius.circular(30.sp),
-                //                           ),
-                //                         ),
-                //                       );
-                //                     },
-                //                   )
-                //                 ],
-                //               ),
-                //             ),
-                //           ),
-                //         )
-                //       ],
-                //     ),
-                //   ),
-                // // 체력
-                // if (controller.purchaseCompleteItem.value.itemStat.stamina! > 0)
-                //   Padding(
-                //     padding: EdgeInsets.only(top: 16.0.sp),
-                //     child: Column(
-                //       children: [
-                //         Row(
-                //           mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                //           children: [
-                //             Row(
-                //               children: [
-                //                 iconStatStamina,
-                //                 Padding(
-                //                   padding: EdgeInsets.only(left: 8.0.sp),
-                //                   child: StyledText(
-                //                     '체력',
-                //                     fontWeight: 500,
-                //                     fontSize: 14,
-                //                     lineHeight: 15,
-                //                   ),
-                //                 ),
-                //               ],
-                //             ),
-                //             StyledText(
-                //               formatDecimalPlaces(controller.purchaseCompleteItem.value.itemStat.stamina!, 0),
-                //               fontSize: 12,
-                //               fontWeight: 500,
-                //               color: lightGreenColor,
-                //               letterSpacing: -.1,
-                //             ),
-                //           ],
-                //         ),
-                //         Padding(
-                //           padding: EdgeInsets.only(top: 8.0.sp),
-                //           child: ClipRRect(
-                //             child: SizedBox(
-                //               height: 11,
-                //               child: Stack(
-                //                 children: [
-                //                   Container(
-                //                     decoration: BoxDecoration(
-                //                       color: subBg02Color,
-                //                       borderRadius: BorderRadius.all(
-                //                         Radius.circular(50.sp),
-                //                       ),
-                //                     ),
-                //                   ),
-                //                   LayoutBuilder(
-                //                     builder: (context, constraints) {
-                //                       return Container(
-                //                         width: constraints.maxWidth / (double.parse(controller.itemHealthMax.value) / controller.purchaseCompleteItem.value.itemStat.stamina!),
-                //                         decoration: BoxDecoration(
-                //                           color: lightGreenColor,
-                //                           borderRadius: BorderRadius.all(
-                //                             Radius.circular(30.sp),
-                //                           ),
-                //                         ),
-                //                       );
-                //                     },
-                //                   )
-                //                 ],
-                //               ),
-                //             ),
-                //           ),
-                //         )
-                //       ],
-                //     ),
-                //   ),
-                //
-                // // 행운
-                // if (controller.purchaseCompleteItem.value.itemStat.luck! > 0)
-                //   Padding(
-                //     padding: EdgeInsets.only(top: 16.0.sp),
-                //     child: Column(
-                //       children: [
-                //         Row(
-                //           mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                //           children: [
-                //             Row(
-                //               children: [
-                //                 iconStatLuck,
-                //                 Padding(
-                //                   padding: EdgeInsets.only(left: 8.0.sp),
-                //                   child: StyledText(
-                //                     '행운',
-                //                     fontWeight: 500,
-                //                     fontSize: 14,
-                //                     lineHeight: 15,
-                //                   ),
-                //                 ),
-                //               ],
-                //             ),
-                //             StyledText(
-                //               formatDecimalPlaces(controller.purchaseCompleteItem.value.itemStat.luck!, 0),
-                //               fontSize: 12,
-                //               fontWeight: 500,
-                //               color: pinkColor,
-                //               letterSpacing: -.1,
-                //             ),
-                //           ],
-                //         ),
-                //         Padding(
-                //           padding: EdgeInsets.only(top: 8.0.sp),
-                //           child: ClipRRect(
-                //             child: SizedBox(
-                //               height: 11,
-                //               child: Stack(
-                //                 children: [
-                //                   Container(
-                //                     decoration: BoxDecoration(
-                //                       color: subBg02Color,
-                //                       borderRadius: BorderRadius.all(
-                //                         Radius.circular(50.sp),
-                //                       ),
-                //                     ),
-                //                   ),
-                //                   LayoutBuilder(
-                //                     builder: (context, constraints) {
-                //                       return Container(
-                //                         width: constraints.maxWidth / (double.parse(controller.itemLuckMax.value) / controller.purchaseCompleteItem.value.itemStat.luck!),
-                //                         decoration: BoxDecoration(
-                //                           color: pinkColor,
-                //                           borderRadius: BorderRadius.all(
-                //                             Radius.circular(30.sp),
-                //                           ),
-                //                         ),
-                //                       );
-                //                     },
-                //                   )
-                //                 ],
-                //               ),
-                //             ),
-                //           ),
-                //         )
-                //       ],
-                //     ),
-                //   ),
-              ],
+              ),
             ),
           ),
           Padding(
@@ -2039,16 +1731,41 @@ void itemPurchaseCompleteAlert(ShopDetailController controller) {
                 ),
               ],
             ),
-          )
+          ),
+          if (controller.purchaseCompleteItem.value.challenge != null && controller.purchaseCompleteItem.value.challenge!.extTxtDetail != null)
+            Padding(
+              padding: EdgeInsets.only(
+                bottom: 30.sp,
+              ),
+              child: StyledText(
+                controller.purchaseCompleteItem.value.challenge!.extTxtDetail!,
+                fontWeight: 500,
+                fontSize: 12,
+                lineHeight: 18,
+                color: deepGrayColor,
+              ),
+            )
         ],
       );
     }),
     actions: [
+      if (controller.purchaseCompleteItem.value.challenge != null && controller.purchaseCompleteItem.value.challenge!.linkUrl != null)
+        Expanded(
+          child: GazagoButton(
+            onTap: () => controller.moveToExternalBrowser(controller.purchaseCompleteItem.value.challenge!.linkUrl),
+            buttonText: controller.purchaseCompleteItem.value.challenge!.extBtnLabel!,
+            textColor: Colors.white,
+            buttonColor: popupBgColor,
+          ),
+        ),
+      if (controller.purchaseCompleteItem.value.challenge != null && controller.purchaseCompleteItem.value.challenge!.linkUrl != null)
+        SizedBox(
+          width: 9.sp,
+        ),
       Expanded(
         child: GazagoButton(
           onTap: () {
             Get.back();
-
             controller.fetchEquipItem(controller.purchaseCompleteItem.value.id);
           },
           buttonText: '확인',

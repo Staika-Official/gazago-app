@@ -1,3 +1,4 @@
+import 'package:gaza_go/platform/models/shop_item_challenge_model.dart';
 import 'package:json_annotation/json_annotation.dart';
 
 part 'shop_item_model.g.dart';
@@ -24,10 +25,7 @@ class ShopItemModel {
   String? description;
   String? publishType;
   String? tradeSymbol;
-  String? extBtnLabel;
-  String? extTxt;
-  String? extTxtDetail;
-  String? linkUrl;
+  ShopItemChallengeModel? challenge;
 
   ShopItemModel({
     required this.id,
@@ -50,10 +48,7 @@ class ShopItemModel {
     this.description,
     this.publishType,
     this.tradeSymbol,
-    this.extBtnLabel,
-    this.extTxt,
-    this.extTxtDetail,
-    this.linkUrl,
+    this.challenge,
   });
 
   factory ShopItemModel.fromJson(Map<String, dynamic> json) => _$ShopItemModelFromJson(json);
