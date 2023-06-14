@@ -64,7 +64,7 @@ mixin ActivityMixin {
   final RxBool zeroStaminaNotified = RxBool(false);
   final RxBool lowDurabilityNotified = RxBool(false);
   final RxBool zeroDurabilityNotified = RxBool(false);
-  final Throttling thr = Throttling(duration: const Duration(milliseconds: 1500));
+  final Throttling activityMixinThr = Throttling(duration: const Duration(milliseconds: 1500));
   final Rx<Control> luckLoadControl = Rx(Control.stop);
   RxBool isShowLuckAnimation = RxBool(false);
 
@@ -421,7 +421,7 @@ mixin ActivityMixin {
     if (globalController.internetConnection.value) {
       Get.back();
       Get.toNamed(Routes.activityActive);
-      thr.throttle(() => continueExercise(source: 'pendingExerciseDialog'));
+      activityMixinThr.throttle(() => continueExercise(source: 'pendingExerciseDialog'));
     } else {
       showToastPopup('인터넷 상태를 확인해주세요.');
     }
@@ -444,7 +444,7 @@ mixin ActivityMixin {
     coordinates.addAll(await parseCoordinates(userState.value.exercise!.id));
 
     initStream();
-    thr.throttle(() => updateExercise(source: source));
+    activityMixinThr.throttle(() => updateExercise(source: source));
     startPeriodicUpdate();
   }
 
@@ -571,7 +571,7 @@ mixin ActivityMixin {
       Duration(milliseconds: updateInterval),
       (timer) {
         validateTimer(timer, HiveKey.updateTimer);
-        thr.throttle(() => updateExercise(source: 'startPeriodicUpdate_${updateTimer.hashCode}'));
+        activityMixinThr.throttle(() => updateExercise(source: 'startPeriodicUpdate_${updateTimer.hashCode}'));
       },
     );
     HiveStore.save(key: HiveKey.updateTimer.name, value: updateTimer.hashCode);

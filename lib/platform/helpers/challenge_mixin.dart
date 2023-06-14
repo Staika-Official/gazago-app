@@ -32,7 +32,7 @@ mixin ChallengeMixin {
   late NaverMapController challengeMapController;
   final RxList<Marker> challengeMarkers = RxList.empty();
   final RxList<Marker> selectedChallengeMarkers = RxList.empty();
-  final Throttling thr = Throttling(duration: const Duration(milliseconds: 500));
+  final Throttling challengeThr = Throttling(duration: const Duration(milliseconds: 500));
 
   String getChallengeExerciseType(String type) {
     switch (type) {
@@ -202,7 +202,7 @@ mixin ChallengeMixin {
           Geolocator.distanceBetween(selectedChallenge.value.endLat!, selectedChallenge.value.endLon!, currentLocation.latitude, currentLocation.longitude) < selectedChallenge.value.endRadius!;
       if (hasArrived && userState.exercise!.badgeIssueId == null) {
         if (globalController.internetConnection.value) {
-          thr.throttle(() => requestBadgeIssuance(userState));
+          challengeThr.throttle(() => requestBadgeIssuance(userState));
         } else {
           HiveStore.save(key: HiveKey.badgeIssuanceRequested.name, value: true);
         }
@@ -212,7 +212,11 @@ mixin ChallengeMixin {
 
   Future<void> requestBadgeIssuance(CurrentUserStateModel userState) async {
     void successCallback(InventoryBadgeModel badge) {
-      showLocalNotification(notificationType: NotificationType.badge, title: '등산 챌린지 뱃지 획득', message: '${selectedChallenge.value.firstName} 등산 챌린지에 성공하여 뱃지를 받았어요. 새로운 뱃지 확인하러 가자GO~~');
+      showLocalNotification(
+        notificationType: NotificationType.badge,
+        title: '등산 챌린지 뱃지 획득',
+        message: '${selectedChallenge.value.firstName} 등산 챌린지에 성공하여 뱃지를 받았어요. 새로운 뱃지 확인하러 가자GO~~',
+      );
       showToastPopup('뱃지를 획득하였습니다.');
       userState.exercise!.badgeIssueId = badge.id;
       HiveStore.deleteKey(key: HiveKey.badgeIssuanceRequested.name);
@@ -224,6 +228,10 @@ mixin ChallengeMixin {
       HiveStore.save(key: HiveKey.badgeIssuanceRequested.name, value: true);
     }
 
-    await BadgeService.fetchUserIssuanceBadge(userState.exercise!.id!, successCallback: successCallback, errorCallback: errorCallback);
+    await BadgeService.fetchUserIssuanceBadge(
+      userState.exercise!.id!,
+      successCallback: successCallback,
+      errorCallback: errorCallback,
+    );
   }
 }
