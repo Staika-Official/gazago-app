@@ -283,15 +283,23 @@ class ChallengesHome extends StatelessWidget {
                                         padding: EdgeInsets.only(left: 5.0.sp),
                                         child: Row(
                                           children: [
-                                            if (item.challengeState != 'READY')
-                                              StyledText(
-                                                '${formatDecimalPlaces(item.soldQuantity!.toDouble(), 0) ?? 0}명 /',
-                                                color: lightGrayColor,
-                                                fontWeight: 500,
-                                                fontSize: 12,
-                                                lineHeight: 13,
-                                                letterSpacing: -.1,
-                                              ),
+                                            item.challengeState == 'READY'
+                                                ? StyledText(
+                                                    '모집인원',
+                                                    color: lightGrayColor,
+                                                    fontWeight: 500,
+                                                    fontSize: 12,
+                                                    lineHeight: 13,
+                                                    letterSpacing: -.1,
+                                                  )
+                                                : StyledText(
+                                                    '${formatDecimalPlaces(item.soldQuantity!.toDouble(), 0) ?? 0}명 /',
+                                                    color: lightGrayColor,
+                                                    fontWeight: 500,
+                                                    fontSize: 12,
+                                                    lineHeight: 13,
+                                                    letterSpacing: -.1,
+                                                  ),
                                             StyledText(
                                               ' ${formatDecimalPlaces(item.quantity.toDouble(), 0)}명',
                                               color: lightGrayColor,

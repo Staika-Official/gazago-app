@@ -350,15 +350,12 @@ class ChallengeDetail extends StatelessWidget {
                                           if (controller.challengeDetails.value.title != null)
                                             Padding(
                                               padding: EdgeInsets.only(bottom: 10.0.sp),
-                                              child: Container(
-                                                key: controller.titleKey,
-                                                child: StyledText(
-                                                  controller.challengeDetails.value.title!,
-                                                  fontSize: 20,
-                                                  lineHeight: 25,
-                                                  fontWeight: 500,
-                                                  letterSpacing: -.1,
-                                                ),
+                                              child: StyledText(
+                                                controller.challengeDetails.value.title!,
+                                                fontSize: 20,
+                                                lineHeight: 25,
+                                                fontWeight: 500,
+                                                letterSpacing: -.1,
                                               ),
                                             ),
                                           Row(
