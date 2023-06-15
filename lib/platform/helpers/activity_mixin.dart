@@ -306,6 +306,7 @@ mixin ActivityMixin {
         // 모바일 재시작 시 event.steps 가 초기화 됨.
         if (event.steps < dummySteps) {
           dummySteps = event.steps;
+          HiveStore.save(key: HiveKey.dummyStepCount.name, value: event.steps);
         }
 
         int actualSteps = (event.steps - dummySteps) + savedSteps;
