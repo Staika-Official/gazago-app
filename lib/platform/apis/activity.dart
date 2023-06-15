@@ -155,4 +155,15 @@ class ActivityApi {
       showLoading: false,
     ).get('/users/$userId/locations/$exerciseId?page=$page&size=$size');
   }
+
+  static Future<Response> fetchChallengeAllianceLinkRecord(String userId, int challengeId, String linkUrl) async {
+    return await Api.client(
+      serviceUrl: '/services/gazago/api',
+      showLoading: false,
+    ).post('/alliance-link-records/users/$userId', data: {
+      "userId": userId,
+      "challengeId": challengeId,
+      "linkUrl": linkUrl,
+    });
+  }
 }

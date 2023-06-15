@@ -11,6 +11,7 @@ import 'package:gaza_go/platform/models/inventory_item_model.dart';
 import 'package:gaza_go/platform/models/inventory_item_stat_model.dart';
 import 'package:gaza_go/platform/models/shop_item_model.dart';
 import 'package:gaza_go/platform/models/shop_item_purchase_response_model.dart';
+import 'package:gaza_go/platform/services/activity_service.dart';
 import 'package:gaza_go/platform/services/item_service.dart';
 import 'package:gaza_go/platform/services/shop_service.dart';
 import 'package:gaza_go/presentations/components/alert_ui_list.dart';
@@ -235,6 +236,7 @@ class ShopDetailController extends GetxController {
   void moveToExternalBrowser(linkUrl) async {
     Uri url = Uri.parse(linkUrl!);
     if (await canLaunchUrl(url)) {
+      await ActivityService.fetchChallengeAllianceLinkRecord(selectedItem.value.challenge!.challengeId!, linkUrl);
       await launchUrl(url, mode: LaunchMode.externalApplication);
     }
   }

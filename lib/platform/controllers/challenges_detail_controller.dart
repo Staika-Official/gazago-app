@@ -121,6 +121,7 @@ class ChallengesDetailController extends GetxController with GetTickerProviderSt
   void moveToExternalBrowser(linkUrl) async {
     Uri url = Uri.parse(linkUrl!);
     if (await canLaunchUrl(url)) {
+      await ActivityService.fetchChallengeAllianceLinkRecord(challengeId.value, linkUrl);
       await launchUrl(url, mode: LaunchMode.externalApplication);
     }
   }

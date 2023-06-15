@@ -242,13 +242,13 @@ class ChallengeDetail extends StatelessWidget {
                                     if (controller.challengeDetails.value.imageUrl != null)
                                       controller.challengeDetails.value.imageUrl!.contains('.svg')
                                           ? SvgPicture.network(
-                                              fit: BoxFit.cover,
+                                              fit: BoxFit.fill,
                                               controller.challengeDetails.value.imageUrl!,
                                               placeholderBuilder: (BuildContext context) => const Center(child: SizedBox.square(dimension: 40, child: CircularProgressIndicator())),
                                             )
                                           : CachedNetworkImage(
                                               imageUrl: controller.challengeDetails.value.imageUrl!,
-                                              fit: BoxFit.cover,
+                                              fit: BoxFit.fill,
                                               placeholder: (context, url) => const Center(child: SizedBox.square(dimension: 40, child: CircularProgressIndicator())),
                                               errorWidget: (context, url, error) => const Center(child: SizedBox.square(dimension: 40, child: CircularProgressIndicator())),
                                             ),
@@ -436,15 +436,23 @@ class ChallengeDetail extends StatelessWidget {
                                                       padding: EdgeInsets.only(left: 5.0.sp),
                                                       child: Row(
                                                         children: [
-                                                          if (controller.challengeDetails.value.challengeState != 'READY')
-                                                            StyledText(
-                                                              '${formatDecimalPlaces(controller.challengeDetails.value.soldQuantity!.toDouble(), 0)}명 /',
-                                                              color: lightGrayColor,
-                                                              fontWeight: 500,
-                                                              fontSize: 12,
-                                                              lineHeight: 13,
-                                                              letterSpacing: -.1,
-                                                            ),
+                                                          controller.challengeDetails.value.challengeState == 'READY'
+                                                              ? StyledText(
+                                                                  '모집인원',
+                                                                  color: lightGrayColor,
+                                                                  fontWeight: 500,
+                                                                  fontSize: 12,
+                                                                  lineHeight: 13,
+                                                                  letterSpacing: -.1,
+                                                                )
+                                                              : StyledText(
+                                                                  '${formatDecimalPlaces(controller.challengeDetails.value.soldQuantity!.toDouble(), 0) ?? 0}명 /',
+                                                                  color: lightGrayColor,
+                                                                  fontWeight: 500,
+                                                                  fontSize: 12,
+                                                                  lineHeight: 13,
+                                                                  letterSpacing: -.1,
+                                                                ),
                                                           StyledText(
                                                             ' ${formatDecimalPlaces(controller.challengeDetails.value.quantity!.toDouble(), 0)}명',
                                                             color: lightGrayColor,
