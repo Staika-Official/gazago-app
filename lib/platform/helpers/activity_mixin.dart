@@ -72,7 +72,7 @@ mixin ActivityMixin {
     Color color = Colors.white;
     switch (exerciseState.value) {
       case ExerciseState.ongoing:
-        if (avgSpeed.value < 1 || avgSpeed.value > 7) {
+        if (realTimeSpeed.value < 1 || realTimeSpeed.value > 7) {
           color = textRedColor;
         } else {
           color = textGreenColor;
@@ -92,7 +92,7 @@ mixin ActivityMixin {
     Color color = Colors.white;
     switch (exerciseState.value) {
       case ExerciseState.ongoing:
-        if (avgSpeed.value < 1 || avgSpeed.value > 7) {
+        if (realTimeSpeed.value < 1 || realTimeSpeed.value > 7) {
           color = speedRedColor;
         } else {
           color = speedGreenColor;
