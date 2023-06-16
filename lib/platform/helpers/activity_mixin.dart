@@ -76,7 +76,7 @@ mixin ActivityMixin {
     Color color = Colors.white;
     switch (exerciseState.value) {
       case ExerciseState.ongoing:
-        if (avgSpeed.value < 1 || avgSpeed.value > 7) {
+        if (realTimeSpeed.value < 1 || realTimeSpeed.value > 7) {
           color = textRedColor;
         } else {
           color = textGreenColor;
@@ -96,7 +96,7 @@ mixin ActivityMixin {
     Color color = Colors.white;
     switch (exerciseState.value) {
       case ExerciseState.ongoing:
-        if (avgSpeed.value < 1 || avgSpeed.value > 7) {
+        if (realTimeSpeed.value < 1 || realTimeSpeed.value > 7) {
           color = speedRedColor;
         } else {
           color = speedGreenColor;
@@ -310,6 +310,7 @@ mixin ActivityMixin {
         // 모바일 재시작 시 event.steps 가 초기화 됨.
         if (event.steps < dummySteps) {
           dummySteps = event.steps;
+          HiveStore.save(key: HiveKey.dummyStepCount.name, value: event.steps);
         }
 
         int actualSteps = (event.steps - dummySteps) + savedSteps;

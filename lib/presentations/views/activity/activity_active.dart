@@ -311,7 +311,7 @@ class ActivityActive extends StatelessWidget {
                     fontWeight: 500,
                   )
                 : StyledText(
-                    (controller.avgSpeed.value < 1 || controller.avgSpeed.value > 7) && controller.exerciseState.value == ExerciseState.ongoing
+                    (controller.realTimeSpeed.value < 1 || controller.realTimeSpeed.value > 7) && controller.exerciseState.value == ExerciseState.ongoing
                         ? '${controller.exerciseState.value.label} (보상 불가)'
                         : controller.exerciseState.value.label,
                     fontSize: 18,
@@ -509,10 +509,10 @@ class ActivityActive extends StatelessWidget {
                                 ),
                                 Positioned(
                                   top: -26.sp,
-                                  left: calculateGaugePosition(constraints, controller.avgSpeed.value),
+                                  left: calculateGaugePosition(constraints, controller.realTimeSpeed.value),
                                   child: GaugeCursor(
                                     color: controller.exerciseStateGaugeColor.value,
-                                    speed: controller.avgSpeed.value,
+                                    speed: controller.realTimeSpeed.value,
                                   ),
                                 ),
                                 Positioned(
