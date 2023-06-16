@@ -500,7 +500,7 @@ class InventoryItemDetail extends StatelessWidget {
                                             padding: EdgeInsets.only(top: 10.0.sp, left: 20.sp, right: 20.sp),
                                             child: StyledText(
                                               controller.selectedItem.value.challenge!.extTxtDetail!,
-                                              fontSize: 11,
+                                              fontSize: 12,
                                               letterSpacing: -.1,
                                               lineHeight: 18,
                                               color: deepGrayColor,

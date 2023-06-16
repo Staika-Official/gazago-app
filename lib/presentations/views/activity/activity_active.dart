@@ -278,7 +278,7 @@ class ActivityActive extends StatelessWidget {
     final luckMovie = MovieTween()
       ..scene(begin: const Duration(seconds: 0), duration: const Duration(seconds: 2))
           .tween('opacity', Tween<double>(begin: 0, end: 1), curve: Curves.easeOut)
-          .thenFor(duration: const Duration(seconds: 1))
+          .thenFor(duration: const Duration(seconds: 5))
           .thenTween('opacity', Tween<double>(begin: 1, end: 0), duration: const Duration(milliseconds: 300), curve: Curves.easeOut);
 
     return DefaultContainer(
@@ -559,6 +559,11 @@ class ActivityActive extends StatelessWidget {
                         return Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
+                            InkWell(
+                                onTap: () {
+                                  controller.showLuckAnimation();
+                                },
+                                child: StyledText('눌ㄹ러라')),
                             SizedBox(
                               width: constraints.maxWidth / 3,
                               child: Column(

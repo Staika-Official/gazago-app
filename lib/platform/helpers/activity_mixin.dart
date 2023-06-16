@@ -1,7 +1,10 @@
 import 'dart:async';
 import 'dart:io';
 
+import 'package:assets_audio_player/assets_audio_player.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
+import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:flutter_naver_map/flutter_naver_map.dart';
 import 'package:gaza_go/constants/config.dart';
 import 'package:gaza_go/constants/enums.dart';
@@ -67,6 +70,7 @@ mixin ActivityMixin {
   final Throttling activityMixinThr = Throttling(duration: const Duration(milliseconds: 1500));
   final Rx<Control> luckLoadControl = Rx(Control.stop);
   RxBool isShowLuckAnimation = RxBool(false);
+  final assetsAudioPlayer = AssetsAudioPlayer();
 
   Rx<Color> get exerciseStateTextColor {
     Color color = Colors.white;
@@ -825,7 +829,14 @@ mixin ActivityMixin {
   }
 
   void showLuckAnimation() async {
+    FlutterLocalNotificationsPlugin notificationsPlugin = FlutterLocalNotificationsPlugin();
     luckLoadControl.value = Control.playReverseFromEnd;
+    HapticFeedback.vibrate();
+
+    assetsAudioPlayer.open(
+      Audio("assets/audio/bonus_go.mp3"),
+    );
+    assetsAudioPlayer.play();
     isShowLuckAnimation.value = true;
   }
 

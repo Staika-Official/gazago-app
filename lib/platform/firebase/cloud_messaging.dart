@@ -196,6 +196,7 @@ NotificationDetails badgeAcquiredNotificationDetail = NotificationDetails(
   ),
   iOS: const IOSNotificationDetails(sound: 'badge_acquired.mp3'),
 );
+
 //
 // badge,
 // stamina,

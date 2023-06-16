@@ -669,7 +669,7 @@ class ShopItemDetail extends StatelessWidget {
                                   padding: EdgeInsets.only(top: 8.0.sp),
                                   child: StyledText(
                                     controller.selectedItem.value.challenge!.extTxtDetail!,
-                                    fontSize: 11,
+                                    fontSize: 12,
                                     letterSpacing: -.1,
                                     lineHeight: 18,
                                     color: deepGrayColor,
