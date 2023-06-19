@@ -72,46 +72,47 @@ class ChallengeInfo extends StatelessWidget {
                         ],
                       ),
                     ),
-                    Container(
-                      margin: EdgeInsets.only(top: 16.sp),
-                      decoration: BoxDecoration(
-                        color: const Color(0xFF2E3038),
-                        border: Border.all(
-                          width: 1,
+                    if (controller.challengeDetails.value.rewardAmount != null && controller.challengeDetails.value.rewardAmount! > 0)
+                      Container(
+                        margin: EdgeInsets.only(top: 16.sp),
+                        decoration: BoxDecoration(
                           color: const Color(0xFF2E3038),
+                          border: Border.all(
+                            width: 1,
+                            color: const Color(0xFF2E3038),
+                          ),
+                          borderRadius: BorderRadius.all(
+                            Radius.circular(12.sp),
+                          ),
                         ),
-                        borderRadius: BorderRadius.all(
-                          Radius.circular(12.sp),
+                        child: Padding(
+                          padding: EdgeInsets.symmetric(vertical: 15.sp, horizontal: 10.sp),
+                          child: Row(
+                            mainAxisSize: MainAxisSize.max,
+                            mainAxisAlignment: MainAxisAlignment.start,
+                            crossAxisAlignment: CrossAxisAlignment.center,
+                            children: [
+                              iconTodayTik,
+                              Padding(
+                                padding: EdgeInsets.only(left: 10.0.sp),
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    if (controller.challengeDetails.value.rewardAmount != null)
+                                      StyledText(
+                                        formatDecimalPlaces(double.parse(controller.challengeDetails.value.rewardAmount!.toString()), 0),
+                                        color: Colors.white,
+                                        fontWeight: 600,
+                                        fontSize: 26,
+                                        lineHeight: 28,
+                                      ),
+                                  ],
+                                ),
+                              )
+                            ],
+                          ),
                         ),
                       ),
-                      child: Padding(
-                        padding: EdgeInsets.symmetric(vertical: 15.sp, horizontal: 10.sp),
-                        child: Row(
-                          mainAxisSize: MainAxisSize.max,
-                          mainAxisAlignment: MainAxisAlignment.start,
-                          crossAxisAlignment: CrossAxisAlignment.center,
-                          children: [
-                            iconTodayTik,
-                            Padding(
-                              padding: EdgeInsets.only(left: 10.0.sp),
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  if (controller.challengeDetails.value.rewardAmount != null)
-                                    StyledText(
-                                      formatDecimalPlaces(double.parse(controller.challengeDetails.value.rewardAmount!.toString()), 0),
-                                      color: Colors.white,
-                                      fontWeight: 600,
-                                      fontSize: 26,
-                                      lineHeight: 28,
-                                    ),
-                                ],
-                              ),
-                            )
-                          ],
-                        ),
-                      ),
-                    ),
                     if (controller.challengeDetails.value.badge != null)
                       Padding(
                         padding: EdgeInsets.only(top: 16.0.sp),

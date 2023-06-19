@@ -82,7 +82,7 @@ class InventoryItemDetail extends StatelessWidget {
                                 ),
                               ),
                               Padding(
-                                padding: EdgeInsets.symmetric(vertical: 30.0.sp),
+                                padding: EdgeInsets.only(top: 30.0.sp),
                                 child: Obx(
                                   () {
                                     return Column(
@@ -599,7 +599,7 @@ class InventoryItemDetail extends StatelessWidget {
                                         controller.selectedItem.value.equipped == true
                                             ? Center(
                                                 child: Padding(
-                                                  padding: EdgeInsets.only(top: 5.0.sp),
+                                                  padding: EdgeInsets.only(top: 5.0.sp, bottom: 30.sp),
                                                   child: Container(
                                                     decoration: BoxDecoration(
                                                       color: popupBgColor,
@@ -643,7 +643,7 @@ class InventoryItemDetail extends StatelessWidget {
                                               )
                                             : Center(
                                                 child: Padding(
-                                                  padding: EdgeInsets.only(top: 5.0.sp),
+                                                  padding: EdgeInsets.only(top: 5.0.sp, bottom: 30.sp),
                                                   child: Container(
                                                     decoration: BoxDecoration(
                                                       color: popupBgColor,
@@ -684,11 +684,28 @@ class InventoryItemDetail extends StatelessWidget {
                                                   ),
                                                 ),
                                               ),
+                                        if (controller.selectedItem.value.expiredDate != null)
+                                          Container(
+                                              decoration: BoxDecoration(
+                                                color: Colors.black.withOpacity(.2),
+                                              ),
+                                              child: Padding(
+                                                padding: EdgeInsets.symmetric(vertical: 10.0.sp),
+                                                child: Center(
+                                                  child: StyledText(
+                                                    '아이템 사용 기한: ${formatDateUntilTime(controller.selectedItem.value.expiredDate)} 소멸 예정',
+                                                    color: lightGrayColor,
+                                                    fontSize: 12,
+                                                    fontWeight: 500,
+                                                    letterSpacing: -0.1,
+                                                  ),
+                                                ),
+                                              ))
                                       ],
                                     );
                                   },
                                 ),
-                              )
+                              ),
                             ],
                           ),
                         ),

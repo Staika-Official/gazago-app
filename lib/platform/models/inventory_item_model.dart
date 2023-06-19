@@ -14,6 +14,7 @@ class InventoryItemModel {
   String? publishType;
   String itemCategory;
   String itemGrade;
+  String? expiredDate;
   double durability;
   double? abrasionRate;
   double? rewardRate;
@@ -35,6 +36,7 @@ class InventoryItemModel {
     required this.serialNumber,
     required this.itemGrade,
     required this.itemName,
+    this.expiredDate,
     this.publishType,
     required this.itemCategory,
     required this.durability,
