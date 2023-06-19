@@ -74,8 +74,7 @@ class HomeMenuController extends SuperController {
 
   void handleAppNotification() async {
     RemoteMessage? initialMessage = await FirebaseMessaging.instance.getInitialMessage();
-    print('aasdlkhjaslkjdklajsfkljasklfklasjfkljaskljfdlksajlkfjalkfjklsa');
-    print(initialMessage);
+
     if (initialMessage != null) {
       if (initialMessage.data['notificationKey'] == 'DAILY_REWARD_COMPLETED') {
         Get.find<WalletMasterController>().moveToWallet();

@@ -100,18 +100,17 @@ class InventoryItemDetail extends StatelessWidget {
                                                       Positioned.fill(left: 24.sp, right: 24.sp, child: SvgPicture.asset('assets/images/shop/ico_nft_detail.svg')),
                                                     Center(
                                                       child: SizedBox(
-                                                        width: 150.sp,
                                                         child: controller.selectedItem.value.itemImageUrl.contains('.svg')
                                                             ? SvgPicture.network(
-                                                                fit: BoxFit.fitWidth,
-                                                                width: 170.sp,
+                                                                fit: BoxFit.fitHeight,
+                                                                height: 170.sp,
                                                                 controller.selectedItem.value.itemImageUrl,
                                                                 placeholderBuilder: (BuildContext context) => Container(padding: const EdgeInsets.all(30.0), child: const CircularProgressIndicator()),
                                                               )
                                                             : CachedNetworkImage(
                                                                 imageUrl: controller.selectedItem.value.itemImageUrl,
-                                                                width: 170.sp,
-                                                                fit: BoxFit.fitWidth,
+                                                                height: 170.sp,
+                                                                fit: BoxFit.fitHeight,
                                                                 placeholder: (context, url) => const Center(child: SizedBox.square(dimension: 40, child: CircularProgressIndicator())),
                                                               ),
                                                       ),

@@ -252,29 +252,29 @@ class ChallengeDetail extends StatelessWidget {
                                               placeholder: (context, url) => const Center(child: SizedBox.square(dimension: 40, child: CircularProgressIndicator())),
                                               errorWidget: (context, url, error) => const Center(child: SizedBox.square(dimension: 40, child: CircularProgressIndicator())),
                                             ),
-                                    if (controller.challengeDetails.value.challengeActivationType != null)
-                                      Positioned(
-                                        top: 12.sp,
-                                        left: 15.sp,
-                                        child: Container(
-                                          decoration: BoxDecoration(
-                                            color: subBg01Color,
-                                            borderRadius: BorderRadius.all(
-                                              Radius.circular(6.sp),
-                                            ),
-                                          ),
-                                          child: Padding(
-                                            padding: EdgeInsets.symmetric(vertical: 8.0, horizontal: 11.0),
-                                            child: StyledText(
-                                              controller.challengeDetails.value.challengeActivationType == 'ITEM' ? '아이템 장착형' : '참가비 납부형',
-                                              fontWeight: 600,
-                                              fontSize: 12,
-                                              lineHeight: 14,
-                                              letterSpacing: -.1,
-                                            ),
-                                          ),
-                                        ),
-                                      ),
+                                    // if (controller.challengeDetails.value.challengeActivationType != null)
+                                    //   Positioned(
+                                    //     top: 12.sp,
+                                    //     left: 15.sp,
+                                    //     child: Container(
+                                    //       decoration: BoxDecoration(
+                                    //         color: subBg01Color,
+                                    //         borderRadius: BorderRadius.all(
+                                    //           Radius.circular(6.sp),
+                                    //         ),
+                                    //       ),
+                                    //       child: Padding(
+                                    //         padding: EdgeInsets.symmetric(vertical: 8.0, horizontal: 11.0),
+                                    //         child: StyledText(
+                                    //           controller.challengeDetails.value.challengeActivationType == 'ITEM' ? '아이템 장착형' : '참가비 납부형',
+                                    //           fontWeight: 600,
+                                    //           fontSize: 12,
+                                    //           lineHeight: 14,
+                                    //           letterSpacing: -.1,
+                                    //         ),
+                                    //       ),
+                                    //     ),
+                                    //   ),
                                   ],
                                 ),
                               ),
