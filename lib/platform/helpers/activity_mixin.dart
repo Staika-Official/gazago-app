@@ -624,7 +624,7 @@ mixin ActivityMixin {
     if (source != null && source == 'pendingExerciseDialog') {
       if (globalController.internetConnection.value) {
         Get.back();
-        controller.thr.throttle(() => endExercise(challenge, source: source));
+        controller.exerciseEndThr.throttle(() => endExercise(challenge, source: source));
       } else {
         showToastPopup('인터넷 상태를 확인해주세요.');
       }

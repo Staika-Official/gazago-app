@@ -89,6 +89,10 @@ class ActivityController extends SuperController with ActivityMixin, ChallengeMi
   RxBool disableButton = RxBool(false);
   RxBool disableActivityButton = RxBool(true);
   final Throttling thr = Throttling(duration: const Duration(milliseconds: 500));
+  final Throttling exerciseStartThr = Throttling(duration: const Duration(milliseconds: 500));
+  final Throttling exerciseUpdateThr = Throttling(duration: const Duration(milliseconds: 500));
+  final Throttling exerciseEndThr = Throttling(duration: const Duration(milliseconds: 500));
+  final Throttling locationThr = Throttling(duration: const Duration(milliseconds: 500));
   late AnimationController challengeGuideController;
   final Rx<Control> challengeLoadControl = Rx(Control.play);
   final RxDouble challengeLoadControlPosition = RxDouble(0);
@@ -587,7 +591,7 @@ class ActivityController extends SuperController with ActivityMixin, ChallengeMi
         if (loadingTime.value >= 3) {
           timer.cancel();
           loadingTimer = null;
-          thr.throttle(() => startExercise(exerciseType, challenge, adId: adId));
+          exerciseStartThr.throttle(() => startExercise(exerciseType, challenge, adId: adId));
         } else {
           loadingTime.value++;
           activityLoadControl = Control.playFromStart;
@@ -735,7 +739,7 @@ class ActivityController extends SuperController with ActivityMixin, ChallengeMi
         }
       }
 
-      thr.throttle(() {
+      locationThr.throttle(() {
         detectChallengeZone(position);
         autoFinishChallenge(position, userState.value);
       });
