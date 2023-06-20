@@ -1429,7 +1429,7 @@ void itemPurchaseCompleteAlert(ShopDetailController controller) {
       return Column(
         children: [
           Padding(
-            padding: EdgeInsets.only(top: 20.0.sp, bottom: 15.sp),
+            padding: EdgeInsets.only(top: 10.0.sp, bottom: 15.sp),
             child: Column(
               children: [
                 SizedBox(
@@ -1438,13 +1438,13 @@ void itemPurchaseCompleteAlert(ShopDetailController controller) {
                       ? SvgPicture.network(
                           fit: BoxFit.contain,
                           controller.purchaseCompleteItem.value.itemImageUrl,
-                          placeholderBuilder: (BuildContext context) => Container(padding: const EdgeInsets.all(30.0), child: const CircularProgressIndicator()),
+                          placeholderBuilder: (BuildContext context) => const Center(child: SizedBox.square(dimension: 40, child: CircularProgressIndicator())),
                         )
                       : CachedNetworkImage(
                           imageUrl: controller.purchaseCompleteItem.value.itemImageUrl,
                           fit: BoxFit.fitWidth,
-                          placeholder: (context, url) => const CircularProgressIndicator(),
-                          errorWidget: (context, url, error) => Image.asset("assets/images/@temp_badge.png"),
+                          placeholder: (context, url) => const Center(child: SizedBox.square(dimension: 40, child: CircularProgressIndicator())),
+                          errorWidget: (context, url, error) => const Center(child: SizedBox.square(dimension: 40, child: CircularProgressIndicator())),
                         ),
                 ),
               ],
@@ -1698,8 +1698,8 @@ void itemPurchaseCompleteAlert(ShopDetailController controller) {
           ),
           Padding(
             padding: EdgeInsets.only(
-              top: 35.0.sp,
-              bottom: 30.sp,
+              top: 15.0.sp,
+              bottom: 20.sp,
             ),
             child: Column(
               children: [
@@ -1743,6 +1743,7 @@ void itemPurchaseCompleteAlert(ShopDetailController controller) {
                 fontSize: 12,
                 lineHeight: 18,
                 color: deepGrayColor,
+                textAlign: TextAlign.center,
               ),
             )
         ],

@@ -559,11 +559,11 @@ class ActivityActive extends StatelessWidget {
                         return Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
-                            InkWell(
-                                onTap: () {
-                                  controller.showLuckAnimation();
-                                },
-                                child: StyledText('눌ㄹ러라')),
+                            // InkWell(
+                            //     onTap: () {
+                            //       controller.showLuckAnimation();
+                            //     },
+                            //     child: StyledText('눌ㄹ러라')),
                             SizedBox(
                               width: constraints.maxWidth / 3,
                               child: Column(
