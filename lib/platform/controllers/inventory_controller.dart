@@ -118,24 +118,24 @@ class InventoryController extends GetxController with LinearProgressMixin, Inven
     ),
   );
 
-  Rx<InventoryItemModel> get equippedTop {
-    return Rx(equippedItemList.firstWhere((element) => element.itemCategory == 'TOP'));
+  Rxn get equippedTop {
+    return Rxn(equippedItemList.firstWhereOrNull((element) => element.itemCategory == 'TOP'));
   }
 
-  Rx<InventoryItemModel> get equippedShoe {
-    return Rx(equippedItemList.firstWhere((element) => element.itemCategory == 'SHOES'));
+  Rxn get equippedShoe {
+    return Rxn(equippedItemList.firstWhereOrNull((element) => element.itemCategory == 'SHOES'));
   }
 
-  Rx<InventoryItemModel> get equippedAccessory {
-    return Rx(equippedItemList.firstWhere((element) => element.itemCategory == 'ACCESSORY'));
+  Rxn get equippedAccessory {
+    return Rxn(equippedItemList.firstWhereOrNull((element) => element.itemCategory == 'ACCESSORY'));
   }
 
-  Rx<InventoryItemModel> get equippedBottom {
-    return Rx(equippedItemList.firstWhere((element) => element.itemCategory == 'BOTTOM'));
+  Rxn get equippedBottom {
+    return Rxn(equippedItemList.firstWhereOrNull((element) => element.itemCategory == 'BOTTOM'));
   }
 
-  Rx<InventoryItemModel> get equippedHat {
-    return Rx(equippedItemList.firstWhere((element) => element.itemCategory == 'HAT'));
+  Rxn get equippedHat {
+    return Rxn(equippedItemList.firstWhereOrNull((element) => element.itemCategory == 'HAT'));
   }
 
   RxMap<String, List<InventoryItemModel>> get allItems {
@@ -364,17 +364,20 @@ class InventoryController extends GetxController with LinearProgressMixin, Inven
   }
 
   void checkEquippedInventoryChallengeItem(int itemId, String category) {
-    InventoryItemModel filteredItem = equippedItemList.firstWhere((element) => element.itemCategory == category);
-
-    if (filteredItem.challenge != null) {
-      checkChallengeItemEquip(this, itemId);
+    InventoryItemModel? filteredItem = equippedItemList.firstWhereOrNull((element) => element.itemCategory == category);
+    if (filteredItem != null) {
+      if (filteredItem.challengeItem != null && filteredItem.challengeItem!) {
+        checkChallengeItemEquip(this, itemId);
+      } else {
+        fetchEquipItem(itemId);
+      }
     } else {
       fetchEquipItem(itemId);
     }
   }
 
-  void checkEquippedChallengeItem(bool? isEquippedItem, int itemId) {
-    if (isEquippedItem!) {
+  void checkEquippedChallengeItem(bool isEquippedItem, int itemId) {
+    if (isEquippedItem != null && isEquippedItem) {
       checkChallengeItemEquip(this, itemId);
     } else {
       fetchEquipItem(itemId);
@@ -388,14 +391,21 @@ class InventoryController extends GetxController with LinearProgressMixin, Inven
         selectedItem.value = item;
         int allItemsPrevEquippedIndex = myAllItems.indexWhere((element) => element.itemCategory == selectedItem.value.itemCategory && element.equipped!);
         int allItemsIndex = myAllItems.indexWhere((element) => element.id == item.id);
-        int equippedIndex = equippedItemList.indexWhere((element) => element.itemCategory == item.itemCategory);
+        // int equippedIndex = equippedItemList.indexWhere((element) => element.itemCategory == item.itemCategory);
 
         if (allItemsPrevEquippedIndex >= 0) {
           myAllItems[allItemsPrevEquippedIndex].equipped = false;
         }
 
         myAllItems[allItemsIndex] = item;
-        equippedItemList[equippedIndex] = item;
+        // if (equippedIndex > 0) {
+        //   equippedItemList[equippedIndex] = item;
+        // }
+
+        Timer(const Duration(milliseconds: 500), () {
+          getUserEquippedItems();
+        });
+
         // await getUserEquippedItems();
         myAllItems.refresh();
         equippedItemList.refresh();

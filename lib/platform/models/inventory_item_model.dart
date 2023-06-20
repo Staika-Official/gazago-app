@@ -22,6 +22,7 @@ class InventoryItemModel {
   String itemImageUrl;
   String? description;
   bool? equipped;
+  bool? challengeItem;
   bool? equippedChallengeItem;
   int? listOrder;
   int? tik;
@@ -49,6 +50,7 @@ class InventoryItemModel {
     this.equipped,
     this.listOrder,
     this.equippedChallengeItem,
+    this.challengeItem,
     this.tik = 0,
     this.isShoe = false,
     this.challenge,

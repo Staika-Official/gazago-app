@@ -15,7 +15,7 @@ import 'package:intl/intl.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class ChallengesDetailController extends GetxController with GetTickerProviderStateMixin, ChallengeMixin {
-  ChallengesController challengesController = Get.find();
+  ChallengesController challengesController = Get.isRegistered<ChallengesController>() ? Get.find<ChallengesController>() : Get.put(ChallengesController());
   LoaderController loaderController = Get.put(LoaderController());
   Rx<DateTime?> today = Rx(DateTime.now());
   RxString fromDate = RxString('');
