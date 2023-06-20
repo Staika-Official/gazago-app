@@ -87,7 +87,6 @@ class ChallengesDetailController extends GetxController with GetTickerProviderSt
   }
 
   Future<void> getChallengeDetail() async {
-    // loaderController.isLoading.value = true;
     await ActivityService.getChallengeDetails(challengeId.value, successCallback: (NewChallengeDetailModel data) {
       challengeDetails.value = data;
 
