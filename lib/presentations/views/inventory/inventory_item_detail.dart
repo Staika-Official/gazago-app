@@ -46,7 +46,7 @@ class InventoryItemDetail extends StatelessWidget {
             child: Column(
               children: [
                 Padding(
-                  padding: EdgeInsets.only(left: 22.0.sp, right: 22.0.sp, bottom: 22.0.sp),
+                  padding: EdgeInsets.only(left: 22.0.sp, right: 22.0.sp, bottom: controller.isShoe.value ? 120.sp : 22.0.sp),
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
@@ -665,7 +665,7 @@ class InventoryItemDetail extends StatelessWidget {
                                                       ],
                                                     ),
                                                     child: InkWell(
-                                                      onTap: () => controller.checkEquippedChallengeItem(controller.selectedItem.value.equippedChallengeItem, controller.selectedItem.value.id),
+                                                      onTap: () => controller.checkEquippedChallengeItem(controller.selectedItem.value.equippedChallengeItem!, controller.selectedItem.value.id),
                                                       child: Padding(
                                                         padding: EdgeInsets.symmetric(vertical: 13.0.sp, horizontal: 30.sp),
                                                         child: Column(
