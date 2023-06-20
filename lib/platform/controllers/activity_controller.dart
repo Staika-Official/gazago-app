@@ -579,6 +579,10 @@ class ActivityController extends SuperController with ActivityMixin, ChallengeMi
   void loadExercise(ExerciseType exerciseType, String? adId, [ChallengeModel? challenge]) {
     loadingTime.value = 1;
 
+    if (loadingTimer != null) {
+      loadingTimer = null;
+    }
+
     Get.dialog(
       barrierDismissible: false,
       barrierColor: const Color.fromRGBO(0, 0, 0, 0.8),
@@ -830,8 +834,10 @@ class ActivityController extends SuperController with ActivityMixin, ChallengeMi
   void adLoadTimerStart() {
     adLoadingTime.value = 5;
     adUpdateLocked = false;
-    if (_adTimer != null) {
+
+    if (_adTimer != null && adLoadingTime.value < 0) {
       _adTimer = null;
+      adLoadingTime.value = 5;
     }
 
     _adTimer = Timer.periodic(const Duration(seconds: 1), (timer) {
