@@ -231,249 +231,251 @@ class ChallengeDetail extends StatelessWidget {
                         background: Container(
                           key: controller.backgroundKey,
                           color: subBg01Color,
-                          child: Column(
-                            children: [
-                              Container(
-                                width: double.infinity,
-                                height: 220.sp,
-                                child: Stack(
-                                  fit: StackFit.expand,
+                          child: controller.backgroundBoxSize.value > 0
+                              ? Column(
                                   children: [
-                                    if (controller.challengeDetails.value.imageUrl != null)
-                                      controller.challengeDetails.value.imageUrl!.contains('.svg')
-                                          ? SvgPicture.network(
-                                              fit: BoxFit.fill,
-                                              controller.challengeDetails.value.imageUrl!,
-                                              placeholderBuilder: (BuildContext context) => const Center(child: SizedBox.square(dimension: 40, child: CircularProgressIndicator())),
-                                            )
-                                          : CachedNetworkImage(
-                                              imageUrl: controller.challengeDetails.value.imageUrl!,
-                                              fit: BoxFit.fill,
-                                              placeholder: (context, url) => const Center(child: SizedBox.square(dimension: 40, child: CircularProgressIndicator())),
-                                              errorWidget: (context, url, error) => const Center(child: SizedBox.square(dimension: 40, child: CircularProgressIndicator())),
-                                            ),
-                                    // if (controller.challengeDetails.value.challengeActivationType != null)
-                                    //   Positioned(
-                                    //     top: 12.sp,
-                                    //     left: 15.sp,
-                                    //     child: Container(
-                                    //       decoration: BoxDecoration(
-                                    //         color: subBg01Color,
-                                    //         borderRadius: BorderRadius.all(
-                                    //           Radius.circular(6.sp),
-                                    //         ),
-                                    //       ),
-                                    //       child: Padding(
-                                    //         padding: EdgeInsets.symmetric(vertical: 8.0, horizontal: 11.0),
-                                    //         child: StyledText(
-                                    //           controller.challengeDetails.value.challengeActivationType == 'ITEM' ? '아이템 장착형' : '참가비 납부형',
-                                    //           fontWeight: 600,
-                                    //           fontSize: 12,
-                                    //           lineHeight: 14,
-                                    //           letterSpacing: -.1,
-                                    //         ),
-                                    //       ),
-                                    //     ),
-                                    //   ),
-                                  ],
-                                ),
-                              ),
-                              // CachedNetworkImage(
-                              //   imageUrl: controller.challengeDetails.value.imageUrl!,
-                              //   fit: BoxFit.cover,
-                              //   placeholder: (context, url) => const Center(child: SizedBox.square(dimension: 40, child: CircularProgressIndicator())),
-                              //   errorWidget: (context, url, error) => Image.asset("assets/images/challenges/@temp_img.png", fit: BoxFit.cover),
-                              // )
-                              Padding(
-                                padding: EdgeInsets.all(20.0.sp),
-                                child: controller.challengeDetails.value.title == null
-                                    ? Column(
-                                        crossAxisAlignment: CrossAxisAlignment.start,
+                                    SizedBox(
+                                      width: double.infinity,
+                                      height: 220.sp,
+                                      child: Stack(
+                                        fit: StackFit.expand,
                                         children: [
-                                          SkeletonLine(
-                                            style: SkeletonLineStyle(
-                                              height: 28,
-                                              width: 88,
-                                              borderRadius: BorderRadius.circular(0),
-                                            ),
-                                          ),
-                                          Padding(
-                                            padding: EdgeInsets.only(top: 10.0.sp),
-                                            child: SkeletonLine(
-                                              style: SkeletonLineStyle(
-                                                height: 20,
-                                                minLength: MediaQuery.of(context).size.width / 2,
-                                                maxLength: MediaQuery.of(context).size.width,
-                                                borderRadius: BorderRadius.circular(0),
-                                              ),
-                                            ),
-                                          ),
-                                          Padding(
-                                            padding: EdgeInsets.only(top: 12.0.sp),
-                                            child: SkeletonLine(
-                                              style: SkeletonLineStyle(
-                                                height: 14,
-                                                minLength: MediaQuery.of(context).size.width / 4,
-                                                maxLength: MediaQuery.of(context).size.width / 2,
-                                                borderRadius: BorderRadius.circular(0),
-                                              ),
-                                            ),
-                                          ),
-                                          Padding(
-                                            padding: EdgeInsets.only(top: 10.0.sp),
-                                            child: SkeletonLine(
-                                              style: SkeletonLineStyle(
-                                                height: 14,
-                                                minLength: MediaQuery.of(context).size.width / 4,
-                                                maxLength: MediaQuery.of(context).size.width / 2,
-                                                borderRadius: BorderRadius.circular(0),
-                                              ),
-                                            ),
-                                          ),
-                                        ],
-                                      )
-                                    : Column(
-                                        crossAxisAlignment: CrossAxisAlignment.start,
-                                        children: [
-                                          if (controller.challengeDetails.value.subTitle != null || controller.challengeDetails.value.subTitle == '')
-                                            Padding(
-                                              padding: EdgeInsets.only(top: 4.sp, bottom: 10.0.sp),
-                                              child: StyledText(
-                                                controller.challengeDetails.value.subTitle!,
-                                                fontSize: 14,
-                                                lineHeight: 14,
-                                                fontWeight: 500,
-                                                letterSpacing: -.1,
-                                                color: lightGrayColor,
-                                              ),
-                                            ),
-                                          if (controller.challengeDetails.value.title != null)
-                                            Padding(
-                                              padding: EdgeInsets.only(bottom: 10.0.sp),
-                                              child: StyledText(
-                                                controller.challengeDetails.value.title!,
-                                                fontSize: 20,
-                                                lineHeight: 25,
-                                                fontWeight: 500,
-                                                letterSpacing: -.1,
-                                              ),
-                                            ),
-                                          Row(
-                                            children: [
-                                              StyledText(
-                                                '${formatDateUntilTime(controller.challengeDetails.value.fromDate)} - ${formatDateUntilTime(controller.challengeDetails.value.toDate)}',
-                                                color: lightGrayColor,
-                                                fontWeight: 500,
-                                                fontSize: 12,
-                                                lineHeight: 14,
-                                                letterSpacing: -.1,
-                                              ),
-                                              StyledText(
-                                                ' · ',
-                                                color: lightGrayColor,
-                                                fontWeight: 500,
-                                                fontSize: 12,
-                                                lineHeight: 14,
-                                                letterSpacing: -.1,
-                                              ),
-                                              if (controller.challengeDetails.value.challengeState != null)
-                                                StyledText(
-                                                  controller.getChallengeStatus(controller.challengeDetails.value.challengeState!),
-                                                  color: controller.challengeDetails.value.challengeState == 'READY'
-                                                      ? lightGreenColor
-                                                      : controller.challengeDetails.value.challengeState == 'IN_PROGRESS'
-                                                          ? skyBlueColor
-                                                          : lightGrayColor,
-                                                  fontWeight: 500,
-                                                  fontSize: 12,
-                                                  lineHeight: 14,
-                                                  letterSpacing: -.1,
-                                                ),
-                                            ],
-                                          ),
-                                          Padding(
-                                            padding: EdgeInsets.only(top: 18.0),
-                                            child: Row(
-                                              children: [
-                                                if (controller.challengeDetails.value.exerciseTypes != null)
-                                                  Row(
-                                                    children: [
-                                                      ...controller.challengeDetails.value.exerciseTypes!.map(
-                                                        (type) => Container(
-                                                          decoration: BoxDecoration(
-                                                            color: Colors.white,
-                                                            border: Border.all(width: 1.sp, color: Colors.black),
-                                                            borderRadius: BorderRadius.all(
-                                                              Radius.circular(15.sp),
-                                                            ),
-                                                          ),
-                                                          child: Padding(
-                                                            padding: EdgeInsets.symmetric(vertical: 3.0.sp, horizontal: 8.sp),
-                                                            child: StyledText(
-                                                              controller.getChallengeExerciseType(type),
-                                                              color: subBg01Color,
-                                                              fontSize: 10,
-                                                              fontWeight: 600,
-                                                              lineHeight: 12,
-                                                            ),
-                                                          ),
-                                                        ),
-                                                      )
-                                                    ],
+                                          if (controller.challengeDetails.value.imageUrl != null)
+                                            controller.challengeDetails.value.imageUrl!.contains('.svg')
+                                                ? SvgPicture.network(
+                                                    fit: BoxFit.fill,
+                                                    controller.challengeDetails.value.imageUrl!,
+                                                    placeholderBuilder: (BuildContext context) => const Center(child: SizedBox.square(dimension: 40, child: CircularProgressIndicator())),
+                                                  )
+                                                : CachedNetworkImage(
+                                                    imageUrl: controller.challengeDetails.value.imageUrl!,
+                                                    fit: BoxFit.fill,
+                                                    placeholder: (context, url) => const Center(child: SizedBox.square(dimension: 40, child: CircularProgressIndicator())),
+                                                    errorWidget: (context, url, error) => const Center(child: SizedBox.square(dimension: 40, child: CircularProgressIndicator())),
                                                   ),
-                                                StyledText(
-                                                  ' · ',
-                                                  color: const Color(0xffd9d9d9),
-                                                  fontWeight: 500,
-                                                  fontSize: 16,
-                                                  lineHeight: 18,
-                                                  letterSpacing: -.1,
+                                          // if (controller.challengeDetails.value.challengeActivationType != null)
+                                          //   Positioned(
+                                          //     top: 12.sp,
+                                          //     left: 15.sp,
+                                          //     child: Container(
+                                          //       decoration: BoxDecoration(
+                                          //         color: subBg01Color,
+                                          //         borderRadius: BorderRadius.all(
+                                          //           Radius.circular(6.sp),
+                                          //         ),
+                                          //       ),
+                                          //       child: Padding(
+                                          //         padding: EdgeInsets.symmetric(vertical: 8.0, horizontal: 11.0),
+                                          //         child: StyledText(
+                                          //           controller.challengeDetails.value.challengeActivationType == 'ITEM' ? '아이템 장착형' : '참가비 납부형',
+                                          //           fontWeight: 600,
+                                          //           fontSize: 12,
+                                          //           lineHeight: 14,
+                                          //           letterSpacing: -.1,
+                                          //         ),
+                                          //       ),
+                                          //     ),
+                                          //   ),
+                                        ],
+                                      ),
+                                    ),
+                                    // CachedNetworkImage(
+                                    //   imageUrl: controller.challengeDetails.value.imageUrl!,
+                                    //   fit: BoxFit.cover,
+                                    //   placeholder: (context, url) => const Center(child: SizedBox.square(dimension: 40, child: CircularProgressIndicator())),
+                                    //   errorWidget: (context, url, error) => Image.asset("assets/images/challenges/@temp_img.png", fit: BoxFit.cover),
+                                    // )
+                                    Padding(
+                                      padding: EdgeInsets.all(20.0.sp),
+                                      child: controller.challengeDetails.value.title == null
+                                          ? Column(
+                                              crossAxisAlignment: CrossAxisAlignment.start,
+                                              children: [
+                                                SkeletonLine(
+                                                  style: SkeletonLineStyle(
+                                                    height: 28,
+                                                    width: 88,
+                                                    borderRadius: BorderRadius.circular(0),
+                                                  ),
                                                 ),
+                                                Padding(
+                                                  padding: EdgeInsets.only(top: 10.0.sp),
+                                                  child: SkeletonLine(
+                                                    style: SkeletonLineStyle(
+                                                      height: 20,
+                                                      minLength: MediaQuery.of(context).size.width / 2,
+                                                      maxLength: MediaQuery.of(context).size.width,
+                                                      borderRadius: BorderRadius.circular(0),
+                                                    ),
+                                                  ),
+                                                ),
+                                                Padding(
+                                                  padding: EdgeInsets.only(top: 12.0.sp),
+                                                  child: SkeletonLine(
+                                                    style: SkeletonLineStyle(
+                                                      height: 14,
+                                                      minLength: MediaQuery.of(context).size.width / 4,
+                                                      maxLength: MediaQuery.of(context).size.width / 2,
+                                                      borderRadius: BorderRadius.circular(0),
+                                                    ),
+                                                  ),
+                                                ),
+                                                Padding(
+                                                  padding: EdgeInsets.only(top: 10.0.sp),
+                                                  child: SkeletonLine(
+                                                    style: SkeletonLineStyle(
+                                                      height: 14,
+                                                      minLength: MediaQuery.of(context).size.width / 4,
+                                                      maxLength: MediaQuery.of(context).size.width / 2,
+                                                      borderRadius: BorderRadius.circular(0),
+                                                    ),
+                                                  ),
+                                                ),
+                                              ],
+                                            )
+                                          : Column(
+                                              crossAxisAlignment: CrossAxisAlignment.start,
+                                              children: [
+                                                if (controller.challengeDetails.value.subTitle != null || controller.challengeDetails.value.subTitle == '')
+                                                  Padding(
+                                                    padding: EdgeInsets.only(top: 4.sp, bottom: 10.0.sp),
+                                                    child: StyledText(
+                                                      controller.challengeDetails.value.subTitle!,
+                                                      fontSize: 14,
+                                                      lineHeight: 14,
+                                                      fontWeight: 500,
+                                                      letterSpacing: -.1,
+                                                      color: lightGrayColor,
+                                                    ),
+                                                  ),
+                                                if (controller.challengeDetails.value.title != null)
+                                                  Padding(
+                                                    padding: EdgeInsets.only(bottom: 10.0.sp),
+                                                    child: StyledText(
+                                                      controller.challengeDetails.value.title!,
+                                                      fontSize: 20,
+                                                      lineHeight: 25,
+                                                      fontWeight: 500,
+                                                      letterSpacing: -.1,
+                                                    ),
+                                                  ),
                                                 Row(
                                                   children: [
-                                                    iconPeople,
-                                                    Padding(
-                                                      padding: EdgeInsets.only(left: 5.0.sp),
-                                                      child: Row(
+                                                    StyledText(
+                                                      '${formatDateUntilTime(controller.challengeDetails.value.fromDate)} - ${formatDateUntilTime(controller.challengeDetails.value.toDate)}',
+                                                      color: lightGrayColor,
+                                                      fontWeight: 500,
+                                                      fontSize: 12,
+                                                      lineHeight: 14,
+                                                      letterSpacing: -.1,
+                                                    ),
+                                                    StyledText(
+                                                      ' · ',
+                                                      color: lightGrayColor,
+                                                      fontWeight: 500,
+                                                      fontSize: 12,
+                                                      lineHeight: 14,
+                                                      letterSpacing: -.1,
+                                                    ),
+                                                    if (controller.challengeDetails.value.challengeState != null)
+                                                      StyledText(
+                                                        controller.getChallengeStatus(controller.challengeDetails.value.challengeState!),
+                                                        color: controller.challengeDetails.value.challengeState == 'READY'
+                                                            ? lightGreenColor
+                                                            : controller.challengeDetails.value.challengeState == 'IN_PROGRESS'
+                                                                ? skyBlueColor
+                                                                : lightGrayColor,
+                                                        fontWeight: 500,
+                                                        fontSize: 12,
+                                                        lineHeight: 14,
+                                                        letterSpacing: -.1,
+                                                      ),
+                                                  ],
+                                                ),
+                                                Padding(
+                                                  padding: EdgeInsets.only(top: 18.0),
+                                                  child: Row(
+                                                    children: [
+                                                      if (controller.challengeDetails.value.exerciseTypes != null)
+                                                        Row(
+                                                          children: [
+                                                            ...controller.challengeDetails.value.exerciseTypes!.map(
+                                                              (type) => Container(
+                                                                decoration: BoxDecoration(
+                                                                  color: Colors.white,
+                                                                  border: Border.all(width: 1.sp, color: Colors.black),
+                                                                  borderRadius: BorderRadius.all(
+                                                                    Radius.circular(15.sp),
+                                                                  ),
+                                                                ),
+                                                                child: Padding(
+                                                                  padding: EdgeInsets.symmetric(vertical: 3.0.sp, horizontal: 8.sp),
+                                                                  child: StyledText(
+                                                                    controller.getChallengeExerciseType(type),
+                                                                    color: subBg01Color,
+                                                                    fontSize: 10,
+                                                                    fontWeight: 600,
+                                                                    lineHeight: 12,
+                                                                  ),
+                                                                ),
+                                                              ),
+                                                            )
+                                                          ],
+                                                        ),
+                                                      StyledText(
+                                                        ' · ',
+                                                        color: const Color(0xffd9d9d9),
+                                                        fontWeight: 500,
+                                                        fontSize: 16,
+                                                        lineHeight: 18,
+                                                        letterSpacing: -.1,
+                                                      ),
+                                                      Row(
                                                         children: [
-                                                          controller.challengeDetails.value.challengeState == 'READY'
-                                                              ? StyledText(
-                                                                  '모집인원',
-                                                                  color: lightGrayColor,
-                                                                  fontWeight: 500,
-                                                                  fontSize: 12,
-                                                                  lineHeight: 13,
-                                                                  letterSpacing: -.1,
-                                                                )
-                                                              : StyledText(
-                                                                  '${formatDecimalPlaces(controller.challengeDetails.value.soldQuantity!.toDouble(), 0) ?? 0}명 /',
+                                                          iconPeople,
+                                                          Padding(
+                                                            padding: EdgeInsets.only(left: 5.0.sp),
+                                                            child: Row(
+                                                              children: [
+                                                                controller.challengeDetails.value.challengeState == 'READY'
+                                                                    ? StyledText(
+                                                                        '모집인원',
+                                                                        color: lightGrayColor,
+                                                                        fontWeight: 500,
+                                                                        fontSize: 12,
+                                                                        lineHeight: 13,
+                                                                        letterSpacing: -.1,
+                                                                      )
+                                                                    : StyledText(
+                                                                        '${formatDecimalPlaces(controller.challengeDetails.value.soldQuantity!.toDouble(), 0) ?? 0}명 /',
+                                                                        color: lightGrayColor,
+                                                                        fontWeight: 500,
+                                                                        fontSize: 12,
+                                                                        lineHeight: 13,
+                                                                        letterSpacing: -.1,
+                                                                      ),
+                                                                StyledText(
+                                                                  ' ${formatDecimalPlaces(controller.challengeDetails.value.quantity!.toDouble(), 0)}명',
                                                                   color: lightGrayColor,
                                                                   fontWeight: 500,
                                                                   fontSize: 12,
                                                                   lineHeight: 13,
                                                                   letterSpacing: -.1,
                                                                 ),
-                                                          StyledText(
-                                                            ' ${formatDecimalPlaces(controller.challengeDetails.value.quantity!.toDouble(), 0)}명',
-                                                            color: lightGrayColor,
-                                                            fontWeight: 500,
-                                                            fontSize: 12,
-                                                            lineHeight: 13,
-                                                            letterSpacing: -.1,
+                                                              ],
+                                                            ),
                                                           ),
                                                         ],
-                                                      ),
-                                                    ),
-                                                  ],
-                                                )
+                                                      )
+                                                    ],
+                                                  ),
+                                                ),
                                               ],
                                             ),
-                                          ),
-                                        ],
-                                      ),
-                              ),
-                            ],
-                          ),
+                                    ),
+                                  ],
+                                )
+                              : Container(),
                         ),
                       ),
                     );
