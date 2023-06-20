@@ -95,7 +95,7 @@ class ActivityController extends SuperController with ActivityMixin, ChallengeMi
   RxBool isAbleAdView = RxBool(false);
   final RxBool isLoadingGetAdData = RxBool(false);
   Timer? _adTimer;
-  final RxInt time = RxInt(5);
+  final RxInt adLoadingTime = RxInt(5);
   String? advertisingId = '';
   bool? isLimitAdTrackingEnabled;
 
@@ -604,7 +604,7 @@ class ActivityController extends SuperController with ActivityMixin, ChallengeMi
   Future<void> selectExerciseType(ExerciseType exerciseType) async {
     selectedExerciseType.value = exerciseType;
 
-    AdWatchAvailableModel adWatchAvailableModel = AdWatchAvailableModel();
+    AdWatchAvailableModel adWatchAvailableModel = AdWatchAvailableModel(watchAvailable: false);
     await AdmobService.getAdWatchAvailableTime(
       'EXERCISE_START',
       callback: (AdWatchAvailableModel model) {
@@ -824,21 +824,21 @@ class ActivityController extends SuperController with ActivityMixin, ChallengeMi
   }
 
   void adLoadTimerStart() {
-    time.value = 5;
+    adLoadingTime.value = 5;
     adUpdateLocked = false;
     if (_adTimer != null) {
       _adTimer = null;
     }
 
     _adTimer = Timer.periodic(const Duration(seconds: 1), (timer) {
-      time.value--;
+      adLoadingTime.value--;
 
       if (startAd.value != null || endAd.value != null) {
         timer.cancel();
         _adTimer = null;
       }
 
-      if (time.value == 0) {
+      if (adLoadingTime.value == 0) {
         adUpdateLocked = true;
         timer.cancel();
         _adTimer = null;

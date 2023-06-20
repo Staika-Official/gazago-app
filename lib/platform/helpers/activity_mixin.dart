@@ -593,7 +593,7 @@ mixin ActivityMixin {
       if (counter == const Duration(milliseconds: 500)) {
         initializeStopTimer();
 
-        AdWatchAvailableModel adWatchAvailableModel = AdWatchAvailableModel();
+        AdWatchAvailableModel adWatchAvailableModel = AdWatchAvailableModel(watchAvailable: false);
         await AdmobService.getAdWatchAvailableTime(
           'EXERCISE_END',
           callback: (AdWatchAvailableModel model) {
@@ -607,7 +607,6 @@ mixin ActivityMixin {
           );
           if (controller.userState.value.exercise!.rewardGo! > 0) {
             showEndExerciseAdDialog(challenge, controller);
-            controller.adLoadTimerStart();
           } else {
             checkShowEndPopup(source, challenge, controller);
           }
@@ -662,7 +661,7 @@ mixin ActivityMixin {
 
   void showEndExerciseAdDialog(ChallengeModel challenge, ActivityController controller) {
     showEndExerciseAdAlert(challenge, controller);
-    controller.adLoadTimerStop();
+    controller.adLoadTimerStart();
   }
 
   void showEndExerciseDialog(ChallengeModel challenge) {
