@@ -411,7 +411,7 @@ mixin ActivityMixin {
             startPeriodicUpdate();
           },
           errorCallback: (String? statusMessage) {
-            showToastPopup(statusMessage ?? '운동을 시작하지 못했습니다. 잠시후 다시 시도해주세요.');
+            showToastPopup(statusMessage ?? '운동을 시작하지 못했습니다. 잠시 후 다시 시도해주세요.');
           },
         );
       } else {
