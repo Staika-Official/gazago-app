@@ -585,11 +585,11 @@ void showEndExerciseAdAlert(ChallengeModel challenge, ActivityController control
                       ],
                     ),
                     child: controller.endAd.value == null
-                        ? controller.time.value != 0
+                        ? controller.adLoadingTime.value != 0
                             ? Stack(
                                 children: [
                                   Text(
-                                    controller.time.value.toString(),
+                                    controller.adLoadingTime.value.toString(),
                                     style: TextStyle(
                                       fontSize: 40.sp,
                                       fontFamily: 'Montserrat',
@@ -599,7 +599,7 @@ void showEndExerciseAdAlert(ChallengeModel challenge, ActivityController control
                                     ),
                                   ),
                                   Text(
-                                    controller.time.value.toString(),
+                                    controller.adLoadingTime.value.toString(),
                                     style: TextStyle(
                                       fontSize: 40.sp,
                                       height: 1.1,
