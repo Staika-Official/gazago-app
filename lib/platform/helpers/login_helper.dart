@@ -45,7 +45,6 @@ void handleKeysOnLogout() {
     HiveKey.userState.name,
     HiveKey.exerciseData.name,
     HiveKey.endExerciseRequested.name,
-    HiveKey.badgeIssuanceRequested.name,
     HiveKey.savedStepCount.name,
     HiveKey.dummyStepCount.name,
     HiveKey.savedStepInitialized.name,
