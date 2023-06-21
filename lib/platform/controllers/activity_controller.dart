@@ -128,7 +128,7 @@ class ActivityController extends SuperController with ActivityMixin, ChallengeMi
     // 타이머 시작
     // adLoadTimerStart();
     checkConnectivityStatus();
-    if ([ExerciseState.ongoing, ExerciseState.paused].any((state) => state == exerciseState.value) && !isFakeGps.value && !isTestingFakeGps()) {
+    if ([ExerciseState.ongoing, ExerciseState.paused].any((state) => state == exerciseState.value) && !isFakeGps.value && !isTestingFakeGps() && !batchIsInProgress()) {
       showPendingExerciseAlert(this);
     }
     disableActivityButton.value = false;
@@ -436,13 +436,17 @@ class ActivityController extends SuperController with ActivityMixin, ChallengeMi
   requestExerciseInitialization() async {
     bool systemReady = await checkAvailabilities();
     if (systemReady) {
-      if (!isListeningToLocation.value) {
-        initializeActivity();
-      }
-      if (globalController.internetConnection.value) {
-        getActivityRoute();
+      if (!batchIsInProgress()) {
+        if (!isListeningToLocation.value) {
+          initializeActivity();
+        }
+        if (globalController.internetConnection.value) {
+          getActivityRoute();
+        } else {
+          showToastPopup('원할한 네트워크에서 진행해주세요.');
+        }
       } else {
-        showToastPopup('원할한 네트워크에서 진행해주세요.');
+        showToastPopup('리워드 정산 중(11:55~12:05) 입니다.\n잠시 후 시작해주세요.');
       }
     } else {
       await requestPermissionStepByStep();
