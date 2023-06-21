@@ -411,7 +411,7 @@ mixin ActivityMixin {
             startPeriodicUpdate();
           },
           errorCallback: (String? statusMessage) {
-            showToastPopup(statusMessage ?? '운동을 시작하지 못했습니다. 잠시후 다시 시도해주세요.');
+            showToastPopup(statusMessage ?? '운동을 시작하지 못했습니다. 잠시 후 다시 시도해주세요.');
           },
         );
       } else {
@@ -583,42 +583,45 @@ mixin ActivityMixin {
   }
 
   void onTapDownStop(TapDownDetails tapDownDetails, ChallengeModel challenge, {String? source, required ActivityController controller}) async {
-    Duration counter = Duration.zero;
+    if (!batchIsInProgress()) {
+      Duration counter = Duration.zero;
 
-    if (stopTimer != null) {
-      initializeStopTimer();
-    }
-
-    stopTimer = Timer.periodic(const Duration(milliseconds: 10), (timer) async {
-      if (counter == const Duration(milliseconds: 500)) {
+      if (stopTimer != null) {
         initializeStopTimer();
+      }
 
-        AdWatchAvailableModel adWatchAvailableModel = AdWatchAvailableModel();
-        await AdmobService.getAdWatchAvailableTime(
-          'EXERCISE_END',
-          callback: (AdWatchAvailableModel model) {
-            adWatchAvailableModel = model;
-          },
-        );
+      stopTimer = Timer.periodic(const Duration(milliseconds: 10), (timer) async {
+        if (counter == const Duration(milliseconds: 500)) {
+          initializeStopTimer();
 
-        if (adWatchAvailableModel.watchAvailable! && !batchIsInProgress()) {
-          await controller.exerciseEndRewardedAdInit(
-            'exerciseEndAd',
+          AdWatchAvailableModel adWatchAvailableModel = AdWatchAvailableModel(watchAvailable: false);
+          await AdmobService.getAdWatchAvailableTime(
+            'EXERCISE_END',
+            callback: (AdWatchAvailableModel model) {
+              adWatchAvailableModel = model;
+            },
           );
-          if (controller.userState.value.exercise!.rewardGo! > 0) {
-            showEndExerciseAdDialog(challenge, controller);
-            controller.adLoadTimerStart();
+
+          if (adWatchAvailableModel.watchAvailable! && !batchIsInProgress()) {
+            await controller.exerciseEndRewardedAdInit(
+              'exerciseEndAd',
+            );
+            if (controller.userState.value.exercise!.rewardGo! > 0) {
+              showEndExerciseAdDialog(challenge, controller);
+            } else {
+              checkShowEndPopup(source, challenge, controller);
+            }
           } else {
             checkShowEndPopup(source, challenge, controller);
           }
         } else {
-          checkShowEndPopup(source, challenge, controller);
+          counter = counter + const Duration(milliseconds: 10);
+          stopProgress.value += (10 / 500);
         }
-      } else {
-        counter = counter + const Duration(milliseconds: 10);
-        stopProgress.value += (10 / 500);
-      }
-    });
+      });
+    } else {
+      showToastPopup('리워드 정산 중(11:55~12:05) 입니다.\n잠시 후 시도해주세요.');
+    }
   }
 
   void checkShowEndPopup(String? source, ChallengeModel challenge, ActivityController controller) {
@@ -636,8 +639,10 @@ mixin ActivityMixin {
 
   void onTapUpStop(TapUpDetails tapUpDetails, {String? source}) {
     // if (source != null && source != 'pendingExerciseDialog') showToastPopup('3초간 눌러야 정지됩니다.');
-    showToastPopup('길게 눌러주세요!');
-    initializeStopTimer();
+    if (!batchIsInProgress()) {
+      showToastPopup('길게 눌러주세요!');
+      initializeStopTimer();
+    }
   }
 
   void initializeStopTimer() {
@@ -647,17 +652,21 @@ mixin ActivityMixin {
   }
 
   void pauseExercise() {
-    updateTimer?.cancel();
-    updateTimer = null;
-    exerciseTimer?.cancel();
-    exerciseTimer = null;
-    stepSubscription?.cancel();
-    stepSubscription = null;
-    pedestrianStatusSubscription?.cancel();
-    pedestrianStatusSubscription = null;
-    exerciseState.value = ExerciseState.paused;
-    HiveStore.save(key: HiveKey.savedStepInitialized.name, value: false);
-    updateExercise(isPaused: true, source: 'pauseExercise${updateTimer.hashCode}');
+    if (!batchIsInProgress()) {
+      updateTimer?.cancel();
+      updateTimer = null;
+      exerciseTimer?.cancel();
+      exerciseTimer = null;
+      stepSubscription?.cancel();
+      stepSubscription = null;
+      pedestrianStatusSubscription?.cancel();
+      pedestrianStatusSubscription = null;
+      exerciseState.value = ExerciseState.paused;
+      HiveStore.save(key: HiveKey.savedStepInitialized.name, value: false);
+      updateExercise(isPaused: true, source: 'pauseExercise${updateTimer.hashCode}');
+    } else {
+      showToastPopup('리워드 정산 중(11:55~12:05) 입니다.\n잠시 후 시도해주세요.');
+    }
   }
 
   void showEndExerciseAdDialog(ChallengeModel challenge, ActivityController controller) {
@@ -683,61 +692,57 @@ mixin ActivityMixin {
       );
     }
 
-    if (!batchIsInProgress()) {
-      if (globalController.internetConnection.value) {
-        // 업데이트 타이머에 의해서 미세한 차이로 운동 종료 요청후 즉시 운동 업데이트 요청이 나가지 않도록 타이머를 우선 스탑한다.
-        updateTimer?.cancel();
-        exerciseTimer?.cancel();
+    if (globalController.internetConnection.value) {
+      // 업데이트 타이머에 의해서 미세한 차이로 운동 종료 요청후 즉시 운동 업데이트 요청이 나가지 않도록 타이머를 우선 스탑한다.
+      updateTimer?.cancel();
+      exerciseTimer?.cancel();
 
-        //타이머 멈춘 후 종료 요청
-        await ActivityService.fetchEndUserExercises(
-          userExerciseData.value,
-          source: source,
-          successCallback: (CurrentUserStateModel newUserState) {
-            userState.update(
-              (state) {
-                state?.state = newUserState.state;
-                state?.exercise = newUserState.exercise;
-                state?.shoes = newUserState.shoes;
-              },
+      //타이머 멈춘 후 종료 요청
+      await ActivityService.fetchEndUserExercises(
+        userExerciseData.value,
+        source: source,
+        successCallback: (CurrentUserStateModel newUserState) {
+          userState.update(
+            (state) {
+              state?.state = newUserState.state;
+              state?.exercise = newUserState.exercise;
+              state?.shoes = newUserState.shoes;
+            },
+          );
+
+          if (newUserState.exercise!.state == 'ENDED') {
+            exerciseState.value = ExerciseState.ready;
+            HiveStore.deleteMultipleKeys(keys: [HiveKey.userState.name, HiveKey.endExerciseRequested.name]);
+            resetVariables(challenge);
+            resetTimer();
+            resetSubscriptions();
+            if (['showEndExerciseAlert', 'showEndADExerciseAlert', 'pendingExerciseDialog'].any((src) => src == source)) {
+              moveToExerciseDetail(userState.value.exercise!.id!);
+            }
+          }
+
+          if (newUserState.exercise!.recordState == 'ABNORMAL') {
+            HiveStore.saveCurrentUserState(
+              userState: CurrentUserStateModel(
+                state: newUserState.state,
+                exercise: newUserState.exercise,
+                shoes: newUserState.shoes,
+              ),
             );
 
-            if (newUserState.exercise!.state == 'ENDED') {
-              exerciseState.value = ExerciseState.ready;
-              HiveStore.deleteMultipleKeys(keys: [HiveKey.userState.name, HiveKey.endExerciseRequested.name]);
-              resetVariables(challenge);
-              resetTimer();
-              resetSubscriptions();
-              if (['showEndExerciseAlert', 'showEndADExerciseAlert', 'pendingExerciseDialog'].any((src) => src == source)) {
-                moveToExerciseDetail(userState.value.exercise!.id!);
-              }
+            if (retryAttempt > 4) {
+              showToastPopup('운동 종료에 실패했습니다.\n다시 시도해주세요.');
+            } else {
+              endExercise(challenge, source: source, adId: adId, retryAttempt: retryAttempt + 1);
             }
-
-            if (newUserState.exercise!.recordState == 'ABNORMAL') {
-              HiveStore.saveCurrentUserState(
-                userState: CurrentUserStateModel(
-                  state: newUserState.state,
-                  exercise: newUserState.exercise,
-                  shoes: newUserState.shoes,
-                ),
-              );
-
-              if (retryAttempt > 4) {
-                showToastPopup('운동 종료에 실패했습니다.\n다시 시도해주세요.');
-              } else {
-                endExercise(challenge, source: source, adId: adId, retryAttempt: retryAttempt + 1);
-              }
-            }
-          },
-          errorCallback: () {
-            endExerciseLocally(challenge);
-          },
-        );
-      } else {
-        showToastPopup('인터넷 상태를 확인해주세요.');
-      }
+          }
+        },
+        errorCallback: () {
+          endExerciseLocally(challenge);
+        },
+      );
     } else {
-      showToastPopup('리워드 정산 중(11:55~12:05) 입니다.\n잠시 후 종료해주세요.');
+      showToastPopup('인터넷 상태를 확인해주세요.');
     }
   }
 
