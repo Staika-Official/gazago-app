@@ -1,9 +1,7 @@
 import 'dart:async';
 import 'dart:io';
 
-import 'package:advertising_id/advertising_id.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:flutter_naver_map/flutter_naver_map.dart';
 import 'package:gaza_go/constants/config.dart';
 import 'package:gaza_go/constants/enums.dart';
@@ -80,42 +78,11 @@ class ActivityController extends SuperController with ActivityMixin, ChallengeMi
   final Throttling locationThr = Throttling(duration: const Duration(milliseconds: 500));
   late AnimationController challengeGuideController;
   final Rx<Control> challengeLoadControl = Rx(Control.play);
-  final RxDouble challengeLoadControlPosition = RxDouble(0);
-  RxBool isAbleAdView = RxBool(false);
-  final RxBool isLoadingGetAdData = RxBool(false);
-  Timer? _adTimer;
-  final RxInt adLoadingTime = RxInt(5);
-  String? advertisingId = '';
-  bool? isLimitAdTrackingEnabled;
-
-  initPlatformState() async {
-    // Platform messages may fail, so we use a try/catch PlatformException.
-    try {
-      advertisingId = await AdvertisingId.id(true);
-    } on PlatformException {
-      advertisingId = 'Failed to get platform version.';
-    }
-
-    try {
-      isLimitAdTrackingEnabled = await AdvertisingId.isLimitAdTrackingEnabled;
-    } on PlatformException {
-      isLimitAdTrackingEnabled = false;
-    }
-
-    // If the widget was removed from the tree while the asynchronous platform
-    // message was in flight, we want to discard the reply rather than calling
-    // setState to update our non-existent appearance.
-
-    advertisingId = advertisingId;
-    isLimitAdTrackingEnabled = isLimitAdTrackingEnabled;
-  }
 
   Future<void> initializeController() async {
     challengeGuideController = AnimationController(vsync: this);
     await initController();
 
-    // 타이머 시작
-    // adLoadTimerStart();
     checkConnectivityStatus();
     if ([ExerciseState.ongoing, ExerciseState.paused].any((state) => state == exerciseState.value) && !isFakeGps.value && !isTestingFakeGps() && !batchIsInProgress()) {
       showPendingExerciseAlert(this);
@@ -783,27 +750,7 @@ class ActivityController extends SuperController with ActivityMixin, ChallengeMi
     }
   }
 
-  // void moveToWebView(item) {
-  //   if (item['linkUrl'].contains('http')) {
-  //     Get.toNamed(Routes.webView, arguments: {'id': item.id, 'linkUrl': item.linkUrl});
-  //   } else {
-  //     Get.back();
-  //     Get.find<HomeMenuController>().selectMenu(3);
-  //   }
-  // }
-
-  // void onSavePopupCloseDate() {
-  //   DateTime now = DateTime.now();
-  //   HiveStore.save(key: HiveKey.closePopupDate.name, value: now);
-  //   Get.back();
-  // }
-
   void checkConnectivityStatus() async {
-    // globalController.connectivityResult.listen((value) async {
-    //   if (value != ConnectivityResult.none) {
-    //     await retrySavedRequests(source: 'connectivityListener');
-    //   }
-    // });
     print('인터넷 연결됐는지 확인중');
     if (globalController.internetConnection.value) {
       await retrySavedRequests(source: 'connectivityListener');
@@ -817,38 +764,6 @@ class ActivityController extends SuperController with ActivityMixin, ChallengeMi
 
     if (HiveStore.load(key: HiveKey.endExerciseRequested.name) != null && HiveStore.load(key: HiveKey.endExerciseRequested.name) && userState.value.exercise != null) {
       await endExercise(selectedChallenge.value, source: source);
-    }
-  }
-
-  void adLoadTimerStart() {
-    adLoadingTime.value = 5;
-    adUpdateLocked = false;
-
-    if (_adTimer != null && adLoadingTime.value < 0) {
-      _adTimer = null;
-      adLoadingTime.value = 5;
-    }
-
-    _adTimer = Timer.periodic(const Duration(seconds: 1), (timer) {
-      adLoadingTime.value--;
-
-      if (startAd.value != null || endAd.value != null) {
-        timer.cancel();
-        _adTimer = null;
-      }
-
-      if (adLoadingTime.value == 0) {
-        adUpdateLocked = true;
-        timer.cancel();
-        _adTimer = null;
-      }
-    });
-  }
-
-  void adLoadTimerStop() {
-    if (_adTimer != null) {
-      _adTimer?.cancel();
-      _adTimer = null;
     }
   }
 
@@ -875,8 +790,8 @@ class ActivityController extends SuperController with ActivityMixin, ChallengeMi
     pedestrianStatusSubscription = null;
     _serviceStatusStream?.cancel();
     _serviceStatusStream = null;
-    _adTimer?.cancel();
-    _adTimer = null;
+    adTimer?.cancel();
+    adTimer = null;
     HiveStore.save(key: HiveKey.savedStepInitialized.name, value: false);
   }
 
