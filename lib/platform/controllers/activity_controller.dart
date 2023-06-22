@@ -35,7 +35,6 @@ import 'package:gaza_go/platform/services/uaa_service.dart';
 import 'package:gaza_go/platform/stores/hive_store.dart';
 import 'package:gaza_go/presentations/components/alert_ui_list.dart';
 import 'package:gaza_go/presentations/styles/colors.dart';
-import 'package:gaza_go/presentations/styles/icons.dart';
 import 'package:gaza_go/presentations/views/activity/activity_loading.dart';
 import 'package:gaza_go/presentations/views/activity/activity_select.dart';
 import 'package:gaza_go/presentations/views/activity/ad_select.dart';
@@ -49,23 +48,10 @@ import 'package:throttling/throttling.dart';
 class ActivityController extends SuperController with ActivityMixin, ChallengeMixin, GetTickerProviderStateMixin, AdmobMixin {
   final WalletMasterController walletMasterController = Get.find();
 
-  RxDouble testNum = RxDouble(0.0);
-  GlobalKey webViewKey = GlobalKey();
-  final RxString noticeUrl = RxString('');
-  //rewarded.dart
   RxList<StatModel> get statList {
     return RxList([
       StatModel(name: '체력', currentStat: userState.value.state != null ? userState.value.state!.stamina! : 0, type: 'STAMINA'),
       StatModel(name: '신발 내구도', currentStat: userState.value.shoes != null ? userState.value.shoes!.durability! : 0, type: 'DURABILITY'),
-    ]);
-  }
-
-  RxList<dynamic> get activitySumList {
-    return RxList([
-      {'title': '운동 시간', 'unit': '', 'content': '1일 ${'03:15:12'}', 'icon': iconActivityStoryWatch},
-      {'title': '운동 거리', 'unit': 'km', 'content': 300.34.toString(), 'icon': iconActivityStoryDistance},
-      {'title': '걸음 수', 'unit': '', 'content': 12682.toString(), 'icon': iconActivityStorySteps},
-      {'title': '총 획득 타이카', 'unit': 'TIK', 'content': 200.toString(), 'icon': iconActivityStoryTaika},
     ]);
   }
 
@@ -81,10 +67,9 @@ class ActivityController extends SuperController with ActivityMixin, ChallengeMi
   StreamSubscription<ServiceStatus>? _serviceStatusStream;
   final Rx<DateTime> receiveLocationTime = Rx(DateTime.now());
   final HealthFactory health = HealthFactory();
-  final Rxn<OverlayImage>? challengeStartMaker = Rxn();
   OverlayImage? startMaker;
   OverlayImage? endMaker;
-  RxInt challengeSelectedIndex = RxInt(-1);
+  RxnInt challengeSelectedIndex = RxnInt(null);
   Control activityLoadControl = Control.play;
   RxBool disableButton = RxBool(false);
   RxBool disableActivityButton = RxBool(true);
@@ -204,7 +189,7 @@ class ActivityController extends SuperController with ActivityMixin, ChallengeMi
   }
 
   void showEndPointMarker(ChallengeModel course) {
-    if (challengeSelectedIndex.value != -1) {
+    if (challengeSelectedIndex.value != null) {
       challengeMarkers.add(generateDefaultMarker(allChallengesList.firstWhere((element) => element.id == challengeSelectedIndex.value)));
     }
 
@@ -656,7 +641,7 @@ class ActivityController extends SuperController with ActivityMixin, ChallengeMi
   void moveToChallengeMap() async {
     bool systemReady = await checkAvailabilities();
     if (systemReady) {
-      challengeSelectedIndex.value = -1;
+      challengeSelectedIndex.value = null;
       selectedChallengeMarkers.value = RxList.empty();
       generateChallengeMarkerList();
       Get.toNamed(Routes.challengeMap);
