@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:io';
 
 import 'package:gaza_go/flavors.dart';
@@ -29,10 +30,11 @@ mixin AdmobMixin {
     print(adType);
 
     await RewardedAd.load(
-        // adUnitId: Platform.isIOS ? 'ca-app-pub-3940256099942544/1712485313' : 'ca-app-pub-3940256099942544/5224354917',
-        adUnitId: Platform.isIOS ? F.startAdIos : F.startAdAndroid,
-        request: const AdRequest(),
-        rewardedAdLoadCallback: RewardedAdLoadCallback(onAdLoaded: (RewardedAd ad) {
+      // adUnitId: Platform.isIOS ? 'ca-app-pub-3940256099942544/1712485313' : 'ca-app-pub-3940256099942544/5224354917',
+      adUnitId: Platform.isIOS ? F.startAdIos : F.startAdAndroid,
+      request: const AdRequest(),
+      rewardedAdLoadCallback: RewardedAdLoadCallback(
+        onAdLoaded: (RewardedAd ad) {
           print('RewardedAd loaded');
 
           if (!adUpdateLocked) {
@@ -41,23 +43,27 @@ mixin AdmobMixin {
           isLoadedAd.value = true;
           adLoadAttempts[adType] = 0;
           successCallback();
-        }, onAdFailedToLoad: (error) {
+        },
+        onAdFailedToLoad: (error) {
           print('RewardedAd failed to load: $error adType ${adType}');
           startAd.value = null;
           isLoadedAd.value = false;
           adLoadAttempts[adType] = adLoadAttempts[adType]! + 1;
           errorCallback();
-        }));
+        },
+      ),
+    );
   }
 
   // 운동 종료 광고
   Future exerciseEndRewardedAdInit(String adType, {successCallback, errorCallback}) async {
     print(adType);
     await RewardedAd.load(
-        // adUnitId: Platform.isIOS ? 'ca-app-pub-3940256099942544/1712485313' : 'ca-app-pub-3940256099942544/5224354917',
-        adUnitId: Platform.isIOS ? F.endAdIos : F.endAdAndroid,
-        request: const AdRequest(),
-        rewardedAdLoadCallback: RewardedAdLoadCallback(onAdLoaded: (RewardedAd ad) {
+      // adUnitId: Platform.isIOS ? 'ca-app-pub-3940256099942544/1712485313' : 'ca-app-pub-3940256099942544/5224354917',
+      adUnitId: Platform.isIOS ? F.endAdIos : F.endAdAndroid,
+      request: const AdRequest(),
+      rewardedAdLoadCallback: RewardedAdLoadCallback(
+        onAdLoaded: (RewardedAd ad) {
           print('RewardedAd loaded');
 
           if (!adUpdateLocked) {
@@ -67,12 +73,15 @@ mixin AdmobMixin {
 
           successCallback();
           // numRewardedLoadAttempts = 0;
-        }, onAdFailedToLoad: (error) {
+        },
+        onAdFailedToLoad: (error) {
           print('RewardedAd failed to load: $error adType $adType');
           endAd.value = null;
           adLoadAttempts[adType] = adLoadAttempts[adType]! + 1;
           errorCallback();
-        }));
+        },
+      ),
+    );
   }
 
   void showExerciseStartAd(ActivityController activityController, String adType) {
@@ -106,7 +115,9 @@ mixin AdmobMixin {
       // DateTime now = DateTime.now();
       // HiveStore.save(key: 'exerciseStartAd', value: now);
     });
-    startAd.value = null;
+    Timer(const Duration(seconds: 1), () {
+      startAd.value = null;
+    });
   }
 
   void showExerciseEndAd(ChallengeModel challenge, ActivityController activityController) async {
@@ -126,7 +137,7 @@ mixin AdmobMixin {
         if (ad.adUnitId.isNotEmpty) {
           activityController.endExercise(challenge, source: 'showEndADExerciseAlert', adId: ad.adUnitId);
           endAd.value = null;
-          activityController.time.value = 0;
+          activityController.adLoadingTime.value = 0;
         }
 
         ad.dispose();
@@ -144,6 +155,8 @@ mixin AdmobMixin {
       // DateTime now = DateTime.now();
       // HiveStore.save(key: 'exerciseEndAd', value: now);
     });
-    endAd.value = null;
+    Timer(const Duration(seconds: 1), () {
+      endAd.value = null;
+    });
   }
 }

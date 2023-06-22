@@ -77,7 +77,7 @@ class AdSelect extends StatelessWidget {
                           padding: EdgeInsets.only(top: 22.sp, left: 10.sp, right: 10.sp),
                           child: Column(
                             children: [
-                              controller.time.value == 0
+                              controller.adLoadingTime.value == 0
                                   ? controller.startAd.value != null
                                       ? Padding(
                                           padding: EdgeInsets.only(top: 22.0.sp),
@@ -95,7 +95,7 @@ class AdSelect extends StatelessWidget {
                                           child: Stack(
                                             children: [
                                               Text(
-                                                controller.time.value.toString(),
+                                                controller.adLoadingTime.value.toString(),
                                                 style: TextStyle(
                                                   fontSize: 40,
                                                   fontFamily: 'Montserrat',
@@ -104,7 +104,7 @@ class AdSelect extends StatelessWidget {
                                                 ),
                                               ),
                                               Text(
-                                                controller.time.value.toString(),
+                                                controller.adLoadingTime.value.toString(),
                                                 style: TextStyle(
                                                   fontSize: 40,
                                                   fontFamily: 'Montserrat',
@@ -126,7 +126,7 @@ class AdSelect extends StatelessWidget {
                                 padding: EdgeInsets.only(top: 12.sp),
                                 child: FittedBox(
                                   alignment: Alignment.topCenter,
-                                  child: controller.time.value == 0 && controller.startAd.value == null
+                                  child: controller.adLoadingTime.value == 0 && controller.startAd.value == null
                                       ? const StyledText(
                                           '아직 광고가 부족해요...',
                                           color: Color(0xFFC0C2C8),

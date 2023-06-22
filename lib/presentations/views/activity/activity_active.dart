@@ -699,9 +699,9 @@ class ActivityActive extends StatelessWidget {
                                       color: const Color(0xffFF2222),
                                       onTap: () {
                                         if (controller.exerciseState.value == ExerciseState.paused) {
-                                          controller.thr.throttle(() => controller.continueExercise());
+                                          controller.exerciseUpdateThr.throttle(() => controller.continueExercise());
                                         } else {
-                                          controller.thr.throttle(() => controller.startExercise(controller.selectedExerciseType.value, controller.selectedChallenge.value));
+                                          controller.exerciseStartThr.throttle(() => controller.startExercise(controller.selectedExerciseType.value, controller.selectedChallenge.value));
                                         }
                                       },
                                       child: Icon(Icons.play_arrow, color: Colors.white, size: 35.sp),

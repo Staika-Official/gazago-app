@@ -74,13 +74,17 @@ class ActivityController extends SuperController with ActivityMixin, ChallengeMi
   RxBool disableButton = RxBool(false);
   RxBool disableActivityButton = RxBool(true);
   final Throttling thr = Throttling(duration: const Duration(milliseconds: 500));
+  final Throttling exerciseStartThr = Throttling(duration: const Duration(milliseconds: 500));
+  final Throttling exerciseUpdateThr = Throttling(duration: const Duration(milliseconds: 500));
+  final Throttling exerciseEndThr = Throttling(duration: const Duration(milliseconds: 500));
+  final Throttling locationThr = Throttling(duration: const Duration(milliseconds: 500));
   late AnimationController challengeGuideController;
   final Rx<Control> challengeLoadControl = Rx(Control.play);
   final RxDouble challengeLoadControlPosition = RxDouble(0);
   RxBool isAbleAdView = RxBool(false);
   final RxBool isLoadingGetAdData = RxBool(false);
   Timer? _adTimer;
-  final RxInt time = RxInt(5);
+  final RxInt adLoadingTime = RxInt(5);
   String? advertisingId = '';
   bool? isLimitAdTrackingEnabled;
 
@@ -564,6 +568,10 @@ class ActivityController extends SuperController with ActivityMixin, ChallengeMi
   void loadExercise(ExerciseType exerciseType, String? adId, [ChallengeModel? challenge]) {
     loadingTime.value = 1;
 
+    if (loadingTimer != null) {
+      loadingTimer = null;
+    }
+
     Get.dialog(
       barrierDismissible: false,
       barrierColor: const Color.fromRGBO(0, 0, 0, 0.8),
@@ -576,7 +584,7 @@ class ActivityController extends SuperController with ActivityMixin, ChallengeMi
         if (loadingTime.value >= 3) {
           timer.cancel();
           loadingTimer = null;
-          thr.throttle(() => startExercise(exerciseType, challenge, adId: adId));
+          exerciseStartThr.throttle(() => startExercise(exerciseType, challenge, adId: adId));
         } else {
           loadingTime.value++;
           activityLoadControl = Control.playFromStart;
@@ -593,7 +601,7 @@ class ActivityController extends SuperController with ActivityMixin, ChallengeMi
   Future<void> selectExerciseType(ExerciseType exerciseType) async {
     selectedExerciseType.value = exerciseType;
 
-    AdWatchAvailableModel adWatchAvailableModel = AdWatchAvailableModel();
+    AdWatchAvailableModel adWatchAvailableModel = AdWatchAvailableModel(watchAvailable: false);
     await AdmobService.getAdWatchAvailableTime(
       'EXERCISE_START',
       callback: (AdWatchAvailableModel model) {
@@ -724,7 +732,7 @@ class ActivityController extends SuperController with ActivityMixin, ChallengeMi
         }
       }
 
-      thr.throttle(() {
+      locationThr.throttle(() {
         detectChallengeZone(position);
         autoFinishChallenge(position, userState.value);
       });
@@ -813,21 +821,23 @@ class ActivityController extends SuperController with ActivityMixin, ChallengeMi
   }
 
   void adLoadTimerStart() {
-    time.value = 5;
+    adLoadingTime.value = 5;
     adUpdateLocked = false;
-    if (_adTimer != null) {
+
+    if (_adTimer != null && adLoadingTime.value < 0) {
       _adTimer = null;
+      adLoadingTime.value = 5;
     }
 
     _adTimer = Timer.periodic(const Duration(seconds: 1), (timer) {
-      time.value--;
+      adLoadingTime.value--;
 
       if (startAd.value != null || endAd.value != null) {
         timer.cancel();
         _adTimer = null;
       }
 
-      if (time.value == 0) {
+      if (adLoadingTime.value == 0) {
         adUpdateLocked = true;
         timer.cancel();
         _adTimer = null;
