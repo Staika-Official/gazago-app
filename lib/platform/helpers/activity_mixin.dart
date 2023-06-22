@@ -392,6 +392,8 @@ mixin ActivityMixin {
             altitude: currentLocation.value.altitude,
             time: 0,
             startPoint: challenge != null ? challenge.firstName : '${currentLocation.value.longitude}, ${currentLocation.value.latitude}',
+            lastLongitude: currentLocation.value.longitude,
+            lastLatitude: currentLocation.value.latitude,
             challengeId: challenge?.id,
             locationUpdateTime: DateTime.now(),
             adId: adId != null ? '${adId}_${deviceId}_${DateTime.now().millisecondsSinceEpoch}' : null,
