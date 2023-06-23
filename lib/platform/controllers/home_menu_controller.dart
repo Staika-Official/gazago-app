@@ -150,7 +150,7 @@ class HomeMenuController extends SuperController {
         _appAndroidUpdateInfo = await InAppUpdate.checkForUpdate().catchError((e) {
           showToastPopup(e.toString());
         });
-      } else if (_appIOSUpdateInfo != null && _appIOSUpdateInfo!.canUpdate) {
+      } else {
         _appIOSUpdateInfo = await NewVersion(
           iOSId: F.isDev ? 'kr.co.eztechfin.gazaGo.dev' : 'kr.co.eztechfin.gazaGo',
         ).getVersionStatus().catchError((e) {
