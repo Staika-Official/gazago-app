@@ -22,7 +22,6 @@ class WebViewController extends GetxController {
   }
 
   void initWebViewLinkUrl() {
-    print(Get.arguments['linkUrl']);
-    linkUrl.value = Get.arguments['linkUrl'];
+    linkUrl.value = Get.arguments['linkUrl'] ?? '';
   }
 }

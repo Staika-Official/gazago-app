@@ -2,6 +2,7 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg_provider/flutter_svg_provider.dart';
+import 'package:gaza_go/constants/config.dart';
 import 'package:gaza_go/platform/controllers/wallet_staika_controller.dart';
 import 'package:gaza_go/platform/helpers/base_helper.dart';
 import 'package:gaza_go/platform/models/wallet_token_balance_model.dart';
@@ -55,6 +56,7 @@ class StaikaAssetItemCoin extends StatelessWidget {
                     foregroundImage: asset.logoUrl != null && asset.logoUrl != ''
                         ? CachedNetworkImageProvider(
                             asset.logoUrl!,
+                            headers: imageNetworkHeader,
                           )
                         : const Svg('assets/images/wallet/ico_stik.svg') as ImageProvider,
                   ),

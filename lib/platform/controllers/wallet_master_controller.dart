@@ -184,13 +184,19 @@ class WalletMasterController extends GetxController with SolanaMixin, GetTickerP
   Future<void> getSpendingWalletTransactions(AssetTokenBalanceModel asset) async {
     dataGetLoading.value = true;
     selectedAsset.value = asset;
-    assetDetail.value = await WalletService.getSpendingWalletTransactions(asset.symbol!, page: rawTransactionList.isEmpty ? 0 : (rawTransactionList.length / 10).floor());
-    rawTransactionList.addAll(assetDetail.value.transactions);
-    if (assetDetail.value.transactions.isEmpty || !(assetDetail.value.transactions.length % 10 == 0)) {
-      hasMoreTransactions = false;
-    } else {
-      hasMoreTransactions = true;
-    }
+    await WalletService.getSpendingWalletTransactions(
+      asset.symbol!,
+      page: rawTransactionList.isEmpty ? 0 : (rawTransactionList.length / 10).floor(),
+      successCallback: (AssetDetailModel detail) {
+        assetDetail.value = detail;
+        rawTransactionList.addAll(assetDetail.value.transactions);
+        if (assetDetail.value.transactions.isEmpty || !(assetDetail.value.transactions.length % 10 == 0)) {
+          hasMoreTransactions = false;
+        } else {
+          hasMoreTransactions = true;
+        }
+      },
+    );
     dataGetLoading.value = false;
   }
 

@@ -419,11 +419,10 @@ class ActivityController extends SuperController with ActivityMixin, ChallengeMi
 
         if (Get.isRegistered<LoadingController>()) Get.find<LoadingController>().updateProgress("곧 가자고와 가자고~!");
       },
-      errorCallback: (statusCode) {
-        if (statusCode == 404) {
+      errorCallback: (int? statusCode) {
+        if (statusCode != null && statusCode == 404) {
           onLogout();
         }
-        throw statusCode;
       },
     );
   }

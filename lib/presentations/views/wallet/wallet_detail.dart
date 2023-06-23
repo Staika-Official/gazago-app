@@ -2,6 +2,7 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg_provider/flutter_svg_provider.dart' as sp;
+import 'package:gaza_go/constants/config.dart';
 import 'package:gaza_go/platform/controllers/wallet_master_controller.dart';
 import 'package:gaza_go/platform/helpers/base_helper.dart';
 import 'package:gaza_go/presentations/components/default_container.dart';
@@ -152,7 +153,10 @@ class WalletDetail extends StatelessWidget {
               padding: EdgeInsets.only(top: 40.sp),
               child: CircleAvatar(
                 foregroundImage: controller.selectedAsset.value.logoUrl != '' && controller.selectedAsset.value.logoUrl != null
-                    ? CachedNetworkImageProvider(controller.selectedAsset.value.logoUrl!)
+                    ? CachedNetworkImageProvider(
+                        controller.selectedAsset.value.logoUrl!,
+                        headers: imageNetworkHeader,
+                      )
                     : const sp.Svg('assets/images/common/ico_token_tik.svg') as ImageProvider,
               ),
             ),

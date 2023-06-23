@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:gaza_go/constants/config.dart';
 import 'package:gaza_go/constants/enums.dart';
 import 'package:gaza_go/constants/routes.dart';
 import 'package:gaza_go/flavors.dart';
@@ -337,7 +338,10 @@ class LeaderboardHome extends StatelessWidget {
                           backgroundColor: Colors.black,
                           child: CircleAvatar(
                             radius: 15.sp,
-                            foregroundImage: NetworkImage(myRank.profileImageUrl!),
+                            foregroundImage: NetworkImage(
+                              myRank.profileImageUrl!,
+                              headers: imageNetworkHeader,
+                            ),
                           ),
                         ),
                       )
@@ -491,7 +495,10 @@ class LeaderboardHome extends StatelessWidget {
                                             'assets/images/ic_launcher.png',
                                             width: 30.sp,
                                           ).image
-                                        : NetworkImage(ranker.profileImageUrl!),
+                                        : NetworkImage(
+                                            ranker.profileImageUrl!,
+                                            headers: imageNetworkHeader,
+                                          ),
                                   ),
                                 ),
                               ),

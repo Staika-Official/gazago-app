@@ -75,8 +75,8 @@ class Home extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    HomeMenuController controller = Get.put(HomeMenuController());
     Get.put(NoticePopupController());
+    HomeMenuController controller = Get.put(HomeMenuController());
 
     GlobalKey<NavigatorState> navigatorKey = GlobalKey<NavigatorState>();
     return WillPopScope(

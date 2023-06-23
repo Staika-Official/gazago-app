@@ -3,6 +3,7 @@ import 'package:custom_rounded_rectangle_border/custom_rounded_rectangle_border.
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:gaza_go/constants/config.dart';
 import 'package:gaza_go/platform/controllers/shop_controller.dart';
 import 'package:gaza_go/platform/helpers/base_helper.dart';
 import 'package:gaza_go/platform/helpers/inventory_helper.dart';
@@ -56,12 +57,14 @@ class ShopItems extends StatelessWidget {
                                               fit: BoxFit.contain,
                                               item.itemImageUrl!,
                                               placeholderBuilder: (BuildContext context) => Center(child: SizedBox.square(dimension: 40, child: CircularProgressIndicator())),
+                                              headers: imageNetworkHeader,
                                             )
                                           : CachedNetworkImage(
                                               imageUrl: item.itemImageUrl!,
                                               fit: BoxFit.fitHeight,
                                               placeholder: (context, url) => const Center(child: SizedBox.square(dimension: 40, child: CircularProgressIndicator())),
                                               errorWidget: (context, url, error) => Image.asset("assets/images/@temp_bal.png"),
+                                              httpHeaders: imageNetworkHeader,
                                             ),
                                     )
                                   : Container(),

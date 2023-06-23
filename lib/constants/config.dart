@@ -15,3 +15,8 @@ void initRemoteConfigData() {
   abusingInsideRadiusRatio = getConfig(dataType: ConfigType.double, configKey: 'abuse_inside_radius_ratio');
   abusingReportTime = getConfig(dataType: ConfigType.double, configKey: 'abuse_report_time');
 }
+
+Map<String, String> imageNetworkHeader = {
+  'Connection': 'Keep-Alive',
+  'Keep-Alive': 'timeout=10, max=5',
+};

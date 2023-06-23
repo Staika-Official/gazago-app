@@ -1,6 +1,7 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:gaza_go/constants/config.dart';
 import 'package:gaza_go/platform/models/asset_item_nft_model.dart';
 
 class AssetItemNft extends StatelessWidget {
@@ -17,7 +18,10 @@ class AssetItemNft extends StatelessWidget {
         child: Row(
           children: [
             CircleAvatar(
-              foregroundImage: CachedNetworkImageProvider(asset.tokenImageUrl),
+              foregroundImage: CachedNetworkImageProvider(
+                asset.tokenImageUrl,
+                headers: imageNetworkHeader,
+              ),
             ),
             Expanded(
               child: Padding(

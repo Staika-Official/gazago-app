@@ -164,7 +164,7 @@ class ActivityService {
     if (res.statusCode == 200) {
       successCallback(CurrentUserStateModel.fromJson(res.data));
     } else {
-      if (errorCallback != null) errorCallback(ErrorResponseDataModel.fromJson(res.data));
+      if (errorCallback != null) errorCallback(res.data != null ? ErrorResponseDataModel.fromJson(res.data) : null);
     }
   }
 
@@ -173,7 +173,7 @@ class ActivityService {
     if (res.statusCode == 200) {
       successCallback(CurrentUserStateModel.fromJson(res.data));
     } else {
-      if (errorCallback != null) errorCallback(ErrorResponseDataModel.fromJson(res.data));
+      if (errorCallback != null) errorCallback(res.data != null ? ErrorResponseDataModel.fromJson(res.data) : null);
     }
   }
 

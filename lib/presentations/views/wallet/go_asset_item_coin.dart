@@ -4,6 +4,7 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg_provider/flutter_svg_provider.dart';
+import 'package:gaza_go/constants/config.dart';
 import 'package:gaza_go/platform/helpers/base_helper.dart';
 import 'package:gaza_go/platform/models/asset_token_balance_model.dart';
 import 'package:gaza_go/presentations/styles/colors.dart';
@@ -56,6 +57,7 @@ class GoAssetItemCoin extends StatelessWidget {
                       foregroundImage: asset.logoUrl != null && asset.logoUrl != ''
                           ? CachedNetworkImageProvider(
                               asset.logoUrl!,
+                              headers: imageNetworkHeader,
                             )
                           : const Svg('assets/images/common/ico_token_tik.svg') as ImageProvider,
                     ),
