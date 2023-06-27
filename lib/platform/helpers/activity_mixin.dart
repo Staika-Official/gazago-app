@@ -4,7 +4,6 @@ import 'dart:io';
 import 'package:assets_audio_player/assets_audio_player.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:flutter_naver_map/flutter_naver_map.dart';
 import 'package:gaza_go/constants/config.dart';
 import 'package:gaza_go/constants/enums.dart';
@@ -830,14 +829,15 @@ mixin ActivityMixin {
   }
 
   void showLuckAnimation() async {
-    FlutterLocalNotificationsPlugin notificationsPlugin = FlutterLocalNotificationsPlugin();
+    bool? isAbleSound = HiveStore.load(key: HiveKey.luckSound.name);
+    print(isAbleSound);
     luckLoadControl.value = Control.playReverseFromEnd;
-    HapticFeedback.vibrate();
+    if (isAbleSound != null && isAbleSound) {
+      HapticFeedback.vibrate();
+      assetsAudioPlayer.open(Audio("assets/audio/bonus_go.mp3"));
+      assetsAudioPlayer.play();
+    }
 
-    assetsAudioPlayer.open(
-      Audio("assets/audio/bonus_go.mp3"),
-    );
-    assetsAudioPlayer.play();
     isShowLuckAnimation.value = true;
   }
 
