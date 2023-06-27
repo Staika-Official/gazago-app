@@ -1,6 +1,7 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:gaza_go/constants/config.dart';
 import 'package:gaza_go/platform/helpers/base_helper.dart';
 import 'package:gaza_go/platform/models/asset_solana_balance_model.dart';
 import 'package:gaza_go/presentations/styles/colors.dart';
@@ -47,6 +48,7 @@ class OnChainItemCoin extends StatelessWidget {
                   radius: 19.sp,
                   foregroundImage: CachedNetworkImageProvider(
                     asset.logoUrl,
+                    headers: imageNetworkHeader,
                   ),
                 ),
                 Expanded(

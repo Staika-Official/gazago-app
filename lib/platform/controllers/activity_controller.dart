@@ -371,11 +371,10 @@ class ActivityController extends SuperController with ActivityMixin, ChallengeMi
 
         if (Get.isRegistered<LoadingController>()) Get.find<LoadingController>().updateProgress("곧 가자고와 가자고~!");
       },
-      errorCallback: (statusCode) {
-        if (statusCode == 404) {
+      errorCallback: (int? statusCode) {
+        if (statusCode != null && statusCode == 404) {
           onLogout();
         }
-        throw statusCode;
       },
     );
   }
@@ -625,7 +624,7 @@ class ActivityController extends SuperController with ActivityMixin, ChallengeMi
     }
   }
 
-  void initLocationStream() {
+  void initLocationStream() async {
     late LocationSettings locationSettings;
 
     if (Platform.isAndroid) {
@@ -703,6 +702,8 @@ class ActivityController extends SuperController with ActivityMixin, ChallengeMi
         detectChallengeZone(position);
         autoFinishChallenge(position, userState.value);
       });
+    }, onError: (e) {
+      print(e.toString());
     });
   }
 

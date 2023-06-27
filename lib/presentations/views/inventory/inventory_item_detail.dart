@@ -2,6 +2,7 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:gaza_go/constants/config.dart';
 import 'package:gaza_go/platform/controllers/inventory_controller.dart';
 import 'package:gaza_go/platform/helpers/base_helper.dart';
 import 'package:gaza_go/platform/helpers/inventory_helper.dart';
@@ -106,12 +107,14 @@ class InventoryItemDetail extends StatelessWidget {
                                                                 height: 170.sp,
                                                                 controller.selectedItem.value.itemImageUrl,
                                                                 placeholderBuilder: (BuildContext context) => Container(padding: const EdgeInsets.all(30.0), child: const CircularProgressIndicator()),
+                                                                headers: imageNetworkHeader,
                                                               )
                                                             : CachedNetworkImage(
                                                                 imageUrl: controller.selectedItem.value.itemImageUrl,
                                                                 height: 170.sp,
                                                                 fit: BoxFit.fitHeight,
                                                                 placeholder: (context, url) => const Center(child: SizedBox.square(dimension: 40, child: CircularProgressIndicator())),
+                                                                httpHeaders: imageNetworkHeader,
                                                               ),
                                                       ),
                                                     )
@@ -563,6 +566,7 @@ class InventoryItemDetail extends StatelessWidget {
                                                             ),
                                                             placeholder: (context, url) => const Center(child: SizedBox.square(dimension: 40, child: CircularProgressIndicator())),
                                                             errorWidget: (context, url, error) => const Center(child: SizedBox.square(dimension: 40, child: CircularProgressIndicator())),
+                                                            httpHeaders: imageNetworkHeader,
                                                           ),
                                                         )
                                                     ],
@@ -665,7 +669,7 @@ class InventoryItemDetail extends StatelessWidget {
                                                       ],
                                                     ),
                                                     child: InkWell(
-                                                      onTap: () => controller.checkEquippedChallengeItem(controller.selectedItem.value.equippedChallengeItem!, controller.selectedItem.value.id),
+                                                      onTap: () => controller.checkEquippedChallengeItem(controller.selectedItem.value.equippedChallengeItem, controller.selectedItem.value.id),
                                                       child: Padding(
                                                         padding: EdgeInsets.symmetric(vertical: 13.0.sp, horizontal: 30.sp),
                                                         child: Column(

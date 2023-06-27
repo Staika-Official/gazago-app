@@ -3,6 +3,7 @@ import 'package:custom_rounded_rectangle_border/custom_rounded_rectangle_border.
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:gaza_go/constants/config.dart';
 import 'package:gaza_go/platform/controllers/shop_detail_controller.dart';
 import 'package:gaza_go/platform/helpers/base_helper.dart';
 import 'package:gaza_go/platform/helpers/inventory_helper.dart';
@@ -94,14 +95,18 @@ class ShopItemDetail extends StatelessWidget {
                                                               ? SvgPicture.network(
                                                                   fit: BoxFit.contain,
                                                                   controller.selectedItem.value.itemImageUrl!,
-                                                                  placeholderBuilder: (BuildContext context) =>
-                                                                      Container(padding: const EdgeInsets.all(30.0), child: const CircularProgressIndicator()),
+                                                                  placeholderBuilder: (BuildContext context) => Container(
+                                                                    padding: const EdgeInsets.all(30.0),
+                                                                    child: const CircularProgressIndicator(),
+                                                                  ),
+                                                                  headers: imageNetworkHeader,
                                                                 )
                                                               : CachedNetworkImage(
                                                                   imageUrl: controller.selectedItem.value.itemImageUrl!,
                                                                   fit: BoxFit.fitWidth,
                                                                   placeholder: (context, url) => const Center(child: SizedBox.square(dimension: 40, child: CircularProgressIndicator())),
                                                                   errorWidget: (context, url, error) => const Center(child: SizedBox.square(dimension: 40, child: CircularProgressIndicator())),
+                                                                  httpHeaders: imageNetworkHeader,
                                                                 ),
                                                         ),
                                                       ),
@@ -753,6 +758,7 @@ class ShopItemDetail extends StatelessWidget {
                                           ),
                                           placeholder: (context, url) => const Center(child: SizedBox.square(dimension: 40, child: CircularProgressIndicator())),
                                           errorWidget: (context, url, error) => const Center(child: SizedBox.square(dimension: 40, child: CircularProgressIndicator())),
+                                          httpHeaders: imageNetworkHeader,
                                         ),
                                       )
                                   ],

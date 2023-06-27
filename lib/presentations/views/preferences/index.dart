@@ -1,6 +1,7 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:gaza_go/constants/config.dart';
 import 'package:gaza_go/constants/routes.dart';
 import 'package:gaza_go/flavors.dart';
 import 'package:gaza_go/platform/controllers/debugging_controller.dart';
@@ -49,6 +50,7 @@ class Preferences extends StatelessWidget {
                                   foregroundImage: controller.profile.value.profileImageUrl != null && controller.profile.value.profileImageUrl != ''
                                       ? CachedNetworkImageProvider(
                                           controller.profile.value.profileImageUrl!,
+                                          headers: imageNetworkHeader,
                                         )
                                       : Image.asset(
                                           'assets/images/ic_launcher.png',
@@ -119,6 +121,33 @@ class Preferences extends StatelessWidget {
                       title: '본인인증',
                       onTap: () => Get.toNamed(Routes.verificationTerms),
                     ),
+              Padding(
+                padding: EdgeInsets.only(left: 25.sp, right: 20.sp),
+                child: Container(
+                  height: 70,
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      const StyledText(
+                        '행운 효과음',
+                        fontSize: 18,
+                        lineHeight: 18,
+                        fontWeight: 500,
+                        color: Colors.white,
+                      ),
+                      Switch.adaptive(
+                        activeColor: skyBlueColor,
+                        activeTrackColor: skyBlueColor,
+                        inactiveTrackColor: const Color.fromRGBO(120, 120, 128, 0.16),
+                        thumbColor: MaterialStateProperty.all(Colors.white),
+                        overlayColor: MaterialStateProperty.all(Colors.transparent),
+                        value: controller.isAbleLuckSound.value,
+                        onChanged: (val) => controller.toggleLuckSoundAlarm(val),
+                      )
+                    ],
+                  ),
+                ),
+              ),
               PreferenceItem(
                 title: '알림',
                 onTap: () {

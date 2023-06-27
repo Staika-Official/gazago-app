@@ -18,7 +18,7 @@ publish_to: 'none' # Remove this line if you wish to publish to pub.dev
 # In Windows, build-name is used as the major, minor, and patch parts
 # of the product and file versions while build-number is used as the build suffix.
 
-version: 1.2.10+78
+version: 1.2.12+80
 
 
 environment:
@@ -97,7 +97,9 @@ dependencies:
   carousel_slider: ^4.1.1
   flutter_screenutil: ^5.6.0
   throttling: ^1.0.0
-  flutter_inappwebview: ^6.0.0-beta.22
+  # flutter_inappwebview 업데이트 하면 안됨
+  # beta.24+1 요구사항이 xcode 14.3 이상인데 xcode 업데이트 하면 다른 패키지에서 에러남
+  flutter_inappwebview: 6.0.0-beta.22
   google_mobile_ads: ^2.3.0
   path_provider: ^2.0.11
   advertising_id: 2.3.0
@@ -118,6 +120,7 @@ dependencies:
   skeletons: ^0.0.3
   shape_of_view_null_safe: ^2.0.0
   assets_audio_player: ^3.0.6
+  collection: ^1.17.0
 
 
 

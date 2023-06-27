@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:gaza_go/constants/config.dart';
 import 'package:gaza_go/constants/routes.dart';
 import 'package:gaza_go/flavors.dart';
 import 'package:gaza_go/platform/controllers/challenges_detail_controller.dart';
@@ -62,7 +63,10 @@ class ChallengeLeaderboard extends StatelessWidget {
                                     'assets/images/ic_launcher.png',
                                     width: 30.sp,
                                   ).image
-                                : NetworkImage(myRank.profileImageUrl!),
+                                : NetworkImage(
+                                    myRank.profileImageUrl!,
+                                    headers: imageNetworkHeader,
+                                  ),
                           ),
                         ),
                       )
@@ -218,7 +222,10 @@ class ChallengeLeaderboard extends StatelessWidget {
                                               'assets/images/ic_launcher.png',
                                               width: 30.sp,
                                             ).image
-                                          : NetworkImage(item.profileImageUrl!),
+                                          : NetworkImage(
+                                              item.profileImageUrl!,
+                                              headers: imageNetworkHeader,
+                                            ),
                                     ),
                                   ),
                                 ),

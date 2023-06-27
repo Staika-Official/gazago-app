@@ -12,9 +12,10 @@ import 'package:gaza_go/presentations/styles/icons.dart';
 import 'package:gaza_go/presentations/styles/styled_text.dart';
 import 'package:get/get.dart';
 
-Future<String> showConfirmPasswordDialog(WalletMasterController controller) {
+Future<String?> showConfirmPasswordDialog(WalletMasterController controller) {
   ConfirmWalletPasswordController controller = Get.put(ConfirmWalletPasswordController());
-  Completer<String> completer = Completer();
+  controller.passwordFormStatus.value = FormStatus.empty;
+  Completer<String?> completer = Completer();
   Get.dialog(
     barrierDismissible: false,
     useSafeArea: false,
@@ -105,6 +106,12 @@ Future<String> showConfirmPasswordDialog(WalletMasterController controller) {
                                 color: Colors.white,
                               ),
                               onChanged: (password) => controller.updatePassword(password),
+                              onSubmitted: (String text) async {
+                                if (controller.passwordFormStatus.value == FormStatus.sufficient) {
+                                  String? password = controller.nextStep();
+                                  if (password != null) completer.complete(password);
+                                }
+                              },
                             ),
                           ),
                           Obx(
@@ -137,16 +144,20 @@ Future<String> showConfirmPasswordDialog(WalletMasterController controller) {
             Container(
               padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 15),
               width: double.infinity,
-              child: GazagoButton(
-                onTap: () {
-                  String? password = controller.nextStep();
-                  completer.complete(password);
-                },
-                buttonText: '확인',
-                buttonColor: skyBlueColor,
-                // textColor: Colors.white,
-                // buttonColor: popupBgColor,
-              ),
+              child: Obx(() {
+                return GazagoButton(
+                  onTap: () {
+                    if (controller.passwordFormStatus.value == FormStatus.sufficient) {
+                      String? password = controller.nextStep();
+                      if (password != null) completer.complete(password);
+                    }
+                  },
+                  buttonText: '확인',
+                  buttonColor: controller.passwordFormStatus.value == FormStatus.sufficient ? skyBlueColor : deepGrayColor,
+                  // textColor: Colors.white,
+                  // buttonColor: popupBgColor,
+                );
+              }),
             ),
           ],
         ),

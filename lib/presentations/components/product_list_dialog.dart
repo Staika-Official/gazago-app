@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:gaza_go/constants/config.dart';
 import 'package:gaza_go/constants/enums.dart';
 import 'package:gaza_go/platform/controllers/wallet_master_controller.dart';
 import 'package:gaza_go/platform/helpers/base_helper.dart';
@@ -158,6 +159,7 @@ void showProductList(WalletMasterController controller) {
                               foregroundImage: HiveStore.loadString(key: HiveKey.profileImageUrl.name) != null && HiveStore.loadString(key: HiveKey.profileImageUrl.name) != ''
                                   ? CachedNetworkImageProvider(
                                       HiveStore.loadString(key: HiveKey.profileImageUrl.name)!,
+                                      headers: imageNetworkHeader,
                                     )
                                   : Image.asset(
                                       'assets/images/ic_launcher.png',

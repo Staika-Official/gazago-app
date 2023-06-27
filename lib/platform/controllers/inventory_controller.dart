@@ -376,7 +376,7 @@ class InventoryController extends GetxController with LinearProgressMixin, Inven
     }
   }
 
-  void checkEquippedChallengeItem(bool isEquippedItem, int itemId) {
+  void checkEquippedChallengeItem(bool? isEquippedItem, int itemId) {
     if (isEquippedItem != null && isEquippedItem) {
       checkChallengeItemEquip(this, itemId);
     } else {

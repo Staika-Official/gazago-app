@@ -175,7 +175,7 @@ mixin AdmobMixin {
       // DateTime now = DateTime.now();
       // HiveStore.save(key: 'exerciseStartAd', value: now);
     });
-    Timer(const Duration(seconds: 1), () {
+    Timer(const Duration(milliseconds: 300), () {
       startAd.value = null;
     });
   }
@@ -215,7 +215,7 @@ mixin AdmobMixin {
       // DateTime now = DateTime.now();
       // HiveStore.save(key: 'exerciseEndAd', value: now);
     });
-    Timer(const Duration(seconds: 1), () {
+    Timer(const Duration(milliseconds: 300), () {
       endAd.value = null;
     });
   }

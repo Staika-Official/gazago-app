@@ -137,14 +137,12 @@ class StaikaWalletController extends GetxController with WalletMixin, SolanaMixi
       } catch (e) {
         assetStik.value = null;
       }
-
-      // setCurrentSumPriceUI(tokenData, currency.value);
-      // coinAssetList.add(WalletTokenBalanceModel(symbol: "STIK", name: "Staika", amount: 4998310000, uiAmount: 4.99831));
     });
     loaderController.isLoading.value = false;
   }
 
   void moveToSendToGoWallet() {
+    stikAmountTextController.text = '';
     Get.toNamed(Routes.sendStikGoWallet);
   }
 

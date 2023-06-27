@@ -2,6 +2,7 @@ import 'dart:developer';
 
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
+import 'package:gaza_go/constants/config.dart';
 import 'package:gaza_go/constants/routes.dart';
 import 'package:gaza_go/platform/helpers/inventory_mixin.dart';
 import 'package:gaza_go/platform/models/inventory_badge_list_model.dart';
@@ -135,12 +136,18 @@ class SyntheticBadgeController extends GetxController with InventoryMixin {
           return Column(
             children: [
               Center(
-                child: CachedNetworkImage(
-                  imageUrl: selectBadge.value.imageUrl!,
-                  fit: BoxFit.fill,
-                  placeholder: (context, url) => const CircularProgressIndicator(),
-                  errorWidget: (context, url, error) => Image.asset("assets/images/@temp_badge.png"),
-                ),
+                child: selectBadge.value.imageUrl != null
+                    ? CachedNetworkImage(
+                        imageUrl: selectBadge.value.imageUrl!,
+                        fit: BoxFit.fill,
+                        placeholder: (context, url) => const CircularProgressIndicator(),
+                        errorWidget: (context, url, error) => Image.asset("assets/images/@temp_badge.png"),
+                        httpHeaders: imageNetworkHeader,
+                      )
+                    : Image.asset(
+                        "assets/images/@temp_badge.png",
+                        fit: BoxFit.fill,
+                      ),
               ),
               SizedBox(
                 width: 200,

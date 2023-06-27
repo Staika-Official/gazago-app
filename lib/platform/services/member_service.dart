@@ -28,7 +28,7 @@ class MemberService {
     if (res.statusCode == 200) {
       successCallback(MemberUserModel.fromJson(res.data));
     } else {
-      errorCallback(res.statusMessage);
+      if (res.statusMessage != null) errorCallback(res.statusMessage);
     }
   }
 
