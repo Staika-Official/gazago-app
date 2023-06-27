@@ -1,9 +1,7 @@
 import 'dart:async';
 import 'dart:io';
 
-import 'package:advertising_id/advertising_id.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:flutter_naver_map/flutter_naver_map.dart';
 import 'package:gaza_go/constants/config.dart';
 import 'package:gaza_go/constants/enums.dart';
@@ -35,7 +33,6 @@ import 'package:gaza_go/platform/services/uaa_service.dart';
 import 'package:gaza_go/platform/stores/hive_store.dart';
 import 'package:gaza_go/presentations/components/alert_ui_list.dart';
 import 'package:gaza_go/presentations/styles/colors.dart';
-import 'package:gaza_go/presentations/styles/icons.dart';
 import 'package:gaza_go/presentations/views/activity/activity_loading.dart';
 import 'package:gaza_go/presentations/views/activity/activity_select.dart';
 import 'package:gaza_go/presentations/views/activity/ad_select.dart';
@@ -49,23 +46,10 @@ import 'package:throttling/throttling.dart';
 class ActivityController extends SuperController with ActivityMixin, ChallengeMixin, GetTickerProviderStateMixin, AdmobMixin {
   final WalletMasterController walletMasterController = Get.find();
 
-  RxDouble testNum = RxDouble(0.0);
-  GlobalKey webViewKey = GlobalKey();
-  final RxString noticeUrl = RxString('');
-  //rewarded.dart
   RxList<StatModel> get statList {
     return RxList([
       StatModel(name: '체력', currentStat: userState.value.state != null ? userState.value.state!.stamina! : 0, type: 'STAMINA'),
       StatModel(name: '신발 내구도', currentStat: userState.value.shoes != null ? userState.value.shoes!.durability! : 0, type: 'DURABILITY'),
-    ]);
-  }
-
-  RxList<dynamic> get activitySumList {
-    return RxList([
-      {'title': '운동 시간', 'unit': '', 'content': '1일 ${'03:15:12'}', 'icon': iconActivityStoryWatch},
-      {'title': '운동 거리', 'unit': 'km', 'content': 300.34.toString(), 'icon': iconActivityStoryDistance},
-      {'title': '걸음 수', 'unit': '', 'content': 12682.toString(), 'icon': iconActivityStorySteps},
-      {'title': '총 획득 타이카', 'unit': 'TIK', 'content': 200.toString(), 'icon': iconActivityStoryTaika},
     ]);
   }
 
@@ -81,10 +65,9 @@ class ActivityController extends SuperController with ActivityMixin, ChallengeMi
   StreamSubscription<ServiceStatus>? _serviceStatusStream;
   final Rx<DateTime> receiveLocationTime = Rx(DateTime.now());
   final HealthFactory health = HealthFactory();
-  final Rxn<OverlayImage>? challengeStartMaker = Rxn();
   OverlayImage? startMaker;
   OverlayImage? endMaker;
-  RxInt challengeSelectedIndex = RxInt(-1);
+  RxnInt challengeSelectedIndex = RxnInt(null);
   Control activityLoadControl = Control.play;
   RxBool disableButton = RxBool(false);
   RxBool disableActivityButton = RxBool(true);
@@ -95,42 +78,11 @@ class ActivityController extends SuperController with ActivityMixin, ChallengeMi
   final Throttling locationThr = Throttling(duration: const Duration(milliseconds: 500));
   late AnimationController challengeGuideController;
   final Rx<Control> challengeLoadControl = Rx(Control.play);
-  final RxDouble challengeLoadControlPosition = RxDouble(0);
-  RxBool isAbleAdView = RxBool(false);
-  final RxBool isLoadingGetAdData = RxBool(false);
-  Timer? _adTimer;
-  final RxInt adLoadingTime = RxInt(5);
-  String? advertisingId = '';
-  bool? isLimitAdTrackingEnabled;
-
-  initPlatformState() async {
-    // Platform messages may fail, so we use a try/catch PlatformException.
-    try {
-      advertisingId = await AdvertisingId.id(true);
-    } on PlatformException {
-      advertisingId = 'Failed to get platform version.';
-    }
-
-    try {
-      isLimitAdTrackingEnabled = await AdvertisingId.isLimitAdTrackingEnabled;
-    } on PlatformException {
-      isLimitAdTrackingEnabled = false;
-    }
-
-    // If the widget was removed from the tree while the asynchronous platform
-    // message was in flight, we want to discard the reply rather than calling
-    // setState to update our non-existent appearance.
-
-    advertisingId = advertisingId;
-    isLimitAdTrackingEnabled = isLimitAdTrackingEnabled;
-  }
 
   Future<void> initializeController() async {
     challengeGuideController = AnimationController(vsync: this);
     await initController();
 
-    // 타이머 시작
-    // adLoadTimerStart();
     checkConnectivityStatus();
     if ([ExerciseState.ongoing, ExerciseState.paused].any((state) => state == exerciseState.value) && !isFakeGps.value && !isTestingFakeGps() && !batchIsInProgress()) {
       showPendingExerciseAlert(this);
@@ -208,7 +160,7 @@ class ActivityController extends SuperController with ActivityMixin, ChallengeMi
   }
 
   void showEndPointMarker(ChallengeModel course) {
-    if (challengeSelectedIndex.value != -1) {
+    if (challengeSelectedIndex.value != null) {
       challengeMarkers.add(generateDefaultMarker(allChallengesList.firstWhere((element) => element.id == challengeSelectedIndex.value)));
     }
 
@@ -664,7 +616,7 @@ class ActivityController extends SuperController with ActivityMixin, ChallengeMi
   void moveToChallengeMap() async {
     bool systemReady = await checkAvailabilities();
     if (systemReady) {
-      challengeSelectedIndex.value = -1;
+      challengeSelectedIndex.value = null;
       selectedChallengeMarkers.value = RxList.empty();
       generateChallengeMarkerList();
       Get.toNamed(Routes.challengeMap);
@@ -798,27 +750,7 @@ class ActivityController extends SuperController with ActivityMixin, ChallengeMi
     }
   }
 
-  // void moveToWebView(item) {
-  //   if (item['linkUrl'].contains('http')) {
-  //     Get.toNamed(Routes.webView, arguments: {'id': item.id, 'linkUrl': item.linkUrl});
-  //   } else {
-  //     Get.back();
-  //     Get.find<HomeMenuController>().selectMenu(3);
-  //   }
-  // }
-
-  // void onSavePopupCloseDate() {
-  //   DateTime now = DateTime.now();
-  //   HiveStore.save(key: HiveKey.closePopupDate.name, value: now);
-  //   Get.back();
-  // }
-
   void checkConnectivityStatus() async {
-    // globalController.connectivityResult.listen((value) async {
-    //   if (value != ConnectivityResult.none) {
-    //     await retrySavedRequests(source: 'connectivityListener');
-    //   }
-    // });
     print('인터넷 연결됐는지 확인중');
     if (globalController.internetConnection.value) {
       await retrySavedRequests(source: 'connectivityListener');
@@ -832,38 +764,6 @@ class ActivityController extends SuperController with ActivityMixin, ChallengeMi
 
     if (HiveStore.load(key: HiveKey.endExerciseRequested.name) != null && HiveStore.load(key: HiveKey.endExerciseRequested.name) && userState.value.exercise != null) {
       await endExercise(selectedChallenge.value, source: source);
-    }
-  }
-
-  void adLoadTimerStart() {
-    adLoadingTime.value = 5;
-    adUpdateLocked = false;
-
-    if (_adTimer != null && adLoadingTime.value < 0) {
-      _adTimer = null;
-      adLoadingTime.value = 5;
-    }
-
-    _adTimer = Timer.periodic(const Duration(seconds: 1), (timer) {
-      adLoadingTime.value--;
-
-      if (startAd.value != null || endAd.value != null) {
-        timer.cancel();
-        _adTimer = null;
-      }
-
-      if (adLoadingTime.value == 0) {
-        adUpdateLocked = true;
-        timer.cancel();
-        _adTimer = null;
-      }
-    });
-  }
-
-  void adLoadTimerStop() {
-    if (_adTimer != null) {
-      _adTimer?.cancel();
-      _adTimer = null;
     }
   }
 
@@ -890,8 +790,8 @@ class ActivityController extends SuperController with ActivityMixin, ChallengeMi
     pedestrianStatusSubscription = null;
     _serviceStatusStream?.cancel();
     _serviceStatusStream = null;
-    _adTimer?.cancel();
-    _adTimer = null;
+    adTimer?.cancel();
+    adTimer = null;
     HiveStore.save(key: HiveKey.savedStepInitialized.name, value: false);
   }
 

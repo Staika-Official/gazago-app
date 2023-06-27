@@ -54,14 +54,10 @@ mixin ActivityMixin {
   Timer? updateTimer;
   Timer? stopTimer;
   final RxDouble stopProgress = RxDouble(0);
-  Completer<NaverMapController> mapCompleter = Completer();
   StreamSubscription<Position>? locationSubscription;
   StreamSubscription<StepCount>? stepSubscription;
   StreamSubscription<PedestrianStatus>? pedestrianStatusSubscription;
   final HealthFactory health = HealthFactory();
-  final Rx<DateTime> pedestrianStoppedTime = Rx(DateTime.now());
-  final RxInt updateCount = RxInt(0);
-  final RxString lastUpdateTime = RxString('');
   final RxDouble realTimeSpeed = RxDouble(0);
   final RxBool lowStaminaNotified = RxBool(false);
   final RxBool zeroStaminaNotified = RxBool(false);
@@ -396,6 +392,8 @@ mixin ActivityMixin {
             altitude: currentLocation.value.altitude,
             time: 0,
             startPoint: challenge != null ? challenge.firstName : '${currentLocation.value.longitude}, ${currentLocation.value.latitude}',
+            lastLongitude: currentLocation.value.longitude,
+            lastLatitude: currentLocation.value.latitude,
             challengeId: challenge?.id,
             locationUpdateTime: DateTime.now(),
             adId: adId != null ? '${adId}_${deviceId}_${DateTime.now().millisecondsSinceEpoch}' : null,
@@ -774,10 +772,6 @@ mixin ActivityMixin {
     exerciseData.value = List.empty(growable: true);
     coordinates.value = List.empty(growable: true);
     challenge.id = null;
-
-    //TODO 삭제
-    updateCount.value = 0;
-    lastUpdateTime.value = '';
   }
 
   void resetTimer() {

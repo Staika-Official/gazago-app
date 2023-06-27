@@ -1,6 +1,8 @@
 import 'dart:async';
 import 'dart:io';
 
+import 'package:advertising_id/advertising_id.dart';
+import 'package:flutter/services.dart';
 import 'package:gaza_go/flavors.dart';
 import 'package:gaza_go/platform/controllers/activity_controller.dart';
 import 'package:get/get.dart';
@@ -11,6 +13,10 @@ import '../models/challenge_model.dart';
 mixin AdmobMixin {
   Rx<RewardedAd?> startAd = Rx(null);
   Rx<RewardedAd?> endAd = Rx(null);
+  Timer? adTimer;
+  final RxInt adLoadingTime = RxInt(5);
+  String? advertisingId = '';
+  bool? isLimitAdTrackingEnabled;
 
   RxMap<String, int> adLoadAttempts = RxMap({
     "exerciseStartAd": 0,
@@ -23,6 +29,60 @@ mixin AdmobMixin {
 
   Future handleSelectAdType(adType) async {
     selectedAd.value = adType;
+  }
+
+  Future<void> initPlatformState() async {
+    // Platform messages may fail, so we use a try/catch PlatformException.
+    try {
+      advertisingId = await AdvertisingId.id(true);
+    } on PlatformException {
+      advertisingId = 'Failed to get platform version.';
+    }
+
+    try {
+      isLimitAdTrackingEnabled = await AdvertisingId.isLimitAdTrackingEnabled;
+    } on PlatformException {
+      isLimitAdTrackingEnabled = false;
+    }
+
+    // If the widget was removed from the tree while the asynchronous platform
+    // message was in flight, we want to discard the reply rather than calling
+    // setState to update our non-existent appearance.
+
+    advertisingId = advertisingId;
+    isLimitAdTrackingEnabled = isLimitAdTrackingEnabled;
+  }
+
+  void adLoadTimerStart() {
+    adLoadingTime.value = 5;
+    adUpdateLocked = false;
+
+    if (adTimer != null && adLoadingTime.value < 0) {
+      adTimer = null;
+      adLoadingTime.value = 5;
+    }
+
+    adTimer = Timer.periodic(const Duration(seconds: 1), (timer) {
+      adLoadingTime.value--;
+
+      if (startAd.value != null || endAd.value != null) {
+        timer.cancel();
+        adTimer = null;
+      }
+
+      if (adLoadingTime.value == 0) {
+        adUpdateLocked = true;
+        timer.cancel();
+        adTimer = null;
+      }
+    });
+  }
+
+  void adLoadTimerStop() {
+    if (adTimer != null) {
+      adTimer?.cancel();
+      adTimer = null;
+    }
   }
 
   // 운동 시작 광고
