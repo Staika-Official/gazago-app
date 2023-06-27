@@ -1,5 +1,8 @@
+import 'dart:io';
+
 import 'package:flutter_naver_map/flutter_naver_map.dart';
 import 'package:gaza_go/constants/enums.dart';
+import 'package:gaza_go/platform/helpers/alert_helper.dart';
 import 'package:gaza_go/platform/models/current_user_state_model.dart';
 import 'package:gaza_go/platform/models/user_exercise_model.dart';
 import 'package:gaza_go/platform/models/user_shoes_model.dart';
@@ -20,27 +23,22 @@ class HiveStore {
 
   static void save({required String key, required dynamic value}) {
     final Box box = Hive.box('gazaGo');
-    box.put(key, value);
+    box.put(key, value).onError((FileSystemException error, stackTrace) => handleHiveError(error));
   }
 
   static void saveUserExerciseData({required dynamic value}) {
     final Box box = Hive.box('gazaGo');
-    box.put(HiveKey.userExerciseDataLogs.name, value);
+    box.put(HiveKey.userExerciseDataLogs.name, value).onError((FileSystemException error, stackTrace) => handleHiveError(error));
   }
 
   static void savePositionRawData({required dynamic value}) {
     final Box box = Hive.box('gazaGo');
-    box.put(HiveKey.positionRawDataLogs.name, value);
+    box.put(HiveKey.positionRawDataLogs.name, value).onError((FileSystemException error, stackTrace) => handleHiveError(error));
   }
 
   static void saveCurrentUserState({required CurrentUserStateModel userState}) {
     final Box box = Hive.box('gazaGo');
-    box.put(HiveKey.userState.name, userState);
-  }
-
-  static void saveExerciseData({required UserExerciseModel exerciseData}) {
-    final Box box = Hive.box('gazaGo');
-    box.put(HiveKey.exerciseData.name, exerciseData);
+    box.put(HiveKey.userState.name, userState).onError((FileSystemException error, stackTrace) => handleHiveError(error));
   }
 
   static dynamic load({required String key}) {
@@ -56,11 +54,6 @@ class HiveStore {
   static CurrentUserStateModel? loadCurrentUserState() {
     final Box box = Hive.box('gazaGo');
     return box.get(HiveKey.userState.name);
-  }
-
-  static UserExerciseModel? loadExerciseData() {
-    final Box box = Hive.box('gazaGo');
-    return box.get(HiveKey.exerciseData.name);
   }
 
   static void deleteKey({required String key}) {
@@ -85,13 +78,19 @@ class HiveStore {
       untypedCoordinateList.add([coordinate.latitude, coordinate.longitude]);
     }
 
-    box.put(HiveKey.lastUpdatedCoordinateIndex.name, coordinates.length);
-    box.put(HiveKey.exerciseCoordinates.name, untypedCoordinateList);
+    box.put(HiveKey.lastUpdatedCoordinateIndex.name, coordinates.length).onError((FileSystemException error, stackTrace) => handleHiveError(error));
+    box.put(HiveKey.exerciseCoordinates.name, untypedCoordinateList).onError((FileSystemException error, stackTrace) => handleHiveError(error));
   }
 
   static void initializeExerciseCoordinates() {
     final Box box = Hive.box('gazaGo');
-    box.put(HiveKey.lastUpdatedCoordinateIndex.name, 0);
-    box.put(HiveKey.exerciseCoordinates.name, []);
+    box.put(HiveKey.lastUpdatedCoordinateIndex.name, 0).onError((FileSystemException error, stackTrace) => handleHiveError(error));
+    box.put(HiveKey.exerciseCoordinates.name, []).onError((FileSystemException error, stackTrace) => handleHiveError(error));
+  }
+
+  static void handleHiveError(FileSystemException e) {
+    if (e.osError != null && e.osError!.errorCode == 28) {
+      showToastPopup('저장공간이 부족합니다.');
+    }
   }
 }

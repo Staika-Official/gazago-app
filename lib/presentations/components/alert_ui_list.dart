@@ -2219,7 +2219,7 @@ Future<void> showForceLogoutAlert() {
     actions: [
       Expanded(
         child: GazagoButton(
-          onTap: () => forceLogoutAlertCompleter.complete(),
+          onTap: () => !forceLogoutAlertCompleter.isCompleted ? forceLogoutAlertCompleter.complete() : null,
           buttonText: '확인',
           buttonColor: skyBlueColor,
         ),

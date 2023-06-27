@@ -53,9 +53,9 @@ class StaikaAssetItemCoin extends StatelessWidget {
                 children: [
                   CircleAvatar(
                     radius: 19.sp,
-                    foregroundImage: asset.logoUrl != null && asset.logoUrl != ''
+                    foregroundImage: asset.logoUrl != ''
                         ? CachedNetworkImageProvider(
-                            asset.logoUrl!,
+                            asset.logoUrl,
                             headers: imageNetworkHeader,
                           )
                         : const Svg('assets/images/wallet/ico_stik.svg') as ImageProvider,

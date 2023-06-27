@@ -178,8 +178,8 @@ class LoadingController extends GetxController {
           Get.offNamed(Routes.joinTerms, arguments: {'platform': 'gazago'});
         }
       },
-      errorCallback: (ErrorResponseDataModel error) {
-        if (error.status != 401) showToastPopup('약관 동의 여부를 확인할 수 없습니다.');
+      errorCallback: (ErrorResponseDataModel? error) {
+        if (error != null && error.status != 401) showToastPopup('약관 동의 여부를 확인할 수 없습니다.');
         timerStop();
         HiveStore.deleteMultipleKeys(keys: [
           HiveKey.accessToken.name,

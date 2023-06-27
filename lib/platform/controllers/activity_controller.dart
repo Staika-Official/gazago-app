@@ -837,6 +837,8 @@ class ActivityController extends SuperController with ActivityMixin, ChallengeMi
   void adLoadTimerStart() {
     adLoadingTime.value = 5;
     adUpdateLocked = false;
+    startAd.value = null;
+    endAd.value = null;
 
     if (_adTimer != null && adLoadingTime.value < 0) {
       _adTimer = null;

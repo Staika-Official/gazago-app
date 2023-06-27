@@ -669,7 +669,7 @@ class InventoryItemDetail extends StatelessWidget {
                                                       ],
                                                     ),
                                                     child: InkWell(
-                                                      onTap: () => controller.checkEquippedChallengeItem(controller.selectedItem.value.equippedChallengeItem!, controller.selectedItem.value.id),
+                                                      onTap: () => controller.checkEquippedChallengeItem(controller.selectedItem.value.equippedChallengeItem, controller.selectedItem.value.id),
                                                       child: Padding(
                                                         padding: EdgeInsets.symmetric(vertical: 13.0.sp, horizontal: 30.sp),
                                                         child: Column(
