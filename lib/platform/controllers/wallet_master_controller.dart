@@ -73,17 +73,25 @@ class WalletMasterController extends GetxController with SolanaMixin, GetTickerP
   }
 
   Rx<AssetTokenBalanceModel> get tik {
-    return Rx(spendingTokenUiList.singleWhere((token) => token.symbol == 'TOTAL_TIK', orElse: () {
-      showToastPopup('TAIKA를 찾을 수 없습니다.');
-      return AssetTokenBalanceModel();
-    }));
+    try {
+      return Rx(spendingTokenUiList.singleWhere((token) => token.symbol == 'TOTAL_TIK', orElse: () {
+        showToastPopup('TAIKA를 찾을 수 없습니다.');
+        return AssetTokenBalanceModel();
+      }));
+    } catch (e) {
+      return Rx(AssetTokenBalanceModel());
+    }
   }
 
   Rx<AssetTokenBalanceModel> get stik {
-    return Rx(spendingTokenUiList.singleWhere((token) => token.symbol == 'STIK', orElse: () {
-      showToastPopup('STAIKA를 찾을 수 없습니다.');
-      return AssetTokenBalanceModel();
-    }));
+    try {
+      return Rx(spendingTokenUiList.singleWhere((token) => token.symbol == 'STIK', orElse: () {
+        showToastPopup('STAIKA를 찾을 수 없습니다.');
+        return AssetTokenBalanceModel();
+      }));
+    } catch (e) {
+      return Rx(AssetTokenBalanceModel());
+    }
   }
 
   RxList<AssetTokenTransactionModel> get transactionsList {

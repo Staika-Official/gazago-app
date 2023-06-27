@@ -672,7 +672,7 @@ class ActivityController extends SuperController with ActivityMixin, ChallengeMi
     }
   }
 
-  void initLocationStream() {
+  void initLocationStream() async {
     late LocationSettings locationSettings;
 
     if (Platform.isAndroid) {
@@ -750,6 +750,8 @@ class ActivityController extends SuperController with ActivityMixin, ChallengeMi
         detectChallengeZone(position);
         autoFinishChallenge(position, userState.value);
       });
+    }, onError: (e) {
+      print(e.toString());
     });
   }
 
