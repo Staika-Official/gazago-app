@@ -23,7 +23,6 @@ class GlobalController extends SuperController {
   @override
   void onInit() async {
     checkMainPopupExpiredDate();
-    await execute(InternetConnectionChecker());
     await execute(customInstance);
     // await checkLoginStatus();
 
@@ -53,7 +52,7 @@ class GlobalController extends SuperController {
   void onInactive() {
     print('onInactive GlobalController');
     // connectivityStream?.cancel();
-    internetConnectionListener?.cancel();
+    // internetConnectionListener?.pause();
     // TODO: implement onInactive
   }
 
@@ -65,10 +64,11 @@ class GlobalController extends SuperController {
 
   @override
   void onResumed() async {
-    print('onResumed GlobalController');
-    await execute(customInstance);
-    // await getConnectivity();
-    // initConnectivityStream();
+    if (internetConnectionListener != null) {
+      internetConnectionListener?.resume();
+    } else {
+      await execute(customInstance);
+    }
   }
 
   Future<void> execute(
@@ -87,9 +87,6 @@ class GlobalController extends SuperController {
         }
       },
     );
-
-    await Future<void>.delayed(const Duration(seconds: 30));
-    await internetConnectionListener?.cancel();
   }
 
   // Future<void> getConnectivity() async {
