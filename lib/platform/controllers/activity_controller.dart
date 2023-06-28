@@ -527,7 +527,7 @@ class ActivityController extends SuperController with ActivityMixin, ChallengeMi
     if ([ExerciseState.ongoing, ExerciseState.paused].any((state) => state == exerciseState.value)) {
       Get.toNamed(Routes.activityActive);
     } else {
-      Get.dialog(const ActivitySelect(), barrierDismissible: false, barrierColor: const Color.fromRGBO(0, 0, 0, 0.85));
+      if (Get.isDialogOpen == null || Get.isDialogOpen == false) Get.dialog(const ActivitySelect(), barrierDismissible: false, barrierColor: const Color.fromRGBO(0, 0, 0, 0.85));
     }
   }
 
@@ -548,9 +548,9 @@ class ActivityController extends SuperController with ActivityMixin, ChallengeMi
       const Duration(seconds: 1),
       (timer) {
         if (loadingTime.value >= 3) {
+          exerciseStartThr.throttle(() => startExercise(exerciseType, challenge, adId: adId));
           timer.cancel();
           loadingTimer = null;
-          exerciseStartThr.throttle(() => startExercise(exerciseType, challenge, adId: adId));
         } else {
           loadingTime.value++;
           activityLoadControl = Control.playFromStart;

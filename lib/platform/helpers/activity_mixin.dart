@@ -363,7 +363,7 @@ mixin ActivityMixin {
     String deviceId = HiveStore.loadString(key: HiveKey.uuid.name)!;
     HiveStore.save(key: HiveKey.lastUpdatedStepCount.name, value: 0);
 
-    if (Get.isDialogOpen != null && Get.isDialogOpen!) Get.until((route) => Get.isDialogOpen == false);
+    if (Get.isDialogOpen != null && Get.isDialogOpen!) Get.until((route) => Get.currentRoute == Routes.activityActive && (Get.isDialogOpen == false || Get.isDialogOpen == null));
     if (isFakeGps.value && !isTestingFakeGps()) {
       return;
     }
