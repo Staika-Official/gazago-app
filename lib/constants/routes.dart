@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:gaza_go/flavors.dart';
+import 'package:gaza_go/platform/controllers/loading_controller.dart';
 import 'package:gaza_go/platform/middleware/router_middleware.dart';
 import 'package:gaza_go/presentations/views/activity/activity_active.dart';
 import 'package:gaza_go/presentations/views/activity/activity_challenges.dart';
@@ -54,6 +55,8 @@ import 'package:gaza_go/presentations/views/wallet/taika_pay.dart';
 import 'package:gaza_go/presentations/views/wallet/wallet_actions.dart';
 import 'package:gaza_go/presentations/views/wallet/wallet_detail.dart';
 import 'package:gaza_go/presentations/views/webview.dart';
+import 'package:get/get.dart';
+import 'package:get/get_instance/get_instance.dart';
 import 'package:get/get_navigation/get_navigation.dart';
 
 import '../presentations/views/debugging/activity_logs.dart';
@@ -125,7 +128,9 @@ class Routes {
     stepPage(name: Routes.login, page: const Login()),
     stepPage(name: Routes.onBoarding, page: const OnBoarding()),
     stepPage(name: Routes.joinTerms, page: const JoinTerms()),
-    stepPage(name: Routes.loading, page: const Loading()),
+    stepPage(name: Routes.loading, page: const Loading(), binding: BindingsBuilder(() {
+      Get.lazyPut<LoadingController>(() => LoadingController());
+    })),
     stepPage(
       name: Routes.home,
       page: const Home(),
@@ -185,10 +190,10 @@ class Routes {
   ];
 }
 
-GetPage stepPage({required String name, required Widget page, Transition? transition, Duration? transitionDuration, List<GetMiddleware>? middlewares}) {
+GetPage stepPage({required String name, required Widget page, Transition? transition, Duration? transitionDuration, List<GetMiddleware>? middlewares, BindingsBuilder? binding}) {
   return GetPage(name: name, page: () => _flavorBanner(child: page, show: F.name != 'prod'), transition: transition, transitionDuration: transitionDuration, middlewares: [
     AuthMiddleware(),
-  ]);
+  ], binding: binding);
 }
 
 Widget _flavorBanner({

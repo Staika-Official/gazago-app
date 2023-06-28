@@ -33,7 +33,7 @@ class Loading extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    LoadingController loadingController = Get.put(LoadingController());
+    LoadingController loadingController = Get.find<LoadingController>();
     Get.put(WalletMasterController(), permanent: true);
     Get.put(ActivityController(), permanent: true);
 
