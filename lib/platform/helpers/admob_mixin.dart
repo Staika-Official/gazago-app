@@ -70,7 +70,7 @@ mixin AdmobMixin {
         adTimer = null;
       }
 
-      if (adLoadingTime.value == 0) {
+      if (adLoadingTime.value == 0 || adLoadingTime.value < 0) {
         adUpdateLocked = true;
         timer.cancel();
         adTimer = null;
@@ -86,7 +86,7 @@ mixin AdmobMixin {
   }
 
   // 운동 시작 광고
-  void exerciseStartRewardedAdInit(String adType, {successCallback, errorCallback}) async {
+  void exerciseStartRewardedAdInit(String adType, {Function? successCallback, Function? errorCallback}) async {
     print(adType);
 
     await RewardedAd.load(
@@ -102,21 +102,21 @@ mixin AdmobMixin {
           }
           isLoadedAd.value = true;
           adLoadAttempts[adType] = 0;
-          successCallback();
+          if (successCallback != null) successCallback();
         },
         onAdFailedToLoad: (error) {
           print('RewardedAd failed to load: $error adType ${adType}');
           startAd.value = null;
           isLoadedAd.value = false;
           adLoadAttempts[adType] = adLoadAttempts[adType]! + 1;
-          errorCallback();
+          if (errorCallback != null) errorCallback();
         },
       ),
     );
   }
 
   // 운동 종료 광고
-  Future exerciseEndRewardedAdInit(String adType, {successCallback, errorCallback}) async {
+  Future exerciseEndRewardedAdInit(String adType, {Function? successCallback, Function? errorCallback}) async {
     print(adType);
     await RewardedAd.load(
       // adUnitId: Platform.isIOS ? 'ca-app-pub-3940256099942544/1712485313' : 'ca-app-pub-3940256099942544/5224354917',
@@ -131,14 +131,14 @@ mixin AdmobMixin {
           }
           adLoadAttempts[adType] = 0;
 
-          successCallback();
+          if (successCallback != null) successCallback();
           // numRewardedLoadAttempts = 0;
         },
         onAdFailedToLoad: (error) {
           print('RewardedAd failed to load: $error adType $adType');
           endAd.value = null;
           adLoadAttempts[adType] = adLoadAttempts[adType]! + 1;
-          errorCallback();
+          if (errorCallback != null) errorCallback();
         },
       ),
     );
