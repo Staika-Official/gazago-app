@@ -527,10 +527,13 @@ mixin ActivityMixin {
             userExerciseData.value,
             Platform.operatingSystem,
             source: source,
-            successCallback: (CurrentUserStateModel newUserState) {
+            successCallback: (CurrentUserStateModel newUserState) async {
+              // newUserState.exercise!.luckApplyRewardGo = 0.00001;
+              // newUserState.exercise!.luckOccurred = true;
               updateLocalUserState(newUserState);
               validateBadgeAcquisition(newUserState.exercise!.id!, newUserState.exercise!.badgeIssued!, newUserState.exercise!.badgeImageUrl ?? '');
-              if (newUserState.exercise!.luckApplyRewardGo! > 0 && newUserState.exercise!.luckOccurred!) {
+              await Future.delayed(const Duration(seconds: 1));
+              if (userState.value.exercise!.luckApplyRewardGo! > 0 && userState.value.exercise!.luckOccurred!) {
                 showLuckAnimation();
               }
 
@@ -829,10 +832,10 @@ mixin ActivityMixin {
   }
 
   void showLuckAnimation() async {
-    bool? isAbleSound = HiveStore.load(key: HiveKey.luckSound.name);
-    print(isAbleSound);
+    bool isAbleSound = HiveStore.load(key: HiveKey.luckSound.name) ?? false;
+    await Future.delayed(const Duration(milliseconds: 300));
     luckLoadControl.value = Control.playReverseFromEnd;
-    if (isAbleSound != null && isAbleSound) {
+    if (isAbleSound) {
       HapticFeedback.vibrate();
       assetsAudioPlayer.open(Audio("assets/audio/bonus_go.mp3"));
       assetsAudioPlayer.play();
