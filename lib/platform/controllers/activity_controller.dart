@@ -568,6 +568,7 @@ class ActivityController extends SuperController with ActivityMixin, ChallengeMi
     selectedExerciseType.value = exerciseType;
 
     AdWatchAvailableModel adWatchAvailableModel = AdWatchAvailableModel(watchAvailable: false);
+
     await AdmobService.getAdWatchAvailableTime(
       'EXERCISE_START',
       callback: (AdWatchAvailableModel model) {
@@ -594,7 +595,7 @@ class ActivityController extends SuperController with ActivityMixin, ChallengeMi
   }
 
   void showAdTip() {
-    showAdTipAlert(selectedExerciseType.value);
+    showAdTipAlert(selectedChallenge.value.id);
   }
 
   void handleMoveExerciseActive(ExerciseType exerciseType, {String? adId}) {
@@ -700,7 +701,6 @@ class ActivityController extends SuperController with ActivityMixin, ChallengeMi
 
       locationThr.throttle(() {
         detectChallengeZone(position);
-        autoFinishChallenge(position, userState.value);
       });
     }, onError: (e) {
       print(e.toString());
@@ -759,10 +759,6 @@ class ActivityController extends SuperController with ActivityMixin, ChallengeMi
   }
 
   Future<void> retrySavedRequests({required String source}) async {
-    if (HiveStore.load(key: HiveKey.badgeIssuanceRequested.name) != null && HiveStore.load(key: HiveKey.badgeIssuanceRequested.name) && userState.value.exercise != null) {
-      await requestBadgeIssuance(userState.value);
-    }
-
     if (HiveStore.load(key: HiveKey.endExerciseRequested.name) != null && HiveStore.load(key: HiveKey.endExerciseRequested.name) && userState.value.exercise != null) {
       await endExercise(selectedChallenge.value, source: source);
     }

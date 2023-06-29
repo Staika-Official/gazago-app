@@ -50,9 +50,8 @@ class UserExerciseModel {
   String? lastModifiedBy;
   @HiveField(21)
   String? lastModifiedDate;
-  //운동 시작할때만 필요한 파라미터
   @HiveField(22)
-  String? type;
+  String? type; //운동 시작할때만 필요한 파라미터 type
   @HiveField(23)
   String? userProfileImageUrl;
   @HiveField(24)
@@ -79,6 +78,10 @@ class UserExerciseModel {
   bool? luckOccurred;
   @HiveField(35)
   double? luckApplyRewardGo;
+  @HiveField(36)
+  String? badgeImageUrl;
+  @HiveField(37)
+  bool? badgeIssued;
 
   UserExerciseModel({
     this.id,
@@ -117,6 +120,8 @@ class UserExerciseModel {
     this.luckApplyTotalRewardGo,
     this.luckOccurred,
     this.luckApplyRewardGo,
+    this.badgeImageUrl,
+    this.badgeIssued,
   });
 
   factory UserExerciseModel.fromJson(Map<String, dynamic> json) => _$UserExerciseModelFromJson(json);

@@ -527,9 +527,13 @@ mixin ActivityMixin {
             userExerciseData.value,
             Platform.operatingSystem,
             source: source,
-            successCallback: (CurrentUserStateModel newUserState) {
+            successCallback: (CurrentUserStateModel newUserState) async {
+              // newUserState.exercise!.luckApplyRewardGo = 0.00001;
+              // newUserState.exercise!.luckOccurred = true;
               updateLocalUserState(newUserState);
-              if (newUserState.exercise!.luckApplyRewardGo! > 0 && newUserState.exercise!.luckOccurred!) {
+              validateBadgeAcquisition(newUserState.exercise!.id!, newUserState.exercise!.badgeIssued!, newUserState.exercise!.badgeImageUrl ?? '');
+              await Future.delayed(const Duration(seconds: 1));
+              if (userState.value.exercise!.luckApplyRewardGo! > 0 && userState.value.exercise!.luckOccurred!) {
                 showLuckAnimation();
               }
 
@@ -709,7 +713,7 @@ mixin ActivityMixin {
 
           if (newUserState.exercise!.state == 'ENDED') {
             exerciseState.value = ExerciseState.ready;
-            HiveStore.deleteMultipleKeys(keys: [HiveKey.userState.name, HiveKey.endExerciseRequested.name]);
+            HiveStore.deleteMultipleKeys(keys: [HiveKey.userState.name, HiveKey.endExerciseRequested.name, HiveKey.famousChallengeBadgeIssued.name]);
             resetVariables(challenge);
             resetTimer();
             resetSubscriptions();
@@ -828,10 +832,10 @@ mixin ActivityMixin {
   }
 
   void showLuckAnimation() async {
-    bool? isAbleSound = HiveStore.load(key: HiveKey.luckSound.name);
-    print(isAbleSound);
+    bool isAbleSound = HiveStore.load(key: HiveKey.luckSound.name) ?? false;
+    await Future.delayed(const Duration(milliseconds: 300));
     luckLoadControl.value = Control.playReverseFromEnd;
-    if (isAbleSound != null && isAbleSound) {
+    if (isAbleSound) {
       HapticFeedback.vibrate();
       assetsAudioPlayer.open(Audio("assets/audio/bonus_go.mp3"));
       assetsAudioPlayer.play();
@@ -843,5 +847,15 @@ mixin ActivityMixin {
   void initLuckAnimation() async {
     luckLoadControl.value = Control.stop;
     isShowLuckAnimation.value = false;
+  }
+
+  void validateBadgeAcquisition(int exerciseId, bool badgeIssued, String badgeImgUrl) {
+    bool? issuedBadge = HiveStore.load(key: HiveKey.famousChallengeBadgeIssued.name);
+    if (issuedBadge != null && issuedBadge) return;
+    if (badgeIssued) {
+      HiveStore.save(key: HiveKey.famousChallengeBadgeIssued.name, value: badgeIssued);
+    }
+    ActivityController controller = Get.find<ActivityController>();
+    showBadgeAcquisitionAlert(badgeImgUrl, controller.selectedChallenge.value);
   }
 }

@@ -59,7 +59,6 @@ enum HiveKey {
   userState,
   exerciseData,
   endExerciseRequested,
-  badgeIssuanceRequested,
   savedStepInitialized,
   savedStepCount,
   dummyStepCount,
@@ -96,6 +95,7 @@ enum HiveKey {
   challengeNotificationTime,
   hasChallengeSuccessPushMessage,
   luckSound,
+  famousChallengeBadgeIssued,
 }
 
 enum ResponseStatus {

@@ -34,7 +34,6 @@ import 'package:gaza_go/platform/helpers/base_helper.dart';
 import 'package:gaza_go/platform/helpers/inventory_helper.dart';
 import 'package:gaza_go/platform/models/challenge_model.dart';
 import 'package:gaza_go/platform/models/exchange_stik_price_model.dart';
-import 'package:gaza_go/platform/models/inventory_badge_model.dart';
 import 'package:gaza_go/platform/models/push_message_challenge_success_model.dart';
 import 'package:gaza_go/platform/models/stat_model.dart';
 import 'package:gaza_go/presentations/components/circular_button.dart';
@@ -686,7 +685,7 @@ void showEndExerciseAdAlert(ChallengeModel challenge, ActivityController control
   );
 }
 
-void showBadgeAcquisitionAlert(InventoryBadgeModel badge, ChallengeModel selectedChallenge) {
+void showBadgeAcquisitionAlert(String badgeImgUrl, ChallengeModel selectedChallenge) {
   showAlert(
     isScrollControlled: true,
     title: '챌린지 뱃지 발급',
@@ -694,16 +693,16 @@ void showBadgeAcquisitionAlert(InventoryBadgeModel badge, ChallengeModel selecte
       children: [
         Padding(
           padding: EdgeInsets.only(top: 30.sp, bottom: 30.sp),
-          child: badge.badge.imageUrl.contains('.svg')
+          child: badgeImgUrl.contains('.svg')
               ? SvgPicture.network(
                   fit: BoxFit.contain,
-                  badge.badge.imageUrl,
+                  badgeImgUrl,
                   width: 150.sp,
                   placeholderBuilder: (BuildContext context) => Container(padding: const EdgeInsets.all(30.0), child: const CircularProgressIndicator()),
                   headers: imageNetworkHeader,
                 )
               : CachedNetworkImage(
-                  imageUrl: badge.badge.imageUrl,
+                  imageUrl: badgeImgUrl,
                   placeholder: (context, url) => const CircularProgressIndicator(),
                   fit: BoxFit.fitWidth,
                   width: 150.sp,
@@ -2230,7 +2229,7 @@ Future<void> showForceLogoutAlert() {
   return forceLogoutAlertCompleter.future;
 }
 
-void showAdTipAlert(ExerciseType exerciseType) {
+void showAdTipAlert(int? challengeId) {
   Get.dialog(
     barrierColor: Colors.transparent,
     WillPopScope(
@@ -2309,7 +2308,7 @@ void showAdTipAlert(ExerciseType exerciseType) {
                                                 fontFamily: 'Montserrat',
                                               ),
                                               TextSpan(
-                                                text: '광고 보고, 1GO 받고 시작하기',
+                                                text: '광고 보고, ${challengeId == null ? '1' : '3'}GO 받고 시작하기',
                                               ),
                                             ),
                                           ),
