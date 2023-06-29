@@ -53,9 +53,13 @@ class WalletService {
     }
   }
 
-  static Future<AssetDetailModel> getSpendingWalletTransactions(String symbol, {int page = 1, int size = 10}) async {
+  static Future<void> getSpendingWalletTransactions(String symbol, {int page = 1, int size = 10, required Function successCallback, Function? errorCallback}) async {
     Response res = await WalletApi.getSpendingWalletTransactions(symbol, page, size);
-    return AssetDetailModel.fromJson(res.data);
+    if (res.statusCode == 200) {
+      successCallback(AssetDetailModel.fromJson(res.data));
+    } else {
+      if (errorCallback != null) errorCallback();
+    }
   }
 
   static Future<BuyTikResponseModel> buyTik(int tikAmount) async {
@@ -225,7 +229,7 @@ class WalletService {
     String? decryptPrivateKey = decrypt(accountSecretkey, email!, walletPassword);
     print('decryptPrivateKey: ${decryptPrivateKey}');
 
-    if (decryptPrivateKey == null) {}
+    // if (decryptPrivateKey == null) {}
 
     final sender = await Ed25519HDKeyPair.fromPrivateKeyBytes(
       privateKey: base58.decode(decryptPrivateKey!).sublist(0, 32),
@@ -245,7 +249,7 @@ class WalletService {
     // FeePayer
     final feePayer = F.solanaFeePayer;
 
-    final recentBlockhash = await solanaClient.rpcClient.getRecentBlockhash(commitment: Commitment.confirmed);
+    final recentBlockhash = await solanaClient.rpcClient.getLatestBlockhash(commitment: Commitment.confirmed);
     final CompiledMessage compiledMessage = message.compile(
       recentBlockhash: recentBlockhash.value.blockhash,
       feePayer: feePayer,

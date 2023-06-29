@@ -2,6 +2,7 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg_provider/flutter_svg_provider.dart';
+import 'package:gaza_go/constants/config.dart';
 import 'package:gaza_go/platform/controllers/wallet_master_controller.dart';
 import 'package:gaza_go/presentations/components/default_container.dart';
 import 'package:gaza_go/presentations/styles/colors.dart';
@@ -41,7 +42,10 @@ class BuyTik extends StatelessWidget {
               children: [
                 CircleAvatar(
                   foregroundImage: controller.tik.value.logoUrl != '' && controller.tik.value.logoUrl != null
-                      ? CachedNetworkImageProvider(controller.tik.value.logoUrl!)
+                      ? CachedNetworkImageProvider(
+                          controller.tik.value.logoUrl!,
+                          headers: imageNetworkHeader,
+                        )
                       : const Svg('assets/images/common/ico_token_tik.svg') as ImageProvider,
                   radius: 12.5.sp,
                 ),
@@ -302,7 +306,10 @@ class BuyTik extends StatelessWidget {
                   children: [
                     CircleAvatar(
                       foregroundImage: controller.tik.value.logoUrl! != '' || controller.tik.value.logoUrl != null
-                          ? CachedNetworkImageProvider(controller.tik.value.logoUrl!)
+                          ? CachedNetworkImageProvider(
+                              controller.tik.value.logoUrl!,
+                              headers: imageNetworkHeader,
+                            )
                           : const Svg('assets/images/common/ico_token_tik.svg') as ImageProvider,
                     ),
                     Container(

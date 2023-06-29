@@ -4,7 +4,6 @@ import 'dart:io';
 import 'package:assets_audio_player/assets_audio_player.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:flutter_naver_map/flutter_naver_map.dart';
 import 'package:gaza_go/constants/config.dart';
 import 'package:gaza_go/constants/enums.dart';
@@ -54,14 +53,10 @@ mixin ActivityMixin {
   Timer? updateTimer;
   Timer? stopTimer;
   final RxDouble stopProgress = RxDouble(0);
-  Completer<NaverMapController> mapCompleter = Completer();
   StreamSubscription<Position>? locationSubscription;
   StreamSubscription<StepCount>? stepSubscription;
   StreamSubscription<PedestrianStatus>? pedestrianStatusSubscription;
   final HealthFactory health = HealthFactory();
-  final Rx<DateTime> pedestrianStoppedTime = Rx(DateTime.now());
-  final RxInt updateCount = RxInt(0);
-  final RxString lastUpdateTime = RxString('');
   final RxDouble realTimeSpeed = RxDouble(0);
   final RxBool lowStaminaNotified = RxBool(false);
   final RxBool zeroStaminaNotified = RxBool(false);
@@ -368,7 +363,7 @@ mixin ActivityMixin {
     String deviceId = HiveStore.loadString(key: HiveKey.uuid.name)!;
     HiveStore.save(key: HiveKey.lastUpdatedStepCount.name, value: 0);
 
-    if (Get.isDialogOpen != null && Get.isDialogOpen!) Get.until((route) => Get.isDialogOpen == false);
+    if (Get.isDialogOpen != null && Get.isDialogOpen!) Get.until((route) => Get.currentRoute == Routes.activityActive && (Get.isDialogOpen == false || Get.isDialogOpen == null));
     if (isFakeGps.value && !isTestingFakeGps()) {
       return;
     }
@@ -396,6 +391,8 @@ mixin ActivityMixin {
             altitude: currentLocation.value.altitude,
             time: 0,
             startPoint: challenge != null ? challenge.firstName : '${currentLocation.value.longitude}, ${currentLocation.value.latitude}',
+            lastLongitude: currentLocation.value.longitude,
+            lastLatitude: currentLocation.value.latitude,
             challengeId: challenge?.id,
             locationUpdateTime: DateTime.now(),
             adId: adId != null ? '${adId}_${deviceId}_${DateTime.now().millisecondsSinceEpoch}' : null,
@@ -774,10 +771,6 @@ mixin ActivityMixin {
     exerciseData.value = List.empty(growable: true);
     coordinates.value = List.empty(growable: true);
     challenge.id = null;
-
-    //TODO 삭제
-    updateCount.value = 0;
-    lastUpdateTime.value = '';
   }
 
   void resetTimer() {
@@ -835,14 +828,15 @@ mixin ActivityMixin {
   }
 
   void showLuckAnimation() async {
-    FlutterLocalNotificationsPlugin notificationsPlugin = FlutterLocalNotificationsPlugin();
+    bool? isAbleSound = HiveStore.load(key: HiveKey.luckSound.name);
+    print(isAbleSound);
     luckLoadControl.value = Control.playReverseFromEnd;
-    HapticFeedback.vibrate();
+    if (isAbleSound != null && isAbleSound) {
+      HapticFeedback.vibrate();
+      assetsAudioPlayer.open(Audio("assets/audio/bonus_go.mp3"));
+      assetsAudioPlayer.play();
+    }
 
-    assetsAudioPlayer.open(
-      Audio("assets/audio/bonus_go.mp3"),
-    );
-    assetsAudioPlayer.play();
     isShowLuckAnimation.value = true;
   }
 

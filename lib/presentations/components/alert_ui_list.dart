@@ -8,6 +8,7 @@ import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:gaza_go/constants/config.dart';
 import 'package:gaza_go/constants/enums.dart';
 import 'package:gaza_go/constants/routes.dart';
 import 'package:gaza_go/platform/controllers/activity_controller.dart';
@@ -699,12 +700,14 @@ void showBadgeAcquisitionAlert(InventoryBadgeModel badge, ChallengeModel selecte
                   badge.badge.imageUrl,
                   width: 150.sp,
                   placeholderBuilder: (BuildContext context) => Container(padding: const EdgeInsets.all(30.0), child: const CircularProgressIndicator()),
+                  headers: imageNetworkHeader,
                 )
               : CachedNetworkImage(
                   imageUrl: badge.badge.imageUrl,
                   placeholder: (context, url) => const CircularProgressIndicator(),
                   fit: BoxFit.fitWidth,
                   width: 150.sp,
+                  httpHeaders: imageNetworkHeader,
                 ),
         ),
         Container(
@@ -761,18 +764,20 @@ Future<void> showChallengeBadgeAcquisitionAlert(PushMessageChallengeSuccessModel
       children: [
         Padding(
           padding: EdgeInsets.only(top: 30.sp, bottom: 30.sp),
-          child: pushMessageData.badgeImageUrl!.contains('.svg')
+          child: pushMessageData.badgeImageUrl != null && pushMessageData.badgeImageUrl!.contains('.svg')
               ? SvgPicture.network(
                   fit: BoxFit.contain,
                   pushMessageData.badgeImageUrl!,
                   width: 150.sp,
                   placeholderBuilder: (BuildContext context) => const Center(child: SizedBox.square(dimension: 40, child: CircularProgressIndicator())),
+                  headers: imageNetworkHeader,
                 )
               : CachedNetworkImage(
                   imageUrl: pushMessageData.badgeImageUrl!,
                   placeholder: (context, url) => const Center(child: SizedBox.square(dimension: 40, child: CircularProgressIndicator())),
                   fit: BoxFit.fitWidth,
                   width: 150.sp,
+                  httpHeaders: imageNetworkHeader,
                 ),
         ),
         Container(
@@ -1439,12 +1444,14 @@ void itemPurchaseCompleteAlert(ShopDetailController controller) {
                           fit: BoxFit.contain,
                           controller.purchaseCompleteItem.value.itemImageUrl,
                           placeholderBuilder: (BuildContext context) => const Center(child: SizedBox.square(dimension: 40, child: CircularProgressIndicator())),
+                          headers: imageNetworkHeader,
                         )
                       : CachedNetworkImage(
                           imageUrl: controller.purchaseCompleteItem.value.itemImageUrl,
                           fit: BoxFit.fitWidth,
                           placeholder: (context, url) => const Center(child: SizedBox.square(dimension: 40, child: CircularProgressIndicator())),
                           errorWidget: (context, url, error) => const Center(child: SizedBox.square(dimension: 40, child: CircularProgressIndicator())),
+                          httpHeaders: imageNetworkHeader,
                         ),
                 ),
               ],
@@ -2212,7 +2219,7 @@ Future<void> showForceLogoutAlert() {
     actions: [
       Expanded(
         child: GazagoButton(
-          onTap: () => forceLogoutAlertCompleter.complete(),
+          onTap: () => !forceLogoutAlertCompleter.isCompleted ? forceLogoutAlertCompleter.complete() : null,
           buttonText: '확인',
           buttonColor: skyBlueColor,
         ),
@@ -2302,11 +2309,7 @@ void showAdTipAlert(ExerciseType exerciseType) {
                                                 fontFamily: 'Montserrat',
                                               ),
                                               TextSpan(
-                                                text: [ExerciseType.walking, ExerciseType.hiking].any((type) => exerciseType == type) ? '1' : '3',
-                                                children: const [
-                                                  TextSpan(text: 'GO', style: TextStyle(fontWeight: FontWeight.w800)),
-                                                  TextSpan(text: ' 획득하고 시작하기'),
-                                                ],
+                                                text: '광고 보고, 1GO 받고 시작하기',
                                               ),
                                             ),
                                           ),
@@ -3551,14 +3554,8 @@ void sendStikToGoWalletAlert(StaikaWalletController controller) {
         child: GazagoButton(
           onTap: () async {
             Get.back();
-            print(controller.shortStikUiAmount.value);
-            if (double.parse(controller.shortStikUiAmount.value) >= 0) {
-              String? password = await showConfirmPasswordDialog(walletMasterController);
-              controller.confirmSendStikToGoWallet(password);
-            } else {
-              String? password = await showConfirmPasswordDialog(walletMasterController);
-              controller.confirmSendStikToGoWallet(password);
-            }
+            String? password = await showConfirmPasswordDialog(walletMasterController);
+            if (password != null) controller.confirmSendStikToGoWallet(password);
           },
           buttonText: '네',
           buttonColor: skyBlueColor,

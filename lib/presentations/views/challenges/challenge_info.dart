@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_html/flutter_html.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:gaza_go/constants/config.dart';
 import 'package:gaza_go/platform/controllers/challenges_detail_controller.dart';
 import 'package:gaza_go/platform/helpers/base_helper.dart';
 import 'package:gaza_go/presentations/styles/colors.dart';
@@ -150,12 +151,14 @@ class ChallengeInfo extends StatelessWidget {
                                             fit: BoxFit.contain,
                                             controller.challengeDetails.value.badge!.imageUrl!,
                                             placeholderBuilder: (BuildContext context) => const Center(child: SizedBox.square(dimension: 40, child: CircularProgressIndicator())),
+                                            headers: imageNetworkHeader,
                                           )
                                         : CachedNetworkImage(
                                             imageUrl: controller.challengeDetails.value.badge!.imageUrl!,
                                             fit: BoxFit.fitHeight,
                                             placeholder: (context, url) => const Center(child: SizedBox.square(dimension: 40, child: CircularProgressIndicator())),
                                             errorWidget: (context, url, error) => const Center(child: SizedBox.square(dimension: 40, child: CircularProgressIndicator())),
+                                            httpHeaders: imageNetworkHeader,
                                           ),
                                   ),
                                   Padding(
@@ -270,12 +273,14 @@ class ChallengeInfo extends StatelessWidget {
                                                 fit: BoxFit.contain,
                                                 controller.challengeDetails.value.item!.itemImageUrl!,
                                                 placeholderBuilder: (BuildContext context) => Container(padding: const EdgeInsets.all(30.0), child: const CircularProgressIndicator()),
+                                                headers: imageNetworkHeader,
                                               )
                                             : CachedNetworkImage(
                                                 imageUrl: controller.challengeDetails.value.item!.itemImageUrl!,
                                                 fit: BoxFit.fitHeight,
                                                 placeholder: (context, url) => const Center(child: SizedBox.square(dimension: 40, child: CircularProgressIndicator())),
                                                 errorWidget: (context, url, error) => const Center(child: SizedBox.square(dimension: 40, child: CircularProgressIndicator())),
+                                                httpHeaders: imageNetworkHeader,
                                               ),
                                       ),
                                     if (controller.challengeDetails.value.item != null)

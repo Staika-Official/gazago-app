@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:gaza_go/constants/config.dart';
 import 'package:gaza_go/constants/routes.dart';
 import 'package:gaza_go/platform/controllers/my_page_controller.dart';
 import 'package:gaza_go/platform/helpers/preference_helper.dart';
@@ -50,6 +51,7 @@ class MyPage extends StatelessWidget {
                                 : controller.profile.value.profileImageUrl != null && controller.profile.value.profileImageUrl != ''
                                     ? CachedNetworkImageProvider(
                                         controller.profile.value.profileImageUrl!,
+                                        headers: imageNetworkHeader,
                                       )
                                     : Image.asset(
                                         'assets/images/ic_launcher.png',

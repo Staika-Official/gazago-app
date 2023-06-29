@@ -2,6 +2,7 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:gaza_go/constants/config.dart';
 import 'package:gaza_go/platform/controllers/wallet_staika_controller.dart';
 import 'package:gaza_go/platform/helpers/base_helper.dart';
 import 'package:gaza_go/presentations/components/default_container.dart';
@@ -36,6 +37,7 @@ class SendStikGoWallet extends StatelessWidget {
                       foregroundImage: controller.assetStik.value != null
                           ? CachedNetworkImageProvider(
                               controller.assetStik.value!.logoUrl,
+                              headers: imageNetworkHeader,
                             )
                           : Image.asset(
                               'assets/images/ic_launcher.png',
@@ -154,7 +156,7 @@ class SendStikGoWallet extends StatelessWidget {
                             height: 60.sp,
                             alignment: Alignment.center,
                             child: InkWell(
-                              onTap: () => null,
+                              onTap: null,
                               child: Padding(
                                 padding: EdgeInsets.symmetric(vertical: 8.0.sp),
                                 child: Center(
@@ -178,7 +180,7 @@ class SendStikGoWallet extends StatelessWidget {
                             height: 60.sp,
                             alignment: Alignment.center,
                             child: InkWell(
-                              onTap: () => controller.openSendStikGoWalletAlert(),
+                              onTap: controller.isValid.value ? () => controller.openSendStikGoWalletAlert() : null,
                               child: Padding(
                                 padding: EdgeInsets.symmetric(vertical: 8.0.sp),
                                 child: Center(

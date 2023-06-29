@@ -1,6 +1,8 @@
 import 'dart:async';
 import 'dart:io';
 
+import 'package:advertising_id/advertising_id.dart';
+import 'package:flutter/services.dart';
 import 'package:gaza_go/flavors.dart';
 import 'package:gaza_go/platform/controllers/activity_controller.dart';
 import 'package:get/get.dart';
@@ -11,6 +13,10 @@ import '../models/challenge_model.dart';
 mixin AdmobMixin {
   Rx<RewardedAd?> startAd = Rx(null);
   Rx<RewardedAd?> endAd = Rx(null);
+  Timer? adTimer;
+  final RxInt adLoadingTime = RxInt(5);
+  String? advertisingId = '';
+  bool? isLimitAdTrackingEnabled;
 
   RxMap<String, int> adLoadAttempts = RxMap({
     "exerciseStartAd": 0,
@@ -25,8 +31,62 @@ mixin AdmobMixin {
     selectedAd.value = adType;
   }
 
+  Future<void> initPlatformState() async {
+    // Platform messages may fail, so we use a try/catch PlatformException.
+    try {
+      advertisingId = await AdvertisingId.id(true);
+    } on PlatformException {
+      advertisingId = 'Failed to get platform version.';
+    }
+
+    try {
+      isLimitAdTrackingEnabled = await AdvertisingId.isLimitAdTrackingEnabled;
+    } on PlatformException {
+      isLimitAdTrackingEnabled = false;
+    }
+
+    // If the widget was removed from the tree while the asynchronous platform
+    // message was in flight, we want to discard the reply rather than calling
+    // setState to update our non-existent appearance.
+
+    advertisingId = advertisingId;
+    isLimitAdTrackingEnabled = isLimitAdTrackingEnabled;
+  }
+
+  void adLoadTimerStart() {
+    adLoadingTime.value = 5;
+    adUpdateLocked = false;
+
+    if (adTimer != null && adLoadingTime.value < 0) {
+      adTimer = null;
+      adLoadingTime.value = 5;
+    }
+
+    adTimer = Timer.periodic(const Duration(seconds: 1), (timer) {
+      adLoadingTime.value--;
+
+      if (startAd.value != null || endAd.value != null) {
+        timer.cancel();
+        adTimer = null;
+      }
+
+      if (adLoadingTime.value == 0 || adLoadingTime.value < 0) {
+        adUpdateLocked = true;
+        timer.cancel();
+        adTimer = null;
+      }
+    });
+  }
+
+  void adLoadTimerStop() {
+    if (adTimer != null) {
+      adTimer?.cancel();
+      adTimer = null;
+    }
+  }
+
   // 운동 시작 광고
-  void exerciseStartRewardedAdInit(String adType, {successCallback, errorCallback}) async {
+  void exerciseStartRewardedAdInit(String adType, {Function? successCallback, Function? errorCallback}) async {
     print(adType);
 
     await RewardedAd.load(
@@ -42,21 +102,21 @@ mixin AdmobMixin {
           }
           isLoadedAd.value = true;
           adLoadAttempts[adType] = 0;
-          successCallback();
+          if (successCallback != null) successCallback();
         },
         onAdFailedToLoad: (error) {
           print('RewardedAd failed to load: $error adType ${adType}');
           startAd.value = null;
           isLoadedAd.value = false;
           adLoadAttempts[adType] = adLoadAttempts[adType]! + 1;
-          errorCallback();
+          if (errorCallback != null) errorCallback();
         },
       ),
     );
   }
 
   // 운동 종료 광고
-  Future exerciseEndRewardedAdInit(String adType, {successCallback, errorCallback}) async {
+  Future exerciseEndRewardedAdInit(String adType, {Function? successCallback, Function? errorCallback}) async {
     print(adType);
     await RewardedAd.load(
       // adUnitId: Platform.isIOS ? 'ca-app-pub-3940256099942544/1712485313' : 'ca-app-pub-3940256099942544/5224354917',
@@ -71,14 +131,14 @@ mixin AdmobMixin {
           }
           adLoadAttempts[adType] = 0;
 
-          successCallback();
+          if (successCallback != null) successCallback();
           // numRewardedLoadAttempts = 0;
         },
         onAdFailedToLoad: (error) {
           print('RewardedAd failed to load: $error adType $adType');
           endAd.value = null;
           adLoadAttempts[adType] = adLoadAttempts[adType]! + 1;
-          errorCallback();
+          if (errorCallback != null) errorCallback();
         },
       ),
     );
@@ -115,7 +175,7 @@ mixin AdmobMixin {
       // DateTime now = DateTime.now();
       // HiveStore.save(key: 'exerciseStartAd', value: now);
     });
-    Timer(const Duration(seconds: 1), () {
+    Timer(const Duration(milliseconds: 300), () {
       startAd.value = null;
     });
   }
@@ -155,7 +215,7 @@ mixin AdmobMixin {
       // DateTime now = DateTime.now();
       // HiveStore.save(key: 'exerciseEndAd', value: now);
     });
-    Timer(const Duration(seconds: 1), () {
+    Timer(const Duration(milliseconds: 300), () {
       endAd.value = null;
     });
   }

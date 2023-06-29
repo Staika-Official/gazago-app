@@ -2,6 +2,7 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:gaza_go/constants/config.dart';
 import 'package:gaza_go/platform/controllers/challenges_detail_controller.dart';
 import 'package:gaza_go/platform/helpers/base_helper.dart';
 import 'package:gaza_go/presentations/components/secondary_appbar.dart';
@@ -246,12 +247,14 @@ class ChallengeDetail extends StatelessWidget {
                                                     fit: BoxFit.fill,
                                                     controller.challengeDetails.value.imageUrl!,
                                                     placeholderBuilder: (BuildContext context) => const Center(child: SizedBox.square(dimension: 40, child: CircularProgressIndicator())),
+                                                    headers: imageNetworkHeader,
                                                   )
                                                 : CachedNetworkImage(
                                                     imageUrl: controller.challengeDetails.value.imageUrl!,
                                                     fit: BoxFit.fill,
                                                     placeholder: (context, url) => const Center(child: SizedBox.square(dimension: 40, child: CircularProgressIndicator())),
                                                     errorWidget: (context, url, error) => const Center(child: SizedBox.square(dimension: 40, child: CircularProgressIndicator())),
+                                                    httpHeaders: imageNetworkHeader,
                                                   ),
                                           // if (controller.challengeDetails.value.challengeActivationType != null)
                                           //   Positioned(

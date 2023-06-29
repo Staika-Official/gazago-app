@@ -2,6 +2,7 @@ import 'dart:async';
 import 'dart:io';
 
 import 'package:device_info_plus/device_info_plus.dart';
+import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:gaza_go/constants/enums.dart';
 import 'package:gaza_go/constants/routes.dart';
 import 'package:gaza_go/platform/helpers/alert_helper.dart';
@@ -58,7 +59,11 @@ class PermissionController extends GetxController {
   }
 
   Future<bool> checkLocationAccuracy() async {
-    LocationAccuracyStatus accuracyStatus = await Geolocator.getLocationAccuracy();
+    LocationAccuracyStatus accuracyStatus = await Geolocator.getLocationAccuracy().onError((error, stackTrace) async {
+      await FirebaseCrashlytics.instance.recordError(error, stackTrace);
+      return LocationAccuracyStatus.unknown;
+    });
+
     _locationAccuracyStatus.value = accuracyStatus;
 
     return accuracyStatus == LocationAccuracyStatus.precise;
