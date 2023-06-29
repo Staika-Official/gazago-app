@@ -184,7 +184,7 @@ class InventoryController extends GetxController with LinearProgressMixin, Inven
 
   @override
   void onReady() {
-    equippedInfoHeight.value = equippedInfoKey.currentContext!.size!.height;
+    equippedInfoHeight.value = equippedInfoKey.currentContext != null ? equippedInfoKey.currentContext!.size!.height : 0;
     isLoaded.value = true;
     super.onReady();
   }

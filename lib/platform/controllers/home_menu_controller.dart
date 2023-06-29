@@ -68,7 +68,7 @@ class HomeMenuController extends SuperController {
   void onReady() async {
     handleAppNotification();
     await checkUpdates();
-    bottomNavHeight.value = bottomNavKey.currentContext!.size!.height;
+    bottomNavHeight.value = bottomNavKey.currentContext != null ? bottomNavKey.currentContext!.size!.height : 0;
     super.onReady();
   }
 
@@ -150,7 +150,7 @@ class HomeMenuController extends SuperController {
         _appAndroidUpdateInfo = await InAppUpdate.checkForUpdate().catchError((e) {
           showToastPopup(e.toString());
         });
-      } else if (_appIOSUpdateInfo != null && _appIOSUpdateInfo!.canUpdate) {
+      } else {
         _appIOSUpdateInfo = await NewVersion(
           iOSId: F.isDev ? 'kr.co.eztechfin.gazaGo.dev' : 'kr.co.eztechfin.gazaGo',
         ).getVersionStatus().catchError((e) {
@@ -173,7 +173,7 @@ class HomeMenuController extends SuperController {
         }).catchError((e) {
           showToastPopup(e.toString());
         });
-      } else if (_appIOSUpdateInfo != null && _appIOSUpdateInfo!.canUpdate) {
+      } else {
         showForceUpdateApp();
       }
     } else {
@@ -194,7 +194,7 @@ class HomeMenuController extends SuperController {
           } else if (_appAndroidUpdateInfo!.installStatus == InstallStatus.downloaded) {
             showUpdateSnackbar();
           }
-        } else if (_appIOSUpdateInfo != null && _appIOSUpdateInfo!.canUpdate) {
+        } else {
           showRecommendUpdateApp();
         }
       }

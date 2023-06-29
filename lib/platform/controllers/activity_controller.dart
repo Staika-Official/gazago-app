@@ -255,6 +255,10 @@ class ActivityController extends SuperController with ActivityMixin, ChallengeMi
 
   void fetchRechargeStamina(type) async {
     disableButton.value = true;
+
+    if (walletMasterController.tik.value.amount == null) {
+      await walletMasterController.getSpendingWalletBalances();
+    }
     if (walletMasterController.tik.value.amount! >= costTik.value) {
       if (costTik.value > 0) {
         await ActivityService.fetchUserStaminaRecharge(
@@ -285,6 +289,9 @@ class ActivityController extends SuperController with ActivityMixin, ChallengeMi
 
   void fetchRepairShoes() async {
     disableButton.value = true;
+    if (walletMasterController.tik.value.amount == null) {
+      await walletMasterController.getSpendingWalletBalances();
+    }
     if (walletMasterController.tik.value.amount! >= costTik.value) {
       if (costTik.value > 0) {
         await ItemService.fetchRepairItemShoes(
@@ -323,15 +330,27 @@ class ActivityController extends SuperController with ActivityMixin, ChallengeMi
           state?.exercise = currentUserState.exercise;
           state?.shoes = currentUserState.shoes;
         });
-
+        if (currentUserState.exercise != null) {
+          HiveStore.save(key: HiveKey.savedStepCount.name, value: currentUserState.exercise!.steps!);
+        }
         if (userState.value.exercise == null) {
           exerciseState.value = ExerciseState.ready;
         } else {
           CurrentUserStateModel? savedUserState = HiveStore.loadCurrentUserState();
+          if (savedUserState != null && savedUserState.exercise!.steps! < currentUserState.exercise!.steps!) {
+            HiveStore.saveCurrentUserState(
+              userState: CurrentUserStateModel(
+                state: currentUserState.state,
+                exercise: currentUserState.exercise,
+                shoes: currentUserState.shoes,
+              ),
+            );
+            savedUserState = CurrentUserStateModel.fromJson(currentUserState.toJson());
+          }
           if (savedUserState != null && savedUserState.exercise != null && savedUserState.exercise!.recordState != null && savedUserState.exercise!.recordState! == 'NORMAL') {
             savedUserState.exercise!.locationUpdateTime = DateTime.now();
             userState.update((state) {
-              state?.exercise = savedUserState.exercise;
+              state?.exercise = savedUserState!.exercise;
             });
 
             int savedSteps = HiveStore.load(key: HiveKey.savedStepCount.name) ?? 0;
@@ -350,10 +369,10 @@ class ActivityController extends SuperController with ActivityMixin, ChallengeMi
           if (updateTimer == null) {
             exerciseData.value = List.empty(growable: true);
             exerciseData.add(userState.value.exercise!);
-            exerciseTime.value = userState.value.exercise!.time!;
-            exerciseSteps.value = userState.value.exercise!.steps!;
-            exerciseDistance.value = userState.value.exercise!.distance!;
-
+            // exerciseTime.value = userState.value.exercise!.time!;
+            // exerciseSteps.value = userState.value.exercise!.steps!;
+            // exerciseDistance.value = userState.value.exercise!.distance!;
+            syncExerciseData(userState.value);
             coordinates.value = List.empty(growable: true);
             coordinates.addAll(await parseCoordinates(userState.value.exercise!.id));
           }
@@ -362,6 +381,7 @@ class ActivityController extends SuperController with ActivityMixin, ChallengeMi
 
           if (state == 'ONGOING' && updateTimer != null) {
             exerciseState.value = ExerciseState.ongoing;
+            // syncExerciseData(userState.value);
           } else if (state == 'PAUSED' || updateTimer == null) {
             exerciseState.value = ExerciseState.paused;
           }

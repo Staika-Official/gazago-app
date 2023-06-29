@@ -311,6 +311,12 @@ mixin ActivityMixin {
 
         int actualSteps = (event.steps - dummySteps) + savedSteps;
         exerciseSteps.value = actualSteps;
+        print('---------------------initStepStream----------------------');
+        print('이벤트 스텝 : ${event.steps}');
+        print('더미 스텝 : ${dummySteps}');
+        print('세이브 스텝 : ${savedSteps}');
+        print('액튜얼 스텝 : ${actualSteps}');
+        print('---------------------initStepStream----------------------');
         HiveStore.save(key: HiveKey.savedStepCount.name, value: actualSteps);
       }
     });
@@ -504,6 +510,7 @@ mixin ActivityMixin {
             shoes: newUserState.shoes,
           ),
         );
+        syncExerciseData(newUserState);
       }
     }
 
@@ -725,7 +732,7 @@ mixin ActivityMixin {
                 shoes: newUserState.shoes,
               ),
             );
-
+            syncExerciseData(newUserState);
             if (retryAttempt > 4) {
               showToastPopup('운동 종료에 실패했습니다.\n다시 시도해주세요.');
             } else {
@@ -766,9 +773,12 @@ mixin ActivityMixin {
     stopProgress.value = 0;
     exerciseSteps.value = 0;
     exerciseDistance.value = 0;
-    userState.value.exercise!.rewardGo = 0;
+    if (userState.value.exercise != null) {
+      userState.value.exercise!.rewardGo = 0;
+    }
     exerciseData.value = List.empty(growable: true);
     coordinates.value = List.empty(growable: true);
+    print('resetVariables${challenge.id}');
     challenge.id = null;
   }
 
@@ -841,5 +851,11 @@ mixin ActivityMixin {
   void initLuckAnimation() async {
     luckLoadControl.value = Control.stop;
     isShowLuckAnimation.value = false;
+  }
+
+  void syncExerciseData(CurrentUserStateModel userState) {
+    exerciseTime.value = userState.exercise!.time!;
+    exerciseSteps.value = userState.exercise!.steps!;
+    exerciseDistance.value = userState.exercise!.distance!;
   }
 }

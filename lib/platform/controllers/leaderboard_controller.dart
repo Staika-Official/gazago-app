@@ -140,11 +140,13 @@ class LeaderboardController extends GetxController with GetTickerProviderStateMi
     );
   }
 
-  void calendarSelectedChanged(selectedDay) {
-    selectedDate.value = selectedDay;
+  void calendarSelectedChanged(selectDay) {
+    HomeMenuController controller = Get.find<HomeMenuController>();
+    selectedDate.value = selectDay;
     _fetchMyRank();
     _fetchRankerList(true);
-    toggleBottomNav(leaderboardScrollController);
+
+    controller.hideBottomNav.value = false;
   }
 
   void calendarChanged(focusedDay) {
