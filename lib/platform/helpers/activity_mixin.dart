@@ -45,6 +45,7 @@ mixin ActivityMixin {
   final RxList<LatLng> coordinates = RxList.empty();
   final RxInt exerciseTime = RxInt(0);
   final RxInt exerciseSteps = RxInt(0);
+  final RxInt prevExerciseSteps = RxInt(0);
   final RxDouble exerciseDistance = RxDouble(0);
   final RxString pedestrianStatus = RxString('STOPPED');
   final Rx<ExerciseState> exerciseState = Rx(ExerciseState.init);
@@ -52,6 +53,7 @@ mixin ActivityMixin {
   Timer? exerciseTimer;
   Timer? updateTimer;
   Timer? stopTimer;
+  Timer? walkingStateTimer;
   final RxDouble stopProgress = RxDouble(0);
   StreamSubscription<Position>? locationSubscription;
   StreamSubscription<StepCount>? stepSubscription;
@@ -59,6 +61,7 @@ mixin ActivityMixin {
   final HealthFactory health = HealthFactory();
   final RxDouble realTimeSpeed = RxDouble(0);
   final RxBool lowStaminaNotified = RxBool(false);
+  final RxBool stoppedExercising = RxBool(false);
   final RxBool zeroStaminaNotified = RxBool(false);
   final RxBool lowDurabilityNotified = RxBool(false);
   final RxBool zeroDurabilityNotified = RxBool(false);
@@ -71,7 +74,7 @@ mixin ActivityMixin {
     Color color = Colors.white;
     switch (exerciseState.value) {
       case ExerciseState.ongoing:
-        if (realTimeSpeed.value < 1 || realTimeSpeed.value > 7) {
+        if ((avgSpeed.value < 1 || avgSpeed.value > 7) || stoppedExercising.value) {
           color = textRedColor;
         } else {
           color = textGreenColor;
@@ -230,8 +233,8 @@ mixin ActivityMixin {
       }
       validateTimer(timer, HiveKey.exerciseTimer);
 
-      // 스피드 계산
-      calRealtimeSpeed();
+      calRealtimeSpeed(); // 스피드 계산
+      getExerciseState(exerciseSteps.value); //움직임 상태 감시
 
       if (exerciseState.value == ExerciseState.ongoing) {
         exerciseTime.value++;
@@ -854,8 +857,21 @@ mixin ActivityMixin {
     if (issuedBadge != null && issuedBadge) return;
     if (badgeIssued) {
       HiveStore.save(key: HiveKey.famousChallengeBadgeIssued.name, value: badgeIssued);
+      ActivityController controller = Get.find<ActivityController>();
+      showBadgeAcquisitionAlert(badgeImgUrl, controller.selectedChallenge.value);
     }
-    ActivityController controller = Get.find<ActivityController>();
-    showBadgeAcquisitionAlert(badgeImgUrl, controller.selectedChallenge.value);
+  }
+
+  void getExerciseState(int exerciseSteps) {
+    if (prevExerciseSteps.value == exerciseSteps) {
+      walkingStateTimer ??= Timer(const Duration(seconds: 10), () {
+        stoppedExercising.value = true;
+      });
+    } else {
+      prevExerciseSteps.value = exerciseSteps;
+      stoppedExercising.value = false;
+      walkingStateTimer?.cancel();
+      walkingStateTimer = null;
+    }
   }
 }
