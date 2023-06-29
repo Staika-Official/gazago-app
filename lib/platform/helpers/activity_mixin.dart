@@ -529,6 +529,7 @@ mixin ActivityMixin {
             source: source,
             successCallback: (CurrentUserStateModel newUserState) {
               updateLocalUserState(newUserState);
+              validateBadgeAcquisition(newUserState.exercise!.id!, newUserState.exercise!.badgeIssued!, newUserState.exercise!.badgeImageUrl ?? '');
               if (newUserState.exercise!.luckApplyRewardGo! > 0 && newUserState.exercise!.luckOccurred!) {
                 showLuckAnimation();
               }
@@ -709,7 +710,7 @@ mixin ActivityMixin {
 
           if (newUserState.exercise!.state == 'ENDED') {
             exerciseState.value = ExerciseState.ready;
-            HiveStore.deleteMultipleKeys(keys: [HiveKey.userState.name, HiveKey.endExerciseRequested.name]);
+            HiveStore.deleteMultipleKeys(keys: [HiveKey.userState.name, HiveKey.endExerciseRequested.name, HiveKey.famousChallengeBadgeIssued.name]);
             resetVariables(challenge);
             resetTimer();
             resetSubscriptions();
@@ -843,5 +844,15 @@ mixin ActivityMixin {
   void initLuckAnimation() async {
     luckLoadControl.value = Control.stop;
     isShowLuckAnimation.value = false;
+  }
+
+  void validateBadgeAcquisition(int exerciseId, bool badgeIssued, String badgeImgUrl) {
+    bool? issuedBadge = HiveStore.load(key: HiveKey.famousChallengeBadgeIssued.name);
+    if (issuedBadge != null && issuedBadge) return;
+    if (badgeIssued) {
+      HiveStore.save(key: HiveKey.famousChallengeBadgeIssued.name, value: badgeIssued);
+    }
+    ActivityController controller = Get.find<ActivityController>();
+    showBadgeAcquisitionAlert(badgeImgUrl, controller.selectedChallenge.value);
   }
 }

@@ -95,6 +95,7 @@ enum HiveKey {
   challengeNotificationTime,
   hasChallengeSuccessPushMessage,
   luckSound,
+  famousChallengeBadgeIssued,
 }
 
 enum ResponseStatus {
