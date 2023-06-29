@@ -605,6 +605,7 @@ class ActivityController extends SuperController with ActivityMixin, ChallengeMi
     selectedExerciseType.value = exerciseType;
 
     AdWatchAvailableModel adWatchAvailableModel = AdWatchAvailableModel();
+
     await AdmobService.getAdWatchAvailableTime(
       'EXERCISE_START',
       callback: (AdWatchAvailableModel model) {
@@ -631,7 +632,7 @@ class ActivityController extends SuperController with ActivityMixin, ChallengeMi
   }
 
   void showAdTip() {
-    showAdTipAlert(selectedExerciseType.value);
+    showAdTipAlert(selectedChallenge.value.id);
   }
 
   void handleMoveExerciseActive(ExerciseType exerciseType, {String? adId}) {

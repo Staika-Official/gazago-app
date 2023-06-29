@@ -24,7 +24,7 @@ class PreferenceController extends GetxController {
 
   @override
   void onInit() {
-    isAbleLuckSound.value = HiveStore.load(key: HiveKey.luckSound.name);
+    isAbleLuckSound.value = HiveStore.load(key: HiveKey.luckSound.name) ?? false;
     getProfileInfo();
     getAppVersion();
     super.onInit();
@@ -68,10 +68,6 @@ class PreferenceController extends GetxController {
 
   void toggleLuckSoundAlarm(val) {
     isAbleLuckSound.value = val;
-    if (val) {
-      HiveStore.save(key: HiveKey.luckSound.name, value: true);
-    } else {
-      HiveStore.save(key: HiveKey.luckSound.name, value: false);
-    }
+    HiveStore.save(key: HiveKey.luckSound.name, value: val);
   }
 }
