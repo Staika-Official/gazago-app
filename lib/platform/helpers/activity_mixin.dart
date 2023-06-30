@@ -530,8 +530,8 @@ mixin ActivityMixin {
             Platform.operatingSystem,
             source: source,
             successCallback: (CurrentUserStateModel newUserState) async {
-              // newUserState.exercise!.luckApplyRewardGo = 0.33;
-              // newUserState.exercise!.luckOccurred = true;
+              newUserState.exercise!.luckApplyRewardGo = 0.33;
+              newUserState.exercise!.luckOccurred = true;
               updateLocalUserState(newUserState);
 
               await Future.delayed(const Duration(seconds: 1));
@@ -835,7 +835,7 @@ mixin ActivityMixin {
   void showLuckAnimation() async {
     bool isAbleSound = HiveStore.load(key: HiveKey.luckSound.name) ?? false;
     await Future.delayed(const Duration(milliseconds: 300));
-    luckLoadControl.value = Control.play;
+    luckLoadControl.value = Control.playReverseFromEnd;
     isShowLuckAnimation.value = true;
     if (isAbleSound) {
       HapticFeedback.vibrate();
