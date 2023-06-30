@@ -322,7 +322,7 @@ class ActivityActive extends StatelessWidget {
           ],
         );
       }),
-      child: Container(
+      child: SizedBox(
           height: double.infinity,
           child: Stack(
             children: [

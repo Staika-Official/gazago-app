@@ -867,6 +867,12 @@ mixin ActivityMixin {
     if (badgeIssued) {
       HiveStore.save(key: HiveKey.famousChallengeBadgeIssued.name, value: badgeIssued);
       ActivityController controller = Get.find<ActivityController>();
+      showLocalNotification(
+        notificationType: NotificationType.badge,
+        title: '등산 챌린지 뱃지 획득',
+        message: '${controller.selectedChallenge.value.firstName} 등산 챌린지에 성공하여 뱃지를 받았어요. 새로운 뱃지 확인하러 가자GO~~',
+      );
+      showToastPopup('뱃지를 획득하였습니다.');
       showBadgeAcquisitionAlert(badgeImgUrl, controller.selectedChallenge.value);
     }
   }
