@@ -362,67 +362,68 @@ class ActivityActive extends StatelessWidget {
                                       control: controller.luckLoadControl.value,
                                       tween: luckMovie,
                                       duration: luckMovie.duration,
+                                      onStarted: () {
+                                        controller.showLuckAnimation();
+                                      },
                                       onCompleted: () {
                                         controller.initLuckAnimation();
                                       },
                                       builder: (context, value, _) {
-                                        return Container(
-                                          child: Opacity(
-                                            opacity: value.get('opacity'),
-                                            child: Column(
-                                              crossAxisAlignment: CrossAxisAlignment.start,
-                                              children: [
-                                                Container(
-                                                  decoration: BoxDecoration(
-                                                    color: Colors.black,
-                                                    borderRadius: BorderRadius.circular(50),
-                                                  ),
-                                                  child: Padding(
-                                                    padding: EdgeInsets.only(left: 14, right: 14, top: 10, bottom: 10.0),
-                                                    child: Row(
-                                                      children: [
-                                                        iconStatLuck,
-                                                        Padding(
-                                                          padding: EdgeInsets.only(left: 5.0.sp, right: 5.0.sp),
-                                                          child: StyledText(
-                                                            '행운효과',
-                                                            color: pinkColor,
-                                                            fontSize: 14,
-                                                            fontWeight: 500,
-                                                            letterSpacing: -.1,
-                                                          ),
+                                        return Opacity(
+                                          opacity: value.get('opacity'),
+                                          child: Column(
+                                            crossAxisAlignment: CrossAxisAlignment.start,
+                                            children: [
+                                              Container(
+                                                decoration: BoxDecoration(
+                                                  color: Colors.black,
+                                                  borderRadius: BorderRadius.circular(50),
+                                                ),
+                                                child: Padding(
+                                                  padding: EdgeInsets.only(left: 14.sp, right: 14.sp, top: 10.sp, bottom: 10.0.sp),
+                                                  child: Row(
+                                                    children: [
+                                                      iconStatLuck,
+                                                      Padding(
+                                                        padding: EdgeInsets.only(left: 5.0.sp, right: 5.0.sp),
+                                                        child: StyledText(
+                                                          '행운효과',
+                                                          color: pinkColor,
+                                                          fontSize: 14,
+                                                          fontWeight: 500,
+                                                          letterSpacing: -.1,
                                                         ),
-                                                        if (controller.userState.value.exercise != null)
-                                                          StyledText(
-                                                            '+${controller.userState.value.exercise!.luckApplyRewardGo}',
-                                                            fontSize: 14,
-                                                            fontWeight: 700,
-                                                            letterSpacing: -.1,
-                                                          ),
+                                                      ),
+                                                      if (controller.userState.value.exercise != null)
                                                         StyledText(
-                                                          ' GO',
+                                                          '+${controller.userState.value.exercise!.luckApplyRewardGo}',
                                                           fontSize: 14,
                                                           fontWeight: 700,
                                                           letterSpacing: -.1,
                                                         ),
-                                                      ],
-                                                    ),
+                                                      StyledText(
+                                                        ' GO',
+                                                        fontSize: 14,
+                                                        fontWeight: 700,
+                                                        letterSpacing: -.1,
+                                                      ),
+                                                    ],
                                                   ),
                                                 ),
-                                                Padding(
-                                                  padding: EdgeInsets.only(left: 25.0.sp),
-                                                  child: ClipPath(
-                                                    clipper: CustomShapeClipper(),
-                                                    clipBehavior: Clip.antiAlias,
-                                                    child: Container(
-                                                      width: 10.0.sp,
-                                                      height: 7.0.sp,
-                                                      color: Colors.black,
-                                                    ),
+                                              ),
+                                              Padding(
+                                                padding: EdgeInsets.only(left: 25.0.sp),
+                                                child: ClipPath(
+                                                  clipper: CustomShapeClipper(),
+                                                  clipBehavior: Clip.antiAlias,
+                                                  child: Container(
+                                                    width: 10.0.sp,
+                                                    height: 7.0.sp,
+                                                    color: Colors.black,
                                                   ),
-                                                )
-                                              ],
-                                            ),
+                                                ),
+                                              )
+                                            ],
                                           ),
                                         );
                                       });
@@ -798,7 +799,6 @@ class GaugeCursor extends StatelessWidget {
 class CustomShapeClipper extends CustomClipper<Path> {
   @override
   getClip(Size size) {
-    print(size.height);
     final Path path = Path();
     path.lineTo(size.width / 2, size.height);
     path.lineTo(size.width, 0);

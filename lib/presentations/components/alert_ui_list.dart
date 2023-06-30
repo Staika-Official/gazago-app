@@ -3547,7 +3547,7 @@ void sendStikToGoWalletAlert(StaikaWalletController controller) {
         child: GazagoButton(
           onTap: () async {
             Get.back();
-            print(controller.shortStikUiAmount.value);
+
             if (double.parse(controller.shortStikUiAmount.value) >= 0) {
               String? password = await showConfirmPasswordDialog(walletMasterController);
               controller.confirmSendStikToGoWallet(password);
