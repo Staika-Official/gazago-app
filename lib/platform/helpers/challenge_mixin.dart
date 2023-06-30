@@ -44,7 +44,6 @@ mixin ChallengeMixin {
   }
 
   String getChallengeStatus(String status) {
-    print(status);
     switch (status) {
       case 'READY':
         return '챌린지 전';
@@ -59,7 +58,7 @@ mixin ChallengeMixin {
 
   String getChallengeUserStatus(status) {
     String text = '';
-    print(status);
+
     switch (status) {
       case 'REGISTER_AVAILABLE':
         text = '접수 중';

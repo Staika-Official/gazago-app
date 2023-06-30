@@ -532,7 +532,7 @@ mixin ActivityMixin {
             Platform.operatingSystem,
             source: source,
             successCallback: (CurrentUserStateModel newUserState) async {
-              // newUserState.exercise!.luckApplyRewardGo = 0.00001;
+              // newUserState.exercise!.luckApplyRewardGo = 0.33;
               // newUserState.exercise!.luckOccurred = true;
               updateLocalUserState(newUserState);
               validateBadgeAcquisition(newUserState.exercise!.id!, newUserState.exercise!.badgeIssued!, newUserState.exercise!.badgeImageUrl ?? '');
@@ -843,8 +843,14 @@ mixin ActivityMixin {
     luckLoadControl.value = Control.playReverseFromEnd;
     if (isAbleSound) {
       HapticFeedback.vibrate();
-      assetsAudioPlayer.open(Audio("assets/audio/bonus_go.mp3"));
-      assetsAudioPlayer.play();
+
+      if (!assetsAudioPlayer.isPlaying.value) {
+        assetsAudioPlayer.open(Audio("assets/audio/bonus_go.mp3")).then((value) {
+          assetsAudioPlayer.play();
+        }).onError((error, stackTrace) {
+          print(error);
+        });
+      }
     }
 
     isShowLuckAnimation.value = true;

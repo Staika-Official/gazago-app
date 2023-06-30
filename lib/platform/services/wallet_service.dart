@@ -85,7 +85,7 @@ class WalletService {
   static Future<WalletSolanaModel?> getSolanaWallet() async {
     String? userId = HiveStore.loadString(key: HiveKey.userId.name);
     Response res = await WalletApi.getSolanaWallet(userId);
-    print(res.data);
+
     if (res.data == null || res.data == '') {
       return null;
     }
