@@ -284,6 +284,7 @@ class ActivityActive extends StatelessWidget {
     return DefaultContainer(
       backgroundColor: subBg02Color,
       onBackButtonTap: () {
+        controller.initLuckAnimation();
         if (globalController.internetConnection.value) {
           Get.back();
         } else {
@@ -362,9 +363,6 @@ class ActivityActive extends StatelessWidget {
                                       control: controller.luckLoadControl.value,
                                       tween: luckMovie,
                                       duration: luckMovie.duration,
-                                      onStarted: () {
-                                        controller.showLuckAnimation();
-                                      },
                                       onCompleted: () {
                                         controller.initLuckAnimation();
                                       },

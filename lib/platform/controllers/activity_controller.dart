@@ -893,6 +893,7 @@ class ActivityController extends SuperController with ActivityMixin, ChallengeMi
   void onPaused() {
     print('onPaused');
     adLoadTimerStop();
+    initLuckAnimation();
     HiveStore.save(key: HiveKey.savedStepInitialized.name, value: false);
   }
 
