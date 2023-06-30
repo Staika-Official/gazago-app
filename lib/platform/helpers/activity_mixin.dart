@@ -207,7 +207,6 @@ mixin ActivityMixin {
   void initStream() {
     initExerciseTimer();
     initStepStream();
-    initPedestrianStatusStream();
   }
 
   void initExerciseStats() {
@@ -349,6 +348,7 @@ mixin ActivityMixin {
     realTimeSpeed.value = calRealtimeSpeed.value;
   }
 
+  //not used
   void initPedestrianStatusStream() {
     if (pedestrianStatusSubscription != null) {
       pedestrianStatusSubscription = null;
@@ -535,7 +535,7 @@ mixin ActivityMixin {
               // newUserState.exercise!.luckApplyRewardGo = 0.33;
               // newUserState.exercise!.luckOccurred = true;
               updateLocalUserState(newUserState);
-              validateBadgeAcquisition(newUserState.exercise!.id!, newUserState.exercise!.badgeIssued!, newUserState.exercise!.badgeImageUrl ?? '');
+              validateBadgeAcquisition(newUserState.exercise!.id!, newUserState.exercise!.badgeIssued, newUserState.exercise!.badgeImageUrl ?? '');
               await Future.delayed(const Duration(seconds: 1));
               if (userState.value.exercise!.luckApplyRewardGo! > 0 && userState.value.exercise!.luckOccurred!) {
                 showLuckAnimation();
@@ -861,10 +861,10 @@ mixin ActivityMixin {
     isShowLuckAnimation.value = false;
   }
 
-  void validateBadgeAcquisition(int exerciseId, bool badgeIssued, String badgeImgUrl) {
+  void validateBadgeAcquisition(int exerciseId, bool? badgeIssued, String badgeImgUrl) {
     bool? issuedBadge = HiveStore.load(key: HiveKey.famousChallengeBadgeIssued.name);
     if (issuedBadge != null && issuedBadge) return;
-    if (badgeIssued) {
+    if (badgeIssued != null && badgeIssued) {
       HiveStore.save(key: HiveKey.famousChallengeBadgeIssued.name, value: badgeIssued);
       ActivityController controller = Get.find<ActivityController>();
       showLocalNotification(
@@ -879,7 +879,7 @@ mixin ActivityMixin {
 
   void getExerciseState(int exerciseSteps) {
     if (prevExerciseSteps.value == exerciseSteps) {
-      walkingStateTimer ??= Timer(const Duration(seconds: 10), () {
+      walkingStateTimer ??= Timer(const Duration(seconds: 40), () {
         stoppedExercising.value = true;
       });
     } else {
