@@ -102,13 +102,14 @@ mixin ChallengeMixin {
   }
 
   Future<void> getNearByChallenge(Position currentLocation, ExerciseState exerciseState) async {
-    await ActivityService.getNearByChallenge(
-      currentLocation,
-      successCallback: (result) {
+    await ActivityService.getNearByChallenge(currentLocation, successCallback: (ChallengeModel? result) {
+      if (result != null) {
         notificationOnChallenge(result, exerciseState);
-        nearByChallenge.value = result;
-      },
-    );
+      }
+      nearByChallenge.value = result;
+    }, errorCallback: () {
+      nearByChallenge.value = null;
+    });
   }
 
   Future<void> getChallengesHierarchy(Position currentLocation) async {
@@ -187,7 +188,11 @@ mixin ChallengeMixin {
       double distance = calculateDistance(location.latitude, location.longitude, nearByChallenge.value!.startLat, nearByChallenge.value!.startLon);
       if (distance <= convertMetersToKm(nearByChallenge.value!.startRadius!)) {
         doableChallenge.value = nearByChallenge.value;
+      } else {
+        doableChallenge.value = null;
       }
+    } else {
+      doableChallenge.value = null;
     }
   }
 }

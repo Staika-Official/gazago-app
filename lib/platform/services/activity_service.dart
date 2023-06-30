@@ -126,6 +126,8 @@ class ActivityService {
     if (res.statusCode == 200) {
       if (res.data != null && res.data != '') {
         successCallback(ChallengeModel.fromJson(res.data));
+      } else {
+        successCallback(null);
       }
     } else {
       if (errorCallback != null) errorCallback();
