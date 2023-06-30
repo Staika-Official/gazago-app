@@ -1054,12 +1054,13 @@ void itemPurchaseAlert(ShopDetailController controller, double remainMyTik, trad
                   lineHeight: 32,
                   fontWeight: 600,
                 ),
-                StyledText(
-                  controller.selectedItem.value.tradeSymbol!,
-                  fontSize: 30,
-                  lineHeight: 32,
-                  fontWeight: 400,
-                ),
+                if (controller.selectedItem.value.tradeSymbol != null)
+                  StyledText(
+                    controller.selectedItem.value.tradeSymbol!,
+                    fontSize: 30,
+                    lineHeight: 32,
+                    fontWeight: 400,
+                  ),
               ],
             ),
           ),
@@ -1438,7 +1439,7 @@ void itemPurchaseCompleteAlert(ShopDetailController controller) {
               children: [
                 SizedBox(
                   width: 150.sp,
-                  child: controller.purchaseCompleteItem.value.itemImageUrl.contains('.svg')
+                  child: controller.purchaseCompleteItem.value != null && controller.purchaseCompleteItem.value.itemImageUrl.contains('.svg')
                       ? SvgPicture.network(
                           fit: BoxFit.contain,
                           controller.purchaseCompleteItem.value.itemImageUrl,
@@ -1463,7 +1464,7 @@ void itemPurchaseCompleteAlert(ShopDetailController controller) {
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
                 getItemGradeCircleIcon(controller.purchaseCompleteItem.value.itemGrade),
-                if (controller.selectedItem.value.publishType == 'NFT')
+                if (controller.selectedItem.value != null && controller.selectedItem.value.publishType == 'NFT')
                   Padding(
                     padding: EdgeInsets.only(left: 5.0.sp),
                     child: SvgPicture.asset('assets/images/shop/ico_nft_label.svg'),
@@ -1508,184 +1509,185 @@ void itemPurchaseCompleteAlert(ShopDetailController controller) {
                 ),
                 child: Column(
                   children: [
-                    Padding(
-                      padding: EdgeInsets.symmetric(vertical: 24.0.sp),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                        children: [
-                          if (controller.purchaseCompleteItem.value.itemStat!.goProfit! > 0)
-                            Expanded(
-                              child: Column(
-                                children: [
-                                  StyledText(
-                                    formatDecimalPlaces(controller.purchaseCompleteItem.value.itemStat!.goProfit!, 0),
-                                    fontSize: 26,
-                                    lineHeight: 26,
-                                    color: skyBlueColor,
-                                    fontWeight: 500,
-                                    letterSpacing: -.1,
-                                  ),
-                                  Padding(
-                                    padding: EdgeInsets.only(top: 8.0.sp),
-                                    child: Row(
-                                      mainAxisAlignment: MainAxisAlignment.center,
-                                      children: [
-                                        iconShopReward,
-                                        Padding(
-                                          padding: EdgeInsets.only(left: 4.0.sp),
-                                          child: StyledText(
-                                            'GO 보상',
-                                            color: skyBlueColor,
+                    if (controller.purchaseCompleteItem.value != null)
+                      Padding(
+                        padding: EdgeInsets.symmetric(vertical: 24.0.sp),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                          children: [
+                            if (controller.purchaseCompleteItem.value.itemStat!.goProfit! > 0)
+                              Expanded(
+                                child: Column(
+                                  children: [
+                                    StyledText(
+                                      formatDecimalPlaces(controller.purchaseCompleteItem.value.itemStat!.goProfit!, 0),
+                                      fontSize: 26,
+                                      lineHeight: 26,
+                                      color: skyBlueColor,
+                                      fontWeight: 500,
+                                      letterSpacing: -.1,
+                                    ),
+                                    Padding(
+                                      padding: EdgeInsets.only(top: 8.0.sp),
+                                      child: Row(
+                                        mainAxisAlignment: MainAxisAlignment.center,
+                                        children: [
+                                          iconShopReward,
+                                          Padding(
+                                            padding: EdgeInsets.only(left: 4.0.sp),
+                                            child: StyledText(
+                                              'GO 보상',
+                                              color: skyBlueColor,
+                                              fontSize: 12,
+                                              lineHeight: 14,
+                                              fontWeight: 500,
+                                              letterSpacing: -.1,
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            if (controller.purchaseCompleteItem.value.itemStat!.goProfit! > 0 &&
+                                controller.purchaseCompleteItem.value.itemStat!.luck! < 1 &&
+                                (controller.purchaseCompleteItem.value.itemStat!.durability! > 0 || controller.purchaseCompleteItem.value.itemStat!.stamina! > 0))
+                              Container(
+                                height: 35.sp,
+                                child: VerticalDivider(
+                                  color: popupBgColor,
+                                  width: 1,
+                                  thickness: 1,
+                                ),
+                              ),
+                            if (controller.purchaseCompleteItem.value.itemStat!.durability! > 0)
+                              Expanded(
+                                child: Column(
+                                  children: [
+                                    StyledText(
+                                      formatDecimalPlaces(controller.purchaseCompleteItem.value.itemStat!.durability!, 0),
+                                      fontSize: 26,
+                                      lineHeight: 26,
+                                      fontWeight: 500,
+                                      letterSpacing: -.1,
+                                      color: const Color(0xFFB0A3FF),
+                                    ),
+                                    Padding(
+                                      padding: EdgeInsets.only(top: 8.0.sp),
+                                      child: Row(
+                                        mainAxisAlignment: MainAxisAlignment.center,
+                                        crossAxisAlignment: CrossAxisAlignment.center,
+                                        children: [
+                                          iconShopDurabilityLight,
+                                          Padding(
+                                            padding: EdgeInsets.only(left: 4.0.sp),
+                                            child: const StyledText(
+                                              '내구도',
+                                              color: Color(0xFFB0A3FF),
+                                              fontSize: 12,
+                                              lineHeight: 12,
+                                              letterSpacing: -.1,
+                                              fontWeight: 600,
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            if (controller.purchaseCompleteItem.value.itemStat!.durability! > 0 && controller.purchaseCompleteItem.value.itemStat!.goProfit! < 1)
+                              Container(
+                                height: 35.sp,
+                                child: VerticalDivider(
+                                  color: popupBgColor,
+                                  width: 1,
+                                  thickness: 1,
+                                ),
+                              ),
+                            if (controller.purchaseCompleteItem.value.itemStat!.stamina! > 0)
+                              Expanded(
+                                child: Column(
+                                  children: [
+                                    StyledText(
+                                      formatDecimalPlaces(controller.purchaseCompleteItem.value.itemStat!.stamina!, 0),
+                                      fontSize: 26,
+                                      lineHeight: 26,
+                                      fontWeight: 500,
+                                      color: lightGreenColor,
+                                      letterSpacing: -.1,
+                                    ),
+                                    Padding(
+                                      padding: EdgeInsets.only(top: 8.0.sp),
+                                      child: Row(
+                                        mainAxisAlignment: MainAxisAlignment.center,
+                                        children: [
+                                          Padding(
+                                            padding: EdgeInsets.only(right: 4.0.sp),
+                                            child: iconShopStamina,
+                                          ),
+                                          StyledText(
+                                            '체력',
+                                            color: lightGreenColor,
                                             fontSize: 12,
-                                            lineHeight: 14,
+                                            lineHeight: 12,
                                             fontWeight: 500,
                                             letterSpacing: -.1,
                                           ),
-                                        ),
-                                      ],
+                                        ],
+                                      ),
                                     ),
-                                  ),
-                                ],
+                                  ],
+                                ),
                               ),
-                            ),
-                          if (controller.purchaseCompleteItem.value.itemStat!.goProfit! > 0 &&
-                              controller.purchaseCompleteItem.value.itemStat!.luck! < 1 &&
-                              (controller.purchaseCompleteItem.value.itemStat!.durability! > 0 || controller.purchaseCompleteItem.value.itemStat!.stamina! > 0))
-                            Container(
-                              height: 35.sp,
-                              child: VerticalDivider(
-                                color: popupBgColor,
-                                width: 1,
-                                thickness: 1,
+                            if (controller.purchaseCompleteItem.value.itemStat!.luck! > 0)
+                              Container(
+                                height: 35.sp,
+                                child: VerticalDivider(
+                                  color: popupBgColor,
+                                  width: 1,
+                                  thickness: 1,
+                                ),
                               ),
-                            ),
-                          if (controller.purchaseCompleteItem.value.itemStat!.durability! > 0)
-                            Expanded(
-                              child: Column(
-                                children: [
-                                  StyledText(
-                                    formatDecimalPlaces(controller.purchaseCompleteItem.value.itemStat!.durability!, 0),
-                                    fontSize: 26,
-                                    lineHeight: 26,
-                                    fontWeight: 500,
-                                    letterSpacing: -.1,
-                                    color: const Color(0xFFB0A3FF),
-                                  ),
-                                  Padding(
-                                    padding: EdgeInsets.only(top: 8.0.sp),
-                                    child: Row(
-                                      mainAxisAlignment: MainAxisAlignment.center,
-                                      crossAxisAlignment: CrossAxisAlignment.center,
-                                      children: [
-                                        iconShopDurabilityLight,
-                                        Padding(
-                                          padding: EdgeInsets.only(left: 4.0.sp),
-                                          child: const StyledText(
-                                            '내구도',
-                                            color: Color(0xFFB0A3FF),
+                            if (controller.purchaseCompleteItem.value.itemStat!.luck! > 0)
+                              Expanded(
+                                child: Column(
+                                  children: [
+                                    StyledText(
+                                      formatDecimalPlaces(controller.purchaseCompleteItem.value.itemStat!.luck!, 0),
+                                      fontSize: 26,
+                                      lineHeight: 26,
+                                      fontWeight: 500,
+                                      color: pinkColor,
+                                      letterSpacing: -.1,
+                                    ),
+                                    Padding(
+                                      padding: EdgeInsets.only(top: 8.0.sp),
+                                      child: Row(
+                                        mainAxisAlignment: MainAxisAlignment.center,
+                                        children: [
+                                          Padding(
+                                            padding: EdgeInsets.only(right: 4.0.sp),
+                                            child: iconShopLuck,
+                                          ),
+                                          StyledText(
+                                            '행운',
+                                            color: pinkColor,
                                             fontSize: 12,
                                             lineHeight: 12,
+                                            fontWeight: 500,
                                             letterSpacing: -.1,
-                                            fontWeight: 600,
                                           ),
-                                        ),
-                                      ],
+                                        ],
+                                      ),
                                     ),
-                                  ),
-                                ],
+                                  ],
+                                ),
                               ),
-                            ),
-                          if (controller.purchaseCompleteItem.value.itemStat!.durability! > 0 && controller.purchaseCompleteItem.value.itemStat!.goProfit! < 1)
-                            Container(
-                              height: 35.sp,
-                              child: VerticalDivider(
-                                color: popupBgColor,
-                                width: 1,
-                                thickness: 1,
-                              ),
-                            ),
-                          if (controller.purchaseCompleteItem.value.itemStat!.stamina! > 0)
-                            Expanded(
-                              child: Column(
-                                children: [
-                                  StyledText(
-                                    formatDecimalPlaces(controller.purchaseCompleteItem.value.itemStat!.stamina!, 0),
-                                    fontSize: 26,
-                                    lineHeight: 26,
-                                    fontWeight: 500,
-                                    color: lightGreenColor,
-                                    letterSpacing: -.1,
-                                  ),
-                                  Padding(
-                                    padding: EdgeInsets.only(top: 8.0.sp),
-                                    child: Row(
-                                      mainAxisAlignment: MainAxisAlignment.center,
-                                      children: [
-                                        Padding(
-                                          padding: EdgeInsets.only(right: 4.0.sp),
-                                          child: iconShopStamina,
-                                        ),
-                                        StyledText(
-                                          '체력',
-                                          color: lightGreenColor,
-                                          fontSize: 12,
-                                          lineHeight: 12,
-                                          fontWeight: 500,
-                                          letterSpacing: -.1,
-                                        ),
-                                      ],
-                                    ),
-                                  ),
-                                ],
-                              ),
-                            ),
-                          if (controller.purchaseCompleteItem.value.itemStat!.luck! > 0)
-                            Container(
-                              height: 35.sp,
-                              child: VerticalDivider(
-                                color: popupBgColor,
-                                width: 1,
-                                thickness: 1,
-                              ),
-                            ),
-                          if (controller.purchaseCompleteItem.value.itemStat!.luck! > 0)
-                            Expanded(
-                              child: Column(
-                                children: [
-                                  StyledText(
-                                    formatDecimalPlaces(controller.purchaseCompleteItem.value.itemStat!.luck!, 0),
-                                    fontSize: 26,
-                                    lineHeight: 26,
-                                    fontWeight: 500,
-                                    color: pinkColor,
-                                    letterSpacing: -.1,
-                                  ),
-                                  Padding(
-                                    padding: EdgeInsets.only(top: 8.0.sp),
-                                    child: Row(
-                                      mainAxisAlignment: MainAxisAlignment.center,
-                                      children: [
-                                        Padding(
-                                          padding: EdgeInsets.only(right: 4.0.sp),
-                                          child: iconShopLuck,
-                                        ),
-                                        StyledText(
-                                          '행운',
-                                          color: pinkColor,
-                                          fontSize: 12,
-                                          lineHeight: 12,
-                                          fontWeight: 500,
-                                          letterSpacing: -.1,
-                                        ),
-                                      ],
-                                    ),
-                                  ),
-                                ],
-                              ),
-                            ),
-                        ],
+                          ],
+                        ),
                       ),
-                    ),
                     if (controller.purchaseCompleteItem.value.challenge != null && controller.purchaseCompleteItem.value.challenge!.extTxt != null)
                       Padding(
                         padding: EdgeInsets.only(bottom: 24.0.sp),

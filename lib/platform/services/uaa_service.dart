@@ -26,7 +26,7 @@ class UaaService {
     if (res.statusCode == 204) {
       successCallback();
     } else {
-      if (errorCallback != null) errorCallback(res.data);
+      if (errorCallback != null) errorCallback();
     }
   }
 

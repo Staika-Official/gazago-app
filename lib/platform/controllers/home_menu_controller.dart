@@ -68,7 +68,7 @@ class HomeMenuController extends SuperController {
   void onReady() async {
     handleAppNotification();
     await checkUpdates();
-    bottomNavHeight.value = bottomNavKey.currentContext!.size!.height;
+    bottomNavHeight.value = bottomNavKey.currentContext != null ? bottomNavKey.currentContext!.size!.height : 0;
     super.onReady();
   }
 

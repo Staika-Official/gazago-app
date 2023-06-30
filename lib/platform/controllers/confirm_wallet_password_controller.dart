@@ -55,7 +55,7 @@ class ConfirmWalletPasswordController extends GetxController with PasswordMixin 
       return _password.value;
     } else {
       showToastPopup('비밀번호를 다시 확인해주세요');
-      return null;
+      return '';
     }
   }
 }

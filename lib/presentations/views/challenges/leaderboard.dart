@@ -418,21 +418,22 @@ class ChallengeLeaderboard extends StatelessWidget {
                           crossAxisAlignment: CrossAxisAlignment.center,
                           children: [
                             iconTodayTik,
-                            Padding(
-                              padding: EdgeInsets.only(left: 10.0.sp),
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  StyledText(
-                                    formatDecimalPlaces(double.parse(controller.challengeDetails.value.rewardAmount!.toString()), 0),
-                                    color: Colors.white,
-                                    fontWeight: 600,
-                                    fontSize: 30,
-                                    lineHeight: 34,
-                                  ),
-                                ],
-                              ),
-                            )
+                            if (controller.challengeDetails.value.rewardAmount != null)
+                              Padding(
+                                padding: EdgeInsets.only(left: 10.0.sp),
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    StyledText(
+                                      formatDecimalPlaces(double.parse(controller.challengeDetails.value.rewardAmount!.toString()), 0),
+                                      color: Colors.white,
+                                      fontWeight: 600,
+                                      fontSize: 30,
+                                      lineHeight: 34,
+                                    ),
+                                  ],
+                                ),
+                              )
                           ],
                         ),
                       ),
