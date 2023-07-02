@@ -513,6 +513,7 @@ mixin ActivityMixin {
     // if (globalController.connectivityResult.value != ConnectivityResult.none && !batchIsInProgress()) {
     if (globalController.internetConnection.value && !batchIsInProgress()) {
       if (isPaused != null && isPaused) {
+        initLuckAnimation();
         await ActivityService.fetchPausedUserExercises(
           userExerciseData.value,
           Platform.operatingSystem,
@@ -530,8 +531,8 @@ mixin ActivityMixin {
             Platform.operatingSystem,
             source: source,
             successCallback: (CurrentUserStateModel newUserState) async {
-              // newUserState.exercise!.luckApplyRewardGo = 0.33;
-              // newUserState.exercise!.luckOccurred = true;
+              newUserState.exercise!.luckApplyRewardGo = 0.33;
+              newUserState.exercise!.luckOccurred = true;
               updateLocalUserState(newUserState);
 
               await Future.delayed(const Duration(seconds: 1));
