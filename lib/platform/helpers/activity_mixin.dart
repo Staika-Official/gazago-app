@@ -531,8 +531,8 @@ mixin ActivityMixin {
             Platform.operatingSystem,
             source: source,
             successCallback: (CurrentUserStateModel newUserState) async {
-              newUserState.exercise!.luckApplyRewardGo = 0.33;
-              newUserState.exercise!.luckOccurred = true;
+              // newUserState.exercise!.luckApplyRewardGo = 0.33;
+              // newUserState.exercise!.luckOccurred = true;
               updateLocalUserState(newUserState);
 
               await Future.delayed(const Duration(seconds: 1));
