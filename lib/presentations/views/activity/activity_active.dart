@@ -284,6 +284,7 @@ class ActivityActive extends StatelessWidget {
     return DefaultContainer(
       backgroundColor: subBg02Color,
       onBackButtonTap: () {
+        controller.initLuckAnimation();
         if (globalController.internetConnection.value) {
           Get.back();
         } else {
@@ -357,77 +358,75 @@ class ActivityActive extends StatelessWidget {
                           children: [
                             Stack(
                               children: [
-                                Obx(() {
-                                  return CustomAnimationBuilder<Movie>(
-                                      control: controller.luckLoadControl.value,
-                                      tween: luckMovie,
-                                      duration: luckMovie.duration,
-                                      onStarted: () {
-                                        controller.showLuckAnimation();
-                                      },
-                                      onCompleted: () {
-                                        controller.initLuckAnimation();
-                                      },
-                                      builder: (context, value, _) {
-                                        return Opacity(
-                                          opacity: value.get('opacity'),
-                                          child: Column(
-                                            crossAxisAlignment: CrossAxisAlignment.start,
-                                            children: [
-                                              Container(
-                                                decoration: BoxDecoration(
-                                                  color: Colors.black,
-                                                  borderRadius: BorderRadius.circular(50),
-                                                ),
-                                                child: Padding(
-                                                  padding: EdgeInsets.only(left: 14.sp, right: 14.sp, top: 10.sp, bottom: 10.0.sp),
-                                                  child: Row(
-                                                    children: [
-                                                      iconStatLuck,
-                                                      Padding(
-                                                        padding: EdgeInsets.only(left: 5.0.sp, right: 5.0.sp),
-                                                        child: StyledText(
-                                                          '행운효과',
-                                                          color: pinkColor,
-                                                          fontSize: 14,
-                                                          fontWeight: 500,
-                                                          letterSpacing: -.1,
+                                if (controller.isShowLuckAnimation.value)
+                                  Obx(() {
+                                    return CustomAnimationBuilder<Movie>(
+                                        control: controller.luckLoadControl.value,
+                                        tween: luckMovie,
+                                        duration: luckMovie.duration,
+                                        onCompleted: () {
+                                          controller.initLuckAnimation();
+                                        },
+                                        builder: (context, value, _) {
+                                          return Opacity(
+                                            opacity: value.get('opacity'),
+                                            child: Column(
+                                              crossAxisAlignment: CrossAxisAlignment.start,
+                                              children: [
+                                                Container(
+                                                  decoration: BoxDecoration(
+                                                    color: Colors.black,
+                                                    borderRadius: BorderRadius.circular(50),
+                                                  ),
+                                                  child: Padding(
+                                                    padding: EdgeInsets.only(left: 14.sp, right: 14.sp, top: 10.sp, bottom: 10.0.sp),
+                                                    child: Row(
+                                                      children: [
+                                                        iconStatLuck,
+                                                        Padding(
+                                                          padding: EdgeInsets.only(left: 5.0.sp, right: 5.0.sp),
+                                                          child: StyledText(
+                                                            '행운효과',
+                                                            color: pinkColor,
+                                                            fontSize: 14,
+                                                            fontWeight: 500,
+                                                            letterSpacing: -.1,
+                                                          ),
                                                         ),
-                                                      ),
-                                                      if (controller.userState.value.exercise != null)
+                                                        if (controller.userState.value.exercise != null)
+                                                          StyledText(
+                                                            '+${controller.userState.value.exercise!.luckApplyRewardGo}',
+                                                            fontSize: 14,
+                                                            fontWeight: 700,
+                                                            letterSpacing: -.1,
+                                                          ),
                                                         StyledText(
-                                                          '+${controller.userState.value.exercise!.luckApplyRewardGo}',
+                                                          ' GO',
                                                           fontSize: 14,
                                                           fontWeight: 700,
                                                           letterSpacing: -.1,
                                                         ),
-                                                      StyledText(
-                                                        ' GO',
-                                                        fontSize: 14,
-                                                        fontWeight: 700,
-                                                        letterSpacing: -.1,
-                                                      ),
-                                                    ],
+                                                      ],
+                                                    ),
                                                   ),
                                                 ),
-                                              ),
-                                              Padding(
-                                                padding: EdgeInsets.only(left: 25.0.sp),
-                                                child: ClipPath(
-                                                  clipper: CustomShapeClipper(),
-                                                  clipBehavior: Clip.antiAlias,
-                                                  child: Container(
-                                                    width: 10.0.sp,
-                                                    height: 7.0.sp,
-                                                    color: Colors.black,
+                                                Padding(
+                                                  padding: EdgeInsets.only(left: 25.0.sp),
+                                                  child: ClipPath(
+                                                    clipper: CustomShapeClipper(),
+                                                    clipBehavior: Clip.antiAlias,
+                                                    child: Container(
+                                                      width: 10.0.sp,
+                                                      height: 7.0.sp,
+                                                      color: Colors.black,
+                                                    ),
                                                   ),
-                                                ),
-                                              )
-                                            ],
-                                          ),
-                                        );
-                                      });
-                                }),
+                                                )
+                                              ],
+                                            ),
+                                          );
+                                        });
+                                  }),
                                 Padding(
                                   padding: EdgeInsets.only(top: 43.0.sp, left: 12.sp, right: 12.sp),
                                   child: Row(

@@ -515,6 +515,7 @@ mixin ActivityMixin {
     // if (globalController.connectivityResult.value != ConnectivityResult.none && !batchIsInProgress()) {
     if (globalController.internetConnection.value && !batchIsInProgress()) {
       if (isPaused != null && isPaused) {
+        initLuckAnimation();
         await ActivityService.fetchPausedUserExercises(
           userExerciseData.value,
           Platform.operatingSystem,
@@ -526,7 +527,7 @@ mixin ActivityMixin {
       } else {
         if (!isSameStepCount) {
           HiveStore.save(key: HiveKey.lastUpdatedStepCount.name, value: userExerciseData.value.steps);
-
+          initLuckAnimation();
           await ActivityService.fetchUpdateUserExercises(
             userExerciseData.value,
             Platform.operatingSystem,
@@ -536,6 +537,7 @@ mixin ActivityMixin {
               // newUserState.exercise!.luckOccurred = true;
               updateLocalUserState(newUserState);
               validateBadgeAcquisition(newUserState.exercise!.id!, newUserState.exercise!.badgeIssued, newUserState.exercise!.badgeImageUrl ?? '');
+
               await Future.delayed(const Duration(seconds: 1));
               if (userState.value.exercise!.luckApplyRewardGo! > 0 && userState.value.exercise!.luckOccurred!) {
                 showLuckAnimation();
@@ -841,6 +843,7 @@ mixin ActivityMixin {
     bool isAbleSound = HiveStore.load(key: HiveKey.luckSound.name) ?? false;
     await Future.delayed(const Duration(milliseconds: 300));
     luckLoadControl.value = Control.playReverseFromEnd;
+    isShowLuckAnimation.value = true;
     if (isAbleSound) {
       HapticFeedback.vibrate();
 
@@ -852,8 +855,6 @@ mixin ActivityMixin {
         });
       }
     }
-
-    isShowLuckAnimation.value = true;
   }
 
   void initLuckAnimation() async {

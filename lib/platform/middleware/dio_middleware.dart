@@ -13,6 +13,7 @@ import 'package:gaza_go/platform/stores/hive_store.dart';
 import 'package:get/get.dart' as getx;
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:logger/logger.dart';
+import 'package:package_info_plus/package_info_plus.dart';
 
 class Api {
   static final Logger _logger = Logger(printer: PrettyPrinter(colors: true, printEmojis: true));
@@ -313,10 +314,12 @@ class Api {
 
   static Future<void> _getNewAccessToken(DioError e, ErrorInterceptorHandler handler) async {
     final String refreshToken = HiveStore.loadString(key: HiveKey.refreshToken.name) ?? '';
+    PackageInfo packageInfo = await PackageInfo.fromPlatform();
+    String deviceId = HiveStore.loadString(key: HiveKey.uuid.name)!;
 
     Dio refreshDio = Dio();
     refreshDio.options.headers['Authorization'] = 'Bearer $refreshToken';
-    await refreshDio.post('${F.baseUrl}/services/uaa/api/sign-in/token', data: {'clientId': 'GAZAGO'}).then((Response res) async {
+    await refreshDio.post('${F.baseUrl}/services/uaa/api/sign-in/token', data: {'clientId': 'GAZAGO', 'appVersion': packageInfo.version, 'deviceId': deviceId}).then((Response res) async {
       _logger.d(
         '------------->'
         '\nRESPONSE'
