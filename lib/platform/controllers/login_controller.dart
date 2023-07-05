@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'dart:io';
 
+import 'package:device_info_plus/device_info_plus.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:gaza_go/constants/enums.dart';
 import 'package:gaza_go/constants/routes.dart';
@@ -121,6 +122,15 @@ class LoginController extends GetxController {
     String deviceId = HiveStore.loadString(key: HiveKey.uuid.name)!;
     String fcmToken = HiveStore.loadString(key: HiveKey.fcmToken.name)!;
     String appVersion = await PackageInfo.fromPlatform().then((info) => info.version);
+
+    dynamic deviceInfo;
+
+    if (Platform.isAndroid) {
+      deviceInfo = await DeviceInfoPlugin().androidInfo;
+    } else if (Platform.isIOS) {
+      deviceInfo = await DeviceInfoPlugin().iosInfo;
+    }
+
     String platform = Platform.operatingSystem;
 
     SocialLoginInfoModel loginInfo = SocialLoginInfoModel(
@@ -132,6 +142,7 @@ class LoginController extends GetxController {
       platform: platform,
       clientId: 'GAZAGO',
       forceLogin: forceLogin,
+      deviceInfo: deviceInfo.toString(),
     );
 
     await UaaService.socialLogin(

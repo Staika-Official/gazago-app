@@ -12,6 +12,7 @@ class SocialLoginInfoModel {
   String platform;
   String clientId;
   bool forceLogin;
+  dynamic deviceInfo;
 
   SocialLoginInfoModel({
     required this.provider,
@@ -22,6 +23,7 @@ class SocialLoginInfoModel {
     required this.platform,
     required this.clientId,
     required this.forceLogin,
+    this.deviceInfo,
   });
 
   factory SocialLoginInfoModel.fromJson(Map<String, dynamic> json) => _$SocialLoginInfoModelFromJson(json);

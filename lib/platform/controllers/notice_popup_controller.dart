@@ -89,6 +89,7 @@ class NoticePopupController extends GetxController {
   }
 
   void moveToWebView(NoticePopupModel item) async {
+    print(item.linkUrl);
     if (Get.isBottomSheetOpen!) {
       Get.back();
     }
@@ -103,6 +104,13 @@ class NoticePopupController extends GetxController {
             break;
           case 'ARCHIVE':
             Get.find<HomeMenuController>().selectMenu(4);
+            if (Get.isRegistered<LeaderboardController>()) {
+              Get.find<LeaderboardController>().tabController.animateTo(1);
+            } else {
+              LeaderboardController leaderboardController = Get.put(LeaderboardController());
+              leaderboardController.tabController.animateTo(1);
+            }
+
             break;
           case 'ITEM':
             Get.find<HomeMenuController>().selectMenu(1);
@@ -113,10 +121,10 @@ class NoticePopupController extends GetxController {
           case 'RANKING':
             Get.find<HomeMenuController>().selectMenu(4);
             if (Get.isRegistered<LeaderboardController>()) {
-              Get.find<LeaderboardController>().tabController.animateTo(1);
+              Get.find<LeaderboardController>().tabController.animateTo(0);
             } else {
               LeaderboardController leaderboardController = Get.put(LeaderboardController());
-              leaderboardController.tabController.animateTo(1);
+              leaderboardController.tabController.animateTo(0);
             }
             break;
 

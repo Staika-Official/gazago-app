@@ -1,6 +1,8 @@
 import 'dart:async';
 import 'dart:convert';
+import 'dart:io';
 
+import 'package:device_info_plus/device_info_plus.dart';
 import 'package:dio/dio.dart';
 import 'package:gaza_go/constants/enums.dart';
 import 'package:gaza_go/constants/routes.dart';
@@ -316,10 +318,18 @@ class Api {
     final String refreshToken = HiveStore.loadString(key: HiveKey.refreshToken.name) ?? '';
     PackageInfo packageInfo = await PackageInfo.fromPlatform();
     String deviceId = HiveStore.loadString(key: HiveKey.uuid.name)!;
+    dynamic deviceInfo;
+
+    if (Platform.isAndroid) {
+      deviceInfo = await DeviceInfoPlugin().androidInfo;
+    } else if (Platform.isIOS) {
+      deviceInfo = await DeviceInfoPlugin().iosInfo;
+    }
 
     Dio refreshDio = Dio();
     refreshDio.options.headers['Authorization'] = 'Bearer $refreshToken';
-    await refreshDio.post('${F.baseUrl}/services/uaa/api/sign-in/token', data: {'clientId': 'GAZAGO', 'appVersion': packageInfo.version, 'deviceId': deviceId}).then((Response res) async {
+    await refreshDio.post('${F.baseUrl}/services/uaa/api/sign-in/token',
+        data: {'clientId': 'GAZAGO', 'appVersion': packageInfo.version, 'deviceId': deviceId, 'deviceInfo': deviceInfo.toString()}).then((Response res) async {
       _logger.d(
         '------------->'
         '\nRESPONSE'
