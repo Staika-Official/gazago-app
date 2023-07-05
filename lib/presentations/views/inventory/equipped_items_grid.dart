@@ -52,6 +52,7 @@ class EquippedItemsGrid extends StatelessWidget {
               child: controller.equippedHat.value != null
                   ? InventoryTile(
                       index: 2,
+                      id: controller.equippedHat.value.id,
                       itemGrade: controller.equippedHat.value.itemGrade,
                       imageUrl: controller.equippedHat.value.itemImageUrl,
                     )
@@ -63,6 +64,7 @@ class EquippedItemsGrid extends StatelessWidget {
               child: controller.equippedTop.value != null
                   ? InventoryTile(
                       index: 3,
+                      id: controller.equippedTop.value.id,
                       itemGrade: controller.equippedTop.value.itemGrade,
                       imageUrl: controller.equippedTop.value.itemImageUrl,
                     )
@@ -74,6 +76,7 @@ class EquippedItemsGrid extends StatelessWidget {
               child: controller.equippedBottom.value != null
                   ? InventoryTile(
                       index: 4,
+                      id: controller.equippedBottom.value.id,
                       itemGrade: controller.equippedBottom.value.itemGrade,
                       imageUrl: controller.equippedBottom.value.itemImageUrl,
                     )
@@ -85,6 +88,7 @@ class EquippedItemsGrid extends StatelessWidget {
               child: controller.equippedAccessory.value != null
                   ? InventoryTile(
                       index: 5,
+                      id: controller.equippedAccessory.value.id,
                       itemGrade: controller.equippedAccessory.value.itemGrade,
                       imageUrl: controller.equippedAccessory.value.itemImageUrl,
                     )

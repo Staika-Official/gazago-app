@@ -40,217 +40,226 @@ class InventoryTile extends StatelessWidget {
     final child = Container(
       color: Colors.transparent,
       height: extent,
-      child: Container(
-        decoration: BoxDecoration(
-          color: popupBgColor,
-          border: Border.all(
-            width: 2.sp,
-            color: Colors.black,
-          ),
-          borderRadius: BorderRadius.all(
-            Radius.circular(14.sp),
-          ),
-          boxShadow: [
-            BoxShadow(
+      child: InkWell(
+        onTap: () {
+          if (badgeId != null && badgeId != -1) {
+            controller.toBadgeDetail(badgeId!);
+          } else {
+            controller.toItemDetail(id!);
+          }
+        },
+        child: Container(
+          decoration: BoxDecoration(
+            color: popupBgColor,
+            border: Border.all(
+              width: 2.sp,
               color: Colors.black,
-              offset: Offset(2.sp, 4.sp),
-              blurRadius: 0.0,
-              spreadRadius: 0.0,
             ),
-          ],
-        ),
-        child: Stack(
-          alignment: Alignment.bottomCenter,
-          children: [
-            Padding(
-              padding: badgeId != null && badgeId != -1 ? EdgeInsets.only(top: 10.0.sp, bottom: 30.sp, left: 35.sp, right: 35.sp) : EdgeInsets.all(index < 1 ? 20.sp : 10.0.sp),
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: [
-                  AspectRatio(
-                    aspectRatio: index == 1 ? 1 / 1 : 1.2 / 1,
-                    child: imageUrl != ''
-                        ? imageUrl.contains('.svg')
-                            ? SvgPicture.network(
-                                fit: BoxFit.contain,
-                                imageUrl,
-                                placeholderBuilder: (BuildContext context) => Container(
-                                  padding: const EdgeInsets.all(30.0),
-                                  child: const CircularProgressIndicator(),
-                                ),
-                              )
-                            : CachedNetworkImage(
-                                imageUrl: imageUrl,
-                                placeholder: (context, url) => const Center(child: SizedBox.square(dimension: 40, child: CircularProgressIndicator())),
-                                errorWidget: (context, url, error) => iconNoBadge,
-                                fit: BoxFit.contain,
-                                httpHeaders: imageNetworkHeader,
-                              )
-                        : iconNoBadge,
-                  ),
-                ],
+            borderRadius: BorderRadius.all(
+              Radius.circular(14.sp),
+            ),
+            boxShadow: [
+              BoxShadow(
+                color: Colors.black,
+                offset: Offset(2.sp, 4.sp),
+                blurRadius: 0.0,
+                spreadRadius: 0.0,
               ),
-            ),
-            if (badgeId != null && badgeId != -1)
+            ],
+          ),
+          child: Stack(
+            alignment: Alignment.bottomCenter,
+            children: [
               Padding(
-                padding: EdgeInsets.all(10.sp),
-                child: Container(
-                  padding: EdgeInsets.symmetric(
-                    vertical: 5.sp,
-                    horizontal: 10.sp,
-                  ),
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(60.sp),
-                    border: Border.all(
-                      width: 1,
+                padding: badgeId != null && badgeId != -1 ? EdgeInsets.only(top: 10.0.sp, bottom: 30.sp, left: 35.sp, right: 35.sp) : EdgeInsets.all(index < 1 ? 20.sp : 10.0.sp),
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    AspectRatio(
+                      aspectRatio: index == 1 ? 1 / 1 : 1.2 / 1,
+                      child: imageUrl != ''
+                          ? imageUrl.contains('.svg')
+                              ? SvgPicture.network(
+                                  fit: BoxFit.contain,
+                                  imageUrl,
+                                  placeholderBuilder: (BuildContext context) => Container(
+                                    padding: const EdgeInsets.all(30.0),
+                                    child: const CircularProgressIndicator(),
+                                  ),
+                                )
+                              : CachedNetworkImage(
+                                  imageUrl: imageUrl,
+                                  placeholder: (context, url) => const Center(child: SizedBox.square(dimension: 40, child: CircularProgressIndicator())),
+                                  errorWidget: (context, url, error) => iconNoBadge,
+                                  fit: BoxFit.contain,
+                                  httpHeaders: imageNetworkHeader,
+                                )
+                          : iconNoBadge,
+                    ),
+                  ],
+                ),
+              ),
+              if (badgeId != null && badgeId != -1)
+                Padding(
+                  padding: EdgeInsets.all(10.sp),
+                  child: Container(
+                    padding: EdgeInsets.symmetric(
+                      vertical: 5.sp,
+                      horizontal: 10.sp,
+                    ),
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(60.sp),
+                      border: Border.all(
+                        width: 1,
+                        color: deepGrayColor,
+                      ),
+                    ),
+                    child: StyledText(
+                      '#${badgeId.toString()}',
+                      fontSize: 10,
+                      lineHeight: 10,
+                      fontWeight: 500,
+                      letterSpacing: 1,
+                      fontFamily: 'Montserrat',
                       color: deepGrayColor,
                     ),
                   ),
-                  child: StyledText(
-                    '#${badgeId.toString()}',
-                    fontSize: 10,
-                    lineHeight: 10,
-                    fontWeight: 500,
-                    letterSpacing: 1,
-                    fontFamily: 'Montserrat',
-                    color: deepGrayColor,
-                  ),
                 ),
-              ),
-            durability != null
-                ? Padding(
-                    padding: EdgeInsets.symmetric(horizontal: 15.0.sp, vertical: 9.0.sp),
-                    child: SizedBox(
-                      height: 22.sp,
-                      child: Stack(
-                        clipBehavior: Clip.none,
-                        alignment: AlignmentDirectional.center,
-                        children: [
-                          Row(
-                            children: [
-                              Expanded(
-                                child: ClipRRect(
-                                  child: SizedBox(
-                                    child: Stack(
-                                      children: [
-                                        Padding(
-                                          padding: EdgeInsets.all(2.0.sp),
-                                          child: Container(
-                                            decoration: BoxDecoration(
-                                              color: const Color(0xFF606167),
-                                              borderRadius: BorderRadius.all(
-                                                Radius.circular(50.sp),
-                                              ),
-                                              boxShadow: [
-                                                BoxShadow(
-                                                  color: Colors.black,
-                                                  offset: Offset(0, 1.sp),
-                                                  blurRadius: 0.0,
-                                                  spreadRadius: 0.0,
+              durability != null
+                  ? Padding(
+                      padding: EdgeInsets.symmetric(horizontal: 15.0.sp, vertical: 9.0.sp),
+                      child: SizedBox(
+                        height: 22.sp,
+                        child: Stack(
+                          clipBehavior: Clip.none,
+                          alignment: AlignmentDirectional.center,
+                          children: [
+                            Row(
+                              children: [
+                                Expanded(
+                                  child: ClipRRect(
+                                    child: SizedBox(
+                                      child: Stack(
+                                        children: [
+                                          Padding(
+                                            padding: EdgeInsets.all(2.0.sp),
+                                            child: Container(
+                                              decoration: BoxDecoration(
+                                                color: const Color(0xFF606167),
+                                                borderRadius: BorderRadius.all(
+                                                  Radius.circular(50.sp),
                                                 ),
-                                              ],
+                                                boxShadow: [
+                                                  BoxShadow(
+                                                    color: Colors.black,
+                                                    offset: Offset(0, 1.sp),
+                                                    blurRadius: 0.0,
+                                                    spreadRadius: 0.0,
+                                                  ),
+                                                ],
+                                              ),
                                             ),
                                           ),
-                                        ),
-                                        durability! > 1.0
-                                            ? Padding(
-                                                padding: EdgeInsets.only(top: 2.0.sp, left: 2.0.sp),
-                                                child: LayoutBuilder(builder: (context, constraints) {
-                                                  return Container(
-                                                    height: 18.sp,
-                                                    margin: EdgeInsets.zero,
-                                                    width: durability! > 20
-                                                        ? constraints.maxWidth / (100 / durability!)
-                                                        : durability! < 2
-                                                            ? 0
-                                                            : 34,
-                                                    decoration: BoxDecoration(
-                                                      color: durability! < 30 ? textRedColor : purpleColor,
-                                                      borderRadius: BorderRadius.all(
-                                                        Radius.circular(50.sp),
+                                          durability! > 1.0
+                                              ? Padding(
+                                                  padding: EdgeInsets.only(top: 2.0.sp, left: 2.0.sp),
+                                                  child: LayoutBuilder(builder: (context, constraints) {
+                                                    return Container(
+                                                      height: 18.sp,
+                                                      margin: EdgeInsets.zero,
+                                                      width: durability! > 20
+                                                          ? constraints.maxWidth / (100 / durability!)
+                                                          : durability! < 2
+                                                              ? 0
+                                                              : 34,
+                                                      decoration: BoxDecoration(
+                                                        color: durability! < 30 ? textRedColor : purpleColor,
+                                                        borderRadius: BorderRadius.all(
+                                                          Radius.circular(50.sp),
+                                                        ),
                                                       ),
-                                                    ),
-                                                  );
-                                                }),
-                                              )
-                                            : Container(),
-                                      ],
+                                                    );
+                                                  }),
+                                                )
+                                              : Container(),
+                                        ],
+                                      ),
                                     ),
                                   ),
                                 ),
-                              ),
-                            ],
-                          ),
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            crossAxisAlignment: CrossAxisAlignment.center,
-                            children: [
-                              Row(
-                                children: [
-                                  Padding(
-                                    padding: EdgeInsets.symmetric(horizontal: 5.0.sp),
-                                    child: iconShoes,
-                                  ),
-                                ],
-                              ),
-                            ],
-                          ),
-                          Positioned(
-                            right: -1,
-                            top: -1,
-                            child: Padding(
-                              padding: EdgeInsets.only(top: 1.0.sp),
-                              child: Container(
-                                decoration: BoxDecoration(
-                                  color: gaugeGrayColor,
-                                  border: Border.all(
-                                    width: 1.sp,
-                                    color: Colors.black,
-                                  ),
-                                  borderRadius: BorderRadius.all(
-                                    Radius.circular(30.sp),
-                                  ),
-                                  boxShadow: [
-                                    BoxShadow(
-                                      color: Colors.black,
-                                      offset: Offset(0, 1.sp),
-                                      blurRadius: 0.0,
-                                      spreadRadius: 0.0,
+                              ],
+                            ),
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              crossAxisAlignment: CrossAxisAlignment.center,
+                              children: [
+                                Row(
+                                  children: [
+                                    Padding(
+                                      padding: EdgeInsets.symmetric(horizontal: 5.0.sp),
+                                      child: iconShoes,
                                     ),
                                   ],
                                 ),
-                                child: InkWell(
-                                  onTap: () => controller.showShoesRepairPopup(id),
-                                  child: CircleAvatar(
-                                    radius: 10.sp,
-                                    backgroundColor: purpleColor,
-                                    child: IconButton(
-                                      alignment: Alignment.center,
-                                      padding: EdgeInsets.zero,
-                                      iconSize: 20.0.sp,
-                                      icon: iconPlus,
-                                      onPressed: null,
-                                      // onPressed: () => {controller.onClickRepairStat(stat)},
+                              ],
+                            ),
+                            Positioned(
+                              right: -1,
+                              top: -1,
+                              child: Padding(
+                                padding: EdgeInsets.only(top: 1.0.sp),
+                                child: Container(
+                                  decoration: BoxDecoration(
+                                    color: gaugeGrayColor,
+                                    border: Border.all(
+                                      width: 1.sp,
+                                      color: Colors.black,
+                                    ),
+                                    borderRadius: BorderRadius.all(
+                                      Radius.circular(30.sp),
+                                    ),
+                                    boxShadow: [
+                                      BoxShadow(
+                                        color: Colors.black,
+                                        offset: Offset(0, 1.sp),
+                                        blurRadius: 0.0,
+                                        spreadRadius: 0.0,
+                                      ),
+                                    ],
+                                  ),
+                                  child: InkWell(
+                                    onTap: () => controller.showShoesRepairPopup(id),
+                                    child: CircleAvatar(
+                                      radius: 10.sp,
+                                      backgroundColor: purpleColor,
+                                      child: IconButton(
+                                        alignment: Alignment.center,
+                                        padding: EdgeInsets.zero,
+                                        iconSize: 20.0.sp,
+                                        icon: iconPlus,
+                                        onPressed: null,
+                                        // onPressed: () => {controller.onClickRepairStat(stat)},
+                                      ),
                                     ),
                                   ),
                                 ),
                               ),
                             ),
-                          ),
-                        ],
+                          ],
+                        ),
                       ),
-                    ),
-                  )
-                : Container(),
-            itemGrade != null
-                ? Positioned(
-                    right: index > 1 ? 6.sp : 10.sp,
-                    top: index > 1 ? 6.sp : 10.sp,
-                    child: getItemGradeCircleIcon(itemGrade!),
-                  )
-                : Container(),
-          ],
+                    )
+                  : Container(),
+              itemGrade != null
+                  ? Positioned(
+                      right: index > 1 ? 6.sp : 10.sp,
+                      top: index > 1 ? 6.sp : 10.sp,
+                      child: getItemGradeCircleIcon(itemGrade!),
+                    )
+                  : Container(),
+            ],
+          ),
         ),
       ),
     );
