@@ -302,6 +302,7 @@ class InventoryController extends GetxController with LinearProgressMixin, Inven
   }
 
   Future<void> getUserAllItems() async {
+    Get.isRegistered<InventoryHomeController>() ? Get.find<InventoryHomeController>() : Get.put(InventoryHomeController());
     dataGetLoading.value = true;
     await ItemService.getAllMyItems(
       page.value,
@@ -485,7 +486,7 @@ class InventoryController extends GetxController with LinearProgressMixin, Inven
   void showShoesRepairPopup(id) async {
     currentSliderValue.value = 0;
     await walletMasterController.getFeeTik();
-    showShoeRepairSlider(this, walletMasterController.feeTikDurability.value);
+    showShoeRepairSlider(this, walletMasterController.feeTikDurability.value, id);
   }
 
   void handleNotEnoughTaikaPopup() {

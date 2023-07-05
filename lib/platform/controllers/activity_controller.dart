@@ -78,6 +78,7 @@ class ActivityController extends SuperController with ActivityMixin, ChallengeMi
   final Throttling locationThr = Throttling(duration: const Duration(milliseconds: 500));
   late AnimationController challengeGuideController;
   final Rx<Control> challengeLoadControl = Rx(Control.play);
+  final RxBool isButtonDisabled = RxBool(false);
 
   Future<void> initializeController() async {
     challengeGuideController = AnimationController(vsync: this);
@@ -581,6 +582,7 @@ class ActivityController extends SuperController with ActivityMixin, ChallengeMi
   }
 
   Future<void> selectExerciseType(ExerciseType exerciseType) async {
+    isButtonDisabled.value = true;
     selectedExerciseType.value = exerciseType;
 
     AdWatchAvailableModel adWatchAvailableModel = AdWatchAvailableModel(watchAvailable: false);
@@ -589,6 +591,7 @@ class ActivityController extends SuperController with ActivityMixin, ChallengeMi
       'EXERCISE_START',
       callback: (AdWatchAvailableModel model) {
         adWatchAvailableModel = model;
+        isButtonDisabled.value = false;
       },
     );
 

@@ -33,6 +33,7 @@ import 'package:health/health.dart';
 import 'package:pedometer/pedometer.dart';
 import 'package:simple_animations/animation_builder/custom_animation_builder.dart';
 import 'package:throttling/throttling.dart';
+import 'package:uuid/uuid.dart';
 
 mixin ActivityMixin {
   GlobalController globalController = Get.find();
@@ -195,6 +196,7 @@ mixin ActivityMixin {
         lastLatitude: coordinates.isNotEmpty ? coordinates.last.latitude : null,
         lastLongitude: coordinates.isNotEmpty ? coordinates.last.longitude : null,
         latestLocations: partialCoordinates,
+        sequence: const Uuid().v4(),
       ),
     );
   }
@@ -364,6 +366,8 @@ mixin ActivityMixin {
 
   void startExercise(ExerciseType exerciseType, ChallengeModel? challenge, {String? adId}) async {
     String deviceId = HiveStore.loadString(key: HiveKey.uuid.name)!;
+    String sequence = Uuid().v4();
+
     HiveStore.save(key: HiveKey.lastUpdatedStepCount.name, value: 0);
 
     if (Get.isDialogOpen != null && Get.isDialogOpen!) Get.until((route) => Get.currentRoute == Routes.activityActive && (Get.isDialogOpen == false || Get.isDialogOpen == null));
@@ -399,6 +403,7 @@ mixin ActivityMixin {
             challengeId: challenge?.id,
             locationUpdateTime: DateTime.now(),
             adId: adId != null ? '${adId}_${deviceId}_${DateTime.now().millisecondsSinceEpoch}' : null,
+            sequence: sequence,
           ),
           Platform.operatingSystem,
           successCallback: (UserExerciseModel userExerciseData) {
@@ -516,6 +521,9 @@ mixin ActivityMixin {
     if (globalController.internetConnection.value && !batchIsInProgress()) {
       if (isPaused != null && isPaused) {
         initLuckAnimation();
+
+        print(userExerciseData.value.sequence);
+
         await ActivityService.fetchPausedUserExercises(
           userExerciseData.value,
           Platform.operatingSystem,
@@ -528,6 +536,8 @@ mixin ActivityMixin {
         if (!isSameStepCount) {
           HiveStore.save(key: HiveKey.lastUpdatedStepCount.name, value: userExerciseData.value.steps);
           initLuckAnimation();
+
+          print(userExerciseData.value.sequence);
           await ActivityService.fetchUpdateUserExercises(
             userExerciseData.value,
             Platform.operatingSystem,
@@ -703,7 +713,7 @@ mixin ActivityMixin {
       // 업데이트 타이머에 의해서 미세한 차이로 운동 종료 요청후 즉시 운동 업데이트 요청이 나가지 않도록 타이머를 우선 스탑한다.
       updateTimer?.cancel();
       exerciseTimer?.cancel();
-
+      userExerciseData.value.sequence = const Uuid().v4();
       //타이머 멈춘 후 종료 요청
       await ActivityService.fetchEndUserExercises(
         userExerciseData.value,

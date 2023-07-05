@@ -840,23 +840,45 @@ class ShopItemDetail extends StatelessWidget {
                             ),
                         ],
                       ),
-                      InkWell(
-                        onTap: () => controller.onClickPurchaseItem(controller.selectedItem.value.tradeSymbol),
-                        child: Container(
-                          decoration: BoxDecoration(
-                            border: Border.all(width: 2.sp, color: skyBlueColor),
-                            borderRadius: BorderRadius.circular(30.sp),
-                          ),
-                          child: Padding(
-                            padding: EdgeInsets.symmetric(vertical: 8.0.sp, horizontal: 15.sp),
-                            child: const StyledText(
-                              '구매하기',
-                              fontSize: 18,
-                              lineHeight: 20,
+                      controller.selectedItem.value.itemLabel != null && controller.selectedItem.value.itemLabel == 'SOLD_OUT'
+                          ? InkWell(
+                              onTap: () => null,
+                              child: Container(
+                                decoration: BoxDecoration(
+                                  color: subBg01Color,
+                                  border: Border.all(width: 2.sp, color: deepGrayColor),
+                                  borderRadius: BorderRadius.circular(30.sp),
+                                ),
+                                child: Padding(
+                                  padding: EdgeInsets.symmetric(vertical: 8.0.sp, horizontal: 15.sp),
+                                  child: StyledText(
+                                    '구매하기',
+                                    fontSize: 18,
+                                    lineHeight: 20,
+                                    color: deepGrayColor,
+                                    letterSpacing: -.1,
+                                  ),
+                                ),
+                              ),
+                            )
+                          : InkWell(
+                              onTap: () => controller.onClickPurchaseItem(controller.selectedItem.value.tradeSymbol),
+                              child: Container(
+                                decoration: BoxDecoration(
+                                  border: Border.all(width: 2.sp, color: skyBlueColor),
+                                  borderRadius: BorderRadius.circular(30.sp),
+                                ),
+                                child: Padding(
+                                  padding: EdgeInsets.symmetric(vertical: 8.0.sp, horizontal: 15.sp),
+                                  child: const StyledText(
+                                    '구매하기',
+                                    fontSize: 18,
+                                    lineHeight: 20,
+                                    letterSpacing: -.1,
+                                  ),
+                                ),
+                              ),
                             ),
-                          ),
-                        ),
-                      ),
                     ],
                   ),
                 ),

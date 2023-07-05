@@ -82,6 +82,8 @@ class UserExerciseModel {
   String? badgeImageUrl;
   @HiveField(37)
   bool? badgeIssued;
+  @HiveField(38)
+  String? sequence;
 
   UserExerciseModel({
     this.id,
@@ -122,6 +124,7 @@ class UserExerciseModel {
     this.luckApplyRewardGo,
     this.badgeImageUrl,
     this.badgeIssued,
+    this.sequence,
   });
 
   factory UserExerciseModel.fromJson(Map<String, dynamic> json) => _$UserExerciseModelFromJson(json);

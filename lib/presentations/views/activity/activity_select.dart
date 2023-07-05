@@ -158,7 +158,7 @@ class ActivitySelect extends StatelessWidget {
                             borderRadius: BorderRadius.circular(14.sp),
                           ),
                           child: InkWell(
-                            onTap: () => controller.thr.throttle(() => controller.selectExerciseType(ExerciseType.walking)),
+                            onTap: () => !controller.isButtonDisabled.value ? controller.selectExerciseType(ExerciseType.walking) : null,
                             borderRadius: BorderRadius.circular(14.sp),
                             child: Padding(
                               padding: EdgeInsets.only(top: 32.sp),

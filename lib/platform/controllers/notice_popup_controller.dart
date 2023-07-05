@@ -89,27 +89,28 @@ class NoticePopupController extends GetxController {
   }
 
   void moveToWebView(NoticePopupModel item) async {
+    if (Get.isBottomSheetOpen!) {
+      Get.back();
+    }
     switch (item.openType) {
       case 'IN_APP':
+        if (!Get.currentRoute.contains('home')) {
+          Get.until((route) => Get.currentRoute == Routes.home);
+        }
         switch (item.linkUrl) {
           case 'CHALLENGES':
-            Get.back();
             Get.find<HomeMenuController>().selectMenu(0);
             break;
           case 'ARCHIVE':
-            Get.back();
             Get.find<HomeMenuController>().selectMenu(4);
             break;
           case 'ITEM':
-            Get.back();
             Get.find<HomeMenuController>().selectMenu(1);
             break;
           case 'SHOP':
-            Get.back();
             Get.find<HomeMenuController>().selectMenu(3);
             break;
           case 'RANKING':
-            Get.back();
             Get.find<HomeMenuController>().selectMenu(4);
             if (Get.isRegistered<LeaderboardController>()) {
               Get.find<LeaderboardController>().tabController.animateTo(1);
@@ -118,7 +119,7 @@ class NoticePopupController extends GetxController {
               leaderboardController.tabController.animateTo(1);
             }
             break;
-            break;
+
           case 'WALLET':
             Get.toNamed(Routes.wallet);
             break;

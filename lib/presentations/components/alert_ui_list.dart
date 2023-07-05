@@ -62,7 +62,7 @@ void showRetryAlert(LoadingController controller) {
   );
 }
 
-void showShoeRepairSlider(InventoryController controller, int feeTikDurability) {
+void showShoeRepairSlider(InventoryController controller, int feeTikDurability, int itemId) {
   showAlert(
     title: '신발 내구도 충전',
     contentWidget: Obx(() {
@@ -71,7 +71,7 @@ void showShoeRepairSlider(InventoryController controller, int feeTikDurability) 
           Padding(
             padding: EdgeInsets.only(top: 12.0.sp),
             child: StyledText(
-              '현재 신발 내구도 ${formatDecimalPlaces(controller.equippedShoe.value.durability, 2)}',
+              '현재 신발 내구도 ${formatDecimalPlaces(itemId == controller.equippedShoe.value.id ? controller.equippedShoe.value.durability : controller.selectedItem.value.durability, 2)}',
               fontSize: 16,
               lineHeight: 22,
               fontWeight: 500,
@@ -180,7 +180,7 @@ void showShoeRepairSlider(InventoryController controller, int feeTikDurability) 
       Expanded(
         child: Obx(() {
           return GazagoButton(
-            onTap: () => controller.fetchRepairShoes(controller.equippedShoe.value.id),
+            onTap: () => controller.fetchRepairShoes(itemId),
             disableButton: controller.disableButton.value,
             buttonText: '네',
             buttonColor: skyBlueColor,

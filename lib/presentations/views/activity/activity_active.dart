@@ -75,53 +75,35 @@ class ActivityActive extends StatelessWidget {
                     children: [
                       Expanded(
                         child: ClipRRect(
-                          child: stat.type == 'STAMINA'
-                              ? SizedBox(
-                                  child: Stack(
-                                    children: [
-                                      Container(
-                                        decoration: BoxDecoration(
-                                          color: gaugeGrayColor,
-                                          border: Border.all(
-                                            width: 2.sp,
-                                            color: Colors.black,
-                                          ),
-                                          borderRadius: BorderRadius.all(
-                                            Radius.circular(42.sp),
-                                          ),
-                                        ),
-                                      ),
-                                      stat.currentStat > 1.0
-                                          ? LayoutBuilder(builder: (context, constraints) {
-                                              return Container(
-                                                width: (stat.currentStat > 20
-                                                        ? constraints.maxWidth / (100 / stat.currentStat)
-                                                        : stat.currentStat < 2
-                                                            ? 0
-                                                            : 34)
-                                                    .sp,
-                                                decoration: BoxDecoration(
-                                                  color: stat.currentStat < 30 ? textRedColor : lightGreenColor,
-                                                  border: Border.all(
-                                                    width: 2.sp,
-                                                    color: Colors.black,
-                                                  ),
-                                                  borderRadius: BorderRadius.all(
-                                                    Radius.circular(42.sp),
-                                                  ),
-                                                ),
-                                              );
-                                            })
-                                          : Container(),
-                                    ],
+                            child: SizedBox(
+                          child: Stack(
+                            children: [
+                              Container(
+                                decoration: BoxDecoration(
+                                  color: gaugeGrayColor,
+                                  border: Border.all(
+                                    width: 2.sp,
+                                    color: Colors.black,
                                   ),
-                                )
-                              : SizedBox(
-                                  child: Stack(
-                                    children: [
-                                      Container(
+                                  borderRadius: BorderRadius.all(
+                                    Radius.circular(42.sp),
+                                  ),
+                                ),
+                              ),
+                              stat.currentStat > 1.0
+                                  ? LayoutBuilder(builder: (context, constraints) {
+                                      return Container(
+                                        width: (stat.currentStat > 20
+                                            ? constraints.maxWidth / (100 / stat.currentStat)
+                                            : stat.currentStat < 2
+                                                ? 0
+                                                : 34),
                                         decoration: BoxDecoration(
-                                          color: gaugeGrayColor,
+                                          color: stat.currentStat < 30
+                                              ? textRedColor
+                                              : stat.type == 'STAMINA'
+                                                  ? lightGreenColor
+                                                  : purpleColor,
                                           border: Border.all(
                                             width: 2.sp,
                                             color: Colors.black,
@@ -130,32 +112,12 @@ class ActivityActive extends StatelessWidget {
                                             Radius.circular(50.sp),
                                           ),
                                         ),
-                                      ),
-                                      stat.currentStat > 1.0
-                                          ? LayoutBuilder(builder: (context, constraints) {
-                                              return Container(
-                                                width: stat.currentStat > 20
-                                                    ? constraints.maxWidth / (100 / stat.currentStat)
-                                                    : stat.currentStat < 2
-                                                        ? 0
-                                                        : 34,
-                                                decoration: BoxDecoration(
-                                                  color: stat.currentStat <= 30 ? textRedColor : purpleColor,
-                                                  border: Border.all(
-                                                    width: 2.sp,
-                                                    color: Colors.black,
-                                                  ),
-                                                  borderRadius: BorderRadius.all(
-                                                    Radius.circular(50.sp),
-                                                  ),
-                                                ),
-                                              );
-                                            })
-                                          : Container(),
-                                    ],
-                                  ),
-                                ),
-                        ),
+                                      );
+                                    })
+                                  : Container(),
+                            ],
+                          ),
+                        )),
                       ),
                     ],
                   ),

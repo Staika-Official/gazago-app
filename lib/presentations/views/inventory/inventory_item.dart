@@ -31,6 +31,7 @@ class InventoryItem extends StatelessWidget {
             crossAxisSpacing: 10.sp,
             mainAxisSpacing: 10.sp,
             crossAxisCount: (width < 350.sp) ? 2 : 3,
+            cacheExtent: 1000,
             children: [
               ...controller.allItems[tab['itemType']]!.map(
                 (item) => InkWell(
@@ -52,14 +53,15 @@ class InventoryItem extends StatelessWidget {
                             children: [
                               SizedBox(
                                 height: 80.sp,
-                                child: Opacity(
-                                  opacity: item.equipped == true ? 0.5 : 1,
+                                child: Container(
                                   child: item.itemImageUrl.contains('.svg')
                                       ? SvgPicture.network(
                                           fit: BoxFit.fitHeight,
                                           item.itemImageUrl,
                                           placeholderBuilder: (BuildContext context) => Container(padding: const EdgeInsets.all(30.0), child: const CircularProgressIndicator()),
                                           headers: imageNetworkHeader,
+                                          color: item.equipped == true ? Colors.white.withOpacity(0.5) : Colors.white.withOpacity(1),
+                                          colorBlendMode: BlendMode.modulate,
                                         )
                                       : CachedNetworkImage(
                                           imageUrl: item.itemImageUrl,
@@ -67,6 +69,8 @@ class InventoryItem extends StatelessWidget {
                                           placeholder: (context, url) => const Center(child: SizedBox.square(dimension: 40, child: CircularProgressIndicator())),
                                           errorWidget: (context, url, error) => Image.asset("assets/images/@temp_badge.png"),
                                           httpHeaders: imageNetworkHeader,
+                                          color: item.equipped == true ? Colors.white.withOpacity(0.5) : Colors.white.withOpacity(1),
+                                          colorBlendMode: BlendMode.modulate,
                                         ),
                                 ),
                               ),
