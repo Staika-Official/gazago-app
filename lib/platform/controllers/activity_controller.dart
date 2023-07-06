@@ -785,6 +785,7 @@ class ActivityController extends SuperController with ActivityMixin, ChallengeMi
 
   void closeAdSelectPopup() {
     adLoadTimerStop();
+    selectedChallenge.value.id = null;
     Get.back();
     Timer(const Duration(seconds: 1), () {
       startAd.value = null;
