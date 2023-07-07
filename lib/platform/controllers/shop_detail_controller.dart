@@ -114,7 +114,6 @@ class ShopDetailController extends GetxController {
     itemId.value = await Get.arguments['id'];
     initController();
 
-    print('asdasd');
     super.onInit();
   }
 

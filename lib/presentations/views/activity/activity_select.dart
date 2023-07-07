@@ -222,80 +222,82 @@ class ActivitySelect extends StatelessWidget {
                       ),
                       borderRadius: BorderRadius.circular(14.sp),
                     ),
-                    child: InkWell(
-                      // onTap: () => controller.selectExerciseType(ExerciseType.famous),
-                      onTap: controller.doableChallenge.value != null
-                          ? () {
-                              Get.back();
-                              controller.moveToChallengeSelection();
-                            }
-                          : () {
-                              showNotChallangeAbleAlert(controller);
-                            },
-                      borderRadius: BorderRadius.circular(14.sp),
-                      child: Padding(
-                        padding: EdgeInsets.only(top: 15.sp),
-                        child: Stack(
-                          children: [
-                            Padding(
-                              padding: EdgeInsets.only(left: 15.0.sp),
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Container(
-                                    decoration: BoxDecoration(
-                                      color: skyBlueColor,
-                                      borderRadius: BorderRadius.circular(14.sp),
-                                    ),
-                                    child: Padding(
-                                      padding: EdgeInsets.symmetric(vertical: 3.0.sp, horizontal: 10.sp),
-                                      child: const StyledText(
-                                        '챌린지',
-                                        color: Colors.black,
-                                        fontFamily: 'Montserrat',
-                                        fontSize: 10,
-                                        fontWeight: 600,
+                    child: Obx(() {
+                      return InkWell(
+                        // onTap: () => controller.selectExerciseType(ExerciseType.famous),
+                        onTap: controller.doableChallenge.value != null
+                            ? () {
+                                Get.back();
+                                controller.moveToChallengeSelection();
+                              }
+                            : () {
+                                showNotChallangeAbleAlert(controller);
+                              },
+                        borderRadius: BorderRadius.circular(14.sp),
+                        child: Padding(
+                          padding: EdgeInsets.only(top: 15.sp),
+                          child: Stack(
+                            children: [
+                              Padding(
+                                padding: EdgeInsets.only(left: 15.0.sp),
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Container(
+                                      decoration: BoxDecoration(
+                                        color: skyBlueColor,
+                                        borderRadius: BorderRadius.circular(14.sp),
+                                      ),
+                                      child: Padding(
+                                        padding: EdgeInsets.symmetric(vertical: 3.0.sp, horizontal: 10.sp),
+                                        child: const StyledText(
+                                          '챌린지',
+                                          color: Colors.black,
+                                          fontFamily: 'Montserrat',
+                                          fontSize: 10,
+                                          fontWeight: 600,
+                                        ),
                                       ),
                                     ),
-                                  ),
-                                  Padding(
-                                    padding: EdgeInsets.only(top: 8.sp),
-                                    child: StyledText(
-                                      '100대 명산 챌린지',
-                                      fontSize: 22,
-                                      fontWeight: 600,
-                                      lineHeight: 22,
-                                      color: skyBlueColor,
+                                    Padding(
+                                      padding: EdgeInsets.only(top: 8.sp),
+                                      child: StyledText(
+                                        '100대 명산 챌린지',
+                                        fontSize: 22,
+                                        fontWeight: 600,
+                                        lineHeight: 22,
+                                        color: skyBlueColor,
+                                      ),
                                     ),
-                                  ),
-                                  Padding(
-                                    padding: EdgeInsets.only(top: 5.sp),
-                                    child: StyledText(
-                                      '뱃지 획득 도전',
-                                      fontWeight: 600,
-                                      fontSize: 10,
-                                      color: Colors.white.withOpacity(.8),
+                                    Padding(
+                                      padding: EdgeInsets.only(top: 5.sp),
+                                      child: StyledText(
+                                        '뱃지 획득 도전',
+                                        fontWeight: 600,
+                                        fontSize: 10,
+                                        color: Colors.white.withOpacity(.8),
+                                      ),
                                     ),
-                                  ),
-                                ],
-                              ),
-                            ),
-                            Positioned(
-                              left: 2.sp,
-                              bottom: -10.sp,
-                              child: Padding(
-                                padding: EdgeInsets.only(left: 4.0, right: 4.0, bottom: 1.0),
-                                child: SvgPicture.asset(
-                                  'assets/images/activity/ico_challange_mountain.svg',
-                                  width: 88.sp,
-                                  height: 88.sp,
+                                  ],
                                 ),
                               ),
-                            ),
-                          ],
+                              Positioned(
+                                left: 2.sp,
+                                bottom: -10.sp,
+                                child: Padding(
+                                  padding: EdgeInsets.only(left: 4.0, right: 4.0, bottom: 1.0),
+                                  child: SvgPicture.asset(
+                                    'assets/images/activity/ico_challange_mountain.svg',
+                                    width: 88.sp,
+                                    height: 88.sp,
+                                  ),
+                                ),
+                              ),
+                            ],
+                          ),
                         ),
-                      ),
-                    ),
+                      );
+                    }),
                   ),
                 ],
               ),

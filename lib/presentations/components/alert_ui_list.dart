@@ -698,12 +698,12 @@ void showBadgeAcquisitionAlert(String badgeImgUrl, ChallengeModel selectedChalle
                   fit: BoxFit.contain,
                   badgeImgUrl,
                   width: 150.sp,
-                  placeholderBuilder: (BuildContext context) => Container(padding: const EdgeInsets.all(30.0), child: const CircularProgressIndicator()),
+                  placeholderBuilder: (BuildContext context) => Container(width: 150, height: 150, padding: const EdgeInsets.all(30.0), child: const CircularProgressIndicator()),
                   headers: imageNetworkHeader,
                 )
               : CachedNetworkImage(
                   imageUrl: badgeImgUrl,
-                  placeholder: (context, url) => Container(padding: const EdgeInsets.all(30.0), child: const CircularProgressIndicator()),
+                  placeholder: (context, url) => Container(width: 150, height: 150, padding: const EdgeInsets.all(30.0), child: const CircularProgressIndicator()),
                   fit: BoxFit.fitWidth,
                   width: 150.sp,
                   httpHeaders: imageNetworkHeader,
@@ -1464,7 +1464,7 @@ void itemPurchaseCompleteAlert(ShopDetailController controller) {
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
                 getItemGradeCircleIcon(controller.purchaseCompleteItem.value.itemGrade),
-                if (controller.selectedItem.value != null && controller.selectedItem.value.publishType == 'NFT')
+                if (controller.selectedItem.value.id > 0 && controller.selectedItem.value.publishType == 'NFT')
                   Padding(
                     padding: EdgeInsets.only(left: 5.0.sp),
                     child: SvgPicture.asset('assets/images/shop/ico_nft_label.svg'),
@@ -1553,7 +1553,7 @@ void itemPurchaseCompleteAlert(ShopDetailController controller) {
                             if (controller.purchaseCompleteItem.value.itemStat!.goProfit! > 0 &&
                                 controller.purchaseCompleteItem.value.itemStat!.luck! < 1 &&
                                 (controller.purchaseCompleteItem.value.itemStat!.durability! > 0 || controller.purchaseCompleteItem.value.itemStat!.stamina! > 0))
-                              Container(
+                              SizedBox(
                                 height: 35.sp,
                                 child: VerticalDivider(
                                   color: popupBgColor,
@@ -1642,7 +1642,7 @@ void itemPurchaseCompleteAlert(ShopDetailController controller) {
                                 ),
                               ),
                             if (controller.purchaseCompleteItem.value.itemStat!.luck! > 0)
-                              Container(
+                              SizedBox(
                                 height: 35.sp,
                                 child: VerticalDivider(
                                   color: popupBgColor,
