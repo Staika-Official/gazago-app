@@ -698,12 +698,12 @@ void showBadgeAcquisitionAlert(String badgeImgUrl, ChallengeModel selectedChalle
                   fit: BoxFit.contain,
                   badgeImgUrl,
                   width: 150.sp,
-                  placeholderBuilder: (BuildContext context) => Container(padding: const EdgeInsets.all(30.0), child: const CircularProgressIndicator()),
+                  placeholderBuilder: (BuildContext context) => Container(width: 150, height: 150, padding: const EdgeInsets.all(30.0), child: const CircularProgressIndicator()),
                   headers: imageNetworkHeader,
                 )
               : CachedNetworkImage(
                   imageUrl: badgeImgUrl,
-                  placeholder: (context, url) => Container(padding: const EdgeInsets.all(30.0), child: const CircularProgressIndicator()),
+                  placeholder: (context, url) => Container(width: 150, height: 150, padding: const EdgeInsets.all(30.0), child: const CircularProgressIndicator()),
                   fit: BoxFit.fitWidth,
                   width: 150.sp,
                   httpHeaders: imageNetworkHeader,
