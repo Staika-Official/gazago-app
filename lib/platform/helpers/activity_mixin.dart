@@ -379,51 +379,47 @@ mixin ActivityMixin {
       return;
     }
 
-    if (!batchIsInProgress()) {
-      // if (globalController.connectivityResult.value != ConnectivityResult.none) {
-      if (globalController.internetConnection.value) {
-        await ActivityService.fetchStartUserExercises(
-          UserExerciseModel(
-            userId: int.parse(
-              HiveStore.loadString(
-                key: HiveKey.userId.name,
-              )!,
-            ),
-            userNickname: HiveStore.loadString(key: HiveKey.nickname.name),
-            userProfileImageUrl: HiveStore.loadString(key: HiveKey.profileImageUrl.name),
-            type: exerciseType.value == ExerciseType.walking.value ? ExerciseType.walking.value : ExerciseType.hiking.value,
-            steps: 0,
-            speed: 0,
-            distance: 0,
-            altitude: currentLocation.value.altitude,
-            time: 0,
-            startPoint: challenge != null ? challenge.firstName : '${currentLocation.value.longitude}, ${currentLocation.value.latitude}',
-            lastLongitude: currentLocation.value.longitude,
-            lastLatitude: currentLocation.value.latitude,
-            challengeId: challenge?.id,
-            locationUpdateTime: DateTime.now(),
-            adId: adId != null ? '${adId}_${deviceId}_${DateTime.now().millisecondsSinceEpoch}' : null,
-            sequence: sequence,
+    // if (globalController.connectivityResult.value != ConnectivityResult.none) {
+    if (globalController.internetConnection.value) {
+      await ActivityService.fetchStartUserExercises(
+        UserExerciseModel(
+          userId: int.parse(
+            HiveStore.loadString(
+              key: HiveKey.userId.name,
+            )!,
           ),
-          Platform.operatingSystem,
-          successCallback: (UserExerciseModel userExerciseData) {
-            userState.update((state) => state!.exercise = userExerciseData);
-            exerciseState.value = ExerciseState.ongoing;
-            HiveStore.save(key: HiveKey.savedStepInitialized.name, value: false);
-            HiveStore.save(key: HiveKey.savedStepCount.name, value: 0);
-            initExerciseStats();
-            initStream();
-            startPeriodicUpdate();
-          },
-          errorCallback: (String? statusMessage) {
-            showToastPopup(statusMessage ?? '운동을 시작하지 못했습니다. 잠시 후 다시 시도해주세요.');
-          },
-        );
-      } else {
-        showToastPopup('인터넷 상태를 확인해주세요.');
-      }
+          userNickname: HiveStore.loadString(key: HiveKey.nickname.name),
+          userProfileImageUrl: HiveStore.loadString(key: HiveKey.profileImageUrl.name),
+          type: exerciseType.value == ExerciseType.walking.value ? ExerciseType.walking.value : ExerciseType.hiking.value,
+          steps: 0,
+          speed: 0,
+          distance: 0,
+          altitude: currentLocation.value.altitude,
+          time: 0,
+          startPoint: challenge != null ? challenge.firstName : '${currentLocation.value.longitude}, ${currentLocation.value.latitude}',
+          lastLongitude: currentLocation.value.longitude,
+          lastLatitude: currentLocation.value.latitude,
+          challengeId: challenge?.id,
+          locationUpdateTime: DateTime.now(),
+          adId: adId != null ? '${adId}_${deviceId}_${DateTime.now().millisecondsSinceEpoch}' : null,
+          sequence: sequence,
+        ),
+        Platform.operatingSystem,
+        successCallback: (UserExerciseModel userExerciseData) {
+          userState.update((state) => state!.exercise = userExerciseData);
+          exerciseState.value = ExerciseState.ongoing;
+          HiveStore.save(key: HiveKey.savedStepInitialized.name, value: false);
+          HiveStore.save(key: HiveKey.savedStepCount.name, value: 0);
+          initExerciseStats();
+          initStream();
+          startPeriodicUpdate();
+        },
+        errorCallback: (String? statusMessage) {
+          showToastPopup(statusMessage ?? '운동을 시작하지 못했습니다. 잠시 후 다시 시도해주세요.');
+        },
+      );
     } else {
-      showToastPopup('리워드 정산 중(11:55~12:05) 입니다.\n잠시 후 시작해주세요.');
+      showToastPopup('인터넷 상태를 확인해주세요.');
     }
   }
 
@@ -518,7 +514,7 @@ mixin ActivityMixin {
     }
 
     // if (globalController.connectivityResult.value != ConnectivityResult.none && !batchIsInProgress()) {
-    if (globalController.internetConnection.value && !batchIsInProgress()) {
+    if (globalController.internetConnection.value) {
       if (isPaused != null && isPaused) {
         initLuckAnimation();
 
@@ -603,45 +599,41 @@ mixin ActivityMixin {
   }
 
   void onTapDownStop(TapDownDetails tapDownDetails, ChallengeModel challenge, {String? source, required ActivityController controller}) async {
-    if (!batchIsInProgress()) {
-      Duration counter = Duration.zero;
+    Duration counter = Duration.zero;
 
-      if (stopTimer != null) {
+    if (stopTimer != null) {
+      initializeStopTimer();
+    }
+
+    stopTimer = Timer.periodic(const Duration(milliseconds: 10), (timer) async {
+      if (counter == const Duration(milliseconds: 500)) {
         initializeStopTimer();
-      }
 
-      stopTimer = Timer.periodic(const Duration(milliseconds: 10), (timer) async {
-        if (counter == const Duration(milliseconds: 500)) {
-          initializeStopTimer();
+        AdWatchAvailableModel adWatchAvailableModel = AdWatchAvailableModel(watchAvailable: false);
+        await AdmobService.getAdWatchAvailableTime(
+          'EXERCISE_END',
+          callback: (AdWatchAvailableModel model) {
+            adWatchAvailableModel = model;
+          },
+        );
 
-          AdWatchAvailableModel adWatchAvailableModel = AdWatchAvailableModel(watchAvailable: false);
-          await AdmobService.getAdWatchAvailableTime(
-            'EXERCISE_END',
-            callback: (AdWatchAvailableModel model) {
-              adWatchAvailableModel = model;
-            },
+        if (adWatchAvailableModel.watchAvailable!) {
+          await controller.exerciseEndRewardedAdInit(
+            'exerciseEndAd',
           );
-
-          if (adWatchAvailableModel.watchAvailable! && !batchIsInProgress()) {
-            await controller.exerciseEndRewardedAdInit(
-              'exerciseEndAd',
-            );
-            if (controller.userState.value.exercise!.rewardGo! > 0) {
-              showEndExerciseAdDialog(challenge, controller);
-            } else {
-              checkShowEndPopup(source, challenge, controller);
-            }
+          if (controller.userState.value.exercise!.rewardGo! > 0) {
+            showEndExerciseAdDialog(challenge, controller);
           } else {
             checkShowEndPopup(source, challenge, controller);
           }
         } else {
-          counter = counter + const Duration(milliseconds: 10);
-          stopProgress.value += (10 / 500);
+          checkShowEndPopup(source, challenge, controller);
         }
-      });
-    } else {
-      showToastPopup('리워드 정산 중(11:55~12:05) 입니다.\n잠시 후 시도해주세요.');
-    }
+      } else {
+        counter = counter + const Duration(milliseconds: 10);
+        stopProgress.value += (10 / 500);
+      }
+    });
   }
 
   void checkShowEndPopup(String? source, ChallengeModel challenge, ActivityController controller) {
@@ -659,10 +651,8 @@ mixin ActivityMixin {
 
   void onTapUpStop(TapUpDetails tapUpDetails, {String? source}) {
     // if (source != null && source != 'pendingExerciseDialog') showToastPopup('3초간 눌러야 정지됩니다.');
-    if (!batchIsInProgress()) {
-      showToastPopup('길게 눌러주세요!');
-      initializeStopTimer();
-    }
+    showToastPopup('길게 눌러주세요!');
+    initializeStopTimer();
   }
 
   void initializeStopTimer() {
@@ -672,21 +662,17 @@ mixin ActivityMixin {
   }
 
   void pauseExercise() {
-    if (!batchIsInProgress()) {
-      updateTimer?.cancel();
-      updateTimer = null;
-      exerciseTimer?.cancel();
-      exerciseTimer = null;
-      stepSubscription?.cancel();
-      stepSubscription = null;
-      pedestrianStatusSubscription?.cancel();
-      pedestrianStatusSubscription = null;
-      exerciseState.value = ExerciseState.paused;
-      HiveStore.save(key: HiveKey.savedStepInitialized.name, value: false);
-      updateExercise(isPaused: true, source: 'pauseExercise${updateTimer.hashCode}');
-    } else {
-      showToastPopup('리워드 정산 중(11:55~12:05) 입니다.\n잠시 후 시도해주세요.');
-    }
+    updateTimer?.cancel();
+    updateTimer = null;
+    exerciseTimer?.cancel();
+    exerciseTimer = null;
+    stepSubscription?.cancel();
+    stepSubscription = null;
+    pedestrianStatusSubscription?.cancel();
+    pedestrianStatusSubscription = null;
+    exerciseState.value = ExerciseState.paused;
+    HiveStore.save(key: HiveKey.savedStepInitialized.name, value: false);
+    updateExercise(isPaused: true, source: 'pauseExercise${updateTimer.hashCode}');
   }
 
   void showEndExerciseAdDialog(ChallengeModel challenge, ActivityController controller) {
