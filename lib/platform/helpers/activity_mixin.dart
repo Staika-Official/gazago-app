@@ -533,6 +533,9 @@ mixin ActivityMixin {
           errorCallback: errorHandler,
         );
       } else {
+        // exerciseSteps.value = exerciseSteps.value + 50;
+        // exerciseDistance.value = exerciseDistance.value + 50;
+
         if (!isSameStepCount) {
           HiveStore.save(key: HiveKey.lastUpdatedStepCount.name, value: userExerciseData.value.steps);
           initLuckAnimation();
@@ -719,6 +722,7 @@ mixin ActivityMixin {
         userExerciseData.value,
         source: source,
         successCallback: (CurrentUserStateModel newUserState) {
+          initLuckAnimation();
           userState.update(
             (state) {
               state?.state = newUserState.state;

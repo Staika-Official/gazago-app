@@ -703,7 +703,7 @@ void showBadgeAcquisitionAlert(String badgeImgUrl, ChallengeModel selectedChalle
                 )
               : CachedNetworkImage(
                   imageUrl: badgeImgUrl,
-                  placeholder: (context, url) => const CircularProgressIndicator(),
+                  placeholder: (context, url) => Container(padding: const EdgeInsets.all(30.0), child: const CircularProgressIndicator()),
                   fit: BoxFit.fitWidth,
                   width: 150.sp,
                   httpHeaders: imageNetworkHeader,

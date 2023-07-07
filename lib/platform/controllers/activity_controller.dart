@@ -628,8 +628,10 @@ class ActivityController extends SuperController with ActivityMixin, ChallengeMi
   }
 
   void moveToChallengeSelection() {
-    selectedChallenge.value = ChallengeModel.fromJson(doableChallenge.value!.toJson());
-    Get.toNamed(Routes.activityChallenges);
+    if (doableChallenge.value != null) {
+      selectedChallenge.value = ChallengeModel.fromJson(doableChallenge.value!.toJson());
+      Get.toNamed(Routes.activityChallenges);
+    }
   }
 
   void moveToChallengeMap() async {
