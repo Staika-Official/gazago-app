@@ -117,92 +117,91 @@ class ChallengeInfo extends StatelessWidget {
                     if (controller.challengeDetails.value.badge != null)
                       Padding(
                         padding: EdgeInsets.only(top: 16.0.sp),
-                        child: InkWell(
-                          onTap: () => null,
-                          child: Container(
-                            decoration: BoxDecoration(
+                        child: Container(
+                          decoration: BoxDecoration(
+                            color: const Color(0xFF2E3038),
+                            border: Border.all(
+                              width: 1,
                               color: const Color(0xFF2E3038),
-                              border: Border.all(
-                                width: 1,
-                                color: const Color(0xFF2E3038),
-                              ),
-                              borderRadius: BorderRadius.all(
-                                Radius.circular(12.sp),
-                              ),
                             ),
-                            child: Padding(
-                              padding: EdgeInsets.symmetric(vertical: 11.sp, horizontal: 10.sp),
-                              child: Row(
-                                mainAxisSize: MainAxisSize.max,
-                                mainAxisAlignment: MainAxisAlignment.start,
-                                crossAxisAlignment: CrossAxisAlignment.center,
-                                children: [
-                                  Container(
-                                    decoration: BoxDecoration(
-                                      color: subBg01Color,
-                                      borderRadius: BorderRadius.all(
-                                        Radius.circular(12.sp),
-                                      ),
+                            borderRadius: BorderRadius.all(
+                              Radius.circular(12.sp),
+                            ),
+                          ),
+                          child: Padding(
+                            padding: EdgeInsets.symmetric(vertical: 11.sp, horizontal: 10.sp),
+                            child: Row(
+                              mainAxisSize: MainAxisSize.max,
+                              mainAxisAlignment: MainAxisAlignment.start,
+                              crossAxisAlignment: CrossAxisAlignment.center,
+                              children: [
+                                Container(
+                                  decoration: BoxDecoration(
+                                    color: subBg01Color,
+                                    borderRadius: BorderRadius.all(
+                                      Radius.circular(12.sp),
                                     ),
-                                    width: 107.sp,
-                                    height: 87.sp,
-                                    child: controller.challengeDetails.value.badge!.imageUrl!.contains('.svg')
-                                        ? SvgPicture.network(
-                                            fit: BoxFit.contain,
-                                            controller.challengeDetails.value.badge!.imageUrl!,
-                                            placeholderBuilder: (BuildContext context) => const Center(child: SizedBox.square(dimension: 40, child: CircularProgressIndicator())),
-                                            headers: imageNetworkHeader,
-                                          )
-                                        : CachedNetworkImage(
-                                            imageUrl: controller.challengeDetails.value.badge!.imageUrl!,
-                                            fit: BoxFit.fitHeight,
-                                            placeholder: (context, url) => const Center(child: SizedBox.square(dimension: 40, child: CircularProgressIndicator())),
-                                            errorWidget: (context, url, error) => const Center(child: SizedBox.square(dimension: 40, child: CircularProgressIndicator())),
-                                            httpHeaders: imageNetworkHeader,
-                                          ),
                                   ),
-                                  Padding(
-                                    padding: EdgeInsets.only(left: 17.0.sp),
-                                    child: Column(
-                                      crossAxisAlignment: CrossAxisAlignment.start,
-                                      children: [
-                                        StyledText(
-                                          controller.challengeDetails.value.badge!.name!,
-                                          fontFamily: 'Montserrat',
-                                          fontWeight: 500,
-                                          fontSize: 16,
-                                          lineHeight: 22,
-                                          letterSpacing: -.1,
+                                  width: 107.sp,
+                                  height: 87.sp,
+                                  child: controller.challengeDetails.value.badge!.imageUrl != null
+                                      ? controller.challengeDetails.value.badge!.imageUrl!.contains('.svg')
+                                          ? SvgPicture.network(
+                                              fit: BoxFit.contain,
+                                              controller.challengeDetails.value.badge!.imageUrl!,
+                                              placeholderBuilder: (BuildContext context) => const Center(child: SizedBox.square(dimension: 40, child: CircularProgressIndicator())),
+                                              headers: imageNetworkHeader,
+                                            )
+                                          : CachedNetworkImage(
+                                              imageUrl: controller.challengeDetails.value.badge!.imageUrl!,
+                                              fit: BoxFit.fitHeight,
+                                              placeholder: (context, url) => const Center(child: SizedBox.square(dimension: 40, child: CircularProgressIndicator())),
+                                              errorWidget: (context, url, error) => const Center(child: SizedBox.square(dimension: 40, child: CircularProgressIndicator())),
+                                              httpHeaders: imageNetworkHeader,
+                                            )
+                                      : const SizedBox(),
+                                ),
+                                Padding(
+                                  padding: EdgeInsets.only(left: 17.0.sp),
+                                  child: Column(
+                                    crossAxisAlignment: CrossAxisAlignment.start,
+                                    children: [
+                                      StyledText(
+                                        controller.challengeDetails.value.badge!.name!,
+                                        fontFamily: 'Montserrat',
+                                        fontWeight: 500,
+                                        fontSize: 16,
+                                        lineHeight: 22,
+                                        letterSpacing: -.1,
+                                      ),
+                                      Padding(
+                                        padding: EdgeInsets.only(top: 9.0.sp),
+                                        child: Row(
+                                          children: [
+                                            controller.challengeDetails.value.badge!.limitedCount! > 0
+                                                ? StyledText(
+                                                    '${formatDecimalPlaces(controller.challengeDetails.value.badge!.limitedCount!.toDouble(), 0)} 명',
+                                                    fontFamily: 'Montserrat',
+                                                    fontWeight: 600,
+                                                    fontSize: 22,
+                                                    lineHeight: 22,
+                                                    letterSpacing: -.1,
+                                                  )
+                                                : StyledText(
+                                                    '참여자 전원 뱃지 지급',
+                                                    fontFamily: 'Montserrat',
+                                                    fontWeight: 600,
+                                                    fontSize: 16,
+                                                    lineHeight: 17,
+                                                    letterSpacing: -.1,
+                                                  ),
+                                          ],
                                         ),
-                                        Padding(
-                                          padding: EdgeInsets.only(top: 9.0.sp),
-                                          child: Row(
-                                            children: [
-                                              controller.challengeDetails.value.badge!.limitedCount! > 0
-                                                  ? StyledText(
-                                                      '${formatDecimalPlaces(controller.challengeDetails.value.badge!.limitedCount!.toDouble(), 0)} 명',
-                                                      fontFamily: 'Montserrat',
-                                                      fontWeight: 600,
-                                                      fontSize: 22,
-                                                      lineHeight: 22,
-                                                      letterSpacing: -.1,
-                                                    )
-                                                  : StyledText(
-                                                      '참여자 전원 뱃지 지급',
-                                                      fontFamily: 'Montserrat',
-                                                      fontWeight: 600,
-                                                      fontSize: 16,
-                                                      lineHeight: 17,
-                                                      letterSpacing: -.1,
-                                                    ),
-                                            ],
-                                          ),
-                                        ),
-                                      ],
-                                    ),
-                                  )
-                                ],
-                              ),
+                                      ),
+                                    ],
+                                  ),
+                                )
+                              ],
                             ),
                           ),
                         ),
@@ -236,124 +235,121 @@ class ChallengeInfo extends StatelessWidget {
                     ),
                     Padding(
                       padding: EdgeInsets.only(top: 16.0.sp),
-                      child: InkWell(
-                        onTap: () => null,
-                        child: Container(
-                          decoration: BoxDecoration(
+                      child: Container(
+                        decoration: BoxDecoration(
+                          color: const Color(0xFF2E3038),
+                          border: Border.all(
+                            width: 1,
                             color: const Color(0xFF2E3038),
-                            border: Border.all(
-                              width: 1,
-                              color: const Color(0xFF2E3038),
-                            ),
-                            borderRadius: BorderRadius.all(
-                              Radius.circular(12.sp),
-                            ),
                           ),
-                          child: Stack(
-                            children: [
-                              Padding(
-                                padding: EdgeInsets.symmetric(vertical: 11.sp, horizontal: 10.sp),
-                                child: Row(
-                                  mainAxisSize: MainAxisSize.max,
-                                  mainAxisAlignment: MainAxisAlignment.start,
-                                  crossAxisAlignment: CrossAxisAlignment.center,
-                                  children: [
-                                    if (controller.challengeDetails.value.item != null)
-                                      Container(
-                                        decoration: BoxDecoration(
-                                          color: subBg01Color,
-                                          borderRadius: BorderRadius.all(
-                                            Radius.circular(12.sp),
-                                          ),
+                          borderRadius: BorderRadius.all(
+                            Radius.circular(12.sp),
+                          ),
+                        ),
+                        child: Stack(
+                          children: [
+                            Padding(
+                              padding: EdgeInsets.symmetric(vertical: 11.sp, horizontal: 10.sp),
+                              child: Row(
+                                mainAxisSize: MainAxisSize.max,
+                                mainAxisAlignment: MainAxisAlignment.start,
+                                crossAxisAlignment: CrossAxisAlignment.center,
+                                children: [
+                                  if (controller.challengeDetails.value.item != null)
+                                    Container(
+                                      decoration: BoxDecoration(
+                                        color: subBg01Color,
+                                        borderRadius: BorderRadius.all(
+                                          Radius.circular(12.sp),
                                         ),
-                                        width: 107.sp,
-                                        height: 87.sp,
-                                        child: controller.challengeDetails.value.item!.itemImageUrl!.contains('.svg')
-                                            ? SvgPicture.network(
-                                                fit: BoxFit.contain,
-                                                controller.challengeDetails.value.item!.itemImageUrl!,
-                                                placeholderBuilder: (BuildContext context) => Container(padding: const EdgeInsets.all(30.0), child: const CircularProgressIndicator()),
-                                                headers: imageNetworkHeader,
-                                              )
-                                            : CachedNetworkImage(
-                                                imageUrl: controller.challengeDetails.value.item!.itemImageUrl!,
-                                                fit: BoxFit.fitHeight,
-                                                placeholder: (context, url) => const Center(child: SizedBox.square(dimension: 40, child: CircularProgressIndicator())),
-                                                errorWidget: (context, url, error) => const Center(child: SizedBox.square(dimension: 40, child: CircularProgressIndicator())),
-                                                httpHeaders: imageNetworkHeader,
-                                              ),
                                       ),
-                                    if (controller.challengeDetails.value.item != null)
-                                      Padding(
-                                        padding: EdgeInsets.only(left: 17.0.sp),
-                                        child: Column(
-                                          crossAxisAlignment: CrossAxisAlignment.start,
-                                          children: [
-                                            if (controller.challengeDetails.value.item!.itemLabel != null)
-                                              StyledText(
-                                                controller.challengeDetails.value.item!.itemLabel == 'CLOSE_DEADLINE' ? '마감임박' : '품절',
-                                                color: skyBlueColor,
-                                                fontWeight: 600,
-                                                fontSize: 10,
-                                                lineHeight: 10,
-                                              ),
+                                      width: 107.sp,
+                                      height: 87.sp,
+                                      child: controller.challengeDetails.value.item!.itemImageUrl!.contains('.svg')
+                                          ? SvgPicture.network(
+                                              fit: BoxFit.contain,
+                                              controller.challengeDetails.value.item!.itemImageUrl!,
+                                              placeholderBuilder: (BuildContext context) => Container(padding: const EdgeInsets.all(30.0), child: const CircularProgressIndicator()),
+                                              headers: imageNetworkHeader,
+                                            )
+                                          : CachedNetworkImage(
+                                              imageUrl: controller.challengeDetails.value.item!.itemImageUrl!,
+                                              fit: BoxFit.fitHeight,
+                                              placeholder: (context, url) => const Center(child: SizedBox.square(dimension: 40, child: CircularProgressIndicator())),
+                                              errorWidget: (context, url, error) => const Center(child: SizedBox.square(dimension: 40, child: CircularProgressIndicator())),
+                                              httpHeaders: imageNetworkHeader,
+                                            ),
+                                    ),
+                                  if (controller.challengeDetails.value.item != null)
+                                    Padding(
+                                      padding: EdgeInsets.only(left: 17.0.sp),
+                                      child: Column(
+                                        crossAxisAlignment: CrossAxisAlignment.start,
+                                        children: [
+                                          if (controller.challengeDetails.value.item!.itemLabel != null)
                                             StyledText(
-                                              controller.challengeDetails.value.item!.name,
-                                              fontFamily: 'Montserrat',
-                                              fontWeight: 500,
-                                              fontSize: 16,
-                                              lineHeight: 22,
+                                              controller.challengeDetails.value.item!.itemLabel == 'CLOSE_DEADLINE' ? '마감임박' : '품절',
+                                              color: skyBlueColor,
+                                              fontWeight: 600,
+                                              fontSize: 10,
+                                              lineHeight: 10,
                                             ),
-                                            Padding(
-                                              padding: EdgeInsets.only(top: 9.0.sp),
-                                              child: Row(
-                                                children: [
-                                                  StyledText(
-                                                    formatDecimalPlaces(controller.challengeDetails.value.item!.price, 0),
-                                                    fontFamily: 'Montserrat',
-                                                    fontWeight: 600,
-                                                    fontSize: 22,
-                                                    lineHeight: 22,
-                                                  ),
-                                                  StyledText(
-                                                    ' ${controller.challengeDetails.value.item!.tradeSymbol}',
-                                                    fontFamily: 'Montserrat',
-                                                    fontWeight: 400,
-                                                    fontSize: 22,
-                                                    lineHeight: 22,
-                                                  ),
-                                                ],
-                                              ),
+                                          StyledText(
+                                            controller.challengeDetails.value.item!.name,
+                                            fontFamily: 'Montserrat',
+                                            fontWeight: 500,
+                                            fontSize: 16,
+                                            lineHeight: 22,
+                                          ),
+                                          Padding(
+                                            padding: EdgeInsets.only(top: 9.0.sp),
+                                            child: Row(
+                                              children: [
+                                                StyledText(
+                                                  formatDecimalPlaces(controller.challengeDetails.value.item!.price, 0),
+                                                  fontFamily: 'Montserrat',
+                                                  fontWeight: 600,
+                                                  fontSize: 22,
+                                                  lineHeight: 22,
+                                                ),
+                                                StyledText(
+                                                  ' ${controller.challengeDetails.value.item!.tradeSymbol}',
+                                                  fontFamily: 'Montserrat',
+                                                  fontWeight: 400,
+                                                  fontSize: 22,
+                                                  lineHeight: 22,
+                                                ),
+                                              ],
                                             ),
-                                          ],
-                                        ),
-                                      )
-                                  ],
-                                ),
+                                          ),
+                                        ],
+                                      ),
+                                    )
+                                ],
                               ),
-                              // Positioned(
-                              //   right: 23.sp,
-                              //   top: 18.sp,
-                              //   child: iconArrowRightTriangle,
-                              // ),
-                              // if ((controller.challengeDetails.value.challengeState == 'READY' && controller.challengeDetails.value.challengeUserState == 'REGISTER_READY') ||
-                              //     controller.challengeDetails.value.challengeState == 'CLOSED')
-                              //   Positioned(
-                              //     left: 0,
-                              //     top: 0,
-                              //     right: 0,
-                              //     bottom: 0,
-                              //     child: Container(
-                              //       decoration: BoxDecoration(
-                              //         color: Colors.black.withOpacity(.5),
-                              //         borderRadius: BorderRadius.all(
-                              //           Radius.circular(12.sp),
-                              //         ),
-                              //       ),
-                              //     ),
-                              //   ),
-                            ],
-                          ),
+                            ),
+                            // Positioned(
+                            //   right: 23.sp,
+                            //   top: 18.sp,
+                            //   child: iconArrowRightTriangle,
+                            // ),
+                            // if ((controller.challengeDetails.value.challengeState == 'READY' && controller.challengeDetails.value.challengeUserState == 'REGISTER_READY') ||
+                            //     controller.challengeDetails.value.challengeState == 'CLOSED')
+                            //   Positioned(
+                            //     left: 0,
+                            //     top: 0,
+                            //     right: 0,
+                            //     bottom: 0,
+                            //     child: Container(
+                            //       decoration: BoxDecoration(
+                            //         color: Colors.black.withOpacity(.5),
+                            //         borderRadius: BorderRadius.all(
+                            //           Radius.circular(12.sp),
+                            //         ),
+                            //       ),
+                            //     ),
+                            //   ),
+                          ],
                         ),
                       ),
                     ),

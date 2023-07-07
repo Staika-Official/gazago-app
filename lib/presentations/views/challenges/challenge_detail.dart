@@ -5,6 +5,7 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:gaza_go/constants/config.dart';
 import 'package:gaza_go/platform/controllers/challenges_detail_controller.dart';
 import 'package:gaza_go/platform/helpers/base_helper.dart';
+import 'package:gaza_go/presentations/components/mini_bottom_sheet.dart';
 import 'package:gaza_go/presentations/components/secondary_appbar.dart';
 import 'package:gaza_go/presentations/styles/colors.dart';
 import 'package:gaza_go/presentations/styles/icons.dart';
@@ -14,8 +15,6 @@ import 'package:gaza_go/presentations/views/challenges/leaderboard.dart';
 import 'package:get/get.dart';
 import 'package:intrinsic_dimension/intrinsic_dimension.dart';
 import 'package:skeletons/skeletons.dart';
-
-import '../../components/mini_bottom_sheet.dart';
 
 class ChallengeDetail extends StatelessWidget {
   const ChallengeDetail({Key? key}) : super(key: key);
@@ -62,14 +61,12 @@ class ChallengeDetail extends StatelessWidget {
                             children: [
                               Padding(
                                 padding: EdgeInsets.only(top: 15.0.sp, bottom: 10.0.sp),
-                                child: Container(
-                                  child: StyledText(
-                                    controller.challengeDetails.value.title!,
-                                    fontSize: 20,
-                                    lineHeight: 25,
-                                    fontWeight: 500,
-                                    letterSpacing: -.1,
-                                  ),
+                                child: StyledText(
+                                  controller.challengeDetails.value.title!,
+                                  fontSize: 20,
+                                  lineHeight: 25,
+                                  fontWeight: 500,
+                                  letterSpacing: -.1,
                                 ),
                               ),
                               Row(

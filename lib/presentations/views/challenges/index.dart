@@ -1,7 +1,7 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:flutter_svg/flutter_svg.dart';
+import 'package:flutter_svg/svg.dart';
 import 'package:flutter_svg_provider/flutter_svg_provider.dart' as sp;
 import 'package:gaza_go/constants/config.dart';
 import 'package:gaza_go/platform/controllers/challenges_controller.dart';
@@ -48,37 +48,33 @@ class ChallengesHome extends StatelessWidget {
                 clipBehavior: Clip.antiAlias,
                 color: popupBgColor,
                 shape: RoundedRectangleBorder(
-                  borderRadius: const BorderRadius.only(
-                    topLeft: Radius.circular(14),
-                    topRight: Radius.circular(14),
-                    bottomLeft: Radius.circular(14),
-                    bottomRight: Radius.circular(14),
-                  ),
+                  borderRadius: BorderRadius.circular(14),
                 ),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Container(
+                    SizedBox(
                       width: double.infinity,
                       height: 148.sp,
                       child: Stack(
                         fit: StackFit.expand,
                         clipBehavior: Clip.none,
                         children: [
-                          item.thumbnailImageUrl != null && item.thumbnailImageUrl!.contains('.svg')
-                              ? SvgPicture.network(
-                                  fit: BoxFit.cover,
-                                  item.thumbnailImageUrl!,
-                                  placeholderBuilder: (BuildContext context) => const Center(child: SizedBox.square(dimension: 40, child: CircularProgressIndicator())),
-                                  headers: imageNetworkHeader,
-                                )
-                              : CachedNetworkImage(
-                                  imageUrl: item.thumbnailImageUrl!,
-                                  fit: BoxFit.cover,
-                                  placeholder: (context, url) => const Center(child: SizedBox.square(dimension: 40, child: CircularProgressIndicator())),
-                                  errorWidget: (context, url, error) => const Center(child: SizedBox.square(dimension: 40, child: CircularProgressIndicator())),
-                                  httpHeaders: imageNetworkHeader,
-                                ),
+                          if (item.thumbnailImageUrl != null)
+                            item.thumbnailImageUrl!.contains('.svg')
+                                ? SvgPicture.network(
+                                    fit: BoxFit.cover,
+                                    item.thumbnailImageUrl!,
+                                    placeholderBuilder: (BuildContext context) => const Center(child: SizedBox.square(dimension: 40, child: CircularProgressIndicator())),
+                                    headers: imageNetworkHeader,
+                                  )
+                                : CachedNetworkImage(
+                                    imageUrl: item.thumbnailImageUrl!,
+                                    fit: BoxFit.cover,
+                                    placeholder: (context, url) => const Center(child: SizedBox.square(dimension: 40, child: CircularProgressIndicator())),
+                                    errorWidget: (context, url, error) => const Center(child: SizedBox.square(dimension: 40, child: CircularProgressIndicator())),
+                                    httpHeaders: imageNetworkHeader,
+                                  ),
                           // Image.asset("assets/images/challenges/@temp_img.png", fit: BoxFit.cover),
                           if (item.challengeActivationType != null)
                             Positioned(
@@ -103,7 +99,6 @@ class ChallengesHome extends StatelessWidget {
                                 ),
                               ),
                             ),
-
                           if (item.challengeUserState != 'COMPLETE' && item.challengeUserState != 'INCOMPLETE')
                             Positioned(
                               bottom: 12.sp,
