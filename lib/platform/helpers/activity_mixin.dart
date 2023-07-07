@@ -4,7 +4,6 @@ import 'dart:io';
 import 'package:assets_audio_player/assets_audio_player.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:flutter_naver_map/flutter_naver_map.dart';
 import 'package:gaza_go/constants/config.dart';
 import 'package:gaza_go/constants/enums.dart';
@@ -514,6 +513,7 @@ mixin ActivityMixin {
     // if (globalController.connectivityResult.value != ConnectivityResult.none && !batchIsInProgress()) {
     if (globalController.internetConnection.value && !batchIsInProgress()) {
       if (isPaused != null && isPaused) {
+        initLuckAnimation();
         await ActivityService.fetchPausedUserExercises(
           userExerciseData.value,
           Platform.operatingSystem,
@@ -525,14 +525,18 @@ mixin ActivityMixin {
       } else {
         if (!isSameStepCount) {
           HiveStore.save(key: HiveKey.lastUpdatedStepCount.name, value: userExerciseData.value.steps);
-
+          initLuckAnimation();
           await ActivityService.fetchUpdateUserExercises(
             userExerciseData.value,
             Platform.operatingSystem,
             source: source,
-            successCallback: (CurrentUserStateModel newUserState) {
+            successCallback: (CurrentUserStateModel newUserState) async {
+              // newUserState.exercise!.luckApplyRewardGo = 0.33;
+              // newUserState.exercise!.luckOccurred = true;
               updateLocalUserState(newUserState);
-              if (newUserState.exercise!.luckApplyRewardGo! > 0 && newUserState.exercise!.luckOccurred!) {
+
+              await Future.delayed(const Duration(seconds: 1));
+              if (userState.value.exercise!.luckApplyRewardGo! > 0 && userState.value.exercise!.luckOccurred!) {
                 showLuckAnimation();
               }
 
@@ -830,15 +834,21 @@ mixin ActivityMixin {
   }
 
   void showLuckAnimation() async {
-    FlutterLocalNotificationsPlugin notificationsPlugin = FlutterLocalNotificationsPlugin();
+    bool isAbleSound = HiveStore.load(key: HiveKey.luckSound.name) ?? false;
+    await Future.delayed(const Duration(milliseconds: 300));
     luckLoadControl.value = Control.playReverseFromEnd;
-    HapticFeedback.vibrate();
-
-    assetsAudioPlayer.open(
-      Audio("assets/audio/bonus_go.mp3"),
-    );
-    assetsAudioPlayer.play();
     isShowLuckAnimation.value = true;
+    if (isAbleSound) {
+      HapticFeedback.vibrate();
+
+      if (!assetsAudioPlayer.isPlaying.value) {
+        assetsAudioPlayer.open(Audio("assets/audio/bonus_go.mp3")).then((value) {
+          assetsAudioPlayer.play();
+        }).onError((error, stackTrace) {
+          print(error);
+        });
+      }
+    }
   }
 
   void initLuckAnimation() async {

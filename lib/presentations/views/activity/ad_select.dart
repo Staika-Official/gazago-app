@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:gaza_go/constants/enums.dart';
 import 'package:gaza_go/platform/controllers/activity_controller.dart';
 import 'package:gaza_go/presentations/styles/colors.dart';
 import 'package:gaza_go/presentations/styles/icons.dart';
@@ -136,12 +135,13 @@ class AdSelect extends StatelessWidget {
                                           fontFamily: 'Montserrat',
                                         )
                                       : StyledText(
-                                          '${[ExerciseType.walking, ExerciseType.hiking].any((type) => controller.selectedExerciseType.value == type) ? '1' : '3'}GO 획득하고 시작하기',
+                                          '광고 보고, ${controller.selectedChallenge.value.id == null ? '1' : '3'}GO 받고 시작하기',
                                           color: controller.startAd.value == null ? Color(0xFF767883) : Colors.black,
                                           fontSize: 20,
                                           fontWeight: 600,
                                           lineHeight: 20,
                                           fontFamily: 'Montserrat',
+                                          letterSpacing: -.1,
                                         ),
                                 ),
                               ),

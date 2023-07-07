@@ -119,6 +119,33 @@ class Preferences extends StatelessWidget {
                       title: '본인인증',
                       onTap: () => Get.toNamed(Routes.verificationTerms),
                     ),
+              Padding(
+                padding: EdgeInsets.only(left: 25.sp, right: 20.sp),
+                child: Container(
+                  height: 70,
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      const StyledText(
+                        '행운 효과음',
+                        fontSize: 18,
+                        lineHeight: 18,
+                        fontWeight: 500,
+                        color: Colors.white,
+                      ),
+                      Switch.adaptive(
+                        activeColor: skyBlueColor,
+                        activeTrackColor: skyBlueColor,
+                        inactiveTrackColor: const Color.fromRGBO(120, 120, 128, 0.16),
+                        thumbColor: MaterialStateProperty.all(Colors.white),
+                        overlayColor: MaterialStateProperty.all(Colors.transparent),
+                        value: controller.isAbleLuckSound.value,
+                        onChanged: (val) => controller.toggleLuckSoundAlarm(val),
+                      )
+                    ],
+                  ),
+                ),
+              ),
               PreferenceItem(
                 title: '알림',
                 onTap: () {

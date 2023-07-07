@@ -2223,7 +2223,7 @@ Future<void> showForceLogoutAlert() {
   return forceLogoutAlertCompleter.future;
 }
 
-void showAdTipAlert(ExerciseType exerciseType) {
+void showAdTipAlert(int? challengeId) {
   Get.dialog(
     barrierColor: Colors.transparent,
     WillPopScope(
@@ -2302,11 +2302,7 @@ void showAdTipAlert(ExerciseType exerciseType) {
                                                 fontFamily: 'Montserrat',
                                               ),
                                               TextSpan(
-                                                text: [ExerciseType.walking, ExerciseType.hiking].any((type) => exerciseType == type) ? '1' : '3',
-                                                children: const [
-                                                  TextSpan(text: 'GO', style: TextStyle(fontWeight: FontWeight.w800)),
-                                                  TextSpan(text: ' 획득하고 시작하기'),
-                                                ],
+                                                text: '광고 보고, ${challengeId == null ? '1' : '3'}GO 받고 시작하기',
                                               ),
                                             ),
                                           ),
@@ -3551,7 +3547,7 @@ void sendStikToGoWalletAlert(StaikaWalletController controller) {
         child: GazagoButton(
           onTap: () async {
             Get.back();
-            print(controller.shortStikUiAmount.value);
+
             if (double.parse(controller.shortStikUiAmount.value) >= 0) {
               String? password = await showConfirmPasswordDialog(walletMasterController);
               controller.confirmSendStikToGoWallet(password);
