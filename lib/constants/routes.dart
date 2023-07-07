@@ -4,7 +4,6 @@ import 'package:gaza_go/platform/controllers/loading_controller.dart';
 import 'package:gaza_go/platform/middleware/router_middleware.dart';
 import 'package:gaza_go/presentations/views/activity/activity_active.dart';
 import 'package:gaza_go/presentations/views/activity/activity_challenges.dart';
-import 'package:gaza_go/presentations/views/activity/activity_loading.dart';
 import 'package:gaza_go/presentations/views/activity/challenge_map.dart';
 import 'package:gaza_go/presentations/views/activity/equipped_item.dart';
 import 'package:gaza_go/presentations/views/archive/archive_detail.dart';
@@ -56,8 +55,6 @@ import 'package:gaza_go/presentations/views/wallet/wallet_actions.dart';
 import 'package:gaza_go/presentations/views/wallet/wallet_detail.dart';
 import 'package:gaza_go/presentations/views/webview.dart';
 import 'package:get/get.dart';
-import 'package:get/get_instance/get_instance.dart';
-import 'package:get/get_navigation/get_navigation.dart';
 
 import '../presentations/views/debugging/activity_logs.dart';
 import '../presentations/views/laboratory/index.dart';
@@ -128,9 +125,12 @@ class Routes {
     stepPage(name: Routes.login, page: const Login()),
     stepPage(name: Routes.onBoarding, page: const OnBoarding()),
     stepPage(name: Routes.joinTerms, page: const JoinTerms()),
-    stepPage(name: Routes.loading, page: const Loading(), binding: BindingsBuilder(() {
-      Get.lazyPut<LoadingController>(() => LoadingController());
-    })),
+    stepPage(
+        name: Routes.loading,
+        page: const Loading(),
+        binding: BindingsBuilder(() {
+          Get.lazyPut<LoadingController>(() => LoadingController());
+        })),
     stepPage(
       name: Routes.home,
       page: const Home(),
@@ -140,7 +140,6 @@ class Routes {
     stepPage(name: Routes.termsList, page: const TermsList()),
     stepPage(name: Routes.archiveDetail, page: const ArchiveDetail()),
     stepPage(name: Routes.activityChallenges, page: const ActivityChallenges()),
-    stepPage(name: Routes.activityLoading, page: const ActivityLoading()),
     stepPage(name: Routes.activityActive, page: const ActivityActive()),
     stepPage(name: Routes.challengeMap, page: const ChallengeMap()),
     stepPage(name: Routes.preferences, page: const Preferences()),
@@ -191,9 +190,15 @@ class Routes {
 }
 
 GetPage stepPage({required String name, required Widget page, Transition? transition, Duration? transitionDuration, List<GetMiddleware>? middlewares, BindingsBuilder? binding}) {
-  return GetPage(name: name, page: () => _flavorBanner(child: page, show: F.name != 'prod'), transition: transition, transitionDuration: transitionDuration, middlewares: [
-    AuthMiddleware(),
-  ], binding: binding);
+  return GetPage(
+      name: name,
+      page: () => _flavorBanner(child: page, show: F.name != 'prod'),
+      transition: transition,
+      transitionDuration: transitionDuration,
+      middlewares: [
+        AuthMiddleware(),
+      ],
+      binding: binding);
 }
 
 Widget _flavorBanner({

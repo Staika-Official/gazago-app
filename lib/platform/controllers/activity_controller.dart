@@ -554,7 +554,11 @@ class ActivityController extends SuperController with ActivityMixin, ChallengeMi
     Get.dialog(
       barrierDismissible: false,
       barrierColor: const Color.fromRGBO(0, 0, 0, 0.8),
-      const ActivityLoading(),
+      ActivityLoading(
+        exerciseType: exerciseType,
+        adId: adId,
+        challenge: challenge,
+      ),
     );
 
     loadingTimer = Timer.periodic(
@@ -572,9 +576,11 @@ class ActivityController extends SuperController with ActivityMixin, ChallengeMi
     );
   }
 
-  void passThrowActivityLoading() {
-    loadingTime.value = 4;
+  void passThrowActivityLoading(ExerciseType exerciseType, String? adId, [ChallengeModel? challenge]) {
+    loadingTimer?.cancel();
+    loadingTimer = null;
     Get.back();
+    exerciseStartThr.throttle(() => startExercise(exerciseType, challenge, adId: adId));
   }
 
   Future<void> selectExerciseType(ExerciseType exerciseType) async {
