@@ -275,6 +275,7 @@ class ActivityChallenges extends StatelessWidget {
               left: 20.sp,
               child: InkWell(
                   onTap: () {
+                    controller.selectedChallenge.value.id = null;
                     Navigator.pop(context);
                   },
                   child: iconChallengeScreenBack),
