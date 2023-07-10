@@ -37,6 +37,7 @@ class InventoryTile extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     InventoryController controller = Get.find();
+
     final child = Container(
       color: Colors.transparent,
       height: extent,
@@ -83,10 +84,7 @@ class InventoryTile extends StatelessWidget {
                               ? SvgPicture.network(
                                   fit: BoxFit.contain,
                                   imageUrl,
-                                  placeholderBuilder: (BuildContext context) => Container(
-                                    padding: const EdgeInsets.all(30.0),
-                                    child: const CircularProgressIndicator(),
-                                  ),
+                                  placeholderBuilder: (BuildContext context) => const Center(child: SizedBox.square(dimension: 40, child: CircularProgressIndicator())),
                                 )
                               : CachedNetworkImage(
                                   imageUrl: imageUrl,

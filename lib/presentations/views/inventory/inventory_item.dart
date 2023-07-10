@@ -58,7 +58,7 @@ class InventoryItem extends StatelessWidget {
                                       ? SvgPicture.network(
                                           fit: BoxFit.fitHeight,
                                           item.itemImageUrl,
-                                          placeholderBuilder: (BuildContext context) => Container(padding: const EdgeInsets.all(30.0), child: const CircularProgressIndicator()),
+                                          placeholderBuilder: (BuildContext context) => const Center(child: SizedBox.square(dimension: 40, child: CircularProgressIndicator())),
                                           headers: imageNetworkHeader,
                                           color: item.equipped == true ? Colors.white.withOpacity(0.5) : Colors.white.withOpacity(1),
                                           colorBlendMode: BlendMode.modulate,

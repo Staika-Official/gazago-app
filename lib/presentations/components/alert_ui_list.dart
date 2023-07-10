@@ -333,6 +333,7 @@ void showRepairStatSlider(ActivityController controller, StatModel stat, int fee
 
 void showNotEnoughTaikaAlert() {
   showAlert(
+    allowMultipleBottomSheet: true,
     title: '잔고 부족',
     contentText: 'Taika 가 부족하여 진행할 수 없습니다.\n GO지갑에 Taika를 충전해 주세요.',
     actions: [
@@ -1279,6 +1280,7 @@ void itemPurchaseAlert(ShopDetailController controller, double remainMyTik, trad
 
 void itemPurchaseShortBalanceAlert(ShopDetailController controller, double remainMyTik, tradeSymbol) {
   showAlert(
+    allowMultipleBottomSheet: true,
     title: '잔액이 부족합니다',
     isDangerTitle: true,
     isScrollControlled: true,
@@ -3565,6 +3567,7 @@ void sendStikToGoWalletAlert(StaikaWalletController controller) {
 
 void failureShortBalanceStikToTikAlert(GoWalletController controller) {
   showAlert(
+    allowMultipleBottomSheet: true,
     title: '잔액이 부족해 진행할 수 없습니다.',
     contentWidget: Padding(
       padding: EdgeInsets.only(top: 20.0.sp, bottom: 40.sp),
@@ -3595,6 +3598,7 @@ void failureShortBalanceStikToTikAlert(GoWalletController controller) {
 
 void exchangeStikShortBalanceAlert(StaikaWalletController controller) {
   showAlert(
+    allowMultipleBottomSheet: true,
     title: '잔액이 부족해 진행할 수 없습니다.',
     isScrollControlled: true,
     contentWidget: Obx(() {
