@@ -518,8 +518,6 @@ mixin ActivityMixin {
       if (isPaused != null && isPaused) {
         initLuckAnimation();
 
-        print(userExerciseData.value.sequence);
-
         await ActivityService.fetchPausedUserExercises(
           userExerciseData.value,
           Platform.operatingSystem,
@@ -529,14 +527,13 @@ mixin ActivityMixin {
           errorCallback: errorHandler,
         );
       } else {
-        // exerciseSteps.value = exerciseSteps.value + 50;
-        // exerciseDistance.value = exerciseDistance.value + 50;
+        // exerciseSteps.value = exerciseSteps.value + 20;
+        // exerciseDistance.value = exerciseDistance.value + 20;
 
         if (!isSameStepCount) {
           HiveStore.save(key: HiveKey.lastUpdatedStepCount.name, value: userExerciseData.value.steps);
           initLuckAnimation();
 
-          print(userExerciseData.value.sequence);
           await ActivityService.fetchUpdateUserExercises(
             userExerciseData.value,
             Platform.operatingSystem,
@@ -844,6 +841,7 @@ mixin ActivityMixin {
     await Future.delayed(const Duration(milliseconds: 300));
     luckLoadControl.value = Control.playReverseFromEnd;
     isShowLuckAnimation.value = true;
+
     if (isAbleSound) {
       HapticFeedback.vibrate();
 

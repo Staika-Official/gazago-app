@@ -311,25 +311,25 @@ class ActivityActive extends StatelessWidget {
                           : Container(),
                     );
                   }),
-                  Obx(() {
-                    return Stack(children: [
-                      Padding(
-                        padding: EdgeInsets.only(top: 0.0.sp, bottom: 20.sp),
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            Stack(
+                  Stack(children: [
+                    Padding(
+                      padding: EdgeInsets.only(top: 0.0.sp, bottom: 20.sp),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Obx(() {
+                            return Stack(
                               children: [
                                 if (controller.isShowLuckAnimation.value)
-                                  Obx(() {
-                                    return CustomAnimationBuilder<Movie>(
-                                        control: controller.luckLoadControl.value,
-                                        tween: luckMovie,
-                                        duration: luckMovie.duration,
-                                        onCompleted: () {
-                                          controller.initLuckAnimation();
-                                        },
-                                        builder: (context, value, _) {
+                                  CustomAnimationBuilder<Movie>(
+                                      control: controller.luckLoadControl.value,
+                                      tween: luckMovie,
+                                      duration: luckMovie.duration,
+                                      onCompleted: () {
+                                        controller.initLuckAnimation();
+                                      },
+                                      builder: (context, value, _) {
+                                        return Obx(() {
                                           return Opacity(
                                             opacity: value.get('opacity'),
                                             child: Column(
@@ -388,66 +388,68 @@ class ActivityActive extends StatelessWidget {
                                             ),
                                           );
                                         });
-                                  }),
-                                Padding(
-                                  padding: EdgeInsets.only(top: 43.0.sp, left: 12.sp, right: 12.sp),
-                                  child: Row(
-                                    mainAxisAlignment: MainAxisAlignment.center,
-                                    children: [
-                                      SvgPicture.asset(
-                                        'assets/images/common/ico_token_go.svg',
-                                        width: 36.sp,
-                                        height: 36.sp,
-                                      ),
-                                      Padding(
-                                        padding: EdgeInsets.only(left: 14.0.sp),
-                                        child: AnimatedFlipCounter(
-                                          value: controller.userState.value.exercise != null ? controller.userState.value.exercise!.rewardGo! : 0,
-                                          duration: const Duration(milliseconds: 500),
-                                          fractionDigits: 2,
-                                          thousandSeparator: ',',
-                                          textStyle: TextStyle(
-                                            fontWeight: FontWeight.w600,
-                                            fontSize: 50.sp,
-                                            height: 1,
-                                            fontFamily: 'Montserrat',
-                                            color: Colors.white,
+                                      }),
+                                Obx(() {
+                                  return Padding(
+                                    padding: EdgeInsets.only(top: 43.0.sp, left: 12.sp, right: 12.sp),
+                                    child: Row(
+                                      mainAxisAlignment: MainAxisAlignment.center,
+                                      children: [
+                                        SvgPicture.asset(
+                                          'assets/images/common/ico_token_go.svg',
+                                          width: 36.sp,
+                                          height: 36.sp,
+                                        ),
+                                        Padding(
+                                          padding: EdgeInsets.only(left: 14.0.sp),
+                                          child: AnimatedFlipCounter(
+                                            value: controller.userState.value.exercise != null ? controller.userState.value.exercise!.rewardGo! : 0,
+                                            duration: const Duration(milliseconds: 500),
+                                            fractionDigits: 2,
+                                            thousandSeparator: ',',
+                                            textStyle: TextStyle(
+                                              fontWeight: FontWeight.w600,
+                                              fontSize: 50.sp,
+                                              height: 1,
+                                              fontFamily: 'Montserrat',
+                                              color: Colors.white,
+                                            ),
                                           ),
                                         ),
-                                      ),
-                                      Padding(
-                                        padding: EdgeInsets.only(left: 3.0.sp),
-                                        child: StyledText(
-                                          'GO',
-                                          fontWeight: 500,
-                                          fontSize: 35,
-                                          lineHeight: 35,
-                                          fontFamily: 'Montserrat',
-                                          color: deepGrayColor,
+                                        Padding(
+                                          padding: EdgeInsets.only(left: 3.0.sp),
+                                          child: StyledText(
+                                            'GO',
+                                            fontWeight: 500,
+                                            fontSize: 35,
+                                            lineHeight: 35,
+                                            fontFamily: 'Montserrat',
+                                            color: deepGrayColor,
+                                          ),
                                         ),
-                                      ),
-                                    ],
-                                  ),
-                                ),
+                                      ],
+                                    ),
+                                  );
+                                }),
                               ],
-                            ),
-                          ],
+                            );
+                          }),
+                        ],
+                      ),
+                    ),
+                    if (controller.isShowLuckAnimation.value)
+                      Positioned(
+                        left: 0.sp,
+                        top: 0,
+                        child: Lottie.asset(
+                          'assets/lottie/activity_luck.json',
+                          width: 250,
+                          height: 150,
+                          repeat: false,
+                          frameRate: FrameRate.max,
                         ),
                       ),
-                      if (controller.isShowLuckAnimation.value)
-                        Positioned(
-                          left: 0.sp,
-                          top: 0,
-                          child: Lottie.asset(
-                            'assets/lottie/activity_luck.json',
-                            width: 250,
-                            height: 150,
-                            repeat: false,
-                            frameRate: FrameRate.max,
-                          ),
-                        ),
-                    ]);
-                  }),
+                  ]),
                   Padding(
                       padding: EdgeInsets.symmetric(horizontal: 20.0.sp, vertical: 10.sp),
                       child: Container(
