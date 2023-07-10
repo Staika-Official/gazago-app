@@ -124,7 +124,7 @@ Future<void> setForegroundConfig() async {
 
   const AndroidInitializationSettings initializationSettingsAndroid = AndroidInitializationSettings('@mipmap/ic_launcher');
 
-  const IOSInitializationSettings initializationSettingsIOS = IOSInitializationSettings(requestAlertPermission: true, requestBadgePermission: true, requestSoundPermission: true);
+  const DarwinInitializationSettings initializationSettingsIOS = DarwinInitializationSettings(requestAlertPermission: true, requestBadgePermission: true, requestSoundPermission: true);
 
   const InitializationSettings initializationSettings = InitializationSettings(
     android: initializationSettingsAndroid,
@@ -133,7 +133,7 @@ Future<void> setForegroundConfig() async {
 
   flutterLocalNotificationsPlugin = FlutterLocalNotificationsPlugin();
 
-  await flutterLocalNotificationsPlugin.initialize(initializationSettings, onSelectNotification: onSelectNotification);
+  await flutterLocalNotificationsPlugin.initialize(initializationSettings, onDidReceiveNotificationResponse: onSelectNotification);
 
   if (defaultTargetPlatform == TargetPlatform.android) {
     await flutterLocalNotificationsPlugin.resolvePlatformSpecificImplementation<AndroidFlutterLocalNotificationsPlugin>()?.requestPermission();
@@ -146,9 +146,9 @@ Future<void> setForegroundConfig() async {
   }
 }
 
-void onSelectNotification(String? payload) {
-  if (payload != null) {
-    print(payload);
+void onSelectNotification(NotificationResponse? notificationResponse) {
+  if (notificationResponse != null) {
+    print(notificationResponse.payload);
   }
 }
 
@@ -170,7 +170,7 @@ NotificationDetails statLowNotificationDetail = NotificationDetails(
     playSound: true,
     sound: const RawResourceAndroidNotificationSound('stat_low'),
   ),
-  iOS: const IOSNotificationDetails(sound: 'stat_low.mp3'),
+  iOS: const DarwinNotificationDetails(sound: 'stat_low.mp3'),
 );
 
 NotificationDetails statDepletedNotificationDetail = NotificationDetails(
@@ -182,7 +182,7 @@ NotificationDetails statDepletedNotificationDetail = NotificationDetails(
     playSound: true,
     sound: const RawResourceAndroidNotificationSound('stat_depleted'),
   ),
-  iOS: const IOSNotificationDetails(sound: 'stat_depleted.mp3'),
+  iOS: const DarwinNotificationDetails(sound: 'stat_depleted.mp3'),
 );
 
 NotificationDetails badgeAcquiredNotificationDetail = NotificationDetails(
@@ -194,7 +194,7 @@ NotificationDetails badgeAcquiredNotificationDetail = NotificationDetails(
     playSound: true,
     sound: const RawResourceAndroidNotificationSound('badge_acquired'),
   ),
-  iOS: const IOSNotificationDetails(sound: 'badge_acquired.mp3'),
+  iOS: const DarwinNotificationDetails(sound: 'badge_acquired.mp3'),
 );
 
 //
