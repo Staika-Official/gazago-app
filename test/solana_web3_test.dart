@@ -1,18 +1,15 @@
-
-
-
 import 'dart:convert';
 import 'dart:typed_data';
 
 import 'package:dio/dio.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:solana_web3/solana_web3.dart' as web3;
 import 'package:solana_web3/programs/system.dart';
+import 'package:solana_web3/solana_web3.dart' as web3;
 import 'package:solana_web3/solana_web3.dart';
 import 'package:solana_web3/types/health_status.dart';
-void main() {
 
+void main() {
   // 솔라나 토큰 트랜스퍼
   test('solana transfer sign', () async {
     WidgetsFlutterBinding.ensureInitialized();
@@ -28,7 +25,7 @@ void main() {
     final wallet2 = await walletB();
     final address2 = wallet2.publicKey;
 
-    final bh = await connection.getLatestBlockhash();
+    // final bh = await connection.getLatestBlockhash();
     final transaction = web3.Transaction();
     transaction.add(
       SystemProgram.transfer(
@@ -64,10 +61,9 @@ void main() {
     final wallet2 = await walletB();
     final address2 = wallet2.publicKey;
 
-
     final feeWallet = await feePayerWallet();
 
-   /* final encodeTransaction = await getTransaction();
+    /* final encodeTransaction = await getTransaction();
     final transaction = web3.Transaction.fromBase64(encodeTransaction);
 
     print(transaction);
@@ -79,7 +75,6 @@ void main() {
         lamports: BigInt.from(1000000),
       ),
     );*/
-
 
     print(address1);
     print(address2);
@@ -111,36 +106,32 @@ void main() {
     print(transaction.signatures.first.publicKey);
     print(transaction.signatures.first.signature);
 
-    final txSerialize = transaction.serialize(SerializeConfig(requireAllSignatures: false, verifySignatures: false));
+    final txSerialize = transaction.serialize(const SerializeConfig(requireAllSignatures: false, verifySignatures: false));
 
     print(txSerialize);
 
     print(base64.encode(txSerialize.asUint8List()));
 
-
-    final endocdeTransction = base64.encode(txSerialize.asUint8List());
+    // final endocdeTransction = base64.encode(txSerialize.asUint8List());
 
     //final decodeTransaction = Buffer.fromUint8(base64.decode(endocdeTransction));
 
-    final encode = web3.Transaction.fromBase64(endocdeTransction);
+    // final encode = web3.Transaction.fromBase64(endocdeTransction);
     print('##################################');
     print(transaction.signatures.first.publicKey);
     print(transaction.signatures.first.signature);
 
-    final accessToken = 'eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJhZG1pbiIsImF1dGgiOiJST0xFX0FETUlOLFJPTEVfVVNFUiIsImV4cCI6MTY3NjI3NDU5NCwidXNlcklkIjoiMyJ9.ItPbb71tNXjXCwID0pLHH7IUySHqClUXOSVqQD7q2jiAOu-6LU3JDpOW_ZVTHWP0yf_wLbyyQM4NNm2tb9IOkA';
+    const accessToken =
+        'eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJhZG1pbiIsImF1dGgiOiJST0xFX0FETUlOLFJPTEVfVVNFUiIsImV4cCI6MTY3NjI3NDU5NCwidXNlcklkIjoiMyJ9.ItPbb71tNXjXCwID0pLHH7IUySHqClUXOSVqQD7q2jiAOu-6LU3JDpOW_ZVTHWP0yf_wLbyyQM4NNm2tb9IOkA';
 
-    final send = {
-      'clientId': 'GAZAGO',
-      'endocdeTransction': base64.encode(txSerialize.asUint8List())
-    };
+    final send = {'clientId': 'GAZAGO', 'endocdeTransction': base64.encode(txSerialize.asUint8List())};
 
     try {
-      var response = await Dio().post('http://localhost:8080/services/gazago-wallet/api/solana/wallet/test/transfer', data: send,
-        options: Options(
-          headers: {
-            'Authorization': 'Bearer $accessToken'
-          },
-        ));
+      var response = await Dio().post('http://localhost:8080/services/gazago-wallet/api/solana/wallet/test/transfer',
+          data: send,
+          options: Options(
+            headers: {'Authorization': 'Bearer $accessToken'},
+          ));
       print(response.data);
     } catch (e) {
       print(e);
@@ -149,7 +140,6 @@ void main() {
 
   // 솔라나 토큰 트랜스퍼 서명(이게 사용됨)
   test('airdrop', () async {
-
     WidgetsFlutterBinding.ensureInitialized();
 
     final cluster = web3.Cluster.devnet;
@@ -158,32 +148,30 @@ void main() {
     print(connection);
 
     final HealthStatus status = await connection.health();
-    print('health ${status}');
+    print('health $status');
 
     final wallet1 = await walletA();
     final address = wallet1.publicKey;
 
     print(address);
 
-    final lamports = web3.lamportsPerSol * 2;
+    const lamports = web3.lamportsPerSol * 2;
     final transactionSignature = await connection.requestAirdrop(address, lamports);
     await connection.confirmTransaction(transactionSignature);
   });
 }
 
 Future<String> getTransaction() async {
-  final accessToken = 'eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJhZG1pbiIsImF1dGgiOiJST0xFX0FETUlOLFJPTEVfVVNFUiIsImV4cCI6MTY3NTk0MDY3MywidXNlcklkIjoiMyJ9.zSZouf8HeI2esQ0r2tTupnseBnBhWNAOCD0QSsVsKICwFKpzdks4Z2ut45FiTP6gLPJ8fJwX8FDK9Yr6s1SeMg';
+  const accessToken =
+      'eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJhZG1pbiIsImF1dGgiOiJST0xFX0FETUlOLFJPTEVfVVNFUiIsImV4cCI6MTY3NTk0MDY3MywidXNlcklkIjoiMyJ9.zSZouf8HeI2esQ0r2tTupnseBnBhWNAOCD0QSsVsKICwFKpzdks4Z2ut45FiTP6gLPJ8fJwX8FDK9Yr6s1SeMg';
 
-  final send = {
-    'clientId': 'GAZAGO'
-  };
+  final send = {'clientId': 'GAZAGO'};
 
   try {
-    var response = await Dio().post('http://localhost:8080/services/gazago-wallet/api/solana/wallet/test/transaction', data: send,
+    var response = await Dio().post('http://localhost:8080/services/gazago-wallet/api/solana/wallet/test/transaction',
+        data: send,
         options: Options(
-          headers: {
-            'Authorization': 'Bearer $accessToken'
-          },
+          headers: {'Authorization': 'Bearer $accessToken'},
         ));
     print(response.data);
     print(11111111);
@@ -198,10 +186,9 @@ Future<String> getTransaction() async {
 
 /// WARNING: Airdrops cannot be performed on the mainnet.
 Future<web3.Keypair> createWalletWithBalance(
-    final web3.Connection connection, {
-      required final int amount,
-    }) async {
-
+  final web3.Connection connection, {
+  required final int amount,
+}) async {
   // Create a new wallet and get its public address.
   final wallet = web3.Keypair.generateSync();
   final address = wallet.publicKey;
@@ -221,23 +208,208 @@ Future<web3.Keypair> createWalletWithBalance(
 }
 
 Future<web3.Keypair> walletA() async {
-  return web3.Keypair.fromSecretKey(Uint8List.fromList([179, 242, 163, 65, 9, 177, 33, 213, 188, 118, 12, 231, 3, 166, 249, 254, 10, 68, 106, 95, 1, 254, 98, 23, 215, 26, 140, 181, 119, 243, 151, 219, 41, 104, 206, 115, 76, 224, 233, 41, 166, 176, 188, 93, 149, 84, 0, 235, 16, 162, 11, 40, 90, 238, 41, 90, 52, 197, 243, 54, 43, 200, 25, 220]));
+  return web3.Keypair.fromSecretKey(Uint8List.fromList([
+    179,
+    242,
+    163,
+    65,
+    9,
+    177,
+    33,
+    213,
+    188,
+    118,
+    12,
+    231,
+    3,
+    166,
+    249,
+    254,
+    10,
+    68,
+    106,
+    95,
+    1,
+    254,
+    98,
+    23,
+    215,
+    26,
+    140,
+    181,
+    119,
+    243,
+    151,
+    219,
+    41,
+    104,
+    206,
+    115,
+    76,
+    224,
+    233,
+    41,
+    166,
+    176,
+    188,
+    93,
+    149,
+    84,
+    0,
+    235,
+    16,
+    162,
+    11,
+    40,
+    90,
+    238,
+    41,
+    90,
+    52,
+    197,
+    243,
+    54,
+    43,
+    200,
+    25,
+    220
+  ]));
 }
 
 Future<web3.Keypair> walletB() async {
-  return web3.Keypair.fromSecretKey(Uint8List.fromList([7, 151, 239, 194, 176, 185, 103, 219,  69,  14,  65,
-    230, 253,   2,   8, 178,   2, 129, 194, 144,  96, 235,
-    152,  20,   2,  48,  64,  24,  45, 218, 171,  93, 120,
-    4,  67, 229, 177,  33,  21, 179, 128, 164, 131, 189,
-    68, 211, 195, 143, 167,  37,  94, 165,  96,  35,  95,
-    125, 202,  96, 116, 151, 126, 123, 147,  97]));
+  return web3.Keypair.fromSecretKey(Uint8List.fromList([
+    7,
+    151,
+    239,
+    194,
+    176,
+    185,
+    103,
+    219,
+    69,
+    14,
+    65,
+    230,
+    253,
+    2,
+    8,
+    178,
+    2,
+    129,
+    194,
+    144,
+    96,
+    235,
+    152,
+    20,
+    2,
+    48,
+    64,
+    24,
+    45,
+    218,
+    171,
+    93,
+    120,
+    4,
+    67,
+    229,
+    177,
+    33,
+    21,
+    179,
+    128,
+    164,
+    131,
+    189,
+    68,
+    211,
+    195,
+    143,
+    167,
+    37,
+    94,
+    165,
+    96,
+    35,
+    95,
+    125,
+    202,
+    96,
+    116,
+    151,
+    126,
+    123,
+    147,
+    97
+  ]));
 }
 
 Future<web3.Keypair> feePayerWallet() async {
-  return web3.Keypair.fromSecretKey(Uint8List.fromList([ 62, 109, 167, 119, 110,  18, 127,  29, 154,  52, 119,
-    35, 109,  87, 224,  81, 120,  62, 145, 178,  10, 157,
-    133,  51,  92, 126, 185, 206, 158,   6, 141,  46, 119,
-    58, 142,  99,  48, 129, 216, 104,  75, 100, 199, 189,
-    44,  80,  64,  98, 249, 114, 163, 124, 179, 123, 129,
-    168, 100,  48,  42,  49, 236, 174,  36, 153]));
+  return web3.Keypair.fromSecretKey(Uint8List.fromList([
+    62,
+    109,
+    167,
+    119,
+    110,
+    18,
+    127,
+    29,
+    154,
+    52,
+    119,
+    35,
+    109,
+    87,
+    224,
+    81,
+    120,
+    62,
+    145,
+    178,
+    10,
+    157,
+    133,
+    51,
+    92,
+    126,
+    185,
+    206,
+    158,
+    6,
+    141,
+    46,
+    119,
+    58,
+    142,
+    99,
+    48,
+    129,
+    216,
+    104,
+    75,
+    100,
+    199,
+    189,
+    44,
+    80,
+    64,
+    98,
+    249,
+    114,
+    163,
+    124,
+    179,
+    123,
+    129,
+    168,
+    100,
+    48,
+    42,
+    49,
+    236,
+    174,
+    36,
+    153
+  ]));
 }

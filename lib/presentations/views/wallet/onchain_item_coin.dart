@@ -84,7 +84,7 @@ class OnChainItemCoin extends StatelessWidget {
                     ),
                     Padding(
                       padding: EdgeInsets.only(top: 4.sp),
-                      child: StyledText(
+                      child: const StyledText(
                         '₩ 287,888.000',
                         fontSize: 14,
                         lineHeight: 14,

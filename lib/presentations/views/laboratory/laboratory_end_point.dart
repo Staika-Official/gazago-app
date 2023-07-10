@@ -22,8 +22,10 @@ class LaboratoryEndPoint extends StatelessWidget {
               return Column(
                 mainAxisSize: MainAxisSize.min,
                 children: [
-                  RadioListTile(title: StyledText('STAGE'), value: EndPointType.stage, groupValue: debuggingController.endPointType.value, onChanged: (val) => debuggingController.setEndPoint(val!)),
-                  RadioListTile(title: StyledText('PROD'), value: EndPointType.prod, groupValue: debuggingController.endPointType.value, onChanged: (val) => debuggingController.setEndPoint(val!))
+                  RadioListTile(
+                      title: const StyledText('STAGE'), value: EndPointType.stage, groupValue: debuggingController.endPointType.value, onChanged: (val) => debuggingController.setEndPoint(val!)),
+                  RadioListTile(
+                      title: const StyledText('PROD'), value: EndPointType.prod, groupValue: debuggingController.endPointType.value, onChanged: (val) => debuggingController.setEndPoint(val!))
                 ],
               );
             }),

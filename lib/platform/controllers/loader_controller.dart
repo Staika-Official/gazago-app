@@ -11,7 +11,7 @@ class LoaderController extends GetxController {
     isLoading.listen((val) {
       if (val == true) {
         Get.dialog(
-            Dialog(
+            const Dialog(
               shadowColor: Colors.transparent,
               backgroundColor: Colors.transparent,
               child: Center(
@@ -38,15 +38,5 @@ class LoaderController extends GetxController {
       }
     });
     super.onInit();
-  }
-
-  @override
-  void onReady() {
-    super.onReady();
-  }
-
-  @override
-  void onClose() {
-    super.onClose();
   }
 }

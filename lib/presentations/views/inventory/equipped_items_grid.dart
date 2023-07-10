@@ -33,7 +33,7 @@ class EquippedItemsGrid extends StatelessWidget {
                       durability: controller.equippedShoe.value.durability,
                       imageUrl: controller.equippedShoe.value.itemImageUrl,
                     )
-                  : InventoryTilePlaceHolder(),
+                  : const InventoryTilePlaceHolder(),
             ),
             StaggeredGridTile.count(
               crossAxisCellCount: 2,
@@ -44,7 +44,7 @@ class EquippedItemsGrid extends StatelessWidget {
                       imageUrl: controller.equippedBadge.value.badge.imageUrl,
                       badgeId: controller.equippedBadge.value.badge.id,
                     )
-                  : InventoryTilePlaceHolder(),
+                  : const InventoryTilePlaceHolder(),
             ),
             StaggeredGridTile.count(
               crossAxisCellCount: 1,
@@ -56,7 +56,7 @@ class EquippedItemsGrid extends StatelessWidget {
                       itemGrade: controller.equippedHat.value.itemGrade,
                       imageUrl: controller.equippedHat.value.itemImageUrl,
                     )
-                  : InventoryTilePlaceHolder(),
+                  : const InventoryTilePlaceHolder(),
             ),
             StaggeredGridTile.count(
               crossAxisCellCount: 1,
@@ -68,7 +68,7 @@ class EquippedItemsGrid extends StatelessWidget {
                       itemGrade: controller.equippedTop.value.itemGrade,
                       imageUrl: controller.equippedTop.value.itemImageUrl,
                     )
-                  : InventoryTilePlaceHolder(),
+                  : const InventoryTilePlaceHolder(),
             ),
             StaggeredGridTile.count(
               crossAxisCellCount: 1,
@@ -80,7 +80,7 @@ class EquippedItemsGrid extends StatelessWidget {
                       itemGrade: controller.equippedBottom.value.itemGrade,
                       imageUrl: controller.equippedBottom.value.itemImageUrl,
                     )
-                  : InventoryTilePlaceHolder(),
+                  : const InventoryTilePlaceHolder(),
             ),
             StaggeredGridTile.count(
               crossAxisCellCount: 1,
@@ -92,7 +92,7 @@ class EquippedItemsGrid extends StatelessWidget {
                       itemGrade: controller.equippedAccessory.value.itemGrade,
                       imageUrl: controller.equippedAccessory.value.itemImageUrl,
                     )
-                  : InventoryTilePlaceHolder(),
+                  : const InventoryTilePlaceHolder(),
             ),
           ],
         );

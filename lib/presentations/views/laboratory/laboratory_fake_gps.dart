@@ -21,8 +21,8 @@ class LaboratoryFakeGps extends StatelessWidget {
               return Column(
                 mainAxisSize: MainAxisSize.min,
                 children: [
-                  RadioListTile(title: StyledText('거부'), value: false, groupValue: debuggingController.allowFakeGps.value, onChanged: (val) => debuggingController.setGpsPermission(val!)),
-                  RadioListTile(title: StyledText('허용'), value: true, groupValue: debuggingController.allowFakeGps.value, onChanged: (val) => debuggingController.setGpsPermission(val!)),
+                  RadioListTile(title: const StyledText('거부'), value: false, groupValue: debuggingController.allowFakeGps.value, onChanged: (val) => debuggingController.setGpsPermission(val!)),
+                  RadioListTile(title: const StyledText('허용'), value: true, groupValue: debuggingController.allowFakeGps.value, onChanged: (val) => debuggingController.setGpsPermission(val!)),
                 ],
               );
             }),

@@ -123,7 +123,7 @@ class Preferences extends StatelessWidget {
                     ),
               Padding(
                 padding: EdgeInsets.only(left: 25.sp, right: 20.sp),
-                child: Container(
+                child: SizedBox(
                   height: 70,
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,

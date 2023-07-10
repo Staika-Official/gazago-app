@@ -69,7 +69,7 @@ class StaikaAssetItemCoin extends StatelessWidget {
                           Padding(
                             padding: EdgeInsets.only(right: 20.0.sp),
                             child: StyledText(
-                              asset.name!,
+                              asset.name,
                               fontSize: 18,
                               lineHeight: 18,
                               fontWeight: 500,
@@ -87,7 +87,7 @@ class StaikaAssetItemCoin extends StatelessWidget {
                                       mainAxisSize: MainAxisSize.min,
                                       children: [
                                         StyledText(
-                                          '${formatDecimalPlaces(double.parse(asset.uiAmountString!), 4, isAutoDecimal: true)}',
+                                          formatDecimalPlaces(double.parse(asset.uiAmountString), 4, isAutoDecimal: true),
                                           fontSize: 18,
                                           lineHeight: 20,
                                           letterSpacing: 0.5,
@@ -96,7 +96,7 @@ class StaikaAssetItemCoin extends StatelessWidget {
                                         Padding(
                                           padding: const EdgeInsets.only(left: 3),
                                           child: StyledText(
-                                            asset.symbol!,
+                                            asset.symbol,
                                             fontSize: 18,
                                             lineHeight: 20,
                                             letterSpacing: 0.5,
@@ -107,7 +107,7 @@ class StaikaAssetItemCoin extends StatelessWidget {
                                     ),
                                   ),
                                   StyledText(
-                                    '${staikaWalletController.currencyString.value} ${formatDecimalPlaces(double.parse(staikaWalletController.getCurrencyPrice(double.parse(asset.uiAmountString!))), staikaWalletController.isKRW.value ? 0 : 2)}',
+                                    '${staikaWalletController.currencyString.value} ${formatDecimalPlaces(double.parse(staikaWalletController.getCurrencyPrice(double.parse(asset.uiAmountString))), staikaWalletController.isKRW.value ? 0 : 2)}',
                                     fontSize: 14,
                                     lineHeight: 16,
                                     letterSpacing: 0.5,

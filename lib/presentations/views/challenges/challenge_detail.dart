@@ -49,7 +49,7 @@ class ChallengeDetail extends StatelessWidget {
                     child: Column(
                       mainAxisSize: MainAxisSize.min,
                       children: [
-                        Container(
+                        SizedBox(
                           width: double.infinity,
                           height: 220.sp,
                           child: Image.asset("assets/images/challenges/@temp_img_big.png", fit: BoxFit.cover),
@@ -98,7 +98,7 @@ class ChallengeDetail extends StatelessWidget {
                                 ],
                               ),
                               Padding(
-                                padding: EdgeInsets.only(top: 10.0),
+                                padding: const EdgeInsets.only(top: 10.0),
                                 child: Row(
                                   children: [
                                     Row(
@@ -126,9 +126,9 @@ class ChallengeDetail extends StatelessWidget {
                                         )
                                       ],
                                     ),
-                                    StyledText(
+                                    const StyledText(
                                       ' · ',
-                                      color: const Color(0xffd9d9d9),
+                                      color: Color(0xffd9d9d9),
                                       fontWeight: 500,
                                       fontSize: 16,
                                       lineHeight: 18,
@@ -182,15 +182,15 @@ class ChallengeDetail extends StatelessWidget {
                         title: Container(
                           decoration: BoxDecoration(
                             color: subBg01Color,
-                            border: Border(
+                            border: const Border(
                               top: BorderSide(
                                 // POINT
-                                color: const Color(0xFF2E3038),
+                                color: Color(0xFF2E3038),
                                 width: 1.0,
                               ),
                               bottom: BorderSide(
                                 // POINT
-                                color: const Color(0xFF2E3038),
+                                color: Color(0xFF2E3038),
                                 width: 1.0,
                               ),
                             ),
@@ -393,7 +393,7 @@ class ChallengeDetail extends StatelessWidget {
                                                   ],
                                                 ),
                                                 Padding(
-                                                  padding: EdgeInsets.only(top: 18.0),
+                                                  padding: const EdgeInsets.only(top: 18.0),
                                                   child: Row(
                                                     children: [
                                                       if (controller.challengeDetails.value.exerciseTypes != null)
@@ -422,9 +422,9 @@ class ChallengeDetail extends StatelessWidget {
                                                             )
                                                           ],
                                                         ),
-                                                      StyledText(
+                                                      const StyledText(
                                                         ' · ',
-                                                        color: const Color(0xffd9d9d9),
+                                                        color: Color(0xffd9d9d9),
                                                         fontWeight: 500,
                                                         fontSize: 16,
                                                         lineHeight: 18,
@@ -447,7 +447,7 @@ class ChallengeDetail extends StatelessWidget {
                                                                         letterSpacing: -.1,
                                                                       )
                                                                     : StyledText(
-                                                                        '${formatDecimalPlaces(controller.challengeDetails.value.soldQuantity!.toDouble(), 0) ?? 0}명 /',
+                                                                        '${formatDecimalPlaces((controller.challengeDetails.value.soldQuantity ?? 0).toDouble(), 0)}명 /',
                                                                         color: lightGrayColor,
                                                                         fontWeight: 500,
                                                                         fontSize: 12,

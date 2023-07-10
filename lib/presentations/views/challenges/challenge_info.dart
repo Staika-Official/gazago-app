@@ -52,7 +52,7 @@ class ChallengeInfo extends StatelessWidget {
                       child: Row(
                         crossAxisAlignment: CrossAxisAlignment.center,
                         children: [
-                          StyledText(
+                          const StyledText(
                             '챌린지 보상',
                             fontWeight: 500,
                             fontSize: 18,
@@ -187,7 +187,7 @@ class ChallengeInfo extends StatelessWidget {
                                                     lineHeight: 22,
                                                     letterSpacing: -.1,
                                                   )
-                                                : StyledText(
+                                                : const StyledText(
                                                     '참여자 전원 뱃지 지급',
                                                     fontFamily: 'Montserrat',
                                                     fontWeight: 600,
@@ -359,7 +359,7 @@ class ChallengeInfo extends StatelessWidget {
                         children: [
                           Padding(
                             padding: EdgeInsets.only(top: 38.0.sp, bottom: 15.sp),
-                            child: StyledText(
+                            child: const StyledText(
                               '챌린지 달성 기준',
                               fontWeight: 500,
                               fontSize: 18,
@@ -392,7 +392,7 @@ class ChallengeInfo extends StatelessWidget {
                         children: [
                           Padding(
                             padding: EdgeInsets.only(top: 38.0.sp, bottom: 15.sp),
-                            child: StyledText(
+                            child: const StyledText(
                               '챌린지 아이템 추가 보상',
                               fontWeight: 500,
                               fontSize: 18,
@@ -434,7 +434,7 @@ class ChallengeInfo extends StatelessWidget {
               ),
               Padding(
                 padding: EdgeInsets.only(top: 40.0.sp),
-                child: Divider(
+                child: const Divider(
                   color: Color(0xFF26272F),
                   height: 3,
                   thickness: 2,
@@ -446,7 +446,7 @@ class ChallengeInfo extends StatelessWidget {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      StyledText(
+                      const StyledText(
                         '이용안내',
                         fontWeight: 500,
                         fontSize: 18,
@@ -454,7 +454,7 @@ class ChallengeInfo extends StatelessWidget {
                         letterSpacing: -.1,
                       ),
                       Padding(
-                        padding: EdgeInsets.only(top: 14.0),
+                        padding: const EdgeInsets.only(top: 14.0),
                         child: Html(
                           shrinkWrap: true,
                           data: controller.challengeDetails.value.description!,

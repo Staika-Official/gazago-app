@@ -54,7 +54,7 @@ class MainAppbar extends StatelessWidget implements PreferredSizeWidget {
                               width: 8,
                               height: 8,
                               decoration: BoxDecoration(
-                                color: Color(0xffFF1414),
+                                color: const Color(0xffFF1414),
                                 borderRadius: BorderRadius.circular(8),
                               ),
                             ),

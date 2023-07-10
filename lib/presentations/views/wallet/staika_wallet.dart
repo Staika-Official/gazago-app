@@ -22,8 +22,8 @@ class StaikaWallet extends StatelessWidget {
             padding: EdgeInsets.only(top: 14.sp, left: 21.sp, right: 21.sp),
             child: StaikaAssetItemCoin(
               asset: asset,
-              onTapButton: asset.symbol!.toUpperCase() == 'STIK' ? () => controller.moveToSendToGoWallet() : null,
-              buttonText: asset.symbol!.toUpperCase() == 'STIK' ? 'GO지갑으로 보내기' : '',
+              onTapButton: asset.symbol.toUpperCase() == 'STIK' ? () => controller.moveToSendToGoWallet() : null,
+              buttonText: asset.symbol.toUpperCase() == 'STIK' ? 'GO지갑으로 보내기' : '',
               showPrice: false,
             ),
           ),
@@ -84,13 +84,13 @@ class StaikaWallet extends StatelessWidget {
                               ),
                               children: [
                                 TextSpan(
-                                  text: '${controller.userWalletAddress.value.substring(0, 4)}',
+                                  text: controller.userWalletAddress.value.substring(0, 4),
                                 ),
-                                TextSpan(
+                                const TextSpan(
                                   text: '...',
                                 ),
                                 TextSpan(
-                                  text: '${controller.userWalletAddress.value.substring(controller.userWalletAddress.value.length - 4)}',
+                                  text: controller.userWalletAddress.value.substring(controller.userWalletAddress.value.length - 4),
                                 ),
                               ],
                             ),
@@ -126,7 +126,7 @@ class StaikaWallet extends StatelessWidget {
                           color: lightGrayColor,
                         ),
                         Padding(
-                          padding: EdgeInsets.only(left: 3.0),
+                          padding: const EdgeInsets.only(left: 3.0),
                           child: iconTransactionHistory,
                         ),
                       ],
@@ -141,7 +141,7 @@ class StaikaWallet extends StatelessWidget {
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
-                  StyledText(
+                  const StyledText(
                     '디지털 자산',
                     fontWeight: 500,
                     fontSize: 16,

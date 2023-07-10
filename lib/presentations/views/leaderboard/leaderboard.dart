@@ -74,7 +74,7 @@ class LeaderboardHome extends StatelessWidget {
                                                     lineHeight: 16.sp,
                                                     fontWeight: 600,
                                                     letterSpacing: -.1,
-                                                    color: Color(0xFFFF6B9C),
+                                                    color: const Color(0xFFFF6B9C),
                                                   ),
                                                 ],
                                               ),
@@ -88,7 +88,7 @@ class LeaderboardHome extends StatelessWidget {
                                                 lineHeight: 16.sp,
                                                 fontWeight: 600,
                                                 letterSpacing: -.1,
-                                                color: Color(0xFFFFB443),
+                                                color: const Color(0xFFFFB443),
                                               ),
                                             ),
                                         ],
@@ -237,7 +237,7 @@ class LeaderboardHome extends StatelessWidget {
                                     ),
                                     TextSpan(
                                       text: formatDecimalPlaces(controller.totalTikRewarded.value.toDouble(), 0),
-                                      children: [
+                                      children: const [
                                         TextSpan(text: ' TIK', style: TextStyle(fontWeight: FontWeight.w400)),
                                       ],
                                     ),
@@ -263,7 +263,7 @@ class LeaderboardHome extends StatelessWidget {
                                       ),
                                       TextSpan(
                                         text: formatDecimalPlaces(controller.totalStikRewarded.value, 2, isAutoDecimal: true),
-                                        children: [
+                                        children: const [
                                           TextSpan(text: ' STIK', style: TextStyle(fontWeight: FontWeight.w400)),
                                         ],
                                       ),
@@ -306,7 +306,7 @@ class LeaderboardHome extends StatelessWidget {
           //   ),
           // ),
           ConstrainedBox(
-            constraints: BoxConstraints(maxWidth: 60, minWidth: 60),
+            constraints: const BoxConstraints(maxWidth: 60, minWidth: 60),
             child: FittedBox(
               fit: BoxFit.scaleDown,
               child: Padding(
@@ -456,7 +456,7 @@ class LeaderboardHome extends StatelessWidget {
         mainAxisSize: MainAxisSize.max,
         children: [
           ConstrainedBox(
-            constraints: BoxConstraints(maxWidth: 40, minWidth: 40),
+            constraints: const BoxConstraints(maxWidth: 40, minWidth: 40),
             child: FittedBox(
               fit: BoxFit.scaleDown,
               child: Padding(
@@ -474,7 +474,7 @@ class LeaderboardHome extends StatelessWidget {
             ),
           ),
           Expanded(
-            child: Container(
+            child: SizedBox(
               height: double.infinity,
               child: Row(
                 crossAxisAlignment: CrossAxisAlignment.center,
@@ -487,7 +487,7 @@ class LeaderboardHome extends StatelessWidget {
                             children: [
                               Center(
                                 child: Padding(
-                                  padding: EdgeInsets.only(top: 7.0),
+                                  padding: const EdgeInsets.only(top: 7.0),
                                   child: CircleAvatar(
                                     radius: 16.sp,
                                     foregroundImage: (ranker.profileImageUrl == null || ranker.profileImageUrl == '')

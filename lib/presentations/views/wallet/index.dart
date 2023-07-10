@@ -47,16 +47,16 @@ class WalletHome extends StatelessWidget {
                     ),
                   ],
                 ),
-                indicatorPadding: EdgeInsets.only(bottom: 2),
+                indicatorPadding: const EdgeInsets.only(bottom: 2),
                 labelColor: Colors.white,
                 unselectedLabelColor: const Color(0xFFA5A5A5),
-                labelStyle: TextStyle(
+                labelStyle: const TextStyle(
                   fontWeight: FontWeight.w500,
                   fontSize: 18,
                   height: 20 / 18,
                   letterSpacing: 0.5,
                 ),
-                tabs: [
+                tabs: const [
                   Tab(
                     text: 'GO 지갑',
                   ),
@@ -69,7 +69,7 @@ class WalletHome extends StatelessWidget {
           ),
           Expanded(
             child: TabBarView(
-              physics: NeverScrollableScrollPhysics(),
+              physics: const NeverScrollableScrollPhysics(),
               controller: walletMasterController.tabController,
               children: const [
                 GoWallet(),

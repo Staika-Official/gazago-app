@@ -80,7 +80,7 @@ class ShopItemDetail extends StatelessWidget {
                                               //   fit: BoxFit.fill,
                                               // ),
 
-                                              Container(
+                                              SizedBox(
                                                 width: double.infinity,
                                                 child: Stack(
                                                   children: [
@@ -152,7 +152,7 @@ class ShopItemDetail extends StatelessWidget {
                           crossAxisAlignment: CrossAxisAlignment.start,
                           mainAxisAlignment: MainAxisAlignment.start,
                           children: [
-                            StyledText(
+                            const StyledText(
                               '능력치',
                               fontWeight: 600,
                               fontSize: 18,
@@ -180,7 +180,7 @@ class ShopItemDetail extends StatelessWidget {
                                   Row(
                                     children: [
                                       iconStatGo,
-                                      Padding(
+                                      const Padding(
                                         padding: EdgeInsets.only(left: 8.0),
                                         child: StyledText(
                                           'GO 보상',
@@ -281,7 +281,7 @@ class ShopItemDetail extends StatelessWidget {
                                   Row(
                                     children: [
                                       iconStatDurabilityLight,
-                                      Padding(
+                                      const Padding(
                                         padding: EdgeInsets.only(left: 8.0),
                                         child: StyledText(
                                           '내구도',
@@ -382,7 +382,7 @@ class ShopItemDetail extends StatelessWidget {
                                   Row(
                                     children: [
                                       iconStatStamina,
-                                      Padding(
+                                      const Padding(
                                         padding: EdgeInsets.only(left: 8.0),
                                         child: StyledText(
                                           '체력',
@@ -483,7 +483,7 @@ class ShopItemDetail extends StatelessWidget {
                                   Row(
                                     children: [
                                       iconStatLuck,
-                                      Padding(
+                                      const Padding(
                                         padding: EdgeInsets.only(left: 8.0),
                                         child: StyledText(
                                           '행운',
@@ -585,7 +585,7 @@ class ShopItemDetail extends StatelessWidget {
                                     children: [
                                       iconStatEtc,
                                       Padding(
-                                        padding: EdgeInsets.only(left: 8.0),
+                                        padding: const EdgeInsets.only(left: 8.0),
                                         child: StyledText(
                                           controller.selectedItem.value.challenge!.extTxt!,
                                           fontWeight: 500,
@@ -617,7 +617,7 @@ class ShopItemDetail extends StatelessWidget {
                                             return Container(
                                               width: double.infinity,
                                               decoration: BoxDecoration(
-                                                color: Color(0xFFFF922E),
+                                                color: const Color(0xFFFF922E),
                                                 borderRadius: BorderRadius.all(
                                                   Radius.circular(30.sp),
                                                 ),
@@ -713,7 +713,7 @@ class ShopItemDetail extends StatelessWidget {
                                     Row(
                                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                       children: [
-                                        StyledText(
+                                        const StyledText(
                                           '연관 챌린지',
                                           fontWeight: 600,
                                           fontSize: 18,
@@ -774,7 +774,7 @@ class ShopItemDetail extends StatelessWidget {
                           children: [
                             Padding(
                               padding: EdgeInsets.only(bottom: 10.sp),
-                              child: StyledText(
+                              child: const StyledText(
                                 '제품 설명',
                                 fontWeight: 600,
                                 fontSize: 18,

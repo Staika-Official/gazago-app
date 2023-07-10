@@ -76,29 +76,28 @@ class ChallengesHome extends StatelessWidget {
                                     httpHeaders: imageNetworkHeader,
                                   ),
                           // Image.asset("assets/images/challenges/@temp_img.png", fit: BoxFit.cover),
-                          if (item.challengeActivationType != null)
-                            Positioned(
-                              top: 12.sp,
-                              left: 15.sp,
-                              child: Container(
-                                decoration: BoxDecoration(
-                                  color: subBg01Color,
-                                  borderRadius: BorderRadius.all(
-                                    Radius.circular(6.sp),
-                                  ),
+                          Positioned(
+                            top: 12.sp,
+                            left: 15.sp,
+                            child: Container(
+                              decoration: BoxDecoration(
+                                color: subBg01Color,
+                                borderRadius: BorderRadius.all(
+                                  Radius.circular(6.sp),
                                 ),
-                                child: Padding(
-                                  padding: EdgeInsets.symmetric(vertical: 8.0.sp, horizontal: 11.0.sp),
-                                  child: StyledText(
-                                    item.challengeActivationType == 'ITEM' ? '아이템 장착형' : '참가비 납부형',
-                                    fontWeight: 600,
-                                    fontSize: 12,
-                                    lineHeight: 14,
-                                    letterSpacing: -.1,
-                                  ),
+                              ),
+                              child: Padding(
+                                padding: EdgeInsets.symmetric(vertical: 8.0.sp, horizontal: 11.0.sp),
+                                child: StyledText(
+                                  item.challengeActivationType == 'ITEM' ? '아이템 장착형' : '참가비 납부형',
+                                  fontWeight: 600,
+                                  fontSize: 12,
+                                  lineHeight: 14,
+                                  letterSpacing: -.1,
                                 ),
                               ),
                             ),
+                          ),
                           if (item.challengeUserState != 'COMPLETE' && item.challengeUserState != 'INCOMPLETE')
                             Positioned(
                               bottom: 12.sp,
@@ -113,7 +112,7 @@ class ChallengesHome extends StatelessWidget {
                                         ),
                                       ),
                                       child: Padding(
-                                        padding: EdgeInsets.symmetric(vertical: 6.0, horizontal: 13.0),
+                                        padding: const EdgeInsets.symmetric(vertical: 6.0, horizontal: 13.0),
                                         child: FittedBox(
                                           fit: BoxFit.scaleDown,
                                           child: StyledText(
@@ -142,7 +141,7 @@ class ChallengesHome extends StatelessWidget {
                                             ),
                                           ),
                                           child: Padding(
-                                            padding: EdgeInsets.symmetric(vertical: 6.0, horizontal: 13.0),
+                                            padding: const EdgeInsets.symmetric(vertical: 6.0, horizontal: 13.0),
                                             child: FittedBox(
                                               fit: BoxFit.scaleDown,
                                               child: StyledText(
@@ -167,7 +166,7 @@ class ChallengesHome extends StatelessWidget {
                         ],
                       ),
                     ),
-                    Container(
+                    SizedBox(
                       width: double.infinity,
                       height: 114.sp,
                       child: Padding(
@@ -291,7 +290,7 @@ class ChallengesHome extends StatelessWidget {
                                                     letterSpacing: -.1,
                                                   )
                                                 : StyledText(
-                                                    '${formatDecimalPlaces(item.soldQuantity!.toDouble(), 0) ?? 0}명 /',
+                                                    '${formatDecimalPlaces((item.soldQuantity ?? 0).toDouble(), 0)}명 /',
                                                     color: lightGrayColor,
                                                     fontWeight: 500,
                                                     fontSize: 12,

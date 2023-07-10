@@ -70,6 +70,7 @@ class StaikaWalletController extends GetxController with WalletMixin, SolanaMixi
     super.onClose();
   }
 
+  @override
   void dispose() {
     super.dispose();
 
@@ -83,7 +84,7 @@ class StaikaWalletController extends GetxController with WalletMixin, SolanaMixi
   }
 
   getCurrencyPrice(double amount) {
-    return (amount * (currency == Currency.krw ? stikPriceInfoKRW.value.price! : stikPriceInfoUSD.value.price!)).toString();
+    return (amount * (currency.value == Currency.krw ? stikPriceInfoKRW.value.price! : stikPriceInfoUSD.value.price!)).toString();
   }
 
   Future<void> getStaikaWalletInfo() async {

@@ -194,7 +194,7 @@ class InventoryBadgeDetail extends StatelessWidget {
                                           ),
                                         ),
                                       if (controller.selectedBadge.value.rewardRate > 0 && controller.selectedBadge.value.luckRate > 0)
-                                        Container(
+                                        SizedBox(
                                           height: 35.sp,
                                           child: VerticalDivider(
                                             color: popupBgColor,
@@ -247,7 +247,7 @@ class InventoryBadgeDetail extends StatelessWidget {
                               child: Column(
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
-                                  StyledText(
+                                  const StyledText(
                                     '획득 정보',
                                     fontSize: 18,
                                     lineHeight: 18,

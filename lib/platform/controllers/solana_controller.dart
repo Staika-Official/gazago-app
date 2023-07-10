@@ -12,11 +12,6 @@ class SolanaController extends GetxController {
   final RxString transaction = RxString('');
   final RxString solscanUrl = RxString('');
 
-  @override
-  void onInit() async {
-    super.onInit();
-  }
-
   void createWallet() async {
     WalletSolanaModel? wallet = await WalletService.getSolanaWallet();
 

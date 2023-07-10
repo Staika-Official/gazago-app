@@ -46,8 +46,8 @@ class ConfirmWalletPasswordController extends GetxController with PasswordMixin 
     String? secretKey = HiveStore.loadString(key: HiveKey.solanaSecretKey.name);
     String? email = HiveStore.loadString(key: HiveKey.email.name);
     String? decryptPrivateKey = decrypt(secretKey!, email!, _password.value);
-    print('decryptPrivateKey: ${decryptPrivateKey}');
-    print('email: ${email}');
+    print('decryptPrivateKey: $decryptPrivateKey');
+    print('email: $email');
     print('_password: ${_password.value}');
 
     if (decryptPrivateKey != null) {

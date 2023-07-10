@@ -146,7 +146,7 @@ class ActivitySelect extends StatelessWidget {
                           width: 153.sp,
                           height: 186.sp,
                           decoration: BoxDecoration(
-                            color: Color(0xFF2EFF75),
+                            color: const Color(0xFF2EFF75),
                             boxShadow: const [
                               BoxShadow(
                                 color: Color.fromRGBO(0, 0, 0, 0.25),
@@ -285,7 +285,7 @@ class ActivitySelect extends StatelessWidget {
                                 left: 2.sp,
                                 bottom: -10.sp,
                                 child: Padding(
-                                  padding: EdgeInsets.only(left: 4.0, right: 4.0, bottom: 1.0),
+                                  padding: const EdgeInsets.only(left: 4.0, right: 4.0, bottom: 1.0),
                                   child: SvgPicture.asset(
                                     'assets/images/activity/ico_challange_mountain.svg',
                                     width: 88.sp,

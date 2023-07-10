@@ -14,7 +14,7 @@ class Loader extends StatelessWidget {
         children: [
           Center(
             key: loaderController.dialogKey,
-            child: CircularProgressIndicator(), //무지성 돌돌이~
+            child: const CircularProgressIndicator(), //무지성 돌돌이~
           ),
         ],
       ),

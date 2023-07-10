@@ -64,7 +64,6 @@ class ActivityController extends SuperController with ActivityMixin, ChallengeMi
   final Rx<LocationAccuracyStatus> _locationAccuracyStatus = Rx(LocationAccuracyStatus.unknown);
   StreamSubscription<ServiceStatus>? _serviceStatusStream;
   final Rx<DateTime> receiveLocationTime = Rx(DateTime.now());
-  final HealthFactory health = HealthFactory();
   OverlayImage? startMaker;
   OverlayImage? endMaker;
   RxnInt challengeSelectedIndex = RxnInt(null);
@@ -834,6 +833,7 @@ class ActivityController extends SuperController with ActivityMixin, ChallengeMi
   @override
   void onResumed() {
     print('onResumed activity');
+    getUserState(showLoading: true);
     // TODO: implement onResumed
   }
 }

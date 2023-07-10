@@ -52,11 +52,11 @@ void showUpdateSnackbar() {
       isDismissible: false,
       snackPosition: SnackPosition.BOTTOM,
       backgroundColor: Colors.black.withOpacity(0.9),
-      titleText: StyledText(
+      titleText: const StyledText(
         '다운로드 완료',
         fontSize: 14,
       ),
-      messageText: StyledText(
+      messageText: const StyledText(
         '업데이트 해주세요',
         fontSize: 12,
       ),

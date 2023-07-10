@@ -86,16 +86,6 @@ class ChallengesController extends GetxController with GetTickerProviderStateMix
     super.onInit();
   }
 
-  @override
-  void onReady() {
-    super.onReady();
-  }
-
-  @override
-  void onClose() {
-    super.onClose();
-  }
-
   Future<void> refreshController() async {
     challengeList.value = RxList.empty();
     await getChallengesList();

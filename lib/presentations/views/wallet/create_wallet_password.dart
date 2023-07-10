@@ -51,14 +51,14 @@ class CreateWalletPassword extends StatelessWidget {
                   height: 32.sp / 22,
                 ),
                 children: [
-                  TextSpan(
+                  const TextSpan(
                     text: '안전한 지갑 사용을 위해\n',
                   ),
                   TextSpan(
                     text: '이체 비밀번호',
                     style: TextStyle(color: skyBlueColor),
                   ),
-                  TextSpan(
+                  const TextSpan(
                     text: '를 등록해주세요.',
                   ),
                 ],
@@ -101,7 +101,7 @@ class CreateWalletPassword extends StatelessWidget {
                             obscureText: true,
                             decoration: InputDecoration(
                               border: InputBorder.none,
-                              contentPadding: EdgeInsets.symmetric(horizontal: 15),
+                              contentPadding: const EdgeInsets.symmetric(horizontal: 15),
                               hintText: '이체 비밀번호를 입력해주세요',
                               hintStyle: TextStyle(
                                 color: deepGrayColor,
@@ -111,7 +111,7 @@ class CreateWalletPassword extends StatelessWidget {
                                 letterSpacing: -0.5,
                               ),
                             ),
-                            style: TextStyle(
+                            style: const TextStyle(
                               color: Colors.white,
                             ),
                             onChanged: (password) => controller.updatePassword(password),
@@ -140,7 +140,7 @@ class CreateWalletPassword extends StatelessWidget {
                             obscureText: true,
                             decoration: InputDecoration(
                               border: InputBorder.none,
-                              contentPadding: EdgeInsets.symmetric(horizontal: 15),
+                              contentPadding: const EdgeInsets.symmetric(horizontal: 15),
                               hintText: '이체 비밀번호를 확인해주세요',
                               hintStyle: TextStyle(
                                 color: deepGrayColor,
@@ -151,7 +151,7 @@ class CreateWalletPassword extends StatelessWidget {
                               ),
                             ),
                             textInputAction: TextInputAction.go,
-                            style: TextStyle(
+                            style: const TextStyle(
                               color: Colors.white,
                             ),
                             onChanged: (password) => controller.updateConfirmPassword(password),
@@ -162,11 +162,11 @@ class CreateWalletPassword extends StatelessWidget {
                       ],
                     ),
                   ),
-                  Padding(
-                    padding: const EdgeInsets.only(top: 12, left: 10),
+                  const Padding(
+                    padding: EdgeInsets.only(top: 12, left: 10),
                     child: Text(
                       '• 8~16자로 영문, 숫자, 특수문자가 조합해주세요.',
-                      style: const TextStyle(
+                      style: TextStyle(
                         fontSize: 14,
                         fontWeight: FontWeight.w500,
                         color: Color(0xffa4a4a4),
@@ -194,7 +194,7 @@ class CreateWalletPassword extends StatelessWidget {
                   height: 20 / 12,
                 ),
                 children: [
-                  TextSpan(
+                  const TextSpan(
                     text: '스타이카 월렛은 ',
                   ),
                   TextSpan(
@@ -204,7 +204,7 @@ class CreateWalletPassword extends StatelessWidget {
                       color: lightGrayColor,
                     ),
                   ),
-                  TextSpan(
+                  const TextSpan(
                     text: '이에요. ',
                   ),
                   TextSpan(
@@ -214,7 +214,7 @@ class CreateWalletPassword extends StatelessWidget {
                       color: lightGrayColor,
                     ),
                   ),
-                  TextSpan(
+                  const TextSpan(
                     text: '는 "개인키"이므로 사용자 기기에만 저장되고 관련 정보를 중앙에 일체 저장하지 않고 있어요.\n',
                   ),
                   TextSpan(

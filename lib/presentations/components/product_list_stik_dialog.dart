@@ -108,7 +108,7 @@ void showProductStikList(WalletMasterController controller) {
             children: [
               Padding(
                 padding: EdgeInsets.only(top: 15.0.sp, bottom: 5.sp),
-                child: StyledText(
+                child: const StyledText(
                   'TIK으로 교환',
                   fontSize: 18,
                   lineHeight: 18,
@@ -165,7 +165,7 @@ void showProductStikList(WalletMasterController controller) {
                         ),
                         Expanded(
                           child: Padding(
-                            padding: EdgeInsets.only(left: 20.0),
+                            padding: const EdgeInsets.only(left: 20.0),
                             child: Column(
                               crossAxisAlignment: CrossAxisAlignment.end,
                               children: [

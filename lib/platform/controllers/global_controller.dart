@@ -35,6 +35,7 @@ class GlobalController extends SuperController {
     super.onInit();
   }
 
+  @override
   void onReady() {
     print('Ready GlobalController');
     super.onReady();

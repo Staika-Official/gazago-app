@@ -136,7 +136,7 @@ class AdSelect extends StatelessWidget {
                                         )
                                       : StyledText(
                                           '광고 보고, ${controller.selectedChallenge.value.id == null ? '1' : '3'}GO 받고 시작하기',
-                                          color: controller.startAd.value == null ? Color(0xFF767883) : Colors.black,
+                                          color: controller.startAd.value == null ? const Color(0xFF767883) : Colors.black,
                                           fontSize: 20,
                                           fontWeight: 600,
                                           lineHeight: 20,

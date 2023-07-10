@@ -24,7 +24,7 @@ class CalendarCell extends StatelessWidget {
     // }, orElse: () => UserRewardStatisticsModel(id: -1));
     // print(dailyReward.toJson());
     return Padding(
-      padding: EdgeInsets.symmetric(horizontal: 2, vertical: 10),
+      padding: const EdgeInsets.symmetric(horizontal: 2, vertical: 10),
       child: Column(
         children: [
           Container(

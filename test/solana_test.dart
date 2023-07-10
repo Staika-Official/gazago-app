@@ -6,7 +6,7 @@ import 'package:solana/encoder.dart';
 import 'package:solana/solana.dart';
 
 void main() {
-  final rpcUrl = 'https://api.devnet.solana.com';
+  const rpcUrl = 'https://api.devnet.solana.com';
 
   final subscriptionClient = SubscriptionClient.connect('wss://api.devnet.solana.com');
 
@@ -19,7 +19,7 @@ void main() {
   });
 
   test('import wallet', () async {
-    final address = '6BufeZ6DFnpjn4KLG5gfe3DLAVAoS3imQxYBP6DzbMBg';
+    // final address = '6BufeZ6DFnpjn4KLG5gfe3DLAVAoS3imQxYBP6DzbMBg';
     List<int> privateKey = [161, 38, 33, 160, 179, 255, 235, 121, 6, 215, 185, 63, 133, 112, 250, 78, 156, 177, 93, 135, 102, 5, 156, 160, 192, 128, 24, 162, 226, 8, 177, 116];
     final testKeyPair = await Ed25519HDKeyPair.fromPrivateKeyBytes(
       privateKey: privateKey,
@@ -67,7 +67,7 @@ void main() {
       commitment: Commitment.confirmed,
     );
 
-    print('signature ${signature}');
+    print('signature $signature');
   });
 
   test('spl transfer', () async {
@@ -76,7 +76,7 @@ void main() {
       websocketUrl: Uri.parse('wss://api.devnet.solana.com'),
     );
 
-    final commitment = Commitment.confirmed;
+    const commitment = Commitment.confirmed;
 
     final sender = await getWalletA();
     final destination = Ed25519HDPublicKey.fromBase58('4L3ScUzhGu9onoZ6bbXCeFKFhkJ6tMAUHunj9akLu2P1');
@@ -166,7 +166,7 @@ void main() {
     print(sender.publicKey.toBase58());
     print('resignedTx ${tx.encode()}');
 
-    final accessToken =
+    const accessToken =
         'eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJhZG1pbiIsImF1dGgiOiJST0xFX0FETUlOLFJPTEVfVVNFUiIsImV4cCI6MTY3NjI2OTM3MSwidXNlcklkIjoiMyJ9.s9lJOVIOOuIBKAdRKxcyNnZoEvWVNga_dLISIMgAWDn5MvF8pdmAddqskGPHOVBlGg-nLq1IVudbcKJ_SWqxog';
 
     final send = {'clientId': 'GAZAGO', 'endocdeTransction': tx.encode()};
@@ -232,7 +232,7 @@ void main() {
       signatures: signatures,
     );
 
-    final accessToken =
+    const accessToken =
         'eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJhZG1pbiIsImF1dGgiOiJST0xFX0FETUlOLFJPTEVfVVNFUiIsImV4cCI6MTY3NjI3Njk1MiwidXNlcklkIjoiMyJ9.MDgxZSVg1rNKBLs_GrjBZFSp3bwKAiExvvO4R1ct5YyZFI9rWxYqRE2sD9071xUHWgYWlCeRGTR7cG9VCSKcFQ';
 
     /*
@@ -292,7 +292,7 @@ void main() {
       commitment: Commitment.confirmed,
     );
 
-    print('signature ${signature}');
+    print('signature $signature');
   });
 
   test('Create Token Account', () async {
@@ -321,7 +321,7 @@ void main() {
       commitment: Commitment.confirmed,
     );
 
-    print('signature ${signature}');
+    print('signature $signature');
   });
 
   test('Mint To', () async {
@@ -344,7 +344,7 @@ void main() {
       commitment: Commitment.confirmed,
     );
 
-    print('signature ${signature}');
+    print('signature $signature');
   });
 
   test('token transfer', () async {
@@ -360,7 +360,7 @@ void main() {
       owner: owner.publicKey,
       amount: 10000000,
     );
-    print('instruction ${instruction}');
+    print('instruction $instruction');
 
     final recentBlockhash = await rpcClient.getLatestBlockhash(commitment: Commitment.confirmed);
 
@@ -373,7 +373,7 @@ void main() {
     );*/
     print('signature ${signature.encode()}');
 
-    final token = '';
+    // final token = '';
 
     final send = {'clientId': 'GAZAGO', 'transInfo': signature.encode()};
 
@@ -425,11 +425,11 @@ Future<String> getFeeSign(accessToken, tx) async {
 }
 
 Future<Ed25519HDKeyPair> getWalletA() async {
-  final address = '6BufeZ6DFnpjn4KLG5gfe3DLAVAoS3imQxYBP6DzbMBg';
+  // final address = '6BufeZ6DFnpjn4KLG5gfe3DLAVAoS3imQxYBP6DzbMBg';
   List<int> privateKey = [161, 38, 33, 160, 179, 255, 235, 121, 6, 215, 185, 63, 133, 112, 250, 78, 156, 177, 93, 135, 102, 5, 156, 160, 192, 128, 24, 162, 226, 8, 177, 116];
 
   String endcode = base58encode(privateKey);
-  print('endcode ${endcode}');
+  print('endcode $endcode');
 
   final wallet = await Ed25519HDKeyPair.fromPrivateKeyBytes(
     privateKey: privateKey,
@@ -442,7 +442,7 @@ Ed25519HDPublicKey getWalletATokenAccount() {
 }
 
 Future<Ed25519HDKeyPair> getWalletB() async {
-  String address = '4L3ScUzhGu9onoZ6bbXCeFKFhkJ6tMAUHunj9akLu2P1';
+  // String address = '4L3ScUzhGu9onoZ6bbXCeFKFhkJ6tMAUHunj9akLu2P1';
   List<int> privateKey = [156, 174, 186, 87, 109, 39, 222, 252, 251, 84, 238, 187, 115, 49, 26, 79, 220, 78, 134, 99, 30, 196, 72, 51, 199, 107, 175, 192, 252, 93, 9, 21];
   final wallet = await Ed25519HDKeyPair.fromPrivateKeyBytes(
     privateKey: privateKey,

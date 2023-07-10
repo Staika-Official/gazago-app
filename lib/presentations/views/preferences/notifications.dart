@@ -18,7 +18,7 @@ class Notifications extends StatelessWidget {
               decoration: BoxDecoration(
                 borderRadius: BorderRadius.circular(10),
               ),
-              margin: EdgeInsets.only(top: 14),
+              margin: const EdgeInsets.only(top: 14),
               child: GestureDetector(
                 onTap: () => controller.moveToWebView(notice),
                 child: Image.network(
@@ -37,7 +37,7 @@ class Notifications extends StatelessWidget {
         physics: const ClampingScrollPhysics(),
         child: SafeArea(
           child: Padding(
-            padding: EdgeInsets.only(left: 22, right: 22),
+            padding: const EdgeInsets.only(left: 22, right: 22),
             child: Obx(() {
               return Column(
                 children: [

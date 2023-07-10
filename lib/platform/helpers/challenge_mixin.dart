@@ -133,7 +133,7 @@ mixin ChallengeMixin {
       notifiedChallengeList.add(challenge.id!);
       HiveStore.save(key: HiveKey.challengeNotificationList.name, value: notifiedChallengeList);
       HiveStore.save(key: HiveKey.challengeNotificationTime.name, value: DateTime(notifiedTime.year, notifiedTime.month, notifiedTime.day));
-      showLocalNotification(notificationType: NotificationType.challenge, title: '등산 챌린지 시작 포인트 발견', message: '주변에 챌린지를 시작 할 수 있는 ${challenge!.firstName}이 있어요. 뱃지 받으러 가자GO~~');
+      showLocalNotification(notificationType: NotificationType.challenge, title: '등산 챌린지 시작 포인트 발견', message: '주변에 챌린지를 시작 할 수 있는 ${challenge.firstName}이 있어요. 뱃지 받으러 가자GO~~');
       showToastPopup('등산 챌린지 시작 포인트 발견');
     }
   }

@@ -23,7 +23,7 @@ class WebView extends StatelessWidget {
             ? subBg01Color
             : webViewController.linkUrl.value.contains('taika')
                 ? Colors.white
-                : Color(0xFF191919),
+                : const Color(0xFF191919),
         child: SafeArea(
           child: InAppWebView(
             key: webViewController.webViewKey,
@@ -35,8 +35,8 @@ class WebView extends StatelessWidget {
               underPageBackgroundColor: webViewController.linkUrl.value.contains('leaderboard')
                   ? subBg01Color
                   : webViewController.linkUrl.value.contains('taika')
-                  ? Colors.white
-                  : Color(0xFF191919),
+                      ? Colors.white
+                      : const Color(0xFF191919),
             ),
             onLoadResourceWithCustomScheme: (controller, url) async {
               await controller.stopLoading();

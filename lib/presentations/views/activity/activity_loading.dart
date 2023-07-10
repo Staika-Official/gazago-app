@@ -10,10 +10,10 @@ import 'package:simple_animations/animation_builder/custom_animation_builder.dar
 import '../../styles/styled_text.dart';
 
 class ActivityLoading extends StatelessWidget {
-  ExerciseType exerciseType;
-  String? adId;
-  ChallengeModel? challenge;
-  ActivityLoading({Key? key, required this.exerciseType, this.adId, this.challenge}) : super(key: key);
+  final ExerciseType exerciseType;
+  final String? adId;
+  final ChallengeModel? challenge;
+  const ActivityLoading({Key? key, required this.exerciseType, this.adId, this.challenge}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {

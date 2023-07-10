@@ -26,7 +26,7 @@ class ChallengeLeaderboard extends StatelessWidget {
         children: [
           iconMyRankArrow,
           ConstrainedBox(
-            constraints: BoxConstraints(maxWidth: 60, minWidth: 50),
+            constraints: const BoxConstraints(maxWidth: 60, minWidth: 50),
             child: FittedBox(
               fit: BoxFit.scaleDown,
               child: Padding(
@@ -183,7 +183,7 @@ class ChallengeLeaderboard extends StatelessWidget {
           mainAxisSize: MainAxisSize.max,
           children: [
             ConstrainedBox(
-              constraints: BoxConstraints(maxWidth: 40, minWidth: 40),
+              constraints: const BoxConstraints(maxWidth: 40, minWidth: 40),
               child: FittedBox(
                 fit: BoxFit.scaleDown,
                 child: Padding(
@@ -201,7 +201,7 @@ class ChallengeLeaderboard extends StatelessWidget {
               ),
             ),
             Expanded(
-              child: Container(
+              child: SizedBox(
                 height: double.infinity,
                 child: Row(
                   crossAxisAlignment: CrossAxisAlignment.center,
@@ -214,7 +214,7 @@ class ChallengeLeaderboard extends StatelessWidget {
                               children: [
                                 Center(
                                   child: Padding(
-                                    padding: EdgeInsets.only(top: 7.0),
+                                    padding: const EdgeInsets.only(top: 7.0),
                                     child: CircleAvatar(
                                       radius: 16.sp,
                                       foregroundImage: (item.profileImageUrl == null || item.profileImageUrl == '')
@@ -443,7 +443,7 @@ class ChallengeLeaderboard extends StatelessWidget {
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
-                          StyledText(
+                          const StyledText(
                             '실시간 TOP10',
                             color: Colors.white,
                             fontSize: 16,
@@ -487,7 +487,7 @@ class ChallengeLeaderboard extends StatelessWidget {
                               child: const Center(child: CircularProgressIndicator()),
                             )
                           : controller.challengeRankingList.isEmpty
-                              ? Container(
+                              ? SizedBox(
                                   height: 500,
                                   child: Center(
                                     child: Column(

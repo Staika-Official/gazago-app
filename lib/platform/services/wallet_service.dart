@@ -115,9 +115,9 @@ class WalletService {
     String? email = HiveStore.loadString(key: HiveKey.email.name);
 
     print('##############');
-    print('accountSecretkey: ${accountSecretkey}');
+    print('accountSecretkey: $accountSecretkey');
     String? decryptPrivateKey = decrypt(accountSecretkey, email!, walletPassword);
-    print('decryptPrivateKey: ${decryptPrivateKey}');
+    print('decryptPrivateKey: $decryptPrivateKey');
 
     if (decryptPrivateKey == null) {}
 
@@ -225,9 +225,9 @@ class WalletService {
     String? email = HiveStore.loadString(key: HiveKey.email.name);
 
     print('##############');
-    print('accountSecretkey: ${accountSecretkey}');
+    print('accountSecretkey: $accountSecretkey');
     String? decryptPrivateKey = decrypt(accountSecretkey, email!, walletPassword);
-    print('decryptPrivateKey: ${decryptPrivateKey}');
+    print('decryptPrivateKey: $decryptPrivateKey');
 
     // if (decryptPrivateKey == null) {}
 

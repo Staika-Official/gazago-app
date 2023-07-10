@@ -366,7 +366,7 @@ mixin ActivityMixin {
 
   void startExercise(ExerciseType exerciseType, ChallengeModel? challenge, {String? adId}) async {
     String deviceId = HiveStore.loadString(key: HiveKey.uuid.name)!;
-    String sequence = Uuid().v4();
+    String sequence = const Uuid().v4();
 
     HiveStore.save(key: HiveKey.lastUpdatedStepCount.name, value: 0);
 

@@ -22,7 +22,7 @@ class ShopItems extends StatelessWidget {
             onTap: () => shopController.toItemDetail(item.id),
             child: Container(
               decoration: BoxDecoration(
-                color: item.publishType == 'NFT' ? Color(0xFF151519) : subBg01Color,
+                color: item.publishType == 'NFT' ? const Color(0xFF151519) : subBg01Color,
                 border: Border.all(
                   width: 2,
                   color: Colors.black,
@@ -56,7 +56,7 @@ class ShopItems extends StatelessWidget {
                                           ? SvgPicture.network(
                                               fit: BoxFit.contain,
                                               item.itemImageUrl!,
-                                              placeholderBuilder: (BuildContext context) => Center(child: SizedBox.square(dimension: 40, child: CircularProgressIndicator())),
+                                              placeholderBuilder: (BuildContext context) => const Center(child: SizedBox.square(dimension: 40, child: CircularProgressIndicator())),
                                               headers: imageNetworkHeader,
                                             )
                                           : CachedNetworkImage(

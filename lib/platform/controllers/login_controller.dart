@@ -60,6 +60,7 @@ class LoginController extends GetxController {
         idToken: googleAuth?.idToken,
       );
 
+      await FirebaseAuth.instance.signInWithCredential(credential);
       await requestLogin(LoginType.google, credential.idToken!);
     } catch (e) {
       print(e);
@@ -85,6 +86,8 @@ class LoginController extends GetxController {
         accessToken: appleCredential.authorizationCode,
         idToken: appleCredential.identityToken,
       );
+
+      await FirebaseAuth.instance.signInWithCredential(credential);
       await requestLogin(LoginType.apple, credential.accessToken!);
     } catch (e) {
       print(e);

@@ -60,11 +60,6 @@ class HomeMenuController extends SuperController {
   }
 
   @override
-  void onInit() async {
-    super.onInit();
-  }
-
-  @override
   void onReady() async {
     handleAppNotification();
     await checkUpdates();
@@ -142,16 +137,16 @@ class HomeMenuController extends SuperController {
   }
 
   Future<void> checkUpdates() async {
-    AppUpdateInfo? _appAndroidUpdateInfo;
-    VersionStatus? _appIOSUpdateInfo;
+    AppUpdateInfo? appAndroidUpdateInfo;
+    VersionStatus? appIOSUpdateInfo;
 
     Future<void> checkAppStores() async {
       if (Platform.isAndroid) {
-        _appAndroidUpdateInfo = await InAppUpdate.checkForUpdate().catchError((e) {
+        appAndroidUpdateInfo = await InAppUpdate.checkForUpdate().catchError((e) {
           showToastPopup(e.toString());
         });
       } else {
-        _appIOSUpdateInfo = await NewVersion(
+        appIOSUpdateInfo = await NewVersion(
           iOSId: F.isDev ? 'kr.co.eztechfin.gazaGo.dev' : 'kr.co.eztechfin.gazaGo',
         ).getVersionStatus().catchError((e) {
           showToastPopup(e.toString());
@@ -164,8 +159,8 @@ class HomeMenuController extends SuperController {
     if (needForceUpgrade) {
       await checkAppStores();
       if (Platform.isAndroid &&
-          _appAndroidUpdateInfo != null &&
-          [UpdateAvailability.updateAvailable, UpdateAvailability.developerTriggeredUpdateInProgress].any((result) => result == _appAndroidUpdateInfo?.updateAvailability)) {
+          appAndroidUpdateInfo != null &&
+          [UpdateAvailability.updateAvailable, UpdateAvailability.developerTriggeredUpdateInProgress].any((result) => result == appAndroidUpdateInfo?.updateAvailability)) {
         await InAppUpdate.performImmediateUpdate().then((result) {
           if ([AppUpdateResult.userDeniedUpdate, AppUpdateResult.inAppUpdateFailed].any((resultStatus) => resultStatus == result)) {
             showForceUpdateApp();
@@ -173,7 +168,7 @@ class HomeMenuController extends SuperController {
         }).catchError((e) {
           showToastPopup(e.toString());
         });
-      } else if (_appIOSUpdateInfo != null && _appIOSUpdateInfo!.canUpdate) {
+      } else if (appIOSUpdateInfo != null && appIOSUpdateInfo!.canUpdate) {
         showForceUpdateApp();
       }
     } else {
@@ -181,9 +176,9 @@ class HomeMenuController extends SuperController {
       if (needRecommendedUpgrade) {
         await checkAppStores();
         if (Platform.isAndroid &&
-            _appAndroidUpdateInfo != null &&
-            [UpdateAvailability.updateAvailable, UpdateAvailability.developerTriggeredUpdateInProgress].any((result) => result == _appAndroidUpdateInfo?.updateAvailability)) {
-          if (_appAndroidUpdateInfo!.flexibleUpdateAllowed) {
+            appAndroidUpdateInfo != null &&
+            [UpdateAvailability.updateAvailable, UpdateAvailability.developerTriggeredUpdateInProgress].any((result) => result == appAndroidUpdateInfo?.updateAvailability)) {
+          if (appAndroidUpdateInfo!.flexibleUpdateAllowed) {
             await InAppUpdate.startFlexibleUpdate().then((value) {
               if (value == AppUpdateResult.success) {
                 showUpdateSnackbar();
@@ -191,10 +186,10 @@ class HomeMenuController extends SuperController {
             }).catchError((e) {
               showToastPopup(e.toString());
             });
-          } else if (_appAndroidUpdateInfo!.installStatus == InstallStatus.downloaded) {
+          } else if (appAndroidUpdateInfo!.installStatus == InstallStatus.downloaded) {
             showUpdateSnackbar();
           }
-        } else if (_appIOSUpdateInfo != null && _appIOSUpdateInfo!.canUpdate) {
+        } else if (appIOSUpdateInfo != null && appIOSUpdateInfo!.canUpdate) {
           showRecommendUpdateApp();
         }
       }

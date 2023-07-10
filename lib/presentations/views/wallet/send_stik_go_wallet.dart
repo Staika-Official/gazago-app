@@ -73,7 +73,7 @@ class SendStikGoWallet extends StatelessWidget {
               ),
               Padding(
                 padding: EdgeInsets.only(top: 50.0.sp, left: 28.sp, right: 28.sp),
-                child: StyledText(
+                child: const StyledText(
                   '보내는 STIK',
                   fontWeight: 500,
                   fontSize: 18,
@@ -98,20 +98,20 @@ class SendStikGoWallet extends StatelessWidget {
                           fontSize: 24.sp,
                           fontWeight: FontWeight.w400,
                         ),
-                        focusedBorder: OutlineInputBorder(
+                        focusedBorder: const OutlineInputBorder(
                           borderRadius: BorderRadius.all(Radius.circular(10.0)),
                           borderSide: BorderSide(width: 2, color: Color(0xFF363841)),
                         ),
-                        enabledBorder: OutlineInputBorder(
+                        enabledBorder: const OutlineInputBorder(
                           borderRadius: BorderRadius.all(Radius.circular(10.0)),
                           borderSide: BorderSide(width: 2, color: Color(0xFF363841)),
                         ),
-                        border: OutlineInputBorder(
+                        border: const OutlineInputBorder(
                           borderRadius: BorderRadius.all(Radius.circular(10.0)),
                         ),
                       ),
                       controller: controller.stikAmountTextController,
-                      keyboardType: TextInputType.numberWithOptions(decimal: true, signed: false),
+                      keyboardType: const TextInputType.numberWithOptions(decimal: true, signed: false),
                       textInputAction: TextInputAction.go,
                       inputFormatters: [
                         FilteringTextInputFormatter.allow(RegExp(r'(\d*\.?\d*)')),

@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:gaza_go/platform/controllers/verification_cert_code_controller.dart';
 import 'package:gaza_go/presentations/components/default_container.dart';
@@ -83,7 +82,7 @@ class VerificationCertCode extends StatelessWidget {
                                   hintStyle: TextStyle(
                                     color: deepGrayColor,
                                   ),
-                                  contentPadding: EdgeInsets.symmetric(
+                                  contentPadding: const EdgeInsets.symmetric(
                                     horizontal: 15,
                                     vertical: 0,
                                   ),

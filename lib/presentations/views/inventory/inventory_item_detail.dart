@@ -93,7 +93,7 @@ class InventoryItemDetail extends StatelessWidget {
                                           padding: EdgeInsets.symmetric(vertical: 10.0.sp, horizontal: 16.sp),
                                           child: Column(
                                             children: [
-                                              Container(
+                                              SizedBox(
                                                 width: double.infinity,
                                                 child: Stack(
                                                   children: [
@@ -303,7 +303,7 @@ class InventoryItemDetail extends StatelessWidget {
                                                                 controller.selectedItem.value.itemStat!.goProfit! > 0 &&
                                                                 controller.selectedItem.value.itemStat!.luck! < 1 &&
                                                                 (controller.selectedItem.value.itemStat!.durability! > 0 || controller.selectedItem.value.itemStat!.stamina! > 0))
-                                                              Container(
+                                                              SizedBox(
                                                                 height: 35.sp,
                                                                 child: VerticalDivider(
                                                                   color: popupBgColor,
@@ -350,7 +350,7 @@ class InventoryItemDetail extends StatelessWidget {
                                                             if (controller.selectedItem.value.itemStat != null &&
                                                                 controller.selectedItem.value.itemStat!.durability! > 0 &&
                                                                 controller.selectedItem.value.itemStat!.goProfit! < 1)
-                                                              Container(
+                                                              SizedBox(
                                                                 height: 35.sp,
                                                                 child: VerticalDivider(
                                                                   color: popupBgColor,
@@ -394,7 +394,7 @@ class InventoryItemDetail extends StatelessWidget {
                                                                 ),
                                                               ),
                                                             if (controller.selectedItem.value.itemStat != null && controller.selectedItem.value.itemStat!.luck! > 0)
-                                                              Container(
+                                                              SizedBox(
                                                                 height: 35.sp,
                                                                 child: VerticalDivider(
                                                                   color: popupBgColor,
@@ -521,7 +521,7 @@ class InventoryItemDetail extends StatelessWidget {
                                                       Row(
                                                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                                         children: [
-                                                          StyledText(
+                                                          const StyledText(
                                                             '연관 챌린지',
                                                             fontWeight: 600,
                                                             fontSize: 18,

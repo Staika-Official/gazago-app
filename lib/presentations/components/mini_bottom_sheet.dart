@@ -85,14 +85,14 @@ Widget renderParticipateInChallenge() {
                 height: 24.sp / 16,
               ),
               children: [
-                TextSpan(
+                const TextSpan(
                   text: '이미 챌린지 아이템을\n',
                 ),
                 TextSpan(
                   text: '장착중',
                   style: TextStyle(color: skyBlueColor),
                 ),
-                TextSpan(
+                const TextSpan(
                   text: '입니다',
                 ),
               ],
@@ -138,14 +138,14 @@ Widget renderParticipateInChallenge() {
                 height: 24.sp / 16,
               ),
               children: [
-                TextSpan(
+                const TextSpan(
                   text: '이미 챌린지 아이템을\n',
                 ),
                 TextSpan(
                   text: '보유중',
                   style: TextStyle(color: skyBlueColor),
                 ),
-                TextSpan(
+                const TextSpan(
                   text: '입니다',
                 ),
               ],
@@ -171,7 +171,7 @@ Widget renderParticipateInChallenge() {
                 ),
                 child: Padding(
                   padding: EdgeInsets.symmetric(vertical: 13.0.sp, horizontal: 25.sp),
-                  child: StyledText(
+                  child: const StyledText(
                     '참가하기',
                     fontWeight: 500,
                     fontSize: 18,
@@ -191,7 +191,7 @@ Widget renderParticipateInChallenge() {
               height: 24.sp / 16,
             ),
             children: [
-              TextSpan(
+              const TextSpan(
                 text: '아이템 구매 후 장착하고\n',
               ),
               TextSpan(
@@ -221,7 +221,7 @@ Widget renderParticipateInChallenge() {
               ),
               child: Padding(
                 padding: EdgeInsets.symmetric(vertical: 13.0.sp, horizontal: 25.sp),
-                child: StyledText(
+                child: const StyledText(
                   '참가하기',
                   fontWeight: 500,
                   fontSize: 18,
@@ -244,14 +244,14 @@ Widget renderParticipateInChallenge() {
             height: 24.sp / 16,
           ),
           children: [
-            TextSpan(
+            const TextSpan(
               text: '아이템 장착으로\n',
             ),
             TextSpan(
               text: '챌린지 참가중',
               style: TextStyle(color: skyBlueColor),
             ),
-            TextSpan(
+            const TextSpan(
               text: '입니다.',
             ),
           ],
@@ -272,7 +272,7 @@ Widget renderParticipateInChallenge() {
             ),
             child: Padding(
               padding: EdgeInsets.symmetric(vertical: 13.0.sp, horizontal: 25.sp),
-              child: StyledText(
+              child: const StyledText(
                 '참가 중',
                 fontWeight: 500,
                 fontSize: 18,
@@ -293,14 +293,14 @@ Widget renderParticipateInChallenge() {
               height: 24.sp / 16,
             ),
             children: [
-              TextSpan(
+              const TextSpan(
                 text: '이미 챌린지 아이템을\n',
               ),
               TextSpan(
                 text: '보유중',
                 style: TextStyle(color: skyBlueColor),
               ),
-              TextSpan(
+              const TextSpan(
                 text: '입니다',
               ),
             ],
@@ -326,7 +326,7 @@ Widget renderParticipateInChallenge() {
               ),
               child: Padding(
                 padding: EdgeInsets.symmetric(vertical: 13.0.sp, horizontal: 25.sp),
-                child: StyledText(
+                child: const StyledText(
                   '참가하기',
                   fontWeight: 500,
                   fontSize: 18,
@@ -345,7 +345,7 @@ Widget renderParticipateInChallenge() {
               height: 24.sp / 16,
             ),
             children: [
-              TextSpan(
+              const TextSpan(
                 text: '아이템 구매 후 장착하고\n',
               ),
               TextSpan(
@@ -375,7 +375,7 @@ Widget renderParticipateInChallenge() {
               ),
               child: Padding(
                 padding: EdgeInsets.symmetric(vertical: 13.0.sp, horizontal: 25.sp),
-                child: StyledText(
+                child: const StyledText(
                   '참가하기',
                   fontWeight: 500,
                   fontSize: 18,
@@ -400,7 +400,7 @@ Widget renderParticipateInChallenge() {
               text: '아이템 판매완료',
               style: TextStyle(color: skyBlueColor),
             ),
-            TextSpan(
+            const TextSpan(
               text: '로\n챌린지 참가가 마감되었습니다.',
             ),
           ],
@@ -446,7 +446,7 @@ Widget renderParticipateInChallenge() {
             fontSize: 16.sp,
             height: 24.sp / 16,
           ),
-          children: [
+          children: const [
             TextSpan(
               text: '수고하셨습니다.\n',
             ),
@@ -471,7 +471,7 @@ Widget renderParticipateInChallenge() {
             fontSize: 16.sp,
             height: 24.sp / 16,
           ),
-          children: [
+          children: const [
             TextSpan(
               text: '수고하셨습니다.\n',
             ),
@@ -493,7 +493,7 @@ Widget renderParticipateInChallenge() {
             fontSize: 16.sp,
             height: 24.sp / 16,
           ),
-          children: [
+          children: const [
             TextSpan(
               text: '챌린지에 참가해주셔서\n',
             ),
@@ -515,7 +515,7 @@ Widget renderParticipateInChallenge() {
             fontSize: 16.sp,
             height: 24.sp / 16,
           ),
-          children: [
+          children: const [
             TextSpan(
               text: '챌린지가 종료되었습니다\n',
             ),
@@ -626,13 +626,13 @@ Widget renderParticipateInChallenge() {
                     ? ShaderMask(
                         blendMode: BlendMode.modulate,
                         shaderCallback: (size) => LinearGradient(
-                          colors: [Color(0XFF0EE6F3), skyBlueColor],
+                          colors: [const Color(0XFF0EE6F3), skyBlueColor],
                           begin: Alignment.topCenter,
                           end: Alignment.bottomCenter,
                         ).createShader(
                           Rect.fromLTWH(0, 0, size.width, 16),
                         ),
-                        child: StyledText(
+                        child: const StyledText(
                           '챌린지 기간',
                           fontSize: 14,
                           lineHeight: 20,
@@ -652,7 +652,7 @@ Widget renderParticipateInChallenge() {
                       ? ShaderMask(
                           blendMode: BlendMode.modulate,
                           shaderCallback: (size) => LinearGradient(
-                            colors: [Color(0XFF0EE6F3), skyBlueColor],
+                            colors: [const Color(0XFF0EE6F3), skyBlueColor],
                             begin: Alignment.topCenter,
                             end: Alignment.bottomCenter,
                           ).createShader(

@@ -35,7 +35,7 @@ class SecondaryAppbar extends StatelessWidget implements PreferredSizeWidget {
             Padding(
               padding: EdgeInsets.only(left: 4.sp),
               child: ConstrainedBox(
-                constraints: BoxConstraints(maxWidth: 90),
+                constraints: const BoxConstraints(maxWidth: 90),
                 child: FittedBox(
                   fit: BoxFit.scaleDown,
                   child: StyledText(

@@ -54,11 +54,6 @@ class ChallengesDetailController extends GetxController with GetTickerProviderSt
   }
 
   @override
-  void onReady() {
-    super.onReady();
-  }
-
-  @override
   void onClose() {
     challengesController.getChallengesList();
     super.onClose();

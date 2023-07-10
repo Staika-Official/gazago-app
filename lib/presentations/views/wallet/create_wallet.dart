@@ -36,7 +36,7 @@ class CreateWallet extends StatelessWidget {
                         height: 120,
                         repeat: true,
                       ),
-                      StyledText(
+                      const StyledText(
                         '지갑을 만들고 있습니다.',
                         fontSize: 22,
                         fontWeight: 600,

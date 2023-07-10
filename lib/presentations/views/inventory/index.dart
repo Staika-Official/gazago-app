@@ -25,7 +25,7 @@ class InventoryHome extends StatelessWidget {
       controller: controller.singleChildScrollController,
       child: Obx(() {
         return Padding(
-          padding: EdgeInsets.only(top:12.sp),
+          padding: EdgeInsets.only(top: 12.sp),
           child: ConstrainedBox(
             constraints: BoxConstraints(
               maxHeight: controller.isLoaded.value
@@ -99,9 +99,9 @@ class InventoryHome extends StatelessWidget {
                                     iconShopDurabilityLight,
                                     Padding(
                                       padding: EdgeInsets.only(left: 4.0.sp),
-                                      child: StyledText(
+                                      child: const StyledText(
                                         '내구도',
-                                        color: const Color(0xFFB0A3FF),
+                                        color: Color(0xFFB0A3FF),
                                         fontSize: 12,
                                         lineHeight: 12,
                                         letterSpacing: -.1,
@@ -187,7 +187,7 @@ class InventoryHome extends StatelessWidget {
                       ),
                       child: Padding(
                         padding: EdgeInsets.symmetric(vertical: 8.0.sp, horizontal: 15.sp),
-                        child: StyledText(
+                        child: const StyledText(
                           '능력치는 수치가 높을수록 좋아요!',
                           fontWeight: 400,
                           fontSize: 10,

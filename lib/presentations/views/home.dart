@@ -122,7 +122,7 @@ class Home extends StatelessWidget {
                   controller,
                 )
               : AnimatedContainer(
-                  duration: Duration(milliseconds: 300),
+                  duration: const Duration(milliseconds: 300),
                   height: controller.hideBottomNav.value ? 0 : controller.bottomNavHeight.value,
                   child: Wrap(
                     children: [

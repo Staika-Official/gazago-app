@@ -49,14 +49,14 @@ class RankingHome extends StatelessWidget {
                 ),
               ],
             ),
-            Divider(
+            const Divider(
               color: Color(0xFF2E3038),
               height: 1,
               thickness: 1,
             ),
             Expanded(
               child: TabBarView(
-                physics: NeverScrollableScrollPhysics(),
+                physics: const NeverScrollableScrollPhysics(),
                 controller: controller.tabController,
                 children: const [
                   LeaderboardHome(),

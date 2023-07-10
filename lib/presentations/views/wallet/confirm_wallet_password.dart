@@ -42,14 +42,14 @@ Future<String?> showConfirmPasswordDialog(WalletMasterController controller) {
                     height: 32.sp / 22,
                   ),
                   children: [
-                    TextSpan(
+                    const TextSpan(
                       text: '안전한 지갑 사용을 위해\n',
                     ),
                     TextSpan(
                       text: '이체 비밀번호',
                       style: TextStyle(color: skyBlueColor),
                     ),
-                    TextSpan(
+                    const TextSpan(
                       text: '를 한번 확인합니다.',
                     ),
                   ],
@@ -92,7 +92,7 @@ Future<String?> showConfirmPasswordDialog(WalletMasterController controller) {
                               obscureText: true,
                               decoration: InputDecoration(
                                 border: InputBorder.none,
-                                contentPadding: EdgeInsets.symmetric(horizontal: 15),
+                                contentPadding: const EdgeInsets.symmetric(horizontal: 15),
                                 hintText: '이체 비밀번호를 입력해주세요',
                                 hintStyle: TextStyle(
                                   color: deepGrayColor,
@@ -102,7 +102,7 @@ Future<String?> showConfirmPasswordDialog(WalletMasterController controller) {
                                   letterSpacing: -0.5,
                                 ),
                               ),
-                              style: TextStyle(
+                              style: const TextStyle(
                                 color: Colors.white,
                               ),
                               onChanged: (password) => controller.updatePassword(password),
@@ -126,11 +126,11 @@ Future<String?> showConfirmPasswordDialog(WalletMasterController controller) {
                         ],
                       ),
                     ),
-                    Padding(
-                      padding: const EdgeInsets.only(top: 12, left: 10),
+                    const Padding(
+                      padding: EdgeInsets.only(top: 12, left: 10),
                       child: Text(
                         '• 8~16자로 영문, 숫자, 특수문자가 조합되어 있습니다.',
-                        style: const TextStyle(
+                        style: TextStyle(
                           fontSize: 14,
                           fontWeight: FontWeight.w500,
                           color: Color(0xffa4a4a4),

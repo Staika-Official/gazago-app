@@ -31,7 +31,7 @@ class Laboratory extends StatelessWidget {
                         onSubmitted: (String text) => debuggingController.verifyLabPassword(),
                         decoration: InputDecoration(
                           focusColor: skyBlueColor,
-                          enabledBorder: OutlineInputBorder(
+                          enabledBorder: const OutlineInputBorder(
                             borderSide: BorderSide(
                               color: Colors.white,
                             ),
@@ -45,7 +45,7 @@ class Laboratory extends StatelessWidget {
                         textAlign: TextAlign.center,
                         textInputAction: TextInputAction.go,
                         controller: debuggingController.labPasswordController,
-                        style: TextStyle(
+                        style: const TextStyle(
                           color: Colors.white,
                         ),
                       ),

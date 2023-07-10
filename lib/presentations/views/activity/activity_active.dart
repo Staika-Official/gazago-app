@@ -362,7 +362,7 @@ class ActivityActive extends StatelessWidget {
                                                             fontWeight: 700,
                                                             letterSpacing: -.1,
                                                           ),
-                                                        StyledText(
+                                                        const StyledText(
                                                           ' GO',
                                                           fontSize: 14,
                                                           fontWeight: 700,

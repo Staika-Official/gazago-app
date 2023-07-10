@@ -105,7 +105,7 @@ mixin AdmobMixin {
           if (successCallback != null) successCallback();
         },
         onAdFailedToLoad: (error) {
-          print('RewardedAd failed to load: $error adType ${adType}');
+          print('RewardedAd failed to load: $error adType $adType');
           startAd.value = null;
           isLoadedAd.value = false;
           adLoadAttempts[adType] = adLoadAttempts[adType]! + 1;
