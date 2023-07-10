@@ -165,7 +165,7 @@ class ArchiveDetail extends StatelessWidget {
                   activeLayers: const [MapLayer.LAYER_GROUP_MOUNTAIN],
                   onMapCreated: (mapController) => controller.recordMapCreated(mapController, controller.locations),
                   initialCameraPosition: CameraPosition(
-                    target: controller.locations.length > 1 ? controller.locations.first : const LatLng(37.5525, 126.9883),
+                    target: controller.locations.isNotEmpty ? controller.locations.first : const LatLng(37.5525, 126.9883),
                   ),
                   pathOverlays: {
                     PathOverlay(
