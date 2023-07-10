@@ -1,5 +1,3 @@
-import 'dart:async';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:gaza_go/constants/enums.dart';
@@ -265,7 +263,7 @@ class ActivityHome extends StatelessWidget {
   Widget build(BuildContext context) {
     ActivityController controller = Get.find();
 
-    final challengeMovie = MovieTween()
+    var challengeMovie = MovieTween()
       ..scene(begin: const Duration(seconds: 1), duration: const Duration(seconds: 2))
           .thenTween('width', Tween<double>(begin: 70.sp, end: 270.sp), duration: const Duration(milliseconds: 300), curve: Curves.easeOut)
           .tween('opacity', Tween<double>(begin: 0, end: 1), curve: Curves.easeOut)
@@ -498,10 +496,13 @@ class ActivityHome extends StatelessWidget {
                                                   children: [
                                                     InkWell(
                                                       onTap: () {
-                                                        controller.challengeLoadControl.value = Control.playReverseFromEnd;
-                                                        Timer(Duration.zero, () {
-                                                          controller.challengeLoadControl.value = Control.stop;
-                                                        });
+                                                        controller.challengeLoadControl.value = Control.stop;
+                                                        challengeMovie = MovieTween()
+                                                          ..scene(begin: const Duration(milliseconds: 200), duration: const Duration(milliseconds: 200))
+                                                              .thenTween('opacity', Tween<double>(begin: 1, end: 0), duration: const Duration(milliseconds: 300), curve: Curves.easeOut)
+                                                              .tween('width', Tween<double>(begin: 250.sp, end: 70.sp), curve: Curves.easeOut)
+                                                              .thenTween('bottom', Tween<double>(begin: 0, end: 10.sp), duration: const Duration(milliseconds: 300), curve: Curves.easeOut)
+                                                              .thenTween('bottom', Tween<double>(begin: 10.sp, end: 0), duration: const Duration(milliseconds: 300), curve: Curves.easeIn);
                                                       },
                                                       child: Padding(
                                                         padding: const EdgeInsets.only(
