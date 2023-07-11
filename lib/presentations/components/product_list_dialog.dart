@@ -34,7 +34,7 @@ List<Widget> renderProductList(WalletMasterController controller) {
                   Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      if (product.key > 2)
+                      if ([2, 4, 5].any((element) => element == product.key))
                         Padding(
                           padding: const EdgeInsets.only(bottom: 7),
                           child: StyledText(
@@ -61,13 +61,13 @@ List<Widget> renderProductList(WalletMasterController controller) {
                             lineHeight: 18.sp,
                             letterSpacing: -0.5,
                           ),
-                          if (product.key > 2)
+                          if (product.key > 1)
                             Padding(
                               padding: const EdgeInsets.only(left: 8),
                               child: Row(
                                 children: [
                                   StyledText(
-                                    '+ ${formatDecimalPlaces(controller.getProductPrice(product.value.id) * 0.1, 0)}',
+                                    '+ ${formatDecimalPlaces(controller.getProductPrice(product.value.id) * (product.key < 4 ? 0.05 : 0.1), 0)}',
                                     fontSize: 12.sp,
                                     fontWeight: 700,
                                     lineHeight: 16.sp,

@@ -323,18 +323,20 @@ class WalletMasterController extends GetxController with SolanaMixin, GetTickerP
     } else {
       Set<String> _kIds = F.isDev
           ? <String>{
-              'ptik_purchase_dev_6',
-              'ptik_purchase_dev_7',
-              'ptik_purchase_dev_8',
-              'ptik_purchase_dev_9',
-              'ptik_purchase_dev_10',
+              'ptik_purchase_dev_11',
+              'ptik_purchase_dev_12',
+              'ptik_purchase_dev_13',
+              'ptik_purchase_dev_14',
+              'ptik_purchase_dev_15',
+              'ptik_purchase_dev_16',
             }
           : <String>{
-              'ptik_purchase_6',
-              'ptik_purchase_7',
-              'ptik_purchase_8',
-              'ptik_purchase_9',
-              'ptik_purchase_10',
+              'ptik_purchase_11',
+              'ptik_purchase_12',
+              'ptik_purchase_13',
+              'ptik_purchase_14',
+              'ptik_purchase_15',
+              'ptik_purchase_16',
             };
 
       final ProductDetailsResponse response = await InAppPurchase.instance.queryProductDetails(_kIds);
@@ -457,6 +459,24 @@ class WalletMasterController extends GetxController with SolanaMixin, GetTickerP
         break;
       case '10':
         rewardTikAmount = 60000;
+        break;
+      case '11':
+        rewardTikAmount = 1500;
+        break;
+      case '12':
+        rewardTikAmount = 4900;
+        break;
+      case '13':
+        rewardTikAmount = 9900;
+        break;
+      case '14':
+        rewardTikAmount = 19000;
+        break;
+      case '15':
+        rewardTikAmount = 55000;
+        break;
+      case '16':
+        rewardTikAmount = 89000;
         break;
     }
     return rewardTikAmount;
