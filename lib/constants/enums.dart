@@ -96,6 +96,7 @@ enum HiveKey {
   hasChallengeSuccessPushMessage,
   luckSound,
   famousChallengeBadgeIssued,
+  expirationNotificationState,
 }
 
 enum ResponseStatus {
@@ -246,6 +247,7 @@ enum NotificationType {
   staminaDepleted,
   durabilityLow,
   durabilityDepleted,
+  normal,
 }
 
 extension NotificationId on NotificationType {
@@ -261,6 +263,8 @@ extension NotificationId on NotificationType {
       case NotificationType.durabilityLow:
       case NotificationType.durabilityDepleted:
         return 3;
+      case NotificationType.normal:
+        return 4;
     }
   }
 }
