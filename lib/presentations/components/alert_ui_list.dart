@@ -2734,116 +2734,117 @@ void showLeaderboardInfo() {
 
 Future<void> showMainPopupAlert(NoticePopupController noticePopupController) async {
   final CarouselController carouselController = CarouselController();
-
-  await Get.bottomSheet(
-    isDismissible: false,
-    isScrollControlled: true,
-    WillPopScope(
-      onWillPop: () async => false,
-      child: Container(
-        decoration: const BoxDecoration(
-          color: Colors.transparent,
-        ),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.end,
-          mainAxisAlignment: MainAxisAlignment.end,
-          mainAxisSize: MainAxisSize.max,
-          children: [
-            Stack(children: [
-              CarouselSlider(
-                key: const Key('Slider'),
-                items: noticePopupController.noticeMainPopupList
-                    .map((item) => SizedBox(
-                          width: double.infinity,
-                          child: InkWell(
-                            onTap: () => noticePopupController.moveToWebView(item),
-                            child: item.imageUrlKo != null
-                                ? Image.network(
-                                    item.imageUrlKo!,
-                                    width: double.infinity,
-                                  )
-                                : Container(),
+  if (Get.isBottomSheetOpen == null || !Get.isBottomSheetOpen!) {
+    await Get.bottomSheet(
+      isDismissible: false,
+      isScrollControlled: true,
+      WillPopScope(
+        onWillPop: () async => false,
+        child: Container(
+          decoration: const BoxDecoration(
+            color: Colors.transparent,
+          ),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.end,
+            mainAxisAlignment: MainAxisAlignment.end,
+            mainAxisSize: MainAxisSize.max,
+            children: [
+              Stack(children: [
+                CarouselSlider(
+                  key: const Key('Slider'),
+                  items: noticePopupController.noticeMainPopupList
+                      .map((item) => SizedBox(
+                            width: double.infinity,
+                            child: InkWell(
+                              onTap: () => noticePopupController.moveToWebView(item),
+                              child: item.imageUrlKo != null
+                                  ? Image.network(
+                                      item.imageUrlKo!,
+                                      width: double.infinity,
+                                    )
+                                  : Container(),
+                            ),
+                          ))
+                      .toList(),
+                  carouselController: carouselController,
+                  options: CarouselOptions(
+                    aspectRatio: 1,
+                    viewportFraction: 1,
+                    autoPlay: true,
+                    enlargeCenterPage: false,
+                    enableInfiniteScroll: false,
+                    onPageChanged: (index, reason) {
+                      noticePopupController.setCurrent(index);
+                    },
+                    onScrolled: (op) {
+                      noticePopupController.setValue(op!);
+                    },
+                  ),
+                ),
+                Positioned(
+                    right: 20.sp,
+                    top: 12.sp,
+                    child: Obx(() {
+                      return Container(
+                        decoration: BoxDecoration(
+                          color: popupBgColor,
+                          borderRadius: BorderRadius.circular(20.sp),
+                        ),
+                        child: Padding(
+                          padding: EdgeInsets.symmetric(horizontal: 8.0.sp, vertical: 4.0.sp),
+                          child: StyledText(
+                            '${(noticePopupController.current.value + 1).toString()}/${noticePopupController.noticeMainPopupList.length}',
+                            fontSize: 16,
+                            lineHeight: 17,
+                            fontWeight: 500,
                           ),
-                        ))
-                    .toList(),
-                carouselController: carouselController,
-                options: CarouselOptions(
-                  aspectRatio: 1,
-                  viewportFraction: 1,
-                  autoPlay: true,
-                  enlargeCenterPage: false,
-                  enableInfiniteScroll: false,
-                  onPageChanged: (index, reason) {
-                    noticePopupController.setCurrent(index);
-                  },
-                  onScrolled: (op) {
-                    noticePopupController.setValue(op!);
-                  },
+                        ),
+                      );
+                    })),
+              ]),
+              Container(
+                color: popupBgColor,
+                child: Padding(
+                  padding: EdgeInsets.symmetric(horizontal: 20.0.sp),
+                  child: Row(
+                    mainAxisSize: MainAxisSize.max,
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      InkWell(
+                        onTap: () => noticePopupController.onSavePopupCloseDate(),
+                        child: Padding(
+                          padding: EdgeInsets.symmetric(vertical: 28.0.sp, horizontal: 10.sp),
+                          child: const StyledText(
+                            '오늘 그만 보기',
+                            color: Color(0xFFB6B6B6),
+                            fontSize: 16,
+                            lineHeight: 16,
+                            fontWeight: 500,
+                          ),
+                        ),
+                      ),
+                      InkWell(
+                        onTap: () => Get.back(),
+                        child: Padding(
+                          padding: EdgeInsets.symmetric(vertical: 28.0.sp, horizontal: 10.sp),
+                          child: const StyledText(
+                            '닫기',
+                            fontWeight: 700,
+                            fontSize: 16,
+                            lineHeight: 16,
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
                 ),
               ),
-              Positioned(
-                  right: 20.sp,
-                  top: 12.sp,
-                  child: Obx(() {
-                    return Container(
-                      decoration: BoxDecoration(
-                        color: popupBgColor,
-                        borderRadius: BorderRadius.circular(20.sp),
-                      ),
-                      child: Padding(
-                        padding: EdgeInsets.symmetric(horizontal: 8.0.sp, vertical: 4.0.sp),
-                        child: StyledText(
-                          '${(noticePopupController.current.value + 1).toString()}/${noticePopupController.noticeMainPopupList.length}',
-                          fontSize: 16,
-                          lineHeight: 17,
-                          fontWeight: 500,
-                        ),
-                      ),
-                    );
-                  })),
-            ]),
-            Container(
-              color: popupBgColor,
-              child: Padding(
-                padding: EdgeInsets.symmetric(horizontal: 20.0.sp),
-                child: Row(
-                  mainAxisSize: MainAxisSize.max,
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    InkWell(
-                      onTap: () => noticePopupController.onSavePopupCloseDate(),
-                      child: Padding(
-                        padding: EdgeInsets.symmetric(vertical: 28.0.sp, horizontal: 10.sp),
-                        child: const StyledText(
-                          '오늘 그만 보기',
-                          color: Color(0xFFB6B6B6),
-                          fontSize: 16,
-                          lineHeight: 16,
-                          fontWeight: 500,
-                        ),
-                      ),
-                    ),
-                    InkWell(
-                      onTap: () => Get.back(),
-                      child: Padding(
-                        padding: EdgeInsets.symmetric(vertical: 28.0.sp, horizontal: 10.sp),
-                        child: const StyledText(
-                          '닫기',
-                          fontWeight: 700,
-                          fontSize: 16,
-                          lineHeight: 16,
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-            ),
-          ],
+            ],
+          ),
         ),
       ),
-    ),
-  );
+    );
+  }
 }
 
 void showNotChallangeAbleAlert(ActivityController controller) {
