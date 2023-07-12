@@ -40,9 +40,14 @@ class ShopItems extends StatelessWidget {
                       mainAxisAlignment: MainAxisAlignment.start,
                       crossAxisAlignment: CrossAxisAlignment.center,
                       children: [
-                        Container(
-                          child: getItemGradeIcon(item.itemGrade),
-                        ),
+                        item.itemCategory != 'DISPOSABLE'
+                            ? Container(
+                                child: getItemGradeIcon(item.itemGrade),
+                              )
+                            : SizedBox(
+                                width: 90.sp,
+                                height: 24.sp,
+                              ),
                         Column(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           crossAxisAlignment: CrossAxisAlignment.center,
@@ -75,7 +80,7 @@ class ShopItems extends StatelessWidget {
                               fontWeight: 500,
                               color: lightGrayColor,
                             ),
-                            if (item.maxGoProfit != 0 || item.maxDurability != 0 || item.maxStamina != 0 || item.maxLuck != 0)
+                            if (item.maxGoProfit != 0 || item.maxDurability != 0 || item.maxStamina != 0 || item.maxLuck != 0 || item.recoveryStamina != 0 || item.repairDurability != 0)
                               Padding(
                                 padding: EdgeInsets.symmetric(vertical: 10.0.sp, horizontal: 5.sp),
                                 child: FittedBox(
@@ -97,6 +102,7 @@ class ShopItems extends StatelessWidget {
                                                   '${formatDecimalPlaces(item.minGoProfit!, 0)}-${formatDecimalPlaces(item.maxGoProfit!, 0)}',
                                                   fontSize: 12,
                                                   fontWeight: 600,
+                                                  letterSpacing: -.1,
                                                   color: skyBlueColor,
                                                 ),
                                               ),
@@ -119,6 +125,7 @@ class ShopItems extends StatelessWidget {
                                                   '${formatDecimalPlaces(item.minDurability!, 0)}-${formatDecimalPlaces(item.maxDurability!, 0)}',
                                                   fontSize: 12,
                                                   fontWeight: 600,
+                                                  letterSpacing: -.1,
                                                   color: purpleColor,
                                                 ),
                                               ),
@@ -141,6 +148,7 @@ class ShopItems extends StatelessWidget {
                                                   '${formatDecimalPlaces(item.minStamina!, 0)}-${formatDecimalPlaces(item.maxStamina!, 0)}',
                                                   fontSize: 12,
                                                   fontWeight: 600,
+                                                  letterSpacing: -.1,
                                                   color: lightGreenColor,
                                                 ),
                                               ),
@@ -164,6 +172,53 @@ class ShopItems extends StatelessWidget {
                                                   fontSize: 12,
                                                   fontWeight: 600,
                                                   color: pinkColor,
+                                                  letterSpacing: -.1,
+                                                ),
+                                              ),
+                                            ],
+                                          ),
+                                        ),
+                                      if (item.recoveryStamina! > 0)
+                                        Padding(
+                                          padding: const EdgeInsets.symmetric(horizontal: 4),
+                                          child: Row(
+                                            children: [
+                                              CircleAvatar(
+                                                radius: 6,
+                                                backgroundColor: lightGreenColor,
+                                                child: iconShopStamina,
+                                              ),
+                                              Padding(
+                                                padding: EdgeInsets.only(left: 3.0.sp),
+                                                child: StyledText(
+                                                  '+${formatDecimalPlaces(item.recoveryStamina!, 0)} 회복',
+                                                  fontSize: 12,
+                                                  fontWeight: 600,
+                                                  color: lightGreenColor,
+                                                  letterSpacing: -.1,
+                                                ),
+                                              ),
+                                            ],
+                                          ),
+                                        ),
+                                      if (item.repairDurability! > 0)
+                                        Padding(
+                                          padding: const EdgeInsets.symmetric(horizontal: 4),
+                                          child: Row(
+                                            children: [
+                                              CircleAvatar(
+                                                radius: 6,
+                                                backgroundColor: purpleColor,
+                                                child: iconShopDurability,
+                                              ),
+                                              Padding(
+                                                padding: EdgeInsets.only(left: 3.0.sp),
+                                                child: StyledText(
+                                                  '+${formatDecimalPlaces(item.repairDurability!, 0)} 수리',
+                                                  fontSize: 12,
+                                                  fontWeight: 600,
+                                                  color: purpleColor,
+                                                  letterSpacing: -.1,
                                                 ),
                                               ),
                                             ],

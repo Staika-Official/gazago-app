@@ -100,6 +100,8 @@ class InventoryController extends GetxController with LinearProgressMixin, Inven
           durability: 0.0,
           stamina: 0.0,
           luck: 0.0,
+          recoveryStamina: 0.0,
+          repairDurability: 0.0,
         )),
   );
   Rx<InventoryBadgeListModel> selectedBadge = Rx(
@@ -145,9 +147,9 @@ class InventoryController extends GetxController with LinearProgressMixin, Inven
         ItemType.top.name: myAllItems.where((item) => item.itemCategory == 'TOP').toList(),
         ItemType.shoes.name: myAllItems.where((item) => item.itemCategory == 'SHOES').toList(),
         ItemType.accessory.name: myAllItems.where((item) => item.itemCategory == 'ACCESSORY').toList(),
-        ItemType.drink.name: myAllItems.where((item) => item.itemCategory == 'DRINK').toList(),
         ItemType.bottom.name: myAllItems.where((item) => item.itemCategory == 'BOTTOM').toList(),
         ItemType.hat.name: myAllItems.where((item) => item.itemCategory == 'HAT').toList(),
+        ItemType.disposable.name: myAllItems.where((item) => item.itemCategory == 'DISPOSABLE').toList(),
       },
     );
   }

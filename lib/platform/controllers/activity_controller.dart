@@ -239,7 +239,8 @@ class ActivityController extends SuperController with ActivityMixin, ChallengeMi
   }
 
   void onClickRepairStat(stat) {
-    handleShowStaminaPopup(stat);
+    print(stat.toJson());
+    // handleShowStaminaPopup(stat);
   }
 
   void handleShowStaminaPopup(stat) async {

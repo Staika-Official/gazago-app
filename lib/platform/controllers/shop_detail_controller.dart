@@ -23,6 +23,11 @@ class ShopDetailController extends GetxController {
   final HomeMenuController challengesDetailController = Get.put(HomeMenuController());
   LoaderController loaderController = Get.put(LoaderController());
   final RxList<ShopItemModel> shopItemsList = RxList.empty();
+  final RxInt purchaseItemCount = RxInt(0);
+
+  RxInt get purchaseItemSumPrice {
+    return RxInt((purchaseItemCount.value * selectedItem.value.price).toInt());
+  }
 
   final List<Map<String, String>> sortingList = [
     {'title': '최근 등록 순', 'value': 'id,DESC'},

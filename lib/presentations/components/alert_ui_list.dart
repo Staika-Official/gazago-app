@@ -1048,12 +1048,19 @@ void itemPurchaseAlert(ShopDetailController controller, double remainMyTik, trad
             child: Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                StyledText(
-                  '${formatDecimalPlaces(controller.selectedItem.value.price, 0)} ',
-                  fontSize: 30,
-                  lineHeight: 32,
-                  fontWeight: 600,
-                ),
+                controller.selectedItem.value.itemCategory == 'DISPOSABLE'
+                    ? StyledText(
+                        '${formatDecimalPlaces(controller.purchaseItemSumPrice.value.toDouble(), 0)} ',
+                        fontSize: 30,
+                        lineHeight: 32,
+                        fontWeight: 600,
+                      )
+                    : StyledText(
+                        '${formatDecimalPlaces(controller.selectedItem.value.price, 0)} ',
+                        fontSize: 30,
+                        lineHeight: 32,
+                        fontWeight: 600,
+                      ),
                 if (controller.selectedItem.value.tradeSymbol != null)
                   StyledText(
                     controller.selectedItem.value.tradeSymbol!,
@@ -1219,6 +1226,27 @@ void itemPurchaseAlert(ShopDetailController controller, double remainMyTik, trad
                 ),
               ],
             ),
+          if (controller.purchaseItemCount > 0)
+            Padding(
+              padding: EdgeInsets.only(top: 30.0.sp),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  StyledText(
+                    controller.selectedItem.value.name,
+                    fontSize: 18,
+                    lineHeight: 32,
+                    fontWeight: 600,
+                  ),
+                  StyledText(
+                    '${controller.purchaseItemCount.value}개',
+                    fontSize: 18,
+                    lineHeight: 32,
+                    fontWeight: 400,
+                  ),
+                ],
+              ),
+            ),
           Divider(
             height: 40.sp,
             thickness: 2.0.sp,
@@ -1290,12 +1318,19 @@ void itemPurchaseShortBalanceAlert(ShopDetailController controller, double remai
             child: Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                StyledText(
-                  '${formatDecimalPlaces(controller.selectedItem.value.price, 0)} ',
-                  fontSize: 30,
-                  lineHeight: 32,
-                  fontWeight: 600,
-                ),
+                controller.selectedItem.value.itemCategory == 'DISPOSABLE'
+                    ? StyledText(
+                        '${formatDecimalPlaces(controller.purchaseItemSumPrice.value.toDouble(), 0)} ',
+                        fontSize: 30,
+                        lineHeight: 32,
+                        fontWeight: 600,
+                      )
+                    : StyledText(
+                        '${formatDecimalPlaces(controller.selectedItem.value.price, 0)} ',
+                        fontSize: 30,
+                        lineHeight: 32,
+                        fontWeight: 600,
+                      ),
                 StyledText(
                   controller.selectedItem.value.tradeSymbol!,
                   fontSize: 30,
@@ -1376,6 +1411,27 @@ void itemPurchaseShortBalanceAlert(ShopDetailController controller, double remai
                   fontWeight: 400,
                 ),
               ],
+            ),
+          if (controller.purchaseItemCount > 0)
+            Padding(
+              padding: EdgeInsets.only(top: 30.0.sp),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  StyledText(
+                    controller.selectedItem.value.name,
+                    fontSize: 18,
+                    lineHeight: 32,
+                    fontWeight: 600,
+                  ),
+                  StyledText(
+                    '${controller.purchaseItemCount.value}개',
+                    fontSize: 18,
+                    lineHeight: 32,
+                    fontWeight: 400,
+                  ),
+                ],
+              ),
             ),
           Divider(
             height: 40.sp,
@@ -1935,53 +1991,53 @@ void itemFilterListAlert(ShopController controller) {
               ),
             );
           }),
-          Padding(
-            padding: EdgeInsets.only(bottom: 10.0.sp),
-            child: const StyledText(
-              '카테고리',
-              fontWeight: 500,
-              fontSize: 16,
-              lineHeight: 22,
-            ),
-          ),
-          Obx(() {
-            return SizedBox(
-              width: double.infinity,
-              child: Wrap(
-                children: [
-                  ...controller.categoryFilterList.asMap().entries.map(
-                        (entry) => Padding(
-                          padding: EdgeInsets.only(right: 10.sp, bottom: 10.sp),
-                          child: InkWell(
-                            onTap: () => controller.onSelectCategory(entry.value['value']),
-                            child: Container(
-                              decoration: BoxDecoration(
-                                color: controller.selectedCategory.any((element) => element == entry.value['value']) ? Colors.white : popupBgColor,
-                                border: Border.all(
-                                  width: 1,
-                                  color: Colors.white,
-                                ),
-                                borderRadius: BorderRadius.circular(20.sp),
-                              ),
-                              child: Padding(
-                                padding: EdgeInsets.symmetric(horizontal: 12.0.sp, vertical: 6.sp),
-                                child: StyledText(
-                                  entry.value['title']!,
-                                  fontSize: 14,
-                                  lineHeight: 16,
-                                  letterSpacing: .2,
-                                  fontWeight: 500,
-                                  color: controller.selectedCategory.any((element) => element == entry.value['value']) ? Colors.black : Colors.white,
-                                ),
-                              ),
-                            ),
-                          ),
-                        ),
-                      ),
-                ],
-              ),
-            );
-          }),
+          // Padding(
+          //   padding: EdgeInsets.only(bottom: 10.0.sp),
+          //   child: const StyledText(
+          //     '카테고리',
+          //     fontWeight: 500,
+          //     fontSize: 16,
+          //     lineHeight: 22,
+          //   ),
+          // ),
+          // Obx(() {
+          //   return SizedBox(
+          //     width: double.infinity,
+          //     child: Wrap(
+          //       children: [
+          //         ...controller.categoryFilterList.asMap().entries.map(
+          //               (entry) => Padding(
+          //                 padding: EdgeInsets.only(right: 10.sp, bottom: 10.sp),
+          //                 child: InkWell(
+          //                   onTap: () => controller.onSelectCategory(entry.value['value']),
+          //                   child: Container(
+          //                     decoration: BoxDecoration(
+          //                       color: controller.selectedCategory.any((element) => element == entry.value['value']) ? Colors.white : popupBgColor,
+          //                       border: Border.all(
+          //                         width: 1,
+          //                         color: Colors.white,
+          //                       ),
+          //                       borderRadius: BorderRadius.circular(20.sp),
+          //                     ),
+          //                     child: Padding(
+          //                       padding: EdgeInsets.symmetric(horizontal: 12.0.sp, vertical: 6.sp),
+          //                       child: StyledText(
+          //                         entry.value['title']!,
+          //                         fontSize: 14,
+          //                         lineHeight: 16,
+          //                         letterSpacing: .2,
+          //                         fontWeight: 500,
+          //                         color: controller.selectedCategory.any((element) => element == entry.value['value']) ? Colors.black : Colors.white,
+          //                       ),
+          //                     ),
+          //                   ),
+          //                 ),
+          //               ),
+          //             ),
+          //       ],
+          //     ),
+          //   );
+          // }),
           Padding(
             padding: EdgeInsets.only(bottom: 10.0.sp, top: 20.sp),
             child: const StyledText(

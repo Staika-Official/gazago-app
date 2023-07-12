@@ -8,12 +8,16 @@ class InventoryItemStatModel {
   double? durability;
   double? stamina;
   double? luck;
+  double? recoveryStamina;
+  double? repairDurability;
 
   InventoryItemStatModel({
     this.goProfit,
     this.durability,
     this.stamina,
     this.luck,
+    this.recoveryStamina,
+    this.repairDurability,
   });
 
   factory InventoryItemStatModel.fromJson(Map<String, dynamic> json) => _$InventoryItemStatModelFromJson(json);

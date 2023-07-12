@@ -27,6 +27,7 @@ class InventoryItemModel {
   int? listOrder;
   int? tik;
   bool? isShoe;
+  int? amount;
   InventoryItemStatModel? itemStat;
   ShopItemChallengeModel? challenge;
 
@@ -51,6 +52,7 @@ class InventoryItemModel {
     this.listOrder,
     this.equippedChallengeItem,
     this.challengeItem,
+    this.amount,
     this.tik = 0,
     this.isShoe = false,
     this.challenge,

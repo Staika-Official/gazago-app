@@ -35,6 +35,10 @@ class InventoryHomeController extends GetxController with GetTickerProviderState
       'title': '액세서리',
       'itemType': ItemType.accessory.name,
     },
+    {
+      'title': '기타',
+      'itemType': ItemType.disposable.name,
+    },
   ];
 
   @override
@@ -54,7 +58,7 @@ class InventoryHomeController extends GetxController with GetTickerProviderState
 
   void initController() {
     tabController = TabController(length: 2, vsync: this);
-    subTabController = TabController(length: 6, vsync: this);
+    subTabController = TabController(length: 7, vsync: this);
 
     tabController.addListener(() {
       if (tabController.indexIsChanging) {

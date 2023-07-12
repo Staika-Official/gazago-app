@@ -58,7 +58,7 @@ class InventoryItem extends StatelessWidget {
                                       ? SvgPicture.network(
                                           fit: BoxFit.fitHeight,
                                           item.itemImageUrl,
-                                          placeholderBuilder: (BuildContext context) => Container(padding: const EdgeInsets.all(30.0), child: const CircularProgressIndicator()),
+                                          placeholderBuilder: (BuildContext context) => const Center(child: SizedBox.square(dimension: 40, child: CircularProgressIndicator())),
                                           headers: imageNetworkHeader,
                                           color: item.equipped == true ? Colors.white.withOpacity(0.5) : Colors.white.withOpacity(1),
                                           colorBlendMode: BlendMode.modulate,
@@ -117,8 +117,8 @@ class InventoryItem extends StatelessWidget {
                                         alignment: Alignment.center,
                                         child: Padding(
                                           padding: EdgeInsets.all(8.0.sp),
-                                          child: const StyledText(
-                                            '장착',
+                                          child: StyledText(
+                                            item.itemCategory == 'DISPOSABLE' ? '사용하기' : '장착',
                                             fontWeight: 500,
                                             fontSize: 14,
                                           ),
@@ -155,13 +155,35 @@ class InventoryItem extends StatelessWidget {
                             ],
                           ),
                         ),
-                        Positioned(
-                          right: 7.sp,
-                          top: 7.sp,
-                          width: 18,
-                          height: 18,
-                          child: getItemGradeCircleIcon(item.itemGrade),
-                        ),
+                        item.itemCategory == 'DISPOSABLE'
+                            ? Positioned(
+                                right: 7.sp,
+                                top: 7.sp,
+                                width: 20,
+                                height: 20,
+                                child: Container(
+                                  decoration: BoxDecoration(
+                                    color: popupBgColor,
+                                    borderRadius: BorderRadius.circular(50),
+                                  ),
+                                  child: FittedBox(
+                                    fit: BoxFit.scaleDown,
+                                    child: StyledText(
+                                      item.amount != null ? item.amount.toString() : '0',
+                                      fontSize: 10,
+                                      letterSpacing: -.1,
+                                      fontWeight: 600,
+                                    ),
+                                  ),
+                                ),
+                              )
+                            : Positioned(
+                                right: 7.sp,
+                                top: 7.sp,
+                                width: 18,
+                                height: 18,
+                                child: getItemGradeCircleIcon(item.itemGrade),
+                              ),
                       ],
                     ),
                   ),
