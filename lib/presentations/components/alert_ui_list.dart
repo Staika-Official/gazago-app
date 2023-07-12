@@ -1430,6 +1430,7 @@ void itemPurchaseShortBalanceAlert(ShopDetailController controller, double remai
 
 void itemPurchaseCompleteAlert(ShopDetailController controller) {
   showAlert(
+    allowMultipleBottomSheet: true,
     title: '구매가 완료되었습니다.',
     isScrollControlled: true,
     contentWidget: Obx(() {
@@ -1788,6 +1789,7 @@ void itemPurchaseCompleteAlert(ShopDetailController controller) {
 
 void itemPurchaseImpossibleAlert() {
   showAlert(
+    allowMultipleBottomSheet: true,
     title: '구매가 불가합니다',
     contentWidget: Padding(
       padding: EdgeInsets.only(top: 20.0.sp, bottom: 40.sp),
@@ -1814,6 +1816,7 @@ void itemPurchaseImpossibleAlert() {
 
 void itemPurchaseAvailableOnlyOneAlert(String errorMessage) {
   showAlert(
+    allowMultipleBottomSheet: true,
     title: errorMessage,
     contentWidget: Padding(
       padding: EdgeInsets.only(top: 20.0.sp, bottom: 40.sp),
@@ -3085,6 +3088,7 @@ Future<bool> verifyEndPointPasswordAlert(DebuggingController controller) {
 
 void showStaikaStatusAlert({required bool hasWallet, TabController? tabController}) {
   showAlert(
+    allowMultipleBottomSheet: true,
     contentWidget: Column(
       children: [
         Padding(
@@ -3409,6 +3413,7 @@ void exchangeStikToTikAlert(GoWalletController controller, ExchangeStikPriceMode
 
 void failureChargeStikToTikAlert(GoWalletController controller, String errorMsg) {
   showAlert(
+    allowMultipleBottomSheet: true,
     title: '잠시 후 다시 시도해 주세요.',
     contentWidget: Padding(
       padding: EdgeInsets.only(top: 20.0.sp, bottom: 40.sp),
@@ -3476,6 +3481,7 @@ void successChargeStikToTikAlert(GoWalletController controller) {
 void sendStikToGoWalletAlert(StaikaWalletController controller) {
   WalletMasterController walletMasterController = Get.find();
   showAlert(
+    allowMultipleBottomSheet: true,
     title: '전송 하시겠습니까?',
     isScrollControlled: true,
     contentWidget: Obx(() {
