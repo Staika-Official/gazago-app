@@ -1,6 +1,9 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_naver_map/flutter_naver_map.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:flutter_svg/svg.dart';
+import 'package:gaza_go/constants/config.dart';
 import 'package:gaza_go/platform/controllers/archive_controller.dart';
 import 'package:gaza_go/platform/helpers/activity_helper.dart';
 import 'package:gaza_go/platform/helpers/base_helper.dart';
@@ -54,11 +57,29 @@ class ArchiveDetail extends StatelessWidget {
                               foregroundImage: controller.getArchiveTypeImage(controller.selectedItem.value),
                             ),
                             if (controller.selectedItem.value.badgeIssueId != null)
-                              Positioned(
-                                right: -5,
-                                bottom: -5,
-                                child: Image.network(controller.selectedItem.value.badgeImageUrl!, width: 20.sp, height: 20.sp),
-                              ),
+                              controller.selectedItem.value.badgeImageUrl!.contains('.svg')
+                                  ? Positioned(
+                                      right: -5,
+                                      bottom: -5,
+                                      child: SvgPicture.network(
+                                        width: 20.sp,
+                                        height: 20.sp,
+                                        fit: BoxFit.contain,
+                                        controller.selectedItem.value.badgeImageUrl!,
+                                        headers: imageNetworkHeader,
+                                      ),
+                                    )
+                                  : Positioned(
+                                      right: -5,
+                                      bottom: -5,
+                                      child: CachedNetworkImage(
+                                        width: 20.sp,
+                                        height: 20.sp,
+                                        imageUrl: controller.selectedItem.value.badgeImageUrl!,
+                                        fit: BoxFit.fitHeight,
+                                        httpHeaders: imageNetworkHeader,
+                                      ),
+                                    ),
                           ],
                         ),
                       ),
