@@ -1,4 +1,4 @@
-import 'package:gaza_go/platform/models/challenge_model.dart';
+import 'package:gaza_go/platform/models/challenge_course_model.dart';
 import 'package:json_annotation/json_annotation.dart';
 
 part 'challenge_hierarchy_model.g.dart';
@@ -7,7 +7,7 @@ part 'challenge_hierarchy_model.g.dart';
 class ChallengeHierarchyModel {
   String name;
   String? province;
-  List<ChallengeModel> course;
+  List<ChallengeCourseModel> course;
 
   ChallengeHierarchyModel({required this.name, this.province, required this.course});
 

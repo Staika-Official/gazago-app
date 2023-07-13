@@ -1,7 +1,7 @@
 import 'package:gaza_go/platform/controllers/activity_controller.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
 
-import '../models/challenge_model.dart';
+import '../models/challenge_course_model.dart';
 
 mixin AdmobMixin {
   RewardedAd? rewardedStartAd;
@@ -56,14 +56,12 @@ mixin AdmobMixin {
   }
 
   // 운동 시작 광고
-  void exerciseStartRewardedAdInit(
-      {successCallback, errorCallback, required String startAdId}) async {
+  void exerciseStartRewardedAdInit({successCallback, errorCallback, required String startAdId}) async {
     String adId = startAdId;
     await RewardedAd.load(
         adUnitId: adId,
         request: const AdRequest(),
-        rewardedAdLoadCallback:
-            RewardedAdLoadCallback(onAdLoaded: (RewardedAd ad) {
+        rewardedAdLoadCallback: RewardedAdLoadCallback(onAdLoaded: (RewardedAd ad) {
           print('RewardedAd loaded');
           rewardedStartAd = ad;
           successCallback();
@@ -80,14 +78,12 @@ mixin AdmobMixin {
   }
 
   // 운동 종료 광고
-  Future exerciseEndRewardedAdInit(
-      {successCallback, errorCallback, required String endAdId}) async {
+  Future exerciseEndRewardedAdInit({successCallback, errorCallback, required String endAdId}) async {
     String adId = endAdId;
     await RewardedAd.load(
         adUnitId: adId,
         request: const AdRequest(),
-        rewardedAdLoadCallback:
-            RewardedAdLoadCallback(onAdLoaded: (RewardedAd ad) {
+        rewardedAdLoadCallback: RewardedAdLoadCallback(onAdLoaded: (RewardedAd ad) {
           print('RewardedAd loaded');
           rewardedEndAd = ad;
           successCallback();
@@ -109,15 +105,12 @@ mixin AdmobMixin {
       return;
     }
     rewardedStartAd!.fullScreenContentCallback = FullScreenContentCallback(
-      onAdShowedFullScreenContent: (RewardedAd ad) =>
-          print('ad onAdShowedFullScreenContent.'),
+      onAdShowedFullScreenContent: (RewardedAd ad) => print('ad onAdShowedFullScreenContent.'),
       onAdDismissedFullScreenContent: (RewardedAd ad) {
         print('$ad onAdDismissedFullScreenContent.');
 
         if (ad.adUnitId.isNotEmpty) {
-          activityController.handleMoveExerciseActive(
-              activityController.selectedExerciseType.value,
-              adId: ad.adUnitId);
+          activityController.handleMoveExerciseActive(activityController.selectedExerciseType.value, adId: ad.adUnitId);
         }
 
         ad.dispose();
@@ -130,28 +123,24 @@ mixin AdmobMixin {
     );
 
     rewardedStartAd!.setImmersiveMode(true);
-    rewardedStartAd!.show(
-        onUserEarnedReward: (AdWithoutView ad, RewardItem reward) {
+    rewardedStartAd!.show(onUserEarnedReward: (AdWithoutView ad, RewardItem reward) {
       print('$ad with reward $RewardItem(${reward.amount}, ${reward.type})');
     });
     rewardedStartAd = null;
   }
 
-  void showExerciseEndAd(
-      ChallengeModel challenge, ActivityController activityController) {
+  void showExerciseEndAd(ChallengeCourseModel challenge, ActivityController activityController) {
     if (rewardedEndAd == null) {
       print('Warning: attempt to show rewarded before loaded.');
       return;
     }
     rewardedEndAd!.fullScreenContentCallback = FullScreenContentCallback(
-      onAdShowedFullScreenContent: (RewardedAd ad) =>
-          print('ad onAdShowedFullScreenContent.'),
+      onAdShowedFullScreenContent: (RewardedAd ad) => print('ad onAdShowedFullScreenContent.'),
       onAdDismissedFullScreenContent: (RewardedAd ad) {
         print('$ad onAdDismissedFullScreenContent.');
 
         if (ad.adUnitId.isNotEmpty) {
-          activityController.endExercise(challenge,
-              source: 'showEndADExerciseAlert', adId: ad.adUnitId);
+          activityController.endExercise(challenge, source: 'showEndADExerciseAlert', adId: ad.adUnitId);
         }
 
         ad.dispose();
@@ -164,8 +153,7 @@ mixin AdmobMixin {
     );
 
     rewardedEndAd!.setImmersiveMode(true);
-    rewardedEndAd!.show(
-        onUserEarnedReward: (AdWithoutView ad, RewardItem reward) {
+    rewardedEndAd!.show(onUserEarnedReward: (AdWithoutView ad, RewardItem reward) {
       print('$ad with reward $RewardItem(${reward.amount}, ${reward.type})');
     });
     rewardedEndAd = null;

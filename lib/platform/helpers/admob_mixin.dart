@@ -8,7 +8,7 @@ import 'package:gaza_go/platform/controllers/activity_controller.dart';
 import 'package:get/get.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
 
-import '../models/challenge_model.dart';
+import '../models/challenge_course_model.dart';
 
 mixin AdmobMixin {
   Rx<RewardedAd?> startAd = Rx(null);
@@ -180,7 +180,7 @@ mixin AdmobMixin {
     });
   }
 
-  void showExerciseEndAd(ChallengeModel challenge, ActivityController activityController) async {
+  void showExerciseEndAd(ChallengeCourseModel challenge, ActivityController activityController) async {
     // String endAdName =
     //     await checkActivityType(selectedAd.value);
 

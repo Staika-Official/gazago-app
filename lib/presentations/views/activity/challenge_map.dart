@@ -3,8 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_naver_map/flutter_naver_map.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:gaza_go/platform/controllers/activity_controller.dart';
+import 'package:gaza_go/platform/models/challenge_course_model.dart';
 import 'package:gaza_go/platform/models/challenge_hierarchy_model.dart';
-import 'package:gaza_go/platform/models/challenge_model.dart';
 import 'package:gaza_go/presentations/styles/colors.dart';
 import 'package:gaza_go/presentations/styles/icons.dart';
 import 'package:gaza_go/presentations/styles/styled_text.dart';
@@ -14,7 +14,7 @@ class ChallengeMap extends StatelessWidget {
   const ChallengeMap({Key? key}) : super(key: key);
 
   List<CircleOverlay> renderStartPoint(ActivityController controller) {
-    List<CircleOverlay> centerCircles = controller.allChallengesList
+    List<CircleOverlay> centerCircles = controller.allCoursesList
         .map(
           (challenge) => CircleOverlay(
             overlayId: 'ChallengeStartCenter${challenge.id!}',
@@ -29,7 +29,7 @@ class ChallengeMap extends StatelessWidget {
   }
 
   List<CircleOverlay> renderEndPoint(ActivityController controller) {
-    List<CircleOverlay> centerCircles = controller.allChallengesList
+    List<CircleOverlay> centerCircles = controller.allCoursesList
         .map(
           (challenge) => CircleOverlay(
             overlayId: 'ChallengeEndCenter${challenge.id!}',
@@ -65,7 +65,7 @@ class ChallengeMap extends StatelessWidget {
     );
   }
 
-  Widget _renderCourse(ActivityController controller, ChallengeModel course) {
+  Widget _renderCourse(ActivityController controller, ChallengeCourseModel course) {
     print('${controller.challengeSelectedIndex.value} ===== ${course.id}');
     return Builder(builder: (context) {
       return Obx(() {

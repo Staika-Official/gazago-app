@@ -1,6 +1,8 @@
 import 'package:dio/dio.dart';
 import 'package:gaza_go/constants/enums.dart';
 import 'package:gaza_go/platform/apis/activity.dart';
+import 'package:gaza_go/platform/models/challenge_course_model.dart';
+import 'package:gaza_go/platform/models/challenge_detail_model.dart';
 import 'package:gaza_go/platform/models/challenge_hierarchy_model.dart';
 import 'package:gaza_go/platform/models/challenge_model.dart';
 import 'package:gaza_go/platform/models/challenge_ranker_model.dart';
@@ -21,13 +23,13 @@ class ActivityService {
     return HiveStore.loadString(key: HiveKey.userId.name);
   }
 
-  static Future<void> getChallenges({required Function successCallback, Function? errorCallback}) async {
-    Response res = await ActivityApi.getChallenges();
+  static Future<void> getCourses({required Function successCallback, Function? errorCallback}) async {
+    Response res = await ActivityApi.getCourses();
     if (res.statusCode == 200) {
-      List<ChallengeModel> challengeList = List.empty(growable: true);
+      List<ChallengeCourseModel> challengeList = List.empty(growable: true);
       if (res.data.length > 0) {
         res.data.forEach((challenge) {
-          challengeList.add(ChallengeModel.fromJson(challenge));
+          challengeList.add(ChallengeCourseModel.fromJson(challenge));
         });
       }
       successCallback(challengeList);
@@ -66,10 +68,10 @@ class ActivityService {
     }
   }
 
-  static Future<void> getChallenge(int id, {required Function successCallback, Function? errorCallback}) async {
-    Response res = await ActivityApi.getChallenge(id);
+  static Future<void> getChallengeCourse(int id, {required Function successCallback, Function? errorCallback}) async {
+    Response res = await ActivityApi.getChallengeCourse(id);
     if (res.statusCode == 200) {
-      successCallback(ChallengeModel.fromJson(res.data));
+      successCallback(ChallengeCourseModel.fromJson(res.data));
     } else {
       if (errorCallback != null) errorCallback();
     }
@@ -121,13 +123,19 @@ class ActivityService {
     }
   }
 
-  static Future<void> getNearByChallenge(Position currentLocation, {required Function successCallback, Function? errorCallback}) async {
-    Response res = await ActivityApi.getNearByChallenge(currentLocation);
+  static Future<void> getNearByCourses(Position currentLocation, {required Function successCallback, Function? errorCallback}) async {
+    Response res = await ActivityApi.getNearByCourses(currentLocation);
     if (res.statusCode == 200) {
-      if (res.data != null && res.data != '') {
-        successCallback(ChallengeModel.fromJson(res.data));
+      if (res.data != null) {
+        List<ChallengeCourseModel> challengeList = List.empty(growable: true);
+        if (res.data.length > 0) {
+          res.data.forEach((type) {
+            challengeList.add(ChallengeCourseModel.fromJson(type));
+          });
+        }
+        successCallback(challengeList);
       } else {
-        successCallback(null);
+        successCallback(List.empty(growable: true));
       }
     } else {
       if (errorCallback != null) errorCallback();
@@ -212,6 +220,30 @@ class ActivityService {
       print('fetch success');
     } else {
       print('fetch failure');
+    }
+  }
+
+  static Future<void> getChallenges({required Function successCallback, Function? errorCallback}) async {
+    Response res = await ActivityApi.getChallenges(userId!);
+    if (res.statusCode == 200) {
+      List<ChallengeModel> challengeTypeList = List.empty(growable: true);
+      if (res.data.length > 0) {
+        res.data.forEach((type) {
+          challengeTypeList.add(ChallengeModel.fromJson(type));
+        });
+      }
+      successCallback(challengeTypeList);
+    } else {
+      if (errorCallback != null) errorCallback();
+    }
+  }
+
+  static Future<void> getChallengeDetail({required int challengeId, required double lat, required double lon, required Function successCallback, Function? errorCallback}) async {
+    Response res = await ActivityApi.getChallengeDetail(userId!, challengeId: challengeId, lat: lat, lon: lon);
+    if (res.statusCode == 200) {
+      successCallback(ChallengeDetailModel.fromJson(res.data));
+    } else {
+      if (errorCallback != null) errorCallback();
     }
   }
 }

@@ -16,6 +16,7 @@ import 'package:gaza_go/platform/helpers/challenge_mixin.dart';
 import 'package:gaza_go/platform/helpers/location_helper.dart';
 import 'package:gaza_go/platform/helpers/login_helper.dart';
 import 'package:gaza_go/platform/models/ad_watch_available_model.dart';
+import 'package:gaza_go/platform/models/challenge_course_model.dart';
 import 'package:gaza_go/platform/models/challenge_hierarchy_model.dart';
 import 'package:gaza_go/platform/models/challenge_model.dart';
 import 'package:gaza_go/platform/models/current_user_state_model.dart';
@@ -64,8 +65,9 @@ class ActivityController extends SuperController with ActivityMixin, ChallengeMi
   final Rx<LocationAccuracyStatus> _locationAccuracyStatus = Rx(LocationAccuracyStatus.unknown);
   StreamSubscription<ServiceStatus>? _serviceStatusStream;
   final Rx<DateTime> receiveLocationTime = Rx(DateTime.now());
-  OverlayImage? startMaker;
-  OverlayImage? endMaker;
+  OverlayImage? startMarker;
+  OverlayImage? endMarker;
+  OverlayImage? checkpointMarker;
   RxnInt challengeSelectedIndex = RxnInt(null);
   Control activityLoadControl = Control.play;
   RxBool disableButton = RxBool(false);
@@ -78,6 +80,7 @@ class ActivityController extends SuperController with ActivityMixin, ChallengeMi
   late AnimationController challengeGuideController;
   final Rx<Control> challengeLoadControl = Rx(Control.play);
   final RxBool isButtonDisabled = RxBool(false);
+  final RxList<ChallengeModel> challengeList = RxList.empty();
 
   Future<void> initializeController() async {
     challengeGuideController = AnimationController(vsync: this);
@@ -112,16 +115,20 @@ class ActivityController extends SuperController with ActivityMixin, ChallengeMi
   }
 
   Future<void> loadMakerImages() async {
-    startMaker = await OverlayImage.fromAssetImage(
-      assetName: 'assets/images/activity/ico_challenge_start_maker.png',
+    startMarker = await OverlayImage.fromAssetImage(
+      assetName: 'assets/images/activity/ico_challenge_start_marker.png',
     );
 
-    endMaker = await OverlayImage.fromAssetImage(
-      assetName: 'assets/images/activity/ico_challenge_end_maker.png',
+    endMarker = await OverlayImage.fromAssetImage(
+      assetName: 'assets/images/activity/ico_challenge_end_marker.png',
+    );
+
+    checkpointMarker = await OverlayImage.fromAssetImage(
+      assetName: 'assets/images/activity/ico_challenge_checkpoint_marker.png',
     );
   }
 
-  Marker generateDefaultMarker(ChallengeModel course) {
+  Marker generateDefaultMarker(ChallengeCourseModel course) {
     return Marker(
       markerId: course.id!.toString(),
       position: LatLng(course.startLat!, course.startLon!),
@@ -133,7 +140,7 @@ class ActivityController extends SuperController with ActivityMixin, ChallengeMi
       subCaptionColor: (Platform.isAndroid) ? Colors.white : Colors.black,
       subCaptionHaloColor: (Platform.isAndroid) ? Colors.black : Colors.white,
       captionOffset: 5,
-      icon: startMaker,
+      icon: startMarker,
       width: 20,
       height: 20,
       onMarkerTab: (marker, iconSize) {
@@ -143,11 +150,11 @@ class ActivityController extends SuperController with ActivityMixin, ChallengeMi
   }
 
   void generateChallengeMarkerList() {
-    allChallengesList.value = RxList.empty();
+    allCoursesList.value = RxList.empty();
     challengeMarkers.value = RxList.empty();
     for (ChallengeHierarchyModel challenge in hierarchyChallengesList) {
-      for (ChallengeModel course in challenge.course) {
-        allChallengesList.add(course);
+      for (ChallengeCourseModel course in challenge.course) {
+        allCoursesList.add(course);
 
         challengeMarkers.add(generateDefaultMarker(course));
       }
@@ -155,13 +162,19 @@ class ActivityController extends SuperController with ActivityMixin, ChallengeMi
   }
 
   Future<void> loadChallenges() async {
+    await getChallenges(
+      successCallback: (List<ChallengeModel> data) {
+        challengeList.clear();
+        challengeList.addAll(data);
+      },
+    );
     await getChallengesHierarchy(currentLocation.value);
     generateChallengeMarkerList();
   }
 
-  void showEndPointMarker(ChallengeModel course) {
+  void showEndPointMarker(ChallengeCourseModel course) {
     if (challengeSelectedIndex.value != null) {
-      challengeMarkers.add(generateDefaultMarker(allChallengesList.firstWhere((element) => element.id == challengeSelectedIndex.value)));
+      challengeMarkers.add(generateDefaultMarker(allCoursesList.firstWhere((element) => element.id == challengeSelectedIndex.value)));
     }
 
     challengeSelectedIndex.value = course.id!;
@@ -182,7 +195,7 @@ class ActivityController extends SuperController with ActivityMixin, ChallengeMi
       subCaptionColor: (Platform.isAndroid) ? Colors.white : Colors.black,
       subCaptionHaloColor: (Platform.isAndroid) ? Colors.black : Colors.white,
       captionOffset: 5,
-      icon: startMaker,
+      icon: startMarker,
       width: 20,
       height: 20,
     ));
@@ -199,7 +212,7 @@ class ActivityController extends SuperController with ActivityMixin, ChallengeMi
       subCaptionTextSize: 14,
       subCaptionColor: (Platform.isAndroid) ? Colors.white : Colors.black,
       subCaptionHaloColor: (Platform.isAndroid) ? Colors.black : Colors.white,
-      icon: endMaker,
+      icon: endMarker,
       width: 20,
       height: 20,
     ));
@@ -361,9 +374,9 @@ class ActivityController extends SuperController with ActivityMixin, ChallengeMi
 
           if (userState.value.exercise?.challengeId != null) {
             //  산행중인 정보 가져오기
-            ChallengeModel challenge = await getChallenge(userState.value.exercise!.challengeId!);
+            ChallengeCourseModel challenge = await getChallengeCourse(userState.value.exercise!.challengeId!);
             if (challenge.id != null) {
-              selectedChallenge.value = challenge;
+              selectedCourse.value = challenge;
             }
           }
           if (updateTimer == null) {
@@ -543,7 +556,7 @@ class ActivityController extends SuperController with ActivityMixin, ChallengeMi
     }
   }
 
-  void loadExercise(ExerciseType exerciseType, String? adId, [ChallengeModel? challenge]) {
+  void loadExercise(ExerciseType exerciseType, String? adId, [ChallengeCourseModel? challenge]) {
     loadingTime.value = 1;
 
     if (loadingTimer != null) {
@@ -575,7 +588,7 @@ class ActivityController extends SuperController with ActivityMixin, ChallengeMi
     );
   }
 
-  void passThrowActivityLoading(ExerciseType exerciseType, String? adId, [ChallengeModel? challenge]) {
+  void passThrowActivityLoading(ExerciseType exerciseType, String? adId, [ChallengeCourseModel? challenge]) {
     loadingTimer?.cancel();
     loadingTimer = null;
     Get.back();
@@ -615,24 +628,23 @@ class ActivityController extends SuperController with ActivityMixin, ChallengeMi
   }
 
   void showAdTip() {
-    showAdTipAlert(selectedChallenge.value.id);
+    showAdTipAlert(selectedCourse.value.id);
   }
 
   void handleMoveExerciseActive(ExerciseType exerciseType, {String? adId}) {
-    if (selectedExerciseType.value == ExerciseType.walking) selectedChallenge.value = ChallengeModel();
+    if (selectedExerciseType.value == ExerciseType.walking) selectedCourse.value = ChallengeCourseModel();
     Get.offNamed(Routes.activityActive);
     loadExercise(
       selectedExerciseType.value,
       adId,
-      selectedChallenge.value.id != null ? selectedChallenge.value : null,
+      selectedCourse.value.id != null ? selectedCourse.value : null,
     );
   }
 
-  void moveToChallengeSelection() {
-    if (doableChallenge.value != null) {
-      selectedChallenge.value = ChallengeModel.fromJson(doableChallenge.value!.toJson());
-      Get.toNamed(Routes.activityChallenges);
-    }
+  void moveToCourseSelection({required ChallengeCourseModel course, required ChallengeModel challenge}) async {
+    selectedCourse.value = ChallengeCourseModel.fromJson(course.toJson());
+    selectedChallenge.value = ChallengeModel.fromJson(challenge.toJson());
+    Get.toNamed(Routes.activityChallenges);
   }
 
   void moveToChallengeMap() async {
@@ -716,7 +728,7 @@ class ActivityController extends SuperController with ActivityMixin, ChallengeMi
         DateTime now = DateTime.now();
 
         if (receiveLocationTime.value.add(const Duration(seconds: 30)).compareTo(now) < 0) {
-          await findChallenge();
+          await findCourses();
           receiveLocationTime.value = now;
         }
       }
@@ -760,16 +772,16 @@ class ActivityController extends SuperController with ActivityMixin, ChallengeMi
     initLocationStream();
     initGpsServiceStream();
     //await setMarkerImages();
-    await findChallenge();
+    await findCourses();
     detectChallengeZone(currentLocation.value);
   }
 
   // 챌린지 찾기
-  Future<void> findChallenge() async {
+  Future<void> findCourses() async {
     if (currentLocation.value.latitude != 0 && currentLocation.value.longitude != 0) {
-      await getNearByChallenge(currentLocation.value, exerciseState.value);
+      await getNearByCourses(currentLocation.value, exerciseState.value);
     } else {
-      await getChallengeList();
+      await getCourseList();
     }
   }
 
@@ -782,13 +794,13 @@ class ActivityController extends SuperController with ActivityMixin, ChallengeMi
 
   Future<void> retrySavedRequests({required String source}) async {
     if (HiveStore.load(key: HiveKey.endExerciseRequested.name) != null && HiveStore.load(key: HiveKey.endExerciseRequested.name) && userState.value.exercise != null) {
-      await endExercise(selectedChallenge.value, source: source);
+      await endExercise(selectedCourse.value, source: source);
     }
   }
 
   void closeAdSelectPopup() {
     adLoadTimerStop();
-    selectedChallenge.value.id = null;
+    selectedCourse.value.id = null;
     Get.back();
     Timer(const Duration(seconds: 1), () {
       startAd.value = null;

@@ -17,7 +17,7 @@ import 'package:gaza_go/platform/helpers/alert_helper.dart';
 import 'package:gaza_go/platform/helpers/base_helper.dart';
 import 'package:gaza_go/platform/helpers/location_helper.dart';
 import 'package:gaza_go/platform/models/ad_watch_available_model.dart';
-import 'package:gaza_go/platform/models/challenge_model.dart';
+import 'package:gaza_go/platform/models/challenge_course_model.dart';
 import 'package:gaza_go/platform/models/current_user_state_model.dart';
 import 'package:gaza_go/platform/models/error_response_data_model.dart';
 import 'package:gaza_go/platform/models/user_exercise_model.dart';
@@ -364,7 +364,7 @@ mixin ActivityMixin {
     });
   }
 
-  void startExercise(ExerciseType exerciseType, ChallengeModel? challenge, {String? adId}) async {
+  void startExercise(ExerciseType exerciseType, ChallengeCourseModel? challenge, {String? adId}) async {
     String deviceId = HiveStore.loadString(key: HiveKey.uuid.name)!;
     String sequence = const Uuid().v4();
 
@@ -595,7 +595,7 @@ mixin ActivityMixin {
     HiveStore.save(key: HiveKey.updateTimer.name, value: updateTimer.hashCode);
   }
 
-  void onTapDownStop(TapDownDetails tapDownDetails, ChallengeModel challenge, {String? source, required ActivityController controller}) async {
+  void onTapDownStop(TapDownDetails tapDownDetails, ChallengeCourseModel challenge, {String? source, required ActivityController controller}) async {
     Duration counter = Duration.zero;
 
     if (stopTimer != null) {
@@ -619,12 +619,12 @@ mixin ActivityMixin {
             'exerciseEndAd',
           );
           if (controller.userState.value.exercise!.rewardGo! > 0) {
-            showEndExerciseAdDialog(challenge, controller);
+            showEndExerciseAdDialog(ChallengeCourseModel.fromJson(challenge.toJson()), controller);
           } else {
-            checkShowEndPopup(source, challenge, controller);
+            checkShowEndPopup(source, ChallengeCourseModel.fromJson(challenge.toJson()), controller);
           }
         } else {
-          checkShowEndPopup(source, challenge, controller);
+          checkShowEndPopup(source, ChallengeCourseModel.fromJson(challenge.toJson()), controller);
         }
       } else {
         counter = counter + const Duration(milliseconds: 10);
@@ -633,7 +633,7 @@ mixin ActivityMixin {
     });
   }
 
-  void checkShowEndPopup(String? source, ChallengeModel challenge, ActivityController controller) {
+  void checkShowEndPopup(String? source, ChallengeCourseModel challenge, ActivityController controller) {
     if (source != null && source == 'pendingExerciseDialog') {
       if (globalController.internetConnection.value) {
         Get.back();
@@ -672,16 +672,16 @@ mixin ActivityMixin {
     updateExercise(isPaused: true, source: 'pauseExercise${updateTimer.hashCode}');
   }
 
-  void showEndExerciseAdDialog(ChallengeModel challenge, ActivityController controller) {
+  void showEndExerciseAdDialog(ChallengeCourseModel challenge, ActivityController controller) {
     showEndExerciseAdAlert(challenge, controller);
     controller.adLoadTimerStart();
   }
 
-  void showEndExerciseDialog(ChallengeModel challenge) {
+  void showEndExerciseDialog(ChallengeCourseModel challenge) {
     showEndExerciseAlert(this, challenge);
   }
 
-  Future<void> endExercise(ChallengeModel challenge, {String? source, String? adId, int retryAttempt = 0}) async {
+  Future<void> endExercise(ChallengeCourseModel challenge, {String? source, String? adId, int retryAttempt = 0}) async {
     String deviceId = HiveStore.loadString(key: HiveKey.uuid.name)!;
     if (isFakeGps.value && !isTestingFakeGps()) {
       return;
@@ -717,7 +717,7 @@ mixin ActivityMixin {
           if (newUserState.exercise!.state == 'ENDED') {
             exerciseState.value = ExerciseState.ready;
             HiveStore.deleteMultipleKeys(keys: [HiveKey.userState.name, HiveKey.endExerciseRequested.name, HiveKey.famousChallengeBadgeIssued.name]);
-            resetVariables(challenge);
+            resetVariables(ChallengeCourseModel.fromJson(challenge.toJson()));
             resetTimer();
             resetSubscriptions();
             if (['showEndExerciseAlert', 'showEndADExerciseAlert', 'pendingExerciseDialog'].any((src) => src == source)) {
@@ -750,7 +750,7 @@ mixin ActivityMixin {
     }
   }
 
-  void endExerciseLocally(ChallengeModel challenge) {
+  void endExerciseLocally(ChallengeCourseModel challenge) {
     exerciseState.value = ExerciseState.ready;
     CurrentUserStateModel? savedState = HiveStore.loadCurrentUserState();
     if (savedState != null) {
@@ -769,7 +769,7 @@ mixin ActivityMixin {
     Get.until((route) => route.isFirst);
   }
 
-  void resetVariables(ChallengeModel challenge) {
+  void resetVariables(ChallengeCourseModel challenge) {
     exerciseTime.value = 0;
     stopProgress.value = 0;
     exerciseSteps.value = 0;
@@ -822,7 +822,7 @@ mixin ActivityMixin {
     ActivityController controller = Get.find<ActivityController>();
     exerciseState.value = ExerciseState.ready;
     HiveStore.deleteMultipleKeys(keys: [HiveKey.userState.name, HiveKey.endExerciseRequested.name]);
-    resetVariables(controller.selectedChallenge.value);
+    resetVariables(ChallengeCourseModel.fromJson(controller.selectedCourse.value.toJson()));
     resetTimer();
     resetSubscriptions();
     Get.until((route) => route.isFirst);
@@ -869,10 +869,10 @@ mixin ActivityMixin {
       showLocalNotification(
         notificationType: NotificationType.badge,
         title: '등산 챌린지 뱃지 획득',
-        message: '${controller.selectedChallenge.value.firstName} 등산 챌린지에 성공하여 뱃지를 받았어요. 새로운 뱃지 확인하러 가자GO~~',
+        message: '${controller.selectedCourse.value.firstName} 등산 챌린지에 성공하여 뱃지를 받았어요. 새로운 뱃지 확인하러 가자GO~~',
       );
       showToastPopup('뱃지를 획득하였습니다.');
-      showBadgeAcquisitionAlert(badgeImgUrl, controller.selectedChallenge.value);
+      showBadgeAcquisitionAlert(badgeImgUrl, controller.selectedCourse.value);
     }
   }
 

@@ -32,7 +32,7 @@ import 'package:gaza_go/platform/helpers/activity_mixin.dart';
 import 'package:gaza_go/platform/helpers/alert_helper.dart';
 import 'package:gaza_go/platform/helpers/base_helper.dart';
 import 'package:gaza_go/platform/helpers/inventory_helper.dart';
-import 'package:gaza_go/platform/models/challenge_model.dart';
+import 'package:gaza_go/platform/models/challenge_course_model.dart';
 import 'package:gaza_go/platform/models/exchange_stik_price_model.dart';
 import 'package:gaza_go/platform/models/push_message_challenge_success_model.dart';
 import 'package:gaza_go/platform/models/stat_model.dart';
@@ -532,7 +532,7 @@ Future<bool> showGalleryPermissionAlert(MyPageController controller) async {
   return photoPermissionCompleter.future;
 }
 
-void showEndExerciseAlert(ActivityMixin mixin, ChallengeModel challenge) {
+void showEndExerciseAlert(ActivityMixin mixin, ChallengeCourseModel challenge) {
   showAlert(
     title: '활동 종료',
     contentText: '지금까지의 기록만 저장됩니다.',
@@ -559,7 +559,7 @@ void showEndExerciseAlert(ActivityMixin mixin, ChallengeModel challenge) {
   );
 }
 
-void showEndExerciseAdAlert(ChallengeModel challenge, ActivityController controller) {
+void showEndExerciseAdAlert(ChallengeCourseModel challenge, ActivityController controller) {
   showAlert(
     title: '활동 종료',
     contentText: '지금까지의 기록만 저장됩니다.',
@@ -686,7 +686,7 @@ void showEndExerciseAdAlert(ChallengeModel challenge, ActivityController control
   );
 }
 
-void showBadgeAcquisitionAlert(String badgeImgUrl, ChallengeModel selectedChallenge) {
+void showBadgeAcquisitionAlert(String badgeImgUrl, ChallengeCourseModel selectedChallenge) {
   showAlert(
     isScrollControlled: true,
     title: '챌린지 뱃지 발급',
@@ -999,7 +999,7 @@ void showPendingExerciseAlert(ActivityController controller) {
                     ),
                     Obx(() {
                       return GestureDetector(
-                        onTapDown: (tapDownDetail) => controller.onTapDownStop(tapDownDetail, controller.selectedChallenge.value, controller: controller, source: 'pendingExerciseDialog'),
+                        onTapDown: (tapDownDetail) => controller.onTapDownStop(tapDownDetail, controller.selectedCourse.value, controller: controller, source: 'pendingExerciseDialog'),
                         onTapUp: (tapUpDetail) => controller.onTapUpStop(tapUpDetail),
                         child: Stack(
                           children: [

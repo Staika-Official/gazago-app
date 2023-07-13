@@ -10,16 +10,16 @@ class ActivityMap extends StatelessWidget {
 
   List<CircleOverlay> renderStartPoint(ActivityController controller) {
     CircleOverlay centerCircle = CircleOverlay(
-      overlayId: 'ChallengeStartCenter${controller.selectedChallenge.value.id!}',
-      center: LatLng(controller.selectedChallenge.value.startLat!, controller.selectedChallenge.value.startLon!),
+      overlayId: 'ChallengeStartCenter${controller.selectedCourse.value.id!}',
+      center: LatLng(controller.selectedCourse.value.startLat!, controller.selectedCourse.value.startLon!),
       radius: 9,
       color: skyBlueColor,
     );
 
     CircleOverlay outerCircle = CircleOverlay(
-      overlayId: 'ChallengeStart${controller.selectedChallenge.value.id!}',
-      center: LatLng(controller.selectedChallenge.value.startLat!, controller.selectedChallenge.value.startLon!),
-      radius: controller.selectedChallenge.value.startRadius!,
+      overlayId: 'ChallengeStart${controller.selectedCourse.value.id!}',
+      center: LatLng(controller.selectedCourse.value.startLat!, controller.selectedCourse.value.startLon!),
+      radius: controller.selectedCourse.value.startRadius!,
       color: const Color.fromRGBO(14, 230, 243, 0.3),
     );
 
@@ -28,16 +28,16 @@ class ActivityMap extends StatelessWidget {
 
   List<CircleOverlay> renderEndPoint(ActivityController controller) {
     CircleOverlay centerCircle = CircleOverlay(
-      overlayId: 'ChallengeEndCenter${controller.selectedChallenge.value.id!}',
-      center: LatLng(controller.selectedChallenge.value.endLat!, controller.selectedChallenge.value.endLon!),
+      overlayId: 'ChallengeEndCenter${controller.selectedCourse.value.id!}',
+      center: LatLng(controller.selectedCourse.value.endLat!, controller.selectedCourse.value.endLon!),
       radius: 9,
       color: Colors.red,
     );
 
     CircleOverlay outerCircle = CircleOverlay(
-      overlayId: 'ChallengeEnd${controller.selectedChallenge.value.id!}',
-      center: LatLng(controller.selectedChallenge.value.endLat!, controller.selectedChallenge.value.endLon!),
-      radius: controller.selectedChallenge.value.endRadius!,
+      overlayId: 'ChallengeEnd${controller.selectedCourse.value.id!}',
+      center: LatLng(controller.selectedCourse.value.endLat!, controller.selectedCourse.value.endLon!),
+      radius: controller.selectedCourse.value.endRadius!,
       color: Colors.red[300]?.withOpacity(0.3),
     );
 
@@ -45,29 +45,35 @@ class ActivityMap extends StatelessWidget {
   }
 
   List<Marker> renderStartMarker(ActivityController controller) {
-    return [
-      Marker(
-        markerId: 'StartMarker${controller.nearByChallenge.value!.id!}',
-        position: LatLng(controller.nearByChallenge.value!.startLat!, controller.nearByChallenge.value!.startLon!),
-        captionText: '${controller.nearByChallenge.value!.firstName!} 시작점',
-        // icon: controller.startMarkerImage.value,
-        // width: 10,
-        // height: 10,
-      ),
-    ];
+    return controller.nearByCourses
+        .where((challenge) => challenge.id == controller.userState.value.exercise?.challengeId)
+        .map(
+          (challenge) => Marker(
+            markerId: 'StartMarker${challenge.id!}',
+            position: LatLng(challenge.startLat!, challenge.startLon!),
+            captionText: '${challenge.firstName!} 시작점',
+            // icon: controller.startMarkerImage.value,
+            // width: 10,
+            // height: 10,
+          ),
+        )
+        .toList();
   }
 
   List<Marker> renderEndMarker(ActivityController controller) {
-    return [
-      Marker(
-        markerId: 'FinishMarker${controller.nearByChallenge.value!.id!}',
-        position: LatLng(controller.nearByChallenge.value!.endLat!, controller.nearByChallenge.value!.endLon!),
-        captionText: '${controller.nearByChallenge.value!.firstName!} 도착점',
-        // icon: controller.startMarkerImage.value,
-        // width: 10,
-        // height: 10,
-      ),
-    ];
+    return controller.nearByCourses
+        .where((challenge) => challenge.id == controller.userState.value.exercise?.challengeId)
+        .map(
+          (challenge) => Marker(
+            markerId: 'FinishMarker${challenge.id!}',
+            position: LatLng(challenge.endLat!, challenge.endLon!),
+            captionText: '${challenge.firstName!} 도착점',
+            // icon: controller.finishMarkerImage.value,
+            // width: 10,
+            // height: 10,
+          ),
+        )
+        .toList();
   }
 
   @override
@@ -87,8 +93,8 @@ class ActivityMap extends StatelessWidget {
             ),
             initLocationTrackingMode: LocationTrackingMode.Follow,
             circles: [
-              if (controller.selectedChallenge.value.id != null) ...renderStartPoint(controller),
-              if (controller.selectedChallenge.value.id != null) ...renderEndPoint(controller),
+              if (controller.selectedCourse.value.id != null) ...renderStartPoint(controller),
+              if (controller.selectedCourse.value.id != null) ...renderEndPoint(controller),
             ],
             // markers: [
             //   ...renderStartMarker(controller),

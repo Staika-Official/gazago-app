@@ -7,7 +7,7 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:gaza_go/constants/enums.dart';
 import 'package:gaza_go/platform/controllers/activity_controller.dart';
 import 'package:gaza_go/platform/helpers/alert_helper.dart';
-import 'package:gaza_go/platform/models/challenge_model.dart';
+import 'package:gaza_go/platform/models/challenge_course_model.dart';
 import 'package:gaza_go/presentations/styles/colors.dart';
 import 'package:gaza_go/presentations/styles/icons.dart';
 import 'package:gaza_go/presentations/styles/styled_text.dart';
@@ -18,16 +18,16 @@ class ActivityChallenges extends StatelessWidget {
 
   List<CircleOverlay> renderStartPoint(ActivityController controller) {
     CircleOverlay centerCircle = CircleOverlay(
-      overlayId: 'ChallengeStartCenter${controller.selectedChallenge.value.id!}',
-      center: LatLng(controller.selectedChallenge.value.startLat!, controller.selectedChallenge.value.startLon!),
+      overlayId: 'ChallengeStartCenter${controller.selectedCourse.value.id!}',
+      center: LatLng(controller.selectedCourse.value.startLat!, controller.selectedCourse.value.startLon!),
       radius: 9,
       color: skyBlueColor,
     );
 
     CircleOverlay outerCircle = CircleOverlay(
-      overlayId: 'ChallengeStart${controller.selectedChallenge.value.id!}',
-      center: LatLng(controller.selectedChallenge.value.startLat!, controller.selectedChallenge.value.startLon!),
-      radius: controller.selectedChallenge.value.startRadius!,
+      overlayId: 'ChallengeStart${controller.selectedCourse.value.id!}',
+      center: LatLng(controller.selectedCourse.value.startLat!, controller.selectedCourse.value.startLon!),
+      radius: controller.selectedCourse.value.startRadius!,
       color: const Color.fromRGBO(14, 230, 243, 0.3),
     );
 
@@ -36,16 +36,16 @@ class ActivityChallenges extends StatelessWidget {
 
   List<CircleOverlay> renderEndPoint(ActivityController controller) {
     CircleOverlay centerCircle = CircleOverlay(
-      overlayId: 'ChallengeEndCenter${controller.selectedChallenge.value.id!}',
-      center: LatLng(controller.selectedChallenge.value.endLat!, controller.selectedChallenge.value.endLon!),
+      overlayId: 'ChallengeEndCenter${controller.selectedCourse.value.id!}',
+      center: LatLng(controller.selectedCourse.value.endLat!, controller.selectedCourse.value.endLon!),
       radius: 9,
       color: Colors.red,
     );
 
     CircleOverlay outerCircle = CircleOverlay(
-      overlayId: 'ChallengeEnd${controller.selectedChallenge.value.id!}',
-      center: LatLng(controller.selectedChallenge.value.endLat!, controller.selectedChallenge.value.endLon!),
-      radius: controller.selectedChallenge.value.endRadius!,
+      overlayId: 'ChallengeEnd${controller.selectedCourse.value.id!}',
+      center: LatLng(controller.selectedCourse.value.endLat!, controller.selectedCourse.value.endLon!),
+      radius: controller.selectedCourse.value.endRadius!,
       color: Colors.red[300]?.withOpacity(0.3),
     );
 
@@ -53,22 +53,23 @@ class ActivityChallenges extends StatelessWidget {
   }
 
   List<Marker> renderMaker(ActivityController controller) {
-    ChallengeModel course = controller.selectedChallenge.value;
+    ChallengeCourseModel course = controller.selectedCourse.value;
     Marker startMaker = Marker(
-        markerId: course.id!.toString(),
-        position: LatLng(course.startLat!, course.startLon!),
-        captionText: '시작: ${course.startPointName}',
-        captionColor: skyBlueColor,
-        captionHaloColor: Colors.black,
-        captionTextSize: 16.0.sp,
-        subCaptionTextSize: 14.sp,
-        subCaptionText: course.secondName,
-        subCaptionColor: (Platform.isAndroid) ? Colors.white : Colors.black,
-        subCaptionHaloColor: (Platform.isAndroid) ? Colors.black : Colors.white,
-        captionOffset: 5,
-        icon: controller.startMaker,
-        width: 20,
-        height: 20);
+      markerId: course.id!.toString(),
+      position: LatLng(course.startLat!, course.startLon!),
+      captionText: '시작: ${course.startPointName}',
+      captionColor: skyBlueColor,
+      captionHaloColor: Colors.black,
+      captionTextSize: 16.0.sp,
+      subCaptionTextSize: 14.sp,
+      subCaptionText: course.secondName,
+      subCaptionColor: (Platform.isAndroid) ? Colors.white : Colors.black,
+      subCaptionHaloColor: (Platform.isAndroid) ? Colors.black : Colors.white,
+      captionOffset: 5,
+      icon: controller.startMarker,
+      width: 20,
+      height: 20,
+    );
 
     Marker endMaker = Marker(
       markerId: 'end_${course.id!.toString()}',
@@ -82,20 +83,42 @@ class ActivityChallenges extends StatelessWidget {
       subCaptionTextSize: 14.sp,
       subCaptionColor: (Platform.isAndroid) ? Colors.white : Colors.black,
       subCaptionHaloColor: (Platform.isAndroid) ? Colors.black : Colors.white,
-      icon: controller.endMaker,
+      icon: controller.endMarker,
       width: 20,
       height: 20,
     );
+
+    List<Marker> checkpointMarker() {
+      return [
+        Marker(
+          markerId: 'end_${course.id!.toString()}',
+          position: LatLng(course.endLat!, course.endLon!),
+          captionText: '도착: ${course.endPointName}',
+          captionColor: const Color(0xFFFF6F75),
+          captionHaloColor: Colors.black,
+          captionTextSize: 16.0.sp,
+          captionOffset: 5,
+          subCaptionText: course.secondName,
+          subCaptionTextSize: 14.sp,
+          subCaptionColor: (Platform.isAndroid) ? Colors.white : Colors.black,
+          subCaptionHaloColor: (Platform.isAndroid) ? Colors.black : Colors.white,
+          icon: controller.endMarker,
+          width: 20,
+          height: 20,
+        )
+      ];
+    }
+
     return [startMaker, endMaker];
   }
 
-  List<Widget> renderChallengeList(ActivityController controller) {
-    if (controller.doableChallenge.value != null) {
-      bool isSelected = controller.doableChallenge.value!.id == controller.selectedChallenge.value.id;
+  List<Widget> renderCourseList(ActivityController controller) {
+    if (controller.doableCoursesByChallenge.isNotEmpty) {
+      return controller.doableCoursesByChallenge.map((ChallengeCourseModel course) {
+        bool isSelected = course.id == controller.selectedCourse.value.id;
 
-      return [
-        InkWell(
-          onTap: () => controller.selectChallenge(controller.doableChallenge.value!),
+        return InkWell(
+          onTap: () => controller.selectCourse(course),
           child: Padding(
             padding: EdgeInsets.symmetric(horizontal: 30.sp, vertical: 15.sp),
             child: Row(
@@ -113,7 +136,7 @@ class ActivityChallenges extends StatelessWidget {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       StyledText(
-                        controller.doableChallenge.value!.secondName!,
+                        course.secondName!,
                         fontSize: 18,
                         fontWeight: 500,
                         lineHeight: 18,
@@ -124,9 +147,7 @@ class ActivityChallenges extends StatelessWidget {
                           top: 7.sp,
                         ),
                         child: StyledText(
-                          controller.doableChallenge.value!.startPointName != null
-                              ? '시작: ${controller.doableChallenge.value!.startPointName!} - 도착: ${controller.doableChallenge.value!.endPointName!}'
-                              : controller.doableChallenge.value!.firstName!,
+                          course.startPointName != null ? '시작: ${course.startPointName!} - 도착: ${course.endPointName!}' : course.firstName!,
                           fontSize: 14,
                           fontWeight: 500,
                           lineHeight: 14,
@@ -139,8 +160,8 @@ class ActivityChallenges extends StatelessWidget {
               ],
             ),
           ),
-        ),
-      ];
+        );
+      }).toList();
     } else {
       return [];
     }
@@ -162,11 +183,11 @@ class ActivityChallenges extends StatelessWidget {
                 zoom: 14,
               ),
               circles: [
-                if (controller.selectedChallenge.value.id != null) ...renderStartPoint(controller),
-                if (controller.selectedChallenge.value.id != null) ...renderEndPoint(controller),
+                if (controller.selectedCourse.value.id != null) ...renderStartPoint(controller),
+                if (controller.selectedCourse.value.id != null) ...renderEndPoint(controller),
               ],
               markers: [
-                if (controller.selectedChallenge.value.id != null) ...renderMaker(controller),
+                if (controller.selectedCourse.value.id != null) ...renderMaker(controller),
               ],
               mapType: MapType.Basic,
               activeLayers: const [MapLayer.LAYER_GROUP_MOUNTAIN],
@@ -211,7 +232,7 @@ class ActivityChallenges extends StatelessWidget {
                         physics: const ClampingScrollPhysics(),
                         child: Column(
                           children: [
-                            ...renderChallengeList(controller),
+                            ...renderCourseList(controller),
                           ],
                         ),
                       ),
@@ -224,9 +245,9 @@ class ActivityChallenges extends StatelessWidget {
                         bottom: 30.sp,
                       ),
                       child: InkWell(
-                        onTap: controller.doableChallenge.value != null
+                        onTap: controller.doableCoursesByChallenge.isNotEmpty
                             ? () {
-                                if (controller.selectedChallenge.value.id != null) {
+                                if (controller.selectedCourse.value.id != null) {
                                   controller.selectExerciseType(ExerciseType.famous);
                                 } else {
                                   showToastPopup('도전할 챌린지를 선택해주세요.');
@@ -237,7 +258,7 @@ class ActivityChallenges extends StatelessWidget {
                           padding: EdgeInsets.all(20.sp),
                           width: double.infinity.sp,
                           decoration: BoxDecoration(
-                            color: controller.selectedChallenge.value.id != null && controller.doableChallenge.value != null ? skyBlueColor : popupBgColor,
+                            color: controller.selectedCourse.value.id != null && controller.doableCoursesByChallenge.isNotEmpty ? skyBlueColor : popupBgColor,
                             borderRadius: BorderRadius.circular(12.sp),
                             border: Border.all(
                               width: 2.sp,
@@ -260,7 +281,7 @@ class ActivityChallenges extends StatelessWidget {
                               fontSize: 18.sp,
                               fontWeight: FontWeight.w600,
                               height: (16 / 18).sp,
-                              color: controller.selectedChallenge.value.id != null && controller.doableChallenge.value != null ? Colors.black : lightGrayColor,
+                              color: controller.selectedCourse.value.id != null && controller.doableCoursesByChallenge.isNotEmpty ? Colors.black : lightGrayColor,
                             ),
                           ),
                         ),
@@ -274,37 +295,39 @@ class ActivityChallenges extends StatelessWidget {
               top: 48.sp,
               left: 20.sp,
               child: InkWell(
-                  onTap: () {
-                    controller.selectedChallenge.value.id = null;
-                    Navigator.pop(context);
-                  },
-                  child: iconChallengeScreenBack),
+                onTap: () {
+                  controller.selectedCourse.value.id = null;
+                  Navigator.pop(context);
+                },
+                child: iconChallengeScreenBack,
+              ),
             ),
             Positioned(
               top: 50.sp,
               child: Container(
-                  padding: EdgeInsets.only(top: 10.sp, bottom: 10.sp, right: 20.sp, left: 20.sp),
-                  decoration: BoxDecoration(
-                    color: popupBgColor,
-                    borderRadius: BorderRadius.circular(14.sp),
-                    border: Border.all(color: Colors.black, width: 2.sp),
-                    boxShadow: const [
-                      BoxShadow(
-                        color: Colors.black,
-                        spreadRadius: 0,
-                        blurRadius: 0,
-                        offset: Offset(0, 4), // changes position of shadow
-                      ),
-                    ],
-                  ),
-                  child: const StyledText(
-                    '챌린지 고르기',
-                    fontSize: 16,
-                    fontWeight: 500,
-                    lineHeight: 22,
-                    color: Colors.white,
-                    textAlign: TextAlign.center,
-                  )),
+                padding: EdgeInsets.only(top: 10.sp, bottom: 10.sp, right: 20.sp, left: 20.sp),
+                decoration: BoxDecoration(
+                  color: popupBgColor,
+                  borderRadius: BorderRadius.circular(14.sp),
+                  border: Border.all(color: Colors.black, width: 2.sp),
+                  boxShadow: const [
+                    BoxShadow(
+                      color: Colors.black,
+                      spreadRadius: 0,
+                      blurRadius: 0,
+                      offset: Offset(0, 4), // changes position of shadow
+                    ),
+                  ],
+                ),
+                child: const StyledText(
+                  '챌린지 고르기',
+                  fontSize: 16,
+                  fontWeight: 500,
+                  lineHeight: 22,
+                  color: Colors.white,
+                  textAlign: TextAlign.center,
+                ),
+              ),
             ),
           ],
         );
