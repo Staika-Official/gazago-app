@@ -38,8 +38,14 @@ class ChallengesDetailController extends GetxController with GetTickerProviderSt
   RxList<ChallengeRankerModel> challengeRankingList = RxList.empty();
   final RxBool dataGetLoading = RxBool(false);
   ScrollController leaderboardScrollController = ScrollController();
+  final TextEditingController codeTextController = TextEditingController(text: '');
+  final RxString patricipateInCode = RxString('');
+  final FocusNode focusNode = FocusNode();
+  final RxString errorMessage = RxString('');
+
   @override
   void onInit() async {
+    focusNode.addListener(_onFocusChange);
     tabController = TabController(length: 2, vsync: this)
       ..addListener(() {
         if (tabController.indexIsChanging && tabController.index == 1) {}
@@ -56,7 +62,22 @@ class ChallengesDetailController extends GetxController with GetTickerProviderSt
   @override
   void onClose() {
     challengesController.getChallengesList();
+    focusNode.removeListener(_onFocusChange);
+    focusNode.unfocus();
     super.onClose();
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
+
+    focusNode.removeListener(_onFocusChange);
+    focusNode.unfocus();
+    focusNode.dispose();
+  }
+
+  void _onFocusChange() {
+    debugPrint("Focus: ${focusNode.hasFocus.toString()}");
   }
 
   Future<void> refreshController() async {
@@ -117,6 +138,40 @@ class ChallengesDetailController extends GetxController with GetTickerProviderSt
     if (await canLaunchUrl(url)) {
       await ActivityService.fetchChallengeAllianceLinkRecord(challengeId.value, linkUrl);
       await launchUrl(url, mode: LaunchMode.externalApplication);
+    }
+  }
+
+  void setCode(String code) {
+    patricipateInCode.value = code;
+  }
+
+  void closeParticipateInCodeAlert() {
+    Get.back();
+    initCodeTextField();
+  }
+
+  void initCodeTextField() {
+    patricipateInCode.value = '';
+    codeTextController.text = '';
+    errorMessage.value = '';
+  }
+
+  void sendParticipateInCode() async {
+    if (patricipateInCode.value != '') {
+      await ActivityService.sendParticipateInCode(challengeId.value, patricipateInCode.value, successCallback: (bool isSuccess) {
+        if (isSuccess) {
+          Get.back();
+          showToastPopup('인증이 완료되었습니다.');
+          initCodeTextField();
+          getChallengeDetail();
+          getChallengeLeaderboard();
+          getChallengeLeaderboardMyRanking();
+        }
+      }, errorCallback: (String? message) {
+        errorMessage.value = message!;
+      });
+    } else {
+      showToastPopup('참여코드를 입력해주세요.');
     }
   }
 }

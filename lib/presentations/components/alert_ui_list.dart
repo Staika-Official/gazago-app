@@ -6,6 +6,7 @@ import 'package:another_xlider/another_xlider.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:gaza_go/constants/config.dart';
@@ -4642,5 +4643,145 @@ void checkChallengeItemEquip(InventoryController controller, int itemId) {
         ),
       ),
     ],
+  );
+}
+
+void participateInChallengeByCodeAlert() {
+  ChallengesDetailController controller = Get.find();
+  Get.dialog(
+    barrierColor: subBg01Color.withOpacity(0.2),
+    useSafeArea: true,
+    barrierDismissible: false,
+    WillPopScope(
+      onWillPop: () async => false,
+      child: Dialog(
+        insetPadding: EdgeInsets.zero,
+        backgroundColor: subBg01Color.withOpacity(0.2),
+        child: Padding(
+          padding: EdgeInsets.all(20.0.sp),
+          child: Stack(
+            children: [
+              Center(
+                child: Container(
+                  decoration: BoxDecoration(
+                    color: popupBgColor,
+                    borderRadius: BorderRadius.all(
+                      Radius.circular(20.sp),
+                    ),
+                  ),
+                  child: Padding(
+                    padding: EdgeInsets.symmetric(horizontal: 20.0.sp, vertical: 30.sp),
+                    child: Column(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        Padding(
+                          padding: EdgeInsets.only(bottom: 14.0.sp),
+                          child: const StyledText(
+                            '참여코드 입력',
+                            fontSize: 20,
+                            lineHeight: 21,
+                            fontWeight: 500,
+                          ),
+                        ),
+                        Padding(
+                          padding: EdgeInsets.only(bottom: 35.0.sp),
+                          child: const StyledText(
+                            '참여코드 입력이 필요한 챌린지 입니다.',
+                            fontSize: 16,
+                            lineHeight: 17,
+                            fontWeight: 500,
+                          ),
+                        ),
+                        Obx(() {
+                          return TextField(
+                            decoration: InputDecoration(
+                              filled: true,
+                              fillColor: subBg01Color,
+                              hintText: '참여코드를 입력해주세요.',
+                              hintStyle: TextStyle(
+                                color: deepGrayColor,
+                                fontSize: 18,
+                                height: 20 / 18,
+                                fontWeight: FontWeight.w500,
+                              ),
+                              focusedBorder: OutlineInputBorder(
+                                borderRadius: BorderRadius.all(Radius.circular(10.0)),
+                                borderSide: BorderSide(width: 2, color: controller.errorMessage.value == '' ? skyBlueColor : const Color(0xFFFF4C4C)),
+                              ),
+                              enabledBorder: OutlineInputBorder(
+                                borderRadius: BorderRadius.all(Radius.circular(10.0)),
+                                borderSide: BorderSide(width: 2, color: controller.errorMessage.value == '' ? skyBlueColor : const Color(0xFFFF4C4C)),
+                              ),
+                              border: OutlineInputBorder(
+                                borderSide: BorderSide(width: 2, color: controller.errorMessage.value == '' ? skyBlueColor : const Color(0xFFFF4C4C)),
+                                borderRadius: BorderRadius.all(Radius.circular(10.0)),
+                              ),
+                            ),
+                            controller: controller.codeTextController,
+                            textInputAction: TextInputAction.go,
+                            inputFormatters: [
+                              FilteringTextInputFormatter.allow(RegExp(r'[a-zaA-Z0-9]')),
+                              LengthLimitingTextInputFormatter(6),
+                              TextInputFormatter.withFunction((oldValue, newValue) {
+                                return newValue.copyWith(text: newValue.text.toUpperCase());
+                              }),
+                            ],
+                            style: TextStyle(
+                              color: Colors.white,
+                              fontSize: 18.sp,
+                              height: 20 / 18,
+                              fontWeight: FontWeight.w600,
+                            ),
+                            autofocus: false,
+                            cursorColor: Colors.white,
+                            focusNode: controller.focusNode,
+                            onChanged: (value) => controller.setCode(value),
+                            onSubmitted: (val) => null,
+                          );
+                        }),
+                        Obx(() {
+                          return SizedBox(
+                            height: 50.sp,
+                            child: Padding(
+                              padding: EdgeInsets.symmetric(vertical: 20.0.sp),
+                              child: StyledText(controller.errorMessage.value, fontSize: 14, color: Colors.redAccent, fontWeight: 500, lineHeight: 15),
+                            ),
+                          );
+                        }),
+                        Padding(
+                          padding: EdgeInsets.only(top: 5.0.sp),
+                          child: Row(
+                            children: [
+                              Expanded(
+                                child: GazagoButton(
+                                  onTap: () => controller.closeParticipateInCodeAlert(),
+                                  buttonText: '취소',
+                                  textColor: Colors.white,
+                                  buttonColor: popupBgColor,
+                                ),
+                              ),
+                              SizedBox(
+                                width: 9.sp,
+                              ),
+                              Expanded(
+                                child: GazagoButton(
+                                  onTap: () => controller.sendParticipateInCode(),
+                                  buttonText: '확인',
+                                  buttonColor: skyBlueColor,
+                                ),
+                              ),
+                            ],
+                          ),
+                        )
+                      ],
+                    ),
+                  ),
+                ),
+              ),
+            ],
+          ),
+        ),
+      ),
+    ),
   );
 }
