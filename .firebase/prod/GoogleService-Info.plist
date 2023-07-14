@@ -32,6 +32,8 @@
 	<true></true>
 	<key>GOOGLE_APP_ID</key>
 	<string>1:321889905131:ios:fcd56d852edb7bc40a11ae</string>
+	<key>DATABASE_URL</key>
+	<string>https://app-step-prod-default-rtdb.asia-southeast1.firebasedatabase.app</string>
 	<key>ADMOB_APP_ID</key>
 	<string>ca-app-pub-4234536720874912~6134851285</string>
 </dict>
