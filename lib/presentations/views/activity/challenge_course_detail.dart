@@ -351,30 +351,17 @@ class ChallengeCourseDetail extends StatelessWidget {
                                                         lineHeight: 22,
                                                         letterSpacing: -.1,
                                                       ),
-                                                      Padding(
-                                                        padding: EdgeInsets.only(top: 9.0.sp),
-                                                        child: Row(
-                                                          children: [
-                                                            badge.limitedCount! > 0
-                                                                ? StyledText(
-                                                                    '${formatDecimalPlaces(badge.limitedCount!.toDouble(), 0)} 명',
-                                                                    fontFamily: 'Montserrat',
-                                                                    fontWeight: 600,
-                                                                    fontSize: 22,
-                                                                    lineHeight: 22,
-                                                                    letterSpacing: -.1,
-                                                                  )
-                                                                : const StyledText(
-                                                                    '참여자 전원 뱃지 지급',
-                                                                    fontFamily: 'Montserrat',
-                                                                    fontWeight: 600,
-                                                                    fontSize: 16,
-                                                                    lineHeight: 17,
-                                                                    letterSpacing: -.1,
-                                                                  ),
-                                                          ],
-                                                        ),
-                                                      ),
+                                                      if (badge.description != null)
+                                                        Padding(
+                                                            padding: EdgeInsets.only(top: 9.0.sp),
+                                                            child: StyledText(
+                                                              badge.description!,
+                                                              fontFamily: 'Montserrat',
+                                                              fontWeight: 600,
+                                                              fontSize: 22,
+                                                              lineHeight: 22,
+                                                              letterSpacing: -.1,
+                                                            )),
                                                     ],
                                                   ),
                                                 )
