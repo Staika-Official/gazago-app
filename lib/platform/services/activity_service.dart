@@ -246,4 +246,18 @@ class ActivityService {
       if (errorCallback != null) errorCallback();
     }
   }
+
+  static Future<void> sendParticipateInCode(int challengeId, String code, {required Function successCallback, Function? errorCallback}) async {
+    Response res = await ActivityApi.fetchChallengeParticipateInCode(userId!, challengeId, code);
+    if (res.statusCode == 200) {
+      successCallback(true);
+    } else if (res.statusCode != 500) {
+      if (errorCallback != null) {
+        if (res.data != null) {
+          ErrorResponseDataModel errorData = ErrorResponseDataModel.fromJson(res.data);
+          errorCallback(errorData.errorMessage);
+        }
+      }
+    }
+  }
 }

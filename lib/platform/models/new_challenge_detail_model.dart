@@ -30,6 +30,7 @@ class NewChallengeDetailModel {
   bool? previewDisplayed;
   String? challengeRewardRuleType;
   int? rewardAmount;
+  int? rewardQuantity;
   String? introduce;
   String? description;
   NewChallengeItemModel? item;
@@ -63,6 +64,7 @@ class NewChallengeDetailModel {
     this.previewDisplayed,
     this.challengeRewardRuleType,
     this.rewardAmount,
+    this.rewardQuantity,
     this.introduce,
     this.description,
     this.item,

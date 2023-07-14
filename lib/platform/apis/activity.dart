@@ -189,4 +189,11 @@ class ActivityApi {
       '/challenges/users/$userId/$challengeId/lat/$lat/lon/$lon',
     );
   }
+
+  static Future<Response> fetchChallengeParticipateInCode(String userId, int challengeId, String code) async {
+    return await Api.client(
+      serviceUrl: '/services/gazago/api',
+      showLoading: false,
+    ).post('/user-challenges/users/${userId}/challenges/${challengeId}/codes/${code}');
+  }
 }
