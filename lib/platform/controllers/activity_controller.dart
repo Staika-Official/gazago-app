@@ -809,7 +809,7 @@ class ActivityController extends SuperController with ActivityMixin, ChallengeMi
   }
 
   void moveToChallengeDetail(ChallengeModel challenge) {
-    Get.toNamed(Routes.challengeDetail, arguments: {'id': challenge.id});
+    Get.toNamed(Routes.challengeCourseDetail, arguments: {'id': challenge.id});
   }
 
   @override

@@ -4,6 +4,7 @@ import 'package:gaza_go/platform/controllers/loading_controller.dart';
 import 'package:gaza_go/platform/middleware/router_middleware.dart';
 import 'package:gaza_go/presentations/views/activity/activity_active.dart';
 import 'package:gaza_go/presentations/views/activity/activity_courses.dart';
+import 'package:gaza_go/presentations/views/activity/challenge_course_detail.dart';
 import 'package:gaza_go/presentations/views/activity/challenge_map.dart';
 import 'package:gaza_go/presentations/views/activity/equipped_item.dart';
 import 'package:gaza_go/presentations/views/archive/archive_detail.dart';
@@ -119,6 +120,7 @@ class Routes {
   static const createWallet = '/wallet/create';
   static const sendStikGoWallet = '/wallet/send_stik_go_wallet';
   static const challengeDetail = '/challenges/challenge_detail';
+  static const challengeCourseDetail = '/activity/challenge_course_detail';
   static const leaderboard = '/leaderboard';
 
   static List<GetPage> pages = [
@@ -185,6 +187,7 @@ class Routes {
     stepPage(name: Routes.createWallet, page: const CreateWallet()),
     stepPage(name: Routes.sendStikGoWallet, page: const SendStikGoWallet()),
     stepPage(name: Routes.challengeDetail, page: const ChallengeDetail()),
+    stepPage(name: Routes.challengeCourseDetail, page: const ChallengeCourseDetail()),
     stepPage(name: Routes.leaderboard, page: const RankingHome()),
   ];
 }

@@ -36,6 +36,7 @@ class NewChallengeDetailModel {
   NewChallengeItemModel? item;
   NewChallengeUserItemModel? userItem;
   NewChallengeBadgeModel? badge;
+  List<NewChallengeBadgeModel>? badges;
   String? extBtnLabel;
   String? extTxt;
   String? extTxtDetail;
@@ -70,6 +71,7 @@ class NewChallengeDetailModel {
     this.item,
     this.userItem,
     this.badge,
+    this.badges,
     this.extBtnLabel,
     this.extTxt,
     this.extTxtDetail,

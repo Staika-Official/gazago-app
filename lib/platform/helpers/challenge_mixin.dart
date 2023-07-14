@@ -47,7 +47,7 @@ mixin ChallengeMixin {
       case 'CLIMBING':
         return '오르기';
       case 'HIKING':
-        return '오르기';
+        return '등산';
       default:
         return '';
     }
