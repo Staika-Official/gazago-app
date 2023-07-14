@@ -39,9 +39,10 @@ class ChallengesDetailController extends GetxController with GetTickerProviderSt
   final RxBool dataGetLoading = RxBool(false);
   ScrollController leaderboardScrollController = ScrollController();
   final TextEditingController codeTextController = TextEditingController(text: '');
-  final RxString patricipateInCode = RxString('');
+  final RxString participationCode = RxString('');
   final FocusNode focusNode = FocusNode();
   final RxString errorMessage = RxString('');
+  final RxBool hideCourses = RxBool(false);
 
   @override
   void onInit() async {
@@ -52,6 +53,7 @@ class ChallengesDetailController extends GetxController with GetTickerProviderSt
       });
     tabController.addListener(_tabController);
     challengeId.value = await Get.arguments['id'];
+    hideCourses.value = await Get.arguments['hideCourses'] ?? false;
     getChallengeDetail();
     getChallengeLeaderboard();
     getChallengeLeaderboardMyRanking();
@@ -142,7 +144,7 @@ class ChallengesDetailController extends GetxController with GetTickerProviderSt
   }
 
   void setCode(String code) {
-    patricipateInCode.value = code;
+    participationCode.value = code;
   }
 
   void closeParticipateInCodeAlert() {
@@ -151,14 +153,14 @@ class ChallengesDetailController extends GetxController with GetTickerProviderSt
   }
 
   void initCodeTextField() {
-    patricipateInCode.value = '';
+    participationCode.value = '';
     codeTextController.text = '';
     errorMessage.value = '';
   }
 
   void sendParticipateInCode() async {
-    if (patricipateInCode.value != '') {
-      await ActivityService.sendParticipateInCode(challengeId.value, patricipateInCode.value, successCallback: (bool isSuccess) {
+    if (participationCode.value != '') {
+      await ActivityService.sendParticipateInCode(challengeId.value, participationCode.value, successCallback: (bool isSuccess) {
         if (isSuccess) {
           Get.back();
           showToastPopup('인증이 완료되었습니다.');

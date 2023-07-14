@@ -808,8 +808,8 @@ class ActivityController extends SuperController with ActivityMixin, ChallengeMi
     });
   }
 
-  void moveToChallengeDetail(ChallengeModel challenge) {
-    Get.toNamed(Routes.challengeCourseDetail, arguments: {'id': challenge.id});
+  void moveToChallengeDetail(ChallengeModel challenge, bool hideLinkToCourses) {
+    Get.toNamed(Routes.challengeCourseDetail, arguments: {'id': challenge.id, 'hideCourses': hideLinkToCourses});
   }
 
   @override

@@ -1,9 +1,12 @@
+import 'dart:io';
+
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_html/flutter_html.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:gaza_go/constants/config.dart';
+import 'package:gaza_go/platform/controllers/activity_controller.dart';
 import 'package:gaza_go/platform/controllers/challenges_detail_controller.dart';
 import 'package:gaza_go/platform/helpers/base_helper.dart';
 import 'package:gaza_go/presentations/components/secondary_appbar.dart';
@@ -419,7 +422,136 @@ class ChallengeCourseDetail extends StatelessWidget {
                           ),
                       ],
                     ),
-                  )
+                  ),
+                  if (!controller.hideCourses.value)
+                    Container(
+                      decoration: BoxDecoration(
+                        color: popupBgColor,
+                        border: Border.all(
+                          width: 2,
+                          color: Colors.black,
+                        ),
+                        borderRadius: BorderRadius.only(
+                          topLeft: Radius.circular(25.sp),
+                          topRight: Radius.circular(25.sp),
+                        ),
+                      ),
+                      width: double.infinity,
+                      // height: 50,
+                      child: Column(
+                        children: [
+                          Padding(
+                            padding: EdgeInsets.symmetric(horizontal: 25.0.sp, vertical: 20.sp),
+                            child: Flex(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              direction: Axis.horizontal,
+                              children: [
+                                Flexible(
+                                  child: RichText(
+                                    text: TextSpan(
+                                      style: TextStyle(
+                                        color: skyBlueColor,
+                                        fontWeight: FontWeight.w500,
+                                        fontSize: 16.sp,
+                                        height: 24.sp / 16,
+                                      ),
+                                      children: [
+                                        TextSpan(
+                                          text: '${controller.challengeDetails.value.title}\n',
+                                          style: TextStyle(
+                                            color: lightGrayColor,
+                                          ),
+                                        ),
+                                        TextSpan(
+                                          text: '코스를 미리 확인하세요',
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                ),
+                                Padding(
+                                  padding: EdgeInsets.only(left: 5.0.sp),
+                                  child: InkWell(
+                                    onTap: () {
+                                      Get.find<ActivityController>().moveToChallengeMap(controller.challengeDetails.value.id!);
+                                    },
+                                    child: Container(
+                                        decoration: BoxDecoration(
+                                          color: popupBgColor,
+                                          border: Border.all(
+                                            width: 2,
+                                            style: BorderStyle.solid,
+                                            color: skyBlueColor,
+                                          ),
+                                          borderRadius: BorderRadius.all(
+                                            Radius.circular(25.sp),
+                                          ),
+                                          boxShadow: [
+                                            BoxShadow(offset: Offset(0.sp, 3.sp), color: Colors.black),
+                                          ],
+                                        ),
+                                        child: Padding(
+                                          padding: EdgeInsets.symmetric(vertical: 13.0.sp, horizontal: 40.sp),
+                                          child: StyledText(
+                                            '코스 보기',
+                                            fontWeight: 500,
+                                            fontSize: 18,
+                                            lineHeight: 18,
+                                            letterSpacing: -.1,
+                                          ),
+                                        )),
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                          Container(
+                            width: double.infinity,
+                            color: subBg01Color,
+                            child: Padding(
+                              padding: EdgeInsets.only(top: 10.0.sp, bottom: Platform.isAndroid ? 10.0.sp : 24.sp),
+                              child: Row(mainAxisAlignment: MainAxisAlignment.center, crossAxisAlignment: CrossAxisAlignment.center, children: [
+                                ShaderMask(
+                                  shaderCallback: (size) => LinearGradient(
+                                    colors: [const Color(0XFF0EE6F3), skyBlueColor],
+                                    begin: Alignment.topCenter,
+                                    end: Alignment.bottomCenter,
+                                  ).createShader(
+                                    Rect.fromLTWH(0, 0, size.width, 16),
+                                  ),
+                                  child: const StyledText(
+                                    '챌린지 기간',
+                                    fontSize: 14,
+                                    lineHeight: 20,
+                                    fontWeight: 600,
+                                  ),
+                                ),
+                                ShaderMask(
+                                  blendMode: BlendMode.modulate,
+                                  shaderCallback: (size) => LinearGradient(
+                                    colors: [const Color(0XFF0EE6F3), skyBlueColor],
+                                    begin: Alignment.topCenter,
+                                    end: Alignment.bottomCenter,
+                                  ).createShader(
+                                    Rect.fromLTWH(0, 0, size.width, 16),
+                                  ),
+                                  child: Text(
+                                    '${formatDateUntilTime(controller.challengeDetails.value.fromDate)} - ${formatDateUntilTime(controller.challengeDetails.value.toDate)}',
+                                    style: TextStyle(
+                                      color: Colors.white,
+                                      fontStyle: FontStyle.normal,
+                                      fontWeight: FontWeight.w600,
+                                      fontSize: 14.sp,
+                                      height: (20 / 14).sp,
+                                    ),
+                                  ),
+                                )
+                              ]),
+                            ),
+                          ),
+                        ],
+                      ),
+                    )
                 ],
               )
             ],

@@ -207,7 +207,7 @@ class ActivityChallengeCourses extends StatelessWidget {
               child: ClipRRect(
                 borderRadius: BorderRadius.circular(72),
                 child: GestureDetector(
-                  onTap: () => controller.moveToChallengeDetail(controller.selectedChallenge.value!),
+                  onTap: () => controller.moveToChallengeDetail(controller.selectedChallenge.value!, true),
                   child: controller.selectedChallenge.value!.thumbnailImageUrl.contains('.svg')
                       ? SvgPicture.network(
                           controller.selectedChallenge.value!.thumbnailImageUrl,

@@ -93,8 +93,9 @@ class ChallengesController extends GetxController with GetTickerProviderStateMix
 
   Future<void> getChallengesList() async {
     dataGetLoading.value = true;
+    challengeList.clear();
     await ActivityService.getNewChallenges(successCallback: (List<NewChallengeModel> data) {
-      challengeList.value = data;
+      challengeList.addAll(data);
       dataGetLoading.value = false;
     }, errorCallback: () {
       dataGetLoading.value = false;

@@ -112,6 +112,7 @@ mixin ChallengeMixin {
   }
 
   Future<void> getNearByCourses(Position currentLocation, ExerciseState exerciseState) async {
+    nearByCourses.clear();
     await ActivityService.getNearByCourses(currentLocation, successCallback: (List<ChallengeCourseModel> result) {
       if (result.isNotEmpty) {
         notificationOnCourse(result, exerciseState);
@@ -134,38 +135,41 @@ mixin ChallengeMixin {
     );
   }
 
-  void notificationOnCourse(List<ChallengeCourseModel> challenges, ExerciseState exerciseState) {
+  void notificationOnCourse(List<ChallengeCourseModel> courses, ExerciseState exerciseState) {
     bool notification = false;
-    if (challenges.isNotEmpty && !([ExerciseState.ongoing, ExerciseState.paused].any((state) => state == exerciseState))) {
+    if (courses.isNotEmpty && !([ExerciseState.ongoing, ExerciseState.paused].any((state) => state == exerciseState))) {
       notification = true;
     }
 
     if (notification) {
-      for (ChallengeCourseModel challenge in challenges) {
-        if (validateChallengeNotification(challenge.id!)) {
+      for (ChallengeCourseModel course in courses) {
+        if (validateChallengeNotification(course)) {
           DateTime notifiedTime = DateTime.now();
-          List<int> notifiedChallengeList = HiveStore.load(key: HiveKey.challengeNotificationList.name) ?? [];
-          notifiedChallengeList.add(challenge.id!);
-          HiveStore.save(key: HiveKey.challengeNotificationList.name, value: notifiedChallengeList);
-          HiveStore.save(key: HiveKey.challengeNotificationTime.name, value: DateTime(notifiedTime.year, notifiedTime.month, notifiedTime.day));
-          showLocalNotification(notificationType: NotificationType.challenge, title: '등산 챌린지 시작 포인트 발견', message: '주변에 챌린지를 시작 할 수 있는 ${challenge.firstName}이 있어요. 뱃지 받으러 가자GO~~');
-          showToastPopup('등산 챌린지 시작 포인트 발견');
+          List<dynamic> notifiedChallengeList = HiveStore.load(key: HiveKey.courseNotificationList.name) ?? [];
+          notifiedChallengeList.add({
+            'courseId': course.id!,
+            'challengeId': course.challengeId!,
+          });
+          HiveStore.save(key: HiveKey.courseNotificationList.name, value: notifiedChallengeList);
+          HiveStore.save(key: HiveKey.courseNotificationTime.name, value: DateTime(notifiedTime.year, notifiedTime.month, notifiedTime.day));
+          showLocalNotification(notificationType: NotificationType.challenge, title: '챌린지 시작 포인트 발견', message: '주변에 챌린지를 시작 할 수 있는 ${course.firstName}이 있어요. 뱃지 받으러 가자GO~~');
+          showToastPopup('챌린지 시작 포인트 발견');
         }
       }
     }
   }
 
-  bool validateChallengeNotification(int challengeId) {
-    DateTime? notifiedTime = HiveStore.load(key: HiveKey.challengeNotificationTime.name);
+  bool validateChallengeNotification(ChallengeCourseModel course) {
+    DateTime? notifiedTime = HiveStore.load(key: HiveKey.courseNotificationTime.name);
     bool isNextDay = notifiedTime != null ? DateTime.now().isAfter(notifiedTime.add(const Duration(hours: 24))) : true;
-    List<int>? notifiedChallengeList = HiveStore.load(key: HiveKey.challengeNotificationList.name);
+    List<dynamic>? notifiedChallengeList = HiveStore.load(key: HiveKey.courseNotificationList.name);
 
     if (isNextDay) {
-      HiveStore.save(key: HiveKey.challengeNotificationList.name, value: null);
+      HiveStore.save(key: HiveKey.courseNotificationList.name, value: null);
       return true;
     } else {
       if (notifiedChallengeList != null && notifiedChallengeList.isNotEmpty) {
-        bool challengeAlreadyNotified = notifiedChallengeList.contains(challengeId);
+        bool challengeAlreadyNotified = notifiedChallengeList.any((notifiedCourse) => notifiedCourse['challengeId'] == course.challengeId);
         if (challengeAlreadyNotified) {
           return false;
         }
