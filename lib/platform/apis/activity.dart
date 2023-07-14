@@ -22,11 +22,11 @@ class ActivityApi {
     );
   }
 
-  static Future<Response> getChallengeCourse(int id) async {
+  static Future<Response> getChallengeCourse(String userId, int id) async {
     return await Api.client(
       serviceUrl: '/services/gazago/api',
       showLoading: false,
-    ).get('/challenge-courses/$id');
+    ).get('/challenge-courses/users/$userId/$id');
   }
 
   static Future<Response> getNewChallenges(String userId) async {

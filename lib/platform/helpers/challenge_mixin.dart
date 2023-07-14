@@ -181,15 +181,17 @@ mixin ChallengeMixin {
     }
   }
 
-  void selectCourse(ChallengeCourseModel challenge) {
-    selectedCourse.value = ChallengeCourseModel.fromJson(challenge.toJson());
+  void selectCourse(ChallengeCourseModel course) {
+    selectedCourse.value = ChallengeCourseModel.fromJson(course.toJson());
+
+    print(selectedCourse.value.toJson());
 
     challengeMapController.moveCamera(
       CameraUpdate.fitBounds(
         LatLngBounds.fromLatLngList(
           [
-            LatLng(challenge.startLat!, challenge.startLon!),
-            LatLng(challenge.endLat!, challenge.endLon!),
+            LatLng(course.startLat!, course.startLon!),
+            LatLng(course.endLat!, course.endLon!),
           ],
         ),
         padding: 80,

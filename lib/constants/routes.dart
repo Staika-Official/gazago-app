@@ -3,7 +3,7 @@ import 'package:gaza_go/flavors.dart';
 import 'package:gaza_go/platform/controllers/loading_controller.dart';
 import 'package:gaza_go/platform/middleware/router_middleware.dart';
 import 'package:gaza_go/presentations/views/activity/activity_active.dart';
-import 'package:gaza_go/presentations/views/activity/activity_challenges.dart';
+import 'package:gaza_go/presentations/views/activity/activity_courses.dart';
 import 'package:gaza_go/presentations/views/activity/challenge_map.dart';
 import 'package:gaza_go/presentations/views/activity/equipped_item.dart';
 import 'package:gaza_go/presentations/views/archive/archive_detail.dart';
@@ -139,7 +139,7 @@ class Routes {
     stepPage(name: Routes.term, page: const Term()),
     stepPage(name: Routes.termsList, page: const TermsList()),
     stepPage(name: Routes.archiveDetail, page: const ArchiveDetail()),
-    stepPage(name: Routes.activityChallenges, page: const ActivityChallenges()),
+    stepPage(name: Routes.activityChallenges, page: const ActivityChallengeCourses()),
     stepPage(name: Routes.activityActive, page: const ActivityActive()),
     stepPage(name: Routes.challengeMap, page: const ChallengeMap()),
     stepPage(name: Routes.preferences, page: const Preferences()),

@@ -59,13 +59,13 @@ class ChallengeMap extends StatelessWidget {
         tilePadding: EdgeInsets.only(left: 20.sp, right: 20.sp, top: 0, bottom: 0),
         //children: challenge.course.map(course => _renderCourse(controller, course)).toList(),
         children: challenge.course.map((course) {
-          return _renderCourse(controller, course);
+          return _renderCourseList(controller, course);
         }).toList(),
       ),
     );
   }
 
-  Widget _renderCourse(ActivityController controller, ChallengeCourseModel course) {
+  Widget _renderCourseList(ActivityController controller, ChallengeCourseModel course) {
     print('${controller.challengeSelectedIndex.value} ===== ${course.id}');
     return Builder(builder: (context) {
       return Obx(() {

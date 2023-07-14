@@ -193,8 +193,8 @@ mixin ActivityMixin {
         // locations: coordinatesToString(coordinates),
         locationUpdateTime: DateTime.now(),
         adId: userState.value.exercise!.adId,
-        lastLatitude: coordinates.isNotEmpty ? coordinates.last.latitude : null,
-        lastLongitude: coordinates.isNotEmpty ? coordinates.last.longitude : null,
+        lastLatitude: coordinates.isNotEmpty ? coordinates.last.latitude : currentLocation.value.latitude,
+        lastLongitude: coordinates.isNotEmpty ? coordinates.last.longitude : currentLocation.value.longitude,
         latestLocations: partialCoordinates,
         sequence: const Uuid().v4(),
       ),
@@ -364,7 +364,7 @@ mixin ActivityMixin {
     });
   }
 
-  void startExercise(ExerciseType exerciseType, ChallengeCourseModel? challenge, {String? adId}) async {
+  void startExercise(ExerciseType exerciseType, ChallengeCourseModel? course, {String? adId}) async {
     String deviceId = HiveStore.loadString(key: HiveKey.uuid.name)!;
     String sequence = const Uuid().v4();
 
@@ -396,10 +396,11 @@ mixin ActivityMixin {
           distance: 0,
           altitude: currentLocation.value.altitude,
           time: 0,
-          startPoint: challenge != null ? challenge.firstName : '${currentLocation.value.longitude}, ${currentLocation.value.latitude}',
+          startPoint: course != null ? course.firstName : '${currentLocation.value.longitude}, ${currentLocation.value.latitude}',
           lastLongitude: currentLocation.value.longitude,
           lastLatitude: currentLocation.value.latitude,
-          challengeId: challenge?.id,
+          challengeId: course?.challengeId,
+          challengeCourseId: course?.id,
           locationUpdateTime: DateTime.now(),
           adId: adId != null ? '${adId}_${deviceId}_${DateTime.now().millisecondsSinceEpoch}' : null,
           sequence: sequence,

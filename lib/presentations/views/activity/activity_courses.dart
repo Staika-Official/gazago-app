@@ -1,9 +1,11 @@
 import 'dart:io';
 
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_naver_map/flutter_naver_map.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:gaza_go/constants/config.dart';
 import 'package:gaza_go/constants/enums.dart';
 import 'package:gaza_go/platform/controllers/activity_controller.dart';
 import 'package:gaza_go/platform/helpers/alert_helper.dart';
@@ -13,8 +15,8 @@ import 'package:gaza_go/presentations/styles/icons.dart';
 import 'package:gaza_go/presentations/styles/styled_text.dart';
 import 'package:get/get.dart';
 
-class ActivityChallenges extends StatelessWidget {
-  const ActivityChallenges({Key? key}) : super(key: key);
+class ActivityChallengeCourses extends StatelessWidget {
+  const ActivityChallengeCourses({Key? key}) : super(key: key);
 
   List<CircleOverlay> renderStartPoint(ActivityController controller) {
     CircleOverlay centerCircle = CircleOverlay(
@@ -52,7 +54,7 @@ class ActivityChallenges extends StatelessWidget {
     return [centerCircle, outerCircle];
   }
 
-  List<Marker> renderMaker(ActivityController controller) {
+  List<Marker> renderMakers(ActivityController controller) {
     ChallengeCourseModel course = controller.selectedCourse.value;
     Marker startMaker = Marker(
       markerId: course.id!.toString(),
@@ -89,27 +91,31 @@ class ActivityChallenges extends StatelessWidget {
     );
 
     List<Marker> checkpointMarker() {
-      return [
-        Marker(
-          markerId: 'end_${course.id!.toString()}',
-          position: LatLng(course.endLat!, course.endLon!),
-          captionText: '도착: ${course.endPointName}',
-          captionColor: const Color(0xFFFF6F75),
-          captionHaloColor: Colors.black,
-          captionTextSize: 16.0.sp,
-          captionOffset: 5,
-          subCaptionText: course.secondName,
-          subCaptionTextSize: 14.sp,
-          subCaptionColor: (Platform.isAndroid) ? Colors.white : Colors.black,
-          subCaptionHaloColor: (Platform.isAndroid) ? Colors.black : Colors.white,
-          icon: controller.endMarker,
-          width: 20,
-          height: 20,
-        )
-      ];
+      if (course.checkpoints != null && course.checkpoints!.isNotEmpty) {
+        return course.checkpoints!
+            .map((checkpoint) => Marker(
+                  markerId: 'checkpoint_${checkpoint.id!.toString()}',
+                  position: LatLng(checkpoint.lat!, checkpoint.lon!),
+                  captionText: checkpoint.name,
+                  captionColor: skyBlueColor,
+                  captionHaloColor: Colors.black,
+                  captionTextSize: 12.0.sp,
+                  captionOffset: 5,
+                  // subCaptionText: course.secondName,
+                  // subCaptionTextSize: 14.sp,
+                  // subCaptionColor: (Platform.isAndroid) ? Colors.white : Colors.black,
+                  // subCaptionHaloColor: (Platform.isAndroid) ? Colors.black : Colors.white,
+                  icon: controller.checkpointMarker,
+                  width: 30,
+                  height: 30,
+                ))
+            .toList();
+      } else {
+        return [];
+      }
     }
 
-    return [startMaker, endMaker];
+    return [startMaker, endMaker, ...checkpointMarker()];
   }
 
   List<Widget> renderCourseList(ActivityController controller) {
@@ -187,13 +193,40 @@ class ActivityChallenges extends StatelessWidget {
                 if (controller.selectedCourse.value.id != null) ...renderEndPoint(controller),
               ],
               markers: [
-                if (controller.selectedCourse.value.id != null) ...renderMaker(controller),
+                if (controller.selectedCourse.value.id != null) ...renderMakers(controller),
               ],
               mapType: MapType.Basic,
               activeLayers: const [MapLayer.LAYER_GROUP_MOUNTAIN],
               nightModeEnable: true,
               tiltGestureEnable: false,
               onMapCreated: controller.onChallengeMapCreated,
+            ),
+            Positioned(
+              bottom: controller.listHeight.value + 14,
+              right: 20,
+              child: ClipRRect(
+                borderRadius: BorderRadius.circular(72),
+                child: GestureDetector(
+                  onTap: () => controller.moveToChallengeDetail(controller.selectedChallenge.value!),
+                  child: controller.selectedChallenge.value!.thumbnailImageUrl.contains('.svg')
+                      ? SvgPicture.network(
+                          controller.selectedChallenge.value!.thumbnailImageUrl,
+                          fit: BoxFit.fitHeight,
+                          width: 72.sp,
+                          height: 72.sp,
+                          placeholderBuilder: (BuildContext context) => const Center(child: SizedBox.square(dimension: 30, child: CircularProgressIndicator())),
+                          headers: imageNetworkHeader,
+                        )
+                      : CachedNetworkImage(
+                          fit: BoxFit.fitHeight,
+                          width: 72.sp,
+                          height: 72.sp,
+                          imageUrl: controller.selectedChallenge.value!.thumbnailImageUrl,
+                          placeholder: (context, url) => const Center(child: SizedBox.square(dimension: 30, child: CircularProgressIndicator())),
+                          httpHeaders: imageNetworkHeader,
+                        ),
+                ),
+              ),
             ),
             Positioned(
               bottom: 0,

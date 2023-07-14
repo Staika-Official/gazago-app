@@ -1,7 +1,10 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_naver_map/flutter_naver_map.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:gaza_go/platform/controllers/activity_controller.dart';
+import 'package:gaza_go/platform/models/challenge_course_model.dart';
 import 'package:gaza_go/presentations/styles/colors.dart';
 import 'package:get/get.dart';
 
@@ -44,36 +47,69 @@ class ActivityMap extends StatelessWidget {
     return [centerCircle, outerCircle];
   }
 
-  List<Marker> renderStartMarker(ActivityController controller) {
-    return controller.nearByCourses
-        .where((challenge) => challenge.id == controller.userState.value.exercise?.challengeId)
-        .map(
-          (challenge) => Marker(
-            markerId: 'StartMarker${challenge.id!}',
-            position: LatLng(challenge.startLat!, challenge.startLon!),
-            captionText: '${challenge.firstName!} 시작점',
-            // icon: controller.startMarkerImage.value,
-            // width: 10,
-            // height: 10,
-          ),
-        )
-        .toList();
-  }
+  List<Marker> renderMakers(ActivityController controller) {
+    ChallengeCourseModel course = controller.selectedCourse.value;
 
-  List<Marker> renderEndMarker(ActivityController controller) {
-    return controller.nearByCourses
-        .where((challenge) => challenge.id == controller.userState.value.exercise?.challengeId)
-        .map(
-          (challenge) => Marker(
-            markerId: 'FinishMarker${challenge.id!}',
-            position: LatLng(challenge.endLat!, challenge.endLon!),
-            captionText: '${challenge.firstName!} 도착점',
-            // icon: controller.finishMarkerImage.value,
-            // width: 10,
-            // height: 10,
-          ),
-        )
-        .toList();
+    Marker startMaker = Marker(
+      markerId: course.id!.toString(),
+      position: LatLng(course.startLat!, course.startLon!),
+      captionText: '시작: ${course.startPointName}',
+      captionColor: skyBlueColor,
+      captionHaloColor: Colors.black,
+      captionTextSize: 16.0.sp,
+      subCaptionTextSize: 14.sp,
+      subCaptionText: course.secondName,
+      subCaptionColor: (Platform.isAndroid) ? Colors.white : Colors.black,
+      subCaptionHaloColor: (Platform.isAndroid) ? Colors.black : Colors.white,
+      captionOffset: 5,
+      icon: controller.startMarker,
+      width: 20,
+      height: 20,
+    );
+
+    Marker endMaker = Marker(
+      markerId: 'end_${course.id!.toString()}',
+      position: LatLng(course.endLat!, course.endLon!),
+      captionText: '도착: ${course.endPointName}',
+      captionColor: const Color(0xFFFF6F75),
+      captionHaloColor: Colors.black,
+      captionTextSize: 16.0.sp,
+      captionOffset: 5,
+      subCaptionText: course.secondName,
+      subCaptionTextSize: 14.sp,
+      subCaptionColor: (Platform.isAndroid) ? Colors.white : Colors.black,
+      subCaptionHaloColor: (Platform.isAndroid) ? Colors.black : Colors.white,
+      icon: controller.endMarker,
+      width: 20,
+      height: 20,
+    );
+
+    List<Marker> checkpointMarker() {
+      if (course.checkpoints != null && course.checkpoints!.isNotEmpty) {
+        return course.checkpoints!
+            .map((checkpoint) => Marker(
+                  markerId: 'checkpoint_${checkpoint.id!.toString()}',
+                  position: LatLng(checkpoint.lat!, checkpoint.lon!),
+                  captionText: checkpoint.name,
+                  captionColor: skyBlueColor,
+                  captionHaloColor: Colors.black,
+                  captionTextSize: 12.0.sp,
+                  captionOffset: 5,
+                  // subCaptionText: course.secondName,
+                  // subCaptionTextSize: 14.sp,
+                  // subCaptionColor: (Platform.isAndroid) ? Colors.white : Colors.black,
+                  // subCaptionHaloColor: (Platform.isAndroid) ? Colors.black : Colors.white,
+                  icon: controller.checkpointMarker,
+                  width: 30,
+                  height: 30,
+                ))
+            .toList();
+      } else {
+        return [];
+      }
+    }
+
+    return [startMaker, endMaker, ...checkpointMarker()];
   }
 
   @override
@@ -96,10 +132,7 @@ class ActivityMap extends StatelessWidget {
               if (controller.selectedCourse.value.id != null) ...renderStartPoint(controller),
               if (controller.selectedCourse.value.id != null) ...renderEndPoint(controller),
             ],
-            // markers: [
-            //   ...renderStartMarker(controller),
-            //   ...renderEndMarker(controller),
-            // ],
+            markers: [...renderMakers(controller)],
             pathOverlays: (controller.coordinates.length < 10)
                 ? null
                 : {

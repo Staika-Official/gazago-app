@@ -69,7 +69,7 @@ class ActivityService {
   }
 
   static Future<void> getChallengeCourse(int id, {required Function successCallback, Function? errorCallback}) async {
-    Response res = await ActivityApi.getChallengeCourse(id);
+    Response res = await ActivityApi.getChallengeCourse(userId!, id);
     if (res.statusCode == 200) {
       successCallback(ChallengeCourseModel.fromJson(res.data));
     } else {

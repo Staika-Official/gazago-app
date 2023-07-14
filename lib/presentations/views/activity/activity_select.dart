@@ -6,7 +6,6 @@ import 'package:gaza_go/constants/config.dart';
 import 'package:gaza_go/constants/enums.dart';
 import 'package:gaza_go/platform/controllers/activity_controller.dart';
 import 'package:gaza_go/platform/helpers/base_helper.dart';
-import 'package:gaza_go/presentations/components/alert_ui_list.dart';
 import 'package:gaza_go/presentations/styles/colors.dart';
 import 'package:gaza_go/presentations/styles/styled_text.dart';
 import 'package:get/get.dart';
@@ -45,7 +44,7 @@ class ActivitySelect extends StatelessWidget {
                             );
                           }
                         : () {
-                            showNotChallangeAbleAlert(controller);
+                            controller.moveToChallengeDetail(challenge);
                           },
                     borderRadius: BorderRadius.circular(14),
                     child: Padding(
@@ -54,20 +53,20 @@ class ActivitySelect extends StatelessWidget {
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
                           ClipRRect(
-                            borderRadius: BorderRadius.circular(70),
+                            borderRadius: BorderRadius.circular(72),
                             child: challenge.thumbnailImageUrl.contains('.svg')
                                 ? SvgPicture.network(
                                     challenge.thumbnailImageUrl,
                                     fit: BoxFit.fitHeight,
-                                    width: 70.sp,
-                                    height: 70.sp,
+                                    width: 72.sp,
+                                    height: 72.sp,
                                     placeholderBuilder: (BuildContext context) => const Center(child: SizedBox.square(dimension: 30, child: CircularProgressIndicator())),
                                     headers: imageNetworkHeader,
                                   )
                                 : CachedNetworkImage(
                                     fit: BoxFit.fitHeight,
-                                    width: 70.sp,
-                                    height: 70.sp,
+                                    width: 72.sp,
+                                    height: 72.sp,
                                     imageUrl: challenge.thumbnailImageUrl,
                                     placeholder: (context, url) => const Center(child: SizedBox.square(dimension: 30, child: CircularProgressIndicator())),
                                     httpHeaders: imageNetworkHeader,
