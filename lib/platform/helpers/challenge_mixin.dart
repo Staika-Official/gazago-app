@@ -122,11 +122,14 @@ mixin ChallengeMixin {
     });
   }
 
-  Future<void> getChallengesHierarchy(Position currentLocation) async {
+  Future<void> getChallengesHierarchy(Position currentLocation, int challengeId) async {
+    hierarchyChallengesList.clear();
+
     await ActivityService.getChallengesHierarchy(
       currentLocation,
+      challengeId,
       successCallback: (challengeList) {
-        hierarchyChallengesList.value = challengeList;
+        hierarchyChallengesList.addAll(challengeList);
       },
     );
   }

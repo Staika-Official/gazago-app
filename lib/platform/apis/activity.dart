@@ -13,12 +13,12 @@ class ActivityApi {
     ).get('/challenge-courses?size=9999&page=0');
   }
 
-  static Future<Response> getChallengesHierarchy(Position currentLocation) async {
+  static Future<Response> getChallengesHierarchy(Position currentLocation, int challengeId) async {
     return await Api.client(
       serviceUrl: '/services/gazago/api',
       showLoading: false,
     ).get(
-      '/challenge-courses/hierarchy/lat/${currentLocation.latitude}/lon/${currentLocation.longitude}',
+      '/challenge-courses/hierarchy/lat/${currentLocation.latitude}/lon/${currentLocation.longitude}?challengeId=$challengeId',
     );
   }
 
