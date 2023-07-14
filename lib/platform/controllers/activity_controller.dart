@@ -168,7 +168,6 @@ class ActivityController extends SuperController with ActivityMixin, ChallengeMi
         challengeList.addAll(data);
       },
     );
-    await getChallengesHierarchy(currentLocation.value);
     generateChallengeMarkerList();
   }
 
@@ -647,7 +646,8 @@ class ActivityController extends SuperController with ActivityMixin, ChallengeMi
     Get.toNamed(Routes.activityChallenges);
   }
 
-  void moveToChallengeMap() async {
+  void moveToChallengeMap(int challengeId) async {
+    await getChallengesHierarchy(currentLocation.value, challengeId);
     bool systemReady = await checkAvailabilities();
     if (systemReady) {
       challengeSelectedIndex.value = null;

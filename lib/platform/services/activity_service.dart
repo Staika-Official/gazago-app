@@ -53,8 +53,8 @@ class ActivityService {
     }
   }
 
-  static Future<void> getChallengesHierarchy(Position currentLocation, {required Function successCallback, Function? errorCallback}) async {
-    Response res = await ActivityApi.getChallengesHierarchy(currentLocation);
+  static Future<void> getChallengesHierarchy(Position currentLocation, int challengeId, {required Function successCallback, Function? errorCallback}) async {
+    Response res = await ActivityApi.getChallengesHierarchy(currentLocation, challengeId);
     if (res.statusCode == 200) {
       List<ChallengeHierarchyModel> challengeList = List.empty(growable: true);
       if (res.data.length > 0) {

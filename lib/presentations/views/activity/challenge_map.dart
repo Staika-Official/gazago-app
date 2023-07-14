@@ -173,7 +173,7 @@ class ChallengeMap extends StatelessWidget {
                     ],
                   ),
                   child: const StyledText(
-                    '100대 명산 챌린지 가이드',
+                    '챌린지 코스',
                     fontSize: 16,
                     fontWeight: 500,
                     lineHeight: 22,
