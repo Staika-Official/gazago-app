@@ -4669,10 +4669,10 @@ void participateInChallengeByCodeAlert() {
                               ),
                               enabledBorder: OutlineInputBorder(
                                 borderRadius: BorderRadius.all(Radius.circular(10.0)),
-                                borderSide: BorderSide(width: 2, color: controller.errorMessage.value == '' ? skyBlueColor : const Color(0xFFFF4C4C)),
+                                borderSide: BorderSide(width: 2, color: controller.errorMessage.value == '' ? Colors.transparent : const Color(0xFFFF4C4C)),
                               ),
                               border: OutlineInputBorder(
-                                borderSide: BorderSide(width: 2, color: controller.errorMessage.value == '' ? skyBlueColor : const Color(0xFFFF4C4C)),
+                                borderSide: BorderSide(width: 2, color: controller.errorMessage.value == '' ? Colors.transparent : const Color(0xFFFF4C4C)),
                                 borderRadius: BorderRadius.all(Radius.circular(10.0)),
                               ),
                             ),
@@ -4695,7 +4695,7 @@ void participateInChallengeByCodeAlert() {
                             cursorColor: Colors.white,
                             focusNode: controller.focusNode,
                             onChanged: (value) => controller.setCode(value),
-                            onSubmitted: (val) => null,
+                            onSubmitted: (val) => controller.sendParticipateInCode(),
                           );
                         }),
                         Obx(() {
