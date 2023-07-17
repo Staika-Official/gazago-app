@@ -166,7 +166,7 @@ class InventoryItem extends StatelessWidget {
                                   vertical: 5.sp,
                                 ),
                                 decoration: BoxDecoration(
-                                  color: controller.getRemainingDays(item.expiredDate!) == 2 ? const Color(0xffFD5D70) : popupBgColor,
+                                  color: controller.getRemainingDays(item.expiredDate!) == 0 ? const Color(0xffFD5D70) : popupBgColor,
                                   borderRadius: BorderRadius.circular(20),
                                 ),
                                 child: StyledText('D-${controller.getRemainingDays(item.expiredDate!)}'),

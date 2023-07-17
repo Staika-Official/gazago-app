@@ -81,6 +81,12 @@ class HomeMenuController extends SuperController {
       // 챌린지 보상 푸쉬 알림
       if (initialMessage.data['notificationKey'] == 'CHALLENGE_REWARD_BADGE_ISSUED') {
         PushMessageChallengeSuccessModel data = PushMessageChallengeSuccessModel.fromJson(initialMessage.data);
+        showLocalNotification(
+          notificationType: NotificationType.badge,
+          title: '챌린지 뱃지 발급!',
+          message: '${data.challengeTitle} 달성. 새로운 뱃지 확인하러 가자GO~~',
+          payload: 'NAV-INVENTORY_BADGE',
+        );
         showChallengeBadgeAcquisitionAlert(data);
       }
 
@@ -213,10 +219,17 @@ class HomeMenuController extends SuperController {
           DateTime expiryUTCDateTime = DateTime.parse(item['expiredDate']).toUtc();
           DateTime now = DateTime.now().toUtc();
 
-          if (expirationNotified.isEmpty || expirationNotified.isNotEmpty && !expirationNotified[item['userItemId'].toString()]['notified']) {
+          if (expirationNotified.isEmpty || expirationNotified.isNotEmpty && expirationNotified[item['userItemId'].toString()] == null) {
             if (const Duration(hours: 48).compareTo(expiryUTCDateTime.difference(now)) == 1) {
               expirationNotified[item['userItemId'].toString()] = {'notified': true, 'expireDate': expiryUTCDateTime.toString()};
-              showLocalNotification(notificationType: NotificationType.normal, title: '아이템 만료 알림', message: '${item['itemName']}가 48시간 이내에 회수될 예정입니다.');
+              showLocalNotification(
+                notificationType: NotificationType.normal,
+                title: '아이템 만료 알림',
+                message: '${item['itemName']}가 48시간 이내에 회수될 예정입니다.',
+                allowSeparatePush: true,
+                separatePushId: item['userItemId'],
+                payload: 'NAV-INVENTORY_ITEM',
+              );
             }
           }
         }

@@ -30,6 +30,7 @@ class ChallengesController extends GetxController with GetTickerProviderStateMix
 
   Rx isSelectedSortValue = Rx({'title': '전체', 'value': 'id,DESC'});
   RxString isSelectedSortString = RxString('전체');
+
   // final List<Map<String, dynamic>> challengeList = [
   //   {
   //     'title': '[2월] 챌린저 트레킹슈즈 신고 매일 걷기',
