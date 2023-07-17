@@ -40,6 +40,19 @@ mixin ChallengeMixin {
     }
   }
 
+  String getChallengeActivationTypeString(String activationType) {
+    switch (activationType) {
+      case 'ITEM':
+        return '아이템 장착형';
+      case 'COURSE':
+        return '코스형';
+      case 'CODE':
+        return '참여코드형';
+      default:
+        return '참가비 납부형';
+    }
+  }
+
   String getChallengeExerciseType(String type) {
     switch (type) {
       case 'WALKING':

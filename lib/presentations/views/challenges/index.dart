@@ -89,7 +89,7 @@ class ChallengesHome extends StatelessWidget {
                               child: Padding(
                                 padding: EdgeInsets.symmetric(vertical: 8.0.sp, horizontal: 11.0.sp),
                                 child: StyledText(
-                                  item.challengeActivationType == 'ITEM' ? '아이템 장착형' : '참가비 납부형',
+                                  controller.getChallengeActivationTypeString(item.challengeActivationType),
                                   fontWeight: 600,
                                   fontSize: 12,
                                   lineHeight: 14,
