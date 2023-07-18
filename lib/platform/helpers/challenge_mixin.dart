@@ -25,7 +25,7 @@ mixin ChallengeMixin {
   final RxList<ChallengeCourseModel> allCoursesList = RxList.empty();
   final RxList<ChallengeHierarchyModel> hierarchyChallengesList = RxList.empty();
   final RxList<ChallengeCourseModel> doableCourses = RxList.empty();
-  final Rx<ChallengeCourseModel> selectedCourse = Rx(ChallengeCourseModel());
+  final Rxn<ChallengeCourseModel> selectedCourse = Rxn();
   final Rxn<ChallengeModel> selectedChallenge = Rxn();
   late NaverMapController challengeMapController;
   final RxList<Marker> challengeMarkers = RxList.empty();
@@ -203,8 +203,6 @@ mixin ChallengeMixin {
 
   void selectCourse(ChallengeCourseModel course) {
     selectedCourse.value = ChallengeCourseModel.fromJson(course.toJson());
-
-    print(selectedCourse.value.toJson());
 
     challengeMapController.moveCamera(
       CameraUpdate.fitBounds(

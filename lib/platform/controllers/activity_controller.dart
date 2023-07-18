@@ -627,16 +627,15 @@ class ActivityController extends SuperController with ActivityMixin, ChallengeMi
   }
 
   void showAdTip() {
-    showAdTipAlert(selectedCourse.value.id);
+    showAdTipAlert(selectedCourse.value?.id);
   }
 
   void handleMoveExerciseActive(ExerciseType exerciseType, {String? adId}) {
-    if (selectedExerciseType.value == ExerciseType.walking) selectedCourse.value = ChallengeCourseModel();
     Get.offNamed(Routes.activityActive);
     loadExercise(
       selectedExerciseType.value,
       adId,
-      selectedCourse.value.id != null ? selectedCourse.value : null,
+      selectedCourse.value,
     );
   }
 
@@ -794,13 +793,13 @@ class ActivityController extends SuperController with ActivityMixin, ChallengeMi
 
   Future<void> retrySavedRequests({required String source}) async {
     if (HiveStore.load(key: HiveKey.endExerciseRequested.name) != null && HiveStore.load(key: HiveKey.endExerciseRequested.name) && userState.value.exercise != null) {
-      await endExercise(selectedCourse.value, source: source);
+      await endExercise(source: source);
     }
   }
 
   void closeAdSelectPopup() {
     adLoadTimerStop();
-    selectedCourse.value.id = null;
+    selectedCourse.value = null;
     Get.back();
     Timer(const Duration(seconds: 1), () {
       startAd.value = null;

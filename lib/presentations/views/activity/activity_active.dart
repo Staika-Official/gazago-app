@@ -294,7 +294,7 @@ class ActivityActive extends StatelessWidget {
                 children: [
                   Obx(() {
                     return Container(
-                      child: controller.selectedCourse.value.id != null
+                      child: controller.selectedCourse.value != null
                           ? Container(
                               padding: EdgeInsets.symmetric(horizontal: 14.sp, vertical: 7.sp),
                               decoration: BoxDecoration(
@@ -302,7 +302,7 @@ class ActivityActive extends StatelessWidget {
                                 borderRadius: BorderRadius.circular(50.sp),
                               ),
                               child: StyledText(
-                                '${controller.selectedCourse.value.firstName} | ${controller.selectedCourse.value.secondName}',
+                                '${controller.selectedCourse.value!.firstName} | ${controller.selectedCourse.value!.secondName}',
                                 fontSize: 14,
                                 fontWeight: 500,
                                 color: deepGrayColor,

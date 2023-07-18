@@ -140,7 +140,7 @@ mixin AdmobMixin {
         print('$ad onAdDismissedFullScreenContent.');
 
         if (ad.adUnitId.isNotEmpty) {
-          activityController.endExercise(challenge, source: 'showEndADExerciseAlert', adId: ad.adUnitId);
+          activityController.endExercise(source: 'showEndADExerciseAlert', adId: ad.adUnitId);
         }
 
         ad.dispose();

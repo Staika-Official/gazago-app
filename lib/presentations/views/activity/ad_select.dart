@@ -135,7 +135,7 @@ class AdSelect extends StatelessWidget {
                                           fontFamily: 'Montserrat',
                                         )
                                       : StyledText(
-                                          '광고 보고, ${controller.selectedCourse.value.id == null ? '1' : '3'}GO 받고 시작하기',
+                                          '광고 보고, ${controller.selectedCourse.value == null ? '1' : '3'}GO 받고 시작하기',
                                           color: controller.startAd.value == null ? const Color(0xFF767883) : Colors.black,
                                           fontSize: 20,
                                           fontWeight: 600,

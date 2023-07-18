@@ -596,7 +596,7 @@ mixin ActivityMixin {
     HiveStore.save(key: HiveKey.updateTimer.name, value: updateTimer.hashCode);
   }
 
-  void onTapDownStop(TapDownDetails tapDownDetails, ChallengeCourseModel challenge, {String? source, required ActivityController controller}) async {
+  void onTapDownStop(TapDownDetails tapDownDetails, ChallengeCourseModel? challenge, {String? source, required ActivityController controller}) async {
     Duration counter = Duration.zero;
 
     if (stopTimer != null) {
@@ -620,12 +620,12 @@ mixin ActivityMixin {
             'exerciseEndAd',
           );
           if (controller.userState.value.exercise!.rewardGo! > 0) {
-            showEndExerciseAdDialog(ChallengeCourseModel.fromJson(challenge.toJson()), controller);
+            showEndExerciseAdDialog(controller);
           } else {
-            checkShowEndPopup(source, ChallengeCourseModel.fromJson(challenge.toJson()), controller);
+            checkShowEndPopup(source, controller);
           }
         } else {
-          checkShowEndPopup(source, ChallengeCourseModel.fromJson(challenge.toJson()), controller);
+          checkShowEndPopup(source, controller);
         }
       } else {
         counter = counter + const Duration(milliseconds: 10);
@@ -634,16 +634,16 @@ mixin ActivityMixin {
     });
   }
 
-  void checkShowEndPopup(String? source, ChallengeCourseModel challenge, ActivityController controller) {
+  void checkShowEndPopup(String? source, ActivityController controller) {
     if (source != null && source == 'pendingExerciseDialog') {
       if (globalController.internetConnection.value) {
         Get.back();
-        controller.exerciseEndThr.throttle(() => endExercise(challenge, source: source));
+        controller.exerciseEndThr.throttle(() => endExercise(source: source));
       } else {
         showToastPopup('인터넷 상태를 확인해주세요.');
       }
     } else {
-      showEndExerciseDialog(challenge);
+      showEndExerciseDialog();
     }
   }
 
@@ -673,16 +673,16 @@ mixin ActivityMixin {
     updateExercise(isPaused: true, source: 'pauseExercise${updateTimer.hashCode}');
   }
 
-  void showEndExerciseAdDialog(ChallengeCourseModel challenge, ActivityController controller) {
-    showEndExerciseAdAlert(challenge, controller);
+  void showEndExerciseAdDialog(ActivityController controller) {
+    showEndExerciseAdAlert(controller);
     controller.adLoadTimerStart();
   }
 
-  void showEndExerciseDialog(ChallengeCourseModel challenge) {
-    showEndExerciseAlert(this, challenge);
+  void showEndExerciseDialog() {
+    showEndExerciseAlert(this);
   }
 
-  Future<void> endExercise(ChallengeCourseModel challenge, {String? source, String? adId, int retryAttempt = 0}) async {
+  Future<void> endExercise({String? source, String? adId, int retryAttempt = 0}) async {
     String deviceId = HiveStore.loadString(key: HiveKey.uuid.name)!;
     if (isFakeGps.value && !isTestingFakeGps()) {
       return;
@@ -718,7 +718,7 @@ mixin ActivityMixin {
           if (newUserState.exercise!.state == 'ENDED') {
             exerciseState.value = ExerciseState.ready;
             HiveStore.deleteMultipleKeys(keys: [HiveKey.userState.name, HiveKey.endExerciseRequested.name, HiveKey.famousChallengeBadgeIssued.name]);
-            resetVariables(ChallengeCourseModel.fromJson(challenge.toJson()));
+            resetVariables();
             resetTimer();
             resetSubscriptions();
             if (['showEndExerciseAlert', 'showEndADExerciseAlert', 'pendingExerciseDialog'].any((src) => src == source)) {
@@ -738,12 +738,12 @@ mixin ActivityMixin {
             if (retryAttempt > 4) {
               showToastPopup('운동 종료에 실패했습니다.\n다시 시도해주세요.');
             } else {
-              endExercise(challenge, source: source, adId: adId, retryAttempt: retryAttempt + 1);
+              endExercise(source: source, adId: adId, retryAttempt: retryAttempt + 1);
             }
           }
         },
         errorCallback: () {
-          endExerciseLocally(challenge);
+          endExerciseLocally();
         },
       );
     } else {
@@ -751,7 +751,7 @@ mixin ActivityMixin {
     }
   }
 
-  void endExerciseLocally(ChallengeCourseModel challenge) {
+  void endExerciseLocally() {
     exerciseState.value = ExerciseState.ready;
     CurrentUserStateModel? savedState = HiveStore.loadCurrentUserState();
     if (savedState != null) {
@@ -764,13 +764,13 @@ mixin ActivityMixin {
     userState.value.exercise!.state = 'ENDED';
     HiveStore.saveCurrentUserState(userState: userState.value);
     HiveStore.save(key: HiveKey.endExerciseRequested.name, value: true);
-    resetVariables(challenge);
+    resetVariables();
     resetTimer();
     resetSubscriptions();
     Get.until((route) => route.isFirst);
   }
 
-  void resetVariables(ChallengeCourseModel challenge) {
+  void resetVariables() {
     exerciseTime.value = 0;
     stopProgress.value = 0;
     exerciseSteps.value = 0;
@@ -780,7 +780,7 @@ mixin ActivityMixin {
     }
     exerciseData.value = List.empty(growable: true);
     coordinates.value = List.empty(growable: true);
-    challenge.id = null;
+    Get.find<ActivityController>().selectedCourse.value = null;
   }
 
   void resetTimer() {
@@ -820,10 +820,9 @@ mixin ActivityMixin {
   }
 
   void handleAlreadyFinishedExercise() {
-    ActivityController controller = Get.find<ActivityController>();
     exerciseState.value = ExerciseState.ready;
     HiveStore.deleteMultipleKeys(keys: [HiveKey.userState.name, HiveKey.endExerciseRequested.name]);
-    resetVariables(ChallengeCourseModel.fromJson(controller.selectedCourse.value.toJson()));
+    resetVariables();
     resetTimer();
     resetSubscriptions();
     Get.until((route) => route.isFirst);
@@ -870,11 +869,11 @@ mixin ActivityMixin {
       showLocalNotification(
         notificationType: NotificationType.badge,
         title: '등산 챌린지 뱃지 획득',
-        message: '${controller.selectedCourse.value.firstName} 등산 챌린지에 성공하여 뱃지를 받았어요. 새로운 뱃지 확인하러 가자GO~~',
+        message: '${controller.selectedCourse.value!.firstName} 등산 챌린지에 성공하여 뱃지를 받았어요. 새로운 뱃지 확인하러 가자GO~~',
         payload: 'NAV-INVENTORY_BADGE',
       );
       showToastPopup('뱃지를 획득하였습니다.');
-      showBadgeAcquisitionAlert(badgeImgUrl, controller.selectedCourse.value);
+      showBadgeAcquisitionAlert(badgeImgUrl, controller.selectedCourse.value!);
     }
   }
 

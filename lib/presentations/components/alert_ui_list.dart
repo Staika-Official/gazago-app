@@ -533,7 +533,7 @@ Future<bool> showGalleryPermissionAlert(MyPageController controller) async {
   return photoPermissionCompleter.future;
 }
 
-void showEndExerciseAlert(ActivityMixin mixin, ChallengeCourseModel challenge) {
+void showEndExerciseAlert(ActivityMixin mixin) {
   showAlert(
     title: '활동 종료',
     contentText: '지금까지의 기록만 저장됩니다.',
@@ -551,7 +551,7 @@ void showEndExerciseAlert(ActivityMixin mixin, ChallengeCourseModel challenge) {
       ),
       Expanded(
         child: GazagoButton(
-          onTap: () => mixin.endExercise(challenge, source: 'showEndExerciseAlert'),
+          onTap: () => mixin.endExercise(source: 'showEndExerciseAlert'),
           buttonText: '활동 종료',
           buttonColor: skyBlueColor,
         ),
@@ -560,7 +560,7 @@ void showEndExerciseAlert(ActivityMixin mixin, ChallengeCourseModel challenge) {
   );
 }
 
-void showEndExerciseAdAlert(ChallengeCourseModel challenge, ActivityController controller) {
+void showEndExerciseAdAlert(ActivityController controller) {
   showAlert(
     title: '활동 종료',
     contentText: '지금까지의 기록만 저장됩니다.',
@@ -569,7 +569,7 @@ void showEndExerciseAdAlert(ChallengeCourseModel challenge, ActivityController c
         child: Column(
           children: [
             InkWell(
-                onTap: () => controller.endAd.value != null ? controller.showExerciseEndAd(challenge, controller) : null,
+                onTap: () => controller.endAd.value != null ? controller.showExerciseEndAd(controller) : null,
                 child: Obx(() {
                   return Container(
                     width: double.infinity,
@@ -644,7 +644,7 @@ void showEndExerciseAdAlert(ChallengeCourseModel challenge, ActivityController c
             Padding(
               padding: EdgeInsets.only(top: 8.0.sp),
               child: GazagoButton(
-                onTap: () => controller.endExercise(challenge, source: 'showEndExerciseAlert'),
+                onTap: () => controller.endExercise(source: 'showEndExerciseAlert'),
                 buttonText: '활동 종료',
                 buttonColor: const Color(0xFF2C2E36),
                 textColor: skyBlueColor,

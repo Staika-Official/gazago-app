@@ -8,8 +8,6 @@ import 'package:gaza_go/platform/controllers/activity_controller.dart';
 import 'package:get/get.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
 
-import '../models/challenge_course_model.dart';
-
 mixin AdmobMixin {
   Rx<RewardedAd?> startAd = Rx(null);
   Rx<RewardedAd?> endAd = Rx(null);
@@ -180,7 +178,7 @@ mixin AdmobMixin {
     });
   }
 
-  void showExerciseEndAd(ChallengeCourseModel challenge, ActivityController activityController) async {
+  void showExerciseEndAd(ActivityController activityController) async {
     // String endAdName =
     //     await checkActivityType(selectedAd.value);
 
@@ -195,7 +193,7 @@ mixin AdmobMixin {
         print('$ad onAdDismissedFullScreenContent.');
 
         if (ad.adUnitId.isNotEmpty) {
-          activityController.endExercise(challenge, source: 'showEndADExerciseAlert', adId: ad.adUnitId);
+          activityController.endExercise(source: 'showEndADExerciseAlert', adId: ad.adUnitId);
           endAd.value = null;
           activityController.adLoadingTime.value = 0;
         }
