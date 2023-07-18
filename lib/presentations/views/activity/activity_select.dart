@@ -339,7 +339,23 @@ class ActivitySelect extends StatelessWidget {
             //     ),
             //   ),
             // ),
-            ...renderChallengeTypes(controller),
+            Material(
+              color: Colors.transparent,
+              child: ConstrainedBox(
+                constraints: const BoxConstraints(
+                  minWidth: double.infinity,
+                  maxHeight: 300,
+                ),
+                child: SingleChildScrollView(
+                  physics: const ClampingScrollPhysics(),
+                  child: Column(
+                    children: [
+                      ...renderChallengeTypes(controller),
+                    ],
+                  ),
+                ),
+              ),
+            ),
             Padding(
               padding: EdgeInsets.only(top: 80.sp),
               child: InkWell(
