@@ -180,7 +180,8 @@ void showShoeRepairSlider(InventoryController controller, int feeTikDurability, 
       Expanded(
         child: Obx(() {
           return GazagoButton(
-            onTap: () => controller.fetchRepairShoes(itemId),
+            // onTap: () => controller.fetchRepairShoes(itemId),
+            onTap: () {},
             disableButton: controller.disableButton.value,
             buttonText: '네',
             buttonColor: skyBlueColor,
@@ -1519,7 +1520,7 @@ void itemPurchaseCompleteAlert(ShopDetailController controller) {
               mainAxisAlignment: MainAxisAlignment.center,
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
-                getItemGradeCircleIcon(controller.purchaseCompleteItem.value.itemGrade),
+                if (controller.purchaseCompleteItem.value.itemCategory != 'DISPOSABLE') getItemGradeCircleIcon(controller.purchaseCompleteItem.value.itemGrade),
                 if (controller.selectedItem.value.id > 0 && controller.selectedItem.value.publishType == 'NFT')
                   Padding(
                     padding: EdgeInsets.only(left: 5.0.sp),
@@ -1534,6 +1535,16 @@ void itemPurchaseCompleteAlert(ShopDetailController controller) {
                     fontWeight: 500,
                   ),
                 ),
+                if (controller.purchaseCompleteItem.value.itemCategory == 'DISPOSABLE')
+                  Padding(
+                    padding: EdgeInsets.only(left: 5.0.sp),
+                    child: StyledText(
+                      'x ${controller.purchaseItemCount.toString()}',
+                      fontSize: 18,
+                      lineHeight: 20,
+                      fontWeight: 500,
+                    ),
+                  ),
               ],
             ),
           ),
@@ -1740,6 +1751,77 @@ void itemPurchaseCompleteAlert(ShopDetailController controller) {
                                 ],
                               ),
                             ),
+                          if (controller.purchaseCompleteItem.value.itemStat!.repairDurability! > 0)
+                            Expanded(
+                              child: Column(
+                                children: [
+                                  StyledText(
+                                    '+${formatDecimalPlaces(controller.purchaseCompleteItem.value.itemStat!.repairDurability!, 0)}',
+                                    fontSize: 26,
+                                    lineHeight: 26,
+                                    fontWeight: 500,
+                                    letterSpacing: -.1,
+                                    color: const Color(0xFFB0A3FF),
+                                  ),
+                                  Padding(
+                                    padding: EdgeInsets.only(top: 8.0.sp),
+                                    child: Row(
+                                      mainAxisAlignment: MainAxisAlignment.center,
+                                      crossAxisAlignment: CrossAxisAlignment.center,
+                                      children: [
+                                        iconShopDurabilityLight,
+                                        Padding(
+                                          padding: EdgeInsets.only(left: 4.0.sp),
+                                          child: const StyledText(
+                                            '내구도 수리',
+                                            color: Color(0xFFB0A3FF),
+                                            fontSize: 12,
+                                            lineHeight: 12,
+                                            letterSpacing: -.1,
+                                            fontWeight: 600,
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                          if (controller.purchaseCompleteItem.value.itemStat!.recoveryStamina! > 0)
+                            Expanded(
+                              child: Column(
+                                children: [
+                                  StyledText(
+                                    '+${formatDecimalPlaces(controller.purchaseCompleteItem.value.itemStat!.recoveryStamina!, 0)}',
+                                    fontSize: 26,
+                                    lineHeight: 26,
+                                    fontWeight: 500,
+                                    color: lightGreenColor,
+                                    letterSpacing: -.1,
+                                  ),
+                                  Padding(
+                                    padding: EdgeInsets.only(top: 8.0.sp),
+                                    child: Row(
+                                      mainAxisAlignment: MainAxisAlignment.center,
+                                      children: [
+                                        Padding(
+                                          padding: EdgeInsets.only(right: 4.0.sp),
+                                          child: iconShopStamina,
+                                        ),
+                                        StyledText(
+                                          '체력 회복',
+                                          color: lightGreenColor,
+                                          fontSize: 12,
+                                          lineHeight: 12,
+                                          fontWeight: 500,
+                                          letterSpacing: -.1,
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
                         ],
                       ),
                     ),
@@ -1830,7 +1912,9 @@ void itemPurchaseCompleteAlert(ShopDetailController controller) {
         child: GazagoButton(
           onTap: () {
             Get.back();
-            controller.fetchEquipItem(controller.purchaseCompleteItem.value.id);
+            if (controller.purchaseCompleteItem.value.itemCategory != 'DISPOSABLE') {
+              controller.fetchEquipItem(controller.purchaseCompleteItem.value.id);
+            }
           },
           buttonText: '확인',
           buttonColor: skyBlueColor,

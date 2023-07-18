@@ -19,15 +19,13 @@ import 'package:gaza_go/platform/models/ad_watch_available_model.dart';
 import 'package:gaza_go/platform/models/challenge_hierarchy_model.dart';
 import 'package:gaza_go/platform/models/challenge_model.dart';
 import 'package:gaza_go/platform/models/current_user_state_model.dart';
-import 'package:gaza_go/platform/models/inventory_item_model.dart';
-import 'package:gaza_go/platform/models/repair_shoes_model.dart';
+
 import 'package:gaza_go/platform/models/stat_model.dart';
 import 'package:gaza_go/platform/models/user_exercise_model.dart';
 import 'package:gaza_go/platform/models/user_stamina_recharge_model.dart';
 import 'package:gaza_go/platform/models/user_state_model.dart';
 import 'package:gaza_go/platform/services/activity_service.dart';
 import 'package:gaza_go/platform/services/admob_service.dart';
-import 'package:gaza_go/platform/services/item_service.dart';
 import 'package:gaza_go/platform/services/member_service.dart';
 import 'package:gaza_go/platform/services/uaa_service.dart';
 import 'package:gaza_go/platform/stores/hive_store.dart';
@@ -290,35 +288,35 @@ class ActivityController extends SuperController with ActivityMixin, ChallengeMi
 
   void fetchRepairShoes() async {
     disableButton.value = true;
-    if (walletMasterController.tik.value.amount == null) {
-      await walletMasterController.getSpendingWalletBalances();
-    }
-    if (walletMasterController.tik.value.amount! >= costTik.value) {
-      if (costTik.value > 0) {
-        await ItemService.fetchRepairItemShoes(
-            RepairShoesModel(
-              id: userState.value.shoes!.id,
-              durability: currentSliderValue.value.toInt(),
-              feeTik: costTik.value.toInt(),
-            ), successCallback: (repairModel) {
-          InventoryItemModel newRepairModel = repairModel;
-          userState.update((state) {
-            state!.shoes!.durability = newRepairModel.durability;
-          });
-          walletMasterController.getSpendingWalletBalances();
-          showToastPopup('내구도 충전이 완료되었습니다.');
-          closeRepairPopup();
-        }, errorCallback: () {
-          showToastPopup('충전 요청이 실패했습니다.');
-          initRepairButton();
-        });
-      } else {
-        showToastPopup('충전할 게이지를 확인해주세요.');
-        initRepairButton();
-      }
-    } else {
-      handleNotEnoughTaikaPopup();
-    }
+    // if (walletMasterController.tik.value.amount == null) {
+    //   await walletMasterController.getSpendingWalletBalances();
+    // }
+    // if (walletMasterController.tik.value.amount! >= costTik.value) {
+    //   if (costTik.value > 0) {
+    //     await ItemService.fetchRepairItemShoes(
+    //         RepairShoesModel(
+    //           repairUuid: userState.value.shoes!.id,
+    //           durability: currentSliderValue.value.toInt(),
+    //           feeTik: costTik.value.toInt(),
+    //         ), successCallback: (repairModel) {
+    //       InventoryItemModel newRepairModel = repairModel;
+    //       userState.update((state) {
+    //         state!.shoes!.durability = newRepairModel.durability;
+    //       });
+    //       walletMasterController.getSpendingWalletBalances();
+    //       showToastPopup('내구도 충전이 완료되었습니다.');
+    //       closeRepairPopup();
+    //     }, errorCallback: () {
+    //       showToastPopup('충전 요청이 실패했습니다.');
+    //       initRepairButton();
+    //     });
+    //   } else {
+    //     showToastPopup('충전할 게이지를 확인해주세요.');
+    //     initRepairButton();
+    //   }
+    // } else {
+    //   handleNotEnoughTaikaPopup();
+    // }
   }
 
   Future<void> getUserState({bool showLoading = false}) async {

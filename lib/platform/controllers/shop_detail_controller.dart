@@ -207,7 +207,11 @@ class ShopDetailController extends GetxController {
   }
 
   void onClickPurchaseItem(tradeSymbol) {
-    if ((tradeSymbol == 'STIK' ? double.parse(walletMasterController.stik.value.uiAmountString!) : double.parse(walletMasterController.tik.value.uiAmountString!)) < selectedItem.value.price) {
+    print(selectedItem.value.price);
+    print(purchaseItemSumPrice);
+    print(walletMasterController.tik.value.uiAmountString!);
+    if ((tradeSymbol == 'STIK' ? double.parse(walletMasterController.stik.value.uiAmountString!) : double.parse(walletMasterController.tik.value.uiAmountString!)) <
+        (selectedItem.value.itemCategory == 'DISPOSABLE' ? purchaseItemSumPrice.value : selectedItem.value.price)) {
       isShortBalance.value = true;
       showTikShortBalancePopup(tradeSymbol);
     } else {

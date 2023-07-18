@@ -3,8 +3,9 @@ import 'package:gaza_go/constants/enums.dart';
 import 'package:gaza_go/platform/apis/item.dart';
 import 'package:gaza_go/platform/models/inventory_badge_model.dart';
 import 'package:gaza_go/platform/models/inventory_item_model.dart';
-import 'package:gaza_go/platform/models/repair_shoes_model.dart';
 import 'package:gaza_go/platform/stores/hive_store.dart';
+
+import '../models/repair_shoes_model.dart';
 
 class ItemService {
   static String? get userId {
@@ -51,8 +52,8 @@ class ItemService {
     }
   }
 
-  static Future<void> fetchRepairItemShoes(RepairShoesModel repairInfo, {required Function successCallback, Function? errorCallback}) async {
-    Response res = await ItemApi.fetchRepairItemShoes(userId!, repairInfo);
+  static Future<void> fetchRepairItemShoes(int itemId, RepairShoesModel repairInfo, {required Function successCallback, Function? errorCallback}) async {
+    Response res = await ItemApi.fetchRepairItemShoes(userId!, itemId, repairInfo);
     if (res.statusCode == 200) {
       successCallback(InventoryItemModel.fromJson(res.data));
     } else {

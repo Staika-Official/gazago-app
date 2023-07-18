@@ -2,7 +2,8 @@ import 'package:dio/dio.dart';
 import 'package:gaza_go/constants/base_urls.dart';
 import 'package:gaza_go/platform/middleware/dio_middleware.dart';
 import 'package:gaza_go/platform/models/inventory_item_model.dart';
-import 'package:gaza_go/platform/models/repair_shoes_model.dart';
+
+import '../models/repair_shoes_model.dart';
 
 class ItemApi {
   static Future<List<InventoryItemModel>> getMyEquipmentItemsList(userId) async {
@@ -44,10 +45,17 @@ class ItemApi {
     return await Api.client(serviceUrl: ServiceUrl.badgeService).put('/users/$userId/equip/$badgeId');
   }
 
-  static Future<Response> fetchRepairItemShoes(String userId, RepairShoesModel repairInfo) async {
+  // static Future<Response> fetchRepairItemShoes(String userId, RepairShoesModel repairInfo) async {
+  //   return await Api.client(
+  //     serviceUrl: ServiceUrl.itemService,
+  //     allowCustomErrorHandler: true,
+  //   ).patch('/users/$userId/repair/${repairInfo.id}', data: repairInfo);
+  // }
+
+  static Future<Response> fetchRepairItemShoes(String userId, int itemId, RepairShoesModel repairInfo) async {
     return await Api.client(
       serviceUrl: ServiceUrl.itemService,
       allowCustomErrorHandler: true,
-    ).patch('/users/$userId/repair/${repairInfo.id}', data: repairInfo);
+    ).patch('/user/$userId/item-repair/$itemId', data: repairInfo);
   }
 }

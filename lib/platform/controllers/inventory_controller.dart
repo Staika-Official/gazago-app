@@ -10,18 +10,21 @@ import 'package:gaza_go/platform/helpers/alert_helper.dart';
 import 'package:gaza_go/platform/helpers/base_helper.dart';
 import 'package:gaza_go/platform/helpers/inventory_mixin.dart';
 import 'package:gaza_go/platform/helpers/linear_progress_mixin.dart';
+import 'package:gaza_go/platform/models/error_response_data_model.dart';
 import 'package:gaza_go/platform/models/inventory_badge_item_model.dart';
 import 'package:gaza_go/platform/models/inventory_badge_list_model.dart';
 import 'package:gaza_go/platform/models/inventory_badge_model.dart';
 import 'package:gaza_go/platform/models/inventory_item_model.dart';
 import 'package:gaza_go/platform/models/inventory_item_stat_model.dart';
 import 'package:gaza_go/platform/models/repair_shoes_model.dart';
+import 'package:gaza_go/platform/models/repair_use_item_model.dart';
 import 'package:gaza_go/platform/models/stat_model.dart';
 import 'package:gaza_go/platform/services/activity_service.dart';
 import 'package:gaza_go/platform/services/item_service.dart';
 import 'package:gaza_go/presentations/components/alert_ui_list.dart';
 import 'package:get/get.dart';
 import 'package:url_launcher/url_launcher.dart';
+import 'package:uuid/uuid.dart';
 
 class InventoryController extends GetxController with LinearProgressMixin, InventoryMixin {
   final WalletMasterController walletMasterController = Get.find();
@@ -55,6 +58,8 @@ class InventoryController extends GetxController with LinearProgressMixin, Inven
   ScrollController itemScrollController = ScrollController(keepScrollOffset: false);
   ScrollController badgeScrollController = ScrollController(keepScrollOffset: false);
 
+  final RxList<RepairUseItemModel> repairUseItemList = RxList.empty();
+
   Rx<InventoryBadgeModel> equippedBadge = Rx(
     InventoryBadgeModel(
       id: -1,
@@ -85,7 +90,7 @@ class InventoryController extends GetxController with LinearProgressMixin, Inven
       ),
     ),
   );
-  final Rx<RepairShoesModel> shoesDurability = Rx(RepairShoesModel());
+  // final Rx<RepairShoesModel> shoesDurability = Rx(RepairShoesModel());
   Rx<InventoryItemModel> selectedItem = Rx(
     InventoryItemModel(
         id: -1,
@@ -445,35 +450,56 @@ class InventoryController extends GetxController with LinearProgressMixin, Inven
     Get.toNamed(Routes.syntheticBadge);
   }
 
-  void fetchRepairShoes(shoeId) async {
-    if (walletMasterController.tik.value.amount! >= costTik.value) {
-      if (costTik.value > 0) {
-        disableButton.value = true;
-        await ItemService.fetchRepairItemShoes(
-          RepairShoesModel(
-            id: shoeId,
-            durability: currentSliderValue.value.toInt(),
-            feeTik: costTik.value.toInt(),
+  void fetchRepairShoesUseOneItem(int useItemId) async {
+    String uuid = const Uuid().v4();
+    await ItemService.fetchRepairItemShoes(
+      equippedShoe.value.id,
+      RepairShoesModel(
+        repairUuid: uuid,
+        repairItems: [
+          RepairUseItemModel(
+            userItemId: useItemId,
+            spendItemAmount: 1,
           ),
-          successCallback: (repairModel) {
-            InventoryItemModel newRepairModel = repairModel;
-            costTik.value = 0;
-            currentSliderValue.value = 0;
-            selectedItem.value = newRepairModel;
-            remainDurability.value = newRepairModel.durability.toInt();
-            walletMasterController.getSpendingWalletBalances();
-            getUserAllItems();
-            getUserEquippedItems();
-            showToastPopup('내구도 충전이 완료되었습니다.');
-            closeRepairPopup();
-          },
-        );
-      } else {
-        showToastPopup('수리할 내구도가 없습니다.');
-      }
-    } else {
-      handleNotEnoughTaikaPopup();
-    }
+        ],
+      ),
+      successCallback: (repairModel) {
+        getUserAllItems();
+        getUserEquippedItems();
+        showToastPopup('내구도 충전이 완료되었습니다.');
+      },
+      errorCallback: (ErrorResponseDataModel data) {
+        showToastPopup(data.errorMessage!);
+      },
+    );
+    // if (walletMasterController.tik.value.amount! >= costTik.value) {
+    //   if (costTik.value > 0) {
+    //     disableButton.value = true;
+    //     await ItemService.fetchRepairItemShoes(
+    //       RepairShoesModel(
+    //         id: shoeId,
+    //         durability: currentSliderValue.value.toInt(),
+    //         feeTik: costTik.value.toInt(),
+    //       ),
+    //       successCallback: (repairModel) {
+    //         InventoryItemModel newRepairModel = repairModel;
+    //         costTik.value = 0;
+    //         currentSliderValue.value = 0;
+    //         selectedItem.value = newRepairModel;
+    //         remainDurability.value = newRepairModel.durability.toInt();
+    //         walletMasterController.getSpendingWalletBalances();
+    //         getUserAllItems();
+    //         getUserEquippedItems();
+    //         showToastPopup('내구도 충전이 완료되었습니다.');
+    //         closeRepairPopup();
+    //       },
+    //     );
+    //   } else {
+    //     showToastPopup('수리할 내구도가 없습니다.');
+    //   }
+    // } else {
+    //   handleNotEnoughTaikaPopup();
+    // }
   }
 
   void initRepairInfo() {
