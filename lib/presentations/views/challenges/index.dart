@@ -280,7 +280,7 @@ class ChallengesHome extends StatelessWidget {
                                         padding: EdgeInsets.only(left: 5.0.sp),
                                         child: Row(
                                           children: [
-                                            item.challengeState == 'READY'
+                                            item.challengeState == 'READY' || item.challengeActivationType == 'CODE'
                                                 ? StyledText(
                                                     '모집인원',
                                                     color: lightGrayColor,

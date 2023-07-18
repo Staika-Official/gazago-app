@@ -288,12 +288,12 @@ Widget renderParticipateInChallenge() {
               height: 24.sp / 16,
             ),
             children: [
-              TextSpan(
-                text: '참여인원 달성!\n',
-                style: TextStyle(color: skyBlueColor),
-              ),
               const TextSpan(
+                text: '모집인원 달성!\n',
+              ),
+              TextSpan(
                 text: '다음 챌린지를 기대해주세요',
+                style: TextStyle(color: skyBlueColor),
               ),
             ],
           ),

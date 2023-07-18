@@ -6,6 +6,7 @@ part 'challenge_model.g.dart';
 class ChallengeModel {
   int id;
   String challengeType;
+  List<String> exerciseTypes;
   String simpleTitle;
   String subTitle;
   String fromDate;
@@ -15,6 +16,7 @@ class ChallengeModel {
   ChallengeModel({
     required this.id,
     required this.challengeType,
+    required this.exerciseTypes,
     required this.simpleTitle,
     required this.subTitle,
     required this.fromDate,
