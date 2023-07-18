@@ -132,7 +132,7 @@ class ActivityMap extends StatelessWidget {
               if (controller.selectedCourse.value.id != null) ...renderStartPoint(controller),
               if (controller.selectedCourse.value.id != null) ...renderEndPoint(controller),
             ],
-            markers: [...renderMakers(controller)],
+            markers: [if (controller.selectedCourse.value.id != null) ...renderMakers(controller)],
             pathOverlays: (controller.coordinates.length < 10)
                 ? null
                 : {
