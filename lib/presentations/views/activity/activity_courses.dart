@@ -35,7 +35,6 @@ class ActivityChallengeCourses extends StatelessWidget {
       );
 
       return [centerCircle, outerCircle];
-
     } else {
       return List.empty();
     }
@@ -149,31 +148,34 @@ class ActivityChallengeCourses extends StatelessWidget {
                   width: 16.sp,
                   height: 11.sp,
                 ),
-                Padding(
-                  padding: EdgeInsets.only(left: 11.sp),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      StyledText(
-                        course.secondName!,
-                        fontSize: 18,
-                        fontWeight: 500,
-                        lineHeight: 18,
-                        color: isSelected ? skyBlueColor : Colors.white,
-                      ),
-                      Padding(
-                        padding: EdgeInsets.only(
-                          top: 7.sp,
-                        ),
-                        child: StyledText(
-                          course.startPointName != null ? '시작: ${course.startPointName!} - 도착: ${course.endPointName!}' : course.firstName!,
-                          fontSize: 14,
+                Expanded(
+                  child: Padding(
+                    padding: EdgeInsets.only(left: 11.sp),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        StyledText(
+                          course.secondName!,
+                          fontSize: 18,
                           fontWeight: 500,
-                          lineHeight: 14,
-                          color: isSelected ? skyBlueColor : deepGrayColor,
+                          lineHeight: 18,
+                          color: isSelected ? skyBlueColor : Colors.white,
                         ),
-                      ),
-                    ],
+                        Padding(
+                          padding: EdgeInsets.only(
+                            top: 7.sp,
+                          ),
+                          child: StyledText(
+                            controller.getCourseRouteString(course),
+                            // course.startPointName != null ? '시작: ${course.startPointName!} - 도착: ${course.endPointName!}' : course.firstName!,
+                            fontSize: 14,
+                            fontWeight: 500,
+                            lineHeight: 18,
+                            color: isSelected ? skyBlueColor : deepGrayColor,
+                          ),
+                        ),
+                      ],
+                    ),
                   ),
                 ),
               ],

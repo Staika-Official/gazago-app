@@ -76,7 +76,8 @@ class ChallengeMap extends StatelessWidget {
             dense: MediaQuery.of(context).size.width < 320,
             visualDensity: VisualDensity(vertical: MediaQuery.of(context).size.width < 320 ? -3 : 0),
             subtitle: StyledText(
-              '시작: ${course.startPointName} - 도착: ${course.endPointName}',
+              controller.getCourseRouteString(course),
+              // '시작: ${course.startPointName} - 도착: ${course.endPointName}',
               color: (controller.challengeSelectedIndex.value == course.id) ? skyBlueColor : deepGrayColor,
               fontSize: 14,
               lineHeight: 14,
@@ -186,10 +187,11 @@ class ChallengeMap extends StatelessWidget {
                 top: 66.sp,
                 left: 20.sp,
                 child: InkWell(
-                    onTap: () {
-                      Navigator.pop(context);
-                    },
-                    child: iconChallengeScreenBack),
+                  onTap: () {
+                    Get.back();
+                  },
+                  child: iconChallengeScreenBack,
+                ),
               ),
             ],
           );

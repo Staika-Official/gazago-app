@@ -373,7 +373,7 @@ class ActivityController extends SuperController with ActivityMixin, ChallengeMi
 
           if (userState.value.exercise?.challengeId != null) {
             //  산행중인 정보 가져오기
-            ChallengeCourseModel challenge = await getChallengeCourse(userState.value.exercise!.challengeId!);
+            ChallengeCourseModel challenge = await getChallengeCourse(userState.value.exercise!.challengeCourseId!);
             if (challenge.id != null) {
               selectedCourse.value = challenge;
             }

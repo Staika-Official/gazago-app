@@ -237,4 +237,10 @@ mixin ChallengeMixin {
       errorCallback: errorCallback,
     );
   }
+
+  String getCourseRouteString(ChallengeCourseModel course) {
+    List<String> checkpointNames = course.checkpoints != null && course.checkpoints!.isNotEmpty ? course.checkpoints!.map((checkpoint) => checkpoint.name!).toList() : [];
+    List<String> fullCourseRoute = [course.startPointName!, ...checkpointNames, course.endPointName!];
+    return fullCourseRoute.join(' - ');
+  }
 }
