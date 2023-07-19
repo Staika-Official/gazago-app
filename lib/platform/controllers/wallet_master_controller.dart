@@ -400,7 +400,7 @@ class WalletMasterController extends GetxController with SolanaMixin, GetTickerP
     print('verificationData.source : ${purchaseDetails.verificationData.source}');
     print('#################################################');
 
-    return Future<bool>.value(response.valid);
+    return response.valid;
   }
 
   Future<void> _deliverProduct(PurchaseDetails purchaseDetails) async {
