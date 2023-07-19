@@ -197,51 +197,53 @@ class ChallengeCourseDetail extends StatelessWidget {
                                           )
                                         ],
                                       ),
-                                    const StyledText(
-                                      ' · ',
-                                      color: Color(0xffd9d9d9),
-                                      fontWeight: 500,
-                                      fontSize: 16,
-                                      lineHeight: 18,
-                                      letterSpacing: -.1,
-                                    ),
-                                    Row(
-                                      children: [
-                                        iconPeople,
-                                        Padding(
-                                          padding: EdgeInsets.only(left: 5.0.sp),
-                                          child: Row(
-                                            children: [
-                                              controller.challengeDetails.value.challengeState == 'READY'
-                                                  ? StyledText(
-                                                      '모집인원',
-                                                      color: lightGrayColor,
-                                                      fontWeight: 500,
-                                                      fontSize: 12,
-                                                      lineHeight: 13,
-                                                      letterSpacing: -.1,
-                                                    )
-                                                  : StyledText(
-                                                      '${formatDecimalPlaces((controller.challengeDetails.value.soldQuantity ?? 0).toDouble(), 0)}명 /',
-                                                      color: lightGrayColor,
-                                                      fontWeight: 500,
-                                                      fontSize: 12,
-                                                      lineHeight: 13,
-                                                      letterSpacing: -.1,
-                                                    ),
-                                              StyledText(
-                                                ' ${formatDecimalPlaces(controller.challengeDetails.value.quantity!.toDouble(), 0)}명',
-                                                color: lightGrayColor,
-                                                fontWeight: 500,
-                                                fontSize: 12,
-                                                lineHeight: 13,
-                                                letterSpacing: -.1,
-                                              ),
-                                            ],
+                                    if (controller.challengeDetails.value.quantity != 0)
+                                      const StyledText(
+                                        ' · ',
+                                        color: Color(0xffd9d9d9),
+                                        fontWeight: 500,
+                                        fontSize: 16,
+                                        lineHeight: 18,
+                                        letterSpacing: -.1,
+                                      ),
+                                    if (controller.challengeDetails.value.quantity != 0)
+                                      Row(
+                                        children: [
+                                          iconPeople,
+                                          Padding(
+                                            padding: EdgeInsets.only(left: 5.0.sp),
+                                            child: Row(
+                                              children: [
+                                                controller.challengeDetails.value.challengeState == 'READY'
+                                                    ? StyledText(
+                                                        '모집인원',
+                                                        color: lightGrayColor,
+                                                        fontWeight: 500,
+                                                        fontSize: 12,
+                                                        lineHeight: 13,
+                                                        letterSpacing: -.1,
+                                                      )
+                                                    : StyledText(
+                                                        '${formatDecimalPlaces((controller.challengeDetails.value.soldQuantity ?? 0).toDouble(), 0)}명 /',
+                                                        color: lightGrayColor,
+                                                        fontWeight: 500,
+                                                        fontSize: 12,
+                                                        lineHeight: 13,
+                                                        letterSpacing: -.1,
+                                                      ),
+                                                StyledText(
+                                                  ' ${formatDecimalPlaces(controller.challengeDetails.value.quantity!.toDouble(), 0)}명',
+                                                  color: lightGrayColor,
+                                                  fontWeight: 500,
+                                                  fontSize: 12,
+                                                  lineHeight: 13,
+                                                  letterSpacing: -.1,
+                                                ),
+                                              ],
+                                            ),
                                           ),
-                                        ),
-                                      ],
-                                    )
+                                        ],
+                                      )
                                   ],
                                 ),
                               ),
