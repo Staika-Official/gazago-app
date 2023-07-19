@@ -2236,7 +2236,7 @@ Future<void> showForceLogoutAlert() {
   return forceLogoutAlertCompleter.future;
 }
 
-void showAdTipAlert(int? challengeId) {
+void showAdTipAlert(int? challengeId, ExerciseType exerciseType) {
   Get.dialog(
     barrierColor: Colors.transparent,
     WillPopScope(
@@ -2315,7 +2315,7 @@ void showAdTipAlert(int? challengeId) {
                                                 fontFamily: 'Montserrat',
                                               ),
                                               TextSpan(
-                                                text: '광고 보고, ${challengeId == null ? '1' : '3'}GO 받고 시작하기',
+                                                text: '광고 보고, ${challengeId == null && exerciseType.value != ExerciseType.hiking.value ? '1' : '3'}GO 받고 시작하기',
                                               ),
                                             ),
                                           ),
