@@ -326,8 +326,8 @@ class ChallengeCourseDetail extends StatelessWidget {
                                                   ),
                                                   width: 107.sp,
                                                   height: 87.sp,
-                                                  child: controller.challengeDetails.value.badge!.imageUrl != null
-                                                      ? controller.challengeDetails.value.badge!.imageUrl!.contains('.svg')
+                                                  child: badge.imageUrl != null
+                                                      ? badge.imageUrl!.contains('.svg')
                                                           ? SvgPicture.network(
                                                               fit: BoxFit.contain,
                                                               badge.imageUrl!,
@@ -464,7 +464,7 @@ class ChallengeCourseDetail extends StatelessWidget {
                                             color: lightGrayColor,
                                           ),
                                         ),
-                                        TextSpan(
+                                        const TextSpan(
                                           text: '코스를 미리 확인하세요',
                                         ),
                                       ],
@@ -494,7 +494,7 @@ class ChallengeCourseDetail extends StatelessWidget {
                                         ),
                                         child: Padding(
                                           padding: EdgeInsets.symmetric(vertical: 13.0.sp, horizontal: 40.sp),
-                                          child: StyledText(
+                                          child: const StyledText(
                                             '코스 보기',
                                             fontWeight: 500,
                                             fontSize: 18,
