@@ -134,39 +134,40 @@ class ChallengeCourseDetail extends StatelessWidget {
                                     letterSpacing: -.1,
                                   ),
                                 ),
-                              Row(
-                                children: [
-                                  StyledText(
-                                    '${formatDateUntilTime(controller.challengeDetails.value.fromDate)} - ${formatDateUntilTime(controller.challengeDetails.value.toDate)}',
-                                    color: lightGrayColor,
-                                    fontWeight: 500,
-                                    fontSize: 12,
-                                    lineHeight: 14,
-                                    letterSpacing: -.1,
-                                  ),
-                                  StyledText(
-                                    ' · ',
-                                    color: lightGrayColor,
-                                    fontWeight: 500,
-                                    fontSize: 12,
-                                    lineHeight: 14,
-                                    letterSpacing: -.1,
-                                  ),
-                                  if (controller.challengeDetails.value.challengeState != null)
+                              if (controller.challengeDetails.value.limitedPeriod != null && controller.challengeDetails.value.limitedPeriod!)
+                                Row(
+                                  children: [
                                     StyledText(
-                                      controller.getChallengeStatus(controller.challengeDetails.value.challengeState!),
-                                      color: controller.challengeDetails.value.challengeState == 'READY'
-                                          ? lightGreenColor
-                                          : controller.challengeDetails.value.challengeState == 'IN_PROGRESS'
-                                              ? skyBlueColor
-                                              : lightGrayColor,
+                                      '${formatDateUntilTime(controller.challengeDetails.value.fromDate)} - ${formatDateUntilTime(controller.challengeDetails.value.toDate)}',
+                                      color: lightGrayColor,
                                       fontWeight: 500,
                                       fontSize: 12,
                                       lineHeight: 14,
                                       letterSpacing: -.1,
                                     ),
-                                ],
-                              ),
+                                    StyledText(
+                                      ' · ',
+                                      color: lightGrayColor,
+                                      fontWeight: 500,
+                                      fontSize: 12,
+                                      lineHeight: 14,
+                                      letterSpacing: -.1,
+                                    ),
+                                    if (controller.challengeDetails.value.challengeState != null)
+                                      StyledText(
+                                        controller.getChallengeStatus(controller.challengeDetails.value.challengeState!),
+                                        color: controller.challengeDetails.value.challengeState == 'READY'
+                                            ? lightGreenColor
+                                            : controller.challengeDetails.value.challengeState == 'IN_PROGRESS'
+                                                ? skyBlueColor
+                                                : lightGrayColor,
+                                        fontWeight: 500,
+                                        fontSize: 12,
+                                        lineHeight: 14,
+                                        letterSpacing: -.1,
+                                      ),
+                                  ],
+                                ),
                               Padding(
                                 padding: const EdgeInsets.only(top: 18.0),
                                 child: Row(

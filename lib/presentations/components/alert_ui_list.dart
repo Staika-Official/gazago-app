@@ -2315,7 +2315,7 @@ void showAdTipAlert(int? challengeId, ExerciseType exerciseType) {
                                                 fontFamily: 'Montserrat',
                                               ),
                                               TextSpan(
-                                                text: '광고 보고, ${challengeId == null && exerciseType.value != ExerciseType.hiking.value ? '1' : '3'}GO 받고 시작하기',
+                                                text: '광고 보고, ${challengeId == null || exerciseType.value == ExerciseType.walking.value ? '1' : '3'}GO 받고 시작하기',
                                               ),
                                             ),
                                           ),
