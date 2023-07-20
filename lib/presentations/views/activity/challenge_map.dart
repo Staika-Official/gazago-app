@@ -71,7 +71,7 @@ class ChallengeMap extends StatelessWidget {
       return Obx(() {
         return ListTile(
             onTap: () {
-              controller.showEndPointMarker(course);
+              controller.showPathPointMarkers(course);
             },
             dense: MediaQuery.of(context).size.width < 320,
             visualDensity: VisualDensity(vertical: MediaQuery.of(context).size.width < 320 ? -3 : 0),

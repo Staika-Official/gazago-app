@@ -465,7 +465,7 @@ class ChallengeCourseDetail extends StatelessWidget {
                                           ),
                                         ),
                                         const TextSpan(
-                                          text: '코스를 미리 확인하세요',
+                                          text: '코스를 미리 확인해요',
                                         ),
                                       ],
                                     ),
@@ -507,50 +507,51 @@ class ChallengeCourseDetail extends StatelessWidget {
                               ],
                             ),
                           ),
-                          Container(
-                            width: double.infinity,
-                            color: subBg01Color,
-                            child: Padding(
-                              padding: EdgeInsets.only(top: 10.0.sp, bottom: Platform.isAndroid ? 10.0.sp : 24.sp),
-                              child: Row(mainAxisAlignment: MainAxisAlignment.center, crossAxisAlignment: CrossAxisAlignment.center, children: [
-                                ShaderMask(
-                                  shaderCallback: (size) => LinearGradient(
-                                    colors: [const Color(0XFF0EE6F3), skyBlueColor],
-                                    begin: Alignment.topCenter,
-                                    end: Alignment.bottomCenter,
-                                  ).createShader(
-                                    Rect.fromLTWH(0, 0, size.width, 16),
-                                  ),
-                                  child: const StyledText(
-                                    '챌린지 기간',
-                                    fontSize: 14,
-                                    lineHeight: 20,
-                                    fontWeight: 600,
-                                  ),
-                                ),
-                                ShaderMask(
-                                  blendMode: BlendMode.modulate,
-                                  shaderCallback: (size) => LinearGradient(
-                                    colors: [const Color(0XFF0EE6F3), skyBlueColor],
-                                    begin: Alignment.topCenter,
-                                    end: Alignment.bottomCenter,
-                                  ).createShader(
-                                    Rect.fromLTWH(0, 0, size.width, 16),
-                                  ),
-                                  child: Text(
-                                    '${formatDateUntilTime(controller.challengeDetails.value.fromDate)} - ${formatDateUntilTime(controller.challengeDetails.value.toDate)}',
-                                    style: TextStyle(
-                                      color: Colors.white,
-                                      fontStyle: FontStyle.normal,
-                                      fontWeight: FontWeight.w600,
-                                      fontSize: 14.sp,
-                                      height: (20 / 14).sp,
+                          if (controller.challengeDetails.value.limitedPeriod != null && controller.challengeDetails.value.limitedPeriod!)
+                            Container(
+                              width: double.infinity,
+                              color: subBg01Color,
+                              child: Padding(
+                                padding: EdgeInsets.only(top: 10.0.sp, bottom: Platform.isAndroid ? 10.0.sp : 24.sp),
+                                child: Row(mainAxisAlignment: MainAxisAlignment.center, crossAxisAlignment: CrossAxisAlignment.center, children: [
+                                  ShaderMask(
+                                    shaderCallback: (size) => LinearGradient(
+                                      colors: [const Color(0XFF0EE6F3), skyBlueColor],
+                                      begin: Alignment.topCenter,
+                                      end: Alignment.bottomCenter,
+                                    ).createShader(
+                                      Rect.fromLTWH(0, 0, size.width, 16),
+                                    ),
+                                    child: const StyledText(
+                                      '챌린지 기간',
+                                      fontSize: 14,
+                                      lineHeight: 20,
+                                      fontWeight: 600,
                                     ),
                                   ),
-                                )
-                              ]),
+                                  ShaderMask(
+                                    blendMode: BlendMode.modulate,
+                                    shaderCallback: (size) => LinearGradient(
+                                      colors: [const Color(0XFF0EE6F3), skyBlueColor],
+                                      begin: Alignment.topCenter,
+                                      end: Alignment.bottomCenter,
+                                    ).createShader(
+                                      Rect.fromLTWH(0, 0, size.width, 16),
+                                    ),
+                                    child: Text(
+                                      '${formatDateUntilTime(controller.challengeDetails.value.fromDate)} - ${formatDateUntilTime(controller.challengeDetails.value.toDate)}',
+                                      style: TextStyle(
+                                        color: Colors.white,
+                                        fontStyle: FontStyle.normal,
+                                        fontWeight: FontWeight.w600,
+                                        fontSize: 14.sp,
+                                        height: (20 / 14).sp,
+                                      ),
+                                    ),
+                                  )
+                                ]),
+                              ),
                             ),
-                          ),
                         ],
                       ),
                     )

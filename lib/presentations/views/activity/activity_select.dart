@@ -77,6 +77,7 @@ class ActivitySelect extends StatelessWidget {
                               padding: EdgeInsets.only(left: 22.sp),
                               child: Column(
                                 crossAxisAlignment: CrossAxisAlignment.start,
+                                mainAxisSize: MainAxisSize.min,
                                 children: [
                                   Container(
                                     padding: EdgeInsets.symmetric(horizontal: 9.sp, vertical: 4.sp),
@@ -114,16 +115,17 @@ class ActivitySelect extends StatelessWidget {
                                       letterSpacing: 0.3,
                                     ),
                                   ),
-                                  Padding(
-                                    padding: const EdgeInsets.only(top: 13),
-                                    child: StyledText(
-                                      '${formatDateUntilDay(challenge.fromDate)} ~ ${formatDateUntilDay(challenge.toDate)}',
-                                      color: deepGrayColor,
-                                      fontSize: 10,
-                                      fontWeight: 500,
-                                      lineHeight: 10,
+                                  if (challenge.limitedPeriod)
+                                    Padding(
+                                      padding: const EdgeInsets.only(top: 13),
+                                      child: StyledText(
+                                        '${formatDateUntilDay(challenge.fromDate)} ~ ${formatDateUntilDay(challenge.toDate)}',
+                                        color: deepGrayColor,
+                                        fontSize: 10,
+                                        fontWeight: 500,
+                                        lineHeight: 10,
+                                      ),
                                     ),
-                                  ),
                                 ],
                               ),
                             )

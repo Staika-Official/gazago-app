@@ -15,10 +15,12 @@ import 'package:gaza_go/platform/helpers/alert_helper.dart';
 import 'package:gaza_go/platform/helpers/challenge_mixin.dart';
 import 'package:gaza_go/platform/helpers/location_helper.dart';
 import 'package:gaza_go/platform/helpers/login_helper.dart';
+import 'package:gaza_go/platform/helpers/map_helper.dart';
 import 'package:gaza_go/platform/models/ad_watch_available_model.dart';
 import 'package:gaza_go/platform/models/challenge_course_model.dart';
 import 'package:gaza_go/platform/models/challenge_hierarchy_model.dart';
 import 'package:gaza_go/platform/models/challenge_model.dart';
+import 'package:gaza_go/platform/models/checkpoint_model.dart';
 import 'package:gaza_go/platform/models/current_user_state_model.dart';
 import 'package:gaza_go/platform/models/inventory_item_model.dart';
 import 'package:gaza_go/platform/models/repair_shoes_model.dart';
@@ -33,7 +35,6 @@ import 'package:gaza_go/platform/services/member_service.dart';
 import 'package:gaza_go/platform/services/uaa_service.dart';
 import 'package:gaza_go/platform/stores/hive_store.dart';
 import 'package:gaza_go/presentations/components/alert_ui_list.dart';
-import 'package:gaza_go/presentations/styles/colors.dart';
 import 'package:gaza_go/presentations/views/activity/activity_loading.dart';
 import 'package:gaza_go/presentations/views/activity/activity_select.dart';
 import 'package:gaza_go/presentations/views/activity/ad_select.dart';
@@ -129,22 +130,12 @@ class ActivityController extends SuperController with ActivityMixin, ChallengeMi
   }
 
   Marker generateDefaultMarker(ChallengeCourseModel course) {
-    return Marker(
-      markerId: course.id!.toString(),
-      position: LatLng(course.startLat!, course.startLon!),
-      captionText: course.startPointName,
-      captionColor: skyBlueColor,
-      captionHaloColor: Colors.black,
-      captionTextSize: 16.0,
-      subCaptionTextSize: 14,
-      subCaptionColor: (Platform.isAndroid) ? Colors.white : Colors.black,
-      subCaptionHaloColor: (Platform.isAndroid) ? Colors.black : Colors.white,
-      captionOffset: 5,
-      icon: startMarker,
-      width: 20,
-      height: 20,
+    return getCustomMarker(
+      markerType: "START",
+      course: course,
+      markerIcon: startMarker,
       onMarkerTab: (marker, iconSize) {
-        showEndPointMarker(course);
+        showPathPointMarkers(course);
       },
     );
   }
@@ -171,50 +162,26 @@ class ActivityController extends SuperController with ActivityMixin, ChallengeMi
     generateChallengeMarkerList();
   }
 
-  void showEndPointMarker(ChallengeCourseModel course) {
+  void showPathPointMarkers(ChallengeCourseModel course) {
     if (challengeSelectedIndex.value != null) {
       challengeMarkers.add(generateDefaultMarker(allCoursesList.firstWhere((element) => element.id == challengeSelectedIndex.value)));
     }
 
     challengeSelectedIndex.value = course.id!;
-    selectedChallengeMarkers.value = RxList.empty();
+    selectedChallengeMarkers.clear();
     challengeMarkers.removeWhere((element) {
       return element.markerId == challengeSelectedIndex.value.toString();
     });
 
-    selectedChallengeMarkers.add(Marker(
-      markerId: 'start_${course.id!.toString()}',
-      position: LatLng(course.startLat!, course.startLon!),
-      captionText: '시작: ${course.startPointName}',
-      captionColor: skyBlueColor,
-      captionHaloColor: Colors.black,
-      captionTextSize: 16.0,
-      subCaptionTextSize: 14,
-      subCaptionText: course.secondName,
-      subCaptionColor: (Platform.isAndroid) ? Colors.white : Colors.black,
-      subCaptionHaloColor: (Platform.isAndroid) ? Colors.black : Colors.white,
-      captionOffset: 5,
-      icon: startMarker,
-      width: 20,
-      height: 20,
-    ));
+    selectedChallengeMarkers.add(getCustomMarker(markerType: "START", course: course, markerIcon: startMarker));
 
-    selectedChallengeMarkers.add(Marker(
-      markerId: 'end_${course.id!.toString()}',
-      position: LatLng(course.endLat!, course.endLon!),
-      captionText: '도착: ${course.endPointName}',
-      captionColor: const Color(0xFFFF6F75),
-      captionHaloColor: Colors.black,
-      captionTextSize: 16.0,
-      captionOffset: 5,
-      subCaptionText: course.secondName,
-      subCaptionTextSize: 14,
-      subCaptionColor: (Platform.isAndroid) ? Colors.white : Colors.black,
-      subCaptionHaloColor: (Platform.isAndroid) ? Colors.black : Colors.white,
-      icon: endMarker,
-      width: 20,
-      height: 20,
-    ));
+    if (course.checkpoints != null && course.checkpoints!.isNotEmpty) {
+      for (CheckpointModel checkpoint in course.checkpoints!) {
+        selectedChallengeMarkers.add(getCheckpointMarker(checkpoint, checkpointMarker));
+      }
+    }
+
+    selectedChallengeMarkers.add(getCustomMarker(markerType: "END", course: course, markerIcon: endMarker));
 
     challengeMapController.moveCamera(
       CameraUpdate.fitBounds(
@@ -808,7 +775,7 @@ class ActivityController extends SuperController with ActivityMixin, ChallengeMi
   }
 
   void moveToChallengeDetail(ChallengeModel challenge, bool hideLinkToCourses) {
-    Get.toNamed(Routes.challengeCourseDetail, arguments: {'id': challenge.id, 'hideCourses': hideLinkToCourses});
+    Get.toNamed(Routes.challengeCourseDetail, arguments: {'id': challenge.id, 'hideCourses': hideLinkToCourses}, preventDuplicates: false);
   }
 
   @override

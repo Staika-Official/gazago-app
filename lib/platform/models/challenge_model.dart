@@ -12,6 +12,7 @@ class ChallengeModel {
   String fromDate;
   String toDate;
   String thumbnailImageUrl;
+  bool limitedPeriod;
 
   ChallengeModel({
     required this.id,
@@ -22,6 +23,7 @@ class ChallengeModel {
     required this.fromDate,
     required this.toDate,
     required this.thumbnailImageUrl,
+    required this.limitedPeriod,
   });
 
   factory ChallengeModel.fromJson(Map<String, dynamic> json) => _$ChallengeModelFromJson(json);

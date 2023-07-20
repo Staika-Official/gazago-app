@@ -165,7 +165,11 @@ mixin ChallengeMixin {
           });
           HiveStore.save(key: HiveKey.courseNotificationList.name, value: notifiedChallengeList);
           HiveStore.save(key: HiveKey.courseNotificationTime.name, value: DateTime(notifiedTime.year, notifiedTime.month, notifiedTime.day));
-          showLocalNotification(notificationType: NotificationType.challenge, title: '챌린지 시작 포인트 발견', message: '주변에 챌린지를 시작 할 수 있는 ${course.firstName}이 있어요. 뱃지 받으러 가자GO~~');
+          showLocalNotification(
+            notificationType: NotificationType.challenge,
+            title: '챌린지 시작 포인트 발견',
+            message: '주변에 챌린지를 시작 할 수 있는 ${course.firstName}이 있어요. 뱃지 받으러 가자GO~~',
+          );
           showToastPopup('챌린지 시작 포인트 발견');
         }
       }

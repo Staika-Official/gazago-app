@@ -104,12 +104,12 @@ void handleNotification(RemoteMessage message) {
 
   if (message.data['notificationKey'] == 'CHALLENGE_REWARD_BADGE_ISSUED') {
     PushMessageChallengeSuccessModel data = PushMessageChallengeSuccessModel.fromJson(message.data);
-    showLocalNotification(
-      notificationType: NotificationType.badge,
-      title: '챌린지 뱃지 발급!',
-      message: '${data.challengeTitle} 달성. 새로운 뱃지 확인하러 가자GO~~',
-      payload: 'NAV-INVENTORY_BADGE',
-    );
+    // showLocalNotification(
+    //   notificationType: NotificationType.badge,
+    //   title: '챌린지 뱃지 발급!',
+    //   message: '${data.challengeTitle} 달성. 새로운 뱃지 확인하러 가자GO~~',
+    //   payload: 'NAV-INVENTORY_BADGE',
+    // );
     showChallengeBadgeAcquisitionAlert(data);
   }
 }
@@ -155,12 +155,13 @@ Future<void> setForegroundConfig() async {
 }
 
 void onSelectNotification(NotificationResponse? notificationResponse) {
-  if (notificationResponse != null) {
+  if (notificationResponse != null && (notificationResponse.payload == null || notificationResponse.payload != '')) {
     List<String> payload = notificationResponse.payload!.split('-');
     String action = payload[0];
     String route = payload[1];
 
     if (action == 'NAV') {
+      Get.until((route) => route.isFirst);
       switch (route) {
         case 'INVENTORY_BADGE':
           HomeMenuController homeMenuController = Get.isRegistered<HomeMenuController>() ? Get.find<HomeMenuController>() : Get.put(HomeMenuController());

@@ -8,7 +8,6 @@ import 'package:gaza_go/presentations/styles/colors.dart';
 import 'package:gaza_go/presentations/styles/icons.dart';
 import 'package:gaza_go/presentations/styles/styled_text.dart';
 import 'package:get/get.dart';
-import 'package:simple_animations/simple_animations.dart';
 
 class ActivityHome extends StatelessWidget {
   const ActivityHome({Key? key}) : super(key: key);

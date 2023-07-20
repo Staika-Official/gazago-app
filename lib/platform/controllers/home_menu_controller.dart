@@ -81,12 +81,12 @@ class HomeMenuController extends SuperController {
       // 챌린지 보상 푸쉬 알림
       if (initialMessage.data['notificationKey'] == 'CHALLENGE_REWARD_BADGE_ISSUED') {
         PushMessageChallengeSuccessModel data = PushMessageChallengeSuccessModel.fromJson(initialMessage.data);
-        showLocalNotification(
-          notificationType: NotificationType.badge,
-          title: '챌린지 뱃지 발급!',
-          message: '${data.challengeTitle} 달성. 새로운 뱃지 확인하러 가자GO~~',
-          payload: 'NAV-INVENTORY_BADGE',
-        );
+        // showLocalNotification(
+        //   notificationType: NotificationType.badge,
+        //   title: '챌린지 뱃지 발급!',
+        //   message: '${data.challengeTitle} 달성. 새로운 뱃지 확인하러 가자GO~~',
+        //   payload: 'NAV-INVENTORY_BADGE',
+        // );
         showChallengeBadgeAcquisitionAlert(data);
       }
 

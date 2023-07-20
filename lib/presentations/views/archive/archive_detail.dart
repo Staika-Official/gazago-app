@@ -7,6 +7,7 @@ import 'package:gaza_go/constants/config.dart';
 import 'package:gaza_go/platform/controllers/archive_controller.dart';
 import 'package:gaza_go/platform/helpers/activity_helper.dart';
 import 'package:gaza_go/platform/helpers/base_helper.dart';
+import 'package:gaza_go/platform/helpers/map_helper.dart';
 import 'package:gaza_go/presentations/components/default_container.dart';
 import 'package:gaza_go/presentations/styles/colors.dart';
 import 'package:gaza_go/presentations/styles/icons.dart';
@@ -188,6 +189,12 @@ class ArchiveDetail extends StatelessWidget {
                   initialCameraPosition: CameraPosition(
                     target: controller.locations.isNotEmpty ? controller.locations.first : const LatLng(37.5525, 126.9883),
                   ),
+                  circles: [
+                    if (controller.selectedItem.value.challengeCourse != null) ...renderCircleOverlays(controller.selectedItem.value.challengeCourse),
+                  ],
+                  markers: [
+                    if (controller.selectedItem.value.challengeCourse != null) ...renderMarkers(controller.selectedItem.value.challengeCourse),
+                  ],
                   pathOverlays: {
                     PathOverlay(
                       PathOverlayId('detail path'),
@@ -350,7 +357,7 @@ class ArchiveDetail extends StatelessWidget {
                 ],
               ),
             ),
-            controller.selectedItem.value.challengeId != null && controller.selectedItem.value.badgeName != null && controller.selectedItem.value.type == "HIKING"
+            controller.selectedItem.value.challengeActivationType == "COURSE"
                 ? Padding(
                     padding: EdgeInsets.symmetric(vertical: 10.0.sp, horizontal: 20.0.sp),
                     child: Row(
@@ -379,7 +386,7 @@ class ArchiveDetail extends StatelessWidget {
                 color: Color(0xFF2C2C35),
               ),
             ),
-            controller.selectedItem.value.startPointName != null && controller.selectedItem.value.type == "HIKING"
+            controller.selectedItem.value.challengeActivationType == "COURSE"
                 ? Padding(
                     padding: EdgeInsets.symmetric(vertical: 10.0.sp, horizontal: 20.0.sp),
                     child: Row(
@@ -420,7 +427,7 @@ class ArchiveDetail extends StatelessWidget {
               ),
             ),
             // startPointName
-            controller.selectedItem.value.endPointName != null && controller.selectedItem.value.type == "HIKING"
+            controller.selectedItem.value.challengeActivationType == "COURSE"
                 ? Padding(
                     padding: EdgeInsets.symmetric(vertical: 10.0.sp, horizontal: 20.0.sp),
                     child: Row(

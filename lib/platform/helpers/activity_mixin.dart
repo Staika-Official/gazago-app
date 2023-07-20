@@ -528,8 +528,8 @@ mixin ActivityMixin {
           errorCallback: errorHandler,
         );
       } else {
-        // exerciseSteps.value = exerciseSteps.value + 20;
-        // exerciseDistance.value = exerciseDistance.value + 20;
+        // exerciseSteps.value = exerciseSteps.value + 100;
+        // exerciseDistance.value = exerciseDistance.value + 100;
 
         if (!isSameStepCount) {
           HiveStore.save(key: HiveKey.lastUpdatedStepCount.name, value: userExerciseData.value.steps);
@@ -868,8 +868,8 @@ mixin ActivityMixin {
       ActivityController controller = Get.find<ActivityController>();
       showLocalNotification(
         notificationType: NotificationType.badge,
-        title: '등산 챌린지 뱃지 획득',
-        message: '${controller.selectedCourse.value!.firstName} 등산 챌린지에 성공하여 뱃지를 받았어요. 새로운 뱃지 확인하러 가자GO~~',
+        title: '챌린지 뱃지 획득',
+        message: '${controller.selectedCourse.value!.firstName} 챌린지에 성공하여 뱃지를 받았어요. 새로운 뱃지 확인하러 가자GO~~',
         payload: 'NAV-INVENTORY_BADGE',
       );
       showToastPopup('뱃지를 획득하였습니다.');
