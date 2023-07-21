@@ -344,21 +344,22 @@ class ChallengeCourseDetail extends StatelessWidget {
                                                             )
                                                       : const SizedBox(),
                                                 ),
-                                                Padding(
-                                                  padding: EdgeInsets.only(left: 17.0.sp),
-                                                  child: Column(
-                                                    crossAxisAlignment: CrossAxisAlignment.start,
-                                                    children: [
-                                                      StyledText(
-                                                        badge.name!,
-                                                        fontFamily: 'Montserrat',
-                                                        fontWeight: 500,
-                                                        fontSize: 16,
-                                                        lineHeight: 22,
-                                                        letterSpacing: -.1,
-                                                      ),
-                                                      if (badge.description != null)
-                                                        Padding(
+                                                Expanded(
+                                                  child: Padding(
+                                                    padding: EdgeInsets.only(left: 17.0.sp),
+                                                    child: Column(
+                                                      crossAxisAlignment: CrossAxisAlignment.start,
+                                                      children: [
+                                                        StyledText(
+                                                          badge.name!,
+                                                          fontFamily: 'Montserrat',
+                                                          fontWeight: 500,
+                                                          fontSize: 16,
+                                                          lineHeight: 22,
+                                                          letterSpacing: -.1,
+                                                        ),
+                                                        if (badge.description != null)
+                                                          Padding(
                                                             padding: EdgeInsets.only(top: 9.0.sp),
                                                             child: StyledText(
                                                               badge.description!,
@@ -367,8 +368,10 @@ class ChallengeCourseDetail extends StatelessWidget {
                                                               fontSize: 22,
                                                               lineHeight: 22,
                                                               letterSpacing: -.1,
-                                                            )),
-                                                    ],
+                                                            ),
+                                                          ),
+                                                      ],
+                                                    ),
                                                   ),
                                                 )
                                               ],

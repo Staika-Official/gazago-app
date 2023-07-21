@@ -66,15 +66,14 @@ List<Marker> renderMarkers(ChallengeCourseModel? course) {
     Marker startMaker = getCustomMarker(markerType: "START", course: course, markerIcon: controller.startMarker);
 
     Marker endMaker = getCustomMarker(markerType: "END", course: course, markerIcon: controller.startMarker);
-    ;
 
     List<Marker> checkpointMarker() {
       if (course.checkpoints != null && course.checkpoints!.isNotEmpty) {
-        return course.checkpoints!
-            .map(
-              (checkpoint) => getCheckpointMarker(checkpoint, controller.checkpointMarker),
-            )
-            .toList();
+        List<Marker> list = List.empty(growable: true);
+        course.checkpoints!.asMap().forEach((index, checkpoint) {
+          list.add(getCheckpointMarker(checkpoint, controller.checkpointMarkers[index]));
+        });
+        return list;
       } else {
         return [];
       }
@@ -142,7 +141,7 @@ Marker getCheckpointMarker(CheckpointModel checkpoint, OverlayImage? markerIcon)
     captionTextSize: 12.0.sp,
     captionOffset: 5,
     icon: markerIcon,
-    width: 19,
-    height: 17,
+    width: 43,
+    height: 54,
   );
 }

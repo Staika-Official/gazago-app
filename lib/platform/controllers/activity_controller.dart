@@ -20,7 +20,6 @@ import 'package:gaza_go/platform/models/ad_watch_available_model.dart';
 import 'package:gaza_go/platform/models/challenge_course_model.dart';
 import 'package:gaza_go/platform/models/challenge_hierarchy_model.dart';
 import 'package:gaza_go/platform/models/challenge_model.dart';
-import 'package:gaza_go/platform/models/checkpoint_model.dart';
 import 'package:gaza_go/platform/models/current_user_state_model.dart';
 import 'package:gaza_go/platform/models/inventory_item_model.dart';
 import 'package:gaza_go/platform/models/repair_shoes_model.dart';
@@ -68,7 +67,7 @@ class ActivityController extends SuperController with ActivityMixin, ChallengeMi
   final Rx<DateTime> receiveLocationTime = Rx(DateTime.now());
   OverlayImage? startMarker;
   OverlayImage? endMarker;
-  OverlayImage? checkpointMarker;
+  List<OverlayImage> checkpointMarkers = List.empty(growable: true);
   RxnInt challengeSelectedIndex = RxnInt(null);
   Control activityLoadControl = Control.play;
   RxBool disableButton = RxBool(false);
@@ -124,9 +123,13 @@ class ActivityController extends SuperController with ActivityMixin, ChallengeMi
       assetName: 'assets/images/activity/ico_challenge_end_marker.png',
     );
 
-    checkpointMarker = await OverlayImage.fromAssetImage(
-      assetName: 'assets/images/activity/ico_challenge_checkpoint_marker.png',
-    );
+    int index = 0;
+    while (index < 10) {
+      checkpointMarkers.add(await OverlayImage.fromAssetImage(
+        assetName: 'assets/images/activity/ico_challenge_checkpoint_marker_${index + 1}.png',
+      ));
+      index++;
+    }
   }
 
   Marker generateDefaultMarker(ChallengeCourseModel course) {
@@ -176,9 +179,9 @@ class ActivityController extends SuperController with ActivityMixin, ChallengeMi
     selectedChallengeMarkers.add(getCustomMarker(markerType: "START", course: course, markerIcon: startMarker));
 
     if (course.checkpoints != null && course.checkpoints!.isNotEmpty) {
-      for (CheckpointModel checkpoint in course.checkpoints!) {
-        selectedChallengeMarkers.add(getCheckpointMarker(checkpoint, checkpointMarker));
-      }
+      course.checkpoints!.asMap().forEach((index, checkpoint) {
+        selectedChallengeMarkers.add(getCheckpointMarker(checkpoint, checkpointMarkers[index]));
+      });
     }
 
     selectedChallengeMarkers.add(getCustomMarker(markerType: "END", course: course, markerIcon: endMarker));
