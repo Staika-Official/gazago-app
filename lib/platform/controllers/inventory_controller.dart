@@ -6,6 +6,7 @@ import 'package:gaza_go/constants/routes.dart';
 import 'package:gaza_go/platform/controllers/inventory_home_controller.dart';
 import 'package:gaza_go/platform/controllers/wallet_master_controller.dart';
 import 'package:gaza_go/platform/firebase/remote_config.dart';
+import 'package:gaza_go/platform/helpers/activity_mixin.dart';
 import 'package:gaza_go/platform/helpers/alert_helper.dart';
 import 'package:gaza_go/platform/helpers/base_helper.dart';
 import 'package:gaza_go/platform/helpers/inventory_mixin.dart';
@@ -26,7 +27,7 @@ import 'package:get/get.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:uuid/uuid.dart';
 
-class InventoryController extends GetxController with LinearProgressMixin, InventoryMixin {
+class InventoryController extends GetxController with LinearProgressMixin, InventoryMixin, ActivityMixin {
   final WalletMasterController walletMasterController = Get.find();
   final RxDouble viewportWidth = RxDouble(0);
   final RxDouble listHeight = RxDouble(0);
@@ -46,9 +47,15 @@ class InventoryController extends GetxController with LinearProgressMixin, Inven
 
   final RxBool isShoe = RxBool(false);
   final RxString getBadgeDate = RxString('');
-  final RxInt remainDurability = RxInt(0);
+  final RxDouble remainDurability = RxDouble(0.0);
   final RxInt repairDurability = RxInt(0);
-  final RxInt costTik = RxInt(0);
+  // final RxDouble resultDurability = RxDouble(0.0);
+  RxDouble get resultDurability {
+    return RxDouble(remainDurability.value + consumerItemSumDurability);
+  }
+
+  final RxBool isDisableButton = RxBool(false);
+  final RxList consumerItemList = RxList.empty();
 
   final RxDouble currentSliderValue = RxDouble(0);
   final RxBool disableButton = RxBool(false);
@@ -58,7 +65,25 @@ class InventoryController extends GetxController with LinearProgressMixin, Inven
   ScrollController itemScrollController = ScrollController(keepScrollOffset: false);
   ScrollController badgeScrollController = ScrollController(keepScrollOffset: false);
 
-  final RxList<RepairUseItemModel> repairUseItemList = RxList.empty();
+  final RxList<RepairUseItemModel> repairUseCounterItemList = RxList.empty();
+
+  int get consumerItemSumDurability {
+    int totalRecovery = 0;
+    for (int i = 0; i < repairUseCounterItemList.length; i++) {
+      int itemId = repairUseCounterItemList[i].userItemId!;
+      int amount = repairUseCounterItemList[i].spendItemAmount!;
+
+      // 해당 itemId로 recoveryList에서 회복량 찾기
+      for (int j = 0; j < consumerItemList.length; j++) {
+        if (consumerItemList[j].id == itemId) {
+          int recovery = consumerItemList[j].itemStat.repairDurability!.toInt();
+          totalRecovery += recovery * amount;
+        }
+      }
+    }
+
+    return totalRecovery;
+  }
 
   Rx<InventoryBadgeModel> equippedBadge = Rx(
     InventoryBadgeModel(
@@ -327,6 +352,29 @@ class InventoryController extends GetxController with LinearProgressMixin, Inven
     );
   }
 
+  Future<void> getMyConsumerItemsByType(String itemType) async {
+    await ItemService.getUserConsumerItemByType(itemType, successCallback: (data) {
+      consumerItemList.value = data;
+      for (var item in consumerItemList) {
+        RepairUseItemModel counterObj = RepairUseItemModel();
+        counterObj.userItemId = item.id;
+        counterObj.spendItemAmount = 0;
+        repairUseCounterItemList.add(counterObj);
+      }
+    });
+  }
+
+  RepairUseItemModel getRepairUseItem(int itemId) {
+    // print(repairUseCounterItemList);
+
+    return repairUseCounterItemList.firstWhere((item) => item.userItemId == itemId);
+  }
+
+  void updateSpendCount(RepairUseItemModel item, int updatedCount) {
+    item.spendItemAmount = updatedCount;
+    repairUseCounterItemList.refresh();
+  }
+
   Future<void> getUserItemsByCategory(List<Map<String, String>> subTabList, int tabIndex) async {
     String category = subTabList[tabIndex]['itemType']!.toUpperCase();
 
@@ -366,7 +414,7 @@ class InventoryController extends GetxController with LinearProgressMixin, Inven
           });
         }
 
-        remainDurability.value = equippedItems.items.firstWhere((element) => element.itemCategory == 'SHOES').durability.floor();
+        remainDurability.value = equippedItems.items.firstWhere((element) => element.itemCategory == 'SHOES').durability;
       },
     );
   }
@@ -503,7 +551,7 @@ class InventoryController extends GetxController with LinearProgressMixin, Inven
   }
 
   void initRepairInfo() {
-    costTik.value = 0;
+    // costTik.value = 0;
     if (disableButton.value) {
       Timer(const Duration(seconds: 1), () {
         disableButton.value = false;
@@ -511,10 +559,26 @@ class InventoryController extends GetxController with LinearProgressMixin, Inven
     }
   }
 
-  void showShoesRepairPopup(id) async {
-    currentSliderValue.value = 0;
-    await walletMasterController.getFeeTik();
-    showShoeRepairSlider(this, walletMasterController.feeTikDurability.value, id);
+  void showShoesRepairPopup(id, context) async {
+    isDisableButton.value = true;
+    await getMyConsumerItemsByType('REPAIR');
+    if (userState.value.state != null) {
+      print('현재 체력 : ${userState.value.state!.stamina!}');
+    }
+    remainDurability.value = equippedShoe.value.durability;
+    print('현재 내구도 : ${equippedShoe.value.durability}');
+    consumerItemUsagePopup(this, 'shoes', context);
+    isDisableButton.value = false;
+    // print(consumerItemArea)
+    // if (consumerItemArea.currentContext != null) {
+    //   final RenderBox renderBox = consumerItemArea.currentContext!.findRenderObject() as RenderBox;
+    //
+    //   print(renderBox.size.height);
+    // }
+
+    // currentSliderValue.value = 0;
+    // await walletMasterController.getFeeTik();
+    // showShoeRepairSlider(this, walletMasterController.feeTikDurability.value, id);
   }
 
   void handleNotEnoughTaikaPopup() {

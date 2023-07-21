@@ -45,6 +45,10 @@ class ItemApi {
     return await Api.client(serviceUrl: ServiceUrl.badgeService).put('/users/$userId/equip/$badgeId');
   }
 
+  static Future<Response> getUserConsumerItemByType(userId, itemType) async {
+    return await Api.client(serviceUrl: ServiceUrl.itemService).get('/user/$userId/type/$itemType');
+  }
+
   // static Future<Response> fetchRepairItemShoes(String userId, RepairShoesModel repairInfo) async {
   //   return await Api.client(
   //     serviceUrl: ServiceUrl.itemService,

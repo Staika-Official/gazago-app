@@ -14,6 +14,7 @@ Future<void> showAlert({
   bool isScrollControlled = false,
   bool isDangerTitle = false,
   bool isNonePaddingOuter = false,
+  bool isFullHeight = false,
 }) async {
   if (Get.isBottomSheetOpen == null || !Get.isBottomSheetOpen!) {
     await Get.bottomSheet(
@@ -26,6 +27,7 @@ Future<void> showAlert({
           actions: actions,
           isDangerTitle: isDangerTitle,
           isNonePaddingOuter: isNonePaddingOuter,
+          isFullHeight: isFullHeight,
         ),
       ),
       isDismissible: false,

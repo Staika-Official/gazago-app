@@ -172,17 +172,17 @@ class InventoryItemDetail extends StatelessWidget {
                                                                         ],
                                                                       ),
                                                                     ),
-                                                                    controller.selectedItem.value.durability > 1.0
+                                                                    controller.selectedItem.value.durability! > 1.0
                                                                         ? LayoutBuilder(
                                                                             builder: (context, constraints) {
                                                                               return Container(
-                                                                                width: controller.selectedItem.value.durability > 20
-                                                                                    ? constraints.maxWidth / (100 / controller.selectedItem.value.durability)
-                                                                                    : controller.selectedItem.value.durability < 2
+                                                                                width: controller.selectedItem.value.durability! > 20
+                                                                                    ? constraints.maxWidth / (100 / controller.selectedItem.value.durability!)
+                                                                                    : controller.selectedItem.value.durability! < 2
                                                                                         ? 0
                                                                                         : 34,
                                                                                 decoration: BoxDecoration(
-                                                                                  color: controller.selectedItem.value.durability <= 30 ? textRedColor : purpleColor,
+                                                                                  color: controller.selectedItem.value.durability! <= 30 ? textRedColor : purpleColor,
                                                                                   border: Border.all(
                                                                                     width: 2.sp,
                                                                                     color: Colors.black,
@@ -229,16 +229,16 @@ class InventoryItemDetail extends StatelessWidget {
                                                                   fontWeight: 800,
                                                                   fontSize: 15,
                                                                   lineHeight: 21,
-                                                                  color: controller.selectedItem.value.durability.toInt() <= 30 ? Colors.white : Colors.black,
+                                                                  color: controller.selectedItem.value.durability!.toInt() <= 30 ? Colors.white : Colors.black,
                                                                 ),
                                                                 Padding(
                                                                   padding: EdgeInsets.only(left: 5.0.sp),
                                                                   child: StyledText(
-                                                                    formatDecimalPlaces(controller.selectedItem.value.durability, 2),
+                                                                    formatDecimalPlaces(controller.selectedItem.value.durability!, 2),
                                                                     fontWeight: 800,
                                                                     fontSize: 14,
                                                                     lineHeight: 15,
-                                                                    color: controller.selectedItem.value.durability.toInt() <= 30 ? Colors.white : Colors.black,
+                                                                    color: controller.selectedItem.value.durability!.toInt() <= 30 ? Colors.white : Colors.black,
                                                                   ),
                                                                 ),
                                                               ],
@@ -1074,7 +1074,7 @@ class InventoryItemDetail extends StatelessWidget {
               right: 20,
               bottom: 10,
               child: InkWell(
-                onTap: () => controller.showShoesRepairPopup(controller.selectedItem.value.id),
+                onTap: () => controller.isDisableButton.value ? null : controller.showShoesRepairPopup(controller.selectedItem.value.id, context),
                 child: Container(
                   padding: EdgeInsets.all(20.sp),
                   margin: const EdgeInsets.only(bottom: 20),

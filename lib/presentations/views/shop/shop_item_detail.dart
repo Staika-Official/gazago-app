@@ -7,7 +7,6 @@ import 'package:gaza_go/constants/config.dart';
 import 'package:gaza_go/platform/controllers/shop_detail_controller.dart';
 import 'package:gaza_go/platform/helpers/base_helper.dart';
 import 'package:gaza_go/platform/helpers/inventory_helper.dart';
-import 'package:gaza_go/presentations/components/item_counter.dart';
 import 'package:gaza_go/presentations/components/secondary_appbar.dart';
 import 'package:gaza_go/presentations/styles/colors.dart';
 import 'package:gaza_go/presentations/styles/icons.dart';
@@ -60,7 +59,7 @@ class ShopItemDetail extends StatelessWidget {
                         child: SizedBox(
                           child: Stack(
                             children: [
-                              if (controller.selectedItem.value.itemCategory != 'DISPOSABLE')
+                              if (controller.selectedItem.value.itemCategory != '' && controller.selectedItem.value.itemCategory != 'DISPOSABLE')
                                 Positioned(
                                   right: 32.sp,
                                   top: 0,
@@ -139,7 +138,7 @@ class ShopItemDetail extends StatelessWidget {
                                             ],
                                           ),
                                         ),
-                                        if (controller.selectedItem.value.itemCategory == 'DISPOSABLE') itemCounter(controller.purchaseItemCount),
+                                        // if (controller.selectedItem.value.itemCategory == 'DISPOSABLE') ItemCounter(controller.get),
                                       ],
                                     );
                                   },

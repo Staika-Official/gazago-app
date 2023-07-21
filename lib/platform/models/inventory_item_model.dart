@@ -8,14 +8,16 @@ part 'inventory_item_model.g.dart';
 class InventoryItemModel {
   int id;
   int? userId;
+  int? itemId;
   int? nftId;
-  String serialNumber;
+  String? serialNumber;
   String itemName;
   String? publishType;
   String itemCategory;
   String itemGrade;
+  String? itemType;
   String? expiredDate;
-  double durability;
+  double? durability;
   double? abrasionRate;
   double? rewardRate;
   double? staminaReduceRate;
@@ -35,13 +37,15 @@ class InventoryItemModel {
     required this.id,
     this.userId,
     this.nftId,
-    required this.serialNumber,
+    this.itemId,
+    this.serialNumber,
     required this.itemGrade,
     required this.itemName,
+    this.itemType,
     this.expiredDate,
     this.publishType,
     required this.itemCategory,
-    required this.durability,
+    this.durability,
     this.abrasionRate,
     this.rewardRate,
     this.staminaReduceRate,

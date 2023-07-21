@@ -78,4 +78,19 @@ class ItemService {
       if (errorCallback != null) errorCallback();
     }
   }
+
+  static Future<void> getUserConsumerItemByType(String itemType, {required Function successCallback, Function? errorCallback}) async {
+    Response res = await ItemApi.getUserConsumerItemByType(userId!, itemType);
+    if (res.statusCode == 200) {
+      List<InventoryItemModel> userItemsByType = List.empty(growable: true);
+      if (res.data.length > 0) {
+        res.data.forEach((challenge) {
+          userItemsByType.add(InventoryItemModel.fromJson(challenge));
+        });
+      }
+      successCallback(userItemsByType);
+    } else {
+      if (errorCallback != null) errorCallback();
+    }
+  }
 }
