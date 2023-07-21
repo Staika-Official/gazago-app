@@ -1,5 +1,3 @@
-import 'dart:io';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_naver_map/flutter_naver_map.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -93,10 +91,10 @@ Marker getCustomMarker({required String markerType, required ChallengeCourseMode
     captionColor: skyBlueColor,
     captionHaloColor: Colors.black,
     captionTextSize: 16.0.sp,
-    subCaptionTextSize: 14.sp,
-    subCaptionText: course.secondName,
-    subCaptionColor: (Platform.isAndroid) ? Colors.white : Colors.black,
-    subCaptionHaloColor: (Platform.isAndroid) ? Colors.black : Colors.white,
+    // subCaptionTextSize: 14.sp,
+    // subCaptionText: course.secondName,
+    // subCaptionColor: (Platform.isAndroid) ? Colors.white : Colors.black,
+    // subCaptionHaloColor: (Platform.isAndroid) ? Colors.black : Colors.white,
     captionOffset: 5,
     icon: markerIcon,
     width: 20,
@@ -112,10 +110,10 @@ Marker getCustomMarker({required String markerType, required ChallengeCourseMode
     captionHaloColor: Colors.black,
     captionTextSize: 16.0.sp,
     captionOffset: 5,
-    subCaptionText: course.secondName,
-    subCaptionTextSize: 14.sp,
-    subCaptionColor: (Platform.isAndroid) ? Colors.white : Colors.black,
-    subCaptionHaloColor: (Platform.isAndroid) ? Colors.black : Colors.white,
+    // subCaptionText: course.secondName,
+    // subCaptionTextSize: 14.sp,
+    // subCaptionColor: (Platform.isAndroid) ? Colors.white : Colors.black,
+    // subCaptionHaloColor: (Platform.isAndroid) ? Colors.black : Colors.white,
     icon: markerIcon,
     width: 20,
     height: 20,
@@ -135,8 +133,8 @@ Marker getCheckpointMarker(CheckpointModel checkpoint, OverlayImage? markerIcon)
   return Marker(
     markerId: 'checkpoint_${checkpoint.id!.toString()}',
     position: LatLng(checkpoint.lat!, checkpoint.lon!),
-    captionText: checkpoint.name,
-    captionColor: skyBlueColor,
+    // captionText: checkpoint.name,
+    // captionColor: skyBlueColor,
     captionHaloColor: Colors.black,
     captionTextSize: 12.0.sp,
     captionOffset: 5,
