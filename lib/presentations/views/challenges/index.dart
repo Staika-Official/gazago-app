@@ -290,7 +290,7 @@ class ChallengesHome extends StatelessWidget {
                                                     letterSpacing: -.1,
                                                   )
                                                 : StyledText(
-                                                    '${formatDecimalPlaces((item.soldQuantity ?? 0).toDouble(), 0)}명 /',
+                                                    '${formatDecimalPlaces((item.soldQuantity ?? 0).toDouble(), 0)}명',
                                                     color: lightGrayColor,
                                                     fontWeight: 500,
                                                     fontSize: 12,
@@ -298,7 +298,7 @@ class ChallengesHome extends StatelessWidget {
                                                     letterSpacing: -.1,
                                                   ),
                                             StyledText(
-                                              ' ${formatDecimalPlaces(item.quantity.toDouble(), 0)}명',
+                                              item.quantity >= 0 ? ' / ${formatDecimalPlaces(item.quantity.toDouble(), 0)}명' : ' 참여중',
                                               color: lightGrayColor,
                                               fontWeight: 500,
                                               fontSize: 12,
