@@ -453,30 +453,33 @@ class ChallengeCourseDetail extends StatelessWidget {
                               direction: Axis.horizontal,
                               children: [
                                 Flexible(
-                                  child: RichText(
-                                    text: TextSpan(
-                                      style: TextStyle(
-                                        color: skyBlueColor,
-                                        fontWeight: FontWeight.w500,
-                                        fontSize: 16.sp,
-                                        height: 24.sp / 16,
-                                      ),
-                                      children: [
-                                        TextSpan(
-                                          text: '${controller.challengeDetails.value.title}\n',
-                                          style: TextStyle(
-                                            color: lightGrayColor,
+                                  child: FittedBox(
+                                    fit: BoxFit.fitWidth,
+                                    child: RichText(
+                                      text: TextSpan(
+                                        style: TextStyle(
+                                          color: skyBlueColor,
+                                          fontWeight: FontWeight.w500,
+                                          fontSize: 16.sp,
+                                          height: 24.sp / 16,
+                                        ),
+                                        children: [
+                                          TextSpan(
+                                            text: '${controller.challengeDetails.value.title}\n',
+                                            style: TextStyle(
+                                              color: lightGrayColor,
+                                            ),
                                           ),
-                                        ),
-                                        const TextSpan(
-                                          text: '코스를 미리 확인해요',
-                                        ),
-                                      ],
+                                          const TextSpan(
+                                            text: '코스를 미리 확인해요',
+                                          ),
+                                        ],
+                                      ),
                                     ),
                                   ),
                                 ),
                                 Padding(
-                                  padding: EdgeInsets.only(left: 5.0.sp),
+                                  padding: EdgeInsets.only(left: 8.0.sp),
                                   child: InkWell(
                                     onTap: () {
                                       Get.find<ActivityController>().moveToChallengeMap(controller.challengeDetails.value.id!);
