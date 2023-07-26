@@ -7,6 +7,7 @@ import 'package:gaza_go/presentations/views/activity/activity_courses.dart';
 import 'package:gaza_go/presentations/views/activity/challenge_course_detail.dart';
 import 'package:gaza_go/presentations/views/activity/challenge_map.dart';
 import 'package:gaza_go/presentations/views/activity/equipped_item.dart';
+import 'package:gaza_go/presentations/views/activity/fair_play_view.dart';
 import 'package:gaza_go/presentations/views/archive/archive_detail.dart';
 import 'package:gaza_go/presentations/views/auth/account_restore.dart';
 import 'package:gaza_go/presentations/views/auth/signup_complete.dart';
@@ -122,6 +123,7 @@ class Routes {
   static const challengeDetail = '/challenges/challenge_detail';
   static const challengeCourseDetail = '/activity/challenge_course_detail';
   static const leaderboard = '/leaderboard';
+  static const fairPlayView = '/fair_play_view';
 
   static List<GetPage> pages = [
     stepPage(name: Routes.login, page: const Login()),
@@ -189,6 +191,7 @@ class Routes {
     stepPage(name: Routes.challengeDetail, page: const ChallengeDetail()),
     stepPage(name: Routes.challengeCourseDetail, page: const ChallengeCourseDetail()),
     stepPage(name: Routes.leaderboard, page: const RankingHome()),
+    stepPage(name: Routes.fairPlayView, page: const FairPlayView()),
   ];
 }
 

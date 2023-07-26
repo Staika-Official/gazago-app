@@ -4,6 +4,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:gaza_go/constants/config.dart';
 import 'package:gaza_go/constants/enums.dart';
+import 'package:gaza_go/constants/routes.dart';
 import 'package:gaza_go/platform/controllers/activity_controller.dart';
 import 'package:gaza_go/platform/helpers/base_helper.dart';
 import 'package:gaza_go/presentations/styles/colors.dart';
@@ -367,6 +368,45 @@ class ActivitySelect extends StatelessWidget {
                     ],
                   ),
                 ),
+              ),
+            ),
+            SizedBox(
+              width: 302.sp,
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.end,
+                children: [
+                  Padding(
+                    padding: const EdgeInsets.only(top: 12),
+                    child: Ink(
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(10),
+                        color: const Color(0xff28292F),
+                        boxShadow: const [
+                          BoxShadow(
+                            color: Color.fromRGBO(0, 0, 0, 0.25),
+                            offset: Offset(0, 0),
+                            blurRadius: 4,
+                            spreadRadius: 4,
+                          )
+                        ],
+                      ),
+                      child: InkWell(
+                        onTap: () => Get.toNamed(Routes.fairPlayView),
+                        borderRadius: BorderRadius.circular(10),
+                        child: Padding(
+                          padding: EdgeInsets.symmetric(horizontal: 16.sp, vertical: 14.sp),
+                          child: StyledText(
+                            '경고 & 퇴장 카드',
+                            color: lightGrayColor,
+                            fontSize: 14,
+                            fontWeight: 600,
+                            lineHeight: 14,
+                          ),
+                        ),
+                      ),
+                    ),
+                  ),
+                ],
               ),
             ),
             Padding(

@@ -393,6 +393,7 @@ class ActivityController extends SuperController with ActivityMixin, ChallengeMi
         initializeActivity();
       }
       if (globalController.internetConnection.value) {
+        await showFairPlayAlert();
         getActivityRoute();
       } else {
         showToastPopup('원할한 네트워크에서 진행해주세요.');

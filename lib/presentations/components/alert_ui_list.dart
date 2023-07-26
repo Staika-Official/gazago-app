@@ -38,6 +38,7 @@ import 'package:gaza_go/platform/models/exchange_stik_price_model.dart';
 import 'package:gaza_go/platform/models/push_message_challenge_success_model.dart';
 import 'package:gaza_go/platform/models/stat_model.dart';
 import 'package:gaza_go/presentations/components/circular_button.dart';
+import 'package:gaza_go/presentations/components/fair_play_content.dart';
 import 'package:gaza_go/presentations/components/gazago_button.dart';
 import 'package:gaza_go/presentations/styles/colors.dart';
 import 'package:gaza_go/presentations/styles/icons.dart';
@@ -4664,16 +4665,16 @@ void participateInChallengeByCodeAlert() {
                                 fontWeight: FontWeight.w500,
                               ),
                               focusedBorder: OutlineInputBorder(
-                                borderRadius: BorderRadius.all(Radius.circular(10.0)),
+                                borderRadius: const BorderRadius.all(Radius.circular(10.0)),
                                 borderSide: BorderSide(width: 2, color: controller.errorMessage.value == '' ? skyBlueColor : const Color(0xFFFF4C4C)),
                               ),
                               enabledBorder: OutlineInputBorder(
-                                borderRadius: BorderRadius.all(Radius.circular(10.0)),
+                                borderRadius: const BorderRadius.all(Radius.circular(10.0)),
                                 borderSide: BorderSide(width: 2, color: controller.errorMessage.value == '' ? Colors.transparent : const Color(0xFFFF4C4C)),
                               ),
                               border: OutlineInputBorder(
                                 borderSide: BorderSide(width: 2, color: controller.errorMessage.value == '' ? Colors.transparent : const Color(0xFFFF4C4C)),
-                                borderRadius: BorderRadius.all(Radius.circular(10.0)),
+                                borderRadius: const BorderRadius.all(Radius.circular(10.0)),
                               ),
                             ),
                             controller: controller.codeTextController,
@@ -4743,4 +4744,74 @@ void participateInChallengeByCodeAlert() {
       ),
     ),
   );
+}
+
+Future<void> showFairPlayAlert() async {
+  Completer completer = Completer();
+  Get.dialog(
+    barrierColor: subBg01Color.withOpacity(0.2),
+    useSafeArea: true,
+    barrierDismissible: false,
+    WillPopScope(
+      onWillPop: () async => false,
+      child: Dialog(
+        insetPadding: EdgeInsets.zero,
+        backgroundColor: subBg01Color.withOpacity(0.8),
+        child: Padding(
+          padding: EdgeInsets.all(25.0.sp),
+          child: Container(
+            height: Get.context!.size!.height * 0.7,
+            padding: const EdgeInsets.only(top: 38, bottom: 28),
+            decoration: BoxDecoration(
+              color: popupBgColor,
+              borderRadius: BorderRadius.circular(15),
+            ),
+            child: Column(
+              children: [
+                iconFairplayAlert,
+                const Padding(
+                  padding: EdgeInsets.only(
+                    top: 18.0,
+                    bottom: 30,
+                  ),
+                  child: StyledText(
+                    '가자고 페어플레이',
+                    fontSize: 18,
+                    lineHeight: 18,
+                    fontWeight: 700,
+                  ),
+                ),
+                Expanded(
+                  child: FairPlayContent(
+                    padding: const EdgeInsets.only(
+                      left: 30,
+                      right: 30,
+                      bottom: 30,
+                    ),
+                  ),
+                ),
+                Padding(
+                  padding: const EdgeInsets.only(
+                    top: 20,
+                    left: 30,
+                    right: 30,
+                  ),
+                  child: GazagoButton(
+                    onTap: () {
+                      Get.back();
+                      completer.complete();
+                    },
+                    buttonText: '확인했습니다.',
+                    buttonColor: const Color(0xFF0EE6F3),
+                    textColor: Colors.black,
+                  ),
+                )
+              ],
+            ),
+          ),
+        ),
+      ),
+    ),
+  );
+  return completer.future;
 }
