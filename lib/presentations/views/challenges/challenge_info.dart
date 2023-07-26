@@ -50,32 +50,33 @@ class ChallengeInfo extends StatelessWidget {
                     if (controller.challengeDetails.value.challengeActivationType != 'CODE')
                       Column(
                         children: [
-                          Padding(
-                            padding: EdgeInsets.only(top: 45.0.sp),
-                            child: Row(
-                              crossAxisAlignment: CrossAxisAlignment.center,
-                              children: [
-                                const StyledText(
-                                  '챌린지 보상',
-                                  fontWeight: 500,
-                                  fontSize: 18,
-                                  lineHeight: 20,
-                                  letterSpacing: -.1,
-                                ),
-                                Padding(
-                                  padding: EdgeInsets.only(left: 3.0.sp),
-                                  child: StyledText(
-                                    '분배할 전체 리워드',
-                                    color: deepGrayColor,
-                                    fontSize: 14,
+                          if ((controller.challengeDetails.value.rewardAmount != null && controller.challengeDetails.value.rewardAmount! > 0) || controller.challengeDetails.value.badge != null)
+                            Padding(
+                              padding: EdgeInsets.only(top: 45.0.sp),
+                              child: Row(
+                                crossAxisAlignment: CrossAxisAlignment.center,
+                                children: [
+                                  const StyledText(
+                                    '챌린지 보상',
                                     fontWeight: 500,
-                                    lineHeight: 14,
+                                    fontSize: 18,
+                                    lineHeight: 20,
                                     letterSpacing: -.1,
                                   ),
-                                ),
-                              ],
+                                  Padding(
+                                    padding: EdgeInsets.only(left: 3.0.sp),
+                                    child: StyledText(
+                                      '분배할 전체 리워드',
+                                      color: deepGrayColor,
+                                      fontSize: 14,
+                                      fontWeight: 500,
+                                      lineHeight: 14,
+                                      letterSpacing: -.1,
+                                    ),
+                                  ),
+                                ],
+                              ),
                             ),
-                          ),
                           if (controller.challengeDetails.value.rewardAmount != null && controller.challengeDetails.value.rewardAmount! > 0)
                             Container(
                               margin: EdgeInsets.only(top: 16.sp),
