@@ -426,16 +426,18 @@ class ChallengeInfo extends StatelessWidget {
                     Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Padding(
-                          padding: EdgeInsets.only(top: 38.0.sp, bottom: 15.sp),
-                          child: const StyledText(
-                            '챌린지 달성 기준',
-                            fontWeight: 500,
-                            fontSize: 18,
-                            lineHeight: 20,
-                            letterSpacing: -.1,
+                        if ((controller.challengeDetails.value.rewardQuantity != null && controller.challengeDetails.value.rewardQuantity! > 0) ||
+                            (controller.challengeDetails.value.minDistance != null && controller.challengeDetails.value.minDistance! > 0))
+                          Padding(
+                            padding: EdgeInsets.only(top: 38.0.sp, bottom: 15.sp),
+                            child: const StyledText(
+                              '챌린지 달성 기준',
+                              fontWeight: 500,
+                              fontSize: 18,
+                              lineHeight: 20,
+                              letterSpacing: -.1,
+                            ),
                           ),
-                        ),
                         if (controller.challengeDetails.value.minDistance != null && controller.challengeDetails.value.minDistance! > 0)
                           Padding(
                             padding: EdgeInsets.only(bottom: 10.0.sp),
