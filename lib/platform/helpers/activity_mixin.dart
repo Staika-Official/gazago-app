@@ -742,8 +742,12 @@ mixin ActivityMixin {
             }
           }
         },
-        errorCallback: () {
-          endExerciseLocally();
+        errorCallback: (ErrorResponseDataModel? errorData) {
+          if (errorData != null && errorData.errorCode == 'ALREADY_EXERCISE_ENDED') {
+            handleAlreadyFinishedExercise();
+          } else {
+            endExerciseLocally();
+          }
         },
       );
     } else {
