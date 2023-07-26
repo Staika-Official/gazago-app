@@ -447,7 +447,7 @@ class ChallengeDetail extends StatelessWidget {
                                                                         letterSpacing: -.1,
                                                                       )
                                                                     : StyledText(
-                                                                        '${formatDecimalPlaces((controller.challengeDetails.value.soldQuantity ?? 0).toDouble(), 0)}명 /',
+                                                                        '${formatDecimalPlaces((controller.challengeDetails.value.soldQuantity ?? 0).toDouble(), 0)}명',
                                                                         color: lightGrayColor,
                                                                         fontWeight: 500,
                                                                         fontSize: 12,
@@ -455,7 +455,7 @@ class ChallengeDetail extends StatelessWidget {
                                                                         letterSpacing: -.1,
                                                                       ),
                                                                 StyledText(
-                                                                  ' ${formatDecimalPlaces(controller.challengeDetails.value.quantity!.toDouble(), 0)}명',
+                                                                  ' / ${formatDecimalPlaces(controller.challengeDetails.value.quantity!.toDouble(), 0)}명',
                                                                   color: lightGrayColor,
                                                                   fontWeight: 500,
                                                                   fontSize: 12,
