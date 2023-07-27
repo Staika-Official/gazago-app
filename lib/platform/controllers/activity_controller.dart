@@ -393,8 +393,17 @@ class ActivityController extends SuperController with ActivityMixin, ChallengeMi
         initializeActivity();
       }
       if (globalController.internetConnection.value) {
-        await showFairPlayAlert();
-        getActivityRoute();
+        bool hasSeenFairPlayAlert = HiveStore.load(key: HiveKey.hasSeenFairPlayAlert.name) ?? false;
+        if (!hasSeenFairPlayAlert) {
+          HiveStore.save(key: HiveKey.hasSeenFairPlayAlert.name, value: true);
+          await showFairPlayAlert();
+        }
+
+        if (userState.value.state!.locked != null && userState.value.state!.locked! == true) {
+          showLockedUserAlert();
+        } else {
+          getActivityRoute();
+        }
       } else {
         showToastPopup('원할한 네트워크에서 진행해주세요.');
       }

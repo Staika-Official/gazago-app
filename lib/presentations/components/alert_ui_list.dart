@@ -4815,3 +4815,34 @@ Future<void> showFairPlayAlert() async {
   );
   return completer.future;
 }
+
+void showLockedUserAlert() async {
+  await showAlert(
+    title: '알림',
+    contentWidget: Padding(
+      padding: EdgeInsets.only(top: 30.sp, bottom: 50.sp),
+      child: Text.rich(
+        textAlign: TextAlign.center,
+        style: TextStyle(
+          fontSize: 18.sp,
+          height: 24.sp / 18.sp,
+          fontWeight: FontWeight.w500,
+          color: Colors.white,
+        ),
+        const TextSpan(
+          text: '경고 & 퇴장 카드 운영 정책에 따라\n계정 블락중입니다. ',
+        ),
+      ),
+    ),
+    actions: [
+      Expanded(
+        child: GazagoButton(
+          buttonText: '확인',
+          onTap: () {
+            Get.back();
+          },
+        ),
+      ),
+    ],
+  );
+}

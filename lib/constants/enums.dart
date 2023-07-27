@@ -97,6 +97,7 @@ enum HiveKey {
   luckSound,
   famousChallengeBadgeIssued,
   expirationNotificationState,
+  hasSeenFairPlayAlert,
 }
 
 enum ResponseStatus {
