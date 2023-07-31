@@ -2,6 +2,7 @@ import 'package:dio/dio.dart';
 import 'package:gaza_go/constants/base_urls.dart';
 import 'package:gaza_go/platform/middleware/dio_middleware.dart';
 import 'package:gaza_go/platform/models/inventory_item_model.dart';
+import 'package:gaza_go/platform/models/recovery_stamina_model.dart';
 
 import '../models/repair_shoes_model.dart';
 
@@ -46,7 +47,7 @@ class ItemApi {
   }
 
   static Future<Response> getUserConsumerItemByType(userId, itemType) async {
-    return await Api.client(serviceUrl: ServiceUrl.itemService).get('/user/$userId/type/$itemType');
+    return await Api.client(serviceUrl: ServiceUrl.itemService).get('/users/$userId/types/$itemType');
   }
 
   // static Future<Response> fetchRepairItemShoes(String userId, RepairShoesModel repairInfo) async {
@@ -60,6 +61,13 @@ class ItemApi {
     return await Api.client(
       serviceUrl: ServiceUrl.itemService,
       allowCustomErrorHandler: true,
-    ).patch('/user/$userId/item-repair/$itemId', data: repairInfo);
+    ).patch('/users/$userId/item-repairs/$itemId', data: repairInfo);
+  }
+
+  static Future<Response> fetchRecoveryStamina(String userId, RecoveryStaminaModel recoveryInfo) async {
+    return await Api.client(
+      serviceUrl: ServiceUrl.staminaService,
+      allowCustomErrorHandler: true,
+    ).patch('/users/$userId', data: recoveryInfo);
   }
 }

@@ -167,22 +167,23 @@ class ShopDetailController extends GetxController {
 
   void handlePurchaseShopItem(int itemId) async {
     Get.back();
+    int itemCount = selectedItem.value.itemCategory == 'DISPOSABLE' ? purchaseItemCount.value : 1;
     loaderController.isLoading.value = true;
-    await ShopService.fetchPurchaseShopItem(itemId, successCallback: (ShopItemPurchaseResponseModel items) {
+    await ShopService.fetchPurchaseShopItem(itemId, itemCount, successCallback: (ShopItemPurchaseResponseModel items) {
       loaderController.isLoading.value = false;
       purchaseCompleteItem.value = items;
       showItemPurchaseCompletePopup();
       walletMasterController.getSpendingWalletBalances();
 
       getItemDetail(itemId);
-    }, errorCallback: (statusCode, errorCode, errorMessage) {
+    }, errorCallback: (errorData) {
       loaderController.isLoading.value = false;
-      if (statusCode == 422) {
+      if (errorData.statusCode == 422) {
         isShortBalance.value = true;
         showTikShortBalancePopup(selectedItem.value.tradeSymbol);
       } else {
-        if (errorCode == 'PURCHASE_LIMIT_EXCEEDED') {
-          itemPurchaseAvailableOnlyOneAlert(errorMessage);
+        if (errorData.errorCode == 'PURCHASE_LIMIT_EXCEEDED') {
+          itemPurchaseAvailableOnlyOneAlert(errorData.errorMessage);
         } else {
           itemPurchaseImpossibleAlert();
         }

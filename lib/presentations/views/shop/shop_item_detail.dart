@@ -138,7 +138,88 @@ class ShopItemDetail extends StatelessWidget {
                                             ],
                                           ),
                                         ),
-                                        // if (controller.selectedItem.value.itemCategory == 'DISPOSABLE') ItemCounter(controller.get),
+                                        if (controller.selectedItem.value.itemCategory == 'DISPOSABLE')
+                                          Row(
+                                            mainAxisAlignment: MainAxisAlignment.center,
+                                            children: [
+                                              Container(
+                                                decoration: BoxDecoration(
+                                                  color: popupBgColor,
+                                                  borderRadius: BorderRadius.circular(50),
+                                                ),
+                                                child: Padding(
+                                                  padding: EdgeInsets.all(8.0.sp),
+                                                  child: Row(
+                                                    children: [
+                                                      InkWell(
+                                                        onTap: () {
+                                                          if (controller.purchaseItemCount.value > 0) {
+                                                            controller.purchaseItemCount.value = controller.purchaseItemCount.value - 1;
+                                                          }
+                                                        },
+                                                        child: Container(
+                                                          width: 26.sp,
+                                                          height: 26.sp,
+                                                          decoration: BoxDecoration(
+                                                            color: controller.purchaseItemCount.value > 0 ? skyBlueColor : lightGrayColor,
+                                                            borderRadius: BorderRadius.circular(50),
+                                                            boxShadow: [
+                                                              BoxShadow(
+                                                                color: Colors.black,
+                                                                offset: Offset(0, 3.sp),
+                                                              )
+                                                            ],
+                                                          ),
+                                                          child: Center(
+                                                            child: SizedBox(
+                                                              width: 13.sp,
+                                                              height: 3.sp,
+                                                              child: iconEaMinus,
+                                                            ),
+                                                          ),
+                                                        ),
+                                                      ),
+                                                      Padding(
+                                                        padding: EdgeInsets.symmetric(horizontal: 25.0.sp),
+                                                        child: StyledText(
+                                                          controller.purchaseItemCount.value.toString(),
+                                                          fontSize: 20,
+                                                          lineHeight: 26,
+                                                          fontWeight: 600,
+                                                        ),
+                                                      ),
+                                                      InkWell(
+                                                        onTap: () {
+                                                          controller.purchaseItemCount.value = controller.purchaseItemCount.value + 1;
+                                                        },
+                                                        child: Container(
+                                                          width: 26.sp,
+                                                          height: 26.sp,
+                                                          decoration: BoxDecoration(
+                                                            color: skyBlueColor,
+                                                            boxShadow: [
+                                                              BoxShadow(
+                                                                color: Colors.black,
+                                                                offset: Offset(0, 3.sp),
+                                                              )
+                                                            ],
+                                                            borderRadius: BorderRadius.circular(50),
+                                                          ),
+                                                          child: Center(
+                                                            child: SizedBox(
+                                                              width: 13.sp,
+                                                              height: 13.sp,
+                                                              child: iconEaPlus,
+                                                            ),
+                                                          ),
+                                                        ),
+                                                      ),
+                                                    ],
+                                                  ),
+                                                ),
+                                              ),
+                                            ],
+                                          ),
                                       ],
                                     );
                                   },

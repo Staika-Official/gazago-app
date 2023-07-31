@@ -142,6 +142,7 @@ dev_dependencies:
 # following page: https://dart.dev/tools/pub/pubspec
 
 dependency_overrides:
+
 # The following section is specific to Flutter packages.
 flutter:
 

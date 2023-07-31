@@ -1,8 +1,11 @@
 import 'package:dio/dio.dart';
 import 'package:gaza_go/constants/enums.dart';
 import 'package:gaza_go/platform/apis/item.dart';
+import 'package:gaza_go/platform/models/error_response_data_model.dart';
 import 'package:gaza_go/platform/models/inventory_badge_model.dart';
 import 'package:gaza_go/platform/models/inventory_item_model.dart';
+import 'package:gaza_go/platform/models/recovery_stamina_model.dart';
+import 'package:gaza_go/platform/models/user_state_model.dart';
 import 'package:gaza_go/platform/stores/hive_store.dart';
 
 import '../models/repair_shoes_model.dart';
@@ -57,7 +60,16 @@ class ItemService {
     if (res.statusCode == 200) {
       successCallback(InventoryItemModel.fromJson(res.data));
     } else {
-      if (errorCallback != null) errorCallback();
+      if (errorCallback != null) errorCallback(ErrorResponseDataModel.fromJson(res.data));
+    }
+  }
+
+  static Future<void> fetchRecoveryStamina(RecoveryStaminaModel recoveryInfo, {required Function successCallback, Function? errorCallback}) async {
+    Response res = await ItemApi.fetchRecoveryStamina(userId!, recoveryInfo);
+    if (res.statusCode == 200) {
+      successCallback(UserStateModel.fromJson(res.data));
+    } else {
+      if (errorCallback != null) errorCallback(ErrorResponseDataModel.fromJson(res.data));
     }
   }
 

@@ -9,25 +9,22 @@ import 'package:gaza_go/platform/firebase/remote_config.dart';
 import 'package:gaza_go/platform/helpers/activity_mixin.dart';
 import 'package:gaza_go/platform/helpers/alert_helper.dart';
 import 'package:gaza_go/platform/helpers/base_helper.dart';
+import 'package:gaza_go/platform/helpers/consumer_item_mixin.dart';
 import 'package:gaza_go/platform/helpers/inventory_mixin.dart';
 import 'package:gaza_go/platform/helpers/linear_progress_mixin.dart';
-import 'package:gaza_go/platform/models/error_response_data_model.dart';
 import 'package:gaza_go/platform/models/inventory_badge_item_model.dart';
 import 'package:gaza_go/platform/models/inventory_badge_list_model.dart';
 import 'package:gaza_go/platform/models/inventory_badge_model.dart';
 import 'package:gaza_go/platform/models/inventory_item_model.dart';
 import 'package:gaza_go/platform/models/inventory_item_stat_model.dart';
-import 'package:gaza_go/platform/models/repair_shoes_model.dart';
-import 'package:gaza_go/platform/models/repair_use_item_model.dart';
 import 'package:gaza_go/platform/models/stat_model.dart';
 import 'package:gaza_go/platform/services/activity_service.dart';
 import 'package:gaza_go/platform/services/item_service.dart';
 import 'package:gaza_go/presentations/components/alert_ui_list.dart';
 import 'package:get/get.dart';
 import 'package:url_launcher/url_launcher.dart';
-import 'package:uuid/uuid.dart';
 
-class InventoryController extends GetxController with LinearProgressMixin, InventoryMixin, ActivityMixin {
+class InventoryController extends GetxController with LinearProgressMixin, InventoryMixin, ActivityMixin, ConsumerItemMixin {
   final WalletMasterController walletMasterController = Get.find();
   final RxDouble viewportWidth = RxDouble(0);
   final RxDouble listHeight = RxDouble(0);
@@ -47,43 +44,15 @@ class InventoryController extends GetxController with LinearProgressMixin, Inven
 
   final RxBool isShoe = RxBool(false);
   final RxString getBadgeDate = RxString('');
-  final RxDouble remainDurability = RxDouble(0.0);
-  final RxInt repairDurability = RxInt(0);
-  // final RxDouble resultDurability = RxDouble(0.0);
-  RxDouble get resultDurability {
-    return RxDouble(remainDurability.value + consumerItemSumDurability);
-  }
 
   final RxBool isDisableButton = RxBool(false);
-  final RxList consumerItemList = RxList.empty();
 
-  final RxDouble currentSliderValue = RxDouble(0);
   final RxBool disableButton = RxBool(false);
   final RxList<InventoryItemModel> equippedItemList = RxList.empty();
 
   ScrollController singleChildScrollController = ScrollController();
   ScrollController itemScrollController = ScrollController(keepScrollOffset: false);
   ScrollController badgeScrollController = ScrollController(keepScrollOffset: false);
-
-  final RxList<RepairUseItemModel> repairUseCounterItemList = RxList.empty();
-
-  int get consumerItemSumDurability {
-    int totalRecovery = 0;
-    for (int i = 0; i < repairUseCounterItemList.length; i++) {
-      int itemId = repairUseCounterItemList[i].userItemId!;
-      int amount = repairUseCounterItemList[i].spendItemAmount!;
-
-      // 해당 itemId로 recoveryList에서 회복량 찾기
-      for (int j = 0; j < consumerItemList.length; j++) {
-        if (consumerItemList[j].id == itemId) {
-          int recovery = consumerItemList[j].itemStat.repairDurability!.toInt();
-          totalRecovery += recovery * amount;
-        }
-      }
-    }
-
-    return totalRecovery;
-  }
 
   Rx<InventoryBadgeModel> equippedBadge = Rx(
     InventoryBadgeModel(
@@ -315,7 +284,19 @@ class InventoryController extends GetxController with LinearProgressMixin, Inven
       successCallback: (item) {
         selectedItem.value = item;
         isShoe.value = selectedItem.value.itemCategory == 'SHOES';
+        if (selectedItem.value.itemCategory == 'SHOES') {
+          currentStat.value = selectedItem.value.durability!;
+        }
         Get.toNamed(Routes.itemDetail);
+      },
+    );
+  }
+
+  void getItemDetail(int itemId) async {
+    await ItemService.getItemDetailInfo(
+      itemId,
+      successCallback: (item) {
+        selectedItem.value = item;
       },
     );
   }
@@ -343,36 +324,13 @@ class InventoryController extends GetxController with LinearProgressMixin, Inven
         if (allItems.length < 100) {
           stopLoading.value = true;
         }
-
+        myAllItems.value = allItems;
         getUniqueItemList(allItems);
         calculateTabHeight(
             Get.find<InventoryHomeController>().tabController.index, Get.find<InventoryHomeController>().itemSubTabList[Get.find<InventoryHomeController>().subTabController.index]['itemType']!);
         dataGetLoading.value = false;
       },
     );
-  }
-
-  Future<void> getMyConsumerItemsByType(String itemType) async {
-    await ItemService.getUserConsumerItemByType(itemType, successCallback: (data) {
-      consumerItemList.value = data;
-      for (var item in consumerItemList) {
-        RepairUseItemModel counterObj = RepairUseItemModel();
-        counterObj.userItemId = item.id;
-        counterObj.spendItemAmount = 0;
-        repairUseCounterItemList.add(counterObj);
-      }
-    });
-  }
-
-  RepairUseItemModel getRepairUseItem(int itemId) {
-    // print(repairUseCounterItemList);
-
-    return repairUseCounterItemList.firstWhere((item) => item.userItemId == itemId);
-  }
-
-  void updateSpendCount(RepairUseItemModel item, int updatedCount) {
-    item.spendItemAmount = updatedCount;
-    repairUseCounterItemList.refresh();
   }
 
   Future<void> getUserItemsByCategory(List<Map<String, String>> subTabList, int tabIndex) async {
@@ -414,7 +372,7 @@ class InventoryController extends GetxController with LinearProgressMixin, Inven
           });
         }
 
-        remainDurability.value = equippedItems.items.firstWhere((element) => element.itemCategory == 'SHOES').durability;
+        currentStat.value = equippedItems.items.firstWhere((element) => element.itemCategory == 'SHOES').durability;
       },
     );
   }
@@ -498,60 +456,17 @@ class InventoryController extends GetxController with LinearProgressMixin, Inven
     Get.toNamed(Routes.syntheticBadge);
   }
 
-  void fetchRepairShoesUseOneItem(int useItemId) async {
-    String uuid = const Uuid().v4();
-    await ItemService.fetchRepairItemShoes(
-      equippedShoe.value.id,
-      RepairShoesModel(
-        repairUuid: uuid,
-        repairItems: [
-          RepairUseItemModel(
-            userItemId: useItemId,
-            spendItemAmount: 1,
-          ),
-        ],
-      ),
-      successCallback: (repairModel) {
-        getUserAllItems();
-        getUserEquippedItems();
-        showToastPopup('내구도 충전이 완료되었습니다.');
-      },
-      errorCallback: (ErrorResponseDataModel data) {
-        showToastPopup(data.errorMessage!);
-      },
-    );
-    // if (walletMasterController.tik.value.amount! >= costTik.value) {
-    //   if (costTik.value > 0) {
-    //     disableButton.value = true;
-    //     await ItemService.fetchRepairItemShoes(
-    //       RepairShoesModel(
-    //         id: shoeId,
-    //         durability: currentSliderValue.value.toInt(),
-    //         feeTik: costTik.value.toInt(),
-    //       ),
-    //       successCallback: (repairModel) {
-    //         InventoryItemModel newRepairModel = repairModel;
-    //         costTik.value = 0;
-    //         currentSliderValue.value = 0;
-    //         selectedItem.value = newRepairModel;
-    //         remainDurability.value = newRepairModel.durability.toInt();
-    //         walletMasterController.getSpendingWalletBalances();
-    //         getUserAllItems();
-    //         getUserEquippedItems();
-    //         showToastPopup('내구도 충전이 완료되었습니다.');
-    //         closeRepairPopup();
-    //       },
-    //     );
-    //   } else {
-    //     showToastPopup('수리할 내구도가 없습니다.');
-    //   }
-    // } else {
-    //   handleNotEnoughTaikaPopup();
-    // }
+  void checkConsumerItemType(InventoryItemModel useItem) async {
+    if (useItem.itemStat!.repairDurability! > 0) {
+      await fetchRepairShoesUseOneItem(useItem, equippedShoe.value.id);
+    } else {
+      await fetchRecoveryUseOneItem(useItem);
+    }
+    getUserAllItems();
+    getUserEquippedItems();
   }
 
   void initRepairInfo() {
-    // costTik.value = 0;
     if (disableButton.value) {
       Timer(const Duration(seconds: 1), () {
         disableButton.value = false;
@@ -559,26 +474,29 @@ class InventoryController extends GetxController with LinearProgressMixin, Inven
     }
   }
 
-  void showShoesRepairPopup(id, context) async {
+  void showShoesRepairPopup(int id, context) async {
     isDisableButton.value = true;
-    await getMyConsumerItemsByType('REPAIR');
-    if (userState.value.state != null) {
-      print('현재 체력 : ${userState.value.state!.stamina!}');
-    }
-    remainDurability.value = equippedShoe.value.durability;
-    print('현재 내구도 : ${equippedShoe.value.durability}');
-    consumerItemUsagePopup(this, 'shoes', context);
-    isDisableButton.value = false;
-    // print(consumerItemArea)
-    // if (consumerItemArea.currentContext != null) {
-    //   final RenderBox renderBox = consumerItemArea.currentContext!.findRenderObject() as RenderBox;
-    //
-    //   print(renderBox.size.height);
-    // }
+    await getMyConsumerItemsByType('REPAIR', isNotEmptyCallback: () {
+      targetShoeId.value = id;
+      selectedType.value = 'DURABILITY';
+      currentStat.value = id == equippedShoe.value.id ? equippedShoe.value.durability : selectedItem.value.durability;
 
-    // currentSliderValue.value = 0;
-    // await walletMasterController.getFeeTik();
-    // showShoeRepairSlider(this, walletMasterController.feeTikDurability.value, id);
+      consumerItemUsagePopup(this, context);
+    }, isEmptyCallback: () {
+      shortConsumerItems(selectedType.value);
+    });
+    isDisableButton.value = false;
+  }
+
+  void confirmRecoveryOrRepairStat() async {
+    await fetchRepairShoes();
+    getUserAllItems();
+    getUserEquippedItems();
+    if (Get.currentRoute == Routes.itemDetail) {
+      getItemDetail(targetShoeId.value);
+    }
+
+    initStat();
   }
 
   void handleNotEnoughTaikaPopup() {
@@ -599,9 +517,12 @@ class InventoryController extends GetxController with LinearProgressMixin, Inven
 
   void getUniqueItemList(List<InventoryItemModel> targetList) {
     Set<int> itemSet = myAllItems.map((element) => element.id).toSet();
-
+    print('itemSet$itemSet');
     List<InventoryItemModel> uniqueItemList = targetList.where((item) => itemSet.add(item.id)).toList();
+    print('uniqueItemList${uniqueItemList}');
+
     myAllItems.value = [...myAllItems, ...uniqueItemList];
+    print(myAllItems.toString());
     myAllItems.refresh();
   }
 

@@ -6,6 +6,7 @@ import 'package:flutter_naver_map/flutter_naver_map.dart';
 import 'package:gaza_go/constants/config.dart';
 import 'package:gaza_go/constants/enums.dart';
 import 'package:gaza_go/constants/routes.dart';
+import 'package:gaza_go/platform/controllers/loader_controller.dart';
 import 'package:gaza_go/platform/controllers/loading_controller.dart';
 import 'package:gaza_go/platform/controllers/wallet_master_controller.dart';
 import 'package:gaza_go/platform/helpers/activity_helper.dart';
@@ -13,17 +14,15 @@ import 'package:gaza_go/platform/helpers/activity_mixin.dart';
 import 'package:gaza_go/platform/helpers/admob_mixin.dart';
 import 'package:gaza_go/platform/helpers/alert_helper.dart';
 import 'package:gaza_go/platform/helpers/challenge_mixin.dart';
+import 'package:gaza_go/platform/helpers/consumer_item_mixin.dart';
 import 'package:gaza_go/platform/helpers/location_helper.dart';
 import 'package:gaza_go/platform/helpers/login_helper.dart';
 import 'package:gaza_go/platform/models/ad_watch_available_model.dart';
 import 'package:gaza_go/platform/models/challenge_hierarchy_model.dart';
 import 'package:gaza_go/platform/models/challenge_model.dart';
 import 'package:gaza_go/platform/models/current_user_state_model.dart';
-
 import 'package:gaza_go/platform/models/stat_model.dart';
 import 'package:gaza_go/platform/models/user_exercise_model.dart';
-import 'package:gaza_go/platform/models/user_stamina_recharge_model.dart';
-import 'package:gaza_go/platform/models/user_state_model.dart';
 import 'package:gaza_go/platform/services/activity_service.dart';
 import 'package:gaza_go/platform/services/admob_service.dart';
 import 'package:gaza_go/platform/services/member_service.dart';
@@ -41,9 +40,9 @@ import 'package:permission_handler/permission_handler.dart' as ph;
 import 'package:simple_animations/animation_builder/custom_animation_builder.dart';
 import 'package:throttling/throttling.dart';
 
-class ActivityController extends SuperController with ActivityMixin, ChallengeMixin, GetTickerProviderStateMixin, AdmobMixin {
+class ActivityController extends SuperController with ActivityMixin, ChallengeMixin, GetTickerProviderStateMixin, AdmobMixin, ConsumerItemMixin {
   final WalletMasterController walletMasterController = Get.find();
-
+  LoaderController loaderController = Get.isRegistered<LoaderController>() ? Get.find<LoaderController>() : Get.put(LoaderController());
   RxList<StatModel> get statList {
     return RxList([
       StatModel(name: '체력', currentStat: userState.value.state != null ? userState.value.state!.stamina! : 0, type: 'STAMINA'),
@@ -51,9 +50,9 @@ class ActivityController extends SuperController with ActivityMixin, ChallengeMi
     ]);
   }
 
-  final RxDouble currentSliderValue = RxDouble(0);
-  final RxInt remainDurability = RxInt(0);
-  final RxInt repairDurability = RxInt(0);
+  // final RxDouble currentSliderValue = RxDouble(0);
+  // final RxInt remainDurability = RxInt(0);
+  // final RxInt repairDurability = RxInt(0);
   final RxInt costTik = RxInt(0);
   final RxBool isListeningToLocation = RxBool(false);
   final RxBool hasPermission = RxBool(false);
@@ -216,9 +215,9 @@ class ActivityController extends SuperController with ActivityMixin, ChallengeMi
   }
 
   void initRepairInfo() {
-    repairDurability.value = 0;
-    remainDurability.value = 0;
-    currentSliderValue.value = 0;
+    // repairDurability.value = 0;
+    // remainDurability.value = 0;
+    // currentSliderValue.value = 0;
     costTik.value = 0;
   }
 
@@ -236,88 +235,108 @@ class ActivityController extends SuperController with ActivityMixin, ChallengeMi
     initRepairButton();
   }
 
-  void onClickRepairStat(stat) {
-    print(stat.toJson());
-    // handleShowStaminaPopup(stat);
+  void onClickRepairStat(stat, context) async {
+    loaderController.isLoading.value = true;
+    await getMyConsumerItemsByType(stat.type == 'STAMINA' ? 'RECOVERY' : 'REPAIR', isNotEmptyCallback: () {
+      loaderController.isLoading.value = false;
+      selectedType.value = stat.type;
+      if (stat.type != 'STAMINA') {
+        targetShoeId.value = userState.value.shoes!.id!;
+      }
+      currentStat.value = stat.type == 'STAMINA' ? userState.value.state!.stamina! : userState.value.shoes!.durability!;
+      consumerItemUsagePopup(this, context);
+    }, isEmptyCallback: () {
+      loaderController.isLoading.value = false;
+      shortConsumerItems(stat.type);
+    });
   }
 
-  void handleShowStaminaPopup(stat) async {
-    currentSliderValue.value = 0;
-    await walletMasterController.getFeeTik();
-    showRepairStatSlider(this, stat, walletMasterController.feeTikStamina.value, walletMasterController.feeTikDurability.value);
+  void confirmRecoveryOrRepairStat() async {
+    if (selectedType.value == 'STAMINA') {
+      await fetchRecoveryStamina();
+    } else {
+      await fetchRepairShoes();
+    }
+    getUserState();
+    initStat();
   }
+
+  // void handleShowStaminaPopup(stat) async {
+  //   await walletMasterController.getFeeTik();
+  //   showRepairStatSlider(this, stat, walletMasterController.feeTikStamina.value, walletMasterController.feeTikDurability.value);
+  // }
 
   void handleNotEnoughTaikaPopup() {
     showNotEnoughTaikaAlert();
     initRepairButton();
   }
 
-  void fetchRechargeStamina(type) async {
-    disableButton.value = true;
+  // void fetchRechargeStamina(type) async {
+  //   disableButton.value = true;
+  //
+  //   if (walletMasterController.tik.value.amount == null) {
+  //     await walletMasterController.getSpendingWalletBalances();
+  //   }
+  //   if (walletMasterController.tik.value.amount! >= costTik.value) {
+  //     if (costTik.value > 0) {
+  //       await ActivityService.fetchUserStaminaRecharge(
+  //           UserStaminaRechargeModel(
+  //             type: type,
+  //             stat: currentSliderValue.value.toInt(),
+  //             feeTik: costTik.value,
+  //           ), successCallback: (userState) {
+  //         UserStateModel newUserState = userState;
+  //         this.userState.update((state) {
+  //           state?.state = newUserState;
+  //         });
+  //         walletMasterController.getSpendingWalletBalances();
+  //         showToastPopup('체력이 충전되었습니다.');
+  //         closeRepairPopup();
+  //       }, errorCallback: () {
+  //         showToastPopup('충전 요청이 실패했습니다.');
+  //         initRepairButton();
+  //       });
+  //     } else {
+  //       showToastPopup('충전할 게이지를 확인해주세요.');
+  //       initRepairButton();
+  //     }
+  //   } else {
+  //     handleNotEnoughTaikaPopup();
+  //   }
+  // }
 
-    if (walletMasterController.tik.value.amount == null) {
-      await walletMasterController.getSpendingWalletBalances();
-    }
-    if (walletMasterController.tik.value.amount! >= costTik.value) {
-      if (costTik.value > 0) {
-        await ActivityService.fetchUserStaminaRecharge(
-            UserStaminaRechargeModel(
-              type: type,
-              stat: currentSliderValue.value.toInt(),
-              feeTik: costTik.value,
-            ), successCallback: (userState) {
-          UserStateModel newUserState = userState;
-          this.userState.update((state) {
-            state?.state = newUserState;
-          });
-          walletMasterController.getSpendingWalletBalances();
-          showToastPopup('체력이 충전되었습니다.');
-          closeRepairPopup();
-        }, errorCallback: () {
-          showToastPopup('충전 요청이 실패했습니다.');
-          initRepairButton();
-        });
-      } else {
-        showToastPopup('충전할 게이지를 확인해주세요.');
-        initRepairButton();
-      }
-    } else {
-      handleNotEnoughTaikaPopup();
-    }
-  }
-
-  void fetchRepairShoes() async {
-    disableButton.value = true;
-    // if (walletMasterController.tik.value.amount == null) {
-    //   await walletMasterController.getSpendingWalletBalances();
-    // }
-    // if (walletMasterController.tik.value.amount! >= costTik.value) {
-    //   if (costTik.value > 0) {
-    //     await ItemService.fetchRepairItemShoes(
-    //         RepairShoesModel(
-    //           repairUuid: userState.value.shoes!.id,
-    //           durability: currentSliderValue.value.toInt(),
-    //           feeTik: costTik.value.toInt(),
-    //         ), successCallback: (repairModel) {
-    //       InventoryItemModel newRepairModel = repairModel;
-    //       userState.update((state) {
-    //         state!.shoes!.durability = newRepairModel.durability;
-    //       });
-    //       walletMasterController.getSpendingWalletBalances();
-    //       showToastPopup('내구도 충전이 완료되었습니다.');
-    //       closeRepairPopup();
-    //     }, errorCallback: () {
-    //       showToastPopup('충전 요청이 실패했습니다.');
-    //       initRepairButton();
-    //     });
-    //   } else {
-    //     showToastPopup('충전할 게이지를 확인해주세요.');
-    //     initRepairButton();
-    //   }
-    // } else {
-    //   handleNotEnoughTaikaPopup();
-    // }
-  }
+  // void fetchRepairShoes() async {
+  //   disableButton.value = true;
+  //   if (walletMasterController.tik.value.amount == null) {
+  //     await walletMasterController.getSpendingWalletBalances();
+  //   }
+  //   if (walletMasterController.tik.value.amount! >= costTik.value) {
+  //     if (costTik.value > 0) {
+  //       await ItemService.fetchRepairItemShoes(
+  //           RepairShoesModel(
+  //             repairUuid: userState.value.shoes!.id,
+  //             durability: currentSliderValue.value.toInt(),
+  //             feeTik: costTik.value.toInt(),
+  //           ), successCallback: (repairModel) {
+  //         InventoryItemModel newRepairModel = repairModel;
+  //         userState.update((state) {
+  //           state!.shoes!.durability = newRepairModel.durability;
+  //         });
+  //         walletMasterController.getSpendingWalletBalances();
+  //         showToastPopup('내구도 충전이 완료되었습니다.');
+  //         closeRepairPopup();
+  //       }, errorCallback: () {
+  //         showToastPopup('충전 요청이 실패했습니다.');
+  //         initRepairButton();
+  //       });
+  //     } else {
+  //       showToastPopup('충전할 게이지를 확인해주세요.');
+  //       initRepairButton();
+  //     }
+  //   } else {
+  //     handleNotEnoughTaikaPopup();
+  //   }
+  // }
 
   Future<void> getUserState({bool showLoading = false}) async {
     await ActivityService.getCurrentUserState(

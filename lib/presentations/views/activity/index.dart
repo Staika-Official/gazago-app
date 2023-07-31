@@ -216,7 +216,7 @@ class ActivityHome extends StatelessWidget {
                                     backgroundColor: lightGreenColor,
                                     child: IconButton(
                                       icon: iconPlus,
-                                      onPressed: () => {controller.onClickRepairStat(stat)},
+                                      onPressed: () => {controller.onClickRepairStat(stat, context)},
                                     ),
                                   ),
                                 )
@@ -244,7 +244,7 @@ class ActivityHome extends StatelessWidget {
                                     backgroundColor: purpleColor,
                                     child: IconButton(
                                       icon: iconPlus,
-                                      onPressed: () => {controller.onClickRepairStat(stat)},
+                                      onPressed: () => {controller.onClickRepairStat(stat, context)},
                                     ),
                                   ),
                                 ),

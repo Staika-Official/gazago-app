@@ -186,7 +186,7 @@ class ActivityActive extends StatelessWidget {
                                     child: IconButton(
                                       icon: iconPlus,
                                       splashRadius: 19.sp,
-                                      onPressed: () => {controller.onClickRepairStat(stat)},
+                                      onPressed: () => {controller.onClickRepairStat(stat, context)},
                                     ),
                                   ),
                                 )
@@ -215,7 +215,7 @@ class ActivityActive extends StatelessWidget {
                                     child: IconButton(
                                       icon: iconPlus,
                                       splashRadius: 15.sp,
-                                      onPressed: () => {controller.onClickRepairStat(stat)},
+                                      onPressed: () => {controller.onClickRepairStat(stat, context)},
                                     ),
                                   ),
                                 ),

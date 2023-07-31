@@ -229,7 +229,7 @@ class InventoryTile extends StatelessWidget {
                                     ],
                                   ),
                                   child: InkWell(
-                                    onTap: () => controller.showShoesRepairPopup(id, context),
+                                    onTap: () => controller.showShoesRepairPopup(id!, context),
                                     child: CircleAvatar(
                                       radius: 10.sp,
                                       backgroundColor: purpleColor,

@@ -92,9 +92,8 @@ class InventoryItem extends StatelessWidget {
                               ),
                               item.equipped == false
                                   ? InkWell(
-                                      onTap: () => item.itemCategory == 'DISPOSABLE'
-                                          ? controller.fetchRepairShoesUseOneItem(item.id)
-                                          : controller.checkEquippedInventoryChallengeItem(item.id, item.itemCategory),
+                                      onTap: () =>
+                                          item.itemCategory == 'DISPOSABLE' ? controller.checkConsumerItemType(item) : controller.checkEquippedInventoryChallengeItem(item.id, item.itemCategory),
                                       child: Container(
                                         width: double.infinity,
                                         decoration: BoxDecoration(
