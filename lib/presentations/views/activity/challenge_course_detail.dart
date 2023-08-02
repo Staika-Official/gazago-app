@@ -258,7 +258,7 @@ class ChallengeCourseDetail extends StatelessWidget {
                   ),
                   Container(
                     color: subBg01Color,
-                    padding: EdgeInsets.only(bottom: 180.0.sp),
+                    padding: EdgeInsets.only(bottom: 80.0.sp),
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [

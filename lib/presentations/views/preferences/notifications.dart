@@ -21,9 +21,11 @@ class Notifications extends StatelessWidget {
               margin: const EdgeInsets.only(top: 14),
               child: GestureDetector(
                 onTap: () => controller.moveToWebView(notice),
-                child: Image.network(
-                  notice.subImageUrl!,
-                ),
+                child: notice.subImageUrl != null && notice.subImageUrl!.contains('http')
+                    ? Image.network(
+                        notice.subImageUrl!,
+                      )
+                    : Container(),
               ),
             ),
           )

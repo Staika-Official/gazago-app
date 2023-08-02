@@ -88,7 +88,7 @@ class ChallengeMap extends StatelessWidget {
               padding: EdgeInsets.only(left: 30.sp, top: 5),
               child: (controller.challengeSelectedIndex.value == course.id) ? iconChallengeCheckOn : iconChallengeCheckOff,
             ),
-            contentPadding: const EdgeInsets.only(right: 10),
+            contentPadding: EdgeInsets.only(right: 20.sp),
             // title: Text(
             //   course.secondName!,
             //   style: TextStyle(color: (controller.challengeSelectedIndex == course.id) ? skyBlueColor : Colors.white),
