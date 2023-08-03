@@ -178,7 +178,7 @@ class HomeMenuController extends SuperController {
         }).catchError((e) {
           showToastPopup(e.toString());
         });
-      } else if (appIOSUpdateInfo != null && appIOSUpdateInfo!.canUpdate) {
+      } else {
         showForceUpdateApp();
       }
     } else {
@@ -199,7 +199,7 @@ class HomeMenuController extends SuperController {
           } else if (appAndroidUpdateInfo!.installStatus == InstallStatus.downloaded) {
             showUpdateSnackbar();
           }
-        } else if (appIOSUpdateInfo != null && appIOSUpdateInfo!.canUpdate) {
+        } else {
           showRecommendUpdateApp();
         }
       }

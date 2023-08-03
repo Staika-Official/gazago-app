@@ -16,7 +16,6 @@ import 'package:gaza_go/platform/helpers/challenge_mixin.dart';
 import 'package:gaza_go/platform/helpers/location_helper.dart';
 import 'package:gaza_go/platform/helpers/login_helper.dart';
 import 'package:gaza_go/platform/helpers/map_helper.dart';
-import 'package:gaza_go/platform/models/ad_watch_available_model.dart';
 import 'package:gaza_go/platform/models/challenge_course_model.dart';
 import 'package:gaza_go/platform/models/challenge_hierarchy_model.dart';
 import 'package:gaza_go/platform/models/challenge_model.dart';
@@ -28,7 +27,6 @@ import 'package:gaza_go/platform/models/user_exercise_model.dart';
 import 'package:gaza_go/platform/models/user_stamina_recharge_model.dart';
 import 'package:gaza_go/platform/models/user_state_model.dart';
 import 'package:gaza_go/platform/services/activity_service.dart';
-import 'package:gaza_go/platform/services/admob_service.dart';
 import 'package:gaza_go/platform/services/item_service.dart';
 import 'package:gaza_go/platform/services/member_service.dart';
 import 'package:gaza_go/platform/services/uaa_service.dart';
@@ -36,7 +34,6 @@ import 'package:gaza_go/platform/stores/hive_store.dart';
 import 'package:gaza_go/presentations/components/alert_ui_list.dart';
 import 'package:gaza_go/presentations/views/activity/activity_loading.dart';
 import 'package:gaza_go/presentations/views/activity/activity_select.dart';
-import 'package:gaza_go/presentations/views/activity/ad_select.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:get/get.dart';
 import 'package:health/health.dart';
@@ -535,7 +532,7 @@ class ActivityController extends SuperController with ActivityMixin, ChallengeMi
     }
   }
 
-  void loadExercise(ExerciseType exerciseType, String? adId, [ChallengeCourseModel? challenge]) {
+  void loadExercise(ExerciseType exerciseType, [ChallengeCourseModel? challenge]) {
     loadingTime.value = 1;
 
     if (loadingTimer != null) {
@@ -547,7 +544,6 @@ class ActivityController extends SuperController with ActivityMixin, ChallengeMi
       barrierColor: const Color.fromRGBO(0, 0, 0, 0.8),
       ActivityLoading(
         exerciseType: exerciseType,
-        adId: adId,
         challenge: challenge,
       ),
     );
@@ -556,7 +552,7 @@ class ActivityController extends SuperController with ActivityMixin, ChallengeMi
       const Duration(seconds: 1),
       (timer) {
         if (loadingTime.value >= 3) {
-          exerciseStartThr.throttle(() => startExercise(exerciseType, challenge, adId: adId));
+          exerciseStartThr.throttle(() => startExercise(exerciseType, challenge));
           timer.cancel();
           loadingTimer = null;
         } else {
@@ -567,39 +563,40 @@ class ActivityController extends SuperController with ActivityMixin, ChallengeMi
     );
   }
 
-  void passThrowActivityLoading(ExerciseType exerciseType, String? adId, [ChallengeCourseModel? challenge]) {
+  void passThrowActivityLoading(ExerciseType exerciseType, [ChallengeCourseModel? challenge]) {
     loadingTimer?.cancel();
     loadingTimer = null;
     Get.back();
-    exerciseStartThr.throttle(() => startExercise(exerciseType, challenge, adId: adId));
+    exerciseStartThr.throttle(() => startExercise(exerciseType, challenge));
   }
 
   Future<void> selectExerciseType(ExerciseType exerciseType) async {
-    isButtonDisabled.value = true;
     selectedExerciseType.value = exerciseType;
 
-    AdWatchAvailableModel adWatchAvailableModel = AdWatchAvailableModel(watchAvailable: false);
+    // AdWatchAvailableModel adWatchAvailableModel = AdWatchAvailableModel(watchAvailable: false);
+    //
+    // await AdmobService.getAdWatchAvailableTime(
+    //   'EXERCISE_START',
+    //   callback: (AdWatchAvailableModel model) {
+    //     adWatchAvailableModel = model;
+    //     isButtonDisabled.value = false;
+    //   },
+    // );
 
-    await AdmobService.getAdWatchAvailableTime(
-      'EXERCISE_START',
-      callback: (AdWatchAvailableModel model) {
-        adWatchAvailableModel = model;
-        isButtonDisabled.value = false;
-      },
-    );
+    // if (adWatchAvailableModel.watchAvailable!) {
+    //   Get.back();
+    //   Get.dialog(const AdSelect(), barrierDismissible: false, barrierColor: const Color.fromRGBO(0, 0, 0, 0.85));
+    //   if (startAd.value == null) {
+    //     adLoadTimerStart();
+    //     exerciseStartRewardedAdInit(
+    //       'exerciseStartAd',
+    //     );
+    //   }
+    // } else {
+    //   handleMoveExerciseActive(exerciseType);
+    // }
 
-    if (adWatchAvailableModel.watchAvailable!) {
-      Get.back();
-      Get.dialog(const AdSelect(), barrierDismissible: false, barrierColor: const Color.fromRGBO(0, 0, 0, 0.85));
-      if (startAd.value == null) {
-        adLoadTimerStart();
-        exerciseStartRewardedAdInit(
-          'exerciseStartAd',
-        );
-      }
-    } else {
-      handleMoveExerciseActive(exerciseType);
-    }
+    handleMoveExerciseActive(exerciseType);
   }
 
   void showAdAndMoveActivity() {
@@ -610,11 +607,10 @@ class ActivityController extends SuperController with ActivityMixin, ChallengeMi
     showAdTipAlert(selectedCourse.value?.id, selectedExerciseType.value);
   }
 
-  void handleMoveExerciseActive(ExerciseType exerciseType, {String? adId}) {
+  void handleMoveExerciseActive(ExerciseType exerciseType) {
     Get.offNamed(Routes.activityActive);
     loadExercise(
       selectedExerciseType.value,
-      adId,
       selectedCourse.value,
     );
   }

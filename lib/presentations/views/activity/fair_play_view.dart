@@ -8,7 +8,7 @@ class FairPlayView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return DefaultContainer(
-      titleText: '경고 & 퇴장 카드',
+      titleText: '경고 & 퇴장 카드 규정',
       child: FairPlayContent(),
     );
   }

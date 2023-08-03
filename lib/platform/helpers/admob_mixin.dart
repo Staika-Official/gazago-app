@@ -153,11 +153,11 @@ mixin AdmobMixin {
       onAdDismissedFullScreenContent: (RewardedAd ad) {
         print('$ad onAdDismissedFullScreenContent.');
 
-        if (ad.adUnitId.isNotEmpty) {
-          activityController.handleMoveExerciseActive(activityController.selectedExerciseType.value, adId: ad.adUnitId);
-          startAd.value = null;
-        }
-
+        // if (ad.adUnitId.isNotEmpty) {
+        //
+        // }
+        activityController.handleMoveExerciseActive(activityController.selectedExerciseType.value);
+        startAd.value = null;
         ad.dispose();
       },
       onAdFailedToShowFullScreenContent: (RewardedAd ad, AdError error) {
@@ -192,11 +192,15 @@ mixin AdmobMixin {
       onAdDismissedFullScreenContent: (RewardedAd ad) {
         print('$ad onAdDismissedFullScreenContent.');
 
-        if (ad.adUnitId.isNotEmpty) {
-          activityController.endExercise(source: 'showEndADExerciseAlert', adId: ad.adUnitId);
-          endAd.value = null;
-          activityController.adLoadingTime.value = 0;
-        }
+        // if (ad.adUnitId.isNotEmpty) {
+        //   activityController.endExercise(source: 'showEndADExerciseAlert', adId: ad.adUnitId);
+        //   endAd.value = null;
+        //   activityController.adLoadingTime.value = 0;
+        // }
+
+        activityController.endExercise(source: 'showEndADExerciseAlert');
+        endAd.value = null;
+        activityController.adLoadingTime.value = 0;
 
         ad.dispose();
       },

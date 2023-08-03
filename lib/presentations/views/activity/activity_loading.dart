@@ -49,7 +49,7 @@ class ActivityLoading extends StatelessWidget {
                 right: 0,
                 child: Center(
                   child: InkWell(
-                    onTap: () => controller.passThrowActivityLoading(exerciseType, adId, challenge),
+                    onTap: () => controller.passThrowActivityLoading(exerciseType, challenge),
                     child: Padding(
                       padding: EdgeInsets.all(8.0.sp),
                       child: Container(

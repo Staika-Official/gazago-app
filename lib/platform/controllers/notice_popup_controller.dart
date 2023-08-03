@@ -58,7 +58,7 @@ class NoticePopupController extends GetxController {
   Future<void> initController() async {
     await getNoticePopupList();
     await getMainNoticePopupList();
-    checkPopupExpired();
+    showMainPopup();
   }
 
   Future<void> getMainNoticePopupList() async {
@@ -172,8 +172,24 @@ class NoticePopupController extends GetxController {
     }
   }
 
-  void checkPopupExpired() {
-    if (globalController.isPopupOpen.value && noticeMainPopupList.isNotEmpty) {
+  Future<bool> checkPopupExpired() async {
+    DateTime? date = await HiveStore.load(key: HiveKey.closePopupDate.name);
+
+    if (date != null) {
+      DateTime viewableTime = date.add(const Duration(hours: 24));
+      DateTime now = DateTime.now();
+      if (viewableTime.isBefore(now) && noticeMainPopupList.isNotEmpty) {
+        return true;
+      }
+      return false;
+    } else {
+      return true;
+    }
+  }
+
+  void showMainPopup() async {
+    bool isShowPopup = await checkPopupExpired();
+    if (isShowPopup) {
       setCurrent(0);
       showMainPopupAlert(this);
     }

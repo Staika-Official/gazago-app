@@ -192,7 +192,7 @@ class ActivitySelect extends StatelessWidget {
                 ],
               ),
               child: InkWell(
-                onTap: () => !controller.isButtonDisabled.value ? controller.selectExerciseType(ExerciseType.walking) : null,
+                onTap: () => controller.selectExerciseType(ExerciseType.walking),
                 borderRadius: BorderRadius.circular(14),
                 child: Padding(
                   padding: EdgeInsets.symmetric(horizontal: 26.sp, vertical: 24.sp),
@@ -396,7 +396,7 @@ class ActivitySelect extends StatelessWidget {
                         child: Padding(
                           padding: EdgeInsets.symmetric(horizontal: 16.sp, vertical: 14.sp),
                           child: StyledText(
-                            '경고 & 퇴장 카드',
+                            '경고 & 퇴장 카드 규정',
                             color: lightGrayColor,
                             fontSize: 14,
                             fontWeight: 600,

@@ -263,34 +263,34 @@ class ArchiveDetail extends StatelessWidget {
                 ],
               ),
             ),
-            Padding(
-              padding: EdgeInsets.symmetric(vertical: 10.0.sp, horizontal: 20.0.sp),
-              child: Row(
-                children: [
-                  const StyledText(
-                    '광고 보상',
-                    fontWeight: 600,
-                    fontSize: 16,
-                  ),
-                  const Spacer(),
-                  Row(
-                    children: [
-                      StyledText(
-                        formatDecimalPlaces(controller.selectedItem.value.rewardGoAdSum!, 2),
-                        fontWeight: 500,
-                        fontSize: 16,
-                      ),
-                      const StyledText(
-                        ' GO',
-                        fontWeight: 500,
-                        fontSize: 16,
-                        color: Color(0xFF7D7D84),
-                      ),
-                    ],
-                  ),
-                ],
-              ),
-            ),
+            // Padding(
+            //   padding: EdgeInsets.symmetric(vertical: 10.0.sp, horizontal: 20.0.sp),
+            //   child: Row(
+            //     children: [
+            //       const StyledText(
+            //         '광고 보상',
+            //         fontWeight: 600,
+            //         fontSize: 16,
+            //       ),
+            //       const Spacer(),
+            //       Row(
+            //         children: [
+            //           StyledText(
+            //             formatDecimalPlaces(controller.selectedItem.value.rewardGoAdSum!, 2),
+            //             fontWeight: 500,
+            //             fontSize: 16,
+            //           ),
+            //           const StyledText(
+            //             ' GO',
+            //             fontWeight: 500,
+            //             fontSize: 16,
+            //             color: Color(0xFF7D7D84),
+            //           ),
+            //         ],
+            //       ),
+            //     ],
+            //   ),
+            // ),
             Padding(
               padding: EdgeInsets.symmetric(vertical: 10.0.sp, horizontal: 20.0.sp),
               child: Row(
