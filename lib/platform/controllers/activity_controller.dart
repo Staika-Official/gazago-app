@@ -17,7 +17,8 @@ import 'package:gaza_go/platform/helpers/challenge_mixin.dart';
 import 'package:gaza_go/platform/helpers/consumer_item_mixin.dart';
 import 'package:gaza_go/platform/helpers/location_helper.dart';
 import 'package:gaza_go/platform/helpers/login_helper.dart';
-import 'package:gaza_go/platform/models/ad_watch_available_model.dart';
+import 'package:gaza_go/platform/helpers/map_helper.dart';
+import 'package:gaza_go/platform/models/challenge_course_model.dart';
 import 'package:gaza_go/platform/models/challenge_hierarchy_model.dart';
 import 'package:gaza_go/platform/models/challenge_model.dart';
 import 'package:gaza_go/platform/models/current_user_state_model.dart';
@@ -25,14 +26,13 @@ import 'package:gaza_go/platform/models/stat_model.dart';
 import 'package:gaza_go/platform/models/user_exercise_model.dart';
 import 'package:gaza_go/platform/services/activity_service.dart';
 import 'package:gaza_go/platform/services/admob_service.dart';
+import 'package:gaza_go/platform/services/item_service.dart';
 import 'package:gaza_go/platform/services/member_service.dart';
 import 'package:gaza_go/platform/services/uaa_service.dart';
 import 'package:gaza_go/platform/stores/hive_store.dart';
 import 'package:gaza_go/presentations/components/alert_ui_list.dart';
-import 'package:gaza_go/presentations/styles/colors.dart';
 import 'package:gaza_go/presentations/views/activity/activity_loading.dart';
 import 'package:gaza_go/presentations/views/activity/activity_select.dart';
-import 'package:gaza_go/presentations/views/activity/ad_select.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:get/get.dart';
 import 'package:health/health.dart';
@@ -61,8 +61,9 @@ class ActivityController extends SuperController with ActivityMixin, ChallengeMi
   final Rx<LocationAccuracyStatus> _locationAccuracyStatus = Rx(LocationAccuracyStatus.unknown);
   StreamSubscription<ServiceStatus>? _serviceStatusStream;
   final Rx<DateTime> receiveLocationTime = Rx(DateTime.now());
-  OverlayImage? startMaker;
-  OverlayImage? endMaker;
+  OverlayImage? startMarker;
+  OverlayImage? endMarker;
+  List<OverlayImage> checkpointMarkers = List.empty(growable: true);
   RxnInt challengeSelectedIndex = RxnInt(null);
   Control activityLoadControl = Control.play;
   RxBool disableButton = RxBool(false);
@@ -75,6 +76,7 @@ class ActivityController extends SuperController with ActivityMixin, ChallengeMi
   late AnimationController challengeGuideController;
   final Rx<Control> challengeLoadControl = Rx(Control.play);
   final RxBool isButtonDisabled = RxBool(false);
+  final RxList<ChallengeModel> challengeList = RxList.empty();
 
   Future<void> initializeController() async {
     challengeGuideController = AnimationController(vsync: this);
@@ -109,42 +111,40 @@ class ActivityController extends SuperController with ActivityMixin, ChallengeMi
   }
 
   Future<void> loadMakerImages() async {
-    startMaker = await OverlayImage.fromAssetImage(
-      assetName: 'assets/images/activity/ico_challenge_start_maker.png',
+    startMarker = await OverlayImage.fromAssetImage(
+      assetName: 'assets/images/activity/ico_challenge_start_marker.png',
     );
 
-    endMaker = await OverlayImage.fromAssetImage(
-      assetName: 'assets/images/activity/ico_challenge_end_maker.png',
+    endMarker = await OverlayImage.fromAssetImage(
+      assetName: 'assets/images/activity/ico_challenge_end_marker.png',
     );
+
+    int index = 0;
+    while (index < 10) {
+      checkpointMarkers.add(await OverlayImage.fromAssetImage(
+        assetName: 'assets/images/activity/ico_challenge_checkpoint_marker_${index + 1}.png',
+      ));
+      index++;
+    }
   }
 
-  Marker generateDefaultMarker(ChallengeModel course) {
-    return Marker(
-      markerId: course.id!.toString(),
-      position: LatLng(course.startLat!, course.startLon!),
-      captionText: course.startPointName,
-      captionColor: skyBlueColor,
-      captionHaloColor: Colors.black,
-      captionTextSize: 16.0,
-      subCaptionTextSize: 14,
-      subCaptionColor: (Platform.isAndroid) ? Colors.white : Colors.black,
-      subCaptionHaloColor: (Platform.isAndroid) ? Colors.black : Colors.white,
-      captionOffset: 5,
-      icon: startMaker,
-      width: 20,
-      height: 20,
+  Marker generateDefaultMarker(ChallengeCourseModel course) {
+    return getCustomMarker(
+      markerType: "START",
+      course: course,
+      markerIcon: startMarker,
       onMarkerTab: (marker, iconSize) {
-        showEndPointMarker(course);
+        showPathPointMarkers(course);
       },
     );
   }
 
   void generateChallengeMarkerList() {
-    allChallengesList.value = RxList.empty();
+    allCoursesList.value = RxList.empty();
     challengeMarkers.value = RxList.empty();
     for (ChallengeHierarchyModel challenge in hierarchyChallengesList) {
-      for (ChallengeModel course in challenge.course) {
-        allChallengesList.add(course);
+      for (ChallengeCourseModel course in challenge.course) {
+        allCoursesList.add(course);
 
         challengeMarkers.add(generateDefaultMarker(course));
       }
@@ -152,54 +152,35 @@ class ActivityController extends SuperController with ActivityMixin, ChallengeMi
   }
 
   Future<void> loadChallenges() async {
-    await getChallengesHierarchy(currentLocation.value);
+    await getChallenges(
+      successCallback: (List<ChallengeModel> data) {
+        challengeList.clear();
+        challengeList.addAll(data);
+      },
+    );
     generateChallengeMarkerList();
   }
 
-  void showEndPointMarker(ChallengeModel course) {
+  void showPathPointMarkers(ChallengeCourseModel course) {
     if (challengeSelectedIndex.value != null) {
-      challengeMarkers.add(generateDefaultMarker(allChallengesList.firstWhere((element) => element.id == challengeSelectedIndex.value)));
+      challengeMarkers.add(generateDefaultMarker(allCoursesList.firstWhere((element) => element.id == challengeSelectedIndex.value)));
     }
 
     challengeSelectedIndex.value = course.id!;
-    selectedChallengeMarkers.value = RxList.empty();
+    selectedChallengeMarkers.clear();
     challengeMarkers.removeWhere((element) {
       return element.markerId == challengeSelectedIndex.value.toString();
     });
 
-    selectedChallengeMarkers.add(Marker(
-      markerId: 'start_${course.id!.toString()}',
-      position: LatLng(course.startLat!, course.startLon!),
-      captionText: '시작: ${course.startPointName}',
-      captionColor: skyBlueColor,
-      captionHaloColor: Colors.black,
-      captionTextSize: 16.0,
-      subCaptionTextSize: 14,
-      subCaptionText: course.secondName,
-      subCaptionColor: (Platform.isAndroid) ? Colors.white : Colors.black,
-      subCaptionHaloColor: (Platform.isAndroid) ? Colors.black : Colors.white,
-      captionOffset: 5,
-      icon: startMaker,
-      width: 20,
-      height: 20,
-    ));
+    selectedChallengeMarkers.add(getCustomMarker(markerType: "START", course: course, markerIcon: startMarker));
 
-    selectedChallengeMarkers.add(Marker(
-      markerId: 'end_${course.id!.toString()}',
-      position: LatLng(course.endLat!, course.endLon!),
-      captionText: '도착: ${course.endPointName}',
-      captionColor: const Color(0xFFFF6F75),
-      captionHaloColor: Colors.black,
-      captionTextSize: 16.0,
-      captionOffset: 5,
-      subCaptionText: course.secondName,
-      subCaptionTextSize: 14,
-      subCaptionColor: (Platform.isAndroid) ? Colors.white : Colors.black,
-      subCaptionHaloColor: (Platform.isAndroid) ? Colors.black : Colors.white,
-      icon: endMaker,
-      width: 20,
-      height: 20,
-    ));
+    if (course.checkpoints != null && course.checkpoints!.isNotEmpty) {
+      course.checkpoints!.asMap().forEach((index, checkpoint) {
+        selectedChallengeMarkers.add(getCheckpointMarker(checkpoint, checkpointMarkers[index]));
+      });
+    }
+
+    selectedChallengeMarkers.add(getCustomMarker(markerType: "END", course: course, markerIcon: endMarker));
 
     challengeMapController.moveCamera(
       CameraUpdate.fitBounds(
@@ -377,11 +358,11 @@ class ActivityController extends SuperController with ActivityMixin, ChallengeMi
             }
           }
 
-          if (userState.value.exercise?.challengeId != null) {
+          if (userState.value.exercise?.challengeCourseId != null) {
             //  산행중인 정보 가져오기
-            ChallengeModel challenge = await getChallenge(userState.value.exercise!.challengeId!);
+            ChallengeCourseModel challenge = await getChallengeCourse(userState.value.exercise!.challengeCourseId!);
             if (challenge.id != null) {
-              selectedChallenge.value = challenge;
+              selectedCourse.value = challenge;
             }
           }
           if (updateTimer == null) {
@@ -429,7 +410,17 @@ class ActivityController extends SuperController with ActivityMixin, ChallengeMi
         initializeActivity();
       }
       if (globalController.internetConnection.value) {
-        getActivityRoute();
+        bool hasSeenFairPlayAlert = HiveStore.load(key: HiveKey.hasSeenFairPlayAlert.name) ?? false;
+        if (!hasSeenFairPlayAlert) {
+          HiveStore.save(key: HiveKey.hasSeenFairPlayAlert.name, value: true);
+          await showFairPlayAlert();
+        }
+
+        if (userState.value.state!.locked != null && userState.value.state!.locked! == true) {
+          showLockedUserAlert();
+        } else {
+          getActivityRoute();
+        }
       } else {
         showToastPopup('원할한 네트워크에서 진행해주세요.');
       }
@@ -561,7 +552,7 @@ class ActivityController extends SuperController with ActivityMixin, ChallengeMi
     }
   }
 
-  void loadExercise(ExerciseType exerciseType, String? adId, [ChallengeModel? challenge]) {
+  void loadExercise(ExerciseType exerciseType, [ChallengeCourseModel? challenge]) {
     loadingTime.value = 1;
 
     if (loadingTimer != null) {
@@ -573,7 +564,6 @@ class ActivityController extends SuperController with ActivityMixin, ChallengeMi
       barrierColor: const Color.fromRGBO(0, 0, 0, 0.8),
       ActivityLoading(
         exerciseType: exerciseType,
-        adId: adId,
         challenge: challenge,
       ),
     );
@@ -582,7 +572,7 @@ class ActivityController extends SuperController with ActivityMixin, ChallengeMi
       const Duration(seconds: 1),
       (timer) {
         if (loadingTime.value >= 3) {
-          exerciseStartThr.throttle(() => startExercise(exerciseType, challenge, adId: adId));
+          exerciseStartThr.throttle(() => startExercise(exerciseType, challenge));
           timer.cancel();
           loadingTimer = null;
         } else {
@@ -593,39 +583,40 @@ class ActivityController extends SuperController with ActivityMixin, ChallengeMi
     );
   }
 
-  void passThrowActivityLoading(ExerciseType exerciseType, String? adId, [ChallengeModel? challenge]) {
+  void passThrowActivityLoading(ExerciseType exerciseType, [ChallengeCourseModel? challenge]) {
     loadingTimer?.cancel();
     loadingTimer = null;
     Get.back();
-    exerciseStartThr.throttle(() => startExercise(exerciseType, challenge, adId: adId));
+    exerciseStartThr.throttle(() => startExercise(exerciseType, challenge));
   }
 
   Future<void> selectExerciseType(ExerciseType exerciseType) async {
-    isButtonDisabled.value = true;
     selectedExerciseType.value = exerciseType;
 
-    AdWatchAvailableModel adWatchAvailableModel = AdWatchAvailableModel(watchAvailable: false);
+    // AdWatchAvailableModel adWatchAvailableModel = AdWatchAvailableModel(watchAvailable: false);
+    //
+    // await AdmobService.getAdWatchAvailableTime(
+    //   'EXERCISE_START',
+    //   callback: (AdWatchAvailableModel model) {
+    //     adWatchAvailableModel = model;
+    //     isButtonDisabled.value = false;
+    //   },
+    // );
 
-    await AdmobService.getAdWatchAvailableTime(
-      'EXERCISE_START',
-      callback: (AdWatchAvailableModel model) {
-        adWatchAvailableModel = model;
-        isButtonDisabled.value = false;
-      },
-    );
+    // if (adWatchAvailableModel.watchAvailable!) {
+    //   Get.back();
+    //   Get.dialog(const AdSelect(), barrierDismissible: false, barrierColor: const Color.fromRGBO(0, 0, 0, 0.85));
+    //   if (startAd.value == null) {
+    //     adLoadTimerStart();
+    //     exerciseStartRewardedAdInit(
+    //       'exerciseStartAd',
+    //     );
+    //   }
+    // } else {
+    //   handleMoveExerciseActive(exerciseType);
+    // }
 
-    if (adWatchAvailableModel.watchAvailable!) {
-      Get.back();
-      Get.dialog(const AdSelect(), barrierDismissible: false, barrierColor: const Color.fromRGBO(0, 0, 0, 0.85));
-      if (startAd.value == null) {
-        adLoadTimerStart();
-        exerciseStartRewardedAdInit(
-          'exerciseStartAd',
-        );
-      }
-    } else {
-      handleMoveExerciseActive(exerciseType);
-    }
+    handleMoveExerciseActive(exerciseType);
   }
 
   void showAdAndMoveActivity() {
@@ -633,27 +624,25 @@ class ActivityController extends SuperController with ActivityMixin, ChallengeMi
   }
 
   void showAdTip() {
-    showAdTipAlert(selectedChallenge.value.id);
+    showAdTipAlert(selectedCourse.value?.id, selectedExerciseType.value);
   }
 
-  void handleMoveExerciseActive(ExerciseType exerciseType, {String? adId}) {
-    if (selectedExerciseType.value == ExerciseType.walking) selectedChallenge.value = ChallengeModel();
+  void handleMoveExerciseActive(ExerciseType exerciseType) {
     Get.offNamed(Routes.activityActive);
     loadExercise(
       selectedExerciseType.value,
-      adId,
-      selectedChallenge.value.id != null ? selectedChallenge.value : null,
+      selectedCourse.value,
     );
   }
 
-  void moveToChallengeSelection() {
-    if (doableChallenge.value != null) {
-      selectedChallenge.value = ChallengeModel.fromJson(doableChallenge.value!.toJson());
-      Get.toNamed(Routes.activityChallenges);
-    }
+  void moveToCourseSelection({required ChallengeCourseModel course, required ChallengeModel challenge}) async {
+    selectedCourse.value = ChallengeCourseModel.fromJson(course.toJson());
+    selectedChallenge.value = ChallengeModel.fromJson(challenge.toJson());
+    Get.toNamed(Routes.activityChallenges);
   }
 
-  void moveToChallengeMap() async {
+  void moveToChallengeMap(int challengeId) async {
+    await getChallengesHierarchy(currentLocation.value, challengeId);
     bool systemReady = await checkAvailabilities();
     if (systemReady) {
       challengeSelectedIndex.value = null;
@@ -734,7 +723,7 @@ class ActivityController extends SuperController with ActivityMixin, ChallengeMi
         DateTime now = DateTime.now();
 
         if (receiveLocationTime.value.add(const Duration(seconds: 30)).compareTo(now) < 0) {
-          await findChallenge();
+          await findCourses();
           receiveLocationTime.value = now;
         }
       }
@@ -778,16 +767,16 @@ class ActivityController extends SuperController with ActivityMixin, ChallengeMi
     initLocationStream();
     initGpsServiceStream();
     //await setMarkerImages();
-    await findChallenge();
+    await findCourses();
     detectChallengeZone(currentLocation.value);
   }
 
   // 챌린지 찾기
-  Future<void> findChallenge() async {
+  Future<void> findCourses() async {
     if (currentLocation.value.latitude != 0 && currentLocation.value.longitude != 0) {
-      await getNearByChallenge(currentLocation.value, exerciseState.value);
+      await getNearByCourses(currentLocation.value, exerciseState.value);
     } else {
-      await getChallengeList();
+      await getCourseList();
     }
   }
 
@@ -800,18 +789,22 @@ class ActivityController extends SuperController with ActivityMixin, ChallengeMi
 
   Future<void> retrySavedRequests({required String source}) async {
     if (HiveStore.load(key: HiveKey.endExerciseRequested.name) != null && HiveStore.load(key: HiveKey.endExerciseRequested.name) && userState.value.exercise != null) {
-      await endExercise(selectedChallenge.value, source: source);
+      await endExercise(source: source);
     }
   }
 
   void closeAdSelectPopup() {
     adLoadTimerStop();
-    selectedChallenge.value.id = null;
+    selectedCourse.value = null;
     Get.back();
     Timer(const Duration(seconds: 1), () {
       startAd.value = null;
       endAd.value = null;
     });
+  }
+
+  void moveToChallengeDetail(ChallengeModel challenge, bool hideLinkToCourses) {
+    Get.toNamed(Routes.challengeCourseDetail, arguments: {'id': challenge.id, 'hideCourses': hideLinkToCourses}, preventDuplicates: false);
   }
 
   @override
@@ -851,7 +844,9 @@ class ActivityController extends SuperController with ActivityMixin, ChallengeMi
   @override
   void onResumed() {
     print('onResumed activity');
-    getUserState(showLoading: true);
+    if (Get.currentRoute != Routes.login && Get.currentRoute != Routes.loading) {
+      getUserState(showLoading: true);
+    }
     // TODO: implement onResumed
   }
 }

@@ -6,7 +6,7 @@ import 'package:gaza_go/platform/models/iap_valid_model.dart';
 class IapService {
   static Future<IapValidModel> validateReceipt(data) async {
     Response res = await IapApi.validateReceipt(data);
-    if (res.statusCode == 200) {
+    if (res.statusCode == 201) {
       return IapValidModel.fromJson(res.data);
     } else {
       return IapValidModel(valid: false, state: '');

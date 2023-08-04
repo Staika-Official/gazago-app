@@ -3,8 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_naver_map/flutter_naver_map.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:gaza_go/platform/controllers/activity_controller.dart';
+import 'package:gaza_go/platform/models/challenge_course_model.dart';
 import 'package:gaza_go/platform/models/challenge_hierarchy_model.dart';
-import 'package:gaza_go/platform/models/challenge_model.dart';
 import 'package:gaza_go/presentations/styles/colors.dart';
 import 'package:gaza_go/presentations/styles/icons.dart';
 import 'package:gaza_go/presentations/styles/styled_text.dart';
@@ -14,7 +14,7 @@ class ChallengeMap extends StatelessWidget {
   const ChallengeMap({Key? key}) : super(key: key);
 
   List<CircleOverlay> renderStartPoint(ActivityController controller) {
-    List<CircleOverlay> centerCircles = controller.allChallengesList
+    List<CircleOverlay> centerCircles = controller.allCoursesList
         .map(
           (challenge) => CircleOverlay(
             overlayId: 'ChallengeStartCenter${challenge.id!}',
@@ -29,7 +29,7 @@ class ChallengeMap extends StatelessWidget {
   }
 
   List<CircleOverlay> renderEndPoint(ActivityController controller) {
-    List<CircleOverlay> centerCircles = controller.allChallengesList
+    List<CircleOverlay> centerCircles = controller.allCoursesList
         .map(
           (challenge) => CircleOverlay(
             overlayId: 'ChallengeEndCenter${challenge.id!}',
@@ -59,24 +59,25 @@ class ChallengeMap extends StatelessWidget {
         tilePadding: EdgeInsets.only(left: 20.sp, right: 20.sp, top: 0, bottom: 0),
         //children: challenge.course.map(course => _renderCourse(controller, course)).toList(),
         children: challenge.course.map((course) {
-          return _renderCourse(controller, course);
+          return _renderCourseList(controller, course);
         }).toList(),
       ),
     );
   }
 
-  Widget _renderCourse(ActivityController controller, ChallengeModel course) {
+  Widget _renderCourseList(ActivityController controller, ChallengeCourseModel course) {
     print('${controller.challengeSelectedIndex.value} ===== ${course.id}');
     return Builder(builder: (context) {
       return Obx(() {
         return ListTile(
             onTap: () {
-              controller.showEndPointMarker(course);
+              controller.showPathPointMarkers(course);
             },
             dense: MediaQuery.of(context).size.width < 320,
             visualDensity: VisualDensity(vertical: MediaQuery.of(context).size.width < 320 ? -3 : 0),
             subtitle: StyledText(
-              '시작: ${course.startPointName} - 도착: ${course.endPointName}',
+              controller.getCourseRouteString(course),
+              // '시작: ${course.startPointName} - 도착: ${course.endPointName}',
               color: (controller.challengeSelectedIndex.value == course.id) ? skyBlueColor : deepGrayColor,
               fontSize: 14,
               lineHeight: 14,
@@ -87,7 +88,7 @@ class ChallengeMap extends StatelessWidget {
               padding: EdgeInsets.only(left: 30.sp, top: 5),
               child: (controller.challengeSelectedIndex.value == course.id) ? iconChallengeCheckOn : iconChallengeCheckOff,
             ),
-            contentPadding: const EdgeInsets.all(0.0),
+            contentPadding: EdgeInsets.only(right: 20.sp),
             // title: Text(
             //   course.secondName!,
             //   style: TextStyle(color: (controller.challengeSelectedIndex == course.id) ? skyBlueColor : Colors.white),
@@ -173,7 +174,7 @@ class ChallengeMap extends StatelessWidget {
                     ],
                   ),
                   child: const StyledText(
-                    '100대 명산 챌린지 가이드',
+                    '챌린지 코스',
                     fontSize: 16,
                     fontWeight: 500,
                     lineHeight: 22,
@@ -186,10 +187,11 @@ class ChallengeMap extends StatelessWidget {
                 top: 66.sp,
                 left: 20.sp,
                 child: InkWell(
-                    onTap: () {
-                      Navigator.pop(context);
-                    },
-                    child: iconChallengeScreenBack),
+                  onTap: () {
+                    Get.back();
+                  },
+                  child: iconChallengeScreenBack,
+                ),
               ),
             ],
           );

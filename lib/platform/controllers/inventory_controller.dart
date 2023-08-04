@@ -560,4 +560,11 @@ class InventoryController extends GetxController with LinearProgressMixin, Inven
       await launchUrl(url, mode: LaunchMode.externalApplication);
     }
   }
+
+  int getRemainingDays(String expiryDate) {
+    DateTime expiryUTCDateTime = DateTime.parse(expiryDate).toUtc();
+    DateTime now = DateTime.now().toUtc();
+
+    return expiryUTCDateTime.difference(now).inDays;
+  }
 }

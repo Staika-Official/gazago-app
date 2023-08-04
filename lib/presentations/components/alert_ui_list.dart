@@ -5,6 +5,7 @@ import 'dart:ui';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:gaza_go/constants/config.dart';
@@ -32,10 +33,11 @@ import 'package:gaza_go/platform/helpers/activity_mixin.dart';
 import 'package:gaza_go/platform/helpers/alert_helper.dart';
 import 'package:gaza_go/platform/helpers/base_helper.dart';
 import 'package:gaza_go/platform/helpers/inventory_helper.dart';
-import 'package:gaza_go/platform/models/challenge_model.dart';
+import 'package:gaza_go/platform/models/challenge_course_model.dart';
 import 'package:gaza_go/platform/models/exchange_stik_price_model.dart';
 import 'package:gaza_go/platform/models/push_message_challenge_success_model.dart';
 import 'package:gaza_go/presentations/components/circular_button.dart';
+import 'package:gaza_go/presentations/components/fair_play_content.dart';
 import 'package:gaza_go/presentations/components/gazago_button.dart';
 import 'package:gaza_go/presentations/components/item_counter.dart';
 import 'package:gaza_go/presentations/styles/colors.dart';
@@ -334,6 +336,7 @@ void showRetryAlert(LoadingController controller) {
 
 void showNotEnoughTaikaAlert() {
   showAlert(
+    allowMultipleBottomSheet: true,
     title: '잔고 부족',
     contentText: 'Taika 가 부족하여 진행할 수 없습니다.\n GO지갑에 Taika를 충전해 주세요.',
     actions: [
@@ -532,7 +535,7 @@ Future<bool> showGalleryPermissionAlert(MyPageController controller) async {
   return photoPermissionCompleter.future;
 }
 
-void showEndExerciseAlert(ActivityMixin mixin, ChallengeModel challenge) {
+void showEndExerciseAlert(ActivityMixin mixin) {
   showAlert(
     title: '활동 종료',
     contentText: '지금까지의 기록만 저장됩니다.',
@@ -550,7 +553,7 @@ void showEndExerciseAlert(ActivityMixin mixin, ChallengeModel challenge) {
       ),
       Expanded(
         child: GazagoButton(
-          onTap: () => mixin.endExercise(challenge, source: 'showEndExerciseAlert'),
+          onTap: () => mixin.endExercise(source: 'showEndExerciseAlert'),
           buttonText: '활동 종료',
           buttonColor: skyBlueColor,
         ),
@@ -559,7 +562,7 @@ void showEndExerciseAlert(ActivityMixin mixin, ChallengeModel challenge) {
   );
 }
 
-void showEndExerciseAdAlert(ChallengeModel challenge, ActivityController controller) {
+void showEndExerciseAdAlert(ActivityController controller) {
   showAlert(
     title: '활동 종료',
     contentText: '지금까지의 기록만 저장됩니다.',
@@ -568,7 +571,7 @@ void showEndExerciseAdAlert(ChallengeModel challenge, ActivityController control
         child: Column(
           children: [
             InkWell(
-                onTap: () => controller.endAd.value != null ? controller.showExerciseEndAd(challenge, controller) : null,
+                onTap: () => controller.endAd.value != null ? controller.showExerciseEndAd(controller) : null,
                 child: Obx(() {
                   return Container(
                     width: double.infinity,
@@ -643,7 +646,7 @@ void showEndExerciseAdAlert(ChallengeModel challenge, ActivityController control
             Padding(
               padding: EdgeInsets.only(top: 8.0.sp),
               child: GazagoButton(
-                onTap: () => controller.endExercise(challenge, source: 'showEndExerciseAlert'),
+                onTap: () => controller.endExercise(source: 'showEndExerciseAlert'),
                 buttonText: '활동 종료',
                 buttonColor: const Color(0xFF2C2E36),
                 textColor: skyBlueColor,
@@ -686,7 +689,7 @@ void showEndExerciseAdAlert(ChallengeModel challenge, ActivityController control
   );
 }
 
-void showBadgeAcquisitionAlert(String badgeImgUrl, ChallengeModel selectedChallenge) {
+void showBadgeAcquisitionAlert(String badgeImgUrl, ChallengeCourseModel selectedChallenge) {
   showAlert(
     isScrollControlled: true,
     title: '챌린지 뱃지 발급',
@@ -999,7 +1002,7 @@ void showPendingExerciseAlert(ActivityController controller) {
                     ),
                     Obx(() {
                       return GestureDetector(
-                        onTapDown: (tapDownDetail) => controller.onTapDownStop(tapDownDetail, controller.selectedChallenge.value, controller: controller, source: 'pendingExerciseDialog'),
+                        onTapDown: (tapDownDetail) => controller.onTapDownStop(tapDownDetail, controller.selectedCourse.value, controller: controller, source: 'pendingExerciseDialog'),
                         onTapUp: (tapUpDetail) => controller.onTapUpStop(tapUpDetail),
                         child: Stack(
                           children: [
@@ -1308,6 +1311,7 @@ void itemPurchaseAlert(ShopDetailController controller, double remainMyTik, trad
 
 void itemPurchaseShortBalanceAlert(ShopDetailController controller, double remainMyTik, tradeSymbol) {
   showAlert(
+    allowMultipleBottomSheet: true,
     title: '잔액이 부족합니다',
     isDangerTitle: true,
     isScrollControlled: true,
@@ -1485,6 +1489,7 @@ void itemPurchaseShortBalanceAlert(ShopDetailController controller, double remai
 
 void itemPurchaseCompleteAlert(ShopDetailController controller) {
   showAlert(
+    allowMultipleBottomSheet: true,
     title: '구매가 완료되었습니다.',
     isScrollControlled: true,
     contentWidget: Obx(() {
@@ -1926,6 +1931,7 @@ void itemPurchaseCompleteAlert(ShopDetailController controller) {
 
 void itemPurchaseImpossibleAlert() {
   showAlert(
+    allowMultipleBottomSheet: true,
     title: '구매가 불가합니다',
     contentWidget: Padding(
       padding: EdgeInsets.only(top: 20.0.sp, bottom: 40.sp),
@@ -1952,6 +1958,7 @@ void itemPurchaseImpossibleAlert() {
 
 void itemPurchaseAvailableOnlyOneAlert(String errorMessage) {
   showAlert(
+    allowMultipleBottomSheet: true,
     title: errorMessage,
     contentWidget: Padding(
       padding: EdgeInsets.only(top: 20.0.sp, bottom: 40.sp),
@@ -2370,7 +2377,7 @@ Future<void> showForceLogoutAlert() {
   return forceLogoutAlertCompleter.future;
 }
 
-void showAdTipAlert(int? challengeId) {
+void showAdTipAlert(int? challengeId, ExerciseType exerciseType) {
   Get.dialog(
     barrierColor: Colors.transparent,
     WillPopScope(
@@ -2449,7 +2456,7 @@ void showAdTipAlert(int? challengeId) {
                                                 fontFamily: 'Montserrat',
                                               ),
                                               TextSpan(
-                                                text: '광고 보고, ${challengeId == null ? '1' : '3'}GO 받고 시작하기',
+                                                text: '광고 보고, ${challengeId == null || exerciseType.value == ExerciseType.walking.value ? '1' : '3'}GO 받고 시작하기',
                                               ),
                                             ),
                                           ),
@@ -2869,164 +2876,117 @@ void showLeaderboardInfo() {
 
 Future<void> showMainPopupAlert(NoticePopupController noticePopupController) async {
   final CarouselController carouselController = CarouselController();
-
-  await Get.bottomSheet(
-    isDismissible: false,
-    isScrollControlled: true,
-    WillPopScope(
-      onWillPop: () async => false,
-      child: Container(
-        decoration: const BoxDecoration(
-          color: Colors.transparent,
-        ),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.end,
-          mainAxisAlignment: MainAxisAlignment.end,
-          mainAxisSize: MainAxisSize.max,
-          children: [
-            Stack(children: [
-              CarouselSlider(
-                key: const Key('Slider'),
-                items: noticePopupController.noticeMainPopupList
-                    .map((item) => SizedBox(
-                          width: double.infinity,
-                          child: InkWell(
-                            onTap: () => noticePopupController.moveToWebView(item),
-                            child: item.imageUrlKo != null
-                                ? Image.network(
-                                    item.imageUrlKo!,
-                                    width: double.infinity,
-                                  )
-                                : Container(),
+  if (Get.isBottomSheetOpen == null || !Get.isBottomSheetOpen!) {
+    await Get.bottomSheet(
+      isDismissible: false,
+      isScrollControlled: true,
+      WillPopScope(
+        onWillPop: () async => false,
+        child: Container(
+          decoration: const BoxDecoration(
+            color: Colors.transparent,
+          ),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.end,
+            mainAxisAlignment: MainAxisAlignment.end,
+            mainAxisSize: MainAxisSize.max,
+            children: [
+              Stack(children: [
+                CarouselSlider(
+                  key: const Key('Slider'),
+                  items: noticePopupController.noticeMainPopupList
+                      .map((item) => SizedBox(
+                            width: double.infinity,
+                            child: InkWell(
+                              onTap: () => noticePopupController.moveToWebView(item),
+                              child: item.imageUrlKo != null
+                                  ? Image.network(
+                                      item.imageUrlKo!,
+                                      width: double.infinity,
+                                    )
+                                  : Container(),
+                            ),
+                          ))
+                      .toList(),
+                  carouselController: carouselController,
+                  options: CarouselOptions(
+                    aspectRatio: 1,
+                    viewportFraction: 1,
+                    autoPlay: true,
+                    enlargeCenterPage: false,
+                    enableInfiniteScroll: false,
+                    onPageChanged: (index, reason) {
+                      noticePopupController.setCurrent(index);
+                    },
+                    onScrolled: (op) {
+                      noticePopupController.setValue(op!);
+                    },
+                  ),
+                ),
+                Positioned(
+                    right: 20.sp,
+                    top: 12.sp,
+                    child: Obx(() {
+                      return Container(
+                        decoration: BoxDecoration(
+                          color: popupBgColor,
+                          borderRadius: BorderRadius.circular(20.sp),
+                        ),
+                        child: Padding(
+                          padding: EdgeInsets.symmetric(horizontal: 8.0.sp, vertical: 4.0.sp),
+                          child: StyledText(
+                            '${(noticePopupController.current.value + 1).toString()}/${noticePopupController.noticeMainPopupList.length}',
+                            fontSize: 16,
+                            lineHeight: 17,
+                            fontWeight: 500,
                           ),
-                        ))
-                    .toList(),
-                carouselController: carouselController,
-                options: CarouselOptions(
-                  aspectRatio: 1,
-                  viewportFraction: 1,
-                  autoPlay: true,
-                  enlargeCenterPage: false,
-                  enableInfiniteScroll: false,
-                  onPageChanged: (index, reason) {
-                    noticePopupController.setCurrent(index);
-                  },
-                  onScrolled: (op) {
-                    noticePopupController.setValue(op!);
-                  },
+                        ),
+                      );
+                    })),
+              ]),
+              Container(
+                color: popupBgColor,
+                child: Padding(
+                  padding: EdgeInsets.symmetric(horizontal: 20.0.sp),
+                  child: Row(
+                    mainAxisSize: MainAxisSize.max,
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      InkWell(
+                        onTap: () => noticePopupController.onSavePopupCloseDate(),
+                        child: Padding(
+                          padding: EdgeInsets.symmetric(vertical: 28.0.sp, horizontal: 10.sp),
+                          child: const StyledText(
+                            '오늘 그만 보기',
+                            color: Color(0xFFB6B6B6),
+                            fontSize: 16,
+                            lineHeight: 16,
+                            fontWeight: 500,
+                          ),
+                        ),
+                      ),
+                      InkWell(
+                        onTap: () => Get.back(),
+                        child: Padding(
+                          padding: EdgeInsets.symmetric(vertical: 28.0.sp, horizontal: 10.sp),
+                          child: const StyledText(
+                            '닫기',
+                            fontWeight: 700,
+                            fontSize: 16,
+                            lineHeight: 16,
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
                 ),
               ),
-              Positioned(
-                  right: 20.sp,
-                  top: 12.sp,
-                  child: Obx(() {
-                    return Container(
-                      decoration: BoxDecoration(
-                        color: popupBgColor,
-                        borderRadius: BorderRadius.circular(20.sp),
-                      ),
-                      child: Padding(
-                        padding: EdgeInsets.symmetric(horizontal: 8.0.sp, vertical: 4.0.sp),
-                        child: StyledText(
-                          '${(noticePopupController.current.value + 1).toString()}/${noticePopupController.noticeMainPopupList.length}',
-                          fontSize: 16,
-                          lineHeight: 17,
-                          fontWeight: 500,
-                        ),
-                      ),
-                    );
-                  })),
-            ]),
-            Container(
-              color: popupBgColor,
-              child: Padding(
-                padding: EdgeInsets.symmetric(horizontal: 20.0.sp),
-                child: Row(
-                  mainAxisSize: MainAxisSize.max,
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    InkWell(
-                      onTap: () => noticePopupController.onSavePopupCloseDate(),
-                      child: Padding(
-                        padding: EdgeInsets.symmetric(vertical: 28.0.sp, horizontal: 10.sp),
-                        child: const StyledText(
-                          '오늘 그만 보기',
-                          color: Color(0xFFB6B6B6),
-                          fontSize: 16,
-                          lineHeight: 16,
-                          fontWeight: 500,
-                        ),
-                      ),
-                    ),
-                    InkWell(
-                      onTap: () => Get.back(),
-                      child: Padding(
-                        padding: EdgeInsets.symmetric(vertical: 28.0.sp, horizontal: 10.sp),
-                        child: const StyledText(
-                          '닫기',
-                          fontWeight: 700,
-                          fontSize: 16,
-                          lineHeight: 16,
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-            ),
-          ],
-        ),
-      ),
-    ),
-  );
-}
-
-void showNotChallangeAbleAlert(ActivityController controller) {
-  showAlert(
-    contentWidget: Padding(
-      padding: EdgeInsets.only(top: 20.0.sp, bottom: 40.sp),
-      child: Column(
-        children: [
-          Padding(
-            padding: EdgeInsets.only(bottom: 20.0.sp),
-            child: SvgPicture.asset(
-              'assets/images/common/ico_challange_marker.svg',
-              width: 40.sp,
-              height: 40.sp,
-            ),
+            ],
           ),
-          const StyledText(
-            '현재 챌린지 시작점 위치가 아닙니다.\n시작점은 챌린지 가이드에서 확인해보세요!',
-            fontSize: 18,
-            lineHeight: 24,
-            fontWeight: 500,
-            letterSpacing: .2,
-            textAlign: TextAlign.center,
-          ),
-        ],
-      ),
-    ),
-    actions: [
-      Expanded(
-        child: GazagoButton(
-          onTap: () => Get.back(),
-          buttonText: '취소',
-          textColor: Colors.white,
-          buttonColor: popupBgColor,
         ),
       ),
-      SizedBox(
-        width: 9.sp,
-      ),
-      Expanded(
-        child: GazagoButton(
-          onTap: () => {Get.back(), controller.moveToChallengeMap()},
-          buttonText: '챌린지 가이드',
-          buttonColor: skyBlueColor,
-        ),
-      ),
-    ],
-  );
+    );
+  }
 }
 
 void showStoreNotAvailableAlert() {
@@ -3223,6 +3183,7 @@ Future<bool> verifyEndPointPasswordAlert(DebuggingController controller) {
 
 void showStaikaStatusAlert({required bool hasWallet, TabController? tabController}) {
   showAlert(
+    allowMultipleBottomSheet: true,
     contentWidget: Column(
       children: [
         Padding(
@@ -3547,6 +3508,7 @@ void exchangeStikToTikAlert(GoWalletController controller, ExchangeStikPriceMode
 
 void failureChargeStikToTikAlert(GoWalletController controller, String errorMsg) {
   showAlert(
+    allowMultipleBottomSheet: true,
     title: '잠시 후 다시 시도해 주세요.',
     contentWidget: Padding(
       padding: EdgeInsets.only(top: 20.0.sp, bottom: 40.sp),
@@ -3614,6 +3576,7 @@ void successChargeStikToTikAlert(GoWalletController controller) {
 void sendStikToGoWalletAlert(StaikaWalletController controller) {
   WalletMasterController walletMasterController = Get.find();
   showAlert(
+    allowMultipleBottomSheet: true,
     title: '전송 하시겠습니까?',
     isScrollControlled: true,
     contentWidget: Obx(() {
@@ -3705,6 +3668,7 @@ void sendStikToGoWalletAlert(StaikaWalletController controller) {
 
 void failureShortBalanceStikToTikAlert(GoWalletController controller) {
   showAlert(
+    allowMultipleBottomSheet: true,
     title: '잔액이 부족해 진행할 수 없습니다.',
     contentWidget: Padding(
       padding: EdgeInsets.only(top: 20.0.sp, bottom: 40.sp),
@@ -3735,6 +3699,7 @@ void failureShortBalanceStikToTikAlert(GoWalletController controller) {
 
 void exchangeStikShortBalanceAlert(StaikaWalletController controller) {
   showAlert(
+    allowMultipleBottomSheet: true,
     title: '잔액이 부족해 진행할 수 없습니다.',
     isScrollControlled: true,
     contentWidget: Obx(() {
@@ -5116,6 +5081,247 @@ void shortConsumerItems(String itemType) {
           },
           buttonText: '상점으로 이동',
           buttonColor: skyBlueColor,
+        ),
+      ),
+    ],
+  );
+}
+
+void participateInChallengeByCodeAlert() {
+  ChallengesDetailController controller = Get.find();
+  Get.dialog(
+    barrierColor: subBg01Color.withOpacity(0.2),
+    useSafeArea: true,
+    barrierDismissible: false,
+    WillPopScope(
+      onWillPop: () async => false,
+      child: Dialog(
+        insetPadding: EdgeInsets.zero,
+        backgroundColor: subBg01Color.withOpacity(0.2),
+        child: Padding(
+          padding: EdgeInsets.all(20.0.sp),
+          child: Stack(
+            children: [
+              Center(
+                child: Container(
+                  decoration: BoxDecoration(
+                    color: popupBgColor,
+                    borderRadius: BorderRadius.all(
+                      Radius.circular(20.sp),
+                    ),
+                  ),
+                  child: Padding(
+                    padding: EdgeInsets.symmetric(horizontal: 20.0.sp, vertical: 30.sp),
+                    child: Column(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        Padding(
+                          padding: EdgeInsets.only(bottom: 14.0.sp),
+                          child: const StyledText(
+                            '참여코드 입력',
+                            fontSize: 20,
+                            lineHeight: 21,
+                            fontWeight: 500,
+                          ),
+                        ),
+                        Padding(
+                          padding: EdgeInsets.only(bottom: 35.0.sp),
+                          child: const StyledText(
+                            '참여코드 입력이 필요한 챌린지 입니다.',
+                            fontSize: 16,
+                            lineHeight: 17,
+                            fontWeight: 500,
+                          ),
+                        ),
+                        Obx(() {
+                          return TextField(
+                            decoration: InputDecoration(
+                              filled: true,
+                              fillColor: subBg01Color,
+                              hintText: '참여코드를 입력해주세요.',
+                              hintStyle: TextStyle(
+                                color: deepGrayColor,
+                                fontSize: 18,
+                                height: 20 / 18,
+                                fontWeight: FontWeight.w500,
+                              ),
+                              focusedBorder: OutlineInputBorder(
+                                borderRadius: const BorderRadius.all(Radius.circular(10.0)),
+                                borderSide: BorderSide(width: 2, color: controller.errorMessage.value == '' ? skyBlueColor : const Color(0xFFFF4C4C)),
+                              ),
+                              enabledBorder: OutlineInputBorder(
+                                borderRadius: const BorderRadius.all(Radius.circular(10.0)),
+                                borderSide: BorderSide(width: 2, color: controller.errorMessage.value == '' ? Colors.transparent : const Color(0xFFFF4C4C)),
+                              ),
+                              border: OutlineInputBorder(
+                                borderSide: BorderSide(width: 2, color: controller.errorMessage.value == '' ? Colors.transparent : const Color(0xFFFF4C4C)),
+                                borderRadius: const BorderRadius.all(Radius.circular(10.0)),
+                              ),
+                            ),
+                            controller: controller.codeTextController,
+                            textInputAction: TextInputAction.go,
+                            inputFormatters: [
+                              FilteringTextInputFormatter.allow(RegExp(r'[a-zaA-Z0-9]')),
+                              LengthLimitingTextInputFormatter(6),
+                              TextInputFormatter.withFunction((oldValue, newValue) {
+                                return newValue.copyWith(text: newValue.text.toUpperCase());
+                              }),
+                            ],
+                            style: TextStyle(
+                              color: Colors.white,
+                              fontSize: 18.sp,
+                              height: 20 / 18,
+                              fontWeight: FontWeight.w600,
+                            ),
+                            autofocus: false,
+                            cursorColor: Colors.white,
+                            focusNode: controller.focusNode,
+                            onChanged: (value) => controller.setCode(value),
+                            onSubmitted: (val) => controller.sendParticipateInCode(),
+                          );
+                        }),
+                        Obx(() {
+                          return SizedBox(
+                            height: 50.sp,
+                            child: Padding(
+                              padding: EdgeInsets.symmetric(vertical: 20.0.sp),
+                              child: StyledText(controller.errorMessage.value, fontSize: 14, color: Colors.redAccent, fontWeight: 500, lineHeight: 15),
+                            ),
+                          );
+                        }),
+                        Padding(
+                          padding: EdgeInsets.only(top: 5.0.sp),
+                          child: Row(
+                            children: [
+                              Expanded(
+                                child: GazagoButton(
+                                  onTap: () => controller.closeParticipateInCodeAlert(),
+                                  buttonText: '취소',
+                                  textColor: Colors.white,
+                                  buttonColor: popupBgColor,
+                                ),
+                              ),
+                              SizedBox(
+                                width: 9.sp,
+                              ),
+                              Expanded(
+                                child: GazagoButton(
+                                  onTap: () => controller.sendParticipateInCode(),
+                                  buttonText: '확인',
+                                  buttonColor: skyBlueColor,
+                                ),
+                              ),
+                            ],
+                          ),
+                        )
+                      ],
+                    ),
+                  ),
+                ),
+              ),
+            ],
+          ),
+        ),
+      ),
+    ),
+  );
+}
+
+Future<void> showFairPlayAlert() async {
+  Completer completer = Completer();
+  Get.dialog(
+    barrierColor: subBg01Color.withOpacity(0.2),
+    useSafeArea: true,
+    barrierDismissible: false,
+    WillPopScope(
+      onWillPop: () async => false,
+      child: Dialog(
+        insetPadding: EdgeInsets.zero,
+        backgroundColor: subBg01Color.withOpacity(0.8),
+        child: Padding(
+          padding: EdgeInsets.all(25.0.sp),
+          child: Container(
+            height: Get.context!.size!.height * 0.7,
+            padding: const EdgeInsets.only(top: 38, bottom: 28),
+            decoration: BoxDecoration(
+              color: popupBgColor,
+              borderRadius: BorderRadius.circular(15),
+            ),
+            child: Column(
+              children: [
+                iconFairplayAlert,
+                const Padding(
+                  padding: EdgeInsets.only(
+                    top: 18.0,
+                    bottom: 30,
+                  ),
+                  child: StyledText(
+                    '가자고 페어플레이',
+                    fontSize: 18,
+                    lineHeight: 18,
+                    fontWeight: 700,
+                  ),
+                ),
+                Expanded(
+                  child: FairPlayContent(
+                    padding: const EdgeInsets.only(
+                      left: 30,
+                      right: 30,
+                      bottom: 30,
+                    ),
+                  ),
+                ),
+                Padding(
+                  padding: const EdgeInsets.only(
+                    top: 20,
+                    left: 30,
+                    right: 30,
+                  ),
+                  child: GazagoButton(
+                    onTap: () {
+                      Get.back();
+                      completer.complete();
+                    },
+                    buttonText: '확인했습니다.',
+                    buttonColor: const Color(0xFF0EE6F3),
+                    textColor: Colors.black,
+                  ),
+                )
+              ],
+            ),
+          ),
+        ),
+      ),
+    ),
+  );
+  return completer.future;
+}
+
+void showLockedUserAlert() async {
+  await showAlert(
+    title: '알림',
+    contentWidget: Padding(
+      padding: EdgeInsets.only(top: 30.sp, bottom: 50.sp),
+      child: Text.rich(
+        textAlign: TextAlign.center,
+        style: TextStyle(
+          fontSize: 18.sp,
+          height: 24.sp / 18.sp,
+          fontWeight: FontWeight.w500,
+          color: Colors.white,
+        ),
+        const TextSpan(
+          text: '경고 & 퇴장 카드 운영 정책에 따라\n계정 블락중입니다. ',
+        ),
+      ),
+    ),
+    actions: [
+      Expanded(
+        child: GazagoButton(
+          buttonText: '확인',
+          onTap: () {
+            Get.back();
+          },
         ),
       ),
     ],

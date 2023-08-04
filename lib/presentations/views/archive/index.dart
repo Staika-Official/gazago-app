@@ -1,5 +1,8 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:flutter_svg/flutter_svg.dart';
+import 'package:gaza_go/constants/config.dart';
 import 'package:gaza_go/platform/controllers/archive_controller.dart';
 import 'package:gaza_go/platform/helpers/activity_helper.dart';
 import 'package:gaza_go/platform/helpers/base_helper.dart';
@@ -58,11 +61,29 @@ class ArchiveHome extends StatelessWidget {
                                 //     : const sp.Svg('assets/images/archive/ico_archive_walking.svg'),
                               ),
                               if (archive.badgeIssueId != null)
-                                Positioned(
-                                  right: -5,
-                                  bottom: -5,
-                                  child: Image.network(archive.badgeImageUrl!, width: 20.sp, height: 20.sp),
-                                ),
+                                archive.badgeImageUrl!.contains('.svg')
+                                    ? Positioned(
+                                        right: -5,
+                                        bottom: -5,
+                                        child: SvgPicture.network(
+                                          width: 20.sp,
+                                          height: 20.sp,
+                                          fit: BoxFit.contain,
+                                          archive.badgeImageUrl!,
+                                          headers: imageNetworkHeader,
+                                        ),
+                                      )
+                                    : Positioned(
+                                        right: -5,
+                                        bottom: -5,
+                                        child: CachedNetworkImage(
+                                          width: 20.sp,
+                                          height: 20.sp,
+                                          imageUrl: archive.badgeImageUrl!,
+                                          fit: BoxFit.fitHeight,
+                                          httpHeaders: imageNetworkHeader,
+                                        ),
+                                      ),
                             ],
                           ),
                           Padding(

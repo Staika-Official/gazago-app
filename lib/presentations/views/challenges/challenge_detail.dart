@@ -346,6 +346,8 @@ class ChallengeDetail extends StatelessWidget {
                                                       fontWeight: 500,
                                                       letterSpacing: -.1,
                                                       color: lightGrayColor,
+                                                      maxLines: 2,
+                                                      overflowEllipsis: true,
                                                     ),
                                                   ),
                                                 if (controller.challengeDetails.value.title != null)
@@ -447,7 +449,7 @@ class ChallengeDetail extends StatelessWidget {
                                                                         letterSpacing: -.1,
                                                                       )
                                                                     : StyledText(
-                                                                        '${formatDecimalPlaces((controller.challengeDetails.value.soldQuantity ?? 0).toDouble(), 0)}명 /',
+                                                                        '${formatDecimalPlaces((controller.challengeDetails.value.soldQuantity ?? 0).toDouble(), 0)}명',
                                                                         color: lightGrayColor,
                                                                         fontWeight: 500,
                                                                         fontSize: 12,
@@ -455,7 +457,9 @@ class ChallengeDetail extends StatelessWidget {
                                                                         letterSpacing: -.1,
                                                                       ),
                                                                 StyledText(
-                                                                  ' ${formatDecimalPlaces(controller.challengeDetails.value.quantity!.toDouble(), 0)}명',
+                                                                  controller.challengeDetails.value.quantity! >= 0
+                                                                      ? ' / ${formatDecimalPlaces(controller.challengeDetails.value.quantity!.toDouble(), 0)}명'
+                                                                      : ' 참여중',
                                                                   color: lightGrayColor,
                                                                   fontWeight: 500,
                                                                   fontSize: 12,

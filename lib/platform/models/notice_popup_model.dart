@@ -10,6 +10,7 @@ class NoticePopupModel {
   bool? displayed;
   bool? activated;
   int? listOrder;
+  int? referenceId;
   String? openType; //IN_APP, INTERNAL_WEB_VIEW, EXTERNAL_BROWSER
   String? label;
   String? contentKo;
@@ -33,6 +34,7 @@ class NoticePopupModel {
     this.displayed,
     this.activated,
     this.listOrder,
+    this.referenceId,
     this.openType,
     this.label,
     this.contentKo,

@@ -30,14 +30,17 @@ class NewChallengeDetailModel {
   bool? previewDisplayed;
   String? challengeRewardRuleType;
   int? rewardAmount;
+  int? rewardQuantity;
   String? introduce;
   String? description;
   NewChallengeItemModel? item;
   NewChallengeUserItemModel? userItem;
   NewChallengeBadgeModel? badge;
+  List<NewChallengeBadgeModel>? badges;
   String? extBtnLabel;
   String? extTxt;
   String? extTxtDetail;
+  bool? limitedPeriod;
 
   NewChallengeDetailModel({
     this.id,
@@ -63,14 +66,17 @@ class NewChallengeDetailModel {
     this.previewDisplayed,
     this.challengeRewardRuleType,
     this.rewardAmount,
+    this.rewardQuantity,
     this.introduce,
     this.description,
     this.item,
     this.userItem,
     this.badge,
+    this.badges,
     this.extBtnLabel,
     this.extTxt,
     this.extTxtDetail,
+    this.limitedPeriod,
   });
 
   factory NewChallengeDetailModel.fromJson(Map<String, dynamic> json) => _$NewChallengeDetailModelFromJson(json);

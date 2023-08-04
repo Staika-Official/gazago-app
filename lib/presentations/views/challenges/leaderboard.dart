@@ -374,70 +374,72 @@ class ChallengeLeaderboard extends StatelessWidget {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Padding(
-                      padding: EdgeInsets.only(top: 25.0.sp, left: 20.sp, right: 20.sp),
-                      child: Row(
-                        crossAxisAlignment: CrossAxisAlignment.center,
-                        children: [
-                          const StyledText(
-                            '챌린지 보상',
-                            color: Colors.white,
-                            fontWeight: 600,
-                            fontSize: 20,
-                            lineHeight: 24,
-                          ),
-                          Padding(
-                            padding: EdgeInsets.only(left: 4.0.sp),
-                            child: StyledText(
-                              '분배할 전체 리워드',
-                              color: deepGrayColor,
-                              fontWeight: 600,
-                              fontSize: 12,
-                              lineHeight: 12,
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                    Container(
-                      margin: EdgeInsets.only(top: 8.sp, left: 20.sp, right: 20.sp),
-                      decoration: BoxDecoration(
-                        color: const Color(0xFF2E3038),
-                        border: Border.all(
-                          width: 1,
-                          color: const Color(0xFF2E3038),
-                        ),
-                        borderRadius: BorderRadius.all(
-                          Radius.circular(12.sp),
-                        ),
-                      ),
-                      child: Padding(
-                        padding: EdgeInsets.all(10.sp),
+                    if (controller.challengeDetails.value.rewardAmount! > 0) ...[
+                      Padding(
+                        padding: EdgeInsets.only(top: 25.0.sp, left: 20.sp, right: 20.sp),
                         child: Row(
-                          mainAxisAlignment: MainAxisAlignment.start,
                           crossAxisAlignment: CrossAxisAlignment.center,
                           children: [
-                            iconTodayTik,
-                            if (controller.challengeDetails.value.rewardAmount != null)
-                              Padding(
-                                padding: EdgeInsets.only(left: 10.0.sp),
-                                child: Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    StyledText(
-                                      formatDecimalPlaces(double.parse(controller.challengeDetails.value.rewardAmount!.toString()), 0),
-                                      color: Colors.white,
-                                      fontWeight: 600,
-                                      fontSize: 30,
-                                      lineHeight: 34,
-                                    ),
-                                  ],
-                                ),
-                              )
+                            const StyledText(
+                              '챌린지 보상',
+                              color: Colors.white,
+                              fontWeight: 600,
+                              fontSize: 20,
+                              lineHeight: 24,
+                            ),
+                            Padding(
+                              padding: EdgeInsets.only(left: 4.0.sp),
+                              child: StyledText(
+                                '분배할 전체 리워드',
+                                color: deepGrayColor,
+                                fontWeight: 600,
+                                fontSize: 12,
+                                lineHeight: 12,
+                              ),
+                            ),
                           ],
                         ),
                       ),
-                    ),
+                      Container(
+                        margin: EdgeInsets.only(top: 8.sp, left: 20.sp, right: 20.sp),
+                        decoration: BoxDecoration(
+                          color: const Color(0xFF2E3038),
+                          border: Border.all(
+                            width: 1,
+                            color: const Color(0xFF2E3038),
+                          ),
+                          borderRadius: BorderRadius.all(
+                            Radius.circular(12.sp),
+                          ),
+                        ),
+                        child: Padding(
+                          padding: EdgeInsets.all(10.sp),
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.start,
+                            crossAxisAlignment: CrossAxisAlignment.center,
+                            children: [
+                              iconTodayTik,
+                              if (controller.challengeDetails.value.rewardAmount != null)
+                                Padding(
+                                  padding: EdgeInsets.only(left: 10.0.sp),
+                                  child: Column(
+                                    crossAxisAlignment: CrossAxisAlignment.start,
+                                    children: [
+                                      StyledText(
+                                        formatDecimalPlaces(double.parse(controller.challengeDetails.value.rewardAmount!.toString()), 0),
+                                        color: Colors.white,
+                                        fontWeight: 600,
+                                        fontSize: 30,
+                                        lineHeight: 34,
+                                      ),
+                                    ],
+                                  ),
+                                )
+                            ],
+                          ),
+                        ),
+                      ),
+                    ],
                     Container(
                       padding: EdgeInsets.only(top: 30.sp, left: 20.sp, right: 20.sp, bottom: 12.sp),
                       child: Row(

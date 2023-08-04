@@ -18,64 +18,66 @@ Widget renderParticipateInChallenge() {
   Widget suffixWidget;
   String? userState = challengesDetailController.challengeDetails.value.challengeUserState;
   String? challengeState = challengesDetailController.challengeDetails.value.challengeState;
+  String? challengeActivationType = challengesDetailController.challengeDetails.value.challengeActivationType;
   // challengesDetailController.challengeDetails.value.userItem = NewChallengeUserItemModel(id: 0, equipped: false);
-
-  // challengeState = 'READY';
-  // userState = 'REGISTER_AVAILABLE';
-  if (challengeState == 'READY') {
-    // 챌린지 전
-    if (userState == 'REGISTER_READY') {
-      // 접수 전
-      content = RichText(
-        text: TextSpan(
-          style: TextStyle(
-            color: lightGrayColor,
-            fontWeight: FontWeight.w500,
-            fontSize: 16.sp,
-            height: 24.sp / 16,
+  print(challengesDetailController.challengeDetails.value.challengeActivationType);
+  print(userState);
+  print(challengeState);
+  if (challengeActivationType == 'CODE') {
+    // 참여코드형 챌린지
+    if (challengeState == 'READY') {
+      // 챌린지 전
+      if (userState == 'REGISTER_READY') {
+        // 접수 전
+        content = RichText(
+          text: TextSpan(
+            style: TextStyle(
+              color: lightGrayColor,
+              fontWeight: FontWeight.w500,
+              fontSize: 16.sp,
+              height: 24.sp / 16,
+            ),
+            children: [
+              TextSpan(
+                text: '접수 예정일  ${DateFormat('MM.dd HH:mm', 'ko').format(DateTime.parse(challengesDetailController.challengeDetails.value.reservedDate!).toLocal())}',
+                style: TextStyle(color: skyBlueColor),
+              ),
+            ],
           ),
-          children: [
-            TextSpan(
-              text: '접수 예정일  ${DateFormat('MM.dd HH:mm', 'ko').format(DateTime.parse(challengesDetailController.challengeDetails.value.reservedDate!).toLocal())}',
-              style: TextStyle(color: skyBlueColor),
-            ),
-          ],
-        ),
-      );
+        );
 
-      suffixWidget = InkWell(
-        onTap: () => null,
-        child: Container(
-            decoration: BoxDecoration(
-              color: subBg01Color,
-              border: Border.all(
-                width: 2,
-                style: BorderStyle.solid,
-                color: deepGrayColor,
+        suffixWidget = InkWell(
+          onTap: () => null,
+          child: Container(
+              decoration: BoxDecoration(
+                color: subBg01Color,
+                border: Border.all(
+                  width: 2,
+                  style: BorderStyle.solid,
+                  color: deepGrayColor,
+                ),
+                borderRadius: BorderRadius.all(
+                  Radius.circular(25.sp),
+                ),
+                boxShadow: [
+                  BoxShadow(offset: Offset(0.sp, 3.sp), color: Colors.black),
+                ],
               ),
-              borderRadius: BorderRadius.all(
-                Radius.circular(25.sp),
-              ),
-              boxShadow: [
-                BoxShadow(offset: Offset(0.sp, 3.sp), color: Colors.black),
-              ],
-            ),
-            child: Padding(
-              padding: EdgeInsets.symmetric(vertical: 13.0.sp, horizontal: 25.sp),
-              child: StyledText(
-                '접수 전',
-                fontWeight: 500,
-                fontSize: 18,
-                lineHeight: 18,
-                color: deepGrayColor,
-                letterSpacing: -.1,
-              ),
-            )),
-      );
-    } else {
-      // 접수 중
-      if (challengesDetailController.challengeDetails.value.userItem != null) {
-        if (challengesDetailController.challengeDetails.value.userItem!.equipped) {
+              child: Padding(
+                padding: EdgeInsets.symmetric(vertical: 13.0.sp, horizontal: 25.sp),
+                child: StyledText(
+                  '접수 전',
+                  fontWeight: 500,
+                  fontSize: 18,
+                  lineHeight: 18,
+                  color: deepGrayColor,
+                  letterSpacing: -.1,
+                ),
+              )),
+        );
+      } else {
+        // 접수 중
+        if (userState == 'JOINED') {
           content = RichText(
             text: TextSpan(
               style: TextStyle(
@@ -86,14 +88,11 @@ Widget renderParticipateInChallenge() {
               ),
               children: [
                 const TextSpan(
-                  text: '이미 챌린지 아이템을\n',
+                  text: '참여코드 인증완료!\n',
                 ),
                 TextSpan(
-                  text: '장착중',
+                  text: '챌린지 시작을 기다려주세요',
                   style: TextStyle(color: skyBlueColor),
-                ),
-                const TextSpan(
-                  text: '입니다',
                 ),
               ],
             ),
@@ -129,6 +128,590 @@ Widget renderParticipateInChallenge() {
                 )),
           );
         } else {
+          content = RichText(
+            text: TextSpan(
+              style: TextStyle(
+                color: lightGrayColor,
+                fontWeight: FontWeight.w500,
+                fontSize: 16.sp,
+                height: 24.sp / 16,
+              ),
+              children: [
+                const TextSpan(
+                  text: '참여코드 인증하고\n',
+                ),
+                TextSpan(
+                  text: '챌린지 참여하기!',
+                  style: TextStyle(color: skyBlueColor),
+                ),
+              ],
+            ),
+          );
+
+          suffixWidget = InkWell(
+            onTap: () => participateInChallengeByCodeAlert(),
+            child: Container(
+                decoration: BoxDecoration(
+                  color: popupBgColor,
+                  border: Border.all(
+                    width: 2,
+                    style: BorderStyle.solid,
+                    color: skyBlueColor,
+                  ),
+                  borderRadius: BorderRadius.all(
+                    Radius.circular(25.sp),
+                  ),
+                  boxShadow: [
+                    BoxShadow(offset: Offset(0.sp, 3.sp), color: Colors.black),
+                  ],
+                ),
+                child: Padding(
+                  padding: EdgeInsets.symmetric(vertical: 13.0.sp, horizontal: 25.sp),
+                  child: const StyledText(
+                    '참가하기',
+                    fontWeight: 500,
+                    fontSize: 18,
+                    lineHeight: 18,
+                    letterSpacing: -.1,
+                  ),
+                )),
+          );
+        }
+      }
+    } else if (challengeState == 'IN_PROGRESS') {
+      // 챌린지 진행 중
+      if (userState == 'JOINED') {
+        content = RichText(
+          text: TextSpan(
+            style: TextStyle(
+              color: lightGrayColor,
+              fontWeight: FontWeight.w500,
+              fontSize: 16.sp,
+              height: 24.sp / 16,
+            ),
+            children: [
+              const TextSpan(
+                text: '참여코드 인증으로\n',
+              ),
+              TextSpan(
+                text: '챌린지 참가중',
+                style: TextStyle(color: skyBlueColor),
+              ),
+              const TextSpan(
+                text: '입니다.',
+              ),
+            ],
+          ),
+        );
+
+        suffixWidget = InkWell(
+          onTap: () => null,
+          child: Container(
+              decoration: BoxDecoration(
+                color: skyBlueColor,
+                borderRadius: BorderRadius.all(
+                  Radius.circular(25.sp),
+                ),
+                boxShadow: [
+                  BoxShadow(offset: Offset(0.sp, 3.sp), color: Colors.black),
+                ],
+              ),
+              child: Padding(
+                padding: EdgeInsets.symmetric(vertical: 13.0.sp, horizontal: 25.sp),
+                child: const StyledText(
+                  '참가 중',
+                  fontWeight: 500,
+                  fontSize: 18,
+                  lineHeight: 18,
+                  color: Colors.black,
+                  letterSpacing: -.1,
+                ),
+              )),
+        );
+      } else if (userState == 'JOIN_AVAILABLE') {
+        content = RichText(
+          text: TextSpan(
+            style: TextStyle(
+              color: lightGrayColor,
+              fontWeight: FontWeight.w500,
+              fontSize: 16.sp,
+              height: 24.sp / 16,
+            ),
+            children: [
+              const TextSpan(
+                text: '참여코드 인증하고\n',
+              ),
+              TextSpan(
+                text: '챌린지 참여하기!',
+                style: TextStyle(color: skyBlueColor),
+              ),
+            ],
+          ),
+        );
+
+        suffixWidget = InkWell(
+          onTap: () => participateInChallengeByCodeAlert(),
+          child: Container(
+              decoration: BoxDecoration(
+                color: popupBgColor,
+                border: Border.all(
+                  width: 2,
+                  style: BorderStyle.solid,
+                  color: skyBlueColor,
+                ),
+                borderRadius: BorderRadius.all(
+                  Radius.circular(25.sp),
+                ),
+                boxShadow: [
+                  BoxShadow(offset: Offset(0.sp, 3.sp), color: Colors.black),
+                ],
+              ),
+              child: Padding(
+                padding: EdgeInsets.symmetric(vertical: 13.0.sp, horizontal: 25.sp),
+                child: const StyledText(
+                  '참가하기',
+                  fontWeight: 500,
+                  fontSize: 18,
+                  lineHeight: 18,
+                  letterSpacing: -.1,
+                ),
+              )),
+        );
+      } else if (userState == 'JOIN_CLOSED') {
+        // 참가 마감
+        content = RichText(
+          text: TextSpan(
+            style: TextStyle(
+              color: lightGrayColor,
+              fontWeight: FontWeight.w500,
+              fontSize: 16.sp,
+              height: 24.sp / 16,
+            ),
+            children: [
+              const TextSpan(
+                text: '모집인원 달성!\n',
+              ),
+              TextSpan(
+                text: '다음 챌린지를 기대해주세요',
+                style: TextStyle(color: skyBlueColor),
+              ),
+            ],
+          ),
+        );
+
+        suffixWidget = InkWell(
+          onTap: () => null,
+          child: Container(
+              decoration: BoxDecoration(
+                color: subBg01Color,
+                border: Border.all(
+                  width: 2,
+                  style: BorderStyle.solid,
+                  color: deepGrayColor,
+                ),
+                borderRadius: BorderRadius.all(
+                  Radius.circular(25.sp),
+                ),
+                boxShadow: [
+                  BoxShadow(offset: Offset(0.sp, 3.sp), color: Colors.black),
+                ],
+              ),
+              child: Padding(
+                padding: EdgeInsets.symmetric(vertical: 13.0.sp, horizontal: 25.sp),
+                child: StyledText(
+                  '참가마감',
+                  fontWeight: 500,
+                  fontSize: 18,
+                  lineHeight: 18,
+                  color: deepGrayColor,
+                  letterSpacing: -.1,
+                ),
+              )),
+        );
+      } else {
+        // 챌린지 달성
+        content = RichText(
+          text: TextSpan(
+            style: TextStyle(
+              color: skyBlueColor,
+              fontWeight: FontWeight.w500,
+              fontSize: 16.sp,
+              height: 24.sp / 16,
+            ),
+            children: const [
+              TextSpan(
+                text: '수고하셨습니다.\n',
+              ),
+              TextSpan(
+                text: '리더보드를 확인해주세요!',
+              ),
+            ],
+          ),
+        );
+
+        suffixWidget = iconChallengeSuccess;
+      }
+    } else {
+      // 챌린지 종료
+      if (userState == 'COMPLETE') {
+        // 챌린지 달성
+        content = RichText(
+          text: TextSpan(
+            style: TextStyle(
+              color: skyBlueColor,
+              fontWeight: FontWeight.w500,
+              fontSize: 16.sp,
+              height: 24.sp / 16,
+            ),
+            children: const [
+              TextSpan(
+                text: '수고하셨습니다.\n',
+              ),
+              TextSpan(
+                text: '리더보드를 확인해주세요!',
+              ),
+            ],
+          ),
+        );
+
+        suffixWidget = iconChallengeSuccess;
+      } else if (userState == 'INCOMPLETE') {
+        // 챌린지 미달성
+        content = RichText(
+          text: TextSpan(
+            style: TextStyle(
+              color: skyBlueColor,
+              fontWeight: FontWeight.w500,
+              fontSize: 16.sp,
+              height: 24.sp / 16,
+            ),
+            children: const [
+              TextSpan(
+                text: '챌린지에 참가해주셔서\n',
+              ),
+              TextSpan(
+                text: '감사합니다!',
+              ),
+            ],
+          ),
+        );
+
+        suffixWidget = iconChallengeFailure;
+      } else {
+        // 참여하지 않은 챌린지가 종료된 경우
+        content = RichText(
+          text: TextSpan(
+            style: TextStyle(
+              color: skyBlueColor,
+              fontWeight: FontWeight.w500,
+              fontSize: 16.sp,
+              height: 24.sp / 16,
+            ),
+            children: const [
+              TextSpan(
+                text: '챌린지가 종료되었습니다\n',
+              ),
+              TextSpan(
+                text: '다음챌린지를 기대해주세요',
+              ),
+            ],
+          ),
+        );
+
+        suffixWidget = InkWell(
+          onTap: () => null,
+          child: Container(
+              decoration: BoxDecoration(
+                color: subBg01Color,
+                border: Border.all(
+                  width: 2,
+                  style: BorderStyle.solid,
+                  color: deepGrayColor,
+                ),
+                borderRadius: BorderRadius.all(
+                  Radius.circular(25.sp),
+                ),
+                boxShadow: [
+                  BoxShadow(offset: Offset(0.sp, 3.sp), color: Colors.black),
+                ],
+              ),
+              child: Padding(
+                padding: EdgeInsets.symmetric(vertical: 13.0.sp, horizontal: 40.sp),
+                child: StyledText(
+                  '종료',
+                  fontWeight: 500,
+                  fontSize: 18,
+                  lineHeight: 18,
+                  color: deepGrayColor,
+                  letterSpacing: -.1,
+                ),
+              )),
+        );
+      }
+    }
+  } else {
+    if (challengeState == 'READY') {
+      // 챌린지 전
+      if (userState == 'REGISTER_READY') {
+        // 접수 전
+        content = RichText(
+          text: TextSpan(
+            style: TextStyle(
+              color: lightGrayColor,
+              fontWeight: FontWeight.w500,
+              fontSize: 16.sp,
+              height: 24.sp / 16,
+            ),
+            children: [
+              TextSpan(
+                text: '접수 예정일  ${DateFormat('MM.dd HH:mm', 'ko').format(DateTime.parse(challengesDetailController.challengeDetails.value.reservedDate!).toLocal())}',
+                style: TextStyle(color: skyBlueColor),
+              ),
+            ],
+          ),
+        );
+
+        suffixWidget = InkWell(
+          onTap: () => null,
+          child: Container(
+              decoration: BoxDecoration(
+                color: subBg01Color,
+                border: Border.all(
+                  width: 2,
+                  style: BorderStyle.solid,
+                  color: deepGrayColor,
+                ),
+                borderRadius: BorderRadius.all(
+                  Radius.circular(25.sp),
+                ),
+                boxShadow: [
+                  BoxShadow(offset: Offset(0.sp, 3.sp), color: Colors.black),
+                ],
+              ),
+              child: Padding(
+                padding: EdgeInsets.symmetric(vertical: 13.0.sp, horizontal: 25.sp),
+                child: StyledText(
+                  '접수 전',
+                  fontWeight: 500,
+                  fontSize: 18,
+                  lineHeight: 18,
+                  color: deepGrayColor,
+                  letterSpacing: -.1,
+                ),
+              )),
+        );
+      } else {
+        // 접수 중
+        if (challengesDetailController.challengeDetails.value.userItem != null) {
+          if (challengesDetailController.challengeDetails.value.userItem!.equipped) {
+            content = RichText(
+              text: TextSpan(
+                style: TextStyle(
+                  color: lightGrayColor,
+                  fontWeight: FontWeight.w500,
+                  fontSize: 16.sp,
+                  height: 24.sp / 16,
+                ),
+                children: [
+                  const TextSpan(
+                    text: '이미 챌린지 아이템을\n',
+                  ),
+                  TextSpan(
+                    text: '장착중',
+                    style: TextStyle(color: skyBlueColor),
+                  ),
+                  const TextSpan(
+                    text: '입니다',
+                  ),
+                ],
+              ),
+            );
+
+            suffixWidget = InkWell(
+              onTap: () => null,
+              child: Container(
+                  decoration: BoxDecoration(
+                    color: subBg01Color,
+                    border: Border.all(
+                      width: 2,
+                      style: BorderStyle.solid,
+                      color: deepGrayColor,
+                    ),
+                    borderRadius: BorderRadius.all(
+                      Radius.circular(25.sp),
+                    ),
+                    boxShadow: [
+                      BoxShadow(offset: Offset(0.sp, 3.sp), color: Colors.black),
+                    ],
+                  ),
+                  child: Padding(
+                    padding: EdgeInsets.symmetric(vertical: 13.0.sp, horizontal: 25.sp),
+                    child: StyledText(
+                      '챌린지 전',
+                      fontWeight: 500,
+                      fontSize: 18,
+                      lineHeight: 18,
+                      color: deepGrayColor,
+                      letterSpacing: -.1,
+                    ),
+                  )),
+            );
+          } else {
+            content = RichText(
+              text: TextSpan(
+                style: TextStyle(
+                  color: lightGrayColor,
+                  fontWeight: FontWeight.w500,
+                  fontSize: 16.sp,
+                  height: 24.sp / 16,
+                ),
+                children: [
+                  const TextSpan(
+                    text: '이미 챌린지 아이템을\n',
+                  ),
+                  TextSpan(
+                    text: '보유중',
+                    style: TextStyle(color: skyBlueColor),
+                  ),
+                  const TextSpan(
+                    text: '입니다',
+                  ),
+                ],
+              ),
+            );
+
+            suffixWidget = InkWell(
+              onTap: () => challengeItemEquip(challengesDetailController.challengeDetails.value.userItem!.id),
+              child: Container(
+                  decoration: BoxDecoration(
+                    color: popupBgColor,
+                    border: Border.all(
+                      width: 2,
+                      style: BorderStyle.solid,
+                      color: skyBlueColor,
+                    ),
+                    borderRadius: BorderRadius.all(
+                      Radius.circular(25.sp),
+                    ),
+                    boxShadow: [
+                      BoxShadow(offset: Offset(0.sp, 3.sp), color: Colors.black),
+                    ],
+                  ),
+                  child: Padding(
+                    padding: EdgeInsets.symmetric(vertical: 13.0.sp, horizontal: 25.sp),
+                    child: const StyledText(
+                      '참가하기',
+                      fontWeight: 500,
+                      fontSize: 18,
+                      lineHeight: 18,
+                      letterSpacing: -.1,
+                    ),
+                  )),
+            );
+          }
+        } else {
+          content = RichText(
+            text: TextSpan(
+              style: TextStyle(
+                color: lightGrayColor,
+                fontWeight: FontWeight.w500,
+                fontSize: 16.sp,
+                height: 24.sp / 16,
+              ),
+              children: [
+                const TextSpan(
+                  text: '아이템 구매 후 장착하고\n',
+                ),
+                TextSpan(
+                  text: '챌린지 참여하기!',
+                  style: TextStyle(color: skyBlueColor),
+                ),
+              ],
+            ),
+          );
+
+          suffixWidget = InkWell(
+            onTap: () => challengesDetailController.showMoveToShopItem(),
+            child: Container(
+                decoration: BoxDecoration(
+                  color: popupBgColor,
+                  border: Border.all(
+                    width: 2,
+                    style: BorderStyle.solid,
+                    color: skyBlueColor,
+                  ),
+                  borderRadius: BorderRadius.all(
+                    Radius.circular(25.sp),
+                  ),
+                  boxShadow: [
+                    BoxShadow(offset: Offset(0.sp, 3.sp), color: Colors.black),
+                  ],
+                ),
+                child: Padding(
+                  padding: EdgeInsets.symmetric(vertical: 13.0.sp, horizontal: 25.sp),
+                  child: const StyledText(
+                    '참가하기',
+                    fontWeight: 500,
+                    fontSize: 18,
+                    lineHeight: 18,
+                    letterSpacing: -.1,
+                  ),
+                )),
+          );
+        }
+      }
+    } else if (challengeState == 'IN_PROGRESS') {
+      // 챌린지 진행 중
+      if (userState == 'JOINED') {
+        content = RichText(
+          text: TextSpan(
+            style: TextStyle(
+              color: lightGrayColor,
+              fontWeight: FontWeight.w500,
+              fontSize: 16.sp,
+              height: 24.sp / 16,
+            ),
+            children: [
+              const TextSpan(
+                text: '아이템 장착으로\n',
+              ),
+              TextSpan(
+                text: '챌린지 참가중',
+                style: TextStyle(color: skyBlueColor),
+              ),
+              const TextSpan(
+                text: '입니다.',
+              ),
+            ],
+          ),
+        );
+
+        suffixWidget = InkWell(
+          onTap: () => null,
+          child: Container(
+              decoration: BoxDecoration(
+                color: skyBlueColor,
+                borderRadius: BorderRadius.all(
+                  Radius.circular(25.sp),
+                ),
+                boxShadow: [
+                  BoxShadow(offset: Offset(0.sp, 3.sp), color: Colors.black),
+                ],
+              ),
+              child: Padding(
+                padding: EdgeInsets.symmetric(vertical: 13.0.sp, horizontal: 25.sp),
+                child: const StyledText(
+                  '참가 중',
+                  fontWeight: 500,
+                  fontSize: 18,
+                  lineHeight: 18,
+                  color: Colors.black,
+                  letterSpacing: -.1,
+                ),
+              )),
+        );
+      } else if (userState == 'JOIN_AVAILABLE') {
+        if (challengesDetailController.challengeDetails.value.userItem != null) {
           content = RichText(
             text: TextSpan(
               style: TextStyle(
@@ -180,8 +763,58 @@ Widget renderParticipateInChallenge() {
                   ),
                 )),
           );
+        } else {
+          content = RichText(
+            text: TextSpan(
+              style: TextStyle(
+                color: lightGrayColor,
+                fontWeight: FontWeight.w500,
+                fontSize: 16.sp,
+                height: 24.sp / 16,
+              ),
+              children: [
+                const TextSpan(
+                  text: '아이템 구매 후 장착하고\n',
+                ),
+                TextSpan(
+                  text: '챌린지 참여하기!',
+                  style: TextStyle(color: skyBlueColor),
+                ),
+              ],
+            ),
+          );
+
+          suffixWidget = InkWell(
+            onTap: () => challengesDetailController.showMoveToShopItem(),
+            child: Container(
+                decoration: BoxDecoration(
+                  color: popupBgColor,
+                  border: Border.all(
+                    width: 2,
+                    style: BorderStyle.solid,
+                    color: skyBlueColor,
+                  ),
+                  borderRadius: BorderRadius.all(
+                    Radius.circular(25.sp),
+                  ),
+                  boxShadow: [
+                    BoxShadow(offset: Offset(0.sp, 3.sp), color: Colors.black),
+                  ],
+                ),
+                child: Padding(
+                  padding: EdgeInsets.symmetric(vertical: 13.0.sp, horizontal: 25.sp),
+                  child: const StyledText(
+                    '참가하기',
+                    fontWeight: 500,
+                    fontSize: 18,
+                    lineHeight: 18,
+                    letterSpacing: -.1,
+                  ),
+                )),
+          );
         }
-      } else {
+      } else if (userState == 'JOIN_CLOSED') {
+        // 참가 마감
         content = RichText(
           text: TextSpan(
             style: TextStyle(
@@ -191,26 +824,26 @@ Widget renderParticipateInChallenge() {
               height: 24.sp / 16,
             ),
             children: [
-              const TextSpan(
-                text: '아이템 구매 후 장착하고\n',
-              ),
               TextSpan(
-                text: '챌린지 참여하기!',
+                text: '아이템 판매완료',
                 style: TextStyle(color: skyBlueColor),
+              ),
+              const TextSpan(
+                text: '로\n챌린지 참가가 마감되었습니다.',
               ),
             ],
           ),
         );
 
         suffixWidget = InkWell(
-          onTap: () => challengesDetailController.showMoveToShopItem(),
+          onTap: () => null,
           child: Container(
               decoration: BoxDecoration(
-                color: popupBgColor,
+                color: subBg01Color,
                 border: Border.all(
                   width: 2,
                   style: BorderStyle.solid,
-                  color: skyBlueColor,
+                  color: deepGrayColor,
                 ),
                 borderRadius: BorderRadius.all(
                   Radius.circular(25.sp),
@@ -221,150 +854,115 @@ Widget renderParticipateInChallenge() {
               ),
               child: Padding(
                 padding: EdgeInsets.symmetric(vertical: 13.0.sp, horizontal: 25.sp),
-                child: const StyledText(
-                  '참가하기',
+                child: StyledText(
+                  '참가마감',
                   fontWeight: 500,
                   fontSize: 18,
                   lineHeight: 18,
+                  color: deepGrayColor,
                   letterSpacing: -.1,
                 ),
               )),
         );
-      }
-    }
-  } else if (challengeState == 'IN_PROGRESS') {
-    // 챌린지 진행 중
-    if (userState == 'JOINED') {
-      content = RichText(
-        text: TextSpan(
-          style: TextStyle(
-            color: lightGrayColor,
-            fontWeight: FontWeight.w500,
-            fontSize: 16.sp,
-            height: 24.sp / 16,
-          ),
-          children: [
-            const TextSpan(
-              text: '아이템 장착으로\n',
-            ),
-            TextSpan(
-              text: '챌린지 참가중',
-              style: TextStyle(color: skyBlueColor),
-            ),
-            const TextSpan(
-              text: '입니다.',
-            ),
-          ],
-        ),
-      );
-
-      suffixWidget = InkWell(
-        onTap: () => null,
-        child: Container(
-            decoration: BoxDecoration(
+      } else {
+        // 챌린지 달성
+        content = RichText(
+          text: TextSpan(
+            style: TextStyle(
               color: skyBlueColor,
-              borderRadius: BorderRadius.all(
-                Radius.circular(25.sp),
-              ),
-              boxShadow: [
-                BoxShadow(offset: Offset(0.sp, 3.sp), color: Colors.black),
-              ],
-            ),
-            child: Padding(
-              padding: EdgeInsets.symmetric(vertical: 13.0.sp, horizontal: 25.sp),
-              child: const StyledText(
-                '참가 중',
-                fontWeight: 500,
-                fontSize: 18,
-                lineHeight: 18,
-                color: Colors.black,
-                letterSpacing: -.1,
-              ),
-            )),
-      );
-    } else if (userState == 'JOIN_AVAILABLE') {
-      if (challengesDetailController.challengeDetails.value.userItem != null) {
-        content = RichText(
-          text: TextSpan(
-            style: TextStyle(
-              color: lightGrayColor,
               fontWeight: FontWeight.w500,
               fontSize: 16.sp,
               height: 24.sp / 16,
             ),
-            children: [
-              const TextSpan(
-                text: '이미 챌린지 아이템을\n',
+            children: const [
+              TextSpan(
+                text: '수고하셨습니다.\n',
               ),
               TextSpan(
-                text: '보유중',
-                style: TextStyle(color: skyBlueColor),
-              ),
-              const TextSpan(
-                text: '입니다',
+                text: '리더보드를 확인해주세요!',
               ),
             ],
           ),
         );
 
-        suffixWidget = InkWell(
-          onTap: () => challengeItemEquip(challengesDetailController.challengeDetails.value.userItem!.id),
-          child: Container(
-              decoration: BoxDecoration(
-                color: popupBgColor,
-                border: Border.all(
-                  width: 2,
-                  style: BorderStyle.solid,
-                  color: skyBlueColor,
-                ),
-                borderRadius: BorderRadius.all(
-                  Radius.circular(25.sp),
-                ),
-                boxShadow: [
-                  BoxShadow(offset: Offset(0.sp, 3.sp), color: Colors.black),
-                ],
+        suffixWidget = iconChallengeSuccess;
+      }
+    } else {
+      // 챌린지 종료
+      if (userState == 'COMPLETE') {
+        // 챌린지 달성
+        content = RichText(
+          text: TextSpan(
+            style: TextStyle(
+              color: skyBlueColor,
+              fontWeight: FontWeight.w500,
+              fontSize: 16.sp,
+              height: 24.sp / 16,
+            ),
+            children: const [
+              TextSpan(
+                text: '수고하셨습니다.\n',
               ),
-              child: Padding(
-                padding: EdgeInsets.symmetric(vertical: 13.0.sp, horizontal: 25.sp),
-                child: const StyledText(
-                  '참가하기',
-                  fontWeight: 500,
-                  fontSize: 18,
-                  lineHeight: 18,
-                  letterSpacing: -.1,
-                ),
-              )),
+              TextSpan(
+                text: '리더보드를 확인해주세요!',
+              ),
+            ],
+          ),
         );
+
+        suffixWidget = iconChallengeSuccess;
+      } else if (userState == 'INCOMPLETE') {
+        // 챌린지 미달성
+        content = RichText(
+          text: TextSpan(
+            style: TextStyle(
+              color: skyBlueColor,
+              fontWeight: FontWeight.w500,
+              fontSize: 16.sp,
+              height: 24.sp / 16,
+            ),
+            children: const [
+              TextSpan(
+                text: '챌린지에 참가해주셔서\n',
+              ),
+              TextSpan(
+                text: '감사합니다!',
+              ),
+            ],
+          ),
+        );
+
+        suffixWidget = iconChallengeFailure;
       } else {
+        // 참여하지 않은 챌린지가 종료된 경우
         content = RichText(
           text: TextSpan(
             style: TextStyle(
-              color: lightGrayColor,
+              color: skyBlueColor,
               fontWeight: FontWeight.w500,
               fontSize: 16.sp,
               height: 24.sp / 16,
             ),
-            children: [
-              const TextSpan(
-                text: '아이템 구매 후 장착하고\n',
+            children: const [
+              TextSpan(
+                text: '챌린지가 종료되었습니다\n',
               ),
               TextSpan(
-                text: '챌린지 참여하기!',
-                style: TextStyle(color: skyBlueColor),
+                text: '다음챌린지를 기대해주세요',
               ),
             ],
           ),
         );
 
         suffixWidget = InkWell(
-          onTap: () => challengesDetailController.showMoveToShopItem(),
+          onTap: () => null,
           child: Container(
               decoration: BoxDecoration(
-                color: popupBgColor,
+                color: subBg01Color,
                 border: Border.all(
                   width: 2,
                   style: BorderStyle.solid,
-                  color: skyBlueColor,
+                  color: deepGrayColor,
                 ),
                 borderRadius: BorderRadius.all(
                   Radius.circular(25.sp),
@@ -374,189 +972,556 @@ Widget renderParticipateInChallenge() {
                 ],
               ),
               child: Padding(
-                padding: EdgeInsets.symmetric(vertical: 13.0.sp, horizontal: 25.sp),
-                child: const StyledText(
-                  '참가하기',
+                padding: EdgeInsets.symmetric(vertical: 13.0.sp, horizontal: 40.sp),
+                child: StyledText(
+                  '종료',
                   fontWeight: 500,
                   fontSize: 18,
                   lineHeight: 18,
+                  color: deepGrayColor,
                   letterSpacing: -.1,
                 ),
               )),
         );
       }
-    } else if (userState == 'JOIN_CLOSED') {
-      // 참가 마감
-      content = RichText(
-        text: TextSpan(
-          style: TextStyle(
-            color: lightGrayColor,
-            fontWeight: FontWeight.w500,
-            fontSize: 16.sp,
-            height: 24.sp / 16,
-          ),
-          children: [
-            TextSpan(
-              text: '아이템 판매완료',
-              style: TextStyle(color: skyBlueColor),
-            ),
-            const TextSpan(
-              text: '로\n챌린지 참가가 마감되었습니다.',
-            ),
-          ],
-        ),
-      );
-
-      suffixWidget = InkWell(
-        onTap: () => null,
-        child: Container(
-            decoration: BoxDecoration(
-              color: subBg01Color,
-              border: Border.all(
-                width: 2,
-                style: BorderStyle.solid,
-                color: deepGrayColor,
-              ),
-              borderRadius: BorderRadius.all(
-                Radius.circular(25.sp),
-              ),
-              boxShadow: [
-                BoxShadow(offset: Offset(0.sp, 3.sp), color: Colors.black),
-              ],
-            ),
-            child: Padding(
-              padding: EdgeInsets.symmetric(vertical: 13.0.sp, horizontal: 25.sp),
-              child: StyledText(
-                '참가마감',
-                fontWeight: 500,
-                fontSize: 18,
-                lineHeight: 18,
-                color: deepGrayColor,
-                letterSpacing: -.1,
-              ),
-            )),
-      );
-    } else {
-      // 챌린지 달성
-      content = RichText(
-        text: TextSpan(
-          style: TextStyle(
-            color: skyBlueColor,
-            fontWeight: FontWeight.w500,
-            fontSize: 16.sp,
-            height: 24.sp / 16,
-          ),
-          children: const [
-            TextSpan(
-              text: '수고하셨습니다.\n',
-            ),
-            TextSpan(
-              text: '리더보드를 확인해주세요!',
-            ),
-          ],
-        ),
-      );
-
-      suffixWidget = iconChallengeSuccess;
-    }
-  } else {
-    // 챌린지 종료
-    if (userState == 'COMPLETE') {
-      // 챌린지 달성
-      content = RichText(
-        text: TextSpan(
-          style: TextStyle(
-            color: skyBlueColor,
-            fontWeight: FontWeight.w500,
-            fontSize: 16.sp,
-            height: 24.sp / 16,
-          ),
-          children: const [
-            TextSpan(
-              text: '수고하셨습니다.\n',
-            ),
-            TextSpan(
-              text: '리더보드를 확인해주세요!',
-            ),
-          ],
-        ),
-      );
-
-      suffixWidget = iconChallengeSuccess;
-    } else if (userState == 'INCOMPLETE') {
-      // 챌린지 미달성
-      content = RichText(
-        text: TextSpan(
-          style: TextStyle(
-            color: skyBlueColor,
-            fontWeight: FontWeight.w500,
-            fontSize: 16.sp,
-            height: 24.sp / 16,
-          ),
-          children: const [
-            TextSpan(
-              text: '챌린지에 참가해주셔서\n',
-            ),
-            TextSpan(
-              text: '감사합니다!',
-            ),
-          ],
-        ),
-      );
-
-      suffixWidget = iconChallengeFailure;
-    } else {
-      // 참여하지 않은 챌린지가 종료된 경우
-      content = RichText(
-        text: TextSpan(
-          style: TextStyle(
-            color: skyBlueColor,
-            fontWeight: FontWeight.w500,
-            fontSize: 16.sp,
-            height: 24.sp / 16,
-          ),
-          children: const [
-            TextSpan(
-              text: '챌린지가 종료되었습니다\n',
-            ),
-            TextSpan(
-              text: '다음챌린지를 기대해주세요',
-            ),
-          ],
-        ),
-      );
-
-      suffixWidget = InkWell(
-        onTap: () => null,
-        child: Container(
-            decoration: BoxDecoration(
-              color: subBg01Color,
-              border: Border.all(
-                width: 2,
-                style: BorderStyle.solid,
-                color: deepGrayColor,
-              ),
-              borderRadius: BorderRadius.all(
-                Radius.circular(25.sp),
-              ),
-              boxShadow: [
-                BoxShadow(offset: Offset(0.sp, 3.sp), color: Colors.black),
-              ],
-            ),
-            child: Padding(
-              padding: EdgeInsets.symmetric(vertical: 13.0.sp, horizontal: 40.sp),
-              child: StyledText(
-                '종료',
-                fontWeight: 500,
-                fontSize: 18,
-                lineHeight: 18,
-                color: deepGrayColor,
-                letterSpacing: -.1,
-              ),
-            )),
-      );
     }
   }
+
+  // if (challengeState == 'READY') {
+  //   // 챌린지 전
+  //   if (userState == 'REGISTER_READY') {
+  //     // 접수 전
+  //     content = RichText(
+  //       text: TextSpan(
+  //         style: TextStyle(
+  //           color: lightGrayColor,
+  //           fontWeight: FontWeight.w500,
+  //           fontSize: 16.sp,
+  //           height: 24.sp / 16,
+  //         ),
+  //         children: [
+  //           TextSpan(
+  //             text: '접수 예정일  ${DateFormat('MM.dd HH:mm', 'ko').format(DateTime.parse(challengesDetailController.challengeDetails.value.reservedDate!).toLocal())}',
+  //             style: TextStyle(color: skyBlueColor),
+  //           ),
+  //         ],
+  //       ),
+  //     );
+  //
+  //     suffixWidget = InkWell(
+  //       onTap: () => null,
+  //       child: Container(
+  //           decoration: BoxDecoration(
+  //             color: subBg01Color,
+  //             border: Border.all(
+  //               width: 2,
+  //               style: BorderStyle.solid,
+  //               color: deepGrayColor,
+  //             ),
+  //             borderRadius: BorderRadius.all(
+  //               Radius.circular(25.sp),
+  //             ),
+  //             boxShadow: [
+  //               BoxShadow(offset: Offset(0.sp, 3.sp), color: Colors.black),
+  //             ],
+  //           ),
+  //           child: Padding(
+  //             padding: EdgeInsets.symmetric(vertical: 13.0.sp, horizontal: 25.sp),
+  //             child: StyledText(
+  //               '접수 전',
+  //               fontWeight: 500,
+  //               fontSize: 18,
+  //               lineHeight: 18,
+  //               color: deepGrayColor,
+  //               letterSpacing: -.1,
+  //             ),
+  //           )),
+  //     );
+  //   } else {
+  //     // 접수 중
+  //     if (challengesDetailController.challengeDetails.value.userItem != null) {
+  //       if (challengesDetailController.challengeDetails.value.userItem!.equipped) {
+  //         content = RichText(
+  //           text: TextSpan(
+  //             style: TextStyle(
+  //               color: lightGrayColor,
+  //               fontWeight: FontWeight.w500,
+  //               fontSize: 16.sp,
+  //               height: 24.sp / 16,
+  //             ),
+  //             children: [
+  //               const TextSpan(
+  //                 text: '이미 챌린지 아이템을\n',
+  //               ),
+  //               TextSpan(
+  //                 text: '장착중',
+  //                 style: TextStyle(color: skyBlueColor),
+  //               ),
+  //               const TextSpan(
+  //                 text: '입니다',
+  //               ),
+  //             ],
+  //           ),
+  //         );
+  //
+  //         suffixWidget = InkWell(
+  //           onTap: () => null,
+  //           child: Container(
+  //               decoration: BoxDecoration(
+  //                 color: subBg01Color,
+  //                 border: Border.all(
+  //                   width: 2,
+  //                   style: BorderStyle.solid,
+  //                   color: deepGrayColor,
+  //                 ),
+  //                 borderRadius: BorderRadius.all(
+  //                   Radius.circular(25.sp),
+  //                 ),
+  //                 boxShadow: [
+  //                   BoxShadow(offset: Offset(0.sp, 3.sp), color: Colors.black),
+  //                 ],
+  //               ),
+  //               child: Padding(
+  //                 padding: EdgeInsets.symmetric(vertical: 13.0.sp, horizontal: 25.sp),
+  //                 child: StyledText(
+  //                   '챌린지 전',
+  //                   fontWeight: 500,
+  //                   fontSize: 18,
+  //                   lineHeight: 18,
+  //                   color: deepGrayColor,
+  //                   letterSpacing: -.1,
+  //                 ),
+  //               )),
+  //         );
+  //       } else {
+  //         content = RichText(
+  //           text: TextSpan(
+  //             style: TextStyle(
+  //               color: lightGrayColor,
+  //               fontWeight: FontWeight.w500,
+  //               fontSize: 16.sp,
+  //               height: 24.sp / 16,
+  //             ),
+  //             children: [
+  //               const TextSpan(
+  //                 text: '이미 챌린지 아이템을\n',
+  //               ),
+  //               TextSpan(
+  //                 text: '보유중',
+  //                 style: TextStyle(color: skyBlueColor),
+  //               ),
+  //               const TextSpan(
+  //                 text: '입니다',
+  //               ),
+  //             ],
+  //           ),
+  //         );
+  //
+  //         suffixWidget = InkWell(
+  //           onTap: () => challengeItemEquip(challengesDetailController.challengeDetails.value.userItem!.id),
+  //           child: Container(
+  //               decoration: BoxDecoration(
+  //                 color: popupBgColor,
+  //                 border: Border.all(
+  //                   width: 2,
+  //                   style: BorderStyle.solid,
+  //                   color: skyBlueColor,
+  //                 ),
+  //                 borderRadius: BorderRadius.all(
+  //                   Radius.circular(25.sp),
+  //                 ),
+  //                 boxShadow: [
+  //                   BoxShadow(offset: Offset(0.sp, 3.sp), color: Colors.black),
+  //                 ],
+  //               ),
+  //               child: Padding(
+  //                 padding: EdgeInsets.symmetric(vertical: 13.0.sp, horizontal: 25.sp),
+  //                 child: const StyledText(
+  //                   '참가하기',
+  //                   fontWeight: 500,
+  //                   fontSize: 18,
+  //                   lineHeight: 18,
+  //                   letterSpacing: -.1,
+  //                 ),
+  //               )),
+  //         );
+  //       }
+  //     } else {
+  //       content = RichText(
+  //         text: TextSpan(
+  //           style: TextStyle(
+  //             color: lightGrayColor,
+  //             fontWeight: FontWeight.w500,
+  //             fontSize: 16.sp,
+  //             height: 24.sp / 16,
+  //           ),
+  //           children: [
+  //             const TextSpan(
+  //               text: '아이템 구매 후 장착하고\n',
+  //             ),
+  //             TextSpan(
+  //               text: '챌린지 참여하기!',
+  //               style: TextStyle(color: skyBlueColor),
+  //             ),
+  //           ],
+  //         ),
+  //       );
+  //
+  //       suffixWidget = InkWell(
+  //         onTap: () => challengesDetailController.showMoveToShopItem(),
+  //         child: Container(
+  //             decoration: BoxDecoration(
+  //               color: popupBgColor,
+  //               border: Border.all(
+  //                 width: 2,
+  //                 style: BorderStyle.solid,
+  //                 color: skyBlueColor,
+  //               ),
+  //               borderRadius: BorderRadius.all(
+  //                 Radius.circular(25.sp),
+  //               ),
+  //               boxShadow: [
+  //                 BoxShadow(offset: Offset(0.sp, 3.sp), color: Colors.black),
+  //               ],
+  //             ),
+  //             child: Padding(
+  //               padding: EdgeInsets.symmetric(vertical: 13.0.sp, horizontal: 25.sp),
+  //               child: const StyledText(
+  //                 '참가하기',
+  //                 fontWeight: 500,
+  //                 fontSize: 18,
+  //                 lineHeight: 18,
+  //                 letterSpacing: -.1,
+  //               ),
+  //             )),
+  //       );
+  //     }
+  //   }
+  // } else if (challengeState == 'IN_PROGRESS') {
+  //   // 챌린지 진행 중
+  //   if (userState == 'JOINED') {
+  //     content = RichText(
+  //       text: TextSpan(
+  //         style: TextStyle(
+  //           color: lightGrayColor,
+  //           fontWeight: FontWeight.w500,
+  //           fontSize: 16.sp,
+  //           height: 24.sp / 16,
+  //         ),
+  //         children: [
+  //           const TextSpan(
+  //             text: '아이템 장착으로\n',
+  //           ),
+  //           TextSpan(
+  //             text: '챌린지 참가중',
+  //             style: TextStyle(color: skyBlueColor),
+  //           ),
+  //           const TextSpan(
+  //             text: '입니다.',
+  //           ),
+  //         ],
+  //       ),
+  //     );
+  //
+  //     suffixWidget = InkWell(
+  //       onTap: () => null,
+  //       child: Container(
+  //           decoration: BoxDecoration(
+  //             color: skyBlueColor,
+  //             borderRadius: BorderRadius.all(
+  //               Radius.circular(25.sp),
+  //             ),
+  //             boxShadow: [
+  //               BoxShadow(offset: Offset(0.sp, 3.sp), color: Colors.black),
+  //             ],
+  //           ),
+  //           child: Padding(
+  //             padding: EdgeInsets.symmetric(vertical: 13.0.sp, horizontal: 25.sp),
+  //             child: const StyledText(
+  //               '참가 중',
+  //               fontWeight: 500,
+  //               fontSize: 18,
+  //               lineHeight: 18,
+  //               color: Colors.black,
+  //               letterSpacing: -.1,
+  //             ),
+  //           )),
+  //     );
+  //   } else if (userState == 'JOIN_AVAILABLE') {
+  //     if (challengesDetailController.challengeDetails.value.userItem != null) {
+  //       content = RichText(
+  //         text: TextSpan(
+  //           style: TextStyle(
+  //             color: lightGrayColor,
+  //             fontWeight: FontWeight.w500,
+  //             fontSize: 16.sp,
+  //             height: 24.sp / 16,
+  //           ),
+  //           children: [
+  //             const TextSpan(
+  //               text: '이미 챌린지 아이템을\n',
+  //             ),
+  //             TextSpan(
+  //               text: '보유중',
+  //               style: TextStyle(color: skyBlueColor),
+  //             ),
+  //             const TextSpan(
+  //               text: '입니다',
+  //             ),
+  //           ],
+  //         ),
+  //       );
+  //
+  //       suffixWidget = InkWell(
+  //         onTap: () => challengeItemEquip(challengesDetailController.challengeDetails.value.userItem!.id),
+  //         child: Container(
+  //             decoration: BoxDecoration(
+  //               color: popupBgColor,
+  //               border: Border.all(
+  //                 width: 2,
+  //                 style: BorderStyle.solid,
+  //                 color: skyBlueColor,
+  //               ),
+  //               borderRadius: BorderRadius.all(
+  //                 Radius.circular(25.sp),
+  //               ),
+  //               boxShadow: [
+  //                 BoxShadow(offset: Offset(0.sp, 3.sp), color: Colors.black),
+  //               ],
+  //             ),
+  //             child: Padding(
+  //               padding: EdgeInsets.symmetric(vertical: 13.0.sp, horizontal: 25.sp),
+  //               child: const StyledText(
+  //                 '참가하기',
+  //                 fontWeight: 500,
+  //                 fontSize: 18,
+  //                 lineHeight: 18,
+  //                 letterSpacing: -.1,
+  //               ),
+  //             )),
+  //       );
+  //     } else {
+  //       content = RichText(
+  //         text: TextSpan(
+  //           style: TextStyle(
+  //             color: lightGrayColor,
+  //             fontWeight: FontWeight.w500,
+  //             fontSize: 16.sp,
+  //             height: 24.sp / 16,
+  //           ),
+  //           children: [
+  //             const TextSpan(
+  //               text: '아이템 구매 후 장착하고\n',
+  //             ),
+  //             TextSpan(
+  //               text: '챌린지 참여하기!',
+  //               style: TextStyle(color: skyBlueColor),
+  //             ),
+  //           ],
+  //         ),
+  //       );
+  //
+  //       suffixWidget = InkWell(
+  //         onTap: () => challengesDetailController.showMoveToShopItem(),
+  //         child: Container(
+  //             decoration: BoxDecoration(
+  //               color: popupBgColor,
+  //               border: Border.all(
+  //                 width: 2,
+  //                 style: BorderStyle.solid,
+  //                 color: skyBlueColor,
+  //               ),
+  //               borderRadius: BorderRadius.all(
+  //                 Radius.circular(25.sp),
+  //               ),
+  //               boxShadow: [
+  //                 BoxShadow(offset: Offset(0.sp, 3.sp), color: Colors.black),
+  //               ],
+  //             ),
+  //             child: Padding(
+  //               padding: EdgeInsets.symmetric(vertical: 13.0.sp, horizontal: 25.sp),
+  //               child: const StyledText(
+  //                 '참가하기',
+  //                 fontWeight: 500,
+  //                 fontSize: 18,
+  //                 lineHeight: 18,
+  //                 letterSpacing: -.1,
+  //               ),
+  //             )),
+  //       );
+  //     }
+  //   } else if (userState == 'JOIN_CLOSED') {
+  //     // 참가 마감
+  //     content = RichText(
+  //       text: TextSpan(
+  //         style: TextStyle(
+  //           color: lightGrayColor,
+  //           fontWeight: FontWeight.w500,
+  //           fontSize: 16.sp,
+  //           height: 24.sp / 16,
+  //         ),
+  //         children: [
+  //           TextSpan(
+  //             text: '아이템 판매완료',
+  //             style: TextStyle(color: skyBlueColor),
+  //           ),
+  //           const TextSpan(
+  //             text: '로\n챌린지 참가가 마감되었습니다.',
+  //           ),
+  //         ],
+  //       ),
+  //     );
+  //
+  //     suffixWidget = InkWell(
+  //       onTap: () => null,
+  //       child: Container(
+  //           decoration: BoxDecoration(
+  //             color: subBg01Color,
+  //             border: Border.all(
+  //               width: 2,
+  //               style: BorderStyle.solid,
+  //               color: deepGrayColor,
+  //             ),
+  //             borderRadius: BorderRadius.all(
+  //               Radius.circular(25.sp),
+  //             ),
+  //             boxShadow: [
+  //               BoxShadow(offset: Offset(0.sp, 3.sp), color: Colors.black),
+  //             ],
+  //           ),
+  //           child: Padding(
+  //             padding: EdgeInsets.symmetric(vertical: 13.0.sp, horizontal: 25.sp),
+  //             child: StyledText(
+  //               '참가마감',
+  //               fontWeight: 500,
+  //               fontSize: 18,
+  //               lineHeight: 18,
+  //               color: deepGrayColor,
+  //               letterSpacing: -.1,
+  //             ),
+  //           )),
+  //     );
+  //   } else {
+  //     // 챌린지 달성
+  //     content = RichText(
+  //       text: TextSpan(
+  //         style: TextStyle(
+  //           color: skyBlueColor,
+  //           fontWeight: FontWeight.w500,
+  //           fontSize: 16.sp,
+  //           height: 24.sp / 16,
+  //         ),
+  //         children: const [
+  //           TextSpan(
+  //             text: '수고하셨습니다.\n',
+  //           ),
+  //           TextSpan(
+  //             text: '리더보드를 확인해주세요!',
+  //           ),
+  //         ],
+  //       ),
+  //     );
+  //
+  //     suffixWidget = iconChallengeSuccess;
+  //   }
+  // } else {
+  //   // 챌린지 종료
+  //   if (userState == 'COMPLETE') {
+  //     // 챌린지 달성
+  //     content = RichText(
+  //       text: TextSpan(
+  //         style: TextStyle(
+  //           color: skyBlueColor,
+  //           fontWeight: FontWeight.w500,
+  //           fontSize: 16.sp,
+  //           height: 24.sp / 16,
+  //         ),
+  //         children: const [
+  //           TextSpan(
+  //             text: '수고하셨습니다.\n',
+  //           ),
+  //           TextSpan(
+  //             text: '리더보드를 확인해주세요!',
+  //           ),
+  //         ],
+  //       ),
+  //     );
+  //
+  //     suffixWidget = iconChallengeSuccess;
+  //   } else if (userState == 'INCOMPLETE') {
+  //     // 챌린지 미달성
+  //     content = RichText(
+  //       text: TextSpan(
+  //         style: TextStyle(
+  //           color: skyBlueColor,
+  //           fontWeight: FontWeight.w500,
+  //           fontSize: 16.sp,
+  //           height: 24.sp / 16,
+  //         ),
+  //         children: const [
+  //           TextSpan(
+  //             text: '챌린지에 참가해주셔서\n',
+  //           ),
+  //           TextSpan(
+  //             text: '감사합니다!',
+  //           ),
+  //         ],
+  //       ),
+  //     );
+  //
+  //     suffixWidget = iconChallengeFailure;
+  //   } else {
+  //     // 참여하지 않은 챌린지가 종료된 경우
+  //     content = RichText(
+  //       text: TextSpan(
+  //         style: TextStyle(
+  //           color: skyBlueColor,
+  //           fontWeight: FontWeight.w500,
+  //           fontSize: 16.sp,
+  //           height: 24.sp / 16,
+  //         ),
+  //         children: const [
+  //           TextSpan(
+  //             text: '챌린지가 종료되었습니다\n',
+  //           ),
+  //           TextSpan(
+  //             text: '다음챌린지를 기대해주세요',
+  //           ),
+  //         ],
+  //       ),
+  //     );
+  //
+  //     suffixWidget = InkWell(
+  //       onTap: () => null,
+  //       child: Container(
+  //           decoration: BoxDecoration(
+  //             color: subBg01Color,
+  //             border: Border.all(
+  //               width: 2,
+  //               style: BorderStyle.solid,
+  //               color: deepGrayColor,
+  //             ),
+  //             borderRadius: BorderRadius.all(
+  //               Radius.circular(25.sp),
+  //             ),
+  //             boxShadow: [
+  //               BoxShadow(offset: Offset(0.sp, 3.sp), color: Colors.black),
+  //             ],
+  //           ),
+  //           child: Padding(
+  //             padding: EdgeInsets.symmetric(vertical: 13.0.sp, horizontal: 40.sp),
+  //             child: StyledText(
+  //               '종료',
+  //               fontWeight: 500,
+  //               fontSize: 18,
+  //               lineHeight: 18,
+  //               color: deepGrayColor,
+  //               letterSpacing: -.1,
+  //             ),
+  //           )),
+  //     );
+  //   }
+  // }
   // switch (statusType) {
   //   case 'JOINED':
   //     break;

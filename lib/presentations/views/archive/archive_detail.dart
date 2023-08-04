@@ -1,9 +1,13 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_naver_map/flutter_naver_map.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:flutter_svg/flutter_svg.dart';
+import 'package:gaza_go/constants/config.dart';
 import 'package:gaza_go/platform/controllers/archive_controller.dart';
 import 'package:gaza_go/platform/helpers/activity_helper.dart';
 import 'package:gaza_go/platform/helpers/base_helper.dart';
+import 'package:gaza_go/platform/helpers/map_helper.dart';
 import 'package:gaza_go/presentations/components/default_container.dart';
 import 'package:gaza_go/presentations/styles/colors.dart';
 import 'package:gaza_go/presentations/styles/icons.dart';
@@ -54,11 +58,29 @@ class ArchiveDetail extends StatelessWidget {
                               foregroundImage: controller.getArchiveTypeImage(controller.selectedItem.value),
                             ),
                             if (controller.selectedItem.value.badgeIssueId != null)
-                              Positioned(
-                                right: -5,
-                                bottom: -5,
-                                child: Image.network(controller.selectedItem.value.badgeImageUrl!, width: 20.sp, height: 20.sp),
-                              ),
+                              controller.selectedItem.value.badgeImageUrl!.contains('.svg')
+                                  ? Positioned(
+                                      right: -5,
+                                      bottom: -5,
+                                      child: SvgPicture.network(
+                                        width: 20.sp,
+                                        height: 20.sp,
+                                        fit: BoxFit.contain,
+                                        controller.selectedItem.value.badgeImageUrl!,
+                                        headers: imageNetworkHeader,
+                                      ),
+                                    )
+                                  : Positioned(
+                                      right: -5,
+                                      bottom: -5,
+                                      child: CachedNetworkImage(
+                                        width: 20.sp,
+                                        height: 20.sp,
+                                        imageUrl: controller.selectedItem.value.badgeImageUrl!,
+                                        fit: BoxFit.fitHeight,
+                                        httpHeaders: imageNetworkHeader,
+                                      ),
+                                    ),
                           ],
                         ),
                       ),
@@ -167,6 +189,12 @@ class ArchiveDetail extends StatelessWidget {
                   initialCameraPosition: CameraPosition(
                     target: controller.locations.isNotEmpty ? controller.locations.first : const LatLng(37.5525, 126.9883),
                   ),
+                  circles: [
+                    if (controller.selectedItem.value.challengeCourse != null) ...renderCircleOverlays(controller.selectedItem.value.challengeCourse),
+                  ],
+                  markers: [
+                    if (controller.selectedItem.value.challengeCourse != null) ...renderMarkers(controller.selectedItem.value.challengeCourse),
+                  ],
                   pathOverlays: {
                     PathOverlay(
                       PathOverlayId('detail path'),
@@ -235,34 +263,34 @@ class ArchiveDetail extends StatelessWidget {
                 ],
               ),
             ),
-            Padding(
-              padding: EdgeInsets.symmetric(vertical: 10.0.sp, horizontal: 20.0.sp),
-              child: Row(
-                children: [
-                  const StyledText(
-                    '광고 보상',
-                    fontWeight: 600,
-                    fontSize: 16,
-                  ),
-                  const Spacer(),
-                  Row(
-                    children: [
-                      StyledText(
-                        formatDecimalPlaces(controller.selectedItem.value.rewardGoAdSum!, 2),
-                        fontWeight: 500,
-                        fontSize: 16,
-                      ),
-                      const StyledText(
-                        ' GO',
-                        fontWeight: 500,
-                        fontSize: 16,
-                        color: Color(0xFF7D7D84),
-                      ),
-                    ],
-                  ),
-                ],
-              ),
-            ),
+            // Padding(
+            //   padding: EdgeInsets.symmetric(vertical: 10.0.sp, horizontal: 20.0.sp),
+            //   child: Row(
+            //     children: [
+            //       const StyledText(
+            //         '광고 보상',
+            //         fontWeight: 600,
+            //         fontSize: 16,
+            //       ),
+            //       const Spacer(),
+            //       Row(
+            //         children: [
+            //           StyledText(
+            //             formatDecimalPlaces(controller.selectedItem.value.rewardGoAdSum!, 2),
+            //             fontWeight: 500,
+            //             fontSize: 16,
+            //           ),
+            //           const StyledText(
+            //             ' GO',
+            //             fontWeight: 500,
+            //             fontSize: 16,
+            //             color: Color(0xFF7D7D84),
+            //           ),
+            //         ],
+            //       ),
+            //     ],
+            //   ),
+            // ),
             Padding(
               padding: EdgeInsets.symmetric(vertical: 10.0.sp, horizontal: 20.0.sp),
               child: Row(
@@ -329,7 +357,7 @@ class ArchiveDetail extends StatelessWidget {
                 ],
               ),
             ),
-            controller.selectedItem.value.challengeId != null && controller.selectedItem.value.badgeName != null && controller.selectedItem.value.type == "HIKING"
+            controller.selectedItem.value.challengeActivationType == "COURSE"
                 ? Padding(
                     padding: EdgeInsets.symmetric(vertical: 10.0.sp, horizontal: 20.0.sp),
                     child: Row(
@@ -358,7 +386,7 @@ class ArchiveDetail extends StatelessWidget {
                 color: Color(0xFF2C2C35),
               ),
             ),
-            controller.selectedItem.value.startPointName != null && controller.selectedItem.value.type == "HIKING"
+            controller.selectedItem.value.challengeActivationType == "COURSE"
                 ? Padding(
                     padding: EdgeInsets.symmetric(vertical: 10.0.sp, horizontal: 20.0.sp),
                     child: Row(
@@ -399,7 +427,7 @@ class ArchiveDetail extends StatelessWidget {
               ),
             ),
             // startPointName
-            controller.selectedItem.value.endPointName != null && controller.selectedItem.value.type == "HIKING"
+            controller.selectedItem.value.challengeActivationType == "COURSE"
                 ? Padding(
                     padding: EdgeInsets.symmetric(vertical: 10.0.sp, horizontal: 20.0.sp),
                     child: Row(

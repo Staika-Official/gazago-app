@@ -24,6 +24,8 @@ class UserStateModel {
   String? lastModifiedBy;
   @HiveField(8)
   String? lastModifiedDate;
+  @HiveField(9)
+  bool? locked;
 
   UserStateModel({
     required this.id,
@@ -34,6 +36,7 @@ class UserStateModel {
     this.createdDate,
     this.lastModifiedBy,
     this.lastModifiedDate,
+    this.locked,
   });
 
   factory UserStateModel.fromJson(Map<String, dynamic> json) => _$UserStateModelFromJson(json);

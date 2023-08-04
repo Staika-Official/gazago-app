@@ -4,13 +4,17 @@ part 'new_challenge_badge_model.g.dart';
 
 @JsonSerializable(explicitToJson: true)
 class NewChallengeBadgeModel {
+  int? id;
   String? name;
   String? imageUrl;
+  String? description;
   int? limitedCount;
 
   NewChallengeBadgeModel({
+    this.id,
     this.name,
     this.imageUrl,
+    this.description,
     this.limitedCount,
   });
 

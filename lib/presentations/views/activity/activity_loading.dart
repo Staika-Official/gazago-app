@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:gaza_go/constants/enums.dart';
 import 'package:gaza_go/platform/controllers/activity_controller.dart';
-import 'package:gaza_go/platform/models/challenge_model.dart';
+import 'package:gaza_go/platform/models/challenge_course_model.dart';
 import 'package:gaza_go/presentations/styles/colors.dart';
 import 'package:get/get.dart';
 import 'package:simple_animations/animation_builder/custom_animation_builder.dart';
@@ -12,7 +12,7 @@ import '../../styles/styled_text.dart';
 class ActivityLoading extends StatelessWidget {
   final ExerciseType exerciseType;
   final String? adId;
-  final ChallengeModel? challenge;
+  final ChallengeCourseModel? challenge;
   const ActivityLoading({Key? key, required this.exerciseType, this.adId, this.challenge}) : super(key: key);
 
   @override
@@ -49,7 +49,7 @@ class ActivityLoading extends StatelessWidget {
                 right: 0,
                 child: Center(
                   child: InkWell(
-                    onTap: () => controller.passThrowActivityLoading(exerciseType, adId, challenge),
+                    onTap: () => controller.passThrowActivityLoading(exerciseType, challenge),
                     child: Padding(
                       padding: EdgeInsets.all(8.0.sp),
                       child: Container(

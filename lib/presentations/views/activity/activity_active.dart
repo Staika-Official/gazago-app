@@ -294,7 +294,7 @@ class ActivityActive extends StatelessWidget {
                 children: [
                   Obx(() {
                     return Container(
-                      child: controller.selectedChallenge.value.id != null
+                      child: controller.selectedCourse.value != null
                           ? Container(
                               padding: EdgeInsets.symmetric(horizontal: 14.sp, vertical: 7.sp),
                               decoration: BoxDecoration(
@@ -302,7 +302,7 @@ class ActivityActive extends StatelessWidget {
                                 borderRadius: BorderRadius.circular(50.sp),
                               ),
                               child: StyledText(
-                                '${controller.selectedChallenge.value.firstName} | ${controller.selectedChallenge.value.secondName}',
+                                '${controller.selectedCourse.value!.firstName} | ${controller.selectedCourse.value!.secondName}',
                                 fontSize: 14,
                                 fontWeight: 500,
                                 color: deepGrayColor,
@@ -621,7 +621,7 @@ class ActivityActive extends StatelessWidget {
                                   ? Row(
                                       children: [
                                         GestureDetector(
-                                          onTapDown: (tapDownDetail) => controller.onTapDownStop(tapDownDetail, controller.selectedChallenge.value, controller: controller),
+                                          onTapDown: (tapDownDetail) => controller.onTapDownStop(tapDownDetail, controller.selectedCourse.value, controller: controller),
                                           onTapUp: (tapUpDetail) => controller.onTapUpStop(tapUpDetail),
                                           child: Stack(
                                             children: [
@@ -665,7 +665,7 @@ class ActivityActive extends StatelessWidget {
                                         if (controller.exerciseState.value == ExerciseState.paused) {
                                           controller.exerciseUpdateThr.throttle(() => controller.continueExercise());
                                         } else {
-                                          controller.exerciseStartThr.throttle(() => controller.startExercise(controller.selectedExerciseType.value, controller.selectedChallenge.value));
+                                          controller.exerciseStartThr.throttle(() => controller.startExercise(controller.selectedExerciseType.value, controller.selectedCourse.value));
                                         }
                                       },
                                       child: Icon(Icons.play_arrow, color: Colors.white, size: 35.sp),

@@ -14,6 +14,7 @@ class StyledText extends StatelessWidget {
   final TextDecoration decoration;
   final bool overflowEllipsis;
   final bool softWrap;
+  final int? maxLines;
 
   const StyledText(
     this.text, {
@@ -29,6 +30,7 @@ class StyledText extends StatelessWidget {
     this.overflowEllipsis = false,
     this.softWrap = true,
     this.decoration = TextDecoration.none,
+    this.maxLines,
   }) : super(key: key);
 
   FontWeight get getFontWeight {
@@ -72,6 +74,7 @@ class StyledText extends StatelessWidget {
       text,
       textAlign: textAlign,
       softWrap: softWrap,
+      maxLines: maxLines,
       style: TextStyle(
         fontSize: fontSize.sp,
         fontFamily: fontFamily,

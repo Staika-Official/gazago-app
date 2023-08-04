@@ -15,8 +15,10 @@ Future<void> showAlert({
   bool isDangerTitle = false,
   bool isNonePaddingOuter = false,
   bool isFullHeight = false,
+  bool allowMultipleBottomSheet = false,
 }) async {
-  if (Get.isBottomSheetOpen == null || !Get.isBottomSheetOpen!) {
+  print(allowMultipleBottomSheet);
+  if (Get.isBottomSheetOpen == null || !Get.isBottomSheetOpen! || allowMultipleBottomSheet) {
     await Get.bottomSheet(
       WillPopScope(
         onWillPop: () async => false,

@@ -7,6 +7,7 @@ import 'package:gaza_go/platform/controllers/global_controller.dart';
 import 'package:gaza_go/platform/firebase/cloud_messaging.dart';
 import 'package:gaza_go/platform/helpers/activity_helper.dart';
 import 'package:gaza_go/platform/helpers/alert_helper.dart';
+import 'package:gaza_go/platform/models/challenge_course_model.dart';
 import 'package:gaza_go/platform/models/challenge_hierarchy_model.dart';
 import 'package:gaza_go/platform/models/challenge_model.dart';
 import 'package:gaza_go/platform/services/activity_service.dart';
@@ -19,16 +20,38 @@ mixin ChallengeMixin {
   GlobalController globalController = Get.find();
   GlobalKey listKey = GlobalKey();
 
-  final Rxn<ChallengeModel> nearByChallenge = Rxn();
+  final RxList<ChallengeCourseModel> nearByCourses = RxList.empty();
   final RxDouble listHeight = RxDouble(0);
-  final RxList<ChallengeModel> allChallengesList = RxList.empty();
+  final RxList<ChallengeCourseModel> allCoursesList = RxList.empty();
   final RxList<ChallengeHierarchyModel> hierarchyChallengesList = RxList.empty();
-  final Rxn<ChallengeModel> doableChallenge = Rxn();
-  final Rx<ChallengeModel> selectedChallenge = Rx(ChallengeModel());
+  final RxList<ChallengeCourseModel> doableCourses = RxList.empty();
+  final Rxn<ChallengeCourseModel> selectedCourse = Rxn();
+  final Rxn<ChallengeModel> selectedChallenge = Rxn();
   late NaverMapController challengeMapController;
   final RxList<Marker> challengeMarkers = RxList.empty();
   final RxList<Marker> selectedChallengeMarkers = RxList.empty();
   final Throttling challengeThr = Throttling(duration: const Duration(milliseconds: 500));
+
+  RxList<ChallengeCourseModel> get doableCoursesByChallenge {
+    if (selectedChallenge.value != null) {
+      return RxList(doableCourses.where((course) => course.challengeId == selectedChallenge.value!.id).toList());
+    } else {
+      return RxList.empty();
+    }
+  }
+
+  String getChallengeActivationTypeString(String activationType) {
+    switch (activationType) {
+      case 'ITEM':
+        return '아이템 장착형';
+      case 'COURSE':
+        return '코스형';
+      case 'CODE':
+        return '참여코드형';
+      default:
+        return '참가비 납부형';
+    }
+  }
 
   String getChallengeExerciseType(String type) {
     switch (type) {
@@ -37,7 +60,7 @@ mixin ChallengeMixin {
       case 'CLIMBING':
         return '오르기';
       case 'HIKING':
-        return '오르기';
+        return '등산';
       default:
         return '';
     }
@@ -81,17 +104,17 @@ mixin ChallengeMixin {
     return text;
   }
 
-  Future<void> getChallengeList() async {
-    await ActivityService.getChallenges(
+  Future<void> getCourseList() async {
+    await ActivityService.getCourses(
       successCallback: (challengesList) {
-        allChallengesList.value = challengesList;
+        allCoursesList.value = challengesList;
       },
     );
   }
 
-  Future<ChallengeModel> getChallenge(int id) async {
-    ChallengeModel challengeItem = ChallengeModel();
-    await ActivityService.getChallenge(
+  Future<ChallengeCourseModel> getChallengeCourse(int id) async {
+    ChallengeCourseModel challengeItem = ChallengeCourseModel();
+    await ActivityService.getChallengeCourse(
       id,
       successCallback: (challenge) {
         challengeItem = challenge;
@@ -101,54 +124,72 @@ mixin ChallengeMixin {
     return challengeItem;
   }
 
-  Future<void> getNearByChallenge(Position currentLocation, ExerciseState exerciseState) async {
-    await ActivityService.getNearByChallenge(currentLocation, successCallback: (ChallengeModel? result) {
-      if (result != null) {
-        notificationOnChallenge(result, exerciseState);
+  Future<void> getNearByCourses(Position currentLocation, ExerciseState exerciseState) async {
+    nearByCourses.clear();
+    await ActivityService.getNearByCourses(currentLocation, successCallback: (List<ChallengeCourseModel> result) {
+      if (result.isNotEmpty) {
+        notificationOnCourse(result, exerciseState);
       }
-      nearByChallenge.value = result;
+      nearByCourses.addAll(result);
     }, errorCallback: () {
-      nearByChallenge.value = null;
+      nearByCourses.clear();
     });
   }
 
-  Future<void> getChallengesHierarchy(Position currentLocation) async {
+  Future<void> getChallengesHierarchy(Position currentLocation, int challengeId) async {
+    hierarchyChallengesList.clear();
+
     await ActivityService.getChallengesHierarchy(
       currentLocation,
+      challengeId,
       successCallback: (challengeList) {
-        hierarchyChallengesList.value = challengeList;
+        hierarchyChallengesList.addAll(challengeList);
       },
     );
   }
 
-  void notificationOnChallenge(ChallengeModel? challenge, ExerciseState exerciseState) {
+  void notificationOnCourse(List<ChallengeCourseModel> courses, ExerciseState exerciseState) {
     bool notification = false;
-    if (challenge != null && !([ExerciseState.ongoing, ExerciseState.paused].any((state) => state == exerciseState))) {
+    if (courses.isNotEmpty && !([ExerciseState.ongoing, ExerciseState.paused].any((state) => state == exerciseState))) {
       notification = true;
     }
 
-    if (notification && validateChallengeNotification(challenge!.id!)) {
-      DateTime notifiedTime = DateTime.now();
-      List<int> notifiedChallengeList = HiveStore.load(key: HiveKey.challengeNotificationList.name) ?? [];
-      notifiedChallengeList.add(challenge.id!);
-      HiveStore.save(key: HiveKey.challengeNotificationList.name, value: notifiedChallengeList);
-      HiveStore.save(key: HiveKey.challengeNotificationTime.name, value: DateTime(notifiedTime.year, notifiedTime.month, notifiedTime.day));
-      showLocalNotification(notificationType: NotificationType.challenge, title: '등산 챌린지 시작 포인트 발견', message: '주변에 챌린지를 시작 할 수 있는 ${challenge.firstName}이 있어요. 뱃지 받으러 가자GO~~');
-      showToastPopup('등산 챌린지 시작 포인트 발견');
+    if (notification) {
+      for (ChallengeCourseModel course in courses) {
+        if (validateChallengeNotification(course)) {
+          DateTime notifiedTime = DateTime.now();
+          List<dynamic> notifiedChallengeList = HiveStore.load(key: HiveKey.courseNotificationList.name) ?? [];
+          notifiedChallengeList.add({
+            'courseId': course.id!,
+            'challengeId': course.challengeId!,
+            'notifiedTime': DateTime(notifiedTime.year, notifiedTime.month, notifiedTime.day).toString(),
+          });
+          HiveStore.save(key: HiveKey.courseNotificationList.name, value: notifiedChallengeList);
+          HiveStore.save(key: HiveKey.courseNotificationTime.name, value: DateTime(notifiedTime.year, notifiedTime.month, notifiedTime.day));
+          showLocalNotification(
+            allowSeparatePush: true,
+            separatePushId: course.challengeId!,
+            notificationType: NotificationType.challenge,
+            title: '챌린지 시작 포인트 발견',
+            message: '주변에 시작 할 수 있는 ${course.title}가 있어요. 뱃지 받으러 가자GO~~',
+          );
+          showToastPopup('챌린지 시작 포인트 발견');
+        }
+      }
     }
   }
 
-  bool validateChallengeNotification(int challengeId) {
-    DateTime? notifiedTime = HiveStore.load(key: HiveKey.challengeNotificationTime.name);
+  bool validateChallengeNotification(ChallengeCourseModel course) {
+    DateTime? notifiedTime = HiveStore.load(key: HiveKey.courseNotificationTime.name);
     bool isNextDay = notifiedTime != null ? DateTime.now().isAfter(notifiedTime.add(const Duration(hours: 24))) : true;
-    List<int>? notifiedChallengeList = HiveStore.load(key: HiveKey.challengeNotificationList.name);
+    List<dynamic>? notifiedChallengeList = HiveStore.load(key: HiveKey.courseNotificationList.name);
 
     if (isNextDay) {
-      HiveStore.save(key: HiveKey.challengeNotificationList.name, value: null);
+      HiveStore.save(key: HiveKey.courseNotificationList.name, value: null);
       return true;
     } else {
       if (notifiedChallengeList != null && notifiedChallengeList.isNotEmpty) {
-        bool challengeAlreadyNotified = notifiedChallengeList.contains(challengeId);
+        bool challengeAlreadyNotified = notifiedChallengeList.any((notifiedCourse) => notifiedCourse['challengeId'] == course.challengeId);
         if (challengeAlreadyNotified) {
           return false;
         }
@@ -167,15 +208,15 @@ mixin ChallengeMixin {
     }
   }
 
-  void selectChallenge(ChallengeModel challenge) {
-    selectedChallenge.value = ChallengeModel.fromJson(challenge.toJson());
+  void selectCourse(ChallengeCourseModel course) {
+    selectedCourse.value = ChallengeCourseModel.fromJson(course.toJson());
 
     challengeMapController.moveCamera(
       CameraUpdate.fitBounds(
         LatLngBounds.fromLatLngList(
           [
-            LatLng(challenge.startLat!, challenge.startLon!),
-            LatLng(challenge.endLat!, challenge.endLon!),
+            LatLng(course.startLat!, course.startLon!),
+            LatLng(course.endLat!, course.endLon!),
           ],
         ),
         padding: 80,
@@ -184,15 +225,29 @@ mixin ChallengeMixin {
   }
 
   void detectChallengeZone(Position location) {
-    if (nearByChallenge.value != null) {
-      double distance = calculateDistance(location.latitude, location.longitude, nearByChallenge.value!.startLat, nearByChallenge.value!.startLon);
-      if (distance <= convertMetersToKm(nearByChallenge.value!.startRadius!)) {
-        doableChallenge.value = nearByChallenge.value;
-      } else {
-        doableChallenge.value = null;
+    if (nearByCourses.isNotEmpty) {
+      doableCourses.clear();
+      for (ChallengeCourseModel challenge in nearByCourses) {
+        double distance = calculateDistance(location.latitude, location.longitude, challenge.startLat, challenge.startLon);
+        if (distance <= convertMetersToKm(challenge.startRadius!)) {
+          doableCourses.add(challenge);
+        }
       }
     } else {
-      doableChallenge.value = null;
+      doableCourses.clear();
     }
+  }
+
+  Future<void> getChallenges({required Function successCallback, Function? errorCallback}) async {
+    await ActivityService.getChallenges(
+      successCallback: successCallback,
+      errorCallback: errorCallback,
+    );
+  }
+
+  String getCourseRouteString(ChallengeCourseModel course) {
+    List<String> checkpointNames = course.checkpoints != null && course.checkpoints!.isNotEmpty ? course.checkpoints!.map((checkpoint) => checkpoint.name!).toList() : [];
+    List<String> fullCourseRoute = [course.startPointName ?? '', ...checkpointNames, course.endPointName ?? ''];
+    return fullCourseRoute.join(' - ');
   }
 }

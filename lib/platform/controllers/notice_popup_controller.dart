@@ -1,5 +1,6 @@
 import 'package:gaza_go/constants/enums.dart';
 import 'package:gaza_go/constants/routes.dart';
+import 'package:gaza_go/platform/controllers/activity_controller.dart';
 import 'package:gaza_go/platform/controllers/global_controller.dart';
 import 'package:gaza_go/platform/controllers/home_menu_controller.dart';
 import 'package:gaza_go/platform/controllers/leaderboard_controller.dart';
@@ -12,6 +13,7 @@ import 'package:url_launcher/url_launcher.dart';
 
 class NoticePopupController extends GetxController {
   GlobalController globalController = Get.find();
+  ActivityController activityController = Get.find();
   RxList<NoticePopupModel> noticePopupList = RxList.empty();
   RxList<NoticePopupModel> noticeMainPopupList = RxList.empty();
   final RxInt _current = 0.obs;
@@ -56,7 +58,7 @@ class NoticePopupController extends GetxController {
   Future<void> initController() async {
     await getNoticePopupList();
     await getMainNoticePopupList();
-    checkPopupExpired();
+    showMainPopup();
   }
 
   Future<void> getMainNoticePopupList() async {
@@ -101,6 +103,9 @@ class NoticePopupController extends GetxController {
         switch (item.linkUrl) {
           case 'CHALLENGES':
             Get.find<HomeMenuController>().selectMenu(0);
+            break;
+          case 'COURSE_CHALLENGES':
+            checkBlockUser(item);
             break;
           case 'ARCHIVE':
             Get.find<HomeMenuController>().selectMenu(4);
@@ -153,8 +158,38 @@ class NoticePopupController extends GetxController {
     }
   }
 
-  void checkPopupExpired() {
-    if (globalController.isPopupOpen.value && noticeMainPopupList.isNotEmpty) {
+  void checkBlockUser(item) async {
+    bool hasSeenFairPlayAlert = HiveStore.load(key: HiveKey.hasSeenFairPlayAlert.name) ?? false;
+    if (!hasSeenFairPlayAlert) {
+      HiveStore.save(key: HiveKey.hasSeenFairPlayAlert.name, value: true);
+      await showFairPlayAlert();
+    }
+
+    if (activityController.userState.value.state!.locked != null && activityController.userState.value.state!.locked! == true) {
+      showLockedUserAlert();
+    } else {
+      Get.toNamed(Routes.challengeCourseDetail, arguments: {'id': item.referenceId}, preventDuplicates: false);
+    }
+  }
+
+  Future<bool> checkPopupExpired() async {
+    DateTime? date = await HiveStore.load(key: HiveKey.closePopupDate.name);
+
+    if (date != null) {
+      DateTime viewableTime = date.add(const Duration(hours: 24));
+      DateTime now = DateTime.now();
+      if (viewableTime.isBefore(now) && noticeMainPopupList.isNotEmpty) {
+        return true;
+      }
+      return false;
+    } else {
+      return true;
+    }
+  }
+
+  void showMainPopup() async {
+    bool isShowPopup = await checkPopupExpired();
+    if (isShowPopup) {
       setCurrent(0);
       showMainPopupAlert(this);
     }

@@ -49,7 +49,8 @@ void handleKeysOnLogout() {
     HiveKey.dummyStepCount.name,
     HiveKey.savedStepInitialized.name,
     HiveKey.authorities.name,
-    HiveKey.closePopupDate.name,
+    // HiveKey.closePopupDate.name,
+    HiveKey.hasSeenFairPlayAlert.name,
   ]);
 }
 

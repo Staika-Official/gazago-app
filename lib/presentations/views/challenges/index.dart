@@ -1,7 +1,7 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:flutter_svg/svg.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:flutter_svg_provider/flutter_svg_provider.dart' as sp;
 import 'package:gaza_go/constants/config.dart';
 import 'package:gaza_go/platform/controllers/challenges_controller.dart';
@@ -89,7 +89,7 @@ class ChallengesHome extends StatelessWidget {
                               child: Padding(
                                 padding: EdgeInsets.symmetric(vertical: 8.0.sp, horizontal: 11.0.sp),
                                 child: StyledText(
-                                  item.challengeActivationType == 'ITEM' ? '아이템 장착형' : '참가비 납부형',
+                                  controller.getChallengeActivationTypeString(item.challengeActivationType),
                                   fontWeight: 600,
                                   fontSize: 12,
                                   lineHeight: 14,
@@ -290,7 +290,7 @@ class ChallengesHome extends StatelessWidget {
                                                     letterSpacing: -.1,
                                                   )
                                                 : StyledText(
-                                                    '${formatDecimalPlaces((item.soldQuantity ?? 0).toDouble(), 0)}명 /',
+                                                    '${formatDecimalPlaces((item.soldQuantity ?? 0).toDouble(), 0)}명',
                                                     color: lightGrayColor,
                                                     fontWeight: 500,
                                                     fontSize: 12,
@@ -298,7 +298,7 @@ class ChallengesHome extends StatelessWidget {
                                                     letterSpacing: -.1,
                                                   ),
                                             StyledText(
-                                              ' ${formatDecimalPlaces(item.quantity.toDouble(), 0)}명',
+                                              item.quantity >= 0 ? ' / ${formatDecimalPlaces(item.quantity.toDouble(), 0)}명' : ' 참여중',
                                               color: lightGrayColor,
                                               fontWeight: 500,
                                               fontSize: 12,

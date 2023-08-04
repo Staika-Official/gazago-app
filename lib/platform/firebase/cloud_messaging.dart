@@ -3,6 +3,8 @@ import 'package:flutter/foundation.dart' show defaultTargetPlatform, TargetPlatf
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:gaza_go/constants/enums.dart';
 import 'package:gaza_go/platform/controllers/activity_controller.dart';
+import 'package:gaza_go/platform/controllers/home_menu_controller.dart';
+import 'package:gaza_go/platform/controllers/inventory_home_controller.dart';
 import 'package:gaza_go/platform/helpers/login_helper.dart';
 import 'package:gaza_go/platform/models/push_message_challenge_success_model.dart';
 import 'package:gaza_go/platform/stores/hive_store.dart';
@@ -102,6 +104,12 @@ void handleNotification(RemoteMessage message) {
 
   if (message.data['notificationKey'] == 'CHALLENGE_REWARD_BADGE_ISSUED') {
     PushMessageChallengeSuccessModel data = PushMessageChallengeSuccessModel.fromJson(message.data);
+    // showLocalNotification(
+    //   notificationType: NotificationType.badge,
+    //   title: '챌린지 뱃지 발급!',
+    //   message: '${data.challengeTitle} 달성. 새로운 뱃지 확인하러 가자GO~~',
+    //   payload: 'NAV-INVENTORY_BADGE',
+    // );
     showChallengeBadgeAcquisitionAlert(data);
   }
 }
@@ -147,8 +155,28 @@ Future<void> setForegroundConfig() async {
 }
 
 void onSelectNotification(NotificationResponse? notificationResponse) {
-  if (notificationResponse != null) {
-    print(notificationResponse.payload);
+  if (notificationResponse != null && (notificationResponse.payload == null || notificationResponse.payload != '')) {
+    List<String> payload = notificationResponse.payload!.split('-');
+    String action = payload[0];
+    String route = payload[1];
+
+    if (action == 'NAV') {
+      Get.until((route) => route.isFirst);
+      switch (route) {
+        case 'INVENTORY_BADGE':
+          HomeMenuController homeMenuController = Get.isRegistered<HomeMenuController>() ? Get.find<HomeMenuController>() : Get.put(HomeMenuController());
+          InventoryHomeController inventoryHomeController = Get.isRegistered<InventoryHomeController>() ? Get.find<InventoryHomeController>() : Get.put(InventoryHomeController());
+          homeMenuController.selectMenu(1);
+          inventoryHomeController.tabController.animateTo(1);
+          break;
+        case 'INVENTORY_ITEM':
+          HomeMenuController homeMenuController = Get.isRegistered<HomeMenuController>() ? Get.find<HomeMenuController>() : Get.put(HomeMenuController());
+          InventoryHomeController inventoryHomeController = Get.isRegistered<InventoryHomeController>() ? Get.find<InventoryHomeController>() : Get.put(InventoryHomeController());
+          homeMenuController.selectMenu(1);
+          inventoryHomeController.tabController.animateTo(0);
+          break;
+      }
+    }
   }
 }
 
@@ -202,7 +230,7 @@ NotificationDetails badgeAcquiredNotificationDetail = NotificationDetails(
 // stamina,
 // durability,
 
-void showLocalNotification({required NotificationType notificationType, required String title, required String message, String? payload}) {
+void showLocalNotification({required NotificationType notificationType, required String title, required String message, String? payload, bool allowSeparatePush = false, int separatePushId = -1}) {
   FlutterLocalNotificationsPlugin notificationsPlugin = FlutterLocalNotificationsPlugin();
   NotificationDetails details;
   switch (notificationType) {
@@ -220,5 +248,5 @@ void showLocalNotification({required NotificationType notificationType, required
     default:
       details = notificationDetail;
   }
-  notificationsPlugin.show(notificationType.id, title, message, details);
+  notificationsPlugin.show(allowSeparatePush ? separatePushId : notificationType.id, title, message, details, payload: payload);
 }

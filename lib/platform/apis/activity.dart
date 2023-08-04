@@ -6,27 +6,27 @@ import 'package:gaza_go/platform/models/user_stamina_recharge_model.dart';
 import 'package:geolocator/geolocator.dart';
 
 class ActivityApi {
-  static Future<Response> getChallenges() async {
+  static Future<Response> getCourses() async {
     return await Api.client(
       serviceUrl: '/services/gazago/api',
       showLoading: false,
     ).get('/challenge-courses?size=9999&page=0');
   }
 
-  static Future<Response> getChallengesHierarchy(Position currentLocation) async {
+  static Future<Response> getChallengesHierarchy(Position currentLocation, int challengeId) async {
     return await Api.client(
       serviceUrl: '/services/gazago/api',
       showLoading: false,
     ).get(
-      '/challenge-courses/hierarchy/lat/${currentLocation.latitude}/lon/${currentLocation.longitude}',
+      '/challenge-courses/hierarchy/lat/${currentLocation.latitude}/lon/${currentLocation.longitude}?challengeId=$challengeId',
     );
   }
 
-  static Future<Response> getChallenge(int id) async {
+  static Future<Response> getChallengeCourse(String userId, int id) async {
     return await Api.client(
       serviceUrl: '/services/gazago/api',
       showLoading: false,
-    ).get('/challenge-courses/$id');
+    ).get('/challenge-courses/users/$userId/$id');
   }
 
   static Future<Response> getNewChallenges(String userId) async {
@@ -65,12 +65,12 @@ class ActivityApi {
   }
 
   // static Future<Response> getNearByChallenges(LocationData currentLocation) async {
-  static Future<Response> getNearByChallenge(Position currentLocation) async {
+  static Future<Response> getNearByCourses(Position currentLocation) async {
     return await Api.client(
       serviceUrl: '/services/gazago/api',
       showLoading: false,
     ).get(
-      '/challenge-courses/geolocation/lat/${currentLocation.latitude}/lon/${currentLocation.longitude}',
+      '/v2/challenge-courses/geolocation/lat/${currentLocation.latitude}/lon/${currentLocation.longitude}',
     );
   }
 
@@ -165,5 +165,35 @@ class ActivityApi {
       "challengeId": challengeId,
       "linkUrl": linkUrl,
     });
+  }
+
+  static Future<Response> getChallenges(String userId) async {
+    return await Api.client(
+      serviceUrl: '/services/gazago/api',
+      showLoading: false,
+    ).get(
+      '/challenges/users/$userId/main',
+    );
+  }
+
+  static Future<Response> getChallengeDetail(
+    String userId, {
+    required int challengeId,
+    required double lat,
+    required double lon,
+  }) async {
+    return await Api.client(
+      serviceUrl: '/services/gazago/api',
+      showLoading: false,
+    ).get(
+      '/challenges/users/$userId/$challengeId/lat/$lat/lon/$lon',
+    );
+  }
+
+  static Future<Response> fetchChallengeParticipateInCode(String userId, int challengeId, String code) async {
+    return await Api.client(
+      serviceUrl: '/services/gazago/api',
+      showLoading: false,
+    ).post('/user-challenges/users/${userId}/challenges/${challengeId}/codes/${code}');
   }
 }

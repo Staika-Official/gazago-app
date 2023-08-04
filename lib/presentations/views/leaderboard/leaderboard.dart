@@ -40,7 +40,7 @@ class LeaderboardHome extends StatelessWidget {
                     return Padding(
                       padding: EdgeInsets.only(bottom: 20.sp),
                       child: TableCalendar(
-                        rowHeight: 88,
+                        rowHeight: 75,
                         daysOfWeekHeight: 30,
                         locale: 'ko-KR',
                         firstDay: controller.firstDay.value!,

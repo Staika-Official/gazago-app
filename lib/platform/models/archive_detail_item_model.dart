@@ -1,3 +1,4 @@
+import 'package:gaza_go/platform/models/challenge_course_model.dart';
 import 'package:json_annotation/json_annotation.dart';
 
 part 'archive_detail_item_model.g.dart';
@@ -18,11 +19,10 @@ class ArchiveDetailItemModel {
   String? state;
   int? badgeIssueId;
   int? challengeId;
-  double? rewardGoExerciseSum;
-  double? rewardGoAdSum;
+  int? challengeCourseId;
+  String? challengeActivationType;
   String? badgeName;
-  String? challengeTitle;
-  String? locationsStr;
+  String? badgeImageUrl;
   double? spendDurability;
   double? spendStamina;
   String? title;
@@ -32,9 +32,12 @@ class ArchiveDetailItemModel {
   String? endPointName;
   String? description;
   String? province;
-  String? badgeImageUrl;
+  double? rewardGoExerciseSum;
+  double? rewardGoAdSum;
+  double? luckApplyTotalRewardGo;
   int? luckOccurredCount;
-  double? luckApplyRewardGo;
+  String? locationsStr;
+  ChallengeCourseModel? challengeCourse;
 
   ArchiveDetailItemModel({
     this.id,
@@ -51,11 +54,10 @@ class ArchiveDetailItemModel {
     this.state,
     this.badgeIssueId,
     this.challengeId,
-    this.rewardGoExerciseSum,
-    this.rewardGoAdSum,
+    this.challengeCourseId,
+    this.challengeActivationType,
     this.badgeName,
-    this.challengeTitle,
-    this.locationsStr,
+    this.badgeImageUrl,
     this.spendDurability,
     this.spendStamina,
     this.title,
@@ -65,9 +67,12 @@ class ArchiveDetailItemModel {
     this.endPointName,
     this.description,
     this.province,
-    this.badgeImageUrl,
+    this.rewardGoExerciseSum,
+    this.rewardGoAdSum,
+    this.luckApplyTotalRewardGo,
     this.luckOccurredCount,
-    this.luckApplyRewardGo,
+    this.locationsStr,
+    this.challengeCourse,
   });
 
   factory ArchiveDetailItemModel.fromJson(Map<String, dynamic> json) => _$ArchiveDetailItemModelFromJson(json);

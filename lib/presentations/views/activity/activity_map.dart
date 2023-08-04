@@ -2,73 +2,12 @@ import 'package:flutter/material.dart';
 import 'package:flutter_naver_map/flutter_naver_map.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:gaza_go/platform/controllers/activity_controller.dart';
+import 'package:gaza_go/platform/helpers/map_helper.dart';
 import 'package:gaza_go/presentations/styles/colors.dart';
 import 'package:get/get.dart';
 
 class ActivityMap extends StatelessWidget {
   const ActivityMap({Key? key}) : super(key: key);
-
-  List<CircleOverlay> renderStartPoint(ActivityController controller) {
-    CircleOverlay centerCircle = CircleOverlay(
-      overlayId: 'ChallengeStartCenter${controller.selectedChallenge.value.id!}',
-      center: LatLng(controller.selectedChallenge.value.startLat!, controller.selectedChallenge.value.startLon!),
-      radius: 9,
-      color: skyBlueColor,
-    );
-
-    CircleOverlay outerCircle = CircleOverlay(
-      overlayId: 'ChallengeStart${controller.selectedChallenge.value.id!}',
-      center: LatLng(controller.selectedChallenge.value.startLat!, controller.selectedChallenge.value.startLon!),
-      radius: controller.selectedChallenge.value.startRadius!,
-      color: const Color.fromRGBO(14, 230, 243, 0.3),
-    );
-
-    return [centerCircle, outerCircle];
-  }
-
-  List<CircleOverlay> renderEndPoint(ActivityController controller) {
-    CircleOverlay centerCircle = CircleOverlay(
-      overlayId: 'ChallengeEndCenter${controller.selectedChallenge.value.id!}',
-      center: LatLng(controller.selectedChallenge.value.endLat!, controller.selectedChallenge.value.endLon!),
-      radius: 9,
-      color: Colors.red,
-    );
-
-    CircleOverlay outerCircle = CircleOverlay(
-      overlayId: 'ChallengeEnd${controller.selectedChallenge.value.id!}',
-      center: LatLng(controller.selectedChallenge.value.endLat!, controller.selectedChallenge.value.endLon!),
-      radius: controller.selectedChallenge.value.endRadius!,
-      color: Colors.red[300]?.withOpacity(0.3),
-    );
-
-    return [centerCircle, outerCircle];
-  }
-
-  List<Marker> renderStartMarker(ActivityController controller) {
-    return [
-      Marker(
-        markerId: 'StartMarker${controller.nearByChallenge.value!.id!}',
-        position: LatLng(controller.nearByChallenge.value!.startLat!, controller.nearByChallenge.value!.startLon!),
-        captionText: '${controller.nearByChallenge.value!.firstName!} 시작점',
-        // icon: controller.startMarkerImage.value,
-        // width: 10,
-        // height: 10,
-      ),
-    ];
-  }
-
-  List<Marker> renderEndMarker(ActivityController controller) {
-    return [
-      Marker(
-        markerId: 'FinishMarker${controller.nearByChallenge.value!.id!}',
-        position: LatLng(controller.nearByChallenge.value!.endLat!, controller.nearByChallenge.value!.endLon!),
-        captionText: '${controller.nearByChallenge.value!.firstName!} 도착점',
-        // icon: controller.startMarkerImage.value,
-        // width: 10,
-        // height: 10,
-      ),
-    ];
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -87,13 +26,11 @@ class ActivityMap extends StatelessWidget {
             ),
             initLocationTrackingMode: LocationTrackingMode.Follow,
             circles: [
-              if (controller.selectedChallenge.value.id != null) ...renderStartPoint(controller),
-              if (controller.selectedChallenge.value.id != null) ...renderEndPoint(controller),
+              if (controller.selectedCourse.value != null) ...renderCircleOverlays(controller.selectedCourse.value),
             ],
-            // markers: [
-            //   ...renderStartMarker(controller),
-            //   ...renderEndMarker(controller),
-            // ],
+            markers: [
+              if (controller.selectedCourse.value != null) ...renderMarkers(controller.selectedCourse.value),
+            ],
             pathOverlays: (controller.coordinates.length < 10)
                 ? null
                 : {
@@ -136,7 +73,7 @@ class ActivityMap extends StatelessWidget {
               ),
             ),
           ),
-        )
+        ),
       ],
     );
   }

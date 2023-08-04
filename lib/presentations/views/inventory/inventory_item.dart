@@ -185,6 +185,30 @@ class InventoryItem extends StatelessWidget {
                                 height: 18,
                                 child: getItemGradeCircleIcon(item.itemGrade),
                               ),
+                        if (item.expiredDate != null)
+                          if (controller.getRemainingDays(item.expiredDate!) < 3)
+                            Positioned(
+                              left: 7.sp,
+                              top: 7.sp,
+                              child: Container(
+                                padding: EdgeInsets.symmetric(
+                                  horizontal: 7.sp,
+                                  vertical: 5.sp,
+                                ),
+                                decoration: BoxDecoration(
+                                  color: controller.getRemainingDays(item.expiredDate!) == 0 ? const Color(0xffFD5D70) : popupBgColor,
+                                  borderRadius: BorderRadius.circular(20),
+                                ),
+                                child: StyledText('D-${controller.getRemainingDays(item.expiredDate!)}'),
+                              ),
+                            ),
+                        Positioned(
+                          right: 7.sp,
+                          top: 7.sp,
+                          width: 18,
+                          height: 18,
+                          child: getItemGradeCircleIcon(item.itemGrade),
+                        ),
                       ],
                     ),
                   ),

@@ -11,19 +11,24 @@ class ArchiveListItemModel {
   double? speed;
   double? distance;
   double? altitude;
+  double? maxAltitude;
   int? time;
   String? startedDate;
   String? endedDate;
   double? rewardGo;
+  double? spendDurability;
+  double? spendStamina;
   String? state;
   int? badgeIssueId;
   int? challengeId;
-  String? badgeDescription;
-  double? spendDurability;
-  double? spendStamina;
+  int? challengeCourseId;
+  String? challengeActivationType;
   String? badgeName;
   String? badgeImageUrl;
   String? challengeTitle;
+  double? degreeRewardGo;
+  double? degreeSpendDurability;
+  double? degreeSpendStamina;
   int? luckOccurredCount;
   double? luckApplyRewardGo;
 
@@ -35,19 +40,24 @@ class ArchiveListItemModel {
     this.speed,
     this.distance,
     this.altitude,
+    this.maxAltitude,
     this.time,
     this.startedDate,
     this.endedDate,
     this.rewardGo,
+    this.spendDurability,
+    this.spendStamina,
     this.state,
     this.badgeIssueId,
     this.challengeId,
-    this.badgeDescription,
-    this.spendDurability,
-    this.spendStamina,
+    this.challengeCourseId,
+    this.challengeActivationType,
     this.badgeName,
     this.badgeImageUrl,
     this.challengeTitle,
+    this.degreeRewardGo,
+    this.degreeSpendDurability,
+    this.degreeSpendStamina,
     this.luckOccurredCount,
     this.luckApplyRewardGo,
   });

@@ -22,7 +22,7 @@ class GlobalController extends SuperController {
   final RxBool showLoadingDialog = RxBool(false);
   @override
   void onInit() async {
-    checkMainPopupExpiredDate();
+    await checkMainPopupExpiredDate();
     await execute(customInstance);
     // await checkLoginStatus();
 
@@ -117,14 +117,19 @@ class GlobalController extends SuperController {
     }
   }
 
-  void checkMainPopupExpiredDate() {
-    DateTime? date = HiveStore.load(key: HiveKey.closePopupDate.name);
-    DateTime? viewableTime = date?.add(const Duration(hours: 24));
-    DateTime now = DateTime.now();
-    if (date == null || viewableTime!.isBefore(now)) {
-      isPopupOpen.value = true;
+  Future<void> checkMainPopupExpiredDate() async {
+    DateTime? date = await HiveStore.load(key: HiveKey.closePopupDate.name);
+    print('팝업데이트$date');
+    if (date != null) {
+      DateTime viewableTime = date.add(const Duration(hours: 24));
+      DateTime now = DateTime.now();
+      if (viewableTime.isBefore(now)) {
+        isPopupOpen.value = true;
+      } else {
+        isPopupOpen.value = false;
+      }
     } else {
-      isPopupOpen.value = false;
+      isPopupOpen.value = true;
     }
   }
 }

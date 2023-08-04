@@ -4,6 +4,7 @@ import 'package:flutter_naver_map/flutter_naver_map.dart';
 import 'package:gaza_go/constants/enums.dart';
 import 'package:gaza_go/platform/helpers/alert_helper.dart';
 import 'package:gaza_go/platform/models/current_user_state_model.dart';
+import 'package:gaza_go/platform/models/inventory_item_stat_model.dart';
 import 'package:gaza_go/platform/models/user_exercise_model.dart';
 import 'package:gaza_go/platform/models/user_shoes_model.dart';
 import 'package:gaza_go/platform/models/user_state_model.dart';
@@ -15,6 +16,7 @@ class HiveStore {
     Hive.registerAdapter(UserStateModelAdapter());
     Hive.registerAdapter(UserShoesModelAdapter());
     Hive.registerAdapter(CurrentUserStateModelAdapter());
+    Hive.registerAdapter(InventoryItemStatModelAdapter());
   }
 
   static Future<void> openBox() async {

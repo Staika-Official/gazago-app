@@ -143,60 +143,62 @@ class InventoryBadge extends StatelessWidget {
     InventoryController controller = Get.put(InventoryController());
     double width = MediaQuery.of(context).size.width;
 
-    return Container(
-      color: popupBgColor,
-      child: controller.userBadgesList.isEmpty
-          ? Container(
-              width: double.infinity,
-              padding: EdgeInsets.symmetric(vertical: 50.sp),
-              decoration: BoxDecoration(
-                color: popupBgColor,
-                borderRadius: BorderRadius.circular(12.sp),
-              ),
-              child: Column(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  iconEmpty,
-                  Padding(
-                    padding: EdgeInsets.only(top: 20.sp),
-                    child: const StyledText(
-                      '뱃지가 없습니다.',
-                      color: Color(0xff7b7b7b),
-                      fontSize: 16,
-                      lineHeight: 10,
-                      fontWeight: 500,
+    return Obx(() {
+      return Container(
+        color: popupBgColor,
+        child: controller.userBadgesList.isEmpty
+            ? Container(
+                width: double.infinity,
+                padding: EdgeInsets.symmetric(vertical: 50.sp),
+                decoration: BoxDecoration(
+                  color: popupBgColor,
+                  borderRadius: BorderRadius.circular(12.sp),
+                ),
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    iconEmpty,
+                    Padding(
+                      padding: EdgeInsets.only(top: 20.sp),
+                      child: const StyledText(
+                        '뱃지가 없습니다.',
+                        color: Color(0xff7b7b7b),
+                        fontSize: 16,
+                        lineHeight: 10,
+                        fontWeight: 500,
+                      ),
                     ),
-                  ),
-                  Padding(
-                    padding: EdgeInsets.only(top: 13.sp),
-                    child: const StyledText(
-                      '등산해서 뱃지를 받아보세요!',
-                      color: Color(0xff7b7b7b),
-                      fontSize: 16,
-                      lineHeight: 10,
-                      fontWeight: 500,
+                    Padding(
+                      padding: EdgeInsets.only(top: 13.sp),
+                      child: const StyledText(
+                        '등산해서 뱃지를 받아보세요!',
+                        color: Color(0xff7b7b7b),
+                        fontSize: 16,
+                        lineHeight: 10,
+                        fontWeight: 500,
+                      ),
                     ),
-                  ),
-                ],
-              ),
-            )
-          : Padding(
-              padding: EdgeInsets.symmetric(vertical: 20.0.sp),
-              child: Obx(() {
-                return GridView.count(
-                  primary: false,
-                  padding: EdgeInsets.only(left: 20.sp, right: 20.sp, bottom: 30.sp),
-                  childAspectRatio: (1 / 1.4),
-                  crossAxisSpacing: 10.sp,
-                  mainAxisSpacing: 10.sp,
-                  crossAxisCount: (width < 350.sp) ? 2 : 3,
-                  controller: controller.badgeScrollController,
-                  children: <Widget>[
-                    ...renderUserBadgesList(controller),
                   ],
-                );
-              }),
-            ),
-    );
+                ),
+              )
+            : Padding(
+                padding: EdgeInsets.symmetric(vertical: 20.0.sp),
+                child: Obx(() {
+                  return GridView.count(
+                    primary: false,
+                    padding: EdgeInsets.only(left: 20.sp, right: 20.sp, bottom: 30.sp),
+                    childAspectRatio: (1 / 1.4),
+                    crossAxisSpacing: 10.sp,
+                    mainAxisSpacing: 10.sp,
+                    crossAxisCount: (width < 350.sp) ? 2 : 3,
+                    controller: controller.badgeScrollController,
+                    children: <Widget>[
+                      ...renderUserBadgesList(controller),
+                    ],
+                  );
+                }),
+              ),
+      );
+    });
   }
 }

@@ -23,6 +23,8 @@ SvgPicture iconHand = SvgPicture.asset('assets/images/common/ico_hand.svg', widt
 SvgPicture iconCircleSkyBlueCheck = SvgPicture.asset('assets/images/common/ico_circle_check_skyblue.svg', width: 40.sp, height: 40.sp);
 SvgPicture iconEaMinus = SvgPicture.asset('assets/images/common/ico_ea_minus.svg', width: 13.sp, height: 2.sp);
 SvgPicture iconEaPlus = SvgPicture.asset('assets/images/common/ico_ea_plus.svg', width: 13.sp, height: 13.sp);
+SvgPicture iconKey = SvgPicture.asset('assets/images/common/ico_key.svg', width: 26.sp, height: 26.sp);
+SvgPicture iconStar = SvgPicture.asset('assets/images/common/ico_star.svg', width: 14.sp, height: 14.sp);
 
 // Bottom Navigation Icon
 SvgPicture iconMenuHome = SvgPicture.asset('assets/images/common/ico_menu_home.svg', width: 20.5.sp, height: 20.sp, color: lightGrayColor);
@@ -77,6 +79,7 @@ SvgPicture iconAppName = SvgPicture.asset('assets/images/activity/ico_app_name.s
 SvgPicture iconGo = SvgPicture.asset('assets/images/activity/ico_go.svg', width: 31.sp, height: 31.sp);
 SvgPicture iconGoSmall = SvgPicture.asset('assets/images/activity/ico_go.svg', width: 18.sp, height: 18.sp);
 SvgPicture iconExclamation = SvgPicture.asset('assets/images/activity/ico_exclamation.svg', width: 24.sp, height: 24.sp);
+SvgPicture iconFairplayAlert = SvgPicture.asset('assets/images/activity/ico_alert.svg', width: 44.sp, height: 44.sp);
 // archive
 SvgPicture iconArchiveDetailBadge = SvgPicture.asset('assets/images/archive/ico_archive_detail_badge.svg', width: 15.sp, height: 20.sp, color: Colors.black);
 SvgPicture iconWasteBasket = SvgPicture.asset('assets/images/common/ico_wastebasket.svg', width: 15.sp, height: 20.sp);
