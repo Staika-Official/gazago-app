@@ -12,8 +12,11 @@ Future<void> initDynamicLink() async {
 }
 
 void listenToDynamicLink() {
-  FirebaseDynamicLinks.instance.onLink.listen((dynamicLinkData) {
-    // Get.toNamed(dynamicLinkData.link.path);
+  FirebaseDynamicLinks.instance.onLink.listen((dynamicLinkData) async {
+    Map<String, String> queryParams = dynamicLinkData.link.queryParameters;
+    if (queryParams['route'] != null) {
+      Get.toNamed(queryParams['route']!);
+    }
   }).onError((error) {
     // Handle errors
   });
