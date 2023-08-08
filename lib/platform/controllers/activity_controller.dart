@@ -399,6 +399,7 @@ class ActivityController extends SuperController with ActivityMixin, ChallengeMi
         if (userState.value.state!.locked != null && userState.value.state!.locked! == true) {
           showLockedUserAlert();
         } else {
+          await getCourseList();
           getActivityRoute();
         }
       } else {
