@@ -1023,7 +1023,7 @@ class InventoryItemDetail extends StatelessWidget {
                     ],
                   ),
                   child: Text(
-                    '내구도 충전하기',
+                    '신발 내구도 수리하기',
                     textAlign: TextAlign.center,
                     style: TextStyle(
                       fontSize: 18.sp,

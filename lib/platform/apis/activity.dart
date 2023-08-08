@@ -156,7 +156,7 @@ class ActivityApi {
     ).get('/users/$userId/locations/$exerciseId?page=$page&size=$size');
   }
 
-  static Future<Response> fetchChallengeAllianceLinkRecord(String userId, int challengeId, String linkUrl) async {
+  static Future<Response> fetchChallengeAllianceLinkRecord(String userId, int? challengeId, String linkUrl) async {
     return await Api.client(
       serviceUrl: '/services/gazago/api',
       showLoading: false,

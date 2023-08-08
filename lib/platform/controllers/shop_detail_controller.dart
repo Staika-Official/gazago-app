@@ -235,7 +235,7 @@ class ShopDetailController extends GetxController {
   void moveToExternalBrowser(linkUrl) async {
     Uri url = Uri.parse(linkUrl!);
     if (await canLaunchUrl(url)) {
-      await ActivityService.fetchChallengeAllianceLinkRecord(selectedItem.value.challenge!.challengeId!, linkUrl);
+      await ActivityService.fetchChallengeAllianceLinkRecord(selectedItem.value.challenge!.challengeId, linkUrl);
       await launchUrl(url, mode: LaunchMode.externalApplication);
     }
   }

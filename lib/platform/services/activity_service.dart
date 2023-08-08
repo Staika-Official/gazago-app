@@ -214,7 +214,7 @@ class ActivityService {
     }
   }
 
-  static Future<dynamic> fetchChallengeAllianceLinkRecord(int challengeId, String linkUrl) async {
+  static Future<dynamic> fetchChallengeAllianceLinkRecord(int? challengeId, String linkUrl) async {
     Response res = await ActivityApi.fetchChallengeAllianceLinkRecord(userId!, challengeId, linkUrl);
     if (res.statusCode == 201) {
       print('fetch success');
