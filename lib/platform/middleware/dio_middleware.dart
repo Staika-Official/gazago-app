@@ -20,6 +20,7 @@ import 'package:package_info_plus/package_info_plus.dart';
 class Api {
   static final Logger _logger = Logger(printer: PrettyPrinter(colors: true, printEmojis: true));
   static int retryAttempt = 0;
+  static bool needToRefreshToken = true;
 
   static final Dio _dio = Dio()
     ..interceptors.addAll([
@@ -170,6 +171,9 @@ class Api {
     // }
 
     Timer(Duration.zero, () {
+      if (!needToRefreshToken) {
+        needToRefreshToken = true;
+      }
       handler.next(response);
     });
   }
@@ -212,7 +216,11 @@ class Api {
         resetToLogin(e, handler);
       }
 
-      await _getNewAccessToken(e, handler);
+      if (needToRefreshToken) {
+        await _getNewAccessToken(e, handler);
+      } else {
+        await _retryFailedRequest(e, handler);
+      }
     } else {
       if (e.response?.data != null && e.response?.data != '') {
         ErrorResponseDataModel errorData = ErrorResponseDataModel.fromJson(e.response?.data);
@@ -343,6 +351,7 @@ class Api {
 
       HiveStore.save(key: HiveKey.accessToken.name, value: newToken.accessToken);
       HiveStore.save(key: HiveKey.refreshToken.name, value: newToken.refreshToken);
+      needToRefreshToken = false;
 
       await _retryFailedRequest(e, handler);
     }).onError((DioError error, stacktrace) {
