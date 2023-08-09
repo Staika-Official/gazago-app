@@ -153,7 +153,7 @@ class ShopItemDetail extends StatelessWidget {
                                                     children: [
                                                       InkWell(
                                                         onTap: () {
-                                                          if (controller.purchaseItemCount.value > 0) {
+                                                          if (controller.purchaseItemCount.value > 1) {
                                                             controller.purchaseItemCount.value = controller.purchaseItemCount.value - 1;
                                                           }
                                                         },
@@ -161,7 +161,7 @@ class ShopItemDetail extends StatelessWidget {
                                                           width: 26.sp,
                                                           height: 26.sp,
                                                           decoration: BoxDecoration(
-                                                            color: controller.purchaseItemCount.value > 0 ? skyBlueColor : lightGrayColor,
+                                                            color: controller.purchaseItemCount.value > 1 ? skyBlueColor : lightGrayColor,
                                                             borderRadius: BorderRadius.circular(50),
                                                             boxShadow: [
                                                               BoxShadow(

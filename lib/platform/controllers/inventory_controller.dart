@@ -54,6 +54,8 @@ class InventoryController extends GetxController with LinearProgressMixin, Inven
   ScrollController itemScrollController = ScrollController(keepScrollOffset: false);
   ScrollController badgeScrollController = ScrollController(keepScrollOffset: false);
 
+  final Rxn isConsumerItemUsing = Rxn(null);
+
   Rx<InventoryBadgeModel> equippedBadge = Rx(
     InventoryBadgeModel(
       id: -1,
@@ -457,11 +459,13 @@ class InventoryController extends GetxController with LinearProgressMixin, Inven
   }
 
   void checkConsumerItemType(InventoryItemModel useItem) async {
+    isConsumerItemUsing.value = useItem;
     if (useItem.itemStat!.repairDurability! > 0) {
       await fetchRepairShoesUseOneItem(useItem, equippedShoe.value.id);
     } else {
       await fetchRecoveryUseOneItem(useItem);
     }
+    isConsumerItemUsing.value = null;
     getUserAllItems();
     getUserEquippedItems();
   }

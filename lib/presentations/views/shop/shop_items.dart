@@ -1,5 +1,4 @@
 import 'package:cached_network_image/cached_network_image.dart';
-import 'package:custom_rounded_rectangle_border/custom_rounded_rectangle_border.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/flutter_svg.dart';
@@ -14,6 +13,14 @@ import 'package:get/get.dart';
 
 class ShopItems extends StatelessWidget {
   const ShopItems({Key? key}) : super(key: key);
+
+  List<Widget> renderItemTabList(ShopController controller) {
+    return controller.categoryFilterList
+        .map(
+          (item) => Text(item['title']!),
+        )
+        .toList();
+  }
 
   List<Widget> renderShopItemsList(BuildContext context, ShopController shopController) {
     return shopController.shopItemsList
@@ -287,247 +294,273 @@ class ShopItems extends StatelessWidget {
   Widget build(BuildContext context) {
     ShopController shopController = Get.put(ShopController());
     return Obx(() {
-      return Container(
-        decoration: ShapeDecoration(
-          color: popupBgColor,
-          shape: CustomRoundedRectangleBorder(
-            borderRadius: BorderRadius.only(topLeft: Radius.circular(15.sp), topRight: Radius.circular(15.sp)),
-            topLeftCornerSide: BorderSide(color: Colors.black, width: 2.sp),
-            topRightCornerSide: BorderSide(color: Colors.black, width: 2.sp),
-            topSide: BorderSide(color: Colors.black, width: 2.sp),
-          ),
-        ),
-        child: Padding(
-          padding: EdgeInsets.only(top: 15.0.sp, left: 20.sp, right: 20.sp),
-          child: Column(
-            mainAxisSize: MainAxisSize.max,
-            children: [
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: [
-                  InkWell(
-                    onTap: () => shopController.showItemSortingPopup(),
-                    child: Container(
-                      decoration: BoxDecoration(
-                        color: popupBgColor,
-                        border: Border.all(
-                          width: 1,
-                          color: Colors.black,
-                        ),
-                        borderRadius: const BorderRadius.all(
-                          Radius.circular(100),
-                        ),
-                        boxShadow: const [
-                          BoxShadow(
-                            color: Colors.black,
-                            offset: Offset(1, 0),
-                            blurRadius: 0.0,
-                            spreadRadius: 0.0,
-                          ),
-                        ],
-                      ),
-                      child: Stack(
-                        children: [
-                          Padding(
-                            padding: EdgeInsets.only(left: 18.0.sp, top: 11.sp, bottom: 11.sp, right: 58.sp),
-                            child: StyledText(
-                              shopController.isSelectedSortString.value,
-                              fontWeight: 500,
-                              fontSize: 14,
-                            ),
-                          ),
-                          Positioned(
-                            right: 15.sp,
-                            top: 14.sp,
-                            child: iconArrowDown,
-                          ),
-                        ],
-                      ),
-                    ),
+      return Column(
+        children: [
+          Padding(
+            padding: EdgeInsets.symmetric(horizontal: 20.0.sp),
+            child: SizedBox(
+              height: 30.sp,
+              child: Align(
+                alignment: Alignment.centerLeft,
+                child: TabBar(
+                  controller: shopController.tabController,
+                  isScrollable: true,
+                  labelStyle: TextStyle(fontWeight: FontWeight.w500, fontSize: 14.sp),
+                  labelColor: Colors.white,
+                  unselectedLabelColor: const Color(0xFF898B92),
+                  labelPadding: EdgeInsets.only(left: 14.0.sp, right: 14.0.sp, top: 0.0.sp, bottom: 14.0.sp),
+                  indicator: BoxDecoration(
+                    border: Border(
+                        bottom: BorderSide(
+                      color: skyBlueColor,
+                      width: 2,
+                    )),
                   ),
-                  Row(
-                    children: [
-                      if (shopController.isSelectAllItems.value)
-                        Padding(
-                          padding: EdgeInsets.only(right: 10.0.sp),
-                          child: StyledText(
-                            '전체',
-                            fontWeight: 600,
-                            fontSize: 14,
-                            lineHeight: 22,
-                            color: lightGrayColor,
-                          ),
-                        ),
-                      InkWell(
-                        onTap: () => shopController.showItemFilterPopup(),
-                        child: Container(
-                          decoration: BoxDecoration(
-                            color: popupBgColor,
-                            border: Border.all(
-                              width: 1.sp,
-                              color: Colors.black,
-                            ),
-                            borderRadius: BorderRadius.all(
-                              Radius.circular(5.sp),
-                            ),
-                            boxShadow: [
-                              BoxShadow(
-                                color: Colors.black,
-                                offset: Offset(2.sp, 2.sp),
-                                blurRadius: 0.0,
-                                spreadRadius: 0.0,
-                              ),
-                            ],
-                          ),
-                          child: Padding(
-                            padding: const EdgeInsets.symmetric(horizontal: 5.0, vertical: 6.0),
-                            child: shopController.isSelectAllItems.value ? iconShopFilter : iconShopFilterActive,
-                          ),
-                        ),
-                      )
-                    ],
-                  )
-                ],
+                  tabs: [...renderItemTabList(shopController)],
+                  onTap: (index) => shopController.onSelectCategory(shopController.categoryFilterList[index]['value']),
+                ),
               ),
-              shopController.shopItemsList.isEmpty
-                  ? shopController.dataGetLoading.value
-                      ? Padding(
-                          padding: EdgeInsets.symmetric(vertical: 120.0.sp),
-                          child: const Center(child: CircularProgressIndicator()),
-                        )
-                      : Container(
-                          width: double.infinity,
-                          padding: EdgeInsets.symmetric(vertical: 120.sp),
-                          decoration: BoxDecoration(
-                            color: popupBgColor,
-                            borderRadius: BorderRadius.circular(12.sp),
+            ),
+          ),
+          Expanded(
+            child: Container(
+              decoration: BoxDecoration(
+                color: popupBgColor,
+              ),
+              child: Padding(
+                padding: EdgeInsets.only(top: 15.0.sp, left: 20.sp, right: 20.sp),
+                child: Column(
+                  mainAxisSize: MainAxisSize.max,
+                  children: [
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: [
+                        InkWell(
+                          onTap: () => shopController.showItemSortingPopup(),
+                          child: Container(
+                            decoration: BoxDecoration(
+                              color: popupBgColor,
+                              border: Border.all(
+                                width: 1,
+                                color: Colors.black,
+                              ),
+                              borderRadius: const BorderRadius.all(
+                                Radius.circular(100),
+                              ),
+                              boxShadow: const [
+                                BoxShadow(
+                                  color: Colors.black,
+                                  offset: Offset(1, 0),
+                                  blurRadius: 0.0,
+                                  spreadRadius: 0.0,
+                                ),
+                              ],
+                            ),
+                            child: Stack(
+                              children: [
+                                Padding(
+                                  padding: EdgeInsets.only(left: 18.0.sp, top: 11.sp, bottom: 11.sp, right: 58.sp),
+                                  child: StyledText(
+                                    shopController.isSelectedSortString.value,
+                                    fontWeight: 500,
+                                    fontSize: 14,
+                                  ),
+                                ),
+                                Positioned(
+                                  right: 15.sp,
+                                  top: 14.sp,
+                                  child: iconArrowDown,
+                                ),
+                              ],
+                            ),
                           ),
-                          child: Column(
-                            mainAxisSize: MainAxisSize.min,
-                            children: [
-                              iconShopEmpty,
+                        ),
+                        Row(
+                          children: [
+                            if (shopController.isSelectAllItems.value)
                               Padding(
-                                padding: EdgeInsets.only(top: 20.sp),
+                                padding: EdgeInsets.only(right: 10.0.sp),
                                 child: StyledText(
-                                  '필터결과를 찾을 수 없습니다.',
+                                  '전체',
+                                  fontWeight: 600,
+                                  fontSize: 14,
+                                  lineHeight: 22,
                                   color: lightGrayColor,
-                                  fontSize: 16,
-                                  lineHeight: 18,
-                                  fontWeight: 500,
                                 ),
                               ),
-                              Column(
-                                children: [
-                                  Padding(
-                                    padding: EdgeInsets.only(top: 50.0.sp),
-                                    child: Row(
-                                      mainAxisAlignment: MainAxisAlignment.center,
+                            InkWell(
+                              onTap: () => shopController.showItemFilterPopup(),
+                              child: Container(
+                                decoration: BoxDecoration(
+                                  color: popupBgColor,
+                                  border: Border.all(
+                                    width: 1.sp,
+                                    color: Colors.black,
+                                  ),
+                                  borderRadius: BorderRadius.all(
+                                    Radius.circular(5.sp),
+                                  ),
+                                  boxShadow: [
+                                    BoxShadow(
+                                      color: Colors.black,
+                                      offset: Offset(2.sp, 2.sp),
+                                      blurRadius: 0.0,
+                                      spreadRadius: 0.0,
+                                    ),
+                                  ],
+                                ),
+                                child: Padding(
+                                  padding: const EdgeInsets.symmetric(horizontal: 5.0, vertical: 6.0),
+                                  child: shopController.isSelectAllItems.value ? iconShopFilter : iconShopFilterActive,
+                                ),
+                              ),
+                            )
+                          ],
+                        )
+                      ],
+                    ),
+                    shopController.shopItemsList.isEmpty
+                        ? shopController.dataGetLoading.value
+                            ? Padding(
+                                padding: EdgeInsets.symmetric(vertical: 120.0.sp),
+                                child: const Center(child: CircularProgressIndicator()),
+                              )
+                            : Container(
+                                width: double.infinity,
+                                padding: EdgeInsets.symmetric(vertical: 120.sp),
+                                decoration: BoxDecoration(
+                                  color: popupBgColor,
+                                  borderRadius: BorderRadius.circular(12.sp),
+                                ),
+                                child: Column(
+                                  mainAxisSize: MainAxisSize.min,
+                                  children: [
+                                    iconShopEmpty,
+                                    Padding(
+                                      padding: EdgeInsets.only(top: 20.sp),
+                                      child: StyledText(
+                                        '필터결과를 찾을 수 없습니다.',
+                                        color: lightGrayColor,
+                                        fontSize: 16,
+                                        lineHeight: 18,
+                                        fontWeight: 500,
+                                      ),
+                                    ),
+                                    Column(
                                       children: [
-                                        Expanded(
-                                          child: Wrap(
-                                            runSpacing: 10.0,
-                                            spacing: 10.0,
-                                            alignment: WrapAlignment.center,
-                                            crossAxisAlignment: WrapCrossAlignment.start,
+                                        Padding(
+                                          padding: EdgeInsets.only(top: 50.0.sp),
+                                          child: Row(
+                                            mainAxisAlignment: MainAxisAlignment.center,
                                             children: [
-                                              ...shopController.filteredCategory.asMap().entries.map(
-                                                    (entry) => Container(
-                                                      decoration: BoxDecoration(
-                                                        color: popupBgColor,
-                                                        border: Border.all(
-                                                          width: 1,
-                                                          color: Colors.white,
+                                              Expanded(
+                                                child: Wrap(
+                                                  runSpacing: 10.0,
+                                                  spacing: 10.0,
+                                                  alignment: WrapAlignment.center,
+                                                  crossAxisAlignment: WrapCrossAlignment.start,
+                                                  children: [
+                                                    ...shopController.filteredCategory.asMap().entries.map(
+                                                          (entry) => Container(
+                                                            decoration: BoxDecoration(
+                                                              color: popupBgColor,
+                                                              border: Border.all(
+                                                                width: 1,
+                                                                color: Colors.white,
+                                                              ),
+                                                              borderRadius: BorderRadius.circular(20.sp),
+                                                            ),
+                                                            child: Padding(
+                                                              padding: EdgeInsets.symmetric(horizontal: 12.0.sp, vertical: 6.sp),
+                                                              child: StyledText(
+                                                                shopController.categoryFilterList.firstWhere((element) => element['value'] == entry.value)['title']!,
+                                                                fontSize: 14,
+                                                                lineHeight: 16,
+                                                                letterSpacing: .2,
+                                                                fontWeight: 500,
+                                                              ),
+                                                            ),
+                                                          ),
                                                         ),
-                                                        borderRadius: BorderRadius.circular(20.sp),
-                                                      ),
-                                                      child: Padding(
-                                                        padding: EdgeInsets.symmetric(horizontal: 12.0.sp, vertical: 6.sp),
-                                                        child: StyledText(
-                                                          shopController.categoryFilterList.firstWhere((element) => element['value'] == entry.value)['title']!,
-                                                          fontSize: 14,
-                                                          lineHeight: 16,
-                                                          letterSpacing: .2,
-                                                          fontWeight: 500,
-                                                        ),
-                                                      ),
-                                                    ),
-                                                  ),
+                                                  ],
+                                                ),
+                                              ),
                                             ],
                                           ),
                                         ),
-                                      ],
-                                    ),
-                                  ),
-                                  Padding(
-                                    padding: EdgeInsets.only(top: 12.0.sp),
-                                    child: Row(
-                                      mainAxisAlignment: MainAxisAlignment.center,
-                                      children: [
-                                        Expanded(
-                                          child: Wrap(
-                                            runSpacing: 10.0,
-                                            spacing: 10.0,
-                                            alignment: WrapAlignment.center,
-                                            crossAxisAlignment: WrapCrossAlignment.start,
+                                        Padding(
+                                          padding: EdgeInsets.only(top: 12.0.sp),
+                                          child: Row(
+                                            mainAxisAlignment: MainAxisAlignment.center,
                                             children: [
-                                              ...shopController.filteredGrade.asMap().entries.map(
-                                                    (entry) => Container(
-                                                      decoration: BoxDecoration(
-                                                        color: popupBgColor,
-                                                        border: Border.all(
-                                                          width: 1,
-                                                          color: getItemGradeColor(entry.value),
+                                              Expanded(
+                                                child: Wrap(
+                                                  runSpacing: 10.0,
+                                                  spacing: 10.0,
+                                                  alignment: WrapAlignment.center,
+                                                  crossAxisAlignment: WrapCrossAlignment.start,
+                                                  children: [
+                                                    ...shopController.filteredGrade.asMap().entries.map(
+                                                          (entry) => Container(
+                                                            decoration: BoxDecoration(
+                                                              color: popupBgColor,
+                                                              border: Border.all(
+                                                                width: 1,
+                                                                color: getItemGradeColor(entry.value),
+                                                              ),
+                                                              borderRadius: BorderRadius.circular(20.sp),
+                                                            ),
+                                                            child: Padding(
+                                                              padding: const EdgeInsets.symmetric(horizontal: 12.0, vertical: 6),
+                                                              child: StyledText(
+                                                                entry.value!,
+                                                                fontSize: 14,
+                                                                lineHeight: 16,
+                                                                letterSpacing: .2,
+                                                                fontWeight: 500,
+                                                                color: getItemGradeColor(entry.value),
+                                                              ),
+                                                            ),
+                                                          ),
                                                         ),
-                                                        borderRadius: BorderRadius.circular(20.sp),
-                                                      ),
-                                                      child: Padding(
-                                                        padding: const EdgeInsets.symmetric(horizontal: 12.0, vertical: 6),
-                                                        child: StyledText(
-                                                          entry.value!,
-                                                          fontSize: 14,
-                                                          lineHeight: 16,
-                                                          letterSpacing: .2,
-                                                          fontWeight: 500,
-                                                          color: getItemGradeColor(entry.value),
-                                                        ),
-                                                      ),
-                                                    ),
-                                                  ),
+                                                  ],
+                                                ),
+                                              )
                                             ],
                                           ),
                                         )
                                       ],
-                                    ),
-                                  )
-                                ],
+                                    )
+                                  ],
+                                ),
                               )
-                            ],
+                        : Expanded(
+                            child: Padding(
+                              padding: EdgeInsets.only(top: 15.0.sp),
+                              child: Obx(() {
+                                return GridView.count(
+                                  controller: shopController.itemScrollController,
+                                  primary: false,
+                                  padding: EdgeInsets.only(bottom: 30.sp),
+                                  childAspectRatio: (1 / 1.4),
+                                  crossAxisSpacing: 14.sp,
+                                  mainAxisSpacing: 14.sp,
+                                  crossAxisCount: 2,
+                                  // controller: controller.badgeScrollController,
+                                  children: <Widget>[
+                                    ...renderShopItemsList(context, shopController),
+                                  ],
+                                );
+                              }),
+                            ),
                           ),
-                        )
-                  : Expanded(
-                      child: Padding(
-                        padding: EdgeInsets.only(top: 15.0.sp),
-                        child: Obx(() {
-                          return GridView.count(
-                            controller: shopController.itemScrollController,
-                            primary: false,
-                            padding: EdgeInsets.only(bottom: 30.sp),
-                            childAspectRatio: (1 / 1.4),
-                            crossAxisSpacing: 14.sp,
-                            mainAxisSpacing: 14.sp,
-                            crossAxisCount: 2,
-                            // controller: controller.badgeScrollController,
-                            children: <Widget>[
-                              ...renderShopItemsList(context, shopController),
-                            ],
-                          );
-                        }),
-                      ),
-                    ),
-            ],
+                  ],
+                ),
+              ),
+            ),
           ),
-        ),
+        ],
       );
     });
   }

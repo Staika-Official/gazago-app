@@ -16,6 +16,7 @@ class ItemCounter extends StatelessWidget {
   Widget build(BuildContext context) {
     return Row(
       mainAxisSize: MainAxisSize.min,
+      mainAxisAlignment: MainAxisAlignment.end,
       children: [
         Container(
           decoration: BoxDecoration(
@@ -73,7 +74,7 @@ class ItemCounter extends StatelessWidget {
                     width: 26.sp,
                     height: 26.sp,
                     decoration: BoxDecoration(
-                      color: skyBlueColor,
+                      color: item.spendItemAmount! == maxCount ? lightGrayColor : skyBlueColor,
                       boxShadow: [
                         BoxShadow(
                           color: Colors.black,

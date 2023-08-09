@@ -23,7 +23,7 @@ class ShopDetailController extends GetxController {
   final HomeMenuController challengesDetailController = Get.put(HomeMenuController());
   LoaderController loaderController = Get.put(LoaderController());
   final RxList<ShopItemModel> shopItemsList = RxList.empty();
-  final RxInt purchaseItemCount = RxInt(0);
+  final RxInt purchaseItemCount = RxInt(1);
 
   RxInt get purchaseItemSumPrice {
     return RxInt((purchaseItemCount.value * selectedItem.value.price).toInt());

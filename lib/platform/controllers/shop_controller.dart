@@ -14,12 +14,12 @@ import 'package:gaza_go/platform/services/shop_service.dart';
 import 'package:gaza_go/presentations/components/alert_ui_list.dart';
 import 'package:get/get.dart';
 
-class ShopController extends GetxController {
+class ShopController extends GetxController with GetTickerProviderStateMixin {
   final WalletMasterController walletMasterController = Get.find();
   // final ChallengesDetailController challengesDetailController = Get.put(ChallengesDetailController());
   LoaderController loaderController = Get.put(LoaderController());
   final RxList<ShopItemModel> shopItemsList = RxList.empty();
-
+  late TabController tabController;
   final List<Map<String, String>> sortingList = [
     {'title': '최근 등록 순', 'value': 'id,DESC'},
     // {'title': '높은 가격 순', 'value': 'price,DESC'},
@@ -27,11 +27,13 @@ class ShopController extends GetxController {
   ];
 
   final List<Map<String, String>> categoryFilterList = [
+    {'title': '전체', 'value': 'ALL'},
     {'title': '모자', 'value': 'HAT'},
     {'title': '하의', 'value': 'BOTTOM'},
     {'title': '상의', 'value': 'TOP'},
     {'title': '신발', 'value': 'SHOES'},
     {'title': '악세사리', 'value': 'ACCESSORY'},
+    {'title': '기타', 'value': 'DISPOSABLE'},
   ];
 
   final List<Map<String, String>> gradeFilterList = [
@@ -43,7 +45,7 @@ class ShopController extends GetxController {
     {'title': 'Legend', 'value': 'LEGEND'},
   ];
 
-  RxList selectedCategory = RxList.empty(growable: true);
+  RxString selectedCategory = RxString('ALL');
   RxList filteredCategory = RxList.empty(growable: true);
 
   RxList selectedGrade = RxList.empty(growable: true);
@@ -58,6 +60,7 @@ class ShopController extends GetxController {
   RxInt challengeId = RxInt(0);
   ScrollController itemScrollController = ScrollController(keepScrollOffset: false);
   RxBool isShortBalance = RxBool(false);
+
   RxList<ShopItemModel> get sortingShopItemList {
     List<ShopItemModel> itemList = List.empty(growable: true);
 
@@ -126,6 +129,7 @@ class ShopController extends GetxController {
   Future<void> initController() async {
     getShopItemsList();
     getItemMaxValue();
+    tabController = TabController(length: 7, vsync: this);
     itemScrollController.addListener(() => toggleBottomNav(itemScrollController));
   }
 
@@ -265,10 +269,10 @@ class ShopController extends GetxController {
   }
 
   void closeItemFilterPopup() {
-    List newFilteredCategory = [...filteredCategory];
+    // List newFilteredCategory = [...filteredCategory];
     List newFilteredGrade = [...filteredGrade];
     if (isFilteredItems.value) {
-      selectedCategory.value = newFilteredCategory;
+      // selectedCategory.value = newFilteredCategory;
       selectedGrade.value = newFilteredGrade;
       isSelectAllItems.value = false;
     } else {
@@ -279,20 +283,13 @@ class ShopController extends GetxController {
   }
 
   void initItemsFilter() {
-    selectedCategory.value = [];
     selectedGrade.value = [];
     isSelectAllItems.value = true;
   }
 
   void onSelectCategory(category) {
-    isSelectAllItems.value = false;
-    if (selectedCategory.any((element) => element == category)) {
-      selectedCategory.removeWhere((item) => item == category);
-    } else {
-      selectedCategory.add(category);
-    }
-
-    if (selectedCategory.isEmpty && selectedGrade.isEmpty) isSelectAllItems.value = true;
+    selectedCategory.value = category;
+    getShopItemsList();
   }
 
   void onSelectGrade(grade) {
@@ -302,7 +299,7 @@ class ShopController extends GetxController {
     } else {
       selectedGrade.add(grade);
     }
-    if (selectedCategory.isEmpty && selectedGrade.isEmpty) isSelectAllItems.value = true;
+    if (selectedCategory.value == 'ALL' && selectedGrade.isEmpty) isSelectAllItems.value = true;
   }
 
   void onSelectAllItems() {
@@ -312,13 +309,14 @@ class ShopController extends GetxController {
 
   void getShopItemsList() async {
     dataGetLoading.value = true;
-    await ShopService.getShopItems(isSelectedSortValue.value['value'], selectedGrade.join(','), selectedCategory.join(','), successCallback: (List<ShopItemModel> items) {
-      List newSelectedCategory = [...selectedCategory];
+    await ShopService.getShopItems(isSelectedSortValue.value['value'], selectedGrade.join(','), selectedCategory.value == 'ALL' ? '' : selectedCategory.value,
+        successCallback: (List<ShopItemModel> items) {
+      // List newSelectedCategory = [...selectedCategory];
       List newSelectedGrade = [...selectedGrade];
       shopItemsList.value = items;
-      if (selectedGrade.join(',') != '' || selectedCategory.join(',') != '') {
+      if (selectedGrade.join(',') != '') {
         isFilteredItems.value = true;
-        filteredCategory.value = newSelectedCategory;
+        // filteredCategory.value = newSelectedCategory;
         filteredGrade.value = newSelectedGrade;
       } else {
         isSelectAllItems.value = true;

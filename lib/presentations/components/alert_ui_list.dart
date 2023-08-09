@@ -4845,52 +4845,63 @@ void consumerItemUsagePopup(controller, context) {
                                               )
                                             ]),
                                           ),
-                                          Padding(
-                                            padding: EdgeInsets.only(left: 22.0.sp),
-                                            child: Column(
-                                              crossAxisAlignment: CrossAxisAlignment.start,
-                                              mainAxisAlignment: MainAxisAlignment.start,
-                                              mainAxisSize: MainAxisSize.max,
-                                              children: [
-                                                StyledText(
-                                                  item.itemName,
-                                                  fontSize: 16,
-                                                  fontWeight: 500,
-                                                  lineHeight: 18,
-                                                ),
-                                                Padding(
-                                                  padding: EdgeInsets.only(top: 8.0.sp),
-                                                  child: Row(
-                                                    children: [
-                                                      StyledText(
-                                                        '성능 : ${item.itemType == 'RECOVERY' ? item.itemStat.recoveryStamina.toInt() : item.itemStat.repairDurability.toInt()}',
-                                                        fontSize: 14,
-                                                        fontWeight: 600,
-                                                        lineHeight: 14,
-                                                        letterSpacing: -.1,
-                                                        color: deepGrayColor,
-                                                      ),
-                                                      Padding(
-                                                        padding: EdgeInsets.all(3.0.sp),
-                                                        child: StyledText(
-                                                          item.itemType == 'RECOVERY' ? '회복' : '수리',
+                                          Expanded(
+                                            child: Padding(
+                                              padding: EdgeInsets.only(left: 22.0.sp),
+                                              child: Column(
+                                                crossAxisAlignment: CrossAxisAlignment.start,
+                                                mainAxisAlignment: MainAxisAlignment.start,
+                                                mainAxisSize: MainAxisSize.max,
+                                                children: [
+                                                  StyledText(
+                                                    item.itemName,
+                                                    fontSize: 16,
+                                                    fontWeight: 500,
+                                                    lineHeight: 18,
+                                                  ),
+                                                  Padding(
+                                                    padding: EdgeInsets.only(top: 8.0.sp),
+                                                    child: Row(
+                                                      children: [
+                                                        StyledText(
+                                                          '성능 : ${item.itemType == 'RECOVERY' ? item.itemStat.recoveryStamina.toInt() : item.itemStat.repairDurability.toInt()}',
                                                           fontSize: 14,
                                                           fontWeight: 600,
                                                           lineHeight: 14,
                                                           letterSpacing: -.1,
                                                           color: deepGrayColor,
                                                         ),
+                                                        Padding(
+                                                          padding: EdgeInsets.all(3.0.sp),
+                                                          child: StyledText(
+                                                            item.itemType == 'RECOVERY' ? '회복' : '수리',
+                                                            fontSize: 14,
+                                                            fontWeight: 600,
+                                                            lineHeight: 14,
+                                                            letterSpacing: -.1,
+                                                            color: deepGrayColor,
+                                                          ),
+                                                        ),
+                                                      ],
+                                                    ),
+                                                  ),
+                                                  if (controller.getRepairUseItem(item.id) != null)
+                                                    Padding(
+                                                      padding: EdgeInsets.only(top: 8.0.sp),
+                                                      child: Container(
+                                                        width: double.infinity,
+                                                        child: Align(
+                                                          alignment: Alignment.centerRight,
+                                                          child: ItemCounter(
+                                                            item: controller.getRepairUseItem(item.id),
+                                                            callbackFnc: (item, updatedCount) => controller.updateSpendCount(item, updatedCount),
+                                                            maxCount: item.amount,
+                                                          ),
+                                                        ),
                                                       ),
-                                                    ],
-                                                  ),
-                                                ),
-                                                if (controller.getRepairUseItem(item.id) != null)
-                                                  ItemCounter(
-                                                    item: controller.getRepairUseItem(item.id),
-                                                    callbackFnc: (item, updatedCount) => controller.updateSpendCount(item, updatedCount),
-                                                    maxCount: item.amount,
-                                                  ),
-                                              ],
+                                                    ),
+                                                ],
+                                              ),
                                             ),
                                           ),
                                         ],
@@ -4940,7 +4951,7 @@ void consumerItemUsagePopup(controller, context) {
                               lineHeight: 18,
                             ),
                             StyledText(
-                              formatDecimalPlaces(controller.totalStat.toDouble(), 2),
+                              formatDecimalPlaces(controller.totalStat.toDouble(), 0),
                               fontSize: 17,
                               fontWeight: 500,
                               lineHeight: 18,
@@ -5027,7 +5038,8 @@ void consumerItemUsagePopup(controller, context) {
                                       return;
                                     },
                                     buttonText: controller.selectedType == 'STAMINA' ? '회복하기' : '수리하기',
-                                    buttonColor: skyBlueColor,
+                                    textColor: controller.totalStat > 0 ? Colors.black : lightGrayColor,
+                                    buttonColor: controller.totalStat > 0 ? skyBlueColor : subBg01Color,
                                   ),
                                 ),
                               ],

@@ -53,26 +53,28 @@ class InventoryItem extends StatelessWidget {
                             children: [
                               SizedBox(
                                 height: 80.sp,
-                                child: Container(
-                                  child: item.itemImageUrl.contains('.svg')
-                                      ? SvgPicture.network(
-                                          fit: BoxFit.fitHeight,
-                                          item.itemImageUrl,
-                                          placeholderBuilder: (BuildContext context) => const Center(child: SizedBox.square(dimension: 40, child: CircularProgressIndicator())),
-                                          headers: imageNetworkHeader,
-                                          color: item.equipped == true ? Colors.white.withOpacity(0.5) : Colors.white.withOpacity(1),
-                                          colorBlendMode: BlendMode.modulate,
-                                        )
-                                      : CachedNetworkImage(
-                                          imageUrl: item.itemImageUrl,
-                                          fit: BoxFit.fitHeight,
-                                          placeholder: (context, url) => const Center(child: SizedBox.square(dimension: 40, child: CircularProgressIndicator())),
-                                          errorWidget: (context, url, error) => Image.asset("assets/images/@temp_badge.png"),
-                                          httpHeaders: imageNetworkHeader,
-                                          color: item.equipped == true ? Colors.white.withOpacity(0.5) : Colors.white.withOpacity(1),
-                                          colorBlendMode: BlendMode.modulate,
-                                        ),
-                                ),
+                                child: controller.isConsumerItemUsing.value != null && controller.isConsumerItemUsing.value.id == item.id
+                                    ? const Center(child: SizedBox.square(dimension: 40, child: CircularProgressIndicator()))
+                                    : Container(
+                                        child: item.itemImageUrl.contains('.svg')
+                                            ? SvgPicture.network(
+                                                fit: BoxFit.fitHeight,
+                                                item.itemImageUrl,
+                                                placeholderBuilder: (BuildContext context) => const Center(child: SizedBox.square(dimension: 40, child: CircularProgressIndicator())),
+                                                headers: imageNetworkHeader,
+                                                color: item.equipped == true ? Colors.white.withOpacity(0.5) : Colors.white.withOpacity(1),
+                                                colorBlendMode: BlendMode.modulate,
+                                              )
+                                            : CachedNetworkImage(
+                                                imageUrl: item.itemImageUrl,
+                                                fit: BoxFit.fitHeight,
+                                                placeholder: (context, url) => const Center(child: SizedBox.square(dimension: 40, child: CircularProgressIndicator())),
+                                                errorWidget: (context, url, error) => Image.asset("assets/images/@temp_badge.png"),
+                                                httpHeaders: imageNetworkHeader,
+                                                color: item.equipped == true ? Colors.white.withOpacity(0.5) : Colors.white.withOpacity(1),
+                                                colorBlendMode: BlendMode.modulate,
+                                              ),
+                                      ),
                               ),
                               Padding(
                                 padding: EdgeInsets.only(top: 10.sp, bottom: 6.sp),
@@ -202,13 +204,13 @@ class InventoryItem extends StatelessWidget {
                                 child: StyledText('D-${controller.getRemainingDays(item.expiredDate!)}'),
                               ),
                             ),
-                        Positioned(
-                          right: 7.sp,
-                          top: 7.sp,
-                          width: 18,
-                          height: 18,
-                          child: getItemGradeCircleIcon(item.itemGrade),
-                        ),
+                        // Positioned(
+                        //   right: 7.sp,
+                        //   top: 7.sp,
+                        //   width: 18,
+                        //   height: 18,
+                        //   child: getItemGradeCircleIcon(item.itemGrade),
+                        // ),
                       ],
                     ),
                   ),
