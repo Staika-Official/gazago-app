@@ -480,7 +480,7 @@ class ChallengeInfo extends StatelessWidget {
                           ),
                       ],
                     ),
-                    if (controller.challengeDetails.value.extBtnLabel != null && controller.challengeDetails.value.extBtnLabel != '')
+                    if (controller.challengeDetails.value.extBtnLabel != null && controller.challengeDetails.value.extBtnLabel != '' && controller.challengeDetails.value.linkUrl != null)
                       Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [

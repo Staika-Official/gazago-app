@@ -2317,7 +2317,7 @@ void alreadyConnectedDeviceAlert(LoginController controller, LoginType socialTyp
     contentWidget: Padding(
       padding: EdgeInsets.only(top: 20.0.sp, bottom: 40.sp),
       child: const StyledText(
-        '댜른 기기에 로그인 되어 있어요.\n해당 기기의 로그인 해제 후 로그인할게요.',
+        '다른 기기에 로그인 되어 있어요.\n해당 기기의 로그인 해제 후 로그인할게요.',
         fontSize: 18,
         lineHeight: 24,
         fontWeight: 500,

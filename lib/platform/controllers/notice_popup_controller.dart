@@ -178,12 +178,16 @@ class NoticePopupController extends GetxController {
     if (date != null) {
       DateTime viewableTime = date.add(const Duration(hours: 24));
       DateTime now = DateTime.now();
+
       if (viewableTime.isBefore(now) && noticeMainPopupList.isNotEmpty) {
         return true;
       }
       return false;
     } else {
-      return true;
+      if (noticeMainPopupList.isNotEmpty) {
+        return true;
+      }
+      return false;
     }
   }
 

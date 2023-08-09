@@ -30,7 +30,7 @@ import 'package:gaza_go/presentations/views/leaderboard/index.dart';
 import 'package:gaza_go/presentations/views/shop/index.dart';
 import 'package:get/get.dart';
 import 'package:in_app_update/in_app_update.dart';
-import 'package:new_version/new_version.dart';
+import 'package:new_version_plus/new_version_plus.dart';
 
 class HomeMenuController extends SuperController {
   final RxInt selectedIndex = RxInt(2);
@@ -156,7 +156,7 @@ class HomeMenuController extends SuperController {
           showToastPopup(e.toString());
         });
       } else {
-        appIOSUpdateInfo = await NewVersion(
+        appIOSUpdateInfo = await NewVersionPlus(
           iOSId: F.isDev ? 'kr.co.eztechfin.gazaGo.dev' : 'kr.co.eztechfin.gazaGo',
         ).getVersionStatus().catchError((e) {
           showToastPopup(e.toString());
