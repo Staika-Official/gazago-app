@@ -333,8 +333,7 @@ mixin ActivityMixin {
     if (exerciseData.length > 1) {
       sortedList = [...exerciseData];
       sortedList.sort((a, b) => (b.locationUpdateTime!.compareTo(a.locationUpdateTime!)));
-      prevData = sortedList.firstWhere((sortedData) => (DateTime.now().subtract(Duration(seconds: stopTimeInterval)).compareTo(sortedData.locationUpdateTime!) == 1),
-          orElse: () => UserExerciseModel(steps: 0));
+      prevData = sortedList.firstWhere((sortedData) => (DateTime.now().subtract(Duration(seconds: stopTimeInterval)).compareTo(sortedData.locationUpdateTime!) == 1), orElse: () => UserExerciseModel(steps: 0));
     }
     int prevStep = prevData != null ? prevData.steps! : 0;
     int currentStep = exerciseData.isNotEmpty && exerciseData.length > 2 ? exerciseData.last.steps! : 0;
@@ -490,7 +489,7 @@ mixin ActivityMixin {
       }
     }
 
-    void updateLocalUserState(CurrentUserStateModel newUserState) {
+    void updateLocalUserState(CurrentUserStateModel newUserState) async {
       HiveStore.saveExerciseCoordinate(coordinates);
 
       newUserState.exercise!.locationUpdateTime = DateTime.now();
@@ -508,7 +507,7 @@ mixin ActivityMixin {
             shoes: newUserState.shoes,
           ),
         );
-        syncExerciseData(newUserState);
+        await syncExerciseData(newUserState);
       }
     }
 
@@ -703,7 +702,7 @@ mixin ActivityMixin {
       await ActivityService.fetchEndUserExercises(
         userExerciseData.value,
         source: source,
-        successCallback: (CurrentUserStateModel newUserState) {
+        successCallback: (CurrentUserStateModel newUserState) async {
           initLuckAnimation();
           userState.update(
             (state) {
@@ -732,7 +731,7 @@ mixin ActivityMixin {
                 shoes: newUserState.shoes,
               ),
             );
-            syncExerciseData(newUserState);
+            await syncExerciseData(newUserState);
             if (retryAttempt > 4) {
               showToastPopup('운동 종료에 실패했습니다.\n다시 시도해주세요.');
             } else {
@@ -892,9 +891,11 @@ mixin ActivityMixin {
     }
   }
 
-  void syncExerciseData(CurrentUserStateModel userState) {
+  Future<void> syncExerciseData(CurrentUserStateModel userState) async {
     exerciseTime.value = userState.exercise!.time!;
     exerciseSteps.value = userState.exercise!.steps!;
     exerciseDistance.value = userState.exercise!.distance!;
+
+    await Future.delayed(const Duration(milliseconds: 500));
   }
 }

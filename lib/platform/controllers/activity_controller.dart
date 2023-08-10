@@ -348,7 +348,7 @@ class ActivityController extends SuperController with ActivityMixin, ChallengeMi
           if (updateTimer == null) {
             exerciseData.value = List.empty(growable: true);
             exerciseData.add(userState.value.exercise!);
-            syncExerciseData(userState.value);
+            await syncExerciseData(userState.value);
             coordinates.value = List.empty(growable: true);
             coordinates.addAll(await parseCoordinates(userState.value.exercise!.id));
           }
@@ -696,8 +696,7 @@ class ActivityController extends SuperController with ActivityMixin, ChallengeMi
         if (coordinates.isNotEmpty && coordinates.length > 1) {
           //TODO. need to edit filter test
           filterCoordinates(coordinates.last, LatLng(position.latitude, position.longitude), userState.value.exercise!.id!);
-          exerciseDistance.value = exerciseDistance.value +
-              Geolocator.distanceBetween(coordinates[coordinates.length - 2].latitude, coordinates[coordinates.length - 2].longitude, coordinates.last.latitude, coordinates.last.longitude);
+          exerciseDistance.value = exerciseDistance.value + Geolocator.distanceBetween(coordinates[coordinates.length - 2].latitude, coordinates[coordinates.length - 2].longitude, coordinates.last.latitude, coordinates.last.longitude);
         }
       } else {
         // 첼린지 존 찾기(30초마다 요청)
