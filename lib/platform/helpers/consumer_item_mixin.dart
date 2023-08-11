@@ -117,6 +117,7 @@ mixin ConsumerItemMixin {
         repairItems: filteredList,
       ),
       successCallback: (repairModel) async {
+        print(repairModel);
         showToastPopup('+${formatDecimalPlaces(totalStat.toDouble(), 0)} 내구도 수리가 되었습니다.');
       },
       errorCallback: (ErrorResponseDataModel data) {

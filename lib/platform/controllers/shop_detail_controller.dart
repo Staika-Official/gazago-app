@@ -172,6 +172,7 @@ class ShopDetailController extends GetxController {
     await ShopService.fetchPurchaseShopItem(itemId, itemCount, successCallback: (ShopItemPurchaseResponseModel items) {
       loaderController.isLoading.value = false;
       purchaseCompleteItem.value = items;
+
       showItemPurchaseCompletePopup();
       walletMasterController.getSpendingWalletBalances();
 
@@ -208,9 +209,7 @@ class ShopDetailController extends GetxController {
   }
 
   void onClickPurchaseItem(tradeSymbol) {
-    print(selectedItem.value.price);
-    print(purchaseItemSumPrice);
-    print(walletMasterController.tik.value.uiAmountString!);
+    purchaseItemCount.value = 1;
     if ((tradeSymbol == 'STIK' ? double.parse(walletMasterController.stik.value.uiAmountString!) : double.parse(walletMasterController.tik.value.uiAmountString!)) <
         (selectedItem.value.itemCategory == 'DISPOSABLE' ? purchaseItemSumPrice.value : selectedItem.value.price)) {
       isShortBalance.value = true;

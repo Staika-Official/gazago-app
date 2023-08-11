@@ -25,8 +25,6 @@ import 'package:gaza_go/platform/models/current_user_state_model.dart';
 import 'package:gaza_go/platform/models/stat_model.dart';
 import 'package:gaza_go/platform/models/user_exercise_model.dart';
 import 'package:gaza_go/platform/services/activity_service.dart';
-import 'package:gaza_go/platform/services/admob_service.dart';
-import 'package:gaza_go/platform/services/item_service.dart';
 import 'package:gaza_go/platform/services/member_service.dart';
 import 'package:gaza_go/platform/services/uaa_service.dart';
 import 'package:gaza_go/platform/stores/hive_store.dart';
@@ -232,13 +230,16 @@ class ActivityController extends SuperController with ActivityMixin, ChallengeMi
     });
   }
 
-  void confirmRecoveryOrRepairStat() async {
+  void confirmRecoveryOrRepairStat(stat) async {
     if (selectedType.value == 'STAMINA') {
       await fetchRecoveryStamina();
     } else {
       await fetchRepairShoes();
     }
-    getUserState();
+    await getUserState();
+    // currentStat.value = selectedType.value == 'STAMINA' ? userState.value.state!.stamina! : userState.value.shoes!.durability!;
+    // currentStat.value = equippedItems.items.firstWhere((element) => element.itemCategory == 'SHOES').durability;
+    // getUserEquippedItems();
     initStat();
   }
 

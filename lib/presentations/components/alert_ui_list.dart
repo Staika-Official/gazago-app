@@ -1040,7 +1040,7 @@ void showPendingExerciseAlert(ActivityController controller) {
   );
 }
 
-void itemPurchaseAlert(ShopDetailController controller, double remainMyTik, tradeSymbol) {
+void itemPurchaseAlert(ShopDetailController controller, double remainMyAsset, tradeSymbol) {
   showAlert(
     title: '구매 하시겠습니까?',
     isScrollControlled: true,
@@ -1230,7 +1230,7 @@ void itemPurchaseAlert(ShopDetailController controller, double remainMyTik, trad
                 ),
               ],
             ),
-          if (controller.purchaseItemCount > 0)
+          if (controller.selectedItem.value.itemCategory == 'DISPOSABLE')
             Padding(
               padding: EdgeInsets.only(top: 30.0.sp),
               child: Row(
@@ -1242,12 +1242,90 @@ void itemPurchaseAlert(ShopDetailController controller, double remainMyTik, trad
                     lineHeight: 32,
                     fontWeight: 600,
                   ),
-                  StyledText(
-                    '${controller.purchaseItemCount.value}개',
-                    fontSize: 18,
-                    lineHeight: 32,
-                    fontWeight: 400,
-                  ),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Container(
+                        decoration: BoxDecoration(
+                          color: popupBgColor,
+                          borderRadius: BorderRadius.circular(50),
+                        ),
+                        child: Padding(
+                          padding: EdgeInsets.all(8.0.sp),
+                          child: Row(
+                            children: [
+                              InkWell(
+                                onTap: () {
+                                  if (controller.purchaseItemCount.value > 1) {
+                                    controller.purchaseItemCount.value = controller.purchaseItemCount.value - 1;
+                                  }
+                                },
+                                child: Container(
+                                  width: 26.sp,
+                                  height: 26.sp,
+                                  decoration: BoxDecoration(
+                                    color: controller.purchaseItemCount.value > 1 ? skyBlueColor : lightGrayColor,
+                                    borderRadius: BorderRadius.circular(50),
+                                    boxShadow: [
+                                      BoxShadow(
+                                        color: Colors.black,
+                                        offset: Offset(0, 3.sp),
+                                      )
+                                    ],
+                                  ),
+                                  child: Center(
+                                    child: SizedBox(
+                                      width: 13.sp,
+                                      height: 3.sp,
+                                      child: iconEaMinus,
+                                    ),
+                                  ),
+                                ),
+                              ),
+                              Padding(
+                                padding: EdgeInsets.symmetric(horizontal: 25.0.sp),
+                                child: StyledText(
+                                  controller.purchaseItemCount.value.toString(),
+                                  fontSize: 20,
+                                  lineHeight: 26,
+                                  fontWeight: 600,
+                                ),
+                              ),
+                              InkWell(
+                                onTap: () {
+                                  if (remainMyAsset - controller.selectedItem.value.price > controller.purchaseItemSumPrice.value) {
+                                    controller.purchaseItemCount.value = controller.purchaseItemCount.value + 1;
+                                  }
+                                  return;
+                                },
+                                child: Container(
+                                  width: 26.sp,
+                                  height: 26.sp,
+                                  decoration: BoxDecoration(
+                                    color: remainMyAsset - controller.selectedItem.value.price > controller.purchaseItemSumPrice.value ? skyBlueColor : lightGrayColor,
+                                    boxShadow: [
+                                      BoxShadow(
+                                        color: Colors.black,
+                                        offset: Offset(0, 3.sp),
+                                      )
+                                    ],
+                                    borderRadius: BorderRadius.circular(50),
+                                  ),
+                                  child: Center(
+                                    child: SizedBox(
+                                      width: 13.sp,
+                                      height: 13.sp,
+                                      child: iconEaPlus,
+                                    ),
+                                  ),
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                      ),
+                    ],
+                  )
                 ],
               ),
             ),
@@ -1266,30 +1344,44 @@ void itemPurchaseAlert(ShopDetailController controller, double remainMyTik, trad
                 fontWeight: 600,
               ),
               StyledText(
-                '${formatDecimalPlaces(remainMyTik, tradeSymbol == 'STIK' ? 9 : 0, isAutoDecimal: true)} ${controller.selectedItem.value.tradeSymbol!}',
+                '${formatDecimalPlaces(remainMyAsset, tradeSymbol == 'STIK' ? 9 : 0, isAutoDecimal: true)} ${controller.selectedItem.value.tradeSymbol!}',
                 fontSize: 18,
                 lineHeight: 18,
                 fontWeight: 400,
               ),
             ],
           ),
-          Padding(
-            padding: EdgeInsets.only(top: 55.0.sp, bottom: 25.sp),
-            child: StyledText(
-              '· 구매가 완료되면 취소가 불가합니다.',
-              fontSize: 14,
-              lineHeight: 14,
-              fontWeight: 500,
-              color: skyBlueColor,
-            ),
-          )
+          remainMyAsset - controller.selectedItem.value.price > controller.purchaseItemSumPrice.value
+              ? Padding(
+                  padding: EdgeInsets.only(top: 55.0.sp, bottom: 25.sp),
+                  child: StyledText(
+                    '· 구매가 완료되면 취소가 불가합니다.',
+                    fontSize: 14,
+                    lineHeight: 14,
+                    fontWeight: 500,
+                    color: skyBlueColor,
+                  ),
+                )
+              : Padding(
+                  padding: EdgeInsets.only(top: 55.0.sp, bottom: 25.sp),
+                  child: StyledText(
+                    '· 현재 잔액으로는 제한된 수량만 구매 가능해요',
+                    fontSize: 14,
+                    lineHeight: 14,
+                    fontWeight: 500,
+                    color: dangerColor,
+                  ),
+                )
         ],
       );
     }),
     actions: [
       Expanded(
         child: GazagoButton(
-          onTap: () => Get.back(),
+          onTap: () {
+            Get.back();
+            controller.purchaseItemCount.value = 1;
+          },
           buttonText: '취소',
           textColor: Colors.white,
           buttonColor: popupBgColor,
@@ -5033,13 +5125,13 @@ void consumerItemUsagePopup(controller, context) {
                                     onTap: () {
                                       if (controller.resultStat.value <= 9999 && controller.totalStat > 0) {
                                         Get.back();
-                                        controller.confirmRecoveryOrRepairStat();
+                                        controller.confirmRecoveryOrRepairStat(controller.selectedType.value);
                                       }
                                       return;
                                     },
                                     buttonText: controller.selectedType == 'STAMINA' ? '회복하기' : '수리하기',
-                                    textColor: controller.totalStat > 0 ? Colors.black : lightGrayColor,
-                                    buttonColor: controller.totalStat > 0 ? skyBlueColor : subBg01Color,
+                                    textColor: Colors.black,
+                                    buttonColor: controller.totalStat > 0 ? skyBlueColor : Color(0xFF11A4AD),
                                   ),
                                 ),
                               ],
@@ -5059,6 +5151,7 @@ void consumerItemUsagePopup(controller, context) {
 
 void shortConsumerItems(String itemType) {
   HomeMenuController homeMenuController = Get.find();
+  ShopController shopController = Get.isRegistered<ShopController>() ? Get.find<ShopController>() : Get.put(ShopController());
   showAlert(
     title: itemType == 'STAMINA' ? '회복 아이템이 부족해요' : '수리 아이템이 부족해요',
     contentWidget: Padding(
@@ -5090,6 +5183,7 @@ void shortConsumerItems(String itemType) {
             Get.back();
             Get.until((route) => route.isFirst);
             homeMenuController.selectMenu(3);
+            shopController.moveToETC();
           },
           buttonText: '상점으로 이동',
           buttonColor: skyBlueColor,

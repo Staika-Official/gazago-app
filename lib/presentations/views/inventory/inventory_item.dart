@@ -94,8 +94,11 @@ class InventoryItem extends StatelessWidget {
                               ),
                               item.equipped == false
                                   ? InkWell(
-                                      onTap: () =>
-                                          item.itemCategory == 'DISPOSABLE' ? controller.checkConsumerItemType(item) : controller.checkEquippedInventoryChallengeItem(item.id, item.itemCategory),
+                                      onTap: () => item.itemCategory == 'DISPOSABLE'
+                                          ? controller.isConsumerItemUsing.value == null
+                                              ? controller.checkConsumerItemType(item)
+                                              : null
+                                          : controller.checkEquippedInventoryChallengeItem(item.id, item.itemCategory),
                                       child: Container(
                                         width: double.infinity,
                                         decoration: BoxDecoration(
@@ -245,7 +248,7 @@ class InventoryItem extends StatelessWidget {
                   labelStyle: TextStyle(fontWeight: FontWeight.w500, fontSize: 14.sp),
                   labelColor: Colors.black,
                   unselectedLabelColor: const Color(0xFF898B92),
-                  labelPadding: EdgeInsets.only(left: 14.0.sp, right: 14.0.sp, top: 6.0.sp, bottom: 3.0.sp),
+                  labelPadding: EdgeInsets.only(left: 12.0.sp, right: 12.0.sp, top: 6.0.sp, bottom: 3.0.sp),
                   indicator: BoxDecoration(
                     borderRadius: BorderRadius.circular(80.0.sp),
                     color: const Color(0xFFECECEC),

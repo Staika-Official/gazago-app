@@ -123,8 +123,8 @@ class ShopItems extends StatelessWidget {
                                             children: [
                                               CircleAvatar(
                                                 radius: 6,
-                                                backgroundColor: purpleColor,
-                                                child: iconShopDurability,
+                                                backgroundColor: lightPurpleColor,
+                                                child: iconShopDurabilityLight,
                                               ),
                                               Padding(
                                                 padding: EdgeInsets.only(left: 3.0.sp),
@@ -133,7 +133,7 @@ class ShopItems extends StatelessWidget {
                                                   fontSize: 12,
                                                   fontWeight: 600,
                                                   letterSpacing: -.1,
-                                                  color: purpleColor,
+                                                  color: lightPurpleColor,
                                                 ),
                                               ),
                                             ],
@@ -215,8 +215,8 @@ class ShopItems extends StatelessWidget {
                                             children: [
                                               CircleAvatar(
                                                 radius: 6,
-                                                backgroundColor: purpleColor,
-                                                child: iconShopDurability,
+                                                backgroundColor: lightPurpleColor,
+                                                child: iconShopDurabilityLight,
                                               ),
                                               Padding(
                                                 padding: EdgeInsets.only(left: 3.0.sp),
@@ -224,7 +224,7 @@ class ShopItems extends StatelessWidget {
                                                   '+${formatDecimalPlaces(item.repairDurability!, 0)} 수리',
                                                   fontSize: 12,
                                                   fontWeight: 600,
-                                                  color: purpleColor,
+                                                  color: lightPurpleColor,
                                                   letterSpacing: -.1,
                                                 ),
                                               ),
@@ -299,7 +299,7 @@ class ShopItems extends StatelessWidget {
           Padding(
             padding: EdgeInsets.symmetric(horizontal: 20.0.sp),
             child: SizedBox(
-              height: 30.sp,
+              height: 35.sp,
               child: Align(
                 alignment: Alignment.centerLeft,
                 child: TabBar(
@@ -308,7 +308,7 @@ class ShopItems extends StatelessWidget {
                   labelStyle: TextStyle(fontWeight: FontWeight.w500, fontSize: 14.sp),
                   labelColor: Colors.white,
                   unselectedLabelColor: const Color(0xFF898B92),
-                  labelPadding: EdgeInsets.only(left: 14.0.sp, right: 14.0.sp, top: 0.0.sp, bottom: 14.0.sp),
+                  labelPadding: EdgeInsets.only(left: 12.0.sp, right: 12.0.sp, top: 0.0.sp, bottom: 14.0.sp),
                   indicator: BoxDecoration(
                     border: Border(
                         bottom: BorderSide(

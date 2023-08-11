@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:gaza_go/constants/enums.dart';
 import 'package:gaza_go/constants/routes.dart';
+import 'package:gaza_go/platform/controllers/activity_controller.dart';
 import 'package:gaza_go/platform/controllers/inventory_home_controller.dart';
 import 'package:gaza_go/platform/controllers/wallet_master_controller.dart';
 import 'package:gaza_go/platform/firebase/remote_config.dart';
@@ -24,8 +25,10 @@ import 'package:gaza_go/presentations/components/alert_ui_list.dart';
 import 'package:get/get.dart';
 import 'package:url_launcher/url_launcher.dart';
 
-class InventoryController extends GetxController with LinearProgressMixin, InventoryMixin, ActivityMixin, ConsumerItemMixin {
+class InventoryController extends GetxController with LinearProgressMixin, InventoryMixin, ActivityMixin, ConsumerItemMixin, GetTickerProviderStateMixin {
   final WalletMasterController walletMasterController = Get.find();
+  ActivityController activityController = Get.isRegistered<ActivityController>() ? Get.find<ActivityController>() : Get.put(ActivityController());
+  late AnimationController progressController;
   final RxDouble viewportWidth = RxDouble(0);
   final RxDouble listHeight = RxDouble(0);
   GlobalKey itemDetailViewKey = GlobalKey();
@@ -178,10 +181,17 @@ class InventoryController extends GetxController with LinearProgressMixin, Inven
   final RxString badgeGoMax = RxString('0');
   final RxString badgeLuckMax = RxString('0');
 
+  RxDouble progressIndicatorTime = RxDouble(0);
+
   @override
   void onInit() async {
     await initController();
-
+    progressController = AnimationController(
+      /// [AnimationController]s can be created with `vsync: this` because of
+      /// [TickerProviderStateMixin].
+      vsync: this,
+      duration: Duration(seconds: 2),
+    );
     super.onInit();
   }
 
@@ -465,6 +475,7 @@ class InventoryController extends GetxController with LinearProgressMixin, Inven
     } else {
       await fetchRecoveryUseOneItem(useItem);
     }
+    await Future.delayed(Duration(milliseconds: 400));
     isConsumerItemUsing.value = null;
     getUserAllItems();
     getUserEquippedItems();
@@ -492,10 +503,11 @@ class InventoryController extends GetxController with LinearProgressMixin, Inven
     isDisableButton.value = false;
   }
 
-  void confirmRecoveryOrRepairStat() async {
+  void confirmRecoveryOrRepairStat(stat) async {
     await fetchRepairShoes();
     getUserAllItems();
     getUserEquippedItems();
+    activityController.getUserState();
     if (Get.currentRoute == Routes.itemDetail) {
       getItemDetail(targetShoeId.value);
     }
@@ -521,12 +533,8 @@ class InventoryController extends GetxController with LinearProgressMixin, Inven
 
   void getUniqueItemList(List<InventoryItemModel> targetList) {
     Set<int> itemSet = myAllItems.map((element) => element.id).toSet();
-    print('itemSet$itemSet');
     List<InventoryItemModel> uniqueItemList = targetList.where((item) => itemSet.add(item.id)).toList();
-    print('uniqueItemList${uniqueItemList}');
-
     myAllItems.value = [...myAllItems, ...uniqueItemList];
-    print(myAllItems.toString());
     myAllItems.refresh();
   }
 

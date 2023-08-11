@@ -138,88 +138,6 @@ class ShopItemDetail extends StatelessWidget {
                                             ],
                                           ),
                                         ),
-                                        if (controller.selectedItem.value.itemCategory == 'DISPOSABLE')
-                                          Row(
-                                            mainAxisAlignment: MainAxisAlignment.center,
-                                            children: [
-                                              Container(
-                                                decoration: BoxDecoration(
-                                                  color: popupBgColor,
-                                                  borderRadius: BorderRadius.circular(50),
-                                                ),
-                                                child: Padding(
-                                                  padding: EdgeInsets.all(8.0.sp),
-                                                  child: Row(
-                                                    children: [
-                                                      InkWell(
-                                                        onTap: () {
-                                                          if (controller.purchaseItemCount.value > 1) {
-                                                            controller.purchaseItemCount.value = controller.purchaseItemCount.value - 1;
-                                                          }
-                                                        },
-                                                        child: Container(
-                                                          width: 26.sp,
-                                                          height: 26.sp,
-                                                          decoration: BoxDecoration(
-                                                            color: controller.purchaseItemCount.value > 1 ? skyBlueColor : lightGrayColor,
-                                                            borderRadius: BorderRadius.circular(50),
-                                                            boxShadow: [
-                                                              BoxShadow(
-                                                                color: Colors.black,
-                                                                offset: Offset(0, 3.sp),
-                                                              )
-                                                            ],
-                                                          ),
-                                                          child: Center(
-                                                            child: SizedBox(
-                                                              width: 13.sp,
-                                                              height: 3.sp,
-                                                              child: iconEaMinus,
-                                                            ),
-                                                          ),
-                                                        ),
-                                                      ),
-                                                      Padding(
-                                                        padding: EdgeInsets.symmetric(horizontal: 25.0.sp),
-                                                        child: StyledText(
-                                                          controller.purchaseItemCount.value.toString(),
-                                                          fontSize: 20,
-                                                          lineHeight: 26,
-                                                          fontWeight: 600,
-                                                        ),
-                                                      ),
-                                                      InkWell(
-                                                        onTap: () {
-                                                          controller.purchaseItemCount.value = controller.purchaseItemCount.value + 1;
-                                                        },
-                                                        child: Container(
-                                                          width: 26.sp,
-                                                          height: 26.sp,
-                                                          decoration: BoxDecoration(
-                                                            color: skyBlueColor,
-                                                            boxShadow: [
-                                                              BoxShadow(
-                                                                color: Colors.black,
-                                                                offset: Offset(0, 3.sp),
-                                                              )
-                                                            ],
-                                                            borderRadius: BorderRadius.circular(50),
-                                                          ),
-                                                          child: Center(
-                                                            child: SizedBox(
-                                                              width: 13.sp,
-                                                              height: 13.sp,
-                                                              child: iconEaPlus,
-                                                            ),
-                                                          ),
-                                                        ),
-                                                      ),
-                                                    ],
-                                                  ),
-                                                ),
-                                              ),
-                                            ],
-                                          ),
                                       ],
                                     );
                                   },
@@ -851,6 +769,156 @@ class ShopItemDetail extends StatelessWidget {
                             ],
                           ),
                         ),
+                      Padding(
+                        padding: EdgeInsets.only(top: 24.0.sp),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            const StyledText(
+                              '효과',
+                              fontWeight: 600,
+                              fontSize: 18,
+                              lineHeight: 18,
+                            ),
+                            if (controller.selectedItem.value.recoveryStamina != null && controller.selectedItem.value.recoveryStamina != 0)
+                              Padding(
+                                padding: EdgeInsets.only(top: 16.0.sp),
+                                child: Column(
+                                  children: [
+                                    Row(
+                                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                      children: [
+                                        Row(
+                                          children: [
+                                            iconStatStamina,
+                                            const Padding(
+                                              padding: EdgeInsets.only(left: 8.0),
+                                              child: StyledText(
+                                                '체력 회복',
+                                                fontWeight: 500,
+                                                fontSize: 14,
+                                                lineHeight: 15,
+                                              ),
+                                            ),
+                                          ],
+                                        ),
+                                        StyledText(
+                                          '+${formatDecimalPlaces(controller.selectedItem.value.recoveryStamina!, 0)}',
+                                          fontSize: 12,
+                                          fontWeight: 500,
+                                          color: lightGreenColor,
+                                          letterSpacing: -.1,
+                                        ),
+                                      ],
+                                    ),
+                                    Padding(
+                                      padding: EdgeInsets.only(top: 8.0.sp),
+                                      child: ClipRRect(
+                                        child: SizedBox(
+                                          height: 11,
+                                          child: Stack(
+                                            children: [
+                                              Container(
+                                                decoration: BoxDecoration(
+                                                  color: subBg02Color,
+                                                  borderRadius: BorderRadius.all(
+                                                    Radius.circular(50.sp),
+                                                  ),
+                                                ),
+                                              ),
+                                              LayoutBuilder(
+                                                builder: (context, constraints) {
+                                                  return Container(
+                                                    width: double.infinity,
+                                                    decoration: BoxDecoration(
+                                                      color: lightGreenColor,
+                                                      borderRadius: BorderRadius.all(
+                                                        Radius.circular(30.sp),
+                                                      ),
+                                                    ),
+                                                  );
+                                                },
+                                              )
+                                            ],
+                                          ),
+                                        ),
+                                      ),
+                                    )
+                                  ],
+                                ),
+                              ),
+                            if (controller.selectedItem.value.repairDurability != null && controller.selectedItem.value.repairDurability != 0)
+                              Padding(
+                                padding: EdgeInsets.only(top: 16.0.sp),
+                                child: Column(
+                                  children: [
+                                    Row(
+                                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                      children: [
+                                        Row(
+                                          children: [
+                                            iconStatDurabilityLight,
+                                            const Padding(
+                                              padding: EdgeInsets.only(left: 8.0),
+                                              child: StyledText(
+                                                '내구도 수리',
+                                                fontWeight: 500,
+                                                fontSize: 14,
+                                                lineHeight: 15,
+                                              ),
+                                            ),
+                                          ],
+                                        ),
+                                        StyledText(
+                                          '+${formatDecimalPlaces(controller.selectedItem.value.repairDurability!, 0)}',
+                                          fontSize: 12,
+                                          fontWeight: 500,
+                                          color: lightPurpleColor,
+                                          letterSpacing: -.1,
+                                        ),
+                                      ],
+                                    ),
+                                    Padding(
+                                      padding: EdgeInsets.only(top: 8.0.sp),
+                                      child: ClipRRect(
+                                        child: SizedBox(
+                                          height: 11,
+                                          child: Stack(
+                                            children: [
+                                              Container(
+                                                decoration: BoxDecoration(
+                                                  color: subBg02Color,
+                                                  borderRadius: BorderRadius.all(
+                                                    Radius.circular(50.sp),
+                                                  ),
+                                                ),
+                                              ),
+                                              LayoutBuilder(
+                                                builder: (context, constraints) {
+                                                  return Container(
+                                                    width: double.infinity,
+                                                    decoration: BoxDecoration(
+                                                      color: lightPurpleColor,
+                                                      borderRadius: BorderRadius.all(
+                                                        Radius.circular(30.sp),
+                                                      ),
+                                                    ),
+                                                  );
+                                                },
+                                              )
+                                            ],
+                                          ),
+                                        ),
+                                      ),
+                                    )
+                                  ],
+                                ),
+                              ),
+                          ],
+                        ),
+                      ),
+                      // 체력
+
                       Padding(
                         padding: EdgeInsets.only(top: 30.sp, bottom: 120.sp),
                         child: Column(

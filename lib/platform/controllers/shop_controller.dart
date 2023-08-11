@@ -16,7 +16,7 @@ import 'package:get/get.dart';
 
 class ShopController extends GetxController with GetTickerProviderStateMixin {
   final WalletMasterController walletMasterController = Get.find();
-  // final ChallengesDetailController challengesDetailController = Get.put(ChallengesDetailController());
+
   LoaderController loaderController = Get.put(LoaderController());
   final RxList<ShopItemModel> shopItemsList = RxList.empty();
   late TabController tabController;
@@ -162,6 +162,12 @@ class ShopController extends GetxController with GetTickerProviderStateMixin {
     await ShopService.getShopItemDetails(itemId, successCallback: (ShopItemModel items) {
       selectedItem.value = items;
     });
+  }
+
+  void moveToETC() {
+    tabController.animateTo(6);
+    selectedCategory.value = 'DISPOSABLE';
+    getShopItemsList();
   }
 
   // void handlePurchaseShopItem(int itemId) async {
