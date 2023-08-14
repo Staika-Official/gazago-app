@@ -209,20 +209,14 @@ class ActivityController extends SuperController with ActivityMixin, ChallengeMi
     double minLng = markers.map((marker) => marker.position.longitude).reduce((a, b) => a < b ? a : b);
     double maxLng = markers.map((marker) => marker.position.longitude).reduce((a, b) => a > b ? a : b);
 
-    double aspectRatio = (maxLng - minLng) / (maxLat - minLat);
+    // double aspectRatio = (maxLng - minLng) / (maxLat - minLat);
 
     List<LatLng> outermostCoords = [];
 
-    if (aspectRatio > 1.0) {
-      // 가로형일 경우
-      outermostCoords = [LatLng(minLat, minLng), LatLng(maxLat, maxLng)];
-    } else {
-      // 세로형일 경우
-      outermostCoords = [
-        LatLng(minLat, minLng),
-        LatLng(maxLat, maxLng),
-      ];
-    }
+    outermostCoords = [
+      LatLng(minLat, minLng),
+      LatLng(maxLat, maxLng),
+    ];
 
     return outermostCoords;
   }
