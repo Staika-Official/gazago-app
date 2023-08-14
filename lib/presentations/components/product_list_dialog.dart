@@ -254,7 +254,7 @@ void showProductList(WalletMasterController controller) {
                                           style: TextStyle(fontWeight: FontWeight.w700, color: lightGrayColor),
                                         ),
                                         const TextSpan(
-                                          text: '하며, 아이템 구매나 체력 및 내구도 충전만 가능합니다.',
+                                          text: '하며, 아이템 구매나 체력 회복 및 내구도 수리만 가능합니다.',
                                         ),
                                       ],
                                     ),

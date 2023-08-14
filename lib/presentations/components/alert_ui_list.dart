@@ -2809,13 +2809,13 @@ void showLeaderboardInfo() {
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   children: const [
                                     StyledText(
-                                      '· 체력 충전',
+                                      '· 체력 회복',
                                       fontSize: 12,
                                       lineHeight: 18,
                                       fontWeight: 400,
                                     ),
                                     StyledText(
-                                      '· 신발 내구도 충전',
+                                      '· 신발 내구도 수리',
                                       fontSize: 12,
                                       lineHeight: 18,
                                       fontWeight: 400,
@@ -4858,7 +4858,7 @@ void consumerItemUsagePopup(controller, context) {
                 Padding(
                   padding: EdgeInsets.only(bottom: 30.sp),
                   child: StyledText(
-                    controller.selectedType == 'STAMINA' ? '체력 충전하기' : '내구도 수리하기',
+                    controller.selectedType == 'STAMINA' ? '체력 회복하기' : '내구도 수리하기',
                     fontSize: 22,
                     fontWeight: 500,
                     lineHeight: 22,
@@ -5124,14 +5124,24 @@ void consumerItemUsagePopup(controller, context) {
                                   child: GazagoButton(
                                     onTap: () {
                                       if (controller.resultStat.value <= 9999 && controller.totalStat > 0) {
-                                        Get.back();
-                                        controller.confirmRecoveryOrRepairStat(controller.selectedType.value);
+                                        if (controller.selectedType.value == 'STAMINA') {
+                                          if (controller.exerciseState.value != ExerciseState.ongoing) {
+                                            Get.back();
+                                            showAutoRechargeStaminaAlert(controller);
+                                          } else {
+                                            Get.back();
+                                            controller.confirmRecoveryOrRepairStat(controller.selectedType.value);
+                                          }
+                                        } else {
+                                          Get.back();
+                                          controller.confirmRecoveryOrRepairStat(controller.selectedType.value);
+                                        }
                                       }
                                       return;
                                     },
                                     buttonText: controller.selectedType == 'STAMINA' ? '회복하기' : '수리하기',
                                     textColor: Colors.black,
-                                    buttonColor: controller.totalStat > 0 ? skyBlueColor : Color(0xFF11A4AD),
+                                    buttonColor: controller.resultStat.value <= 9999 && controller.totalStat > 0 ? skyBlueColor : Color(0xFF11A4AD),
                                   ),
                                 ),
                               ],
@@ -5428,6 +5438,53 @@ void showLockedUserAlert() async {
           onTap: () {
             Get.back();
           },
+        ),
+      ),
+    ],
+  );
+}
+
+void showAutoRechargeStaminaAlert(ActivityController controller) {
+  showAlert(
+    contentWidget: Center(
+      child: Column(
+        children: [
+          Padding(
+            padding: EdgeInsets.only(top: 14.sp, bottom: 30.sp),
+            child: StyledText(
+              '체력은 시간이 지나면 회복됩니다.\n정말 회복하시겠습니까?',
+              fontSize: 18.sp,
+              fontWeight: 500,
+              lineHeight: 24.sp,
+              textAlign: TextAlign.center,
+            ),
+          ),
+        ],
+      ),
+    ),
+    actions: [
+      Expanded(
+        child: GazagoButton(
+          onTap: () {
+            Get.back();
+            controller.initStat();
+          },
+          buttonText: '취소',
+          textColor: Colors.white,
+          buttonColor: popupBgColor,
+        ),
+      ),
+      SizedBox(
+        width: 9.sp,
+      ),
+      Expanded(
+        child: GazagoButton(
+          onTap: () {
+            Get.back();
+            controller.confirmRecoveryOrRepairStat(controller.selectedType.value);
+          },
+          buttonText: '확인',
+          buttonColor: skyBlueColor,
         ),
       ),
     ],

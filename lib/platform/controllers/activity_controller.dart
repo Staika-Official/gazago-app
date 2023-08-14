@@ -180,17 +180,51 @@ class ActivityController extends SuperController with ActivityMixin, ChallengeMi
 
     selectedChallengeMarkers.add(getCustomMarker(markerType: "END", course: course, markerIcon: endMarker));
 
-    challengeMapController.moveCamera(
-      CameraUpdate.fitBounds(
-        LatLngBounds.fromLatLngList(
-          [
-            LatLng(course.startLat!, course.startLon!),
-            LatLng(course.endLat!, course.endLon!),
-          ],
+    if (course.checkpoints != null && course.checkpoints!.isNotEmpty) {
+      List<LatLng> markers = getfitBoundCourseMarker(selectedChallengeMarkers);
+      challengeMapController.moveCamera(
+        CameraUpdate.fitBounds(
+          LatLngBounds.fromLatLngList(markers),
+          padding: 120,
         ),
-        padding: 100,
-      ),
-    );
+      );
+    } else {
+      challengeMapController.moveCamera(
+        CameraUpdate.fitBounds(
+          LatLngBounds.fromLatLngList(
+            [
+              LatLng(course.startLat!, course.startLon!),
+              LatLng(course.endLat!, course.endLon!),
+            ],
+          ),
+          padding: 100,
+        ),
+      );
+    }
+  }
+
+  List<LatLng> getfitBoundCourseMarker(markers) {
+    double minLat = markers.map((marker) => marker.position.latitude).reduce((a, b) => a < b ? a : b);
+    double maxLat = markers.map((marker) => marker.position.latitude).reduce((a, b) => a > b ? a : b);
+    double minLng = markers.map((marker) => marker.position.longitude).reduce((a, b) => a < b ? a : b);
+    double maxLng = markers.map((marker) => marker.position.longitude).reduce((a, b) => a > b ? a : b);
+
+    double aspectRatio = (maxLng - minLng) / (maxLat - minLat);
+
+    List<LatLng> outermostCoords = [];
+
+    if (aspectRatio > 1.0) {
+      // 가로형일 경우
+      outermostCoords = [LatLng(minLat, minLng), LatLng(maxLat, maxLng)];
+    } else {
+      // 세로형일 경우
+      outermostCoords = [
+        LatLng(minLat, minLng),
+        LatLng(maxLat, maxLng),
+      ];
+    }
+
+    return outermostCoords;
   }
 
   void initRepairInfo() {
@@ -231,6 +265,7 @@ class ActivityController extends SuperController with ActivityMixin, ChallengeMi
   }
 
   void confirmRecoveryOrRepairStat(stat) async {
+    print(stat);
     if (selectedType.value == 'STAMINA') {
       await fetchRecoveryStamina();
     } else {
@@ -717,7 +752,8 @@ class ActivityController extends SuperController with ActivityMixin, ChallengeMi
         if (coordinates.isNotEmpty && coordinates.length > 1) {
           //TODO. need to edit filter test
           filterCoordinates(coordinates.last, LatLng(position.latitude, position.longitude), userState.value.exercise!.id!);
-          exerciseDistance.value = exerciseDistance.value + Geolocator.distanceBetween(coordinates[coordinates.length - 2].latitude, coordinates[coordinates.length - 2].longitude, coordinates.last.latitude, coordinates.last.longitude);
+          exerciseDistance.value = exerciseDistance.value +
+              Geolocator.distanceBetween(coordinates[coordinates.length - 2].latitude, coordinates[coordinates.length - 2].longitude, coordinates.last.latitude, coordinates.last.longitude);
         }
       } else {
         // 첼린지 존 찾기(30초마다 요청)

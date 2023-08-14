@@ -3,6 +3,7 @@ import 'package:gaza_go/constants/routes.dart';
 import 'package:gaza_go/platform/controllers/challenges_detail_controller.dart';
 import 'package:gaza_go/platform/controllers/home_menu_controller.dart';
 import 'package:gaza_go/platform/controllers/loader_controller.dart';
+import 'package:gaza_go/platform/controllers/shop_controller.dart';
 import 'package:gaza_go/platform/controllers/wallet_master_controller.dart';
 import 'package:gaza_go/platform/firebase/remote_config.dart';
 import 'package:gaza_go/platform/helpers/alert_helper.dart';
@@ -21,6 +22,7 @@ import 'package:url_launcher/url_launcher.dart';
 class ShopDetailController extends GetxController {
   final WalletMasterController walletMasterController = Get.find();
   final HomeMenuController challengesDetailController = Get.put(HomeMenuController());
+  ShopController shopController = Get.isRegistered<ShopController>() ? Get.find<ShopController>() : Get.put(ShopController());
   LoaderController loaderController = Get.put(LoaderController());
   final RxList<ShopItemModel> shopItemsList = RxList.empty();
   final RxInt purchaseItemCount = RxInt(1);
@@ -142,12 +144,6 @@ class ShopDetailController extends GetxController {
     } else {
       Get.toNamed(Routes.challengeDetail, arguments: {'id': selectedItem.value.challengeId});
     }
-
-    // if (Get.isRegistered<HomeMenuController>()) {
-    //   Get.find<HomeMenuController>().selectMenu(0);
-    // } else {
-    //   Get.put(HomeMenuController()).selectMenu(0);
-    // }
   }
 
   void getItemMaxValue() {
@@ -175,11 +171,11 @@ class ShopDetailController extends GetxController {
 
       showItemPurchaseCompletePopup();
       walletMasterController.getSpendingWalletBalances();
-
+      shopController.getShopItemsList();
       getItemDetail(itemId);
     }, errorCallback: (errorData) {
       loaderController.isLoading.value = false;
-      if (errorData.statusCode == 422) {
+      if (errorData.status == 422) {
         isShortBalance.value = true;
         showTikShortBalancePopup(selectedItem.value.tradeSymbol);
       } else {
