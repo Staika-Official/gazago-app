@@ -3,6 +3,7 @@ import 'dart:io';
 
 import 'package:device_info_plus/device_info_plus.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:gaza_go/constants/config.dart';
 import 'package:gaza_go/constants/enums.dart';
 import 'package:gaza_go/constants/routes.dart';
 import 'package:gaza_go/flavors.dart';
@@ -146,6 +147,7 @@ class LoginController extends GetxController {
       clientId: 'GAZAGO',
       forceLogin: forceLogin,
       deviceInfo: deviceInfo.toString(),
+      providerEnv: appliedEndpoint != null && appliedEndpoint!['activateStageMode'] ? 'STAGE' : null,
     );
 
     await UaaService.socialLogin(
