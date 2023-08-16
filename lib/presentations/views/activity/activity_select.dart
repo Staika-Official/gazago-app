@@ -117,7 +117,7 @@ class ActivitySelect extends StatelessWidget {
                                       Padding(
                                         padding: const EdgeInsets.only(top: 10),
                                         child: StyledText(
-                                          challenge.subTitle,
+                                          challenge.subTitle.replaceAll('\\n', '\n'),
                                           color: Colors.white,
                                           fontSize: 11,
                                           fontWeight: 600,
