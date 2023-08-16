@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:gaza_go/constants/enums.dart';
+import 'package:gaza_go/constants/routes.dart';
 import 'package:gaza_go/platform/controllers/activity_controller.dart';
 import 'package:gaza_go/platform/helpers/alert_helper.dart';
 import 'package:gaza_go/platform/helpers/base_helper.dart';
@@ -302,6 +303,7 @@ class ActivityHome extends StatelessWidget {
                       Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
+                          ElevatedButton(onPressed: () => Get.toNamed(Routes.dailyBenefits), child: StyledText('일일혜택')),
                           StyledText(
                             '가자고와 함께 \n등산하고 뱃지를 받아보자고-!',
                             color: skyBlueColor,
