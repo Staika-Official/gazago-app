@@ -769,154 +769,155 @@ class ShopItemDetail extends StatelessWidget {
                             ],
                           ),
                         ),
-                      Padding(
-                        padding: EdgeInsets.only(top: 24.0.sp),
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            const StyledText(
-                              '효과',
-                              fontWeight: 600,
-                              fontSize: 18,
-                              lineHeight: 18,
-                            ),
-                            if (controller.selectedItem.value.recoveryStamina != null && controller.selectedItem.value.recoveryStamina != 0)
-                              Padding(
-                                padding: EdgeInsets.only(top: 16.0.sp),
-                                child: Column(
-                                  children: [
-                                    Row(
-                                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                      children: [
-                                        Row(
-                                          children: [
-                                            iconStatStamina,
-                                            const Padding(
-                                              padding: EdgeInsets.only(left: 8.0),
-                                              child: StyledText(
-                                                '체력 회복',
-                                                fontWeight: 500,
-                                                fontSize: 14,
-                                                lineHeight: 15,
-                                              ),
-                                            ),
-                                          ],
-                                        ),
-                                        StyledText(
-                                          '+${formatDecimalPlaces(controller.selectedItem.value.recoveryStamina!, 0)}',
-                                          fontSize: 12,
-                                          fontWeight: 500,
-                                          color: lightGreenColor,
-                                          letterSpacing: -.1,
-                                        ),
-                                      ],
-                                    ),
-                                    Padding(
-                                      padding: EdgeInsets.only(top: 8.0.sp),
-                                      child: ClipRRect(
-                                        child: SizedBox(
-                                          height: 11,
-                                          child: Stack(
+                      if (controller.selectedItem.value.itemCategory == 'DISPOSABLE')
+                        Padding(
+                          padding: EdgeInsets.only(top: 24.0.sp),
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              const StyledText(
+                                '효과',
+                                fontWeight: 600,
+                                fontSize: 18,
+                                lineHeight: 18,
+                              ),
+                              if (controller.selectedItem.value.recoveryStamina != null && controller.selectedItem.value.recoveryStamina != 0)
+                                Padding(
+                                  padding: EdgeInsets.only(top: 16.0.sp),
+                                  child: Column(
+                                    children: [
+                                      Row(
+                                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                        children: [
+                                          Row(
                                             children: [
-                                              Container(
-                                                decoration: BoxDecoration(
-                                                  color: subBg02Color,
-                                                  borderRadius: BorderRadius.all(
-                                                    Radius.circular(50.sp),
-                                                  ),
+                                              iconStatStamina,
+                                              const Padding(
+                                                padding: EdgeInsets.only(left: 8.0),
+                                                child: StyledText(
+                                                  '체력 회복',
+                                                  fontWeight: 500,
+                                                  fontSize: 14,
+                                                  lineHeight: 15,
                                                 ),
                                               ),
-                                              LayoutBuilder(
-                                                builder: (context, constraints) {
-                                                  return Container(
-                                                    width: double.infinity,
-                                                    decoration: BoxDecoration(
-                                                      color: lightGreenColor,
-                                                      borderRadius: BorderRadius.all(
-                                                        Radius.circular(30.sp),
-                                                      ),
-                                                    ),
-                                                  );
-                                                },
-                                              )
                                             ],
                                           ),
-                                        ),
+                                          StyledText(
+                                            '+${formatDecimalPlaces(controller.selectedItem.value.recoveryStamina!, 0)}',
+                                            fontSize: 12,
+                                            fontWeight: 500,
+                                            color: lightGreenColor,
+                                            letterSpacing: -.1,
+                                          ),
+                                        ],
                                       ),
-                                    )
-                                  ],
-                                ),
-                              ),
-                            if (controller.selectedItem.value.repairDurability != null && controller.selectedItem.value.repairDurability != 0)
-                              Padding(
-                                padding: EdgeInsets.only(top: 16.0.sp),
-                                child: Column(
-                                  children: [
-                                    Row(
-                                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                      children: [
-                                        Row(
-                                          children: [
-                                            iconStatDurabilityLight,
-                                            const Padding(
-                                              padding: EdgeInsets.only(left: 8.0),
-                                              child: StyledText(
-                                                '내구도 수리',
-                                                fontWeight: 500,
-                                                fontSize: 14,
-                                                lineHeight: 15,
-                                              ),
-                                            ),
-                                          ],
-                                        ),
-                                        StyledText(
-                                          '+${formatDecimalPlaces(controller.selectedItem.value.repairDurability!, 0)}',
-                                          fontSize: 12,
-                                          fontWeight: 500,
-                                          color: lightPurpleColor,
-                                          letterSpacing: -.1,
-                                        ),
-                                      ],
-                                    ),
-                                    Padding(
-                                      padding: EdgeInsets.only(top: 8.0.sp),
-                                      child: ClipRRect(
-                                        child: SizedBox(
-                                          height: 11,
-                                          child: Stack(
-                                            children: [
-                                              Container(
-                                                decoration: BoxDecoration(
-                                                  color: subBg02Color,
-                                                  borderRadius: BorderRadius.all(
-                                                    Radius.circular(50.sp),
+                                      Padding(
+                                        padding: EdgeInsets.only(top: 8.0.sp),
+                                        child: ClipRRect(
+                                          child: SizedBox(
+                                            height: 11,
+                                            child: Stack(
+                                              children: [
+                                                Container(
+                                                  decoration: BoxDecoration(
+                                                    color: subBg02Color,
+                                                    borderRadius: BorderRadius.all(
+                                                      Radius.circular(50.sp),
+                                                    ),
                                                   ),
                                                 ),
-                                              ),
-                                              LayoutBuilder(
-                                                builder: (context, constraints) {
-                                                  return Container(
-                                                    width: double.infinity,
-                                                    decoration: BoxDecoration(
-                                                      color: lightPurpleColor,
-                                                      borderRadius: BorderRadius.all(
-                                                        Radius.circular(30.sp),
+                                                LayoutBuilder(
+                                                  builder: (context, constraints) {
+                                                    return Container(
+                                                      width: double.infinity,
+                                                      decoration: BoxDecoration(
+                                                        color: lightGreenColor,
+                                                        borderRadius: BorderRadius.all(
+                                                          Radius.circular(30.sp),
+                                                        ),
                                                       ),
-                                                    ),
-                                                  );
-                                                },
-                                              )
-                                            ],
+                                                    );
+                                                  },
+                                                )
+                                              ],
+                                            ),
                                           ),
                                         ),
-                                      ),
-                                    )
-                                  ],
+                                      )
+                                    ],
+                                  ),
                                 ),
-                              ),
-                          ],
+                              if (controller.selectedItem.value.repairDurability != null && controller.selectedItem.value.repairDurability != 0)
+                                Padding(
+                                  padding: EdgeInsets.only(top: 16.0.sp),
+                                  child: Column(
+                                    children: [
+                                      Row(
+                                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                        children: [
+                                          Row(
+                                            children: [
+                                              iconStatDurabilityLight,
+                                              const Padding(
+                                                padding: EdgeInsets.only(left: 8.0),
+                                                child: StyledText(
+                                                  '내구도 수리',
+                                                  fontWeight: 500,
+                                                  fontSize: 14,
+                                                  lineHeight: 15,
+                                                ),
+                                              ),
+                                            ],
+                                          ),
+                                          StyledText(
+                                            '+${formatDecimalPlaces(controller.selectedItem.value.repairDurability!, 0)}',
+                                            fontSize: 12,
+                                            fontWeight: 500,
+                                            color: lightPurpleColor,
+                                            letterSpacing: -.1,
+                                          ),
+                                        ],
+                                      ),
+                                      Padding(
+                                        padding: EdgeInsets.only(top: 8.0.sp),
+                                        child: ClipRRect(
+                                          child: SizedBox(
+                                            height: 11,
+                                            child: Stack(
+                                              children: [
+                                                Container(
+                                                  decoration: BoxDecoration(
+                                                    color: subBg02Color,
+                                                    borderRadius: BorderRadius.all(
+                                                      Radius.circular(50.sp),
+                                                    ),
+                                                  ),
+                                                ),
+                                                LayoutBuilder(
+                                                  builder: (context, constraints) {
+                                                    return Container(
+                                                      width: double.infinity,
+                                                      decoration: BoxDecoration(
+                                                        color: lightPurpleColor,
+                                                        borderRadius: BorderRadius.all(
+                                                          Radius.circular(30.sp),
+                                                        ),
+                                                      ),
+                                                    );
+                                                  },
+                                                )
+                                              ],
+                                            ),
+                                          ),
+                                        ),
+                                      )
+                                    ],
+                                  ),
+                                ),
+                            ],
+                          ),
                         ),
-                      ),
                       // 체력
 
                       Padding(

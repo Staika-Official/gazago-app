@@ -4956,7 +4956,7 @@ void consumerItemUsagePopup(controller, context) {
                                                     child: Row(
                                                       children: [
                                                         StyledText(
-                                                          '성능 : ${item.itemType == 'RECOVERY' ? item.itemStat.recoveryStamina.toInt() : item.itemStat.repairDurability.toInt()}',
+                                                          '효과 : ${item.itemType == 'RECOVERY' ? item.itemStat.recoveryStamina.toInt() : item.itemStat.repairDurability.toInt()}',
                                                           fontSize: 14,
                                                           fontWeight: 600,
                                                           lineHeight: 14,

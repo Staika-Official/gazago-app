@@ -127,6 +127,7 @@ class ShopDetailController extends GetxController {
   @override
   void onClose() {
     itemScrollController.removeListener(() => toggleBottomNav(itemScrollController));
+    shopController.getShopItemsList();
     super.onClose();
   }
 

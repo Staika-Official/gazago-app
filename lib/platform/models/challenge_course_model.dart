@@ -64,5 +64,7 @@ class ChallengeCourseModel {
 
   factory ChallengeCourseModel.fromJson(Map<String, dynamic> json) => _$ChallengeCourseModelFromJson(json);
 
+  Object? get length => null;
+
   Map<String, dynamic> toJson() => _$ChallengeCourseModelToJson(this);
 }

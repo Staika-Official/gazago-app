@@ -182,6 +182,7 @@ class ActivityController extends SuperController with ActivityMixin, ChallengeMi
 
     if (course.checkpoints != null && course.checkpoints!.isNotEmpty) {
       List<LatLng> markers = getfitBoundCourseMarker(selectedChallengeMarkers);
+      print(markers);
       challengeMapController.moveCamera(
         CameraUpdate.fitBounds(
           LatLngBounds.fromLatLngList(markers),
