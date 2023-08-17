@@ -47,14 +47,9 @@ class ShopItems extends StatelessWidget {
                       mainAxisAlignment: MainAxisAlignment.start,
                       crossAxisAlignment: CrossAxisAlignment.center,
                       children: [
-                        item.itemCategory != 'DISPOSABLE'
-                            ? Container(
-                                child: getItemGradeIcon(item.itemGrade),
-                              )
-                            : SizedBox(
-                                width: 90.sp,
-                                height: 24.sp,
-                              ),
+                        Container(
+                          child: getItemGradeIcon(item.itemGrade),
+                        ),
                         Column(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           crossAxisAlignment: CrossAxisAlignment.center,
@@ -296,29 +291,27 @@ class ShopItems extends StatelessWidget {
     return Obx(() {
       return Column(
         children: [
-          Padding(
-            padding: EdgeInsets.symmetric(horizontal: 20.0.sp),
-            child: SizedBox(
-              height: 35.sp,
-              child: Align(
-                alignment: Alignment.centerLeft,
-                child: TabBar(
-                  controller: shopController.tabController,
-                  isScrollable: true,
-                  labelStyle: TextStyle(fontWeight: FontWeight.w500, fontSize: 14.sp),
-                  labelColor: Colors.white,
-                  unselectedLabelColor: const Color(0xFF898B92),
-                  labelPadding: EdgeInsets.only(left: 12.0.sp, right: 12.0.sp, top: 0.0.sp, bottom: 14.0.sp),
-                  indicator: BoxDecoration(
-                    border: Border(
-                        bottom: BorderSide(
-                      color: skyBlueColor,
-                      width: 2,
-                    )),
-                  ),
-                  tabs: [...renderItemTabList(shopController)],
-                  onTap: (index) => shopController.onSelectCategory(shopController.categoryFilterList[index]['value']),
+          SizedBox(
+            height: 35.sp,
+            child: Align(
+              alignment: Alignment.centerLeft,
+              child: TabBar(
+                padding: EdgeInsets.symmetric(horizontal: 20.0.sp),
+                controller: shopController.tabController,
+                isScrollable: true,
+                labelStyle: TextStyle(fontWeight: FontWeight.w500, fontSize: 14.sp),
+                labelColor: Colors.white,
+                unselectedLabelColor: const Color(0xFF898B92),
+                labelPadding: EdgeInsets.only(left: 12.0.sp, right: 12.0.sp, top: 0.0.sp, bottom: 14.0.sp),
+                indicator: BoxDecoration(
+                  border: Border(
+                      bottom: BorderSide(
+                    color: skyBlueColor,
+                    width: 2,
+                  )),
                 ),
+                tabs: [...renderItemTabList(shopController)],
+                onTap: (index) => shopController.onSelectCategory(shopController.categoryFilterList[index]['value']),
               ),
             ),
           ),

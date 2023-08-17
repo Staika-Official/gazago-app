@@ -56,12 +56,17 @@ class ItemCounter extends StatelessWidget {
                   ),
                 ),
                 Padding(
-                  padding: EdgeInsets.symmetric(horizontal: 25.0.sp),
-                  child: StyledText(
-                    item.spendItemAmount.toString(),
-                    fontSize: 20,
-                    lineHeight: 26,
-                    fontWeight: 600,
+                  padding: EdgeInsets.symmetric(horizontal: 5.0.sp),
+                  child: Container(
+                    width: 80.sp,
+                    child: Center(
+                      child: StyledText(
+                        item.spendItemAmount.toString(),
+                        fontSize: 20,
+                        lineHeight: 26,
+                        fontWeight: 600,
+                      ),
+                    ),
                   ),
                 ),
                 InkWell(

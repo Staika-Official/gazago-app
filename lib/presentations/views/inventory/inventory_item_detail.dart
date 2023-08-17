@@ -75,14 +75,13 @@ class InventoryItemDetail extends StatelessWidget {
                           child: Stack(
                             alignment: Alignment.center,
                             children: [
-                              if (controller.selectedItem.value.itemCategory != 'DISPOSABLE')
-                                Positioned(
-                                  right: 18.sp,
-                                  top: 0,
-                                  child: Container(
-                                    child: getItemGradeIcon(controller.selectedItem.value.itemGrade),
-                                  ),
+                              Positioned(
+                                right: 18.sp,
+                                top: 0,
+                                child: Container(
+                                  child: getItemGradeIcon(controller.selectedItem.value.itemGrade),
                                 ),
+                              ),
                               Padding(
                                 padding: EdgeInsets.only(top: 30.0.sp),
                                 child: Obx(

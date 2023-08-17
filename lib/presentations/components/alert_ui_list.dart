@@ -1283,12 +1283,17 @@ void itemPurchaseAlert(ShopDetailController controller, double remainMyAsset, tr
                                 ),
                               ),
                               Padding(
-                                padding: EdgeInsets.symmetric(horizontal: 25.0.sp),
-                                child: StyledText(
-                                  controller.purchaseItemCount.value.toString(),
-                                  fontSize: 20,
-                                  lineHeight: 26,
-                                  fontWeight: 600,
+                                padding: EdgeInsets.symmetric(horizontal: 5.0.sp),
+                                child: Container(
+                                  width: 80.sp,
+                                  child: Center(
+                                    child: StyledText(
+                                      controller.purchaseItemCount.value.toString(),
+                                      fontSize: 20,
+                                      lineHeight: 26,
+                                      fontWeight: 600,
+                                    ),
+                                  ),
                                 ),
                               ),
                               InkWell(
@@ -1617,7 +1622,7 @@ void itemPurchaseCompleteAlert(ShopDetailController controller) {
               mainAxisAlignment: MainAxisAlignment.center,
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
-                if (controller.purchaseCompleteItem.value.itemCategory != 'DISPOSABLE') getItemGradeCircleIcon(controller.purchaseCompleteItem.value.itemGrade),
+                getItemGradeCircleIcon(controller.purchaseCompleteItem.value.itemGrade),
                 if (controller.selectedItem.value.id > 0 && controller.selectedItem.value.publishType == 'NFT')
                   Padding(
                     padding: EdgeInsets.only(left: 5.0.sp),
@@ -2222,7 +2227,9 @@ void itemFilterListAlert(ShopController controller) {
           //   );
           // }),
           Padding(
-            padding: EdgeInsets.only(bottom: 10.0.sp, top: 20.sp),
+            padding: EdgeInsets.only(
+              bottom: 10.0.sp,
+            ),
             child: const StyledText(
               '등급',
               fontWeight: 500,
@@ -4914,27 +4921,33 @@ void consumerItemUsagePopup(controller, context) {
                                                         errorWidget: (context, url, error) => Image.asset("assets/images/@temp_badge.png"),
                                                       ),
                                               ),
-                                              Positioned(
-                                                right: 6.sp,
-                                                top: 6.sp,
-                                                width: 20,
-                                                height: 20,
-                                                child: Container(
-                                                  decoration: BoxDecoration(
-                                                    color: subBg02Color,
-                                                    borderRadius: BorderRadius.circular(50),
-                                                  ),
-                                                  child: FittedBox(
-                                                    fit: BoxFit.scaleDown,
-                                                    child: StyledText(
-                                                      item.amount != null ? item.amount.toString() : '0',
-                                                      fontSize: 10,
-                                                      letterSpacing: -.1,
-                                                      fontWeight: 600,
-                                                    ),
-                                                  ),
+                                              if (item.amount! > 1)
+                                                Positioned(
+                                                  left: 6.sp,
+                                                  bottom: 6.sp,
+                                                  child: Container(
+                                                      decoration: BoxDecoration(
+                                                        color: Color(0xFF0E0E13),
+                                                        borderRadius: BorderRadius.circular(6),
+                                                      ),
+                                                      child: Padding(
+                                                        padding: EdgeInsets.symmetric(vertical: 4.sp, horizontal: 6.0.sp),
+                                                        child: StyledText(
+                                                          item.amount != null ? item.amount.toString() : '0',
+                                                          fontSize: 12,
+                                                          lineHeight: 12,
+                                                          letterSpacing: -.1,
+                                                          fontWeight: 600,
+                                                        ),
+                                                      )),
                                                 ),
-                                              )
+                                              Positioned(
+                                                right: 8.sp,
+                                                top: 8.sp,
+                                                width: 18,
+                                                height: 18,
+                                                child: getItemGradeCircleIcon(item.itemGrade),
+                                              ),
                                             ]),
                                           ),
                                           Expanded(

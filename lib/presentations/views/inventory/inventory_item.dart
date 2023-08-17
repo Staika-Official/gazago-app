@@ -161,35 +161,34 @@ class InventoryItem extends StatelessWidget {
                             ],
                           ),
                         ),
-                        item.itemCategory == 'DISPOSABLE'
-                            ? Positioned(
-                                right: 7.sp,
-                                top: 7.sp,
-                                width: 20,
-                                height: 20,
-                                child: Container(
-                                  decoration: BoxDecoration(
-                                    color: popupBgColor,
-                                    borderRadius: BorderRadius.circular(50),
-                                  ),
-                                  child: FittedBox(
-                                    fit: BoxFit.scaleDown,
-                                    child: StyledText(
-                                      item.amount != null ? item.amount.toString() : '0',
-                                      fontSize: 10,
-                                      letterSpacing: -.1,
-                                      fontWeight: 600,
-                                    ),
-                                  ),
-                                ),
-                              )
-                            : Positioned(
-                                right: 7.sp,
-                                top: 7.sp,
-                                width: 18,
-                                height: 18,
-                                child: getItemGradeCircleIcon(item.itemGrade),
+                        if (item.itemCategory == 'DISPOSABLE' && item.amount! > 1)
+                          Positioned(
+                            left: 8.sp,
+                            top: 8.sp,
+                            child: Container(
+                              decoration: BoxDecoration(
+                                color: Color(0xFF0E0E13),
+                                borderRadius: BorderRadius.circular(6),
                               ),
+                              child: Padding(
+                                padding: EdgeInsets.symmetric(vertical: 4.sp, horizontal: 6.0.sp),
+                                child: StyledText(
+                                  item.amount != null ? item.amount.toString() : '0',
+                                  fontSize: 12,
+                                  lineHeight: 12,
+                                  letterSpacing: -.1,
+                                  fontWeight: 600,
+                                ),
+                              ),
+                            ),
+                          ),
+                        Positioned(
+                          right: 8.sp,
+                          top: 8.sp,
+                          width: 18,
+                          height: 18,
+                          child: getItemGradeCircleIcon(item.itemGrade),
+                        ),
                         if (item.expiredDate != null)
                           if (controller.getRemainingDays(item.expiredDate!) < 3)
                             Positioned(
@@ -237,12 +236,13 @@ class InventoryItem extends StatelessWidget {
         mainAxisSize: MainAxisSize.min,
         children: [
           Padding(
-            padding: EdgeInsets.symmetric(vertical: 10.0.sp, horizontal: 20.0.sp),
+            padding: EdgeInsets.symmetric(vertical: 10.0.sp),
             child: SizedBox(
               height: 28.sp,
               child: Align(
                 alignment: Alignment.centerLeft,
                 child: TabBar(
+                  padding: EdgeInsets.symmetric(horizontal: 20.0.sp),
                   controller: controller.subTabController,
                   isScrollable: true,
                   labelStyle: TextStyle(fontWeight: FontWeight.w500, fontSize: 14.sp),

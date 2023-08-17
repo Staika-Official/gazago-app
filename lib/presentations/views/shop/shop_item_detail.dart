@@ -59,7 +59,7 @@ class ShopItemDetail extends StatelessWidget {
                         child: SizedBox(
                           child: Stack(
                             children: [
-                              if (controller.selectedItem.value.itemCategory != '' && controller.selectedItem.value.itemCategory != 'DISPOSABLE')
+                              if (controller.selectedItem.value.itemCategory != '')
                                 Positioned(
                                   right: 32.sp,
                                   top: 0,
