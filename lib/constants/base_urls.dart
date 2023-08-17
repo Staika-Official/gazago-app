@@ -21,4 +21,5 @@ class ServiceUrl {
   static const String boardService = '/services/board/api';
   static const String shopService = '/services/gazago/api/shop';
   static const String admobService = '/services/gazago/api/ad-admob-rewards';
+  static const String dailyBenefitsService = '/services/gazago/api/benefits';
 }

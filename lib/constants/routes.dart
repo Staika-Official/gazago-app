@@ -194,7 +194,7 @@ class Routes {
     stepPage(name: Routes.challengeCourseDetail, page: const ChallengeCourseDetail()),
     stepPage(name: Routes.leaderboard, page: const RankingHome()),
     stepPage(name: Routes.fairPlayView, page: const FairPlayView()),
-    stepPage(name: Routes.dailyBenefits, page: const DailyBenefits()),
+    stepPage(name: Routes.dailyBenefits, page: DailyBenefits()),
   ];
 }
 

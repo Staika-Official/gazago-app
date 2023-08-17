@@ -208,4 +208,56 @@ class F {
         return 'ca-app-pub-3940256099942544/5224354917';
     }
   }
+
+  static String get dailyBenefitAd1Ios {
+    switch (appFlavor) {
+      case Flavor.dev:
+        return 'ca-app-pub-3940256099942544/1712485313';
+      case Flavor.stage:
+        return 'ca-app-pub-3940256099942544/1712485313';
+      case Flavor.prod:
+        return 'ca-app-pub-4234536720874912/6534492567';
+      default:
+        return 'ca-app-pub-3940256099942544/1712485313';
+    }
+  }
+
+  static String get dailyBenefitAd1Android {
+    switch (appFlavor) {
+      case Flavor.dev:
+        return 'ca-app-pub-3940256099942544/5224354917';
+      case Flavor.stage:
+        return 'ca-app-pub-3940256099942544/5224354917';
+      case Flavor.prod:
+        return 'ca-app-pub-4234536720874912/1226325561';
+      default:
+        return 'ca-app-pub-3940256099942544/5224354917';
+    }
+  }
+
+  static String get dailyBenefitAd2Ios {
+    switch (appFlavor) {
+      case Flavor.dev:
+        return 'ca-app-pub-3940256099942544/1712485313';
+      case Flavor.stage:
+        return 'ca-app-pub-3940256099942544/1712485313';
+      case Flavor.prod:
+        return 'ca-app-pub-4234536720874912/3194013355';
+      default:
+        return 'ca-app-pub-3940256099942544/1712485313';
+    }
+  }
+
+  static String get dailyBenefitAd2Android {
+    switch (appFlavor) {
+      case Flavor.dev:
+        return 'ca-app-pub-3940256099942544/5224354917';
+      case Flavor.stage:
+        return 'ca-app-pub-3940256099942544/5224354917';
+      case Flavor.prod:
+        return 'ca-app-pub-4234536720874912/9567850011';
+      default:
+        return 'ca-app-pub-3940256099942544/5224354917';
+    }
+  }
 }
