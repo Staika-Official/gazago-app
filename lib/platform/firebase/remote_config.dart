@@ -2,7 +2,7 @@ import 'package:firebase_remote_config/firebase_remote_config.dart';
 import 'package:gaza_go/constants/config.dart';
 import 'package:logger/logger.dart';
 
-enum ConfigType { bool, double, int, string }
+enum ConfigType { bool, double, int, string, json }
 
 Map<String, dynamic> _defaultConfigs = {"abuse_radius": 50, "abuse_inside_radius_ratio": 80, "abuse_report_time": 600};
 
@@ -11,7 +11,7 @@ Future<void> initRemoteConfig() async {
   await _setDefaultConfigs(_defaultConfigs);
   try {
     await FirebaseRemoteConfig.instance.fetchAndActivate();
-    initRemoteConfigData();
+    await initRemoteConfigData();
   } catch (e) {
     print(e);
   }
@@ -35,6 +35,7 @@ dynamic getConfig({required ConfigType dataType, required String configKey}) {
       remoteData = FirebaseRemoteConfig.instance.getInt(configKey);
       break;
     case ConfigType.string:
+    case ConfigType.json:
       remoteData = FirebaseRemoteConfig.instance.getString(configKey);
       break;
   }

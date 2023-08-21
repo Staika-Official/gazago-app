@@ -4,6 +4,8 @@ import 'dart:io';
 
 import 'package:device_info_plus/device_info_plus.dart';
 import 'package:dio/dio.dart';
+import 'package:gaza_go/constants/base_urls.dart';
+import 'package:gaza_go/constants/config.dart';
 import 'package:gaza_go/constants/enums.dart';
 import 'package:gaza_go/constants/routes.dart';
 import 'package:gaza_go/flavors.dart';
@@ -107,6 +109,12 @@ class Api {
     //     ),
     //   );
     // }
+
+    if (appliedEndpoint != null && appliedEndpoint!['activateStageMode']) {
+      if (!options.path.contains('/sign-in/social') && options.baseUrl.contains(BaseUrl.prod)) {
+        options.baseUrl = options.baseUrl.replaceAll(BaseUrl.prod, BaseUrl.stage);
+      }
+    }
 
     if (HiveStore.load(key: HiveKey.isDebuggingMode.name)) {
       List requestLogs = HiveStore.load(key: HiveKey.requestLogs.name) ?? [];
