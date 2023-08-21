@@ -185,6 +185,7 @@ mixin ActivityMixin {
         id: userState.value.exercise!.id,
         steps: exerciseSteps.value,
         speed: avgSpeed.value,
+        // speed: 5,
         distance: convertKmToMeters(totalDistance.value),
         altitude: exerciseData.isNotEmpty ? exerciseData.last.altitude : 0,
         time: exerciseTime.value,
@@ -333,7 +334,8 @@ mixin ActivityMixin {
     if (exerciseData.length > 1) {
       sortedList = [...exerciseData];
       sortedList.sort((a, b) => (b.locationUpdateTime!.compareTo(a.locationUpdateTime!)));
-      prevData = sortedList.firstWhere((sortedData) => (DateTime.now().subtract(Duration(seconds: stopTimeInterval)).compareTo(sortedData.locationUpdateTime!) == 1), orElse: () => UserExerciseModel(steps: 0));
+      prevData = sortedList.firstWhere((sortedData) => (DateTime.now().subtract(Duration(seconds: stopTimeInterval)).compareTo(sortedData.locationUpdateTime!) == 1),
+          orElse: () => UserExerciseModel(steps: 0));
     }
     int prevStep = prevData != null ? prevData.steps! : 0;
     int currentStep = exerciseData.isNotEmpty && exerciseData.length > 2 ? exerciseData.last.steps! : 0;
@@ -601,7 +603,7 @@ mixin ActivityMixin {
     }
 
     stopTimer = Timer.periodic(const Duration(milliseconds: 10), (timer) async {
-      if (counter == const Duration(milliseconds: 500)) {
+      if (counter.compareTo(const Duration(milliseconds: 500)) == 0 || counter.compareTo(const Duration(milliseconds: 500)) > 0) {
         initializeStopTimer();
         checkShowEndPopup(source, controller);
         // AdWatchAvailableModel adWatchAvailableModel = AdWatchAvailableModel(watchAvailable: false);
