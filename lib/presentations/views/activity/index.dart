@@ -9,6 +9,8 @@ import 'package:gaza_go/presentations/styles/colors.dart';
 import 'package:gaza_go/presentations/styles/icons.dart';
 import 'package:gaza_go/presentations/styles/styled_text.dart';
 import 'package:get/get.dart';
+import 'package:simple_animations/animation_builder/custom_animation_builder.dart';
+import 'package:simple_animations/movie_tween/movie_tween.dart';
 
 class ActivityHome extends StatelessWidget {
   const ActivityHome({Key? key}) : super(key: key);
@@ -263,15 +265,15 @@ class ActivityHome extends StatelessWidget {
   Widget build(BuildContext context) {
     ActivityController controller = Get.find();
 
-    // var challengeMovie = MovieTween()
-    //   ..scene(begin: const Duration(seconds: 1), duration: const Duration(seconds: 2))
-    //       .thenTween('width', Tween<double>(begin: 70.sp, end: 270.sp), duration: const Duration(milliseconds: 300), curve: Curves.easeOut)
-    //       .tween('opacity', Tween<double>(begin: 0, end: 1), curve: Curves.easeOut)
-    //       .thenFor(duration: const Duration(seconds: 3))
-    //       .thenTween('opacity', Tween<double>(begin: 1, end: 0), duration: const Duration(milliseconds: 300), curve: Curves.easeOut)
-    //       .tween('width', Tween<double>(begin: 250.sp, end: 70.sp), curve: Curves.easeOut)
-    //       .thenTween('bottom', Tween<double>(begin: 0, end: 10.sp), duration: const Duration(milliseconds: 300), curve: Curves.easeOut)
-    //       .thenTween('bottom', Tween<double>(begin: 10.sp, end: 0), duration: const Duration(milliseconds: 300), curve: Curves.easeIn);
+    var challengeMovie = MovieTween()
+      ..scene(begin: const Duration(seconds: 1), duration: const Duration(seconds: 2))
+          .thenTween('width', Tween<double>(begin: 70.sp, end: 270.sp), duration: const Duration(milliseconds: 300), curve: Curves.easeOut)
+          .tween('opacity', Tween<double>(begin: 0, end: 1), curve: Curves.easeOut)
+          .thenFor(duration: const Duration(seconds: 3))
+          .thenTween('opacity', Tween<double>(begin: 1, end: 0), duration: const Duration(milliseconds: 300), curve: Curves.easeOut)
+          .tween('width', Tween<double>(begin: 250.sp, end: 70.sp), curve: Curves.easeOut)
+          .thenTween('bottom', Tween<double>(begin: 0, end: 10.sp), duration: const Duration(milliseconds: 300), curve: Curves.easeOut)
+          .thenTween('bottom', Tween<double>(begin: 10.sp, end: 0), duration: const Duration(milliseconds: 300), curve: Curves.easeIn);
 
     return LayoutBuilder(
       builder: (context, constraint) {
@@ -303,7 +305,6 @@ class ActivityHome extends StatelessWidget {
                       Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          ElevatedButton(onPressed: () => Get.toNamed(Routes.dailyBenefits), child: StyledText('일일혜택')),
                           StyledText(
                             '가자고와 함께 \n등산하고 뱃지를 받아보자고-!',
                             color: skyBlueColor,
@@ -465,86 +466,84 @@ class ActivityHome extends StatelessWidget {
                                 );
                               }),
                             ),
-                            // Positioned(
-                            //     bottom: 0,
-                            //     right: 0,
-                            //     child: Obx(() {
-                            //       return CustomAnimationBuilder<Movie>(
-                            //         control: controller.challengeLoadControl.value,
-                            //         tween: challengeMovie,
-                            //         duration: challengeMovie.duration,
-                            //         builder: (context, value, _) {
-                            //           return InkWell(
-                            //             onTap: () {
-                            //               controller.moveToChallengeMap(107);
-                            //             },
-                            //             child: Container(
-                            //               width: value.get('width'),
-                            //               height: 70.sp,
-                            //               decoration: BoxDecoration(
-                            //                 border: Border.all(color: Colors.black, width: 2),
-                            //                 borderRadius: BorderRadius.circular(40.sp),
-                            //                 color: popupBgColor,
-                            //               ),
-                            //               child: Stack(
-                            //                 clipBehavior: Clip.none,
-                            //                 fit: StackFit.expand,
-                            //                 children: [
-                            //                   Opacity(
-                            //                     opacity: value.get('opacity'),
-                            //                     child: Row(
-                            //                       crossAxisAlignment: CrossAxisAlignment.start,
-                            //                       children: [
-                            //                         InkWell(
-                            //                           onTap: () {
-                            //                             controller.challengeLoadControl.value = Control.stop;
-                            //                             challengeMovie = MovieTween()
-                            //                               ..scene(begin: const Duration(milliseconds: 200), duration: const Duration(milliseconds: 200))
-                            //                                   .thenTween('opacity', Tween<double>(begin: 1, end: 0), duration: const Duration(milliseconds: 300), curve: Curves.easeOut)
-                            //                                   .tween('width', Tween<double>(begin: 250.sp, end: 70.sp), curve: Curves.easeOut)
-                            //                                   .thenTween('bottom', Tween<double>(begin: 0, end: 10.sp), duration: const Duration(milliseconds: 300), curve: Curves.easeOut)
-                            //                                   .thenTween('bottom', Tween<double>(begin: 10.sp, end: 0), duration: const Duration(milliseconds: 300), curve: Curves.easeIn);
-                            //                           },
-                            //                           child: Padding(
-                            //                             padding: const EdgeInsets.only(
-                            //                               left: 20,
-                            //                               top: 16,
-                            //                             ),
-                            //                             child: iconCloseChallenge,
-                            //                           ),
-                            //                         ),
-                            //                         const Expanded(
-                            //                           child: Padding(
-                            //                             padding: EdgeInsets.only(
-                            //                               left: 12,
-                            //                               top: 15,
-                            //                             ),
-                            //                             child: StyledText(
-                            //                               '도전할 100대 명산\n챌린지를 찾아보세요',
-                            //                               fontSize: 16,
-                            //                               lineHeight: 20,
-                            //                               fontWeight: 600,
-                            //                               color: Colors.white,
-                            //                               softWrap: false,
-                            //                               overflowEllipsis: true,
-                            //                             ),
-                            //                           ),
-                            //                         )
-                            //                       ],
-                            //                     ),
-                            //                   ),
-                            //                   Positioned(
-                            //                     bottom: 14.sp,
-                            //                     right: 13.sp,
-                            //                     child: iconChallengeMap,
-                            //                   ),
-                            //                 ],
-                            //               ),
-                            //             ),
-                            //           );
-                            //         },
-                            //       );
-                            //     })),
+                            Positioned(
+                                bottom: 0,
+                                left: 0,
+                                child: Obx(() {
+                                  return CustomAnimationBuilder<Movie>(
+                                    control: controller.challengeLoadControl.value,
+                                    tween: challengeMovie,
+                                    duration: challengeMovie.duration,
+                                    builder: (context, value, _) {
+                                      return InkWell(
+                                        onTap: () => Get.toNamed(Routes.dailyBenefits),
+                                        child: Container(
+                                          width: value.get('width'),
+                                          height: 70.sp,
+                                          decoration: BoxDecoration(
+                                            border: Border.all(color: Colors.black, width: 2),
+                                            borderRadius: BorderRadius.circular(40.sp),
+                                            color: popupBgColor,
+                                          ),
+                                          child: Stack(
+                                            clipBehavior: Clip.none,
+                                            fit: StackFit.expand,
+                                            children: [
+                                              Opacity(
+                                                opacity: value.get('opacity'),
+                                                child: Row(
+                                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                                  children: [
+                                                    InkWell(
+                                                      onTap: () {
+                                                        controller.challengeLoadControl.value = Control.stop;
+                                                        challengeMovie = MovieTween()
+                                                          ..scene(begin: const Duration(milliseconds: 200), duration: const Duration(milliseconds: 200))
+                                                              .thenTween('opacity', Tween<double>(begin: 1, end: 0), duration: const Duration(milliseconds: 300), curve: Curves.easeOut)
+                                                              .tween('width', Tween<double>(begin: 250.sp, end: 70.sp), curve: Curves.easeOut)
+                                                              .thenTween('bottom', Tween<double>(begin: 0, end: 10.sp), duration: const Duration(milliseconds: 300), curve: Curves.easeOut)
+                                                              .thenTween('bottom', Tween<double>(begin: 10.sp, end: 0), duration: const Duration(milliseconds: 300), curve: Curves.easeIn);
+                                                      },
+                                                      child: Padding(
+                                                        padding: const EdgeInsets.only(
+                                                          left: 20,
+                                                          top: 16,
+                                                        ),
+                                                        child: iconCloseChallenge,
+                                                      ),
+                                                    ),
+                                                    const Expanded(
+                                                      child: Padding(
+                                                        padding: EdgeInsets.only(
+                                                          left: 12,
+                                                          top: 15,
+                                                        ),
+                                                        child: StyledText(
+                                                          '도전할 100대 명산\n챌린지를 찾아보세요',
+                                                          fontSize: 16,
+                                                          lineHeight: 20,
+                                                          fontWeight: 600,
+                                                          color: Colors.white,
+                                                          softWrap: false,
+                                                          overflowEllipsis: true,
+                                                        ),
+                                                      ),
+                                                    )
+                                                  ],
+                                                ),
+                                              ),
+                                              Positioned(
+                                                bottom: 14.sp,
+                                                right: 13.sp,
+                                                child: iconChallengeMap,
+                                              ),
+                                            ],
+                                          ),
+                                        ),
+                                      );
+                                    },
+                                  );
+                                })),
                           ],
                         ),
                       ),

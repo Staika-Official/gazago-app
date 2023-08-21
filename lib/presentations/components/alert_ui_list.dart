@@ -4802,7 +4802,7 @@ Future<void> showFairPlayAlert() async {
                       completer.complete();
                     },
                     buttonText: '확인했습니다.',
-                    buttonColor: const Color(0xFF0EE6F3),
+                    buttonColor: skyBlueColor,
                     textColor: Colors.black,
                   ),
                 )

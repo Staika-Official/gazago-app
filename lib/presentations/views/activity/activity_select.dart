@@ -94,7 +94,7 @@ class ActivitySelect extends StatelessWidget {
                                         ),
                                         child: StyledText(
                                           challenge.challengeType == 'COURSE' ? '코스형 챌린지' : '챌린지',
-                                          color: const Color(0xff0EE6F3),
+                                          color: skyBlueColor,
                                           fontSize: 10,
                                           fontWeight: 600,
                                           lineHeight: 10,
