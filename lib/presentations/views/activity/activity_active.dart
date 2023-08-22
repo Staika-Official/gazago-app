@@ -26,7 +26,7 @@ class ActivityActive extends StatelessWidget {
     for (int i = 0; i < 60; i++) {
       //15km / 0.25 = 60
       Widget? gauge;
-      if (i > 2 && i < 28) {
+      if (i > 1 && i < 28) {
         // 1 ~ 6km
         gauge = Container(
           width: 3.sp,
