@@ -5,6 +5,7 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:flutter_svg_provider/flutter_svg_provider.dart' as sp;
 import 'package:gaza_go/constants/config.dart';
 import 'package:gaza_go/platform/controllers/daily_benefit_controller.dart';
+import 'package:gaza_go/platform/helpers/alert_helper.dart';
 import 'package:gaza_go/platform/helpers/base_helper.dart';
 import 'package:gaza_go/platform/models/benefit_item_model.dart';
 import 'package:gaza_go/presentations/components/default_container.dart';
@@ -23,9 +24,6 @@ class DailyBenefits extends StatelessWidget {
         if (item.key == 0) {
           locked = false;
         } else {
-          print(controller.dailyBenefitList.value!.benefits[item.key - 1].id);
-          print(controller.dailyBenefitList.value!.benefits[item.key - 1].toJson());
-          print(!controller.dailyBenefitList.value!.benefits[item.key - 1].received);
           if (!controller.dailyBenefitList.value!.benefits[item.key - 1].received) {
             locked = true;
           } else {
@@ -374,7 +372,7 @@ class _DailyBenefitItemState extends State<DailyBenefitItem> {
             child: Column(
               mainAxisSize: MainAxisSize.min,
               children: [
-                widget.userDistance < widget.benefitItem.distance || widget.locked
+                widget.userDistance < widget.benefitItem.distance
                     ? SvgPicture.asset('assets/images/ico_daily_benefit_locked.svg')
                     : widget.benefitItem.imageUrl!.contains('.svg')
                         ? SvgPicture.network(
@@ -430,9 +428,9 @@ class _DailyBenefitItemState extends State<DailyBenefitItem> {
                     child: Ink(
                       width: double.infinity,
                       decoration: BoxDecoration(
-                        color: widget.benefitItem.received || widget.userDistance < widget.benefitItem.distance || widget.locked ? subBg01Color : skyBlueColor,
+                        color: widget.benefitItem.received || widget.userDistance < widget.benefitItem.distance ? subBg01Color : skyBlueColor,
                         border: Border.all(
-                          color: widget.benefitItem.received || widget.userDistance < widget.benefitItem.distance || widget.locked ? deepGrayColor : Colors.black,
+                          color: widget.benefitItem.received || widget.userDistance < widget.benefitItem.distance ? deepGrayColor : Colors.black,
                           style: BorderStyle.solid,
                         ),
                         borderRadius: BorderRadius.circular(100),
@@ -446,9 +444,13 @@ class _DailyBenefitItemState extends State<DailyBenefitItem> {
                         ],
                       ),
                       child: InkWell(
-                        onTap: widget.benefitItem.received || widget.userDistance < widget.benefitItem.distance || widget.locked
+                        onTap: widget.benefitItem.received || widget.userDistance < widget.benefitItem.distance
                             ? null
                             : () async {
+                                if (widget.locked) {
+                                  showToastPopup('혜택은 순서대로 받을 수 있어요.');
+                                  return;
+                                }
                                 toggleLoadingState();
                                 await controller.requestBenefit(widget.benefitItem);
                                 toggleLoadingState();
@@ -464,7 +466,7 @@ class _DailyBenefitItemState extends State<DailyBenefitItem> {
                               lineHeight: 10,
                               fontWeight: 600,
                               letterSpacing: -0.03,
-                              color: widget.userDistance < widget.benefitItem.distance || widget.locked
+                              color: widget.userDistance < widget.benefitItem.distance
                                   ? deepGrayColor
                                   : widget.benefitItem.received
                                       ? skyBlueColor

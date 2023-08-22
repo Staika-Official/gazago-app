@@ -3,6 +3,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:gaza_go/constants/enums.dart';
 import 'package:gaza_go/constants/routes.dart';
 import 'package:gaza_go/platform/controllers/activity_controller.dart';
+import 'package:gaza_go/platform/controllers/daily_benefit_controller.dart';
 import 'package:gaza_go/platform/helpers/alert_helper.dart';
 import 'package:gaza_go/platform/helpers/base_helper.dart';
 import 'package:gaza_go/presentations/styles/colors.dart';
@@ -476,7 +477,10 @@ class ActivityHome extends StatelessWidget {
                                     duration: challengeMovie.duration,
                                     builder: (context, value, _) {
                                       return InkWell(
-                                        onTap: () => Get.toNamed(Routes.dailyBenefits),
+                                        onTap: () async {
+                                          await Get.find<DailyBenefitController>().refreshController();
+                                          Get.toNamed(Routes.dailyBenefits);
+                                        },
                                         child: Container(
                                           width: value.get('width'),
                                           height: 70.sp,

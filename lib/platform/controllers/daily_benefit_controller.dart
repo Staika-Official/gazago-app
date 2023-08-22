@@ -112,6 +112,7 @@ class DailyBenefitController extends GetxController {
   }
 
   Future<void> requestDailyBenefitAd(BenefitItemModel benefitItem) async {
+    Completer completer = Completer();
     dailyRewardAdList[activeAdIndex]!.fullScreenContentCallback = FullScreenContentCallback(
       // Called when the ad showed the full screen content.
       onAdShowedFullScreenContent: (ad) {
@@ -123,6 +124,7 @@ class DailyBenefitController extends GetxController {
       // Called when the ad failed to show full screen content.
       onAdFailedToShowFullScreenContent: (ad, err) {
         // Dispose the ad here to free resources.
+        completer.complete();
         dailyRewardAdList[activeAdIndex]!.dispose();
       },
       // Called when the ad dismissed full screen content.
@@ -132,6 +134,7 @@ class DailyBenefitController extends GetxController {
         dailyRewardAdList[activeAdIndex]!.dispose();
         dailyRewardAdList[activeAdIndex] = null;
         activeAdIndex = activeAdIndex == 0 ? 1 : 0;
+        completer.complete();
       },
       // Called when a click is recorded for an ad.
       onAdClicked: (ad) {},
@@ -145,5 +148,7 @@ class DailyBenefitController extends GetxController {
       showToastPopup('광고를 시청할 수 없습니다.');
       await loadAd();
     }
+
+    return completer.future;
   }
 }
