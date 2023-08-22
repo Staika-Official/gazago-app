@@ -86,8 +86,8 @@ class ActivityService {
     }
   }
 
-  static Future<void> getChallengeLeaderboard(int id, {required Function successCallback, Function? errorCallback}) async {
-    Response res = await ActivityApi.getNewChallengeLeaderboard(id);
+  static Future<void> getChallengeLeaderboard(int id, int page, int size, {required Function successCallback, Function? errorCallback}) async {
+    Response res = await ActivityApi.getNewChallengeLeaderboard(id, page, size);
     if (res.statusCode == 200) {
       List<ChallengeRankerModel> challengeList = List.empty(growable: true);
       if (res.data.length > 0) {

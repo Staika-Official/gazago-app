@@ -43,6 +43,10 @@ class ChallengesDetailController extends GetxController with GetTickerProviderSt
   final FocusNode focusNode = FocusNode();
   final RxString errorMessage = RxString('');
   final RxBool hideCourses = RxBool(false);
+  int page = 0;
+  int size = 100;
+  bool hasMore = true;
+  bool loadingLeaderboard = false;
 
   @override
   void onInit() async {
@@ -57,6 +61,10 @@ class ChallengesDetailController extends GetxController with GetTickerProviderSt
     getChallengeDetail();
     getChallengeLeaderboard();
     getChallengeLeaderboardMyRanking();
+
+    leaderboardScrollController.addListener(() {
+      loadDataOnScroll();
+    });
 
     super.onInit();
   }
@@ -115,12 +123,21 @@ class ChallengesDetailController extends GetxController with GetTickerProviderSt
   }
 
   Future<void> getChallengeLeaderboard() async {
-    await ActivityService.getChallengeLeaderboard(challengeId.value, successCallback: (data) {
-      data.asMap().forEach((index, ranker) {
-        ranker.rank = (index + 1);
+    if (!loadingLeaderboard) {
+      loadingLeaderboard = true;
+      await ActivityService.getChallengeLeaderboard(challengeId.value, page, size, successCallback: (List<ChallengeRankerModel> data) {
+        if (data.length < size) {
+          hasMore = false;
+        }
+
+        data.asMap().forEach((index, ranker) {
+          ranker.rank = (index + 1) + (page * size);
+        });
+
+        challengeRankingList.addAll(data);
+        loadingLeaderboard = false;
       });
-      challengeRankingList.addAll(data);
-    });
+    }
   }
 
   Future<void> getChallengeLeaderboardMyRanking() async {
@@ -174,6 +191,18 @@ class ChallengesDetailController extends GetxController with GetTickerProviderSt
       });
     } else {
       showToastPopup('참여코드를 입력해주세요.');
+    }
+  }
+
+  void loadDataOnScroll() {
+    double scrollBottom = leaderboardScrollController.positions.last.maxScrollExtent;
+    double scrollPosition = leaderboardScrollController.positions.last.pixels;
+
+    if (tabController.index == 1 && scrollPosition == scrollBottom) {
+      if (hasMore) {
+        page = page + 1;
+        getChallengeLeaderboard();
+      }
     }
   }
 }

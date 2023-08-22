@@ -43,11 +43,11 @@ class ActivityApi {
     ).get('/challenges/users/$userId/$id');
   }
 
-  static Future<Response> getNewChallengeLeaderboard(int id) async {
+  static Future<Response> getNewChallengeLeaderboard(int id, int page, int size) async {
     return await Api.client(
       serviceUrl: '/services/gazago/api',
       showLoading: false,
-    ).get('/challenge-leaderboards/challenges/$id?size=10');
+    ).get('/challenge-leaderboards/challenges/$id?page=$page&size=$size');
   }
 
   static Future<Response> getNewChallengeRewardPool(int id) async {
