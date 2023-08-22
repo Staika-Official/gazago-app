@@ -267,11 +267,11 @@ class ActivityHome extends StatelessWidget {
 
     var challengeMovie = MovieTween()
       ..scene(begin: const Duration(seconds: 1), duration: const Duration(seconds: 2))
-          .thenTween('width', Tween<double>(begin: 70.sp, end: 240.sp), duration: const Duration(milliseconds: 300), curve: Curves.easeOut)
+          .thenTween('width', Tween<double>(begin: 70.sp, end: 250.sp), duration: const Duration(milliseconds: 300), curve: Curves.easeOut)
           .tween('opacity', Tween<double>(begin: 0, end: 1), curve: Curves.easeOut)
           .thenFor(duration: const Duration(seconds: 3))
           .thenTween('opacity', Tween<double>(begin: 1, end: 0), duration: const Duration(milliseconds: 300), curve: Curves.easeOut)
-          .tween('width', Tween<double>(begin: 240.sp, end: 70.sp), curve: Curves.easeOut)
+          .tween('width', Tween<double>(begin: 250.sp, end: 70.sp), curve: Curves.easeOut)
           .thenTween('bottom', Tween<double>(begin: 0, end: 10.sp), duration: const Duration(milliseconds: 300), curve: Curves.easeOut)
           .thenTween('bottom', Tween<double>(begin: 10.sp, end: 0), duration: const Duration(milliseconds: 300), curve: Curves.easeIn);
 
@@ -518,7 +518,7 @@ class ActivityHome extends StatelessWidget {
                                                           left: 20,
                                                         ),
                                                         child: StyledText(
-                                                          '일일혜택을 받으면서\n걸어볼까요?',
+                                                          'GO를 누르고 걷고,\n일일 혜택도 받아보세요',
                                                           fontSize: 16,
                                                           lineHeight: 20,
                                                           fontWeight: 600,
@@ -532,7 +532,7 @@ class ActivityHome extends StatelessWidget {
                                                 ),
                                               ),
                                               Positioned(
-                                                top: 7,
+                                                top: 5,
                                                 right: 8,
                                                 child: iconPresentBox,
                                               ),
