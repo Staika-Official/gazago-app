@@ -14,6 +14,7 @@ class InventoryItemStatModel {
   double? stamina;
   @HiveField(3)
   double? luck;
+  
   @HiveField(4)
   double? recoveryStamina;
   @HiveField(5)

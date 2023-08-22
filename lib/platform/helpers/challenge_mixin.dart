@@ -206,22 +206,61 @@ mixin ChallengeMixin {
     if (listKey.currentContext != null) {
       listHeight.value = listKey.currentContext!.size!.height;
     }
+    if (selectedCourse.value!.checkpoints != null && selectedCourse.value!.checkpoints!.isNotEmpty) {
+      List<LatLng> markers = getCheckPointsCourse(selectedCourse.value!.checkpoints!);
+
+      challengeMapController.moveCamera(
+        CameraUpdate.fitBounds(
+          LatLngBounds.fromLatLngList(markers),
+          padding: 120,
+        ),
+      );
+    }
   }
 
   void selectCourse(ChallengeCourseModel course) {
     selectedCourse.value = ChallengeCourseModel.fromJson(course.toJson());
+    if (course.checkpoints != null && course.checkpoints!.isNotEmpty) {
+      List<LatLng> markers = getCheckPointsCourse(selectedCourse.value!.checkpoints!);
 
-    challengeMapController.moveCamera(
-      CameraUpdate.fitBounds(
-        LatLngBounds.fromLatLngList(
-          [
-            LatLng(course.startLat!, course.startLon!),
-            LatLng(course.endLat!, course.endLon!),
-          ],
+      challengeMapController.moveCamera(
+        CameraUpdate.fitBounds(
+          LatLngBounds.fromLatLngList(markers),
+          padding: 120,
         ),
-        padding: 80,
-      ),
-    );
+      );
+    } else {
+      challengeMapController.moveCamera(
+        CameraUpdate.fitBounds(
+          LatLngBounds.fromLatLngList(
+            [
+              LatLng(course.startLat!, course.startLon!),
+              LatLng(course.endLat!, course.endLon!),
+            ],
+          ),
+          padding: 80,
+        ),
+      );
+    }
+    print(course.checkpoints);
+  }
+
+  List<LatLng> getCheckPointsCourse(markers) {
+    double minLat = markers.map((marker) => marker.lat).reduce((a, b) => a < b ? a : b);
+    double maxLat = markers.map((marker) => marker.lat).reduce((a, b) => a > b ? a : b);
+    double minLng = markers.map((marker) => marker.lon).reduce((a, b) => a < b ? a : b);
+    double maxLng = markers.map((marker) => marker.lon).reduce((a, b) => a > b ? a : b);
+
+    // double aspectRatio = (maxLng - minLng) / (maxLat - minLat);
+
+    List<LatLng> outermostCoords = [];
+
+    outermostCoords = [
+      LatLng(minLat, minLng),
+      LatLng(maxLat, maxLng),
+    ];
+
+    return outermostCoords;
   }
 
   void detectChallengeZone(Position location) {

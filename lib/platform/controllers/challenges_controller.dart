@@ -8,7 +8,7 @@ import 'package:get/get.dart';
 
 class ChallengesController extends GetxController with GetTickerProviderStateMixin, ChallengeMixin {
   ScrollController challengesScrollController = ScrollController();
-  // ScrollController itemScrollController = ScrollController(keepScrollOffset: false);
+
   final RxList<NewChallengeModel> challengeList = RxList.empty();
   final List<Map<String, String>> sortingList = [
     {'title': '전체', 'value': 'id,DESC'},
@@ -31,56 +31,6 @@ class ChallengesController extends GetxController with GetTickerProviderStateMix
   Rx isSelectedSortValue = Rx({'title': '전체', 'value': 'id,DESC'});
   RxString isSelectedSortString = RxString('전체');
 
-  // final List<Map<String, dynamic>> challengeList = [
-  //   {
-  //     'title': '[2월] 챌린저 트레킹슈즈 신고 매일 걷기',
-  //     'openDate': '2023/02/01',
-  //     'closeDate': '2023/02/28',
-  //     'activityTypes': ['걷기', '100대 명산'],
-  //     'challengeTypes': 'ITEM',
-  //     'maxPeople': 100,
-  //     'participatePeople': 80,
-  //     'status': 'READY',
-  //     'imageUrl': '',
-  //     'userStatus': '참가중'
-  //   },
-  //   {
-  //     'title': '[2월] 챌린저 트레킹슈즈 신고 매일 걷기',
-  //     'openDate': '2023/02/01',
-  //     'closeDate': '2023/02/28',
-  //     'activityTypes': ['걷기', '100대 명산'],
-  //     'challengeTypes': 'ITEM',
-  //     'maxPeople': 100,
-  //     'participatePeople': 80,
-  //     'status': 'READY',
-  //     'imageUrl': '',
-  //     'userStatus': '참가중'
-  //   },
-  //   {
-  //     'title': '[2월] 챌린저 트레킹슈즈 신고 매일 걷기',
-  //     'openDate': '2023/02/01',
-  //     'closeDate': '2023/02/28',
-  //     'activityTypes': ['걷기', '100대 명산'],
-  //     'challengeTypes': 'ITEM',
-  //     'maxPeople': 100,
-  //     'participatePeople': 80,
-  //     'status': 'READY',
-  //     'imageUrl': '',
-  //     'userStatus': '참가중'
-  //   },
-  //   {
-  //     'title': '[2월] 챌린저 트레킹슈즈 신고 매일 걷기',
-  //     'openDate': '2023/02/01',
-  //     'closeDate': '2023/02/28',
-  //     'activityTypes': ['걷기', '100대 명산'],
-  //     'challengeTypes': 'ITEM',
-  //     'maxPeople': 100,
-  //     'participatePeople': 80,
-  //     'status': 'READY',
-  //     'imageUrl': '',
-  //     'userStatus': '참가중'
-  //   },
-  // ];
   @override
   void onInit() async {
     await getChallengesList();

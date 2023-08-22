@@ -14,6 +14,7 @@ Future<void> showAlert({
   bool isScrollControlled = false,
   bool isDangerTitle = false,
   bool isNonePaddingOuter = false,
+  bool isFullHeight = false,
   bool allowMultipleBottomSheet = false,
 }) async {
   print(allowMultipleBottomSheet);
@@ -28,6 +29,7 @@ Future<void> showAlert({
           actions: actions,
           isDangerTitle: isDangerTitle,
           isNonePaddingOuter: isNonePaddingOuter,
+          isFullHeight: isFullHeight,
         ),
       ),
       isDismissible: false,
@@ -41,7 +43,7 @@ void showToastPopup(String message) {
   Fluttertoast.showToast(
     timeInSecForIosWeb: 2,
     msg: message,
-    gravity: ToastGravity.TOP,
+    gravity: ToastGravity.BOTTOM,
     backgroundColor: Colors.black.withOpacity(0.9),
     textColor: Colors.white,
     fontSize: 18.0,

@@ -1,6 +1,7 @@
 import 'package:dio/dio.dart';
 import 'package:gaza_go/constants/enums.dart';
 import 'package:gaza_go/platform/apis/shop.dart';
+import 'package:gaza_go/platform/models/error_response_data_model.dart';
 import 'package:gaza_go/platform/models/shop_item_model.dart';
 import 'package:gaza_go/platform/models/shop_item_purchase_response_model.dart';
 import 'package:gaza_go/platform/stores/hive_store.dart';
@@ -35,15 +36,15 @@ class ShopService {
     }
   }
 
-  static Future<void> fetchPurchaseShopItem(int itemId, {required Function successCallback, Function? errorCallback}) async {
-    Response res = await ShopApi.fetchPurchaseShopItem(userId!, itemId);
+  static Future<void> fetchPurchaseShopItem(int itemId, int itemCount, {required Function successCallback, Function? errorCallback}) async {
+    Response res = await ShopApi.fetchPurchaseShopItem(userId!, itemId, itemCount);
 
     if (res.statusCode == 200) {
       successCallback(ShopItemPurchaseResponseModel.fromJson(res.data));
     } else if (res.statusCode == 422) {
-      if (errorCallback != null) errorCallback(res.statusCode, res.data.errorCode, res.data.errorMessage);
+      if (errorCallback != null) errorCallback(ErrorResponseDataModel.fromJson(res.data));
     } else {
-      if (errorCallback != null) errorCallback(res.statusCode, res.data.errorCode, res.data.errorMessage);
+      if (errorCallback != null) errorCallback(ErrorResponseDataModel.fromJson(res.data));
     }
   }
 }

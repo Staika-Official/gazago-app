@@ -53,26 +53,28 @@ class InventoryItem extends StatelessWidget {
                             children: [
                               SizedBox(
                                 height: 80.sp,
-                                child: Container(
-                                  child: item.itemImageUrl.contains('.svg')
-                                      ? SvgPicture.network(
-                                          fit: BoxFit.fitHeight,
-                                          item.itemImageUrl,
-                                          placeholderBuilder: (BuildContext context) => const Center(child: SizedBox.square(dimension: 40, child: CircularProgressIndicator())),
-                                          headers: imageNetworkHeader,
-                                          color: item.equipped == true ? Colors.white.withOpacity(0.5) : Colors.white.withOpacity(1),
-                                          colorBlendMode: BlendMode.modulate,
-                                        )
-                                      : CachedNetworkImage(
-                                          imageUrl: item.itemImageUrl,
-                                          fit: BoxFit.fitHeight,
-                                          placeholder: (context, url) => const Center(child: SizedBox.square(dimension: 40, child: CircularProgressIndicator())),
-                                          errorWidget: (context, url, error) => Image.asset("assets/images/@temp_badge.png"),
-                                          httpHeaders: imageNetworkHeader,
-                                          color: item.equipped == true ? Colors.white.withOpacity(0.5) : Colors.white.withOpacity(1),
-                                          colorBlendMode: BlendMode.modulate,
-                                        ),
-                                ),
+                                child: controller.isConsumerItemUsing.value != null && controller.isConsumerItemUsing.value.id == item.id
+                                    ? const Center(child: SizedBox.square(dimension: 40, child: CircularProgressIndicator()))
+                                    : Container(
+                                        child: item.itemImageUrl.contains('.svg')
+                                            ? SvgPicture.network(
+                                                fit: BoxFit.fitHeight,
+                                                item.itemImageUrl,
+                                                placeholderBuilder: (BuildContext context) => const Center(child: SizedBox.square(dimension: 40, child: CircularProgressIndicator())),
+                                                headers: imageNetworkHeader,
+                                                color: item.equipped == true ? Colors.white.withOpacity(0.5) : Colors.white.withOpacity(1),
+                                                colorBlendMode: BlendMode.modulate,
+                                              )
+                                            : CachedNetworkImage(
+                                                imageUrl: item.itemImageUrl,
+                                                fit: BoxFit.fitHeight,
+                                                placeholder: (context, url) => const Center(child: SizedBox.square(dimension: 40, child: CircularProgressIndicator())),
+                                                errorWidget: (context, url, error) => Image.asset("assets/images/@temp_badge.png"),
+                                                httpHeaders: imageNetworkHeader,
+                                                color: item.equipped == true ? Colors.white.withOpacity(0.5) : Colors.white.withOpacity(1),
+                                                colorBlendMode: BlendMode.modulate,
+                                              ),
+                                      ),
                               ),
                               Padding(
                                 padding: EdgeInsets.only(top: 10.sp, bottom: 6.sp),
@@ -92,7 +94,11 @@ class InventoryItem extends StatelessWidget {
                               ),
                               item.equipped == false
                                   ? InkWell(
-                                      onTap: () => controller.checkEquippedInventoryChallengeItem(item.id, item.itemCategory),
+                                      onTap: () => item.itemCategory == 'DISPOSABLE'
+                                          ? controller.isConsumerItemUsing.value == null
+                                              ? controller.checkConsumerItemType(item)
+                                              : null
+                                          : controller.checkEquippedInventoryChallengeItem(item.id, item.itemCategory),
                                       child: Container(
                                         width: double.infinity,
                                         decoration: BoxDecoration(
@@ -117,8 +123,8 @@ class InventoryItem extends StatelessWidget {
                                         alignment: Alignment.center,
                                         child: Padding(
                                           padding: EdgeInsets.all(8.0.sp),
-                                          child: const StyledText(
-                                            '장착',
+                                          child: StyledText(
+                                            item.itemCategory == 'DISPOSABLE' ? '사용하기' : '장착',
                                             fontWeight: 500,
                                             fontSize: 14,
                                           ),
@@ -155,6 +161,34 @@ class InventoryItem extends StatelessWidget {
                             ],
                           ),
                         ),
+                        if (item.itemCategory == 'DISPOSABLE' && item.amount! > 1)
+                          Positioned(
+                            left: 8.sp,
+                            top: 8.sp,
+                            child: Container(
+                              decoration: BoxDecoration(
+                                color: Color(0xFF0E0E13),
+                                borderRadius: BorderRadius.circular(6),
+                              ),
+                              child: Padding(
+                                padding: EdgeInsets.symmetric(vertical: 4.sp, horizontal: 6.0.sp),
+                                child: StyledText(
+                                  item.amount != null ? item.amount.toString() : '0',
+                                  fontSize: 12,
+                                  lineHeight: 12,
+                                  letterSpacing: -.1,
+                                  fontWeight: 600,
+                                ),
+                              ),
+                            ),
+                          ),
+                        Positioned(
+                          right: 8.sp,
+                          top: 8.sp,
+                          width: 18,
+                          height: 18,
+                          child: getItemGradeCircleIcon(item.itemGrade),
+                        ),
                         if (item.expiredDate != null)
                           if (controller.getRemainingDays(item.expiredDate!) < 3)
                             Positioned(
@@ -172,13 +206,13 @@ class InventoryItem extends StatelessWidget {
                                 child: StyledText('D-${controller.getRemainingDays(item.expiredDate!)}'),
                               ),
                             ),
-                        Positioned(
-                          right: 7.sp,
-                          top: 7.sp,
-                          width: 18,
-                          height: 18,
-                          child: getItemGradeCircleIcon(item.itemGrade),
-                        ),
+                        // Positioned(
+                        //   right: 7.sp,
+                        //   top: 7.sp,
+                        //   width: 18,
+                        //   height: 18,
+                        //   child: getItemGradeCircleIcon(item.itemGrade),
+                        // ),
                       ],
                     ),
                   ),
@@ -202,18 +236,19 @@ class InventoryItem extends StatelessWidget {
         mainAxisSize: MainAxisSize.min,
         children: [
           Padding(
-            padding: EdgeInsets.symmetric(vertical: 10.0.sp, horizontal: 20.0.sp),
+            padding: EdgeInsets.symmetric(vertical: 10.0.sp),
             child: SizedBox(
               height: 28.sp,
               child: Align(
                 alignment: Alignment.centerLeft,
                 child: TabBar(
+                  padding: EdgeInsets.symmetric(horizontal: 20.0.sp),
                   controller: controller.subTabController,
                   isScrollable: true,
                   labelStyle: TextStyle(fontWeight: FontWeight.w500, fontSize: 14.sp),
                   labelColor: Colors.black,
                   unselectedLabelColor: const Color(0xFF898B92),
-                  labelPadding: EdgeInsets.only(left: 14.0.sp, right: 14.0.sp, top: 6.0.sp, bottom: 3.0.sp),
+                  labelPadding: EdgeInsets.only(left: 12.0.sp, right: 12.0.sp, top: 6.0.sp, bottom: 3.0.sp),
                   indicator: BoxDecoration(
                     borderRadius: BorderRadius.circular(80.0.sp),
                     color: const Color(0xFFECECEC),

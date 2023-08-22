@@ -26,9 +26,9 @@ class ShopApi {
     ).get('/items/$id');
   }
 
-  static Future<Response> fetchPurchaseShopItem(String userId, int itemId) async {
+  static Future<Response> fetchPurchaseShopItem(String userId, int itemId, int itemCount) async {
     return await Api.client(
-      serviceUrl: ServiceUrl.shopService,
-    ).post('/items/$itemId/users/$userId/buy');
+      serviceUrl: ServiceUrl.shop2Service,
+    ).post('/items/$itemId/users/$userId/buy', data: {"quantity": itemCount});
   }
 }

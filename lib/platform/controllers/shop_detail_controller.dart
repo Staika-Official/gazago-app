@@ -3,6 +3,7 @@ import 'package:gaza_go/constants/routes.dart';
 import 'package:gaza_go/platform/controllers/challenges_detail_controller.dart';
 import 'package:gaza_go/platform/controllers/home_menu_controller.dart';
 import 'package:gaza_go/platform/controllers/loader_controller.dart';
+import 'package:gaza_go/platform/controllers/shop_controller.dart';
 import 'package:gaza_go/platform/controllers/wallet_master_controller.dart';
 import 'package:gaza_go/platform/firebase/remote_config.dart';
 import 'package:gaza_go/platform/helpers/alert_helper.dart';
@@ -21,8 +22,14 @@ import 'package:url_launcher/url_launcher.dart';
 class ShopDetailController extends GetxController {
   final WalletMasterController walletMasterController = Get.find();
   final HomeMenuController challengesDetailController = Get.put(HomeMenuController());
+  ShopController shopController = Get.isRegistered<ShopController>() ? Get.find<ShopController>() : Get.put(ShopController());
   LoaderController loaderController = Get.put(LoaderController());
   final RxList<ShopItemModel> shopItemsList = RxList.empty();
+  final RxInt purchaseItemCount = RxInt(1);
+
+  RxInt get purchaseItemSumPrice {
+    return RxInt((purchaseItemCount.value * selectedItem.value.price).toInt());
+  }
 
   final List<Map<String, String>> sortingList = [
     {'title': '최근 등록 순', 'value': 'id,DESC'},
@@ -120,6 +127,7 @@ class ShopDetailController extends GetxController {
   @override
   void onClose() {
     itemScrollController.removeListener(() => toggleBottomNav(itemScrollController));
+    shopController.getShopItemsList();
     super.onClose();
   }
 
@@ -137,12 +145,6 @@ class ShopDetailController extends GetxController {
     } else {
       Get.toNamed(Routes.challengeDetail, arguments: {'id': selectedItem.value.challengeId});
     }
-
-    // if (Get.isRegistered<HomeMenuController>()) {
-    //   Get.find<HomeMenuController>().selectMenu(0);
-    // } else {
-    //   Get.put(HomeMenuController()).selectMenu(0);
-    // }
   }
 
   void getItemMaxValue() {
@@ -162,22 +164,24 @@ class ShopDetailController extends GetxController {
 
   void handlePurchaseShopItem(int itemId) async {
     Get.back();
+    int itemCount = selectedItem.value.itemCategory == 'DISPOSABLE' ? purchaseItemCount.value : 1;
     loaderController.isLoading.value = true;
-    await ShopService.fetchPurchaseShopItem(itemId, successCallback: (ShopItemPurchaseResponseModel items) {
+    await ShopService.fetchPurchaseShopItem(itemId, itemCount, successCallback: (ShopItemPurchaseResponseModel items) {
       loaderController.isLoading.value = false;
       purchaseCompleteItem.value = items;
+
       showItemPurchaseCompletePopup();
       walletMasterController.getSpendingWalletBalances();
-
+      shopController.getShopItemsList();
       getItemDetail(itemId);
-    }, errorCallback: (statusCode, errorCode, errorMessage) {
+    }, errorCallback: (errorData) {
       loaderController.isLoading.value = false;
-      if (statusCode == 422) {
+      if (errorData.status == 422) {
         isShortBalance.value = true;
         showTikShortBalancePopup(selectedItem.value.tradeSymbol);
       } else {
-        if (errorCode == 'PURCHASE_LIMIT_EXCEEDED') {
-          itemPurchaseAvailableOnlyOneAlert(errorMessage);
+        if (errorData.errorCode == 'PURCHASE_LIMIT_EXCEEDED') {
+          itemPurchaseAvailableOnlyOneAlert(errorData.errorMessage);
         } else {
           itemPurchaseImpossibleAlert();
         }
@@ -202,7 +206,9 @@ class ShopDetailController extends GetxController {
   }
 
   void onClickPurchaseItem(tradeSymbol) {
-    if ((tradeSymbol == 'STIK' ? double.parse(walletMasterController.stik.value.uiAmountString!) : double.parse(walletMasterController.tik.value.uiAmountString!)) < selectedItem.value.price) {
+    purchaseItemCount.value = 1;
+    if ((tradeSymbol == 'STIK' ? double.parse(walletMasterController.stik.value.uiAmountString!) : double.parse(walletMasterController.tik.value.uiAmountString!)) <
+        (selectedItem.value.itemCategory == 'DISPOSABLE' ? purchaseItemSumPrice.value : selectedItem.value.price)) {
       isShortBalance.value = true;
       showTikShortBalancePopup(tradeSymbol);
     } else {
