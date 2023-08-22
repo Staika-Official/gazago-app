@@ -79,6 +79,7 @@ SvgPicture iconGo = SvgPicture.asset('assets/images/activity/ico_go.svg', width:
 SvgPicture iconGoSmall = SvgPicture.asset('assets/images/activity/ico_go.svg', width: 18.sp, height: 18.sp);
 SvgPicture iconExclamation = SvgPicture.asset('assets/images/activity/ico_exclamation.svg', width: 24.sp, height: 24.sp);
 SvgPicture iconFairplayAlert = SvgPicture.asset('assets/images/activity/ico_alert.svg', width: 44.sp, height: 44.sp);
+SvgPicture iconPresentBox = SvgPicture.asset('assets/images/ic_present_box.svg', width: 54.sp, height: 54.sp);
 // archive
 SvgPicture iconArchiveDetailBadge = SvgPicture.asset('assets/images/archive/ico_archive_detail_badge.svg', width: 15.sp, height: 20.sp, color: Colors.black);
 SvgPicture iconWasteBasket = SvgPicture.asset('assets/images/common/ico_wastebasket.svg', width: 15.sp, height: 20.sp);
