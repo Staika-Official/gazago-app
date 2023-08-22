@@ -162,6 +162,7 @@ class ChallengeDetail extends StatelessWidget {
                 },
               ),
             NestedScrollView(
+              controller: controller.leaderboardScrollController,
               headerSliverBuilder: (context, value) {
                 return [
                   Obx(() {

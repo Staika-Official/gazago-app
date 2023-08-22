@@ -2,8 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:gaza_go/constants/config.dart';
 import 'package:gaza_go/constants/enums.dart';
-import 'package:gaza_go/constants/routes.dart';
-import 'package:gaza_go/flavors.dart';
 import 'package:gaza_go/platform/controllers/leaderboard_controller.dart';
 import 'package:gaza_go/platform/helpers/base_helper.dart';
 import 'package:gaza_go/platform/models/ranker_model.dart';
@@ -844,28 +842,28 @@ class LeaderboardHome extends StatelessWidget {
                       lineHeight: 18,
                       fontWeight: 600,
                     ),
-                    Padding(
-                      padding: EdgeInsets.only(left: 10.0.sp),
-                      child: InkWell(
-                        onTap: () => Get.toNamed(Routes.webView, arguments: {'linkUrl': '${F.leaderboardUrl}/${formatDateUntilDay(controller.selectedDate.toString())}'}),
-                        child: Row(
-                          children: [
-                            StyledText(
-                              '더보기',
-                              color: lightGrayColor,
-                              fontSize: 12,
-                              lineHeight: 14,
-                              fontWeight: 600,
-                              letterSpacing: -.1,
-                            ),
-                            Padding(
-                              padding: EdgeInsets.only(left: 4.0.sp),
-                              child: iconArrowRightTriangle,
-                            )
-                          ],
-                        ),
-                      ),
-                    ),
+                    // Padding(
+                    //   padding: EdgeInsets.only(left: 10.0.sp),
+                    //   child: InkWell(
+                    //     onTap: () => Get.toNamed(Routes.webView, arguments: {'linkUrl': '${F.leaderboardUrl}/${formatDateUntilDay(controller.selectedDate.toString())}'}),
+                    //     child: Row(
+                    //       children: [
+                    //         StyledText(
+                    //           '더보기',
+                    //           color: lightGrayColor,
+                    //           fontSize: 12,
+                    //           lineHeight: 14,
+                    //           fontWeight: 600,
+                    //           letterSpacing: -.1,
+                    //         ),
+                    //         Padding(
+                    //           padding: EdgeInsets.only(left: 4.0.sp),
+                    //           child: iconArrowRightTriangle,
+                    //         )
+                    //       ],
+                    //     ),
+                    //   ),
+                    // ),
                   ],
                 ),
                 Row(
