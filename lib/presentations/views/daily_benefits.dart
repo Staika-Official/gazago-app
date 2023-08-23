@@ -2,7 +2,6 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:flutter_svg_provider/flutter_svg_provider.dart' as sp;
 import 'package:gaza_go/constants/config.dart';
 import 'package:gaza_go/platform/controllers/daily_benefit_controller.dart';
 import 'package:gaza_go/platform/helpers/alert_helper.dart';
@@ -16,6 +15,44 @@ import 'package:get/get.dart';
 
 class DailyBenefits extends StatelessWidget {
   const DailyBenefits({super.key});
+
+  Widget _renderTitleText(String title) {
+    List<String> list = title.split(RegExp(r'([0-9]+(\s|\S)TIK)|([0-9]+(\s|\S)GO)|(아이템)'));
+    List<String?> keywords = RegExp(r'([0-9]+(\s|\S)TIK)|([0-9]+(\s|\S)GO)|(아이템)').allMatches(title).map((match) => match.group(0)).toList();
+    List<TextSpan> textSpanList = List.empty(growable: true);
+
+    for (int idx = 1; idx < list.length; idx++) {
+      textSpanList.add(
+        TextSpan(
+          text: keywords[idx - 1],
+          style: TextStyle(color: skyBlueColor),
+        ),
+      );
+
+      textSpanList.add(
+        TextSpan(
+          text: list[idx],
+        ),
+      );
+    }
+
+    return RichText(
+      text: TextSpan(
+        style: const TextStyle(
+          color: Color(0xffF9F9F9),
+          fontWeight: FontWeight.w500,
+          fontSize: 20,
+          height: 20 / 18,
+        ),
+        children: [
+          TextSpan(
+            text: list.first,
+          ),
+          ...textSpanList,
+        ],
+      ),
+    );
+  }
 
   List<Widget> _renderDailyBenefitList(DailyBenefitController controller) {
     return controller.dailyBenefitList.value!.benefits.asMap().entries.map(
@@ -47,8 +84,8 @@ class DailyBenefits extends StatelessWidget {
     return Obx(() {
       return DefaultContainer(
         backgroundColor: subBg01Color,
-        titleWidget: Row(
-          mainAxisAlignment: MainAxisAlignment.center,
+        titleWidget: Stack(
+          clipBehavior: Clip.none,
           children: [
             const StyledText(
               '일일혜택',
@@ -56,18 +93,22 @@ class DailyBenefits extends StatelessWidget {
               fontWeight: 500,
               lineHeight: 18,
             ),
-            Container(
-              margin: const EdgeInsets.only(left: 8),
-              padding: const EdgeInsets.symmetric(horizontal: 7, vertical: 5),
-              decoration: BoxDecoration(
-                color: skyBlueColor,
-                borderRadius: BorderRadius.circular(9),
-              ),
-              child: const StyledText(
-                'BETA',
-                fontSize: 12,
-                fontWeight: 600,
-                color: Colors.black,
+            Positioned(
+              right: -50,
+              top: -3,
+              child: Container(
+                margin: const EdgeInsets.only(left: 8),
+                padding: const EdgeInsets.symmetric(horizontal: 7, vertical: 5),
+                decoration: BoxDecoration(
+                  color: skyBlueColor,
+                  borderRadius: BorderRadius.circular(9),
+                ),
+                child: const StyledText(
+                  'Beta',
+                  fontSize: 12,
+                  fontWeight: 600,
+                  color: Colors.black,
+                ),
               ),
             )
           ],
@@ -79,11 +120,16 @@ class DailyBenefits extends StatelessWidget {
               child: Column(
                 mainAxisSize: MainAxisSize.min,
                 children: [
-                  StyledText(
-                    controller.formattedDate.value,
-                    fontSize: 16,
-                    lineHeight: 16,
-                    fontWeight: 500,
+                  Padding(
+                    padding: const EdgeInsets.only(
+                      top: 10,
+                    ),
+                    child: StyledText(
+                      controller.formattedDate.value,
+                      fontSize: 16,
+                      lineHeight: 16,
+                      fontWeight: 500,
+                    ),
                   ),
                   Padding(
                     padding: const EdgeInsets.only(top: 26, bottom: 11),
@@ -91,20 +137,21 @@ class DailyBenefits extends StatelessWidget {
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
                         StyledText(
-                          controller.dailyBenefitList.value!.userExercise.distance! > 1000
-                              ? formatMeterToKilometer(controller.dailyBenefitList.value!.userExercise.distance!.toInt())
+                          controller.dailyBenefitList.value!.userExercise.distance! >= 1000
+                              ? formatDecimalPlaces(double.parse(formatMeterToKilometer(controller.dailyBenefitList.value!.userExercise.distance!.toInt())), 1)
                               : formatDecimalPlaces(controller.dailyBenefitList.value!.userExercise.distance!, 0),
                           fontFamily: 'Montserrat',
                           fontSize: 50,
                           lineHeight: 50,
-                          fontWeight: 600,
+                          fontWeight: 500,
+                          letterSpacing: -0.3,
                         ),
                         StyledText(
-                          controller.dailyBenefitList.value!.userExercise.distance! > 1000 ? 'km' : 'm',
+                          controller.dailyBenefitList.value!.userExercise.distance! >= 1000 ? 'km' : 'm',
                           fontFamily: 'Montserrat',
                           fontSize: 50,
                           lineHeight: 50,
-                          fontWeight: 500,
+                          fontWeight: 400,
                         ),
                       ],
                     ),
@@ -124,20 +171,17 @@ class DailyBenefits extends StatelessWidget {
                         child: Ink(
                           width: 24,
                           height: 24,
-                          decoration: BoxDecoration(
-                            image: const DecorationImage(image: sp.Svg('assets/images/ico_refresh.svg') as ImageProvider),
-                            borderRadius: BorderRadius.circular(24),
-                          ),
                           child: InkWell(
                             onTap: () => controller.refreshController(),
                             borderRadius: BorderRadius.circular(24),
+                            child: iconRefresh,
                           ),
                         ),
                       )
                     ],
                   ),
                   Padding(
-                    padding: const EdgeInsets.only(top: 20, bottom: 40),
+                    padding: const EdgeInsets.only(top: 18, bottom: 25),
                     child: SizedBox(
                       width: 280,
                       child: Stack(
@@ -180,20 +224,14 @@ class DailyBenefits extends StatelessWidget {
                   Align(
                     alignment: Alignment.centerLeft,
                     child: FittedBox(
-                      fit: BoxFit.fitWidth,
+                      fit: BoxFit.scaleDown,
                       child: Padding(
-                        padding: const EdgeInsets.only(top: 16, left: 20, right: 20, bottom: 36),
+                        padding: const EdgeInsets.only(top: 16, left: 20, right: 20, bottom: 24),
                         child: Row(
                           children: [
-                            const StyledText(
-                              '매일 걷기와 광고를 보고 혜택을 받아요',
-                              fontSize: 20,
-                              lineHeight: 18,
-                              fontWeight: 500,
-                              color: Color(0xffF9F9F9),
-                            ),
+                            _renderTitleText(controller.dailyBenefitList.value!.label),
                             Padding(
-                              padding: EdgeInsets.only(left: 5.0.sp),
+                              padding: EdgeInsets.only(left: 5.0.sp, bottom: 3),
                               child: SizedBox(
                                 width: 20,
                                 height: 20,
@@ -213,7 +251,7 @@ class DailyBenefits extends StatelessWidget {
                                                 children: [
                                                   Container(
                                                     width: double.infinity,
-                                                    padding: EdgeInsets.only(top: 49.sp, left: 29.sp, right: 29.sp, bottom: 50.sp),
+                                                    padding: EdgeInsets.only(top: 44.sp, left: 29.sp, right: 29.sp, bottom: 42.sp),
                                                     decoration: BoxDecoration(
                                                       color: popupBgColor,
                                                       borderRadius: BorderRadius.circular(10.sp),
@@ -221,24 +259,22 @@ class DailyBenefits extends StatelessWidget {
                                                     child: Column(
                                                       crossAxisAlignment: CrossAxisAlignment.start,
                                                       children: [
-                                                        Padding(
-                                                          padding: EdgeInsets.only(top: 20.0.sp),
-                                                          child: const StyledText(
-                                                            '일일 혜택 안내',
-                                                            fontSize: 18,
-                                                            fontWeight: 700,
-                                                          ),
+                                                        const StyledText(
+                                                          '일일 혜택 안내',
+                                                          fontSize: 18,
+                                                          fontWeight: 700,
                                                         ),
                                                         Padding(
-                                                          padding: EdgeInsets.only(top: 8.0.sp),
+                                                          padding: EdgeInsets.only(top: 29.sp),
                                                           child: const Column(
                                                             crossAxisAlignment: CrossAxisAlignment.start,
                                                             children: [
                                                               StyledText(
-                                                                '일일 혜택은 광고 수익으로 운영되며, 광고를 시청하신 후에 보상으로 아이템 또는 TIK등을 받을 수 있어요. \n\n최대한 혜택을 드리고자, 다소 길이가 길거나 불필요하게 느껴지는 광고가 나올 수 있다는 점 양해 부탁드려요. \n\n일일 혜택은 현재 베타로 운영되고 있으며, 상황에 따라 사전 고지 없이 변경될 수 있어요.',
+                                                                '일일 혜택은 광고 수익으로 운영되며, 광고를 시청하신 후에 보상으로 아이템 또는 TIK등을 받을 수 있어요. \n최대한 혜택을 드리고자, 다소 길이가 길거나 불필요하게 느껴지는 광고가 나올 수 있다는 점 양해 부탁드려요. \n일일 혜택은 현재 베타로 운영되고 있으며, 상황에 따라 사전 고지 없이 변경될 수 있어요.',
                                                                 fontSize: 14,
                                                                 fontWeight: 600,
-                                                                lineHeight: 16,
+                                                                lineHeight: 24,
+                                                                letterSpacing: -0.3,
                                                               ),
                                                             ],
                                                           ),
@@ -246,7 +282,14 @@ class DailyBenefits extends StatelessWidget {
                                                       ],
                                                     ),
                                                   ),
-                                                  Positioned(right: 12, top: 20, child: InkWell(onTap: () => Get.back(), child: iconCloseWhite)),
+                                                  Positioned(
+                                                    right: 12,
+                                                    top: 12,
+                                                    child: InkWell(
+                                                      onTap: () => Get.back(),
+                                                      child: iconCloseWhite,
+                                                    ),
+                                                  ),
                                                 ],
                                               ),
                                             ],
@@ -265,27 +308,43 @@ class DailyBenefits extends StatelessWidget {
                       ),
                     ),
                   ),
-                  controller.dailyBenefitList.value == null
-                      ? const Expanded(
+                  controller.dataGetLoading.value
+                      ? const SizedBox(
+                          height: 200,
                           child: Center(
-                            child: StyledText('no data'),
+                            child: SizedBox(
+                              width: 40,
+                              height: 40,
+                              child: CircularProgressIndicator(),
+                            ),
                           ),
                         )
-                      : Padding(
-                          padding: const EdgeInsets.only(bottom: 20),
-                          child: GridView.count(
-                            crossAxisCount: 3,
-                            mainAxisSpacing: 18,
-                            crossAxisSpacing: 10,
-                            childAspectRatio: 110 / 155,
-                            physics: const ClampingScrollPhysics(),
-                            padding: const EdgeInsets.only(left: 20, right: 20),
-                            shrinkWrap: true,
-                            children: [
-                              ..._renderDailyBenefitList(controller),
-                            ],
-                          ),
-                        )
+                      : controller.dailyBenefitList.value != null && controller.dailyBenefitList.value!.benefits.isEmpty
+                          ? const SizedBox(
+                              height: 200,
+                              child: Center(
+                                child: StyledText(
+                                  '일일 혜택이 없습니다.',
+                                  fontSize: 16,
+                                  fontWeight: 600,
+                                ),
+                              ),
+                            )
+                          : Padding(
+                              padding: const EdgeInsets.only(bottom: 20),
+                              child: GridView.count(
+                                crossAxisCount: 3,
+                                mainAxisSpacing: 18,
+                                crossAxisSpacing: 10,
+                                childAspectRatio: 110 / 144,
+                                physics: const ClampingScrollPhysics(),
+                                padding: const EdgeInsets.only(left: 20, right: 20),
+                                shrinkWrap: true,
+                                children: [
+                                  ..._renderDailyBenefitList(controller),
+                                ],
+                              ),
+                            )
                 ],
               ),
             ),
@@ -336,7 +395,7 @@ class _DailyBenefitItemState extends State<DailyBenefitItem> {
           const BoxShadow(
             color: Colors.black,
             offset: Offset(1, 2),
-            blurRadius: 4.0,
+            blurRadius: 0.0,
             spreadRadius: 0.0,
           ),
         ],
@@ -367,9 +426,12 @@ class _DailyBenefitItemState extends State<DailyBenefitItem> {
                 ),
               ),
             ),
-          Padding(
-            padding: const EdgeInsets.only(top: 23, left: 15, right: 15, bottom: 12),
+          Container(
+            width: double.infinity,
+            padding: const EdgeInsets.only(top: 15, left: 10, right: 10, bottom: 5),
             child: Column(
+              crossAxisAlignment: CrossAxisAlignment.center,
+              mainAxisAlignment: MainAxisAlignment.center,
               mainAxisSize: MainAxisSize.min,
               children: [
                 widget.userDistance < widget.benefitItem.distance
@@ -378,15 +440,17 @@ class _DailyBenefitItemState extends State<DailyBenefitItem> {
                         ? SvgPicture.network(
                             widget.benefitItem.imageUrl!,
                             fit: BoxFit.fitHeight,
-                            width: 40,
-                            height: 40,
+                            width: 50,
+                            height: 50,
                             placeholderBuilder: (BuildContext context) => const Center(child: SizedBox.square(dimension: 30, child: CircularProgressIndicator())),
                             headers: imageNetworkHeader,
                           )
                         : CachedNetworkImage(
                             imageUrl: widget.benefitItem.imageUrl!,
-                            height: 40,
-                            width: 40,
+                            height: 50,
+                            width: 50,
+                            placeholder: (context, string) => const Center(child: SizedBox.square(dimension: 30, child: CircularProgressIndicator())),
+                            httpHeaders: imageNetworkHeader,
                           ),
                 Padding(
                   padding: const EdgeInsets.symmetric(vertical: 10),
@@ -394,27 +458,30 @@ class _DailyBenefitItemState extends State<DailyBenefitItem> {
                     child: widget.benefitItem.distance == 0
                         ? const StyledText(
                             '출석체크',
-                            fontFamily: 'Montserrat',
+                            fontFamily: 'Pretendard',
                             fontSize: 20,
                             lineHeight: 18,
-                            fontWeight: 600,
+                            fontWeight: 500,
                           )
                         : Row(
                             mainAxisAlignment: MainAxisAlignment.center,
                             children: [
                               StyledText(
-                                widget.benefitItem.distance > 1000 ? formatMeterToKilometer(widget.benefitItem.distance.toInt()) : formatDecimalPlaces(widget.benefitItem.distance, 0),
-                                fontFamily: 'Montserrat',
-                                fontSize: 20,
-                                lineHeight: 18,
-                                fontWeight: 600,
-                              ),
-                              StyledText(
-                                widget.benefitItem.distance > 1000 ? 'km' : 'm',
+                                widget.benefitItem.distance >= 1000 ? formatMeterToKilometer(widget.benefitItem.distance.toInt()) : formatDecimalPlaces(widget.benefitItem.distance, 0),
                                 fontFamily: 'Montserrat',
                                 fontSize: 20,
                                 lineHeight: 18,
                                 fontWeight: 500,
+                                letterSpacing: -0.3,
+                                color: widget.benefitItem.received || widget.userDistance < widget.benefitItem.distance ? deepGrayColor : Colors.white,
+                              ),
+                              StyledText(
+                                widget.benefitItem.distance >= 1000 ? 'km' : 'm',
+                                fontFamily: 'Montserrat',
+                                fontSize: 20,
+                                lineHeight: 18,
+                                fontWeight: 400,
+                                color: widget.benefitItem.received || widget.userDistance < widget.benefitItem.distance ? deepGrayColor : Colors.white,
                               ),
                             ],
                           ),
@@ -426,7 +493,6 @@ class _DailyBenefitItemState extends State<DailyBenefitItem> {
                   child: Container(
                     margin: const EdgeInsets.only(bottom: 3),
                     child: Ink(
-                      width: double.infinity,
                       decoration: BoxDecoration(
                         color: widget.benefitItem.received || widget.userDistance < widget.benefitItem.distance ? subBg01Color : skyBlueColor,
                         border: Border.all(
@@ -451,6 +517,9 @@ class _DailyBenefitItemState extends State<DailyBenefitItem> {
                                   showToastPopup('혜택은 순서대로 받을 수 있어요.');
                                   return;
                                 }
+                                if (_loading) {
+                                  return;
+                                }
                                 toggleLoadingState();
                                 await controller.requestBenefit(widget.benefitItem);
                                 toggleLoadingState();
@@ -459,13 +528,14 @@ class _DailyBenefitItemState extends State<DailyBenefitItem> {
                         child: Padding(
                           padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 8.0),
                           child: FittedBox(
-                            fit: BoxFit.fitWidth,
+                            fit: BoxFit.scaleDown,
                             child: StyledText(
                               widget.benefitItem.received ? widget.benefitItem.labelReceived : widget.benefitItem.label,
                               fontSize: 10,
                               lineHeight: 10,
                               fontWeight: 600,
                               letterSpacing: -0.03,
+                              textAlign: TextAlign.center,
                               color: widget.userDistance < widget.benefitItem.distance
                                   ? deepGrayColor
                                   : widget.benefitItem.received

@@ -6,10 +6,12 @@ part 'daily_benefit_list_model.g.dart';
 
 @JsonSerializable(explicitToJson: true)
 class DailyBenefitListModel {
+  String label;
   UserExerciseModel userExercise;
   List<BenefitItemModel> benefits;
 
   DailyBenefitListModel({
+    required this.label,
     required this.userExercise,
     required this.benefits,
   });

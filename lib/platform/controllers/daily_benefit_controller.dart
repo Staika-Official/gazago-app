@@ -2,7 +2,9 @@ import 'dart:async';
 import 'dart:io';
 
 import 'package:gaza_go/flavors.dart';
+import 'package:gaza_go/platform/controllers/activity_controller.dart';
 import 'package:gaza_go/platform/helpers/alert_helper.dart';
+import 'package:gaza_go/platform/helpers/base_helper.dart';
 import 'package:gaza_go/platform/models/benefit_item_model.dart';
 import 'package:gaza_go/platform/models/daily_benefit_list_model.dart';
 import 'package:gaza_go/platform/models/error_response_data_model.dart';
@@ -14,6 +16,7 @@ import 'package:intl/intl.dart';
 class DailyBenefitController extends GetxController {
   Rxn<DailyBenefitListModel> dailyBenefitList = Rxn();
   RxBool dataGetLoading = RxBool(false);
+  bool adIsLoading = false;
   List<RewardedAd?> dailyRewardAdList = [null, null];
   int activeAdIndex = 0;
   RxDouble get maxRewardDistance {
@@ -29,6 +32,8 @@ class DailyBenefitController extends GetxController {
     return RxString(DateFormat('yyyy. MM. dd EEEE', 'ko').format(todaysDate.value.toLocal()));
   }
 
+  DateTime? adViewTime;
+
   @override
   void onInit() async {
     await initController();
@@ -42,6 +47,7 @@ class DailyBenefitController extends GetxController {
 
   Future<void> refreshController() async {
     await getDailyBenefitsList();
+    todaysDate.value = DateTime.now();
   }
 
   Future<void> getDailyBenefitsList() async {
@@ -65,42 +71,56 @@ class DailyBenefitController extends GetxController {
   }
 
   Future<void> loadAd() async {
-    await RewardedAd.load(
-      // adUnitId: Platform.isIOS ? 'ca-app-pub-3940256099942544/1712485313' : 'ca-app-pub-3940256099942544/5224354917',
-      adUnitId: getAdUnitId(),
-      request: const AdRequest(),
-      rewardedAdLoadCallback: RewardedAdLoadCallback(
-        onAdLoaded: (RewardedAd ad) {
-          print('ad loaded');
-          if (dailyRewardAdList.first == null) {
-            dailyRewardAdList.first = ad;
-          } else {
-            dailyRewardAdList.last = ad;
-          }
-        },
-        onAdFailedToLoad: (error) {
-          print('RewardedAd failed to load: $error');
-        },
-      ),
-    );
-  }
-
-  Future<void> requestBenefit(BenefitItemModel benefitItem) async {
-    if (benefitItem.adDisplayed) {
-      await requestDailyBenefitAd(benefitItem);
-    } else {
-      await fetchDailyBenefit(benefitItem, null);
+    if (!adIsLoading) {
+      await RewardedAd.load(
+        // adUnitId: Platform.isIOS ? 'ca-app-pub-3940256099942544/1712485313' : 'ca-app-pub-3940256099942544/5224354917',
+        adUnitId: getAdUnitId(),
+        request: const AdRequest(),
+        rewardedAdLoadCallback: RewardedAdLoadCallback(
+          onAdLoaded: (RewardedAd ad) {
+            print('ad loaded');
+            if (dailyRewardAdList.first == null) {
+              dailyRewardAdList.first = ad;
+            } else {
+              dailyRewardAdList.last = ad;
+            }
+            adIsLoading = false;
+          },
+          onAdFailedToLoad: (error) {
+            print('RewardedAd failed to load: $error');
+            adIsLoading = false;
+            loadAd();
+          },
+        ),
+      );
     }
   }
 
-  Future<void> fetchDailyBenefit(BenefitItemModel benefitItem, String? adId) async {
+  Future<void> requestBenefit(BenefitItemModel benefitItem) async {
+    DateTime requestTime = DateTime.now();
+    DateTime midnight = DateTime(todaysDate.value.year, todaysDate.value.month, todaysDate.value.day + 1).toLocal();
+
+    if (requestTime.isBefore(midnight)) {
+      if (benefitItem.adDisplayed) {
+        await requestDailyBenefitAd(benefitItem);
+      } else {
+        await fetchDailyBenefit(benefitItem, formatDateUntilDay(requestTime.toString()), null);
+      }
+    } else {
+      showToastPopup('자정이 지났습니다. 새로고침 해주세요');
+    }
+  }
+
+  Future<void> fetchDailyBenefit(BenefitItemModel benefitItem, String benefitDate, String? adId) async {
     await DailyBenefitsService.fetchDailyBenefit(
       benefitItem.id,
+      benefitDate,
       adId,
-      successCallback: (BenefitItemModel updatedItem) {
+      successCallback: (BenefitItemModel updatedItem) async {
         int index = dailyBenefitList.value!.benefits.indexWhere((item) => updatedItem.id == item.id);
         dailyBenefitList.value!.benefits[index] = updatedItem;
         dailyBenefitList.refresh();
+        Get.find<ActivityController>().getUserState();
       },
       errorCallback: (ErrorResponseDataModel? errorResponse) {
         if (errorResponse != null && errorResponse.errorCode == 'DAILY_BENEFIT_TIME_UP') {
@@ -113,40 +133,56 @@ class DailyBenefitController extends GetxController {
 
   Future<void> requestDailyBenefitAd(BenefitItemModel benefitItem) async {
     Completer completer = Completer();
-    dailyRewardAdList[activeAdIndex]!.fullScreenContentCallback = FullScreenContentCallback(
-      // Called when the ad showed the full screen content.
-      onAdShowedFullScreenContent: (ad) {
-        print('onAdShowedFullScreenContent');
-        loadAd();
-      },
-      // Called when an impression occurs on the ad.
-      onAdImpression: (ad) {},
-      // Called when the ad failed to show full screen content.
-      onAdFailedToShowFullScreenContent: (ad, err) {
-        // Dispose the ad here to free resources.
+    if (dailyRewardAdList[activeAdIndex] != null) {
+      dailyRewardAdList[activeAdIndex]!.fullScreenContentCallback = FullScreenContentCallback(
+        // Called when the ad showed the full screen content.
+        onAdShowedFullScreenContent: (ad) {
+          print('onAdShowedFullScreenContent');
+          adViewTime = DateTime.now();
+          loadAd();
+        },
+        // Called when an impression occurs on the ad.
+        onAdImpression: (ad) {},
+        // Called when the ad failed to show full screen content.
+        onAdFailedToShowFullScreenContent: (ad, AdError err) {
+          // Dispose the ad here to free resources.
+          print('failed to show ad');
+          print(err.code);
+          if (err.code == 3 && Platform.isAndroid) {
+            showToastPopup('잠금상태에선 광고를 시청할 수 없습니다.');
+            completer.complete();
+          } else {
+            completer.complete();
+            dailyRewardAdList[activeAdIndex]!.dispose();
+          }
+        },
+        // Called when the ad dismissed full screen content.
+        onAdDismissedFullScreenContent: (ad) async {
+          // Dispose the ad here to free resources.
+          dailyRewardAdList[activeAdIndex]!.dispose();
+        },
+        // Called when a click is recorded for an ad.
+        onAdClicked: (ad) {},
+      );
+      try {
+        dailyRewardAdList[activeAdIndex]!.setImmersiveMode(true);
+        dailyRewardAdList[activeAdIndex]!.show(onUserEarnedReward: (AdWithoutView ad, RewardItem reward) async {
+          await fetchDailyBenefit(benefitItem, formatDateUntilDay(adViewTime.toString()), dailyRewardAdList[activeAdIndex]!.adUnitId);
+          dailyRewardAdList[activeAdIndex] = null;
+          activeAdIndex = activeAdIndex == 0 ? 1 : 0;
+          print('$ad with reward $RewardItem(${reward.amount}, ${reward.type})');
+          completer.complete();
+        });
+      } catch (e) {
+        showToastPopup('광고를 시청할 수 없습니다. 잠시 후 다시 시도해주세요');
+        dailyRewardAdList[0] = null;
+        dailyRewardAdList[1] = null;
+        await loadAd();
         completer.complete();
-        dailyRewardAdList[activeAdIndex]!.dispose();
-      },
-      // Called when the ad dismissed full screen content.
-      onAdDismissedFullScreenContent: (ad) async {
-        // Dispose the ad here to free resources.
-        await fetchDailyBenefit(benefitItem, dailyRewardAdList[activeAdIndex]!.adUnitId);
-        dailyRewardAdList[activeAdIndex]!.dispose();
-        dailyRewardAdList[activeAdIndex] = null;
-        activeAdIndex = activeAdIndex == 0 ? 1 : 0;
-        completer.complete();
-      },
-      // Called when a click is recorded for an ad.
-      onAdClicked: (ad) {},
-    );
-    dailyRewardAdList[activeAdIndex]!.setImmersiveMode(true);
-    try {
-      dailyRewardAdList[activeAdIndex]!.show(onUserEarnedReward: (AdWithoutView ad, RewardItem reward) {
-        print('$ad with reward $RewardItem(${reward.amount}, ${reward.type})');
-      });
-    } catch (e) {
-      showToastPopup('광고를 시청할 수 없습니다.');
+      }
+    } else {
       await loadAd();
+      completer.complete();
     }
 
     return completer.future;

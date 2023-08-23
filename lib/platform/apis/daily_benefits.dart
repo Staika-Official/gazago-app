@@ -7,9 +7,10 @@ class DailyBenefitApi {
     return await Api.client(serviceUrl: ServiceUrl.dailyBenefitsService).get('/users/$userId');
   }
 
-  static Future<Response> fetchDailyBenefit(String userId, int benefitId, String? adId) async {
+  static Future<Response> fetchDailyBenefit(String userId, int benefitId, String benefitDate, String? adId) async {
     return await Api.client(serviceUrl: ServiceUrl.dailyBenefitsService).post('/users/$userId/receive/$benefitId', data: {
       "benefitId": benefitId,
+      "benefitDate": benefitDate,
       "adId": adId,
     });
   }

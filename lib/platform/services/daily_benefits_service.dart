@@ -20,8 +20,8 @@ class DailyBenefitsService {
     }
   }
 
-  static Future<void> fetchDailyBenefit(int benefitId, String? adId, {required Function successCallback, Function? errorCallback}) async {
-    Response res = await DailyBenefitApi.fetchDailyBenefit(userId!, benefitId, adId);
+  static Future<void> fetchDailyBenefit(int benefitId, String benefitDate, String? adId, {required Function successCallback, Function? errorCallback}) async {
+    Response res = await DailyBenefitApi.fetchDailyBenefit(userId!, benefitId, benefitDate, adId);
     if (res.statusCode == 200) {
       successCallback(BenefitItemModel.fromJson({...res.data, 'received': true}));
     } else {

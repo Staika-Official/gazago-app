@@ -13,6 +13,7 @@ class BenefitItemModel {
   String label;
   String labelReceived;
   bool received;
+  String? benefitDate;
 
   BenefitItemModel({
     required this.id,
@@ -24,6 +25,7 @@ class BenefitItemModel {
     required this.label,
     required this.labelReceived,
     required this.received,
+    this.benefitDate,
   });
 
   factory BenefitItemModel.fromJson(Map<String, dynamic> json) => _$BenefitItemModelFromJson(json);
