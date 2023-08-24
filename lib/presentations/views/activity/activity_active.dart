@@ -274,7 +274,7 @@ class ActivityActive extends StatelessWidget {
                     fontWeight: 500,
                   )
                 : StyledText(
-                    (controller.avgSpeed.value < 1 || controller.avgSpeed.value > 7) && controller.exerciseState.value == ExerciseState.ongoing || controller.stoppedExercising.value
+                    (controller.avgSpeed.value < 0.7 || controller.avgSpeed.value > 7) && controller.exerciseState.value == ExerciseState.ongoing || controller.stoppedExercising.value
                         ? '${controller.exerciseState.value.label} (보상 불가)'
                         : controller.exerciseState.value.label,
                     fontSize: 18,

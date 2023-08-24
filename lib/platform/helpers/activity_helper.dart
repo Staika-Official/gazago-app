@@ -5,7 +5,7 @@ import 'package:geolocator/geolocator.dart';
 double calculateAvgSpeed(List<double> speedList) {
   if (speedList.isNotEmpty) {
     double sumSpeed = speedList.fold(0, (summedValue, speed) => summedValue + speed);
-    return sumSpeed / speedList.length;
+    return sumSpeed / speedList.length >= 0 ? sumSpeed / speedList.length : 0;
   } else {
     return 0;
   }
