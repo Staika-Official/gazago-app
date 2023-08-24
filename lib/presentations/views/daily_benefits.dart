@@ -25,7 +25,9 @@ class DailyBenefits extends StatelessWidget {
       textSpanList.add(
         TextSpan(
           text: keywords[idx - 1],
-          style: TextStyle(color: skyBlueColor),
+          style: TextStyle(
+            color: skyBlueColor,
+          ),
         ),
       );
 
@@ -40,8 +42,9 @@ class DailyBenefits extends StatelessWidget {
       text: TextSpan(
         style: const TextStyle(
           color: Color(0xffF9F9F9),
-          fontWeight: FontWeight.w500,
+          fontWeight: FontWeight.w600,
           fontSize: 20,
+          fontFamily: 'Pretendard',
           height: 20 / 18,
         ),
         children: [
@@ -94,7 +97,7 @@ class DailyBenefits extends StatelessWidget {
               lineHeight: 18,
             ),
             Positioned(
-              right: -50,
+              right: -45,
               top: -3,
               child: Container(
                 margin: const EdgeInsets.only(left: 8),
@@ -108,6 +111,7 @@ class DailyBenefits extends StatelessWidget {
                   fontSize: 12,
                   fontWeight: 600,
                   color: Colors.black,
+                  letterSpacing: -0.1,
                 ),
               ),
             )
@@ -129,6 +133,7 @@ class DailyBenefits extends StatelessWidget {
                       fontSize: 16,
                       lineHeight: 16,
                       fontWeight: 500,
+                      letterSpacing: -0.1,
                     ),
                   ),
                   Padding(
@@ -183,12 +188,12 @@ class DailyBenefits extends StatelessWidget {
                   Padding(
                     padding: const EdgeInsets.only(top: 18, bottom: 25),
                     child: SizedBox(
-                      width: 280,
+                      width: 310,
                       child: Stack(
                         children: [
                           Container(
                             width: double.infinity,
-                            height: 13,
+                            height: 16,
                             decoration: BoxDecoration(
                               color: popupBgColor,
                               borderRadius: BorderRadius.circular(7),

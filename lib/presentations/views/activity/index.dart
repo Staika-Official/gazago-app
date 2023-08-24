@@ -399,7 +399,7 @@ class ActivityHome extends StatelessWidget {
                           alignment: Alignment.center,
                           children: [
                             Padding(
-                              padding: const EdgeInsets.only(bottom: 20),
+                              padding: const EdgeInsets.only(bottom: 50),
                               child: Center(
                                 child: Obx(() {
                                   return Row(
@@ -529,14 +529,15 @@ class ActivityHome extends StatelessWidget {
                                                           ),
                                                           child: StyledText(
                                                             Get.find<DailyBenefitController>().dailyBenefitList.value != null
-                                                                ? Get.find<DailyBenefitController>().dailyBenefitList.value!.label
+                                                                ? Get.find<DailyBenefitController>().dailyBenefitList.value!.label.replaceAll('과 ', '과\n')
                                                                 : 'GO를 누르고 걷고,\n일일 혜택도 받아보세요',
-                                                            fontSize: 16,
+                                                            fontSize: 17,
                                                             lineHeight: 20,
                                                             fontWeight: 600,
                                                             color: Colors.black,
                                                             softWrap: true,
                                                             overflowEllipsis: false,
+                                                            letterSpacing: -0.2,
                                                           ),
                                                         ),
                                                       )
