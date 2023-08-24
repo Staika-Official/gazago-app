@@ -23,11 +23,11 @@ class ActivityActive extends StatelessWidget {
 
   List<Widget> renderGauge(Color color) {
     List<Widget> gaugeList = List.empty(growable: true);
-    for (int i = 0; i < 60; i++) {
-      //15km / 0.25 = 60
+    for (int i = 0; i < 75; i++) {
+      //15km / 0.20 = 75
       Widget? gauge;
-      if (i > 1 && i < 28) {
-        // 1 ~ 6km
+      if (i > 2 && i < 35) {
+        // 0.6 ~ 7km
         gauge = Container(
           width: 3.sp,
           height: 21.sp,
@@ -485,7 +485,7 @@ class ActivityActive extends StatelessWidget {
                                   child: Row(
                                     children: [
                                       StyledText(
-                                        '1-7',
+                                        '0.7-7',
                                         color: deepGrayColor,
                                         fontSize: 14,
                                         lineHeight: 12,
