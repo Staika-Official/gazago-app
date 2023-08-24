@@ -226,7 +226,7 @@ class DailyBenefits extends StatelessWidget {
                     child: FittedBox(
                       fit: BoxFit.scaleDown,
                       child: Padding(
-                        padding: const EdgeInsets.only(top: 16, left: 20, right: 20, bottom: 24),
+                        padding: EdgeInsets.only(top: 16, left: 20.sp, right: 20.sp, bottom: 24),
                         child: Row(
                           children: [
                             _renderTitleText(controller.dailyBenefitList.value!.label),
@@ -334,11 +334,11 @@ class DailyBenefits extends StatelessWidget {
                               padding: const EdgeInsets.only(bottom: 20),
                               child: GridView.count(
                                 crossAxisCount: 3,
-                                mainAxisSpacing: 18,
-                                crossAxisSpacing: 10,
-                                childAspectRatio: 110 / 144,
+                                mainAxisSpacing: 18.sp,
+                                crossAxisSpacing: 10.sp,
+                                childAspectRatio: 110.sp / 147.sp,
                                 physics: const ClampingScrollPhysics(),
-                                padding: const EdgeInsets.only(left: 20, right: 20),
+                                padding: EdgeInsets.only(left: 20.sp, right: 20.sp),
                                 shrinkWrap: true,
                                 children: [
                                   ..._renderDailyBenefitList(controller),
@@ -404,8 +404,8 @@ class _DailyBenefitItemState extends State<DailyBenefitItem> {
         children: [
           if (widget.benefitItem.adDisplayed)
             Positioned(
-              top: 8,
-              right: 8,
+              top: 8.sp,
+              right: 8.sp,
               child: Container(
                 width: 22,
                 height: 15,
@@ -428,27 +428,31 @@ class _DailyBenefitItemState extends State<DailyBenefitItem> {
             ),
           Container(
             width: double.infinity,
-            padding: const EdgeInsets.only(top: 15, left: 10, right: 10, bottom: 5),
+            padding: EdgeInsets.only(top: 15, left: 10.sp, right: 10.sp, bottom: 5),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.center,
               mainAxisAlignment: MainAxisAlignment.center,
               mainAxisSize: MainAxisSize.min,
               children: [
                 widget.userDistance < widget.benefitItem.distance
-                    ? SvgPicture.asset('assets/images/ico_daily_benefit_locked.svg')
+                    ? SvgPicture.asset(
+                        'assets/images/ico_daily_benefit_locked.svg',
+                        width: 50.sp,
+                        height: 50.sp,
+                      )
                     : widget.benefitItem.imageUrl!.contains('.svg')
                         ? SvgPicture.network(
                             widget.benefitItem.imageUrl!,
                             fit: BoxFit.fitHeight,
-                            width: 50,
-                            height: 50,
+                            width: 50.sp,
+                            height: 50.sp,
                             placeholderBuilder: (BuildContext context) => const Center(child: SizedBox.square(dimension: 30, child: CircularProgressIndicator())),
                             headers: imageNetworkHeader,
                           )
                         : CachedNetworkImage(
                             imageUrl: widget.benefitItem.imageUrl!,
-                            height: 50,
-                            width: 50,
+                            height: 50.sp,
+                            width: 50.sp,
                             placeholder: (context, string) => const Center(child: SizedBox.square(dimension: 30, child: CircularProgressIndicator())),
                             httpHeaders: imageNetworkHeader,
                           ),
@@ -473,7 +477,7 @@ class _DailyBenefitItemState extends State<DailyBenefitItem> {
                                 lineHeight: 18,
                                 fontWeight: 500,
                                 letterSpacing: -0.3,
-                                color: widget.benefitItem.received || widget.userDistance < widget.benefitItem.distance ? deepGrayColor : Colors.white,
+                                color: widget.userDistance < widget.benefitItem.distance ? deepGrayColor : Colors.white,
                               ),
                               StyledText(
                                 widget.benefitItem.distance >= 1000 ? 'km' : 'm',
@@ -481,7 +485,7 @@ class _DailyBenefitItemState extends State<DailyBenefitItem> {
                                 fontSize: 20,
                                 lineHeight: 18,
                                 fontWeight: 400,
-                                color: widget.benefitItem.received || widget.userDistance < widget.benefitItem.distance ? deepGrayColor : Colors.white,
+                                color: widget.userDistance < widget.benefitItem.distance ? deepGrayColor : Colors.white,
                               ),
                             ],
                           ),
@@ -526,7 +530,7 @@ class _DailyBenefitItemState extends State<DailyBenefitItem> {
                               },
                         borderRadius: BorderRadius.circular(100),
                         child: Padding(
-                          padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 8.0),
+                          padding: EdgeInsets.symmetric(horizontal: 10.sp, vertical: 8.0),
                           child: FittedBox(
                             fit: BoxFit.scaleDown,
                             child: StyledText(
