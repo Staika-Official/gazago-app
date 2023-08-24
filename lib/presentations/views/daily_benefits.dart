@@ -203,11 +203,11 @@ class DailyBenefits extends StatelessWidget {
                             left: 0,
                             top: 0,
                             child: Container(
-                              width: 280 *
+                              width: 310 *
                                   (controller.dailyBenefitList.value!.userExercise.distance! >= controller.maxRewardDistance.value
                                       ? 1
                                       : controller.dailyBenefitList.value!.userExercise.distance! / controller.maxRewardDistance.value),
-                              height: 13,
+                              height: 16,
                               decoration: BoxDecoration(
                                 gradient: LinearGradient(
                                   begin: Alignment.centerLeft,

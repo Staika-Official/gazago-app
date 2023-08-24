@@ -16,9 +16,9 @@ import 'package:intl/intl.dart';
 class DailyBenefitController extends GetxController {
   Rxn<DailyBenefitListModel> dailyBenefitList = Rxn();
   RxBool dataGetLoading = RxBool(false);
-  bool adIsLoading = false;
-  List<RewardedAd?> dailyRewardAdList = [null, null];
-  int activeAdIndex = 0;
+  RxBool adIsLoading = RxBool(false);
+  RxList<RewardedAd?> dailyRewardAdList = RxList.empty(growable: true);
+  RxInt activeAdIndex = RxInt(0);
   RxDouble get maxRewardDistance {
     if (dailyBenefitList.value != null && dailyBenefitList.value!.benefits.isNotEmpty) {
       return RxDouble(dailyBenefitList.value!.benefits.last.distance);
@@ -32,7 +32,7 @@ class DailyBenefitController extends GetxController {
     return RxString(DateFormat('yyyy. MM. dd EEEE', 'ko').format(todaysDate.value.toLocal()));
   }
 
-  DateTime? adViewTime;
+  Rxn<DateTime> adViewTime = Rxn();
 
   @override
   void onInit() async {
@@ -71,7 +71,7 @@ class DailyBenefitController extends GetxController {
   }
 
   Future<void> loadAd() async {
-    if (!adIsLoading) {
+    if (!adIsLoading.value) {
       await RewardedAd.load(
         // adUnitId: Platform.isIOS ? 'ca-app-pub-3940256099942544/1712485313' : 'ca-app-pub-3940256099942544/5224354917',
         adUnitId: getAdUnitId(),
@@ -79,16 +79,20 @@ class DailyBenefitController extends GetxController {
         rewardedAdLoadCallback: RewardedAdLoadCallback(
           onAdLoaded: (RewardedAd ad) {
             print('ad loaded');
-            if (dailyRewardAdList.first == null) {
+            if (dailyRewardAdList.isEmpty) {
+              print('index: 0');
+              dailyRewardAdList.value = [null, null];
               dailyRewardAdList.first = ad;
             } else {
-              dailyRewardAdList.last = ad;
+              int index = activeAdIndex.value == 0 ? 1 : 0;
+              print('index: $index');
+              dailyRewardAdList[index] = ad;
             }
-            adIsLoading = false;
+            adIsLoading.value = false;
           },
           onAdFailedToLoad: (error) {
             print('RewardedAd failed to load: $error');
-            adIsLoading = false;
+            adIsLoading.value = false;
             loadAd();
           },
         ),
@@ -133,12 +137,12 @@ class DailyBenefitController extends GetxController {
 
   Future<void> requestDailyBenefitAd(BenefitItemModel benefitItem) async {
     Completer completer = Completer();
-    if (dailyRewardAdList[activeAdIndex] != null) {
-      dailyRewardAdList[activeAdIndex]!.fullScreenContentCallback = FullScreenContentCallback(
+    if (dailyRewardAdList[activeAdIndex.value] != null) {
+      dailyRewardAdList[activeAdIndex.value]!.fullScreenContentCallback = FullScreenContentCallback(
         // Called when the ad showed the full screen content.
         onAdShowedFullScreenContent: (ad) {
           print('onAdShowedFullScreenContent');
-          adViewTime = DateTime.now();
+          adViewTime.value = DateTime.now();
           loadAd();
         },
         // Called when an impression occurs on the ad.
@@ -153,27 +157,28 @@ class DailyBenefitController extends GetxController {
             completer.complete();
           } else {
             completer.complete();
-            dailyRewardAdList[activeAdIndex]!.dispose();
+            dailyRewardAdList[activeAdIndex.value]!.dispose();
           }
         },
         // Called when the ad dismissed full screen content.
         onAdDismissedFullScreenContent: (ad) async {
           // Dispose the ad here to free resources.
-          dailyRewardAdList[activeAdIndex]!.dispose();
         },
         // Called when a click is recorded for an ad.
         onAdClicked: (ad) {},
       );
       try {
-        dailyRewardAdList[activeAdIndex]!.setImmersiveMode(true);
-        dailyRewardAdList[activeAdIndex]!.show(onUserEarnedReward: (AdWithoutView ad, RewardItem reward) async {
-          await fetchDailyBenefit(benefitItem, formatDateUntilDay(adViewTime.toString()), dailyRewardAdList[activeAdIndex]!.adUnitId);
-          dailyRewardAdList[activeAdIndex] = null;
-          activeAdIndex = activeAdIndex == 0 ? 1 : 0;
+        dailyRewardAdList[activeAdIndex.value]!.setImmersiveMode(true);
+        dailyRewardAdList[activeAdIndex.value]!.show(onUserEarnedReward: (AdWithoutView ad, RewardItem reward) async {
+          await fetchDailyBenefit(benefitItem, formatDateUntilDay(adViewTime.toString()), dailyRewardAdList[activeAdIndex.value]!.adUnitId);
+          dailyRewardAdList[activeAdIndex.value]!.dispose();
+          dailyRewardAdList[activeAdIndex.value] = null;
+          activeAdIndex.value = activeAdIndex.value == 0 ? 1 : 0;
           print('$ad with reward $RewardItem(${reward.amount}, ${reward.type})');
           completer.complete();
         });
       } catch (e) {
+        print(e);
         showToastPopup('광고를 시청할 수 없습니다. 잠시 후 다시 시도해주세요');
         dailyRewardAdList[0] = null;
         dailyRewardAdList[1] = null;
