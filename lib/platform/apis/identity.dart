@@ -11,6 +11,6 @@ class IdentityApi {
     return await Api.client(
       serviceUrl: ServiceUrl.uaaService,
       allowCustomErrorHandler: true,
-    ).post('/user-identities/users/$userId/sms/verify', data: verifyData);
+    ).post('/v2/user-identities/users/$userId/sms/verify', data: verifyData);
   }
 }

@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:gaza_go/constants/enums.dart';
 import 'package:gaza_go/constants/routes.dart';
 import 'package:gaza_go/platform/helpers/alert_helper.dart';
+import 'package:gaza_go/platform/helpers/login_helper.dart';
 import 'package:gaza_go/platform/models/verification_user_model.dart';
 import 'package:gaza_go/platform/services/identity_service.dart';
 import 'package:gaza_go/platform/stores/hive_store.dart';
@@ -58,8 +59,12 @@ class VerificationCertCodeController extends GetxController {
       Get.until((route) => Get.currentRoute == Routes.home);
     }, errorCallback: (res) {
       if (res.data['errorCode'] == 'IDENTITY_ALREADY_VERIFIED') {
-        showToastPopup('본인인증이 완료되었습니다.');
+        showToastPopup(res.data['errorMessage']);
         Get.until((route) => Get.currentRoute == Routes.home);
+      }
+      if (res.data['errorCode'] == 'PENALTY_BLOCKED_USER') {
+        showToastPopup(res.data['errorMessage']);
+        forceLogout();
       } else {
         showInvalidCertCode(res.data['errorMessage']);
       }
