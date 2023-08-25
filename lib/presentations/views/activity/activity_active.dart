@@ -21,13 +21,13 @@ import 'package:simple_animations/movie_tween/movie_tween.dart';
 class ActivityActive extends StatelessWidget {
   const ActivityActive({Key? key}) : super(key: key);
 
-  List<Widget> renderGauge(Color color) {
+  List<Widget> renderGauge(ExerciseType exerciseType, Color color) {
     List<Widget> gaugeList = List.empty(growable: true);
     for (int i = 0; i < 75; i++) {
       //15km / 0.20 = 75
       Widget? gauge;
-      if (i > 2 && i < 35) {
-        // 0.6 ~ 7km
+      if (i > (exerciseType == ExerciseType.hiking ? 1 : 3) && i < 35) {
+        // hiking? 0.6 : 1 ~ 7km
         gauge = Container(
           width: 3.sp,
           height: 21.sp,
@@ -47,12 +47,12 @@ class ActivityActive extends StatelessWidget {
   }
 
   double calculateGaugePosition(BoxConstraints constraints, double speed) {
-    double spaceLeft = constraints.maxWidth - (60 * 3);
-    double spacesBetweenBars = spaceLeft / 59;
-    int barStep = ((speed > 15 ? 15 : speed) / 0.25).floor();
+    double spaceLeft = constraints.maxWidth - (75 * 3); //75 = bar 개수, 3= bar width
+    double spacesBetweenBars = spaceLeft / 74;
+    int barStep = ((speed > 15 ? 15 : speed) / 0.20).floor();
 
     if (barStep < 2) {
-      return 0.5;
+      return 0.5; //0.5 = gauge cursor width / 2
     } else {
       return (3 + spacesBetweenBars) * (barStep - 1) + 0.5;
     }
@@ -274,7 +274,9 @@ class ActivityActive extends StatelessWidget {
                     fontWeight: 500,
                   )
                 : StyledText(
-                    (controller.avgSpeed.value < 0.7 || controller.avgSpeed.value > 7) && controller.exerciseState.value == ExerciseState.ongoing || controller.stoppedExercising.value
+                    ((controller.selectedExerciseType.value == ExerciseType.hiking ? controller.avgSpeed.value < 0.7 : controller.avgSpeed.value < 1) || controller.avgSpeed.value > 7) &&
+                                controller.exerciseState.value == ExerciseState.ongoing ||
+                            controller.stoppedExercising.value
                         ? '${controller.exerciseState.value.label} (보상 불가)'
                         : controller.exerciseState.value.label,
                     fontSize: 18,
@@ -468,7 +470,7 @@ class ActivityActive extends StatelessWidget {
                                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                   crossAxisAlignment: CrossAxisAlignment.end,
                                   children: [
-                                    ...renderGauge(controller.exerciseStateGaugeColor.value),
+                                    ...renderGauge(controller.selectedExerciseType.value, controller.exerciseStateGaugeColor.value),
                                   ],
                                 ),
                                 Positioned(
@@ -485,7 +487,7 @@ class ActivityActive extends StatelessWidget {
                                   child: Row(
                                     children: [
                                       StyledText(
-                                        '0.7-7',
+                                        '${controller.selectedExerciseType.value == ExerciseType.hiking ? '0.7' : '1'}-7',
                                         color: deepGrayColor,
                                         fontSize: 14,
                                         lineHeight: 12,

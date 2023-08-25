@@ -236,7 +236,7 @@ class DailyBenefits extends StatelessWidget {
                           children: [
                             _renderTitleText(controller.dailyBenefitList.value!.label),
                             Padding(
-                              padding: EdgeInsets.only(left: 5.0.sp, bottom: 3),
+                              padding: EdgeInsets.only(left: 5.0.sp, bottom: 2),
                               child: SizedBox(
                                 width: 20,
                                 height: 20,
