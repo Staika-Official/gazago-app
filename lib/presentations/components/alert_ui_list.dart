@@ -5503,3 +5503,51 @@ void showAutoRechargeStaminaAlert(ActivityController controller) {
     ],
   );
 }
+
+void showConfirmNicknameChange(MyPageController controller) {
+  showAlert(
+    title: '닉네임을 변경하시겠습니까?',
+    contentWidget: Center(
+      child: Column(
+        children: [
+          Padding(
+            padding: EdgeInsets.only(top: 14.sp, bottom: 30.sp),
+            child: StyledText(
+              '닉네임은 최초 1번만 수정할 수 있어요.\n정말 수정하시겠어요?',
+              fontSize: 16.sp,
+              fontWeight: 500,
+              lineHeight: 22.sp,
+              color: lightGrayColor,
+              textAlign: TextAlign.center,
+            ),
+          ),
+        ],
+      ),
+    ),
+    actions: [
+      Expanded(
+        child: GazagoButton(
+          onTap: () async {
+            await controller.modifyMyAccountInfo();
+            Get.back();
+          },
+          buttonText: '네',
+          textColor: Colors.white,
+          buttonColor: popupBgColor,
+        ),
+      ),
+      SizedBox(
+        width: 9.sp,
+      ),
+      Expanded(
+        child: GazagoButton(
+          onTap: () {
+            Get.back();
+          },
+          buttonText: '아니요',
+          buttonColor: skyBlueColor,
+        ),
+      ),
+    ],
+  );
+}

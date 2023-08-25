@@ -35,6 +35,7 @@ class MyPageController extends GetxController {
   final RxBool isEditMode = RxBool(false);
   final TextEditingController nicknameTextController = TextEditingController();
   final int maxNickNameLength = 20;
+  final RxString originalNickname = RxString('');
 
   @override
   void onInit() {
@@ -44,22 +45,29 @@ class MyPageController extends GetxController {
 
   void getProfileInfo() async {
     await UaaService.getAccountInfo(
-      successCallback: (account) {
+      successCallback: (UserAccountModel account) {
         profile.update(
           (state) {
             state?.nickname = account.nickname;
             state?.profileImageUrl = account.profileImageUrl;
+            state?.availableChangeNickname = account.availableChangeNickname;
             state?.provider = account.provider;
             state?.email = account.email;
             state?.id = account.id;
             state?.authorities = account.authorities;
           },
         );
+        originalNickname.value = account.nickname!;
       },
     );
   }
 
   Future<void> modifyMyAccountInfo() async {
+    if (pickedImage.value == null && profile.value.nickname == originalNickname.value) {
+      toggleEditMode();
+      return;
+    }
+
     String? uploadUrl = profile.value.profileImageUrl;
 
     if (pickedImage.value != null) {
@@ -161,6 +169,11 @@ class MyPageController extends GetxController {
   }
 
   void updateNickName(nickname) {
+    if (!profile.value.availableChangeNickname!) {
+      nicknameTextController.text = originalNickname.value;
+      showToastPopup('닉네임 수정 이력이 있어요.\n닉네임은 최초 1회 이후 수정할 수 없어요');
+      return;
+    }
     profile.update((profile) {
       profile!.nickname = nickname;
     });
@@ -181,5 +194,13 @@ class MyPageController extends GetxController {
     final kb = bytes / 1024;
     final mb = kb / 1024;
     return mb;
+  }
+
+  void validateProfileEdit() {
+    if (profile.value.availableChangeNickname! && profile.value.nickname != originalNickname.value) {
+      showConfirmNicknameChange(this);
+    } else {
+      modifyMyAccountInfo();
+    }
   }
 }

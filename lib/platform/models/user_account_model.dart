@@ -8,6 +8,7 @@ class UserAccountModel {
   String login;
   String email;
   String? nickname;
+  bool? availableChangeNickname;
   String? profileImageUrl;
   String? phone;
   String? userCode;
@@ -25,6 +26,7 @@ class UserAccountModel {
     required this.login,
     required this.email,
     this.nickname,
+    this.availableChangeNickname,
     this.profileImageUrl,
     this.phone,
     this.userCode,

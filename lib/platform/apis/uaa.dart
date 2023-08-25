@@ -43,7 +43,15 @@ class UaaApi {
     return await Api.client(
       serviceUrl: ServiceUrl.uaaService,
       isPatch: true,
-    ).patch('/users/$userId', data: {'id': userId, 'nickname': nickname, 'profileImageUrl': profileImageUrl});
+    ).patch(
+      '/users/$userId',
+      data: {
+        'id': userId,
+        'nickname': nickname,
+        'profileImageUrl': profileImageUrl,
+        "clientId": "GAZAGO",
+      },
+    );
   }
 
   static Future<Response> fetchUploadImage(String userId, FormData imageFile) async {
