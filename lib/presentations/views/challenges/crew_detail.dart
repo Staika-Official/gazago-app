@@ -8,6 +8,7 @@ import 'package:get/get.dart';
 class CrewDetail extends StatelessWidget {
   const CrewDetail({Key? key}) : super(key: key);
   Size get preferredSize => const Size.fromHeight(kToolbarHeight);
+
   @override
   Widget build(BuildContext context) {
     CrewDetailController controller = Get.put(CrewDetailController());
@@ -19,6 +20,7 @@ class CrewDetail extends StatelessWidget {
           child: const ShareAppbar(
             titleText: '크루 릴레이',
             isBeta: true,
+            isLockButton: true,
           )),
       backgroundColor: subBg01Color,
       body: Column(
@@ -52,7 +54,12 @@ class CrewDetail extends StatelessWidget {
                 text: '크루 랭킹',
               ),
             ],
-          )
+          ),
+          // TabBarView(
+          //   physics: const NeverScrollableScrollPhysics(),
+          //   controller: controller.tabController,
+          //   children: [CrewLeaderboard(), CrewLeaderboard()],
+          // ),
         ],
       ),
     );

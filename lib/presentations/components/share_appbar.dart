@@ -79,7 +79,7 @@ class ShareAppbar extends StatelessWidget implements PreferredSizeWidget {
                       padding: EdgeInsets.only(left: 4.sp),
                       child: IconButton(
                         onPressed: () => null,
-                        icon: iconHeaderShare,
+                        icon: iconHeaderUnlock,
                         splashRadius: 20.sp,
                         constraints: BoxConstraints(
                           minWidth: 30.sp,

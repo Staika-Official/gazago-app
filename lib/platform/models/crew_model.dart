@@ -9,6 +9,8 @@ class CrewModel {
   String? iconImageUrl;
   int? user;
   bool? isLocked;
+  int? blockQuantity;
+  int? rank;
 
   CrewModel({
     this.name,
@@ -16,6 +18,8 @@ class CrewModel {
     this.iconImageUrl,
     this.user,
     this.isLocked,
+    this.blockQuantity,
+    this.rank,
   });
 
   factory CrewModel.fromJson(Map<String, dynamic> json) => _$CrewModelFromJson(json);

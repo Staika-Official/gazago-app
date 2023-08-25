@@ -50,6 +50,8 @@ SvgPicture iconHeaderGear = SvgPicture.asset('assets/images/common/ico_header_ge
 SvgPicture iconHeaderWallet = SvgPicture.asset('assets/images/common/ico_header_wallet.svg', width: 30.sp, height: 30.sp);
 SvgPicture iconHeaderBell = SvgPicture.asset('assets/images/common/ico_header_bell.svg', width: 30.sp, height: 30.sp);
 SvgPicture iconHeaderShare = SvgPicture.asset('assets/images/common/ico_header_share.svg', width: 17.sp, height: 25.sp);
+SvgPicture iconHeaderLock = SvgPicture.asset('assets/images/common/ico_header_lock.svg', width: 20.sp, height: 26.sp);
+SvgPicture iconHeaderUnlock = SvgPicture.asset('assets/images/common/ico_header_unlock.svg', width: 20.sp, height: 26.sp);
 
 SvgPicture iconArchiveClock = SvgPicture.asset('assets/images/archive/ico_archive_clock.svg', width: 14.sp, height: 14.sp);
 SvgPicture iconArchiveDistance = SvgPicture.asset('assets/images/archive/ico_archive_distance.svg', width: 14.sp, height: 14.sp);
