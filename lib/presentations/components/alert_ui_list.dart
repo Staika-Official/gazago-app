@@ -5527,11 +5527,10 @@ void showConfirmNicknameChange(MyPageController controller) {
     actions: [
       Expanded(
         child: GazagoButton(
-          onTap: () async {
-            await controller.modifyMyAccountInfo();
+          onTap: () {
             Get.back();
           },
-          buttonText: '네',
+          buttonText: '취소',
           textColor: Colors.white,
           buttonColor: popupBgColor,
         ),
@@ -5541,10 +5540,11 @@ void showConfirmNicknameChange(MyPageController controller) {
       ),
       Expanded(
         child: GazagoButton(
-          onTap: () {
+          onTap: () async {
+            await controller.modifyMyAccountInfo();
             Get.back();
           },
-          buttonText: '아니요',
+          buttonText: '변경',
           buttonColor: skyBlueColor,
         ),
       ),
