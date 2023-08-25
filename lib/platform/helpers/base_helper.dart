@@ -70,6 +70,14 @@ String formatDateUntilTime(String? isoDateString) {
   }
 }
 
+String formatDateMonthUntilTime(String? isoDateString) {
+  if (isoDateString != null) {
+    return DateFormat("MM.dd (HH:mm)").format(DateTime.parse(isoDateString).toLocal());
+  } else {
+    return '';
+  }
+}
+
 String coordinatesToString(List<LatLng> coordinates) {
   List<List<double>> coordinateStringList = List.empty(growable: true);
   for (LatLng coordinate in coordinates) {

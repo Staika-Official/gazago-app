@@ -5,6 +5,7 @@ import 'package:gaza_go/platform/helpers/alert_helper.dart';
 import 'package:gaza_go/platform/helpers/challenge_mixin.dart';
 import 'package:gaza_go/platform/models/challenge_ranker_model.dart';
 import 'package:gaza_go/platform/models/challenge_reward_model.dart';
+import 'package:gaza_go/platform/models/crew_model.dart';
 import 'package:gaza_go/platform/models/inventory_item_model.dart';
 import 'package:gaza_go/platform/models/new_challenge_detail_model.dart';
 import 'package:gaza_go/platform/services/activity_service.dart';
@@ -44,6 +45,8 @@ class ChallengesDetailController extends GetxController with GetTickerProviderSt
   final RxString errorMessage = RxString('');
   final RxBool hideCourses = RxBool(false);
 
+  RxList<CrewModel> crewList = RxList.empty();
+
   @override
   void onInit() async {
     focusNode.addListener(_onFocusChange);
@@ -57,7 +60,7 @@ class ChallengesDetailController extends GetxController with GetTickerProviderSt
     getChallengeDetail();
     getChallengeLeaderboard();
     getChallengeLeaderboardMyRanking();
-
+    getCrewList();
     super.onInit();
   }
 
@@ -129,6 +132,16 @@ class ChallengesDetailController extends GetxController with GetTickerProviderSt
     });
   }
 
+  Future<void> getCrewList() async {
+    crewList.value = [
+      CrewModel(name: "크루명01", crewFounderNickName: "크루장01", iconImageUrl: "assets/images/@temp_badge.png", user: 4, isLocked: false),
+      CrewModel(name: "크루명01", crewFounderNickName: "크루장01", iconImageUrl: "assets/images/@temp_badge.png", user: 5, isLocked: false),
+      CrewModel(name: "크루명01", crewFounderNickName: "크루장01", iconImageUrl: "assets/images/@temp_badge.png", user: 10, isLocked: false),
+      CrewModel(name: "크루명01", crewFounderNickName: "크루장01", iconImageUrl: "assets/images/@temp_badge.png", user: 20, isLocked: true),
+      CrewModel(name: "크루명01", crewFounderNickName: "크루장01", iconImageUrl: "assets/images/@temp_badge.png", user: 4, isLocked: true),
+    ];
+  }
+
   void getSize() {
     if (backgroundKey.currentContext != null) {
       backgroundBoxSize.value = backgroundKey.currentContext!.size!.height;
@@ -175,5 +188,9 @@ class ChallengesDetailController extends GetxController with GetTickerProviderSt
     } else {
       showToastPopup('참여코드를 입력해주세요.');
     }
+  }
+
+  void sharedKakaoCrewChallenge() {
+    print('asd');
   }
 }

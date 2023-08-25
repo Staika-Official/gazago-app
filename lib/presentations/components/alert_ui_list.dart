@@ -4846,3 +4846,927 @@ void showLockedUserAlert() async {
     ],
   );
 }
+
+void crewJoinInfoAlert() async {
+  await showAlert(
+    title: '크루 가입 안내',
+    contentWidget: Padding(
+      padding: EdgeInsets.only(top: 22.sp, bottom: 49.sp),
+      child: const StyledText(
+        '크루에 가입하면 챌린지 종료시까지\n크루를 떠날 수 없습니다\n정말로 가입하시겠습니까?',
+        fontWeight: 500,
+        fontSize: 16,
+        lineHeight: 24,
+        letterSpacing: -.1,
+        textAlign: TextAlign.center,
+      ),
+    ),
+    actions: [
+      Expanded(
+        child: GazagoButton(
+          onTap: () => Get.back(),
+          buttonText: '아니요',
+          textColor: Colors.white,
+          buttonColor: popupBgColor,
+        ),
+      ),
+      SizedBox(
+        width: 9.sp,
+      ),
+      Expanded(
+        child: GazagoButton(
+          buttonText: '네',
+          onTap: () {
+            Get.back();
+          },
+        ),
+      ),
+    ],
+  );
+}
+
+void crewJoinCompleteAlert() async {
+  await showAlert(
+    contentWidget: Padding(
+      padding: EdgeInsets.only(top: 22.sp, bottom: 49.sp),
+      child: Column(
+        children: [
+          CircleAvatar(backgroundColor: Colors.black, radius: 25.sp),
+          Padding(
+            padding: EdgeInsets.only(top: 20.0.sp),
+            child: const StyledText(
+              '크루가입을 환영합니다!',
+              fontWeight: 500,
+              fontSize: 22,
+              lineHeight: 22,
+              letterSpacing: -.1,
+              textAlign: TextAlign.center,
+            ),
+          ),
+          Padding(
+            padding: EdgeInsets.only(top: 20.0.sp),
+            child: const StyledText(
+              '크루 가입을 환영합니다!\n크루원 페이지로 이동합니다\n크루챌린지를 즐겨주세요!',
+              fontWeight: 500,
+              fontSize: 16,
+              lineHeight: 24,
+              letterSpacing: -.1,
+              textAlign: TextAlign.center,
+            ),
+          ),
+        ],
+      ),
+    ),
+    actions: [
+      Expanded(
+        child: GazagoButton(
+          buttonText: '확인',
+          onTap: () {
+            Get.back();
+          },
+        ),
+      ),
+    ],
+  );
+}
+
+void crewCreateCompleteAlert() async {
+  await showAlert(
+    contentWidget: Padding(
+      padding: EdgeInsets.only(top: 22.sp, bottom: 49.sp),
+      child: Column(
+        children: [
+          CircleAvatar(backgroundColor: Colors.black, radius: 25.sp),
+          Padding(
+            padding: EdgeInsets.only(top: 20.0.sp),
+            child: const StyledText(
+              '크루개설을 축하합니다!',
+              fontWeight: 500,
+              fontSize: 22,
+              lineHeight: 22,
+              letterSpacing: -.1,
+              textAlign: TextAlign.center,
+            ),
+          ),
+          Padding(
+            padding: EdgeInsets.only(top: 20.0.sp),
+            child: const StyledText(
+              '크루 개설을 축하합니다!\n크루원 페이지로 이동합니다\n크루챌린지를 즐겨주세요!',
+              fontWeight: 500,
+              fontSize: 16,
+              lineHeight: 24,
+              letterSpacing: -.1,
+              textAlign: TextAlign.center,
+            ),
+          ),
+        ],
+      ),
+    ),
+    actions: [
+      Expanded(
+        child: GazagoButton(
+          buttonText: '확인',
+          onTap: () {
+            Get.back();
+          },
+        ),
+      ),
+    ],
+  );
+}
+
+void shortTikCreateCrewAlert() async {
+  await showAlert(
+    title: '잔액이 부족합니다',
+    contentWidget: Padding(
+      padding: EdgeInsets.only(top: 22.sp, bottom: 49.sp),
+      child: const StyledText(
+        'TIK를 충전하시거나, 챌린지 공유하기로\n무료로 개설이 가능합니다',
+        fontWeight: 500,
+        fontSize: 16,
+        lineHeight: 24,
+        letterSpacing: -.1,
+        textAlign: TextAlign.center,
+      ),
+    ),
+    actions: [
+      Expanded(
+        child: GazagoButton(
+          onTap: () => Get.back(),
+          buttonText: '닫기',
+          textColor: Colors.white,
+          buttonColor: popupBgColor,
+        ),
+      ),
+      SizedBox(
+        width: 9.sp,
+      ),
+      Expanded(
+        child: GazagoButton(
+          buttonText: '충전하기',
+          onTap: () {
+            Get.back();
+          },
+        ),
+      ),
+    ],
+  );
+}
+
+void crewEarlyCloseAlert() async {
+  await showAlert(
+    contentWidget: Padding(
+      padding: EdgeInsets.only(top: 22.sp, bottom: 49.sp),
+      child: Column(
+        children: [
+          CircleAvatar(backgroundColor: Colors.black, radius: 25.sp),
+          Padding(
+            padding: EdgeInsets.only(top: 20.0.sp),
+            child: const StyledText(
+              '너무 아쉬워요',
+              fontWeight: 500,
+              fontSize: 22,
+              lineHeight: 22,
+              letterSpacing: -.1,
+              textAlign: TextAlign.center,
+            ),
+          ),
+          Padding(
+            padding: EdgeInsets.only(top: 20.0.sp),
+            child: const StyledText(
+              '정시 12시안에 0개의 블럭을 쌓았기 때문에\n크루릴레이가 자동으로 종료되었어요!\n챌린지 종료 이후 쌓은 블럭만큼은 보상지급됩니다\n감사합니다.',
+              fontWeight: 500,
+              fontSize: 16,
+              lineHeight: 24,
+              letterSpacing: -.1,
+              textAlign: TextAlign.center,
+            ),
+          ),
+        ],
+      ),
+    ),
+    actions: [
+      Expanded(
+        child: GazagoButton(
+          buttonText: '확인',
+          onTap: () {
+            Get.back();
+          },
+        ),
+      ),
+    ],
+  );
+}
+
+void crewRecruitLimitAlert() async {
+  await showAlert(
+    contentWidget: Padding(
+      padding: EdgeInsets.only(top: 22.sp, bottom: 49.sp),
+      child: Column(
+        children: [
+          Stack(
+            clipBehavior: Clip.none,
+            children: [
+              CircleAvatar(backgroundColor: Colors.black, radius: 25.sp),
+              Positioned(
+                bottom: 0,
+                right: -5.sp,
+                child: InkWell(
+                  onTap: () => Get.back(),
+                  child: SvgPicture.asset(
+                    'assets/images/challenges/ico_circle_limit.svg',
+                    width: 23.sp,
+                    height: 23.sp,
+                  ),
+                ),
+              ),
+            ],
+          ),
+          Padding(
+            padding: EdgeInsets.only(top: 20.0.sp),
+            child: StyledText(
+              '크루 모집을\n제한하시겠습니까?',
+              fontWeight: 500,
+              fontSize: 22,
+              lineHeight: 30,
+              letterSpacing: -.1,
+              textAlign: TextAlign.center,
+            ),
+          ),
+          Padding(
+            padding: EdgeInsets.only(top: 20.0.sp),
+            child: const StyledText(
+              '크루 모집을 더 이상 받지 않으시겠습니까?\n크루 모집 제한은 총 20명이 되면\n자동으로 잠금이 됩니다.',
+              fontWeight: 500,
+              fontSize: 16,
+              lineHeight: 24,
+              letterSpacing: -.1,
+              textAlign: TextAlign.center,
+            ),
+          ),
+        ],
+      ),
+    ),
+    actions: [
+      Expanded(
+        child: GazagoButton(
+          onTap: () => Get.back(),
+          buttonText: '아니요',
+          textColor: Colors.white,
+          buttonColor: popupBgColor,
+        ),
+      ),
+      SizedBox(
+        width: 9.sp,
+      ),
+      Expanded(
+        child: GazagoButton(
+          buttonText: '네',
+          onTap: () {
+            Get.back();
+          },
+        ),
+      ),
+    ],
+  );
+}
+
+void crewRecruitUnlimitAlert() async {
+  await showAlert(
+    contentWidget: Padding(
+      padding: EdgeInsets.only(top: 22.sp, bottom: 49.sp),
+      child: Column(
+        children: [
+          Stack(
+            clipBehavior: Clip.none,
+            children: [
+              CircleAvatar(backgroundColor: Colors.black, radius: 25.sp),
+              Positioned(
+                bottom: 0,
+                right: -5.sp,
+                child: InkWell(
+                  onTap: () => Get.back(),
+                  child: SvgPicture.asset(
+                    'assets/images/challenges/ico_circle_unlimit.svg',
+                    width: 23.sp,
+                    height: 23.sp,
+                  ),
+                ),
+              ),
+            ],
+          ),
+          Padding(
+            padding: EdgeInsets.only(top: 20.0.sp),
+            child: StyledText(
+              '크루 모집을\n제한을 푸시겠습니까?',
+              fontWeight: 500,
+              fontSize: 22,
+              lineHeight: 30,
+              letterSpacing: -.1,
+              textAlign: TextAlign.center,
+            ),
+          ),
+          Padding(
+            padding: EdgeInsets.only(top: 20.0.sp),
+            child: const StyledText(
+              '크루 모집을 더 받으시겠습니까?\n크루 모집 제한은 총 20명이 되면\n자동으ㄴ로 잠금이 됩니다.',
+              fontWeight: 500,
+              fontSize: 16,
+              lineHeight: 24,
+              letterSpacing: -.1,
+              textAlign: TextAlign.center,
+            ),
+          ),
+        ],
+      ),
+    ),
+    actions: [
+      Expanded(
+        child: GazagoButton(
+          onTap: () => Get.back(),
+          buttonText: '아니요',
+          textColor: Colors.white,
+          buttonColor: popupBgColor,
+        ),
+      ),
+      SizedBox(
+        width: 9.sp,
+      ),
+      Expanded(
+        child: GazagoButton(
+          buttonText: '네',
+          onTap: () {
+            Get.back();
+          },
+        ),
+      ),
+    ],
+  );
+}
+
+void crewChallengeCloseAlert() async {
+  await showAlert(
+    contentWidget: Padding(
+      padding: EdgeInsets.only(top: 22.sp, bottom: 49.sp),
+      child: Column(
+        children: [
+          CircleAvatar(backgroundColor: Colors.black, radius: 25.sp),
+          Padding(
+            padding: EdgeInsets.only(top: 20.0.sp),
+            child: const StyledText(
+              '챌린지가 종료되었습니다!',
+              fontWeight: 500,
+              fontSize: 22,
+              lineHeight: 22,
+              letterSpacing: -.1,
+              textAlign: TextAlign.center,
+            ),
+          ),
+          Padding(
+            padding: EdgeInsets.only(top: 20.0.sp),
+            child: const StyledText(
+              '모두들 수고하셨습니다\n공정성을 위해 챌린지 랭킹 점검 후\n랭킹을 공지&보상을 지급하도록 하겠습니다\n감사합니다',
+              fontWeight: 500,
+              fontSize: 16,
+              lineHeight: 24,
+              letterSpacing: -.1,
+              textAlign: TextAlign.center,
+            ),
+          ),
+        ],
+      ),
+    ),
+    actions: [
+      Expanded(
+        child: GazagoButton(
+          buttonText: '확인',
+          onTap: () {
+            Get.back();
+          },
+        ),
+      ),
+    ],
+  );
+}
+
+void crewCreatePopup() async {
+  await Get.bottomSheet(
+    isDismissible: false,
+    isScrollControlled: true,
+    enableDrag: false,
+    WillPopScope(
+      onWillPop: () async => false,
+      child: Container(
+          decoration: BoxDecoration(
+            color: popupBgColor,
+            borderRadius: BorderRadius.only(
+              topLeft: Radius.circular(12.sp),
+              topRight: Radius.circular(12.sp),
+            ),
+          ),
+          child: Padding(
+            padding: EdgeInsets.all(20.0.sp),
+            child: Column(mainAxisSize: MainAxisSize.min, children: [
+              Padding(
+                padding: EdgeInsets.only(top: 22.sp, bottom: 28.sp),
+                child: Column(
+                  children: [
+                    Padding(
+                      padding: EdgeInsets.only(bottom: 20.0.sp),
+                      child: const StyledText(
+                        '크루 개설하기',
+                        fontSize: 22,
+                        letterSpacing: -.1,
+                        fontWeight: 600,
+                      ),
+                    ),
+                    Text.rich(
+                      textAlign: TextAlign.center,
+                      style: TextStyle(
+                        fontSize: 16.sp,
+                        height: 24.sp / 16.sp,
+                        fontWeight: FontWeight.w500,
+                        color: Colors.white,
+                      ),
+                      TextSpan(
+                        text: '챌린지 기간동안 함께할 크루를 만들어주세요!\n크루를 개설할 시 ',
+                        children: [
+                          TextSpan(text: '3블록', style: TextStyle(color: skyBlueColor)),
+                          const TextSpan(text: '을 제공해드립니다!'),
+                        ],
+                      ),
+                    ),
+                    Padding(
+                      padding: EdgeInsets.only(top: 4.0.sp),
+                      child: const StyledText(
+                        '크루 개설 비용 3000 TIK',
+                        fontWeight: 500,
+                        fontSize: 16,
+                        lineHeight: 24,
+                        letterSpacing: -.1,
+                        textAlign: TextAlign.center,
+                      ),
+                    ),
+                    Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Padding(
+                          padding: EdgeInsets.only(top: 33.0.sp, bottom: 8.0.sp, left: 5.sp),
+                          child: StyledText(
+                            '크루 마크',
+                            fontSize: 16,
+                            lineHeight: 18,
+                            color: lightGrayColor,
+                            fontWeight: 500,
+                          ),
+                        ),
+                        Container(
+                          decoration: BoxDecoration(
+                            color: subBg01Color,
+                            borderRadius: BorderRadius.all(
+                              Radius.circular(10.sp),
+                            ),
+                          ),
+                          child: Padding(
+                            padding: EdgeInsets.symmetric(vertical: 16.0.sp, horizontal: 20.sp),
+                            child: Column(
+                              children: [
+                                Row(
+                                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                                  children: [
+                                    CircleAvatar(backgroundColor: const Color(0xff747474), radius: 25.sp),
+                                    CircleAvatar(backgroundColor: const Color(0xff747474), radius: 25.sp),
+                                    CircleAvatar(backgroundColor: const Color(0xff747474), radius: 25.sp),
+                                    CircleAvatar(backgroundColor: const Color(0xff747474), radius: 25.sp),
+                                    CircleAvatar(backgroundColor: const Color(0xff747474), radius: 25.sp),
+                                  ],
+                                ),
+                                Padding(
+                                  padding: EdgeInsets.only(top: 10.0.sp),
+                                  child: Row(
+                                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                                    children: [
+                                      CircleAvatar(backgroundColor: const Color(0xff747474), radius: 25.sp),
+                                      CircleAvatar(backgroundColor: const Color(0xff747474), radius: 25.sp),
+                                      CircleAvatar(backgroundColor: const Color(0xff747474), radius: 25.sp),
+                                      CircleAvatar(backgroundColor: const Color(0xff747474), radius: 25.sp),
+                                      CircleAvatar(backgroundColor: const Color(0xff747474), radius: 25.sp),
+                                    ],
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                        ),
+                        Padding(
+                          padding: EdgeInsets.only(top: 22.0.sp, bottom: 8.sp, left: 5.sp),
+                          child: StyledText(
+                            '크루 이름',
+                            fontSize: 16,
+                            lineHeight: 18,
+                            color: lightGrayColor,
+                            fontWeight: 500,
+                          ),
+                        ),
+                        TextField(
+                          cursorColor: Colors.white,
+                          obscureText: true,
+                          decoration: InputDecoration(
+                            filled: true,
+                            fillColor: subBg01Color,
+                            border: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(10.0),
+                            ),
+                            contentPadding: const EdgeInsets.symmetric(horizontal: 15),
+                            hintText: '크루명을 작성해주세요.',
+                            hintStyle: TextStyle(
+                              color: popupBgColor,
+                              fontSize: 20,
+                              fontWeight: FontWeight.w500,
+                              height: 1,
+                              letterSpacing: -0.5,
+                            ),
+                          ),
+                          style: const TextStyle(
+                            color: Colors.white,
+                          ),
+                          onChanged: (name) => null,
+                          onSubmitted: (String text) async {
+                            // if (controller.passwordFormStatus.value == FormStatus.sufficient) {
+                            //   String? password = controller.nextStep();
+                            //   if (password != null) completer.complete(password);
+                            // }
+                          },
+                        )
+                      ],
+                    ),
+                  ],
+                ),
+              ),
+              Row(
+                children: [
+                  Expanded(
+                    child: Container(
+                      margin: EdgeInsets.only(bottom: 3.sp),
+                      child: InkWell(
+                        onTap: null,
+                        borderRadius: BorderRadius.circular(8.sp),
+                        child: Container(
+                          decoration: BoxDecoration(
+                            color: skyBlueColor,
+                            border: Border.all(width: 2.sp, color: Colors.black),
+                            borderRadius: BorderRadius.circular(8.sp),
+                            boxShadow: [
+                              BoxShadow(
+                                color: Colors.black,
+                                offset: Offset(0, 4.sp),
+                              )
+                            ],
+                          ),
+                          child: Padding(
+                            padding: EdgeInsets.symmetric(vertical: 7.0.sp),
+                            child: Center(
+                              child: Column(
+                                children: [
+                                  StyledText(
+                                    '개설하기',
+                                    fontSize: 18,
+                                    lineHeight: 18,
+                                    fontWeight: 600,
+                                    color: Colors.black,
+                                  ),
+                                  StyledText(
+                                    '3000TIK',
+                                    fontSize: 12,
+                                    lineHeight: 16,
+                                    fontWeight: 600,
+                                    letterSpacing: -.1,
+                                    color: Colors.black,
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ),
+                        ),
+                      ),
+                    ),
+                  ),
+                  SizedBox(
+                    width: 9.sp,
+                  ),
+                  Expanded(
+                    child: GazagoButton(
+                      buttonText: '무료 개설',
+                      onTap: () {
+                        Get.back();
+                      },
+                    ),
+                  ),
+                ],
+              ),
+              Padding(
+                padding: EdgeInsets.only(top: 8.0.sp),
+                child: GazagoButton(
+                  onTap: () => Get.back(),
+                  buttonText: '취소',
+                  textColor: Colors.white,
+                  buttonColor: popupBgColor,
+                ),
+              )
+            ]),
+          )),
+    ),
+  );
+}
+
+void shareCrewChallengeKakaoLinkDialog() {
+  Get.dialog(
+    Dialog(
+      shadowColor: Colors.transparent,
+      backgroundColor: Colors.transparent,
+      child: Center(
+        child: Container(
+          height: 270.sp,
+          decoration: BoxDecoration(
+            color: popupBgColor,
+            borderRadius: BorderRadius.all(
+              Radius.circular(12.sp),
+            ),
+          ),
+          child: Padding(
+            padding: EdgeInsets.all(20.0.sp),
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                const Expanded(
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      StyledText(
+                        '카카오톡으로 친구에게 링크를\n공유하면 크루를 무료로\n개설할 수 있어요!',
+                        textAlign: TextAlign.center,
+                        fontWeight: 500,
+                        fontSize: 20,
+                        lineHeight: 30,
+                      ),
+                      StyledText(
+                        '(본인 공유는 불가 합니다)',
+                        textAlign: TextAlign.center,
+                        fontWeight: 500,
+                        fontSize: 16,
+                        lineHeight: 30,
+                      ),
+                    ],
+                  ),
+                ),
+                Padding(
+                  padding: EdgeInsets.only(top: 25.sp),
+                  child: Row(children: [
+                    Expanded(
+                      child: GazagoButton(
+                        onTap: () => Get.back(),
+                        buttonText: '닫기',
+                        textColor: Colors.white,
+                        buttonColor: popupBgColor,
+                      ),
+                    ),
+                    SizedBox(
+                      width: 9.sp,
+                    ),
+                    Expanded(
+                      child: GazagoButton(
+                        buttonText: '공유하기',
+                        onTap: () {
+                          Get.back();
+                        },
+                      ),
+                    ),
+                  ]),
+                )
+              ],
+            ),
+          ),
+        ),
+      ),
+    ),
+  );
+}
+
+void askSharedCompleteDialog() {
+  Get.dialog(
+    Dialog(
+      shadowColor: Colors.transparent,
+      backgroundColor: Colors.transparent,
+      child: Center(
+        child: Container(
+          height: 270.sp,
+          decoration: BoxDecoration(
+            color: popupBgColor,
+            borderRadius: BorderRadius.all(
+              Radius.circular(12.sp),
+            ),
+          ),
+          child: Padding(
+            padding: EdgeInsets.all(20.0.sp),
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Expanded(
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      const StyledText(
+                        '공유하기를 완료했나요?',
+                        textAlign: TextAlign.center,
+                        fontWeight: 500,
+                        fontSize: 20,
+                        lineHeight: 30,
+                      ),
+                      Padding(
+                        padding: EdgeInsets.only(top: 12.0.sp),
+                        child: const StyledText(
+                          '완료 버튼을 누르면 크루를\n무료로 개설할 수 있어요!',
+                          textAlign: TextAlign.center,
+                          fontWeight: 500,
+                          fontSize: 16,
+                          lineHeight: 24,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+                Row(children: [
+                  Expanded(
+                    child: GazagoButton(
+                      onTap: () => Get.back(),
+                      buttonText: '닫기',
+                      textColor: Colors.white,
+                      buttonColor: popupBgColor,
+                    ),
+                  ),
+                  SizedBox(
+                    width: 9.sp,
+                  ),
+                  Expanded(
+                    child: GazagoButton(
+                      buttonText: '완료',
+                      onTap: () {
+                        Get.back();
+                      },
+                    ),
+                  ),
+                ])
+              ],
+            ),
+          ),
+        ),
+      ),
+    ),
+  );
+}
+
+void unableShareMyselfDialog() {
+  Get.dialog(
+    Dialog(
+      shadowColor: Colors.transparent,
+      backgroundColor: Colors.transparent,
+      child: Center(
+        child: Container(
+          height: 270.sp,
+          decoration: BoxDecoration(
+            color: popupBgColor,
+            borderRadius: BorderRadius.all(
+              Radius.circular(12.sp),
+            ),
+          ),
+          child: Padding(
+            padding: EdgeInsets.all(20.0.sp),
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Expanded(
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      const StyledText(
+                        '본인 공유 불가',
+                        textAlign: TextAlign.center,
+                        fontWeight: 500,
+                        fontSize: 20,
+                        lineHeight: 30,
+                      ),
+                      Padding(
+                        padding: EdgeInsets.only(top: 17.0.sp),
+                        child: const StyledText(
+                          '본인에게 공유하기는\n인정되지 않아요\n친구에게 공유해주세요!',
+                          textAlign: TextAlign.center,
+                          fontWeight: 500,
+                          fontSize: 16,
+                          lineHeight: 24,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+                Row(children: [
+                  Expanded(
+                    child: GazagoButton(
+                      onTap: () => Get.back(),
+                      buttonText: '닫기',
+                      textColor: Colors.white,
+                      buttonColor: popupBgColor,
+                    ),
+                  ),
+                  SizedBox(
+                    width: 9.sp,
+                  ),
+                  Expanded(
+                    child: GazagoButton(
+                      buttonText: '다시 공유',
+                      onTap: () {
+                        Get.back();
+                      },
+                    ),
+                  ),
+                ])
+              ],
+            ),
+          ),
+        ),
+      ),
+    ),
+  );
+}
+
+void unableSharedHistoryDialog() {
+  Get.dialog(
+    Dialog(
+      shadowColor: Colors.transparent,
+      backgroundColor: Colors.transparent,
+      child: Center(
+        child: Container(
+          height: 270.sp,
+          decoration: BoxDecoration(
+            color: popupBgColor,
+            borderRadius: BorderRadius.all(
+              Radius.circular(12.sp),
+            ),
+          ),
+          child: Padding(
+            padding: EdgeInsets.all(20.0.sp),
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Expanded(
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      const StyledText(
+                        '공유 확인 불가',
+                        textAlign: TextAlign.center,
+                        fontWeight: 500,
+                        fontSize: 20,
+                        lineHeight: 30,
+                      ),
+                      Padding(
+                        padding: EdgeInsets.only(top: 17.0.sp),
+                        child: const StyledText(
+                          '공유한 이력이 확인되지 않아요\n다시 공유해주세요!',
+                          textAlign: TextAlign.center,
+                          fontWeight: 500,
+                          fontSize: 16,
+                          lineHeight: 24,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+                Row(children: [
+                  Expanded(
+                    child: GazagoButton(
+                      onTap: () => Get.back(),
+                      buttonText: '닫기',
+                      textColor: Colors.white,
+                      buttonColor: popupBgColor,
+                    ),
+                  ),
+                  SizedBox(
+                    width: 9.sp,
+                  ),
+                  Expanded(
+                    child: GazagoButton(
+                      buttonText: '다시 공유',
+                      onTap: () {
+                        Get.back();
+                      },
+                    ),
+                  ),
+                ])
+              ],
+            ),
+          ),
+        ),
+      ),
+    ),
+  );
+}

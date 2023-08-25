@@ -23,7 +23,7 @@ class GazagoButton extends StatelessWidget {
     return Material(
       borderRadius: BorderRadius.circular(8.sp),
       child: Container(
-        margin: EdgeInsets.only(bottom: 3.sp),
+        margin: EdgeInsets.only(bottom: 4.sp),
         child: Ink(
           decoration: BoxDecoration(
             color: buttonColor,
@@ -32,7 +32,7 @@ class GazagoButton extends StatelessWidget {
             boxShadow: [
               BoxShadow(
                 color: Colors.black,
-                offset: Offset(0, 3.sp),
+                offset: Offset(0, 4.sp),
               )
             ],
           ),
