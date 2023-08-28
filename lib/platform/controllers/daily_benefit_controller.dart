@@ -59,11 +59,7 @@ class DailyBenefitController extends GetxController {
   }
 
   String getAdUnitId() {
-    if (F.isDev) {
-      return Platform.isIOS ? F.dailyBenefitAd1Ios : F.dailyBenefitAd1Android;
-    }
-
-    if (dailyRewardAdList.first != null) {
+    if (dailyRewardAdList.isEmpty || dailyRewardAdList.first == null) {
       return Platform.isIOS ? F.dailyBenefitAd1Ios : F.dailyBenefitAd1Android;
     } else {
       return Platform.isIOS ? F.dailyBenefitAd2Ios : F.dailyBenefitAd2Android;
@@ -73,7 +69,6 @@ class DailyBenefitController extends GetxController {
   Future<void> loadAd() async {
     if (!adIsLoading.value) {
       await RewardedAd.load(
-        // adUnitId: Platform.isIOS ? 'ca-app-pub-3940256099942544/1712485313' : 'ca-app-pub-3940256099942544/5224354917',
         adUnitId: getAdUnitId(),
         request: const AdRequest(),
         rewardedAdLoadCallback: RewardedAdLoadCallback(
@@ -137,7 +132,7 @@ class DailyBenefitController extends GetxController {
 
   Future<void> requestDailyBenefitAd(BenefitItemModel benefitItem) async {
     Completer completer = Completer();
-    if (dailyRewardAdList[activeAdIndex.value] != null) {
+    if (dailyRewardAdList.isNotEmpty && dailyRewardAdList[activeAdIndex.value] != null) {
       dailyRewardAdList[activeAdIndex.value]!.fullScreenContentCallback = FullScreenContentCallback(
         // Called when the ad showed the full screen content.
         onAdShowedFullScreenContent: (ad) {
