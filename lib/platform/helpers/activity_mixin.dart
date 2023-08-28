@@ -184,8 +184,8 @@ mixin ActivityMixin {
       UserExerciseModel(
         id: userState.value.exercise!.id,
         steps: exerciseSteps.value,
-        speed: avgSpeed.value,
-        // speed: 5,
+        // speed: avgSpeed.value,
+        speed: 5,
         distance: convertKmToMeters(totalDistance.value),
         altitude: exerciseData.isNotEmpty ? exerciseData.last.altitude : 0,
         time: exerciseTime.value,
@@ -527,8 +527,8 @@ mixin ActivityMixin {
           errorCallback: errorHandler,
         );
       } else {
-        // exerciseSteps.value = exerciseSteps.value + 100;
-        // exerciseDistance.value = exerciseDistance.value + 100;
+        exerciseSteps.value = exerciseSteps.value + 500;
+        exerciseDistance.value = exerciseDistance.value + 500;
 
         if (!isSameStepCount) {
           HiveStore.save(key: HiveKey.lastUpdatedStepCount.name, value: userExerciseData.value.steps);
