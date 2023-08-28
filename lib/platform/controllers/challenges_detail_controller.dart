@@ -152,11 +152,11 @@ class ChallengesDetailController extends GetxController with GetTickerProviderSt
 
   Future<void> getCrewList() async {
     crewList.value = [
-      CrewModel(name: "크루명01", crewFounderNickName: "크루장01", iconImageUrl: "assets/images/@temp_badge.png", user: 4, isLocked: false),
-      CrewModel(name: "크루명01", crewFounderNickName: "크루장01", iconImageUrl: "assets/images/@temp_badge.png", user: 5, isLocked: false),
-      CrewModel(name: "크루명01", crewFounderNickName: "크루장01", iconImageUrl: "assets/images/@temp_badge.png", user: 10, isLocked: false),
-      CrewModel(name: "크루명01", crewFounderNickName: "크루장01", iconImageUrl: "assets/images/@temp_badge.png", user: 20, isLocked: true),
-      CrewModel(name: "크루명01", crewFounderNickName: "크루장01", iconImageUrl: "assets/images/@temp_badge.png", user: 4, isLocked: true),
+      CrewModel(name: "크루명01", crewFounderNickName: "크루장01", iconImageUrl: '', user: 4, isLocked: false),
+      CrewModel(name: "크루명01", crewFounderNickName: "크루장01", iconImageUrl: '', user: 5, isLocked: false),
+      CrewModel(name: "크루명01", crewFounderNickName: "크루장01", iconImageUrl: '', user: 10, isLocked: false),
+      CrewModel(name: "크루명01", crewFounderNickName: "크루장01", iconImageUrl: '', user: 20, isLocked: true),
+      CrewModel(name: "크루명01", crewFounderNickName: "크루장01", iconImageUrl: '', user: 4, isLocked: true),
     ];
   }
 
