@@ -123,6 +123,7 @@ dependencies:
   assets_audio_player: ^3.0.6
   collection: ^1.17.0
   firebase_database: ^10.2.3
+  adjust_sdk: ^4.33.1
 
 
 

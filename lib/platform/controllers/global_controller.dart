@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:adjust_sdk/adjust.dart';
 import 'package:gaza_go/constants/enums.dart';
 import 'package:gaza_go/constants/routes.dart';
 import 'package:gaza_go/platform/helpers/alert_helper.dart';
@@ -61,10 +62,12 @@ class GlobalController extends SuperController {
   void onPaused() {
     print('onPaused GlobalController');
     // TODO: implement onPaused
+    Adjust.onPause();
   }
 
   @override
   void onResumed() async {
+    Adjust.onResume();
     if (internetConnectionListener != null) {
       internetConnectionListener?.resume();
     } else {
