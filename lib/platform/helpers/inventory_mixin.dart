@@ -4,6 +4,7 @@ import 'package:get/get.dart';
 
 class InventoryMixin {
   final RxList<InventoryBadgeListModel> userBadgesList = RxList.empty();
+  final RxList userRepairKitList = RxList.empty();
 
   Future<void> getUserBadgesList() async {
     await BadgeService.getUserBadgesList(

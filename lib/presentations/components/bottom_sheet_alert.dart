@@ -12,8 +12,9 @@ class BottomSheetAlert extends StatelessWidget {
   final List<Widget> actions;
   final bool? isDangerTitle;
   final bool? isNonePaddingOuter;
+  final bool? isFullHeight;
 
-  const BottomSheetAlert({Key? key, this.title, this.contentText, this.contentWidget, this.isDangerTitle, this.isNonePaddingOuter, required this.actions}) : super(key: key);
+  const BottomSheetAlert({Key? key, this.title, this.contentText, this.contentWidget, this.isDangerTitle, this.isNonePaddingOuter, this.isFullHeight, required this.actions}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -25,51 +26,54 @@ class BottomSheetAlert extends StatelessWidget {
           topRight: Radius.circular(12.sp),
         ),
       ),
-      child: Padding(
-        padding: isNonePaddingOuter! ? const EdgeInsets.all(0) : EdgeInsets.only(top: 30.0.sp, left: 20.sp, right: 20.sp, bottom: 40.sp),
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            if (title != null)
-              Padding(
-                padding: EdgeInsets.only(top: 8.0.sp),
-                child: StyledText(
-                  title!,
-                  fontSize: 22,
-                  lineHeight: 24,
-                  fontWeight: 500,
-                  letterSpacing: .2,
-                  color: isDangerTitle! ? dangerColor : Colors.white,
-                ),
-              ),
-            contentWidget ??
+      child: SizedBox(
+        height: isFullHeight! ? MediaQuery.of(context).size.height - 80 : null,
+        child: Padding(
+          padding: isNonePaddingOuter! ? const EdgeInsets.all(0) : EdgeInsets.only(top: 30.0.sp, left: 20.sp, right: 20.sp, bottom: 40.sp),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              if (title != null)
                 Padding(
-                  padding: EdgeInsets.only(top: 12.0.sp, bottom: 30.sp),
+                  padding: EdgeInsets.only(top: 8.0.sp),
                   child: StyledText(
-                    contentText!,
-                    fontSize: 18,
+                    title!,
+                    fontSize: 22,
                     lineHeight: 24,
                     fontWeight: 500,
                     letterSpacing: .2,
-                    color: lightGrayColor,
-                    textAlign: TextAlign.center,
+                    color: isDangerTitle! ? dangerColor : Colors.white,
                   ),
                 ),
-            Row(
-              mainAxisSize: MainAxisSize.max,
-              children: actions.isNotEmpty
-                  ? actions
-                  : [
-                      Expanded(
-                        child: GazagoButton(
-                          onTap: () => Get.until((route) => Get.isBottomSheetOpen == false && Get.isDialogOpen == false),
-                          buttonText: '확인',
-                          buttonColor: skyBlueColor,
+              contentWidget ??
+                  Padding(
+                    padding: EdgeInsets.only(top: 12.0.sp, bottom: 30.sp),
+                    child: StyledText(
+                      contentText!,
+                      fontSize: 18,
+                      lineHeight: 24,
+                      fontWeight: 500,
+                      letterSpacing: .2,
+                      color: lightGrayColor,
+                      textAlign: TextAlign.center,
+                    ),
+                  ),
+              Row(
+                mainAxisSize: MainAxisSize.max,
+                children: actions.isNotEmpty
+                    ? actions
+                    : [
+                        Expanded(
+                          child: GazagoButton(
+                            onTap: () => Get.until((route) => Get.isBottomSheetOpen == false && Get.isDialogOpen == false),
+                            buttonText: '확인',
+                            buttonColor: skyBlueColor,
+                          ),
                         ),
-                      ),
-                    ],
-            )
-          ],
+                      ],
+              )
+            ],
+          ),
         ),
       ),
     );

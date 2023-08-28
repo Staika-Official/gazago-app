@@ -308,7 +308,7 @@ enum ItemType {
   shoes,
   accessory,
   hat,
-  drink,
+  disposable,
   bottom,
 }
 

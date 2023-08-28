@@ -106,7 +106,7 @@ class InventoryItemDetail extends StatelessWidget {
                                                                 fit: BoxFit.fitHeight,
                                                                 height: 170.sp,
                                                                 controller.selectedItem.value.itemImageUrl,
-                                                                placeholderBuilder: (BuildContext context) => Container(padding: const EdgeInsets.all(30.0), child: const CircularProgressIndicator()),
+                                                                placeholderBuilder: (BuildContext context) => const Center(child: SizedBox.square(dimension: 40, child: CircularProgressIndicator())),
                                                                 headers: imageNetworkHeader,
                                                               )
                                                             : CachedNetworkImage(
@@ -171,17 +171,17 @@ class InventoryItemDetail extends StatelessWidget {
                                                                         ],
                                                                       ),
                                                                     ),
-                                                                    controller.selectedItem.value.durability > 1.0
+                                                                    controller.selectedItem.value.durability! > 1.0
                                                                         ? LayoutBuilder(
                                                                             builder: (context, constraints) {
                                                                               return Container(
-                                                                                width: controller.selectedItem.value.durability > 20
-                                                                                    ? constraints.maxWidth / (100 / controller.selectedItem.value.durability)
-                                                                                    : controller.selectedItem.value.durability < 2
+                                                                                width: controller.selectedItem.value.durability! > 20
+                                                                                    ? constraints.maxWidth / (100 / controller.selectedItem.value.durability!)
+                                                                                    : controller.selectedItem.value.durability! < 2
                                                                                         ? 0
                                                                                         : 34,
                                                                                 decoration: BoxDecoration(
-                                                                                  color: controller.selectedItem.value.durability <= 30 ? textRedColor : purpleColor,
+                                                                                  color: controller.selectedItem.value.durability! <= 30 ? textRedColor : purpleColor,
                                                                                   border: Border.all(
                                                                                     width: 2.sp,
                                                                                     color: Colors.black,
@@ -228,16 +228,16 @@ class InventoryItemDetail extends StatelessWidget {
                                                                   fontWeight: 800,
                                                                   fontSize: 15,
                                                                   lineHeight: 21,
-                                                                  color: controller.selectedItem.value.durability.toInt() <= 30 ? Colors.white : Colors.black,
+                                                                  color: controller.selectedItem.value.durability!.toInt() <= 30 ? Colors.white : Colors.black,
                                                                 ),
                                                                 Padding(
                                                                   padding: EdgeInsets.only(left: 5.0.sp),
                                                                   child: StyledText(
-                                                                    formatDecimalPlaces(controller.selectedItem.value.durability, 2),
+                                                                    formatDecimalPlaces(controller.selectedItem.value.durability!, 2),
                                                                     fontWeight: 800,
                                                                     fontSize: 14,
                                                                     lineHeight: 15,
-                                                                    color: controller.selectedItem.value.durability.toInt() <= 30 ? Colors.white : Colors.black,
+                                                                    color: controller.selectedItem.value.durability!.toInt() <= 30 ? Colors.white : Colors.black,
                                                                   ),
                                                                 ),
                                                               ],
@@ -437,6 +437,150 @@ class InventoryItemDetail extends StatelessWidget {
                                                                   ],
                                                                 ),
                                                               ),
+                                                            if (controller.selectedItem.value.itemStat!.repairDurability! > 0)
+                                                              Expanded(
+                                                                child: Column(
+                                                                  children: [
+                                                                    StyledText(
+                                                                      '+${formatDecimalPlaces(controller.selectedItem.value.itemStat!.repairDurability!, 0)}',
+                                                                      fontSize: 26,
+                                                                      lineHeight: 26,
+                                                                      fontWeight: 500,
+                                                                      letterSpacing: -.1,
+                                                                      color: const Color(0xFFB0A3FF),
+                                                                    ),
+                                                                    Padding(
+                                                                      padding: EdgeInsets.only(top: 8.0.sp),
+                                                                      child: Row(
+                                                                        mainAxisAlignment: MainAxisAlignment.center,
+                                                                        crossAxisAlignment: CrossAxisAlignment.center,
+                                                                        children: [
+                                                                          iconShopDurabilityLight,
+                                                                          Padding(
+                                                                            padding: EdgeInsets.only(left: 4.0.sp),
+                                                                            child: const StyledText(
+                                                                              '내구도 수리',
+                                                                              color: Color(0xFFB0A3FF),
+                                                                              fontSize: 12,
+                                                                              lineHeight: 12,
+                                                                              letterSpacing: -.1,
+                                                                              fontWeight: 600,
+                                                                            ),
+                                                                          ),
+                                                                        ],
+                                                                      ),
+                                                                    ),
+                                                                  ],
+                                                                ),
+                                                              ),
+                                                            if (controller.selectedItem.value.itemStat!.recoveryStamina! > 0)
+                                                              Expanded(
+                                                                child: Column(
+                                                                  children: [
+                                                                    StyledText(
+                                                                      '+${formatDecimalPlaces(controller.selectedItem.value.itemStat!.recoveryStamina!, 0)}',
+                                                                      fontSize: 26,
+                                                                      lineHeight: 26,
+                                                                      fontWeight: 500,
+                                                                      letterSpacing: -.1,
+                                                                      color: lightGreenColor,
+                                                                    ),
+                                                                    Padding(
+                                                                      padding: EdgeInsets.only(top: 8.0.sp),
+                                                                      child: Row(
+                                                                        mainAxisAlignment: MainAxisAlignment.center,
+                                                                        crossAxisAlignment: CrossAxisAlignment.center,
+                                                                        children: [
+                                                                          iconShopStamina,
+                                                                          Padding(
+                                                                            padding: EdgeInsets.only(left: 4.0.sp),
+                                                                            child: StyledText(
+                                                                              '체력 회복',
+                                                                              color: lightGreenColor,
+                                                                              fontSize: 12,
+                                                                              lineHeight: 12,
+                                                                              letterSpacing: -.1,
+                                                                              fontWeight: 600,
+                                                                            ),
+                                                                          ),
+                                                                        ],
+                                                                      ),
+                                                                    ),
+                                                                  ],
+                                                                ),
+                                                              ),
+                                                            // if(controller.selectedItem.value.)
+                                                            // if (controller.selectedItem.value.itemStat != null && controller.selectedItem.value.itemStat!.recoveryStamina! > 0)
+                                                            //   Expanded(
+                                                            //     child: Column(
+                                                            //       children: [
+                                                            //         StyledText(
+                                                            //           '+${formatDecimalPlaces(controller.selectedItem.value.itemStat!.recoveryStamina!, 0)}',
+                                                            //           fontSize: 26,
+                                                            //           lineHeight: 26,
+                                                            //           fontWeight: 500,
+                                                            //           color: lightGreenColor,
+                                                            //           letterSpacing: -.1,
+                                                            //         ),
+                                                            //         Padding(
+                                                            //           padding: EdgeInsets.only(top: 8.0.sp),
+                                                            //           child: Row(
+                                                            //             mainAxisAlignment: MainAxisAlignment.center,
+                                                            //             children: [
+                                                            //               Padding(
+                                                            //                 padding: EdgeInsets.only(right: 4.0.sp),
+                                                            //                 child: iconShopStamina,
+                                                            //               ),
+                                                            //               StyledText(
+                                                            //                 '체력 회복',
+                                                            //                 color: lightGreenColor,
+                                                            //                 fontSize: 12,
+                                                            //                 lineHeight: 12,
+                                                            //                 fontWeight: 500,
+                                                            //                 letterSpacing: -.1,
+                                                            //               ),
+                                                            //             ],
+                                                            //           ),
+                                                            //         ),
+                                                            //       ],
+                                                            //     ),
+                                                            //   ),
+                                                            // if (controller.selectedItem.value.itemStat != null && controller.selectedItem.value.itemStat!.repairDurability! > 0)
+                                                            //   Expanded(
+                                                            //     child: Column(
+                                                            //       children: [
+                                                            //         StyledText(
+                                                            //           '+${formatDecimalPlaces(controller.selectedItem.value.itemStat!.repairDurability!, 0)}',
+                                                            //           fontSize: 26,
+                                                            //           lineHeight: 26,
+                                                            //           fontWeight: 500,
+                                                            //           letterSpacing: -.1,
+                                                            //           color: const Color(0xFFB0A3FF),
+                                                            //         ),
+                                                            //         Padding(
+                                                            //           padding: EdgeInsets.only(top: 8.0.sp),
+                                                            //           child: Row(
+                                                            //             mainAxisAlignment: MainAxisAlignment.center,
+                                                            //             crossAxisAlignment: CrossAxisAlignment.center,
+                                                            //             children: [
+                                                            //               iconShopDurabilityLight,
+                                                            //               Padding(
+                                                            //                 padding: EdgeInsets.only(left: 4.0.sp),
+                                                            //                 child: const StyledText(
+                                                            //                   '내구도 수리',
+                                                            //                   color: Color(0xFFB0A3FF),
+                                                            //                   fontSize: 12,
+                                                            //                   lineHeight: 12,
+                                                            //                   letterSpacing: -.1,
+                                                            //                   fontWeight: 600,
+                                                            //                 ),
+                                                            //               ),
+                                                            //             ],
+                                                            //           ),
+                                                            //         ),
+                                                            //       ],
+                                                            //     ),
+                                                            //   ),
                                                           ],
                                                         ),
                                                       ),
@@ -600,94 +744,95 @@ class InventoryItemDetail extends StatelessWidget {
                                             ],
                                           ),
                                         ),
-                                        controller.selectedItem.value.equipped == true
-                                            ? Center(
-                                                child: Padding(
-                                                  padding: EdgeInsets.only(top: 5.0.sp, bottom: 30.sp),
-                                                  child: Container(
-                                                    decoration: BoxDecoration(
-                                                      color: popupBgColor,
-                                                      border: Border.all(
-                                                        width: 1,
-                                                        style: BorderStyle.solid,
-                                                        color: deepGrayColor,
-                                                      ),
-                                                      borderRadius: BorderRadius.all(
-                                                        Radius.circular(30.sp),
-                                                      ),
-                                                      boxShadow: const [
-                                                        BoxShadow(
-                                                          color: Colors.black,
-                                                          offset: Offset(0, 1),
-                                                          blurRadius: 0.0,
-                                                          spreadRadius: 0.0,
+                                        if (controller.selectedItem.value.itemCategory != 'DISPOSABLE')
+                                          controller.selectedItem.value.equipped == true
+                                              ? Center(
+                                                  child: Padding(
+                                                    padding: EdgeInsets.only(top: 5.0.sp, bottom: 30.sp),
+                                                    child: Container(
+                                                      decoration: BoxDecoration(
+                                                        color: popupBgColor,
+                                                        border: Border.all(
+                                                          width: 1,
+                                                          style: BorderStyle.solid,
+                                                          color: deepGrayColor,
                                                         ),
-                                                      ],
+                                                        borderRadius: BorderRadius.all(
+                                                          Radius.circular(30.sp),
+                                                        ),
+                                                        boxShadow: const [
+                                                          BoxShadow(
+                                                            color: Colors.black,
+                                                            offset: Offset(0, 1),
+                                                            blurRadius: 0.0,
+                                                            spreadRadius: 0.0,
+                                                          ),
+                                                        ],
+                                                      ),
+                                                      child: InkWell(
+                                                        onTap: null,
+                                                        child: Padding(
+                                                          padding: EdgeInsets.symmetric(vertical: 13.0.sp, horizontal: 30.sp),
+                                                          child: Column(
+                                                            mainAxisAlignment: MainAxisAlignment.center,
+                                                            children: [
+                                                              StyledText(
+                                                                '장착중',
+                                                                fontSize: 18,
+                                                                lineHeight: 18,
+                                                                fontWeight: 500,
+                                                                color: deepGrayColor,
+                                                              ),
+                                                            ],
+                                                          ),
+                                                        ),
+                                                      ),
                                                     ),
-                                                    child: InkWell(
-                                                      onTap: null,
-                                                      child: Padding(
-                                                        padding: EdgeInsets.symmetric(vertical: 13.0.sp, horizontal: 30.sp),
-                                                        child: Column(
-                                                          mainAxisAlignment: MainAxisAlignment.center,
-                                                          children: [
-                                                            StyledText(
-                                                              '장착중',
-                                                              fontSize: 18,
-                                                              lineHeight: 18,
-                                                              fontWeight: 500,
-                                                              color: deepGrayColor,
-                                                            ),
-                                                          ],
+                                                  ),
+                                                )
+                                              : Center(
+                                                  child: Padding(
+                                                    padding: EdgeInsets.only(top: 5.0.sp, bottom: 30.sp),
+                                                    child: Container(
+                                                      decoration: BoxDecoration(
+                                                        color: popupBgColor,
+                                                        border: Border.all(
+                                                          width: 1,
+                                                          style: BorderStyle.solid,
+                                                          color: const Color(0xFF54F5FF),
+                                                        ),
+                                                        borderRadius: BorderRadius.all(
+                                                          Radius.circular(30.sp),
+                                                        ),
+                                                        boxShadow: const [
+                                                          BoxShadow(
+                                                            color: Colors.black,
+                                                            offset: Offset(0, 1),
+                                                            blurRadius: 0.0,
+                                                            spreadRadius: 0.0,
+                                                          ),
+                                                        ],
+                                                      ),
+                                                      child: InkWell(
+                                                        onTap: () => controller.checkEquippedChallengeItem(controller.selectedItem.value.equippedChallengeItem, controller.selectedItem.value.id),
+                                                        child: Padding(
+                                                          padding: EdgeInsets.symmetric(vertical: 13.0.sp, horizontal: 30.sp),
+                                                          child: Column(
+                                                            mainAxisAlignment: MainAxisAlignment.center,
+                                                            children: [
+                                                              StyledText(
+                                                                '장착',
+                                                                fontSize: 18,
+                                                                lineHeight: 18,
+                                                                fontWeight: 500,
+                                                              ),
+                                                            ],
+                                                          ),
                                                         ),
                                                       ),
                                                     ),
                                                   ),
                                                 ),
-                                              )
-                                            : Center(
-                                                child: Padding(
-                                                  padding: EdgeInsets.only(top: 5.0.sp, bottom: 30.sp),
-                                                  child: Container(
-                                                    decoration: BoxDecoration(
-                                                      color: popupBgColor,
-                                                      border: Border.all(
-                                                        width: 1,
-                                                        style: BorderStyle.solid,
-                                                        color: const Color(0xFF54F5FF),
-                                                      ),
-                                                      borderRadius: BorderRadius.all(
-                                                        Radius.circular(30.sp),
-                                                      ),
-                                                      boxShadow: const [
-                                                        BoxShadow(
-                                                          color: Colors.black,
-                                                          offset: Offset(0, 1),
-                                                          blurRadius: 0.0,
-                                                          spreadRadius: 0.0,
-                                                        ),
-                                                      ],
-                                                    ),
-                                                    child: InkWell(
-                                                      onTap: () => controller.checkEquippedChallengeItem(controller.selectedItem.value.equippedChallengeItem, controller.selectedItem.value.id),
-                                                      child: Padding(
-                                                        padding: EdgeInsets.symmetric(vertical: 13.0.sp, horizontal: 30.sp),
-                                                        child: Column(
-                                                          mainAxisAlignment: MainAxisAlignment.center,
-                                                          children: const [
-                                                            StyledText(
-                                                              '장착',
-                                                              fontSize: 18,
-                                                              lineHeight: 18,
-                                                              fontWeight: 500,
-                                                            ),
-                                                          ],
-                                                        ),
-                                                      ),
-                                                    ),
-                                                  ),
-                                                ),
-                                              ),
                                         if (controller.selectedItem.value.expiredDate != null)
                                           Container(
                                               decoration: BoxDecoration(
@@ -1000,7 +1145,7 @@ class InventoryItemDetail extends StatelessWidget {
               right: 20,
               bottom: 10,
               child: InkWell(
-                onTap: () => controller.showShoesRepairPopup(controller.selectedItem.value.id),
+                onTap: () => controller.isDisableButton.value ? null : controller.showShoesRepairPopup(controller.selectedItem.value.id, context),
                 child: Container(
                   padding: EdgeInsets.all(20.sp),
                   margin: const EdgeInsets.only(bottom: 20),

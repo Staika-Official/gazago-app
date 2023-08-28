@@ -212,225 +212,264 @@ class MyPage extends StatelessWidget {
             child: Obx(() {
               return Column(
                 children: [
-                  controller.isEditMode.value
-                      ? Expanded(
-                          child: Container(
-                              color: subBg01Color,
-                              child: Align(
-                                alignment: Alignment.bottomCenter,
-                                child: Container(
-                                  color: skyBlueColor,
-                                  height: 60.sp,
-                                  alignment: Alignment.center,
-                                  child: InkWell(
-                                    onTap: () => controller.modifyMyAccountInfo(),
-                                    child: Padding(
-                                      padding: EdgeInsets.symmetric(vertical: 8.0.sp),
-                                      child: const Center(
-                                        child: StyledText(
-                                          '확인',
-                                          color: Colors.black,
-                                          fontSize: 18,
-                                          fontWeight: 500,
-                                        ),
-                                      ),
-                                    ),
-                                  ),
+                  if (controller.isEditMode.value) ...[
+                    Expanded(
+                      child: Align(
+                        alignment: Alignment.bottomCenter,
+                        child: Container(
+                          padding: EdgeInsets.only(
+                            top: 26,
+                            left: 20,
+                            right: 20,
+                            bottom: 90,
+                          ),
+                          decoration: BoxDecoration(
+                            border: Border(
+                              top: BorderSide(
+                                color: Color(0xff26272F),
+                                width: 2,
+                              ),
+                            ),
+                          ),
+                          child: Column(
+                            mainAxisSize: MainAxisSize.min,
+                            mainAxisAlignment: MainAxisAlignment.start,
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              StyledText(
+                                '닉네임 변경 안내',
+                                fontSize: 18,
+                                fontWeight: 500,
+                                lineHeight: 20,
+                                textAlign: TextAlign.left,
+                              ),
+                              Padding(
+                                padding: EdgeInsets.only(top: 10),
+                                child: StyledText(
+                                  '- 닉네임은 앱 사용 시 1회만 변경이 가능합니다. 신중하게 선택해주세요.\n- 욕설, 비방 등의 용어가 포함된 닉네임은 설정이 불가합니다.\n- 금지어가 포함된 닉네임을 설정할 경우, 운영 정책에 따라 가입했던 이메일 주소로 임의로 초기화 될 수 있습니다.',
+                                  fontSize: 12,
+                                  fontWeight: 500,
+                                  lineHeight: 18,
+                                  color: deepGrayColor,
                                 ),
-                              )),
-                        )
-                      : Container(
-                          color: subBg02Color,
-                          child: Padding(
-                            padding: EdgeInsets.symmetric(horizontal: 20.0.sp),
-                            child: Column(
-                              children: [
-                                // Padding(
-                                //   padding: const EdgeInsets.only(bottom: 21.0),
-                                //   child: Column(
-                                //     children: [
-                                //       Row(
-                                //         mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                //         children: [
-                                //           const StyledText(
-                                //             '지갑주소',
-                                //             fontSize: 18,
-                                //             fontWeight: 500,
-                                //             lineHeight: 20,
-                                //           ),
-                                //           TextButton(
-                                //             onPressed: () async => await Clipboard.setData(ClipboardData(text: controller.profile.value.walletAddress)),
-                                //             child: Row(
-                                //               children: [
-                                //                 iconCopy,
-                                //                 const Padding(
-                                //                   padding: const EdgeInsets.only(left: 8.0),
-                                //                   child: StyledText(
-                                //                     '주소복사',
-                                //                     fontSize: 14,
-                                //                     fontWeight: 500,
-                                //                     color: Color(0xFFA8A8A8),
-                                //                   ),
-                                //                 )
-                                //               ],
-                                //             ),
-                                //           )
-                                //         ],
-                                //       ),
-                                //       SizedBox(
-                                //         width: double.infinity,
-                                //         child: StyledText(
-                                //           controller.profile.value.walletAddress,
-                                //           textAlign: TextAlign.end,
-                                //           fontWeight: 500,
-                                //           color: const Color(0xFF646464),
-                                //           fontSize: 12,
-                                //         ),
-                                //       ),
-                                //     ],
-                                //   ),
-                                // ),
-                                Padding(
-                                  padding: EdgeInsets.symmetric(vertical: 21.0.sp),
-                                  child: Row(
-                                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              )
+                            ],
+                          ),
+                        ),
+                      ),
+                    ),
+                    Container(
+                      color: skyBlueColor,
+                      height: 60.sp,
+                      alignment: Alignment.center,
+                      child: InkWell(
+                        onTap: () => controller.validateProfileEdit(),
+                        child: Padding(
+                          padding: EdgeInsets.symmetric(vertical: 8.0.sp),
+                          child: const Center(
+                            child: StyledText(
+                              '확인',
+                              color: Colors.black,
+                              fontSize: 18,
+                              fontWeight: 500,
+                            ),
+                          ),
+                        ),
+                      ),
+                    ),
+                  ] else
+                    Container(
+                      color: subBg02Color,
+                      child: Padding(
+                        padding: EdgeInsets.symmetric(horizontal: 20.0.sp),
+                        child: Column(
+                          children: [
+                            // Padding(
+                            //   padding: const EdgeInsets.only(bottom: 21.0),
+                            //   child: Column(
+                            //     children: [
+                            //       Row(
+                            //         mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            //         children: [
+                            //           const StyledText(
+                            //             '지갑주소',
+                            //             fontSize: 18,
+                            //             fontWeight: 500,
+                            //             lineHeight: 20,
+                            //           ),
+                            //           TextButton(
+                            //             onPressed: () async => await Clipboard.setData(ClipboardData(text: controller.profile.value.walletAddress)),
+                            //             child: Row(
+                            //               children: [
+                            //                 iconCopy,
+                            //                 const Padding(
+                            //                   padding: const EdgeInsets.only(left: 8.0),
+                            //                   child: StyledText(
+                            //                     '주소복사',
+                            //                     fontSize: 14,
+                            //                     fontWeight: 500,
+                            //                     color: Color(0xFFA8A8A8),
+                            //                   ),
+                            //                 )
+                            //               ],
+                            //             ),
+                            //           )
+                            //         ],
+                            //       ),
+                            //       SizedBox(
+                            //         width: double.infinity,
+                            //         child: StyledText(
+                            //           controller.profile.value.walletAddress,
+                            //           textAlign: TextAlign.end,
+                            //           fontWeight: 500,
+                            //           color: const Color(0xFF646464),
+                            //           fontSize: 12,
+                            //         ),
+                            //       ),
+                            //     ],
+                            //   ),
+                            // ),
+                            Padding(
+                              padding: EdgeInsets.symmetric(vertical: 21.0.sp),
+                              child: Row(
+                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                children: [
+                                  const StyledText(
+                                    'SNS 로그인',
+                                    fontSize: 18,
+                                    fontWeight: 500,
+                                    lineHeight: 20,
+                                  ),
+                                  Row(
                                     children: [
-                                      const StyledText(
-                                        'SNS 로그인',
-                                        fontSize: 18,
-                                        fontWeight: 500,
-                                        lineHeight: 20,
+                                      Padding(
+                                        padding: EdgeInsets.only(right: 5.0.sp, bottom: 3.0.sp),
+                                        child: getMypageLoginedButtonIcon(controller.profile.value.provider!),
                                       ),
-                                      Row(
-                                        children: [
-                                          Padding(
-                                            padding: EdgeInsets.only(right: 5.0.sp, bottom: 3.0.sp),
-                                            child: getMypageLoginedButtonIcon(controller.profile.value.provider!),
-                                          ),
-                                          StyledText(
-                                            controller.profile.value.provider!,
-                                            color: const Color(0xFFA8A8A8),
-                                            fontSize: 16,
-                                            fontWeight: 500,
-                                          ),
-                                        ],
+                                      StyledText(
+                                        controller.profile.value.provider!,
+                                        color: const Color(0xFFA8A8A8),
+                                        fontSize: 16,
+                                        fontWeight: 500,
                                       ),
                                     ],
                                   ),
-                                ),
-                                Padding(
-                                  padding: EdgeInsets.symmetric(vertical: 21.0.sp),
-                                  child: Row(
-                                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                    children: [
-                                      const StyledText(
-                                        '이메일 주소',
-                                        fontSize: 18,
-                                        fontWeight: 500,
-                                        lineHeight: 20,
-                                      ),
-                                      controller.profile.value.provider == 'APPLE'
-                                          ? Column(
-                                              crossAxisAlignment: CrossAxisAlignment.end,
-                                              children: [
-                                                StyledText(
-                                                  controller.profile.value.email.split('@')[0],
-                                                  fontSize: 14,
-                                                  fontWeight: 500,
-                                                  color: const Color(0xFFA8A8A8),
-                                                ),
-                                                Padding(
-                                                  padding: EdgeInsets.only(top: 5.0.sp),
-                                                  child: StyledText(
-                                                    '@${controller.profile.value.email.split('@')[1]}',
-                                                    fontSize: 14,
-                                                    fontWeight: 500,
-                                                    color: const Color(0xFFA8A8A8),
-                                                  ),
-                                                ),
-                                              ],
-                                            )
-                                          : StyledText(
-                                              controller.profile.value.email,
+                                ],
+                              ),
+                            ),
+                            Padding(
+                              padding: EdgeInsets.symmetric(vertical: 21.0.sp),
+                              child: Row(
+                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                children: [
+                                  const StyledText(
+                                    '이메일 주소',
+                                    fontSize: 18,
+                                    fontWeight: 500,
+                                    lineHeight: 20,
+                                  ),
+                                  controller.profile.value.provider == 'APPLE'
+                                      ? Column(
+                                          crossAxisAlignment: CrossAxisAlignment.end,
+                                          children: [
+                                            StyledText(
+                                              controller.profile.value.email.split('@')[0],
                                               fontSize: 14,
                                               fontWeight: 500,
                                               color: const Color(0xFFA8A8A8),
                                             ),
-                                    ],
-                                  ),
-                                ),
-
-                                // InkWell(
-                                //   onTap: () => Get.toNamed(Routes.editBiometrics),
-                                //   child: Row(
-                                //     mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                //     children: [
-                                //       StyledText(
-                                //         '생체정보',
-                                //         fontSize: 18,
-                                //         fontWeight: 500,
-                                //         lineHeight: 20,
-                                //       ),
-                                //       Icon(Icons.chevron_right),
-                                //     ],
-                                //   ),
-                                // ),
-                                // Row(
-                                //   mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                //   children: [
-                                //     StyledText(
-                                //       '성별',
-                                //       fontSize: 18,
-                                //       fontWeight: 500,
-                                //       lineHeight: 20,
-                                //     ),
-                                //     StyledText(
-                                //       controller.profile.value.gender == 'MALE' ? '남자' : '여자',
-                                //       fontSize: 18,
-                                //       fontWeight: 500,
-                                //     )
-                                //   ],
-                                // ),
-                                // Row(
-                                //   mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                //   children: [
-                                //     StyledText(
-                                //       '나이',
-                                //       fontSize: 18,
-                                //       fontWeight: 500,
-                                //       lineHeight: 20,
-                                //     ),
-                                //     StyledText(controller.profile.value.age.toString())
-                                //   ],
-                                // ),
-                                // Row(
-                                //   mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                //   children: [
-                                //     StyledText(
-                                //       '몸무게',
-                                //       fontSize: 18,
-                                //       fontWeight: 500,
-                                //       lineHeight: 20,
-                                //     ),
-                                //     StyledText('${controller.profile.value.weight.toString()}kg')
-                                //   ],
-                                // ),
-                                // Row(
-                                //   mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                //   children: [
-                                //     StyledText(
-                                //       '키',
-                                //       fontSize: 18,
-                                //       fontWeight: 500,
-                                //       lineHeight: 20,
-                                //     ),
-                                //     StyledText('${controller.profile.value.height.toString()}cm')
-                                //   ],
-                                // ),
-                              ],
+                                            Padding(
+                                              padding: EdgeInsets.only(top: 5.0.sp),
+                                              child: StyledText(
+                                                '@${controller.profile.value.email.split('@')[1]}',
+                                                fontSize: 14,
+                                                fontWeight: 500,
+                                                color: const Color(0xFFA8A8A8),
+                                              ),
+                                            ),
+                                          ],
+                                        )
+                                      : StyledText(
+                                          controller.profile.value.email,
+                                          fontSize: 14,
+                                          fontWeight: 500,
+                                          color: const Color(0xFFA8A8A8),
+                                        ),
+                                ],
+                              ),
                             ),
-                          ),
+
+                            // InkWell(
+                            //   onTap: () => Get.toNamed(Routes.editBiometrics),
+                            //   child: Row(
+                            //     mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            //     children: [
+                            //       StyledText(
+                            //         '생체정보',
+                            //         fontSize: 18,
+                            //         fontWeight: 500,
+                            //         lineHeight: 20,
+                            //       ),
+                            //       Icon(Icons.chevron_right),
+                            //     ],
+                            //   ),
+                            // ),
+                            // Row(
+                            //   mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            //   children: [
+                            //     StyledText(
+                            //       '성별',
+                            //       fontSize: 18,
+                            //       fontWeight: 500,
+                            //       lineHeight: 20,
+                            //     ),
+                            //     StyledText(
+                            //       controller.profile.value.gender == 'MALE' ? '남자' : '여자',
+                            //       fontSize: 18,
+                            //       fontWeight: 500,
+                            //     )
+                            //   ],
+                            // ),
+                            // Row(
+                            //   mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            //   children: [
+                            //     StyledText(
+                            //       '나이',
+                            //       fontSize: 18,
+                            //       fontWeight: 500,
+                            //       lineHeight: 20,
+                            //     ),
+                            //     StyledText(controller.profile.value.age.toString())
+                            //   ],
+                            // ),
+                            // Row(
+                            //   mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            //   children: [
+                            //     StyledText(
+                            //       '몸무게',
+                            //       fontSize: 18,
+                            //       fontWeight: 500,
+                            //       lineHeight: 20,
+                            //     ),
+                            //     StyledText('${controller.profile.value.weight.toString()}kg')
+                            //   ],
+                            // ),
+                            // Row(
+                            //   mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            //   children: [
+                            //     StyledText(
+                            //       '키',
+                            //       fontSize: 18,
+                            //       fontWeight: 500,
+                            //       lineHeight: 20,
+                            //     ),
+                            //     StyledText('${controller.profile.value.height.toString()}cm')
+                            //   ],
+                            // ),
+                          ],
                         ),
+                      ),
+                    ),
                   if (!controller.isEditMode.value)
                     Column(
                       children: [

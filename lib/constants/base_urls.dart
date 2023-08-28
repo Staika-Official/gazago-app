@@ -20,5 +20,7 @@ class ServiceUrl {
   static const String onChainWalletService = '/services/wallet-go/api/on-chains';
   static const String boardService = '/services/board/api';
   static const String shopService = '/services/gazago/api/shop';
+  static const String shop2Service = '/services/gazago/api/v2/shop';
   static const String admobService = '/services/gazago/api/ad-admob-rewards';
+  static const String dailyBenefitsService = '/services/gazago/api/benefits';
 }

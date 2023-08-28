@@ -6,6 +6,7 @@ import 'package:flutter_naver_map/flutter_naver_map.dart';
 import 'package:gaza_go/constants/config.dart';
 import 'package:gaza_go/constants/enums.dart';
 import 'package:gaza_go/constants/routes.dart';
+import 'package:gaza_go/platform/controllers/loader_controller.dart';
 import 'package:gaza_go/platform/controllers/loading_controller.dart';
 import 'package:gaza_go/platform/controllers/wallet_master_controller.dart';
 import 'package:gaza_go/platform/helpers/activity_helper.dart';
@@ -13,6 +14,7 @@ import 'package:gaza_go/platform/helpers/activity_mixin.dart';
 import 'package:gaza_go/platform/helpers/admob_mixin.dart';
 import 'package:gaza_go/platform/helpers/alert_helper.dart';
 import 'package:gaza_go/platform/helpers/challenge_mixin.dart';
+import 'package:gaza_go/platform/helpers/consumer_item_mixin.dart';
 import 'package:gaza_go/platform/helpers/location_helper.dart';
 import 'package:gaza_go/platform/helpers/login_helper.dart';
 import 'package:gaza_go/platform/helpers/map_helper.dart';
@@ -20,14 +22,9 @@ import 'package:gaza_go/platform/models/challenge_course_model.dart';
 import 'package:gaza_go/platform/models/challenge_hierarchy_model.dart';
 import 'package:gaza_go/platform/models/challenge_model.dart';
 import 'package:gaza_go/platform/models/current_user_state_model.dart';
-import 'package:gaza_go/platform/models/inventory_item_model.dart';
-import 'package:gaza_go/platform/models/repair_shoes_model.dart';
 import 'package:gaza_go/platform/models/stat_model.dart';
 import 'package:gaza_go/platform/models/user_exercise_model.dart';
-import 'package:gaza_go/platform/models/user_stamina_recharge_model.dart';
-import 'package:gaza_go/platform/models/user_state_model.dart';
 import 'package:gaza_go/platform/services/activity_service.dart';
-import 'package:gaza_go/platform/services/item_service.dart';
 import 'package:gaza_go/platform/services/member_service.dart';
 import 'package:gaza_go/platform/services/uaa_service.dart';
 import 'package:gaza_go/platform/stores/hive_store.dart';
@@ -41,9 +38,9 @@ import 'package:permission_handler/permission_handler.dart' as ph;
 import 'package:simple_animations/animation_builder/custom_animation_builder.dart';
 import 'package:throttling/throttling.dart';
 
-class ActivityController extends SuperController with ActivityMixin, ChallengeMixin, GetTickerProviderStateMixin, AdmobMixin {
+class ActivityController extends SuperController with ActivityMixin, ChallengeMixin, GetTickerProviderStateMixin, AdmobMixin, ConsumerItemMixin {
   final WalletMasterController walletMasterController = Get.find();
-
+  LoaderController loaderController = Get.isRegistered<LoaderController>() ? Get.find<LoaderController>() : Get.put(LoaderController());
   RxList<StatModel> get statList {
     return RxList([
       StatModel(name: '체력', currentStat: userState.value.state != null ? userState.value.state!.stamina! : 0, type: 'STAMINA'),
@@ -51,9 +48,9 @@ class ActivityController extends SuperController with ActivityMixin, ChallengeMi
     ]);
   }
 
-  final RxDouble currentSliderValue = RxDouble(0);
-  final RxInt remainDurability = RxInt(0);
-  final RxInt repairDurability = RxInt(0);
+  // final RxDouble currentSliderValue = RxDouble(0);
+  // final RxInt remainDurability = RxInt(0);
+  // final RxInt repairDurability = RxInt(0);
   final RxInt costTik = RxInt(0);
   final RxBool isListeningToLocation = RxBool(false);
   final RxBool hasPermission = RxBool(false);
@@ -183,23 +180,52 @@ class ActivityController extends SuperController with ActivityMixin, ChallengeMi
 
     selectedChallengeMarkers.add(getCustomMarker(markerType: "END", course: course, markerIcon: endMarker));
 
-    challengeMapController.moveCamera(
-      CameraUpdate.fitBounds(
-        LatLngBounds.fromLatLngList(
-          [
-            LatLng(course.startLat!, course.startLon!),
-            LatLng(course.endLat!, course.endLon!),
-          ],
+    if (course.checkpoints != null && course.checkpoints!.isNotEmpty) {
+      List<LatLng> markers = getfitBoundCourseMarker(selectedChallengeMarkers);
+      print(markers);
+      challengeMapController.moveCamera(
+        CameraUpdate.fitBounds(
+          LatLngBounds.fromLatLngList(markers),
+          padding: 120,
         ),
-        padding: 100,
-      ),
-    );
+      );
+    } else {
+      challengeMapController.moveCamera(
+        CameraUpdate.fitBounds(
+          LatLngBounds.fromLatLngList(
+            [
+              LatLng(course.startLat!, course.startLon!),
+              LatLng(course.endLat!, course.endLon!),
+            ],
+          ),
+          padding: 100,
+        ),
+      );
+    }
+  }
+
+  List<LatLng> getfitBoundCourseMarker(markers) {
+    double minLat = markers.map((marker) => marker.position.latitude).reduce((a, b) => a < b ? a : b);
+    double maxLat = markers.map((marker) => marker.position.latitude).reduce((a, b) => a > b ? a : b);
+    double minLng = markers.map((marker) => marker.position.longitude).reduce((a, b) => a < b ? a : b);
+    double maxLng = markers.map((marker) => marker.position.longitude).reduce((a, b) => a > b ? a : b);
+
+    // double aspectRatio = (maxLng - minLng) / (maxLat - minLat);
+
+    List<LatLng> outermostCoords = [];
+
+    outermostCoords = [
+      LatLng(minLat, minLng),
+      LatLng(maxLat, maxLng),
+    ];
+
+    return outermostCoords;
   }
 
   void initRepairInfo() {
-    repairDurability.value = 0;
-    remainDurability.value = 0;
-    currentSliderValue.value = 0;
+    // repairDurability.value = 0;
+    // remainDurability.value = 0;
+    // currentSliderValue.value = 0;
     costTik.value = 0;
   }
 
@@ -217,87 +243,112 @@ class ActivityController extends SuperController with ActivityMixin, ChallengeMi
     initRepairButton();
   }
 
-  void onClickRepairStat(stat) {
-    handleShowStaminaPopup(stat);
+  void onClickRepairStat(stat, context) async {
+    loaderController.isLoading.value = true;
+    await getMyConsumerItemsByType(stat.type == 'STAMINA' ? 'RECOVERY' : 'REPAIR', isNotEmptyCallback: () {
+      loaderController.isLoading.value = false;
+      selectedType.value = stat.type;
+      if (stat.type != 'STAMINA') {
+        targetShoeId.value = userState.value.shoes!.id!;
+      }
+      currentStat.value = stat.type == 'STAMINA' ? userState.value.state!.stamina! : userState.value.shoes!.durability!;
+      consumerItemUsagePopup(this, context);
+    }, isEmptyCallback: () {
+      loaderController.isLoading.value = false;
+      shortConsumerItems(stat.type);
+    });
   }
 
-  void handleShowStaminaPopup(stat) async {
-    currentSliderValue.value = 0;
-    await walletMasterController.getFeeTik();
-    showRepairStatSlider(this, stat, walletMasterController.feeTikStamina.value, walletMasterController.feeTikDurability.value);
+  void confirmRecoveryOrRepairStat(stat) async {
+    print(stat);
+    if (selectedType.value == 'STAMINA') {
+      await fetchRecoveryStamina();
+    } else {
+      await fetchRepairShoes();
+    }
+    await getUserState();
+    // currentStat.value = selectedType.value == 'STAMINA' ? userState.value.state!.stamina! : userState.value.shoes!.durability!;
+    // currentStat.value = equippedItems.items.firstWhere((element) => element.itemCategory == 'SHOES').durability;
+    // getUserEquippedItems();
+    initStat();
   }
+
+  // void handleShowStaminaPopup(stat) async {
+  //   await walletMasterController.getFeeTik();
+  //   showRepairStatSlider(this, stat, walletMasterController.feeTikStamina.value, walletMasterController.feeTikDurability.value);
+  // }
 
   void handleNotEnoughTaikaPopup() {
     showNotEnoughTaikaAlert();
     initRepairButton();
   }
 
-  void fetchRechargeStamina(type) async {
-    disableButton.value = true;
+  // void fetchRechargeStamina(type) async {
+  //   disableButton.value = true;
+  //
+  //   if (walletMasterController.tik.value.amount == null) {
+  //     await walletMasterController.getSpendingWalletBalances();
+  //   }
+  //   if (walletMasterController.tik.value.amount! >= costTik.value) {
+  //     if (costTik.value > 0) {
+  //       await ActivityService.fetchUserStaminaRecharge(
+  //           UserStaminaRechargeModel(
+  //             type: type,
+  //             stat: currentSliderValue.value.toInt(),
+  //             feeTik: costTik.value,
+  //           ), successCallback: (userState) {
+  //         UserStateModel newUserState = userState;
+  //         this.userState.update((state) {
+  //           state?.state = newUserState;
+  //         });
+  //         walletMasterController.getSpendingWalletBalances();
+  //         showToastPopup('체력이 충전되었습니다.');
+  //         closeRepairPopup();
+  //       }, errorCallback: () {
+  //         showToastPopup('충전 요청이 실패했습니다.');
+  //         initRepairButton();
+  //       });
+  //     } else {
+  //       showToastPopup('충전할 게이지를 확인해주세요.');
+  //       initRepairButton();
+  //     }
+  //   } else {
+  //     handleNotEnoughTaikaPopup();
+  //   }
+  // }
 
-    if (walletMasterController.tik.value.amount == null) {
-      await walletMasterController.getSpendingWalletBalances();
-    }
-    if (walletMasterController.tik.value.amount! >= costTik.value) {
-      if (costTik.value > 0) {
-        await ActivityService.fetchUserStaminaRecharge(
-            UserStaminaRechargeModel(
-              type: type,
-              stat: currentSliderValue.value.toInt(),
-              feeTik: costTik.value,
-            ), successCallback: (userState) {
-          UserStateModel newUserState = userState;
-          this.userState.update((state) {
-            state?.state = newUserState;
-          });
-          walletMasterController.getSpendingWalletBalances();
-          showToastPopup('체력이 충전되었습니다.');
-          closeRepairPopup();
-        }, errorCallback: () {
-          showToastPopup('충전 요청이 실패했습니다.');
-          initRepairButton();
-        });
-      } else {
-        showToastPopup('충전할 게이지를 확인해주세요.');
-        initRepairButton();
-      }
-    } else {
-      handleNotEnoughTaikaPopup();
-    }
-  }
-
-  void fetchRepairShoes() async {
-    disableButton.value = true;
-    if (walletMasterController.tik.value.amount == null) {
-      await walletMasterController.getSpendingWalletBalances();
-    }
-    if (walletMasterController.tik.value.amount! >= costTik.value) {
-      if (costTik.value > 0) {
-        await ItemService.fetchRepairItemShoes(
-            RepairShoesModel(
-              id: userState.value.shoes!.id,
-              durability: currentSliderValue.value.toInt(),
-              feeTik: costTik.value.toInt(),
-            ), successCallback: (repairModel) {
-          InventoryItemModel newRepairModel = repairModel;
-          userState.update((state) {
-            state!.shoes!.durability = newRepairModel.durability;
-          });
-          walletMasterController.getSpendingWalletBalances();
-          showToastPopup('내구도 충전이 완료되었습니다.');
-          closeRepairPopup();
-        }, errorCallback: () {
-          showToastPopup('충전 요청이 실패했습니다.');
-          initRepairButton();
-        });
-      } else {
-        showToastPopup('충전할 게이지를 확인해주세요.');
-        initRepairButton();
-      }
-    } else {
-      handleNotEnoughTaikaPopup();
-    }
-  }
+  // void fetchRepairShoes() async {
+  //   disableButton.value = true;
+  //   if (walletMasterController.tik.value.amount == null) {
+  //     await walletMasterController.getSpendingWalletBalances();
+  //   }
+  //   if (walletMasterController.tik.value.amount! >= costTik.value) {
+  //     if (costTik.value > 0) {
+  //       await ItemService.fetchRepairItemShoes(
+  //           RepairShoesModel(
+  //             repairUuid: userState.value.shoes!.id,
+  //             durability: currentSliderValue.value.toInt(),
+  //             feeTik: costTik.value.toInt(),
+  //           ), successCallback: (repairModel) {
+  //         InventoryItemModel newRepairModel = repairModel;
+  //         userState.update((state) {
+  //           state!.shoes!.durability = newRepairModel.durability;
+  //         });
+  //         walletMasterController.getSpendingWalletBalances();
+  //         showToastPopup('내구도 충전이 완료되었습니다.');
+  //         closeRepairPopup();
+  //       }, errorCallback: () {
+  //         showToastPopup('충전 요청이 실패했습니다.');
+  //         initRepairButton();
+  //       });
+  //     } else {
+  //       showToastPopup('충전할 게이지를 확인해주세요.');
+  //       initRepairButton();
+  //     }
+  //   } else {
+  //     handleNotEnoughTaikaPopup();
+  //   }
+  // }
 
   Future<void> getUserState({bool showLoading = false}) async {
     await ActivityService.getCurrentUserState(
@@ -696,7 +747,8 @@ class ActivityController extends SuperController with ActivityMixin, ChallengeMi
         if (coordinates.isNotEmpty && coordinates.length > 1) {
           //TODO. need to edit filter test
           filterCoordinates(coordinates.last, LatLng(position.latitude, position.longitude), userState.value.exercise!.id!);
-          exerciseDistance.value = exerciseDistance.value + Geolocator.distanceBetween(coordinates[coordinates.length - 2].latitude, coordinates[coordinates.length - 2].longitude, coordinates.last.latitude, coordinates.last.longitude);
+          exerciseDistance.value = exerciseDistance.value +
+              Geolocator.distanceBetween(coordinates[coordinates.length - 2].latitude, coordinates[coordinates.length - 2].longitude, coordinates.last.latitude, coordinates.last.longitude);
         }
       } else {
         // 첼린지 존 찾기(30초마다 요청)

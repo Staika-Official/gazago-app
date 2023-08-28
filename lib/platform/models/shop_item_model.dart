@@ -1,3 +1,4 @@
+import 'package:gaza_go/platform/models/inventory_item_stat_model.dart';
 import 'package:gaza_go/platform/models/shop_item_challenge_model.dart';
 import 'package:json_annotation/json_annotation.dart';
 
@@ -25,6 +26,8 @@ class ShopItemModel {
   String? description;
   String? publishType;
   String? tradeSymbol;
+  double? recoveryStamina;
+  double? repairDurability;
   ShopItemChallengeModel? challenge;
 
   ShopItemModel({
@@ -48,6 +51,8 @@ class ShopItemModel {
     this.description,
     this.publishType,
     this.tradeSymbol,
+    this.recoveryStamina,
+    this.repairDurability,
     this.challenge,
   });
 

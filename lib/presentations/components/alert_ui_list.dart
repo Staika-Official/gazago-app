@@ -2,7 +2,6 @@ import 'dart:async';
 import 'dart:io';
 import 'dart:ui';
 
-import 'package:another_xlider/another_xlider.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
@@ -36,7 +35,6 @@ import 'package:gaza_go/platform/helpers/inventory_helper.dart';
 import 'package:gaza_go/platform/models/challenge_course_model.dart';
 import 'package:gaza_go/platform/models/exchange_stik_price_model.dart';
 import 'package:gaza_go/platform/models/push_message_challenge_success_model.dart';
-import 'package:gaza_go/platform/models/stat_model.dart';
 import 'package:gaza_go/presentations/components/circular_button.dart';
 import 'package:gaza_go/presentations/components/fair_play_content.dart';
 import 'package:gaza_go/presentations/components/gazago_button.dart';
@@ -64,274 +62,274 @@ void showRetryAlert(LoadingController controller) {
   );
 }
 
-void showShoeRepairSlider(InventoryController controller, int feeTikDurability, int itemId) {
-  showAlert(
-    title: '신발 내구도 충전',
-    contentWidget: Obx(() {
-      return Column(
-        children: [
-          Padding(
-            padding: EdgeInsets.only(top: 12.0.sp),
-            child: StyledText(
-              '현재 신발 내구도 ${formatDecimalPlaces(itemId == controller.equippedShoe.value.id ? controller.equippedShoe.value.durability : controller.selectedItem.value.durability, 2)}',
-              fontSize: 16,
-              lineHeight: 22,
-              fontWeight: 500,
-              color: deepGrayColor,
-            ),
-          ),
-          Container(
-            margin: EdgeInsets.only(top: 15.sp),
-            child: FlutterSlider(
-              values: [controller.currentSliderValue.value],
-              max: 100,
-              min: 0,
-              handlerHeight: 32.0,
-              ignoreSteps: [
-                FlutterSliderIgnoreSteps(from: 0, to: 0),
-              ],
-              trackBar: FlutterSliderTrackBar(
-                inactiveTrackBarHeight: 16,
-                activeTrackBarHeight: 15,
-                inactiveTrackBar: BoxDecoration(
-                  borderRadius: BorderRadius.circular(20.sp),
-                  color: sliderGrayColor,
-                  boxShadow: [
-                    BoxShadow(
-                      color: Colors.black,
-                      offset: Offset(2.sp, 3.sp),
-                    )
-                  ],
-                ),
-                activeTrackBar: BoxDecoration(
-                  borderRadius: BorderRadius.circular(20.sp),
-                  color: purpleColor,
-                ),
-              ),
-              onDragging: (handlerIndex, lowerValue, upperValue) {
-                controller.currentSliderValue.value = lowerValue;
-                controller.costTik.value = controller.currentSliderValue.value.toInt() * feeTikDurability;
-              },
-              handler: FlutterSliderHandler(
-                decoration: BoxDecoration(
-                  color: purpleColor,
-                  border: Border.all(width: 2.sp, color: Colors.white),
-                  borderRadius: BorderRadius.circular(30.sp),
-                  boxShadow: [
-                    BoxShadow(
-                      color: Colors.black,
-                      offset: Offset(2.sp, 3.sp),
-                    )
-                  ],
-                ),
-                child: iconSliderShoe,
-              ),
-              tooltip: FlutterSliderTooltip(
-                textStyle: TextStyle(
-                  color: Colors.black,
-                  fontSize: 22.sp,
-                  fontWeight: FontWeight.w500,
-                  height: 1.sp,
-                ),
-                format: (label) => '+ ${formatDecimalPlaces(double.parse(label), 0)}',
-                boxStyle: FlutterSliderTooltipBox(
-                  decoration: BoxDecoration(
-                    color: purpleColor,
-                    borderRadius: BorderRadius.circular(50.sp),
-                  ),
-                ),
-              ),
-            ),
-          ),
-          Padding(
-            padding: EdgeInsets.symmetric(vertical: 40.0.sp),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: [
-                const StyledText(
-                  '충전 비용 :',
-                  fontSize: 22,
-                  fontWeight: 500,
-                  color: Color(0xFFA7A7A7),
-                ),
-                StyledText(
-                  ' ${controller.costTik.value} TIK',
-                  fontSize: 22,
-                  fontWeight: 500,
-                  color: Colors.white,
-                ),
-              ],
-            ),
-          ),
-        ],
-      );
-    }),
-    actions: [
-      Expanded(
-        child: GazagoButton(
-          onTap: () => controller.closeRepairPopup(),
-          buttonText: '취소',
-          textColor: Colors.white,
-          buttonColor: popupBgColor,
-        ),
-      ),
-      SizedBox(
-        width: 9.sp,
-      ),
-      Expanded(
-        child: Obx(() {
-          return GazagoButton(
-            onTap: () => controller.fetchRepairShoes(itemId),
-            disableButton: controller.disableButton.value,
-            buttonText: '네',
-            buttonColor: skyBlueColor,
-          );
-        }),
-      ),
-    ],
-  );
-}
+// void showShoeRepairSlider(InventoryController controller, int feeTikDurability, int itemId) {
+//   showAlert(
+//     title: '신발 내구도 충전',
+//     contentWidget: Obx(() {
+//       return Column(
+//         children: [
+//           Padding(
+//             padding: EdgeInsets.only(top: 12.0.sp),
+//             child: StyledText(
+//               '현재 신발 내구도 ${formatDecimalPlaces(itemId == controller.equippedShoe.value.id ? controller.equippedShoe.value.durability : controller.selectedItem.value.durability, 2)}',
+//               fontSize: 16,
+//               lineHeight: 22,
+//               fontWeight: 500,
+//               color: deepGrayColor,
+//             ),
+//           ),
+//           Container(
+//             margin: EdgeInsets.only(top: 15.sp),
+//             child: FlutterSlider(
+//               values: [controller.currentSliderValue.value],
+//               max: 100,
+//               min: 0,
+//               handlerHeight: 32.0,
+//               ignoreSteps: [
+//                 FlutterSliderIgnoreSteps(from: 0, to: 0),
+//               ],
+//               trackBar: FlutterSliderTrackBar(
+//                 inactiveTrackBarHeight: 16,
+//                 activeTrackBarHeight: 15,
+//                 inactiveTrackBar: BoxDecoration(
+//                   borderRadius: BorderRadius.circular(20.sp),
+//                   color: sliderGrayColor,
+//                   boxShadow: [
+//                     BoxShadow(
+//                       color: Colors.black,
+//                       offset: Offset(2.sp, 3.sp),
+//                     )
+//                   ],
+//                 ),
+//                 activeTrackBar: BoxDecoration(
+//                   borderRadius: BorderRadius.circular(20.sp),
+//                   color: purpleColor,
+//                 ),
+//               ),
+//               onDragging: (handlerIndex, lowerValue, upperValue) {
+//                 controller.currentSliderValue.value = lowerValue;
+//                 controller.costTik.value = controller.currentSliderValue.value.toInt() * feeTikDurability;
+//               },
+//               handler: FlutterSliderHandler(
+//                 decoration: BoxDecoration(
+//                   color: purpleColor,
+//                   border: Border.all(width: 2.sp, color: Colors.white),
+//                   borderRadius: BorderRadius.circular(30.sp),
+//                   boxShadow: [
+//                     BoxShadow(
+//                       color: Colors.black,
+//                       offset: Offset(2.sp, 3.sp),
+//                     )
+//                   ],
+//                 ),
+//                 child: iconSliderShoe,
+//               ),
+//               tooltip: FlutterSliderTooltip(
+//                 textStyle: TextStyle(
+//                   color: Colors.black,
+//                   fontSize: 22.sp,
+//                   fontWeight: FontWeight.w500,
+//                   height: 1.sp,
+//                 ),
+//                 format: (label) => '+ ${formatDecimalPlaces(double.parse(label), 0)}',
+//                 boxStyle: FlutterSliderTooltipBox(
+//                   decoration: BoxDecoration(
+//                     color: purpleColor,
+//                     borderRadius: BorderRadius.circular(50.sp),
+//                   ),
+//                 ),
+//               ),
+//             ),
+//           ),
+//           Padding(
+//             padding: EdgeInsets.symmetric(vertical: 40.0.sp),
+//             child: Row(
+//               mainAxisAlignment: MainAxisAlignment.center,
+//               crossAxisAlignment: CrossAxisAlignment.center,
+//               children: [
+//                 const StyledText(
+//                   '충전 비용 :',
+//                   fontSize: 22,
+//                   fontWeight: 500,
+//                   color: Color(0xFFA7A7A7),
+//                 ),
+//                 StyledText(
+//                   ' ${controller.costTik.value} TIK',
+//                   fontSize: 22,
+//                   fontWeight: 500,
+//                   color: Colors.white,
+//                 ),
+//               ],
+//             ),
+//           ),
+//         ],
+//       );
+//     }),
+//     actions: [
+//       Expanded(
+//         child: GazagoButton(
+//           onTap: () => controller.closeRepairPopup(),
+//           buttonText: '취소',
+//           textColor: Colors.white,
+//           buttonColor: popupBgColor,
+//         ),
+//       ),
+//       SizedBox(
+//         width: 9.sp,
+//       ),
+//       Expanded(
+//         child: Obx(() {
+//           return GazagoButton(
+//             onTap: () => controller.fetchRepairShoes(itemId),
+//             disableButton: controller.disableButton.value,
+//             buttonText: '네',
+//             buttonColor: skyBlueColor,
+//           );
+//         }),
+//       ),
+//     ],
+//   );
+// }
 
-void showRepairStatSlider(ActivityController controller, StatModel stat, int feeTikStamina, int feeTikDurability) {
-  showAlert(
-    title: stat.type == 'STAMINA' ? '체력 충전' : '신발 내구도 충전',
-    contentWidget: Obx(() {
-      return Column(
-        children: [
-          Padding(
-            padding: EdgeInsets.only(top: 12.0.sp),
-            child: stat.type == 'STAMINA'
-                ? StyledText(
-                    '현재 체력 ${stat.currentStat}',
-                    fontSize: 16,
-                    lineHeight: 22,
-                    fontWeight: 500,
-                    color: deepGrayColor,
-                  )
-                : StyledText(
-                    '현재 신발 내구도 ${formatDecimalPlaces(stat.currentStat, 2)}',
-                    fontSize: 16,
-                    lineHeight: 22,
-                    fontWeight: 500,
-                    color: deepGrayColor,
-                  ),
-          ),
-          Container(
-            margin: EdgeInsets.only(top: 15.sp),
-            child: FlutterSlider(
-              values: [controller.currentSliderValue.value],
-              max: 100,
-              min: 0,
-              step: const FlutterSliderStep(
-                step: 1, // default
-              ),
-              handlerHeight: 32.0,
-              ignoreSteps: [
-                FlutterSliderIgnoreSteps(from: 0, to: 0),
-              ],
-              trackBar: FlutterSliderTrackBar(
-                inactiveTrackBarHeight: 16,
-                activeTrackBarHeight: 15,
-                inactiveTrackBar: BoxDecoration(
-                  borderRadius: BorderRadius.circular(20.sp),
-                  color: const Color(0xFF494954),
-                  boxShadow: [
-                    BoxShadow(
-                      color: Colors.black,
-                      offset: Offset(2.sp, 3.sp),
-                    )
-                  ],
-                ),
-                activeTrackBar: BoxDecoration(
-                  borderRadius: BorderRadius.circular(20.sp),
-                  color: stat.type == 'STAMINA' ? lightGreenColor : purpleColor,
-                ),
-              ),
-              onDragging: (handlerIndex, lowerValue, upperValue) {
-                controller.currentSliderValue.value = lowerValue;
-                controller.costTik.value = controller.currentSliderValue.value.toInt() * (stat.type == 'STAMINA' ? feeTikStamina : feeTikDurability);
-              },
-              handler: FlutterSliderHandler(
-                decoration: BoxDecoration(
-                  color: stat.type == 'STAMINA' ? lightGreenColor : purpleColor,
-                  border: Border.all(width: 2.sp, color: Colors.white),
-                  borderRadius: BorderRadius.circular(30.sp),
-                  boxShadow: [
-                    BoxShadow(
-                      color: Colors.black,
-                      offset: Offset(2.sp, 3.sp),
-                    )
-                  ],
-                ),
-                child: stat.type == 'STAMINA' ? iconSliderStamina : iconSliderShoe,
-              ),
-              tooltip: FlutterSliderTooltip(
-                textStyle: TextStyle(
-                  color: Colors.black,
-                  fontSize: 22.sp,
-                  fontWeight: FontWeight.w500,
-                  height: 1.sp,
-                ),
-                format: (label) => '+ ${formatDecimalPlaces(double.parse(label), 0)}',
-                boxStyle: FlutterSliderTooltipBox(
-                  decoration: BoxDecoration(
-                    color: stat.type == 'STAMINA' ? lightGreenColor : purpleColor,
-                    borderRadius: BorderRadius.circular(50.sp),
-                  ),
-                ),
-              ),
-            ),
-          ),
-          Padding(
-            padding: EdgeInsets.symmetric(vertical: 40.0.sp),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: [
-                StyledText(
-                  '${stat.type == 'STAMINA' ? '충전 ' : '충전 '}비용 :',
-                  fontSize: 22,
-                  fontWeight: 500,
-                  color: lightGrayColor,
-                ),
-                StyledText(
-                  ' ${controller.costTik.value} TIK',
-                  fontSize: 22,
-                  fontWeight: 500,
-                  color: Colors.white,
-                ),
-              ],
-            ),
-          ),
-        ],
-      );
-    }),
-    actions: [
-      Expanded(
-        child: GazagoButton(
-          onTap: () => controller.closeRepairPopup(),
-          buttonText: '취소',
-          textColor: Colors.white,
-          buttonColor: popupBgColor,
-        ),
-      ),
-      SizedBox(
-        width: 9.sp,
-      ),
-      Expanded(
-        child: Obx(() {
-          return GazagoButton(
-            onTap: () => stat.type == 'STAMINA' ? controller.fetchRechargeStamina(stat.type) : controller.fetchRepairShoes(),
-            disableButton: controller.disableButton.value,
-            buttonText: '네',
-            buttonColor: skyBlueColor,
-          );
-        }),
-      ),
-    ],
-  );
-}
+// void showRepairStatSlider(ActivityController controller, StatModel stat, int feeTikStamina, int feeTikDurability) {
+//   showAlert(
+//     title: stat.type == 'STAMINA' ? '체력 충전' : '신발 내구도 충전',
+//     contentWidget: Obx(() {
+//       return Column(
+//         children: [
+//           Padding(
+//             padding: EdgeInsets.only(top: 12.0.sp),
+//             child: stat.type == 'STAMINA'
+//                 ? StyledText(
+//                     '현재 체력 ${stat.currentStat}',
+//                     fontSize: 16,
+//                     lineHeight: 22,
+//                     fontWeight: 500,
+//                     color: deepGrayColor,
+//                   )
+//                 : StyledText(
+//                     '현재 신발 내구도 ${formatDecimalPlaces(stat.currentStat, 2)}',
+//                     fontSize: 16,
+//                     lineHeight: 22,
+//                     fontWeight: 500,
+//                     color: deepGrayColor,
+//                   ),
+//           ),
+//           Container(
+//             margin: EdgeInsets.only(top: 15.sp),
+//             child: FlutterSlider(
+//               values: [controller.currentSliderValue.value],
+//               max: 100,
+//               min: 0,
+//               step: const FlutterSliderStep(
+//                 step: 1, // default
+//               ),
+//               handlerHeight: 32.0,
+//               ignoreSteps: [
+//                 FlutterSliderIgnoreSteps(from: 0, to: 0),
+//               ],
+//               trackBar: FlutterSliderTrackBar(
+//                 inactiveTrackBarHeight: 16,
+//                 activeTrackBarHeight: 15,
+//                 inactiveTrackBar: BoxDecoration(
+//                   borderRadius: BorderRadius.circular(20.sp),
+//                   color: const Color(0xFF494954),
+//                   boxShadow: [
+//                     BoxShadow(
+//                       color: Colors.black,
+//                       offset: Offset(2.sp, 3.sp),
+//                     )
+//                   ],
+//                 ),
+//                 activeTrackBar: BoxDecoration(
+//                   borderRadius: BorderRadius.circular(20.sp),
+//                   color: stat.type == 'STAMINA' ? lightGreenColor : purpleColor,
+//                 ),
+//               ),
+//               onDragging: (handlerIndex, lowerValue, upperValue) {
+//                 controller.currentSliderValue.value = lowerValue;
+//                 controller.costTik.value = controller.currentSliderValue.value.toInt() * (stat.type == 'STAMINA' ? feeTikStamina : feeTikDurability);
+//               },
+//               handler: FlutterSliderHandler(
+//                 decoration: BoxDecoration(
+//                   color: stat.type == 'STAMINA' ? lightGreenColor : purpleColor,
+//                   border: Border.all(width: 2.sp, color: Colors.white),
+//                   borderRadius: BorderRadius.circular(30.sp),
+//                   boxShadow: [
+//                     BoxShadow(
+//                       color: Colors.black,
+//                       offset: Offset(2.sp, 3.sp),
+//                     )
+//                   ],
+//                 ),
+//                 child: stat.type == 'STAMINA' ? iconSliderStamina : iconSliderShoe,
+//               ),
+//               tooltip: FlutterSliderTooltip(
+//                 textStyle: TextStyle(
+//                   color: Colors.black,
+//                   fontSize: 22.sp,
+//                   fontWeight: FontWeight.w500,
+//                   height: 1.sp,
+//                 ),
+//                 format: (label) => '+ ${formatDecimalPlaces(double.parse(label), 0)}',
+//                 boxStyle: FlutterSliderTooltipBox(
+//                   decoration: BoxDecoration(
+//                     color: stat.type == 'STAMINA' ? lightGreenColor : purpleColor,
+//                     borderRadius: BorderRadius.circular(50.sp),
+//                   ),
+//                 ),
+//               ),
+//             ),
+//           ),
+//           Padding(
+//             padding: EdgeInsets.symmetric(vertical: 40.0.sp),
+//             child: Row(
+//               mainAxisAlignment: MainAxisAlignment.center,
+//               crossAxisAlignment: CrossAxisAlignment.center,
+//               children: [
+//                 StyledText(
+//                   '${stat.type == 'STAMINA' ? '충전 ' : '충전 '}비용 :',
+//                   fontSize: 22,
+//                   fontWeight: 500,
+//                   color: lightGrayColor,
+//                 ),
+//                 StyledText(
+//                   ' ${controller.costTik.value} TIK',
+//                   fontSize: 22,
+//                   fontWeight: 500,
+//                   color: Colors.white,
+//                 ),
+//               ],
+//             ),
+//           ),
+//         ],
+//       );
+//     }),
+//     actions: [
+//       Expanded(
+//         child: GazagoButton(
+//           onTap: () => controller.closeRepairPopup(),
+//           buttonText: '취소',
+//           textColor: Colors.white,
+//           buttonColor: popupBgColor,
+//         ),
+//       ),
+//       SizedBox(
+//         width: 9.sp,
+//       ),
+//       Expanded(
+//         child: Obx(() {
+//           return GazagoButton(
+//             onTap: () => stat.type == 'STAMINA' ? controller.fetchRechargeStamina(stat.type) : controller.fetchRepairShoes(),
+//             disableButton: controller.disableButton.value,
+//             buttonText: '네',
+//             buttonColor: skyBlueColor,
+//           );
+//         }),
+//       ),
+//     ],
+//   );
+// }
 
 void showNotEnoughTaikaAlert() {
   showAlert(
@@ -1039,7 +1037,7 @@ void showPendingExerciseAlert(ActivityController controller) {
   );
 }
 
-void itemPurchaseAlert(ShopDetailController controller, double remainMyTik, tradeSymbol) {
+void itemPurchaseAlert(ShopDetailController controller, double remainMyAsset, tradeSymbol) {
   showAlert(
     title: '구매 하시겠습니까?',
     isScrollControlled: true,
@@ -1051,12 +1049,19 @@ void itemPurchaseAlert(ShopDetailController controller, double remainMyTik, trad
             child: Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                StyledText(
-                  '${formatDecimalPlaces(controller.selectedItem.value.price, 0)} ',
-                  fontSize: 30,
-                  lineHeight: 32,
-                  fontWeight: 600,
-                ),
+                controller.selectedItem.value.itemCategory == 'DISPOSABLE'
+                    ? StyledText(
+                        '${formatDecimalPlaces(controller.purchaseItemSumPrice.value.toDouble(), 0)} ',
+                        fontSize: 30,
+                        lineHeight: 32,
+                        fontWeight: 600,
+                      )
+                    : StyledText(
+                        '${formatDecimalPlaces(controller.selectedItem.value.price, 0)} ',
+                        fontSize: 30,
+                        lineHeight: 32,
+                        fontWeight: 600,
+                      ),
                 if (controller.selectedItem.value.tradeSymbol != null)
                   StyledText(
                     controller.selectedItem.value.tradeSymbol!,
@@ -1222,6 +1227,110 @@ void itemPurchaseAlert(ShopDetailController controller, double remainMyTik, trad
                 ),
               ],
             ),
+          if (controller.selectedItem.value.itemCategory == 'DISPOSABLE')
+            Padding(
+              padding: EdgeInsets.only(top: 30.0.sp),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  StyledText(
+                    controller.selectedItem.value.name,
+                    fontSize: 18,
+                    lineHeight: 32,
+                    fontWeight: 600,
+                  ),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Container(
+                        decoration: BoxDecoration(
+                          color: popupBgColor,
+                          borderRadius: BorderRadius.circular(50),
+                        ),
+                        child: Padding(
+                          padding: EdgeInsets.all(8.0.sp),
+                          child: Row(
+                            children: [
+                              InkWell(
+                                onTap: () {
+                                  if (controller.purchaseItemCount.value > 1) {
+                                    controller.purchaseItemCount.value = controller.purchaseItemCount.value - 1;
+                                  }
+                                },
+                                child: Container(
+                                  width: 26.sp,
+                                  height: 26.sp,
+                                  decoration: BoxDecoration(
+                                    color: controller.purchaseItemCount.value > 1 ? skyBlueColor : lightGrayColor,
+                                    borderRadius: BorderRadius.circular(50),
+                                    boxShadow: [
+                                      BoxShadow(
+                                        color: Colors.black,
+                                        offset: Offset(0, 3.sp),
+                                      )
+                                    ],
+                                  ),
+                                  child: Center(
+                                    child: SizedBox(
+                                      width: 13.sp,
+                                      height: 3.sp,
+                                      child: iconEaMinus,
+                                    ),
+                                  ),
+                                ),
+                              ),
+                              Padding(
+                                padding: EdgeInsets.symmetric(horizontal: 5.0.sp),
+                                child: Container(
+                                  width: 80.sp,
+                                  child: Center(
+                                    child: StyledText(
+                                      controller.purchaseItemCount.value.toString(),
+                                      fontSize: 20,
+                                      lineHeight: 26,
+                                      fontWeight: 600,
+                                    ),
+                                  ),
+                                ),
+                              ),
+                              InkWell(
+                                onTap: () {
+                                  if (remainMyAsset - controller.selectedItem.value.price > controller.purchaseItemSumPrice.value) {
+                                    controller.purchaseItemCount.value = controller.purchaseItemCount.value + 1;
+                                  }
+                                  return;
+                                },
+                                child: Container(
+                                  width: 26.sp,
+                                  height: 26.sp,
+                                  decoration: BoxDecoration(
+                                    color: remainMyAsset - controller.selectedItem.value.price > controller.purchaseItemSumPrice.value ? skyBlueColor : lightGrayColor,
+                                    boxShadow: [
+                                      BoxShadow(
+                                        color: Colors.black,
+                                        offset: Offset(0, 3.sp),
+                                      )
+                                    ],
+                                    borderRadius: BorderRadius.circular(50),
+                                  ),
+                                  child: Center(
+                                    child: SizedBox(
+                                      width: 13.sp,
+                                      height: 13.sp,
+                                      child: iconEaPlus,
+                                    ),
+                                  ),
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                      ),
+                    ],
+                  )
+                ],
+              ),
+            ),
           Divider(
             height: 40.sp,
             thickness: 2.0.sp,
@@ -1237,30 +1346,44 @@ void itemPurchaseAlert(ShopDetailController controller, double remainMyTik, trad
                 fontWeight: 600,
               ),
               StyledText(
-                '${formatDecimalPlaces(remainMyTik, tradeSymbol == 'STIK' ? 9 : 0, isAutoDecimal: true)} ${controller.selectedItem.value.tradeSymbol!}',
+                '${formatDecimalPlaces(remainMyAsset, tradeSymbol == 'STIK' ? 9 : 0, isAutoDecimal: true)} ${controller.selectedItem.value.tradeSymbol!}',
                 fontSize: 18,
                 lineHeight: 18,
                 fontWeight: 400,
               ),
             ],
           ),
-          Padding(
-            padding: EdgeInsets.only(top: 55.0.sp, bottom: 25.sp),
-            child: StyledText(
-              '· 구매가 완료되면 취소가 불가합니다.',
-              fontSize: 14,
-              lineHeight: 14,
-              fontWeight: 500,
-              color: skyBlueColor,
-            ),
-          )
+          remainMyAsset - controller.selectedItem.value.price > controller.purchaseItemSumPrice.value
+              ? Padding(
+                  padding: EdgeInsets.only(top: 55.0.sp, bottom: 25.sp),
+                  child: StyledText(
+                    '· 구매가 완료되면 취소가 불가합니다.',
+                    fontSize: 14,
+                    lineHeight: 14,
+                    fontWeight: 500,
+                    color: skyBlueColor,
+                  ),
+                )
+              : Padding(
+                  padding: EdgeInsets.only(top: 55.0.sp, bottom: 25.sp),
+                  child: StyledText(
+                    '· 현재 잔액으로는 제한된 수량만 구매 가능해요',
+                    fontSize: 14,
+                    lineHeight: 14,
+                    fontWeight: 500,
+                    color: dangerColor,
+                  ),
+                )
         ],
       );
     }),
     actions: [
       Expanded(
         child: GazagoButton(
-          onTap: () => Get.back(),
+          onTap: () {
+            Get.back();
+            controller.purchaseItemCount.value = 1;
+          },
           buttonText: '취소',
           textColor: Colors.white,
           buttonColor: popupBgColor,
@@ -1294,12 +1417,19 @@ void itemPurchaseShortBalanceAlert(ShopDetailController controller, double remai
             child: Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                StyledText(
-                  '${formatDecimalPlaces(controller.selectedItem.value.price, 0)} ',
-                  fontSize: 30,
-                  lineHeight: 32,
-                  fontWeight: 600,
-                ),
+                controller.selectedItem.value.itemCategory == 'DISPOSABLE'
+                    ? StyledText(
+                        '${formatDecimalPlaces(controller.purchaseItemSumPrice.value.toDouble(), 0)} ',
+                        fontSize: 30,
+                        lineHeight: 32,
+                        fontWeight: 600,
+                      )
+                    : StyledText(
+                        '${formatDecimalPlaces(controller.selectedItem.value.price, 0)} ',
+                        fontSize: 30,
+                        lineHeight: 32,
+                        fontWeight: 600,
+                      ),
                 StyledText(
                   controller.selectedItem.value.tradeSymbol!,
                   fontSize: 30,
@@ -1380,6 +1510,27 @@ void itemPurchaseShortBalanceAlert(ShopDetailController controller, double remai
                   fontWeight: 400,
                 ),
               ],
+            ),
+          if (controller.purchaseItemCount > 0)
+            Padding(
+              padding: EdgeInsets.only(top: 30.0.sp),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  StyledText(
+                    controller.selectedItem.value.name,
+                    fontSize: 18,
+                    lineHeight: 32,
+                    fontWeight: 600,
+                  ),
+                  StyledText(
+                    '${controller.purchaseItemCount.value}개',
+                    fontSize: 18,
+                    lineHeight: 32,
+                    fontWeight: 400,
+                  ),
+                ],
+              ),
             ),
           Divider(
             height: 40.sp,
@@ -1483,6 +1634,16 @@ void itemPurchaseCompleteAlert(ShopDetailController controller) {
                     fontWeight: 500,
                   ),
                 ),
+                if (controller.purchaseCompleteItem.value.itemCategory == 'DISPOSABLE')
+                  Padding(
+                    padding: EdgeInsets.only(left: 5.0.sp),
+                    child: StyledText(
+                      'x ${controller.purchaseItemCount.toString()}',
+                      fontSize: 18,
+                      lineHeight: 20,
+                      fontWeight: 500,
+                    ),
+                  ),
               ],
             ),
           ),
@@ -1689,6 +1850,77 @@ void itemPurchaseCompleteAlert(ShopDetailController controller) {
                                 ],
                               ),
                             ),
+                          if (controller.purchaseCompleteItem.value.itemStat!.repairDurability! > 0)
+                            Expanded(
+                              child: Column(
+                                children: [
+                                  StyledText(
+                                    '+${formatDecimalPlaces(controller.purchaseCompleteItem.value.itemStat!.repairDurability!, 0)}',
+                                    fontSize: 26,
+                                    lineHeight: 26,
+                                    fontWeight: 500,
+                                    letterSpacing: -.1,
+                                    color: const Color(0xFFB0A3FF),
+                                  ),
+                                  Padding(
+                                    padding: EdgeInsets.only(top: 8.0.sp),
+                                    child: Row(
+                                      mainAxisAlignment: MainAxisAlignment.center,
+                                      crossAxisAlignment: CrossAxisAlignment.center,
+                                      children: [
+                                        iconShopDurabilityLight,
+                                        Padding(
+                                          padding: EdgeInsets.only(left: 4.0.sp),
+                                          child: const StyledText(
+                                            '내구도 수리',
+                                            color: Color(0xFFB0A3FF),
+                                            fontSize: 12,
+                                            lineHeight: 12,
+                                            letterSpacing: -.1,
+                                            fontWeight: 600,
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                          if (controller.purchaseCompleteItem.value.itemStat!.recoveryStamina! > 0)
+                            Expanded(
+                              child: Column(
+                                children: [
+                                  StyledText(
+                                    '+${formatDecimalPlaces(controller.purchaseCompleteItem.value.itemStat!.recoveryStamina!, 0)}',
+                                    fontSize: 26,
+                                    lineHeight: 26,
+                                    fontWeight: 500,
+                                    color: lightGreenColor,
+                                    letterSpacing: -.1,
+                                  ),
+                                  Padding(
+                                    padding: EdgeInsets.only(top: 8.0.sp),
+                                    child: Row(
+                                      mainAxisAlignment: MainAxisAlignment.center,
+                                      children: [
+                                        Padding(
+                                          padding: EdgeInsets.only(right: 4.0.sp),
+                                          child: iconShopStamina,
+                                        ),
+                                        StyledText(
+                                          '체력 회복',
+                                          color: lightGreenColor,
+                                          fontSize: 12,
+                                          lineHeight: 12,
+                                          fontWeight: 500,
+                                          letterSpacing: -.1,
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
                         ],
                       ),
                     ),
@@ -1779,7 +2011,9 @@ void itemPurchaseCompleteAlert(ShopDetailController controller) {
         child: GazagoButton(
           onTap: () {
             Get.back();
-            controller.fetchEquipItem(controller.purchaseCompleteItem.value.id);
+            if (controller.purchaseCompleteItem.value.itemCategory != 'DISPOSABLE') {
+              controller.fetchEquipItem(controller.purchaseCompleteItem.value.id);
+            }
           },
           buttonText: '확인',
           buttonColor: skyBlueColor,
@@ -1942,55 +2176,57 @@ void itemFilterListAlert(ShopController controller) {
               ),
             );
           }),
+          // Padding(
+          //   padding: EdgeInsets.only(bottom: 10.0.sp),
+          //   child: const StyledText(
+          //     '카테고리',
+          //     fontWeight: 500,
+          //     fontSize: 16,
+          //     lineHeight: 22,
+          //   ),
+          // ),
+          // Obx(() {
+          //   return SizedBox(
+          //     width: double.infinity,
+          //     child: Wrap(
+          //       children: [
+          //         ...controller.categoryFilterList.asMap().entries.map(
+          //               (entry) => Padding(
+          //                 padding: EdgeInsets.only(right: 10.sp, bottom: 10.sp),
+          //                 child: InkWell(
+          //                   onTap: () => controller.onSelectCategory(entry.value['value']),
+          //                   child: Container(
+          //                     decoration: BoxDecoration(
+          //                       color: controller.selectedCategory.any((element) => element == entry.value['value']) ? Colors.white : popupBgColor,
+          //                       border: Border.all(
+          //                         width: 1,
+          //                         color: Colors.white,
+          //                       ),
+          //                       borderRadius: BorderRadius.circular(20.sp),
+          //                     ),
+          //                     child: Padding(
+          //                       padding: EdgeInsets.symmetric(horizontal: 12.0.sp, vertical: 6.sp),
+          //                       child: StyledText(
+          //                         entry.value['title']!,
+          //                         fontSize: 14,
+          //                         lineHeight: 16,
+          //                         letterSpacing: .2,
+          //                         fontWeight: 500,
+          //                         color: controller.selectedCategory.any((element) => element == entry.value['value']) ? Colors.black : Colors.white,
+          //                       ),
+          //                     ),
+          //                   ),
+          //                 ),
+          //               ),
+          //             ),
+          //       ],
+          //     ),
+          //   );
+          // }),
           Padding(
-            padding: EdgeInsets.only(bottom: 10.0.sp),
-            child: const StyledText(
-              '카테고리',
-              fontWeight: 500,
-              fontSize: 16,
-              lineHeight: 22,
+            padding: EdgeInsets.only(
+              bottom: 10.0.sp,
             ),
-          ),
-          Obx(() {
-            return SizedBox(
-              width: double.infinity,
-              child: Wrap(
-                children: [
-                  ...controller.categoryFilterList.asMap().entries.map(
-                        (entry) => Padding(
-                          padding: EdgeInsets.only(right: 10.sp, bottom: 10.sp),
-                          child: InkWell(
-                            onTap: () => controller.onSelectCategory(entry.value['value']),
-                            child: Container(
-                              decoration: BoxDecoration(
-                                color: controller.selectedCategory.any((element) => element == entry.value['value']) ? Colors.white : popupBgColor,
-                                border: Border.all(
-                                  width: 1,
-                                  color: Colors.white,
-                                ),
-                                borderRadius: BorderRadius.circular(20.sp),
-                              ),
-                              child: Padding(
-                                padding: EdgeInsets.symmetric(horizontal: 12.0.sp, vertical: 6.sp),
-                                child: StyledText(
-                                  entry.value['title']!,
-                                  fontSize: 14,
-                                  lineHeight: 16,
-                                  letterSpacing: .2,
-                                  fontWeight: 500,
-                                  color: controller.selectedCategory.any((element) => element == entry.value['value']) ? Colors.black : Colors.white,
-                                ),
-                              ),
-                            ),
-                          ),
-                        ),
-                      ),
-                ],
-              ),
-            );
-          }),
-          Padding(
-            padding: EdgeInsets.only(bottom: 10.0.sp, top: 20.sp),
             child: const StyledText(
               '등급',
               fontWeight: 500,
@@ -2577,13 +2813,13 @@ void showLeaderboardInfo() {
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   children: const [
                                     StyledText(
-                                      '· 체력 충전',
+                                      '· 체력 회복',
                                       fontSize: 12,
                                       lineHeight: 18,
                                       fontWeight: 400,
                                     ),
                                     StyledText(
-                                      '· 신발 내구도 충전',
+                                      '· 신발 내구도 수리',
                                       fontSize: 12,
                                       lineHeight: 18,
                                       fontWeight: 400,
@@ -4802,7 +5038,7 @@ Future<void> showFairPlayAlert() async {
                       completer.complete();
                     },
                     buttonText: '확인했습니다.',
-                    buttonColor: const Color(0xFF0EE6F3),
+                    buttonColor: skyBlueColor,
                     textColor: Colors.black,
                   ),
                 )
@@ -4841,6 +5077,53 @@ void showLockedUserAlert() async {
           onTap: () {
             Get.back();
           },
+        ),
+      ),
+    ],
+  );
+}
+
+void showAutoRechargeStaminaAlert(ActivityController controller) {
+  showAlert(
+    contentWidget: Center(
+      child: Column(
+        children: [
+          Padding(
+            padding: EdgeInsets.only(top: 14.sp, bottom: 30.sp),
+            child: StyledText(
+              '체력은 시간이 지나면 회복됩니다.\n정말 회복하시겠습니까?',
+              fontSize: 18.sp,
+              fontWeight: 500,
+              lineHeight: 24.sp,
+              textAlign: TextAlign.center,
+            ),
+          ),
+        ],
+      ),
+    ),
+    actions: [
+      Expanded(
+        child: GazagoButton(
+          onTap: () {
+            Get.back();
+            controller.initStat();
+          },
+          buttonText: '취소',
+          textColor: Colors.white,
+          buttonColor: popupBgColor,
+        ),
+      ),
+      SizedBox(
+        width: 9.sp,
+      ),
+      Expanded(
+        child: GazagoButton(
+          onTap: () {
+            Get.back();
+            controller.confirmRecoveryOrRepairStat(controller.selectedType.value);
+          },
+          buttonText: '확인',
+          buttonColor: skyBlueColor,
         ),
       ),
     ],
@@ -5768,5 +6051,53 @@ void unableSharedHistoryDialog() {
         ),
       ),
     ),
+  );
+}
+
+void showConfirmNicknameChange(MyPageController controller) {
+  showAlert(
+    title: '닉네임을 변경하시겠습니까?',
+    contentWidget: Center(
+      child: Column(
+        children: [
+          Padding(
+            padding: EdgeInsets.only(top: 14.sp, bottom: 30.sp),
+            child: StyledText(
+              '닉네임은 최초 1번만 수정할 수 있어요.\n정말 수정하시겠어요?',
+              fontSize: 16.sp,
+              fontWeight: 500,
+              lineHeight: 22.sp,
+              color: lightGrayColor,
+              textAlign: TextAlign.center,
+            ),
+          ),
+        ],
+      ),
+    ),
+    actions: [
+      Expanded(
+        child: GazagoButton(
+          onTap: () {
+            Get.back();
+          },
+          buttonText: '취소',
+          textColor: Colors.white,
+          buttonColor: popupBgColor,
+        ),
+      ),
+      SizedBox(
+        width: 9.sp,
+      ),
+      Expanded(
+        child: GazagoButton(
+          onTap: () async {
+            await controller.modifyMyAccountInfo();
+            Get.back();
+          },
+          buttonText: '변경',
+          buttonColor: skyBlueColor,
+        ),
+      ),
+    ],
   );
 }

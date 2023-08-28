@@ -13,6 +13,7 @@ import 'package:gaza_go/presentations/views/auth/account_restore.dart';
 import 'package:gaza_go/presentations/views/auth/signup_complete.dart';
 import 'package:gaza_go/presentations/views/challenges/challenge_detail.dart';
 import 'package:gaza_go/presentations/views/challenges/crew_detail.dart';
+import 'package:gaza_go/presentations/views/daily_benefits.dart';
 import 'package:gaza_go/presentations/views/debugging/position_raw_data_logs.dart';
 import 'package:gaza_go/presentations/views/debugging/request_info.dart';
 import 'package:gaza_go/presentations/views/debugging/response_error_logs.dart';
@@ -126,6 +127,7 @@ class Routes {
   static const leaderboard = '/leaderboard';
   static const fairPlayView = '/fair_play_view';
   static const crewDetail = '/crew_detail';
+  static const dailyBenefits = '/daily_benefits';
 
   static List<GetPage> pages = [
     stepPage(name: Routes.login, page: const Login()),
@@ -195,6 +197,7 @@ class Routes {
     stepPage(name: Routes.leaderboard, page: const RankingHome()),
     stepPage(name: Routes.fairPlayView, page: const FairPlayView()),
     stepPage(name: Routes.crewDetail, page: const CrewDetail()),
+    stepPage(name: Routes.dailyBenefits, page: DailyBenefits()),
   ];
 }
 

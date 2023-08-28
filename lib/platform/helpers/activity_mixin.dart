@@ -73,7 +73,7 @@ mixin ActivityMixin {
     Color color = Colors.white;
     switch (exerciseState.value) {
       case ExerciseState.ongoing:
-        if ((avgSpeed.value < 1 || avgSpeed.value > 7) || stoppedExercising.value) {
+        if (((userState.value.exercise!.type! == ExerciseType.hiking.name ? avgSpeed.value < 0.7 : avgSpeed.value < 1) || avgSpeed.value > 7) || stoppedExercising.value) {
           color = textRedColor;
         } else {
           color = textGreenColor;
@@ -93,7 +93,7 @@ mixin ActivityMixin {
     Color color = Colors.white;
     switch (exerciseState.value) {
       case ExerciseState.ongoing:
-        if (realTimeSpeed.value < 1 || realTimeSpeed.value > 7) {
+        if ((userState.value.exercise!.type! == ExerciseType.hiking.name ? realTimeSpeed.value < 0.7 : realTimeSpeed.value < 1) || realTimeSpeed.value > 7) {
           color = speedRedColor;
         } else {
           color = speedGreenColor;
@@ -185,6 +185,7 @@ mixin ActivityMixin {
         id: userState.value.exercise!.id,
         steps: exerciseSteps.value,
         speed: avgSpeed.value,
+        // speed: 5,
         distance: convertKmToMeters(totalDistance.value),
         altitude: exerciseData.isNotEmpty ? exerciseData.last.altitude : 0,
         time: exerciseTime.value,
@@ -333,7 +334,8 @@ mixin ActivityMixin {
     if (exerciseData.length > 1) {
       sortedList = [...exerciseData];
       sortedList.sort((a, b) => (b.locationUpdateTime!.compareTo(a.locationUpdateTime!)));
-      prevData = sortedList.firstWhere((sortedData) => (DateTime.now().subtract(Duration(seconds: stopTimeInterval)).compareTo(sortedData.locationUpdateTime!) == 1), orElse: () => UserExerciseModel(steps: 0));
+      prevData = sortedList.firstWhere((sortedData) => (DateTime.now().subtract(Duration(seconds: stopTimeInterval)).compareTo(sortedData.locationUpdateTime!) == 1),
+          orElse: () => UserExerciseModel(steps: 0));
     }
     int prevStep = prevData != null ? prevData.steps! : 0;
     int currentStep = exerciseData.isNotEmpty && exerciseData.length > 2 ? exerciseData.last.steps! : 0;
@@ -549,19 +551,19 @@ mixin ActivityMixin {
 
               if (userState.value.state!.stamina! < 30) {
                 if (userState.value.state!.stamina! == 0 && !zeroStaminaNotified.value) {
-                  showLocalNotification(notificationType: NotificationType.staminaDepleted, title: '체력 충전 알림', message: '지금 체력이 0이 되어 GO보상이 되지 않고 있어요. 체력 충전하러 가자GO~~');
+                  showLocalNotification(notificationType: NotificationType.staminaDepleted, title: '체력 회복 알림', message: '지금 체력이 0이 되어 GO보상이 되지 않고 있어요. 체력 회복하러 가자GO~~');
                   zeroStaminaNotified.value = true;
                 } else if (!lowStaminaNotified.value) {
-                  showLocalNotification(notificationType: NotificationType.staminaLow, title: '체력 충전 알림', message: '체력이 부족하면 GO보상이 되지 않아요. 체력 충전하러 가자GO~~');
+                  showLocalNotification(notificationType: NotificationType.staminaLow, title: '체력 회복 알림', message: '체력이 부족하면 GO보상이 되지 않아요. 체력 회복하러 가자GO~~');
                   lowStaminaNotified.value = true;
                 }
               }
               if (userState.value.shoes!.durability! < 30 && !zeroDurabilityNotified.value) {
                 if (userState.value.shoes!.durability! == 0) {
-                  showLocalNotification(notificationType: NotificationType.durabilityDepleted, title: '아이템 수리 알림', message: '지금 내구도(신발)가 0이 되어 GO보상이 되지 않고 있어요. 내구도 보충하러 가자GO~~');
+                  showLocalNotification(notificationType: NotificationType.durabilityDepleted, title: '아이템 수리 알림', message: '지금 내구도(신발)가 0이 되어 GO보상이 되지 않고 있어요. 내구도 수리하러 가자GO~~');
                   zeroDurabilityNotified.value = true;
                 } else if (!lowDurabilityNotified.value) {
-                  showLocalNotification(notificationType: NotificationType.durabilityLow, title: '아이템 수리 알림', message: '내구도(신발)가 부족하면 GO보상이 되지 않아요. 내구도 보충하러 가자GO~~');
+                  showLocalNotification(notificationType: NotificationType.durabilityLow, title: '아이템 수리 알림', message: '내구도(신발)가 부족하면 GO보상이 되지 않아요. 내구도 수리하러 가자GO~~');
                   lowDurabilityNotified.value = true;
                 }
               }
@@ -601,7 +603,7 @@ mixin ActivityMixin {
     }
 
     stopTimer = Timer.periodic(const Duration(milliseconds: 10), (timer) async {
-      if (counter == const Duration(milliseconds: 500)) {
+      if (counter.compareTo(const Duration(milliseconds: 500)) == 0 || counter.compareTo(const Duration(milliseconds: 500)) > 0) {
         initializeStopTimer();
         checkShowEndPopup(source, controller);
         // AdWatchAvailableModel adWatchAvailableModel = AdWatchAvailableModel(watchAvailable: false);
