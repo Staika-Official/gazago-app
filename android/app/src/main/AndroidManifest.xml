@@ -95,7 +95,7 @@
     <meta-data
         android:name="com.google.android.gms.ads.APPLICATION_ID"
         android:value="ca-app-pub-4234536720874912~8391712480"/>
-d  </application>
+  </application>
 
   <queries>
     <!-- If your app checks for SMS support -->
