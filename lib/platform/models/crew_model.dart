@@ -10,6 +10,7 @@ class CrewModel {
   int? user;
   bool? isLocked;
   int? blockQuantity;
+  int? invitationCount;
   int? rank;
 
   CrewModel({
@@ -19,6 +20,7 @@ class CrewModel {
     this.user,
     this.isLocked,
     this.blockQuantity,
+    this.invitationCount,
     this.rank,
   });
 

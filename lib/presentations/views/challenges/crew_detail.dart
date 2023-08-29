@@ -3,6 +3,8 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:gaza_go/platform/controllers/crew_detail_controller.dart';
 import 'package:gaza_go/presentations/components/share_appbar.dart';
 import 'package:gaza_go/presentations/styles/colors.dart';
+import 'package:gaza_go/presentations/views/challenges/crew_info.dart';
+import 'package:gaza_go/presentations/views/challenges/crew_leaderboard.dart';
 import 'package:get/get.dart';
 
 class CrewDetail extends StatelessWidget {
@@ -25,41 +27,54 @@ class CrewDetail extends StatelessWidget {
       backgroundColor: subBg01Color,
       body: Column(
         children: [
-          TabBar(
-            controller: controller.tabController,
-            padding: EdgeInsets.symmetric(horizontal: 6.sp),
-            indicator: BoxDecoration(
+          DecoratedBox(
+            decoration: BoxDecoration(
               border: Border(
+                bottom: BorderSide(
+                  width: 2,
+                  color: Color(0xff2E3038),
+                ),
+              ),
+            ),
+            child: TabBar(
+              controller: controller.tabController,
+              padding: EdgeInsets.symmetric(horizontal: 6.sp),
+              indicator: const BoxDecoration(
+                border: Border(
                   bottom: BorderSide(
-                color: skyBlueColor,
-                width: 2,
-              )),
-            ),
-            indicatorPadding: EdgeInsets.only(left: 33.sp, right: 33.sp),
-            labelColor: Colors.white,
-            unselectedLabelColor: const Color(0xFFA5A5A5),
-            labelStyle: TextStyle(
-              fontWeight: FontWeight.w500,
-              fontSize: 16.sp,
-              height: 20.sp / 16.sp,
-              letterSpacing: 0.5,
-            ),
-            tabs: [
-              Tab(
-                height: 50.sp,
-                text: '나의 크루',
+                    color: skyBlueColor,
+                    width: 2,
+                  ),
+                ),
               ),
-              Tab(
-                height: 50.sp,
-                text: '크루 랭킹',
+              indicatorPadding: EdgeInsets.only(left: 33.sp, right: 33.sp),
+              labelColor: Colors.white,
+              unselectedLabelColor: const Color(0xFFA5A5A5),
+              labelStyle: TextStyle(
+                fontWeight: FontWeight.w500,
+                fontSize: 16.sp,
+                height: 20.sp / 16.sp,
+                letterSpacing: 0.5,
               ),
-            ],
+              tabs: [
+                Tab(
+                  height: 50.sp,
+                  text: '나의 크루',
+                ),
+                Tab(
+                  height: 50.sp,
+                  text: '크루 랭킹',
+                ),
+              ],
+            ),
           ),
-          // TabBarView(
-          //   physics: const NeverScrollableScrollPhysics(),
-          //   controller: controller.tabController,
-          //   children: [CrewLeaderboard(), CrewLeaderboard()],
-          // ),
+          Expanded(
+            child: TabBarView(
+              physics: const ClampingScrollPhysics(),
+              controller: controller.tabController,
+              children: [CrewInfo(), CrewLeaderboard()],
+            ),
+          ),
         ],
       ),
     );

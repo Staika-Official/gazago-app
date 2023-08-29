@@ -2811,9 +2811,9 @@ void showLeaderboardInfo() {
                               ),
                               Padding(
                                 padding: EdgeInsets.only(top: 5.0.sp, left: 7.0.sp),
-                                child: Column(
+                                child: const Column(
                                   crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: const [
+                                  children: [
                                     StyledText(
                                       '· 체력 회복',
                                       fontSize: 12,
@@ -2874,9 +2874,9 @@ void showLeaderboardInfo() {
                               ),
                               Padding(
                                 padding: EdgeInsets.only(top: 5.0.sp, left: 7.0.sp),
-                                child: Column(
+                                child: const Column(
                                   crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: const [
+                                  children: [
                                     StyledText(
                                       '· 참여자 수 보상(TIK)',
                                       fontSize: 12,
@@ -2937,9 +2937,9 @@ void showLeaderboardInfo() {
                               ),
                               Padding(
                                 padding: EdgeInsets.only(top: 5.0.sp, left: 7.0.sp),
-                                child: Column(
+                                child: const Column(
                                   crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: const [
+                                  children: [
                                     StyledText(
                                       '· NFT 장비 구매',
                                       fontSize: 12,
@@ -4658,8 +4658,8 @@ void challengeItemSoldOutAlert() {
   showAlert(
     contentWidget: Padding(
       padding: EdgeInsets.only(top: 20.0.sp, bottom: 40.sp),
-      child: Column(
-        children: const [
+      child: const Column(
+        children: [
           StyledText(
             '해당 아이템은 판매가 완료되어\n챌린지 참여가 불가능합니다.',
             fontSize: 20,
@@ -4689,8 +4689,8 @@ void challengeEndedAlert() {
   showAlert(
     contentWidget: Padding(
       padding: EdgeInsets.only(top: 20.0.sp, bottom: 40.sp),
-      child: Column(
-        children: const [
+      child: const Column(
+        children: [
           StyledText(
             '챌린지가 종료되어 해당 아이템을\n구매할 수 없습니다.',
             fontSize: 20,
@@ -4720,8 +4720,8 @@ void moveBuyChallengeItemPageAlert(ChallengesDetailController controller, int it
   showAlert(
     contentWidget: Padding(
       padding: EdgeInsets.only(top: 20.0.sp, bottom: 40.sp),
-      child: Column(
-        children: const [
+      child: const Column(
+        children: [
           StyledText(
             '해당 챌린지에 참여하기 위해\n아이템을 구매하러 가시겠습니까?',
             fontSize: 20,
@@ -4764,8 +4764,8 @@ void challengeItemEquip(int itemId) {
   showAlert(
     contentWidget: Padding(
       padding: EdgeInsets.only(top: 20.0.sp, bottom: 40.sp),
-      child: Column(
-        children: const [
+      child: const Column(
+        children: [
           StyledText(
             '챌린지 참가가 가능합니다.\n장착 하시겠어요?',
             fontSize: 18,
@@ -4926,7 +4926,7 @@ void consumerItemUsagePopup(controller, context) {
                                                 bottom: 6.sp,
                                                 child: Container(
                                                     decoration: BoxDecoration(
-                                                      color: Color(0xFF0E0E13),
+                                                      color: const Color(0xFF0E0E13),
                                                       borderRadius: BorderRadius.circular(6),
                                                     ),
                                                     child: Padding(
@@ -5086,7 +5086,7 @@ void consumerItemUsagePopup(controller, context) {
                                   lineHeight: 18,
                                   color: controller.resultStat.value > controller.currentStat.value
                                       ? controller.resultStat.value > 9999
-                                          ? Color(0xFFFF2222)
+                                          ? const Color(0xFFFF2222)
                                           : skyBlueColor
                                       : Colors.white,
                                 ),
@@ -5097,7 +5097,7 @@ void consumerItemUsagePopup(controller, context) {
                                   lineHeight: 18,
                                   color: controller.resultStat.value > controller.currentStat.value
                                       ? controller.resultStat.value > 9999
-                                          ? Color(0xFFFF2222)
+                                          ? const Color(0xFFFF2222)
                                           : skyBlueColor
                                       : Colors.white,
                                 ),
@@ -5153,7 +5153,7 @@ void consumerItemUsagePopup(controller, context) {
                                   },
                                   buttonText: controller.selectedType == 'STAMINA' ? '회복하기' : '수리하기',
                                   textColor: Colors.black,
-                                  buttonColor: controller.resultStat.value <= 9999 && controller.totalStat > 0 ? skyBlueColor : Color(0xFF11A4AD),
+                                  buttonColor: controller.resultStat.value <= 9999 && controller.totalStat > 0 ? skyBlueColor : const Color(0xFF11A4AD),
                                 ),
                               ),
                             ],
@@ -5535,6 +5535,7 @@ void crewJoinInfoAlert() async {
           buttonText: '네',
           onTap: () {
             Get.back();
+            crewJoinCompleteAlert();
           },
         ),
       ),
@@ -5580,6 +5581,7 @@ void crewJoinCompleteAlert() async {
           buttonText: '확인',
           onTap: () {
             Get.back();
+            Get.toNamed(Routes.crewDetail);
           },
         ),
       ),
@@ -5634,6 +5636,7 @@ void crewCreateCompleteAlert() async {
 
 void shortTikCreateCrewAlert() async {
   await showAlert(
+    allowMultipleBottomSheet: true,
     title: '잔액이 부족합니다',
     contentWidget: Padding(
       padding: EdgeInsets.only(top: 22.sp, bottom: 49.sp),
@@ -5741,7 +5744,7 @@ void crewRecruitLimitAlert() async {
           ),
           Padding(
             padding: EdgeInsets.only(top: 20.0.sp),
-            child: StyledText(
+            child: const StyledText(
               '크루 모집을\n제한하시겠습니까?',
               fontWeight: 500,
               fontSize: 22,
@@ -5814,7 +5817,7 @@ void crewRecruitUnlimitAlert() async {
           ),
           Padding(
             padding: EdgeInsets.only(top: 20.0.sp),
-            child: StyledText(
+            child: const StyledText(
               '크루 모집을\n제한을 푸시겠습니까?',
               fontWeight: 500,
               fontSize: 22,
@@ -5914,16 +5917,18 @@ void crewCreatePopup() async {
     WillPopScope(
       onWillPop: () async => false,
       child: Container(
-          decoration: BoxDecoration(
-            color: popupBgColor,
-            borderRadius: BorderRadius.only(
-              topLeft: Radius.circular(12.sp),
-              topRight: Radius.circular(12.sp),
-            ),
+        decoration: BoxDecoration(
+          color: popupBgColor,
+          borderRadius: BorderRadius.only(
+            topLeft: Radius.circular(12.sp),
+            topRight: Radius.circular(12.sp),
           ),
-          child: Padding(
-            padding: EdgeInsets.all(20.0.sp),
-            child: Column(mainAxisSize: MainAxisSize.min, children: [
+        ),
+        child: Padding(
+          padding: EdgeInsets.all(20.0.sp),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
               Padding(
                 padding: EdgeInsets.only(top: 22.sp, bottom: 28.sp),
                 child: Column(
@@ -5956,7 +5961,7 @@ void crewCreatePopup() async {
                     Padding(
                       padding: EdgeInsets.only(top: 4.0.sp),
                       child: const StyledText(
-                        '크루 개설 비용 3000 TIK',
+                        '크루 개설 비용 3,000 TIK',
                         fontWeight: 500,
                         fontSize: 16,
                         lineHeight: 24,
@@ -6066,7 +6071,7 @@ void crewCreatePopup() async {
                     child: Container(
                       margin: EdgeInsets.only(bottom: 3.sp),
                       child: InkWell(
-                        onTap: null,
+                        onTap: () => shortTikCreateCrewAlert(),
                         borderRadius: BorderRadius.circular(8.sp),
                         child: Container(
                           decoration: BoxDecoration(
@@ -6082,7 +6087,7 @@ void crewCreatePopup() async {
                           ),
                           child: Padding(
                             padding: EdgeInsets.symmetric(vertical: 7.0.sp),
-                            child: Center(
+                            child: const Center(
                               child: Column(
                                 children: [
                                   StyledText(
@@ -6093,7 +6098,7 @@ void crewCreatePopup() async {
                                     color: Colors.black,
                                   ),
                                   StyledText(
-                                    '3000TIK',
+                                    '3,000TIK',
                                     fontSize: 12,
                                     lineHeight: 16,
                                     fontWeight: 600,
@@ -6116,6 +6121,7 @@ void crewCreatePopup() async {
                       buttonText: '무료 개설',
                       onTap: () {
                         Get.back();
+                        crewCreateCompleteAlert();
                       },
                     ),
                   ),
@@ -6130,8 +6136,10 @@ void crewCreatePopup() async {
                   buttonColor: popupBgColor,
                 ),
               )
-            ]),
-          )),
+            ],
+          ),
+        ),
+      ),
     ),
   );
 }
@@ -6178,27 +6186,29 @@ void shareCrewChallengeKakaoLinkDialog() {
                 ),
                 Padding(
                   padding: EdgeInsets.only(top: 25.sp),
-                  child: Row(children: [
-                    Expanded(
-                      child: GazagoButton(
-                        onTap: () => Get.back(),
-                        buttonText: '닫기',
-                        textColor: Colors.white,
-                        buttonColor: popupBgColor,
+                  child: Row(
+                    children: [
+                      Expanded(
+                        child: GazagoButton(
+                          onTap: () => Get.back(),
+                          buttonText: '닫기',
+                          textColor: Colors.white,
+                          buttonColor: popupBgColor,
+                        ),
                       ),
-                    ),
-                    SizedBox(
-                      width: 9.sp,
-                    ),
-                    Expanded(
-                      child: GazagoButton(
-                        buttonText: '공유하기',
-                        onTap: () {
-                          Get.back();
-                        },
+                      SizedBox(
+                        width: 9.sp,
                       ),
-                    ),
-                  ]),
+                      Expanded(
+                        child: GazagoButton(
+                          buttonText: '공유하기',
+                          onTap: () {
+                            Get.back();
+                          },
+                        ),
+                      ),
+                    ],
+                  ),
                 )
               ],
             ),

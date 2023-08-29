@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:gaza_go/platform/controllers/challenges_detail_controller.dart';
+import 'package:gaza_go/presentations/components/beta_tag.dart';
 import 'package:gaza_go/presentations/styles/colors.dart';
 import 'package:gaza_go/presentations/styles/icons.dart';
 import 'package:gaza_go/presentations/styles/styled_text.dart';
@@ -49,26 +50,12 @@ class ShareAppbar extends StatelessWidget implements PreferredSizeWidget {
                   lineHeight: 18,
                   fontWeight: 500,
                 ),
-                Positioned(
-                  right: -45,
-                  top: -2,
-                  child: Container(
-                    decoration: BoxDecoration(
-                      color: skyBlueColor,
-                      borderRadius: BorderRadius.circular(50),
-                    ),
-                    child: Padding(
-                        padding: EdgeInsets.symmetric(vertical: 3.0, horizontal: 8.sp),
-                        child: StyledText(
-                          'Beta',
-                          color: Colors.black,
-                          fontSize: 12,
-                          lineHeight: 12,
-                          fontWeight: 600,
-                          letterSpacing: -.1,
-                        )),
-                  ),
-                )
+                if (isBeta)
+                  const Positioned(
+                    right: -45,
+                    top: -3,
+                    child: BetaTag(),
+                  )
               ],
             ),
           Row(

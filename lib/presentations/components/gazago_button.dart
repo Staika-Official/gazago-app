@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:gaza_go/presentations/styles/colors.dart';
 import 'package:gaza_go/presentations/styles/styled_text.dart';
 
 class GazagoButton extends StatelessWidget {
@@ -7,6 +8,7 @@ class GazagoButton extends StatelessWidget {
   final VoidCallback onTap;
   final Color textColor;
   final Color buttonColor;
+  final Color borderColor;
   final bool disableButton;
 
   const GazagoButton({
@@ -14,7 +16,8 @@ class GazagoButton extends StatelessWidget {
     required this.buttonText,
     required this.onTap,
     this.textColor = Colors.black,
-    this.buttonColor = const Color(0xFF0EE6F3),
+    this.borderColor = Colors.black,
+    this.buttonColor = skyBlueColor,
     this.disableButton = false,
   }) : super(key: key);
 
@@ -27,7 +30,7 @@ class GazagoButton extends StatelessWidget {
         child: Ink(
           decoration: BoxDecoration(
             color: buttonColor,
-            border: Border.all(width: 2.sp, color: Colors.black),
+            border: Border.all(width: 2.sp, color: borderColor),
             borderRadius: BorderRadius.circular(8.sp),
             boxShadow: [
               BoxShadow(

@@ -7,6 +7,7 @@ import 'package:gaza_go/platform/controllers/daily_benefit_controller.dart';
 import 'package:gaza_go/platform/helpers/alert_helper.dart';
 import 'package:gaza_go/platform/helpers/base_helper.dart';
 import 'package:gaza_go/platform/models/benefit_item_model.dart';
+import 'package:gaza_go/presentations/components/beta_tag.dart';
 import 'package:gaza_go/presentations/components/default_container.dart';
 import 'package:gaza_go/presentations/styles/colors.dart';
 import 'package:gaza_go/presentations/styles/icons.dart';
@@ -87,10 +88,10 @@ class DailyBenefits extends StatelessWidget {
     return Obx(() {
       return DefaultContainer(
         backgroundColor: subBg01Color,
-        titleWidget: Stack(
+        titleWidget: const Stack(
           clipBehavior: Clip.none,
           children: [
-            const StyledText(
+            StyledText(
               '일일혜택',
               fontSize: 18,
               fontWeight: 500,
@@ -99,21 +100,7 @@ class DailyBenefits extends StatelessWidget {
             Positioned(
               right: -45,
               top: -3,
-              child: Container(
-                margin: const EdgeInsets.only(left: 8),
-                padding: const EdgeInsets.symmetric(horizontal: 7, vertical: 5),
-                decoration: BoxDecoration(
-                  color: skyBlueColor,
-                  borderRadius: BorderRadius.circular(9),
-                ),
-                child: const StyledText(
-                  'Beta',
-                  fontSize: 12,
-                  fontWeight: 600,
-                  color: Colors.black,
-                  letterSpacing: -0.1,
-                ),
-              ),
+              child: BetaTag(),
             )
           ],
         ),

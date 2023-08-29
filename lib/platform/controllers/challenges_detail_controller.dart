@@ -208,6 +208,14 @@ class ChallengesDetailController extends GetxController with GetTickerProviderSt
     }
   }
 
+  void showCreateCrewForm() {
+    crewCreatePopup();
+  }
+
+  void exploreCrews() {
+    tabController.index = 1;
+  }
+
   void sharedKakaoCrewChallenge() {
     print('asd');
   }

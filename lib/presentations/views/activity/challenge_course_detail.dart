@@ -523,7 +523,7 @@ class ChallengeCourseDetail extends StatelessWidget {
                                 child: Row(mainAxisAlignment: MainAxisAlignment.center, crossAxisAlignment: CrossAxisAlignment.center, children: [
                                   ShaderMask(
                                     shaderCallback: (size) => LinearGradient(
-                                      colors: [const Color(0XFF0EE6F3), skyBlueColor],
+                                      colors: [skyBlueColor, skyBlueColor],
                                       begin: Alignment.topCenter,
                                       end: Alignment.bottomCenter,
                                     ).createShader(
@@ -539,7 +539,7 @@ class ChallengeCourseDetail extends StatelessWidget {
                                   ShaderMask(
                                     blendMode: BlendMode.modulate,
                                     shaderCallback: (size) => LinearGradient(
-                                      colors: [const Color(0XFF0EE6F3), skyBlueColor],
+                                      colors: [skyBlueColor, skyBlueColor],
                                       begin: Alignment.topCenter,
                                       end: Alignment.bottomCenter,
                                     ).createShader(

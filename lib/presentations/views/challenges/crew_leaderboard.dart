@@ -2,13 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:gaza_go/platform/controllers/crew_detail_controller.dart';
 import 'package:gaza_go/presentations/styles/colors.dart';
-import 'package:gaza_go/presentations/styles/icons.dart';
 import 'package:gaza_go/presentations/styles/styled_text.dart';
 import 'package:get/get.dart';
 
 class CrewLeaderboard extends StatelessWidget {
   const CrewLeaderboard({Key? key}) : super(key: key);
-  Size get preferredSize => const Size.fromHeight(kToolbarHeight);
 
   List<Widget> renderCrewLeaderboardList(CrewDetailController controller) {
     return controller.crewLeaderboardList.map((item) {
@@ -27,55 +25,51 @@ class CrewLeaderboard extends StatelessWidget {
                 child: Row(
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
-                    (item.iconImageUrl != null)
-                        ? SizedBox(
-                            width: 52.0.sp,
-                            height: 52.0.sp,
-                            child: Stack(
-                              clipBehavior: Clip.none,
-                              children: [
-                                Center(
-                                  child: CircleAvatar(
-                                    radius: 22.sp,
-                                    backgroundColor: deepGrayColor,
-                                    foregroundImage: (item.iconImageUrl == null || item.iconImageUrl == '')
-                                        ? Image.asset(
-                                            'assets/images/ic_launcher.png',
-                                            width: 30.sp,
-                                          ).image
-                                        : NetworkImage(
-                                            item.iconImageUrl!,
-                                          ),
-                                  ),
+                    ConstrainedBox(
+                      constraints: const BoxConstraints(maxWidth: 60, minWidth: 50),
+                      child: FittedBox(
+                        fit: BoxFit.scaleDown,
+                        child: StyledText(
+                          item.rank.toString(),
+                          fontWeight: 600,
+                          fontSize: 16,
+                        ),
+                      ),
+                    ),
+                    Padding(
+                      padding: EdgeInsets.only(left: 10.0.sp),
+                      child: Center(
+                        child: CircleAvatar(
+                          radius: 22.sp,
+                          backgroundColor: deepGrayColor,
+                          foregroundImage: (item.iconImageUrl == null || item.iconImageUrl == '')
+                              ? Image.asset(
+                                  'assets/images/ic_launcher.png',
+                                  width: 30.sp,
+                                ).image
+                              : NetworkImage(
+                                  item.iconImageUrl!,
                                 ),
-                                item.isLocked!
-                                    ? Positioned(
-                                        right: -2,
-                                        bottom: -2,
-                                        child: iconCircleLock,
-                                      )
-                                    : Container()
-                              ],
-                            ),
-                          )
-                        : CircleAvatar(
-                            radius: 22.sp,
-                            backgroundColor: Colors.white,
-                          ),
+                        ),
+                      ),
+                    ),
                     Expanded(
                       child: Padding(
-                        padding: EdgeInsets.only(left: 10.0.sp),
+                        padding: EdgeInsets.only(left: 20.sp),
                         child: Column(
                           mainAxisAlignment: MainAxisAlignment.center,
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            StyledText(
-                              item.name!,
-                              fontWeight: 500,
-                              fontSize: 16,
-                              lineHeight: 20,
-                              letterSpacing: 0,
-                              overflowEllipsis: true,
+                            FittedBox(
+                              fit: BoxFit.scaleDown,
+                              child: StyledText(
+                                item.name!,
+                                fontWeight: 500,
+                                fontSize: 16,
+                                lineHeight: 20,
+                                letterSpacing: 0,
+                                overflowEllipsis: true,
+                              ),
                             ),
                             StyledText(
                               '크루장 : ${item.crewFounderNickName!}',
@@ -94,46 +88,15 @@ class CrewLeaderboard extends StatelessWidget {
                 ),
               ),
             ),
-            InkWell(
-              onTap: () => null,
-              child: Container(
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(50),
-                  color: subBg01Color,
-                  border: Border.all(
-                    color: item.isLocked! ? deepGrayColor : skyBlueColor,
-                    width: 2,
-                  ),
-                  boxShadow: const [
-                    BoxShadow(
-                      color: Color.fromRGBO(0, 0, 0, 1),
-                      offset: Offset(0, 2),
-                    )
-                  ],
-                ),
-                child: Padding(
-                  padding: EdgeInsets.symmetric(vertical: 12.0.sp, horizontal: 14.0.sp),
-                  child: Row(
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      iconPeople,
-                      Padding(
-                        padding: EdgeInsets.only(left: 4.0.sp),
-                        child: StyledText(
-                          item.user.toString(),
-                          textAlign: TextAlign.right,
-                          color: item.isLocked! ? deepGrayColor : Colors.white,
-                          fontSize: 14,
-                          lineHeight: 16,
-                          fontWeight: 500,
-                          letterSpacing: -.1,
-                          softWrap: false,
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
+            Padding(
+              padding: const EdgeInsets.only(left: 8),
+              child: StyledText(
+                '${item.blockQuantity} 블럭',
+                textAlign: TextAlign.right,
+                color: Colors.white,
+                fontSize: 14,
+                fontWeight: 700,
+                softWrap: false,
               ),
             ),
           ],
@@ -147,8 +110,9 @@ class CrewLeaderboard extends StatelessWidget {
     CrewDetailController controller = Get.put(CrewDetailController());
 
     return SingleChildScrollView(
-        child: Column(
-      children: [...renderCrewLeaderboardList(controller)],
-    ));
+      child: Column(
+        children: [...renderCrewLeaderboardList(controller)],
+      ),
+    );
   }
 }

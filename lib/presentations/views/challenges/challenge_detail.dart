@@ -5,6 +5,8 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:gaza_go/constants/config.dart';
 import 'package:gaza_go/platform/controllers/challenges_detail_controller.dart';
 import 'package:gaza_go/platform/helpers/base_helper.dart';
+import 'package:gaza_go/presentations/components/beta_tag.dart';
+import 'package:gaza_go/presentations/components/gazago_button.dart';
 import 'package:gaza_go/presentations/components/mini_bottom_sheet.dart';
 import 'package:gaza_go/presentations/components/secondary_appbar.dart';
 import 'package:gaza_go/presentations/components/share_appbar.dart';
@@ -392,25 +394,11 @@ class ChallengeDetail extends StatelessWidget {
                                                             maxLines: 2,
                                                             overflowEllipsis: true,
                                                           ),
-                                                          Padding(
-                                                            padding: EdgeInsets.only(left: 5.0.sp),
-                                                            child: Container(
-                                                              decoration: BoxDecoration(
-                                                                color: skyBlueColor,
-                                                                borderRadius: BorderRadius.circular(50),
-                                                              ),
-                                                              child: Padding(
-                                                                  padding: EdgeInsets.symmetric(vertical: 3.0, horizontal: 8.sp),
-                                                                  child: const StyledText(
-                                                                    'Beta',
-                                                                    color: Colors.black,
-                                                                    fontSize: 12,
-                                                                    lineHeight: 12,
-                                                                    fontWeight: 600,
-                                                                    letterSpacing: -.1,
-                                                                  )),
+                                                          if (controller.challengeDetails.value.challengeType == 'ALLIANCE')
+                                                            Padding(
+                                                              padding: EdgeInsets.only(left: 5.0.sp),
+                                                              child: const BetaTag(),
                                                             ),
-                                                          ),
                                                         ],
                                                       ),
                                                     ),
@@ -663,12 +651,47 @@ class ChallengeDetail extends StatelessWidget {
                 //   bottom: 0,
                 //   child: renderParticipateInChallenge(controller.challengeDetails.value.challengeState!),
                 // )
-                if (controller.challengeDetails.value.challengeState != null)
+                if (controller.challengeDetails.value.challengeState != null && controller.challengeDetails.value.challengeType != 'ALLIANCE')
                   Positioned.fill(
                     top: null,
                     left: 0,
                     bottom: 0,
                     child: renderParticipateInChallenge(),
+                  )
+                else
+                  Positioned.fill(
+                    top: null,
+                    left: 0,
+                    bottom: 0,
+                    child: Padding(
+                      padding: EdgeInsets.only(
+                        bottom: 27.sp,
+                        left: 18.sp,
+                        right: 18.sp,
+                      ),
+                      child: Row(
+                        children: [
+                          Expanded(
+                            child: GazagoButton(
+                              onTap: () => controller.showCreateCrewForm(),
+                              buttonText: '크루 개설',
+                              buttonColor: popupBgColor,
+                              borderColor: skyBlueColor,
+                              textColor: Colors.white,
+                            ),
+                          ),
+                          SizedBox(
+                            width: 10.sp,
+                          ),
+                          Expanded(
+                            child: GazagoButton(
+                              onTap: () => controller.exploreCrews(),
+                              buttonText: '크루 탐색',
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
                   )
             ],
           );
