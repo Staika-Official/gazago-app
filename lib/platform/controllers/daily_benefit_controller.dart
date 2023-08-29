@@ -3,6 +3,7 @@ import 'dart:io';
 
 import 'package:gaza_go/flavors.dart';
 import 'package:gaza_go/platform/controllers/activity_controller.dart';
+import 'package:gaza_go/platform/controllers/wallet_master_controller.dart';
 import 'package:gaza_go/platform/helpers/alert_helper.dart';
 import 'package:gaza_go/platform/helpers/base_helper.dart';
 import 'package:gaza_go/platform/models/benefit_item_model.dart';
@@ -120,6 +121,7 @@ class DailyBenefitController extends GetxController {
         dailyBenefitList.value!.benefits[index] = updatedItem;
         dailyBenefitList.refresh();
         Get.find<ActivityController>().getUserState();
+        Get.find<WalletMasterController>().getSpendingWalletBalances();
       },
       errorCallback: (ErrorResponseDataModel? errorResponse) {
         if (errorResponse != null && errorResponse.errorCode == 'DAILY_BENEFIT_TIME_UP') {
