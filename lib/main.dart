@@ -50,8 +50,9 @@ void initDebuggingMode() {
 void main() async {
   await runZonedGuarded(() async {
     WidgetsFlutterBinding.ensureInitialized(); // async로 할 때 반드시 호출
-    AdjustConfig config = new AdjustConfig('{YourAppToken}', F.isDev ? AdjustEnvironment.sandbox : AdjustEnvironment.production);
-    Adjust.start(config);
+    AdjustConfig adjustConfig = new AdjustConfig('egsa3l7qwj5s', F.isDev ? AdjustEnvironment.sandbox : AdjustEnvironment.production);
+    adjustConfig.logLevel = AdjustLogLevel.verbose;
+    Adjust.start(adjustConfig);
     await Hive.initFlutter();
     HiveStore.registerAdapters();
     await HiveStore.openBox();
