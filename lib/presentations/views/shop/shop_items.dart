@@ -48,7 +48,12 @@ class ShopItems extends StatelessWidget {
                       crossAxisAlignment: CrossAxisAlignment.center,
                       children: [
                         Container(
-                          child: getItemGradeIcon(item.itemGrade),
+                          child: item.itemGrade != 'NONE'
+                              ? getItemGradeIcon(item.itemGrade)
+                              : const SizedBox(
+                                  width: 90,
+                                  height: 24,
+                                ),
                         ),
                         Column(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
