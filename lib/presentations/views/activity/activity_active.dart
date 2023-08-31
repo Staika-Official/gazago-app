@@ -734,7 +734,7 @@ class GaugeCursor extends StatelessWidget {
             child: Row(
               children: [
                 StyledText(
-                  formatDecimalPlaces(speed, 1),
+                  formatDecimalPlaces(speed >= 0 ? speed : 0, 1),
                   color: color,
                   fontSize: 14,
                   lineHeight: 12,
