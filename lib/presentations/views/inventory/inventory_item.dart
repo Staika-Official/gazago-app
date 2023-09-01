@@ -46,7 +46,7 @@ class InventoryItem extends StatelessWidget {
                     child: Stack(
                       children: [
                         Padding(
-                          padding: EdgeInsets.symmetric(vertical: 8.0.sp, horizontal: 15.0.sp),
+                          padding: EdgeInsets.symmetric(vertical: 7.0.sp, horizontal: 15.0.sp),
                           child: Column(
                             mainAxisAlignment: MainAxisAlignment.end,
                             crossAxisAlignment: CrossAxisAlignment.center,
@@ -62,8 +62,6 @@ class InventoryItem extends StatelessWidget {
                                                 item.itemImageUrl,
                                                 placeholderBuilder: (BuildContext context) => const Center(child: SizedBox.square(dimension: 40, child: CircularProgressIndicator())),
                                                 headers: imageNetworkHeader,
-                                                color: item.equipped == true ? Colors.white.withOpacity(0.5) : Colors.white.withOpacity(1),
-                                                colorBlendMode: BlendMode.modulate,
                                               )
                                             : CachedNetworkImage(
                                                 imageUrl: item.itemImageUrl,

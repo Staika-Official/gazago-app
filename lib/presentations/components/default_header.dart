@@ -45,8 +45,7 @@ class DefaultHeader extends StatelessWidget {
                         },
                     child: SvgPicture.asset(
                       fit: BoxFit.contain,
-                      'assets/images/icons/icon_chevron_left_black.svg',
-                      color: Colors.white,
+                      'assets/images/icons/icon_chevron_left_white.svg',
                     ),
                   ),
                 ),

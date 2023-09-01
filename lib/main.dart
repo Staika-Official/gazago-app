@@ -1,10 +1,13 @@
 import 'dart:async';
 
+import 'package:adjust_sdk/adjust.dart';
+import 'package:adjust_sdk/adjust_config.dart';
 import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:gaza_go/constants/enums.dart';
+import 'package:gaza_go/flavors.dart';
 import 'package:gaza_go/platform/controllers/global_controller.dart';
 import 'package:gaza_go/platform/controllers/loader_controller.dart';
 import 'package:gaza_go/platform/firebase/core.dart';
@@ -47,6 +50,9 @@ void initDebuggingMode() {
 void main() async {
   await runZonedGuarded(() async {
     WidgetsFlutterBinding.ensureInitialized(); // async로 할 때 반드시 호출
+    AdjustConfig adjustConfig = new AdjustConfig('egsa3l7qwj5s', F.isDev ? AdjustEnvironment.sandbox : AdjustEnvironment.production);
+    adjustConfig.logLevel = AdjustLogLevel.verbose;
+    Adjust.start(adjustConfig);
     await Hive.initFlutter();
     HiveStore.registerAdapters();
     await HiveStore.openBox();

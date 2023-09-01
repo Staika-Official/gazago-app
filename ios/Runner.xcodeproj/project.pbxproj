@@ -21,6 +21,10 @@
 		F3E3DE072939982100CE1223 /* stat_low.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = F3E3DE042939982100CE1223 /* stat_low.mp3 */; };
 		F3E3DE082939982100CE1223 /* badge_acquired.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = F3E3DE052939982100CE1223 /* badge_acquired.mp3 */; };
 		F3E3DE092939982100CE1223 /* stat_depleted.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = F3E3DE062939982100CE1223 /* stat_depleted.mp3 */; };
+		F3F9AAA72A9C68BB00EF7AC8 /* AdSupport.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F3F9AAA62A9C68BB00EF7AC8 /* AdSupport.framework */; settings = {ATTRIBUTES = (Weak, ); }; };
+		F3F9AAA92A9C68C500EF7AC8 /* AdServices.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F3F9AAA82A9C68C500EF7AC8 /* AdServices.framework */; settings = {ATTRIBUTES = (Weak, ); }; };
+		F3F9AAAB2A9C68CE00EF7AC8 /* StoreKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F3F9AAAA2A9C68CE00EF7AC8 /* StoreKit.framework */; settings = {ATTRIBUTES = (Weak, ); }; };
+		F3F9AAAD2A9C68D500EF7AC8 /* AppTrackingTransparency.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F3F9AAAC2A9C68D500EF7AC8 /* AppTrackingTransparency.framework */; settings = {ATTRIBUTES = (Weak, ); }; };
 		F6E61FD8F4F488F09D3E231B /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 048AFEF9C364C4DB23127CBD /* GoogleService-Info.plist */; };
 /* End PBXBuildFile section */
 
@@ -82,6 +86,10 @@
 		F3E3DE042939982100CE1223 /* stat_low.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; name = stat_low.mp3; path = ../../android/app/src/main/res/raw/stat_low.mp3; sourceTree = "<group>"; };
 		F3E3DE052939982100CE1223 /* badge_acquired.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; name = badge_acquired.mp3; path = ../../android/app/src/main/res/raw/badge_acquired.mp3; sourceTree = "<group>"; };
 		F3E3DE062939982100CE1223 /* stat_depleted.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; name = stat_depleted.mp3; path = ../../android/app/src/main/res/raw/stat_depleted.mp3; sourceTree = "<group>"; };
+		F3F9AAA62A9C68BB00EF7AC8 /* AdSupport.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AdSupport.framework; path = System/Library/Frameworks/AdSupport.framework; sourceTree = SDKROOT; };
+		F3F9AAA82A9C68C500EF7AC8 /* AdServices.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AdServices.framework; path = System/Library/Frameworks/AdServices.framework; sourceTree = SDKROOT; };
+		F3F9AAAA2A9C68CE00EF7AC8 /* StoreKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = StoreKit.framework; path = System/Library/Frameworks/StoreKit.framework; sourceTree = SDKROOT; };
+		F3F9AAAC2A9C68D500EF7AC8 /* AppTrackingTransparency.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AppTrackingTransparency.framework; path = System/Library/Frameworks/AppTrackingTransparency.framework; sourceTree = SDKROOT; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -89,6 +97,10 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				F3F9AAAD2A9C68D500EF7AC8 /* AppTrackingTransparency.framework in Frameworks */,
+				F3F9AAAB2A9C68CE00EF7AC8 /* StoreKit.framework in Frameworks */,
+				F3F9AAA92A9C68C500EF7AC8 /* AdServices.framework in Frameworks */,
+				F3F9AAA72A9C68BB00EF7AC8 /* AdSupport.framework in Frameworks */,
 				6DDC87A72907AC6A004A839F /* HealthKit.framework in Frameworks */,
 				82294FFB258E68BFBA11B7DB /* Pods_Runner.framework in Frameworks */,
 			);
@@ -100,6 +112,10 @@
 		1B07C0C5B2C2A2CD22C7B7C4 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				F3F9AAAC2A9C68D500EF7AC8 /* AppTrackingTransparency.framework */,
+				F3F9AAAA2A9C68CE00EF7AC8 /* StoreKit.framework */,
+				F3F9AAA82A9C68C500EF7AC8 /* AdServices.framework */,
+				F3F9AAA62A9C68BB00EF7AC8 /* AdSupport.framework */,
 				6DDC87A62907AC6A004A839F /* HealthKit.framework */,
 				6CCF9D7A5BFD3E5E20849FD9 /* Pods_Runner.framework */,
 			);
