@@ -251,7 +251,7 @@ class InventoryController extends GetxController with LinearProgressMixin, Inven
     if (Get.previousRoute == Routes.challengeDetail) {
       Get.back();
     } else {
-      Get.toNamed(Routes.challengeDetail, arguments: {'id': selectedItem.value.challenge!.challengeId});
+      Get.toNamed(Routes.challengeDetail.replaceAll(':id', selectedItem.value.challenge!.challengeId.toString()));
     }
   }
 

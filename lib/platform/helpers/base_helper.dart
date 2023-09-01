@@ -70,6 +70,14 @@ String formatDateUntilTime(String? isoDateString) {
   }
 }
 
+String formatDateMonthUntilTime(String? isoDateString) {
+  if (isoDateString != null) {
+    return DateFormat("MM.dd (HH:mm)").format(DateTime.parse(isoDateString).toLocal());
+  } else {
+    return '';
+  }
+}
+
 String coordinatesToString(List<LatLng> coordinates) {
   List<List<double>> coordinateStringList = List.empty(growable: true);
   for (LatLng coordinate in coordinates) {
@@ -191,4 +199,17 @@ String formatMeterToKilometer(int meter) {
   }
 
   return kilometer;
+}
+
+void handleRoute(String route) {
+  if (route.contains('challenge')) {
+    Get.find<HomeMenuController>().selectMenu(0);
+  } else if (route.contains('inventory')) {
+    Get.find<HomeMenuController>().selectMenu(1);
+  } else if (route.contains('shop')) {
+    Get.find<HomeMenuController>().selectMenu(3);
+  } else if (route.contains('leaderboard')) {
+    Get.find<HomeMenuController>().selectMenu(4);
+  }
+  Get.toNamed(route);
 }

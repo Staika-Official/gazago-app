@@ -1,17 +1,31 @@
+import 'dart:convert';
+
+import 'package:firebase_database/firebase_database.dart';
+import 'package:firebase_dynamic_links/firebase_dynamic_links.dart';
 import 'package:flutter/material.dart';
+import 'package:gaza_go/constants/routes.dart';
+import 'package:gaza_go/flavors.dart';
 import 'package:gaza_go/platform/controllers/challenges_controller.dart';
 import 'package:gaza_go/platform/controllers/loader_controller.dart';
+import 'package:gaza_go/platform/controllers/wallet_master_controller.dart';
 import 'package:gaza_go/platform/helpers/alert_helper.dart';
 import 'package:gaza_go/platform/helpers/challenge_mixin.dart';
 import 'package:gaza_go/platform/models/challenge_ranker_model.dart';
 import 'package:gaza_go/platform/models/challenge_reward_model.dart';
+import 'package:gaza_go/platform/models/crew_create_form_model.dart';
+import 'package:gaza_go/platform/models/crew_icon_model.dart';
+import 'package:gaza_go/platform/models/crew_member_model.dart';
+import 'package:gaza_go/platform/models/crew_model.dart';
+import 'package:gaza_go/platform/models/error_response_data_model.dart';
 import 'package:gaza_go/platform/models/inventory_item_model.dart';
 import 'package:gaza_go/platform/models/new_challenge_detail_model.dart';
 import 'package:gaza_go/platform/services/activity_service.dart';
+import 'package:gaza_go/platform/services/crew_service.dart';
 import 'package:gaza_go/platform/services/item_service.dart';
 import 'package:gaza_go/presentations/components/alert_ui_list.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
+import 'package:share_plus/share_plus.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class ChallengesDetailController extends GetxController with GetTickerProviderStateMixin, ChallengeMixin {
@@ -48,6 +62,12 @@ class ChallengesDetailController extends GetxController with GetTickerProviderSt
   bool hasMore = true;
   bool loadingLeaderboard = false;
 
+  RxList<CrewModel> crewList = RxList.empty();
+  RxList<CrewIconModel> crewMarkIcons = RxList.empty();
+  RxInt selectedMarkIconId = RxInt(0);
+  TextEditingController crewNameController = TextEditingController();
+  RxString crewName = RxString('');
+
   @override
   void onInit() async {
     focusNode.addListener(_onFocusChange);
@@ -56,11 +76,20 @@ class ChallengesDetailController extends GetxController with GetTickerProviderSt
         if (tabController.indexIsChanging && tabController.index == 1) {}
       });
     tabController.addListener(_tabController);
-    challengeId.value = await Get.arguments['id'];
-    hideCourses.value = await Get.arguments['hideCourses'] ?? false;
-    getChallengeDetail();
-    getChallengeLeaderboard();
-    getChallengeLeaderboardMyRanking();
+    if (await Get.arguments != null) {
+      challengeId.value = await Get.arguments['id'];
+      hideCourses.value = await Get.arguments['hideCourses'] ?? false;
+    } else {
+      challengeId.value = int.parse(Get.parameters['id']!);
+      hideCourses.value = false;
+    }
+    await getChallengeDetail();
+    if (challengeDetails.value.challengeType == 'CREW') {
+      getCrewList();
+    } else {
+      getChallengeLeaderboard();
+      getChallengeLeaderboardMyRanking();
+    }
 
     leaderboardScrollController.addListener(() {
       loadDataOnScroll();
@@ -146,6 +175,47 @@ class ChallengesDetailController extends GetxController with GetTickerProviderSt
     });
   }
 
+  Future<void> getCrewList() async {
+    DatabaseReference crewChallengeLeaderboardRef = FirebaseDatabase.instance.ref('crewChallengeLeaderboard/${challengeId.value}');
+
+    crewChallengeLeaderboardRef.get().then((DataSnapshot snapshot) {
+      if (snapshot.exists) {
+        updateCrewData(snapshot);
+      } else {
+        crewList.clear();
+      }
+    }).onError((error, stackTrace) {
+      print(error);
+    });
+
+    crewChallengeLeaderboardRef.onValue.listen((DatabaseEvent event) {
+      final data = event.snapshot.value;
+      updateCrewData(event.snapshot);
+    });
+  }
+
+  void updateCrewData(DataSnapshot snapshot) {
+    crewList.clear();
+    Map crewListMap = snapshot.value as Map;
+    crewListMap.forEach((key, crew) {
+      crew['isLimited'] = false;
+      List<CrewMemberModel> members = List.empty(growable: true);
+      Map membersMap = crew['crewMemberMap'] as Map;
+
+      membersMap.forEach((key, member) {
+        members.add(CrewMemberModel.fromJson(jsonDecode(jsonEncode(member))));
+      });
+
+      members.sort((a, b) => b.blockQuantity!.compareTo(a.blockQuantity!));
+
+      crew['crewMemberList'] = members;
+
+      CrewModel crewModel = CrewModel.fromJson(jsonDecode(jsonEncode(crew)));
+      crewList.add(crewModel);
+    });
+    crewList.sort((a, b) => b.crewMemberList!.length.compareTo(a.crewMemberList!.length));
+  }
+
   void getSize() {
     if (backgroundKey.currentContext != null) {
       backgroundBoxSize.value = backgroundKey.currentContext!.size!.height;
@@ -192,6 +262,85 @@ class ChallengesDetailController extends GetxController with GetTickerProviderSt
     } else {
       showToastPopup('참여코드를 입력해주세요.');
     }
+  }
+
+  Future<void> showCreateCrewForm() async {
+    await CrewService.getCrewMarkIcons(successCallback: (List<CrewIconModel> icons) {
+      crewMarkIcons.clear();
+      selectedMarkIconId.value = icons.first.id;
+      crewMarkIcons.addAll(icons);
+    }, errorCallback: () {
+      showToastPopup('크루 마크를 불러오지 못했습니다.');
+    });
+    crewCreatePopup(this);
+  }
+
+  void handleCreateCrewType(String createCrewType) {
+    if (crewName.value == '') {
+      showToastPopup('크루명을 입력해주세요');
+      return;
+    }
+    if (createCrewType == 'TIK') {
+      if (Get.find<WalletMasterController>().tik.value.amount! < 3000) {
+        shortTikCreateCrewAlert();
+        return;
+      }
+    } else {
+      shareCrewChallengeKakaoLinkDialog();
+    }
+  }
+
+  void requestCreateCrew(String createCrewType) {
+    CrewCreateFormModel formData;
+    if (createCrewType == 'TIK') {
+      formData = CrewCreateFormModel(
+        challengeId: challengeId.value,
+        crewCreateType: 'TIK',
+        crewIconId: selectedMarkIconId.value,
+        name: crewName.value,
+        price: 3000,
+      );
+    } else {
+      formData = CrewCreateFormModel(
+        challengeId: challengeId.value,
+        crewCreateType: 'INVITE',
+        crewIconId: selectedMarkIconId.value,
+        name: crewName.value,
+      );
+    }
+
+    CrewService.createCrew(formData, successCallback: () {
+      showToastPopup('크루가 개설되었습니다.');
+    }, errorCallback: (ErrorResponseDataModel error) {
+      if (error.errorCode == 'ALREADY_EXISTS_CREW_NAME') {
+        showToastPopup(error.errorMessage!);
+      }
+      print(error.toJson());
+    });
+  }
+
+  void selectCrewMark(CrewIconModel crewMarkIcon) {
+    selectedMarkIconId.value = crewMarkIcon.id;
+  }
+
+  void updateCrewName(String name) {
+    crewName.value = name;
+  }
+
+  void exploreCrews() {
+    tabController.index = 1;
+  }
+
+  Future<void> sharedCrewChallenge() async {
+    final dynamicLinkParams = DynamicLinkParameters(
+      link: Uri.parse("https://gazago.io?route=${Routes.challengeDetail.replaceAll(':id', challengeId.value.toString())}"),
+      uriPrefix: F.isDev ? "https://gazagostage.page.link" : "https://gazago.page.link",
+      androidParameters: AndroidParameters(packageName: F.isDev ? "kr.co.eztechfin.gazaGo.dev" : "kr.co.eztechfin.gazaGo"),
+      iosParameters: IOSParameters(bundleId: F.isDev ? "kr.co.eztechfin.gazaGo.dev" : "kr.co.eztechfin.gazaGo"),
+    );
+    final dynamicLink = await FirebaseDynamicLinks.instance.buildShortLink(dynamicLinkParams);
+
+    Share.share(dynamicLink.shortUrl.toString());
   }
 
   void loadDataOnScroll() {

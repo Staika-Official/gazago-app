@@ -9,6 +9,7 @@ part 'new_challenge_detail_model.g.dart';
 class NewChallengeDetailModel {
   int? id;
   int? itemTradeStoreId;
+  String? challengeType;
   String? challengeState;
   String? challengeUserState;
   String? challengeActivationType;
@@ -45,6 +46,7 @@ class NewChallengeDetailModel {
   NewChallengeDetailModel({
     this.id,
     this.itemTradeStoreId,
+    this.challengeType,
     this.challengeState,
     this.challengeUserState,
     this.challengeActivationType,

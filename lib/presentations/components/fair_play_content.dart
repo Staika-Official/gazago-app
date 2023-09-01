@@ -23,7 +23,7 @@ class FairPlayContent extends StatelessWidget {
       fontSize: 14,
       fontWeight: 700,
       lineHeight: 22,
-      color: const Color(0xFF0EE6F3),
+      color: skyBlueColor,
     );
   }
 

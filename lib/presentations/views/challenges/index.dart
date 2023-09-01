@@ -60,7 +60,7 @@ class ChallengesHome extends StatelessWidget {
                         fit: StackFit.expand,
                         clipBehavior: Clip.none,
                         children: [
-                          if (item.thumbnailImageUrl != null)
+                          if (item.thumbnailImageUrl != null || item.thumbnailImageUrl != '')
                             item.thumbnailImageUrl!.contains('.svg')
                                 ? SvgPicture.network(
                                     fit: BoxFit.cover,
