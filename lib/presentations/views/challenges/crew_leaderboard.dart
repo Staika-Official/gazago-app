@@ -9,7 +9,7 @@ class CrewLeaderboard extends StatelessWidget {
   const CrewLeaderboard({Key? key}) : super(key: key);
 
   List<Widget> renderCrewLeaderboardList(CrewDetailController controller) {
-    return controller.crewLeaderboardList.map((item) {
+    return controller.crewLeaderboardList.asMap().entries.map((item) {
       return Container(
         color: subBg01Color,
         height: 64.sp,
@@ -26,11 +26,11 @@ class CrewLeaderboard extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
                     ConstrainedBox(
-                      constraints: const BoxConstraints(maxWidth: 60, minWidth: 50),
+                      constraints: const BoxConstraints(maxWidth: 50, minWidth: 40),
                       child: FittedBox(
                         fit: BoxFit.scaleDown,
                         child: StyledText(
-                          item.rank.toString(),
+                          (item.key + 1).toString(),
                           fontWeight: 600,
                           fontSize: 16,
                         ),
@@ -42,13 +42,13 @@ class CrewLeaderboard extends StatelessWidget {
                         child: CircleAvatar(
                           radius: 22.sp,
                           backgroundColor: deepGrayColor,
-                          foregroundImage: (item.iconImageUrl == null || item.iconImageUrl == '')
+                          foregroundImage: (item.value.imageUrl == null || item.value.imageUrl == '')
                               ? Image.asset(
                                   'assets/images/ic_launcher.png',
                                   width: 30.sp,
                                 ).image
                               : NetworkImage(
-                                  item.iconImageUrl!,
+                                  item.value.imageUrl!,
                                 ),
                         ),
                       ),
@@ -63,7 +63,7 @@ class CrewLeaderboard extends StatelessWidget {
                             FittedBox(
                               fit: BoxFit.scaleDown,
                               child: StyledText(
-                                item.name!,
+                                item.value.nickname!,
                                 fontWeight: 500,
                                 fontSize: 16,
                                 lineHeight: 20,
@@ -72,7 +72,7 @@ class CrewLeaderboard extends StatelessWidget {
                               ),
                             ),
                             StyledText(
-                              '크루장 : ${item.crewFounderNickName!}',
+                              '크루장 : ${controller.selectedCrew.value?.crewFounderNickName!}',
                               color: deepGrayColor,
                               fontWeight: 500,
                               fontSize: 12,
@@ -91,7 +91,7 @@ class CrewLeaderboard extends StatelessWidget {
             Padding(
               padding: const EdgeInsets.only(left: 8),
               child: StyledText(
-                '${item.blockQuantity} 블럭',
+                '${item.value.blockQuantity} 블럭',
                 textAlign: TextAlign.right,
                 color: Colors.white,
                 fontSize: 14,
@@ -107,7 +107,7 @@ class CrewLeaderboard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    CrewDetailController controller = Get.put(CrewDetailController());
+    CrewDetailController controller = Get.find<CrewDetailController>();
 
     return SingleChildScrollView(
       child: Column(

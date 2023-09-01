@@ -15,6 +15,7 @@ import 'package:gaza_go/platform/controllers/leaderboard_controller.dart';
 import 'package:gaza_go/platform/controllers/shop_controller.dart';
 import 'package:gaza_go/platform/controllers/wallet_master_controller.dart';
 import 'package:gaza_go/platform/firebase/cloud_messaging.dart';
+import 'package:gaza_go/platform/firebase/dynamic_link.dart';
 import 'package:gaza_go/platform/helpers/alert_helper.dart';
 import 'package:gaza_go/platform/helpers/base_helper.dart';
 import 'package:gaza_go/platform/helpers/login_helper.dart';
@@ -68,6 +69,7 @@ class HomeMenuController extends SuperController {
     await checkUpdates();
     bottomNavHeight.value = bottomNavKey.currentContext != null ? bottomNavKey.currentContext!.size!.height : 0;
     checkItemsDb();
+    await initDynamicLink();
     super.onReady();
   }
 

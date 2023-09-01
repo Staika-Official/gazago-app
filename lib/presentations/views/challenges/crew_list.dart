@@ -11,14 +11,14 @@ class CrewList extends StatelessWidget {
   const CrewList({Key? key}) : super(key: key);
 
   List<Widget> renderCrewList(ChallengesDetailController controller) {
-    return controller.crewList.map((item) {
+    return controller.crewList.asMap().entries.map((item) {
       return Material(
         color: Colors.transparent,
         child: Ink(
           color: subBg01Color,
           height: 64.sp,
           child: InkWell(
-            onTap: () => item.isLocked! ? null : crewJoinInfoAlert(),
+            onTap: () => item.value.crewRecruitStatus == 'CLOSE' ? null : crewJoinInfoAlert(item.key + 1, item.value),
             child: Padding(
               padding: EdgeInsets.only(left: 18.sp, right: 20.sp),
               child: Row(
@@ -32,7 +32,7 @@ class CrewList extends StatelessWidget {
                       child: Row(
                         crossAxisAlignment: CrossAxisAlignment.center,
                         children: [
-                          (item.iconImageUrl != null)
+                          (item.value.iconImageUrl != null)
                               ? SizedBox(
                                   width: 52.0.sp,
                                   height: 52.0.sp,
@@ -43,17 +43,17 @@ class CrewList extends StatelessWidget {
                                         child: CircleAvatar(
                                           radius: 22.sp,
                                           backgroundColor: deepGrayColor,
-                                          foregroundImage: (item.iconImageUrl == null || item.iconImageUrl == '')
+                                          foregroundImage: (item.value.iconImageUrl == null || item.value.iconImageUrl == '')
                                               ? Image.asset(
                                                   'assets/images/ic_launcher.png',
                                                   width: 30.sp,
                                                 ).image
                                               : NetworkImage(
-                                                  item.iconImageUrl!,
+                                                  item.value.iconImageUrl!,
                                                 ),
                                         ),
                                       ),
-                                      item.isLocked!
+                                      item.value.crewRecruitStatus == 'CLOSE'
                                           ? Positioned(
                                               right: -2,
                                               bottom: -2,
@@ -75,7 +75,7 @@ class CrewList extends StatelessWidget {
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
                                   StyledText(
-                                    item.name!,
+                                    item.value.name!,
                                     fontWeight: 500,
                                     fontSize: 16,
                                     lineHeight: 20,
@@ -83,7 +83,7 @@ class CrewList extends StatelessWidget {
                                     overflowEllipsis: true,
                                   ),
                                   StyledText(
-                                    '크루장 : ${item.crewFounderNickName!}',
+                                    '크루장 : ${item.value.crewFounderNickName!}',
                                     color: deepGrayColor,
                                     fontWeight: 500,
                                     fontSize: 12,
@@ -104,7 +104,7 @@ class CrewList extends StatelessWidget {
                       borderRadius: BorderRadius.circular(50),
                       color: subBg01Color,
                       border: Border.all(
-                        color: item.isLocked! ? deepGrayColor : skyBlueColor,
+                        color: item.value.crewRecruitStatus == 'CLOSE' ? deepGrayColor : skyBlueColor,
                         width: 2,
                       ),
                       boxShadow: const [
@@ -124,9 +124,9 @@ class CrewList extends StatelessWidget {
                           Padding(
                             padding: EdgeInsets.only(left: 4.0.sp),
                             child: StyledText(
-                              item.user.toString(),
+                              item.value.crewMemberList != null ? item.value.crewMemberList!.length.toString() : '0',
                               textAlign: TextAlign.right,
-                              color: item.isLocked! ? deepGrayColor : Colors.white,
+                              color: item.value.crewRecruitStatus == 'CLOSE' ? deepGrayColor : Colors.white,
                               fontSize: 14,
                               lineHeight: 16,
                               fontWeight: 500,
@@ -170,7 +170,7 @@ class CrewList extends StatelessWidget {
                               padding: EdgeInsets.symmetric(vertical: 20.0.sp),
                               child: const Center(child: CircularProgressIndicator()),
                             )
-                          : controller.challengeRankingList.isEmpty
+                          : controller.crewList.isEmpty
                               ? SizedBox(
                                   height: 500,
                                   child: Center(

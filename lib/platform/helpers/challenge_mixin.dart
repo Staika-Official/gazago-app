@@ -48,6 +48,8 @@ mixin ChallengeMixin {
         return '코스형';
       case 'CODE':
         return '참여코드형';
+      case 'CREW':
+        return '크루릴레이';
       default:
         return '참가비 납부형';
     }

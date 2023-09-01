@@ -8,6 +8,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:flutter_svg_provider/flutter_svg_provider.dart' as sp;
 import 'package:gaza_go/constants/config.dart';
 import 'package:gaza_go/constants/enums.dart';
 import 'package:gaza_go/constants/routes.dart';
@@ -15,6 +16,7 @@ import 'package:gaza_go/platform/controllers/activity_controller.dart';
 import 'package:gaza_go/platform/controllers/archive_controller.dart';
 import 'package:gaza_go/platform/controllers/challenges_controller.dart';
 import 'package:gaza_go/platform/controllers/challenges_detail_controller.dart';
+import 'package:gaza_go/platform/controllers/crew_detail_controller.dart';
 import 'package:gaza_go/platform/controllers/debugging_controller.dart';
 import 'package:gaza_go/platform/controllers/home_menu_controller.dart';
 import 'package:gaza_go/platform/controllers/inventory_controller.dart';
@@ -34,12 +36,15 @@ import 'package:gaza_go/platform/helpers/alert_helper.dart';
 import 'package:gaza_go/platform/helpers/base_helper.dart';
 import 'package:gaza_go/platform/helpers/inventory_helper.dart';
 import 'package:gaza_go/platform/models/challenge_course_model.dart';
+import 'package:gaza_go/platform/models/crew_icon_model.dart';
+import 'package:gaza_go/platform/models/crew_model.dart';
 import 'package:gaza_go/platform/models/exchange_stik_price_model.dart';
 import 'package:gaza_go/platform/models/push_message_challenge_success_model.dart';
 import 'package:gaza_go/presentations/components/circular_button.dart';
 import 'package:gaza_go/presentations/components/fair_play_content.dart';
 import 'package:gaza_go/presentations/components/gazago_button.dart';
 import 'package:gaza_go/presentations/components/item_counter.dart';
+import 'package:gaza_go/presentations/components/product_list_dialog.dart';
 import 'package:gaza_go/presentations/styles/colors.dart';
 import 'package:gaza_go/presentations/styles/icons.dart';
 import 'package:gaza_go/presentations/styles/styled_text.dart';
@@ -363,11 +368,11 @@ Future<void> showLocationAlert(ActivityController controller) async {
           fontWeight: FontWeight.w500,
           color: Colors.white,
         ),
-        TextSpan(
+        const TextSpan(
           text: '정확한 운동기록을 위해서 ',
           children: [
             TextSpan(text: '위치', style: TextStyle(color: skyBlueColor)),
-            const TextSpan(text: '엑세스 \n권한을 허용해 주세요'),
+            TextSpan(text: '엑세스 \n권한을 허용해 주세요'),
           ],
         ),
       ),
@@ -399,11 +404,11 @@ Future<void> showActivityAlert(ActivityController controller) async {
           fontWeight: FontWeight.w500,
           color: Colors.white,
         ),
-        TextSpan(
+        const TextSpan(
           text: '정확한 운동기록을 위해서 ',
           children: [
             TextSpan(text: '신체 활동\n', style: TextStyle(color: skyBlueColor)),
-            const TextSpan(text: '엑세스 권한을 허용해 주세요.'),
+            TextSpan(text: '엑세스 권한을 허용해 주세요.'),
           ],
         ),
       ),
@@ -435,11 +440,11 @@ Future<void> showGpsAlert() async {
           fontWeight: FontWeight.w500,
           color: Colors.white,
         ),
-        TextSpan(
+        const TextSpan(
           text: '정상적인 gazaGO 이용을 위하여 디바이스의 ',
           children: [
             TextSpan(text: 'GPS', style: TextStyle(color: skyBlueColor)),
-            const TextSpan(text: ' 기능을 활성화 시켜주세요.'),
+            TextSpan(text: ' 기능을 활성화 시켜주세요.'),
           ],
         ),
       ),
@@ -470,11 +475,11 @@ void showFakeGpsAlert() async {
           fontWeight: FontWeight.w500,
           color: Colors.white,
         ),
-        TextSpan(
+        const TextSpan(
           text: '비정상적인 ',
           children: [
             TextSpan(text: 'GPS 활동', style: TextStyle(color: skyBlueColor)),
-            const TextSpan(text: '이 감지되었습니다.'),
+            TextSpan(text: '이 감지되었습니다.'),
           ],
         ),
       ),
@@ -507,11 +512,11 @@ Future<bool> showGalleryPermissionAlert(MyPageController controller) async {
           fontWeight: FontWeight.w500,
           color: Colors.white,
         ),
-        TextSpan(
+        const TextSpan(
           text: '프로필 사진 변경을 위해서 ',
           children: [
             TextSpan(text: '사진\n', style: TextStyle(color: skyBlueColor)),
-            const TextSpan(text: '엑세스 권한을 허용해 주세요.'),
+            TextSpan(text: '엑세스 권한을 허용해 주세요.'),
           ],
         ),
       ),
@@ -659,7 +664,7 @@ void showEndExerciseAdAlert(ActivityController controller) {
                   controller.closeAdSelectPopup();
                 },
                 child: Container(
-                  decoration: BoxDecoration(
+                  decoration: const BoxDecoration(
                     border: Border(
                       bottom: BorderSide(
                         // POINT
@@ -668,8 +673,8 @@ void showEndExerciseAdAlert(ActivityController controller) {
                       ),
                     ),
                   ),
-                  child: Padding(
-                    padding: const EdgeInsets.only(bottom: 6.0, left: 5.0, right: 5.0),
+                  child: const Padding(
+                    padding: EdgeInsets.only(bottom: 6.0, left: 5.0, right: 5.0),
                     child: StyledText(
                       '취소',
                       fontSize: 18,
@@ -735,10 +740,10 @@ void showBadgeAcquisitionAlert(String badgeImgUrl, ChallengeCourseModel selected
               fontWeight: FontWeight.w500,
               color: lightGrayColor,
             ),
-            TextSpan(
+            const TextSpan(
               children: [
                 TextSpan(text: '내 장비 > 뱃지', style: TextStyle(color: skyBlueColor)),
-                const TextSpan(text: ' 카테고리에서\n획득한 뱃지를 확인하실수 있습니다.'),
+                TextSpan(text: ' 카테고리에서\n획득한 뱃지를 확인하실수 있습니다.'),
               ],
             ),
           ),
@@ -806,10 +811,10 @@ Future<void> showChallengeBadgeAcquisitionAlert(PushMessageChallengeSuccessModel
               fontWeight: FontWeight.w500,
               color: lightGrayColor,
             ),
-            TextSpan(
+            const TextSpan(
               children: [
                 TextSpan(text: '내 장비 > 뱃지', style: TextStyle(color: skyBlueColor)),
-                const TextSpan(text: ' 카테고리에서\n획득한 뱃지를 확인하실수 있습니다.'),
+                TextSpan(text: ' 카테고리에서\n획득한 뱃지를 확인하실수 있습니다.'),
               ],
             ),
           ),
@@ -990,10 +995,10 @@ void showPendingExerciseAlert(ActivityController controller) {
                           fontWeight: FontWeight.w500,
                           color: Colors.white,
                         ),
-                        TextSpan(
+                        const TextSpan(
                           text: '운동을 종료하시려면\n',
                           children: [
-                            const TextSpan(text: '아래 '),
+                            TextSpan(text: '아래 '),
                             TextSpan(text: '종료 버튼을 3초간 눌러주세요', style: TextStyle(color: skyBlueColor)),
                           ],
                         ),
@@ -1101,7 +1106,7 @@ void itemPurchaseAlert(ShopDetailController controller, double remainMyAsset, tr
                                 borderRadius: BorderRadius.circular(2),
                               ),
                             ),
-                            StyledText(
+                            const StyledText(
                               '해당 아이템은 챌린지 대상 아이템입니다.',
                               fontSize: 14,
                               lineHeight: 20,
@@ -1122,7 +1127,7 @@ void itemPurchaseAlert(ShopDetailController controller, double remainMyAsset, tr
                                 borderRadius: BorderRadius.circular(2),
                               ),
                             ),
-                            StyledText(
+                            const StyledText(
                               '구매 후 자동으로 장착되고 챌린지에 자동 참여됩니다.',
                               fontSize: 14,
                               lineHeight: 20,
@@ -1143,7 +1148,7 @@ void itemPurchaseAlert(ShopDetailController controller, double remainMyAsset, tr
                                 borderRadius: BorderRadius.circular(2),
                               ),
                             ),
-                            StyledText(
+                            const StyledText(
                               '챌린지 대상 아이템은 1인 당 한개만 구매 가능합니다.',
                               fontSize: 14,
                               lineHeight: 20,
@@ -1358,7 +1363,7 @@ void itemPurchaseAlert(ShopDetailController controller, double remainMyAsset, tr
           remainMyAsset - controller.selectedItem.value.price > controller.purchaseItemSumPrice.value
               ? Padding(
                   padding: EdgeInsets.only(top: 55.0.sp, bottom: 25.sp),
-                  child: StyledText(
+                  child: const StyledText(
                     '· 구매가 완료되면 취소가 불가합니다.',
                     fontSize: 14,
                     lineHeight: 14,
@@ -1368,7 +1373,7 @@ void itemPurchaseAlert(ShopDetailController controller, double remainMyAsset, tr
                 )
               : Padding(
                   padding: EdgeInsets.only(top: 55.0.sp, bottom: 25.sp),
-                  child: StyledText(
+                  child: const StyledText(
                     '· 현재 잔액으로는 제한된 수량만 구매 가능해요',
                     fontSize: 14,
                     lineHeight: 14,
@@ -1542,7 +1547,7 @@ void itemPurchaseShortBalanceAlert(ShopDetailController controller, double remai
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              StyledText(
+              const StyledText(
                 '잔액',
                 fontSize: 18,
                 lineHeight: 18,
@@ -1669,9 +1674,9 @@ void itemPurchaseCompleteAlert(ShopDetailController controller) {
             child: Padding(
               padding: EdgeInsets.only(top: 20.0.sp),
               child: Container(
-                decoration: BoxDecoration(
+                decoration: const BoxDecoration(
                   color: subBg01Color,
-                  borderRadius: const BorderRadius.all(
+                  borderRadius: BorderRadius.all(
                     Radius.circular(12),
                   ),
                 ),
@@ -1702,7 +1707,7 @@ void itemPurchaseCompleteAlert(ShopDetailController controller) {
                                         iconShopReward,
                                         Padding(
                                           padding: EdgeInsets.only(left: 4.0.sp),
-                                          child: StyledText(
+                                          child: const StyledText(
                                             'GO 보상',
                                             color: skyBlueColor,
                                             fontSize: 12,
@@ -1722,7 +1727,7 @@ void itemPurchaseCompleteAlert(ShopDetailController controller) {
                               (controller.purchaseCompleteItem.value.itemStat!.durability! > 0 || controller.purchaseCompleteItem.value.itemStat!.stamina! > 0))
                             SizedBox(
                               height: 35.sp,
-                              child: VerticalDivider(
+                              child: const VerticalDivider(
                                 color: popupBgColor,
                                 width: 1,
                                 thickness: 1,
@@ -1767,7 +1772,7 @@ void itemPurchaseCompleteAlert(ShopDetailController controller) {
                           if (controller.purchaseCompleteItem.value.itemStat!.durability! > 0 && controller.purchaseCompleteItem.value.itemStat!.goProfit! < 1)
                             SizedBox(
                               height: 35.sp,
-                              child: VerticalDivider(
+                              child: const VerticalDivider(
                                 color: popupBgColor,
                                 width: 1,
                                 thickness: 1,
@@ -1794,7 +1799,7 @@ void itemPurchaseCompleteAlert(ShopDetailController controller) {
                                           padding: EdgeInsets.only(right: 4.0.sp),
                                           child: iconShopStamina,
                                         ),
-                                        StyledText(
+                                        const StyledText(
                                           '체력',
                                           color: lightGreenColor,
                                           fontSize: 12,
@@ -1811,7 +1816,7 @@ void itemPurchaseCompleteAlert(ShopDetailController controller) {
                           if (controller.purchaseCompleteItem.value.itemStat!.luck! > 0)
                             SizedBox(
                               height: 35.sp,
-                              child: VerticalDivider(
+                              child: const VerticalDivider(
                                 color: popupBgColor,
                                 width: 1,
                                 thickness: 1,
@@ -1838,7 +1843,7 @@ void itemPurchaseCompleteAlert(ShopDetailController controller) {
                                           padding: EdgeInsets.only(right: 4.0.sp),
                                           child: iconShopLuck,
                                         ),
-                                        StyledText(
+                                        const StyledText(
                                           '행운',
                                           color: pinkColor,
                                           fontSize: 12,
@@ -1909,7 +1914,7 @@ void itemPurchaseCompleteAlert(ShopDetailController controller) {
                                           padding: EdgeInsets.only(right: 4.0.sp),
                                           child: iconShopStamina,
                                         ),
-                                        StyledText(
+                                        const StyledText(
                                           '체력 회복',
                                           color: lightGreenColor,
                                           fontSize: 12,
@@ -1947,7 +1952,7 @@ void itemPurchaseCompleteAlert(ShopDetailController controller) {
               top: 15.0.sp,
               bottom: 20.sp,
             ),
-            child: Column(
+            child: const Column(
               children: [
                 Row(
                   mainAxisAlignment: MainAxisAlignment.center,
@@ -2575,7 +2580,7 @@ void showAdTipAlert(int? challengeId, ExerciseType exerciseType) {
                               fontWeight: FontWeight.w500,
                               color: Colors.white,
                             ),
-                            TextSpan(
+                            const TextSpan(
                               text: '· ',
                               style: TextStyle(color: lightGrayColor),
                               children: [
@@ -2583,7 +2588,7 @@ void showAdTipAlert(int? challengeId, ExerciseType exerciseType) {
                                   text: '끝까지 광고를 시청하는 것',
                                   style: TextStyle(color: skyBlueColor),
                                 ),
-                                const TextSpan(
+                                TextSpan(
                                   text: '을 권장 드려요!',
                                 ),
                               ],
@@ -2597,10 +2602,10 @@ void showAdTipAlert(int? challengeId, ExerciseType exerciseType) {
                               fontWeight: FontWeight.w500,
                               color: Colors.white,
                             ),
-                            TextSpan(
+                            const TextSpan(
                               text: '· ',
                               style: TextStyle(color: lightGrayColor),
-                              children: const [
+                              children: [
                                 TextSpan(
                                   text: '광고 보상은 당일의 GO 획득 기준이에요!',
                                 ),
@@ -2615,7 +2620,7 @@ void showAdTipAlert(int? challengeId, ExerciseType exerciseType) {
                               fontWeight: FontWeight.w500,
                               color: Colors.white,
                             ),
-                            TextSpan(
+                            const TextSpan(
                               text: '· ',
                               style: TextStyle(color: lightGrayColor),
                               children: [
@@ -2730,19 +2735,19 @@ void showLeaderboardInfo() {
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
-                              StyledText(
+                              const StyledText(
                                 '어제 가자고에서의 활동을 기준으로 확정돼요!',
                                 color: lightGrayColor,
                                 fontSize: 11,
                                 lineHeight: 16,
                               ),
-                              StyledText(
+                              const StyledText(
                                 '오늘 리더보드 참여자에게 획득한 GO만큼 돌려드려요!',
                                 color: lightGrayColor,
                                 fontSize: 11,
                                 lineHeight: 16,
                               ),
-                              StyledText(
+                              const StyledText(
                                 '매일 자정(한국시간기준)에 확정되고 돌려드려요!',
                                 color: lightGrayColor,
                                 fontSize: 11,
@@ -2755,9 +2760,9 @@ void showLeaderboardInfo() {
                                   fontWeight: FontWeight.w400,
                                   color: lightGrayColor,
                                 ),
-                                TextSpan(
+                                const TextSpan(
                                   text: '가자고 팀은 매출의 50~70%를 보상',
-                                  style: const TextStyle(
+                                  style: TextStyle(
                                     fontWeight: FontWeight.w700,
                                     color: Colors.white,
                                   ),
@@ -2772,7 +2777,7 @@ void showLeaderboardInfo() {
                                   ],
                                 ),
                               ),
-                              StyledText(
+                              const StyledText(
                                 '오늘의 리워드는 아래 항목으로 구성됩니다!',
                                 color: lightGrayColor,
                                 fontSize: 11,
@@ -2795,7 +2800,7 @@ void showLeaderboardInfo() {
                                     fontWeight: FontWeight.w500,
                                     color: Colors.white,
                                   ),
-                                  TextSpan(
+                                  const TextSpan(
                                     text: '1. 어제 사용된',
                                     children: [
                                       TextSpan(
@@ -2858,7 +2863,7 @@ void showLeaderboardInfo() {
                                     fontWeight: FontWeight.w500,
                                     color: Colors.white,
                                   ),
-                                  TextSpan(
+                                  const TextSpan(
                                     text: '2. 리더보드 참여자 ',
                                     children: [
                                       TextSpan(
@@ -2915,7 +2920,7 @@ void showLeaderboardInfo() {
                                     fontWeight: FontWeight.w500,
                                     color: Colors.white,
                                   ),
-                                  TextSpan(
+                                  const TextSpan(
                                     text: '3. ',
                                     children: [
                                       TextSpan(
@@ -2925,7 +2930,7 @@ void showLeaderboardInfo() {
                                           fontWeight: FontWeight.w700,
                                         ),
                                       ),
-                                      const TextSpan(
+                                      TextSpan(
                                         text: '을 TIK으로 제공',
                                         style: TextStyle(
                                           fontWeight: FontWeight.w700,
@@ -3225,9 +3230,9 @@ Future<bool> verifyEndPointPasswordAlert(DebuggingController controller) {
               onSubmitted: (String text) async {
                 passwordInputCompleter.complete(await controller.verifyEndPointPassword());
               },
-              decoration: InputDecoration(
+              decoration: const InputDecoration(
                 focusColor: skyBlueColor,
-                enabledBorder: const OutlineInputBorder(
+                enabledBorder: OutlineInputBorder(
                   borderSide: BorderSide(
                     color: Colors.white,
                   ),
@@ -3297,7 +3302,7 @@ void showStaikaStatusAlert({required bool hasWallet, TabController? tabControlle
             TextSpan(
               text: 'Staika Wallet을 ',
               children: [
-                TextSpan(text: hasWallet ? '연결' : '생성', style: TextStyle(color: skyBlueColor)),
+                TextSpan(text: hasWallet ? '연결' : '생성', style: const TextStyle(color: skyBlueColor)),
                 TextSpan(text: hasWallet ? '했습니다.' : '합니다.'),
               ],
             ),
@@ -3319,7 +3324,7 @@ void showStaikaStatusAlert({required bool hasWallet, TabController? tabControlle
                             borderRadius: BorderRadius.circular(2),
                           ),
                         ),
-                        Expanded(
+                        const Expanded(
                           child: StyledText(
                             'gazaGO 계정과 동일한 계정으로 생성되어 있는 Staika Wallet이 있어 연결했습니다.',
                             fontSize: 16,
@@ -3344,7 +3349,7 @@ void showStaikaStatusAlert({required bool hasWallet, TabController? tabControlle
                             borderRadius: BorderRadius.circular(2),
                           ),
                         ),
-                        Expanded(
+                        const Expanded(
                           child: StyledText(
                             'Staika Wallet에 사용 중인 지갑 주소와 이체 비밀번호를 동일하게 사용하실 수 있습니다.',
                             fontSize: 16,
@@ -3373,7 +3378,7 @@ void showStaikaStatusAlert({required bool hasWallet, TabController? tabControlle
                             borderRadius: BorderRadius.circular(2),
                           ),
                         ),
-                        Expanded(
+                        const Expanded(
                           child: StyledText(
                             '모두가 누리는 스마트한 자산관리! 편하고 안전한 블록체인 지갑, Staika Wallet을 생성합니다.',
                             fontSize: 16,
@@ -3398,7 +3403,7 @@ void showStaikaStatusAlert({required bool hasWallet, TabController? tabControlle
                             borderRadius: BorderRadius.circular(2),
                           ),
                         ),
-                        Expanded(
+                        const Expanded(
                           child: StyledText(
                             '이체 비밀번호 설정만으로 가입이 완료됩니다.',
                             fontSize: 16,
@@ -3531,7 +3536,7 @@ void exchangeStikToTikAlert(GoWalletController controller, ExchangeStikPriceMode
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              StyledText(
+              const StyledText(
                 '기준 가격',
                 fontWeight: 500,
                 fontSize: 14,
@@ -3555,7 +3560,7 @@ void exchangeStikToTikAlert(GoWalletController controller, ExchangeStikPriceMode
           ),
           Padding(
             padding: EdgeInsets.only(bottom: 10.sp),
-            child: StyledText(
+            child: const StyledText(
               '충전이 완료되면 취소할 수 없습니다.',
               fontSize: 14,
               lineHeight: 15,
@@ -3725,7 +3730,7 @@ void sendStikToGoWalletAlert(StaikaWalletController controller) {
           ),
           Padding(
             padding: EdgeInsets.only(bottom: 30.sp),
-            child: StyledText(
+            child: const StyledText(
               '· 전송이 완료되면 취소할 수 없습니다.',
               fontSize: 14,
               lineHeight: 15,
@@ -3770,7 +3775,7 @@ void failureShortBalanceStikToTikAlert(GoWalletController controller) {
     title: '잔액이 부족해 진행할 수 없습니다.',
     contentWidget: Padding(
       padding: EdgeInsets.only(top: 20.0.sp, bottom: 40.sp),
-      child: StyledText(
+      child: const StyledText(
         '부족한 STIK을 충전한 후 다시 시도해 주세요.',
         fontSize: 14,
         lineHeight: 20,
@@ -3894,7 +3899,7 @@ void exchangeStikShortBalanceAlert(StaikaWalletController controller) {
           ),
           Padding(
             padding: EdgeInsets.only(bottom: 30.sp),
-            child: StyledText(
+            child: const StyledText(
               '· 부족한 STIK을 충전한 후 다시 시도해 주세요.',
               fontSize: 14,
               lineHeight: 15,
@@ -3938,7 +3943,7 @@ void successExchangeStikToGoWalletAlert(StaikaWalletController controller) {
               ),
               Padding(
                 padding: EdgeInsets.only(top: 10.0.sp),
-                child: StyledText(
+                child: const StyledText(
                   '결과는 잠시 후 거래 내역에서 조회 가능합니다.',
                   fontSize: 16,
                   lineHeight: 24,
@@ -3986,7 +3991,7 @@ void failureExchangeStikToGoWalletAlert() {
               ),
               Padding(
                 padding: EdgeInsets.only(top: 10.0.sp),
-                child: StyledText(
+                child: const StyledText(
                   '블록체인 네트워크 이상으로 완료하지 못했습니다.',
                   fontSize: 16,
                   lineHeight: 24,
@@ -4140,14 +4145,14 @@ void showItemTipAlert() {
                                   const TextSpan(
                                     text: '능력치의 수치는 각 아이템 등급에 따라\n',
                                   ),
-                                  TextSpan(
+                                  const TextSpan(
                                     text: '등급별 기준치 ',
                                     style: TextStyle(color: skyBlueColor),
                                   ),
                                   const TextSpan(
                                     text: '내에서\n',
                                   ),
-                                  TextSpan(
+                                  const TextSpan(
                                     text: '확률적으로 구매시 부여',
                                     style: TextStyle(color: skyBlueColor),
                                   ),
@@ -4452,13 +4457,13 @@ void showMaintenanceAlert({String type = 'ING', required String contentText, Lis
                         onTap: () => callbacks[1](),
                         child: Container(
                           padding: const EdgeInsets.only(bottom: 1),
-                          decoration: BoxDecoration(
+                          decoration: const BoxDecoration(
                             border: Border(
                                 bottom: BorderSide(
                               color: deepGrayColor,
                             )),
                           ),
-                          child: StyledText(
+                          child: const StyledText(
                             '오늘 그만 보기',
                             color: deepGrayColor,
                             fontSize: 16,
@@ -4813,7 +4818,7 @@ void checkChallengeItemEquip(InventoryController controller, int itemId) {
           fontWeight: FontWeight.w500,
           color: Colors.white,
         ),
-        TextSpan(
+        const TextSpan(
           text: '챌린지에 참여중인 아이템을\n장착중입니다. 다른 아이템을 착용하시면\n',
           children: [
             TextSpan(text: '챌린지 참여에 제외됩니다!', style: TextStyle(color: skyBlueColor)),
@@ -5268,7 +5273,7 @@ void participateInChallengeByCodeAlert() {
                               filled: true,
                               fillColor: subBg01Color,
                               hintText: '참여코드를 입력해주세요.',
-                              hintStyle: TextStyle(
+                              hintStyle: const TextStyle(
                                 color: deepGrayColor,
                                 fontSize: 18,
                                 height: 20 / 18,
@@ -5504,7 +5509,7 @@ void showAutoRechargeStaminaAlert(ActivityController controller) {
   );
 }
 
-void crewJoinInfoAlert() async {
+void crewJoinInfoAlert(int ranking, CrewModel crew) async {
   await showAlert(
     title: '크루 가입 안내',
     contentWidget: Padding(
@@ -5535,7 +5540,7 @@ void crewJoinInfoAlert() async {
           buttonText: '네',
           onTap: () {
             Get.back();
-            crewJoinCompleteAlert();
+            crewJoinCompleteAlert(ranking, crew);
           },
         ),
       ),
@@ -5543,7 +5548,7 @@ void crewJoinInfoAlert() async {
   );
 }
 
-void crewJoinCompleteAlert() async {
+void crewJoinCompleteAlert(int ranking, CrewModel crew) async {
   await showAlert(
     contentWidget: Padding(
       padding: EdgeInsets.only(top: 22.sp, bottom: 49.sp),
@@ -5581,7 +5586,7 @@ void crewJoinCompleteAlert() async {
           buttonText: '확인',
           onTap: () {
             Get.back();
-            Get.toNamed(Routes.crewDetail);
+            Get.toNamed(Routes.crewDetail, arguments: {'ranking': ranking, 'crew': crew});
           },
         ),
       ),
@@ -5665,7 +5670,7 @@ void shortTikCreateCrewAlert() async {
         child: GazagoButton(
           buttonText: '충전하기',
           onTap: () {
-            Get.back();
+            showProductList(Get.find<WalletMasterController>());
           },
         ),
       ),
@@ -5673,7 +5678,7 @@ void shortTikCreateCrewAlert() async {
   );
 }
 
-void crewEarlyCloseAlert() async {
+void showCrewRelayEndedAlert() async {
   await showAlert(
     contentWidget: Padding(
       padding: EdgeInsets.only(top: 22.sp, bottom: 49.sp),
@@ -5718,7 +5723,7 @@ void crewEarlyCloseAlert() async {
   );
 }
 
-void crewRecruitLimitAlert() async {
+void crewRecruitLimitAlert(CrewDetailController controller) async {
   await showAlert(
     contentWidget: Padding(
       padding: EdgeInsets.only(top: 22.sp, bottom: 49.sp),
@@ -5784,6 +5789,7 @@ void crewRecruitLimitAlert() async {
           buttonText: '네',
           onTap: () {
             Get.back();
+            controller.toggleRecruitLimit();
           },
         ),
       ),
@@ -5791,7 +5797,7 @@ void crewRecruitLimitAlert() async {
   );
 }
 
-void crewRecruitUnlimitAlert() async {
+void crewRecruitUnlimitAlert(CrewDetailController controller) async {
   await showAlert(
     contentWidget: Padding(
       padding: EdgeInsets.only(top: 22.sp, bottom: 49.sp),
@@ -5857,6 +5863,7 @@ void crewRecruitUnlimitAlert() async {
           buttonText: '네',
           onTap: () {
             Get.back();
+            controller.toggleRecruitLimit();
           },
         ),
       ),
@@ -5909,7 +5916,77 @@ void crewChallengeCloseAlert() async {
   );
 }
 
-void crewCreatePopup() async {
+void crewCreatePopup(ChallengesDetailController controller) async {
+  List<Widget> _renderIcons(List<CrewIconModel> iconList) {
+    List<Widget> rows = List.empty(
+      growable: true,
+    );
+    List<Widget> icons = List.empty(
+      growable: true,
+    );
+    for (int i = 0; i < iconList.length; i++) {
+      icons.add(
+        Material(
+          color: Colors.transparent,
+          shape: const CircleBorder(),
+          clipBehavior: Clip.hardEdge,
+          child: Ink(
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(25.sp),
+              color: const Color(0xff747474),
+              image: DecorationImage(
+                image: iconList[i].imageUrl.contains('.svg')
+                    ? sp.Svg(iconList[i].imageUrl, source: sp.SvgSource.network) as ImageProvider
+                    : CachedNetworkImageProvider(
+                        iconList[i].imageUrl,
+                        headers: imageNetworkHeader,
+                      ),
+              ),
+            ),
+            child: InkWell(
+              borderRadius: BorderRadius.circular(25.sp),
+              onTap: () => controller.selectCrewMark(iconList[i]),
+              child: Container(
+                width: 50.sp,
+                height: 50.sp,
+                decoration: BoxDecoration(
+                  color: Colors.transparent,
+                  border: Border.all(color: iconList[i].id == controller.selectedMarkIconId.value ? skyBlueColor : Colors.transparent, width: 2),
+                  borderRadius: BorderRadius.circular(25.sp),
+                ),
+              ),
+            ),
+          ),
+        ),
+      );
+
+      if (i != 0 && icons.length % 5 == 0) {
+        if (i < 5) {
+          rows.add(Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              ...icons,
+            ],
+          ));
+        } else {
+          rows.add(
+            Padding(
+              padding: const EdgeInsets.only(top: 10),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  ...icons,
+                ],
+              ),
+            ),
+          );
+        }
+        icons.clear();
+      }
+    }
+    return rows;
+  }
+
   await Get.bottomSheet(
     isDismissible: false,
     isScrollControlled: true,
@@ -5950,11 +6027,11 @@ void crewCreatePopup() async {
                         fontWeight: FontWeight.w500,
                         color: Colors.white,
                       ),
-                      TextSpan(
+                      const TextSpan(
                         text: '챌린지 기간동안 함께할 크루를 만들어주세요!\n크루를 개설할 시 ',
                         children: [
                           TextSpan(text: '3블록', style: TextStyle(color: skyBlueColor)),
-                          const TextSpan(text: '을 제공해드립니다!'),
+                          TextSpan(text: '을 제공해드립니다!'),
                         ],
                       ),
                     ),
@@ -5971,10 +6048,11 @@ void crewCreatePopup() async {
                     ),
                     Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
+                      mainAxisSize: MainAxisSize.min,
                       children: [
                         Padding(
                           padding: EdgeInsets.only(top: 33.0.sp, bottom: 8.0.sp, left: 5.sp),
-                          child: StyledText(
+                          child: const StyledText(
                             '크루 마크',
                             fontSize: 16,
                             lineHeight: 18,
@@ -5983,46 +6061,23 @@ void crewCreatePopup() async {
                           ),
                         ),
                         Container(
-                          decoration: BoxDecoration(
-                            color: subBg01Color,
-                            borderRadius: BorderRadius.all(
-                              Radius.circular(10.sp),
-                            ),
-                          ),
-                          child: Padding(
                             padding: EdgeInsets.symmetric(vertical: 16.0.sp, horizontal: 20.sp),
-                            child: Column(
-                              children: [
-                                Row(
-                                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                                  children: [
-                                    CircleAvatar(backgroundColor: const Color(0xff747474), radius: 25.sp),
-                                    CircleAvatar(backgroundColor: const Color(0xff747474), radius: 25.sp),
-                                    CircleAvatar(backgroundColor: const Color(0xff747474), radius: 25.sp),
-                                    CircleAvatar(backgroundColor: const Color(0xff747474), radius: 25.sp),
-                                    CircleAvatar(backgroundColor: const Color(0xff747474), radius: 25.sp),
-                                  ],
-                                ),
-                                Padding(
-                                  padding: EdgeInsets.only(top: 10.0.sp),
-                                  child: Row(
-                                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                                    children: [
-                                      CircleAvatar(backgroundColor: const Color(0xff747474), radius: 25.sp),
-                                      CircleAvatar(backgroundColor: const Color(0xff747474), radius: 25.sp),
-                                      CircleAvatar(backgroundColor: const Color(0xff747474), radius: 25.sp),
-                                      CircleAvatar(backgroundColor: const Color(0xff747474), radius: 25.sp),
-                                      CircleAvatar(backgroundColor: const Color(0xff747474), radius: 25.sp),
-                                    ],
-                                  ),
-                                ),
-                              ],
+                            decoration: BoxDecoration(
+                              color: subBg01Color,
+                              borderRadius: BorderRadius.all(
+                                Radius.circular(10.sp),
+                              ),
                             ),
-                          ),
-                        ),
+                            child: Obx(() {
+                              return Column(
+                                children: [
+                                  ..._renderIcons(controller.crewMarkIcons),
+                                ],
+                              );
+                            })),
                         Padding(
                           padding: EdgeInsets.only(top: 22.0.sp, bottom: 8.sp, left: 5.sp),
-                          child: StyledText(
+                          child: const StyledText(
                             '크루 이름',
                             fontSize: 16,
                             lineHeight: 18,
@@ -6031,6 +6086,7 @@ void crewCreatePopup() async {
                           ),
                         ),
                         TextField(
+                          controller: controller.crewNameController,
                           cursorColor: Colors.white,
                           obscureText: true,
                           decoration: InputDecoration(
@@ -6041,7 +6097,7 @@ void crewCreatePopup() async {
                             ),
                             contentPadding: const EdgeInsets.symmetric(horizontal: 15),
                             hintText: '크루명을 작성해주세요.',
-                            hintStyle: TextStyle(
+                            hintStyle: const TextStyle(
                               color: popupBgColor,
                               fontSize: 20,
                               fontWeight: FontWeight.w500,
@@ -6052,13 +6108,7 @@ void crewCreatePopup() async {
                           style: const TextStyle(
                             color: Colors.white,
                           ),
-                          onChanged: (name) => null,
-                          onSubmitted: (String text) async {
-                            // if (controller.passwordFormStatus.value == FormStatus.sufficient) {
-                            //   String? password = controller.nextStep();
-                            //   if (password != null) completer.complete(password);
-                            // }
-                          },
+                          onChanged: (name) => controller.updateCrewName(name),
                         )
                       ],
                     ),
@@ -6071,7 +6121,7 @@ void crewCreatePopup() async {
                     child: Container(
                       margin: EdgeInsets.only(bottom: 3.sp),
                       child: InkWell(
-                        onTap: () => shortTikCreateCrewAlert(),
+                        onTap: () => controller.handleCreateCrewType('TIK'),
                         borderRadius: BorderRadius.circular(8.sp),
                         child: Container(
                           decoration: BoxDecoration(
@@ -6119,10 +6169,7 @@ void crewCreatePopup() async {
                   Expanded(
                     child: GazagoButton(
                       buttonText: '무료 개설',
-                      onTap: () {
-                        Get.back();
-                        crewCreateCompleteAlert();
-                      },
+                      onTap: () => controller.handleCreateCrewType('INVITE'),
                     ),
                   ),
                 ],
@@ -6203,7 +6250,8 @@ void shareCrewChallengeKakaoLinkDialog() {
                         child: GazagoButton(
                           buttonText: '공유하기',
                           onTap: () {
-                            Get.back();
+                            Get.until((route) => Get.isBottomSheetOpen == false && Get.isDialogOpen == false);
+                            crewCreateCompleteAlert();
                           },
                         ),
                       ),

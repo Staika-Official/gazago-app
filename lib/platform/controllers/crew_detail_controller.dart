@@ -1,13 +1,28 @@
 import 'package:flutter/material.dart';
 import 'package:gaza_go/platform/helpers/challenge_mixin.dart';
+import 'package:gaza_go/platform/models/crew_member_model.dart';
 import 'package:gaza_go/platform/models/crew_model.dart';
+import 'package:gaza_go/presentations/components/alert_ui_list.dart';
 import 'package:get/get.dart';
 
 class CrewDetailController extends GetxController with GetTickerProviderStateMixin, ChallengeMixin {
   late TabController tabController;
   Rxn<CrewModel> selectedCrew = Rxn();
-  RxList<CrewModel> crewLeaderboardList = RxList.empty();
+  RxInt crewRanking = RxInt(0);
+  RxList<CrewMemberModel> get crewLeaderboardList {
+    return RxList(selectedCrew.value!.crewMemberList!);
+  }
+
   RxInt crewTabIndex = RxInt(0);
+  RxInt get accumulatedCrewInvite {
+    if (selectedCrew.value == null) return RxInt(0);
+    return RxInt(selectedCrew.value!.crewMemberList!.fold(0, (prevValue, element) => prevValue + element.inviteCount!));
+  }
+
+  RxInt get accumulatedCrewBlock {
+    if (selectedCrew.value == null) return RxInt(0);
+    return RxInt(selectedCrew.value!.crewMemberList!.fold(0, (prevValue, element) => prevValue + element.blockQuantity!));
+  }
 
   @override
   void onInit() async {
@@ -15,19 +30,12 @@ class CrewDetailController extends GetxController with GetTickerProviderStateMix
       ..addListener(() {
         if (tabController.indexIsChanging && tabController.index == 1) {}
       });
+    crewRanking.value = await Get.arguments['ranking'];
+    selectedCrew.value = await Get.arguments['crew'];
     tabController.addListener(_tabController);
-    getCrewLeaderboardList();
+    showRelayEndedAlert();
+
     super.onInit();
-  }
-
-  @override
-  void onClose() {
-    super.onClose();
-  }
-
-  @override
-  void dispose() {
-    super.dispose();
   }
 
   Future<void> refreshController() async {}
@@ -36,14 +44,23 @@ class CrewDetailController extends GetxController with GetTickerProviderStateMix
     crewTabIndex.value = tabController.index;
   }
 
-  Future<void> getCrewLeaderboardList() async {
-    selectedCrew.value = CrewModel(name: "마이크루", crewFounderNickName: "크루장01", iconImageUrl: "", rank: 1, blockQuantity: 100, isLocked: false, invitationCount: 1);
-    crewLeaderboardList.value = [
-      CrewModel(name: "크루01", crewFounderNickName: "크루장01", iconImageUrl: "", rank: 1, blockQuantity: 100, isLocked: false, invitationCount: 1),
-      CrewModel(name: "크루01", crewFounderNickName: "크루장01", iconImageUrl: "", rank: 2, blockQuantity: 100, isLocked: false, invitationCount: 1),
-      CrewModel(name: "크루04", crewFounderNickName: "크루장01", iconImageUrl: "", rank: 3, blockQuantity: 100, isLocked: false, invitationCount: 4),
-      CrewModel(name: "크루03", crewFounderNickName: "크루장01", iconImageUrl: "", rank: 4, blockQuantity: 100, isLocked: true, invitationCount: 0),
-      CrewModel(name: "크루02", crewFounderNickName: "크루장01", iconImageUrl: "", rank: 5, blockQuantity: 10, isLocked: true, invitationCount: 1),
-    ];
+  Future<void> validateRecruitLock() async {
+    if (selectedCrew.value!.crewRecruitStatus == 'OPEN') {
+      crewRecruitLimitAlert(this);
+    } else {
+      crewRecruitUnlimitAlert(this);
+    }
+  }
+
+  Future<void> toggleRecruitLimit() async {
+    selectedCrew.update((state) {
+      state!.crewRecruitStatus = selectedCrew.value!.crewRecruitStatus! == 'OPEN' ? 'CLOSE' : 'OPEN';
+    });
+  }
+
+  void showRelayEndedAlert() {
+    if (selectedCrew.value!.crewRelayStatus! == "ENDED") {
+      showCrewRelayEndedAlert();
+    }
   }
 }

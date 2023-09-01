@@ -33,8 +33,8 @@ class ChallengeDetail extends StatelessWidget {
         resizeToAvoidBottomInset: false,
         appBar: PreferredSize(
             preferredSize: preferredSize, // here the desired height
-            child: controller.challengeDetails.value.challengeType == 'ALLIANCE'
-                ? ShareAppbar(
+            child: controller.challengeDetails.value.challengeType == 'CREW'
+                ? CrewAppbar(
                     titleText: controller.challengeDetails.value.title,
                     isBeta: true,
                   )
@@ -87,7 +87,7 @@ class ChallengeDetail extends StatelessWidget {
                                     controller.challengeDetails.value.challengeType == 'ALLIANCE'
                                         ? Padding(
                                             padding: EdgeInsets.only(top: 10.0.sp),
-                                            child: Column(
+                                            child: const Column(
                                               children: [
                                                 StyledText(
                                                   '2023/02/01 - 2023/02/01',
@@ -111,7 +111,7 @@ class ChallengeDetail extends StatelessWidget {
                                               ],
                                             ),
                                           )
-                                        : StyledText(
+                                        : const StyledText(
                                             '2023/02/01 - 2023/02/01',
                                             color: lightGrayColor,
                                             fontWeight: 500,
@@ -119,7 +119,7 @@ class ChallengeDetail extends StatelessWidget {
                                             lineHeight: 14,
                                             letterSpacing: -.1,
                                           ),
-                                    StyledText(
+                                    const StyledText(
                                       ' · ',
                                       color: lightGrayColor,
                                       fontWeight: 500,
@@ -127,7 +127,7 @@ class ChallengeDetail extends StatelessWidget {
                                       lineHeight: 14,
                                       letterSpacing: -.1,
                                     ),
-                                    StyledText(
+                                    const StyledText(
                                       '오픈예정',
                                       color: lightGreenColor,
                                       fontWeight: 500,
@@ -179,7 +179,7 @@ class ChallengeDetail extends StatelessWidget {
                                           iconPeople,
                                           Padding(
                                             padding: EdgeInsets.only(left: 5.0.sp),
-                                            child: StyledText(
+                                            child: const StyledText(
                                               '80명 / 100명',
                                               color: lightGrayColor,
                                               fontWeight: 500,
@@ -221,9 +221,9 @@ class ChallengeDetail extends StatelessWidget {
                           expandedTitleScale: 1,
                           titlePadding: EdgeInsets.zero,
                           title: Container(
-                            decoration: BoxDecoration(
+                            decoration: const BoxDecoration(
                               color: subBg01Color,
-                              border: const Border(
+                              border: Border(
                                 top: BorderSide(
                                   // POINT
                                   color: Color(0xFF2E3038),
@@ -239,7 +239,7 @@ class ChallengeDetail extends StatelessWidget {
                             child: TabBar(
                               controller: controller.tabController,
                               padding: EdgeInsets.symmetric(horizontal: 6.sp),
-                              indicator: BoxDecoration(
+                              indicator: const BoxDecoration(
                                 border: Border(
                                     bottom: BorderSide(
                                   color: skyBlueColor,
@@ -262,7 +262,7 @@ class ChallengeDetail extends StatelessWidget {
                                 ),
                                 Tab(
                                   height: 50.sp,
-                                  text: '${controller.challengeDetails.value.challengeType == 'ALLIANCE' ? '크루 탐색' : '리더보드'}',
+                                  text: '${controller.challengeDetails.value.challengeType == 'CREW' ? '크루 탐색' : '리더보드'}',
                                 ),
                               ],
                             ),
@@ -394,7 +394,7 @@ class ChallengeDetail extends StatelessWidget {
                                                             maxLines: 2,
                                                             overflowEllipsis: true,
                                                           ),
-                                                          if (controller.challengeDetails.value.challengeType == 'ALLIANCE')
+                                                          if (controller.challengeDetails.value.challengeType == 'CREW')
                                                             Padding(
                                                               padding: EdgeInsets.only(left: 5.0.sp),
                                                               child: const BetaTag(),
@@ -422,14 +422,14 @@ class ChallengeDetail extends StatelessWidget {
                                                                 children: [
                                                                   Padding(
                                                                     padding: EdgeInsets.only(right: 20.0.sp),
-                                                                    child: StyledText(
+                                                                    child: const StyledText(
                                                                       '모집 기간',
                                                                       fontSize: 14,
                                                                       fontWeight: 500,
                                                                       lineHeight: 14,
                                                                     ),
                                                                   ),
-                                                                  StyledText(
+                                                                  const StyledText(
                                                                     '14일간',
                                                                     fontSize: 14,
                                                                     fontWeight: 500,
@@ -455,14 +455,14 @@ class ChallengeDetail extends StatelessWidget {
                                                                   children: [
                                                                     Padding(
                                                                       padding: EdgeInsets.only(right: 20.0.sp),
-                                                                      child: StyledText(
+                                                                      child: const StyledText(
                                                                         '활동 기간',
                                                                         fontSize: 14,
                                                                         fontWeight: 500,
                                                                         lineHeight: 14,
                                                                       ),
                                                                     ),
-                                                                    StyledText(
+                                                                    const StyledText(
                                                                       '14일간',
                                                                       fontSize: 14,
                                                                       fontWeight: 500,
@@ -496,7 +496,7 @@ class ChallengeDetail extends StatelessWidget {
                                                               lineHeight: 14,
                                                               letterSpacing: -.1,
                                                             ),
-                                                            StyledText(
+                                                            const StyledText(
                                                               ' · ',
                                                               color: lightGrayColor,
                                                               fontWeight: 500,
@@ -560,10 +560,10 @@ class ChallengeDetail extends StatelessWidget {
                                                         Row(
                                                           children: [
                                                             iconPeople,
-                                                            controller.challengeDetails.value.challengeType == 'ALLIANCE'
+                                                            controller.challengeDetails.value.challengeType == 'CREW'
                                                                 ? Padding(
                                                                     padding: EdgeInsets.only(left: 5.0.sp),
-                                                                    child: Row(
+                                                                    child: const Row(
                                                                       children: [
                                                                         StyledText(
                                                                           '크루제한 20명',
@@ -581,7 +581,7 @@ class ChallengeDetail extends StatelessWidget {
                                                                     child: Row(
                                                                       children: [
                                                                         controller.challengeDetails.value.challengeState == 'READY'
-                                                                            ? StyledText(
+                                                                            ? const StyledText(
                                                                                 '모집인원',
                                                                                 color: lightGrayColor,
                                                                                 fontWeight: 500,
@@ -631,8 +631,8 @@ class ChallengeDetail extends StatelessWidget {
                   physics: const NeverScrollableScrollPhysics(),
                   controller: controller.tabController,
                   children: [
-                    ChallengeInfo(),
-                    controller.challengeDetails.value.challengeType == 'ALLIANCE' ? CrewList() : ChallengeLeaderboard(),
+                    const ChallengeInfo(),
+                    controller.challengeDetails.value.challengeType == 'CREW' ? const CrewList() : const ChallengeLeaderboard(),
                   ],
                 ),
               ),
@@ -651,7 +651,7 @@ class ChallengeDetail extends StatelessWidget {
                 //   bottom: 0,
                 //   child: renderParticipateInChallenge(controller.challengeDetails.value.challengeState!),
                 // )
-                if (controller.challengeDetails.value.challengeState != null && controller.challengeDetails.value.challengeType != 'ALLIANCE')
+                if (controller.challengeDetails.value.challengeState != null && controller.challengeDetails.value.challengeType != 'CREW')
                   Positioned.fill(
                     top: null,
                     left: 0,

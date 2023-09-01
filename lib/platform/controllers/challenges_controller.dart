@@ -54,7 +54,7 @@ class ChallengesController extends GetxController with GetTickerProviderStateMix
   }
 
   void moveToDetail(id) {
-    Get.toNamed(Routes.challengeDetail, arguments: {'id': id});
+    Get.toNamed(Routes.challengeDetail.replaceAll(':id', id.toString()));
   }
 
   void showChallengesSortingPopup() {

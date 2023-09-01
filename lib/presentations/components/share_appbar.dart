@@ -1,22 +1,27 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:gaza_go/platform/controllers/challenges_detail_controller.dart';
+import 'package:gaza_go/platform/controllers/crew_detail_controller.dart';
 import 'package:gaza_go/presentations/components/beta_tag.dart';
 import 'package:gaza_go/presentations/styles/colors.dart';
 import 'package:gaza_go/presentations/styles/icons.dart';
 import 'package:gaza_go/presentations/styles/styled_text.dart';
 import 'package:get/get.dart';
 
-class ShareAppbar extends StatelessWidget implements PreferredSizeWidget {
+class CrewAppbar extends StatelessWidget implements PreferredSizeWidget {
   final String? titleText;
   final bool isBeta;
   final bool? isLockButton;
-  const ShareAppbar({Key? key, this.titleText, this.isBeta = false, this.isLockButton = false}) : super(key: key);
+
+  const CrewAppbar({Key? key, this.titleText, this.isBeta = false, this.isLockButton = false}) : super(key: key);
+
   @override
   Size get preferredSize => const Size.fromHeight(kToolbarHeight);
+
   @override
   Widget build(BuildContext context) {
     ChallengesDetailController controller = Get.find();
+
     return AppBar(
       backgroundColor: subBg01Color,
       automaticallyImplyLeading: false,
@@ -62,21 +67,23 @@ class ShareAppbar extends StatelessWidget implements PreferredSizeWidget {
             mainAxisSize: MainAxisSize.min,
             children: [
               isLockButton!
-                  ? Padding(
-                      padding: EdgeInsets.only(left: 4.sp),
-                      child: IconButton(
-                        onPressed: () => null,
-                        icon: iconHeaderUnlock,
-                        splashRadius: 20.sp,
-                        constraints: BoxConstraints(
-                          minWidth: 30.sp,
+                  ? Obx(() {
+                      return Padding(
+                        padding: EdgeInsets.only(left: 4.sp),
+                        child: IconButton(
+                          onPressed: () => Get.find<CrewDetailController>().validateRecruitLock(),
+                          icon: Get.find<CrewDetailController>().selectedCrew.value?.crewRecruitStatus! == 'CLOSE' ? iconHeaderLock : iconHeaderUnlock,
+                          splashRadius: 20.sp,
+                          constraints: BoxConstraints(
+                            minWidth: 30.sp,
+                          ),
                         ),
-                      ),
-                    )
+                      );
+                    })
                   : Padding(
                       padding: EdgeInsets.only(left: 4.sp),
                       child: IconButton(
-                        onPressed: () => controller.sharedKakaoCrewChallenge(),
+                        onPressed: () => controller.sharedCrewChallenge(),
                         icon: iconHeaderShare,
                         splashRadius: 20.sp,
                         constraints: BoxConstraints(

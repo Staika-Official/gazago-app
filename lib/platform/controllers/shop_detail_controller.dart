@@ -143,7 +143,7 @@ class ShopDetailController extends GetxController {
     if (Get.previousRoute == Routes.challengeDetail) {
       Get.back();
     } else {
-      Get.toNamed(Routes.challengeDetail, arguments: {'id': selectedItem.value.challengeId});
+      Get.toNamed(Routes.challengeDetail.replaceAll(':id', selectedItem.value.challengeId.toString()));
     }
   }
 

@@ -122,7 +122,7 @@ class Routes {
   static const createWalletPassword = '/wallet/create/password';
   static const createWallet = '/wallet/create';
   static const sendStikGoWallet = '/wallet/send_stik_go_wallet';
-  static const challengeDetail = '/challenges/challenge_detail';
+  static const challengeDetail = '/challenges/challenge_detail/:id';
   static const challengeCourseDetail = '/activity/challenge_course_detail';
   static const leaderboard = '/leaderboard';
   static const fairPlayView = '/fair_play_view';
@@ -197,7 +197,7 @@ class Routes {
     stepPage(name: Routes.leaderboard, page: const RankingHome()),
     stepPage(name: Routes.fairPlayView, page: const FairPlayView()),
     stepPage(name: Routes.crewDetail, page: const CrewDetail()),
-    stepPage(name: Routes.dailyBenefits, page: DailyBenefits()),
+    stepPage(name: Routes.dailyBenefits, page: const DailyBenefits()),
   ];
 }
 

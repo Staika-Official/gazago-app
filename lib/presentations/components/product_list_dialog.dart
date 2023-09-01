@@ -35,8 +35,8 @@ List<Widget> renderProductList(WalletMasterController controller) {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       if ([2, 4, 5].any((element) => element == product.key))
-                        Padding(
-                          padding: const EdgeInsets.only(bottom: 7),
+                        const Padding(
+                          padding: EdgeInsets.only(bottom: 7),
                           child: StyledText(
                             '인기',
                             fontSize: 10,
@@ -246,14 +246,14 @@ void showProductList(WalletMasterController controller) {
                                       color: deepGrayColor,
                                       letterSpacing: -.1,
                                     ),
-                                    TextSpan(
+                                    const TextSpan(
                                       text: '충전한 TIK으로',
                                       children: [
                                         TextSpan(
                                           text: ' 상품권 교환은 불가',
                                           style: TextStyle(fontWeight: FontWeight.w700, color: lightGrayColor),
                                         ),
-                                        const TextSpan(
+                                        TextSpan(
                                           text: '하며, 아이템 구매나 체력 회복 및 내구도 수리만 가능합니다.',
                                         ),
                                       ],
@@ -276,7 +276,7 @@ void showProductList(WalletMasterController controller) {
                                       borderRadius: BorderRadius.circular(2),
                                     ),
                                   ),
-                                  Expanded(
+                                  const Expanded(
                                     child: StyledText(
                                       '이미 사용한 TIK은 환불할 수 없으며, 이미 사용한 TIK을 환불받은 경우 사전통지 없이 회원이 보유한 TIK에서 환불받은 금액을 회수할 수 있습니다.',
                                       fontSize: 10,
@@ -303,7 +303,7 @@ void showProductList(WalletMasterController controller) {
                                       borderRadius: BorderRadius.circular(2),
                                     ),
                                   ),
-                                  Expanded(
+                                  const Expanded(
                                     child: StyledText(
                                       '결제된 가격은 부가가치세가 포함된 가격입니다.',
                                       fontSize: 10,
@@ -330,7 +330,7 @@ void showProductList(WalletMasterController controller) {
                                       borderRadius: BorderRadius.circular(2),
                                     ),
                                   ),
-                                  Expanded(
+                                  const Expanded(
                                     child: StyledText(
                                       '법정대리인의 동의 없는 미성년자의 결제는 취소될 수 있습니다.',
                                       fontSize: 10,

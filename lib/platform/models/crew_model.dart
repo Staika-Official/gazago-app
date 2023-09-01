@@ -1,27 +1,28 @@
+import 'package:gaza_go/platform/models/crew_member_model.dart';
 import 'package:json_annotation/json_annotation.dart';
 
 part 'crew_model.g.dart';
 
 @JsonSerializable(explicitToJson: true)
 class CrewModel {
-  String? name;
-  String? crewFounderNickName;
-  String? iconImageUrl;
-  int? user;
-  bool? isLocked;
   int? blockQuantity;
-  int? invitationCount;
-  int? rank;
+  String? crewFounderNickName;
+  List<CrewMemberModel>? crewMemberList;
+  String? iconImageUrl;
+  int? id;
+  String? name;
+  String? crewRecruitStatus;
+  String? crewRelayStatus;
 
   CrewModel({
-    this.name,
     this.crewFounderNickName,
     this.iconImageUrl,
-    this.user,
-    this.isLocked,
+    this.crewMemberList,
     this.blockQuantity,
-    this.invitationCount,
-    this.rank,
+    this.id,
+    this.name,
+    this.crewRecruitStatus,
+    this.crewRelayStatus,
   });
 
   factory CrewModel.fromJson(Map<String, dynamic> json) => _$CrewModelFromJson(json);
