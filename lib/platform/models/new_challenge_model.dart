@@ -23,7 +23,7 @@ class NewChallengeModel {
   String? thumbnailImageUrl;
   String? linkUrl;
   bool? infinityDisplayed;
-  bool previewDisplayed;
+  bool? previewDisplayed;
   String? challengeRewardRuleType;
   int rewardAmount;
   String? introduce;
@@ -49,7 +49,7 @@ class NewChallengeModel {
     this.thumbnailImageUrl,
     this.linkUrl,
     this.infinityDisplayed,
-    required this.previewDisplayed,
+    this.previewDisplayed,
     this.challengeRewardRuleType,
     required this.rewardAmount,
     this.introduce,
