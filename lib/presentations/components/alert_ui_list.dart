@@ -5540,7 +5540,7 @@ void crewJoinInfoAlert(int ranking, CrewModel crew) async {
           buttonText: '네',
           onTap: () {
             Get.back();
-            crewJoinCompleteAlert(ranking, crew);
+            Get.find<ChallengesDetailController>().requestJoinCrew(ranking, crew);
           },
         ),
       ),
@@ -5586,7 +5586,7 @@ void crewJoinCompleteAlert(int ranking, CrewModel crew) async {
           buttonText: '확인',
           onTap: () {
             Get.back();
-            Get.toNamed(Routes.crewDetail, arguments: {'ranking': ranking, 'crew': crew});
+            Get.find<ChallengesDetailController>().moveToCrewDetail(ranking, crew);
           },
         ),
       ),
@@ -5789,7 +5789,7 @@ void crewRecruitLimitAlert(CrewDetailController controller) async {
           buttonText: '네',
           onTap: () {
             Get.back();
-            controller.toggleRecruitLimit();
+            controller.requestToggleRecruitStatus();
           },
         ),
       ),
@@ -5835,7 +5835,7 @@ void crewRecruitUnlimitAlert(CrewDetailController controller) async {
           Padding(
             padding: EdgeInsets.only(top: 20.0.sp),
             child: const StyledText(
-              '크루 모집을 더 받으시겠습니까?\n크루 모집 제한은 총 20명이 되면\n자동으ㄴ로 잠금이 됩니다.',
+              '크루 모집을 더 받으시겠습니까?\n크루 모집 제한은 총 20명이 되면\n자동으로 잠금이 됩니다.',
               fontWeight: 500,
               fontSize: 16,
               lineHeight: 24,
@@ -5863,7 +5863,7 @@ void crewRecruitUnlimitAlert(CrewDetailController controller) async {
           buttonText: '네',
           onTap: () {
             Get.back();
-            controller.toggleRecruitLimit();
+            controller.requestToggleRecruitStatus();
           },
         ),
       ),
@@ -5993,197 +5993,203 @@ void crewCreatePopup(ChallengesDetailController controller) async {
     enableDrag: false,
     WillPopScope(
       onWillPop: () async => false,
-      child: Container(
-        decoration: BoxDecoration(
-          color: popupBgColor,
-          borderRadius: BorderRadius.only(
-            topLeft: Radius.circular(12.sp),
-            topRight: Radius.circular(12.sp),
+      child: GestureDetector(
+        onTap: () => FocusScope.of(Get.context!).requestFocus(FocusNode()),
+        child: Container(
+          decoration: BoxDecoration(
+            color: popupBgColor,
+            borderRadius: BorderRadius.only(
+              topLeft: Radius.circular(12.sp),
+              topRight: Radius.circular(12.sp),
+            ),
           ),
-        ),
-        child: Padding(
-          padding: EdgeInsets.all(20.0.sp),
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              Padding(
-                padding: EdgeInsets.only(top: 22.sp, bottom: 28.sp),
-                child: Column(
-                  children: [
-                    Padding(
-                      padding: EdgeInsets.only(bottom: 20.0.sp),
-                      child: const StyledText(
-                        '크루 개설하기',
-                        fontSize: 22,
-                        letterSpacing: -.1,
-                        fontWeight: 600,
-                      ),
-                    ),
-                    Text.rich(
-                      textAlign: TextAlign.center,
-                      style: TextStyle(
-                        fontSize: 16.sp,
-                        height: 24.sp / 16.sp,
-                        fontWeight: FontWeight.w500,
-                        color: Colors.white,
-                      ),
-                      const TextSpan(
-                        text: '챌린지 기간동안 함께할 크루를 만들어주세요!\n크루를 개설할 시 ',
-                        children: [
-                          TextSpan(text: '3블록', style: TextStyle(color: skyBlueColor)),
-                          TextSpan(text: '을 제공해드립니다!'),
-                        ],
-                      ),
-                    ),
-                    Padding(
-                      padding: EdgeInsets.only(top: 4.0.sp),
-                      child: const StyledText(
-                        '크루 개설 비용 3,000 TIK',
-                        fontWeight: 500,
-                        fontSize: 16,
-                        lineHeight: 24,
-                        letterSpacing: -.1,
-                        textAlign: TextAlign.center,
-                      ),
-                    ),
-                    Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      mainAxisSize: MainAxisSize.min,
+          child: Padding(
+            padding: EdgeInsets.all(20.0.sp),
+            child: SingleChildScrollView(
+              physics: const ClampingScrollPhysics(),
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Padding(
+                    padding: EdgeInsets.only(top: 22.sp, bottom: 28.sp),
+                    child: Column(
                       children: [
                         Padding(
-                          padding: EdgeInsets.only(top: 33.0.sp, bottom: 8.0.sp, left: 5.sp),
+                          padding: EdgeInsets.only(bottom: 20.0.sp),
                           child: const StyledText(
-                            '크루 마크',
-                            fontSize: 16,
-                            lineHeight: 18,
-                            color: lightGrayColor,
-                            fontWeight: 500,
+                            '크루 개설하기',
+                            fontSize: 22,
+                            letterSpacing: -.1,
+                            fontWeight: 600,
                           ),
                         ),
-                        Container(
-                            padding: EdgeInsets.symmetric(vertical: 16.0.sp, horizontal: 20.sp),
-                            decoration: BoxDecoration(
-                              color: subBg01Color,
-                              borderRadius: BorderRadius.all(
-                                Radius.circular(10.sp),
-                              ),
-                            ),
-                            child: Obx(() {
-                              return Column(
-                                children: [
-                                  ..._renderIcons(controller.crewMarkIcons),
-                                ],
-                              );
-                            })),
-                        Padding(
-                          padding: EdgeInsets.only(top: 22.0.sp, bottom: 8.sp, left: 5.sp),
-                          child: const StyledText(
-                            '크루 이름',
-                            fontSize: 16,
-                            lineHeight: 18,
-                            color: lightGrayColor,
-                            fontWeight: 500,
-                          ),
-                        ),
-                        TextField(
-                          controller: controller.crewNameController,
-                          cursorColor: Colors.white,
-                          obscureText: true,
-                          decoration: InputDecoration(
-                            filled: true,
-                            fillColor: subBg01Color,
-                            border: OutlineInputBorder(
-                              borderRadius: BorderRadius.circular(10.0),
-                            ),
-                            contentPadding: const EdgeInsets.symmetric(horizontal: 15),
-                            hintText: '크루명을 작성해주세요.',
-                            hintStyle: const TextStyle(
-                              color: popupBgColor,
-                              fontSize: 20,
-                              fontWeight: FontWeight.w500,
-                              height: 1,
-                              letterSpacing: -0.5,
-                            ),
-                          ),
-                          style: const TextStyle(
+                        Text.rich(
+                          textAlign: TextAlign.center,
+                          style: TextStyle(
+                            fontSize: 16.sp,
+                            height: 24.sp / 16.sp,
+                            fontWeight: FontWeight.w500,
                             color: Colors.white,
                           ),
-                          onChanged: (name) => controller.updateCrewName(name),
-                        )
-                      ],
-                    ),
-                  ],
-                ),
-              ),
-              Row(
-                children: [
-                  Expanded(
-                    child: Container(
-                      margin: EdgeInsets.only(bottom: 3.sp),
-                      child: InkWell(
-                        onTap: () => controller.handleCreateCrewType('TIK'),
-                        borderRadius: BorderRadius.circular(8.sp),
-                        child: Container(
-                          decoration: BoxDecoration(
-                            color: skyBlueColor,
-                            border: Border.all(width: 2.sp, color: Colors.black),
-                            borderRadius: BorderRadius.circular(8.sp),
-                            boxShadow: [
-                              BoxShadow(
-                                color: Colors.black,
-                                offset: Offset(0, 4.sp),
-                              )
+                          const TextSpan(
+                            text: '챌린지 기간동안 함께할 크루를 만들어주세요!\n크루를 개설할 시 ',
+                            children: [
+                              TextSpan(text: '3블록', style: TextStyle(color: skyBlueColor)),
+                              TextSpan(text: '을 제공해드립니다!'),
                             ],
                           ),
-                          child: Padding(
-                            padding: EdgeInsets.symmetric(vertical: 7.0.sp),
-                            child: const Center(
-                              child: Column(
-                                children: [
-                                  StyledText(
-                                    '개설하기',
-                                    fontSize: 18,
-                                    lineHeight: 18,
-                                    fontWeight: 600,
-                                    color: Colors.black,
+                        ),
+                        Padding(
+                          padding: EdgeInsets.only(top: 4.0.sp),
+                          child: const StyledText(
+                            '크루 개설 비용 3,000 TIK',
+                            fontWeight: 500,
+                            fontSize: 16,
+                            lineHeight: 24,
+                            letterSpacing: -.1,
+                            textAlign: TextAlign.center,
+                          ),
+                        ),
+                        Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            Padding(
+                              padding: EdgeInsets.only(top: 33.0.sp, bottom: 8.0.sp, left: 5.sp),
+                              child: const StyledText(
+                                '크루 마크',
+                                fontSize: 16,
+                                lineHeight: 18,
+                                color: lightGrayColor,
+                                fontWeight: 500,
+                              ),
+                            ),
+                            Container(
+                                padding: EdgeInsets.symmetric(vertical: 16.0.sp, horizontal: 20.sp),
+                                decoration: BoxDecoration(
+                                  color: subBg01Color,
+                                  borderRadius: BorderRadius.all(
+                                    Radius.circular(10.sp),
                                   ),
-                                  StyledText(
-                                    '3,000TIK',
-                                    fontSize: 12,
-                                    lineHeight: 16,
-                                    fontWeight: 600,
-                                    letterSpacing: -.1,
+                                ),
+                                child: Obx(() {
+                                  return Column(
+                                    children: [
+                                      ..._renderIcons(controller.crewMarkIcons),
+                                    ],
+                                  );
+                                })),
+                            Padding(
+                              padding: EdgeInsets.only(top: 22.0.sp, bottom: 8.sp, left: 5.sp),
+                              child: const StyledText(
+                                '크루 이름',
+                                fontSize: 16,
+                                lineHeight: 18,
+                                color: lightGrayColor,
+                                fontWeight: 500,
+                              ),
+                            ),
+                            TextField(
+                              controller: controller.crewNameController,
+                              cursorColor: Colors.white,
+                              decoration: InputDecoration(
+                                filled: true,
+                                fillColor: subBg01Color,
+                                border: OutlineInputBorder(
+                                  borderRadius: BorderRadius.circular(10.0),
+                                ),
+                                contentPadding: const EdgeInsets.symmetric(horizontal: 15),
+                                hintText: '크루명을 작성해주세요.',
+                                hintStyle: const TextStyle(
+                                  color: popupBgColor,
+                                  fontSize: 20,
+                                  fontWeight: FontWeight.w500,
+                                  height: 1,
+                                  letterSpacing: -0.5,
+                                ),
+                              ),
+                              style: const TextStyle(
+                                color: Colors.white,
+                              ),
+                              onChanged: (name) => controller.updateCrewName(name),
+                              keyboardType: TextInputType.name,
+                            )
+                          ],
+                        ),
+                      ],
+                    ),
+                  ),
+                  Row(
+                    children: [
+                      Expanded(
+                        child: Container(
+                          margin: EdgeInsets.only(bottom: 3.sp),
+                          child: InkWell(
+                            onTap: () => controller.handleCreateCrewType('TIK'),
+                            borderRadius: BorderRadius.circular(8.sp),
+                            child: Container(
+                              decoration: BoxDecoration(
+                                color: skyBlueColor,
+                                border: Border.all(width: 2.sp, color: Colors.black),
+                                borderRadius: BorderRadius.circular(8.sp),
+                                boxShadow: [
+                                  BoxShadow(
                                     color: Colors.black,
-                                  ),
+                                    offset: Offset(0, 4.sp),
+                                  )
                                 ],
+                              ),
+                              child: Padding(
+                                padding: EdgeInsets.symmetric(vertical: 7.0.sp),
+                                child: const Center(
+                                  child: Column(
+                                    children: [
+                                      StyledText(
+                                        '개설하기',
+                                        fontSize: 18,
+                                        lineHeight: 18,
+                                        fontWeight: 600,
+                                        color: Colors.black,
+                                      ),
+                                      StyledText(
+                                        '3,000TIK',
+                                        fontSize: 12,
+                                        lineHeight: 16,
+                                        fontWeight: 600,
+                                        letterSpacing: -.1,
+                                        color: Colors.black,
+                                      ),
+                                    ],
+                                  ),
+                                ),
                               ),
                             ),
                           ),
                         ),
                       ),
-                    ),
+                      SizedBox(
+                        width: 9.sp,
+                      ),
+                      Expanded(
+                        child: GazagoButton(
+                          buttonText: '무료 개설',
+                          onTap: () => controller.handleCreateCrewType('INVITE'),
+                        ),
+                      ),
+                    ],
                   ),
-                  SizedBox(
-                    width: 9.sp,
-                  ),
-                  Expanded(
+                  Padding(
+                    padding: EdgeInsets.only(top: 8.0.sp),
                     child: GazagoButton(
-                      buttonText: '무료 개설',
-                      onTap: () => controller.handleCreateCrewType('INVITE'),
+                      onTap: () => Get.back(),
+                      buttonText: '취소',
+                      textColor: Colors.white,
+                      buttonColor: popupBgColor,
                     ),
-                  ),
+                  )
                 ],
               ),
-              Padding(
-                padding: EdgeInsets.only(top: 8.0.sp),
-                child: GazagoButton(
-                  onTap: () => Get.back(),
-                  buttonText: '취소',
-                  textColor: Colors.white,
-                  buttonColor: popupBgColor,
-                ),
-              )
-            ],
+            ),
           ),
         ),
       ),
@@ -6191,7 +6197,7 @@ void crewCreatePopup(ChallengesDetailController controller) async {
   );
 }
 
-void shareCrewChallengeKakaoLinkDialog() {
+void shareCrewChallengeKakaoLinkDialog(ChallengesDetailController controller) {
   Get.dialog(
     Dialog(
       shadowColor: Colors.transparent,
@@ -6250,8 +6256,9 @@ void shareCrewChallengeKakaoLinkDialog() {
                         child: GazagoButton(
                           buttonText: '공유하기',
                           onTap: () {
-                            Get.until((route) => Get.isBottomSheetOpen == false && Get.isDialogOpen == false);
-                            crewCreateCompleteAlert();
+                            Get.back();
+                            controller.shareCrewChallenge();
+                            askSharedCompleteDialog(controller);
                           },
                         ),
                       ),
@@ -6267,7 +6274,7 @@ void shareCrewChallengeKakaoLinkDialog() {
   );
 }
 
-void askSharedCompleteDialog() {
+void askSharedCompleteDialog(ChallengesDetailController controller) {
   Get.dialog(
     Dialog(
       shadowColor: Colors.transparent,
@@ -6327,6 +6334,7 @@ void askSharedCompleteDialog() {
                       buttonText: '완료',
                       onTap: () {
                         Get.back();
+                        controller.validateKakaoShareResult();
                       },
                     ),
                   ),
@@ -6340,7 +6348,7 @@ void askSharedCompleteDialog() {
   );
 }
 
-void unableShareMyselfDialog() {
+void unableShareMyselfDialog(ChallengesDetailController controller) {
   Get.dialog(
     Dialog(
       shadowColor: Colors.transparent,
@@ -6400,6 +6408,8 @@ void unableShareMyselfDialog() {
                       buttonText: '다시 공유',
                       onTap: () {
                         Get.back();
+                        controller.shareCrewChallenge();
+                        askSharedCompleteDialog(controller);
                       },
                     ),
                   ),
@@ -6413,7 +6423,7 @@ void unableShareMyselfDialog() {
   );
 }
 
-void unableSharedHistoryDialog() {
+void unableSharedHistoryDialog(ChallengesDetailController controller) {
   Get.dialog(
     Dialog(
       shadowColor: Colors.transparent,
@@ -6473,6 +6483,8 @@ void unableSharedHistoryDialog() {
                       buttonText: '다시 공유',
                       onTap: () {
                         Get.back();
+                        controller.shareCrewChallenge();
+                        askSharedCompleteDialog(controller);
                       },
                     ),
                   ),

@@ -124,8 +124,7 @@ dependencies:
   collection: ^1.17.0
   firebase_database: ^10.2.3
   adjust_sdk: ^4.33.1
-
-
+  kakao_flutter_sdk_share: ^1.4.1 # 카카오톡 공유
 
 dev_dependencies:
   flutter_test:

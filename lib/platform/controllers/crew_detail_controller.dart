@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:gaza_go/platform/helpers/alert_helper.dart';
 import 'package:gaza_go/platform/helpers/challenge_mixin.dart';
 import 'package:gaza_go/platform/models/crew_member_model.dart';
 import 'package:gaza_go/platform/models/crew_model.dart';
+import 'package:gaza_go/platform/services/crew_service.dart';
 import 'package:gaza_go/presentations/components/alert_ui_list.dart';
 import 'package:get/get.dart';
 
@@ -9,6 +11,7 @@ class CrewDetailController extends GetxController with GetTickerProviderStateMix
   late TabController tabController;
   Rxn<CrewModel> selectedCrew = Rxn();
   RxInt crewRanking = RxInt(0);
+  RxInt dailyBlockCount = RxInt(0);
   RxList<CrewMemberModel> get crewLeaderboardList {
     return RxList(selectedCrew.value!.crewMemberList!);
   }
@@ -33,6 +36,7 @@ class CrewDetailController extends GetxController with GetTickerProviderStateMix
     crewRanking.value = await Get.arguments['ranking'];
     selectedCrew.value = await Get.arguments['crew'];
     tabController.addListener(_tabController);
+    await getDailyBlockCount();
     showRelayEndedAlert();
 
     super.onInit();
@@ -52,15 +56,36 @@ class CrewDetailController extends GetxController with GetTickerProviderStateMix
     }
   }
 
-  Future<void> toggleRecruitLimit() async {
-    selectedCrew.update((state) {
-      state!.crewRecruitStatus = selectedCrew.value!.crewRecruitStatus! == 'OPEN' ? 'CLOSE' : 'OPEN';
-    });
-  }
-
   void showRelayEndedAlert() {
+    Future.delayed(const Duration(seconds: 1));
     if (selectedCrew.value!.crewRelayStatus! == "ENDED") {
       showCrewRelayEndedAlert();
     }
+  }
+
+  Future<void> requestToggleRecruitStatus() async {
+    await CrewService.changeRecruitStatus(
+      selectedCrew.value!.id!,
+      selectedCrew.value!.crewRecruitStatus! == 'OPEN' ? 'CLOSE' : 'OPEN',
+      successCallback: () {
+        selectedCrew.value!.crewRecruitStatus! == 'OPEN' ? showToastPopup('제한 되었습니다.') : showToastPopup('해제 되었습니다.');
+
+        selectedCrew.update((state) {
+          state!.crewRecruitStatus = selectedCrew.value!.crewRecruitStatus! == 'OPEN' ? 'CLOSE' : 'OPEN';
+        });
+      },
+      errorCallback: () {
+        selectedCrew.value!.crewRecruitStatus! == 'OPEN' ? showToastPopup('제한 실패') : showToastPopup('해제 실패');
+      },
+    );
+  }
+
+  Future<void> getDailyBlockCount() async {
+    await CrewService.getDailyBlockCount(
+      selectedCrew.value!.id!,
+      successCallback: (data) {
+        if (data['dailyCrewBlockQuantity'] != null) dailyBlockCount.value = data['dailyCrewBlockQuantity'];
+      },
+    );
   }
 }

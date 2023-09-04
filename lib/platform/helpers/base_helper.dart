@@ -5,6 +5,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter_naver_map/flutter_naver_map.dart';
 import 'package:gaza_go/constants/enums.dart';
+import 'package:gaza_go/constants/routes.dart';
 import 'package:gaza_go/platform/controllers/home_menu_controller.dart';
 import 'package:gaza_go/platform/firebase/remote_config.dart';
 import 'package:gaza_go/platform/stores/hive_store.dart';
@@ -202,14 +203,27 @@ String formatMeterToKilometer(int meter) {
 }
 
 void handleRoute(String route) {
-  if (route.contains('challenge')) {
-    Get.find<HomeMenuController>().selectMenu(0);
-  } else if (route.contains('inventory')) {
-    Get.find<HomeMenuController>().selectMenu(1);
-  } else if (route.contains('shop')) {
-    Get.find<HomeMenuController>().selectMenu(3);
-  } else if (route.contains('leaderboard')) {
-    Get.find<HomeMenuController>().selectMenu(4);
+  if (Get.currentRoute != Routes.login && Get.currentRoute != Routes.loading) {
+    if (route.contains('challenge')) {
+      Get.find<HomeMenuController>().selectMenu(0);
+    } else if (route.contains('inventory')) {
+      Get.find<HomeMenuController>().selectMenu(1);
+    } else if (route.contains('shop')) {
+      Get.find<HomeMenuController>().selectMenu(3);
+    } else if (route.contains('leaderboard')) {
+      Get.find<HomeMenuController>().selectMenu(4);
+    }
+    Get.toNamed(route);
+  } else {
+    HiveStore.save(key: HiveKey.dynamicLinkRoute.name, value: route);
   }
-  Get.toNamed(route);
+}
+
+void handlePendingDynamicLink() {
+  String? pendingRoute = HiveStore.loadString(key: HiveKey.dynamicLinkRoute.name);
+
+  if (pendingRoute != null) {
+    handleRoute(pendingRoute);
+    HiveStore.deleteKey(key: HiveKey.dynamicLinkRoute.name);
+  }
 }

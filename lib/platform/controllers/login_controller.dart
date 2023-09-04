@@ -125,6 +125,7 @@ class LoginController extends GetxController {
   Future<void> requestLogin(LoginType loginType, String accessToken, {bool forceLogin = false}) async {
     String deviceId = HiveStore.loadString(key: HiveKey.uuid.name)!;
     String fcmToken = HiveStore.loadString(key: HiveKey.fcmToken.name)!;
+    String? inviteUserId = HiveStore.loadString(key: HiveKey.inviteUserId.name);
     String appVersion = await PackageInfo.fromPlatform().then((info) => info.version);
 
     dynamic deviceInfo;
@@ -148,6 +149,7 @@ class LoginController extends GetxController {
       forceLogin: forceLogin,
       deviceInfo: deviceInfo.toString(),
       providerEnv: appliedEndpoint != null && appliedEndpoint!['activateStageMode'] ? 'STAGE' : null,
+      inviteUserId: inviteUserId,
     );
 
     await UaaService.socialLogin(

@@ -150,22 +150,22 @@ class CrewInfo extends StatelessWidget {
                     margin: EdgeInsets.only(top: 37, left: 18.sp, right: 18.sp),
                     child: Row(
                       children: [
-                        const Expanded(
+                        Expanded(
                           child: Padding(
-                            padding: EdgeInsets.all(14),
+                            padding: const EdgeInsets.all(14),
                             child: Column(
                               mainAxisSize: MainAxisSize.min,
                               children: [
-                                StyledText(
+                                const StyledText(
                                   '데일리 크루블록',
                                   fontSize: 14,
                                   fontWeight: 500,
                                   lineHeight: 14,
                                 ),
                                 Padding(
-                                  padding: EdgeInsets.only(top: 8),
+                                  padding: const EdgeInsets.only(top: 8),
                                   child: StyledText(
-                                    '완료',
+                                    controller.dailyBlockCount.value == 0 ? '미완료' : '완료',
                                     fontSize: 16,
                                     fontWeight: 500,
                                     lineHeight: 16,
@@ -266,10 +266,10 @@ class CrewInfo extends StatelessWidget {
                       lineHeight: 22,
                       color: Colors.white.withOpacity(0.6),
                     ),
-                    const Padding(
-                      padding: EdgeInsets.only(top: 12),
+                    Padding(
+                      padding: const EdgeInsets.only(top: 12),
                       child: StyledText(
-                        '35개',
+                        '${controller.dailyBlockCount.value}개',
                         fontSize: 26,
                         fontWeight: 500,
                         lineHeight: 26,

@@ -8,7 +8,7 @@ class CrewCreateFormModel {
   int challengeId;
   int crewIconId;
   String crewCreateType;
-  double? price;
+  int? price;
 
   CrewCreateFormModel({
     required this.name,

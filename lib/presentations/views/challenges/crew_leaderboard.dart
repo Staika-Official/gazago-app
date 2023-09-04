@@ -72,7 +72,7 @@ class CrewLeaderboard extends StatelessWidget {
                               ),
                             ),
                             StyledText(
-                              '크루장 : ${controller.selectedCrew.value?.crewFounderNickName!}',
+                              '크루장 : ${controller.selectedCrew.value?.crewFounderNickName!.split('@')[0]}',
                               color: deepGrayColor,
                               fontWeight: 500,
                               fontSize: 12,

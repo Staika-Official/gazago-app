@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:gaza_go/platform/controllers/challenges_detail_controller.dart';
-import 'package:gaza_go/presentations/components/alert_ui_list.dart';
 import 'package:gaza_go/presentations/styles/colors.dart';
 import 'package:gaza_go/presentations/styles/icons.dart';
 import 'package:gaza_go/presentations/styles/styled_text.dart';
@@ -18,7 +17,7 @@ class CrewList extends StatelessWidget {
           color: subBg01Color,
           height: 64.sp,
           child: InkWell(
-            onTap: () => item.value.crewRecruitStatus == 'CLOSE' ? null : crewJoinInfoAlert(item.key + 1, item.value),
+            onTap: () => controller.handleCrewJoin(item.key + 1, item.value),
             child: Padding(
               padding: EdgeInsets.only(left: 18.sp, right: 20.sp),
               child: Row(
@@ -83,7 +82,7 @@ class CrewList extends StatelessWidget {
                                     overflowEllipsis: true,
                                   ),
                                   StyledText(
-                                    '크루장 : ${item.value.crewFounderNickName!}',
+                                    '크루장 : ${item.value.crewFounderNickName!.split('@')[0]}',
                                     color: deepGrayColor,
                                     fontWeight: 500,
                                     fontSize: 12,

@@ -14,6 +14,7 @@ class SocialLoginInfoModel {
   bool forceLogin;
   dynamic deviceInfo;
   String? providerEnv;
+  String? inviteUserId;
 
   SocialLoginInfoModel({
     required this.provider,
@@ -26,6 +27,7 @@ class SocialLoginInfoModel {
     required this.forceLogin,
     this.deviceInfo,
     this.providerEnv,
+    this.inviteUserId,
   });
 
   factory SocialLoginInfoModel.fromJson(Map<String, dynamic> json) => _$SocialLoginInfoModelFromJson(json);

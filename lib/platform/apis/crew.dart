@@ -17,14 +17,14 @@ class CrewApi {
     });
   }
 
-  static Future<Response> joinCrew(String userId) async {
+  static Future<Response> joinCrew(String userId, int challengeId, int crewId) async {
     return await Api.client(
       serviceUrl: '/services/gazago/api',
       showLoading: false,
     ).post('/user-crews/users/$userId', data: {
-      "crewId": "크루명",
-      "userId": 1,
-      "challengeId": 2,
+      "crewId": crewId,
+      "userId": userId,
+      "challengeId": challengeId,
     });
   }
 
@@ -33,5 +33,26 @@ class CrewApi {
       serviceUrl: '/services/gazago/api',
       showLoading: false,
     ).get('/crew-icons');
+  }
+
+  static Future<Response> changeRecruitStatus(String userId, int crewId, String recruitStatus) async {
+    return await Api.client(
+      serviceUrl: '/services/gazago/api',
+      showLoading: false,
+    ).post('/crews/$crewId/users/$userId/recruit-status/$recruitStatus', data: {
+      "crewId": crewId,
+      "userId": userId,
+      "crewRecruitStatus": recruitStatus,
+    });
+  }
+
+  static Future<Response> getDailyBlockCount(
+    String userId,
+    int crewId,
+  ) async {
+    return await Api.client(
+      serviceUrl: '/services/gazago/api',
+      showLoading: false,
+    ).get('/crews/$crewId/users/$userId/daily-blocks');
   }
 }

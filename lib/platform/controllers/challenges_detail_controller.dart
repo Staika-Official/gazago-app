@@ -1,8 +1,10 @@
 import 'dart:convert';
 
+import 'package:collection/collection.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:firebase_dynamic_links/firebase_dynamic_links.dart';
 import 'package:flutter/material.dart';
+import 'package:gaza_go/constants/enums.dart';
 import 'package:gaza_go/constants/routes.dart';
 import 'package:gaza_go/flavors.dart';
 import 'package:gaza_go/platform/controllers/challenges_controller.dart';
@@ -22,10 +24,11 @@ import 'package:gaza_go/platform/models/new_challenge_detail_model.dart';
 import 'package:gaza_go/platform/services/activity_service.dart';
 import 'package:gaza_go/platform/services/crew_service.dart';
 import 'package:gaza_go/platform/services/item_service.dart';
+import 'package:gaza_go/platform/stores/hive_store.dart';
 import 'package:gaza_go/presentations/components/alert_ui_list.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
-import 'package:share_plus/share_plus.dart';
+import 'package:kakao_flutter_sdk_share/kakao_flutter_sdk_share.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class ChallengesDetailController extends GetxController with GetTickerProviderStateMixin, ChallengeMixin {
@@ -67,6 +70,17 @@ class ChallengesDetailController extends GetxController with GetTickerProviderSt
   RxInt selectedMarkIconId = RxInt(0);
   TextEditingController crewNameController = TextEditingController();
   RxString crewName = RxString('');
+  RxBool get isAbleToCreateOrJoinCrew {
+    return RxBool([
+          'READY',
+          'IN_PROGRESS',
+        ].any((state) => state == challengeDetails.value.challengeState) &&
+        [
+          'REGISTER_AVAILABLE',
+          'REGISTER_READY',
+          'JOIN_AVAILABLE',
+        ].any((state) => state == challengeDetails.value.challengeUserState));
+  }
 
   @override
   void onInit() async {
@@ -189,7 +203,6 @@ class ChallengesDetailController extends GetxController with GetTickerProviderSt
     });
 
     crewChallengeLeaderboardRef.onValue.listen((DatabaseEvent event) {
-      final data = event.snapshot.value;
       updateCrewData(event.snapshot);
     });
   }
@@ -272,10 +285,12 @@ class ChallengesDetailController extends GetxController with GetTickerProviderSt
     }, errorCallback: () {
       showToastPopup('크루 마크를 불러오지 못했습니다.');
     });
+    crewName.value = '';
+    crewNameController.text = '';
     crewCreatePopup(this);
   }
 
-  void handleCreateCrewType(String createCrewType) {
+  void handleCreateCrewType(String createCrewType) async {
     if (crewName.value == '') {
       showToastPopup('크루명을 입력해주세요');
       return;
@@ -285,8 +300,10 @@ class ChallengesDetailController extends GetxController with GetTickerProviderSt
         shortTikCreateCrewAlert();
         return;
       }
+      Get.back();
+      requestCreateCrew(createCrewType);
     } else {
-      shareCrewChallengeKakaoLinkDialog();
+      shareCrewChallengeKakaoLinkDialog(this);
     }
   }
 
@@ -309,14 +326,27 @@ class ChallengesDetailController extends GetxController with GetTickerProviderSt
       );
     }
 
-    CrewService.createCrew(formData, successCallback: () {
-      showToastPopup('크루가 개설되었습니다.');
-    }, errorCallback: (ErrorResponseDataModel error) {
-      if (error.errorCode == 'ALREADY_EXISTS_CREW_NAME') {
-        showToastPopup(error.errorMessage!);
-      }
-      print(error.toJson());
-    });
+    CrewService.createCrew(
+      formData,
+      successCallback: (int crewId) async {
+        await getChallengeDetail();
+        Get.until((route) => Get.isDialogOpen == false && Get.isBottomSheetOpen == false);
+        showToastPopup('크루가 개설되었습니다.');
+        await Future.delayed(const Duration(seconds: 1));
+        crewList.forEachIndexedWhile((index, CrewModel crew) {
+          if (crew.id == crewId) {
+            Get.toNamed(Routes.crewDetail, arguments: {'ranking': index + 1, 'crew': crew});
+          }
+          return crew.id == crewId;
+        });
+      },
+      errorCallback: (ErrorResponseDataModel error) {
+        if (error.errorCode == 'ALREADY_EXISTS_CREW_NAME') {
+          showToastPopup(error.errorMessage!);
+        }
+        print(error.toJson());
+      },
+    );
   }
 
   void selectCrewMark(CrewIconModel crewMarkIcon) {
@@ -331,16 +361,91 @@ class ChallengesDetailController extends GetxController with GetTickerProviderSt
     tabController.index = 1;
   }
 
-  Future<void> sharedCrewChallenge() async {
+  Future<void> shareCrewChallenge() async {
+    bool isKakaoTalkSharingAvailable = await ShareClient.instance.isKakaoTalkSharingAvailable();
+    String userId = HiveStore.loadString(key: HiveKey.userId.name)!;
+
     final dynamicLinkParams = DynamicLinkParameters(
-      link: Uri.parse("https://gazago.io?route=${Routes.challengeDetail.replaceAll(':id', challengeId.value.toString())}"),
+      link: Uri.parse("https://gazago.io?route=${Routes.challengeDetail.replaceAll(':id', challengeId.value.toString())}&inviteId=$userId"),
       uriPrefix: F.isDev ? "https://gazagostage.page.link" : "https://gazago.page.link",
       androidParameters: AndroidParameters(packageName: F.isDev ? "kr.co.eztechfin.gazaGo.dev" : "kr.co.eztechfin.gazaGo"),
       iosParameters: IOSParameters(bundleId: F.isDev ? "kr.co.eztechfin.gazaGo.dev" : "kr.co.eztechfin.gazaGo"),
     );
+
     final dynamicLink = await FirebaseDynamicLinks.instance.buildShortLink(dynamicLinkParams);
 
-    Share.share(dynamicLink.shortUrl.toString());
+    final TextTemplate defaultText = TextTemplate(
+      text: '함께 가자고!!!',
+      link: Link(
+        webUrl: Uri.parse('${dynamicLink.shortUrl}'),
+        mobileWebUrl: Uri.parse('${dynamicLink.shortUrl}'),
+      ),
+    );
+
+    if (isKakaoTalkSharingAvailable) {
+      try {
+        Uri uri = await ShareClient.instance.shareDefault(template: defaultText, serverCallbackArgs: {
+          'userId': '${HiveStore.loadString(key: HiveKey.userId.name)}',
+          'challengeId': '${challengeId.value}',
+        });
+        await ShareClient.instance.launchKakaoTalk(uri);
+      } catch (error) {
+        print('카카오톡 공유 실패 $error');
+      }
+    } else {
+      try {
+        Uri shareUrl = await WebSharerClient.instance.makeDefaultUrl(template: defaultText);
+        await launchBrowserTab(shareUrl, popupOpen: true);
+      } catch (error) {
+        print('카카오톡 공유 실패 $error');
+      }
+      showToastPopup('카카오톡을 설치해주세요');
+    }
+  }
+
+  Future<void> validateKakaoShareResult() async {
+    String userId = HiveStore.loadString(key: HiveKey.userId.name)!;
+    DatabaseReference kakaoShareStatus = FirebaseDatabase.instance.ref('kakaoSharedMessageRecord/${challengeId.value}/$userId');
+
+    kakaoShareStatus.get().then((DataSnapshot snapshot) {
+      if (snapshot.exists) {
+        Map data = snapshot.value as Map;
+
+        if (data['chat_TYPE'] == 'MemoChat') {
+          unableShareMyselfDialog(this);
+        } else {
+          requestCreateCrew('INVITE');
+        }
+      } else {
+        unableSharedHistoryDialog(this);
+      }
+    }).onError((error, stackTrace) {
+      unableSharedHistoryDialog(this);
+    });
+  }
+
+  void handleCrewJoin(int ranking, CrewModel crew) {
+    if (crew.crewRecruitStatus == 'CLOSE' || !isAbleToCreateOrJoinCrew.value) {
+      moveToCrewDetail(ranking, crew);
+    } else {
+      crewJoinInfoAlert(ranking, crew);
+    }
+  }
+
+  void requestJoinCrew(int ranking, CrewModel crew) {
+    CrewService.joinCrew(challengeId.value, crew.id!, successCallback: () {
+      getCrewList();
+      crewJoinCompleteAlert(ranking, crew);
+    }, errorCallback: (ErrorResponseDataModel error) {
+      if (error.errorCode == 'CREW_RECRUIT_CLOSED') {
+        getCrewList();
+      }
+      showToastPopup(error.errorMessage!);
+    });
+  }
+
+  void moveToCrewDetail(int ranking, CrewModel crew) {
+    Get.toNamed(Routes.crewDetail, arguments: {'ranking': ranking, 'crew': crew});
   }
 
   void loadDataOnScroll() {

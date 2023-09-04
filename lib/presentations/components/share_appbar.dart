@@ -66,24 +66,26 @@ class CrewAppbar extends StatelessWidget implements PreferredSizeWidget {
           Row(
             mainAxisSize: MainAxisSize.min,
             children: [
-              isLockButton!
+              isLockButton != null && isLockButton!
                   ? Obx(() {
-                      return Padding(
-                        padding: EdgeInsets.only(left: 4.sp),
-                        child: IconButton(
-                          onPressed: () => Get.find<CrewDetailController>().validateRecruitLock(),
-                          icon: Get.find<CrewDetailController>().selectedCrew.value?.crewRecruitStatus! == 'CLOSE' ? iconHeaderLock : iconHeaderUnlock,
-                          splashRadius: 20.sp,
-                          constraints: BoxConstraints(
-                            minWidth: 30.sp,
-                          ),
-                        ),
-                      );
+                      return Get.find<CrewDetailController>().selectedCrew.value != null
+                          ? Padding(
+                              padding: EdgeInsets.only(left: 4.sp),
+                              child: IconButton(
+                                onPressed: () => Get.find<CrewDetailController>().validateRecruitLock(),
+                                icon: Get.find<CrewDetailController>().selectedCrew.value!.crewRecruitStatus! == 'CLOSE' ? iconHeaderLock : iconHeaderUnlock,
+                                splashRadius: 20.sp,
+                                constraints: BoxConstraints(
+                                  minWidth: 30.sp,
+                                ),
+                              ),
+                            )
+                          : const SizedBox();
                     })
                   : Padding(
                       padding: EdgeInsets.only(left: 4.sp),
                       child: IconButton(
-                        onPressed: () => controller.sharedCrewChallenge(),
+                        onPressed: () => controller.shareCrewChallenge(),
                         icon: iconHeaderShare,
                         splashRadius: 20.sp,
                         constraints: BoxConstraints(

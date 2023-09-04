@@ -18,6 +18,7 @@ import 'package:get/get.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'package:hive_flutter/adapters.dart';
 import 'package:intl/date_symbol_data_local.dart';
+import 'package:kakao_flutter_sdk_share/kakao_flutter_sdk_share.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:uuid/uuid.dart';
 
@@ -56,7 +57,9 @@ void main() async {
     await Hive.initFlutter();
     HiveStore.registerAdapters();
     await HiveStore.openBox();
-
+    KakaoSdk.init(
+      nativeAppKey: F.isDev ? '930bba5aed33cd931e3f56280a663785' : '2e02e4417b2bc7cdecb41b59d6196206',
+    );
     initDebuggingMode();
     await initFirebase();
     await initFirebasePackages();

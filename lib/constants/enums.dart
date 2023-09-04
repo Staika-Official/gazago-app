@@ -98,6 +98,8 @@ enum HiveKey {
   famousChallengeBadgeIssued,
   expirationNotificationState,
   hasSeenFairPlayAlert,
+  inviteUserId,
+  dynamicLinkRoute,
 }
 
 enum ResponseStatus {

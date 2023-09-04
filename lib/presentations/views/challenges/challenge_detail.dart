@@ -671,18 +671,20 @@ class ChallengeDetail extends StatelessWidget {
                       ),
                       child: Row(
                         children: [
-                          Expanded(
-                            child: GazagoButton(
-                              onTap: () => controller.showCreateCrewForm(),
-                              buttonText: '크루 개설',
-                              buttonColor: popupBgColor,
-                              borderColor: skyBlueColor,
-                              textColor: Colors.white,
+                          if (controller.isAbleToCreateOrJoinCrew.value) ...[
+                            Expanded(
+                              child: GazagoButton(
+                                onTap: () => controller.showCreateCrewForm(),
+                                buttonText: '크루 개설',
+                                buttonColor: popupBgColor,
+                                borderColor: skyBlueColor,
+                                textColor: Colors.white,
+                              ),
                             ),
-                          ),
-                          SizedBox(
-                            width: 10.sp,
-                          ),
+                            SizedBox(
+                              width: 10.sp,
+                            ),
+                          ],
                           Expanded(
                             child: GazagoButton(
                               onTap: () => controller.exploreCrews(),
