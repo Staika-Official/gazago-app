@@ -1,8 +1,11 @@
 import 'dart:convert';
 
+import 'package:adjust_sdk/adjust.dart';
+import 'package:adjust_sdk/adjust_event.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:firebase_dynamic_links/firebase_dynamic_links.dart';
 import 'package:flutter/material.dart';
+import 'package:gaza_go/constants/enums.dart';
 import 'package:gaza_go/constants/routes.dart';
 import 'package:gaza_go/flavors.dart';
 import 'package:gaza_go/platform/controllers/challenges_controller.dart';
@@ -22,6 +25,7 @@ import 'package:gaza_go/platform/models/new_challenge_detail_model.dart';
 import 'package:gaza_go/platform/services/activity_service.dart';
 import 'package:gaza_go/platform/services/crew_service.dart';
 import 'package:gaza_go/platform/services/item_service.dart';
+import 'package:gaza_go/platform/stores/hive_store.dart';
 import 'package:gaza_go/presentations/components/alert_ui_list.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
@@ -132,6 +136,13 @@ class ChallengesDetailController extends GetxController with GetTickerProviderSt
   }
 
   void fetchEquipItem(int itemId) async {
+    // 첫 챌린지 참여 이벤트
+    bool adjustFirstJoinedChallengeEvent = HiveStore.load(key: HiveKey.adjustFirstJoinedChallengeEvent.name) ?? false;
+    if (!adjustFirstJoinedChallengeEvent) {
+      Adjust.trackEvent(AdjustEvent('kvq7g5'));
+      HiveStore.save(key: HiveKey.adjustFirstJoinedChallengeEvent.name, value: true);
+    }
+
     await ItemService.fetchEquippedItem(
       itemId,
       successCallback: (InventoryItemModel item) {

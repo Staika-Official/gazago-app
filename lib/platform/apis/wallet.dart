@@ -1,3 +1,5 @@
+import 'package:adjust_sdk/adjust.dart';
+import 'package:adjust_sdk/adjust_event.dart';
 import 'package:dio/dio.dart';
 import 'package:gaza_go/constants/base_urls.dart';
 import 'package:gaza_go/platform/middleware/dio_middleware.dart';
@@ -33,6 +35,9 @@ class WalletApi {
   }
 
   static Future<Response> buyTik(int tikAmount) async {
+    // 틱 구매 이벤트
+    Adjust.trackEvent(AdjustEvent('zgi3sj'));
+
     return await Api.client(serviceUrl: ServiceUrl.goWalletService).post(
       '/wallet/buy-tik',
       data: {

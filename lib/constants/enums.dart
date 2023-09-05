@@ -98,6 +98,11 @@ enum HiveKey {
   famousChallengeBadgeIssued,
   expirationNotificationState,
   hasSeenFairPlayAlert,
+  adjustFirstWalkingEvent,
+  adjustFirstEndedExerciseEvent,
+  adjustFirstPurchasedItemEvent,
+  adjustFirstEquippedItemEvent,
+  adjustFirstJoinedChallengeEvent,
 }
 
 enum ResponseStatus {

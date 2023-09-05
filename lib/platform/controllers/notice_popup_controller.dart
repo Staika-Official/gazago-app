@@ -1,3 +1,5 @@
+import 'package:adjust_sdk/adjust.dart';
+import 'package:adjust_sdk/adjust_event.dart';
 import 'package:gaza_go/constants/enums.dart';
 import 'package:gaza_go/constants/routes.dart';
 import 'package:gaza_go/platform/controllers/activity_controller.dart';
@@ -91,6 +93,9 @@ class NoticePopupController extends GetxController {
   }
 
   void moveToWebView(NoticePopupModel item) async {
+    // 메인팝업 클릭 이벤트
+    Adjust.trackEvent(AdjustEvent('hed7a4'));
+
     print(item.linkUrl);
     if (Get.isBottomSheetOpen!) {
       Get.back();

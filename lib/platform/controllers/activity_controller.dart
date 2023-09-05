@@ -1,6 +1,8 @@
 import 'dart:async';
 import 'dart:io';
 
+import 'package:adjust_sdk/adjust.dart';
+import 'package:adjust_sdk/adjust_event.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_naver_map/flutter_naver_map.dart';
 import 'package:gaza_go/constants/config.dart';
@@ -443,6 +445,8 @@ class ActivityController extends SuperController with ActivityMixin, ChallengeMi
       if (globalController.internetConnection.value) {
         bool hasSeenFairPlayAlert = HiveStore.load(key: HiveKey.hasSeenFairPlayAlert.name) ?? false;
         if (!hasSeenFairPlayAlert) {
+          // 최초 Go 버튼 이벤트
+          Adjust.trackEvent(AdjustEvent('v2xlbe'));
           HiveStore.save(key: HiveKey.hasSeenFairPlayAlert.name, value: true);
           await showFairPlayAlert();
         }
@@ -623,6 +627,14 @@ class ActivityController extends SuperController with ActivityMixin, ChallengeMi
   }
 
   Future<void> selectExerciseType(ExerciseType exerciseType) async {
+    if (exerciseType == ExerciseType.walking) {
+      bool adjustFirstWalkingEvent = HiveStore.load(key: HiveKey.adjustFirstWalkingEvent.name) ?? false;
+      if (!adjustFirstWalkingEvent) {
+        Adjust.trackEvent(AdjustEvent('v2xlbe'));
+        HiveStore.save(key: HiveKey.adjustFirstWalkingEvent.name, value: true);
+      }
+    }
+
     selectedExerciseType.value = exerciseType;
 
     // AdWatchAvailableModel adWatchAvailableModel = AdWatchAvailableModel(watchAvailable: false);
@@ -668,6 +680,9 @@ class ActivityController extends SuperController with ActivityMixin, ChallengeMi
   }
 
   void moveToCourseSelection({required ChallengeCourseModel course, required ChallengeModel challenge}) async {
+    // 코스형 챌린지 이벤트
+    Adjust.trackEvent(AdjustEvent('tx7196'));
+
     selectedCourse.value = ChallengeCourseModel.fromJson(course.toJson());
     selectedChallenge.value = ChallengeModel.fromJson(challenge.toJson());
     Get.toNamed(Routes.activityChallenges);
@@ -836,6 +851,9 @@ class ActivityController extends SuperController with ActivityMixin, ChallengeMi
   }
 
   void moveToChallengeDetail(ChallengeModel challenge, bool hideLinkToCourses) {
+    // 100대명산 챌린지 이벤트
+    Adjust.trackEvent(AdjustEvent('r9akvp'));
+
     Get.toNamed(Routes.challengeCourseDetail, arguments: {'id': challenge.id, 'hideCourses': hideLinkToCourses}, preventDuplicates: false);
   }
 

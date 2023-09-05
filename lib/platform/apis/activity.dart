@@ -1,8 +1,12 @@
+import 'package:adjust_sdk/adjust.dart';
+import 'package:adjust_sdk/adjust_event.dart';
 import 'package:dio/dio.dart';
 import 'package:gaza_go/constants/base_urls.dart';
+import 'package:gaza_go/constants/enums.dart';
 import 'package:gaza_go/platform/middleware/dio_middleware.dart';
 import 'package:gaza_go/platform/models/user_exercise_model.dart';
 import 'package:gaza_go/platform/models/user_stamina_recharge_model.dart';
+import 'package:gaza_go/platform/stores/hive_store.dart';
 import 'package:geolocator/geolocator.dart';
 
 class ActivityApi {
@@ -191,6 +195,13 @@ class ActivityApi {
   }
 
   static Future<Response> fetchChallengeParticipateInCode(String userId, int challengeId, String code) async {
+    // 첫 챌린지 참여 이벤트
+    bool adjustFirstJoinedChallengeEvent = HiveStore.load(key: HiveKey.adjustFirstJoinedChallengeEvent.name) ?? false;
+    if (!adjustFirstJoinedChallengeEvent) {
+      Adjust.trackEvent(AdjustEvent('kvq7g5'));
+      HiveStore.save(key: HiveKey.adjustFirstJoinedChallengeEvent.name, value: true);
+    }
+
     return await Api.client(
       serviceUrl: '/services/gazago/api',
       showLoading: false,

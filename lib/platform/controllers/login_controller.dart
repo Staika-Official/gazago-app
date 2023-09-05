@@ -1,6 +1,8 @@
 import 'dart:async';
 import 'dart:io';
 
+import 'package:adjust_sdk/adjust.dart';
+import 'package:adjust_sdk/adjust_event.dart';
 import 'package:device_info_plus/device_info_plus.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:gaza_go/constants/config.dart';
@@ -23,6 +25,8 @@ import 'package:sign_in_with_apple/sign_in_with_apple.dart';
 
 class LoginController extends GetxController {
   void login(LoginType loginType) async {
+    Adjust.trackEvent(AdjustEvent('lllyw8'));
+
     // showDuplicateLoginWarning();
     switch (loginType) {
       case LoginType.google:

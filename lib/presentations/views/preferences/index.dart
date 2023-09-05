@@ -1,3 +1,5 @@
+import 'package:adjust_sdk/adjust.dart';
+import 'package:adjust_sdk/adjust_event.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -157,16 +159,25 @@ class Preferences extends StatelessWidget {
               PreferenceItem(
                 title: '공지사항',
                 // onTap: () => Get.toNamed(Routes.noticeList, arguments: {'boardType': 'NOTICE'}),
-                onTap: () => Get.toNamed(Routes.webView, arguments: {'linkUrl': 'https://eztechfin.notion.site/c5103042de5d4e3a9a61c1101508ffed'}),
+                onTap: () {
+                  Adjust.trackEvent(AdjustEvent('pk4dwp'));
+                  Get.toNamed(Routes.webView, arguments: {'linkUrl': 'https://eztechfin.notion.site/c5103042de5d4e3a9a61c1101508ffed'});
+                },
               ),
               PreferenceItem(
                 title: 'FAQ',
                 // onTap: () => Get.toNamed(Routes.preferenceBoard, arguments: {'boardType': 'FAQ'}),
-                onTap: () => Get.toNamed(Routes.webView, arguments: {'linkUrl': 'https://eztechfin.notion.site/FAQ-2f6b0ec4d6134fd398cd7a832bfa6cd3'}),
+                onTap: () {
+                  Adjust.trackEvent(AdjustEvent('bkeekw'));
+                  Get.toNamed(Routes.webView, arguments: {'linkUrl': 'https://eztechfin.notion.site/FAQ-2f6b0ec4d6134fd398cd7a832bfa6cd3'});
+                },
               ),
               PreferenceItem(
                 title: 'How to GO',
-                onTap: () => Get.toNamed(Routes.webView, arguments: {'linkUrl': F.howToGoUrl}),
+                onTap: () {
+                  Adjust.trackEvent(AdjustEvent('tbldgc'));
+                  Get.toNamed(Routes.webView, arguments: {'linkUrl': F.howToGoUrl});
+                },
               ),
               Container(
                 width: double.infinity,
