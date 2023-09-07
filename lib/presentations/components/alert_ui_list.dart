@@ -5554,7 +5554,21 @@ void crewJoinCompleteAlert(CrewModel crew) async {
       padding: EdgeInsets.only(top: 22.sp, bottom: 49.sp),
       child: Column(
         children: [
-          CircleAvatar(backgroundColor: Colors.black, radius: 25.sp),
+          CircleAvatar(
+            backgroundColor: Colors.black,
+            radius: 25.sp,
+            foregroundImage: (crew.iconImageUrl == null || crew.iconImageUrl == '')
+                ? Image.asset(
+                    'assets/images/ic_launcher.png',
+                    width: 50.sp,
+                  ).image
+                : crew.iconImageUrl!.contains('.svg')
+                    ? sp.Svg(crew.iconImageUrl!, source: sp.SvgSource.network) as ImageProvider
+                    : CachedNetworkImageProvider(
+                        crew.iconImageUrl!,
+                        headers: imageNetworkHeader,
+                      ),
+          ),
           Padding(
             padding: EdgeInsets.only(top: 20.0.sp),
             child: const StyledText(
@@ -5594,13 +5608,27 @@ void crewJoinCompleteAlert(CrewModel crew) async {
   );
 }
 
-void crewCreateCompleteAlert() async {
+void crewCreateCompleteAlert(ChallengesDetailController controller) async {
   await showAlert(
     contentWidget: Padding(
       padding: EdgeInsets.only(top: 22.sp, bottom: 49.sp),
       child: Column(
         children: [
-          CircleAvatar(backgroundColor: Colors.black, radius: 25.sp),
+          CircleAvatar(
+            backgroundColor: Colors.black,
+            radius: 25.sp,
+            foregroundImage: (controller.myCrew.value!['crew'].iconImageUrl == null || controller.myCrew.value!['crew'].iconImageUrl == '')
+                ? Image.asset(
+                    'assets/images/ic_launcher.png',
+                    width: 50.sp,
+                  ).image
+                : controller.myCrew.value!['crew'].iconImageUrl!.contains('.svg')
+                    ? sp.Svg(controller.myCrew.value!['crew'].iconImageUrl!, source: sp.SvgSource.network) as ImageProvider
+                    : CachedNetworkImageProvider(
+                        controller.myCrew.value!['crew'].iconImageUrl!,
+                        headers: imageNetworkHeader,
+                      ),
+          ),
           Padding(
             padding: EdgeInsets.only(top: 20.0.sp),
             child: const StyledText(
@@ -5632,6 +5660,7 @@ void crewCreateCompleteAlert() async {
           buttonText: '확인',
           onTap: () {
             Get.back();
+            controller.moveToMyCrew();
           },
         ),
       ),
@@ -5670,6 +5699,7 @@ void shortTikCreateCrewAlert() async {
         child: GazagoButton(
           buttonText: '충전하기',
           onTap: () {
+            Get.back();
             showProductList(Get.find<WalletMasterController>());
           },
         ),
@@ -5732,17 +5762,28 @@ void crewRecruitLimitAlert(CrewDetailController controller) async {
           Stack(
             clipBehavior: Clip.none,
             children: [
-              CircleAvatar(backgroundColor: Colors.black, radius: 25.sp),
+              CircleAvatar(
+                backgroundColor: Colors.black,
+                radius: 25.sp,
+                foregroundImage: (controller.selectedCrew.value!.iconImageUrl == null || controller.selectedCrew.value!.iconImageUrl == '')
+                    ? Image.asset(
+                        'assets/images/ic_launcher.png',
+                        width: 50.sp,
+                      ).image
+                    : controller.selectedCrew.value!.iconImageUrl!.contains('.svg')
+                        ? sp.Svg(controller.selectedCrew.value!.iconImageUrl!, source: sp.SvgSource.network) as ImageProvider
+                        : CachedNetworkImageProvider(
+                            controller.selectedCrew.value!.iconImageUrl!,
+                            headers: imageNetworkHeader,
+                          ),
+              ),
               Positioned(
                 bottom: 0,
                 right: -5.sp,
-                child: InkWell(
-                  onTap: () => Get.back(),
-                  child: SvgPicture.asset(
-                    'assets/images/challenges/ico_circle_limit.svg',
-                    width: 23.sp,
-                    height: 23.sp,
-                  ),
+                child: SvgPicture.asset(
+                  'assets/images/challenges/ico_circle_limit.svg',
+                  width: 23.sp,
+                  height: 23.sp,
                 ),
               ),
             ],
@@ -5806,7 +5847,21 @@ void crewRecruitUnlimitAlert(CrewDetailController controller) async {
           Stack(
             clipBehavior: Clip.none,
             children: [
-              CircleAvatar(backgroundColor: Colors.black, radius: 25.sp),
+              CircleAvatar(
+                backgroundColor: Colors.black,
+                radius: 25.sp,
+                foregroundImage: (controller.selectedCrew.value!.iconImageUrl == null || controller.selectedCrew.value!.iconImageUrl == '')
+                    ? Image.asset(
+                        'assets/images/ic_launcher.png',
+                        width: 50.sp,
+                      ).image
+                    : controller.selectedCrew.value!.iconImageUrl!.contains('.svg')
+                        ? sp.Svg(controller.selectedCrew.value!.iconImageUrl!, source: sp.SvgSource.network) as ImageProvider
+                        : CachedNetworkImageProvider(
+                            controller.selectedCrew.value!.iconImageUrl!,
+                            headers: imageNetworkHeader,
+                          ),
+              ),
               Positioned(
                 bottom: 0,
                 right: -5.sp,
@@ -5864,6 +5919,39 @@ void crewRecruitUnlimitAlert(CrewDetailController controller) async {
           onTap: () {
             Get.back();
             controller.requestToggleRecruitStatus();
+          },
+        ),
+      ),
+    ],
+  );
+}
+
+void crewRecruitToggleLimitErrorAlert(String errorMessage) async {
+  await showAlert(
+    contentWidget: Padding(
+      padding: EdgeInsets.only(top: 22.sp, bottom: 49.sp),
+      child: Column(
+        children: [
+          Padding(
+            padding: EdgeInsets.only(top: 20.0.sp),
+            child: StyledText(
+              errorMessage.replaceAll('\\n', '\n'),
+              fontWeight: 500,
+              fontSize: 16,
+              lineHeight: 24,
+              letterSpacing: -.1,
+              textAlign: TextAlign.center,
+            ),
+          ),
+        ],
+      ),
+    ),
+    actions: [
+      Expanded(
+        child: GazagoButton(
+          buttonText: '확인',
+          onTap: () {
+            Get.back();
           },
         ),
       ),
@@ -6258,8 +6346,6 @@ void shareCrewChallengeKakaoLinkDialog(ChallengesDetailController controller) {
                           onTap: () {
                             Get.back();
                             controller.shareCrewChallenge();
-                            Future.delayed(const Duration(seconds: 2));
-                            askSharedCompleteDialog(controller);
                           },
                         ),
                       ),
@@ -6410,8 +6496,6 @@ void unableShareMyselfDialog(ChallengesDetailController controller) {
                       onTap: () {
                         Get.back();
                         controller.shareCrewChallenge();
-                        Future.delayed(const Duration(seconds: 2));
-                        askSharedCompleteDialog(controller);
                       },
                     ),
                   ),
@@ -6486,8 +6570,6 @@ void unableSharedHistoryDialog(ChallengesDetailController controller) {
                       onTap: () {
                         Get.back();
                         controller.shareCrewChallenge();
-                        Future.delayed(const Duration(seconds: 2));
-                        askSharedCompleteDialog(controller);
                       },
                     ),
                   ),

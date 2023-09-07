@@ -14,10 +14,8 @@ class CrewService {
   static Future<dynamic> createCrew(CrewCreateFormModel formData, {required Function successCallback, Function? errorCallback}) async {
     Response res = await CrewApi.createCrew(userId!, formData);
     if (res.statusCode == 201) {
-      print('fetch success');
       successCallback(res.data['id']);
     } else {
-      print('fetch failure');
       if (errorCallback != null) errorCallback(ErrorResponseDataModel.fromJson(res.data));
     }
   }
@@ -42,7 +40,6 @@ class CrewService {
       }
       successCallback(iconList);
     } else {
-      print('fetch failure');
       if (errorCallback != null) errorCallback();
     }
   }
@@ -50,11 +47,9 @@ class CrewService {
   static Future<dynamic> changeRecruitStatus(int crewId, String recruitStatus, {required Function successCallback, Function? errorCallback}) async {
     Response res = await CrewApi.changeRecruitStatus(userId!, crewId, recruitStatus);
     if (res.statusCode == 200) {
-      print('fetch success');
       successCallback();
     } else {
-      print('fetch failure');
-      if (errorCallback != null) errorCallback();
+      if (errorCallback != null) errorCallback(ErrorResponseDataModel.fromJson(res.data));
     }
   }
 

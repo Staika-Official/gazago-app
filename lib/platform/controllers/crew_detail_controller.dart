@@ -4,6 +4,7 @@ import 'package:gaza_go/platform/helpers/alert_helper.dart';
 import 'package:gaza_go/platform/helpers/challenge_mixin.dart';
 import 'package:gaza_go/platform/models/crew_member_model.dart';
 import 'package:gaza_go/platform/models/crew_model.dart';
+import 'package:gaza_go/platform/models/error_response_data_model.dart';
 import 'package:gaza_go/platform/services/crew_service.dart';
 import 'package:gaza_go/platform/stores/hive_store.dart';
 import 'package:gaza_go/presentations/components/alert_ui_list.dart';
@@ -75,14 +76,18 @@ class CrewDetailController extends GetxController with GetTickerProviderStateMix
       selectedCrew.value!.id!,
       selectedCrew.value!.crewRecruitStatus! == 'OPEN' ? 'CLOSE' : 'OPEN',
       successCallback: () {
-        selectedCrew.value!.crewRecruitStatus! == 'OPEN' ? showToastPopup('제한 되었습니다.') : showToastPopup('해제 되었습니다.');
+        selectedCrew.value!.crewRecruitStatus! == 'OPEN' ? showToastPopup('크루 모집이 제한되었습니다.') : showToastPopup('크루 모집 중 입니다.');
 
         selectedCrew.update((state) {
           state!.crewRecruitStatus = selectedCrew.value!.crewRecruitStatus! == 'OPEN' ? 'CLOSE' : 'OPEN';
         });
       },
-      errorCallback: () {
-        selectedCrew.value!.crewRecruitStatus! == 'OPEN' ? showToastPopup('제한 실패') : showToastPopup('해제 실패');
+      errorCallback: (ErrorResponseDataModel error) {
+        if (error.errorCode == 'NOT_AVAILABLE_RECRUIT_OPEN') {
+          crewRecruitToggleLimitErrorAlert(error.errorMessage!);
+        } else {
+          showToastPopup(error.errorMessage!.replaceAll('\\n', '\n'));
+        }
       },
     );
   }

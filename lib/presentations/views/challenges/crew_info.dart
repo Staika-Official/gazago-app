@@ -75,7 +75,7 @@ class CrewInfo extends StatelessWidget {
                       child: Padding(
                         padding: EdgeInsets.only(left: 12.sp),
                         child: StyledText(
-                          member.nickname!,
+                          member.nickname!.split('@')[0],
                           fontWeight: 500,
                           fontSize: 20,
                           lineHeight: 20,
@@ -403,6 +403,19 @@ class CrewInfo extends StatelessWidget {
                         child: iconStackedBlocks,
                       ),
                     ],
+                  ),
+                ),
+              ),
+              Align(
+                alignment: Alignment.centerLeft,
+                child: Padding(
+                  padding: EdgeInsets.only(top: 5, left: 18.sp, bottom: 10),
+                  child: StyledText(
+                    '크루원',
+                    fontSize: 18,
+                    fontWeight: 500,
+                    lineHeight: 18,
+                    color: Colors.white.withOpacity(0.8),
                   ),
                 ),
               ),

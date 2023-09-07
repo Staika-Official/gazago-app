@@ -88,7 +88,7 @@ class CrewRankingItem extends StatelessWidget {
                         foregroundImage: (item.iconImageUrl == null || item.iconImageUrl == '')
                             ? Image.asset(
                                 'assets/images/ic_launcher.png',
-                                width: 30.sp,
+                                width: 44.sp,
                               ).image
                             : item.iconImageUrl!.contains('.svg')
                                 ? sp.Svg(item.iconImageUrl!, source: sp.SvgSource.network) as ImageProvider

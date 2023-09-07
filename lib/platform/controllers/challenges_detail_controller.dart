@@ -324,13 +324,20 @@ class ChallengesDetailController extends GetxController with GetTickerProviderSt
       showToastPopup('크루명을 입력해주세요');
       return;
     }
+
+    RegExp pattern = RegExp(r'^[가-힣a-zA-Z0-9\s]{2,10}$');
+    if (!pattern.hasMatch(crewName.value)) {
+      showToastPopup('2~10글자로 작성해주세요.\n특수문자는 사용 불가능합니다.');
+      return;
+    }
+
     if (createCrewType == 'TIK') {
       if (Get.find<WalletMasterController>().tik.value.amount! < 3000) {
         shortTikCreateCrewAlert();
         return;
       }
       Get.back();
-      requestCreateCrew(createCrewType);
+      requestCreateCrew('TIK');
     } else {
       shareCrewChallengeKakaoLinkDialog(this);
     }
@@ -360,15 +367,11 @@ class ChallengesDetailController extends GetxController with GetTickerProviderSt
       successCallback: (int crewId) async {
         await getChallengeDetail();
         Get.until((route) => Get.isDialogOpen == false && Get.isBottomSheetOpen == false);
-        showToastPopup('크루가 개설되었습니다.');
         await Future.delayed(const Duration(seconds: 1));
-        moveToMyCrew();
+        crewCreateCompleteAlert(this);
       },
       errorCallback: (ErrorResponseDataModel error) {
-        if (error.errorCode == 'ALREADY_EXISTS_CREW_NAME') {
-          showToastPopup(error.errorMessage!);
-        }
-        print(error.toJson());
+        showToastPopup(error.errorMessage!.replaceAll('\\n', '\n'));
       },
     );
   }
@@ -413,16 +416,20 @@ class ChallengesDetailController extends GetxController with GetTickerProviderSt
           'challengeId': '${challengeId.value}',
         });
         await ShareClient.instance.launchKakaoTalk(uri);
+        Future.delayed(const Duration(seconds: 2));
+        askSharedCompleteDialog(this);
       } catch (error) {
-        print('카카오톡 공유 실패 $error');
+        showToastPopup('공유 실패');
       }
     } else {
-      try {
-        Uri shareUrl = await WebSharerClient.instance.makeDefaultUrl(template: defaultText);
-        await launchBrowserTab(shareUrl, popupOpen: true);
-      } catch (error) {
-        print('카카오톡 공유 실패 $error');
-      }
+      // try {
+      //   Uri shareUrl = await WebSharerClient.instance.makeDefaultUrl(template: defaultText);
+      //   await launchBrowserTab(shareUrl, popupOpen: true);
+      //   Future.delayed(const Duration(seconds: 2));
+      //   askSharedCompleteDialog(this);
+      // } catch (error) {
+      //   showToastPopup('공유 실패');
+      // }
       showToastPopup('카카오톡을 설치해주세요');
     }
   }
@@ -467,7 +474,7 @@ class ChallengesDetailController extends GetxController with GetTickerProviderSt
       if (error.errorCode == 'CREW_RECRUIT_CLOSED') {
         await getCrewList();
       }
-      showToastPopup(error.errorMessage!);
+      showToastPopup(error.errorMessage!.replaceAll('\\n', '\n'));
     });
   }
 
