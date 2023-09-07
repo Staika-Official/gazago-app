@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:gaza_go/platform/controllers/challenges_detail_controller.dart';
 import 'package:gaza_go/platform/controllers/crew_detail_controller.dart';
 import 'package:gaza_go/presentations/styles/colors.dart';
 import 'package:gaza_go/presentations/styles/icons.dart';
@@ -227,7 +228,7 @@ class CrewInfo extends StatelessWidget {
                           borderRadius: BorderRadius.circular(6),
                         ),
                       ),
-                      onPressed: () => null,
+                      onPressed: () => Get.find<ChallengesDetailController>().shareCrewChallenge(),
                       child: RichText(
                         text: const TextSpan(
                           text: '크루 초대하면 ',
@@ -300,7 +301,7 @@ class CrewInfo extends StatelessWidget {
                       child: LayoutBuilder(
                         builder: (context, constraints) {
                           return Row(
-                            children: [...renderBlocksCollected(35)],
+                            children: [...renderBlocksCollected(controller.accumulatedCrewBlock.value)],
                           );
                         },
                       ),
@@ -345,23 +346,24 @@ class CrewInfo extends StatelessWidget {
                             fontSize: 18,
                             fontWeight: 500,
                           ),
-                          RichText(
-                            text: TextSpan(
-                              text: controller.selectedCrew.value!.crewMemberList!.length.toString(),
-                              style: const TextStyle(
-                                fontSize: 18,
-                                fontWeight: FontWeight.w700,
-                                height: 1,
-                                color: Colors.white,
-                              ),
-                              children: const [
-                                TextSpan(
-                                  text: '명',
-                                  style: TextStyle(fontWeight: FontWeight.w500),
+                          if (controller.selectedCrew.value != null)
+                            RichText(
+                              text: TextSpan(
+                                text: controller.selectedCrew.value!.crewMemberList!.length.toString(),
+                                style: const TextStyle(
+                                  fontSize: 18,
+                                  fontWeight: FontWeight.w700,
+                                  height: 1,
+                                  color: Colors.white,
                                 ),
-                              ],
+                                children: const [
+                                  TextSpan(
+                                    text: '명',
+                                    style: TextStyle(fontWeight: FontWeight.w500),
+                                  ),
+                                ],
+                              ),
                             ),
-                          ),
                         ],
                       ),
                     ),

@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:gaza_go/constants/enums.dart';
 import 'package:gaza_go/platform/helpers/alert_helper.dart';
 import 'package:gaza_go/platform/helpers/challenge_mixin.dart';
 import 'package:gaza_go/platform/models/crew_member_model.dart';
 import 'package:gaza_go/platform/models/crew_model.dart';
 import 'package:gaza_go/platform/services/crew_service.dart';
+import 'package:gaza_go/platform/stores/hive_store.dart';
 import 'package:gaza_go/presentations/components/alert_ui_list.dart';
 import 'package:get/get.dart';
 
@@ -13,7 +15,7 @@ class CrewDetailController extends GetxController with GetTickerProviderStateMix
   RxInt crewRanking = RxInt(0);
   RxInt dailyBlockCount = RxInt(0);
   RxList<CrewMemberModel> get crewLeaderboardList {
-    return RxList(selectedCrew.value!.crewMemberList!);
+    return selectedCrew.value != null ? RxList(selectedCrew.value!.crewMemberList!) : RxList.empty();
   }
 
   RxInt crewTabIndex = RxInt(0);
@@ -25,6 +27,11 @@ class CrewDetailController extends GetxController with GetTickerProviderStateMix
   RxInt get accumulatedCrewBlock {
     if (selectedCrew.value == null) return RxInt(0);
     return RxInt(selectedCrew.value!.crewMemberList!.fold(0, (prevValue, element) => prevValue + element.blockQuantity!));
+  }
+
+  RxBool get isFounder {
+    String userId = HiveStore.loadString(key: HiveKey.userId.name)!;
+    return selectedCrew.value != null ? RxBool(selectedCrew.value!.crewFounderId.toString() == userId) : RxBool(false);
   }
 
   @override

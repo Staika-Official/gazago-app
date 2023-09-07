@@ -7,6 +7,7 @@ part 'crew_model.g.dart';
 class CrewModel {
   int? blockQuantity;
   String? crewFounderNickName;
+  int? crewFounderId;
   List<CrewMemberModel>? crewMemberList;
   String? iconImageUrl;
   int? id;
@@ -16,6 +17,7 @@ class CrewModel {
 
   CrewModel({
     this.crewFounderNickName,
+    this.crewFounderId,
     this.iconImageUrl,
     this.crewMemberList,
     this.blockQuantity,

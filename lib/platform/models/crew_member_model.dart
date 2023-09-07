@@ -8,12 +8,14 @@ class CrewMemberModel {
   String? imageUrl;
   int? inviteCount;
   String? nickname;
+  int? userId;
 
   CrewMemberModel({
     this.blockQuantity,
     this.imageUrl,
     this.inviteCount,
     this.nickname,
+    this.userId,
   });
 
   factory CrewMemberModel.fromJson(Map<String, dynamic> json) => _$CrewMemberModelFromJson(json);

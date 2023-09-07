@@ -70,7 +70,7 @@ class ChallengesDetailController extends GetxController with GetTickerProviderSt
   RxInt selectedMarkIconId = RxInt(0);
   TextEditingController crewNameController = TextEditingController();
   RxString crewName = RxString('');
-  RxBool get isAbleToCreateOrJoinCrew {
+  RxBool get isAbleToJoinCrew {
     return RxBool([
           'READY',
           'IN_PROGRESS',
@@ -80,6 +80,35 @@ class ChallengesDetailController extends GetxController with GetTickerProviderSt
           'REGISTER_READY',
           'JOIN_AVAILABLE',
         ].any((state) => state == challengeDetails.value.challengeUserState));
+  }
+
+  RxBool get isAbleToCreateCrew {
+    return RxBool([
+          'READY',
+        ].any((state) => state == challengeDetails.value.challengeState) &&
+        [
+          'REGISTER_AVAILABLE',
+          'REGISTER_READY',
+        ].any((state) => state == challengeDetails.value.challengeUserState));
+  }
+
+  Rxn<Map<String, dynamic>> get myCrew {
+    String userId = HiveStore.loadString(key: HiveKey.userId.name)!;
+    int ranking = 0;
+    CrewModel? myCrew;
+    crewList.forEachIndexedWhile((int crewIndex, CrewModel crew) {
+      crew.crewMemberList!.forEachIndexedWhile((int memberIndex, CrewMemberModel member) {
+        if (member.userId.toString() == userId) {
+          ranking = crewIndex + 1;
+          myCrew = crew;
+        }
+        return member.userId.toString() != userId;
+      });
+
+      return myCrew == null;
+    });
+
+    return myCrew == null ? Rxn() : Rxn({'ranking': ranking, 'crew': myCrew});
   }
 
   @override
@@ -226,7 +255,7 @@ class ChallengesDetailController extends GetxController with GetTickerProviderSt
       CrewModel crewModel = CrewModel.fromJson(jsonDecode(jsonEncode(crew)));
       crewList.add(crewModel);
     });
-    crewList.sort((a, b) => b.crewMemberList!.length.compareTo(a.crewMemberList!.length));
+    crewList.sort((a, b) => b.blockQuantity!.compareTo(a.blockQuantity!));
   }
 
   void getSize() {
@@ -333,12 +362,7 @@ class ChallengesDetailController extends GetxController with GetTickerProviderSt
         Get.until((route) => Get.isDialogOpen == false && Get.isBottomSheetOpen == false);
         showToastPopup('크루가 개설되었습니다.');
         await Future.delayed(const Duration(seconds: 1));
-        crewList.forEachIndexedWhile((index, CrewModel crew) {
-          if (crew.id == crewId) {
-            Get.toNamed(Routes.crewDetail, arguments: {'ranking': index + 1, 'crew': crew});
-          }
-          return crew.id == crewId;
-        });
+        moveToMyCrew();
       },
       errorCallback: (ErrorResponseDataModel error) {
         if (error.errorCode == 'ALREADY_EXISTS_CREW_NAME') {
@@ -377,8 +401,8 @@ class ChallengesDetailController extends GetxController with GetTickerProviderSt
     final TextTemplate defaultText = TextTemplate(
       text: '함께 가자고!!!',
       link: Link(
-        webUrl: Uri.parse('${dynamicLink.shortUrl}'),
-        mobileWebUrl: Uri.parse('${dynamicLink.shortUrl}'),
+        webUrl: dynamicLink.shortUrl,
+        mobileWebUrl: dynamicLink.shortUrl,
       ),
     );
 
@@ -424,28 +448,42 @@ class ChallengesDetailController extends GetxController with GetTickerProviderSt
     });
   }
 
-  void handleCrewJoin(int ranking, CrewModel crew) {
-    if (crew.crewRecruitStatus == 'CLOSE' || !isAbleToCreateOrJoinCrew.value) {
-      moveToCrewDetail(ranking, crew);
+  void handleCrewJoin(CrewModel crew) {
+    if (crew.crewRecruitStatus == "OPEN" && crew.crewRelayStatus == "ONGOING") {
+      crewJoinInfoAlert(crew);
+    } else if (crew.crewRelayStatus != "ONGOING") {
+      showToastPopup('비활성화된 크루입니다.');
     } else {
-      crewJoinInfoAlert(ranking, crew);
+      showToastPopup('모집이 제한된 크루입니다.');
     }
   }
 
-  void requestJoinCrew(int ranking, CrewModel crew) {
-    CrewService.joinCrew(challengeId.value, crew.id!, successCallback: () {
-      getCrewList();
-      crewJoinCompleteAlert(ranking, crew);
-    }, errorCallback: (ErrorResponseDataModel error) {
+  void requestJoinCrew(CrewModel crew) {
+    CrewService.joinCrew(challengeId.value, crew.id!, successCallback: () async {
+      await getChallengeDetail();
+      await Future.delayed(const Duration(seconds: 1));
+      crewJoinCompleteAlert(myCrew.value!['crew']);
+    }, errorCallback: (ErrorResponseDataModel error) async {
       if (error.errorCode == 'CREW_RECRUIT_CLOSED') {
-        getCrewList();
+        await getCrewList();
       }
       showToastPopup(error.errorMessage!);
     });
   }
 
-  void moveToCrewDetail(int ranking, CrewModel crew) {
+  void moveToCrewDetail(CrewModel crew) {
+    int ranking = 0;
+    crewList.forEachIndexedWhile((index, CrewModel item) {
+      if (item.id == crew.id!) {
+        ranking = index + 1;
+      }
+      return item.id != crew.id!;
+    });
     Get.toNamed(Routes.crewDetail, arguments: {'ranking': ranking, 'crew': crew});
+  }
+
+  void moveToMyCrew() {
+    Get.toNamed(Routes.crewDetail, arguments: {'ranking': myCrew.value!['ranking'], 'crew': myCrew.value!['crew']});
   }
 
   void loadDataOnScroll() {

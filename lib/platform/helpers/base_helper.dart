@@ -203,7 +203,7 @@ String formatMeterToKilometer(int meter) {
 }
 
 void handleRoute(String route) {
-  if (Get.currentRoute != Routes.login && Get.currentRoute != Routes.loading) {
+  if ((Get.currentRoute != Routes.login || Get.currentRoute != Routes.loading) && Get.isRegistered<HomeMenuController>()) {
     if (route.contains('challenge')) {
       Get.find<HomeMenuController>().selectMenu(0);
     } else if (route.contains('inventory')) {

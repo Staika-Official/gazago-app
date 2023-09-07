@@ -26,6 +26,10 @@ void listenToDynamicLink() {
     if (queryParams['route'] != null) {
       handleRoute(queryParams['route']!);
     }
+
+    if (queryParams['inviteId'] != null) {
+      HiveStore.save(key: HiveKey.inviteUserId.name, value: queryParams['inviteId']!);
+    }
   }).onError((error) {
     // Handle errors
   });

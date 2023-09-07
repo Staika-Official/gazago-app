@@ -68,7 +68,7 @@ class CrewAppbar extends StatelessWidget implements PreferredSizeWidget {
             children: [
               isLockButton != null && isLockButton!
                   ? Obx(() {
-                      return Get.find<CrewDetailController>().selectedCrew.value != null
+                      return Get.find<CrewDetailController>().selectedCrew.value != null && Get.find<CrewDetailController>().isFounder.value
                           ? Padding(
                               padding: EdgeInsets.only(left: 4.sp),
                               child: IconButton(
@@ -80,7 +80,9 @@ class CrewAppbar extends StatelessWidget implements PreferredSizeWidget {
                                 ),
                               ),
                             )
-                          : const SizedBox();
+                          : SizedBox(
+                              width: 30.sp,
+                            );
                     })
                   : Padding(
                       padding: EdgeInsets.only(left: 4.sp),

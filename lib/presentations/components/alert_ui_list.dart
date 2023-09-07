@@ -5509,7 +5509,7 @@ void showAutoRechargeStaminaAlert(ActivityController controller) {
   );
 }
 
-void crewJoinInfoAlert(int ranking, CrewModel crew) async {
+void crewJoinInfoAlert(CrewModel crew) async {
   await showAlert(
     title: '크루 가입 안내',
     contentWidget: Padding(
@@ -5540,7 +5540,7 @@ void crewJoinInfoAlert(int ranking, CrewModel crew) async {
           buttonText: '네',
           onTap: () {
             Get.back();
-            Get.find<ChallengesDetailController>().requestJoinCrew(ranking, crew);
+            Get.find<ChallengesDetailController>().requestJoinCrew(crew);
           },
         ),
       ),
@@ -5548,7 +5548,7 @@ void crewJoinInfoAlert(int ranking, CrewModel crew) async {
   );
 }
 
-void crewJoinCompleteAlert(int ranking, CrewModel crew) async {
+void crewJoinCompleteAlert(CrewModel crew) async {
   await showAlert(
     contentWidget: Padding(
       padding: EdgeInsets.only(top: 22.sp, bottom: 49.sp),
@@ -5586,7 +5586,7 @@ void crewJoinCompleteAlert(int ranking, CrewModel crew) async {
           buttonText: '확인',
           onTap: () {
             Get.back();
-            Get.find<ChallengesDetailController>().moveToCrewDetail(ranking, crew);
+            Get.find<ChallengesDetailController>().moveToCrewDetail(crew);
           },
         ),
       ),
@@ -5908,7 +5908,7 @@ void crewChallengeCloseAlert() async {
         child: GazagoButton(
           buttonText: '확인',
           onTap: () {
-            Get.back();
+            Get.until((route) => Get.currentRoute.contains(Routes.challengeDetail.replaceAll(':id', '')));
           },
         ),
       ),
@@ -6258,6 +6258,7 @@ void shareCrewChallengeKakaoLinkDialog(ChallengesDetailController controller) {
                           onTap: () {
                             Get.back();
                             controller.shareCrewChallenge();
+                            Future.delayed(const Duration(seconds: 2));
                             askSharedCompleteDialog(controller);
                           },
                         ),
@@ -6409,6 +6410,7 @@ void unableShareMyselfDialog(ChallengesDetailController controller) {
                       onTap: () {
                         Get.back();
                         controller.shareCrewChallenge();
+                        Future.delayed(const Duration(seconds: 2));
                         askSharedCompleteDialog(controller);
                       },
                     ),
@@ -6484,6 +6486,7 @@ void unableSharedHistoryDialog(ChallengesDetailController controller) {
                       onTap: () {
                         Get.back();
                         controller.shareCrewChallenge();
+                        Future.delayed(const Duration(seconds: 2));
                         askSharedCompleteDialog(controller);
                       },
                     ),

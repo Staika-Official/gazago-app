@@ -14,6 +14,7 @@ import 'package:gaza_go/presentations/styles/colors.dart';
 import 'package:gaza_go/presentations/styles/icons.dart';
 import 'package:gaza_go/presentations/styles/styled_text.dart';
 import 'package:gaza_go/presentations/views/challenges/challenge_info.dart';
+import 'package:gaza_go/presentations/views/challenges/crew_leaderboard.dart';
 import 'package:gaza_go/presentations/views/challenges/leaderboard.dart';
 import 'package:get/get.dart';
 import 'package:intrinsic_dimension/intrinsic_dimension.dart';
@@ -262,7 +263,11 @@ class ChallengeDetail extends StatelessWidget {
                                 ),
                                 Tab(
                                   height: 50.sp,
-                                  text: '${controller.challengeDetails.value.challengeType == 'CREW' ? '크루 탐색' : '리더보드'}',
+                                  text: controller.challengeDetails.value.challengeType == 'CREW'
+                                      ? !controller.isAbleToJoinCrew.value && !controller.isAbleToJoinCrew.value
+                                          ? '크루 랭킹'
+                                          : '크루 탐색'
+                                      : '리더보드',
                                 ),
                               ],
                             ),
@@ -632,7 +637,11 @@ class ChallengeDetail extends StatelessWidget {
                   controller: controller.tabController,
                   children: [
                     const ChallengeInfo(),
-                    controller.challengeDetails.value.challengeType == 'CREW' ? const CrewList() : const ChallengeLeaderboard(),
+                    controller.challengeDetails.value.challengeType == 'CREW'
+                        ? !controller.isAbleToJoinCrew.value && !controller.isAbleToJoinCrew.value
+                            ? const CrewLeaderboard()
+                            : const CrewList()
+                        : const ChallengeLeaderboard(),
                   ],
                 ),
               ),
@@ -658,6 +667,13 @@ class ChallengeDetail extends StatelessWidget {
                     bottom: 0,
                     child: renderParticipateInChallenge(),
                   )
+                else if (controller.challengeDetails.value.challengeState == 'CLOSED' && controller.challengeDetails.value.challengeType == 'CREW')
+                  Positioned.fill(
+                    top: null,
+                    left: 0,
+                    bottom: 0,
+                    child: renderParticipateInChallenge(),
+                  )
                 else
                   Positioned.fill(
                     top: null,
@@ -671,7 +687,7 @@ class ChallengeDetail extends StatelessWidget {
                       ),
                       child: Row(
                         children: [
-                          if (controller.isAbleToCreateOrJoinCrew.value) ...[
+                          if (controller.isAbleToCreateCrew.value) ...[
                             Expanded(
                               child: GazagoButton(
                                 onTap: () => controller.showCreateCrewForm(),
@@ -685,12 +701,22 @@ class ChallengeDetail extends StatelessWidget {
                               width: 10.sp,
                             ),
                           ],
-                          Expanded(
-                            child: GazagoButton(
-                              onTap: () => controller.exploreCrews(),
-                              buttonText: '크루 탐색',
-                            ),
-                          ),
+                          controller.isAbleToJoinCrew.value
+                              ? Expanded(
+                                  child: GazagoButton(
+                                    onTap: () => controller.exploreCrews(),
+                                    buttonText: '크루 탐색',
+                                    buttonColor: controller.isAbleToCreateCrew.value ? skyBlueColor : popupBgColor,
+                                    borderColor: controller.isAbleToCreateCrew.value ? Colors.black : skyBlueColor,
+                                    textColor: controller.isAbleToCreateCrew.value ? Colors.black : Colors.white,
+                                  ),
+                                )
+                              : Expanded(
+                                  child: GazagoButton(
+                                    onTap: () => controller.moveToMyCrew(),
+                                    buttonText: '진행중 챌린지',
+                                  ),
+                                )
                         ],
                       ),
                     ),

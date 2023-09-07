@@ -4,12 +4,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:gaza_go/platform/controllers/challenges_detail_controller.dart';
 import 'package:gaza_go/platform/helpers/base_helper.dart';
-import 'package:gaza_go/presentations/components/alert_ui_list.dart';
 import 'package:gaza_go/presentations/styles/colors.dart';
-import 'package:gaza_go/presentations/styles/icons.dart';
 import 'package:gaza_go/presentations/styles/styled_text.dart';
 import 'package:get/get.dart';
-import 'package:intl/intl.dart';
 
 import 'challenge_bottom_sheet/code_challenge.dart';
 import 'challenge_bottom_sheet/item_challenge.dart';
@@ -118,6 +115,13 @@ Widget renderParticipateInChallenge() {
         // 참여하지 않은 챌린지가 종료된 경우
         widgets = renderItemEndedElse(challengesDetailController);
       }
+    }
+  }
+
+  if (challengeActivationType == 'CREW') {
+    if (challengeState == 'CLOSED') {
+      // 챌린지 종료
+      widgets = renderItemEndedElse(challengesDetailController);
     }
   }
 
