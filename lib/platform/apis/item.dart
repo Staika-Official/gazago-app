@@ -1,8 +1,12 @@
+import 'package:adjust_sdk/adjust.dart';
+import 'package:adjust_sdk/adjust_event.dart';
 import 'package:dio/dio.dart';
 import 'package:gaza_go/constants/base_urls.dart';
+import 'package:gaza_go/constants/enums.dart';
 import 'package:gaza_go/platform/middleware/dio_middleware.dart';
 import 'package:gaza_go/platform/models/inventory_item_model.dart';
 import 'package:gaza_go/platform/models/recovery_stamina_model.dart';
+import 'package:gaza_go/platform/stores/hive_store.dart';
 
 import '../models/repair_shoes_model.dart';
 
@@ -39,6 +43,12 @@ class ItemApi {
   }
 
   static Future<Response> fetchEquippedItem(String userId, int itemId) async {
+    // 첫 장착 이벤트
+    bool adjustFirstEquippedItemEvent = HiveStore.load(key: HiveKey.adjustFirstEquippedItemEvent.name) ?? false;
+    if (!adjustFirstEquippedItemEvent) {
+      Adjust.trackEvent(AdjustEvent('qwcs58'));
+      HiveStore.save(key: HiveKey.adjustFirstEquippedItemEvent.name, value: true);
+    }
     return await Api.client(serviceUrl: ServiceUrl.itemService).put('/users/$userId/equip/$itemId');
   }
 

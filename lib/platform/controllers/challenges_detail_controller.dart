@@ -1,5 +1,7 @@
 import 'dart:convert';
 
+import 'package:adjust_sdk/adjust.dart';
+import 'package:adjust_sdk/adjust_event.dart';
 import 'package:collection/collection.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:firebase_dynamic_links/firebase_dynamic_links.dart';
@@ -175,6 +177,13 @@ class ChallengesDetailController extends GetxController with GetTickerProviderSt
   }
 
   void fetchEquipItem(int itemId) async {
+    // 첫 챌린지 참여 이벤트
+    bool adjustFirstJoinedChallengeEvent = HiveStore.load(key: HiveKey.adjustFirstJoinedChallengeEvent.name) ?? false;
+    if (!adjustFirstJoinedChallengeEvent) {
+      Adjust.trackEvent(AdjustEvent('kvq7g5'));
+      HiveStore.save(key: HiveKey.adjustFirstJoinedChallengeEvent.name, value: true);
+    }
+
     await ItemService.fetchEquippedItem(
       itemId,
       successCallback: (InventoryItemModel item) {

@@ -1,6 +1,8 @@
 import 'dart:async';
 import 'dart:io';
 
+import 'package:adjust_sdk/adjust.dart';
+import 'package:adjust_sdk/adjust_event.dart';
 import 'package:device_info_plus/device_info_plus.dart';
 import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:gaza_go/constants/enums.dart';
@@ -36,6 +38,8 @@ class PermissionController extends GetxController {
     bool? isNewUser = HiveStore.load(key: HiveKey.isNewUser.name);
 
     if (isNewUser != null && isNewUser) {
+      Adjust.trackEvent(AdjustEvent('u6e7il'));
+
       Get.offAllNamed(Routes.signupComplete);
     } else {
       Get.offAllNamed(Routes.loading);

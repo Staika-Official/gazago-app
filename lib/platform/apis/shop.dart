@@ -1,6 +1,10 @@
+import 'package:adjust_sdk/adjust.dart';
+import 'package:adjust_sdk/adjust_event.dart';
 import 'package:dio/dio.dart';
 import 'package:gaza_go/constants/base_urls.dart';
+import 'package:gaza_go/constants/enums.dart';
 import 'package:gaza_go/platform/middleware/dio_middleware.dart';
+import 'package:gaza_go/platform/stores/hive_store.dart';
 
 class ShopApi {
   static Future<Response> getShopItemsList(String sort, String? grades, String? categories) async {
@@ -27,6 +31,16 @@ class ShopApi {
   }
 
   static Future<Response> fetchPurchaseShopItem(String userId, int itemId, int itemCount) async {
+    // 첫 구매 이벤트
+    bool adjustFirstPurchasedItemEvent = HiveStore.load(key: HiveKey.adjustFirstPurchasedItemEvent.name) ?? false;
+    if (!adjustFirstPurchasedItemEvent) {
+      Adjust.trackEvent(AdjustEvent('ylz6id'));
+      HiveStore.save(key: HiveKey.adjustFirstPurchasedItemEvent.name, value: true);
+    }
+
+    // 구매 이벤트
+    Adjust.trackEvent(AdjustEvent('i71cmi'));
+
     return await Api.client(
       serviceUrl: ServiceUrl.shop2Service,
     ).post('/items/$itemId/users/$userId/buy', data: {"quantity": itemCount});

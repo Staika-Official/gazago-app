@@ -100,6 +100,11 @@ enum HiveKey {
   hasSeenFairPlayAlert,
   inviteUserId,
   dynamicLinkRoute,
+  adjustFirstWalkingEvent,
+  adjustFirstEndedExerciseEvent,
+  adjustFirstPurchasedItemEvent,
+  adjustFirstEquippedItemEvent,
+  adjustFirstJoinedChallengeEvent,
 }
 
 enum ResponseStatus {

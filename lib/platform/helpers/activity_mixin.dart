@@ -1,6 +1,8 @@
 import 'dart:async';
 import 'dart:io';
 
+import 'package:adjust_sdk/adjust.dart';
+import 'package:adjust_sdk/adjust_event.dart';
 import 'package:assets_audio_player/assets_audio_player.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -685,6 +687,12 @@ mixin ActivityMixin {
     // String deviceId = HiveStore.loadString(key: HiveKey.uuid.name)!;
     if (isFakeGps.value && !isTestingFakeGps()) {
       return;
+    }
+
+    bool adjustFirstEndedExerciseEvent = HiveStore.load(key: HiveKey.adjustFirstEndedExerciseEvent.name) ?? false;
+    if (!adjustFirstEndedExerciseEvent) {
+      Adjust.trackEvent(AdjustEvent('fi36if'));
+      HiveStore.save(key: HiveKey.adjustFirstEndedExerciseEvent.name, value: true);
     }
 
     // if (adId != null) {

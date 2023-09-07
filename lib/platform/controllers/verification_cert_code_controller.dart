@@ -1,5 +1,7 @@
 import 'dart:async';
 
+import 'package:adjust_sdk/adjust.dart';
+import 'package:adjust_sdk/adjust_event.dart';
 import 'package:gaza_go/constants/enums.dart';
 import 'package:gaza_go/constants/routes.dart';
 import 'package:gaza_go/platform/helpers/alert_helper.dart';
@@ -54,6 +56,9 @@ class VerificationCertCodeController extends GetxController {
 
   void next() async {
     await IdentityService.verifyIdentityCode({"requestId": _requestId.toInt(), "code": _certCode.toString()}, successCallback: () {
+      // 본인인증이 완료 이벤트
+      Adjust.trackEvent(AdjustEvent('hed7a4'));
+
       HiveStore.save(key: HiveKey.certified.name, value: 'ROLE_CERTIFIED_USER');
       showToastPopup('본인인증이 완료되었습니다.');
       Get.until((route) => Get.currentRoute == Routes.home);
