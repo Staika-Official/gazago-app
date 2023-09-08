@@ -1,3 +1,4 @@
+import 'package:gaza_go/platform/models/challenge_landing_model.dart';
 import 'package:gaza_go/platform/models/new_challenge_badge_model.dart';
 import 'package:gaza_go/platform/models/new_challenge_item_model.dart';
 import 'package:gaza_go/platform/models/new_challenge_user_item_model.dart';
@@ -32,6 +33,7 @@ class NewChallengeDetailModel {
   String? challengeRewardRuleType;
   int? rewardAmount;
   int? rewardQuantity;
+  int? entryFee;
   String? introduce;
   String? description;
   NewChallengeItemModel? item;
@@ -42,6 +44,7 @@ class NewChallengeDetailModel {
   String? extTxt;
   String? extTxtDetail;
   bool? limitedPeriod;
+  ChallengeLandingModel? challengeLanding;
 
   NewChallengeDetailModel({
     this.id,
@@ -56,6 +59,7 @@ class NewChallengeDetailModel {
     this.minDistance,
     this.quantity,
     this.soldQuantity,
+    this.entryFee,
     this.publishedDate,
     this.reservedDate,
     this.fromDate,
@@ -79,6 +83,7 @@ class NewChallengeDetailModel {
     this.extTxt,
     this.extTxtDetail,
     this.limitedPeriod,
+    this.challengeLanding,
   });
 
   factory NewChallengeDetailModel.fromJson(Map<String, dynamic> json) => _$NewChallengeDetailModelFromJson(json);

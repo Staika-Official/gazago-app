@@ -5,6 +5,7 @@ import 'package:get/get.dart';
 class WebViewController extends GetxController {
   GlobalKey webViewKey = GlobalKey();
   RxString linkUrl = RxString('');
+  RxString title = RxString('');
   WalletMasterController walletController = Get.find();
 
   @override
@@ -23,5 +24,6 @@ class WebViewController extends GetxController {
 
   void initWebViewLinkUrl() {
     linkUrl.value = Get.arguments['linkUrl'] ?? '';
+    title.value = Get.arguments['title'] ?? '';
   }
 }

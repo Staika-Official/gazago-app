@@ -196,4 +196,11 @@ class ActivityApi {
       showLoading: false,
     ).post('/user-challenges/users/${userId}/challenges/${challengeId}/codes/${code}');
   }
+
+  static Future<Response> fetchParticipateInPayChallenge(String userId, int challengeId, int entryfee) async {
+    return await Api.client(
+      serviceUrl: '/services/gazago/api',
+      showLoading: false,
+    ).post('/user-challenges/users/${userId}/challenges/${challengeId}/entryFees/${entryfee}');
+  }
 }

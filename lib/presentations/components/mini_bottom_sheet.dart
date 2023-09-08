@@ -4,15 +4,13 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:gaza_go/platform/controllers/challenges_detail_controller.dart';
 import 'package:gaza_go/platform/helpers/base_helper.dart';
-import 'package:gaza_go/presentations/components/alert_ui_list.dart';
 import 'package:gaza_go/presentations/styles/colors.dart';
-import 'package:gaza_go/presentations/styles/icons.dart';
 import 'package:gaza_go/presentations/styles/styled_text.dart';
 import 'package:get/get.dart';
-import 'package:intl/intl.dart';
 
 import 'challenge_bottom_sheet/code_challenge.dart';
 import 'challenge_bottom_sheet/item_challenge.dart';
+import 'challenge_bottom_sheet/pay_challenge.dart';
 
 Widget renderParticipateInChallenge() {
   ChallengesDetailController challengesDetailController = Get.find();
@@ -117,6 +115,47 @@ Widget renderParticipateInChallenge() {
       } else {
         // 참여하지 않은 챌린지가 종료된 경우
         widgets = renderItemEndedElse(challengesDetailController);
+      }
+    }
+  }
+  if (challengeActivationType == 'PAY') {
+    if (challengeState == 'READY') {
+      // 챌린지 전
+      if (userState == 'REGISTER_READY') {
+        // 접수 전
+        widgets = renderPayReadyRegisterReady(challengesDetailController);
+      } else {
+        // 접수 중
+        if (userState == 'JOINED') {
+          widgets = renderPayReadyJoined(challengesDetailController);
+        } else {
+          widgets = renderPayReadyJoinedElse(challengesDetailController);
+        }
+      }
+    } else if (challengeState == 'IN_PROGRESS') {
+      // 챌린지 진행 중
+      if (userState == 'JOINED') {
+        widgets = renderPayInProgressJoined(challengesDetailController);
+      } else if (userState == 'JOIN_AVAILABLE') {
+        widgets = renderPayInProgressJoinedAvailable(challengesDetailController);
+      } else if (userState == 'JOIN_CLOSED') {
+        // 참가 마감
+        widgets = renderPayInProgressJoinedClosed(challengesDetailController);
+      } else {
+        // 챌린지 달성
+        widgets = renderPayInProgressElse(challengesDetailController);
+      }
+    } else {
+      // 챌린지 종료
+      if (userState == 'COMPLETE') {
+        // 챌린지 달성
+        widgets = renderPayEndedComplete(challengesDetailController);
+      } else if (userState == 'INCOMPLETE') {
+        // 챌린지 미달성
+        widgets = renderPayEndedInComplete(challengesDetailController);
+      } else {
+        // 참여하지 않은 챌린지가 종료된 경우
+        widgets = renderPayEndedElse(challengesDetailController);
       }
     }
   }

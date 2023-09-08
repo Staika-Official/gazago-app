@@ -23,6 +23,7 @@ import 'package:gaza_go/platform/models/user_account_model.dart';
 import 'package:gaza_go/platform/services/iap_service.dart';
 import 'package:gaza_go/platform/services/uaa_service.dart';
 import 'package:gaza_go/platform/services/wallet_service.dart';
+import 'package:gaza_go/platform/stores/hive_store.dart';
 import 'package:gaza_go/presentations/components/alert_ui_list.dart';
 import 'package:gaza_go/presentations/components/product_list_dialog.dart';
 import 'package:gaza_go/presentations/components/product_list_stik_dialog.dart';
@@ -367,7 +368,9 @@ class WalletMasterController extends GetxController with SolanaMixin, GetTickerP
 
   void purchaseInAppItem(ProductDetails product) async {
     showPendingPurchaseUI.value = true;
+    print('------------------------------------------asasaㄴ');
     showInAppPurchaseProgressAlert(this);
+    print('------------------------------------------asasa2ㄴ2222');
     try {
       await InAppPurchase.instance.buyConsumable(purchaseParam: PurchaseParam(productDetails: product));
     } catch (e) {
@@ -480,5 +483,15 @@ class WalletMasterController extends GetxController with SolanaMixin, GetTickerP
         break;
     }
     return rewardTikAmount;
+  }
+
+  void afterChargeTikAndReturnPage() {
+    String? enteredRoute = HiveStore.loadString(key: HiveKey.enteredRoute.name);
+    if (enteredRoute != null && enteredRoute.contains('challenge_detail')) {
+      Get.back();
+      Get.until((route) => Get.currentRoute == enteredRoute);
+    } else {
+      Get.back();
+    }
   }
 }

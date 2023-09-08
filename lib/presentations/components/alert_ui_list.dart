@@ -6,6 +6,7 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_html/flutter_html.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:flutter_svg_provider/flutter_svg_provider.dart' as sp;
@@ -3125,6 +3126,7 @@ void showStoreNotAvailableAlert() {
 
 void showInAppPurchaseProgressAlert(WalletMasterController controller) {
   showAlert(
+      allowMultipleBottomSheet: true,
     contentWidget: Obx(() {
       return Container(
           child: controller.showPendingPurchaseUI.value
@@ -3194,7 +3196,7 @@ void showInAppPurchaseProgressAlert(WalletMasterController controller) {
         if (controller.showPendingPurchaseUI.value != true) {
           return Expanded(
             child: GazagoButton(
-              onTap: () => Get.back(),
+              onTap: () => controller.afterChargeTikAndReturnPage(),
               buttonText: '확인',
               buttonColor: skyBlueColor,
             ),
@@ -6216,18 +6218,18 @@ void shareCrewChallengeKakaoLinkDialog(ChallengesDetailController controller) {
             child: Column(
               mainAxisSize: MainAxisSize.min,
               children: [
-                const Expanded(
+                 Expanded(
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
                       StyledText(
-                        '카카오톡으로 친구에게 링크를\n공유하면 크루를 무료로\n개설할 수 있어요!',
+                        controller.challengeDetails.value.challengeActivationType =='CREW' ? '카카오톡으로 친구에게 링크를\n공유하면 크루를 무료로\n개설할 수 있어요!' : '카카오톡으로 친구에게 링크를\n공유하면 챌린지에 무료로\n참여할 수 있어요!',
                         textAlign: TextAlign.center,
                         fontWeight: 500,
                         fontSize: 20,
                         lineHeight: 30,
                       ),
-                      StyledText(
+                      const StyledText(
                         '(본인 공유는 불가 합니다)',
                         textAlign: TextAlign.center,
                         fontWeight: 500,
@@ -6306,8 +6308,8 @@ void askSharedCompleteDialog(ChallengesDetailController controller) {
                       ),
                       Padding(
                         padding: EdgeInsets.only(top: 12.0.sp),
-                        child: const StyledText(
-                          '완료 버튼을 누르면 크루를\n무료로 개설할 수 있어요!',
+                        child:  StyledText(
+                          controller.challengeDetails.value.challengeActivationType =='CREW' ? '완료 버튼을 누르면 크루를\n무료로 개설할 수 있어요!' : '완료 버튼을 누르면\n챌린지에 무료로 참여할 수 있어요!',
                           textAlign: TextAlign.center,
                           fontWeight: 500,
                           fontSize: 16,
@@ -6543,5 +6545,395 @@ void showConfirmNicknameChange(MyPageController controller) {
         ),
       ),
     ],
+  );
+}
+
+void showChallengeNeedVerificationAlert(ChallengesDetailController controller) {
+  Get.dialog(
+    barrierColor: Colors.transparent,
+    WillPopScope(
+      onWillPop: () async => false,
+      child: Dialog(
+        insetPadding: EdgeInsets.zero,
+        backgroundColor: subBg01Color.withOpacity(0.8),
+        child: Center(
+          child: Padding(
+            padding: EdgeInsets.symmetric(horizontal: 20.0.sp),
+            child: Container(
+              decoration: BoxDecoration(
+                color: popupBgColor,
+                borderRadius: BorderRadius.circular(15),
+              ),
+              child: Padding(
+                padding: const EdgeInsets.all(20.0),
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Padding(
+                      padding: EdgeInsets.only(top: 25.0.sp),
+                      child: const StyledText(
+                        '본인인증',
+                        fontSize: 20,
+                        lineHeight: 20,
+                        fontWeight: 500,
+                      ),
+                    ),
+                    Padding(
+                      padding: EdgeInsets.only(top: 12.0.sp),
+                      child: const StyledText(
+                        '안전한 챌린지 참여를 위해\n본인 인증이 필요해요',
+                        fontSize: 16,
+                        lineHeight: 24,
+                        fontWeight: 500,
+                        textAlign: TextAlign.center,
+                      ),
+                    ),
+                    Padding(
+                      padding: EdgeInsets.only(top: 39.0.sp),
+                      child: Row(
+                        children: [
+                          Expanded(
+                            child: GazagoButton(
+                              onTap: () {
+                                Get.back();
+                              },
+                              buttonText: '닫기',
+                              textColor: Colors.white,
+                              buttonColor: popupBgColor,
+                            ),
+                          ),
+                          SizedBox(
+                            width: 9.sp,
+                          ),
+                          Expanded(
+                            child: GazagoButton(
+                              onTap: () => controller.moveToVerification(),
+                              buttonText: '확인',
+                              buttonColor: skyBlueColor,
+                            ),
+                          ),
+                        ],
+                      ),
+                    )
+                  ],
+                ),
+              ),
+            ),
+          ),
+        ),
+      ),
+    ),
+  );
+}
+
+void showChallengeItemBuyNeedVerificationAlert(ShopDetailController controller) {
+  Get.dialog(
+    barrierColor: Colors.transparent,
+    WillPopScope(
+      onWillPop: () async => false,
+      child: Dialog(
+        insetPadding: EdgeInsets.zero,
+        backgroundColor: subBg01Color.withOpacity(0.8),
+        child: Center(
+          child: Padding(
+            padding: EdgeInsets.symmetric(horizontal: 20.0.sp),
+            child: Container(
+              decoration: BoxDecoration(
+                color: popupBgColor,
+                borderRadius: BorderRadius.circular(15),
+              ),
+              child: Padding(
+                padding: const EdgeInsets.all(20.0),
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Padding(
+                      padding: EdgeInsets.only(top: 25.0.sp),
+                      child: const StyledText(
+                        '본인인증',
+                        fontSize: 20,
+                        lineHeight: 20,
+                        fontWeight: 500,
+                      ),
+                    ),
+                    Padding(
+                      padding: EdgeInsets.only(top: 12.0.sp),
+                      child: const StyledText(
+                        '안전한 챌린지 참여를 위해\n챌린지 아이템 구매시\n본인 인증이 필요해요',
+                        fontSize: 16,
+                        lineHeight: 24,
+                        fontWeight: 500,
+                        textAlign: TextAlign.center,
+                      ),
+                    ),
+                    Padding(
+                      padding: EdgeInsets.only(top: 39.0.sp),
+                      child: Row(
+                        children: [
+                          Expanded(
+                            child: GazagoButton(
+                              onTap: () {
+                                Get.back();
+                              },
+                              buttonText: '닫기',
+                              textColor: Colors.white,
+                              buttonColor: popupBgColor,
+                            ),
+                          ),
+                          SizedBox(
+                            width: 9.sp,
+                          ),
+                          Expanded(
+                            child: GazagoButton(
+                              onTap: () => controller.moveToVerification(),
+                              buttonText: '확인',
+                              buttonColor: skyBlueColor,
+                            ),
+                          ),
+                        ],
+                      ),
+                    )
+                  ],
+                ),
+              ),
+            ),
+          ),
+        ),
+      ),
+    ),
+  );
+}
+
+void joinChallengePopup(ChallengesDetailController controller) async {
+  await Get.bottomSheet(
+    isDismissible: false,
+    isScrollControlled: true,
+    enableDrag: false,
+    WillPopScope(
+      onWillPop: () async => false,
+      child: GestureDetector(
+        onTap: () => FocusScope.of(Get.context!).requestFocus(FocusNode()),
+        child: Container(
+          decoration: BoxDecoration(
+            color: popupBgColor,
+            borderRadius: BorderRadius.only(
+              topLeft: Radius.circular(12.sp),
+              topRight: Radius.circular(12.sp),
+            ),
+          ),
+          child: SingleChildScrollView(
+            physics: const ClampingScrollPhysics(),
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Padding(
+                  padding: EdgeInsets.only(top: 35.sp, bottom: 28.sp),
+                  child: Column(
+                    children: [
+                      Padding(
+                        padding: EdgeInsets.only(bottom: 19.0.sp),
+                        child: StyledText(
+                          controller.isShortTokenBalance.value ? '잔액이 부족합니다.' : '챌린지에 참가하시겠습니까?',
+                          color: controller.isShortTokenBalance.value ? dangerColor : Colors.white,
+                          fontSize: 20,
+                          lineHeight: 20,
+                          letterSpacing: -.1,
+                          fontWeight: 600,
+                        ),
+                      ),
+                      Text.rich(
+                        textAlign: TextAlign.center,
+                        style: TextStyle(
+                          fontSize: 30.sp,
+                          height: 30.sp / 30.sp,
+                          fontWeight: FontWeight.w600,
+                          color: Colors.white,
+                        ),
+                        TextSpan(
+                          text: formatDecimalPlaces(controller.challengeDetails.value.entryFee!.toDouble(), 0),
+                          children: const [
+                            TextSpan(text: 'TIK', style: TextStyle(fontWeight: FontWeight.w400)),
+                          ],
+                        ),
+                      ),
+                      Padding(
+                        padding: EdgeInsets.only(top: 25.0.sp),
+                        child: Divider(
+                          color: const Color(0xFF494B56),
+                          thickness: 2,
+                          height: 2.sp,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+                Padding(
+                  padding: EdgeInsets.only(left: 20.sp, right: 20.sp, bottom: 20.sp),
+                  child: Column(
+                    children: [
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          StyledText(
+                            '잔액',
+                            fontSize: 18,
+                            fontWeight: 500,
+                            letterSpacing: -.1,
+                            color: controller.isShortTokenBalance.value ? dangerColor : Colors.white,
+                          ),
+                          Row(
+                            children: [
+                              StyledText(
+                                formatDecimalPlaces(double.parse(controller.walletMasterController.tik.value.uiAmountString!), 0),
+                                fontSize: 20,
+                                fontWeight: 700,
+                                letterSpacing: -.1,
+                                color: controller.isShortTokenBalance.value ? dangerColor : Colors.white,
+                              ),
+                              Padding(
+                                padding: EdgeInsets.only(left: 4.0.sp),
+                                child: StyledText(
+                                  'TIK',
+                                  fontSize: 20,
+                                  fontWeight: 400,
+                                  letterSpacing: -.1,
+                                  color: controller.isShortTokenBalance.value ? dangerColor : Colors.white,
+                                ),
+                              ),
+                            ],
+                          ),
+                        ],
+                      ),
+                      Padding(
+                        padding: EdgeInsets.only(top: 44.sp, bottom: 27.0.sp),
+                        child: StyledText(
+                          controller.isShortTokenBalance.value ? '· TIK 충전 후 재시도 해주세요.' : '· 참가비는 납부 후 취소 및 환불이 불가합니다.',
+                          fontSize: 14,
+                          color: controller.isShortTokenBalance.value ? dangerColor : skyBlueColor,
+                        ),
+                      ),
+                      Row(
+                        children: [
+                          Expanded(
+                            child: GazagoButton(
+                              onTap: () => controller.isShortTokenBalance.value ? controller.moveToChargeTik() : controller.onFetchJoinPaychallenge(),
+                              buttonText: controller.isShortTokenBalance.value ? 'TIK 충전하기' : '참가하기',
+                              textColor: Colors.white,
+                              buttonColor: popupBgColor,
+                            ),
+                          ),
+                          SizedBox(
+                            width: 9.sp,
+                          ),
+                          Expanded(
+                            child: GazagoButton(
+                              buttonText: '무료 참여',
+                              onTap: () =>  shareCrewChallengeKakaoLinkDialog(controller),
+                            ),
+                          ),
+                        ],
+                      ),
+                      Padding(
+                        padding: EdgeInsets.only(top: 8.0.sp),
+                        child: GazagoButton(
+                          onTap: () => Get.back(),
+                          buttonText: '취소',
+                          textColor: Colors.white,
+                          buttonColor: popupBgColor,
+                        ),
+                      )
+                    ],
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ),
+      ),
+    ),
+  );
+}
+
+void showChallengeLandingPopup(ChallengesDetailController controller) {
+  Get.dialog(
+    barrierColor: Colors.transparent,
+    WillPopScope(
+      onWillPop: () async => false,
+      child: Dialog(
+        insetPadding: EdgeInsets.zero,
+        backgroundColor: subBg01Color.withOpacity(0.8),
+        child: Center(
+          child: Padding(
+            padding: EdgeInsets.all(35.0.sp),
+            child: Container(
+              decoration: BoxDecoration(
+                color: popupBgColor,
+                borderRadius: BorderRadius.all(
+                  Radius.circular(12.5.sp),
+                ),
+              ),
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                ClipRRect(
+                  borderRadius: BorderRadius.only(
+                    topLeft: Radius.circular(12.5.sp),
+                    topRight: Radius.circular(12.5.sp),
+                  ),
+                  child: CachedNetworkImage(
+                    imageUrl: controller.challengeDetails.value.challengeLanding!.imageUrl!,
+                    fit: BoxFit.fitWidth,
+                    placeholder: (context, url) => const Center(child: SizedBox.square(dimension: 40, child: CircularProgressIndicator())),
+                    errorWidget: (context, url, error) => const Center(child: SizedBox.square(dimension: 40, child: CircularProgressIndicator())),
+                    httpHeaders: imageNetworkHeader,
+                  ),
+                ),
+                  Row(
+                    children: [
+                      InkWell(
+
+                        onTap: () => Get.back(),
+                        child: Container(
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.only(
+                              bottomLeft: Radius.circular(12.5.sp),
+
+                            ),
+                            color: Color(0xFF2E3038),
+                          ),
+                          width: 140.sp,
+                          height: 60.sp,
+                          child: Center(child: StyledText('닫기',fontSize: 18, fontWeight: 500,),),
+                        ),
+                      ),
+                      Container(
+                        width: 1,
+                        color: skyBlueColor,
+                      ),
+                      Expanded(
+                        child: InkWell(
+                          onTap: () => controller.onClickChallengeLandingPage(),
+                          child: Container(
+                            decoration: BoxDecoration(
+                              borderRadius: BorderRadius.only(
+                                bottomRight: Radius.circular(12.5.sp),
+
+                              ),
+                              color: Color(0xFF2E3038),
+                            ),
+
+                              height: 60.sp,
+                              child: Center(child: StyledText(controller.challengeDetails.value.challengeLanding!.label!,fontSize: 18, fontWeight: 500,),),
+                          ),
+                        ),
+                      )
+                    ],
+                  )
+              ],),
+            ),
+          )
+        ),
+      ),
+    ),
   );
 }

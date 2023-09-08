@@ -100,6 +100,7 @@ enum HiveKey {
   hasSeenFairPlayAlert,
   inviteUserId,
   dynamicLinkRoute,
+  enteredRoute,
 }
 
 enum ResponseStatus {

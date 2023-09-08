@@ -12,12 +12,17 @@ import 'package:gaza_go/platform/models/inventory_item_model.dart';
 import 'package:gaza_go/platform/models/inventory_item_stat_model.dart';
 import 'package:gaza_go/platform/models/shop_item_model.dart';
 import 'package:gaza_go/platform/models/shop_item_purchase_response_model.dart';
+import 'package:gaza_go/platform/models/user_account_model.dart';
 import 'package:gaza_go/platform/services/activity_service.dart';
 import 'package:gaza_go/platform/services/item_service.dart';
 import 'package:gaza_go/platform/services/shop_service.dart';
+import 'package:gaza_go/platform/services/uaa_service.dart';
+import 'package:gaza_go/platform/stores/hive_store.dart';
 import 'package:gaza_go/presentations/components/alert_ui_list.dart';
 import 'package:get/get.dart';
 import 'package:url_launcher/url_launcher.dart';
+
+import '../../constants/enums.dart';
 
 class ShopDetailController extends GetxController {
   final WalletMasterController walletMasterController = Get.find();
@@ -205,8 +210,8 @@ class ShopDetailController extends GetxController {
     showItemTipAlert();
   }
 
-  void onClickPurchaseItem(tradeSymbol) {
-    purchaseItemCount.value = 1;
+
+  void handleCheckPurchaseAvailable(tradeSymbol){
     if ((tradeSymbol == 'STIK' ? double.parse(walletMasterController.stik.value.uiAmountString!) : double.parse(walletMasterController.tik.value.uiAmountString!)) <
         (selectedItem.value.itemCategory == 'DISPOSABLE' ? purchaseItemSumPrice.value : selectedItem.value.price)) {
       isShortBalance.value = true;
@@ -214,6 +219,30 @@ class ShopDetailController extends GetxController {
     } else {
       showItemPurchasePopup(tradeSymbol);
     }
+  }
+
+  Future<void> onClickPurchaseItem(tradeSymbol) async {
+    purchaseItemCount.value = 1;
+
+    if(selectedItem.value.challengeId != null){
+      await UaaService.getAccountInfo(
+        successCallback: (UserAccountModel user) {
+          if (user.authorities!.contains('ROLE_CERTIFIED_USER')) {
+            handleCheckPurchaseAvailable(tradeSymbol);
+          } else {
+            showChallengeItemBuyNeedVerificationAlert(this);
+          }
+        },
+      );
+    } else {
+      handleCheckPurchaseAvailable(tradeSymbol);
+    }
+  }
+
+  void moveToVerification() async {
+    HiveStore.save(key: HiveKey.enteredRoute.name, value: Get.currentRoute);
+    Get.back();
+    Get.toNamed(Routes.verificationTerms);
   }
 
   void showItemPurchasePopup(tradeSymbol) {

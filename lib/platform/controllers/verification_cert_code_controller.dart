@@ -56,11 +56,11 @@ class VerificationCertCodeController extends GetxController {
     await IdentityService.verifyIdentityCode({"requestId": _requestId.toInt(), "code": _certCode.toString()}, successCallback: () {
       HiveStore.save(key: HiveKey.certified.name, value: 'ROLE_CERTIFIED_USER');
       showToastPopup('본인인증이 완료되었습니다.');
-      Get.until((route) => Get.currentRoute == Routes.home);
+      afterVerificationComplete();
     }, errorCallback: (res) {
       if (res.data['errorCode'] == 'IDENTITY_ALREADY_VERIFIED') {
         showToastPopup(res.data['errorMessage']);
-        Get.until((route) => Get.currentRoute == Routes.home);
+        afterVerificationComplete();
       }
       if (res.data['errorCode'] == 'PENALTY_BLOCKED_USER') {
         showToastPopup(res.data['errorMessage']);
@@ -69,6 +69,16 @@ class VerificationCertCodeController extends GetxController {
         showInvalidCertCode(res.data['errorMessage']);
       }
     });
+    HiveStore.deleteKey(key: HiveKey.enteredRoute.name);
+  }
+
+  void afterVerificationComplete() {
+    String? enteredRoute = HiveStore.loadString(key: HiveKey.enteredRoute.name);
+    if (enteredRoute != null && (enteredRoute.contains('challenge_detail')|| enteredRoute.contains('shop/item/detail'))  ) {
+      Get.until((route) => Get.currentRoute == enteredRoute);
+    } else {
+      Get.until((route) => Get.currentRoute == Routes.home);
+    }
   }
 
   void resendIdentityCode() async {
