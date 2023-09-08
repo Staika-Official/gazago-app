@@ -298,7 +298,11 @@ class ChallengesHome extends StatelessWidget {
                                                     letterSpacing: -.1,
                                                   ),
                                             StyledText(
-                                              item.quantity >= 0 ? '${item.challengeState == 'READY' ? '' : ' /'} ${formatDecimalPlaces(item.quantity.toDouble(), 0)}명' : ' 참여중',
+                                              item.quantity >= 0
+                                                  ? '${item.challengeState == 'READY' ? '' : ' /'} ${formatDecimalPlaces(item.quantity.toDouble(), 0)}명'
+                                                  : item.challengeState == 'READY'
+                                                      ? ' 제한없음'
+                                                      : ' 참여중',
                                               color: lightGrayColor,
                                               fontWeight: 500,
                                               fontSize: 12,

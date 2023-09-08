@@ -273,7 +273,31 @@ class ChallengesDetailController extends GetxController with GetTickerProviderSt
       CrewModel crewModel = CrewModel.fromJson(jsonDecode(jsonEncode(crew)));
       crewList.add(crewModel);
     });
-    crewList.sort((a, b) => b.blockQuantity!.compareTo(a.blockQuantity!));
+    if ([
+      'REGISTER_AVAILABLE',
+      'REGISTER_READY',
+      'JOIN_AVAILABLE',
+    ].any((challengeUserState) => challengeUserState == challengeDetails.value.challengeUserState)) {
+      crewList.sort((a, b) {
+        bool isSameMemberCount = b.crewMemberList!.length.compareTo(a.crewMemberList!.length) == 0;
+        if (isSameMemberCount) {
+          return b.name!.toLowerCase().compareTo(a.name!.toLowerCase());
+        }
+        return b.crewMemberList!.length.compareTo(a.crewMemberList!.length);
+      });
+    } else {
+      crewList.sort((a, b) {
+        bool isSameBlockCount = b.blockQuantity!.compareTo(a.blockQuantity!) == 0;
+        if (isSameBlockCount) {
+          bool isSameMemberCount = b.crewMemberList!.length.compareTo(a.crewMemberList!.length) == 0;
+          if (isSameMemberCount) {
+            return b.name!.toLowerCase().compareTo(a.name!.toLowerCase());
+          }
+          return b.crewMemberList!.length.compareTo(a.crewMemberList!.length);
+        }
+        return b.blockQuantity!.compareTo(a.blockQuantity!);
+      });
+    }
   }
 
   void getSize() {
@@ -440,8 +464,6 @@ class ChallengesDetailController extends GetxController with GetTickerProviderSt
           'challengeId': '${challengeId.value}',
         });
         await ShareClient.instance.launchKakaoTalk(uri);
-        Future.delayed(const Duration(seconds: 2));
-        askSharedCompleteDialog(this);
       } catch (error) {
         showToastPopup('공유 실패');
       }

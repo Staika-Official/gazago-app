@@ -6,7 +6,6 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter_html/flutter_html.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:flutter_svg_provider/flutter_svg_provider.dart' as sp;
@@ -3126,7 +3125,7 @@ void showStoreNotAvailableAlert() {
 
 void showInAppPurchaseProgressAlert(WalletMasterController controller) {
   showAlert(
-      allowMultipleBottomSheet: true,
+    allowMultipleBottomSheet: true,
     contentWidget: Obx(() {
       return Container(
           child: controller.showPendingPurchaseUI.value
@@ -6306,12 +6305,12 @@ void shareCrewChallengeKakaoLinkDialog(ChallengesDetailController controller) {
             child: Column(
               mainAxisSize: MainAxisSize.min,
               children: [
-                 Expanded(
+                Expanded(
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
                       StyledText(
-                        controller.challengeDetails.value.challengeActivationType =='CREW' ? '카카오톡으로 친구에게 링크를\n공유하면 크루를 무료로\n개설할 수 있어요!' : '카카오톡으로 친구에게 링크를\n공유하면 챌린지에 무료로\n참여할 수 있어요!',
+                        controller.challengeDetails.value.challengeActivationType == 'CREW' ? '카카오톡으로 친구에게 링크를\n공유하면 크루를 무료로\n개설할 수 있어요!' : '카카오톡으로 친구에게 링크를\n공유하면 챌린지에 무료로\n참여할 수 있어요!',
                         textAlign: TextAlign.center,
                         fontWeight: 500,
                         fontSize: 20,
@@ -6348,6 +6347,8 @@ void shareCrewChallengeKakaoLinkDialog(ChallengesDetailController controller) {
                           onTap: () {
                             Get.back();
                             controller.shareCrewChallenge();
+                            Future.delayed(const Duration(seconds: 2));
+                            askSharedCompleteDialog(controller);
                           },
                         ),
                       ),
@@ -6395,8 +6396,8 @@ void askSharedCompleteDialog(ChallengesDetailController controller) {
                       ),
                       Padding(
                         padding: EdgeInsets.only(top: 12.0.sp),
-                        child:  StyledText(
-                          controller.challengeDetails.value.challengeActivationType =='CREW' ? '완료 버튼을 누르면 크루를\n무료로 개설할 수 있어요!' : '완료 버튼을 누르면\n챌린지에 무료로 참여할 수 있어요!',
+                        child: StyledText(
+                          controller.challengeDetails.value.challengeActivationType == 'CREW' ? '완료 버튼을 누르면 크루를\n무료로 개설할 수 있어요!' : '완료 버튼을 누르면\n챌린지에 무료로 참여할 수 있어요!',
                           textAlign: TextAlign.center,
                           fontWeight: 500,
                           fontSize: 16,
@@ -6498,6 +6499,8 @@ void unableShareMyselfDialog(ChallengesDetailController controller) {
                       onTap: () {
                         Get.back();
                         controller.shareCrewChallenge();
+                        Future.delayed(const Duration(seconds: 2));
+                        askSharedCompleteDialog(controller);
                       },
                     ),
                   ),
@@ -6572,6 +6575,8 @@ void unableSharedHistoryDialog(ChallengesDetailController controller) {
                       onTap: () {
                         Get.back();
                         controller.shareCrewChallenge();
+                        Future.delayed(const Duration(seconds: 2));
+                        askSharedCompleteDialog(controller);
                       },
                     ),
                   ),
@@ -6913,7 +6918,7 @@ void joinChallengePopup(ChallengesDetailController controller) async {
                           Expanded(
                             child: GazagoButton(
                               buttonText: '무료 참여',
-                              onTap: () =>  shareCrewChallengeKakaoLinkDialog(controller),
+                              onTap: () => shareCrewChallengeKakaoLinkDialog(controller),
                             ),
                           ),
                         ],
@@ -6948,18 +6953,18 @@ void showChallengeLandingPopup(ChallengesDetailController controller) {
         insetPadding: EdgeInsets.zero,
         backgroundColor: subBg01Color.withOpacity(0.8),
         child: Center(
-          child: Padding(
-            padding: EdgeInsets.all(35.0.sp),
-            child: Container(
-              decoration: BoxDecoration(
-                color: popupBgColor,
-                borderRadius: BorderRadius.all(
-                  Radius.circular(12.5.sp),
-                ),
+            child: Padding(
+          padding: EdgeInsets.all(35.0.sp),
+          child: Container(
+            decoration: BoxDecoration(
+              color: popupBgColor,
+              borderRadius: BorderRadius.all(
+                Radius.circular(12.5.sp),
               ),
-              child: Column(
-                mainAxisSize: MainAxisSize.min,
-                children: [
+            ),
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
                 ClipRRect(
                   borderRadius: BorderRadius.only(
                     topLeft: Radius.circular(12.5.sp),
@@ -6973,51 +6978,59 @@ void showChallengeLandingPopup(ChallengesDetailController controller) {
                     httpHeaders: imageNetworkHeader,
                   ),
                 ),
-                  Row(
-                    children: [
-                      InkWell(
-
-                        onTap: () => Get.back(),
+                Row(
+                  children: [
+                    InkWell(
+                      onTap: () => Get.back(),
+                      child: Container(
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.only(
+                            bottomLeft: Radius.circular(12.5.sp),
+                          ),
+                          color: Color(0xFF2E3038),
+                        ),
+                        width: 140.sp,
+                        height: 60.sp,
+                        child: Center(
+                          child: StyledText(
+                            '닫기',
+                            fontSize: 18,
+                            fontWeight: 500,
+                          ),
+                        ),
+                      ),
+                    ),
+                    Container(
+                      width: 1,
+                      color: skyBlueColor,
+                    ),
+                    Expanded(
+                      child: InkWell(
+                        onTap: () => controller.onClickChallengeLandingPage(),
                         child: Container(
                           decoration: BoxDecoration(
                             borderRadius: BorderRadius.only(
-                              bottomLeft: Radius.circular(12.5.sp),
-
+                              bottomRight: Radius.circular(12.5.sp),
                             ),
                             color: Color(0xFF2E3038),
                           ),
-                          width: 140.sp,
                           height: 60.sp,
-                          child: Center(child: StyledText('닫기',fontSize: 18, fontWeight: 500,),),
-                        ),
-                      ),
-                      Container(
-                        width: 1,
-                        color: skyBlueColor,
-                      ),
-                      Expanded(
-                        child: InkWell(
-                          onTap: () => controller.onClickChallengeLandingPage(),
-                          child: Container(
-                            decoration: BoxDecoration(
-                              borderRadius: BorderRadius.only(
-                                bottomRight: Radius.circular(12.5.sp),
-
-                              ),
-                              color: Color(0xFF2E3038),
+                          child: Center(
+                            child: StyledText(
+                              controller.challengeDetails.value.challengeLanding!.label!,
+                              fontSize: 18,
+                              fontWeight: 500,
                             ),
-
-                              height: 60.sp,
-                              child: Center(child: StyledText(controller.challengeDetails.value.challengeLanding!.label!,fontSize: 18, fontWeight: 500,),),
                           ),
                         ),
-                      )
-                    ],
-                  )
-              ],),
+                      ),
+                    )
+                  ],
+                )
+              ],
             ),
-          )
-        ),
+          ),
+        )),
       ),
     ),
   );

@@ -85,7 +85,7 @@ class ChallengeDetail extends StatelessWidget {
                                 ),
                                 Row(
                                   children: [
-                                    controller.challengeDetails.value.challengeType == 'ALLIANCE'
+                                    controller.challengeDetails.value.challengeType == 'CREW'
                                         ? Padding(
                                             padding: EdgeInsets.only(top: 10.0.sp),
                                             child: const Column(
@@ -399,11 +399,11 @@ class ChallengeDetail extends StatelessWidget {
                                                             maxLines: 2,
                                                             overflowEllipsis: true,
                                                           ),
-                                                          if (controller.challengeDetails.value.challengeType == 'CREW')
-                                                            Padding(
-                                                              padding: EdgeInsets.only(left: 5.0.sp),
-                                                              child: const BetaTag(),
-                                                            ),
+                                                          // if (controller.challengeDetails.value.challengeType == 'CREW')
+                                                          //   Padding(
+                                                          //     padding: EdgeInsets.only(left: 5.0.sp),
+                                                          //     child: const BetaTag(),
+                                                          //   ),
                                                         ],
                                                       ),
                                                     ),
@@ -418,7 +418,7 @@ class ChallengeDetail extends StatelessWidget {
                                                         letterSpacing: -.1,
                                                       ),
                                                     ),
-                                                  controller.challengeDetails.value.challengeType == 'ALLIANCE'
+                                                  controller.challengeDetails.value.challengeType == 'CREW'
                                                       ? Padding(
                                                           padding: EdgeInsets.only(top: 10.0.sp),
                                                           child: Column(
@@ -434,8 +434,8 @@ class ChallengeDetail extends StatelessWidget {
                                                                       lineHeight: 14,
                                                                     ),
                                                                   ),
-                                                                  const StyledText(
-                                                                    '14일간',
+                                                                  StyledText(
+                                                                    '${calculateDuration(controller.challengeDetails.value.reservedDate, controller.challengeDetails.value.fromDate)}일간',
                                                                     fontSize: 14,
                                                                     fontWeight: 500,
                                                                     lineHeight: 14,
@@ -444,7 +444,7 @@ class ChallengeDetail extends StatelessWidget {
                                                                   Padding(
                                                                     padding: EdgeInsets.only(left: 5.0.sp),
                                                                     child: StyledText(
-                                                                      '${formatDateMonthUntilTime(controller.challengeDetails.value.fromDate)} - ${formatDateMonthUntilTime(controller.challengeDetails.value.toDate)}',
+                                                                      '${formatDateMonthUntilTime(controller.challengeDetails.value.reservedDate)} - ${formatDateMonthUntilTime(controller.challengeDetails.value.fromDate)}',
                                                                       color: deepGrayColor,
                                                                       fontWeight: 500,
                                                                       fontSize: 14,
@@ -467,8 +467,8 @@ class ChallengeDetail extends StatelessWidget {
                                                                         lineHeight: 14,
                                                                       ),
                                                                     ),
-                                                                    const StyledText(
-                                                                      '14일간',
+                                                                    StyledText(
+                                                                      '${calculateDuration(controller.challengeDetails.value.fromDate, controller.challengeDetails.value.toDate)}일간',
                                                                       fontSize: 14,
                                                                       fontWeight: 500,
                                                                       lineHeight: 14,
@@ -604,8 +604,10 @@ class ChallengeDetail extends StatelessWidget {
                                                                               ),
                                                                         StyledText(
                                                                           controller.challengeDetails.value.quantity! >= 0
-                                                                              ? ' / ${formatDecimalPlaces(controller.challengeDetails.value.quantity!.toDouble(), 0)}명'
-                                                                              : ' 참여중',
+                                                                              ? '${controller.challengeDetails.value.challengeState! == 'READY' ? '' : ' /'}  ${formatDecimalPlaces(controller.challengeDetails.value.quantity!.toDouble(), 0)}명'
+                                                                              : controller.challengeDetails.value.challengeState! == 'READY'
+                                                                                  ? ' 제한없음'
+                                                                                  : ' 참여중',
                                                                           color: lightGrayColor,
                                                                           fontWeight: 500,
                                                                           fontSize: 12,

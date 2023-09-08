@@ -79,6 +79,14 @@ String formatDateMonthUntilTime(String? isoDateString) {
   }
 }
 
+String calculateDuration(String? fromDateString, String? toDateString) {
+  if (fromDateString == null || toDateString == null) return '0';
+  DateTime fromDate = DateTime.parse(fromDateString);
+  DateTime toDate = DateTime.parse(toDateString);
+
+  return toDate.difference(fromDate).inDays.toString();
+}
+
 String coordinatesToString(List<LatLng> coordinates) {
   List<List<double>> coordinateStringList = List.empty(growable: true);
   for (LatLng coordinate in coordinates) {
