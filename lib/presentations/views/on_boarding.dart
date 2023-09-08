@@ -9,7 +9,7 @@ import '../../platform/controllers/onboarding_controller.dart';
 class OnBoarding extends StatelessWidget {
   const OnBoarding({Key? key}) : super(key: key);
 
-  List<Widget> _getImageSliders(controller) {
+  List<Widget> _getImageSliders(OnBoardingController controller) {
     return controller.imgList
         .map((item) => Container(
               width: double.infinity,

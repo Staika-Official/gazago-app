@@ -10,6 +10,8 @@ import 'package:gaza_go/constants/enums.dart';
 import 'package:gaza_go/constants/routes.dart';
 import 'package:gaza_go/flavors.dart';
 import 'package:gaza_go/platform/controllers/challenges_controller.dart';
+import 'package:gaza_go/platform/controllers/home_menu_controller.dart';
+import 'package:gaza_go/platform/controllers/leaderboard_controller.dart';
 import 'package:gaza_go/platform/controllers/loader_controller.dart';
 import 'package:gaza_go/platform/controllers/wallet_master_controller.dart';
 import 'package:gaza_go/platform/helpers/alert_helper.dart';
@@ -23,11 +25,14 @@ import 'package:gaza_go/platform/models/crew_model.dart';
 import 'package:gaza_go/platform/models/error_response_data_model.dart';
 import 'package:gaza_go/platform/models/inventory_item_model.dart';
 import 'package:gaza_go/platform/models/new_challenge_detail_model.dart';
+import 'package:gaza_go/platform/models/user_account_model.dart';
 import 'package:gaza_go/platform/services/activity_service.dart';
 import 'package:gaza_go/platform/services/crew_service.dart';
 import 'package:gaza_go/platform/services/item_service.dart';
+import 'package:gaza_go/platform/services/uaa_service.dart';
 import 'package:gaza_go/platform/stores/hive_store.dart';
 import 'package:gaza_go/presentations/components/alert_ui_list.dart';
+import 'package:gaza_go/presentations/components/product_list_dialog.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
 import 'package:kakao_flutter_sdk_share/kakao_flutter_sdk_share.dart';
@@ -35,6 +40,7 @@ import 'package:url_launcher/url_launcher.dart';
 
 class ChallengesDetailController extends GetxController with GetTickerProviderStateMixin, ChallengeMixin {
   ChallengesController challengesController = Get.isRegistered<ChallengesController>() ? Get.find<ChallengesController>() : Get.put(ChallengesController());
+  WalletMasterController walletMasterController = Get.isRegistered<WalletMasterController>() ? Get.find<WalletMasterController>() : Get.put(WalletMasterController());
   LoaderController loaderController = Get.put(LoaderController());
   Rx<DateTime?> today = Rx(DateTime.now());
   RxString fromDate = RxString('');
@@ -62,6 +68,9 @@ class ChallengesDetailController extends GetxController with GetTickerProviderSt
   final FocusNode focusNode = FocusNode();
   final RxString errorMessage = RxString('');
   final RxBool hideCourses = RxBool(false);
+
+  final RxBool isShortTokenBalance = RxBool(false);
+
   int page = 0;
   int size = 100;
   bool hasMore = true;
@@ -273,11 +282,17 @@ class ChallengesDetailController extends GetxController with GetTickerProviderSt
     }
   }
 
-  void moveToExternalBrowser(linkUrl) async {
+  void moveToExternalBrowser(linkUrl, String? title) async {
     Uri url = Uri.parse(linkUrl!);
     if (await canLaunchUrl(url)) {
       await ActivityService.fetchChallengeAllianceLinkRecord(challengeId.value, linkUrl);
-      await launchUrl(url, mode: LaunchMode.externalApplication);
+
+      Get.toNamed(Routes.inAppHeaderWebView, arguments: {'linkUrl': linkUrl, 'title': title});
+      // await launchUrl(
+      //   url,
+      //   mode: LaunchMode.inAppWebView,
+      //   webViewConfiguration: const WebViewConfiguration(enableJavaScript: false),
+      // );
     }
   }
 
@@ -454,7 +469,12 @@ class ChallengesDetailController extends GetxController with GetTickerProviderSt
         if (data['chat_TYPE'] == 'MemoChat') {
           unableShareMyselfDialog(this);
         } else {
-          requestCreateCrew('INVITE');
+          if (challengeDetails.value.challengeActivationType == 'CREW') {
+            requestCreateCrew('INVITE');
+          } else {
+            // 납부형 챌린지 참여하기
+            onFetchJoinPaychallenge();
+          }
         }
       } else {
         unableSharedHistoryDialog(this);
@@ -464,14 +484,22 @@ class ChallengesDetailController extends GetxController with GetTickerProviderSt
     });
   }
 
-  void handleCrewJoin(CrewModel crew) {
-    if (crew.crewRecruitStatus == "OPEN" && crew.crewRelayStatus == "ONGOING") {
-      crewJoinInfoAlert(crew);
-    } else if (crew.crewRelayStatus != "ONGOING") {
-      showToastPopup('비활성화된 크루입니다.');
-    } else {
-      showToastPopup('모집이 제한된 크루입니다.');
-    }
+  Future<void> handleCrewJoin(CrewModel crew) async {
+    await UaaService.getAccountInfo(
+      successCallback: (UserAccountModel user) {
+        if (user.authorities!.contains('ROLE_CERTIFIED_USER')) {
+          if (crew.crewRecruitStatus == "OPEN" && crew.crewRelayStatus == "ONGOING") {
+            crewJoinInfoAlert(crew);
+          } else if (crew.crewRelayStatus != "ONGOING") {
+            showToastPopup('비활성화된 크루입니다.');
+          } else {
+            showToastPopup('모집이 제한된 크루입니다.');
+          }
+        } else {
+          showChallengeNeedVerificationAlert(this);
+        }
+      },
+    );
   }
 
   void requestJoinCrew(CrewModel crew) {
@@ -511,6 +539,117 @@ class ChallengesDetailController extends GetxController with GetTickerProviderSt
         page = page + 1;
         getChallengeLeaderboard();
       }
+    }
+  }
+
+  void onCheckCertifiedUser(Function callback) async {
+    await UaaService.getAccountInfo(
+      successCallback: (UserAccountModel user) {
+        if (user.authorities!.contains('ROLE_CERTIFIED_USER')) {
+          callback();
+        } else {
+          showChallengeNeedVerificationAlert(this);
+        }
+      },
+    );
+  }
+
+  Future<void> onFetchJoinPaychallenge() async {
+    Get.back();
+    await ActivityService.fetchParticipateInPayChallenge(challengeId.value, challengeDetails.value.entryFee!, successCallback: (bool) {
+      getChallengeDetail();
+      showToastPopup('챌린지 참가가 완료되었습니다.');
+      // 광고가 있다면 띄워주기
+      if (challengeDetails.value.challengeLanding != null) {
+        showChallengeLandingPopup(this);
+      }
+    }, errorCallback: (ErrorResponseDataModel error) {
+      showToastPopup(error.errorMessage!);
+    });
+  }
+
+  void onJoinPayChallenge() {
+    if (double.parse(walletMasterController.tik.value.uiAmountString!) < challengeDetails.value.entryFee!) {
+      isShortTokenBalance.value = true;
+    } else {
+      isShortTokenBalance.value = false;
+    }
+    joinChallengePopup(this);
+  }
+
+  void moveToVerification() async {
+    HiveStore.save(key: HiveKey.enteredRoute.name, value: Get.currentRoute);
+    Get.back();
+    Get.toNamed(Routes.verificationTerms);
+  }
+
+  void moveToChargeTik() {
+    HiveStore.save(key: HiveKey.enteredRoute.name, value: Get.currentRoute);
+    showProductList(walletMasterController);
+  }
+
+  void onClickChallengeLandingPage() async {
+    switch (challengeDetails.value.challengeLanding!.openType) {
+      case 'IN_APP':
+        if (!Get.currentRoute.contains('home')) {
+          Get.until((route) => Get.currentRoute == Routes.home);
+        }
+        switch (challengeDetails.value.challengeLanding!.linkUrl) {
+          case 'CHALLENGES':
+            Get.find<HomeMenuController>().selectMenu(0);
+            break;
+          // case 'COURSE_CHALLENGES':
+          //   Get.find<HomeMenuController>().selectMenu(2);
+          //   checkBlockUser(item);
+          //   break;
+          case 'ARCHIVE':
+            Get.find<HomeMenuController>().selectMenu(4);
+            if (Get.isRegistered<LeaderboardController>()) {
+              Get.find<LeaderboardController>().tabController.animateTo(1);
+            } else {
+              LeaderboardController leaderboardController = Get.put(LeaderboardController());
+              leaderboardController.tabController.animateTo(1);
+            }
+
+            break;
+          case 'ITEM':
+            Get.find<HomeMenuController>().selectMenu(1);
+            break;
+          case 'SHOP':
+            Get.find<HomeMenuController>().selectMenu(3);
+            break;
+          case 'RANKING':
+            Get.find<HomeMenuController>().selectMenu(4);
+            if (Get.isRegistered<LeaderboardController>()) {
+              Get.find<LeaderboardController>().tabController.animateTo(0);
+            } else {
+              LeaderboardController leaderboardController = Get.put(LeaderboardController());
+              leaderboardController.tabController.animateTo(0);
+            }
+            break;
+
+          case 'WALLET':
+            Get.toNamed(Routes.wallet);
+            break;
+          case 'NOTICE':
+            // Get.toNamed(Routes.noticeList);
+            Get.toNamed(Routes.webView, arguments: {'linkUrl': 'https://eztechfin.notion.site/c5103042de5d4e3a9a61c1101508ffed'});
+            break;
+          case 'FAQ':
+            // Get.toNamed(Routes.preferenceBoard);
+            Get.toNamed(Routes.webView, arguments: {'linkUrl': 'https://eztechfin.notion.site/FAQ-2f6b0ec4d6134fd398cd7a832bfa6cd3'});
+            break;
+        }
+        break;
+      case 'INTERNAL_WEB_VIEW':
+        Get.toNamed(Routes.inAppHeaderWebView, arguments: {'title': challengeDetails.value.challengeLanding!.title, 'linkUrl': challengeDetails.value.challengeLanding!.linkUrl!});
+        break;
+      case 'EXTERNAL_BROWSER':
+        Uri url = Uri.parse(challengeDetails.value.challengeLanding!.linkUrl!);
+        if (await canLaunchUrl(url)) {
+          await launchUrl(url, mode: LaunchMode.externalApplication);
+        }
+        break;
     }
   }
 }

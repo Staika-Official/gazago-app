@@ -690,7 +690,7 @@ class ChallengeDetail extends StatelessWidget {
                           if (controller.isAbleToCreateCrew.value) ...[
                             Expanded(
                               child: GazagoButton(
-                                onTap: () => controller.showCreateCrewForm(),
+                                onTap: () => controller.onCheckCertifiedUser(controller.showCreateCrewForm),
                                 buttonText: '크루 개설',
                                 buttonColor: popupBgColor,
                                 borderColor: skyBlueColor,
