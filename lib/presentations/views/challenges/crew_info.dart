@@ -1,5 +1,8 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:flutter_svg_provider/flutter_svg_provider.dart' as sp;
+import 'package:gaza_go/constants/config.dart';
 import 'package:gaza_go/platform/controllers/challenges_detail_controller.dart';
 import 'package:gaza_go/platform/controllers/crew_detail_controller.dart';
 import 'package:gaza_go/presentations/styles/colors.dart';
@@ -122,9 +125,12 @@ class CrewInfo extends StatelessWidget {
                               'assets/images/ic_launcher.png',
                               width: 30.sp,
                             ).image
-                          : NetworkImage(
-                              controller.selectedCrew.value!.iconImageUrl!,
-                            ),
+                          : controller.selectedCrew.value!.iconImageUrl!.contains('.svg')
+                              ? sp.Svg(controller.selectedCrew.value!.iconImageUrl!, source: sp.SvgSource.network) as ImageProvider
+                              : CachedNetworkImageProvider(
+                                  controller.selectedCrew.value!.iconImageUrl!,
+                                  headers: imageNetworkHeader,
+                                ),
                     ),
                   ),
                   StyledText(
@@ -158,7 +164,7 @@ class CrewInfo extends StatelessWidget {
                               mainAxisSize: MainAxisSize.min,
                               children: [
                                 const StyledText(
-                                  '데일리 크루블록',
+                                  '데일리 크루블럭',
                                   fontSize: 14,
                                   fontWeight: 500,
                                   lineHeight: 14,

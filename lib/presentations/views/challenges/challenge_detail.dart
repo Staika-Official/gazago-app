@@ -5,7 +5,6 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:gaza_go/constants/config.dart';
 import 'package:gaza_go/platform/controllers/challenges_detail_controller.dart';
 import 'package:gaza_go/platform/helpers/base_helper.dart';
-import 'package:gaza_go/presentations/components/beta_tag.dart';
 import 'package:gaza_go/presentations/components/gazago_button.dart';
 import 'package:gaza_go/presentations/components/mini_bottom_sheet.dart';
 import 'package:gaza_go/presentations/components/secondary_appbar.dart';
@@ -692,7 +691,7 @@ class ChallengeDetail extends StatelessWidget {
                           if (controller.isAbleToCreateCrew.value) ...[
                             Expanded(
                               child: GazagoButton(
-                                onTap: () => controller.onCheckCertifiedUser(controller.showCreateCrewForm),
+                                onTap: () => controller.showCreateCrewForm(),
                                 buttonText: '크루 개설',
                                 buttonColor: popupBgColor,
                                 borderColor: skyBlueColor,

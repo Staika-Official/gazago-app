@@ -257,49 +257,50 @@ class ChallengeInfo extends StatelessWidget {
                           ),
                         ],
                       ),
-                    Padding(
-                      padding: EdgeInsets.only(top: 45.0.sp),
-                      child: Row(
-                        mainAxisSize: MainAxisSize.max,
-                        crossAxisAlignment: CrossAxisAlignment.center,
-                        children: [
-                          Row(
-                            children: [
-                              const StyledText(
-                                '챌린지 참가 조건',
-                                fontWeight: 500,
-                                fontSize: 18,
-                                lineHeight: 20,
-                                letterSpacing: -.1,
-                              ),
-                              controller.challengeDetails.value.challengeActivationType == 'CODE'
-                                  ? Padding(
-                                      padding: EdgeInsets.only(left: 5.0.sp),
-                                      child: StyledText(
-                                        '참여코드 입력',
-                                        color: deepGrayColor,
-                                        fontSize: 14,
-                                        fontWeight: 500,
-                                        lineHeight: 14,
-                                        letterSpacing: -.1,
-                                      ),
-                                    )
-                                  : Padding(
-                                      padding: EdgeInsets.only(left: 3.0.sp),
-                                      child: StyledText(
-                                        controller.challengeDetails.value.challengeActivationType == 'ITEM' ? '아이템 장착' : '참가비 납부',
-                                        color: deepGrayColor,
-                                        fontSize: 14,
-                                        fontWeight: 500,
-                                        lineHeight: 14,
-                                        letterSpacing: -.1,
-                                      ),
-                                    )
-                            ],
-                          ),
-                        ],
+                    if (controller.challengeDetails.value.challengeActivationType != 'CREW')
+                      Padding(
+                        padding: EdgeInsets.only(top: 45.0.sp),
+                        child: Row(
+                          mainAxisSize: MainAxisSize.max,
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          children: [
+                            Row(
+                              children: [
+                                const StyledText(
+                                  '챌린지 참가 조건',
+                                  fontWeight: 500,
+                                  fontSize: 18,
+                                  lineHeight: 20,
+                                  letterSpacing: -.1,
+                                ),
+                                controller.challengeDetails.value.challengeActivationType == 'CODE'
+                                    ? Padding(
+                                        padding: EdgeInsets.only(left: 5.0.sp),
+                                        child: StyledText(
+                                          '참여코드 입력',
+                                          color: deepGrayColor,
+                                          fontSize: 14,
+                                          fontWeight: 500,
+                                          lineHeight: 14,
+                                          letterSpacing: -.1,
+                                        ),
+                                      )
+                                    : Padding(
+                                        padding: EdgeInsets.only(left: 3.0.sp),
+                                        child: StyledText(
+                                          controller.challengeDetails.value.challengeActivationType == 'ITEM' ? '아이템 장착' : '참가비 납부',
+                                          color: deepGrayColor,
+                                          fontSize: 14,
+                                          fontWeight: 500,
+                                          lineHeight: 14,
+                                          letterSpacing: -.1,
+                                        ),
+                                      )
+                              ],
+                            ),
+                          ],
+                        ),
                       ),
-                    ),
                     if (controller.challengeDetails.value.item != null)
                       Padding(
                         padding: EdgeInsets.only(top: 16.0.sp),
@@ -579,6 +580,11 @@ class ChallengeInfo extends StatelessWidget {
                             "*": Style(
                               lineHeight: LineHeight.percent(130),
                             ),
+                            'img': Style(
+                                margin: Margins(
+                              left: Margin(-20.sp),
+                              right: Margin(-20.sp),
+                            )),
                             "p": Style(
                               margin: Margins.zero,
                               color: Colors.white,

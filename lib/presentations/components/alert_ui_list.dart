@@ -5709,13 +5709,27 @@ void shortTikCreateCrewAlert() async {
   );
 }
 
-void showCrewRelayEndedAlert() async {
+void showCrewRelayEndedAlert(CrewDetailController controller) async {
   await showAlert(
     contentWidget: Padding(
       padding: EdgeInsets.only(top: 22.sp, bottom: 49.sp),
       child: Column(
         children: [
-          CircleAvatar(backgroundColor: Colors.black, radius: 25.sp),
+          CircleAvatar(
+            backgroundColor: Colors.black,
+            radius: 25.sp,
+            foregroundImage: (controller.selectedCrew.value!.iconImageUrl == null || controller.selectedCrew.value!.iconImageUrl == '')
+                ? Image.asset(
+                    'assets/images/ic_launcher.png',
+                    width: 50.sp,
+                  ).image
+                : controller.selectedCrew.value!.iconImageUrl!.contains('.svg')
+                    ? sp.Svg(controller.selectedCrew.value!.iconImageUrl!, source: sp.SvgSource.network) as ImageProvider
+                    : CachedNetworkImageProvider(
+                        controller.selectedCrew.value!.iconImageUrl!,
+                        headers: imageNetworkHeader,
+                      ),
+          ),
           Padding(
             padding: EdgeInsets.only(top: 20.0.sp),
             child: const StyledText(
@@ -6123,7 +6137,7 @@ void crewCreatePopup(ChallengesDetailController controller) async {
                           const TextSpan(
                             text: '챌린지 기간동안 함께할 크루를 만들어주세요!\n크루를 개설할 시 ',
                             children: [
-                              TextSpan(text: '3블록', style: TextStyle(color: skyBlueColor)),
+                              TextSpan(text: '3블럭', style: TextStyle(color: skyBlueColor)),
                               TextSpan(text: '을 제공해드립니다!'),
                             ],
                           ),
@@ -6344,10 +6358,10 @@ void shareCrewChallengeKakaoLinkDialog(ChallengesDetailController controller) {
                       Expanded(
                         child: GazagoButton(
                           buttonText: '공유하기',
-                          onTap: () {
+                          onTap: () async {
                             Get.back();
                             controller.shareCrewChallenge();
-                            Future.delayed(const Duration(seconds: 2));
+                            await Future.delayed(const Duration(seconds: 2));
                             askSharedCompleteDialog(controller);
                           },
                         ),
@@ -6496,10 +6510,10 @@ void unableShareMyselfDialog(ChallengesDetailController controller) {
                   Expanded(
                     child: GazagoButton(
                       buttonText: '다시 공유',
-                      onTap: () {
+                      onTap: () async {
                         Get.back();
                         controller.shareCrewChallenge();
-                        Future.delayed(const Duration(seconds: 2));
+                        await Future.delayed(const Duration(seconds: 2));
                         askSharedCompleteDialog(controller);
                       },
                     ),
@@ -6572,10 +6586,10 @@ void unableSharedHistoryDialog(ChallengesDetailController controller) {
                   Expanded(
                     child: GazagoButton(
                       buttonText: '다시 공유',
-                      onTap: () {
+                      onTap: () async {
                         Get.back();
                         controller.shareCrewChallenge();
-                        Future.delayed(const Duration(seconds: 2));
+                        await Future.delayed(const Duration(seconds: 2));
                         askSharedCompleteDialog(controller);
                       },
                     ),

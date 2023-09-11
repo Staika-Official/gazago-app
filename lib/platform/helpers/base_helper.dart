@@ -83,6 +83,10 @@ String calculateDuration(String? fromDateString, String? toDateString) {
   if (fromDateString == null || toDateString == null) return '0';
   DateTime fromDate = DateTime.parse(fromDateString);
   DateTime toDate = DateTime.parse(toDateString);
+  bool hasMoreHours = fromDate.difference(toDate).inHours % 24 != 0;
+  if (hasMoreHours) {
+    return (toDate.difference(fromDate).inDays + 1).toString();
+  }
 
   return toDate.difference(fromDate).inDays.toString();
 }

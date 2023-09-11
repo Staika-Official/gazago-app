@@ -67,7 +67,7 @@ class CrewDetailController extends GetxController with GetTickerProviderStateMix
   void showRelayEndedAlert() {
     Future.delayed(const Duration(seconds: 1));
     if (selectedCrew.value!.crewRelayStatus! == "ENDED") {
-      showCrewRelayEndedAlert();
+      showCrewRelayEndedAlert(this);
     }
   }
 
