@@ -140,6 +140,9 @@ class ChallengesDetailController extends GetxController with GetTickerProviderSt
     await getChallengeDetail();
     if (challengeDetails.value.challengeType == 'CREW') {
       getCrewList();
+      if (challengeDetails.value.challengeState == 'CLOSED') {
+        crewChallengeCloseAlert(this);
+      }
     } else {
       getChallengeLeaderboard();
       getChallengeLeaderboardMyRanking();

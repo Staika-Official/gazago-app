@@ -5974,13 +5974,27 @@ void crewRecruitToggleLimitErrorAlert(String errorMessage) async {
   );
 }
 
-void crewChallengeCloseAlert() async {
+void crewChallengeCloseAlert(ChallengesDetailController controller) async {
   await showAlert(
     contentWidget: Padding(
       padding: EdgeInsets.only(top: 22.sp, bottom: 49.sp),
       child: Column(
         children: [
-          CircleAvatar(backgroundColor: Colors.black, radius: 25.sp),
+          CircleAvatar(
+            backgroundColor: Colors.black,
+            radius: 25.sp,
+            foregroundImage: (controller.myCrew.value!['crew'].iconImageUrl == null || controller.myCrew.value!['crew'].iconImageUrl == '')
+                ? Image.asset(
+                    'assets/images/ic_launcher.png',
+                    width: 50.sp,
+                  ).image
+                : controller.myCrew.value!['crew'].iconImageUrl!.contains('.svg')
+                    ? sp.Svg(controller.myCrew.value!['crew'].iconImageUrl!, source: sp.SvgSource.network) as ImageProvider
+                    : CachedNetworkImageProvider(
+                        controller.myCrew.value!['crew'].iconImageUrl!,
+                        headers: imageNetworkHeader,
+                      ),
+          ),
           Padding(
             padding: EdgeInsets.only(top: 20.0.sp),
             child: const StyledText(
