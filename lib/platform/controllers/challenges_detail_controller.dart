@@ -358,16 +358,20 @@ class ChallengesDetailController extends GetxController with GetTickerProviderSt
   }
 
   Future<void> showCreateCrewForm() async {
-    await CrewService.getCrewMarkIcons(successCallback: (List<CrewIconModel> icons) {
-      crewMarkIcons.clear();
-      selectedMarkIconId.value = icons.first.id;
-      crewMarkIcons.addAll(icons);
-    }, errorCallback: () {
-      showToastPopup('크루 마크를 불러오지 못했습니다.');
-    });
-    crewName.value = '';
-    crewNameController.text = '';
-    crewCreatePopup(this);
+    if (await isVerifiedUser()) {
+      await CrewService.getCrewMarkIcons(successCallback: (List<CrewIconModel> icons) {
+        crewMarkIcons.clear();
+        selectedMarkIconId.value = icons.first.id;
+        crewMarkIcons.addAll(icons);
+      }, errorCallback: () {
+        showToastPopup('크루 마크를 불러오지 못했습니다.');
+      });
+      crewName.value = '';
+      crewNameController.text = '';
+      crewCreatePopup(this);
+    } else {
+      showChallengeNeedVerificationAlert(this);
+    }
   }
 
   void handleCreateCrewType(String createCrewType) async {
@@ -510,26 +514,15 @@ class ChallengesDetailController extends GetxController with GetTickerProviderSt
   }
 
   Future<void> handleCrewJoin(CrewModel crew) async {
-    if (crew.crewRecruitStatus == "OPEN" && crew.crewRelayStatus == "ONGOING") {
-      crewJoinInfoAlert(crew);
+    if (await isVerifiedUser()) {
+      if (crew.crewRecruitStatus == "OPEN" && crew.crewRelayStatus == "ONGOING") {
+        crewJoinInfoAlert(crew);
+      } else {
+        showToastPopup('모집이 제한된 크루입니다.');
+      }
     } else {
-      showToastPopup('모집이 제한된 크루입니다.');
+      showChallengeNeedVerificationAlert(this);
     }
-    // await UaaService.getAccountInfo(
-    //   successCallback: (UserAccountModel user) {
-    //     if (user.authorities!.contains('ROLE_CERTIFIED_USER')) {
-    //       if (crew.crewRecruitStatus == "OPEN" && crew.crewRelayStatus == "ONGOING") {
-    //         crewJoinInfoAlert(crew);
-    //       } else if (crew.crewRelayStatus != "ONGOING") {
-    //         showToastPopup('비활성화된 크루입니다.');
-    //       } else {
-    //         showToastPopup('모집이 제한된 크루입니다.');
-    //       }
-    //     } else {
-    //       showChallengeNeedVerificationAlert(this);
-    //     }
-    //   },
-    // );
   }
 
   void requestJoinCrew(CrewModel crew) {
@@ -682,4 +675,18 @@ class ChallengesDetailController extends GetxController with GetTickerProviderSt
         break;
     }
   }
+}
+
+//TODO 납부형 챌린지 머지 후 삭제 필요
+Future<bool> isVerifiedUser() async {
+  bool isVerified = false;
+  await UaaService.getAccountInfo(
+    successCallback: (UserAccountModel user) {
+      if (user.authorities!.contains('ROLE_CERTIFIED_USER')) {
+        isVerified = true;
+      }
+    },
+  );
+
+  return isVerified;
 }

@@ -6668,12 +6668,12 @@ void showConfirmNicknameChange(MyPageController controller) {
 
 void showChallengeNeedVerificationAlert(ChallengesDetailController controller) {
   Get.dialog(
-    barrierColor: Colors.transparent,
+    barrierColor: subBg01Color.withOpacity(0.8),
     WillPopScope(
       onWillPop: () async => false,
       child: Dialog(
         insetPadding: EdgeInsets.zero,
-        backgroundColor: subBg01Color.withOpacity(0.8),
+        backgroundColor: Colors.transparent,
         child: Center(
           child: Padding(
             padding: EdgeInsets.symmetric(horizontal: 20.0.sp),
