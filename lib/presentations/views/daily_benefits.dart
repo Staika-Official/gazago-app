@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:gaza_go/constants/config.dart';
+import 'package:gaza_go/constants/enums.dart';
 import 'package:gaza_go/platform/controllers/daily_benefit_controller.dart';
 import 'package:gaza_go/platform/helpers/alert_helper.dart';
 import 'package:gaza_go/platform/helpers/base_helper.dart';
@@ -130,7 +131,7 @@ class DailyBenefits extends StatelessWidget {
                       children: [
                         StyledText(
                           controller.dailyBenefitList.value!.userExercise.distance! >= 1000
-                              ? formatDecimalPlaces(double.parse(formatMeterToKilometer(controller.dailyBenefitList.value!.userExercise.distance!.toInt())), 1)
+                              ? formatDecimalPlaces(double.parse(formatMeterToKilometer(controller.dailyBenefitList.value!.userExercise.distance!.toInt())), 1, roundType: RoundType.floor)
                               : formatDecimalPlaces(controller.dailyBenefitList.value!.userExercise.distance!, 0),
                           fontFamily: 'Montserrat',
                           fontSize: 50,
