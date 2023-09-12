@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'dart:io';
 
+import 'package:firebase_dynamic_links/firebase_dynamic_links.dart';
 import 'package:flutter/material.dart';
 import 'package:gaza_go/constants/enums.dart';
 import 'package:gaza_go/constants/routes.dart';
@@ -9,10 +10,13 @@ import 'package:gaza_go/platform/controllers/login_controller.dart';
 import 'package:gaza_go/platform/helpers/alert_helper.dart';
 import 'package:gaza_go/platform/helpers/login_helper.dart';
 import 'package:gaza_go/platform/models/access_token_model.dart';
+import 'package:gaza_go/platform/models/new_challenge_model.dart';
+import 'package:gaza_go/platform/services/activity_service.dart';
 import 'package:gaza_go/platform/services/uaa_service.dart';
 import 'package:gaza_go/platform/stores/hive_store.dart';
 import 'package:gaza_go/presentations/components/alert_ui_list.dart';
 import 'package:get/get.dart';
+import 'package:kakao_flutter_sdk_share/kakao_flutter_sdk_share.dart';
 import 'package:path_provider/path_provider.dart';
 
 class DebuggingController extends GetxController {
@@ -23,12 +27,23 @@ class DebuggingController extends GetxController {
   final TextEditingController endPointPasswordController = TextEditingController();
   final Rx<EndPointType> endPointType = Rx(EndPointType.stage);
   final RxBool allowFakeGps = RxBool(false);
+  final RxList<NewChallengeModel> challengesList = RxList.empty();
+  final Rxn<NewChallengeModel> selectedChallenge = Rxn();
+  RxString get shareUrl {
+    String userId = HiveStore.loadString(key: HiveKey.userId.name)!;
+    if (selectedChallenge.value == null) {
+      return RxString('공유할 챌린지를 선택해주세요');
+    } else {
+      return RxString(Uri.parse("https://gazago.io?route=${Routes.challengeDetail.replaceAll(':id', selectedChallenge.value!.id.toString())}&inviteId=$userId").toString());
+    }
+  }
 
   @override
   void onInit() async {
     isShowDebuggingMenu.value = HiveStore.load(key: HiveKey.isDebuggingMode.name);
     endPointType.value = F.baseUrl.contains('api.stage') ? EndPointType.stage : EndPointType.prod;
     allowFakeGps.value = HiveStore.load(key: HiveKey.allowFakeGpsTest.name) ?? false;
+    getChallengeList();
     super.onInit();
   }
 
@@ -127,5 +142,59 @@ class DebuggingController extends GetxController {
   void setGpsPermission(bool val) {
     allowFakeGps.value = val;
     HiveStore.save(key: HiveKey.allowFakeGpsTest.name, value: val);
+  }
+
+  Future<void> getChallengeList() async {
+    await ActivityService.getNewChallenges(successCallback: (List<NewChallengeModel> data) {
+      challengesList.addAll(data);
+    });
+  }
+
+  void selectChallenge(NewChallengeModel challenge) {
+    selectedChallenge.value = challenge;
+  }
+
+  Future<void> shareChallenge() async {
+    bool isKakaoTalkSharingAvailable = await ShareClient.instance.isKakaoTalkSharingAvailable();
+    String userId = HiveStore.loadString(key: HiveKey.userId.name)!;
+
+    final dynamicLinkParams = DynamicLinkParameters(
+      link: Uri.parse("https://gazago.io?route=${Routes.challengeDetail.replaceAll(':id', selectedChallenge.value!.id.toString())}&inviteId=$userId"),
+      uriPrefix: F.isDev ? "https://gazagostage.page.link" : "https://gazago.page.link",
+      androidParameters: AndroidParameters(packageName: F.isDev ? "kr.co.eztechfin.gazaGo.dev" : "kr.co.eztechfin.gazaGo"),
+      iosParameters: IOSParameters(bundleId: F.isDev ? "kr.co.eztechfin.gazaGo.dev" : "kr.co.eztechfin.gazaGo"),
+    );
+
+    final dynamicLink = await FirebaseDynamicLinks.instance.buildShortLink(dynamicLinkParams);
+
+    final TextTemplate defaultText = TextTemplate(
+      text: '함께 가자고!!!',
+      link: Link(
+        webUrl: dynamicLink.shortUrl,
+        mobileWebUrl: dynamicLink.shortUrl,
+      ),
+    );
+
+    if (isKakaoTalkSharingAvailable) {
+      try {
+        Uri uri = await ShareClient.instance.shareDefault(template: defaultText, serverCallbackArgs: {
+          'userId': '${HiveStore.loadString(key: HiveKey.userId.name)}',
+          'challengeId': '${selectedChallenge.value!.id}',
+        });
+        await ShareClient.instance.launchKakaoTalk(uri);
+      } catch (error) {
+        showToastPopup('공유 실패');
+      }
+    } else {
+      // try {
+      //   Uri shareUrl = await WebSharerClient.instance.makeDefaultUrl(template: defaultText);
+      //   await launchBrowserTab(shareUrl, popupOpen: true);
+      //   Future.delayed(const Duration(seconds: 2));
+      //   askSharedCompleteDialog(this);
+      // } catch (error) {
+      //   showToastPopup('공유 실패');
+      // }
+      showToastPopup('카카오톡을 설치해주세요');
+    }
   }
 }

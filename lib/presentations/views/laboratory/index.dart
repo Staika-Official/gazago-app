@@ -81,6 +81,11 @@ class Laboratory extends StatelessWidget {
                       buttonText: 'FAKE GPS 사용하기',
                       buttonColor: skyBlueColor,
                     ),
+                    GazagoButton(
+                      onTap: () => Get.toNamed(Routes.laboratoryKakaoShare),
+                      buttonText: '카톡 공유하기',
+                      buttonColor: skyBlueColor,
+                    ),
                   ],
                 ),
               ),

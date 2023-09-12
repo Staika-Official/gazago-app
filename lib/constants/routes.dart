@@ -27,6 +27,7 @@ import 'package:gaza_go/presentations/views/inventory/synthetic_badge.dart';
 import 'package:gaza_go/presentations/views/join/join_terms.dart';
 import 'package:gaza_go/presentations/views/laboratory/laboratory_end_point.dart';
 import 'package:gaza_go/presentations/views/laboratory/laboratory_fake_gps.dart';
+import 'package:gaza_go/presentations/views/laboratory/laboratory_kakao_share.dart';
 import 'package:gaza_go/presentations/views/laboratory/laboratory_solana_create_wallet.dart';
 import 'package:gaza_go/presentations/views/laboratory/laboratory_solana_transfer.dart';
 import 'package:gaza_go/presentations/views/leaderboard/index.dart';
@@ -116,6 +117,7 @@ class Routes {
   static const laboratorySolanaTransfer = '/laboratory/laboratory_solana_transfer';
   static const laboratoryEndPoint = '/laboratory/end_point';
   static const laboratoryFakeGps = '/laboratory/fake_gps';
+  static const laboratoryKakaoShare = '/laboratory/kakao_share';
   static const shopItemDetail = '/shop/item/detail';
   static const adMobRewarded = '/admob/reward';
   static const adMobRewardedInterstitial = '/admob/interstitial';
@@ -191,6 +193,7 @@ class Routes {
     stepPage(name: Routes.webView, page: const WebView()),
     stepPage(name: Routes.laboratoryEndPoint, page: const LaboratoryEndPoint()),
     stepPage(name: Routes.laboratoryFakeGps, page: const LaboratoryFakeGps()),
+    stepPage(name: Routes.laboratoryKakaoShare, page: const LaboratoryKakaoShare()),
     stepPage(name: Routes.createWalletPassword, page: const CreateWalletPassword()),
     stepPage(name: Routes.createWallet, page: const CreateWallet()),
     stepPage(name: Routes.sendStikGoWallet, page: const SendStikGoWallet()),
