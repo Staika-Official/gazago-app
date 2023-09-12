@@ -300,9 +300,7 @@ class ChallengesHome extends StatelessWidget {
                                             StyledText(
                                               item.quantity >= 0
                                                   ? '${item.challengeState == 'READY' ? '' : ' /'} ${formatDecimalPlaces(item.quantity.toDouble(), 0)}명'
-                                                  : item.challengeState == 'READY'
-                                                      ? ' 제한없음'
-                                                      : ' 참여중',
+                                                  : controller.getUnlimitedParticipationStatus(item.challengeState!),
                                               color: lightGrayColor,
                                               fontWeight: 500,
                                               fontSize: 12,

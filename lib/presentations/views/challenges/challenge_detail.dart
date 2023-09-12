@@ -427,7 +427,7 @@ class ChallengeDetail extends StatelessWidget {
                                                                   Padding(
                                                                     padding: EdgeInsets.only(right: 20.0.sp),
                                                                     child: const StyledText(
-                                                                      '모집 기간',
+                                                                      '개설 기간',
                                                                       fontSize: 14,
                                                                       fontWeight: 500,
                                                                       lineHeight: 14,
@@ -604,9 +604,7 @@ class ChallengeDetail extends StatelessWidget {
                                                                         StyledText(
                                                                           controller.challengeDetails.value.quantity! >= 0
                                                                               ? '${controller.challengeDetails.value.challengeState! == 'READY' ? '' : ' /'}  ${formatDecimalPlaces(controller.challengeDetails.value.quantity!.toDouble(), 0)}명'
-                                                                              : controller.challengeDetails.value.challengeState! == 'READY'
-                                                                                  ? ' 제한없음'
-                                                                                  : ' 참여중',
+                                                                              : controller.getUnlimitedParticipationStatus(controller.challengeDetails.value.challengeState!),
                                                                           color: lightGrayColor,
                                                                           fontWeight: 500,
                                                                           fontSize: 12,
