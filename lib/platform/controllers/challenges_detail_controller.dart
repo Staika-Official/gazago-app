@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:convert';
 
 import 'package:adjust_sdk/adjust.dart';
@@ -103,24 +104,7 @@ class ChallengesDetailController extends GetxController with GetTickerProviderSt
         ].any((state) => state == challengeDetails.value.challengeUserState));
   }
 
-  Rxn<Map<String, dynamic>> get myCrew {
-    String userId = HiveStore.loadString(key: HiveKey.userId.name)!;
-    int ranking = 0;
-    CrewModel? myCrew;
-    crewList.forEachIndexedWhile((int crewIndex, CrewModel crew) {
-      crew.crewMemberList!.forEachIndexedWhile((int memberIndex, CrewMemberModel member) {
-        if (member.userId.toString() == userId) {
-          ranking = crewIndex + 1;
-          myCrew = crew;
-        }
-        return member.userId.toString() != userId;
-      });
-
-      return myCrew == null;
-    });
-
-    return myCrew == null ? Rxn() : Rxn({'ranking': ranking, 'crew': myCrew});
-  }
+  final Rxn<Map<String, dynamic>> myCrew = Rxn();
 
   @override
   void onInit() async {
@@ -139,8 +123,8 @@ class ChallengesDetailController extends GetxController with GetTickerProviderSt
     }
     await getChallengeDetail();
     if (challengeDetails.value.challengeType == 'CREW') {
-      getCrewList();
-      if (challengeDetails.value.challengeState == 'CLOSED') {
+      await getCrewList();
+      if (challengeDetails.value.challengeState == 'CLOSED' && myCrew.value != null) {
         crewChallengeCloseAlert(this);
       }
     } else {
@@ -242,9 +226,9 @@ class ChallengesDetailController extends GetxController with GetTickerProviderSt
   Future<void> getCrewList() async {
     DatabaseReference crewChallengeLeaderboardRef = FirebaseDatabase.instance.ref('crewChallengeLeaderboard/${challengeId.value}');
 
-    crewChallengeLeaderboardRef.get().then((DataSnapshot snapshot) {
+    await crewChallengeLeaderboardRef.get().then((DataSnapshot snapshot) async {
       if (snapshot.exists) {
-        updateCrewData(snapshot);
+        await updateCrewData(snapshot);
       } else {
         crewList.clear();
       }
@@ -252,12 +236,12 @@ class ChallengesDetailController extends GetxController with GetTickerProviderSt
       print(error);
     });
 
-    crewChallengeLeaderboardRef.onValue.listen((DatabaseEvent event) {
-      updateCrewData(event.snapshot);
+    crewChallengeLeaderboardRef.onValue.listen((DatabaseEvent event) async {
+      await updateCrewData(event.snapshot);
     });
   }
 
-  void updateCrewData(DataSnapshot snapshot) {
+  Future<void> updateCrewData(DataSnapshot snapshot) async {
     crewList.clear();
     Map crewListMap = snapshot.value as Map;
     crewListMap.forEach((key, crew) {
@@ -276,6 +260,7 @@ class ChallengesDetailController extends GetxController with GetTickerProviderSt
       CrewModel crewModel = CrewModel.fromJson(jsonDecode(jsonEncode(crew)));
       crewList.add(crewModel);
     });
+
     if ([
       'REGISTER_AVAILABLE',
       'REGISTER_READY',
@@ -301,6 +286,28 @@ class ChallengesDetailController extends GetxController with GetTickerProviderSt
         return b.blockQuantity!.compareTo(a.blockQuantity!);
       });
     }
+
+    setMyCrew();
+  }
+
+  void setMyCrew() {
+    String userId = HiveStore.loadString(key: HiveKey.userId.name)!;
+    int ranking = 0;
+    CrewModel? myCrew;
+    crewList.forEachIndexedWhile((int crewIndex, CrewModel crew) {
+      crew.crewMemberList!.forEachIndexedWhile((int memberIndex, CrewMemberModel member) {
+        if (member.userId.toString() == userId) {
+          ranking = crewIndex + 1;
+          myCrew = crew;
+        }
+
+        return member.userId.toString() != userId;
+      });
+
+      return myCrew == null;
+    });
+
+    this.myCrew.value = myCrew == null ? null : {'ranking': ranking, 'crew': myCrew};
   }
 
   void getSize() {
@@ -426,7 +433,11 @@ class ChallengesDetailController extends GetxController with GetTickerProviderSt
         crewCreateCompleteAlert(this);
       },
       errorCallback: (ErrorResponseDataModel error) {
-        showToastPopup(error.errorMessage!.replaceAll('\\n', '\n'));
+        if (error.errorCode == 'ALREADY_USER_JOINED_CHALLENGE') {
+          showChallengeAlreadyJoinedAlert();
+        } else {
+          showToastPopup(error.errorMessage!.replaceAll('\\n', '\n'));
+        }
       },
     );
   }
@@ -514,14 +525,18 @@ class ChallengesDetailController extends GetxController with GetTickerProviderSt
   }
 
   Future<void> handleCrewJoin(CrewModel crew) async {
-    if (await isVerifiedUser()) {
-      if (crew.crewRecruitStatus == "OPEN" && crew.crewRelayStatus == "ONGOING") {
-        crewJoinInfoAlert(crew);
+    if (isAbleToJoinCrew.value) {
+      if (await isVerifiedUser()) {
+        if (crew.crewRecruitStatus == "OPEN" && crew.crewRelayStatus == "ONGOING") {
+          crewJoinInfoAlert(crew);
+        } else {
+          showToastPopup('모집이 제한된 크루입니다.');
+        }
       } else {
-        showToastPopup('모집이 제한된 크루입니다.');
+        showChallengeNeedVerificationAlert(this);
       }
     } else {
-      showChallengeNeedVerificationAlert(this);
+      showToastPopup('모집인원이 마감된 크루입니다.');
     }
   }
 
@@ -533,8 +548,11 @@ class ChallengesDetailController extends GetxController with GetTickerProviderSt
     }, errorCallback: (ErrorResponseDataModel error) async {
       if (error.errorCode == 'CREW_RECRUIT_CLOSED') {
         await getCrewList();
+      } else if (error.errorCode == 'ALREADY_USER_JOINED_CHALLENGE') {
+        showChallengeAlreadyJoinedAlert();
+      } else {
+        showToastPopup(error.errorMessage!.replaceAll('\\n', '\n'));
       }
-      showToastPopup(error.errorMessage!.replaceAll('\\n', '\n'));
     });
   }
 
