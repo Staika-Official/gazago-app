@@ -5549,6 +5549,32 @@ void crewJoinInfoAlert(CrewModel crew) async {
   );
 }
 
+void showChallengeAlreadyJoinedAlert() {
+  showAlert(
+    contentWidget: Padding(
+      padding: EdgeInsets.only(top: 22.sp, bottom: 49.sp),
+      child: const StyledText(
+        '다른 계정으로 이미 해당 챌린지에\n참가 중입니다.',
+        fontWeight: 500,
+        fontSize: 16,
+        lineHeight: 24,
+        letterSpacing: -.1,
+        textAlign: TextAlign.center,
+      ),
+    ),
+    actions: [
+      Expanded(
+        child: GazagoButton(
+          buttonText: '확인',
+          onTap: () {
+            Get.back();
+          },
+        ),
+      ),
+    ],
+  );
+}
+
 void crewJoinCompleteAlert(CrewModel crew) async {
   await showAlert(
     contentWidget: Padding(
