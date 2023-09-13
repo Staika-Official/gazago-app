@@ -48,12 +48,18 @@ class CrewAppbar extends StatelessWidget implements PreferredSizeWidget {
             Stack(
               clipBehavior: Clip.none,
               children: [
-                StyledText(
-                  titleText!,
-                  // '크루 릴레이',
-                  fontSize: 18,
-                  lineHeight: 18,
-                  fontWeight: 500,
+                ConstrainedBox(
+                  constraints: BoxConstraints(maxWidth: 200.sp),
+                  child: FittedBox(
+                    fit: BoxFit.scaleDown,
+                    child: StyledText(
+                      titleText!,
+                      // '크루 릴레이',
+                      fontSize: 18,
+                      lineHeight: 18,
+                      fontWeight: 500,
+                    ),
+                  ),
                 ),
                 if (isBeta)
                   const Positioned(
