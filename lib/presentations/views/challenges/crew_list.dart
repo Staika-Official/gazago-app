@@ -20,7 +20,7 @@ class CrewList extends StatelessWidget {
           color: subBg01Color,
           height: 64.sp,
           child: InkWell(
-            onTap: controller.isAbleToJoinCrew.value ? () => controller.handleCrewJoin(item.value) : null,
+            onTap: () => controller.handleCrewJoin(item.value),
             child: Padding(
               padding: EdgeInsets.only(left: 18.sp, right: 20.sp),
               child: Row(
