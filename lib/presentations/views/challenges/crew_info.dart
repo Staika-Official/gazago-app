@@ -257,47 +257,48 @@ class CrewInfo extends StatelessWidget {
                       ],
                     ),
                   ),
-                  Container(
-                    margin: EdgeInsets.only(
-                      top: 12,
-                      left: 18.sp,
-                      right: 18.sp,
-                      bottom: 24,
-                    ),
-                    width: double.infinity,
-                    height: 55,
-                    child: ElevatedButton(
-                      style: ElevatedButton.styleFrom(
-                        elevation: 0,
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(6),
-                        ),
+                  if (controller.selectedCrew.value.crewRelayStatus! == 'ONGOING')
+                    Container(
+                      margin: EdgeInsets.only(
+                        top: 12,
+                        left: 18.sp,
+                        right: 18.sp,
                       ),
-                      onPressed: () => showCrewInviteInfoAlert(controller),
-                      child: RichText(
-                        text: const TextSpan(
-                          text: '크루원 초대하고, ',
-                          style: TextStyle(
-                            fontSize: 18,
-                            fontWeight: FontWeight.w600,
-                            height: 1.5,
-                            color: Colors.black,
+                      width: double.infinity,
+                      height: 55,
+                      child: ElevatedButton(
+                        style: ElevatedButton.styleFrom(
+                          elevation: 0,
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(6),
                           ),
-                          children: [
-                            TextSpan(
-                              text: '2블럭 받기',
-                              style: TextStyle(fontWeight: FontWeight.w800),
+                        ),
+                        onPressed: () => showCrewInviteInfoAlert(controller),
+                        child: RichText(
+                          text: const TextSpan(
+                            text: '크루원 초대하고, ',
+                            style: TextStyle(
+                              fontSize: 18,
+                              fontWeight: FontWeight.w600,
+                              height: 1.5,
+                              color: Colors.black,
                             ),
-                          ],
+                            children: [
+                              TextSpan(
+                                text: '2블럭 받기',
+                                style: TextStyle(fontWeight: FontWeight.w800),
+                              ),
+                            ],
+                          ),
                         ),
                       ),
                     ),
-                  ),
                 ],
               ),
               Container(
                 width: double.infinity,
                 height: 8,
+                margin: const EdgeInsets.only(top: 24),
                 color: const Color(0xff2E3038),
               ),
               Padding(
