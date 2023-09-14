@@ -107,7 +107,12 @@ class StaikaAssetItemCoin extends StatelessWidget {
                                     ),
                                   ),
                                   StyledText(
-                                    '${staikaWalletController.currencyString.value} ${formatDecimalPlaces(double.parse(staikaWalletController.getCurrencyPrice(double.parse(asset.uiAmountString))), staikaWalletController.isKRW.value ? 0 : 2)}',
+                                    '${staikaWalletController.currencyString.value} ${formatDecimalPlaces(double.parse(
+                                          staikaWalletController.getCurrencyPrice(
+                                            staikaWalletController.priceInfoList.singleWhere((priceInfo) => priceInfo.name == asset.name),
+                                            double.parse(asset.uiAmountString),
+                                          ),
+                                        ), staikaWalletController.isKRW.value ? 0 : 2)}',
                                     fontSize: 14,
                                     lineHeight: 16,
                                     letterSpacing: 0.5,

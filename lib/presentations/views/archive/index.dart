@@ -130,7 +130,7 @@ class ArchiveHome extends StatelessWidget {
                                 child: iconArchiveDistance,
                               ),
                               StyledText(
-                                '${formatDecimalPlaces(convertMetersToKm(archive.distance!), 2)} km',
+                                '${formatDecimalPlaces(convertMetersToKm(archive.rewardDistance!), 2)} km',
                                 fontWeight: 600,
                               ),
                             ],

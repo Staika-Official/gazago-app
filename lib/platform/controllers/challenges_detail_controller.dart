@@ -107,7 +107,25 @@ class ChallengesDetailController extends GetxController with GetTickerProviderSt
         ].any((state) => state == challengeDetails.value.challengeUserState));
   }
 
-  final Rxn<Map<String, dynamic>> myCrew = Rxn();
+  Rxn<Map<String, dynamic>> get myCrew {
+    String userId = HiveStore.loadString(key: HiveKey.userId.name)!;
+    int ranking = 0;
+    CrewModel? myCrew;
+    crewList.forEachIndexedWhile((int crewIndex, CrewModel crew) {
+      crew.crewMemberList!.forEachIndexedWhile((int memberIndex, CrewMemberModel member) {
+        if (member.userId.toString() == userId) {
+          ranking = crewIndex + 1;
+          myCrew = crew;
+        }
+
+        return member.userId.toString() != userId;
+      });
+
+      return myCrew == null;
+    });
+
+    return myCrew == null ? Rxn() : Rxn({'ranking': ranking, 'crew': myCrew});
+  }
 
   @override
   void onInit() async {
@@ -289,28 +307,6 @@ class ChallengesDetailController extends GetxController with GetTickerProviderSt
         return b.blockQuantity!.compareTo(a.blockQuantity!);
       });
     }
-
-    setMyCrew();
-  }
-
-  void setMyCrew() {
-    String userId = HiveStore.loadString(key: HiveKey.userId.name)!;
-    int ranking = 0;
-    CrewModel? myCrew;
-    crewList.forEachIndexedWhile((int crewIndex, CrewModel crew) {
-      crew.crewMemberList!.forEachIndexedWhile((int memberIndex, CrewMemberModel member) {
-        if (member.userId.toString() == userId) {
-          ranking = crewIndex + 1;
-          myCrew = crew;
-        }
-
-        return member.userId.toString() != userId;
-      });
-
-      return myCrew == null;
-    });
-
-    this.myCrew.value = myCrew == null ? null : {'ranking': ranking, 'crew': myCrew};
   }
 
   void getSize() {
@@ -419,7 +415,7 @@ class ChallengesDetailController extends GetxController with GetTickerProviderSt
         crewCreateCompleteAlert(this);
       },
       errorCallback: (ErrorResponseDataModel error) {
-        if (error.errorCode == 'ALREADY_USER_JOINED_CHALLENGE') {
+        if (error.errorCode == 'ALREADY_JOINED_CHALLENGE') {
           showChallengeAlreadyJoinedAlert();
         } else {
           showToastPopup(error.errorMessage!.replaceAll('\\n', '\n'));
@@ -450,7 +446,7 @@ class ChallengesDetailController extends GetxController with GetTickerProviderSt
     DynamicLinkParameters? dynamicLinkParams;
 
     if (challengeType == ChallengeType.crew) {
-      if (shareSource == ShareSource.shareAppbar) {
+      if ([ShareSource.shareAppbar, ShareSource.createCrew].any((source) => shareSource == source)) {
         dynamicLinkParams = DynamicLinkParameters(
           link: Uri.parse("https://gazago.io?route=${Routes.challengeDetail.replaceAll(':id', challengeId.value.toString())}"),
           uriPrefix: uriPrefix,
@@ -544,7 +540,7 @@ class ChallengesDetailController extends GetxController with GetTickerProviderSt
     }, errorCallback: (ErrorResponseDataModel error) async {
       if (error.errorCode == 'CREW_RECRUIT_CLOSED') {
         await getCrewList();
-      } else if (error.errorCode == 'ALREADY_USER_JOINED_CHALLENGE') {
+      } else if (error.errorCode == 'ALREADY_JOINED_CHALLENGE') {
         showChallengeAlreadyJoinedAlert();
       } else {
         showToastPopup(error.errorMessage!.replaceAll('\\n', '\n'));
@@ -552,19 +548,8 @@ class ChallengesDetailController extends GetxController with GetTickerProviderSt
     });
   }
 
-  void moveToCrewDetail(CrewModel crew) {
-    int ranking = 0;
-    crewList.forEachIndexedWhile((index, CrewModel item) {
-      if (item.id == crew.id!) {
-        ranking = index + 1;
-      }
-      return item.id != crew.id!;
-    });
-    Get.toNamed(Routes.crewDetail, arguments: {'ranking': ranking, 'crew': crew});
-  }
-
   void moveToMyCrew() {
-    Get.toNamed(Routes.crewDetail, arguments: {'ranking': myCrew.value!['ranking'], 'crew': myCrew.value!['crew']});
+    Get.toNamed(Routes.crewDetail);
   }
 
   void loadDataOnScroll() {

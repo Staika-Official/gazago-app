@@ -11,6 +11,13 @@ class TokenApi {
     ).get('/on-chains/quotes/markets/cmc/solana/tokens/STIK');
   }
 
+  static Future<Response> getTokenPriceInfoList() async {
+    return await Api.client(
+      serviceUrl: ServiceUrl.goWalletService,
+      showLoading: false,
+    ).get('/on-chains/quotes/markets/cmc/solana');
+  }
+
   static Future<Response> getExchangeStikPriceInfo() async {
     return await Api.client(
       serviceUrl: ServiceUrl.goWalletService,

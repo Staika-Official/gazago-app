@@ -16,6 +16,7 @@ class ArchiveDetailItemModel {
   String? startedDate;
   String? endedDate;
   double? rewardGo;
+  double? rewardDistance;
   String? state;
   int? badgeIssueId;
   int? challengeId;
@@ -51,6 +52,7 @@ class ArchiveDetailItemModel {
     this.startedDate,
     this.endedDate,
     this.rewardGo,
+    this.rewardDistance,
     this.state,
     this.badgeIssueId,
     this.challengeId,
