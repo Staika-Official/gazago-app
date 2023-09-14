@@ -127,7 +127,7 @@ Map renderItemReadyJoinedEquipped(ChallengesDetailController challengesDetailCon
 // 챌린지 전 - 접수 중 - 아이템 미장착
 Map renderItemReadyJoinedNotEquipped(ChallengesDetailController challengesDetailController) {
   Widget suffix = InkWell(
-    onTap: () => challengeItemEquip(),
+    onTap: () => challengesDetailController.isDisableButton.value ? null : challengesDetailController.requestJoinChallenge(challengeItemEquip),
     child: Container(
         decoration: BoxDecoration(
           color: popupBgColor,
@@ -187,7 +187,7 @@ Map renderItemReadyJoinedNotEquipped(ChallengesDetailController challengesDetail
 // 챌린지 전 - 접수 중
 Map renderItemReadyJoinedElse(ChallengesDetailController challengesDetailController) {
   Widget suffix = InkWell(
-    onTap: () => challengesDetailController.requestJoinChallenge(challengesDetailController.showMoveToShopItem),
+    onTap: () => challengesDetailController.isDisableButton.value ? null : challengesDetailController.requestJoinChallenge(challengesDetailController.showMoveToShopItem),
     child: Container(
         decoration: BoxDecoration(
           color: popupBgColor,
@@ -300,7 +300,7 @@ Map renderItemInProgressJoined(ChallengesDetailController challengesDetailContro
 // 챌린지 진행 중 - 참가 가능
 Map renderItemInProgressJoinedAvailableEquippedItem(ChallengesDetailController challengesDetailController) {
   Widget suffix = InkWell(
-    onTap: () => challengesDetailController.requestJoinChallenge(challengesDetailController.onFetchJoinChallenge),
+    onTap: () => challengesDetailController.isDisableButton.value ? null :challengesDetailController.requestJoinChallenge(challengesDetailController.onFetchJoinChallenge),
     child: Container(
         decoration: BoxDecoration(
           color: popupBgColor,
@@ -420,7 +420,7 @@ Map renderItemInProgressJoinedAvailableHaveItem(ChallengesDetailController chall
 // 챌린지 진행 중 - 참가 가능
 Map renderItemInProgressJoinedAvailable(ChallengesDetailController challengesDetailController) {
   Widget suffix = InkWell(
-    onTap: () => challengesDetailController.requestJoinChallenge(challengesDetailController.showMoveToShopItem),
+    onTap: () => challengesDetailController.isDisableButton.value ? null :challengesDetailController.requestJoinChallenge(challengesDetailController.showMoveToShopItem),
     child: Container(
         decoration: BoxDecoration(
           color: popupBgColor,

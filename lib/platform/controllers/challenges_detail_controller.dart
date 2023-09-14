@@ -70,6 +70,7 @@ class ChallengesDetailController extends GetxController with GetTickerProviderSt
   final FocusNode focusNode = FocusNode();
   final RxString errorMessage = RxString('');
   final RxBool hideCourses = RxBool(false);
+  final RxBool isDisableButton = RxBool(false);
 
   final RxBool isShortTokenBalance = RxBool(false);
 
@@ -550,12 +551,13 @@ class ChallengesDetailController extends GetxController with GetTickerProviderSt
   }
 
   void requestJoinChallenge(Function callback) async {
+    isDisableButton.value = true;
     if(await handleCheckUserVerified()) {
       callback();
     } else {
       showChallengeNeedVerificationAlert();
     }
-
+    isDisableButton.value = false;
   }
 
 

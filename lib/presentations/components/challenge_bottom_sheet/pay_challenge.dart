@@ -117,7 +117,7 @@ Map renderPayReadyJoined(ChallengesDetailController challengesDetailController) 
 Map renderPayReadyJoinedElse(ChallengesDetailController challengesDetailController) {
   Widget suffix = InkWell(
     // onTap: () => challengesDetailController.showMoveToShopItem(),
-    onTap: () => challengesDetailController.requestJoinChallenge(challengesDetailController.onJoinPayChallenge),
+    onTap: () => challengesDetailController.isDisableButton.value ? null : challengesDetailController.requestJoinChallenge(challengesDetailController.onJoinPayChallenge),
     child: Container(
         decoration: BoxDecoration(
           color: popupBgColor,
@@ -172,7 +172,7 @@ Map renderPayReadyJoinedElse(ChallengesDetailController challengesDetailControll
 Map renderPayInProgressJoinedAvailable(ChallengesDetailController challengesDetailController) {
   Widget suffix = InkWell(
     // onTap: () => challengesDetailController.showMoveToShopItem(),
-    onTap: () => challengesDetailController.requestJoinChallenge(challengesDetailController.onJoinPayChallenge),
+    onTap: () => challengesDetailController.isDisableButton.value ? null :challengesDetailController.requestJoinChallenge(challengesDetailController.onJoinPayChallenge),
     child: Container(
         decoration: BoxDecoration(
           color: popupBgColor,
