@@ -16,6 +16,7 @@ import 'package:gaza_go/platform/controllers/leaderboard_controller.dart';
 import 'package:gaza_go/platform/controllers/loader_controller.dart';
 import 'package:gaza_go/platform/controllers/wallet_master_controller.dart';
 import 'package:gaza_go/platform/helpers/alert_helper.dart';
+import 'package:gaza_go/platform/helpers/base_helper.dart';
 import 'package:gaza_go/platform/helpers/challenge_mixin.dart';
 import 'package:gaza_go/platform/models/challenge_ranker_model.dart';
 import 'package:gaza_go/platform/models/challenge_reward_model.dart';
@@ -269,7 +270,7 @@ class ChallengesDetailController extends GetxController with GetTickerProviderSt
       crewList.sort((a, b) {
         bool isSameMemberCount = b.crewMemberList!.length.compareTo(a.crewMemberList!.length) == 0;
         if (isSameMemberCount) {
-          return b.name!.toLowerCase().compareTo(a.name!.toLowerCase());
+          return a.name!.toLowerCase().compareTo(b.name!.toLowerCase());
         }
         return b.crewMemberList!.length.compareTo(a.crewMemberList!.length);
       });
@@ -279,7 +280,7 @@ class ChallengesDetailController extends GetxController with GetTickerProviderSt
         if (isSameBlockCount) {
           bool isSameMemberCount = b.crewMemberList!.length.compareTo(a.crewMemberList!.length) == 0;
           if (isSameMemberCount) {
-            return b.name!.toLowerCase().compareTo(a.name!.toLowerCase());
+            return a.name!.toLowerCase().compareTo(b.name!.toLowerCase());
           }
           return b.crewMemberList!.length.compareTo(a.crewMemberList!.length);
         }
@@ -454,31 +455,40 @@ class ChallengesDetailController extends GetxController with GetTickerProviderSt
     tabController.index = 1;
   }
 
-  Future<void> shareCrewChallenge() async {
+  Future<void> shareChallenge({required ChallengeType challengeType, required ShareSource shareSource, String? crewName}) async {
     bool isKakaoTalkSharingAvailable = await ShareClient.instance.isKakaoTalkSharingAvailable();
     String userId = HiveStore.loadString(key: HiveKey.userId.name)!;
 
-    final dynamicLinkParams = DynamicLinkParameters(
-      link: Uri.parse("https://gazago.io?route=${Routes.challengeDetail.replaceAll(':id', challengeId.value.toString())}&inviteId=$userId"),
-      uriPrefix: F.isDev ? "https://gazagostage.page.link" : "https://gazago.page.link",
-      androidParameters: AndroidParameters(packageName: F.isDev ? "kr.co.eztechfin.gazaGo.dev" : "kr.co.eztechfin.gazaGo"),
-      iosParameters: IOSParameters(bundleId: F.isDev ? "kr.co.eztechfin.gazaGo.dev" : "kr.co.eztechfin.gazaGo"),
-    );
+    String uriPrefix = F.isDev ? "https://gazagostage.page.link" : "https://gazago.page.link";
+    String packageName = F.isDev ? "kr.co.eztechfin.gazaGo.dev" : "kr.co.eztechfin.gazaGo";
 
-    final dynamicLink = await FirebaseDynamicLinks.instance.buildShortLink(dynamicLinkParams);
+    DynamicLinkParameters? dynamicLinkParams;
 
-    final TextTemplate defaultText = TextTemplate(
-      text: '함께 가자고!!!',
-      link: Link(
-        webUrl: dynamicLink.shortUrl,
-        mobileWebUrl: dynamicLink.shortUrl,
-      ),
-    );
+    if (challengeType == ChallengeType.crew) {
+      if (shareSource == ShareSource.shareAppbar) {
+        dynamicLinkParams = DynamicLinkParameters(
+          link: Uri.parse("https://gazago.io?route=${Routes.challengeDetail.replaceAll(':id', challengeId.value.toString())}"),
+          uriPrefix: uriPrefix,
+          androidParameters: AndroidParameters(packageName: packageName),
+          iosParameters: IOSParameters(bundleId: packageName),
+        );
+      } else {
+        dynamicLinkParams = DynamicLinkParameters(
+          link: Uri.parse("https://gazago.io?route=${Routes.challengeDetail.replaceAll(':id', challengeId.value.toString())}&inviteId=$userId"),
+          uriPrefix: uriPrefix,
+          androidParameters: AndroidParameters(packageName: packageName),
+          iosParameters: IOSParameters(bundleId: packageName),
+        );
+      }
+    }
 
+    final ShortDynamicLink dynamicLink = await FirebaseDynamicLinks.instance.buildShortLink(dynamicLinkParams!);
+
+    FeedTemplate kakaoFeedTemplate = generateFeedTemplate(dynamicLink.shortUrl, challengeType: challengeType, shareSource: shareSource, crewName: crewName);
     if (isKakaoTalkSharingAvailable) {
       try {
-        Uri uri = await ShareClient.instance.shareDefault(template: defaultText, serverCallbackArgs: {
-          'userId': '${HiveStore.loadString(key: HiveKey.userId.name)}',
+        Uri uri = await ShareClient.instance.shareDefault(template: kakaoFeedTemplate, serverCallbackArgs: {
+          'userId': userId,
           'challengeId': '${challengeId.value}',
         });
         await ShareClient.instance.launchKakaoTalk(uri);
@@ -498,7 +508,7 @@ class ChallengesDetailController extends GetxController with GetTickerProviderSt
     }
   }
 
-  Future<void> validateKakaoShareResult() async {
+  Future<void> validateKakaoShareResult({required ChallengeType challengeType, required ShareSource shareSource}) async {
     String userId = HiveStore.loadString(key: HiveKey.userId.name)!;
     DatabaseReference kakaoShareStatus = FirebaseDatabase.instance.ref('kakaoSharedMessageRecord/${challengeId.value}/$userId');
 
@@ -507,7 +517,7 @@ class ChallengesDetailController extends GetxController with GetTickerProviderSt
         Map data = snapshot.value as Map;
 
         if (data['chat_TYPE'] == 'MemoChat') {
-          unableShareMyselfDialog(this);
+          unableShareMyselfDialog(this, challengeType: challengeType, shareSource: shareSource);
         } else {
           if (challengeDetails.value.challengeActivationType == 'CREW') {
             requestCreateCrew('INVITE');
@@ -517,10 +527,10 @@ class ChallengesDetailController extends GetxController with GetTickerProviderSt
           }
         }
       } else {
-        unableSharedHistoryDialog(this);
+        unableSharedHistoryDialog(this, challengeType: challengeType, shareSource: shareSource);
       }
     }).onError((error, stackTrace) {
-      unableSharedHistoryDialog(this);
+      unableSharedHistoryDialog(this, challengeType: challengeType, shareSource: shareSource);
     });
   }
 

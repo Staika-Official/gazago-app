@@ -7,6 +7,7 @@ class CrewApi {
     return await Api.client(
       serviceUrl: '/services/gazago/api',
       showLoading: false,
+      allowCustomErrorHandler: true,
     ).post('/crews/users/$userId', data: {
       "name": formData.name,
       "userId": userId,
@@ -21,6 +22,7 @@ class CrewApi {
     return await Api.client(
       serviceUrl: '/services/gazago/api',
       showLoading: false,
+      allowCustomErrorHandler: true,
     ).post('/user-crews/users/$userId', data: {
       "crewId": crewId,
       "userId": userId,
@@ -39,6 +41,7 @@ class CrewApi {
     return await Api.client(
       serviceUrl: '/services/gazago/api',
       showLoading: false,
+      allowCustomErrorHandler: true,
     ).post('/crews/$crewId/users/$userId/recruit-status/$recruitStatus', data: {
       "crewId": crewId,
       "userId": userId,

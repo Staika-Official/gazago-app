@@ -40,6 +40,12 @@ class ChallengeInfo extends StatelessWidget {
                           "*": Style(
                             lineHeight: LineHeight.percent(130),
                           ),
+                          'img': Style(
+                            margin: Margins(
+                              left: Margin(-20.sp),
+                              right: Margin(-20.sp),
+                            ),
+                          ),
                           "p": Style(
                             margin: Margins.zero,
                             color: Colors.white,
@@ -581,10 +587,11 @@ class ChallengeInfo extends StatelessWidget {
                               lineHeight: LineHeight.percent(130),
                             ),
                             'img': Style(
-                                margin: Margins(
-                              left: Margin(-20.sp),
-                              right: Margin(-20.sp),
-                            )),
+                              margin: Margins(
+                                left: Margin(-20.sp),
+                                right: Margin(-20.sp),
+                              ),
+                            ),
                             "p": Style(
                               margin: Margins.zero,
                               color: Colors.white,

@@ -555,12 +555,90 @@ class ActivityActive extends StatelessWidget {
                                   SvgPicture.asset('assets/images/activity/ico_distance.svg'),
                                   Padding(
                                     padding: EdgeInsets.only(top: 10.sp),
-                                    child: StyledText(
-                                      '${formatDecimalPlaces(controller.totalDistance.value, 2)}km',
-                                      fontWeight: 600,
-                                      fontSize: 16,
-                                      lineHeight: 16,
-                                      color: Colors.white,
+                                    child: Row(
+                                      mainAxisAlignment: MainAxisAlignment.center,
+                                      children: [
+                                        StyledText(
+                                          '${formatDecimalPlaces(controller.rewardDistance.value, 2)}km',
+                                          fontWeight: 600,
+                                          fontSize: 16,
+                                          lineHeight: 16,
+                                          color: Colors.white,
+                                        ),
+                                        Padding(
+                                          padding: EdgeInsets.only(left: 5.0.sp, bottom: 2),
+                                          child: SizedBox(
+                                            width: 20,
+                                            height: 20,
+                                            child: IconButton(
+                                              padding: EdgeInsets.zero,
+                                              onPressed: () => Get.dialog(
+                                                barrierColor: Colors.black.withOpacity(.8),
+                                                Material(
+                                                  color: Colors.transparent,
+                                                  child: Padding(
+                                                    padding: EdgeInsets.symmetric(horizontal: 25.0.sp),
+                                                    child: Center(
+                                                      child: Column(
+                                                        mainAxisSize: MainAxisSize.min,
+                                                        children: [
+                                                          Stack(
+                                                            children: [
+                                                              Container(
+                                                                width: double.infinity,
+                                                                padding: EdgeInsets.only(top: 44.sp, left: 29.sp, right: 29.sp, bottom: 42.sp),
+                                                                decoration: BoxDecoration(
+                                                                  color: popupBgColor,
+                                                                  borderRadius: BorderRadius.circular(10.sp),
+                                                                ),
+                                                                child: Column(
+                                                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                                                  children: [
+                                                                    const StyledText(
+                                                                      '유효거리 안내',
+                                                                      fontSize: 18,
+                                                                      fontWeight: 700,
+                                                                    ),
+                                                                    Padding(
+                                                                      padding: EdgeInsets.only(top: 29.sp),
+                                                                      child: Column(
+                                                                        crossAxisAlignment: CrossAxisAlignment.start,
+                                                                        children: [
+                                                                          StyledText(
+                                                                            '유효거리는 ${controller.selectedExerciseType.value == ExerciseType.hiking ? '0.7' : '1'}~7km/h로 걸은 거리를 의미하며, 유효거리를 기준으로 GO 적립과 챌린지 거리가 측정됩니다.\n자동차나 지하철 등을 탈 때도 켜뒀다가 걸을 경우,유효거리로 바로 반영되지 않을 수 있습니다.',
+                                                                            fontSize: 14,
+                                                                            fontWeight: 600,
+                                                                            lineHeight: 24,
+                                                                            letterSpacing: -0.3,
+                                                                          ),
+                                                                        ],
+                                                                      ),
+                                                                    ),
+                                                                  ],
+                                                                ),
+                                                              ),
+                                                              Positioned(
+                                                                right: 12,
+                                                                top: 12,
+                                                                child: InkWell(
+                                                                  onTap: () => Get.back(),
+                                                                  child: iconCloseWhite,
+                                                                ),
+                                                              ),
+                                                            ],
+                                                          ),
+                                                        ],
+                                                      ),
+                                                    ),
+                                                  ),
+                                                ),
+                                              ),
+                                              icon: iconInfo,
+                                              splashRadius: 15.sp,
+                                            ),
+                                          ),
+                                        )
+                                      ],
                                     ),
                                   )
                                 ],

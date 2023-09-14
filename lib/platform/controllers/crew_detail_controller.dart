@@ -50,7 +50,9 @@ class CrewDetailController extends GetxController with GetTickerProviderStateMix
     super.onInit();
   }
 
-  Future<void> refreshController() async {}
+  Future<void> refreshController() async {
+    await getDailyBlockCount();
+  }
 
   void _tabController() {
     crewTabIndex.value = tabController.index;

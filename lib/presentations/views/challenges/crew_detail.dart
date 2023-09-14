@@ -17,9 +17,9 @@ class CrewDetail extends StatelessWidget {
       resizeToAvoidBottomInset: false,
       appBar: PreferredSize(
           preferredSize: preferredSize, // here the desired height
-          child: const CrewAppbar(
-            titleText: '크루 릴레이',
-            isBeta: true,
+          child: const ShareAppbar(
+            titleText: '나의 크루 기록',
+            isBeta: false,
             isLockButton: true,
           )),
       backgroundColor: subBg01Color,

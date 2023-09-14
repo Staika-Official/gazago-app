@@ -167,17 +167,22 @@ class DebuggingController extends GetxController {
 
     final dynamicLink = await FirebaseDynamicLinks.instance.buildShortLink(dynamicLinkParams);
 
-    final TextTemplate defaultText = TextTemplate(
-      text: '함께 가자고!!!',
-      link: Link(
-        webUrl: dynamicLink.shortUrl,
-        mobileWebUrl: dynamicLink.shortUrl,
-      ),
-    );
+    final FeedTemplate defaultFeed = FeedTemplate(
+        objectType: 'feed',
+        content: Content(
+          title: selectedChallenge.value!.title,
+          description: selectedChallenge.value!.subTitle,
+          imageUrl: Uri.parse(selectedChallenge.value!.imageUrl!),
+          link: Link(
+            webUrl: dynamicLink.shortUrl,
+            mobileWebUrl: dynamicLink.shortUrl,
+          ),
+        ),
+        buttonTitle: '가자고~!');
 
     if (isKakaoTalkSharingAvailable) {
       try {
-        Uri uri = await ShareClient.instance.shareDefault(template: defaultText, serverCallbackArgs: {
+        Uri uri = await ShareClient.instance.shareDefault(template: defaultFeed, serverCallbackArgs: {
           'userId': '${HiveStore.loadString(key: HiveKey.userId.name)}',
           'challengeId': '${selectedChallenge.value!.id}',
         });

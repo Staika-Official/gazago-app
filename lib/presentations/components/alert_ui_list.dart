@@ -6051,7 +6051,7 @@ void crewChallengeCloseAlert(ChallengesDetailController controller) async {
         child: GazagoButton(
           buttonText: '확인',
           onTap: () {
-            Get.until((route) => Get.currentRoute.contains(Routes.challengeDetail.replaceAll(':id', '')));
+            Get.back();
           },
         ),
       ),
@@ -6400,9 +6400,9 @@ void shareCrewChallengeKakaoLinkDialog(ChallengesDetailController controller) {
                           buttonText: '공유하기',
                           onTap: () async {
                             Get.back();
-                            controller.shareCrewChallenge();
+                            controller.shareChallenge(challengeType: ChallengeType.crew, shareSource: ShareSource.createCrew);
                             await Future.delayed(const Duration(seconds: 2));
-                            askSharedCompleteDialog(controller);
+                            askSharedCompleteDialog(controller, challengeType: ChallengeType.crew, shareSource: ShareSource.createCrew);
                           },
                         ),
                       ),
@@ -6418,7 +6418,7 @@ void shareCrewChallengeKakaoLinkDialog(ChallengesDetailController controller) {
   );
 }
 
-void askSharedCompleteDialog(ChallengesDetailController controller) {
+void askSharedCompleteDialog(ChallengesDetailController controller, {required ChallengeType challengeType, required ShareSource shareSource}) {
   Get.dialog(
     Dialog(
       shadowColor: Colors.transparent,
@@ -6478,7 +6478,7 @@ void askSharedCompleteDialog(ChallengesDetailController controller) {
                       buttonText: '완료',
                       onTap: () {
                         Get.back();
-                        controller.validateKakaoShareResult();
+                        controller.validateKakaoShareResult(challengeType: challengeType, shareSource: shareSource);
                       },
                     ),
                   ),
@@ -6492,7 +6492,7 @@ void askSharedCompleteDialog(ChallengesDetailController controller) {
   );
 }
 
-void unableShareMyselfDialog(ChallengesDetailController controller) {
+void unableShareMyselfDialog(ChallengesDetailController controller, {required ChallengeType challengeType, required ShareSource shareSource}) {
   Get.dialog(
     Dialog(
       shadowColor: Colors.transparent,
@@ -6552,9 +6552,9 @@ void unableShareMyselfDialog(ChallengesDetailController controller) {
                       buttonText: '다시 공유',
                       onTap: () async {
                         Get.back();
-                        controller.shareCrewChallenge();
+                        controller.shareChallenge(challengeType: challengeType, shareSource: shareSource);
                         await Future.delayed(const Duration(seconds: 2));
-                        askSharedCompleteDialog(controller);
+                        askSharedCompleteDialog(controller, challengeType: challengeType, shareSource: shareSource);
                       },
                     ),
                   ),
@@ -6568,7 +6568,7 @@ void unableShareMyselfDialog(ChallengesDetailController controller) {
   );
 }
 
-void unableSharedHistoryDialog(ChallengesDetailController controller) {
+void unableSharedHistoryDialog(ChallengesDetailController controller, {required ChallengeType challengeType, required ShareSource shareSource}) {
   Get.dialog(
     Dialog(
       shadowColor: Colors.transparent,
@@ -6628,9 +6628,87 @@ void unableSharedHistoryDialog(ChallengesDetailController controller) {
                       buttonText: '다시 공유',
                       onTap: () async {
                         Get.back();
-                        controller.shareCrewChallenge();
+                        controller.shareChallenge(challengeType: challengeType, shareSource: shareSource);
                         await Future.delayed(const Duration(seconds: 2));
-                        askSharedCompleteDialog(controller);
+                        askSharedCompleteDialog(controller, challengeType: challengeType, shareSource: shareSource);
+                      },
+                    ),
+                  ),
+                ])
+              ],
+            ),
+          ),
+        ),
+      ),
+    ),
+  );
+}
+
+void showCrewInviteInfoAlert(CrewDetailController controller) {
+  Get.dialog(
+    Dialog(
+      shadowColor: Colors.transparent,
+      backgroundColor: Colors.transparent,
+      child: Center(
+        child: Container(
+          height: 270.sp,
+          decoration: BoxDecoration(
+            color: popupBgColor,
+            borderRadius: BorderRadius.all(
+              Radius.circular(12.sp),
+            ),
+          ),
+          child: Padding(
+            padding: EdgeInsets.all(20.0.sp),
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Expanded(
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      const StyledText(
+                        '크루챌린지 초대하기',
+                        textAlign: TextAlign.center,
+                        fontWeight: 500,
+                        fontSize: 20,
+                        lineHeight: 30,
+                      ),
+                      Padding(
+                        padding: EdgeInsets.only(top: 12.0.sp),
+                        child: const StyledText(
+                          '초대한 친구가 반드시 공유한 링크를\n통해 회원가입 및 챌린지에 참가해야\n블럭이 정상적으로 지급됩니다.\n(본인 공유는 불가 합니다)',
+                          textAlign: TextAlign.center,
+                          fontWeight: 500,
+                          fontSize: 16,
+                          lineHeight: 24,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+                Row(children: [
+                  Expanded(
+                    child: GazagoButton(
+                      onTap: () => Get.back(),
+                      buttonText: '닫기',
+                      textColor: Colors.white,
+                      buttonColor: popupBgColor,
+                    ),
+                  ),
+                  SizedBox(
+                    width: 9.sp,
+                  ),
+                  Expanded(
+                    child: GazagoButton(
+                      buttonText: '공유하기',
+                      onTap: () {
+                        Get.find<ChallengesDetailController>().shareChallenge(
+                          challengeType: ChallengeType.crew,
+                          shareSource: ShareSource.crewDetail,
+                          crewName: controller.selectedCrew.value!.name,
+                        );
+                        Get.back();
                       },
                     ),
                   ),
@@ -7041,11 +7119,11 @@ void showChallengeLandingPopup(ChallengesDetailController controller) {
                           borderRadius: BorderRadius.only(
                             bottomLeft: Radius.circular(12.5.sp),
                           ),
-                          color: Color(0xFF2E3038),
+                          color: const Color(0xFF2E3038),
                         ),
                         width: 140.sp,
                         height: 60.sp,
-                        child: Center(
+                        child: const Center(
                           child: StyledText(
                             '닫기',
                             fontSize: 18,
@@ -7066,7 +7144,7 @@ void showChallengeLandingPopup(ChallengesDetailController controller) {
                             borderRadius: BorderRadius.only(
                               bottomRight: Radius.circular(12.5.sp),
                             ),
-                            color: Color(0xFF2E3038),
+                            color: const Color(0xFF2E3038),
                           ),
                           height: 60.sp,
                           child: Center(

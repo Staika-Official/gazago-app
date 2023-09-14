@@ -5,6 +5,7 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:gaza_go/constants/config.dart';
 import 'package:gaza_go/platform/controllers/challenges_detail_controller.dart';
 import 'package:gaza_go/platform/helpers/base_helper.dart';
+import 'package:gaza_go/presentations/components/beta_tag.dart';
 import 'package:gaza_go/presentations/components/gazago_button.dart';
 import 'package:gaza_go/presentations/components/mini_bottom_sheet.dart';
 import 'package:gaza_go/presentations/components/secondary_appbar.dart';
@@ -34,9 +35,8 @@ class ChallengeDetail extends StatelessWidget {
         appBar: PreferredSize(
             preferredSize: preferredSize, // here the desired height
             child: controller.challengeDetails.value.challengeType == 'CREW'
-                ? CrewAppbar(
-                    titleText: controller.challengeDetails.value.title,
-                    isBeta: true,
+                ? const ShareAppbar(
+                    isBeta: false,
                   )
                 : const SecondaryAppbar(
                     isShowBackButton: true,
@@ -398,23 +398,25 @@ class ChallengeDetail extends StatelessWidget {
                                                             maxLines: 2,
                                                             overflowEllipsis: true,
                                                           ),
-                                                          // if (controller.challengeDetails.value.challengeType == 'CREW')
-                                                          //   Padding(
-                                                          //     padding: EdgeInsets.only(left: 5.0.sp),
-                                                          //     child: const BetaTag(),
-                                                          //   ),
                                                         ],
                                                       ),
                                                     ),
                                                   if (controller.challengeDetails.value.title != null)
                                                     Padding(
                                                       padding: EdgeInsets.only(bottom: 10.0.sp),
-                                                      child: StyledText(
-                                                        controller.challengeDetails.value.title!,
-                                                        fontSize: 20,
-                                                        lineHeight: 25,
-                                                        fontWeight: 500,
-                                                        letterSpacing: -.1,
+                                                      child: RichText(
+                                                        text: TextSpan(
+                                                          children: [
+                                                            TextSpan(
+                                                              text: controller.challengeDetails.value.title!,
+                                                              style: const TextStyle(fontSize: 20, fontWeight: FontWeight.w500, letterSpacing: -.1, height: 25 / 20),
+                                                            ),
+                                                            if (controller.challengeDetails.value.challengeType == 'CREW')
+                                                              const WidgetSpan(
+                                                                child: BetaTag(),
+                                                              ),
+                                                          ],
+                                                        ),
                                                       ),
                                                     ),
                                                   controller.challengeDetails.value.challengeType == 'CREW'
@@ -678,11 +680,27 @@ class ChallengeDetail extends StatelessWidget {
                     top: null,
                     left: 0,
                     bottom: 0,
-                    child: Padding(
+                    child: Container(
+                      width: double.infinity,
+                      height: 150.sp,
                       padding: EdgeInsets.only(
+                        top: 68.sp,
                         bottom: 27.sp,
                         left: 18.sp,
                         right: 18.sp,
+                      ),
+                      decoration: BoxDecoration(
+                        gradient: LinearGradient(
+                          begin: Alignment.topCenter,
+                          end: Alignment.bottomCenter,
+                          stops: const [0, 0.4],
+                          colors: [
+                            subBg01Color.withOpacity(0),
+                            subBg01Color,
+                            // Colors.red,
+                            // Colors.blueAccent
+                          ],
+                        ),
                       ),
                       child: Row(
                         children: [
@@ -704,7 +722,7 @@ class ChallengeDetail extends StatelessWidget {
                               ? Expanded(
                                   child: GazagoButton(
                                     onTap: () => controller.exploreCrews(),
-                                    buttonText: '크루 탐색',
+                                    buttonText: controller.isAbleToJoinCrew.value && !controller.isAbleToCreateCrew.value ? '크루 탐색하기' : '크루 탐색',
                                     buttonColor: controller.isAbleToCreateCrew.value ? skyBlueColor : popupBgColor,
                                     borderColor: controller.isAbleToCreateCrew.value ? Colors.black : skyBlueColor,
                                     textColor: controller.isAbleToCreateCrew.value ? Colors.black : Colors.white,
@@ -713,7 +731,7 @@ class ChallengeDetail extends StatelessWidget {
                               : Expanded(
                                   child: GazagoButton(
                                     onTap: () => controller.moveToMyCrew(),
-                                    buttonText: '진행중 챌린지',
+                                    buttonText: '나의 크루 보기',
                                   ),
                                 )
                         ],
