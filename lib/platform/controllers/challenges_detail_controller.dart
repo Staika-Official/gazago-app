@@ -434,7 +434,7 @@ class ChallengesDetailController extends GetxController with GetTickerProviderSt
         crewCreateCompleteAlert(this);
       },
       errorCallback: (ErrorResponseDataModel error) {
-        if (error.errorCode == 'ALREADY_USER_JOINED_CHALLENGE') {
+        if (error.errorCode == 'ALREADY_JOINED_CHALLENGE') {
           showChallengeAlreadyJoinedAlert();
         } else {
           showToastPopup(error.errorMessage!.replaceAll('\\n', '\n'));
@@ -558,7 +558,7 @@ class ChallengesDetailController extends GetxController with GetTickerProviderSt
     }, errorCallback: (ErrorResponseDataModel error) async {
       if (error.errorCode == 'CREW_RECRUIT_CLOSED') {
         await getCrewList();
-      } else if (error.errorCode == 'ALREADY_USER_JOINED_CHALLENGE') {
+      } else if (error.errorCode == 'ALREADY_JOINED_CHALLENGE') {
         showChallengeAlreadyJoinedAlert();
       } else {
         showToastPopup(error.errorMessage!.replaceAll('\\n', '\n'));
@@ -566,19 +566,8 @@ class ChallengesDetailController extends GetxController with GetTickerProviderSt
     });
   }
 
-  void moveToCrewDetail(CrewModel crew) {
-    int ranking = 0;
-    crewList.forEachIndexedWhile((index, CrewModel item) {
-      if (item.id == crew.id!) {
-        ranking = index + 1;
-      }
-      return item.id != crew.id!;
-    });
-    Get.toNamed(Routes.crewDetail, arguments: {'ranking': ranking, 'crew': crew});
-  }
-
   void moveToMyCrew() {
-    Get.toNamed(Routes.crewDetail, arguments: {'ranking': myCrew.value!['ranking'], 'crew': myCrew.value!['crew']});
+    Get.toNamed(Routes.crewDetail);
   }
 
   void loadDataOnScroll() {

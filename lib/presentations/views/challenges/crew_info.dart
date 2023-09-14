@@ -40,7 +40,7 @@ class CrewInfo extends StatelessWidget {
   }
 
   List<Widget> renderCrewList(CrewDetailController controller) {
-    return controller.crewLeaderboardList.map((member) {
+    return controller.crewList.map((member) {
       return Container(
         color: subBg01Color,
         height: 64.sp,
@@ -120,15 +120,15 @@ class CrewInfo extends StatelessWidget {
                     child: CircleAvatar(
                       radius: 22.sp,
                       backgroundColor: deepGrayColor,
-                      foregroundImage: (controller.selectedCrew.value?.iconImageUrl == null || controller.selectedCrew.value?.iconImageUrl == '')
+                      foregroundImage: (controller.selectedCrew.value.iconImageUrl == null || controller.selectedCrew.value.iconImageUrl == '')
                           ? Image.asset(
                               'assets/images/ic_launcher.png',
                               width: 30.sp,
                             ).image
-                          : controller.selectedCrew.value!.iconImageUrl!.contains('.svg')
-                              ? sp.Svg(controller.selectedCrew.value!.iconImageUrl!, source: sp.SvgSource.network) as ImageProvider
+                          : controller.selectedCrew.value.iconImageUrl!.contains('.svg')
+                              ? sp.Svg(controller.selectedCrew.value.iconImageUrl!, source: sp.SvgSource.network) as ImageProvider
                               : CachedNetworkImageProvider(
-                                  controller.selectedCrew.value!.iconImageUrl!,
+                                  controller.selectedCrew.value.iconImageUrl!,
                                   headers: imageNetworkHeader,
                                 ),
                     ),
@@ -143,7 +143,7 @@ class CrewInfo extends StatelessWidget {
                   Padding(
                     padding: const EdgeInsets.only(top: 12),
                     child: StyledText(
-                      controller.selectedCrew.value != null ? controller.selectedCrew.value!.name! : '',
+                      controller.selectedCrew.value.name!,
                       fontSize: 26,
                       lineHeight: 26,
                       fontWeight: 500,
@@ -369,24 +369,23 @@ class CrewInfo extends StatelessWidget {
                             fontSize: 18,
                             fontWeight: 500,
                           ),
-                          if (controller.selectedCrew.value != null)
-                            RichText(
-                              text: TextSpan(
-                                text: controller.selectedCrew.value!.crewMemberList!.length.toString(),
-                                style: const TextStyle(
-                                  fontSize: 18,
-                                  fontWeight: FontWeight.w700,
-                                  height: 1,
-                                  color: Colors.white,
-                                ),
-                                children: const [
-                                  TextSpan(
-                                    text: '명',
-                                    style: TextStyle(fontWeight: FontWeight.w500),
-                                  ),
-                                ],
+                          RichText(
+                            text: TextSpan(
+                              text: controller.selectedCrew.value.crewMemberList!.length.toString(),
+                              style: const TextStyle(
+                                fontSize: 18,
+                                fontWeight: FontWeight.w700,
+                                height: 1,
+                                color: Colors.white,
                               ),
+                              children: const [
+                                TextSpan(
+                                  text: '명',
+                                  style: TextStyle(fontWeight: FontWeight.w500),
+                                ),
+                              ],
                             ),
+                          ),
                         ],
                       ),
                     ),

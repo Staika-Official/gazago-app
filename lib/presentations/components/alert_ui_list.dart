@@ -5627,7 +5627,7 @@ void crewJoinCompleteAlert(CrewModel crew) async {
           buttonText: '확인',
           onTap: () {
             Get.back();
-            Get.find<ChallengesDetailController>().moveToCrewDetail(crew);
+            Get.find<ChallengesDetailController>().moveToMyCrew();
           },
         ),
       ),
