@@ -13,6 +13,8 @@ import 'package:gaza_go/platform/helpers/wallet_mixin.dart';
 import 'package:gaza_go/platform/models/asset_item_nft_model.dart';
 import 'package:gaza_go/platform/models/error_response_data_model.dart';
 import 'package:gaza_go/platform/models/on_chain_wallet_model.dart';
+import 'package:gaza_go/platform/models/token_model.dart';
+import 'package:gaza_go/platform/models/token_quotes_model.dart';
 import 'package:gaza_go/platform/models/wallet_token_balance_model.dart';
 import 'package:gaza_go/platform/services/wallet_service.dart';
 import 'package:gaza_go/platform/stores/hive_store.dart';
@@ -83,8 +85,11 @@ class StaikaWalletController extends GetxController with WalletMixin, SolanaMixi
     debugPrint("Focus: ${focusNode.hasFocus.toString()}");
   }
 
-  getCurrencyPrice(double amount) {
-    return (amount * (currency.value == Currency.krw ? stikPriceInfoKRW.value.price! : stikPriceInfoUSD.value.price!)).toString();
+  String getCurrencyPrice(TokenModel token, double amount) {
+    TokenQuotesModel quote = token.quotes!.singleWhere((quote) => quote.currency! == (currency.value == Currency.krw ? 'KRW' : 'USD'));
+    double price = quote.price!;
+
+    return (amount * price).toString();
   }
 
   Future<void> getStaikaWalletInfo() async {
@@ -99,7 +104,7 @@ class StaikaWalletController extends GetxController with WalletMixin, SolanaMixi
           showStaikaStatusAlert(hasWallet: true);
         }
 
-        await getStikPriceInfo();
+        await getTokenPriceInfoList();
         await getOnChainTokenBalance();
       },
       errorCallback: (ErrorResponseDataModel data) {

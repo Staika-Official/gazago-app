@@ -4,7 +4,7 @@ import 'package:gaza_go/platform/apis/token.dart';
 import 'package:gaza_go/platform/models/charge_tik_model.dart';
 import 'package:gaza_go/platform/models/error_response_data_model.dart';
 import 'package:gaza_go/platform/models/exchange_stik_token_model.dart';
-import 'package:gaza_go/platform/models/stik_token_model.dart';
+import 'package:gaza_go/platform/models/token_model.dart';
 import 'package:gaza_go/platform/stores/hive_store.dart';
 import 'package:solana/solana.dart';
 
@@ -21,7 +21,22 @@ class SolanaService {
   static Future<void> getStikPriceInfo({required Function successCallback, Function? errorCallback}) async {
     Response res = await TokenApi.getStikPriceInfo();
     if (res.statusCode == 200) {
-      successCallback(StikTokenModel.fromJson(res.data));
+      successCallback(TokenModel.fromJson(res.data));
+    } else {
+      if (errorCallback != null) errorCallback();
+    }
+  }
+
+  static Future<void> getTokenPriceInfoList({required Function successCallback, Function? errorCallback}) async {
+    Response res = await TokenApi.getTokenPriceInfoList();
+    if (res.statusCode == 200) {
+      List<TokenModel> tokenPriceList = List.empty(growable: true);
+      if (res.data.length > 0) {
+        res.data.forEach((priceInfo) {
+          tokenPriceList.add(TokenModel.fromJson(priceInfo));
+        });
+      }
+      successCallback(tokenPriceList);
     } else {
       if (errorCallback != null) errorCallback();
     }
