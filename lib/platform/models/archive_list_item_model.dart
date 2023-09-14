@@ -16,6 +16,7 @@ class ArchiveListItemModel {
   String? startedDate;
   String? endedDate;
   double? rewardGo;
+  double? rewardDistance;
   double? spendDurability;
   double? spendStamina;
   String? state;
@@ -45,6 +46,7 @@ class ArchiveListItemModel {
     this.startedDate,
     this.endedDate,
     this.rewardGo,
+    this.rewardDistance,
     this.spendDurability,
     this.spendStamina,
     this.state,
