@@ -45,6 +45,7 @@ class NewChallengeDetailModel {
   String? extTxtDetail;
   bool? limitedPeriod;
   ChallengeLandingModel? challengeLanding;
+  bool? usedImageContent;
 
   NewChallengeDetailModel({
     this.id,
@@ -84,6 +85,7 @@ class NewChallengeDetailModel {
     this.extTxtDetail,
     this.limitedPeriod,
     this.challengeLanding,
+    this.usedImageContent
   });
 
   factory NewChallengeDetailModel.fromJson(Map<String, dynamic> json) => _$NewChallengeDetailModelFromJson(json);

@@ -26,8 +26,9 @@ import '../../constants/enums.dart';
 
 class ShopDetailController extends GetxController {
   final WalletMasterController walletMasterController = Get.find();
-  final HomeMenuController challengesDetailController = Get.put(HomeMenuController());
+  final HomeMenuController homeMenuController = Get.put(HomeMenuController());
   ShopController shopController = Get.isRegistered<ShopController>() ? Get.find<ShopController>() : Get.put(ShopController());
+  ChallengesDetailController challengesDetailController = Get.isRegistered<ChallengesDetailController>() ? Get.find<ChallengesDetailController>() : Get.put(ChallengesDetailController());
   LoaderController loaderController = Get.put(LoaderController());
   final RxList<ShopItemModel> shopItemsList = RxList.empty();
   final RxInt purchaseItemCount = RxInt(1);
@@ -133,6 +134,11 @@ class ShopDetailController extends GetxController {
   void onClose() {
     itemScrollController.removeListener(() => toggleBottomNav(itemScrollController));
     shopController.getShopItemsList();
+
+
+    if(Get.previousRoute.contains('challenge_detail')){
+      challengesDetailController.refreshController();
+    }
     super.onClose();
   }
 
@@ -230,7 +236,7 @@ class ShopDetailController extends GetxController {
           if (user.authorities!.contains('ROLE_CERTIFIED_USER')) {
             handleCheckPurchaseAvailable(tradeSymbol);
           } else {
-            showChallengeItemBuyNeedVerificationAlert(this);
+            showChallengeItemBuyNeedVerificationAlert();
           }
         },
       );
@@ -239,11 +245,7 @@ class ShopDetailController extends GetxController {
     }
   }
 
-  void moveToVerification() async {
-    HiveStore.save(key: HiveKey.enteredRoute.name, value: Get.currentRoute);
-    Get.back();
-    Get.toNamed(Routes.verificationTerms);
-  }
+
 
   void showItemPurchasePopup(tradeSymbol) {
     itemPurchaseAlert(

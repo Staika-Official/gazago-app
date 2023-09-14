@@ -2018,9 +2018,9 @@ void itemPurchaseCompleteAlert(ShopDetailController controller) {
         child: GazagoButton(
           onTap: () {
             Get.back();
-            if (controller.purchaseCompleteItem.value.itemCategory != 'DISPOSABLE') {
-              controller.fetchEquipItem(controller.purchaseCompleteItem.value.id);
-            }
+            // if (controller.purchaseCompleteItem.value.itemCategory != 'DISPOSABLE') {
+            //   controller.fetchEquipItem(controller.purchaseCompleteItem.value.id);
+            // }
           },
           buttonText: '확인',
           buttonColor: skyBlueColor,
@@ -4765,7 +4765,7 @@ void moveBuyChallengeItemPageAlert(ChallengesDetailController controller, int it
   );
 }
 
-void challengeItemEquip(int itemId) {
+void challengeItemEquip() {
   ChallengesDetailController challengesDetailController = Get.find();
   showAlert(
     contentWidget: Padding(
@@ -4797,7 +4797,15 @@ void challengeItemEquip(int itemId) {
       ),
       Expanded(
         child: GazagoButton(
-          onTap: () => {Get.back(), challengesDetailController.fetchEquipItem(itemId)},
+          onTap: () async {
+              Get.back();
+              print(challengesDetailController.challengeDetails.value);
+
+              if(challengesDetailController.challengeDetails.value.challengeUserState != 'JOINED_UNEQUIPPED_ITEM'){
+                await challengesDetailController.onFetchJoinChallenge();
+              }
+              challengesDetailController.fetchEquipItem(challengesDetailController.challengeDetails.value.userItem!.id);
+            },
           buttonText: '장착하기',
           buttonColor: skyBlueColor,
         ),
@@ -5312,7 +5320,10 @@ void participateInChallengeByCodeAlert() {
                             cursorColor: Colors.white,
                             focusNode: controller.focusNode,
                             onChanged: (value) => controller.setCode(value),
-                            onSubmitted: (val) => controller.sendParticipateInCode(),
+                            onSubmitted: (val) {
+                              Get.back();
+                              controller.onFetchJoinChallenge();
+                            } ,
                           );
                         }),
                         Obx(() {
@@ -5341,7 +5352,10 @@ void participateInChallengeByCodeAlert() {
                               ),
                               Expanded(
                                 child: GazagoButton(
-                                  onTap: () => controller.sendParticipateInCode(),
+                                  onTap: () {
+                                    Get.back();
+                                    controller.onFetchJoinChallenge();
+                                  } ,
                                   buttonText: '확인',
                                   buttonColor: skyBlueColor,
                                 ),
@@ -6638,7 +6652,7 @@ void showConfirmNicknameChange(MyPageController controller) {
   );
 }
 
-void showChallengeNeedVerificationAlert(ChallengesDetailController controller) {
+void showChallengeNeedVerificationAlert() {
   Get.dialog(
     barrierColor: Colors.transparent,
     WillPopScope(
@@ -6697,7 +6711,7 @@ void showChallengeNeedVerificationAlert(ChallengesDetailController controller) {
                           ),
                           Expanded(
                             child: GazagoButton(
-                              onTap: () => controller.moveToVerification(),
+                              onTap: () => moveToVerification(),
                               buttonText: '확인',
                               buttonColor: skyBlueColor,
                             ),
@@ -6716,7 +6730,7 @@ void showChallengeNeedVerificationAlert(ChallengesDetailController controller) {
   );
 }
 
-void showChallengeItemBuyNeedVerificationAlert(ShopDetailController controller) {
+void showChallengeItemBuyNeedVerificationAlert() {
   Get.dialog(
     barrierColor: Colors.transparent,
     WillPopScope(
@@ -6775,7 +6789,7 @@ void showChallengeItemBuyNeedVerificationAlert(ShopDetailController controller) 
                           ),
                           Expanded(
                             child: GazagoButton(
-                              onTap: () => controller.moveToVerification(),
+                              onTap: () => moveToVerification(),
                               buttonText: '확인',
                               buttonColor: skyBlueColor,
                             ),
@@ -6906,7 +6920,7 @@ void joinChallengePopup(ChallengesDetailController controller) async {
                         children: [
                           Expanded(
                             child: GazagoButton(
-                              onTap: () => controller.isShortTokenBalance.value ? controller.moveToChargeTik() : controller.onFetchJoinPaychallenge(),
+                              onTap: () => controller.isShortTokenBalance.value ? controller.moveToChargeTik() : controller.onFetchJoinChallenge(),
                               buttonText: controller.isShortTokenBalance.value ? 'TIK 충전하기' : '참가하기',
                               textColor: Colors.white,
                               buttonColor: popupBgColor,

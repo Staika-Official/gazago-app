@@ -8,6 +8,8 @@ import 'package:gaza_go/constants/enums.dart';
 import 'package:gaza_go/constants/routes.dart';
 import 'package:gaza_go/platform/controllers/home_menu_controller.dart';
 import 'package:gaza_go/platform/firebase/remote_config.dart';
+import 'package:gaza_go/platform/models/user_account_model.dart';
+import 'package:gaza_go/platform/services/uaa_service.dart';
 import 'package:gaza_go/platform/stores/hive_store.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
@@ -234,4 +236,33 @@ void handlePendingDynamicLink() {
     handleRoute(pendingRoute);
     HiveStore.deleteKey(key: HiveKey.dynamicLinkRoute.name);
   }
+}
+
+Future<bool> handleCheckUserVerified() async {
+
+  bool isVerified =  HiveStore.load(key: HiveKey.certified.name) ?? false;
+
+  if(!isVerified){
+    await UaaService.getAccountInfo(
+      successCallback: (UserAccountModel user) {
+        if (user.authorities!.contains('ROLE_CERTIFIED_USER')) {
+          HiveStore.save(key: HiveKey.certified.name, value: true);
+          isVerified = true;
+        } else {
+          isVerified = false;
+        }
+      },
+    );
+  }
+
+  return isVerified;
+
+
+}
+
+void moveToVerification() {
+  print(Get.currentRoute);
+  HiveStore.save(key: HiveKey.enteredRoute.name, value: Get.currentRoute);
+  Get.back();
+  Get.toNamed(Routes.verificationTerms);
 }

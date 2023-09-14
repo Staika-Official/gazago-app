@@ -107,6 +107,8 @@ class LoginController extends GetxController {
         HiveStore.save(key: HiveKey.profileImageUrl.name, value: user.profileImageUrl);
         HiveStore.save(key: HiveKey.nickname.name, value: user.nickname);
         HiveStore.save(key: HiveKey.authorities.name, value: user.authorities);
+        HiveStore.save(key: HiveKey.certified.name, value: user.authorities!.contains('ROLE_CERTIFIED_USER'));
+
       },
     );
   }

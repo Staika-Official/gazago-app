@@ -59,7 +59,7 @@ class VerificationCertCodeController extends GetxController {
       // 본인인증이 완료 이벤트
       Adjust.trackEvent(AdjustEvent('hed7a4'));
 
-      HiveStore.save(key: HiveKey.certified.name, value: 'ROLE_CERTIFIED_USER');
+      HiveStore.save(key: HiveKey.certified.name, value: true);
       showToastPopup('본인인증이 완료되었습니다.');
       afterVerificationComplete();
     }, errorCallback: (res) {
@@ -79,7 +79,8 @@ class VerificationCertCodeController extends GetxController {
 
   void afterVerificationComplete() {
     String? enteredRoute = HiveStore.loadString(key: HiveKey.enteredRoute.name);
-    if (enteredRoute != null && (enteredRoute.contains('challenge_detail')|| enteredRoute.contains('shop/item/detail'))  ) {
+
+    if (enteredRoute != null && (enteredRoute.contains('challenge_detail')|| enteredRoute.contains('shop/item/detail')|| enteredRoute.contains('/activity/challenges'))  ) {
       Get.until((route) => Get.currentRoute == enteredRoute);
     } else {
       Get.until((route) => Get.currentRoute == Routes.home);

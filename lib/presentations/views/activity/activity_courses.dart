@@ -7,8 +7,10 @@ import 'package:gaza_go/constants/config.dart';
 import 'package:gaza_go/constants/enums.dart';
 import 'package:gaza_go/platform/controllers/activity_controller.dart';
 import 'package:gaza_go/platform/helpers/alert_helper.dart';
+import 'package:gaza_go/platform/helpers/base_helper.dart';
 import 'package:gaza_go/platform/helpers/map_helper.dart';
 import 'package:gaza_go/platform/models/challenge_course_model.dart';
+import 'package:gaza_go/presentations/components/alert_ui_list.dart';
 import 'package:gaza_go/presentations/styles/colors.dart';
 import 'package:gaza_go/presentations/styles/icons.dart';
 import 'package:gaza_go/presentations/styles/styled_text.dart';
@@ -180,12 +182,16 @@ class ActivityChallengeCourses extends StatelessWidget {
                       ),
                       child: InkWell(
                         onTap: controller.doableCoursesByChallenge.isNotEmpty
-                            ? () {
-                                if (controller.selectedCourse.value != null && controller.selectedChallenge.value != null) {
-                                  ExerciseType type = ExerciseType.values.singleWhere((type) => type.value == controller.selectedChallenge.value?.exerciseTypes[0]);
-                                  controller.selectExerciseType(type);
+                            ? () async {
+                                if(await handleCheckUserVerified()) {
+                                  if (controller.selectedCourse.value != null && controller.selectedChallenge.value != null) {
+                                    ExerciseType type = ExerciseType.values.singleWhere((type) => type.value == controller.selectedChallenge.value?.exerciseTypes[0]);
+                                    controller.selectExerciseType(type);
+                                  } else {
+                                    showToastPopup('도전할 챌린지를 선택해주세요.');
+                                  }
                                 } else {
-                                  showToastPopup('도전할 챌린지를 선택해주세요.');
+                                  showChallengeNeedVerificationAlert();
                                 }
                               }
                             : null,

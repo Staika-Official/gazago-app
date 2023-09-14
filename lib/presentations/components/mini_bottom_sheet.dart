@@ -97,6 +97,8 @@ Widget renderParticipateInChallenge() {
         } else {
           widgets = renderItemInProgressJoinedAvailable(challengesDetailController);
         }
+      } else if(userState == 'JOINED_UNEQUIPPED_ITEM'){
+        widgets = renderItemInProgressJoinedAvailableHaveItem(challengesDetailController);
       } else if (userState == 'JOIN_CLOSED') {
         // 참가 마감
         widgets = renderItemInProgressJoinedClosed(challengesDetailController);
@@ -118,7 +120,7 @@ Widget renderParticipateInChallenge() {
       }
     }
   }
-  if (challengeActivationType == 'PAY') {
+  if (challengeActivationType == 'PAYMENT') {
     if (challengeState == 'READY') {
       // 챌린지 전
       if (userState == 'REGISTER_READY') {

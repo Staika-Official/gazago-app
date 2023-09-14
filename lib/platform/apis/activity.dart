@@ -4,6 +4,7 @@ import 'package:dio/dio.dart';
 import 'package:gaza_go/constants/base_urls.dart';
 import 'package:gaza_go/constants/enums.dart';
 import 'package:gaza_go/platform/middleware/dio_middleware.dart';
+import 'package:gaza_go/platform/models/challenge_join_model.dart';
 import 'package:gaza_go/platform/models/user_exercise_model.dart';
 import 'package:gaza_go/platform/models/user_stamina_recharge_model.dart';
 import 'package:gaza_go/platform/stores/hive_store.dart';
@@ -213,5 +214,12 @@ class ActivityApi {
       serviceUrl: '/services/gazago/api',
       showLoading: false,
     ).post('/user-challenges/users/${userId}/challenges/${challengeId}/entryFees/${entryfee}');
+  }
+
+  static Future<Response> fetchJoinChallenge(String userId, int challengeId, ChallengeJoinModel params) async {
+    return await Api.client(
+      serviceUrl: '/services/gazago/api',
+      showLoading: false,
+    ).post('/user-challenges/users/${userId}/challenges/${challengeId}/join', data: params);
   }
 }

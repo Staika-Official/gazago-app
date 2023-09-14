@@ -15,7 +15,9 @@ import 'package:gaza_go/platform/controllers/leaderboard_controller.dart';
 import 'package:gaza_go/platform/controllers/loader_controller.dart';
 import 'package:gaza_go/platform/controllers/wallet_master_controller.dart';
 import 'package:gaza_go/platform/helpers/alert_helper.dart';
+import 'package:gaza_go/platform/helpers/base_helper.dart';
 import 'package:gaza_go/platform/helpers/challenge_mixin.dart';
+import 'package:gaza_go/platform/models/challenge_join_model.dart';
 import 'package:gaza_go/platform/models/challenge_ranker_model.dart';
 import 'package:gaza_go/platform/models/challenge_reward_model.dart';
 import 'package:gaza_go/platform/models/crew_create_form_model.dart';
@@ -335,24 +337,7 @@ class ChallengesDetailController extends GetxController with GetTickerProviderSt
     errorMessage.value = '';
   }
 
-  void sendParticipateInCode() async {
-    if (participationCode.value != '') {
-      await ActivityService.sendParticipateInCode(challengeId.value, participationCode.value, successCallback: (bool isSuccess) {
-        if (isSuccess) {
-          Get.back();
-          showToastPopup('인증이 완료되었습니다.');
-          initCodeTextField();
-          getChallengeDetail();
-          getChallengeLeaderboard();
-          getChallengeLeaderboardMyRanking();
-        }
-      }, errorCallback: (String? message) {
-        errorMessage.value = message!;
-      });
-    } else {
-      showToastPopup('참여코드를 입력해주세요.');
-    }
-  }
+
 
   Future<void> showCreateCrewForm() async {
     await CrewService.getCrewMarkIcons(successCallback: (List<CrewIconModel> icons) {
@@ -495,7 +480,7 @@ class ChallengesDetailController extends GetxController with GetTickerProviderSt
             requestCreateCrew('INVITE');
           } else {
             // 납부형 챌린지 참여하기
-            onFetchJoinPaychallenge();
+            onFetchJoinChallenge();
           }
         }
       } else {
@@ -518,7 +503,7 @@ class ChallengesDetailController extends GetxController with GetTickerProviderSt
             showToastPopup('모집이 제한된 크루입니다.');
           }
         } else {
-          showChallengeNeedVerificationAlert(this);
+          showChallengeNeedVerificationAlert();
         }
       },
     );
@@ -564,31 +549,81 @@ class ChallengesDetailController extends GetxController with GetTickerProviderSt
     }
   }
 
-  void onCheckCertifiedUser(Function callback) async {
-    await UaaService.getAccountInfo(
-      successCallback: (UserAccountModel user) {
-        if (user.authorities!.contains('ROLE_CERTIFIED_USER')) {
-          callback();
-        } else {
-          showChallengeNeedVerificationAlert(this);
-        }
-      },
-    );
+  void requestJoinChallenge(Function callback) async {
+    if(await handleCheckUserVerified()) {
+      callback();
+    } else {
+      showChallengeNeedVerificationAlert();
+    }
+
   }
 
-  Future<void> onFetchJoinPaychallenge() async {
-    Get.back();
-    await ActivityService.fetchParticipateInPayChallenge(challengeId.value, challengeDetails.value.entryFee!, successCallback: (bool) {
-      getChallengeDetail();
+
+  Future<void> onFetchJoinChallenge() async {
+
+    ChallengeJoinModel params = ChallengeJoinModel(challengeActivationType: challengeDetails.value.challengeActivationType!);
+    if(challengeDetails.value.challengeActivationType! == 'PAYMENT'){
+      params.entryFee = challengeDetails.value.entryFee;
+      Get.back();
+    }
+    if(challengeDetails.value.challengeActivationType! == 'ITEM'){
+      params.itemId = challengeDetails.value.item!.id;
+    }
+    if(challengeDetails.value.challengeActivationType! == 'CODE'){
+      if (participationCode.value == '') {
+        showToastPopup('참여코드를 입력해주세요.');
+        return;
+      }
+      params.code = participationCode.value;
+    }
+    await ActivityService.fetchJoinChallenge(challengeId.value, params, successCallback: (bool) {
+
+      if(challengeDetails.value.challengeActivationType! != 'ITEM') {
+        getChallengeDetail();
+      }
+      getChallengeLeaderboard();
+      getChallengeLeaderboardMyRanking();
       showToastPopup('챌린지 참가가 완료되었습니다.');
       // 광고가 있다면 띄워주기
       if (challengeDetails.value.challengeLanding != null) {
         showChallengeLandingPopup(this);
       }
+      if(challengeDetails.value.challengeActivationType! == 'CODE'){
+        initCodeTextField();
+      }
     }, errorCallback: (ErrorResponseDataModel error) {
-      showToastPopup(error.errorMessage!);
+
+      if(challengeDetails.value.challengeActivationType! == 'CODE'){
+        errorMessage.value = error.errorMessage!;
+      } else {
+        print(error.errorMessage);
+        // showToastPopup(error.errorMessage!);
+      }
     });
   }
+
+  // void sendParticipateInCode() async {
+  //   if (participationCode.value != '') {
+  //     ChallengeJoinModel params = ChallengeJoinModel(
+  //       challengeActivationType: challengeDetails.value.challengeActivationType!,
+  //       code: participationCode.value,
+  //     );
+  //     await ActivityService.fetchJoinChallenge(challengeId.value, params, successCallback: (bool isSuccess) {
+  //       if (isSuccess) {
+  //         Get.back();
+  //         showToastPopup('챌린지 참가가 완료되었습니다.');
+  //         initCodeTextField();
+  //         getChallengeDetail();
+  //         getChallengeLeaderboard();
+  //         getChallengeLeaderboardMyRanking();
+  //       }
+  //     }, errorCallback: (String? message) {
+  //       errorMessage.value = message!;
+  //     });
+  //   } else {
+  //     showToastPopup('참여코드를 입력해주세요.');
+  //   }
+  // }
 
   void onJoinPayChallenge() {
     if (double.parse(walletMasterController.tik.value.uiAmountString!) < challengeDetails.value.entryFee!) {
@@ -599,11 +634,6 @@ class ChallengesDetailController extends GetxController with GetTickerProviderSt
     joinChallengePopup(this);
   }
 
-  void moveToVerification() async {
-    HiveStore.save(key: HiveKey.enteredRoute.name, value: Get.currentRoute);
-    Get.back();
-    Get.toNamed(Routes.verificationTerms);
-  }
 
   void moveToChargeTik() {
     HiveStore.save(key: HiveKey.enteredRoute.name, value: Get.currentRoute);

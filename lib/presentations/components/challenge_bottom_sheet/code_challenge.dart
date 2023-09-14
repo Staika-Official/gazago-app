@@ -123,7 +123,7 @@ Map renderCodeReadyJoined(ChallengesDetailController challengesDetailController)
 // 챌린지 전 - 접수 중
 Map renderCodeReadyJoinedElse(ChallengesDetailController challengesDetailController) {
   Widget suffix = InkWell(
-    onTap: () => challengesDetailController.onCheckCertifiedUser(participateInChallengeByCodeAlert),
+    onTap: () => challengesDetailController.requestJoinChallenge(participateInChallengeByCodeAlert),
     child: Container(
         decoration: BoxDecoration(
           color: popupBgColor,
@@ -236,7 +236,7 @@ Map renderCodeInProgressJoined(ChallengesDetailController challengesDetailContro
 // 챌린지 진행 중 - 참가 가능
 Map renderCodeInProgressJoinedAvailable(ChallengesDetailController challengesDetailController) {
   Widget suffix = InkWell(
-    onTap: () => challengesDetailController.onCheckCertifiedUser(participateInChallengeByCodeAlert),
+    onTap: () => challengesDetailController.requestJoinChallenge(participateInChallengeByCodeAlert),
     child: Container(
         decoration: BoxDecoration(
           color: popupBgColor,

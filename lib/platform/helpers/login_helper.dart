@@ -51,6 +51,7 @@ void handleKeysOnLogout() {
     HiveKey.authorities.name,
     // HiveKey.closePopupDate.name,
     HiveKey.hasSeenFairPlayAlert.name,
+    HiveKey.certified.name
   ]);
 }
 

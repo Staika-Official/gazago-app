@@ -15,6 +15,7 @@ import 'package:gaza_go/platform/helpers/activity_helper.dart';
 import 'package:gaza_go/platform/helpers/activity_mixin.dart';
 import 'package:gaza_go/platform/helpers/admob_mixin.dart';
 import 'package:gaza_go/platform/helpers/alert_helper.dart';
+import 'package:gaza_go/platform/helpers/base_helper.dart';
 import 'package:gaza_go/platform/helpers/challenge_mixin.dart';
 import 'package:gaza_go/platform/helpers/consumer_item_mixin.dart';
 import 'package:gaza_go/platform/helpers/location_helper.dart';
@@ -824,6 +825,14 @@ class ActivityController extends SuperController with ActivityMixin, ChallengeMi
       await getNearByCourses(currentLocation.value, exerciseState.value);
     } else {
       await getCourseList();
+    }
+  }
+
+  void requestJoinChallenge(Function callback) async {
+    if(await handleCheckUserVerified()) {
+      callback();
+    } else {
+      showChallengeNeedVerificationAlert();
     }
   }
 
