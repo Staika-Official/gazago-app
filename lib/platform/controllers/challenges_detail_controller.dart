@@ -105,7 +105,25 @@ class ChallengesDetailController extends GetxController with GetTickerProviderSt
         ].any((state) => state == challengeDetails.value.challengeUserState));
   }
 
-  final Rxn<Map<String, dynamic>> myCrew = Rxn();
+  Rxn<Map<String, dynamic>> get myCrew {
+    String userId = HiveStore.loadString(key: HiveKey.userId.name)!;
+    int ranking = 0;
+    CrewModel? myCrew;
+    crewList.forEachIndexedWhile((int crewIndex, CrewModel crew) {
+      crew.crewMemberList!.forEachIndexedWhile((int memberIndex, CrewMemberModel member) {
+        if (member.userId.toString() == userId) {
+          ranking = crewIndex + 1;
+          myCrew = crew;
+        }
+
+        return member.userId.toString() != userId;
+      });
+
+      return myCrew == null;
+    });
+
+    return myCrew == null ? Rxn() : Rxn({'ranking': ranking, 'crew': myCrew});
+  }
 
   @override
   void onInit() async {
@@ -287,28 +305,6 @@ class ChallengesDetailController extends GetxController with GetTickerProviderSt
         return b.blockQuantity!.compareTo(a.blockQuantity!);
       });
     }
-
-    setMyCrew();
-  }
-
-  void setMyCrew() {
-    String userId = HiveStore.loadString(key: HiveKey.userId.name)!;
-    int ranking = 0;
-    CrewModel? myCrew;
-    crewList.forEachIndexedWhile((int crewIndex, CrewModel crew) {
-      crew.crewMemberList!.forEachIndexedWhile((int memberIndex, CrewMemberModel member) {
-        if (member.userId.toString() == userId) {
-          ranking = crewIndex + 1;
-          myCrew = crew;
-        }
-
-        return member.userId.toString() != userId;
-      });
-
-      return myCrew == null;
-    });
-
-    this.myCrew.value = myCrew == null ? null : {'ranking': ranking, 'crew': myCrew};
   }
 
   void getSize() {
@@ -465,7 +461,7 @@ class ChallengesDetailController extends GetxController with GetTickerProviderSt
     DynamicLinkParameters? dynamicLinkParams;
 
     if (challengeType == ChallengeType.crew) {
-      if (shareSource == ShareSource.shareAppbar) {
+      if ([ShareSource.shareAppbar, ShareSource.createCrew].any((source) => shareSource == source)) {
         dynamicLinkParams = DynamicLinkParameters(
           link: Uri.parse("https://gazago.io?route=${Routes.challengeDetail.replaceAll(':id', challengeId.value.toString())}"),
           uriPrefix: uriPrefix,
