@@ -359,3 +359,16 @@ enum ChallengeStatusType {
   beforeOpenEnter,
   beforeOpen,
 }
+
+enum ChallengeType {
+  crew,
+  alliance,
+  code,
+  item,
+}
+
+enum ShareSource {
+  shareAppbar,
+  createCrew,
+  crewDetail,
+}

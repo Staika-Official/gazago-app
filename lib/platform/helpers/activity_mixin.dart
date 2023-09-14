@@ -159,6 +159,10 @@ mixin ActivityMixin {
     return RxDouble(convertMetersToKm(exerciseDistance.value));
   }
 
+  RxDouble get rewardDistance {
+    return RxDouble(userState.value.exercise!.rewardDistance!);
+  }
+
   RxList<double> get altitudes {
     return RxList(exerciseData.map((location) => location.altitude!).toList());
   }

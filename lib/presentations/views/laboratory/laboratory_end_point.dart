@@ -10,7 +10,7 @@ class LaboratoryEndPoint extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    DebuggingController debuggingController = Get.put(DebuggingController());
+    DebuggingController debuggingController = Get.find<DebuggingController>();
 
     return DefaultContainer(
         titleText: '엔드포인트 변경',

@@ -35,9 +35,8 @@ class ChallengeDetail extends StatelessWidget {
         appBar: PreferredSize(
             preferredSize: preferredSize, // here the desired height
             child: controller.challengeDetails.value.challengeType == 'CREW'
-                ? CrewAppbar(
-                    titleText: controller.challengeDetails.value.title,
-                    isBeta: true,
+                ? const ShareAppbar(
+                    isBeta: false,
                   )
                 : const SecondaryAppbar(
                     isShowBackButton: true,
@@ -399,23 +398,25 @@ class ChallengeDetail extends StatelessWidget {
                                                             maxLines: 2,
                                                             overflowEllipsis: true,
                                                           ),
-                                                          // if (controller.challengeDetails.value.challengeType == 'CREW')
-                                                          //   Padding(
-                                                          //     padding: EdgeInsets.only(left: 5.0.sp),
-                                                          //     child: const BetaTag(),
-                                                          //   ),
                                                         ],
                                                       ),
                                                     ),
                                                   if (controller.challengeDetails.value.title != null)
                                                     Padding(
                                                       padding: EdgeInsets.only(bottom: 10.0.sp),
-                                                      child: StyledText(
-                                                        controller.challengeDetails.value.title!,
-                                                        fontSize: 20,
-                                                        lineHeight: 25,
-                                                        fontWeight: 500,
-                                                        letterSpacing: -.1,
+                                                      child: RichText(
+                                                        text: TextSpan(
+                                                          children: [
+                                                            TextSpan(
+                                                              text: controller.challengeDetails.value.title!,
+                                                              style: const TextStyle(fontSize: 20, fontWeight: FontWeight.w500, letterSpacing: -.1, height: 25 / 20),
+                                                            ),
+                                                            if (controller.challengeDetails.value.challengeType == 'CREW')
+                                                              const WidgetSpan(
+                                                                child: BetaTag(),
+                                                              ),
+                                                          ],
+                                                        ),
                                                       ),
                                                     ),
                                                   controller.challengeDetails.value.challengeType == 'CREW'
@@ -428,7 +429,7 @@ class ChallengeDetail extends StatelessWidget {
                                                                   Padding(
                                                                     padding: EdgeInsets.only(right: 20.0.sp),
                                                                     child: const StyledText(
-                                                                      '모집 기간',
+                                                                      '개설 기간',
                                                                       fontSize: 14,
                                                                       fontWeight: 500,
                                                                       lineHeight: 14,
@@ -605,9 +606,7 @@ class ChallengeDetail extends StatelessWidget {
                                                                         StyledText(
                                                                           controller.challengeDetails.value.quantity! >= 0
                                                                               ? '${controller.challengeDetails.value.challengeState! == 'READY' ? '' : ' /'}  ${formatDecimalPlaces(controller.challengeDetails.value.quantity!.toDouble(), 0)}명'
-                                                                              : controller.challengeDetails.value.challengeState! == 'READY'
-                                                                                  ? ' 제한없음'
-                                                                                  : ' 참여중',
+                                                                              : controller.getUnlimitedParticipationStatus(controller.challengeDetails.value.challengeState!),
                                                                           color: lightGrayColor,
                                                                           fontWeight: 500,
                                                                           fontSize: 12,
@@ -681,18 +680,34 @@ class ChallengeDetail extends StatelessWidget {
                     top: null,
                     left: 0,
                     bottom: 0,
-                    child: Padding(
+                    child: Container(
+                      width: double.infinity,
+                      height: 150.sp,
                       padding: EdgeInsets.only(
+                        top: 68.sp,
                         bottom: 27.sp,
                         left: 18.sp,
                         right: 18.sp,
+                      ),
+                      decoration: BoxDecoration(
+                        gradient: LinearGradient(
+                          begin: Alignment.topCenter,
+                          end: Alignment.bottomCenter,
+                          stops: const [0, 0.4],
+                          colors: [
+                            subBg01Color.withOpacity(0),
+                            subBg01Color,
+                            // Colors.red,
+                            // Colors.blueAccent
+                          ],
+                        ),
                       ),
                       child: Row(
                         children: [
                           if (controller.isAbleToCreateCrew.value) ...[
                             Expanded(
                               child: GazagoButton(
-                                onTap: () => controller.requestJoinChallenge(controller.showCreateCrewForm),
+                                onTap: () => controller.showCreateCrewForm(),
                                 buttonText: '크루 개설',
                                 buttonColor: popupBgColor,
                                 borderColor: skyBlueColor,
@@ -707,7 +722,7 @@ class ChallengeDetail extends StatelessWidget {
                               ? Expanded(
                                   child: GazagoButton(
                                     onTap: () => controller.exploreCrews(),
-                                    buttonText: '크루 탐색',
+                                    buttonText: controller.isAbleToJoinCrew.value && !controller.isAbleToCreateCrew.value ? '크루 탐색하기' : '크루 탐색',
                                     buttonColor: controller.isAbleToCreateCrew.value ? skyBlueColor : popupBgColor,
                                     borderColor: controller.isAbleToCreateCrew.value ? Colors.black : skyBlueColor,
                                     textColor: controller.isAbleToCreateCrew.value ? Colors.black : Colors.white,
@@ -716,7 +731,7 @@ class ChallengeDetail extends StatelessWidget {
                               : Expanded(
                                   child: GazagoButton(
                                     onTap: () => controller.moveToMyCrew(),
-                                    buttonText: '진행중 챌린지',
+                                    buttonText: '나의 크루 보기',
                                   ),
                                 )
                         ],

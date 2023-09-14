@@ -9,7 +9,7 @@ class LaboratoryFakeGps extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    DebuggingController debuggingController = Get.put(DebuggingController());
+    DebuggingController debuggingController = Get.find<DebuggingController>();
 
     return DefaultContainer(
         titleText: 'FAKE GPS 사용하기',

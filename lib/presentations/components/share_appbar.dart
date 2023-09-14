@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:gaza_go/constants/enums.dart';
 import 'package:gaza_go/platform/controllers/challenges_detail_controller.dart';
 import 'package:gaza_go/platform/controllers/crew_detail_controller.dart';
 import 'package:gaza_go/presentations/components/beta_tag.dart';
@@ -8,12 +9,12 @@ import 'package:gaza_go/presentations/styles/icons.dart';
 import 'package:gaza_go/presentations/styles/styled_text.dart';
 import 'package:get/get.dart';
 
-class CrewAppbar extends StatelessWidget implements PreferredSizeWidget {
+class ShareAppbar extends StatelessWidget implements PreferredSizeWidget {
   final String? titleText;
   final bool isBeta;
   final bool? isLockButton;
 
-  const CrewAppbar({Key? key, this.titleText, this.isBeta = false, this.isLockButton = false}) : super(key: key);
+  const ShareAppbar({Key? key, this.titleText, this.isBeta = false, this.isLockButton = false}) : super(key: key);
 
   @override
   Size get preferredSize => const Size.fromHeight(kToolbarHeight);
@@ -48,12 +49,18 @@ class CrewAppbar extends StatelessWidget implements PreferredSizeWidget {
             Stack(
               clipBehavior: Clip.none,
               children: [
-                StyledText(
-                  titleText!,
-                  // '크루 릴레이',
-                  fontSize: 18,
-                  lineHeight: 18,
-                  fontWeight: 500,
+                ConstrainedBox(
+                  constraints: BoxConstraints(maxWidth: 200.sp),
+                  child: FittedBox(
+                    fit: BoxFit.scaleDown,
+                    child: StyledText(
+                      titleText!,
+                      // '크루 릴레이',
+                      fontSize: 18,
+                      lineHeight: 18,
+                      fontWeight: 500,
+                    ),
+                  ),
                 ),
                 if (isBeta)
                   const Positioned(
@@ -87,7 +94,7 @@ class CrewAppbar extends StatelessWidget implements PreferredSizeWidget {
                   : Padding(
                       padding: EdgeInsets.only(left: 4.sp),
                       child: IconButton(
-                        onPressed: () => controller.shareCrewChallenge(),
+                        onPressed: () => controller.shareChallenge(challengeType: ChallengeType.crew, shareSource: ShareSource.shareAppbar),
                         icon: iconHeaderShare,
                         splashRadius: 20.sp,
                         constraints: BoxConstraints(

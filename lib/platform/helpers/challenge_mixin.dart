@@ -81,6 +81,19 @@ mixin ChallengeMixin {
     }
   }
 
+  String getUnlimitedParticipationStatus(String status) {
+    switch (status) {
+      case 'READY':
+        return ' 제한없음';
+      case 'IN_PROGRESS':
+        return ' 참여중';
+      case 'CLOSED':
+        return ' 참여';
+      default:
+        return '';
+    }
+  }
+
   String getChallengeUserStatus(status) {
     String text = '';
 

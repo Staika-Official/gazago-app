@@ -1,7 +1,10 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:gaza_go/platform/controllers/challenges_detail_controller.dart';
+import 'package:flutter_svg_provider/flutter_svg_provider.dart' as sp;
+import 'package:gaza_go/constants/config.dart';
 import 'package:gaza_go/platform/controllers/crew_detail_controller.dart';
+import 'package:gaza_go/presentations/components/alert_ui_list.dart';
 import 'package:gaza_go/presentations/styles/colors.dart';
 import 'package:gaza_go/presentations/styles/icons.dart';
 import 'package:gaza_go/presentations/styles/styled_text.dart';
@@ -122,9 +125,12 @@ class CrewInfo extends StatelessWidget {
                               'assets/images/ic_launcher.png',
                               width: 30.sp,
                             ).image
-                          : NetworkImage(
-                              controller.selectedCrew.value!.iconImageUrl!,
-                            ),
+                          : controller.selectedCrew.value!.iconImageUrl!.contains('.svg')
+                              ? sp.Svg(controller.selectedCrew.value!.iconImageUrl!, source: sp.SvgSource.network) as ImageProvider
+                              : CachedNetworkImageProvider(
+                                  controller.selectedCrew.value!.iconImageUrl!,
+                                  headers: imageNetworkHeader,
+                                ),
                     ),
                   ),
                   StyledText(
@@ -158,7 +164,7 @@ class CrewInfo extends StatelessWidget {
                               mainAxisSize: MainAxisSize.min,
                               children: [
                                 const StyledText(
-                                  '데일리 크루블록',
+                                  '데일리 크루블럭',
                                   fontSize: 14,
                                   fontWeight: 500,
                                   lineHeight: 14,
@@ -228,10 +234,10 @@ class CrewInfo extends StatelessWidget {
                           borderRadius: BorderRadius.circular(6),
                         ),
                       ),
-                      onPressed: () => Get.find<ChallengesDetailController>().shareCrewChallenge(),
+                      onPressed: () => showCrewInviteInfoAlert(controller),
                       child: RichText(
                         text: const TextSpan(
-                          text: '크루 초대하면 ',
+                          text: '크루원 초대하고, ',
                           style: TextStyle(
                             fontSize: 18,
                             fontWeight: FontWeight.w600,
@@ -240,7 +246,7 @@ class CrewInfo extends StatelessWidget {
                           ),
                           children: [
                             TextSpan(
-                              text: '2블럭추가!',
+                              text: '2블럭 받기',
                               style: TextStyle(fontWeight: FontWeight.w800),
                             ),
                           ],
@@ -260,12 +266,29 @@ class CrewInfo extends StatelessWidget {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    StyledText(
-                      '오늘 크루가 쌓은 블럭',
-                      fontSize: 14,
-                      fontWeight: 500,
-                      lineHeight: 22,
-                      color: Colors.white.withOpacity(0.6),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        StyledText(
+                          '오늘 크루가 쌓은 블럭',
+                          fontSize: 14,
+                          fontWeight: 500,
+                          lineHeight: 22,
+                          color: Colors.white.withOpacity(0.6),
+                        ),
+                        Padding(
+                          padding: const EdgeInsets.only(left: 4),
+                          child: Ink(
+                            width: 24,
+                            height: 24,
+                            child: InkWell(
+                              onTap: () => controller.refreshController(),
+                              borderRadius: BorderRadius.circular(24),
+                              child: iconRefresh,
+                            ),
+                          ),
+                        )
+                      ],
                     ),
                     Padding(
                       padding: const EdgeInsets.only(top: 12),

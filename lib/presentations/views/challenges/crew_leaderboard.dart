@@ -87,21 +87,58 @@ class CrewRankingItem extends StatelessWidget {
                         Padding(
                           padding: EdgeInsets.only(left: 10.0.sp),
                           child: Center(
-                            child: CircleAvatar(
-                              radius: 22.sp,
-                              backgroundColor: deepGrayColor,
-                              foregroundImage: (item.iconImageUrl == null || item.iconImageUrl == '')
-                                  ? Image.asset(
-                                      'assets/images/ic_launcher.png',
-                                      width: 44.sp,
-                                    ).image
-                                  : item.iconImageUrl!.contains('.svg')
-                                      ? sp.Svg(item.iconImageUrl!, source: sp.SvgSource.network) as ImageProvider
-                                      : CachedNetworkImageProvider(
-                                          item.iconImageUrl!,
-                                          headers: imageNetworkHeader,
+                            child: SizedBox(
+                              width: 50.sp,
+                              height: 50.sp,
+                              child: Stack(
+                                children: [
+                                  Center(
+                                    child: Padding(
+                                      padding: const EdgeInsets.only(top: 7.0),
+                                      child: CircleAvatar(
+                                        radius: 16.sp,
+                                        foregroundImage: (item.iconImageUrl == null || item.iconImageUrl == '')
+                                            ? Image.asset(
+                                                'assets/images/ic_launcher.png',
+                                                width: 32.sp,
+                                              ).image
+                                            : item.iconImageUrl!.contains('.svg')
+                                                ? sp.Svg(item.iconImageUrl!, source: sp.SvgSource.network) as ImageProvider
+                                                : CachedNetworkImageProvider(
+                                                    item.iconImageUrl!,
+                                                    headers: imageNetworkHeader,
+                                                  ),
+                                      ),
+                                    ),
+                                  ),
+                                  if (index + 1 < 4)
+                                    Center(
+                                      child: SizedBox(
+                                        width: 50.sp,
+                                        height: 50.sp,
+                                        child: Image.asset(
+                                          'assets/images/leaderboard/ranker_${index + 1}.png',
                                         ),
+                                      ),
+                                    ),
+                                ],
+                              ),
                             ),
+                            // child: CircleAvatar(
+                            //   radius: 22.sp,
+                            //   backgroundColor: deepGrayColor,
+                            //   foregroundImage: (item.iconImageUrl == null || item.iconImageUrl == '')
+                            //       ? Image.asset(
+                            //           'assets/images/ic_launcher.png',
+                            //           width: 44.sp,
+                            //         ).image
+                            //       : item.iconImageUrl!.contains('.svg')
+                            //           ? sp.Svg(item.iconImageUrl!, source: sp.SvgSource.network) as ImageProvider
+                            //           : CachedNetworkImageProvider(
+                            //               item.iconImageUrl!,
+                            //               headers: imageNetworkHeader,
+                            //             ),
+                            // ),
                           ),
                         ),
                         Expanded(

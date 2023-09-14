@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:gaza_go/constants/config.dart';
+import 'package:gaza_go/constants/enums.dart';
 import 'package:gaza_go/platform/controllers/daily_benefit_controller.dart';
 import 'package:gaza_go/platform/helpers/alert_helper.dart';
 import 'package:gaza_go/platform/helpers/base_helper.dart';
@@ -26,7 +27,7 @@ class DailyBenefits extends StatelessWidget {
       textSpanList.add(
         TextSpan(
           text: keywords[idx - 1],
-          style: TextStyle(
+          style: const TextStyle(
             color: skyBlueColor,
           ),
         ),
@@ -130,7 +131,7 @@ class DailyBenefits extends StatelessWidget {
                       children: [
                         StyledText(
                           controller.dailyBenefitList.value!.userExercise.distance! >= 1000
-                              ? formatDecimalPlaces(double.parse(formatMeterToKilometer(controller.dailyBenefitList.value!.userExercise.distance!.toInt())), 1)
+                              ? formatDecimalPlaces(double.parse(formatMeterToKilometer(controller.dailyBenefitList.value!.userExercise.distance!.toInt())), 1, roundType: RoundType.floor)
                               : formatDecimalPlaces(controller.dailyBenefitList.value!.userExercise.distance!, 0),
                           fontFamily: 'Montserrat',
                           fontSize: 50,
@@ -151,7 +152,7 @@ class DailyBenefits extends StatelessWidget {
                   Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      StyledText(
+                      const StyledText(
                         '현재 거리',
                         fontSize: 16,
                         lineHeight: 16,
@@ -196,13 +197,13 @@ class DailyBenefits extends StatelessWidget {
                                       : controller.dailyBenefitList.value!.userExercise.distance! / controller.maxRewardDistance.value),
                               height: 16,
                               decoration: BoxDecoration(
-                                gradient: LinearGradient(
+                                gradient: const LinearGradient(
                                   begin: Alignment.centerLeft,
                                   end: Alignment.centerRight,
-                                  transform: const GradientRotation(2.3911),
+                                  transform: GradientRotation(2.3911),
                                   colors: [
                                     skyBlueColor,
-                                    const Color(0xff0EF3D8),
+                                    Color(0xff0EF3D8),
                                   ],
                                 ),
                                 borderRadius: BorderRadius.circular(7),
@@ -403,13 +404,13 @@ class _DailyBenefitItemState extends State<DailyBenefitItem> {
                 height: 15,
                 decoration: BoxDecoration(
                   borderRadius: BorderRadius.circular(4),
-                  gradient: LinearGradient(
+                  gradient: const LinearGradient(
                     begin: Alignment.centerLeft,
                     end: Alignment.centerRight,
-                    transform: const GradientRotation(2.3911),
+                    transform: GradientRotation(2.3911),
                     colors: [
                       skyBlueColor,
-                      const Color(0xff0EF3D8),
+                      Color(0xff0EF3D8),
                     ],
                   ),
                 ),

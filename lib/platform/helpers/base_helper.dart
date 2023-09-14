@@ -13,6 +13,7 @@ import 'package:gaza_go/platform/services/uaa_service.dart';
 import 'package:gaza_go/platform/stores/hive_store.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
+import 'package:kakao_flutter_sdk_share/kakao_flutter_sdk_share.dart';
 import 'package:package_info_plus/package_info_plus.dart';
 
 Future<bool> isForceUpdateTarget() async {
@@ -85,6 +86,10 @@ String calculateDuration(String? fromDateString, String? toDateString) {
   if (fromDateString == null || toDateString == null) return '0';
   DateTime fromDate = DateTime.parse(fromDateString);
   DateTime toDate = DateTime.parse(toDateString);
+  bool hasMoreHours = fromDate.difference(toDate).inHours % 24 != 0;
+  if (hasMoreHours) {
+    return (toDate.difference(fromDate).inDays + 1).toString();
+  }
 
   return toDate.difference(fromDate).inDays.toString();
 }
@@ -223,6 +228,11 @@ void handleRoute(String route) {
     } else if (route.contains('leaderboard')) {
       Get.find<HomeMenuController>().selectMenu(4);
     }
+
+    if (Get.currentRoute != Routes.home) {
+      Get.until((route) => Get.currentRoute == Routes.home);
+    }
+
     Get.toNamed(route);
   } else {
     HiveStore.save(key: HiveKey.dynamicLinkRoute.name, value: route);
@@ -265,4 +275,63 @@ void moveToVerification() {
   HiveStore.save(key: HiveKey.enteredRoute.name, value: Get.currentRoute);
   Get.back();
   Get.toNamed(Routes.verificationTerms);
+}
+FeedTemplate generateFeedTemplate(Uri shareUrl, {required ChallengeType challengeType, required ShareSource shareSource, String? crewName}) {
+  FeedTemplate? template;
+  switch (challengeType) {
+    case ChallengeType.crew:
+    default:
+      switch (shareSource) {
+        case ShareSource.shareAppbar:
+          template = FeedTemplate(
+            content: Content(
+              imageUrl: Uri.parse('https://s3.ap-northeast-2.amazonaws.com/image.staika.io/social/share_crew_relay.png'),
+              imageHeight: 400,
+              imageWidth: 400,
+              title: '세상에 없던 가자고 단체전 챌린지⚡',
+              description: '친구와 같이 걸음블럭을 쌓으며 즐기는 단체전 챌린지! 지금 확인 해 보세요!',
+              link: Link(
+                webUrl: shareUrl,
+                mobileWebUrl: shareUrl,
+              ),
+            ),
+            buttonTitle: '크루릴레이 구경하기',
+          );
+          break;
+        case ShareSource.createCrew:
+          template = FeedTemplate(
+            content: Content(
+              imageUrl: Uri.parse('https://s3.ap-northeast-2.amazonaws.com/image.staika.io/social/share_crew_relay.png'),
+              imageHeight: 400,
+              imageWidth: 400,
+              title: '너를 초대하면 3000TIK을 아낄 수 있더라구…🙄',
+              description: '꼭.. 와달라는건 아니구...구경해보고 맘에 들면 말해줘.. 블럭 받게 해줄게!',
+              link: Link(
+                webUrl: shareUrl,
+                mobileWebUrl: shareUrl,
+              ),
+            ),
+            buttonTitle: '크루릴레이 구경하기',
+          );
+          break;
+        case ShareSource.crewDetail:
+          template = FeedTemplate(
+            content: Content(
+              imageUrl: Uri.parse('https://s3.ap-northeast-2.amazonaws.com/image.staika.io/social/share_crew.png'),
+              imageHeight: 400,
+              imageWidth: 400,
+              title: '너, ${crewName!} 크루가 돼라!🎯\n${crewName} 크루에서 당신을 초대했어요.',
+              description: '지금 참여하면 걸음블럭 2개를 쌓을 수 있어요!',
+              link: Link(
+                webUrl: shareUrl,
+                mobileWebUrl: shareUrl,
+              ),
+            ),
+            buttonTitle: '크루릴레이 참여하기',
+          );
+          break;
+      }
+      break;
+  }
+  return template;
 }
