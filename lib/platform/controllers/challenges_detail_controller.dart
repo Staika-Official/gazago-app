@@ -351,7 +351,7 @@ class ChallengesDetailController extends GetxController with GetTickerProviderSt
 
 
   Future<void> showCreateCrewForm() async {
-    if (await isVerifiedUser()) {
+    if (await handleCheckUserVerified()) {
       await CrewService.getCrewMarkIcons(successCallback: (List<CrewIconModel> icons) {
         crewMarkIcons.clear();
         selectedMarkIconId.value = icons.first.id;
@@ -363,7 +363,7 @@ class ChallengesDetailController extends GetxController with GetTickerProviderSt
       crewNameController.text = '';
       crewCreatePopup(this);
     } else {
-      showChallengeNeedVerificationAlert(this);
+      showChallengeNeedVerificationAlert();
     }
   }
 
@@ -522,14 +522,14 @@ class ChallengesDetailController extends GetxController with GetTickerProviderSt
 
   Future<void> handleCrewJoin(CrewModel crew) async {
     if (isAbleToJoinCrew.value) {
-      if (await isVerifiedUser()) {
+      if (await handleCheckUserVerified()) {
         if (crew.crewRecruitStatus == "OPEN" && crew.crewRelayStatus == "ONGOING") {
           crewJoinInfoAlert(crew);
         } else {
           showToastPopup('모집이 제한된 크루입니다.');
         }
       } else {
-        showChallengeNeedVerificationAlert(this);
+        showChallengeNeedVerificationAlert();
       }
     } else {
       showToastPopup('모집인원이 마감된 크루입니다.');
@@ -737,16 +737,3 @@ class ChallengesDetailController extends GetxController with GetTickerProviderSt
   }
 }
 
-//TODO 납부형 챌린지 머지 후 삭제 필요
-Future<bool> isVerifiedUser() async {
-  bool isVerified = false;
-  await UaaService.getAccountInfo(
-    successCallback: (UserAccountModel user) {
-      if (user.authorities!.contains('ROLE_CERTIFIED_USER')) {
-        isVerified = true;
-      }
-    },
-  );
-
-  return isVerified;
-}
