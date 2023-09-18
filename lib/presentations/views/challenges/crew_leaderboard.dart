@@ -20,7 +20,7 @@ class CrewLeaderboard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    ChallengesDetailController controller = Get.find<ChallengesDetailController>();
+    ChallengesDetailController controller = Get.isRegistered<ChallengesDetailController>() ? Get.find<ChallengesDetailController>() : Get.put(ChallengesDetailController());
 
     return Obx(() {
       return Container(

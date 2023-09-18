@@ -84,14 +84,17 @@ String formatDateMonthUntilTime(String? isoDateString) {
 
 String calculateDuration(String? fromDateString, String? toDateString) {
   if (fromDateString == null || toDateString == null) return '0';
-  DateTime fromDate = DateTime.parse(fromDateString);
-  DateTime toDate = DateTime.parse(toDateString);
-  bool hasMoreHours = fromDate.difference(toDate).inHours % 24 != 0;
+  DateTime fromDate = DateTime.parse(fromDateString).toLocal();
+  DateTime toDate = DateTime.parse(toDateString).toLocal();
+  DateTime formattedFromDate = DateTime(fromDate.year, fromDate.month, fromDate.day);
+  DateTime formattedToDate = DateTime(toDate.year, toDate.month, toDate.day);
+
+  bool hasMoreHours = toDate.difference(fromDate).inHours % 24 != 0;
   if (hasMoreHours) {
-    return (toDate.difference(fromDate).inDays + 1).toString();
+    return (formattedToDate.difference(formattedFromDate).inDays + 1).toString();
   }
 
-  return toDate.difference(fromDate).inDays.toString();
+  return formattedToDate.difference(formattedFromDate).inDays.toString();
 }
 
 String coordinatesToString(List<LatLng> coordinates) {

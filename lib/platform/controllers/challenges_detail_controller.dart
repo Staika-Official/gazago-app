@@ -277,6 +277,9 @@ class ChallengesDetailController extends GetxController with GetTickerProviderSt
       members.sort((a, b) => b.blockQuantity!.compareTo(a.blockQuantity!));
 
       crew['crewMemberList'] = members;
+      if (members.length == 20 && crew['crewRecruitStatus'] != 'CLOSE') {
+        FirebaseDatabase.instance.ref('crewChallengeLeaderboard/${challengeId.value}/$key/crewRecruitStatus').set('CLOSE');
+      }
 
       CrewModel crewModel = CrewModel.fromJson(jsonDecode(jsonEncode(crew)));
       crewList.add(crewModel);

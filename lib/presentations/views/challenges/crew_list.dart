@@ -154,7 +154,7 @@ class CrewList extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    ChallengesDetailController controller = Get.find();
+    ChallengesDetailController controller = Get.isRegistered<ChallengesDetailController>() ? Get.find<ChallengesDetailController>() : Get.put(ChallengesDetailController());
 
     return SingleChildScrollView(
       child: Obx(() {
