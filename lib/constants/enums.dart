@@ -106,6 +106,7 @@ enum HiveKey {
   adjustFirstEquippedItemEvent,
   adjustFirstJoinedChallengeEvent,
   enteredRoute,
+  challengeListIds,
 }
 
 enum ResponseStatus {

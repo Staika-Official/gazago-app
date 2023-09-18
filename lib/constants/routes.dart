@@ -145,7 +145,7 @@ class Routes {
         })),
     stepPage(
       name: Routes.home,
-      page: const Home(),
+      page: Home(),
       transition: Transition.noTransition,
     ),
     stepPage(name: Routes.term, page: const Term()),

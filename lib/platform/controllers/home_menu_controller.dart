@@ -18,7 +18,9 @@ import 'package:gaza_go/platform/firebase/cloud_messaging.dart';
 import 'package:gaza_go/platform/helpers/alert_helper.dart';
 import 'package:gaza_go/platform/helpers/base_helper.dart';
 import 'package:gaza_go/platform/helpers/login_helper.dart';
+import 'package:gaza_go/platform/models/new_challenge_model.dart';
 import 'package:gaza_go/platform/models/push_message_challenge_success_model.dart';
+import 'package:gaza_go/platform/services/activity_service.dart';
 import 'package:gaza_go/platform/stores/hive_store.dart';
 import 'package:gaza_go/presentations/components/alert_ui_list.dart';
 import 'package:gaza_go/presentations/components/main_appbar.dart';
@@ -31,6 +33,7 @@ import 'package:gaza_go/presentations/views/shop/index.dart';
 import 'package:get/get.dart';
 import 'package:in_app_update/in_app_update.dart';
 import 'package:new_version_plus/new_version_plus.dart';
+import 'package:simple_animations/simple_animations.dart';
 
 class HomeMenuController extends SuperController {
   final RxInt selectedIndex = RxInt(2);
@@ -39,6 +42,8 @@ class HomeMenuController extends SuperController {
   GlobalKey bottomNavKey = GlobalKey();
   final RxnDouble bottomNavHeight = RxnDouble();
   final RxBool hideBottomNav = RxBool(false);
+  final RxBool hasNewChallenge = RxBool(false);
+  final Rx<Control> newChallengeControl = Rx(Control.play);
 
   final List<PreferredSizeWidget> appbarList = [
     const MainAppbar(),
@@ -69,6 +74,7 @@ class HomeMenuController extends SuperController {
     bottomNavHeight.value = bottomNavKey.currentContext != null ? bottomNavKey.currentContext!.size!.height : 0;
     checkItemsDb();
     handlePendingDynamicLink();
+    checkForNewChallenges();
     super.onReady();
   }
 
@@ -106,6 +112,9 @@ class HomeMenuController extends SuperController {
   void selectMenu(int index) {
     prevIndex.value = selectedIndex.value;
     selectedIndex.value = index;
+    if (index == 0 && hasNewChallenge.value) {
+      hasNewChallenge.value = false;
+    }
     if (index != 1 && Get.isRegistered<InventoryHomeController>()) {
       Get.find<InventoryHomeController>().tabController.animateTo(0);
     }
@@ -241,6 +250,22 @@ class HomeMenuController extends SuperController {
       }
     }).onError((error, stackTrace) {
       print(error);
+    });
+  }
+
+  void checkForNewChallenges() async {
+    await ActivityService.getNewChallenges(successCallback: (List<NewChallengeModel> challengeList) {
+      List<int>? challengeListIds = HiveStore.load(key: HiveKey.challengeListIds.name);
+      if (challengeListIds != null && challengeListIds.isNotEmpty) {
+        for (NewChallengeModel challenge in challengeList) {
+          if (!challengeListIds.contains(challenge.id)) {
+            hasNewChallenge.value = true;
+            break;
+          }
+        }
+      } else if (challengeListIds == null && challengeList.isNotEmpty) {
+        hasNewChallenge.value = true;
+      }
     });
   }
 
