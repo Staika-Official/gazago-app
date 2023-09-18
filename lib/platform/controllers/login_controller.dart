@@ -14,6 +14,7 @@ import 'package:gaza_go/platform/helpers/login_helper.dart';
 import 'package:gaza_go/platform/models/access_token_model.dart';
 import 'package:gaza_go/platform/models/error_response_data_model.dart';
 import 'package:gaza_go/platform/models/social_login_info_model.dart';
+import 'package:gaza_go/platform/models/user_account_model.dart';
 import 'package:gaza_go/platform/services/member_service.dart';
 import 'package:gaza_go/platform/services/uaa_service.dart';
 import 'package:gaza_go/platform/stores/hive_store.dart';
@@ -101,14 +102,13 @@ class LoginController extends GetxController {
 
   Future<void> getUserInfo() async {
     await UaaService.getAccountInfo(
-      successCallback: (user) {
+      successCallback: (UserAccountModel user) {
         HiveStore.save(key: HiveKey.userId.name, value: user.id.toString());
         HiveStore.save(key: HiveKey.email.name, value: user.email);
         HiveStore.save(key: HiveKey.profileImageUrl.name, value: user.profileImageUrl);
         HiveStore.save(key: HiveKey.nickname.name, value: user.nickname);
         HiveStore.save(key: HiveKey.authorities.name, value: user.authorities);
         HiveStore.save(key: HiveKey.certified.name, value: user.authorities!.contains('ROLE_CERTIFIED_USER'));
-
       },
     );
   }
