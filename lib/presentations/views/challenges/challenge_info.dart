@@ -210,51 +210,7 @@ class ChallengeInfo extends StatelessWidget {
                                   ),
                               ],
                             ),
-                            if (controller.challengeDetails.value.extBtnLabel != null && controller.challengeDetails.value.extBtnLabel != '' && controller.challengeDetails.value.linkUrl != null)
-                              Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Padding(
-                                    padding: EdgeInsets.only(top: 38.0.sp, bottom: 15.sp),
-                                    child: const StyledText(
-                                      '챌린지 참여 추가 혜택',
-                                      fontWeight: 500,
-                                      fontSize: 18,
-                                      lineHeight: 20,
-                                      letterSpacing: -.1,
-                                    ),
-                                  ),
-                                  Container(
-                                    width: double.infinity,
-                                    decoration: BoxDecoration(
-                                      color: popupBgColor,
-                                      border: Border.all(
-                                        width: 2,
-                                        style: BorderStyle.solid,
-                                        color: skyBlueColor,
-                                      ),
-                                      borderRadius: BorderRadius.all(Radius.circular(12.sp)),
-                                    ),
-                                    child: InkWell(
-                                      onTap: () {
-                                        controller.moveToExternalBrowser(controller.challengeDetails.value.linkUrl, controller.challengeDetails.value.title);
-                                      },
-                                      child: Padding(
-                                        padding: EdgeInsets.symmetric(vertical: 20.0.sp, horizontal: 18.sp),
-                                        child: Center(
-                                          child: StyledText(
-                                            controller.challengeDetails.value.extBtnLabel!,
-                                            fontSize: 18,
-                                            fontWeight: 500,
-                                            lineHeight: 18,
-                                            letterSpacing: -.1,
-                                          ),
-                                        ),
-                                      ),
-                                    ),
-                                  ),
-                                ],
-                              ),
+
                             Padding(
                               padding: EdgeInsets.only(top: 45.0.sp),
                               child: Column(
@@ -546,6 +502,51 @@ class ChallengeInfo extends StatelessWidget {
                                     ),
                                   ),
                               ],
+                            ),
+                          ],
+                        ),
+                      if (controller.challengeDetails.value.extBtnLabel != null && controller.challengeDetails.value.extBtnLabel != '' && controller.challengeDetails.value.linkUrl != null)
+                        Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Padding(
+                              padding: EdgeInsets.only(top: 38.0.sp, bottom: 15.sp),
+                              child: const StyledText(
+                                '챌린지 참여 추가 혜택',
+                                fontWeight: 500,
+                                fontSize: 18,
+                                lineHeight: 20,
+                                letterSpacing: -.1,
+                              ),
+                            ),
+                            Container(
+                              width: double.infinity,
+                              decoration: BoxDecoration(
+                                color: popupBgColor,
+                                border: Border.all(
+                                  width: 2,
+                                  style: BorderStyle.solid,
+                                  color: skyBlueColor,
+                                ),
+                                borderRadius: BorderRadius.all(Radius.circular(12.sp)),
+                              ),
+                              child: InkWell(
+                                onTap: () {
+                                  controller.moveToExternalBrowser(controller.challengeDetails.value.linkUrl, controller.challengeDetails.value.title);
+                                },
+                                child: Padding(
+                                  padding: EdgeInsets.symmetric(vertical: 20.0.sp, horizontal: 18.sp),
+                                  child: Center(
+                                    child: StyledText(
+                                      controller.challengeDetails.value.extBtnLabel!,
+                                      fontSize: 18,
+                                      fontWeight: 500,
+                                      lineHeight: 18,
+                                      letterSpacing: -.1,
+                                    ),
+                                  ),
+                                ),
+                              ),
                             ),
                           ],
                         ),

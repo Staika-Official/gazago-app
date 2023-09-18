@@ -365,6 +365,7 @@ enum ChallengeType {
   alliance,
   code,
   item,
+  payment
 }
 
 enum ShareSource {

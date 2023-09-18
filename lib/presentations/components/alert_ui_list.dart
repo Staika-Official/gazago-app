@@ -4799,9 +4799,8 @@ void challengeItemEquip() {
         child: GazagoButton(
           onTap: () async {
               Get.back();
-              print(challengesDetailController.challengeDetails.value);
 
-              if(challengesDetailController.challengeDetails.value.challengeUserState != 'JOINED_UNEQUIPPED_ITEM'){
+              if(challengesDetailController.challengeDetails.value.challengeUserState != 'JOINED_UNEQUIPPED_ITEM' && challengesDetailController.challengeDetails.value.challengeState == 'PROGRESS'){
                 await challengesDetailController.onFetchJoinChallenge();
               }
               challengesDetailController.fetchEquipItem(challengesDetailController.challengeDetails.value.userItem!.id);

@@ -443,17 +443,15 @@ class ChallengesDetailController extends GetxController with GetTickerProviderSt
     String uriPrefix = F.isDev ? "https://gazagostage.page.link" : "https://gazago.page.link";
     String packageName = F.isDev ? "kr.co.eztechfin.gazaGo.dev" : "kr.co.eztechfin.gazaGo";
 
-    DynamicLinkParameters? dynamicLinkParams;
+    DynamicLinkParameters? dynamicLinkParams = DynamicLinkParameters(
+      link: Uri.parse("https://gazago.io?route=${Routes.challengeDetail.replaceAll(':id', challengeId.value.toString())}"),
+      uriPrefix: uriPrefix,
+      androidParameters: AndroidParameters(packageName: packageName),
+      iosParameters: IOSParameters(bundleId: packageName),
+    );
 
     if (challengeType == ChallengeType.crew) {
-      if ([ShareSource.shareAppbar, ShareSource.createCrew].any((source) => shareSource == source)) {
-        dynamicLinkParams = DynamicLinkParameters(
-          link: Uri.parse("https://gazago.io?route=${Routes.challengeDetail.replaceAll(':id', challengeId.value.toString())}"),
-          uriPrefix: uriPrefix,
-          androidParameters: AndroidParameters(packageName: packageName),
-          iosParameters: IOSParameters(bundleId: packageName),
-        );
-      } else {
+      if (![ShareSource.shareAppbar, ShareSource.createCrew].any((source) => shareSource == source)) {
         dynamicLinkParams = DynamicLinkParameters(
           link: Uri.parse("https://gazago.io?route=${Routes.challengeDetail.replaceAll(':id', challengeId.value.toString())}&inviteId=$userId"),
           uriPrefix: uriPrefix,
@@ -462,6 +460,7 @@ class ChallengesDetailController extends GetxController with GetTickerProviderSt
         );
       }
     }
+
 
     final ShortDynamicLink dynamicLink = await FirebaseDynamicLinks.instance.buildShortLink(dynamicLinkParams!);
 
@@ -593,13 +592,14 @@ class ChallengesDetailController extends GetxController with GetTickerProviderSt
       params.code = participationCode.value;
     }
     await ActivityService.fetchJoinChallenge(challengeId.value, params, successCallback: (bool) {
-
+      walletMasterController.getSpendingWalletBalances();
       if(challengeDetails.value.challengeActivationType! != 'ITEM') {
         getChallengeDetail();
       }
       getChallengeLeaderboard();
       getChallengeLeaderboardMyRanking();
       showToastPopup('챌린지 참가가 완료되었습니다.');
+
       // 광고가 있다면 띄워주기
       if (challengeDetails.value.challengeLanding != null) {
         showChallengeLandingPopup(this);
