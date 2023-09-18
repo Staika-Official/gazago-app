@@ -18,6 +18,7 @@ class RankerModel {
   String? createdDate;
   String? lastModifiedBy;
   String? lastModifiedDate;
+  String userKeyword;
 
   RankerModel({
     this.id,
@@ -34,6 +35,7 @@ class RankerModel {
     this.createdDate,
     this.lastModifiedBy,
     this.lastModifiedDate,
+    required this.userKeyword,
   });
 
   factory RankerModel.fromJson(Map<String, dynamic> json) => _$RankerModelFromJson(json);

@@ -6272,8 +6272,8 @@ void crewCreatePopup(ChallengesDetailController controller) async {
                             borderRadius: BorderRadius.circular(8.sp),
                             child: Container(
                               decoration: BoxDecoration(
-                                color: skyBlueColor,
-                                border: Border.all(width: 2.sp, color: Colors.black),
+                                color: popupBgColor,
+                                border: Border.all(width: 2.sp, color: skyBlueColor),
                                 borderRadius: BorderRadius.circular(8.sp),
                                 boxShadow: [
                                   BoxShadow(
@@ -6292,7 +6292,7 @@ void crewCreatePopup(ChallengesDetailController controller) async {
                                         fontSize: 18,
                                         lineHeight: 18,
                                         fontWeight: 600,
-                                        color: Colors.black,
+                                        color: Colors.white,
                                       ),
                                       StyledText(
                                         '3,000TIK',
@@ -6300,7 +6300,7 @@ void crewCreatePopup(ChallengesDetailController controller) async {
                                         lineHeight: 16,
                                         fontWeight: 600,
                                         letterSpacing: -.1,
-                                        color: Colors.black,
+                                        color: Colors.white,
                                       ),
                                     ],
                                   ),

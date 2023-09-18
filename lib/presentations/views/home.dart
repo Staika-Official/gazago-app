@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -8,10 +10,18 @@ import 'package:gaza_go/platform/helpers/alert_helper.dart';
 import 'package:gaza_go/presentations/components/gazago_button.dart';
 import 'package:gaza_go/presentations/styles/colors.dart';
 import 'package:gaza_go/presentations/styles/icons.dart';
+import 'package:gaza_go/presentations/styles/styled_text.dart';
 import 'package:get/get.dart';
+import 'package:simple_animations/simple_animations.dart';
 
 class Home extends StatelessWidget {
-  const Home({Key? key}) : super(key: key);
+  Home({Key? key}) : super(key: key);
+
+  MovieTween challengeMovie = MovieTween()
+    ..scene(begin: const Duration(seconds: 1), duration: const Duration(milliseconds: 300))
+        .tween('opacity', Tween<double>(begin: 0, end: 1), curve: Curves.easeOut)
+        .thenFor(duration: const Duration(seconds: 1))
+        .thenTween('opacity', Tween<double>(begin: 1, end: 0), duration: const Duration(milliseconds: 300), curve: Curves.easeOut);
 
   Widget bottomNavigationBar(HomeMenuController controller) {
     return Container(
@@ -34,41 +44,120 @@ class Home extends StatelessWidget {
             topRight: Radius.circular(16.sp),
           ),
         ),
-        child: ClipRRect(
-          borderRadius: BorderRadius.only(topLeft: Radius.circular(15.sp), topRight: Radius.circular(15.sp)),
-          child: NavigationBar(
-            elevation: 0,
-            backgroundColor: popupBgColor,
-            onDestinationSelected: (index) => controller.selectMenu(index),
-            selectedIndex: controller.selectedIndex.value,
-            destinations: [
-              NavigationDestination(
-                icon: iconMenuChallenges,
-                selectedIcon: iconMenuChallengesActive,
-                label: '챌린지',
+        child: Stack(
+          clipBehavior: Clip.none,
+          children: [
+            Obx(() {
+              return CustomAnimationBuilder<Movie>(
+                control: controller.newChallengeControl.value,
+                tween: challengeMovie,
+                duration: challengeMovie.duration,
+                builder: (context, value, _) {
+                  if (controller.hasNewChallenge.value == true) {
+                    return Positioned(
+                      top: -60.sp,
+                      left: 10.sp,
+                      child: Opacity(
+                        opacity: value.get('opacity'),
+                        child: Stack(
+                          clipBehavior: Clip.none,
+                          children: [
+                            Container(
+                              padding: EdgeInsets.all(14),
+                              decoration: BoxDecoration(
+                                color: Colors.black,
+                                borderRadius: BorderRadius.circular(8),
+                              ),
+                              child: StyledText(
+                                '새로운 챌린지가 오픈했어요',
+                                color: skyBlueColor,
+                                fontSize: 14,
+                                fontWeight: 600,
+                                lineHeight: 14,
+                                letterSpacing: -0.3,
+                              ),
+                            ),
+                            Positioned(
+                              bottom: -5,
+                              left: 20,
+                              child: Transform.rotate(
+                                angle: 180 / pi,
+                                child: Container(
+                                  width: 15,
+                                  height: 15,
+                                  decoration: BoxDecoration(
+                                    color: Colors.black,
+                                  ),
+                                ),
+                              ),
+                            )
+                          ],
+                        ),
+                      ),
+                    );
+                  } else {
+                    return const SizedBox();
+                  }
+                },
+              );
+            }),
+            ClipRRect(
+              borderRadius: BorderRadius.only(topLeft: Radius.circular(15.sp), topRight: Radius.circular(15.sp)),
+              child: NavigationBar(
+                elevation: 0,
+                backgroundColor: popupBgColor,
+                onDestinationSelected: (index) => controller.selectMenu(index),
+                selectedIndex: controller.selectedIndex.value,
+                destinations: [
+                  Obx(() {
+                    return Stack(
+                      clipBehavior: Clip.none,
+                      children: [
+                        NavigationDestination(
+                          icon: iconMenuChallenges,
+                          selectedIcon: iconMenuChallengesActive,
+                          label: '챌린지',
+                        ),
+                        if (controller.hasNewChallenge.value == true)
+                          Positioned(
+                            top: 17.sp,
+                            right: 17.sp,
+                            child: Container(
+                              width: 8,
+                              height: 8,
+                              decoration: BoxDecoration(
+                                color: const Color(0xffFF1414),
+                                borderRadius: BorderRadius.circular(8),
+                              ),
+                            ),
+                          )
+                      ],
+                    );
+                  }),
+                  NavigationDestination(
+                    icon: iconMenuItems,
+                    selectedIcon: iconMenuItemsActive,
+                    label: '내 장비',
+                  ),
+                  NavigationDestination(
+                    icon: iconMenuHome,
+                    selectedIcon: iconMenuHomeActive,
+                    label: '홈',
+                  ),
+                  NavigationDestination(
+                    icon: iconMenuShop,
+                    selectedIcon: iconMenuShopActive,
+                    label: '상점',
+                  ),
+                  NavigationDestination(
+                    icon: iconMenuRanking,
+                    selectedIcon: iconMenuRankingActive,
+                    label: '랭킹',
+                  )
+                ],
               ),
-              NavigationDestination(
-                icon: iconMenuItems,
-                selectedIcon: iconMenuItemsActive,
-                label: '내 장비',
-              ),
-              NavigationDestination(
-                icon: iconMenuHome,
-                selectedIcon: iconMenuHomeActive,
-                label: '홈',
-              ),
-              NavigationDestination(
-                icon: iconMenuShop,
-                selectedIcon: iconMenuShopActive,
-                label: '상점',
-              ),
-              NavigationDestination(
-                icon: iconMenuRanking,
-                selectedIcon: iconMenuRankingActive,
-                label: '랭킹',
-              )
-            ],
-          ),
+            ),
+          ],
         ),
       ),
     );
