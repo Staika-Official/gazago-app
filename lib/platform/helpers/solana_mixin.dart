@@ -19,6 +19,7 @@ class SolanaMixin {
   }
 
   Future<void> getTokenPriceInfoList() async {
+    priceInfoList.clear();
     await SolanaService.getTokenPriceInfoList(successCallback: (data) {
       priceInfoList.addAll(data);
     });
