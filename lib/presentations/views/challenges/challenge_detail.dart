@@ -59,7 +59,7 @@ class ChallengeDetail extends StatelessWidget {
                           print(width);
                           print(startOffset);
 
-                          controller.backgroundBoxSize.value = height + kTextTabBarHeight ;
+                          controller.backgroundBoxSize.value = height + kTextTabBarHeight + 30;
                         },
                         builder: (_, __, ___, ____) {
                           return Container(

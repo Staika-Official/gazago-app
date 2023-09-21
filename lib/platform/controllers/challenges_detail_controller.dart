@@ -157,7 +157,7 @@ class ChallengesDetailController extends GetxController with GetTickerProviderSt
     leaderboardScrollController.addListener(() {
       loadDataOnScroll();
     });
-    showChallengeLandingPopup(this);
+
 
     super.onInit();
   }
@@ -325,7 +325,7 @@ class ChallengesDetailController extends GetxController with GetTickerProviderSt
     if (await canLaunchUrl(url)) {
       await ActivityService.fetchChallengeAllianceLinkRecord(challengeId.value, linkUrl);
 
-      showModalWebview(Get.context, linkUrl);
+      showModalWebview(Get.context, title: challengeDetails.value.title, linkUrl: linkUrl);
       // Get.toNamed(Routes.inAppModalWebView, arguments: {'linkUrl': linkUrl, 'title': title});
       // await launchUrl(
       //   url,
@@ -602,6 +602,7 @@ class ChallengesDetailController extends GetxController with GetTickerProviderSt
       if(challengeDetails.value.challengeActivationType! != 'ITEM') {
         getChallengeDetail();
       }
+      initLeaderboard();
       getChallengeLeaderboard();
       getChallengeLeaderboardMyRanking();
       showToastPopup('챌린지 참가가 완료되었습니다.');
@@ -622,6 +623,12 @@ class ChallengesDetailController extends GetxController with GetTickerProviderSt
         // showToastPopup(error.errorMessage!);
       }
     });
+  }
+
+  void initLeaderboard(){
+    page = 0;
+    hasMore = true;
+    challengeRankingList.value = RxList.empty();
   }
 
   // void sendParticipateInCode() async {
@@ -718,7 +725,7 @@ class ChallengesDetailController extends GetxController with GetTickerProviderSt
         }
         break;
       case 'INTERNAL_WEB_VIEW':
-        showModalWebview(Get.context, challengeDetails.value.linkUrl!);
+        showModalWebview(Get.context, title: challengeDetails.value.challengeLanding!.title!, linkUrl: challengeDetails.value.challengeLanding!.linkUrl!);
         // Get.toNamed(Routes.inAppModalWebView, arguments: {'title': challengeDetails.value.challengeLanding!.title, 'linkUrl': challengeDetails.value.challengeLanding!.linkUrl!});
         break;
       case 'EXTERNAL_BROWSER':

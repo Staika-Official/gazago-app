@@ -7191,37 +7191,85 @@ void showChallengeLandingPopup(ChallengesDetailController controller) {
 }
 
 
-void showModalWebview( context, String linkUrl){
+void showModalWebview( context, {String? title, String linkUrl = ''}){
   InAppWebViewController? inAppWebViewController;
+
   ChallengesDetailController controller = Get.find<ChallengesDetailController>();
   showCupertinoModalBottomSheet(
     isDismissible: true,
     enableDrag: true,
     context: context,
     builder: (builder) {
-      return Container(
-        decoration: BoxDecoration(
-          borderRadius: BorderRadius.only(topLeft: Radius.circular(20.0), topRight: Radius.circular(20.0)),
-        ),
+      return Material(
+        child: Scaffold(
+          body: Container(
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.only(topLeft: Radius.circular(20.0), topRight: Radius.circular(20.0)),
+            ),
 
-        child: CupertinoPageScaffold(
-          navigationBar: CupertinoNavigationBar(
-              leading: Container(), middle: Text('Modal Page')),
-          child: Container(
-            margin: EdgeInsets.only(top: 50.sp),
-            decoration: BoxDecoration(color: Colors.amber, borderRadius: new BorderRadius.only(topLeft: const Radius.circular(20.0), topRight: const Radius.circular(20.0))),
-            child:  InAppWebView(
-              key: controller.webViewKey,
-              gestureRecognizers: Set()..add(Factory<VerticalDragGestureRecognizer>(() => VerticalDragGestureRecognizer())),
-              initialUrlRequest: URLRequest(url: WebUri(linkUrl)),
-              onWebViewCreated: (InAppWebViewController controller) {
-                inAppWebViewController = controller;
-              },
-              onProgressChanged: (InAppWebViewController controller, int progress) {
-                // setState(() {
-                //   this.progress = progress / 100;
-                // });
-              },
+            child: CupertinoPageScaffold(
+              backgroundColor: Colors.transparent,
+              navigationBar: CupertinoNavigationBar(
+
+                  backgroundColor: popupBgColor,
+                  leading: InkWell(
+                    child: Icon(Icons.close, color: Colors.white),
+                    onTap: () {
+                      Get.back();
+                    },
+                  ),
+                trailing: InkWell(
+                  child: Icon(Icons.refresh, color: Colors.white),
+                  onTap: () {
+                    // webViewController.webViewKey.currentState?.reloadWebView();
+                    if (inAppWebViewController != null) {
+                      inAppWebViewController!.reload();
+                    }
+                  },
+                ),
+                  middle:  Padding(
+                    padding: EdgeInsets.symmetric(horizontal: 5.0),
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        if(title != null)
+                      StyledText(
+                       title!,
+                      letterSpacing: -.1,
+                      fontWeight: 600,
+                      fontSize: 12,
+                      lineHeight: 16,
+                      overflowEllipsis: true,
+
+                      ),
+                      StyledText(
+                        linkUrl,
+                      letterSpacing: -.1,
+                      color: lightGrayColor,
+                      fontWeight: 500,
+                      fontSize: 10,
+                      lineHeight: 14,
+                      overflowEllipsis: true,
+                      ),
+                      ],
+                      ),
+                  ),),
+              child: Container(
+                color: Colors.white,
+                child:  InAppWebView(
+                  key: controller.webViewKey,
+                  gestureRecognizers: Set()..add(Factory<VerticalDragGestureRecognizer>(() => VerticalDragGestureRecognizer())),
+                  initialUrlRequest: URLRequest(url: WebUri(linkUrl)),
+                  onWebViewCreated: (InAppWebViewController controller) {
+                    inAppWebViewController = controller;
+                  },
+                  onProgressChanged: (InAppWebViewController controller, int progress) {
+                    // setState(() {
+                    //   this.progress = progress / 100;
+                    // });
+                  },
+                ),
+              ),
             ),
           ),
         ),
