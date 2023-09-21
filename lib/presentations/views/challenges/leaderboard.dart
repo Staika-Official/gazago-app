@@ -444,7 +444,7 @@ class ChallengeLeaderboard extends StatelessWidget {
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
                           StyledText(
-                            '실시간 TOP10',
+                            '실시간 랭킹',
                             color: Colors.white,
                             fontSize: 16,
                             lineHeight: 16,
