@@ -45,7 +45,7 @@ Map renderCodeReadyRegisterReady(ChallengesDetailController challengesDetailCont
         color: lightGrayColor,
         fontWeight: FontWeight.w500,
         fontSize: 16.sp,
-        height: 24.sp / 16,
+        height: 20.sp / 16,
       ),
       children: [
         TextSpan(
@@ -100,7 +100,7 @@ Map renderCodeReadyJoined(ChallengesDetailController challengesDetailController)
         color: lightGrayColor,
         fontWeight: FontWeight.w500,
         fontSize: 16.sp,
-        height: 24.sp / 16,
+        height: 20.sp / 16,
       ),
       children: const[
          TextSpan(
@@ -157,7 +157,7 @@ Map renderCodeReadyJoinedElse(ChallengesDetailController challengesDetailControl
         color: lightGrayColor,
         fontWeight: FontWeight.w500,
         fontSize: 16.sp,
-        height: 24.sp / 16,
+        height: 20.sp / 16,
       ),
       children: [
         const TextSpan(
@@ -210,7 +210,7 @@ Map renderCodeInProgressJoined(ChallengesDetailController challengesDetailContro
         color: lightGrayColor,
         fontWeight: FontWeight.w500,
         fontSize: 16.sp,
-        height: 24.sp / 16,
+        height: 20.sp / 16,
       ),
       children: [
         const TextSpan(
@@ -270,7 +270,7 @@ Map renderCodeInProgressJoinedAvailable(ChallengesDetailController challengesDet
         color: lightGrayColor,
         fontWeight: FontWeight.w500,
         fontSize: 16.sp,
-        height: 24.sp / 16,
+        height: 20.sp / 16,
       ),
       children: [
         const TextSpan(
@@ -328,7 +328,7 @@ Map renderCodeInProgressJoinedClosed(ChallengesDetailController challengesDetail
         color: lightGrayColor,
         fontWeight: FontWeight.w500,
         fontSize: 16.sp,
-        height: 24.sp / 16,
+        height: 20.sp / 16,
       ),
       children: [
         const TextSpan(
@@ -358,7 +358,7 @@ Map renderCodeInProgressElse(ChallengesDetailController challengesDetailControll
         color: skyBlueColor,
         fontWeight: FontWeight.w500,
         fontSize: 16.sp,
-        height: 24.sp / 16,
+        height: 20.sp / 16,
       ),
       children: const [
         TextSpan(
@@ -387,7 +387,7 @@ Map renderCodeEndedComplete(ChallengesDetailController challengesDetailControlle
         color: skyBlueColor,
         fontWeight: FontWeight.w500,
         fontSize: 16.sp,
-        height: 24.sp / 16,
+        height: 20.sp / 16,
       ),
       children: const [
         TextSpan(
@@ -416,7 +416,7 @@ Map renderCodeEndedInComplete(ChallengesDetailController challengesDetailControl
         color: skyBlueColor,
         fontWeight: FontWeight.w500,
         fontSize: 16.sp,
-        height: 24.sp / 16,
+        height: 20.sp / 16,
       ),
       children: const [
         TextSpan(
@@ -473,7 +473,7 @@ Map renderCodeEndedElse(ChallengesDetailController challengesDetailController) {
         color: skyBlueColor,
         fontWeight: FontWeight.w500,
         fontSize: 16.sp,
-        height: 24.sp / 16,
+        height: 20.sp / 16,
       ),
       children: const [
         TextSpan(

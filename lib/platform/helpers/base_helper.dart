@@ -282,6 +282,22 @@ void moveToVerification() {
 FeedTemplate generateFeedTemplate(Uri shareUrl, {required ChallengeType challengeType, required ShareSource shareSource, String? crewName}) {
   FeedTemplate? template;
   switch (challengeType) {
+    case ChallengeType.payment:
+      template = FeedTemplate(
+        content: Content(
+          imageUrl: Uri.parse('https://s3.ap-northeast-2.amazonaws.com/image.staika.io/social/share_free_invite.png'),
+          imageHeight: 400,
+          imageWidth: 400,
+          title: '하루에 딱 30분씩! 5일만 투자하세요',
+          description: '친구가 챌린지에 초대했어요. 지금 참여해 보세요!',
+          link: Link(
+            webUrl: shareUrl,
+            mobileWebUrl: shareUrl,
+          ),
+        ),
+        buttonTitle: '챌린지 참여하기',
+      );
+      break;
     case ChallengeType.crew:
     default:
       switch (shareSource) {

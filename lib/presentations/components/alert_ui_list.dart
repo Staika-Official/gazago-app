@@ -4,8 +4,12 @@ import 'dart:ui';
 
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:carousel_slider/carousel_slider.dart';
+import 'package:flutter/cupertino.dart';
+import 'package:flutter/foundation.dart';
+import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_inappwebview/flutter_inappwebview.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:flutter_svg_provider/flutter_svg_provider.dart' as sp;
@@ -30,6 +34,7 @@ import 'package:gaza_go/platform/controllers/shop_detail_controller.dart';
 import 'package:gaza_go/platform/controllers/wallet_go_controller.dart';
 import 'package:gaza_go/platform/controllers/wallet_master_controller.dart';
 import 'package:gaza_go/platform/controllers/wallet_staika_controller.dart';
+import 'package:gaza_go/platform/controllers/webview_controller.dart';
 import 'package:gaza_go/platform/controllers/withdraw_confirm_controller.dart';
 import 'package:gaza_go/platform/helpers/activity_mixin.dart';
 import 'package:gaza_go/platform/helpers/alert_helper.dart';
@@ -51,6 +56,7 @@ import 'package:gaza_go/presentations/styles/styled_text.dart';
 import 'package:gaza_go/presentations/views/wallet/confirm_wallet_password.dart';
 import 'package:get/get.dart';
 import 'package:lottie/lottie.dart';
+import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 void showRetryAlert(LoadingController controller) {
@@ -7151,7 +7157,10 @@ void showChallengeLandingPopup(ChallengesDetailController controller) {
                     ),
                     Expanded(
                       child: InkWell(
-                        onTap: () => controller.onClickChallengeLandingPage(),
+                        onTap: () {
+                          Get.back();
+                          controller.onClickChallengeLandingPage();
+                        } ,
                         child: Container(
                           decoration: BoxDecoration(
                             borderRadius: BorderRadius.only(
@@ -7178,5 +7187,45 @@ void showChallengeLandingPopup(ChallengesDetailController controller) {
         )),
       ),
     ),
+  );
+}
+
+
+void showModalWebview( context, String linkUrl){
+  InAppWebViewController? inAppWebViewController;
+  ChallengesDetailController controller = Get.find<ChallengesDetailController>();
+  showCupertinoModalBottomSheet(
+    isDismissible: true,
+    enableDrag: true,
+    context: context,
+    builder: (builder) {
+      return Container(
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.only(topLeft: Radius.circular(20.0), topRight: Radius.circular(20.0)),
+        ),
+
+        child: CupertinoPageScaffold(
+          navigationBar: CupertinoNavigationBar(
+              leading: Container(), middle: Text('Modal Page')),
+          child: Container(
+            margin: EdgeInsets.only(top: 50.sp),
+            decoration: BoxDecoration(color: Colors.amber, borderRadius: new BorderRadius.only(topLeft: const Radius.circular(20.0), topRight: const Radius.circular(20.0))),
+            child:  InAppWebView(
+              key: controller.webViewKey,
+              gestureRecognizers: Set()..add(Factory<VerticalDragGestureRecognizer>(() => VerticalDragGestureRecognizer())),
+              initialUrlRequest: URLRequest(url: WebUri(linkUrl)),
+              onWebViewCreated: (InAppWebViewController controller) {
+                inAppWebViewController = controller;
+              },
+              onProgressChanged: (InAppWebViewController controller, int progress) {
+                // setState(() {
+                //   this.progress = progress / 100;
+                // });
+              },
+            ),
+          ),
+        ),
+      );
+    },
   );
 }

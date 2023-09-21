@@ -108,6 +108,7 @@ class NoticePopupController extends GetxController {
         switch (item.linkUrl) {
           case 'CHALLENGES':
             Get.find<HomeMenuController>().selectMenu(0);
+            Get.toNamed(Routes.challengeDetail.replaceAll(':id', item.referenceId.toString()));
             break;
           case 'COURSE_CHALLENGES':
             checkBlockUser(item);

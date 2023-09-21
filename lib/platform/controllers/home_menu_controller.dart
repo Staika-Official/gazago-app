@@ -1,6 +1,8 @@
 import 'dart:convert';
 import 'dart:io';
 
+import 'package:adjust_sdk/adjust.dart';
+import 'package:adjust_sdk/adjust_event.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
@@ -113,6 +115,11 @@ class HomeMenuController extends SuperController {
       switch (index) {
         case 0:
           if (Get.isRegistered<ChallengesController>()) Get.find<ChallengesController>().refreshController();
+          bool adjustFirstClickChallengeTabEvent = HiveStore.load(key: HiveKey.adjustFirstClickChallengeTabEvent.name) ?? false;
+          if (!adjustFirstClickChallengeTabEvent) {
+            Adjust.trackEvent(AdjustEvent('7uolhz'));
+            HiveStore.save(key: HiveKey.adjustFirstClickChallengeTabEvent.name, value: true);
+          }
           break;
         case 1:
           if (Get.isRegistered<InventoryController>()) Get.find<InventoryController>().refreshController();
@@ -126,6 +133,11 @@ class HomeMenuController extends SuperController {
         case 4:
           if (Get.isRegistered<ArchiveController>()) Get.find<ArchiveController>().refreshController();
           if (Get.isRegistered<LeaderboardController>()) Get.find<LeaderboardController>().refreshController();
+          bool adjustFirstClickRankTabEvent = HiveStore.load(key: HiveKey.adjustFirstClickRankTabEvent.name) ?? false;
+          if (!adjustFirstClickRankTabEvent) {
+            Adjust.trackEvent(AdjustEvent('var9av'));
+            HiveStore.save(key: HiveKey.adjustFirstClickRankTabEvent.name, value: true);
+          }
           break;
       }
     } else {

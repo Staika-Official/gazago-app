@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:gaza_go/flavors.dart';
 import 'package:gaza_go/platform/controllers/loading_controller.dart';
 import 'package:gaza_go/platform/middleware/router_middleware.dart';
-import 'package:gaza_go/presentations/components/inAppHeaderWebView.dart';
+import 'package:gaza_go/presentations/components/inAppModalWebView.dart';
 import 'package:gaza_go/presentations/views/activity/activity_active.dart';
 import 'package:gaza_go/presentations/views/activity/activity_courses.dart';
 import 'package:gaza_go/presentations/views/activity/challenge_course_detail.dart';
@@ -131,7 +131,7 @@ class Routes {
   static const fairPlayView = '/fair_play_view';
   static const crewDetail = '/crew_detail';
   static const dailyBenefits = '/daily_benefits';
-  static const inAppHeaderWebView = '/header_webview';
+  static const inAppModalWebView = '/modal_webview';
 
   static List<GetPage> pages = [
     stepPage(name: Routes.login, page: const Login()),
@@ -204,7 +204,7 @@ class Routes {
     stepPage(name: Routes.crewDetail, page: const CrewDetail()),
     stepPage(name: Routes.dailyBenefits, page: const DailyBenefits()),
     stepPage(name: Routes.dailyBenefits, page: DailyBenefits()),
-    stepPage(name: Routes.inAppHeaderWebView, page: const InAppHeaderWebView()),
+    stepPage(name: Routes.inAppModalWebView, page: const InAppModalWebView()),
   ];
 }
 

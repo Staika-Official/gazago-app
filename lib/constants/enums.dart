@@ -105,6 +105,8 @@ enum HiveKey {
   adjustFirstPurchasedItemEvent,
   adjustFirstEquippedItemEvent,
   adjustFirstJoinedChallengeEvent,
+  adjustFirstClickChallengeTabEvent,
+  adjustFirstClickRankTabEvent,
   enteredRoute,
 }
 

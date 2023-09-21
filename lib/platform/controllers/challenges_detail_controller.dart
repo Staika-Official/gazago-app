@@ -45,6 +45,7 @@ class ChallengesDetailController extends GetxController with GetTickerProviderSt
   ChallengesController challengesController = Get.isRegistered<ChallengesController>() ? Get.find<ChallengesController>() : Get.put(ChallengesController());
   WalletMasterController walletMasterController = Get.isRegistered<WalletMasterController>() ? Get.find<WalletMasterController>() : Get.put(WalletMasterController());
   LoaderController loaderController = Get.put(LoaderController());
+  final GlobalKey webViewKey = GlobalKey();
   Rx<DateTime?> today = Rx(DateTime.now());
   RxString fromDate = RxString('');
   RxString toDate = RxString('');
@@ -156,6 +157,7 @@ class ChallengesDetailController extends GetxController with GetTickerProviderSt
     leaderboardScrollController.addListener(() {
       loadDataOnScroll();
     });
+    showChallengeLandingPopup(this);
 
     super.onInit();
   }
@@ -318,12 +320,13 @@ class ChallengesDetailController extends GetxController with GetTickerProviderSt
     }
   }
 
-  void moveToExternalBrowser(linkUrl, String? title) async {
+  void moveToExternalBrowser(linkUrl) async {
     Uri url = Uri.parse(linkUrl!);
     if (await canLaunchUrl(url)) {
       await ActivityService.fetchChallengeAllianceLinkRecord(challengeId.value, linkUrl);
 
-      Get.toNamed(Routes.inAppHeaderWebView, arguments: {'linkUrl': linkUrl, 'title': title});
+      showModalWebview(Get.context, linkUrl);
+      // Get.toNamed(Routes.inAppModalWebView, arguments: {'linkUrl': linkUrl, 'title': title});
       // await launchUrl(
       //   url,
       //   mode: LaunchMode.inAppWebView,
@@ -660,6 +663,7 @@ class ChallengesDetailController extends GetxController with GetTickerProviderSt
   }
 
   void onClickChallengeLandingPage() async {
+
     switch (challengeDetails.value.challengeLanding!.openType) {
       case 'IN_APP':
         if (!Get.currentRoute.contains('home')) {
@@ -668,6 +672,7 @@ class ChallengesDetailController extends GetxController with GetTickerProviderSt
         switch (challengeDetails.value.challengeLanding!.linkUrl) {
           case 'CHALLENGES':
             Get.find<HomeMenuController>().selectMenu(0);
+            // Get.toNamed(Routes.challengeDetail.replaceAll(':id', item.referenceId.toString()));
             break;
           // case 'COURSE_CHALLENGES':
           //   Get.find<HomeMenuController>().selectMenu(2);
@@ -713,7 +718,8 @@ class ChallengesDetailController extends GetxController with GetTickerProviderSt
         }
         break;
       case 'INTERNAL_WEB_VIEW':
-        Get.toNamed(Routes.inAppHeaderWebView, arguments: {'title': challengeDetails.value.challengeLanding!.title, 'linkUrl': challengeDetails.value.challengeLanding!.linkUrl!});
+        showModalWebview(Get.context, challengeDetails.value.linkUrl!);
+        // Get.toNamed(Routes.inAppModalWebView, arguments: {'title': challengeDetails.value.challengeLanding!.title, 'linkUrl': challengeDetails.value.challengeLanding!.linkUrl!});
         break;
       case 'EXTERNAL_BROWSER':
         Uri url = Uri.parse(challengeDetails.value.challengeLanding!.linkUrl!);
