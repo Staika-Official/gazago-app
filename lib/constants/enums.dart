@@ -108,6 +108,7 @@ enum HiveKey {
   adjustFirstClickChallengeTabEvent,
   adjustFirstClickRankTabEvent,
   enteredRoute,
+  challengeListIds,
 }
 
 enum ResponseStatus {

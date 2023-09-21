@@ -279,17 +279,17 @@ class ActivityHome extends StatelessWidget {
     return LayoutBuilder(
       builder: (context, constraint) {
         return Container(
-          decoration: BoxDecoration(
+          decoration: const BoxDecoration(
             gradient: LinearGradient(
               begin: Alignment.topCenter,
               end: Alignment.bottomCenter,
-              stops: const [-0.06, 1],
+              stops: [-0.06, 1],
               colors: [
                 mainBg01Color,
                 mainBg02Color,
               ],
             ),
-            image: const DecorationImage(
+            image: DecorationImage(
               image: AssetImage('assets/images/bg_activity_road.png'),
               alignment: Alignment(100, 1.5),
             ),
@@ -306,7 +306,7 @@ class ActivityHome extends StatelessWidget {
                       Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          StyledText(
+                          const StyledText(
                             '가자고와 함께 \n등산하고 뱃지를 받아보자고-!',
                             color: skyBlueColor,
                             fontWeight: 700,
@@ -523,7 +523,7 @@ class ActivityHome extends StatelessWidget {
                                                       // ),
                                                       Expanded(
                                                         child: Padding(
-                                                          padding: EdgeInsets.only(
+                                                          padding: const EdgeInsets.only(
                                                             left: 20,
                                                             right: 70,
                                                           ),

@@ -205,7 +205,7 @@ class LeaderboardHome extends StatelessWidget {
                 ),
                 child: Column(
                   children: [
-                    StyledText(
+                    const StyledText(
                       'TOTAL',
                       fontSize: 14,
                       lineHeight: 20,
@@ -354,6 +354,23 @@ class LeaderboardHome extends StatelessWidget {
                       mainAxisAlignment: MainAxisAlignment.center,
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
+                        if (myRank.userKeyword != '')
+                          Container(
+                            padding: const EdgeInsets.all(4),
+                            margin: EdgeInsets.only(bottom: 6.sp),
+                            decoration: BoxDecoration(
+                              color: const Color(0xff254538),
+                              borderRadius: BorderRadius.circular(4),
+                            ),
+                            child: StyledText(
+                              myRank.userKeyword,
+                              fontSize: 9,
+                              lineHeight: 9,
+                              fontWeight: 700,
+                              letterSpacing: 0.6,
+                              color: const Color(0xff44E8A3),
+                            ),
+                          ),
                         Text(
                           myRank.nickname.contains('@') ? myRank.nickname.substring(0, myRank.nickname.indexOf('@')) : myRank.nickname,
                           overflow: TextOverflow.ellipsis,
@@ -362,7 +379,7 @@ class LeaderboardHome extends StatelessWidget {
                         ),
                         if (myRank.additionStik != null || myRank.additionTik != null)
                           Padding(
-                            padding: EdgeInsets.only(top: 4.0.sp),
+                            padding: EdgeInsets.only(top: 6.0.sp),
                             child: Text.rich(
                               textAlign: TextAlign.start,
                               style: TextStyle(
@@ -446,7 +463,7 @@ class LeaderboardHome extends StatelessWidget {
   Widget renderRanker(RankerModel ranker, BuildContext context) {
     return Container(
       color: subBg01Color,
-      height: 60.sp,
+      height: 77.sp,
       padding: EdgeInsets.only(left: 18.sp, right: 17.sp),
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.center,
@@ -524,6 +541,23 @@ class LeaderboardHome extends StatelessWidget {
                         mainAxisAlignment: MainAxisAlignment.center,
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
+                          if (ranker.userKeyword != '')
+                            Container(
+                              padding: const EdgeInsets.all(4),
+                              margin: EdgeInsets.only(bottom: 6.sp),
+                              decoration: BoxDecoration(
+                                color: const Color(0xff254538),
+                                borderRadius: BorderRadius.circular(4),
+                              ),
+                              child: StyledText(
+                                ranker.userKeyword,
+                                fontSize: 9,
+                                lineHeight: 9,
+                                fontWeight: 700,
+                                letterSpacing: 0.6,
+                                color: Color(0xff44E8A3),
+                              ),
+                            ),
                           Text(
                             (ranker.nickname.contains('@')
                                 ? ranker.nickname.substring(
@@ -537,7 +571,7 @@ class LeaderboardHome extends StatelessWidget {
                           ),
                           if (ranker.additionStik != null || ranker.additionTik != null)
                             Padding(
-                              padding: EdgeInsets.only(top: 2.0.sp),
+                              padding: EdgeInsets.only(top: 6.0.sp),
                               child: Text.rich(
                                 textAlign: TextAlign.start,
                                 style: TextStyle(
