@@ -155,6 +155,7 @@ class ChallengesDetailController extends GetxController with GetTickerProviderSt
         crewChallengeCloseAlert(this);
       }
     } else {
+      print('이거 부르나');
       getChallengeLeaderboard();
       getChallengeLeaderboardMyRanking();
     }
@@ -548,7 +549,7 @@ class ChallengesDetailController extends GetxController with GetTickerProviderSt
             requestCreateCrew('INVITE');
           } else {
             // 납부형 챌린지 참여하기
-            onFetchJoinChallenge();
+            onFetchJoinChallenge(isFree: true);
           }
         }
       } else {
@@ -619,11 +620,11 @@ class ChallengesDetailController extends GetxController with GetTickerProviderSt
   }
 
 
-  Future<void> onFetchJoinChallenge() async {
+  Future<void> onFetchJoinChallenge({bool isFree = false}) async {
 
     ChallengeJoinModel params = ChallengeJoinModel(challengeActivationType: challengeDetails.value.challengeActivationType!);
     if(challengeDetails.value.challengeActivationType! == 'PAYMENT'){
-      params.entryFee = challengeDetails.value.entryFee;
+      params.entryFee = isFree ? 0 :challengeDetails.value.entryFee;
       Get.back();
     }
     if(challengeDetails.value.challengeActivationType! == 'ITEM'){

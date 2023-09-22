@@ -42,10 +42,14 @@ class ChallengeInfo extends StatelessWidget {
                               lineHeight: LineHeight.percent(130),
                             ),
                             'img': Style(
+                              display: Display.block,
                               margin: Margins(
                                 left: Margin(-5.sp),
                                 right: Margin(-5.sp),
+                                bottom: Margin(-1.sp),
+                                top: Margin(-1.sp),
                               ),
+                              verticalAlign: VerticalAlign.top,
                             ),
                             "p": Style(
                               margin: Margins.zero,

@@ -28,7 +28,8 @@ class ShopDetailController extends GetxController {
   final WalletMasterController walletMasterController = Get.find();
   final HomeMenuController homeMenuController = Get.put(HomeMenuController());
   ShopController shopController = Get.isRegistered<ShopController>() ? Get.find<ShopController>() : Get.put(ShopController());
-  ChallengesDetailController challengesDetailController = Get.isRegistered<ChallengesDetailController>() ? Get.find<ChallengesDetailController>() : Get.put(ChallengesDetailController());
+  // ChallengesDetailController challengesDetailController = Get.isRegistered<ChallengesDetailController>() ? Get.find<ChallengesDetailController>() : Get.put(ChallengesDetailController());
+
   LoaderController loaderController = Get.put(LoaderController());
   final RxList<ShopItemModel> shopItemsList = RxList.empty();
   final RxInt purchaseItemCount = RxInt(1);
@@ -136,8 +137,8 @@ class ShopDetailController extends GetxController {
     shopController.getShopItemsList();
 
 
-    if(Get.previousRoute.contains('challenge_detail')){
-      challengesDetailController.refreshController();
+    if(Get.previousRoute.contains('challenge_detail') && Get.isRegistered<ChallengesDetailController>()  ){
+      Get.find<ChallengesDetailController>().refreshController();
     }
     super.onClose();
   }
