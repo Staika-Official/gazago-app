@@ -3,6 +3,7 @@ import 'dart:convert';
 
 import 'package:adjust_sdk/adjust.dart';
 import 'package:adjust_sdk/adjust_event.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:collection/collection.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:firebase_dynamic_links/firebase_dynamic_links.dart';
@@ -21,6 +22,7 @@ import 'package:gaza_go/platform/helpers/challenge_mixin.dart';
 import 'package:gaza_go/platform/models/challenge_join_model.dart';
 import 'package:gaza_go/platform/models/challenge_ranker_model.dart';
 import 'package:gaza_go/platform/models/challenge_reward_model.dart';
+import 'package:gaza_go/platform/models/challenge_share_template_model.dart';
 import 'package:gaza_go/platform/models/crew_create_form_model.dart';
 import 'package:gaza_go/platform/models/crew_icon_model.dart';
 import 'package:gaza_go/platform/models/crew_member_model.dart';
@@ -40,6 +42,8 @@ import 'package:get/get.dart';
 import 'package:intl/intl.dart';
 import 'package:kakao_flutter_sdk_share/kakao_flutter_sdk_share.dart';
 import 'package:url_launcher/url_launcher.dart';
+
+
 
 class ChallengesDetailController extends GetxController with GetTickerProviderStateMixin, ChallengeMixin {
   ChallengesController challengesController = Get.isRegistered<ChallengesController>() ? Get.find<ChallengesController>() : Get.put(ChallengesController());
@@ -86,6 +90,7 @@ class ChallengesDetailController extends GetxController with GetTickerProviderSt
   RxInt selectedMarkIconId = RxInt(0);
   TextEditingController crewNameController = TextEditingController();
   RxString crewName = RxString('');
+  Rxn<ChallengeShareTemplateModel> shareTemplate = Rxn(ChallengeShareTemplateModel(imageUrl: '', title: '', description: '', buttonTitle: ''));
   RxBool get isAbleToJoinCrew {
     return RxBool([
           'READY',
@@ -157,7 +162,7 @@ class ChallengesDetailController extends GetxController with GetTickerProviderSt
     leaderboardScrollController.addListener(() {
       loadDataOnScroll();
     });
-
+    await getFirebaseShareTemplate();
 
     super.onInit();
   }
@@ -470,10 +475,32 @@ class ChallengesDetailController extends GetxController with GetTickerProviderSt
 
     final ShortDynamicLink dynamicLink = await FirebaseDynamicLinks.instance.buildShortLink(dynamicLinkParams!);
 
-    FeedTemplate kakaoFeedTemplate = generateFeedTemplate(dynamicLink.shortUrl, challengeType: challengeType, shareSource: shareSource, crewName: crewName);
+    FeedTemplate? kakaoFeedTemplate;
+    if(challengeType == ChallengeType.crew){
+      generateFeedTemplate(dynamicLink.shortUrl, challengeType: challengeType, shareSource: shareSource, crewName: crewName);
+    } else {
+      if(shareTemplate.value != null){
+        kakaoFeedTemplate = FeedTemplate(
+          content: Content(
+            imageUrl: Uri.parse(shareTemplate.value!.imageUrl),
+            imageHeight: 400,
+            imageWidth: 400,
+            title: shareTemplate.value!.title,
+            description: shareTemplate.value!.description,
+            link: Link(
+              webUrl: dynamicLink.shortUrl,
+              mobileWebUrl: dynamicLink.shortUrl,
+            ),
+          ),
+          buttonTitle: shareTemplate.value!.buttonTitle,
+        );
+      }
+
+    }
+
     if (isKakaoTalkSharingAvailable) {
       try {
-        Uri uri = await ShareClient.instance.shareDefault(template: kakaoFeedTemplate, serverCallbackArgs: {
+        Uri uri = await ShareClient.instance.shareDefault(template: kakaoFeedTemplate!, serverCallbackArgs: {
           'userId': userId,
           'challengeId': '${challengeId.value}',
         });
@@ -492,6 +519,18 @@ class ChallengesDetailController extends GetxController with GetTickerProviderSt
       // }
       showToastPopup('카카오톡을 설치해주세요');
     }
+  }
+
+  Future<void> getFirebaseShareTemplate() async {
+    print(challengeDetails.value.id);
+    try{
+      DocumentSnapshot docSnapshot = await FirebaseFirestore.instance.collection("challengeShareTemplate").doc(challengeDetails.value.id.toString()).get();
+      shareTemplate.value = ChallengeShareTemplateModel(imageUrl: docSnapshot['imageUrl'], title: docSnapshot['title'], description: docSnapshot['description'], buttonTitle: docSnapshot['buttonTitle'],);
+    }catch(e){
+      shareTemplate.value = null;
+    }
+
+
   }
 
   Future<void> validateKakaoShareResult({required ChallengeType challengeType, required ShareSource shareSource}) async {

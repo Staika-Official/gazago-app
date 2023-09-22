@@ -4806,7 +4806,7 @@ void challengeItemEquip() {
           onTap: () async {
               Get.back();
 
-              if(challengesDetailController.challengeDetails.value.challengeUserState != 'JOINED_UNEQUIPPED_ITEM' && challengesDetailController.challengeDetails.value.challengeState == 'PROGRESS'){
+              if(challengesDetailController.challengeDetails.value.challengeUserState != 'JOINED_UNEQUIPPED_ITEM' && challengesDetailController.challengeDetails.value.challengeState == 'IN_PROGRESS'){
                 await challengesDetailController.onFetchJoinChallenge();
               }
               challengesDetailController.fetchEquipItem(challengesDetailController.challengeDetails.value.userItem!.id);
@@ -6419,9 +6419,23 @@ void shareCrewChallengeKakaoLinkDialog(ChallengesDetailController controller) {
                           buttonText: '공유하기',
                           onTap: () async {
                             Get.back();
-                            controller.shareChallenge(challengeType: ChallengeType.crew, shareSource: ShareSource.createCrew);
-                            await Future.delayed(const Duration(seconds: 2));
-                            askSharedCompleteDialog(controller, challengeType: ChallengeType.crew, shareSource: ShareSource.createCrew);
+                            if(controller.challengeDetails.value.challengeActivationType == 'CREW'){
+                              controller.shareChallenge(challengeType: ChallengeType.crew, shareSource: ShareSource.createCrew);
+                              await Future.delayed(const Duration(seconds: 2));
+                              askSharedCompleteDialog(controller, challengeType: ChallengeType.crew, shareSource: ShareSource.createCrew);
+                            } else {
+                              if(controller.challengeDetails.value.challengeType == 'PAYMENT'){
+                                controller.shareChallenge(challengeType: ChallengeType.payment, shareSource: ShareSource.mirae);
+                                await Future.delayed(const Duration(seconds: 2));
+                                askSharedCompleteDialog(controller, challengeType: ChallengeType.payment, shareSource: ShareSource.mirae);
+                              } else {
+                                controller.shareChallenge(challengeType: ChallengeType.payment, shareSource: ShareSource.spot);
+                                await Future.delayed(const Duration(seconds: 2));
+                                askSharedCompleteDialog(controller, challengeType: ChallengeType.payment, shareSource: ShareSource.spot);
+                              }
+
+                            }
+
                           },
                         ),
                       ),

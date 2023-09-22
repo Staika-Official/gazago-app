@@ -8,7 +8,7 @@ class TokenApi {
     return await Api.client(
       serviceUrl: ServiceUrl.goWalletService,
       showLoading: false,
-    ).get('/on-chains/quotes/markets/cmc/solana');
+    ).get('/on-chains/quotes/markets/cmc/solana/tokens/STIK');
   }
 
   static Future<Response> getTokenPriceInfoList() async {

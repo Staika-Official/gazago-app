@@ -375,4 +375,6 @@ enum ShareSource {
   shareAppbar,
   createCrew,
   crewDetail,
+  mirae,
+  spot,
 }

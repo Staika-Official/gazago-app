@@ -19,7 +19,7 @@ publish_to: 'none' # Remove this line if you wish to publish to pub.dev
 # of the product and file versions while build-number is used as the build suffix.
 
 
-version: 1.2.26+145
+version: 1.2.28+147
 
 
 environment:
@@ -124,6 +124,7 @@ dependencies:
   firebase_database: ^10.2.3
   adjust_sdk: ^4.33.1
   kakao_flutter_sdk_share: ^1.4.1 # 카카오톡 공유
+  cloud_firestore: ^4.9.2
 
 dev_dependencies:
   flutter_test:
