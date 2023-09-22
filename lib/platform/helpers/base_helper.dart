@@ -89,12 +89,7 @@ String calculateDuration(String? fromDateString, String? toDateString) {
   DateTime formattedFromDate = DateTime(fromDate.year, fromDate.month, fromDate.day);
   DateTime formattedToDate = DateTime(toDate.year, toDate.month, toDate.day);
 
-  bool hasMoreHours = toDate.difference(fromDate).inHours % 24 != 0;
-  if (hasMoreHours) {
-    return (formattedToDate.difference(formattedFromDate).inDays + 1).toString();
-  }
-
-  return formattedToDate.difference(formattedFromDate).inDays.toString();
+  return (formattedToDate.difference(formattedFromDate).inDays + 1).toString();
 }
 
 String coordinatesToString(List<LatLng> coordinates) {
@@ -252,10 +247,9 @@ void handlePendingDynamicLink() {
 }
 
 Future<bool> handleCheckUserVerified() async {
+  bool isVerified = HiveStore.load(key: HiveKey.certified.name) ?? false;
 
-  bool isVerified =  HiveStore.load(key: HiveKey.certified.name) ?? false;
-
-  if(!isVerified){
+  if (!isVerified) {
     await UaaService.getAccountInfo(
       successCallback: (UserAccountModel user) {
         if (user.authorities!.contains('ROLE_CERTIFIED_USER')) {
@@ -269,8 +263,6 @@ Future<bool> handleCheckUserVerified() async {
   }
 
   return isVerified;
-
-
 }
 
 void moveToVerification() {
@@ -279,6 +271,7 @@ void moveToVerification() {
   Get.back();
   Get.toNamed(Routes.verificationTerms);
 }
+
 FeedTemplate? generateFeedTemplate(Uri shareUrl, {required ChallengeType challengeType, required ShareSource shareSource, String? crewName}) {
   FeedTemplate? template;
   switch (challengeType) {
