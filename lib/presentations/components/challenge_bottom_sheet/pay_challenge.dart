@@ -96,7 +96,7 @@ Map renderPayReadyJoined(ChallengesDetailController challengesDetailController) 
         color: lightGrayColor,
         fontWeight: FontWeight.w500,
         fontSize: 16.sp,
-        height: 24.sp / 16,
+        height: 20.sp / 16,
       ),
       children: [
         const TextSpan(
