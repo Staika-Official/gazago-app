@@ -579,6 +579,7 @@ class ChallengesDetailController extends GetxController with GetTickerProviderSt
     }, errorCallback: (ErrorResponseDataModel error) async {
       if (error.errorCode == 'CREW_RECRUIT_CLOSED') {
         await getCrewList();
+        showToastPopup(error.errorMessage!.replaceAll('\\n', '\n'));
       } else if (error.errorCode == 'ALREADY_JOINED_CHALLENGE') {
         showChallengeAlreadyJoinedAlert();
       } else {
