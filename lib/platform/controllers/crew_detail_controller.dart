@@ -70,10 +70,6 @@ class CrewDetailController extends GetxController with GetTickerProviderStateMix
       selectedCrew.value.crewRecruitStatus! == 'OPEN' ? 'CLOSE' : 'OPEN',
       successCallback: () {
         selectedCrew.value.crewRecruitStatus! == 'OPEN' ? showToastPopup('크루 모집이 제한되었습니다.') : showToastPopup('크루 모집 중 입니다.');
-
-        selectedCrew.update((state) {
-          state!.crewRecruitStatus = selectedCrew.value.crewRecruitStatus! == 'OPEN' ? 'CLOSE' : 'OPEN';
-        });
       },
       errorCallback: (ErrorResponseDataModel error) {
         if (error.errorCode == 'NOT_AVAILABLE_RECRUIT_OPEN') {

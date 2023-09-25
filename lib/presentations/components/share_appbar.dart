@@ -75,12 +75,12 @@ class ShareAppbar extends StatelessWidget implements PreferredSizeWidget {
             children: [
               isLockButton != null && isLockButton!
                   ? Obx(() {
-                      return Get.find<CrewDetailController>().selectedCrew.value != null && Get.find<CrewDetailController>().isFounder.value
+                      return Get.find<CrewDetailController>().isFounder.value
                           ? Padding(
                               padding: EdgeInsets.only(left: 4.sp),
                               child: IconButton(
                                 onPressed: () => Get.find<CrewDetailController>().validateRecruitLock(),
-                                icon: Get.find<CrewDetailController>().selectedCrew.value!.crewRecruitStatus! == 'CLOSE' ? iconHeaderLock : iconHeaderUnlock,
+                                icon: Get.find<CrewDetailController>().selectedCrew.value.crewRecruitStatus! == 'CLOSE' ? iconHeaderLock : iconHeaderUnlock,
                                 splashRadius: 20.sp,
                                 constraints: BoxConstraints(
                                   minWidth: 30.sp,
