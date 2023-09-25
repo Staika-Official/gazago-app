@@ -30,11 +30,9 @@ import 'package:gaza_go/platform/models/crew_model.dart';
 import 'package:gaza_go/platform/models/error_response_data_model.dart';
 import 'package:gaza_go/platform/models/inventory_item_model.dart';
 import 'package:gaza_go/platform/models/new_challenge_detail_model.dart';
-import 'package:gaza_go/platform/models/user_account_model.dart';
 import 'package:gaza_go/platform/services/activity_service.dart';
 import 'package:gaza_go/platform/services/crew_service.dart';
 import 'package:gaza_go/platform/services/item_service.dart';
-import 'package:gaza_go/platform/services/uaa_service.dart';
 import 'package:gaza_go/platform/stores/hive_store.dart';
 import 'package:gaza_go/presentations/components/alert_ui_list.dart';
 import 'package:gaza_go/presentations/components/product_list_dialog.dart';
@@ -42,8 +40,6 @@ import 'package:get/get.dart';
 import 'package:intl/intl.dart';
 import 'package:kakao_flutter_sdk_share/kakao_flutter_sdk_share.dart';
 import 'package:url_launcher/url_launcher.dart';
-
-
 
 class ChallengesDetailController extends GetxController with GetTickerProviderStateMixin, ChallengeMixin {
   ChallengesController challengesController = Get.isRegistered<ChallengesController>() ? Get.find<ChallengesController>() : Get.put(ChallengesController());
@@ -356,8 +352,6 @@ class ChallengesDetailController extends GetxController with GetTickerProviderSt
     errorMessage.value = '';
   }
 
-
-
   Future<void> showCreateCrewForm() async {
     if (await handleCheckUserVerified()) {
       await CrewService.getCrewMarkIcons(successCallback: (List<CrewIconModel> icons) {
@@ -473,14 +467,13 @@ class ChallengesDetailController extends GetxController with GetTickerProviderSt
       }
     }
 
-
     final ShortDynamicLink dynamicLink = await FirebaseDynamicLinks.instance.buildShortLink(dynamicLinkParams!);
 
     FeedTemplate? kakaoFeedTemplate;
-    if(challengeType == ChallengeType.crew){
-      generateFeedTemplate(dynamicLink.shortUrl, challengeType: challengeType, shareSource: shareSource, crewName: crewName);
+    if (challengeType == ChallengeType.crew) {
+      kakaoFeedTemplate = generateFeedTemplate(dynamicLink.shortUrl, challengeType: challengeType, shareSource: shareSource, crewName: crewName);
     } else {
-      if(shareTemplate.value != null){
+      if (shareTemplate.value != null) {
         kakaoFeedTemplate = FeedTemplate(
           content: Content(
             imageUrl: Uri.parse(shareTemplate.value!.imageUrl),
@@ -496,7 +489,6 @@ class ChallengesDetailController extends GetxController with GetTickerProviderSt
           buttonTitle: shareTemplate.value!.buttonTitle,
         );
       }
-
     }
 
     if (isKakaoTalkSharingAvailable) {
@@ -524,14 +516,17 @@ class ChallengesDetailController extends GetxController with GetTickerProviderSt
 
   Future<void> getFirebaseShareTemplate() async {
     print(challengeDetails.value.id);
-    try{
+    try {
       DocumentSnapshot docSnapshot = await FirebaseFirestore.instance.collection("challengeShareTemplate").doc(challengeDetails.value.id.toString()).get();
-      shareTemplate.value = ChallengeShareTemplateModel(imageUrl: docSnapshot['imageUrl'], title: docSnapshot['title'], description: docSnapshot['description'], buttonTitle: docSnapshot['buttonTitle'],);
-    }catch(e){
+      shareTemplate.value = ChallengeShareTemplateModel(
+        imageUrl: docSnapshot['imageUrl'],
+        title: docSnapshot['title'],
+        description: docSnapshot['description'],
+        buttonTitle: docSnapshot['buttonTitle'],
+      );
+    } catch (e) {
       shareTemplate.value = null;
     }
-
-
   }
 
   Future<void> validateKakaoShareResult({required ChallengeType challengeType, required ShareSource shareSource}) async {
@@ -559,7 +554,6 @@ class ChallengesDetailController extends GetxController with GetTickerProviderSt
       unableSharedHistoryDialog(this, challengeType: challengeType, shareSource: shareSource);
     });
   }
-
 
   Future<void> handleCrewJoin(CrewModel crew) async {
     if (isAbleToJoinCrew.value) {
@@ -611,7 +605,7 @@ class ChallengesDetailController extends GetxController with GetTickerProviderSt
 
   void requestJoinChallenge(Function callback) async {
     isDisableButton.value = true;
-    if(await handleCheckUserVerified()) {
+    if (await handleCheckUserVerified()) {
       callback();
     } else {
       showChallengeNeedVerificationAlert();
@@ -619,18 +613,16 @@ class ChallengesDetailController extends GetxController with GetTickerProviderSt
     isDisableButton.value = false;
   }
 
-
   Future<void> onFetchJoinChallenge({bool isFree = false}) async {
-
     ChallengeJoinModel params = ChallengeJoinModel(challengeActivationType: challengeDetails.value.challengeActivationType!);
-    if(challengeDetails.value.challengeActivationType! == 'PAYMENT'){
-      params.entryFee = isFree ? 0 :challengeDetails.value.entryFee;
+    if (challengeDetails.value.challengeActivationType! == 'PAYMENT') {
+      params.entryFee = isFree ? 0 : challengeDetails.value.entryFee;
       Get.back();
     }
-    if(challengeDetails.value.challengeActivationType! == 'ITEM'){
+    if (challengeDetails.value.challengeActivationType! == 'ITEM') {
       params.itemId = challengeDetails.value.item!.id;
     }
-    if(challengeDetails.value.challengeActivationType! == 'CODE'){
+    if (challengeDetails.value.challengeActivationType! == 'CODE') {
       if (participationCode.value == '') {
         showToastPopup('참여코드를 입력해주세요.');
         return;
@@ -639,7 +631,7 @@ class ChallengesDetailController extends GetxController with GetTickerProviderSt
     }
     await ActivityService.fetchJoinChallenge(challengeId.value, params, successCallback: (bool) {
       walletMasterController.getSpendingWalletBalances();
-      if(challengeDetails.value.challengeActivationType! != 'ITEM') {
+      if (challengeDetails.value.challengeActivationType! != 'ITEM') {
         getChallengeDetail();
       }
       initLeaderboard();
@@ -651,12 +643,11 @@ class ChallengesDetailController extends GetxController with GetTickerProviderSt
       if (challengeDetails.value.challengeLanding != null) {
         showChallengeLandingPopup(this);
       }
-      if(challengeDetails.value.challengeActivationType! == 'CODE'){
+      if (challengeDetails.value.challengeActivationType! == 'CODE') {
         initCodeTextField();
       }
     }, errorCallback: (ErrorResponseDataModel error) {
-
-      if(challengeDetails.value.challengeActivationType! == 'CODE'){
+      if (challengeDetails.value.challengeActivationType! == 'CODE') {
         errorMessage.value = error.errorMessage!;
       } else {
         print(error.errorMessage);
@@ -665,7 +656,7 @@ class ChallengesDetailController extends GetxController with GetTickerProviderSt
     });
   }
 
-  void initLeaderboard(){
+  void initLeaderboard() {
     page = 0;
     hasMore = true;
     challengeRankingList.value = RxList.empty();
@@ -703,14 +694,12 @@ class ChallengesDetailController extends GetxController with GetTickerProviderSt
     joinChallengePopup(this);
   }
 
-
   void moveToChargeTik() {
     HiveStore.save(key: HiveKey.enteredRoute.name, value: Get.currentRoute);
     showProductList(walletMasterController);
   }
 
   void onClickChallengeLandingPage() async {
-
     switch (challengeDetails.value.challengeLanding!.openType) {
       case 'IN_APP':
         if (!Get.currentRoute.contains('home')) {
@@ -778,4 +767,3 @@ class ChallengesDetailController extends GetxController with GetTickerProviderSt
     }
   }
 }
-
