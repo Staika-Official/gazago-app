@@ -73,6 +73,11 @@ void handleMessage() {
       forceLogout();
     }
 
+    if (message.data['notificationKey'] == 'MY_ITEM') {
+
+      Get.find<HomeMenuController>().selectMenu(1);
+    }
+
     if (message.data['notificationKey'] == 'EXERCISE_RESTRICTION') {
       ActivityController controller = Get.find<ActivityController>();
       controller.handleAlreadyFinishedExercise();
@@ -96,6 +101,11 @@ void handleNotification(RemoteMessage message) {
 
   if (message.data['notificationKey'] == 'FORCE_LOGOUT') {
     HiveStore.save(key: HiveKey.needToForceLogout.name, value: true);
+  }
+
+
+  if (message.data['notificationKey'] == 'MY_ITEM') {
+    Get.find<HomeMenuController>().selectMenu(1);
   }
 
   if (message.data['notificationKey'] == 'EXERCISE_RESTRICTION') {
@@ -155,6 +165,7 @@ Future<void> setForegroundConfig() async {
 }
 
 void onSelectNotification(NotificationResponse? notificationResponse) {
+
   if (notificationResponse != null && (notificationResponse.payload == null || notificationResponse.payload != '')) {
     List<String> payload = notificationResponse.payload!.split('-');
     String action = payload[0];

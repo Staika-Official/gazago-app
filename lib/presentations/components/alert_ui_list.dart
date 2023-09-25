@@ -7211,7 +7211,7 @@ void showModalWebview( context, {String? title, String linkUrl = ''}){
   ChallengesDetailController controller = Get.find<ChallengesDetailController>();
   showCupertinoModalBottomSheet(
     isDismissible: true,
-    enableDrag: true,
+    enableDrag: false,
     context: context,
     builder: (builder) {
       return Material(

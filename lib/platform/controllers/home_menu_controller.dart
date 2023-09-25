@@ -87,6 +87,9 @@ class HomeMenuController extends SuperController {
       if (initialMessage.data['notificationKey'] == 'DAILY_REWARD_COMPLETED') {
         Get.find<WalletMasterController>().moveToWallet();
       }
+      if (initialMessage.data['notificationKey'] == 'MY_ITEM') {
+        Get.find<HomeMenuController>().selectMenu(1);
+      }
       // 챌린지 보상 푸쉬 알림
       if (initialMessage.data['notificationKey'] == 'CHALLENGE_REWARD_BADGE_ISSUED') {
         PushMessageChallengeSuccessModel data = PushMessageChallengeSuccessModel.fromJson(initialMessage.data);

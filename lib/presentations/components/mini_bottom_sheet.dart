@@ -34,6 +34,8 @@ Widget renderParticipateInChallenge() {
       if (userState == 'REGISTER_READY') {
         // 접수 전
         widgets = renderCodeReadyRegisterReady(challengesDetailController);
+      } else if(userState == 'JOIN_CLOSED'){
+        widgets = renderCodeInProgressJoinedClosed(challengesDetailController);
       } else {
         // 접수 중
         if (userState == 'JOINED') {
@@ -75,6 +77,8 @@ Widget renderParticipateInChallenge() {
       if (userState == 'REGISTER_READY') {
         // 접수 전
         widgets = renderItemReadyRegisterReady(challengesDetailController);
+      } else if(userState == 'JOIN_CLOSED'){
+        widgets = renderItemInProgressJoinedClosed(challengesDetailController);
       } else {
         // 접수 중
         if (challengesDetailController.challengeDetails.value.userItem != null) {
@@ -126,6 +130,8 @@ Widget renderParticipateInChallenge() {
       if (userState == 'REGISTER_READY') {
         // 접수 전
         widgets = renderPayReadyRegisterReady(challengesDetailController);
+      } else if(userState == 'JOIN_CLOSED'){
+        widgets = renderPayInProgressJoinedClosed(challengesDetailController);
       } else {
         // 접수 중
         if (userState == 'JOINED') {
