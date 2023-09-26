@@ -13,6 +13,7 @@ import 'package:get/get.dart';
 class CrewDetailController extends GetxController with GetTickerProviderStateMixin, ChallengeMixin {
   RxInt dailyBlockCount = RxInt(0);
   Rx<CrewModel> get selectedCrew {
+    if (!Get.isRegistered<ChallengesDetailController>()) Get.put(ChallengesDetailController());
     return Rx(Get.find<ChallengesDetailController>().myCrew.value!['crew']);
   }
 

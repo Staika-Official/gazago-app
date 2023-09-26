@@ -94,7 +94,6 @@ class ChallengesDetailController extends GetxController with GetTickerProviderSt
         ].any((state) => state == challengeDetails.value.challengeState) &&
         [
           'REGISTER_AVAILABLE',
-          'REGISTER_READY',
           'JOIN_AVAILABLE',
         ].any((state) => state == challengeDetails.value.challengeUserState));
   }
@@ -105,7 +104,6 @@ class ChallengesDetailController extends GetxController with GetTickerProviderSt
         ].any((state) => state == challengeDetails.value.challengeState) &&
         [
           'REGISTER_AVAILABLE',
-          'REGISTER_READY',
         ].any((state) => state == challengeDetails.value.challengeUserState));
   }
 

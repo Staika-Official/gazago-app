@@ -34,7 +34,6 @@ import 'package:gaza_go/platform/controllers/shop_detail_controller.dart';
 import 'package:gaza_go/platform/controllers/wallet_go_controller.dart';
 import 'package:gaza_go/platform/controllers/wallet_master_controller.dart';
 import 'package:gaza_go/platform/controllers/wallet_staika_controller.dart';
-import 'package:gaza_go/platform/controllers/webview_controller.dart';
 import 'package:gaza_go/platform/controllers/withdraw_confirm_controller.dart';
 import 'package:gaza_go/platform/helpers/activity_mixin.dart';
 import 'package:gaza_go/platform/helpers/alert_helper.dart';
@@ -4804,13 +4803,13 @@ void challengeItemEquip() {
       Expanded(
         child: GazagoButton(
           onTap: () async {
-              Get.back();
+            Get.back();
 
-              if(challengesDetailController.challengeDetails.value.challengeUserState != 'JOINED_UNEQUIPPED_ITEM' && challengesDetailController.challengeDetails.value.challengeState == 'IN_PROGRESS'){
-                await challengesDetailController.onFetchJoinChallenge();
-              }
-              challengesDetailController.fetchEquipItem(challengesDetailController.challengeDetails.value.userItem!.id);
-            },
+            if (challengesDetailController.challengeDetails.value.challengeUserState != 'JOINED_UNEQUIPPED_ITEM' && challengesDetailController.challengeDetails.value.challengeState == 'IN_PROGRESS') {
+              await challengesDetailController.onFetchJoinChallenge();
+            }
+            challengesDetailController.fetchEquipItem(challengesDetailController.challengeDetails.value.userItem!.id);
+          },
           buttonText: '장착하기',
           buttonColor: skyBlueColor,
         ),
@@ -5328,7 +5327,7 @@ void participateInChallengeByCodeAlert() {
                             onSubmitted: (val) {
                               Get.back();
                               controller.onFetchJoinChallenge();
-                            } ,
+                            },
                           );
                         }),
                         Obx(() {
@@ -5360,7 +5359,7 @@ void participateInChallengeByCodeAlert() {
                                   onTap: () {
                                     Get.back();
                                     controller.onFetchJoinChallenge();
-                                  } ,
+                                  },
                                   buttonText: '확인',
                                   buttonColor: skyBlueColor,
                                 ),
@@ -5570,6 +5569,7 @@ void crewJoinInfoAlert(CrewModel crew) async {
 
 void showChallengeAlreadyJoinedAlert() {
   showAlert(
+    allowMultipleBottomSheet: true,
     contentWidget: Padding(
       padding: EdgeInsets.only(top: 22.sp, bottom: 49.sp),
       child: const StyledText(
@@ -6419,12 +6419,12 @@ void shareCrewChallengeKakaoLinkDialog(ChallengesDetailController controller) {
                           buttonText: '공유하기',
                           onTap: () async {
                             Get.back();
-                            if(controller.challengeDetails.value.challengeActivationType == 'CREW'){
+                            if (controller.challengeDetails.value.challengeActivationType == 'CREW') {
                               controller.shareChallenge(challengeType: ChallengeType.crew, shareSource: ShareSource.createCrew);
                               await Future.delayed(const Duration(seconds: 2));
                               askSharedCompleteDialog(controller, challengeType: ChallengeType.crew, shareSource: ShareSource.createCrew);
                             } else {
-                              if(controller.challengeDetails.value.challengeType == 'PAYMENT'){
+                              if (controller.challengeDetails.value.challengeType == 'PAYMENT') {
                                 controller.shareChallenge(challengeType: ChallengeType.payment, shareSource: ShareSource.mirae);
                                 await Future.delayed(const Duration(seconds: 2));
                                 askSharedCompleteDialog(controller, challengeType: ChallengeType.payment, shareSource: ShareSource.mirae);
@@ -6433,9 +6433,7 @@ void shareCrewChallengeKakaoLinkDialog(ChallengesDetailController controller) {
                                 await Future.delayed(const Duration(seconds: 2));
                                 askSharedCompleteDialog(controller, challengeType: ChallengeType.payment, shareSource: ShareSource.spot);
                               }
-
                             }
-
                           },
                         ),
                       ),
@@ -7174,7 +7172,7 @@ void showChallengeLandingPopup(ChallengesDetailController controller) {
                         onTap: () {
                           Get.back();
                           controller.onClickChallengeLandingPage();
-                        } ,
+                        },
                         child: Container(
                           decoration: BoxDecoration(
                             borderRadius: BorderRadius.only(
@@ -7204,8 +7202,7 @@ void showChallengeLandingPopup(ChallengesDetailController controller) {
   );
 }
 
-
-void showModalWebview( context, {String? title, String linkUrl = ''}){
+void showModalWebview(context, {String? title, String linkUrl = ''}) {
   InAppWebViewController? inAppWebViewController;
 
   ChallengesDetailController controller = Get.find<ChallengesDetailController>();
@@ -7220,18 +7217,16 @@ void showModalWebview( context, {String? title, String linkUrl = ''}){
             decoration: BoxDecoration(
               borderRadius: BorderRadius.only(topLeft: Radius.circular(20.0), topRight: Radius.circular(20.0)),
             ),
-
             child: CupertinoPageScaffold(
               backgroundColor: Colors.transparent,
               navigationBar: CupertinoNavigationBar(
-
-                  backgroundColor: popupBgColor,
-                  leading: InkWell(
-                    child: Icon(Icons.close, color: Colors.white),
-                    onTap: () {
-                      Get.back();
-                    },
-                  ),
+                backgroundColor: popupBgColor,
+                leading: InkWell(
+                  child: Icon(Icons.close, color: Colors.white),
+                  onTap: () {
+                    Get.back();
+                  },
+                ),
                 trailing: InkWell(
                   child: Icon(Icons.refresh, color: Colors.white),
                   onTap: () {
@@ -7241,36 +7236,36 @@ void showModalWebview( context, {String? title, String linkUrl = ''}){
                     }
                   },
                 ),
-                  middle:  Padding(
-                    padding: EdgeInsets.symmetric(horizontal: 5.0),
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        if(title != null)
-                      StyledText(
-                       title!,
-                      letterSpacing: -.1,
-                      fontWeight: 600,
-                      fontSize: 12,
-                      lineHeight: 16,
-                      overflowEllipsis: true,
-
-                      ),
+                middle: Padding(
+                  padding: EdgeInsets.symmetric(horizontal: 5.0),
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      if (title != null)
+                        StyledText(
+                          title!,
+                          letterSpacing: -.1,
+                          fontWeight: 600,
+                          fontSize: 12,
+                          lineHeight: 16,
+                          overflowEllipsis: true,
+                        ),
                       StyledText(
                         linkUrl,
-                      letterSpacing: -.1,
-                      color: lightGrayColor,
-                      fontWeight: 500,
-                      fontSize: 10,
-                      lineHeight: 14,
-                      overflowEllipsis: true,
+                        letterSpacing: -.1,
+                        color: lightGrayColor,
+                        fontWeight: 500,
+                        fontSize: 10,
+                        lineHeight: 14,
+                        overflowEllipsis: true,
                       ),
-                      ],
-                      ),
-                  ),),
+                    ],
+                  ),
+                ),
+              ),
               child: Container(
                 color: Colors.white,
-                child:  InAppWebView(
+                child: InAppWebView(
                   key: controller.webViewKey,
                   gestureRecognizers: Set()..add(Factory<VerticalDragGestureRecognizer>(() => VerticalDragGestureRecognizer())),
                   initialUrlRequest: URLRequest(url: WebUri(linkUrl)),
