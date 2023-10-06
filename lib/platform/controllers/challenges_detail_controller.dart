@@ -695,7 +695,7 @@ class ChallengesDetailController extends GetxController with GetTickerProviderSt
 
   void moveToChargeTik() {
     HiveStore.save(key: HiveKey.enteredRoute.name, value: Get.currentRoute);
-    showProductList(walletMasterController);
+    showProductList();
   }
 
   void onClickChallengeLandingPage() async {

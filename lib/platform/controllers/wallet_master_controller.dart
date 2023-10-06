@@ -7,6 +7,7 @@ import 'package:gaza_go/constants/routes.dart';
 import 'package:gaza_go/flavors.dart';
 import 'package:gaza_go/platform/controllers/loader_controller.dart';
 import 'package:gaza_go/platform/controllers/loading_controller.dart';
+import 'package:gaza_go/platform/controllers/wallet_go_controller.dart';
 import 'package:gaza_go/platform/controllers/wallet_staika_controller.dart';
 import 'package:gaza_go/platform/helpers/alert_helper.dart';
 import 'package:gaza_go/platform/helpers/solana_mixin.dart';
@@ -33,7 +34,7 @@ import 'package:throttling/throttling.dart';
 
 class WalletMasterController extends GetxController with SolanaMixin, GetTickerProviderStateMixin {
   LoaderController loaderController = Get.put(LoaderController());
-  // LoaderController loaderController = Get.find();
+
   late TabController tabController;
   final RxList<AssetTokenBalanceModel> spendingTokens = RxList.empty();
   final RxList<TokenInfoModel> spendingTokenInfoList = RxList.empty();
@@ -58,6 +59,7 @@ class WalletMasterController extends GetxController with SolanaMixin, GetTickerP
   final RxBool isPurchaseSuccessful = RxBool(false);
   final RxList<ProductDetails> inAppProducts = RxList.empty();
   final Throttling thr = Throttling(duration: const Duration(milliseconds: 1000));
+  RxString clickedAssetButton = RxString('');
 
   RxList<AssetTokenBalanceModel> get spendingTokenUiList {
     List<AssetTokenBalanceModel> balanceUiList = List.empty(growable: true);
@@ -66,6 +68,7 @@ class WalletMasterController extends GetxController with SolanaMixin, GetTickerP
       AssetTokenBalanceModel tokenUi;
       if (['STIK', 'TOTAL_TIK'].any((symbol) => symbol == token.symbol)) {
         tokenUi = token;
+
         balanceUiList.add(tokenUi);
       }
     }
@@ -351,16 +354,11 @@ class WalletMasterController extends GetxController with SolanaMixin, GetTickerP
     }
   }
 
-  void showProductDialog() {
-    showProductList(this);
-  }
 
-  void showProductStikDialog() async {
-    loaderController.isLoading.value = true;
-    await getStikPriceInfo();
-    loaderController.isLoading.value = false;
-    showProductStikList(this);
-  }
+
+
+
+
 
   // void onLoaderShow() {
   //   Get.dialog(const Loader());

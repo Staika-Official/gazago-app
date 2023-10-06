@@ -17,11 +17,10 @@ class WalletHome extends StatelessWidget {
     return DefaultContainer(
       backgroundColor: subBg01Color,
       titleText: '지갑',
-      resizeToAvoidBottomInset: false,
       child: Column(
-        children: [
+        children: [ 
           Padding(
-            padding: EdgeInsets.symmetric(horizontal: 28.0.sp),
+            padding: EdgeInsets.only(bottom: 20.0.sp, left: 20.sp, right: 20.sp),
             child: Container(
               height: 54,
               decoration: BoxDecoration(

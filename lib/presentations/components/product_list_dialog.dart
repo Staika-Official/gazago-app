@@ -133,7 +133,8 @@ List<Widget> renderProductList(WalletMasterController controller) {
       .toList();
 }
 
-void showProductList(WalletMasterController controller) {
+void showProductList() {
+  WalletMasterController controller = Get.find();
   Get.dialog(
     barrierDismissible: false,
     useSafeArea: false,
@@ -147,52 +148,46 @@ void showProductList(WalletMasterController controller) {
             mainAxisSize: MainAxisSize.max,
             children: [
               Column(
+
+                crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Padding(
-                    padding: EdgeInsets.only(left: 24.sp, top: 16.sp, right: 24.sp, bottom: 28.sp),
+                    padding: EdgeInsets.only(left: 24.sp,top:16.sp, right: 24.sp, bottom: 16.sp),
+                    child: StyledText(
+                      '현재 보유 자산',
+                      fontSize: 16,
+                      fontWeight: 600,
+                      lineHeight: 20,
+                      textAlign: TextAlign.start,
+                    ),
+                  ),
+                  Padding(
+                    padding: EdgeInsets.only(left: 24.sp,  right: 24.sp, bottom: 16.sp),
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
-                        Row(
-                          children: [
-                            CircleAvatar(
-                              foregroundImage: HiveStore.loadString(key: HiveKey.profileImageUrl.name) != null && HiveStore.loadString(key: HiveKey.profileImageUrl.name) != ''
-                                  ? CachedNetworkImageProvider(
-                                      HiveStore.loadString(key: HiveKey.profileImageUrl.name)!,
-                                      headers: imageNetworkHeader,
-                                    )
-                                  : Image.asset(
-                                      'assets/images/ic_launcher.png',
-                                      width: 30.sp,
-                                    ).image,
-                              radius: 25,
-                            ),
-                            const Padding(
-                              padding: EdgeInsets.only(left: 6),
-                              child: StyledText(
-                                '보유 중',
-                                fontSize: 18,
-                                fontWeight: 600,
-                                lineHeight: 18,
-                              ),
-                            ),
-                          ],
+                        StyledText(
+                          'Taika',
+                          fontSize: 16,
+                          fontWeight: 400,
+                          lineHeight: 20,
                         ),
                         Row(
                           children: [
                             StyledText(
                               formatDecimalPlaces(double.parse(controller.tik.value.uiAmountString!), 0),
-                              fontSize: 18.sp,
+                              fontSize: 14.sp,
                               fontWeight: 700,
-                              lineHeight: 18.sp,
+                              lineHeight: 20.sp,
                               letterSpacing: -0.5,
                             ),
                             StyledText(
                               ' TIK',
-                              fontSize: 18.sp,
+                              fontSize: 14.sp,
                               fontWeight: 400,
-                              lineHeight: 18.sp,
+                              lineHeight: 20.sp,
                               letterSpacing: -0.5,
+                              color: lightGrayColor,
                             ),
                           ],
                         ),
@@ -417,3 +412,5 @@ void showProductList(WalletMasterController controller) {
     showStoreNotAvailableAlert();
   }
 }
+
+

@@ -56,6 +56,7 @@ import 'package:gaza_go/presentations/views/wallet/create_wallet.dart';
 import 'package:gaza_go/presentations/views/wallet/create_wallet_password.dart';
 import 'package:gaza_go/presentations/views/wallet/index.dart';
 import 'package:gaza_go/presentations/views/wallet/send_stik_go_wallet.dart';
+import 'package:gaza_go/presentations/views/wallet/send_stik_staika_wallet.dart';
 import 'package:gaza_go/presentations/views/wallet/taika_pay.dart';
 import 'package:gaza_go/presentations/views/wallet/wallet_actions.dart';
 import 'package:gaza_go/presentations/views/wallet/wallet_detail.dart';
@@ -125,6 +126,7 @@ class Routes {
   static const createWalletPassword = '/wallet/create/password';
   static const createWallet = '/wallet/create';
   static const sendStikGoWallet = '/wallet/send_stik_go_wallet';
+  static const sendStikStaikaWallet = '/wallet/send_stik_staika_wallet';
   static const challengeDetail = '/challenges/challenge_detail/:id';
   static const challengeCourseDetail = '/activity/challenge_course_detail';
   static const leaderboard = '/leaderboard';
@@ -197,6 +199,7 @@ class Routes {
     stepPage(name: Routes.createWalletPassword, page: const CreateWalletPassword()),
     stepPage(name: Routes.createWallet, page: const CreateWallet()),
     stepPage(name: Routes.sendStikGoWallet, page: const SendStikGoWallet()),
+    stepPage(name: Routes.sendStikStaikaWallet, page: const SendStikStaikaWallet()),
     stepPage(name: Routes.challengeDetail, page: const ChallengeDetail()),
     stepPage(name: Routes.challengeCourseDetail, page: const ChallengeCourseDetail()),
     stepPage(name: Routes.leaderboard, page: const RankingHome()),

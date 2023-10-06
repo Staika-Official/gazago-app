@@ -147,7 +147,7 @@ class StaikaWalletController extends GetxController with WalletMixin, SolanaMixi
     loaderController.isLoading.value = false;
   }
 
-  void moveToSendToGoWallet() {
+  void stikSwapWallet() {
     stikAmountTextController.text = '';
     Get.toNamed(Routes.sendStikGoWallet);
   }

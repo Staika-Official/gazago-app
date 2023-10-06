@@ -3,25 +3,27 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:gaza_go/constants/config.dart';
-import 'package:gaza_go/platform/controllers/wallet_staika_controller.dart';
+import 'package:gaza_go/platform/controllers/wallet_go_controller.dart';
+import 'package:gaza_go/platform/controllers/wallet_master_controller.dart';
 import 'package:gaza_go/platform/helpers/base_helper.dart';
 import 'package:gaza_go/presentations/components/default_container.dart';
 import 'package:gaza_go/presentations/styles/colors.dart';
 import 'package:gaza_go/presentations/styles/styled_text.dart';
 import 'package:get/get.dart';
 
-class SendStikGoWallet extends StatelessWidget {
-  const SendStikGoWallet({Key? key}) : super(key: key);
+class SendStikStaikaWallet extends StatelessWidget {
+  const SendStikStaikaWallet({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    StaikaWalletController controller = Get.put(StaikaWalletController());
+    WalletMasterController walletMasterController = Get.find();
+    GoWalletController controller = Get.find();
     return GestureDetector(
       onTap: () {
         controller.focusNode.unfocus();
       },
       child: DefaultContainer(
-        titleText: 'GO 지갑으로 보내기',
+        titleText: 'STAIKA 지갑으로 보내기',
         backgroundColor: subBg01Color,
         headerBackgroundColor: Colors.transparent,
         child: Obx(() {
@@ -34,9 +36,9 @@ class SendStikGoWallet extends StatelessWidget {
                   children: [
                     CircleAvatar(
                       radius: 19.sp,
-                      foregroundImage: controller.assetStik.value != null
+                      foregroundImage: walletMasterController.stik.value != null
                           ? CachedNetworkImageProvider(
-                        controller.assetStik.value!.logoUrl,
+                        walletMasterController.stik.value.logoUrl!,
                         headers: imageNetworkHeader,
                       )
                           : Image.asset(
@@ -49,7 +51,7 @@ class SendStikGoWallet extends StatelessWidget {
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          StyledText(
+                          const StyledText(
                             '보유 중',
                             color: lightGrayColor,
                             fontSize: 12,
@@ -59,7 +61,7 @@ class SendStikGoWallet extends StatelessWidget {
                           Padding(
                             padding: EdgeInsets.only(top: 6.0.sp),
                             child: StyledText(
-                              '${formatDecimalPlaces(double.parse(controller.assetStik.value!.uiAmountString), 4, isAutoDecimal: true)} STIK',
+                              '${formatDecimalPlaces(double.parse(walletMasterController.stik.value.uiAmountString!), 4, isAutoDecimal: true)} STIK',
                               fontSize: 18,
                               lineHeight: 19,
                               fontWeight: 500,

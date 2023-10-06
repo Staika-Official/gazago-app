@@ -22,7 +22,7 @@ class StaikaWallet extends StatelessWidget {
             padding: EdgeInsets.only(top: 14.sp, left: 21.sp, right: 21.sp),
             child: StaikaAssetItemCoin(
               asset: asset,
-              onTapButton: asset.symbol.toUpperCase() == 'STIK' ? () => controller.moveToSendToGoWallet() : null,
+              onTapButton: asset.symbol.toUpperCase() == 'STIK' ? () => controller.stikSwapWallet() : null,
               buttonText: asset.symbol.toUpperCase() == 'STIK' ? 'GO지갑으로 보내기' : '',
               showPrice: false,
             ),
@@ -33,8 +33,7 @@ class StaikaWallet extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    StaikaWalletController controller = Get.put(StaikaWalletController());
-
+    StaikaWalletController controller = Get.isRegistered<StaikaWalletController>() ? Get.find<StaikaWalletController>() : Get.put(StaikaWalletController());
     return Scaffold(
       backgroundColor: subBg01Color,
       resizeToAvoidBottomInset: false,

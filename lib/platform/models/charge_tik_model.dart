@@ -9,9 +9,10 @@ class ChargeTikModel {
   String fromTokenSymbol;
   double fromUiAmount;
   String toTokenSymbol;
-  int toUiAmount;
+  dynamic toUiAmount;
   double priceKRW;
   double priceUSD;
+  double uiFeeString;
 
   ChargeTikModel({
     required this.userId,
@@ -22,6 +23,7 @@ class ChargeTikModel {
     required this.toUiAmount,
     required this.priceKRW,
     required this.priceUSD,
+    required this.uiFeeString,
   });
 
   factory ChargeTikModel.fromJson(Map<String, dynamic> json) => _$ChargeTikModelFromJson(json);

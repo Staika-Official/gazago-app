@@ -331,3 +331,19 @@ FeedTemplate? generateFeedTemplate(Uri shareUrl, {required ChallengeType challen
   }
   return template;
 }
+
+double productSumFeePrice(String price, String fee) {
+  double result;
+
+  result = double.parse(price) + double.parse(fee);
+
+  return result;
+}
+
+double productMinusFeePrice(String price, String fee) {
+  double result;
+
+  result = double.parse(price) - double.parse(fee);
+
+  return result;
+}

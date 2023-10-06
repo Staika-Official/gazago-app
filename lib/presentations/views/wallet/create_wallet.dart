@@ -111,7 +111,9 @@ class CreateWallet extends StatelessWidget {
                           padding: const EdgeInsets.all(20),
                           child: GazagoButton(
                             onTap: () async {
-                              await Get.find<StaikaWalletController>().getStaikaWalletInfo();
+                              if(Get.isRegistered<StaikaWalletController>()){
+                                await Get.find<StaikaWalletController>().getStaikaWalletInfo();
+                              }
                               Get.until((route) => Get.currentRoute == Routes.wallet);
                             },
                             buttonText: '시작하기',

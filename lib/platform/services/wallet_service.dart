@@ -227,7 +227,7 @@ class WalletService {
     print('##############');
     print('accountSecretkey: $accountSecretkey');
     String? decryptPrivateKey = decrypt(accountSecretkey, email!, walletPassword);
-    print('decryptPrivateKey: $decryptPrivateKey');
+
 
     // if (decryptPrivateKey == null) {}
 
@@ -244,7 +244,6 @@ class WalletService {
       message = await getSplTransferMessage(solanaClient, sender, receiver, mint, amount);
     }
 
-    print('sender: ${sender.address}');
 
     // FeePayer
     final feePayer = F.solanaFeePayer;
@@ -265,6 +264,7 @@ class WalletService {
       signatures: signatures,
     );
     String uiAmount = getUiAmountString(amount, decimals);
+    print(uiAmount);
     // API Call
     // Map<String, String> body = {'clientId': 'GAZAGO', 'encodeTransaction': tx.encode()};
     ExchangeTokenWithdrawalModel params = ExchangeTokenWithdrawalModel(
@@ -272,6 +272,26 @@ class WalletService {
       uiAmount: double.parse(uiAmount),
       fee: 0,
       encodedTransaction: tx.encode(),
+    );
+    Response res = await WalletApi.exchangeStikToGoWallet(userId!, symbol, params);
+    if (res.statusCode == 201) {
+      successCallback(true);
+    } else {
+      if (errorCallback != null) errorCallback();
+    }
+  }
+
+  static Future<void> fetchStikMoveToStaikaWallet({
+    required Function successCallback,
+    Function? errorCallback,
+    required String symbol,
+    required double amount,
+  }) async {
+    ExchangeTokenWithdrawalModel params = ExchangeTokenWithdrawalModel(
+      type: 'deposit',
+      uiAmount: amount,
+      fee: 0,
+      encodedTransaction: '',
     );
     Response res = await WalletApi.exchangeStikToGoWallet(userId!, symbol, params);
     if (res.statusCode == 201) {

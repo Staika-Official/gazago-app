@@ -95,7 +95,7 @@ class WalletApi {
 
   //onchain apis
   static Future<Response> getOnChainWallet(String userId) async {
-    return await Api.client(serviceUrl: ServiceUrl.onChainWalletService, allowCustomErrorHandler: true).get('/solana/wallets/users/$userId');
+    return await Api.client(serviceUrl: ServiceUrl.onChainWalletService, allowCustomErrorHandler: true, showLoading: false).get('/solana/wallets/users/$userId');
   }
 
   static Future<Response> createOnChainWallet(String userId, {required String publicKey, required String secretKey}) async {

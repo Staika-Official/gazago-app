@@ -27,6 +27,7 @@ class LoaderController extends GetxController {
         //   Get.dialog(Loader(), name: 'progressCircle');
         // }
       } else {
+        print(dialogKey.currentContext);
         if (dialogKey.currentContext != null) {
           Navigator.of(dialogKey.currentContext!).pop();
         } else {

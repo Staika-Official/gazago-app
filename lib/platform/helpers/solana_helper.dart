@@ -61,3 +61,4 @@ Future<Message> getSplTransferMessage(SolanaClient solanaClient, Ed25519HDKeyPai
     ],
   );
 }
+
