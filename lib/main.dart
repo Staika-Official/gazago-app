@@ -8,8 +8,10 @@ import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:gaza_go/constants/enums.dart';
 import 'package:gaza_go/flavors.dart';
+import 'package:gaza_go/platform/controllers/activity_controller.dart';
 import 'package:gaza_go/platform/controllers/global_controller.dart';
 import 'package:gaza_go/platform/controllers/loader_controller.dart';
+import 'package:gaza_go/platform/controllers/wallet_master_controller.dart';
 import 'package:gaza_go/platform/firebase/core.dart';
 import 'package:gaza_go/platform/firebase/crashlytics.dart';
 import 'package:gaza_go/platform/stores/hive_store.dart';
@@ -110,6 +112,8 @@ class MyApp extends StatelessWidget {
 
     Get.put(GlobalController(), permanent: true);
     Get.put(LoaderController(), permanent: true);
+    Get.put(WalletMasterController(), permanent: true);
+    Get.put(ActivityController(), permanent: true);
 
     return ScreenUtilInit(
       designSize: const Size(390, 844),

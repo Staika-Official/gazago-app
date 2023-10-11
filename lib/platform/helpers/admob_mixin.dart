@@ -200,7 +200,7 @@ mixin AdmobMixin {
 
         activityController.endExercise(source: 'showEndADExerciseAlert');
         endAd.value = null;
-        activityController.adLoadingTime.value = 0;
+        // activityController.adLoadingTime.value = 0;
 
         ad.dispose();
       },

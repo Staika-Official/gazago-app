@@ -13,7 +13,6 @@ import 'package:gaza_go/platform/controllers/loading_controller.dart';
 import 'package:gaza_go/platform/controllers/wallet_master_controller.dart';
 import 'package:gaza_go/platform/helpers/activity_helper.dart';
 import 'package:gaza_go/platform/helpers/activity_mixin.dart';
-import 'package:gaza_go/platform/helpers/admob_mixin.dart';
 import 'package:gaza_go/platform/helpers/alert_helper.dart';
 import 'package:gaza_go/platform/helpers/base_helper.dart';
 import 'package:gaza_go/platform/helpers/challenge_mixin.dart';
@@ -41,7 +40,7 @@ import 'package:permission_handler/permission_handler.dart' as ph;
 import 'package:simple_animations/animation_builder/custom_animation_builder.dart';
 import 'package:throttling/throttling.dart';
 
-class ActivityController extends SuperController with ActivityMixin, ChallengeMixin, GetTickerProviderStateMixin, AdmobMixin, ConsumerItemMixin {
+class ActivityController extends SuperController with ActivityMixin, ChallengeMixin, GetTickerProviderStateMixin, ConsumerItemMixin {
   final WalletMasterController walletMasterController = Get.find();
   LoaderController loaderController = Get.isRegistered<LoaderController>() ? Get.find<LoaderController>() : Get.put(LoaderController());
   RxList<StatModel> get statList {
@@ -99,7 +98,7 @@ class ActivityController extends SuperController with ActivityMixin, ChallengeMi
       await loadChallenges();
     });
 
-    await initPlatformState();
+    // await initPlatformState();
   }
 
   Future<void> refreshController() async {
@@ -664,9 +663,9 @@ class ActivityController extends SuperController with ActivityMixin, ChallengeMi
     handleMoveExerciseActive(exerciseType);
   }
 
-  void showAdAndMoveActivity() {
-    showExerciseStartAd(this, selectedAd.value);
-  }
+  // void showAdAndMoveActivity() {
+  //   showExerciseStartAd(this, selectedAd.value);
+  // }
 
   void showAdTip() {
     showAdTipAlert(selectedCourse.value?.id, selectedExerciseType.value);
@@ -829,7 +828,7 @@ class ActivityController extends SuperController with ActivityMixin, ChallengeMi
   }
 
   void requestJoinChallenge(Function callback) async {
-    if(await handleCheckUserVerified()) {
+    if (await handleCheckUserVerified()) {
       callback();
     } else {
       showChallengeNeedVerificationAlert();
@@ -849,15 +848,15 @@ class ActivityController extends SuperController with ActivityMixin, ChallengeMi
     }
   }
 
-  void closeAdSelectPopup() {
-    adLoadTimerStop();
-    selectedCourse.value = null;
-    Get.back();
-    Timer(const Duration(seconds: 1), () {
-      startAd.value = null;
-      endAd.value = null;
-    });
-  }
+  // void closeAdSelectPopup() {
+  //   adLoadTimerStop();
+  //   selectedCourse.value = null;
+  //   Get.back();
+  //   Timer(const Duration(seconds: 1), () {
+  //     startAd.value = null;
+  //     endAd.value = null;
+  //   });
+  // }
 
   void moveToChallengeDetail(ChallengeModel challenge, bool hideLinkToCourses) {
     // 100대명산 챌린지 이벤트
@@ -880,22 +879,22 @@ class ActivityController extends SuperController with ActivityMixin, ChallengeMi
     pedestrianStatusSubscription = null;
     _serviceStatusStream?.cancel();
     _serviceStatusStream = null;
-    adTimer?.cancel();
-    adTimer = null;
+    // adTimer?.cancel();
+    // adTimer = null;
     HiveStore.save(key: HiveKey.savedStepInitialized.name, value: false);
   }
 
   @override
   void onInactive() {
     print('onInactive');
-    adLoadTimerStop();
+    // adLoadTimerStop();
     HiveStore.save(key: HiveKey.savedStepInitialized.name, value: false);
   }
 
   @override
   void onPaused() {
     print('onPaused');
-    adLoadTimerStop();
+    // adLoadTimerStop();
     initLuckAnimation();
     HiveStore.save(key: HiveKey.savedStepInitialized.name, value: false);
   }

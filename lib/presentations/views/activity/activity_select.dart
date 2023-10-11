@@ -42,7 +42,9 @@ class ActivitySelect extends StatelessWidget {
                     ),
                     child: Obx(() {
                       return InkWell(
-                        onTap: controller.doableCourses.isNotEmpty && controller.doableCourses.any((course) => course.challengeId == challenge.id)
+                        onTap: controller.doableCourses.isNotEmpty &&
+                                controller.doableCourses.any((course) => course.challengeId == challenge.id) &&
+                                DateTime.now().isAfter(DateTime.parse(challenge.fromDate))
                             ? () {
                                 Get.back();
                                 controller.moveToCourseSelection(

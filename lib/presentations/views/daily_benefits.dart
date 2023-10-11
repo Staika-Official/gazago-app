@@ -384,8 +384,8 @@ class _DailyBenefitItemState extends State<DailyBenefitItem> {
         border: Border.all(
           color: Colors.black,
         ),
-        boxShadow: [
-          const BoxShadow(
+        boxShadow: const [
+          BoxShadow(
             color: Colors.black,
             offset: Offset(1, 2),
             blurRadius: 0.0,
@@ -497,8 +497,8 @@ class _DailyBenefitItemState extends State<DailyBenefitItem> {
                           style: BorderStyle.solid,
                         ),
                         borderRadius: BorderRadius.circular(100),
-                        boxShadow: [
-                          const BoxShadow(
+                        boxShadow: const [
+                          BoxShadow(
                             color: Colors.black,
                             offset: Offset(0, 2),
                             blurRadius: 0,
