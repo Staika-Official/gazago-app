@@ -164,17 +164,18 @@ class GoWallet extends StatelessWidget {
                   ),
                 ),
               ),
+
               Padding(
-                padding: EdgeInsets.only(top: 10.sp, bottom: 50.0.sp, left: 20.sp, right: 20.sp),
+                padding: EdgeInsets.only(top: 30.sp, bottom: 50.0.sp, left: 20.sp, right: 20.sp),
                 child: Align(
-                  alignment: Alignment.centerLeft,
+                  alignment: Alignment.bottomCenter,
                   child: StyledText(
                     '· GO 지갑은 가자고 내에서 TIK과 STIK을 관리하는 지갑입니다.',
                     fontWeight: 500,
                     fontSize: 10,
                     letterSpacing: -.1,
                     color: deepGrayColor,
-                    textAlign: TextAlign.left
+                    textAlign: TextAlign.center
                   ),
                 ),
               ),

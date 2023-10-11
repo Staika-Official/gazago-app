@@ -16,6 +16,7 @@ class CreateWalletPasswordController extends GetxController with PasswordMixin {
   final Rx<FormStatus> confirmPasswordFormStatus = Rx(FormStatus.empty);
   final RxBool isEnableNext = false.obs;
   final Rx<ErrorStatus> errorMsg = Rx(ErrorStatus.basic);
+  RxBool isShowAlert = RxBool(false);
 
   void initSamePasswordStream() {
     _isSamePassword = RX.CombineLatestStream.combine2<String, String, bool>(_password.stream, _confirmPassword.stream, (a, b) => a == b);
@@ -55,7 +56,7 @@ class CreateWalletPasswordController extends GetxController with PasswordMixin {
 
   void updateConfirmPassword(String password) {
     _confirmPassword.value = password;
-    confirmPasswordFormStatus.value = verifyPassword(password);
+    confirmPasswordFormStatus.value = verifyConfirmPassword(password, _password.value);
   }
 
   void nextStep() {
@@ -65,5 +66,13 @@ class CreateWalletPasswordController extends GetxController with PasswordMixin {
     } else {
       showToastPopup('비밀번호를 다시 확인해주세요.');
     }
+  }
+
+  void showPasswordNoticeAlert(){
+    isShowAlert.value = true;
+  }
+
+  void closePasswordNoticeAlert(){
+    isShowAlert.value = false;
   }
 }

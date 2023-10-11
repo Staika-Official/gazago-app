@@ -24,9 +24,9 @@ class GoWalletController extends GetxController with SolanaMixin {
   WalletMasterController walletMasterController = Get.find();
   LoaderController loaderController = Get.find();
   RxList productList = RxList.empty();
-  Rx<ChargeTikModel> chargeTikData = Rx(ChargeTikModel(userId: -1, title: "STIK_TO_TIK", fromTokenSymbol: "", fromUiAmount: 0.0, toTokenSymbol: "", toUiAmount: 0, priceKRW: 0.0, priceUSD: 0.0, uiFeeString:0.0));
+  Rx<ChargeTikModel> chargeTikData = Rx(ChargeTikModel(userId: -1, title: "STIK_TO_TIK", fromTokenSymbol: "", fromUiAmount: 0.0, toTokenSymbol: "", toUiAmount: 0, priceKRW: 0.0, priceUSD: 0.0, feeUiAmount:0));
   final FocusNode focusNode = FocusNode();
-  final TextEditingController stikAmountTextController = TextEditingController(text: '');
+  final TextEditingController stikAmountTextController = TextEditingController(text: '0');
   final RxString sendStikUiAmount = RxString('0');
   final RxString shortStikUiAmount = RxString('0');
   final RxBool isFetching = RxBool(false);
@@ -47,8 +47,9 @@ class GoWalletController extends GetxController with SolanaMixin {
   }
 
   void checkShortBalance(ExchangeStikPriceModel item) {
+    print(walletMasterController.exchangeAvailableTik.value.amount);
     double fromAmount = walletMasterController.clickedAssetButton.value == 'STAIKA' ? double.parse(item.fromUiAmountString!): productSumFeePrice(item.fromUiAmountString!, item.uiFeeString!);
-    double myAssetAmount = double.parse(walletMasterController.clickedAssetButton.value == 'STAIKA' ? walletMasterController.stik.value.uiAmountString! : walletMasterController.tik.value.uiAmountString!);
+    double myAssetAmount = double.parse(walletMasterController.clickedAssetButton.value == 'STAIKA' ? walletMasterController.stik.value.uiAmountString! : walletMasterController.exchangeAvailableTik.value.uiAmountString!);
 
     if( myAssetAmount < fromAmount ){
       failureShortBalanceStikToTikAlert(this);
@@ -81,7 +82,8 @@ class GoWalletController extends GetxController with SolanaMixin {
             toUiAmount: walletMasterController.clickedAssetButton.value == 'STAIKA' ?  double.parse(exchangeProduct.toUiAmountString!): int.parse(exchangeProduct.toUiAmountString!),
             priceKRW: walletMasterController.stikPriceInfoKRW.value.price!,
             priceUSD: walletMasterController.stikPriceInfoUSD.value.price!,
-            uiFeeString: double.parse(exchangeProduct.uiFeeString!),
+            feeUiAmount: int.parse(exchangeProduct.uiFeeString!),
+            feeTokenSymbol: int.parse(exchangeProduct.uiFeeString!) > 0 ? 'TIK' : null,
           ),
           successCallback: (data) {
             loaderController.isLoading.value = false;
@@ -112,11 +114,11 @@ class GoWalletController extends GetxController with SolanaMixin {
     handleReGetStikPriceAndProductList();
   }
 
-  void handleReGetStikPriceAndProductList() {
+  void handleReGetStikPriceAndProductList() async {
 
     walletMasterController.getSpendingWalletBalances();
     walletMasterController.getStikPriceInfo();
-    getProductList();
+    await getProductList();
   }
 
   void showProductDialog() async {

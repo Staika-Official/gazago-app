@@ -19,6 +19,7 @@ SvgPicture iconSkyBlueCheck = SvgPicture.asset('assets/images/common/ico_check_s
 SvgPicture iconCloseWhite = SvgPicture.asset('assets/images/common/ico_close_white.svg', width: 28.sp, height: 28.sp);
 SvgPicture iconHand = SvgPicture.asset('assets/images/common/ico_hand.svg', width: 65.sp, height: 65.sp);
 SvgPicture iconCircleSkyBlueCheck = SvgPicture.asset('assets/images/common/ico_circle_check_skyblue.svg', width: 40.sp, height: 40.sp);
+SvgPicture iconCircleSkyBlueExclamention = SvgPicture.asset('assets/images/common/ico_circle_exclamention_skyblue.svg', width: 62.sp, height: 62.sp);
 SvgPicture iconEaMinus = SvgPicture.asset('assets/images/common/ico_ea_minus.svg', width: 13.sp, height: 2.sp);
 SvgPicture iconEaPlus = SvgPicture.asset('assets/images/common/ico_ea_plus.svg', width: 13.sp, height: 13.sp);
 SvgPicture iconKey = SvgPicture.asset('assets/images/common/ico_key.svg', width: 26.sp, height: 26.sp);

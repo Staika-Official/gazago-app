@@ -11,6 +11,7 @@ class ExchangeStikPriceModel {
   String? uiFeeString;
   int? feeRate;
 
+
   ExchangeStikPriceModel({
     this.fromTokenSymbol,
     this.fromUiAmountString,
@@ -18,6 +19,7 @@ class ExchangeStikPriceModel {
     this.toUiAmountString,
     this.uiFeeString,
     this.feeRate,
+
   });
 
   factory ExchangeStikPriceModel.fromJson(Map<String, dynamic> json) => _$ExchangeStikPriceModelFromJson(json);

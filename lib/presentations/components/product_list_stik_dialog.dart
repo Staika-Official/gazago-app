@@ -14,29 +14,41 @@ import 'package:gaza_go/presentations/styles/icons.dart';
 import 'package:gaza_go/presentations/styles/styled_text.dart';
 import 'package:get/get.dart';
 
-List<Widget> renderMySpendingTokenList(WalletMasterController controller) {
-  return controller.spendingTokenUiList
+
+List<Widget> renderMyTikList(WalletMasterController controller) {
+  return controller.allTikUiList
       .asMap()
       .entries
       .map(
           (product) =>
-          Padding(
-            padding: EdgeInsets.symmetric(horizontal: 20.sp, vertical: 4.sp),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-              StyledText(
-                  product.value.name!,
-                  fontSize: 16,
-                  fontWeight: 400,
-                  lineHeight: 20,
-                  letterSpacing: -0.1,
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Row(
+                children: [
+                  Container(
+                    width: 2,
+                    height: 2,
+                    margin: EdgeInsets.only(top:5.sp, left:6.sp, right: 6.sp),
+                    decoration: BoxDecoration(
+                      color: Colors.white,
+                      borderRadius: BorderRadius.circular(2),
+                    ),
+                  ),
+                  StyledText(
+                    product.value.name! == 'Taika' ? '활동으로 받은 TIK' : '충전한 TIK (STIK 교환 불가)',
+                    fontSize: 12,
+                    fontWeight: 400,
+                    lineHeight: 18,
+                    letterSpacing: -0.1,
+                  ),
+                ],
               ),
               Row(
                 children: [
                   StyledText(
-                      '${formatDecimalPlaces(double.parse(product.value.uiAmountString!), product.value.symbol! == 'TOTAL_TIK' ? 0 : 4)}',
-                    fontSize: 14,
+                    '${formatDecimalPlaces(double.parse(product.value.uiAmountString!),  0)}',
+                    fontSize: 12,
                     fontWeight: 700,
                     lineHeight: 20,
                     letterSpacing: -0.1,
@@ -44,8 +56,8 @@ List<Widget> renderMySpendingTokenList(WalletMasterController controller) {
                   Padding(
                     padding: EdgeInsets.only(left:3.0.sp),
                     child: StyledText(
-                        product.value.symbol! == 'TOTAL_TIK' ? 'TIK' : product.value.symbol!,
-                      fontSize: 14,
+                      'TIK',
+                      fontSize: 12,
                       fontWeight: 400,
                       lineHeight: 20,
                       letterSpacing: -0.1,
@@ -54,7 +66,59 @@ List<Widget> renderMySpendingTokenList(WalletMasterController controller) {
                   ),
                 ],
               ),
-            ],),
+            ],)).toList();
+}
+List<Widget> renderMySpendingTokenList(WalletMasterController controller) {
+  return controller.spendingTokenUiList
+      .asMap()
+      .entries
+      .map(
+          (product) =>
+          Padding(
+            padding: EdgeInsets.symmetric(horizontal: 20.sp, vertical: 4.sp),
+            child: Column(
+              children: [
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                  StyledText(
+                      product.value.name!,
+                      fontSize: 16,
+                      fontWeight: 400,
+                      lineHeight: 20,
+                      letterSpacing: -0.1,
+                  ),
+                  Row(
+                    children: [
+                      StyledText(
+                          '${formatDecimalPlaces(double.parse(product.value.uiAmountString!), product.value.symbol! == 'TOTAL_TIK' ? 0 : 4)}',
+                        fontSize: 14,
+                        fontWeight: 700,
+                        lineHeight: 20,
+                        letterSpacing: -0.1,
+                      ),
+                      Padding(
+                        padding: EdgeInsets.only(left:3.0.sp),
+                        child: StyledText(
+                            product.value.symbol! == 'TOTAL_TIK' ? 'TIK' : product.value.symbol!,
+                          fontSize: 14,
+                          fontWeight: 400,
+                          lineHeight: 20,
+                          letterSpacing: -0.1,
+                          color: lightGrayColor,
+                        ),
+                      ),
+                    ],
+                  ),
+
+
+                ],),
+                product.value.symbol! == 'TOTAL_TIK' ?  Padding(
+                  padding: EdgeInsets.only(top:8.0.sp, bottom:5.sp),
+                  child: Column(children: [...renderMyTikList(controller)],),
+                ) : Container()
+              ],
+            ),
           )).toList();
 }
 

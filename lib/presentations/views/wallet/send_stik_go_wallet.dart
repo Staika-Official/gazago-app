@@ -21,7 +21,8 @@ class SendStikGoWallet extends StatelessWidget {
         controller.focusNode.unfocus();
       },
       child: DefaultContainer(
-        titleText: 'GO 지갑으로 보내기',
+        resizeToAvoidBottomInset: true,
+        titleText: 'GO 지갑으로 송금하기',
         backgroundColor: subBg01Color,
         headerBackgroundColor: Colors.transparent,
         child: Obx(() {
@@ -87,17 +88,20 @@ class SendStikGoWallet extends StatelessWidget {
                   children: [
                     TextField(
                       decoration: InputDecoration(
-                        hintText: '금액을 입력하세요(STIK)',
+                        hintText: '0',
                         hintStyle: TextStyle(
-                          color: deepGrayColor,
-                          fontWeight: FontWeight.w400,
-                        ),
-                        suffixText: controller.focusNode != null ? ' STIK' : '',
-                        suffixStyle: TextStyle(
                           color: Colors.white,
-                          fontSize: 24.sp,
                           fontWeight: FontWeight.w400,
                         ),
+                        suffixIcon: Padding(
+                          padding: EdgeInsets.only(right:12.0.sp),
+                          child: StyledText(' STIK',
+                            fontSize: 24,
+                            fontWeight: 400,
+                            lineHeight: 40,
+                          ),
+                        ),
+
                         focusedBorder: const OutlineInputBorder(
                           borderRadius: BorderRadius.all(Radius.circular(10.0)),
                           borderSide: BorderSide(width: 2, color: Color(0xFF363841)),
@@ -119,7 +123,7 @@ class SendStikGoWallet extends StatelessWidget {
                           if (newValue.text.isEmpty) {
                             return newValue.copyWith(text: '');
                           } else if (newValue.text.compareTo(oldValue.text) != 0) {
-                            RegExp exp = RegExp("^(([1-9]\\d{0,8})|0)(\\.\\d{0,9}?)?\$");
+                            RegExp exp = RegExp("^(([1-9]\\d{0,8})|0)(\\.\\d{0,4}?)?\$");
                             if (exp.hasMatch(newValue.text)) {
                               return newValue;
                             } else {

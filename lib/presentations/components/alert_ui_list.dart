@@ -3587,7 +3587,7 @@ void exchangeStikToTikAlert(GoWalletController controller, ExchangeStikPriceMode
                     Padding(
                       padding: EdgeInsets.only(left: 7.0.sp),
                       child: StyledText(
-                        formatDecimalPlaces(walletMasterController.clickedAssetButton.value == 'STAIKA' ? double.parse(exchangeProduct.fromUiAmountString!): productSumFeePrice(exchangeProduct.fromUiAmountString!, exchangeProduct.uiFeeString!), 9, isAutoDecimal: true),
+                        formatDecimalPlaces(walletMasterController.clickedAssetButton.value == 'STAIKA' ? double.parse(exchangeProduct.fromUiAmountString!): productSumFeePrice(exchangeProduct.fromUiAmountString!, exchangeProduct.uiFeeString!), 4, isAutoDecimal: true),
                         fontSize: 30,
                         lineHeight: 32,
                         fontWeight: 600,
@@ -3973,7 +3973,7 @@ void failureShortBalanceStikToTikAlert(GoWalletController controller) {
     contentWidget: Padding(
       padding: EdgeInsets.only(top: 20.0.sp, bottom: 40.sp),
       child: StyledText(
-        '부족한 ${walletMasterController.clickedAssetButton.value == 'STAIKA' ? 'STIK':'TIK'} 을 충전한 후 다시 시도해 주세요.',
+        '부족한 ${walletMasterController.clickedAssetButton.value == 'STAIKA' ? 'STIK':'TIK'} 을 보유한 후 다시 시도해 주세요.',
         fontSize: 14,
         lineHeight: 20,
         fontWeight: 500,
@@ -4009,42 +4009,42 @@ void exchangeStikShortBalanceAlert(StaikaWalletController controller) {
             padding: EdgeInsets.only(top: 34.0.sp, bottom: 30.sp),
             child: Column(
               children: [
-                Opacity(
-                  opacity: 0.4,
-                  child: FittedBox(
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        SvgPicture.asset('assets/images/wallet/ico_stik.svg', width: 24, height: 24),
-                        Padding(
-                          padding: EdgeInsets.only(left: 7.0.sp),
-                          child: StyledText(
-                            formatDecimalPlaces(
-                              double.parse(controller.sendStikUiAmount.value),
-                              controller.assetStik.value!.decimals,
-                              isAutoDecimal: true,
-                            ),
-                            fontSize: 30,
-                            lineHeight: 32,
-                            fontWeight: 600,
-                            letterSpacing: -.1,
-                          ),
-                        ),
-                        Padding(
-                          padding: EdgeInsets.only(left: 7.0.sp),
-                          child: const StyledText(
-                            'STIK',
-                            fontSize: 30,
-                            lineHeight: 32,
-                            fontWeight: 400,
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                ),
+                // Opacity(
+                //   opacity: 0.4,
+                //   child: FittedBox(
+                //     child: Row(
+                //       mainAxisAlignment: MainAxisAlignment.center,
+                //       children: [
+                //         SvgPicture.asset('assets/images/wallet/ico_stik.svg', width: 24, height: 24),
+                //         Padding(
+                //           padding: EdgeInsets.only(left: 7.0.sp),
+                //           child: StyledText(
+                //             formatDecimalPlaces(
+                //               double.parse(controller.sendStikUiAmount.value),
+                //               controller.assetStik.value!.decimals,
+                //               isAutoDecimal: true,
+                //             ),
+                //             fontSize: 30,
+                //             lineHeight: 32,
+                //             fontWeight: 600,
+                //             letterSpacing: -.1,
+                //           ),
+                //         ),
+                //         Padding(
+                //           padding: EdgeInsets.only(left: 7.0.sp),
+                //           child: const StyledText(
+                //             'STIK',
+                //             fontSize: 30,
+                //             lineHeight: 32,
+                //             fontWeight: 400,
+                //           ),
+                //         ),
+                //       ],
+                //     ),
+                //   ),
+                // ),
                 Padding(
-                  padding: EdgeInsets.only(top: 60.0.sp),
+                  padding: EdgeInsets.only(top: 10.0.sp),
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
@@ -4055,7 +4055,7 @@ void exchangeStikShortBalanceAlert(StaikaWalletController controller) {
                         letterSpacing: -.2,
                       ),
                       StyledText(
-                        '${formatDecimalPlaces(double.parse(controller.shortStikUiAmount.value), controller.assetStik.value!.decimals, isAutoDecimal: true)} STIK',
+                        '${formatDecimalPlaces(double.parse(controller.shortStikUiAmount.value), 4, isAutoDecimal: true)} STIK',
                         fontWeight: 500,
                         fontSize: 16,
                         letterSpacing: -.2,
@@ -4075,7 +4075,7 @@ void exchangeStikShortBalanceAlert(StaikaWalletController controller) {
                         letterSpacing: -.2,
                       ),
                       StyledText(
-                        '${formatDecimalPlaces(double.parse(controller.assetStik.value!.uiAmountString), controller.assetStik.value!.decimals, isAutoDecimal: true)} STIK',
+                        '${formatDecimalPlaces(double.parse(controller.assetStik.value!.uiAmountString), 4, isAutoDecimal: true)} STIK',
                         fontWeight: 500,
                         fontSize: 16,
                         letterSpacing: -.2,
@@ -4097,7 +4097,7 @@ void exchangeStikShortBalanceAlert(StaikaWalletController controller) {
           Padding(
             padding: EdgeInsets.only(bottom: 30.sp),
             child: const StyledText(
-              '· 부족한 STIK을 충전한 후 다시 시도해 주세요.',
+              '· 부족한 STIK을 보유한 후 다시 시도해 주세요.',
               fontSize: 14,
               lineHeight: 15,
               fontWeight: 500,
@@ -4135,42 +4135,8 @@ void sendStikShortBalanceAlert(GoWalletController controller) {
             padding: EdgeInsets.only(top: 34.0.sp, bottom: 30.sp),
             child: Column(
               children: [
-                Opacity(
-                  opacity: 0.4,
-                  child: FittedBox(
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        SvgPicture.asset('assets/images/wallet/ico_stik.svg', width: 24, height: 24),
-                        Padding(
-                          padding: EdgeInsets.only(left: 7.0.sp),
-                          child: StyledText(
-                            formatDecimalPlaces(
-                              double.parse(controller.sendStikUiAmount.value),
-                              walletMasterController.stik.value.decimals!,
-                              isAutoDecimal: true,
-                            ),
-                            fontSize: 30,
-                            lineHeight: 32,
-                            fontWeight: 600,
-                            letterSpacing: -.1,
-                          ),
-                        ),
-                        Padding(
-                          padding: EdgeInsets.only(left: 7.0.sp),
-                          child: const StyledText(
-                            'STIK',
-                            fontSize: 30,
-                            lineHeight: 32,
-                            fontWeight: 400,
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                ),
                 Padding(
-                  padding: EdgeInsets.only(top: 60.0.sp),
+                  padding: EdgeInsets.only(top: 10.0.sp),
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
@@ -4181,7 +4147,7 @@ void sendStikShortBalanceAlert(GoWalletController controller) {
                         letterSpacing: -.2,
                       ),
                       StyledText(
-                        '${formatDecimalPlaces(double.parse(controller.shortStikUiAmount.value), walletMasterController.stik.value.decimals!, isAutoDecimal: true)} STIK',
+                        '${formatDecimalPlaces(double.parse(controller.shortStikUiAmount.value), 4, isAutoDecimal: true)} STIK',
                         fontWeight: 500,
                         fontSize: 16,
                         letterSpacing: -.2,
@@ -4201,7 +4167,7 @@ void sendStikShortBalanceAlert(GoWalletController controller) {
                         letterSpacing: -.2,
                       ),
                       StyledText(
-                        '${formatDecimalPlaces(double.parse(walletMasterController.stik.value.uiAmountString!), walletMasterController.stik.value.decimals!, isAutoDecimal: true)} STIK',
+                        '${formatDecimalPlaces(double.parse(walletMasterController.stik.value.uiAmountString!), 4, isAutoDecimal: true)} STIK',
                         fontWeight: 500,
                         fontSize: 16,
                         letterSpacing: -.2,
@@ -4223,7 +4189,7 @@ void sendStikShortBalanceAlert(GoWalletController controller) {
           Padding(
             padding: EdgeInsets.only(bottom: 30.sp),
             child: const StyledText(
-              '· 부족한 STIK을 충전한 후 다시 시도해 주세요.',
+              '· 부족한 STIK을 보유한 후 다시 시도해 주세요.',
               fontSize: 14,
               lineHeight: 15,
               fontWeight: 500,
@@ -7650,3 +7616,4 @@ void showModalWebview(context, {String? title, String linkUrl = ''}) {
     },
   );
 }
+

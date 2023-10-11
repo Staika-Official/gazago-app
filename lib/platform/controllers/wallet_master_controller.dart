@@ -61,6 +61,20 @@ class WalletMasterController extends GetxController with SolanaMixin, GetTickerP
   final Throttling thr = Throttling(duration: const Duration(milliseconds: 1000));
   RxString clickedAssetButton = RxString('');
 
+  RxList<AssetTokenBalanceModel> get allTikUiList {
+    List<AssetTokenBalanceModel> balanceUiList = List.empty(growable: true);
+
+    for (AssetTokenBalanceModel token in spendingTokens) {
+      AssetTokenBalanceModel tokenUi;
+      if (['TIK', 'PTIK'].any((symbol) => symbol == token.symbol)) {
+        tokenUi = token;
+        balanceUiList.add(tokenUi);
+      }
+    }
+
+    return RxList(balanceUiList);
+  }
+
   RxList<AssetTokenBalanceModel> get spendingTokenUiList {
     List<AssetTokenBalanceModel> balanceUiList = List.empty(growable: true);
 
@@ -79,6 +93,17 @@ class WalletMasterController extends GetxController with SolanaMixin, GetTickerP
   Rx<AssetTokenBalanceModel> get tik {
     try {
       return Rx(spendingTokenUiList.singleWhere((token) => token.symbol == 'TOTAL_TIK', orElse: () {
+        showToastPopup('TAIKA를 찾을 수 없습니다.');
+        return AssetTokenBalanceModel();
+      }));
+    } catch (e) {
+      return Rx(AssetTokenBalanceModel());
+    }
+  }
+
+  Rx<AssetTokenBalanceModel> get exchangeAvailableTik {
+    try {
+      return Rx(spendingTokens.singleWhere((token) => token.symbol == 'TIK', orElse: () {
         showToastPopup('TAIKA를 찾을 수 없습니다.');
         return AssetTokenBalanceModel();
       }));
