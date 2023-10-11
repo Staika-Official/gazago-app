@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:gaza_go/platform/controllers/activity_controller.dart';
 import 'package:gaza_go/platform/controllers/loading_controller.dart';
-import 'package:gaza_go/platform/controllers/wallet_master_controller.dart';
 import 'package:gaza_go/presentations/styles/colors.dart';
 import 'package:gaza_go/presentations/styles/icons.dart';
 import 'package:gaza_go/presentations/styles/styled_text.dart';
@@ -34,8 +32,6 @@ class Loading extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     LoadingController loadingController = Get.find<LoadingController>();
-    Get.put(WalletMasterController(), permanent: true);
-    Get.put(ActivityController(), permanent: true);
 
     return Scaffold(
       body: Container(

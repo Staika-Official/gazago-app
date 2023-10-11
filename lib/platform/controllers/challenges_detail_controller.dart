@@ -73,6 +73,7 @@ class ChallengesDetailController extends GetxController with GetTickerProviderSt
   final RxString errorMessage = RxString('');
   final RxBool hideCourses = RxBool(false);
   final RxBool isDisableButton = RxBool(false);
+  final RxBool isLoading = RxBool(false);
 
   final RxBool isShortTokenBalance = RxBool(false);
 
@@ -149,7 +150,6 @@ class ChallengesDetailController extends GetxController with GetTickerProviderSt
         crewChallengeCloseAlert(this);
       }
     } else {
-      print('이거 부르나');
       getChallengeLeaderboard();
       getChallengeLeaderboardMyRanking();
     }
@@ -213,13 +213,14 @@ class ChallengesDetailController extends GetxController with GetTickerProviderSt
   }
 
   Future<void> getChallengeDetail() async {
+    isLoading.value = true;
     await ActivityService.getChallengeDetails(challengeId.value, successCallback: (NewChallengeDetailModel data) {
       challengeDetails.value = data;
-
       fromDate.value = DateFormat('M.d (EEE)', 'ko').format(DateTime.parse(data.fromDate!));
       toDate.value = DateFormat('M.d (EEE)', 'ko').format(DateTime.parse(data.toDate!));
       inDays.value = DateTime.parse(data.toDate!).difference(DateTime.parse(data.fromDate!)).inDays;
     });
+    isLoading.value = false;
   }
 
   Future<void> getChallengeLeaderboard() async {
@@ -265,6 +266,7 @@ class ChallengesDetailController extends GetxController with GetTickerProviderSt
   }
 
   Future<void> updateCrewData(DataSnapshot snapshot) async {
+    if (snapshot.value == null) return;
     crewList.clear();
     Map crewListMap = snapshot.value as Map;
     crewListMap.forEach((key, crew) {
@@ -587,7 +589,11 @@ class ChallengesDetailController extends GetxController with GetTickerProviderSt
   }
 
   void moveToMyCrew() {
-    Get.toNamed(Routes.crewDetail);
+    if (myCrew.value != null) {
+      Get.toNamed(Routes.crewDetail);
+    } else {
+      showToastPopup('내 크루를 찾을 수 없습니다. 잠시후 시도해주세요');
+    }
   }
 
   void loadDataOnScroll() {

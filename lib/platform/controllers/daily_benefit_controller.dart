@@ -1,6 +1,8 @@
 import 'dart:async';
 import 'dart:io';
 
+import 'package:advertising_id/advertising_id.dart';
+import 'package:flutter/services.dart';
 import 'package:gaza_go/flavors.dart';
 import 'package:gaza_go/platform/controllers/activity_controller.dart';
 import 'package:gaza_go/platform/controllers/wallet_master_controller.dart';
@@ -20,6 +22,10 @@ class DailyBenefitController extends GetxController {
   RxBool adIsLoading = RxBool(false);
   RxList<RewardedAd?> dailyRewardAdList = RxList.empty(growable: true);
   RxInt activeAdIndex = RxInt(0);
+  String? advertisingId = '';
+  bool? isLimitAdTrackingEnabled;
+  int adLoadAttemptCount = 0;
+
   RxDouble get maxRewardDistance {
     if (dailyBenefitList.value != null && dailyBenefitList.value!.benefits.isNotEmpty) {
       return RxDouble(dailyBenefitList.value!.benefits.last.distance);
@@ -42,6 +48,7 @@ class DailyBenefitController extends GetxController {
   }
 
   Future<void> initController() async {
+    await initPlatformState();
     await getDailyBenefitsList();
     await loadAd();
   }
@@ -59,6 +66,28 @@ class DailyBenefitController extends GetxController {
     });
   }
 
+  Future<void> initPlatformState() async {
+    // Platform messages may fail, so we use a try/catch PlatformException.
+    try {
+      advertisingId = await AdvertisingId.id(true);
+    } on PlatformException {
+      advertisingId = 'Failed to get platform version.';
+    }
+
+    try {
+      isLimitAdTrackingEnabled = await AdvertisingId.isLimitAdTrackingEnabled;
+    } on PlatformException {
+      isLimitAdTrackingEnabled = false;
+    }
+
+    // If the widget was removed from the tree while the asynchronous platform
+    // message was in flight, we want to discard the reply rather than calling
+    // setState to update our non-existent appearance.
+
+    advertisingId = advertisingId;
+    isLimitAdTrackingEnabled = isLimitAdTrackingEnabled;
+  }
+
   String getAdUnitId() {
     if (dailyRewardAdList.isEmpty || dailyRewardAdList.first == null) {
       return Platform.isIOS ? F.dailyBenefitAd1Ios : F.dailyBenefitAd1Android;
@@ -67,32 +96,47 @@ class DailyBenefitController extends GetxController {
     }
   }
 
+  Future<void> loadRewardedAd() async {
+    Completer completer = Completer<void>();
+    await RewardedAd.load(
+      adUnitId: getAdUnitId(),
+      request: const AdRequest(),
+      rewardedAdLoadCallback: RewardedAdLoadCallback(
+        onAdLoaded: (RewardedAd ad) {
+          print('ad loaded');
+          if (dailyRewardAdList.isEmpty) {
+            print('index: 0');
+            dailyRewardAdList.value = [null, null];
+            dailyRewardAdList.first = ad;
+          } else {
+            int index = activeAdIndex.value == 0 ? 1 : 0;
+            print('index: $index');
+            dailyRewardAdList[index] = ad;
+          }
+          adIsLoading.value = false;
+          completer.complete();
+        },
+        onAdFailedToLoad: (error) async {
+          adLoadAttemptCount += 1;
+          adIsLoading.value = false;
+          print('RewardedAd failed to load: $error');
+          if (adLoadAttemptCount == 2) {
+            adLoadAttemptCount = 0;
+            if (Get.currentRoute != '/') showToastPopup('광고 불러오기 실패, 나중에 다시 시도해주세요');
+          } else {
+            await loadRewardedAd();
+          }
+          completer.complete();
+        },
+      ),
+    );
+    await completer.future;
+  }
+
   Future<void> loadAd() async {
     if (!adIsLoading.value) {
-      await RewardedAd.load(
-        adUnitId: getAdUnitId(),
-        request: const AdRequest(),
-        rewardedAdLoadCallback: RewardedAdLoadCallback(
-          onAdLoaded: (RewardedAd ad) {
-            print('ad loaded');
-            if (dailyRewardAdList.isEmpty) {
-              print('index: 0');
-              dailyRewardAdList.value = [null, null];
-              dailyRewardAdList.first = ad;
-            } else {
-              int index = activeAdIndex.value == 0 ? 1 : 0;
-              print('index: $index');
-              dailyRewardAdList[index] = ad;
-            }
-            adIsLoading.value = false;
-          },
-          onAdFailedToLoad: (error) {
-            print('RewardedAd failed to load: $error');
-            adIsLoading.value = false;
-            loadAd();
-          },
-        ),
-      );
+      // adIsLoading.value = true;
+      await loadRewardedAd();
     }
   }
 

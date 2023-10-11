@@ -1,5 +1,4 @@
 import 'package:cached_network_image/cached_network_image.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/flutter_svg.dart';
@@ -45,6 +44,11 @@ class ChallengeDetail extends StatelessWidget {
                   )),
         backgroundColor: subBg01Color,
         body: Obx(() {
+          if (controller.isLoading.value) {
+            return const Center(
+              child: CircularProgressIndicator(),
+            );
+          }
           return Stack(
             children: [
               if (controller.challengeDetails.value.title != null)
@@ -321,11 +325,9 @@ class ChallengeDetail extends StatelessWidget {
                                                       errorWidget: (context, url, error) => const Center(child: SizedBox.square(dimension: 40, child: CircularProgressIndicator())),
                                                       httpHeaders: imageNetworkHeader,
                                                     ),
-
                                           ],
                                         ),
                                       ),
-
                                       Padding(
                                         padding: EdgeInsets.all(20.0.sp),
                                         child: controller.challengeDetails.value.title == null
@@ -408,7 +410,13 @@ class ChallengeDetail extends StatelessWidget {
                                                           children: [
                                                             TextSpan(
                                                               text: controller.challengeDetails.value.title!,
-                                                              style:  TextStyle(fontSize: 20, fontWeight: FontWeight.w500, letterSpacing: -.1, height: 25 / 20 ,overflow: TextOverflow.ellipsis,),
+                                                              style: const TextStyle(
+                                                                fontSize: 20,
+                                                                fontWeight: FontWeight.w500,
+                                                                letterSpacing: -.1,
+                                                                height: 25 / 20,
+                                                                overflow: TextOverflow.ellipsis,
+                                                              ),
                                                             ),
                                                             if (controller.challengeDetails.value.challengeType == 'CREW')
                                                               const WidgetSpan(

@@ -680,10 +680,10 @@ mixin ActivityMixin {
     updateExercise(isPaused: true, source: 'pauseExercise${updateTimer.hashCode}');
   }
 
-  void showEndExerciseAdDialog(ActivityController controller) {
-    showEndExerciseAdAlert(controller);
-    controller.adLoadTimerStart();
-  }
+  // void showEndExerciseAdDialog(ActivityController controller) {
+  //   showEndExerciseAdAlert(controller);
+  //   controller.adLoadTimerStart();
+  // }
 
   void showEndExerciseDialog() {
     showEndExerciseAlert(this);
