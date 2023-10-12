@@ -86,7 +86,7 @@ class CreateWallet extends StatelessWidget {
                                 const Padding(
                                   padding: EdgeInsets.only(top: 34),
                                   child: StyledText(
-                                    '회원가입이 완료 되었습니다.',
+                                    '지갑 생성이 완료 되었습니다.',
                                     fontSize: 22,
                                     fontWeight: 600,
                                     lineHeight: 26,

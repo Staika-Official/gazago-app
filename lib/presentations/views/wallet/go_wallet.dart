@@ -58,131 +58,145 @@ class GoWallet extends StatelessWidget {
     WalletMasterController controller = Get.find();
     GoWalletController goWalletController = Get.put(GoWalletController());
     // StaikaWalletController staikaController = Get.put(StaikaWalletController());
-    return Scaffold(
-      backgroundColor: subBg01Color,
-        resizeToAvoidBottomInset: false,
-      body: SingleChildScrollView(
-        child: Obx(() {
-          return Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              SizedBox(
-                width: double.infinity,
-                child: Padding(
-                  padding: EdgeInsets.only(left: 25.sp, right: 33.sp),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: const [
-                      StyledText(
-                        '디지털 자산',
-                        fontSize: 16,
-                        fontWeight: 600,
-                        lineHeight: 20,
-                        letterSpacing: -0.5,
-                      ),
-                    ],
-                  ),
-                ),
+    return LayoutBuilder(
+      builder: (context, constraints)  {
+        return Scaffold(
+          backgroundColor: subBg01Color,
+          resizeToAvoidBottomInset: false,
+          body: SingleChildScrollView(
+            child: ConstrainedBox(
+              constraints: BoxConstraints(
+                minHeight: constraints.maxHeight,
+                maxHeight: double.infinity,
               ),
-              ...renderAssetsList(controller, goWalletController),
-              Container(
-                width: double.infinity,
-                padding: EdgeInsets.only(left: 25.sp, right: 33.sp, top: 28.sp),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: const [
-                    StyledText(
-                      '디지털 자산 사용',
-                      fontSize: 16,
-                      fontWeight: 500,
-                      lineHeight: 20,
-                      letterSpacing: -0.5,
-                    ),
-                  ],
-                ),
-              ),
-              Padding(
-                padding: EdgeInsets.only(top: 12.sp, left: 21.sp, right: 21.sp),
-                child: Ink(
-                  decoration: BoxDecoration(
-                    color: subBg02Color,
-                    border: Border.all(width: 2.sp, color: Colors.black),
-                    borderRadius: BorderRadius.circular(12.sp),
-                  ),
-                  child: InkWell(
-                    onTap: () => controller.onClickMoveToTaikaPay(),
-                    borderRadius: BorderRadius.circular(12.sp),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      mainAxisAlignment: MainAxisAlignment.start,
-                      children: [
-                        Padding(
-                          padding: EdgeInsets.only(
-                            top: 20.sp,
-                            left: 16.sp,
-                            right: 16.sp,
-                            bottom: 20.sp,
-                          ),
+              child: IntrinsicHeight(
+                child: Obx(() {
+                  return Column(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      SizedBox(
+                        width: double.infinity,
+                        child: Padding(
+                          padding: EdgeInsets.only(left: 25.sp, right: 33.sp),
                           child: Row(
-                            mainAxisSize: MainAxisSize.max,
-                            children: [
-                              CircleAvatar(
-                                radius: 30.sp,
-                                foregroundImage: Image.asset('assets/images/wallet/ico_coupon.png').image,
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: const [
+                              StyledText(
+                                '디지털 자산',
+                                fontSize: 16,
+                                fontWeight: 600,
+                                lineHeight: 20,
+                                letterSpacing: -0.5,
                               ),
-                              Expanded(
-                                child: Padding(
-                                  padding: EdgeInsets.only(left: 16.0.sp),
-                                  child: Column(
-                                    crossAxisAlignment: CrossAxisAlignment.start,
+                            ],
+                          ),
+                        ),
+                      ),
+                      ...renderAssetsList(controller, goWalletController),
+                      Container(
+                        width: double.infinity,
+                        padding: EdgeInsets.only(left: 25.sp, right: 33.sp, top: 28.sp),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: const [
+                            StyledText(
+                              '디지털 자산 사용',
+                              fontSize: 16,
+                              fontWeight: 500,
+                              lineHeight: 20,
+                              letterSpacing: -0.5,
+                            ),
+                          ],
+                        ),
+                      ),
+                      Padding(
+                        padding: EdgeInsets.only(top: 12.sp, left: 21.sp, right: 21.sp),
+                        child: Ink(
+                          decoration: BoxDecoration(
+                            color: subBg02Color,
+                            border: Border.all(width: 2.sp, color: Colors.black),
+                            borderRadius: BorderRadius.circular(12.sp),
+                          ),
+                          child: InkWell(
+                            onTap: () => controller.onClickMoveToTaikaPay(),
+                            borderRadius: BorderRadius.circular(12.sp),
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.center,
+                              mainAxisAlignment: MainAxisAlignment.start,
+                              children: [
+                                Padding(
+                                  padding: EdgeInsets.only(
+                                    top: 20.sp,
+                                    left: 16.sp,
+                                    right: 16.sp,
+                                    bottom: 20.sp,
+                                  ),
+                                  child: Row(
+                                    mainAxisSize: MainAxisSize.max,
                                     children: [
-                                      StyledText(
-                                        'TIK 사용하기',
-                                        fontSize: 14,
-                                        lineHeight: 14,
-                                        fontWeight: 600,
-                                        color: deepGrayColor,
+                                      CircleAvatar(
+                                        radius: 30.sp,
+                                        foregroundImage: Image.asset('assets/images/wallet/ico_coupon.png').image,
                                       ),
-                                      Padding(
-                                        padding: EdgeInsets.only(top: 2.0.sp),
-                                        child: const StyledText(
-                                          'TIK으로 기프티콘 교환',
-                                          fontSize: 16,
-                                          lineHeight: 24,
-                                          fontWeight: 500,
+                                      Expanded(
+                                        child: Padding(
+                                          padding: EdgeInsets.only(left: 16.0.sp),
+                                          child: Column(
+                                            crossAxisAlignment: CrossAxisAlignment.start,
+                                            children: [
+                                              StyledText(
+                                                'TIK 사용하기',
+                                                fontSize: 14,
+                                                lineHeight: 14,
+                                                fontWeight: 600,
+                                                color: deepGrayColor,
+                                              ),
+                                              Padding(
+                                                padding: EdgeInsets.only(top: 2.0.sp),
+                                                child: const StyledText(
+                                                  'TIK으로 기프티콘 교환',
+                                                  fontSize: 16,
+                                                  lineHeight: 24,
+                                                  fontWeight: 500,
+                                                ),
+                                              ),
+                                            ],
+                                          ),
                                         ),
                                       ),
                                     ],
                                   ),
                                 ),
-                              ),
-                            ],
+                              ],
+                            ),
                           ),
                         ),
-                      ],
-                    ),
-                  ),
-                ),
-              ),
+                      ),
 
-              Padding(
-                padding: EdgeInsets.only(top: 30.sp, bottom: 50.0.sp, left: 20.sp, right: 20.sp),
-                child: Align(
-                  alignment: Alignment.bottomCenter,
-                  child: StyledText(
-                    '· GO 지갑은 가자고 내에서 TIK과 STIK을 관리하는 지갑입니다.',
-                    fontWeight: 500,
-                    fontSize: 10,
-                    letterSpacing: -.1,
-                    color: deepGrayColor,
-                    textAlign: TextAlign.center
-                  ),
-                ),
+                      Expanded(
+                        child: Padding(
+                          padding: EdgeInsets.only(top: 20.sp, bottom:20.0.sp, left: 20.sp, right: 20.sp),
+                          child: Align(
+                            alignment: Alignment.bottomCenter,
+                            child: StyledText(
+                              '· GO 지갑은 가자고 내에서 TIK과 STIK을 관리하는 지갑입니다.',
+                              fontWeight: 500,
+                              fontSize: 10,
+                              letterSpacing: -.1,
+                              color: deepGrayColor,
+                              textAlign: TextAlign.center
+                            ),
+                          ),
+                        ),
+                      ),
+                    ],
+                  );
+                }),
               ),
-            ],
-          );
-        }),
-      ),
+            ),
+          ),
+        );
+      }
     );
   }
 }

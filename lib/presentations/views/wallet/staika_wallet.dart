@@ -66,7 +66,7 @@ class StaikaWallet extends StatelessWidget {
                               ).image,
                       ),
                     ),
-              
+
                     if (controller.userWalletAddress.value != '')
                       Padding(
                         padding: EdgeInsets.only(top: 10.0.sp),
@@ -198,7 +198,7 @@ class StaikaWallet extends StatelessWidget {
                       child: Align(
                         alignment: Alignment.bottomCenter,
                         child: Padding(
-                          padding: EdgeInsets.only(top: 20.sp, bottom: 20.0.sp),
+                          padding: EdgeInsets.only(top: 20.sp, bottom: 20.0.sp, left: 20.sp, right: 20.sp),
                           child: StyledText(
                             '· Staika 지갑은 블록체인 상에 기록되는 블록체인 지갑입니다.',
                             fontWeight: 500,
