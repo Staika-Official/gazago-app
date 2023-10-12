@@ -94,7 +94,7 @@ class CrewRankingItem extends StatelessWidget {
                                 children: [
                                   Center(
                                     child: Padding(
-                                      padding: const EdgeInsets.only(top: 7.0),
+                                      padding: item.crewBuffLevel == 'NONE' || index + 1 > 3 ? EdgeInsets.zero : const EdgeInsets.only(top: 7.0),
                                       child: CircleAvatar(
                                         radius: 16.sp,
                                         foregroundImage: (item.iconImageUrl == null || item.iconImageUrl == '')
@@ -111,7 +111,18 @@ class CrewRankingItem extends StatelessWidget {
                                       ),
                                     ),
                                   ),
-                                  if (index + 1 < 4)
+                                  if (item.crewBuffLevel != 'NONE')
+                                    Center(
+                                      child: Container(
+                                        width: 50.sp,
+                                        height: 50.sp,
+                                        margin: EdgeInsets.only(bottom: 1.sp),
+                                        child: Image.asset(
+                                          'assets/images/challenges/crewbuff_${item.crewBuffLevel}.png',
+                                        ),
+                                      ),
+                                    ),
+                                  if (!isMyCrew && index + 1 < 4)
                                     Center(
                                       child: SizedBox(
                                         width: 50.sp,
