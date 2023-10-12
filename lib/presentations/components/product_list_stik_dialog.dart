@@ -52,6 +52,7 @@ List<Widget> renderMyTikList(WalletMasterController controller) {
                     fontWeight: 700,
                     lineHeight: 20,
                     letterSpacing: -0.1,
+                    color: lightGrayColor,
                   ),
                   Padding(
                     padding: EdgeInsets.only(left:3.0.sp),

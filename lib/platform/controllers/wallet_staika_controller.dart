@@ -157,8 +157,8 @@ class StaikaWalletController extends GetxController with WalletMixin, SolanaMixi
   }
 
   void openSendStikGoWalletAlert() {
-    shortStikUiAmount.value = (double.parse(sendStikUiAmount.value) - double.parse(assetStik.value!.uiAmountString)).toString();
-    if (double.parse(sendStikUiAmount.value) < double.parse(assetStik.value!.uiAmountString)) {
+    shortStikUiAmount.value = (double.parse(assetStik.value!.uiAmountString) - double.parse(sendStikUiAmount.value)).toString();
+    if (double.parse(sendStikUiAmount.value) + 0.00009 <= double.parse(assetStik.value!.uiAmountString)) {
       sendStikToGoWalletAlert(this);
     } else {
       exchangeStikShortBalanceAlert(this);
