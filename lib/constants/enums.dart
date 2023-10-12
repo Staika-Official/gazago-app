@@ -109,6 +109,7 @@ enum HiveKey {
   adjustFirstClickRankTabEvent,
   enteredRoute,
   challengeListIds,
+  notifiedChallengeList,
 }
 
 enum ResponseStatus {
@@ -363,13 +364,7 @@ enum ChallengeStatusType {
   beforeOpen,
 }
 
-enum ChallengeType {
-  crew,
-  alliance,
-  code,
-  item,
-  payment
-}
+enum ChallengeType { crew, alliance, code, item, payment }
 
 enum ShareSource {
   shareAppbar,

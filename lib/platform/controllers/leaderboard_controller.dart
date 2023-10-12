@@ -22,6 +22,7 @@ class LeaderboardController extends GetxController with GetTickerProviderStateMi
   RxList<RankerModel> rankings = RxList.empty();
   RxBool hasMore = RxBool(true);
   RxBool dataGetLoading = RxBool(false);
+  RxBool isLoadingMore = RxBool(false);
   RxMap<String, List<UserRewardStatisticsModel>> userMonthlyRewardMap = RxMap();
   final StreamController<RxMap> streamController = StreamController.broadcast();
 
@@ -107,20 +108,27 @@ class LeaderboardController extends GetxController with GetTickerProviderStateMi
       dataGetLoading.value = true;
     }
 
-    await DashboardService.getDailyRankingList(formattedDate.value, page.value, size.value, successCallback: (List<RankerModel> rankingList) {
-      if (rankingList.length < size.value) {
-        hasMore.value = false;
-      }
+    isLoadingMore.value = true;
+    await DashboardService.getDailyRankingList(
+      formattedDate.value,
+      page.value,
+      size.value,
+      successCallback: (List<RankerModel> rankingList) {
+        if (rankingList.length < size.value) {
+          hasMore.value = false;
+        }
 
-      rankingList.asMap().forEach((index, ranker) {
-        ranker.rank = (index + 1) + (page.value * size.value);
-      });
-      rankings.addAll(rankingList);
-      if (reset) {
-        dataGetLoading.value = false;
-      }
-      rankings.refresh();
-    });
+        rankingList.asMap().forEach((index, ranker) {
+          ranker.rank = (index + 1) + (page.value * size.value);
+        });
+        rankings.addAll(rankingList);
+        if (reset) {
+          dataGetLoading.value = false;
+        }
+        rankings.refresh();
+        isLoadingMore.value = false;
+      },
+    );
   }
 
   void _fetchMyRank() {
@@ -191,7 +199,7 @@ class LeaderboardController extends GetxController with GetTickerProviderStateMi
     double scrollPosition = leaderboardScrollController.positions.last.pixels;
 
     if (scrollPosition == scrollBottom) {
-      if (hasMore.value) {
+      if (hasMore.value && !isLoadingMore.value) {
         page.value = page.value + 1;
         _fetchRankerList(false);
       }

@@ -35,6 +35,7 @@ import 'package:gaza_go/platform/services/crew_service.dart';
 import 'package:gaza_go/platform/services/item_service.dart';
 import 'package:gaza_go/platform/stores/hive_store.dart';
 import 'package:gaza_go/presentations/components/alert_ui_list.dart';
+import 'package:gaza_go/presentations/components/challenge_detail_notification.dart';
 import 'package:gaza_go/presentations/components/product_list_dialog.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
@@ -158,6 +159,7 @@ class ChallengesDetailController extends GetxController with GetTickerProviderSt
       loadDataOnScroll();
     });
     await getFirebaseShareTemplate();
+    showChallengeNotification(this);
 
     super.onInit();
   }

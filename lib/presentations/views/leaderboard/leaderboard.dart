@@ -555,7 +555,7 @@ class LeaderboardHome extends StatelessWidget {
                                 lineHeight: 9,
                                 fontWeight: 700,
                                 letterSpacing: 0.6,
-                                color: Color(0xff44E8A3),
+                                color: const Color(0xff44E8A3),
                               ),
                             ),
                           Text(
@@ -938,7 +938,7 @@ class LeaderboardHome extends StatelessWidget {
               ],
             ),
           ),
-          (controller.myRank.value != null) ? renderMyRank(controller) : Container(),
+          if (controller.myRank.value != null) renderMyRank(controller),
           Expanded(
             child: controller.dataGetLoading.value
                 ? Padding(
@@ -986,6 +986,17 @@ class LeaderboardHome extends StatelessWidget {
                               },
                             ),
                           ),
+                          if (controller.isLoadingMore.value)
+                            Padding(
+                              padding: const EdgeInsets.all(10),
+                              child: Center(
+                                child: SizedBox(
+                                  width: 20.sp,
+                                  height: 20.sp,
+                                  child: const CircularProgressIndicator(),
+                                ),
+                              ),
+                            )
                         ],
                       ),
           )
