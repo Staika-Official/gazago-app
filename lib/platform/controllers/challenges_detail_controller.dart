@@ -86,7 +86,7 @@ class ChallengesDetailController extends GetxController with GetTickerProviderSt
   RxInt selectedMarkIconId = RxInt(0);
   TextEditingController crewNameController = TextEditingController();
   RxString crewName = RxString('');
-  Rxn<ChallengeShareTemplateModel> shareTemplate = Rxn(ChallengeShareTemplateModel(imageUrl: '', title: '', description: '', buttonTitle: ''));
+  Rxn shareTemplate = Rxn();
   RxBool get isAbleToJoinCrew {
     return RxBool([
           'READY',
@@ -518,12 +518,8 @@ class ChallengesDetailController extends GetxController with GetTickerProviderSt
     print(challengeDetails.value.id);
     try {
       DocumentSnapshot docSnapshot = await FirebaseFirestore.instance.collection("challengeShareTemplate").doc(challengeDetails.value.id.toString()).get();
-      shareTemplate.value = ChallengeShareTemplateModel(
-        imageUrl: docSnapshot['imageUrl'],
-        title: docSnapshot['title'],
-        description: docSnapshot['description'],
-        buttonTitle: docSnapshot['buttonTitle'],
-      );
+      print(docSnapshot.data());
+      shareTemplate.value = docSnapshot.data();
     } catch (e) {
       shareTemplate.value = null;
     }
