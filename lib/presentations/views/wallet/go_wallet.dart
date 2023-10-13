@@ -41,7 +41,7 @@ class GoWallet extends StatelessWidget {
                   onTapButton: () => goWalletController.showProductStikDialog(asset.name!.toUpperCase()),
                 ),
                 WalletAssetsButtonModel(
-                  buttonText: 'STIK 지갑으로 송금하기',
+                  buttonText: 'Staika 지갑으로 송금하기',
                   onTapButton: () => goWalletController.stikSwapWallet(),
                 ),
 

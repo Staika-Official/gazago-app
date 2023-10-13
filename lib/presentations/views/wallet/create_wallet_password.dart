@@ -30,7 +30,10 @@ class CreateWalletPassword extends StatelessWidget {
       backgroundColor: subBg01Color,
       resizeToAvoidBottomInset: false,
       onBackButtonTap: () {
-        Get.find<WalletMasterController>().tabController.animateTo(0);
+        Get
+            .find<WalletMasterController>()
+            .tabController
+            .animateTo(0);
         Get.back();
       },
       child: Column(
@@ -228,20 +231,24 @@ class CreateWalletPassword extends StatelessWidget {
               ),
             ),
           ),
-          Container(
-            padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 15),
-            width: double.infinity,
-            child: GazagoButton(
-              onTap: () {
-                // print('click');
-                controller.nextStep();
-              },
-              buttonText: '확인',
-              buttonColor: skyBlueColor,
-              // textColor: Colors.white,
-              // buttonColor: popupBgColor,
-            ),
-          ),
+          Obx(() {
+            return Container(
+              padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 15),
+              width: double.infinity,
+              child: GazagoButton(
+                onTap: () {
+                  // print('click');
+                  if (controller.confirmPasswordFormStatus.value == FormStatus.sufficient) {
+                    controller.nextStep();
+                  }
+                },
+                buttonText: '확인',
+                buttonColor: controller.confirmPasswordFormStatus.value == FormStatus.insufficient ? popupBgColor : skyBlueColor,
+                textColor: controller.confirmPasswordFormStatus.value == FormStatus.insufficient ? deepGrayColor : Colors.black,
+                // buttonColor: popupBgColor,
+              ),
+            );
+          }),
         ],
       ),
     );

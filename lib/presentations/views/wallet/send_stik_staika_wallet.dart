@@ -121,7 +121,7 @@ class SendStikStaikaWallet extends StatelessWidget {
                         FilteringTextInputFormatter.allow(RegExp(r'(\d*\.?\d*)')),
                         TextInputFormatter.withFunction((oldValue, newValue) {
                           if (newValue.text.isEmpty) {
-                            return newValue.copyWith(text: '0');
+                            return newValue.copyWith(text: '');
                           } else if (newValue.text.compareTo(oldValue.text) != 0) {
                             RegExp exp = RegExp("^(([1-9]\\d{0,8})|0)(\\.\\d{0,4}?)?\$");
                             if (exp.hasMatch(newValue.text)) {

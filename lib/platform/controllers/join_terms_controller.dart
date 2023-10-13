@@ -38,6 +38,7 @@ class JoinTermsController extends GetxController {
       }
       return term;
     }).toList();
+
   }
 
   void toggleAllTerms() {
@@ -47,6 +48,7 @@ class JoinTermsController extends GetxController {
       term.isChecked = allChecked;
       return term;
     }).toList();
+
   }
 
   void requestJoin() async {
