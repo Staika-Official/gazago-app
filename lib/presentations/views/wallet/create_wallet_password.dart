@@ -243,8 +243,8 @@ class CreateWalletPassword extends StatelessWidget {
                   }
                 },
                 buttonText: '확인',
-                buttonColor: controller.confirmPasswordFormStatus.value == FormStatus.insufficient ? popupBgColor : skyBlueColor,
-                textColor: controller.confirmPasswordFormStatus.value == FormStatus.insufficient ? deepGrayColor : Colors.black,
+                buttonColor: controller.confirmPasswordFormStatus.value == FormStatus.sufficient ? skyBlueColor  :popupBgColor ,
+                textColor: controller.confirmPasswordFormStatus.value == FormStatus.sufficient ? Colors.black : deepGrayColor,
                 // buttonColor: popupBgColor,
               ),
             );

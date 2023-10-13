@@ -98,6 +98,7 @@ class StaikaWalletController extends GetxController with WalletMixin, SolanaMixi
         HiveStore.save(key: HiveKey.solanaSecretKey.name, value: data.secretKey);
         userWalletAddress.value = data.publicKey;
         explorerUrl.value = data.explorerUrl;
+        print(HiveStore.load(key: HiveKey.walletConnectionPrompted.name));
         bool isWalletConnectionPrompted = HiveStore.load(key: HiveKey.walletConnectionPrompted.name) ?? false;
         if (!isWalletConnectionPrompted) {
           HiveStore.save(key: HiveKey.walletConnectionPrompted.name, value: true);

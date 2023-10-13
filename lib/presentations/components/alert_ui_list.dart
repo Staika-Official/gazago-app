@@ -3430,8 +3430,10 @@ void showStaikaStatusAlert({required bool hasWallet, TabController? tabControlle
           ? Expanded(
               child: GazagoButton(
                 onTap: () async {
-
                   Get.back();
+                  if(tabController?.index == 0){
+                    Get.toNamed(Routes.sendStikStaikaWallet);
+                  }
                 },
                 buttonText: '확인',
                 buttonColor: skyBlueColor,

@@ -47,7 +47,6 @@ class GoWalletController extends GetxController with SolanaMixin {
   }
 
   void checkShortBalance(ExchangeStikPriceModel item) {
-    print(walletMasterController.exchangeAvailableTik.value.amount);
     double fromAmount = walletMasterController.clickedAssetButton.value == 'STAIKA' ? double.parse(item.fromUiAmountString!): productSumFeePrice(item.fromUiAmountString!, item.uiFeeString!);
     double myAssetAmount = double.parse(walletMasterController.clickedAssetButton.value == 'STAIKA' ? walletMasterController.stik.value.uiAmountString! : walletMasterController.exchangeAvailableTik.value.uiAmountString!);
 
@@ -148,7 +147,14 @@ class GoWalletController extends GetxController with SolanaMixin {
     await WalletService.getOnChainWallet(
       successCallback: (OnChainWalletModel data) async {
         loaderController.isLoading.value = false;
-        Get.toNamed(Routes.sendStikStaikaWallet);
+        bool isWalletConnectionPrompted = HiveStore.load(key: HiveKey.walletConnectionPrompted.name) ?? false;
+        if (!isWalletConnectionPrompted) {
+          HiveStore.save(key: HiveKey.walletConnectionPrompted.name, value: true);
+          showStaikaStatusAlert(hasWallet: true , tabController: walletMasterController.tabController);
+        } else {
+          Get.toNamed(Routes.sendStikStaikaWallet);
+        }
+
       },
       errorCallback: (ErrorResponseDataModel data) {
         loaderController.isLoading.value = false;
@@ -164,8 +170,7 @@ class GoWalletController extends GetxController with SolanaMixin {
   }
 
   Future<void> getProductList() async {
-    print('----------------------------------------------');
-    print(walletMasterController.clickedAssetButton.value);
+
     if(walletMasterController.clickedAssetButton.value == 'STAIKA'){
       await SolanaService.getExchangeStikPriceInfo(successCallback: (ExchangeStikTokenModel data) {
         print(data);
