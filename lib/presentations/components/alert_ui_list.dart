@@ -3615,13 +3615,21 @@ void exchangeStikToTikAlert(GoWalletController controller, ExchangeStikPriceMode
                     walletMasterController.clickedAssetButton == 'STAIKA' ? SvgPicture.asset('assets/images/wallet/ico_tik.svg', width: 24, height: 24) : SvgPicture.asset('assets/images/wallet/ico_stik.svg', width: 24, height: 24),
                     Padding(
                       padding: EdgeInsets.only(left: 7.0.sp),
-                      child: StyledText(
-                        formatDecimalPlaces(double.parse(exchangeProduct.toUiAmountString!), 0),
+                      child: walletMasterController.clickedAssetButton == 'STAIKA' ? StyledText(
+                        formatDecimalPlaces(productMinusFeePrice(exchangeProduct.toUiAmountString!, exchangeProduct.uiFeeString!), 0),
                         fontSize: 30,
                         lineHeight: 32,
                         fontWeight: 600,
                         letterSpacing: -.1,
+                      )  :
+                      StyledText(
+                      formatDecimalPlaces(double.parse(exchangeProduct.toUiAmountString!), 0),
+                      fontSize: 30,
+                      lineHeight: 32,
+                      fontWeight: 600,
+                      letterSpacing: -.1,
                       ),
+
                     ),
                     Padding(
                       padding: EdgeInsets.only(left: 7.0.sp),
