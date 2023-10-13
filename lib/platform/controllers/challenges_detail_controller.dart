@@ -22,7 +22,6 @@ import 'package:gaza_go/platform/helpers/challenge_mixin.dart';
 import 'package:gaza_go/platform/models/challenge_join_model.dart';
 import 'package:gaza_go/platform/models/challenge_ranker_model.dart';
 import 'package:gaza_go/platform/models/challenge_reward_model.dart';
-import 'package:gaza_go/platform/models/challenge_share_template_model.dart';
 import 'package:gaza_go/platform/models/crew_create_form_model.dart';
 import 'package:gaza_go/platform/models/crew_icon_model.dart';
 import 'package:gaza_go/platform/models/crew_member_model.dart';
@@ -87,7 +86,7 @@ class ChallengesDetailController extends GetxController with GetTickerProviderSt
   RxInt selectedMarkIconId = RxInt(0);
   TextEditingController crewNameController = TextEditingController();
   RxString crewName = RxString('');
-  Rxn<ChallengeShareTemplateModel> shareTemplate = Rxn(ChallengeShareTemplateModel(imageUrl: '', title: '', description: '', buttonTitle: ''));
+  Rxn shareTemplate = Rxn();
   RxBool get isAbleToJoinCrew {
     return RxBool([
           'READY',
@@ -150,6 +149,7 @@ class ChallengesDetailController extends GetxController with GetTickerProviderSt
         crewChallengeCloseAlert(this);
       }
     } else {
+
       getChallengeLeaderboard();
       getChallengeLeaderboardMyRanking();
     }
@@ -470,26 +470,48 @@ class ChallengesDetailController extends GetxController with GetTickerProviderSt
     final ShortDynamicLink dynamicLink = await FirebaseDynamicLinks.instance.buildShortLink(dynamicLinkParams!);
 
     FeedTemplate? kakaoFeedTemplate;
-    if (challengeType == ChallengeType.crew) {
-      kakaoFeedTemplate = generateFeedTemplate(dynamicLink.shortUrl, challengeType: challengeType, shareSource: shareSource, crewName: crewName);
-    } else {
-      if (shareTemplate.value != null) {
-        kakaoFeedTemplate = FeedTemplate(
-          content: Content(
-            imageUrl: Uri.parse(shareTemplate.value!.imageUrl),
-            imageHeight: 400,
-            imageWidth: 400,
-            title: shareTemplate.value!.title,
-            description: shareTemplate.value!.description,
-            link: Link(
-              webUrl: dynamicLink.shortUrl,
-              mobileWebUrl: dynamicLink.shortUrl,
-            ),
+    String shareTarget = shareSource == ShareSource.crewDetail ? 'inviteCode' : 'basic';
+    if (shareTemplate.value != null) {
+      kakaoFeedTemplate = FeedTemplate(
+        content: Content(
+          imageUrl: Uri.parse(shareTemplate.value![shareTarget]['imageUrl']),
+          imageHeight: 400,
+          imageWidth: 400,
+          title:  shareTemplate.value[shareTarget]['title'],
+          description: shareTemplate.value[shareTarget]['description'],
+          link: Link(
+            webUrl: dynamicLink.shortUrl,
+            mobileWebUrl: dynamicLink.shortUrl,
           ),
-          buttonTitle: shareTemplate.value!.buttonTitle,
-        );
-      }
+        ),
+        buttonTitle: shareTemplate.value[shareTarget]['buttonTitle'],
+      );
+
+    } else {
+      showToastPopup('공유하기 템플릿 설정 미적용');
     }
+
+
+    // if (challengeType == ChallengeType.crew) {
+    //   kakaoFeedTemplate = generateFeedTemplate(dynamicLink.shortUrl, challengeType: challengeType, shareSource: shareSource, crewName: crewName);
+    // } else {
+    //   if (shareTemplate.value != null) {
+    //     kakaoFeedTemplate = FeedTemplate(
+    //       content: Content(
+    //         imageUrl: Uri.parse(shareTemplate.value!.basic.imageUrl),
+    //         imageHeight: 400,
+    //         imageWidth: 400,
+    //         title: shareTemplate.value!.basic.title,
+    //         description: shareTemplate.value!.basic.description,
+    //         link: Link(
+    //           webUrl: dynamicLink.shortUrl,
+    //           mobileWebUrl: dynamicLink.shortUrl,
+    //         ),
+    //       ),
+    //       buttonTitle: shareTemplate.value!.basic.buttonTitle,
+    //     );
+    //   }
+    // }
 
     if (isKakaoTalkSharingAvailable) {
       try {
@@ -518,12 +540,8 @@ class ChallengesDetailController extends GetxController with GetTickerProviderSt
     print(challengeDetails.value.id);
     try {
       DocumentSnapshot docSnapshot = await FirebaseFirestore.instance.collection("challengeShareTemplate").doc(challengeDetails.value.id.toString()).get();
-      shareTemplate.value = ChallengeShareTemplateModel(
-        imageUrl: docSnapshot['imageUrl'],
-        title: docSnapshot['title'],
-        description: docSnapshot['description'],
-        buttonTitle: docSnapshot['buttonTitle'],
-      );
+
+      shareTemplate.value = docSnapshot.data();
     } catch (e) {
       shareTemplate.value = null;
     }
