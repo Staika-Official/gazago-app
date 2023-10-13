@@ -27,6 +27,7 @@ class TaikaPay extends StatelessWidget {
               // initialUrlRequest: URLRequest(url: WebUri('http://localhost:3000')),
               initialUrlRequest: URLRequest(url: WebUri(F.taikaPayUrl)),
               initialSettings: InAppWebViewSettings(
+                clearCache: true,
                 disableContextMenu: true,
                 javaScriptEnabled: true,
               ),
