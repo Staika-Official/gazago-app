@@ -151,7 +151,7 @@ class ChallengesDetailController extends GetxController with GetTickerProviderSt
         crewChallengeCloseAlert(this);
       }
     } else {
-      print('이거 부르나');
+
       getChallengeLeaderboard();
       getChallengeLeaderboardMyRanking();
     }
