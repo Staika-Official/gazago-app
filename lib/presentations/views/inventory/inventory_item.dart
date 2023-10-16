@@ -191,7 +191,7 @@ class InventoryItem extends StatelessWidget {
                           if (controller.getRemainingDays(item.expiredDate!) < 3)
                             Positioned(
                               left: 7.sp,
-                              top: item.itemCategory == 'DISPOSABLE' && item.amount! > 1 ? 70.sp : 7.sp,
+                              top: 70.sp,
                               child: Container(
                                 padding: EdgeInsets.symmetric(
                                   horizontal: 7.sp,
