@@ -969,6 +969,7 @@ class LeaderboardHome extends StatelessWidget {
                         children: [
                           Flexible(
                             child: ListView.separated(
+                              physics: const ClampingScrollPhysics(),
                               padding: const EdgeInsets.only(bottom: kBottomNavigationBarHeight),
                               controller: controller.leaderboardScrollController,
                               separatorBuilder: (context, index) => const Divider(
@@ -988,7 +989,18 @@ class LeaderboardHome extends StatelessWidget {
                           ),
                         ],
                       ),
-          )
+          ),
+          if (controller.isLoadingMore.value)
+            Padding(
+              padding: const EdgeInsets.all(10),
+              child: Center(
+                child: SizedBox(
+                  width: 20.sp,
+                  height: 20.sp,
+                  child: const CircularProgressIndicator(),
+                ),
+              ),
+            )
         ],
       );
     });
