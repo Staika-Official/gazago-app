@@ -10,6 +10,7 @@ import 'package:gaza_go/platform/models/asset_token_balance_model.dart';
 import 'package:gaza_go/platform/models/charge_tik_model.dart';
 import 'package:gaza_go/platform/models/error_response_data_model.dart';
 import 'package:gaza_go/platform/models/exchange_stik_price_model.dart';
+import 'package:gaza_go/platform/models/exchange_stik_quotes_model.dart';
 import 'package:gaza_go/platform/models/exchange_stik_token_model.dart';
 import 'package:gaza_go/platform/models/on_chain_wallet_model.dart';
 import 'package:gaza_go/platform/services/solana_service.dart';
@@ -30,6 +31,7 @@ class GoWalletController extends GetxController with SolanaMixin {
   final RxString sendStikUiAmount = RxString('0');
   final RxString shortStikUiAmount = RxString('0');
   final RxBool isFetching = RxBool(false);
+  Rx<ExchangeStikQuotesModel> stikQuotes = Rx(ExchangeStikQuotesModel(priceKRW: 0.0, priceUSD: 0.0, lastUpdated: ''));
 
   RxBool get isValid {
     if (sendStikUiAmount.value != '') {
@@ -79,8 +81,8 @@ class GoWalletController extends GetxController with SolanaMixin {
             fromUiAmount: double.parse(exchangeProduct.fromUiAmountString!),
             toTokenSymbol: exchangeProduct.toTokenSymbol!,
             toUiAmount: walletMasterController.clickedAssetButton.value == 'STAIKA' ?  double.parse(exchangeProduct.toUiAmountString!): int.parse(exchangeProduct.toUiAmountString!),
-            priceKRW: walletMasterController.stikPriceInfoKRW.value.price!,
-            priceUSD: walletMasterController.stikPriceInfoUSD.value.price!,
+            priceKRW: stikQuotes.value.priceKRW!,
+            priceUSD: stikQuotes.value.priceUSD!,
             feeUiAmount: int.parse(exchangeProduct.uiFeeString!),
             feeTokenSymbol: int.parse(exchangeProduct.uiFeeString!) > 0 ? 'TIK' : null,
           ),
@@ -174,11 +176,13 @@ class GoWalletController extends GetxController with SolanaMixin {
     if(walletMasterController.clickedAssetButton.value == 'STAIKA'){
       await SolanaService.getExchangeStikPriceInfo(successCallback: (ExchangeStikTokenModel data) {
         print(data);
+        stikQuotes.value = data.quotes!;
         productList.value = data.products;
       });
     } else {
       await SolanaService.getExchangeTikPriceInfo(successCallback: (ExchangeStikTokenModel data) {
         print(data);
+        stikQuotes.value = data.quotes!;
         productList.value = data.products;
       });
     }

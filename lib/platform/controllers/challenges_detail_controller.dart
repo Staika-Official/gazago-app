@@ -486,7 +486,7 @@ class ChallengesDetailController extends GetxController with GetTickerProviderSt
         ),
         buttonTitle: shareTemplate.value[shareTarget]['buttonTitle'],
       );
-
+    print(kakaoFeedTemplate);
     } else {
       showToastPopup('공유하기 템플릿 설정 미적용');
     }

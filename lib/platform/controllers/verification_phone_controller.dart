@@ -47,6 +47,7 @@ class VerificationPhoneController extends GetxController {
   void sendIdentityCode() async {
     verificationUserModel.mobileCompany = mobileCompany.value!.name.toUpperCase();
     verificationUserModel.mobileNumber = userMobileNumber.value;
+    verificationUserModel.clientId = 'GAZAGO';
 
     if (HiveStore.load(key: HiveKey.userId.name) == null) {
       showToastPopup('유저 정보가 없습니다');
@@ -54,7 +55,7 @@ class VerificationPhoneController extends GetxController {
       await IdentityService.sendIdentityCode(verificationUserModel, successCallback: (requestId) {
         Get.toNamed(Routes.verificationCertCode, arguments: {'requestId': requestId, 'verificationUserModel': verificationUserModel});
       }, errorCallback: (res) {
-        if (['IDENTITY_REQUEST_BLOCKED_ABUSE', 'REQUEST_LIMIT_EXCEEDED'].any((element) => element == res.data['errorCode'])) {
+        if (['IDENTITY_REQUEST_BLOCKED_ABUSE', 'REQUEST_LIMIT_EXCEEDED', 'MOBILE_NUMBER_ALREADY_VERIFIED'].any((element) => element == res.data['errorCode'])) {
           showToastPopup(res.data['errorMessage']);
         } else {
           showInvalidVerifyCode(res.data['errorMessage']);

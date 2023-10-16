@@ -23,7 +23,7 @@ class SendStikStaikaWallet extends StatelessWidget {
         controller.focusNode.unfocus();
       },
       child: DefaultContainer(
-        titleText: 'STAIKA 지갑으로 송금하기',
+        titleText: 'Staika 지갑으로 송금하기',
         backgroundColor: subBg01Color,
         headerBackgroundColor: Colors.transparent,
         child: Obx(() {

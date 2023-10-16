@@ -4,7 +4,7 @@ import 'package:gaza_go/platform/middleware/dio_middleware.dart';
 
 class IdentityApi {
   static Future<Response> sendIdentityCode(userId, verificationUserModel) async {
-    return await Api.client(serviceUrl: ServiceUrl.uaaService).post('/user-identities/users/$userId/sms', data: verificationUserModel);
+    return await Api.client(serviceUrl: ServiceUrl.uaaService).post('/v2/user-identities/users/$userId/sms', data: verificationUserModel);
   }
 
   static Future<Response> verifyIdentityCode(userId, verifyData) async {
