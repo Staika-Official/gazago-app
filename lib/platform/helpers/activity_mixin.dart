@@ -911,6 +911,7 @@ mixin ActivityMixin {
     exerciseTime.value = userState.exercise!.time!;
     exerciseSteps.value = userState.exercise!.steps!;
     exerciseDistance.value = userState.exercise!.distance!;
+    HiveStore.save(key: HiveKey.savedStepCount.name, value: userState.exercise!.steps!);
 
     await Future.delayed(const Duration(milliseconds: 500));
   }
