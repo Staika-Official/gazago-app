@@ -735,12 +735,14 @@ class ChallengeDetail extends StatelessWidget {
                                     textColor: controller.isAbleToCreateCrew.value ? Colors.black : Colors.white,
                                   ),
                                 )
-                              : Expanded(
-                                  child: GazagoButton(
-                                    onTap: () => controller.moveToMyCrew(),
-                                    buttonText: '나의 크루 보기',
-                                  ),
-                                )
+                              : (controller.myCrew.value != null)
+                                  ? Expanded(
+                                      child: GazagoButton(
+                                        onTap: () => controller.moveToMyCrew(),
+                                        buttonText: '나의 크루 보기',
+                                      ),
+                                    )
+                                  : const SizedBox(),
                         ],
                       ),
                     ),
