@@ -357,7 +357,7 @@ class ChallengeLeaderboard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    ChallengesDetailController controller = Get.find();
+    ChallengesDetailController controller = Get.isRegistered<ChallengesDetailController>() ? Get.find() : Get.put(ChallengesDetailController());
 
     return SingleChildScrollView(
       child: Obx(() {
