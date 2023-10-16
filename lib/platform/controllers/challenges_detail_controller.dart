@@ -149,7 +149,6 @@ class ChallengesDetailController extends GetxController with GetTickerProviderSt
         crewChallengeCloseAlert(this);
       }
     } else {
-
       getChallengeLeaderboard();
       getChallengeLeaderboardMyRanking();
     }
@@ -477,7 +476,7 @@ class ChallengesDetailController extends GetxController with GetTickerProviderSt
           imageUrl: Uri.parse(shareTemplate.value![shareTarget]['imageUrl']),
           imageHeight: 400,
           imageWidth: 400,
-          title:  shareTemplate.value[shareTarget]['title'],
+          title: shareTemplate.value[shareTarget]['title'],
           description: shareTemplate.value[shareTarget]['description'],
           link: Link(
             webUrl: dynamicLink.shortUrl,
@@ -486,11 +485,9 @@ class ChallengesDetailController extends GetxController with GetTickerProviderSt
         ),
         buttonTitle: shareTemplate.value[shareTarget]['buttonTitle'],
       );
-
     } else {
       showToastPopup('공유하기 템플릿 설정 미적용');
     }
-
 
     // if (challengeType == ChallengeType.crew) {
     //   kakaoFeedTemplate = generateFeedTemplate(dynamicLink.shortUrl, challengeType: challengeType, shareSource: shareSource, crewName: crewName);
@@ -607,10 +604,11 @@ class ChallengesDetailController extends GetxController with GetTickerProviderSt
   }
 
   void moveToMyCrew() {
-    if (myCrew.value != null) {
+    if (myCrew.value != null && crewList.isNotEmpty) {
       Get.toNamed(Routes.crewDetail);
     } else {
       showToastPopup('내 크루를 찾을 수 없습니다. 잠시후 시도해주세요');
+      getCrewList();
     }
   }
 
