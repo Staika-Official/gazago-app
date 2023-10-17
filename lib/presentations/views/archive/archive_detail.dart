@@ -179,31 +179,66 @@ class ArchiveDetail extends StatelessWidget {
                 width: double.infinity,
                 height: 220.sp,
                 color: Colors.grey,
-                child: NaverMap(
-                  nightModeEnable: true,
-                  forceGesture: true,
-                  tiltGestureEnable: false,
-                  mapType: MapType.Basic,
-                  activeLayers: const [MapLayer.LAYER_GROUP_MOUNTAIN],
-                  onMapCreated: (mapController) => controller.recordMapCreated(mapController, controller.locations),
-                  initialCameraPosition: CameraPosition(
-                    target: controller.locations.isNotEmpty ? controller.locations.first : const LatLng(37.5525, 126.9883),
-                  ),
-                  circles: [
-                    if (controller.selectedItem.value.challengeCourse != null) ...renderCircleOverlays(controller.selectedItem.value.challengeCourse),
+                child: Stack(
+                  children: [
+                    NaverMap(
+                      nightModeEnable: true,
+                      forceGesture: true,
+                      tiltGestureEnable: false,
+                      mapType: MapType.Basic,
+                      activeLayers: const [MapLayer.LAYER_GROUP_MOUNTAIN],
+                      onMapCreated: (mapController) => controller.recordMapCreated(mapController, controller.locations),
+                      initialCameraPosition: CameraPosition(
+                        target: controller.locations.isNotEmpty ? controller.locations.first : const LatLng(37.5525, 126.9883),
+                      ),
+                      circles: [
+                        if (controller.selectedItem.value.challengeCourse != null) ...renderCircleOverlays(controller.selectedItem.value.challengeCourse),
+                      ],
+                      markers: [
+                        if (controller.selectedItem.value.challengeCourse != null) ...renderMarkers(controller.selectedItem.value.challengeCourse),
+                      ],
+                      pathOverlays: {
+                        PathOverlay(
+                          PathOverlayId('detail path'),
+                          controller.locations.length > 1 ? controller.locations : [const LatLng(37.5551, 126.9933), const LatLng(37.5551, 126.9933)],
+                          width: 3,
+                          color: Colors.red,
+                          // outlineColor: Colors.white,
+                        )
+                      },
+                    ),
+                    if(controller.locations.isEmpty)
+                      Positioned(
+                        left:0,
+                        top:0,
+                        right:0,
+                        bottom:0,
+                        child: Container(
+                          decoration: BoxDecoration(
+                            color: Colors.black.withOpacity(.8),
+                          ),
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.center,
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              iconNoneMap,
+                              Padding(
+                                padding: EdgeInsets.only(top:14.0.sp),
+                                child: StyledText(
+                                  '운동기록이 2개월 지난 지도 데이터는\n불러올 수 없습니다.',
+                                  textAlign: TextAlign.center,
+                                  fontSize: 14,
+                                  fontWeight: 500,
+                                  lineHeight: 20,
+                                  color: Colors.white.withOpacity(.6),
+                                ),
+                              ),
+                            ],
+                          ),
+
+                        ),
+                    ),
                   ],
-                  markers: [
-                    if (controller.selectedItem.value.challengeCourse != null) ...renderMarkers(controller.selectedItem.value.challengeCourse),
-                  ],
-                  pathOverlays: {
-                    PathOverlay(
-                      PathOverlayId('detail path'),
-                      controller.locations.length > 1 ? controller.locations : [const LatLng(37.5551, 126.9933), const LatLng(37.5551, 126.9933)],
-                      width: 3,
-                      color: Colors.red,
-                      // outlineColor: Colors.white,
-                    )
-                  },
                 ),
               ),
             ),

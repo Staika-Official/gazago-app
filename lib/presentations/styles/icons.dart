@@ -87,6 +87,7 @@ SvgPicture iconPresentBox = SvgPicture.asset('assets/images/ic_present_box.svg',
 // archive
 SvgPicture iconArchiveDetailBadge = SvgPicture.asset('assets/images/archive/ico_archive_detail_badge.svg', width: 15.sp, height: 20.sp);
 SvgPicture iconWasteBasket = SvgPicture.asset('assets/images/common/ico_wastebasket.svg', width: 15.sp, height: 20.sp);
+SvgPicture iconNoneMap = SvgPicture.asset('assets/images/archive/ico_none_map.svg', width: 37.sp, height: 37.sp);
 
 //leaderboard
 SvgPicture iconStatisticsTokenGo = SvgPicture.asset('assets/images/activity/ico_activity_token_go.svg', width: 25.27.sp, height: 27.62.sp);
