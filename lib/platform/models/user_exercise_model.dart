@@ -86,6 +86,8 @@ class UserExerciseModel {
   String? sequence;
   @HiveField(39)
   int? challengeCourseId;
+  @HiveField(40)
+  String? crewBuffLevel;
 
   UserExerciseModel({
     this.id,
@@ -128,6 +130,7 @@ class UserExerciseModel {
     this.badgeIssued,
     this.sequence,
     this.challengeCourseId,
+    this.crewBuffLevel,
   });
 
   factory UserExerciseModel.fromJson(Map<String, dynamic> json) => _$UserExerciseModelFromJson(json);

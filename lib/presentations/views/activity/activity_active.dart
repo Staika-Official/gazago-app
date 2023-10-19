@@ -680,11 +680,40 @@ class ActivityActive extends StatelessWidget {
                       );
                     }),
                   ),
+                  Obx(() {
+                    if (controller.userState.value.exercise!.crewBuffLevel != null && controller.userState.value.exercise!.crewBuffLevel != 'NONE') {
+                      return Padding(
+                        padding: EdgeInsets.only(
+                          top: 10.sp,
+                          bottom: 20.sp,
+                        ),
+                        child: Container(
+                          padding: EdgeInsets.symmetric(vertical: 10.sp, horizontal: 14.sp),
+                          decoration: BoxDecoration(
+                            color: speedBlackColor,
+                            borderRadius: BorderRadius.circular(20),
+                          ),
+                          child: StyledText(
+                            '${controller.userState.value.exercise!.crewBuffLevel!.replaceAll('LEVEL_', 'Lv')} 크루 버프 적용중',
+                            fontSize: 16,
+                            fontWeight: 500,
+                            lineHeight: 16,
+                            color: lightGrayColor,
+                          ),
+                        ),
+                      );
+                    } else {
+                      return const SizedBox();
+                    }
+                  }),
                   Expanded(
                     child: Align(
                       alignment: Alignment.bottomCenter,
                       child: Padding(
-                        padding: EdgeInsets.only(left: 35.sp, right: 35.sp, bottom: 100.sp),
+                        padding: EdgeInsets.only(
+                            left: 35.sp,
+                            right: 35.sp,
+                            bottom: (controller.userState.value.exercise!.crewBuffLevel != null && controller.userState.value.exercise!.crewBuffLevel != 'NONE') ? 40.sp : 100.sp),
                         child: Obx(() {
                           return Row(
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,

@@ -26,4 +26,11 @@ class BoardApi {
       showLoading: false,
     ).get('/popups/clients/GAZAGO');
   }
+
+  static Future<Response> getChallengeNotifications(int challengeId) async {
+    return await Api.client(
+      serviceUrl: ServiceUrl.boardService,
+      showLoading: false,
+    ).get('/challenge-notification-groups/reference/$challengeId');
+  }
 }

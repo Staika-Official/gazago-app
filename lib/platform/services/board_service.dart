@@ -1,5 +1,6 @@
 import 'package:dio/dio.dart';
 import 'package:gaza_go/platform/apis/board.dart';
+import 'package:gaza_go/platform/models/challenge_notification_group_model.dart';
 import 'package:gaza_go/platform/models/notice_popup_model.dart';
 import 'package:gaza_go/platform/models/term_item_model.dart';
 
@@ -51,6 +52,18 @@ class BoardService {
         noticePopupList.add(noticePopupItem);
       });
       successCallback(noticePopupList);
+    } else {
+      if (errorCallback != null) errorCallback();
+    }
+  }
+
+  static Future<void> getChallengeNotifications(int challengeId, {required Function successCallback, Function? errorCallback}) async {
+    Response res = await BoardApi.getChallengeNotifications(challengeId);
+    if (res.statusCode == 200) {
+      ChallengeNotificationGroupModel? challengeNotificationGroupModel = res.data != null ? ChallengeNotificationGroupModel.fromJson(res.data) : null;
+
+      challengeNotificationGroupModel?.challengeNotifications.sort((a, b) => a.listOrder.compareTo(b.listOrder));
+      successCallback(challengeNotificationGroupModel);
     } else {
       if (errorCallback != null) errorCallback();
     }

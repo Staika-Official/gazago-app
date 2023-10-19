@@ -125,6 +125,7 @@ dependencies:
   adjust_sdk: ^4.33.1
   kakao_flutter_sdk_share: ^1.4.1 # 카카오톡 공유
   cloud_firestore: ^4.9.2
+  expandable_page_view: ^1.0.17
 
 dev_dependencies:
   flutter_test:
