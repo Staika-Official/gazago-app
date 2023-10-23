@@ -9,6 +9,7 @@ import 'package:gaza_go/constants/config.dart';
 import 'package:gaza_go/constants/enums.dart';
 import 'package:gaza_go/constants/routes.dart';
 import 'package:gaza_go/flavors.dart';
+import 'package:gaza_go/platform/firebase/remote_config.dart';
 import 'package:gaza_go/platform/helpers/alert_helper.dart';
 import 'package:gaza_go/platform/helpers/login_helper.dart';
 import 'package:gaza_go/platform/models/access_token_model.dart';
@@ -23,8 +24,31 @@ import 'package:get/get.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:package_info_plus/package_info_plus.dart';
 import 'package:sign_in_with_apple/sign_in_with_apple.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class LoginController extends GetxController {
+
+
+  @override
+  void onInit() async {
+    bool isInspectionNotice = getConfig(dataType: ConfigType.bool, configKey: 'notice_alert');
+    if (isInspectionNotice) {
+      String noticeUri = getConfig(dataType: ConfigType.string, configKey: 'notice_alert_address');
+      Uri url = Uri.parse(noticeUri);
+      if (await canLaunchUrl(url)) {
+        showModalNoticeWebview(Get.context, linkUrl: noticeUri);
+      }
+      return;
+    } else {
+      Get.back();
+    }
+
+    super.onInit();
+  }
+
+
+
+
   void login(LoginType loginType) async {
     Adjust.trackEvent(AdjustEvent('lllyw8'));
 
@@ -41,6 +65,7 @@ class LoginController extends GetxController {
         break;
     }
   }
+
 
   Future<void> emailLogin() async {
     AccessTokenModel token = await UaaService.emailLogin();

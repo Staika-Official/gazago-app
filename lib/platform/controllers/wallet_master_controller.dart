@@ -2,6 +2,7 @@ import 'dart:async';
 import 'dart:io';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_inappwebview/flutter_inappwebview.dart';
 import 'package:gaza_go/constants/enums.dart';
 import 'package:gaza_go/constants/routes.dart';
 import 'package:gaza_go/flavors.dart';
@@ -30,6 +31,7 @@ import 'package:gaza_go/presentations/components/product_list_dialog.dart';
 import 'package:gaza_go/presentations/components/product_list_stik_dialog.dart';
 import 'package:get/get.dart';
 import 'package:in_app_purchase/in_app_purchase.dart';
+import 'package:path_provider/path_provider.dart';
 import 'package:throttling/throttling.dart';
 
 class WalletMasterController extends GetxController with SolanaMixin, GetTickerProviderStateMixin {
@@ -50,7 +52,7 @@ class WalletMasterController extends GetxController with SolanaMixin, GetTickerP
   final ScrollController transactionScrollController = ScrollController();
   final RxDouble transactionScrollPosition = RxDouble(0);
   GlobalKey webViewKey = GlobalKey();
-
+  late InAppWebViewController webViewController;
   StreamSubscription<List<PurchaseDetails>>? subscription;
   final RxBool storeUnavailable = RxBool(false);
   final RxBool showPendingPurchaseUI = RxBool(false);
@@ -296,6 +298,12 @@ class WalletMasterController extends GetxController with SolanaMixin, GetTickerP
     );
   }
 
+  Future<void> clearCache() async {
+    if (webViewController != null) {
+      await webViewController.clearCache();
+    }
+  }
+
   void moveToVerification() async {
     Get.back();
     Get.toNamed(Routes.verificationTerms);
@@ -510,6 +518,8 @@ class WalletMasterController extends GetxController with SolanaMixin, GetTickerP
 
   void afterChargeTikAndReturnPage() {
     String? enteredRoute = HiveStore.loadString(key: HiveKey.enteredRoute.name);
+    print(enteredRoute);
+    print(enteredRoute?.contains('challenge_detail'));
     if (enteredRoute != null && enteredRoute.contains('challenge_detail')) {
       Get.back();
       Get.until((route) => Get.currentRoute == enteredRoute);

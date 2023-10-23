@@ -20,7 +20,7 @@ publish_to: 'none' # Remove this line if you wish to publish to pub.dev
 
 
 
-version: 1.2.34+160
+version: 1.2.34+164
 
 
 
@@ -43,7 +43,7 @@ dependencies:
   cupertino_icons: ^1.0.5
   dio: ^4.0.4 #https://pub.dev/packages/dio
   get: ^4.6.5 #https://pub.dev/packages/get
-  intl: ^0.17.0 #https://pub.dev/packages/intl
+  intl: ^0.18.0 #https://pub.dev/packages/intl
   hive: ^2.2.3 #https://pub.dev/packages/hive
   hive_flutter: ^1.1.0
   hive_generator: ^2.0.0
@@ -127,6 +127,7 @@ dependencies:
   adjust_sdk: ^4.33.1
   kakao_flutter_sdk_share: ^1.4.1 # 카카오톡 공유
   cloud_firestore: ^4.9.2
+  jiffy: ^6.2.1
 
 dev_dependencies:
   flutter_test:

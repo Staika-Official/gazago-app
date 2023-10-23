@@ -169,7 +169,7 @@ class VerificationPhone extends StatelessWidget {
                         fontSize: 18,
                         lineHeight: 18,
                         fontWeight: 500,
-                        color: controller.isFormValid.isTrue ? Colors.black : Colors.white,
+                        color: controller.isFormValid.isTrue ? Colors.black : deepGrayColor,
                       )),
                     ),
                   ),

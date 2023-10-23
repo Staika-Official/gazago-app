@@ -193,7 +193,7 @@ class VerificationTerms extends StatelessWidget {
                       fontSize: 18,
                       lineHeight: 18,
                       fontWeight: 500,
-                      color: controller.allAgreed.value ? Colors.black : Colors.white,
+                      color: controller.allAgreed.value ? Colors.black : deepGrayColor,
                     )),
                   ),
                 ),

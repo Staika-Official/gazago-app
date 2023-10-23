@@ -225,7 +225,7 @@ class JoinTerms extends StatelessWidget {
                         fontSize: 18,
                         lineHeight: 18,
                         fontWeight: 500,
-                        color: controller.allRequiredAgreed.value ? Colors.black : Colors.white,
+                        color: controller.allRequiredAgreed.value ? Colors.black : deepGrayColor,
                       )),
                     ),
                   ),

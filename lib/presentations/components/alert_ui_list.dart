@@ -7664,3 +7664,42 @@ void showModalWebview(context, {String? title, String linkUrl = ''}) {
   );
 }
 
+void showModalNoticeWebview(context, {String? title, String linkUrl = ''}) {
+  InAppWebViewController? inAppWebViewController;
+  GlobalKey webViewKey = GlobalKey();
+  Get.bottomSheet(
+      isDismissible: false,
+      ignoreSafeArea: false,
+      enableDrag: false,
+       isScrollControlled: true,
+       WillPopScope(
+        onWillPop: () async {
+          return false;
+        },
+        child: Scaffold(
+          body: SafeArea(
+            top: true,
+            child: InAppWebView(
+              key: webViewKey,
+              initialUrlRequest: URLRequest(url: WebUri(linkUrl)),
+              initialSettings: InAppWebViewSettings(
+                disableContextMenu: true,
+                javaScriptEnabled: true,
+                resourceCustomSchemes: ['intent'],
+
+              ),
+              onLoadResourceWithCustomScheme: (controller, url) async {
+                await controller.stopLoading();
+                return null;
+              },
+              onWebViewCreated: (controller) {
+                // register a JavaScript handler with name "myHandlerName"
+
+              },
+            ),
+          ),
+        ),
+      ),
+
+  );
+}

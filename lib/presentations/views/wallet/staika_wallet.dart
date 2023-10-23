@@ -28,8 +28,7 @@ class StaikaWallet extends StatelessWidget {
               showPrice: false,
             ),
           ),
-    )
-        .toList();
+    ).toList();
   }
 
   @override
@@ -193,7 +192,8 @@ class StaikaWallet extends StatelessWidget {
                         ],
                       ),
                     ),
-                    if (controller.coinAssetList.isNotEmpty) ...renderCoinAssetList(controller),
+                    if (controller.coinAssetList.isNotEmpty && controller.coinAssetList != null)
+                      Column(children: [...renderCoinAssetList(controller)],),
                     Expanded(
                       child: Align(
                         alignment: Alignment.bottomCenter,

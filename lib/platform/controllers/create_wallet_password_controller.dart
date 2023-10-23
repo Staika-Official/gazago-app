@@ -17,7 +17,7 @@ class CreateWalletPasswordController extends GetxController with PasswordMixin {
   final RxBool isEnableNext = false.obs;
   final Rx<ErrorStatus> errorMsg = Rx(ErrorStatus.basic);
   RxBool isShowAlert = RxBool(false);
-
+  RxBool isAgree = RxBool(false);
   void initSamePasswordStream() {
     _isSamePassword = RX.CombineLatestStream.combine2<String, String, bool>(_password.stream, _confirmPassword.stream, (a, b) => a == b);
   }
@@ -74,5 +74,11 @@ class CreateWalletPasswordController extends GetxController with PasswordMixin {
 
   void closePasswordNoticeAlert(){
     isShowAlert.value = false;
+  }
+
+  void toggleAgree() {
+
+    isAgree.value = !isAgree.value;
+
   }
 }

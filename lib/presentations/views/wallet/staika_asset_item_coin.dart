@@ -109,7 +109,7 @@ class StaikaAssetItemCoin extends StatelessWidget {
                                   StyledText(
                                     '${staikaWalletController.currencyString.value} ${formatDecimalPlaces(double.parse(
                                           staikaWalletController.getCurrencyPrice(
-                                            staikaWalletController.priceInfoList.singleWhere((priceInfo) => priceInfo.name == asset.name),
+                                            staikaWalletController.priceInfoList.firstWhere((priceInfo) => priceInfo.name == asset.name),
                                             double.parse(asset.uiAmountString),
                                           ),
                                         ), staikaWalletController.isKRW.value ? 0 : 2)}',

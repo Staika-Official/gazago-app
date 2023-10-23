@@ -2,6 +2,7 @@ import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
 
+
 import 'package:flutter_naver_map/flutter_naver_map.dart';
 import 'package:flutter_svg_provider/flutter_svg_provider.dart';
 import 'package:gaza_go/constants/routes.dart';
@@ -14,6 +15,7 @@ import 'package:gaza_go/platform/models/archive_list_item_model.dart';
 import 'package:gaza_go/platform/services/archive_service.dart';
 import 'package:gaza_go/presentations/components/alert_ui_list.dart';
 import 'package:get/get.dart';
+import 'package:jiffy/jiffy.dart';
 
 class ArchiveController extends GetxController with ScrollMixin {
   LoaderController loaderController = Get.put(LoaderController());
@@ -66,11 +68,18 @@ class ArchiveController extends GetxController with ScrollMixin {
   void toDetail(int id) async {
     loaderController.isLoading.value = true;
     dataGetLoading.value = true;
+    final twoMonthAgo = Jiffy.now().subtract(months: 2);
     await ArchiveService.getArchiveItem(id, Platform.operatingSystem, successCallback: (archive) async {
       loaderController.isLoading.value = false;
       dataGetLoading.value = false;
       selectedItem.value = archive;
-      await initialiseLocations();
+      final targetDate = Jiffy.parse(archive.endedDate!);
+      selectedItem.value.isTwoMonthAgo = targetDate.isBefore(twoMonthAgo);
+      if(targetDate.isBefore(twoMonthAgo)){
+        locations.value = RxList.empty();
+      } else {
+        await initialiseLocations();
+      }
       Get.toNamed(Routes.archiveDetail);
     });
   }

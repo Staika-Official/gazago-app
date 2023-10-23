@@ -33,6 +33,7 @@ import 'package:gaza_go/presentations/views/laboratory/laboratory_solana_transfe
 import 'package:gaza_go/presentations/views/leaderboard/index.dart';
 import 'package:gaza_go/presentations/views/loading.dart';
 import 'package:gaza_go/presentations/views/login.dart';
+import 'package:gaza_go/presentations/views/noticeWebview.dart';
 import 'package:gaza_go/presentations/views/on_boarding.dart';
 import 'package:gaza_go/presentations/views/permissions.dart';
 import 'package:gaza_go/presentations/views/preferences/edit_biometrics.dart';
@@ -123,6 +124,7 @@ class Routes {
   static const adMobRewarded = '/admob/reward';
   static const adMobRewardedInterstitial = '/admob/interstitial';
   static const webView = '/webview/:id';
+  static const noticeWebView = '/notice_webview';
   static const createWalletPassword = '/wallet/create/password';
   static const createWallet = '/wallet/create';
   static const sendStikGoWallet = '/wallet/send_stik_go_wallet';
@@ -193,6 +195,7 @@ class Routes {
     stepPage(name: Routes.laboratorySolanaCreateWallet, page: const LaboratorySolanaCreateWallet()),
     stepPage(name: Routes.laboratorySolanaTransfer, page: const LaboratorySolanaTransfer()),
     stepPage(name: Routes.webView, page: const WebView()),
+    stepPage(name: Routes.noticeWebView, page: const NoticeWebView()),
     stepPage(name: Routes.laboratoryEndPoint, page: const LaboratoryEndPoint()),
     stepPage(name: Routes.laboratoryFakeGps, page: const LaboratoryFakeGps()),
     stepPage(name: Routes.laboratoryKakaoShare, page: const LaboratoryKakaoShare()),

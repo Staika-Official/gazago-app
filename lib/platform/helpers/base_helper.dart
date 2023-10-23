@@ -11,10 +11,13 @@ import 'package:gaza_go/platform/firebase/remote_config.dart';
 import 'package:gaza_go/platform/models/user_account_model.dart';
 import 'package:gaza_go/platform/services/uaa_service.dart';
 import 'package:gaza_go/platform/stores/hive_store.dart';
+import 'package:gaza_go/presentations/components/alert_ui_list.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
+import 'package:jiffy/jiffy.dart';
 import 'package:kakao_flutter_sdk_share/kakao_flutter_sdk_share.dart';
 import 'package:package_info_plus/package_info_plus.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 Future<bool> isForceUpdateTarget() async {
   String remoteAppVersion = getConfig(dataType: ConfigType.string, configKey: 'minimum_app_version');
@@ -347,3 +350,4 @@ double productMinusFeePrice(String price, String fee) {
 
   return result;
 }
+
