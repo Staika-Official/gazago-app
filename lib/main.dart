@@ -114,8 +114,9 @@ class MyApp extends StatelessWidget {
       },
     );
 
-    Get.put(InspectionNoticeController(), permanent: true);
+
     Get.put(GlobalController(), permanent: true);
+    Get.put(InspectionNoticeController(), permanent: true);
     Get.put(LoaderController(), permanent: true);
     Get.put(WalletMasterController(), permanent: true);
     Get.put(ActivityController(), permanent: true);

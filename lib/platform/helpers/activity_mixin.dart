@@ -374,7 +374,7 @@ mixin ActivityMixin {
 
   void startExercise(ExerciseType exerciseType, ChallengeCourseModel? course) async {
     // String deviceId = HiveStore.loadString(key: HiveKey.uuid.name)!;
-    inspectionNoticeController.checkInspectionNotice();
+
     String sequence = const Uuid().v4();
 
     HiveStore.save(key: HiveKey.lastUpdatedStepCount.name, value: 0);
@@ -486,7 +486,7 @@ mixin ActivityMixin {
   }
 
   void updateExercise({bool? isPaused, String? source}) async {
-    inspectionNoticeController.checkInspectionNotice();
+
     void errorHandler(ErrorResponseDataModel? errorData) {
       CurrentUserStateModel? savedState = HiveStore.loadCurrentUserState();
       if (savedState != null) {

@@ -22,6 +22,7 @@ import 'package:gaza_go/platform/controllers/challenges_controller.dart';
 import 'package:gaza_go/platform/controllers/challenges_detail_controller.dart';
 import 'package:gaza_go/platform/controllers/crew_detail_controller.dart';
 import 'package:gaza_go/platform/controllers/debugging_controller.dart';
+import 'package:gaza_go/platform/controllers/global_controller.dart';
 import 'package:gaza_go/platform/controllers/home_menu_controller.dart';
 import 'package:gaza_go/platform/controllers/inventory_controller.dart';
 import 'package:gaza_go/platform/controllers/loading_controller.dart';
@@ -7665,7 +7666,7 @@ void showModalWebview(context, {String? title, String linkUrl = ''}) {
 }
 
 void showModalNoticeWebview(context, {String? title, String linkUrl = ''}) {
-  InAppWebViewController? inAppWebViewController;
+
   GlobalKey webViewKey = GlobalKey();
   Get.bottomSheet(
       isDismissible: false,
@@ -7674,7 +7675,7 @@ void showModalNoticeWebview(context, {String? title, String linkUrl = ''}) {
        isScrollControlled: true,
        WillPopScope(
         onWillPop: () async {
-          return false;
+          return true;
         },
         child: Scaffold(
           body: SafeArea(

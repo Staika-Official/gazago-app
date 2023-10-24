@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:adjust_sdk/adjust.dart';
 import 'package:firebase_remote_config/firebase_remote_config.dart';
+import 'package:flutter/material.dart';
 import 'package:gaza_go/constants/enums.dart';
 import 'package:gaza_go/constants/routes.dart';
 import 'package:gaza_go/platform/controllers/inspection_notice_controller.dart';
@@ -29,6 +30,8 @@ class GlobalController extends SuperController {
   final RxBool isPopupOpen = RxBool(true);
   final RxBool isNoticePopupOpen = RxBool(false);
   final RxBool showLoadingDialog = RxBool(false);
+
+
   @override
   void onInit() async {
 

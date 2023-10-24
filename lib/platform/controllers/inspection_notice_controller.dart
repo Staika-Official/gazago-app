@@ -1,6 +1,8 @@
 import 'package:adjust_sdk/adjust.dart';
 import 'package:adjust_sdk/adjust_event.dart';
+import 'package:firebase_database/firebase_database.dart';
 import 'package:firebase_remote_config/firebase_remote_config.dart';
+import 'package:flutter/material.dart';
 import 'package:gaza_go/constants/enums.dart';
 import 'package:gaza_go/constants/routes.dart';
 import 'package:gaza_go/platform/controllers/activity_controller.dart';
@@ -17,8 +19,6 @@ import 'package:get/get.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class InspectionNoticeController extends GetxController {
-  RxBool isShowNoticeWebview = RxBool(false);
-
   @override
   void onInit() async {
     await checkInspectionNotice();
@@ -28,16 +28,37 @@ class InspectionNoticeController extends GetxController {
   @override
   void onResumed() async {
     print('onResumed InspectionNoticeController');
-    await checkInspectionNotice();
+
+  }
+
+  void getStreamData(snapshot) {
+
+    if(snapshot.value == true){
+      forceLogout();
+      if(Get.currentRoute == Routes.login && !Get.isBottomSheetOpen!){
+        String noticeUri = getConfig(dataType: ConfigType.string, configKey: 'notice_alert_address');
+        showModalNoticeWebview(Get.context, linkUrl: noticeUri);
+      }
+      return;
+    } else {
+      if(Get.currentRoute == Routes.login && Get.isBottomSheetOpen!){
+        Get.back();
+      }
+    }
   }
 
   Future<void> checkInspectionNotice() async {
-    await FirebaseRemoteConfig.instance.fetchAndActivate();
-    bool isInspectionNotice = await getConfig(dataType: ConfigType.bool, configKey: 'notice_alert');
-    if (isInspectionNotice) {
-      print('123123123123123123123');
-      forceLogout();
-      return;
-    } else {}
+    DatabaseReference inspectionNoticeRef = FirebaseDatabase.instance.ref('inspectionNotice');
+    Stream<DatabaseEvent> stream = inspectionNoticeRef.onValue;
+    await inspectionNoticeRef.get().then((DataSnapshot snapshot) async {
+      getStreamData(snapshot);
+      }).onError((error, stackTrace) {
+        print(error);
+      });
+    stream.listen((DatabaseEvent event) {
+      print('Event Type: ${event.type}');
+      print('Snapshot: ${event.snapshot.value}');
+      getStreamData(event.snapshot);
+    });
   }
 }

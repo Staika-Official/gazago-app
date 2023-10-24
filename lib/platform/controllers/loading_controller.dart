@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:firebase_crashlytics/firebase_crashlytics.dart';
+import 'package:firebase_database/firebase_database.dart';
 import 'package:gaza_go/constants/enums.dart';
 import 'package:gaza_go/constants/routes.dart';
 import 'package:gaza_go/platform/controllers/activity_controller.dart';
@@ -124,7 +125,15 @@ class LoadingController extends GetxController {
   }
 
   Future<void> initLoading() async {
-    await checkTermsAgreeStatus();
+    DatabaseReference inspectionNoticeRef = FirebaseDatabase.instance.ref('inspectionNotice');
+    await inspectionNoticeRef.get().then((DataSnapshot snapshot) async {
+      if (snapshot.value == false) {
+        await checkTermsAgreeStatus();
+      }
+    }).onError((error, stackTrace) {
+      print(error);
+    });
+
     Future.delayed(Duration.zero, () => timerStart());
   }
 
@@ -202,6 +211,7 @@ class LoadingController extends GetxController {
     if (progress.value >= 0.9) {
       timerStop();
       terminateDebugMode();
+      print('11111111');
       Get.offAllNamed(Routes.home);
     }
   }

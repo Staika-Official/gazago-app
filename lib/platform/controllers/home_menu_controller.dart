@@ -73,7 +73,7 @@ class HomeMenuController extends SuperController {
 
   @override
   void onReady() async {
-
+    if (Get.isRegistered<ActivityController>()) Get.find<ActivityController>().initializeExercise();
     handleAppNotification();
     await checkUpdates();
     bottomNavHeight.value = bottomNavKey.currentContext != null ? bottomNavKey.currentContext!.size!.height : 0;

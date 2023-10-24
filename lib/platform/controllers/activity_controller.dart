@@ -44,7 +44,6 @@ import 'package:throttling/throttling.dart';
 
 class ActivityController extends SuperController with ActivityMixin, ChallengeMixin, GetTickerProviderStateMixin, ConsumerItemMixin {
   final WalletMasterController walletMasterController = Get.find();
-  InspectionNoticeController inspectionNoticeController = Get.isRegistered<InspectionNoticeController>() ? Get.find<InspectionNoticeController>() : Get.put(InspectionNoticeController());
   LoaderController loaderController = Get.isRegistered<LoaderController>() ? Get.find<LoaderController>() : Get.put(LoaderController());
   RxList<StatModel> get statList {
     return RxList([
@@ -81,19 +80,17 @@ class ActivityController extends SuperController with ActivityMixin, ChallengeMi
   final RxBool isButtonDisabled = RxBool(false);
   final RxList<ChallengeModel> challengeList = RxList.empty();
 
-  Future<void> initializeController() async {
-    bool isInspectionNotice = await getConfig(dataType: ConfigType.bool, configKey: 'notice_alert');
+  Future<void> initializeExercise() async {
+
     challengeGuideController = AnimationController(vsync: this);
-    await initController();
-    inspectionNoticeController.checkInspectionNotice();
     checkConnectivityStatus();
-    if ([ExerciseState.ongoing, ExerciseState.paused].any((state) => state == exerciseState.value) && !isFakeGps.value && !isTestingFakeGps() && !isInspectionNotice) {
+    if ([ExerciseState.ongoing, ExerciseState.paused].any((state) => state == exerciseState.value) && !isFakeGps.value && !isTestingFakeGps()) {
       showPendingExerciseAlert(this);
     }
     disableActivityButton.value = false;
   }
 
-  Future<void> initController() async {
+  Future<void> initializeController() async {
     await getUserState().then((_) async {
       hasPermission.value = await checkAvailabilities();
       if (hasPermission.value) {
@@ -156,7 +153,7 @@ class ActivityController extends SuperController with ActivityMixin, ChallengeMi
   }
 
   Future<void> loadChallenges() async {
-    inspectionNoticeController.checkInspectionNotice();
+
     await getChallenges(
       successCallback: (List<ChallengeModel> data) {
         challengeList.clear();
@@ -907,7 +904,7 @@ class ActivityController extends SuperController with ActivityMixin, ChallengeMi
   @override
   void onResumed() {
     print('onResumed activity');
-    inspectionNoticeController.checkInspectionNotice();
+
     if (Get.currentRoute != Routes.login && Get.currentRoute != Routes.loading) {
       getUserState(showLoading: true);
     }
