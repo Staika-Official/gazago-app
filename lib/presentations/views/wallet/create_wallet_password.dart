@@ -30,7 +30,10 @@ class CreateWalletPassword extends StatelessWidget {
       backgroundColor: subBg01Color,
       resizeToAvoidBottomInset: false,
       onBackButtonTap: () {
-        Get.find<WalletMasterController>().tabController.animateTo(0);
+        Get
+            .find<WalletMasterController>()
+            .tabController
+            .animateTo(0);
         Get.back();
       },
       child: Column(
@@ -155,7 +158,11 @@ class CreateWalletPassword extends StatelessWidget {
                               color: Colors.white,
                             ),
                             onChanged: (password) => controller.updateConfirmPassword(password),
-                            onSubmitted: (password) => controller.nextStep(),
+                            onSubmitted: (password) {
+                              if(controller.confirmPasswordFormStatus.value == FormStatus.sufficient && controller.isAgree.value){
+                                controller.nextStep();
+                              }
+                            },
                           ),
                         ),
                         Obx(() => validatePassword(controller.confirmPasswordFormStatus.value)),
@@ -177,71 +184,117 @@ class CreateWalletPassword extends StatelessWidget {
               ),
             ),
           ),
-          Padding(
-            padding: const EdgeInsets.only(
-              bottom: 10,
-              left: 20,
-              right: 20,
-            ),
-            child: RichText(
-              textAlign: TextAlign.center,
-              text: TextSpan(
-                style: TextStyle(
-                  color: deepGrayColor,
-                  fontWeight: FontWeight.w500,
-                  letterSpacing: -0.5,
-                  fontSize: 12,
-                  height: 20 / 12,
-                ),
+
+
+          Obx(() {
+            return Padding(
+              padding: const EdgeInsets.only(
+                bottom: 30,
+                left: 20,
+                right: 20,
+              ),
+              child: Column(
                 children: [
-                  const TextSpan(
-                    text: '스타이카 월렛은 ',
-                  ),
-                  TextSpan(
-                    text: '탈중앙화 지갑',
-                    style: TextStyle(
-                      fontWeight: FontWeight.w600,
-                      color: lightGrayColor,
+                  InkWell(
+                    onTap: () => controller.toggleAgree(),
+                    child: Row(
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: [
+                        controller.isAgree.value
+                            ? Icon(
+                          Icons.check_circle,
+                          color: skyBlueColor,
+                          size: 24.sp,
+                        )
+                            : Icon(
+                          Icons.check_circle_rounded,
+                          color: popupBgColor,
+                          size: 24.sp,
+                        ),
+                        Padding(
+                          padding: EdgeInsets.only(left: 12.0.sp),
+                          child: const StyledText(
+                            '아래의 내용을 모두 확인했습니다.',
+                            color: Colors.white,
+                            fontWeight: 500,
+                            fontSize: 16,
+                            lineHeight: 16,
+                          ),
+                        ),
+                      ],
                     ),
                   ),
-                  const TextSpan(
-                    text: '이에요. ',
-                  ),
-                  TextSpan(
-                    text: '이체 비밀번호',
-                    style: TextStyle(
-                      fontWeight: FontWeight.w600,
-                      color: lightGrayColor,
-                    ),
-                  ),
-                  const TextSpan(
-                    text: '는 "개인키"이므로 사용자 기기에만 저장되고 관련 정보를 중앙에 일체 저장하지 않고 있어요.\n',
-                  ),
-                  TextSpan(
-                    text: '등록한 이체 비밀번호를 꼭 안전한 곳에 기록하여 보관해주세요!',
-                    style: TextStyle(
-                      fontWeight: FontWeight.w600,
-                      color: lightGrayColor,
+                  Padding(
+                    padding: EdgeInsets.only(top: 28.0.sp),
+                    child: RichText(
+                      textAlign: TextAlign.left,
+                      text: TextSpan(
+                        style: TextStyle(
+                          color: deepGrayColor,
+                          fontWeight: FontWeight.w500,
+                          letterSpacing: -0.5,
+                          fontSize: 12,
+                          height: 20 / 12,
+                        ),
+                        children: [
+                          const TextSpan(
+                            text: '스타이카 월렛은 ',
+                          ),
+                          TextSpan(
+                            text: '탈중앙화 지갑',
+                            style: TextStyle(
+                              fontWeight: FontWeight.w600,
+                              color: lightGrayColor,
+                            ),
+                          ),
+                          const TextSpan(
+                            text: '이에요. ',
+                          ),
+                          TextSpan(
+                            text: '이체 비밀번호',
+                            style: TextStyle(
+                              fontWeight: FontWeight.w600,
+                              color: lightGrayColor,
+                            ),
+                          ),
+                          const TextSpan(
+                            text: '는 "개인키"이므로 사용자 기기에만 저장되고 관련 정보를 중앙에 일체 저장하지 않고 있어요.\n',
+                          ),
+                          TextSpan(
+                            text: '등록한 이체 비밀번호를 꼭 안전한 곳에 기록하여 보관해주세요!',
+                            style: TextStyle(
+                              fontWeight: FontWeight.w600,
+                              color: lightGrayColor,
+                            ),
+                          ),
+                        ],
+                      ),
                     ),
                   ),
                 ],
               ),
-            ),
-          ),
-          Container(
-            padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 15),
-            width: double.infinity,
-            child: GazagoButton(
-              onTap: () {
-                // print('click');
-                controller.nextStep();
-              },
-              buttonText: '확인',
-              buttonColor: skyBlueColor,
-              // textColor: Colors.white,
-              // buttonColor: popupBgColor,
-            ),
-          ),
+            );
+          }),
+
+
+          Obx(() {
+            return Container(
+              padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 15),
+              width: double.infinity,
+              child: GazagoButton(
+                onTap: () {
+                  // print('click');
+                  if (controller.confirmPasswordFormStatus.value == FormStatus.sufficient && controller.isAgree.value) {
+                    controller.nextStep();
+                  }
+                },
+                buttonText: '확인',
+                buttonColor: (controller.confirmPasswordFormStatus.value == FormStatus.sufficient && controller.isAgree.value) ? skyBlueColor : popupBgColor,
+                textColor: (controller.confirmPasswordFormStatus.value == FormStatus.sufficient && controller.isAgree.value) ? Colors.black : deepGrayColor,
+                // buttonColor: popupBgColor,
+              ),
+            );
+          }),
         ],
       ),
     );

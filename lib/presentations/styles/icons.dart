@@ -19,6 +19,7 @@ SvgPicture iconSkyBlueCheck = SvgPicture.asset('assets/images/common/ico_check_s
 SvgPicture iconCloseWhite = SvgPicture.asset('assets/images/common/ico_close_white.svg', width: 28.sp, height: 28.sp);
 SvgPicture iconHand = SvgPicture.asset('assets/images/common/ico_hand.svg', width: 65.sp, height: 65.sp);
 SvgPicture iconCircleSkyBlueCheck = SvgPicture.asset('assets/images/common/ico_circle_check_skyblue.svg', width: 40.sp, height: 40.sp);
+SvgPicture iconCircleSkyBlueExclamention = SvgPicture.asset('assets/images/common/ico_circle_exclamention_skyblue.svg', width: 62.sp, height: 62.sp);
 SvgPicture iconEaMinus = SvgPicture.asset('assets/images/common/ico_ea_minus.svg', width: 13.sp, height: 2.sp);
 SvgPicture iconEaPlus = SvgPicture.asset('assets/images/common/ico_ea_plus.svg', width: 13.sp, height: 13.sp);
 SvgPicture iconKey = SvgPicture.asset('assets/images/common/ico_key.svg', width: 26.sp, height: 26.sp);
@@ -86,6 +87,7 @@ SvgPicture iconPresentBox = SvgPicture.asset('assets/images/ic_present_box.svg',
 // archive
 SvgPicture iconArchiveDetailBadge = SvgPicture.asset('assets/images/archive/ico_archive_detail_badge.svg', width: 15.sp, height: 20.sp);
 SvgPicture iconWasteBasket = SvgPicture.asset('assets/images/common/ico_wastebasket.svg', width: 15.sp, height: 20.sp);
+SvgPicture iconNoneMap = SvgPicture.asset('assets/images/archive/ico_none_map.svg', width: 37.sp, height: 37.sp);
 
 //leaderboard
 SvgPicture iconStatisticsTokenGo = SvgPicture.asset('assets/images/activity/ico_activity_token_go.svg', width: 25.27.sp, height: 27.62.sp);
@@ -127,6 +129,7 @@ SvgPicture iconArrowRight = SvgPicture.asset('assets/images/wallet/ico_arrow_rig
 SvgPicture iconArrowRightTriangle = SvgPicture.asset('assets/images/wallet/ico_arrow_right_triangle.svg', width: 12.sp, height: 12.sp);
 SvgPicture iconCoupon = SvgPicture.asset('assets/images/wallet/ico_coupon.svg', width: 38.sp, height: 38.sp);
 SvgPicture iconTik = SvgPicture.asset('assets/images/wallet/ico_tik.svg', width: 20.sp, height: 20.sp);
+SvgPicture iconTikSmall = SvgPicture.asset('assets/images/wallet/ico_tik.svg', width: 14.sp, height: 14.sp);
 SvgPicture iconNoConnection = SvgPicture.asset('assets/images/wallet/ico_no_connection.svg', width: 40.sp, height: 40.sp);
 SvgPicture iconError = SvgPicture.asset('assets/images/wallet/ico_error.svg', width: 40.sp, height: 40.sp);
 SvgPicture iconStikMini = SvgPicture.asset('assets/images/wallet/ico_product_list_stik.svg', width: 11.sp, height: 11.sp);

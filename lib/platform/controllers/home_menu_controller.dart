@@ -11,6 +11,7 @@ import 'package:gaza_go/flavors.dart';
 import 'package:gaza_go/platform/controllers/activity_controller.dart';
 import 'package:gaza_go/platform/controllers/archive_controller.dart';
 import 'package:gaza_go/platform/controllers/challenges_controller.dart';
+import 'package:gaza_go/platform/controllers/inspection_notice_controller.dart';
 import 'package:gaza_go/platform/controllers/inventory_controller.dart';
 import 'package:gaza_go/platform/controllers/inventory_home_controller.dart';
 import 'package:gaza_go/platform/controllers/leaderboard_controller.dart';
@@ -38,6 +39,7 @@ import 'package:new_version_plus/new_version_plus.dart';
 import 'package:simple_animations/simple_animations.dart';
 
 class HomeMenuController extends SuperController {
+
   final RxInt selectedIndex = RxInt(2);
   final RxInt prevIndex = RxInt(0);
   final RxList<int> visitedTabs = RxList.empty();
@@ -71,6 +73,7 @@ class HomeMenuController extends SuperController {
 
   @override
   void onReady() async {
+    if (Get.isRegistered<ActivityController>()) Get.find<ActivityController>().initializeExercise();
     handleAppNotification();
     await checkUpdates();
     bottomNavHeight.value = bottomNavKey.currentContext != null ? bottomNavKey.currentContext!.size!.height : 0;
@@ -301,6 +304,7 @@ class HomeMenuController extends SuperController {
 
   @override
   void onResumed() async {
+
     if (HiveStore.load(key: HiveKey.needRouteToGoWallet.name) != null && HiveStore.load(key: HiveKey.needRouteToGoWallet.name)) {
       HiveStore.deleteKey(key: HiveKey.needRouteToGoWallet.name);
       Get.find<WalletMasterController>().moveToWallet();

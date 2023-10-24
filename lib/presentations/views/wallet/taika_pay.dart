@@ -27,10 +27,13 @@ class TaikaPay extends StatelessWidget {
               // initialUrlRequest: URLRequest(url: WebUri('http://localhost:3000')),
               initialUrlRequest: URLRequest(url: WebUri(F.taikaPayUrl)),
               initialSettings: InAppWebViewSettings(
+                cacheEnabled: false,
+                clearCache: true,
                 disableContextMenu: true,
                 javaScriptEnabled: true,
               ),
               onWebViewCreated: (controller) {
+
                 // register a JavaScript handler with name "myHandlerName"
                 controller.addJavaScriptHandler(
                     handlerName: 'app',

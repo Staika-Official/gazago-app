@@ -86,7 +86,7 @@ class CreateWallet extends StatelessWidget {
                                 const Padding(
                                   padding: EdgeInsets.only(top: 34),
                                   child: StyledText(
-                                    '회원가입이 완료 되었습니다.',
+                                    '지갑 생성이 완료 되었습니다.',
                                     fontSize: 22,
                                     fontWeight: 600,
                                     lineHeight: 26,
@@ -111,7 +111,9 @@ class CreateWallet extends StatelessWidget {
                           padding: const EdgeInsets.all(20),
                           child: GazagoButton(
                             onTap: () async {
-                              await Get.find<StaikaWalletController>().getStaikaWalletInfo();
+                              if(Get.isRegistered<StaikaWalletController>()){
+                                await Get.find<StaikaWalletController>().getStaikaWalletInfo();
+                              }
                               Get.until((route) => Get.currentRoute == Routes.wallet);
                             },
                             buttonText: '시작하기',

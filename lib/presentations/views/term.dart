@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:gaza_go/constants/routes.dart';
 import 'package:gaza_go/platform/controllers/term_controller.dart';
 import 'package:gaza_go/presentations/components/default_container.dart';
 import 'package:gaza_go/presentations/styles/colors.dart';
@@ -21,7 +22,7 @@ class Term extends StatelessWidget {
           physics: const ClampingScrollPhysics(),
           child: Column(
             children: [
-              if (controller.termType.value == 'MARKETING')
+              if (controller.termType.value == 'MARKETING' && Get.previousRoute != Routes.joinTerms)
                 Container(
                   margin: EdgeInsets.symmetric(horizontal: 25.sp, vertical: 0),
                   padding: EdgeInsets.symmetric(horizontal: 0.sp, vertical: 15.sp),

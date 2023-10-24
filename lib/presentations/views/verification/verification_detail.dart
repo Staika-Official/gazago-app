@@ -203,7 +203,7 @@ class VerificationDetail extends StatelessWidget {
                         fontSize: 18,
                         lineHeight: 18,
                         fontWeight: 500,
-                        color: controller.isValidNext.isTrue ? Colors.black : Colors.white,
+                        color: controller.isValidNext.isTrue ? Colors.black : deepGrayColor,
                       )),
                     ),
                   ),

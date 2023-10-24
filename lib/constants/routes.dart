@@ -33,6 +33,7 @@ import 'package:gaza_go/presentations/views/laboratory/laboratory_solana_transfe
 import 'package:gaza_go/presentations/views/leaderboard/index.dart';
 import 'package:gaza_go/presentations/views/loading.dart';
 import 'package:gaza_go/presentations/views/login.dart';
+import 'package:gaza_go/presentations/views/noticeWebview.dart';
 import 'package:gaza_go/presentations/views/on_boarding.dart';
 import 'package:gaza_go/presentations/views/permissions.dart';
 import 'package:gaza_go/presentations/views/preferences/edit_biometrics.dart';
@@ -56,6 +57,7 @@ import 'package:gaza_go/presentations/views/wallet/create_wallet.dart';
 import 'package:gaza_go/presentations/views/wallet/create_wallet_password.dart';
 import 'package:gaza_go/presentations/views/wallet/index.dart';
 import 'package:gaza_go/presentations/views/wallet/send_stik_go_wallet.dart';
+import 'package:gaza_go/presentations/views/wallet/send_stik_staika_wallet.dart';
 import 'package:gaza_go/presentations/views/wallet/taika_pay.dart';
 import 'package:gaza_go/presentations/views/wallet/wallet_actions.dart';
 import 'package:gaza_go/presentations/views/wallet/wallet_detail.dart';
@@ -122,9 +124,11 @@ class Routes {
   static const adMobRewarded = '/admob/reward';
   static const adMobRewardedInterstitial = '/admob/interstitial';
   static const webView = '/webview/:id';
+  static const noticeWebView = '/notice_webview';
   static const createWalletPassword = '/wallet/create/password';
   static const createWallet = '/wallet/create';
   static const sendStikGoWallet = '/wallet/send_stik_go_wallet';
+  static const sendStikStaikaWallet = '/wallet/send_stik_staika_wallet';
   static const challengeDetail = '/challenges/challenge_detail/:id';
   static const challengeCourseDetail = '/activity/challenge_course_detail';
   static const leaderboard = '/leaderboard';
@@ -191,12 +195,14 @@ class Routes {
     stepPage(name: Routes.laboratorySolanaCreateWallet, page: const LaboratorySolanaCreateWallet()),
     stepPage(name: Routes.laboratorySolanaTransfer, page: const LaboratorySolanaTransfer()),
     stepPage(name: Routes.webView, page: const WebView()),
+    stepPage(name: Routes.noticeWebView, page: const NoticeWebView()),
     stepPage(name: Routes.laboratoryEndPoint, page: const LaboratoryEndPoint()),
     stepPage(name: Routes.laboratoryFakeGps, page: const LaboratoryFakeGps()),
     stepPage(name: Routes.laboratoryKakaoShare, page: const LaboratoryKakaoShare()),
     stepPage(name: Routes.createWalletPassword, page: const CreateWalletPassword()),
     stepPage(name: Routes.createWallet, page: const CreateWallet()),
     stepPage(name: Routes.sendStikGoWallet, page: const SendStikGoWallet()),
+    stepPage(name: Routes.sendStikStaikaWallet, page: const SendStikStaikaWallet()),
     stepPage(name: Routes.challengeDetail, page: const ChallengeDetail()),
     stepPage(name: Routes.challengeCourseDetail, page: const ChallengeCourseDetail()),
     stepPage(name: Routes.leaderboard, page: const RankingHome()),

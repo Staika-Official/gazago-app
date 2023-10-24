@@ -5,10 +5,13 @@ import 'package:adjust_sdk/adjust.dart';
 import 'package:adjust_sdk/adjust_event.dart';
 import 'package:device_info_plus/device_info_plus.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_database/firebase_database.dart';
 import 'package:gaza_go/constants/config.dart';
 import 'package:gaza_go/constants/enums.dart';
 import 'package:gaza_go/constants/routes.dart';
 import 'package:gaza_go/flavors.dart';
+import 'package:gaza_go/platform/controllers/global_controller.dart';
+import 'package:gaza_go/platform/firebase/remote_config.dart';
 import 'package:gaza_go/platform/helpers/alert_helper.dart';
 import 'package:gaza_go/platform/helpers/login_helper.dart';
 import 'package:gaza_go/platform/models/access_token_model.dart';
@@ -24,7 +27,32 @@ import 'package:google_sign_in/google_sign_in.dart';
 import 'package:package_info_plus/package_info_plus.dart';
 import 'package:sign_in_with_apple/sign_in_with_apple.dart';
 
+
 class LoginController extends GetxController {
+
+  @override
+  void onInit() async {
+
+    await checkInspectionNotice();
+    super.onInit();
+  }
+
+  Future<void> checkInspectionNotice() async {
+    DatabaseReference inspectionNoticeRef = FirebaseDatabase.instance.ref('inspectionNotice');
+    await inspectionNoticeRef.get().then((DataSnapshot snapshot) async {
+      if(!Get.isBottomSheetOpen!){
+        String noticeUri = getConfig(dataType: ConfigType.string, configKey: 'notice_alert_address');
+        showModalNoticeWebview(Get.context, linkUrl: noticeUri);
+      }
+
+    }).onError((error, stackTrace) {
+      print(error);
+    });
+  }
+
+
+
+
   void login(LoginType loginType) async {
     Adjust.trackEvent(AdjustEvent('lllyw8'));
 
@@ -41,6 +69,7 @@ class LoginController extends GetxController {
         break;
     }
   }
+
 
   Future<void> emailLogin() async {
     AccessTokenModel token = await UaaService.emailLogin();

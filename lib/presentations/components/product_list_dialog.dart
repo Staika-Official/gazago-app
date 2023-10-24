@@ -133,7 +133,64 @@ List<Widget> renderProductList(WalletMasterController controller) {
       .toList();
 }
 
-void showProductList(WalletMasterController controller) {
+void showProductList() {
+  List<Widget> renderMyTikList(WalletMasterController controller) {
+    return controller.allTikUiList
+        .asMap()
+        .entries
+        .map(
+            (product) =>
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Row(
+                  children: [
+                    Container(
+                      width: 2,
+                      height: 2,
+                      margin: EdgeInsets.only(top:5.sp, left:6.sp, right: 6.sp),
+                      decoration: BoxDecoration(
+                        color: Colors.white,
+                        borderRadius: BorderRadius.circular(2),
+                      ),
+                    ),
+                    StyledText(
+                      product.value.name! == 'Taika' ? '활동으로 받은 TIK' : '충전한 TIK',
+                      fontSize: 12,
+                      fontWeight: 400,
+                      lineHeight: 18,
+                      letterSpacing: -0.1,
+
+                    ),
+                  ],
+                ),
+                Row(
+                  children: [
+                    StyledText(
+                      '${formatDecimalPlaces(double.parse(product.value.uiAmountString!),  0)}',
+                      fontSize: 12,
+                      fontWeight: 700,
+                      lineHeight: 20,
+                      letterSpacing: -0.1,
+                      color: lightGrayColor,
+                    ),
+                    Padding(
+                      padding: EdgeInsets.only(left:3.0.sp),
+                      child: StyledText(
+                        'TIK',
+                        fontSize: 12,
+                        fontWeight: 400,
+                        lineHeight: 20,
+                        letterSpacing: -0.1,
+                        color: lightGrayColor,
+                      ),
+                    ),
+                  ],
+                ),
+              ],)).toList();
+  }
+
+  WalletMasterController controller = Get.find();
   Get.dialog(
     barrierDismissible: false,
     useSafeArea: false,
@@ -147,58 +204,61 @@ void showProductList(WalletMasterController controller) {
             mainAxisSize: MainAxisSize.max,
             children: [
               Column(
+
+                crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Padding(
-                    padding: EdgeInsets.only(left: 24.sp, top: 16.sp, right: 24.sp, bottom: 28.sp),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    padding: EdgeInsets.only(left: 24.sp,top:16.sp, right: 24.sp, bottom: 16.sp),
+                    child: StyledText(
+                      '현재 보유 자산',
+                      fontSize: 16,
+                      fontWeight: 600,
+                      lineHeight: 20,
+                      textAlign: TextAlign.start,
+                    ),
+                  ),
+                  Padding(
+                    padding: EdgeInsets.only(left: 24.sp,  right: 24.sp, bottom: 16.sp),
+                    child: Column(
                       children: [
-                        Row(
-                          children: [
-                            CircleAvatar(
-                              foregroundImage: HiveStore.loadString(key: HiveKey.profileImageUrl.name) != null && HiveStore.loadString(key: HiveKey.profileImageUrl.name) != ''
-                                  ? CachedNetworkImageProvider(
-                                      HiveStore.loadString(key: HiveKey.profileImageUrl.name)!,
-                                      headers: imageNetworkHeader,
-                                    )
-                                  : Image.asset(
-                                      'assets/images/ic_launcher.png',
-                                      width: 30.sp,
-                                    ).image,
-                              radius: 25,
-                            ),
-                            const Padding(
-                              padding: EdgeInsets.only(left: 6),
-                              child: StyledText(
-                                '보유 중',
-                                fontSize: 18,
-                                fontWeight: 600,
-                                lineHeight: 18,
+                        Padding(
+                          padding: EdgeInsets.only(bottom:8.0.sp),
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              StyledText(
+                                'Taika',
+                                fontSize: 16,
+                                fontWeight: 400,
+                                lineHeight: 20,
                               ),
-                            ),
-                          ],
+                              Row(
+                                children: [
+                                  StyledText(
+                                    formatDecimalPlaces(double.parse(controller.tik.value.uiAmountString!), 0),
+                                    fontSize: 14.sp,
+                                    fontWeight: 700,
+                                    lineHeight: 20.sp,
+                                    letterSpacing: -0.5,
+                                  ),
+                                  StyledText(
+                                    ' TIK',
+                                    fontSize: 14.sp,
+                                    fontWeight: 400,
+                                    lineHeight: 20.sp,
+                                    letterSpacing: -0.5,
+                                    color: lightGrayColor,
+                                  ),
+                                ],
+                              ),
+                            ],
+                          ),
                         ),
-                        Row(
-                          children: [
-                            StyledText(
-                              formatDecimalPlaces(double.parse(controller.tik.value.uiAmountString!), 0),
-                              fontSize: 18.sp,
-                              fontWeight: 700,
-                              lineHeight: 18.sp,
-                              letterSpacing: -0.5,
-                            ),
-                            StyledText(
-                              ' TIK',
-                              fontSize: 18.sp,
-                              fontWeight: 400,
-                              lineHeight: 18.sp,
-                              letterSpacing: -0.5,
-                            ),
-                          ],
-                        ),
+                        ...renderMyTikList(controller),
                       ],
                     ),
                   ),
+
                   Divider(
                     thickness: 6,
                     color: popupBgColor.withOpacity(0.3),
@@ -247,14 +307,14 @@ void showProductList(WalletMasterController controller) {
                                       letterSpacing: -.1,
                                     ),
                                     const TextSpan(
-                                      text: '충전한 TIK으로',
+                                      text: '충전한 TIK은',
                                       children: [
                                         TextSpan(
-                                          text: ' 상품권 교환은 불가',
+                                          text: ' 상품권, STIK 교환은 불가',
                                           style: TextStyle(fontWeight: FontWeight.w700, color: lightGrayColor),
                                         ),
                                         TextSpan(
-                                          text: '하며, 아이템 구매나 체력 회복 및 내구도 수리만 가능합니다.',
+                                          text: '합니다.',
                                         ),
                                       ],
                                     ),
@@ -417,3 +477,5 @@ void showProductList(WalletMasterController controller) {
     showStoreNotAvailableAlert();
   }
 }
+
+

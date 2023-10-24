@@ -18,17 +18,17 @@ class StaikaWallet extends StatelessWidget {
   List<Widget> renderCoinAssetList(StaikaWalletController controller) {
     return controller.coinAssetList
         .map(
-          (asset) => Padding(
+          (asset) =>
+          Padding(
             padding: EdgeInsets.only(top: 14.sp, left: 21.sp, right: 21.sp),
             child: StaikaAssetItemCoin(
               asset: asset,
-              onTapButton: asset.symbol.toUpperCase() == 'STIK' ? () => controller.moveToSendToGoWallet() : null,
+              onTapButton: asset.symbol.toUpperCase() == 'STIK' ? () => controller.stikSwapWallet() : null,
               buttonText: asset.symbol.toUpperCase() == 'STIK' ? 'GO지갑으로 보내기' : '',
               showPrice: false,
             ),
           ),
-        )
-        .toList();
+    ).toList();
   }
 
   @override
@@ -65,6 +65,7 @@ class StaikaWallet extends StatelessWidget {
                               ).image,
                       ),
                     ),
+
                     if (controller.userWalletAddress.value != '')
                       Padding(
                         padding: EdgeInsets.only(top: 10.0.sp),
@@ -191,12 +192,13 @@ class StaikaWallet extends StatelessWidget {
                         ],
                       ),
                     ),
-                    if (controller.coinAssetList.isNotEmpty) ...renderCoinAssetList(controller),
+                    if (controller.coinAssetList.isNotEmpty && controller.coinAssetList != null)
+                      Column(children: [...renderCoinAssetList(controller)],),
                     Expanded(
                       child: Align(
                         alignment: Alignment.bottomCenter,
                         child: Padding(
-                          padding: EdgeInsets.only(top: 10.sp, bottom: 20.0.sp),
+                          padding: EdgeInsets.only(top: 20.sp, bottom: 20.0.sp, left: 20.sp, right: 20.sp),
                           child: StyledText(
                             '· Staika 지갑은 블록체인 상에 기록되는 블록체인 지갑입니다.',
                             fontWeight: 500,

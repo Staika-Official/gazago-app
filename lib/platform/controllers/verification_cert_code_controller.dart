@@ -19,6 +19,7 @@ class VerificationCertCodeController extends GetxController {
   final RxBool isFormValid = RxBool(false);
   final Rx<Duration> countdownTime = const Duration().obs;
   late VerificationUserModel verificationUserModel = Get.arguments['verificationUserModel'];
+  final RxBool isNotNext = RxBool(false);
   int _requestId = -1;
   Timer _timer = Timer.periodic(const Duration(seconds: 1), (timer) {});
 
@@ -55,7 +56,7 @@ class VerificationCertCodeController extends GetxController {
   }
 
   void next() async {
-    await IdentityService.verifyIdentityCode({"requestId": _requestId.toInt(), "code": _certCode.toString()}, successCallback: () {
+    await IdentityService.verifyIdentityCode({"requestId": _requestId.toInt(), "code": _certCode.toString(), "clientId": "GAZAGO"}, successCallback: () {
       // 본인인증이 완료 이벤트
       Adjust.trackEvent(AdjustEvent('hed7a4'));
 
@@ -63,11 +64,17 @@ class VerificationCertCodeController extends GetxController {
       showToastPopup('본인인증이 완료되었습니다.');
       afterVerificationComplete();
     }, errorCallback: (res) {
-      if (res.data['errorCode'] == 'IDENTITY_ALREADY_VERIFIED') {
+      if (res.data['errorCode'] == 'IDENTITY_CI_ALREADY_EXISTS') {
+        _timer.cancel();
+        countdownTime.value = const Duration(minutes: 0);
+        errorMsg.value = res.data['errorMessage'];
+        isNotNext.value = true;
+      }
+      else if (res.data['errorCode'] == 'IDENTITY_ALREADY_VERIFIED') {
         showToastPopup(res.data['errorMessage']);
         afterVerificationComplete();
       }
-      if (res.data['errorCode'] == 'PENALTY_BLOCKED_USER') {
+      else if (res.data['errorCode'] == 'PENALTY_BLOCKED_USER') {
         showToastPopup(res.data['errorMessage']);
         forceLogout();
       } else {
@@ -89,7 +96,7 @@ class VerificationCertCodeController extends GetxController {
 
   void resendIdentityCode() async {
     await IdentityService.sendIdentityCode(verificationUserModel, successCallback: (requestId) {
-      _requestId = Get.arguments['requestId'];
+      _requestId = requestId;
       _startTimer();
       showToastPopup('인증코드가 재전송되었습니다.');
     });

@@ -39,6 +39,7 @@ class ArchiveDetailItemModel {
   int? luckOccurredCount;
   String? locationsStr;
   ChallengeCourseModel? challengeCourse;
+  bool? isTwoMonthAgo;
 
   ArchiveDetailItemModel({
     this.id,
@@ -75,6 +76,7 @@ class ArchiveDetailItemModel {
     this.luckOccurredCount,
     this.locationsStr,
     this.challengeCourse,
+    this.isTwoMonthAgo,
   });
 
   factory ArchiveDetailItemModel.fromJson(Map<String, dynamic> json) => _$ArchiveDetailItemModelFromJson(json);

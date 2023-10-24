@@ -22,6 +22,7 @@ import 'package:gaza_go/platform/controllers/challenges_controller.dart';
 import 'package:gaza_go/platform/controllers/challenges_detail_controller.dart';
 import 'package:gaza_go/platform/controllers/crew_detail_controller.dart';
 import 'package:gaza_go/platform/controllers/debugging_controller.dart';
+import 'package:gaza_go/platform/controllers/global_controller.dart';
 import 'package:gaza_go/platform/controllers/home_menu_controller.dart';
 import 'package:gaza_go/platform/controllers/inventory_controller.dart';
 import 'package:gaza_go/platform/controllers/loading_controller.dart';
@@ -3431,6 +3432,9 @@ void showStaikaStatusAlert({required bool hasWallet, TabController? tabControlle
               child: GazagoButton(
                 onTap: () async {
                   Get.back();
+                  if(tabController?.index == 0){
+                    Get.toNamed(Routes.sendStikStaikaWallet);
+                  }
                 },
                 buttonText: '확인',
                 buttonColor: skyBlueColor,
@@ -3442,6 +3446,7 @@ void showStaikaStatusAlert({required bool hasWallet, TabController? tabControlle
                   Expanded(
                     child: GazagoButton(
                       onTap: () {
+                        // print(Get.arguments['previousRoute'] );
                         tabController?.animateTo(0);
                         Get.back();
                       },
@@ -3470,10 +3475,106 @@ void showStaikaStatusAlert({required bool hasWallet, TabController? tabControlle
   );
 }
 
+void showCreateStaikaWalletAlert() {
+  showAlert(
+    allowMultipleBottomSheet: true,
+    contentWidget: Column(
+      children: [
+        Padding(
+          padding: const EdgeInsets.only(top: 28, bottom: 28),
+          child: Text.rich(
+            textAlign: TextAlign.center,
+            style: TextStyle(
+              fontSize: 22.sp,
+              height: 22.sp / 22.sp,
+              fontWeight: FontWeight.w500,
+              color: Colors.white,
+            ),
+            TextSpan(
+              text: 'Staika Wallet을 ',
+              children: [
+                TextSpan(text: '생성', style: const TextStyle(color: skyBlueColor)),
+                TextSpan(text: '합니다.'),
+              ],
+            ),
+          ),
+        ),
+        Column(
+          children: [
+            Padding(
+              padding: const EdgeInsets.only(bottom: 34),
+              child: Row(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Padding(
+                    padding: EdgeInsets.only(top:8.0.sp),
+                    child: Container(
+                      width: 2,
+                      height: 2,
+                      margin: const EdgeInsets.all(5),
+                      decoration: BoxDecoration(
+                        color: lightGrayColor,
+                        borderRadius: BorderRadius.circular(2),
+                      ),
+                    ),
+                  ),
+                  const Expanded(
+                    child: StyledText(
+                      '모두가 누리는 스마트한 자산관리! 편하고 안전한 블록체인 지갑, Staika Wallet을 생성합니다.',
+                      fontSize: 16,
+                      lineHeight: 24,
+                      fontWeight: 500,
+                      color: lightGrayColor,
+                    ),
+                  ),
+                ],
+              ),
+            ),
+
+          ],
+        ),
+      ],
+    ),
+    actions: [
+      Expanded(
+        child: Row(
+          children: [
+            Expanded(
+              child: GazagoButton(
+                onTap: () {
+                  Get.back();
+                  // Get.until((route) => Get.currentRoute == Routes.wallet);
+                },
+                buttonText: '아니요',
+                textColor: Colors.white,
+                buttonColor: popupBgColor,
+              ),
+            ),
+            SizedBox(
+              width: 9.sp,
+            ),
+            Expanded(
+              child: GazagoButton(
+                onTap: () async {
+                  Get.back();
+                  Get.toNamed(Routes.joinTerms, arguments: {'platform': 'wallet'});
+                },
+                buttonText: '네',
+                buttonColor: skyBlueColor,
+              ),
+            ),
+          ],
+        ),
+      ),
+    ],
+  );
+}
+
 void exchangeStikToTikAlert(GoWalletController controller, ExchangeStikPriceModel exchangeProduct) {
+  GoWalletController controller = Get.find();
   WalletMasterController walletMasterController = Get.find();
   showAlert(
-    title: '충전 하시겠습니까?',
+    title: '교환 하시겠습니까?',
     isScrollControlled: true,
     contentWidget: Obx(() {
       return Column(
@@ -3485,11 +3586,11 @@ void exchangeStikToTikAlert(GoWalletController controller, ExchangeStikPriceMode
                 Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    SvgPicture.asset('assets/images/wallet/ico_stik.svg', width: 24, height: 24),
+                    walletMasterController.clickedAssetButton.value == 'STAIKA' ? SvgPicture.asset('assets/images/wallet/ico_stik.svg', width: 24, height: 24) : SvgPicture.asset('assets/images/wallet/ico_tik.svg', width: 24, height: 24),
                     Padding(
                       padding: EdgeInsets.only(left: 7.0.sp),
                       child: StyledText(
-                        formatDecimalPlaces(double.parse(exchangeProduct.fromUiAmountString!), 9, isAutoDecimal: true),
+                        formatDecimalPlaces(walletMasterController.clickedAssetButton.value == 'STAIKA' ? double.parse(exchangeProduct.fromUiAmountString!): productSumFeePrice(exchangeProduct.fromUiAmountString!, exchangeProduct.uiFeeString!), 4, isAutoDecimal: true),
                         fontSize: 30,
                         lineHeight: 32,
                         fontWeight: 600,
@@ -3514,16 +3615,24 @@ void exchangeStikToTikAlert(GoWalletController controller, ExchangeStikPriceMode
                 Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    SvgPicture.asset('assets/images/wallet/ico_tik.svg', width: 24, height: 24),
+                    walletMasterController.clickedAssetButton == 'STAIKA' ? SvgPicture.asset('assets/images/wallet/ico_tik.svg', width: 24, height: 24) : SvgPicture.asset('assets/images/wallet/ico_stik.svg', width: 24, height: 24),
                     Padding(
                       padding: EdgeInsets.only(left: 7.0.sp),
-                      child: StyledText(
-                        formatDecimalPlaces(double.parse(exchangeProduct.toUiAmountString!), 0),
+                      child: walletMasterController.clickedAssetButton == 'STAIKA' ? StyledText(
+                        formatDecimalPlaces(productMinusFeePrice(exchangeProduct.toUiAmountString!, exchangeProduct.uiFeeString!), 0),
                         fontSize: 30,
                         lineHeight: 32,
                         fontWeight: 600,
                         letterSpacing: -.1,
+                      )  :
+                      StyledText(
+                      formatDecimalPlaces(double.parse(exchangeProduct.toUiAmountString!), 0),
+                      fontSize: 30,
+                      lineHeight: 32,
+                      fontWeight: 600,
+                      letterSpacing: -.1,
                       ),
+
                     ),
                     Padding(
                       padding: EdgeInsets.only(left: 7.0.sp),
@@ -3567,7 +3676,7 @@ void exchangeStikToTikAlert(GoWalletController controller, ExchangeStikPriceMode
           Padding(
             padding: EdgeInsets.only(bottom: 10.sp),
             child: const StyledText(
-              '충전이 완료되면 취소할 수 없습니다.',
+              '교환이 완료되면 취소할 수 없습니다.',
               fontSize: 14,
               lineHeight: 15,
               fontWeight: 500,
@@ -3607,7 +3716,7 @@ void exchangeStikToTikAlert(GoWalletController controller, ExchangeStikPriceMode
             Get.back();
             controller.exchangeStikToTik(exchangeProduct);
           },
-          buttonText: '충전',
+          buttonText: '교환',
           buttonColor: skyBlueColor,
         ),
       ),
@@ -3647,6 +3756,7 @@ void failureChargeStikToTikAlert(GoWalletController controller, String errorMsg)
 }
 
 void successChargeStikToTikAlert(GoWalletController controller) {
+  WalletMasterController walletMasterController = Get.find();
   showAlert(
     contentWidget: Padding(
       padding: EdgeInsets.only(top: 20.0.sp, bottom: 40.sp),
@@ -3655,8 +3765,8 @@ void successChargeStikToTikAlert(GoWalletController controller) {
           iconCircleSkyBlueCheck,
           Padding(
             padding: EdgeInsets.only(top: 20.0.sp),
-            child: const StyledText(
-              'TIK 충전이 완료 되었습니다.',
+            child: StyledText(
+              '${walletMasterController.clickedAssetButton.value == 'STAIKA' ? 'TIK' : 'STIK'} 교환이 완료 되었습니다.',
               fontSize: 18,
               lineHeight: 24,
               fontWeight: 500,
@@ -3774,15 +3884,107 @@ void sendStikToGoWalletAlert(StaikaWalletController controller) {
     ],
   );
 }
+void sendStikToStaikaWalletAlert(GoWalletController controller) {
+  WalletMasterController walletMasterController = Get.find();
+  showAlert(
+    allowMultipleBottomSheet: true,
+    title: '전송 하시겠습니까?',
+    isScrollControlled: true,
+    contentWidget: Obx(() {
+      return Column(
+        children: [
+          Padding(
+            padding: EdgeInsets.only(top: 34.0.sp, bottom: 30.sp),
+            child: Column(
+              children: [
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    SvgPicture.asset('assets/images/wallet/ico_stik.svg', width: 24, height: 24),
+                    Padding(
+                      padding: EdgeInsets.only(left: 7.0.sp),
+                      child: StyledText(
+                        formatDecimalPlaces(
+                          double.parse(controller.sendStikUiAmount.value),
+                          walletMasterController.stik.value.decimals!,
+                          isAutoDecimal: true,
+                        ),
+                        fontSize: 30,
+                        lineHeight: 32,
+                        fontWeight: 600,
+                      ),
+                    ),
+                    Padding(
+                      padding: EdgeInsets.only(left: 7.0.sp),
+                      child: const StyledText(
+                        'STIK',
+                        fontSize: 30,
+                        lineHeight: 32,
+                        fontWeight: 400,
+                      ),
+                    ),
+                  ],
+                ),
+              ],
+            ),
+          ),
+          Padding(
+            padding: EdgeInsets.only(bottom: 23.0.sp),
+            child: const Divider(
+              color: Color(0xFF1D1D26),
+              height: 3,
+              thickness: 1,
+            ),
+          ),
+          Padding(
+            padding: EdgeInsets.only(bottom: 30.sp),
+            child: const StyledText(
+              '· 전송이 완료되면 취소할 수 없습니다.',
+              fontSize: 14,
+              lineHeight: 15,
+              fontWeight: 500,
+              letterSpacing: -0.02,
+              color: lightGrayColor,
+            ),
+          ),
+        ],
+      );
+    }),
+    actions: [
+      Expanded(
+        child: GazagoButton(
+          onTap: () => Get.back(),
+          buttonText: '아니요',
+          textColor: Colors.white,
+          buttonColor: popupBgColor,
+        ),
+      ),
+      SizedBox(
+        width: 9.sp,
+      ),
+      Expanded(
+        child: GazagoButton(
+          onTap: () async {
+            Get.back();
+            controller.confirmSendStikStaikaWallet();
+          },
+          buttonText: '네',
+          buttonColor: skyBlueColor,
+        ),
+      ),
+    ],
+  );
+}
 
 void failureShortBalanceStikToTikAlert(GoWalletController controller) {
+  WalletMasterController walletMasterController = Get.find();
   showAlert(
     allowMultipleBottomSheet: true,
     title: '잔액이 부족해 진행할 수 없습니다.',
     contentWidget: Padding(
       padding: EdgeInsets.only(top: 20.0.sp, bottom: 40.sp),
-      child: const StyledText(
-        '부족한 STIK을 충전한 후 다시 시도해 주세요.',
+      child: StyledText(
+        '부족한 ${walletMasterController.clickedAssetButton.value == 'STAIKA' ? 'STIK':'TIK'} 을 보유한 후 다시 시도해 주세요.',
         fontSize: 14,
         lineHeight: 20,
         fontWeight: 500,
@@ -3809,6 +4011,169 @@ void failureShortBalanceStikToTikAlert(GoWalletController controller) {
 void exchangeStikShortBalanceAlert(StaikaWalletController controller) {
   showAlert(
     allowMultipleBottomSheet: true,
+    title: '송금 후 최소 잔액이 부족합니다.',
+    isScrollControlled: true,
+    contentWidget: Obx(() {
+      return Column(
+        children: [
+          Padding(
+            padding: EdgeInsets.only(top: 34.0.sp, bottom: 30.sp),
+            child: Column(
+              children: [
+                // Opacity(
+                //   opacity: 0.4,
+                //   child: FittedBox(
+                //     child: Row(
+                //       mainAxisAlignment: MainAxisAlignment.center,
+                //       children: [
+                //         SvgPicture.asset('assets/images/wallet/ico_stik.svg', width: 24, height: 24),
+                //         Padding(
+                //           padding: EdgeInsets.only(left: 7.0.sp),
+                //           child: StyledText(
+                //             formatDecimalPlaces(
+                //               double.parse(controller.sendStikUiAmount.value),
+                //               controller.assetStik.value!.decimals,
+                //               isAutoDecimal: true,
+                //             ),
+                //             fontSize: 30,
+                //             lineHeight: 32,
+                //             fontWeight: 600,
+                //             letterSpacing: -.1,
+                //           ),
+                //         ),
+                //         Padding(
+                //           padding: EdgeInsets.only(left: 7.0.sp),
+                //           child: const StyledText(
+                //             'STIK',
+                //             fontSize: 30,
+                //             lineHeight: 32,
+                //             fontWeight: 400,
+                //           ),
+                //         ),
+                //       ],
+                //     ),
+                //   ),
+                // ),
+                Padding(
+                  padding: EdgeInsets.only(top: 10.0.sp),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      const StyledText(
+                        '요청 금액',
+                        fontWeight: 500,
+                        fontSize: 16,
+                        letterSpacing: -.2,
+                      ),
+                      StyledText(
+                        '${formatDecimalPlaces(double.parse(controller.sendStikUiAmount.value), 4, isAutoDecimal: true)} STIK',
+                        fontWeight: 500,
+                        fontSize: 16,
+                        letterSpacing: -.2,
+                      ),
+                    ],
+                  ),
+                ),
+                Padding(
+                  padding: EdgeInsets.only(top: 15.0.sp),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      const StyledText(
+                        '현재 잔액',
+                        fontWeight: 500,
+                        fontSize: 16,
+                        letterSpacing: -.2,
+                      ),
+                      StyledText(
+                        '${formatDecimalPlaces(double.parse(controller.assetStik.value!.uiAmountString), 4, isAutoDecimal: true)} STIK',
+                        fontWeight: 500,
+                        fontSize: 16,
+                        letterSpacing: -.2,
+                      ),
+                    ],
+                  ),
+                ),
+                Padding(
+                  padding: EdgeInsets.only(top: 15.0.sp),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      const StyledText(
+                        '송금 후 잔액',
+                        fontWeight: 500,
+                        fontSize: 16,
+                        letterSpacing: -.2,
+                      ),
+                      StyledText(
+                        '${formatDecimalPlaces(double.parse(controller.shortStikUiAmount.value), 4, isAutoDecimal: true)} STIK',
+                        fontWeight: 500,
+                        fontSize: 16,
+                        letterSpacing: -.2,
+                      ),
+                    ],
+                  ),
+                ),
+
+              ],
+            ),
+          ),
+          Padding(
+            padding: EdgeInsets.only(bottom: 23.0.sp),
+            child: const Divider(
+              color: Color(0xFF1D1D26),
+              height: 3,
+              thickness: 1,
+            ),
+          ),
+          Padding(
+            padding: EdgeInsets.only(bottom: 30.sp),
+            child: RichText(
+              textAlign: TextAlign.center,
+              text: TextSpan(
+                style: TextStyle(
+                  color: lightGrayColor,
+                  fontWeight: FontWeight.w500,
+                  fontSize: 14.sp,
+                  height: 18.sp / 14,
+                  letterSpacing: -.1
+
+                ),
+                children: [
+                  TextSpan(
+                  text: '솔라나(Solana) 블록체인 네트워크 정책상\n지갑에 최소',
+                  ),
+                  TextSpan(
+                    text: '0.0001 STIK',
+                  ),
+                  TextSpan(
+                    text: ' 이상 잔액이 필요합니다.\n보내는 STIK 금액을 변경한 후 다시 시도해 주세요.',
+                  ),
+                ],
+              ),
+            ),
+          ),
+        ],
+      );
+    }),
+    actions: [
+      Expanded(
+        child: GazagoButton(
+          onTap: () async {
+            Get.back();
+          },
+          buttonText: '확인',
+          buttonColor: skyBlueColor,
+        ),
+      ),
+    ],
+  );
+}
+
+void sendStikShortBalanceAlert(GoWalletController controller) {
+  WalletMasterController walletMasterController = Get.find();
+  showAlert(
+    allowMultipleBottomSheet: true,
     title: '잔액이 부족해 진행할 수 없습니다.',
     isScrollControlled: true,
     contentWidget: Obx(() {
@@ -3818,53 +4183,19 @@ void exchangeStikShortBalanceAlert(StaikaWalletController controller) {
             padding: EdgeInsets.only(top: 34.0.sp, bottom: 30.sp),
             child: Column(
               children: [
-                Opacity(
-                  opacity: 0.4,
-                  child: FittedBox(
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        SvgPicture.asset('assets/images/wallet/ico_stik.svg', width: 24, height: 24),
-                        Padding(
-                          padding: EdgeInsets.only(left: 7.0.sp),
-                          child: StyledText(
-                            formatDecimalPlaces(
-                              double.parse(controller.sendStikUiAmount.value),
-                              controller.assetStik.value!.decimals,
-                              isAutoDecimal: true,
-                            ),
-                            fontSize: 30,
-                            lineHeight: 32,
-                            fontWeight: 600,
-                            letterSpacing: -.1,
-                          ),
-                        ),
-                        Padding(
-                          padding: EdgeInsets.only(left: 7.0.sp),
-                          child: const StyledText(
-                            'STIK',
-                            fontSize: 30,
-                            lineHeight: 32,
-                            fontWeight: 400,
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                ),
                 Padding(
-                  padding: EdgeInsets.only(top: 60.0.sp),
+                  padding: EdgeInsets.only(top: 10.0.sp),
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       const StyledText(
-                        '필요한 STIK',
+                        '요청 금액',
                         fontWeight: 500,
                         fontSize: 16,
                         letterSpacing: -.2,
                       ),
                       StyledText(
-                        '${formatDecimalPlaces(double.parse(controller.shortStikUiAmount.value), controller.assetStik.value!.decimals, isAutoDecimal: true)} STIK',
+                        '${formatDecimalPlaces(double.parse(controller.sendStikUiAmount.value), 4, isAutoDecimal: true)} STIK',
                         fontWeight: 500,
                         fontSize: 16,
                         letterSpacing: -.2,
@@ -3878,13 +4209,13 @@ void exchangeStikShortBalanceAlert(StaikaWalletController controller) {
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       const StyledText(
-                        '잔액 STIK',
+                        '현재 잔액',
                         fontWeight: 500,
                         fontSize: 16,
                         letterSpacing: -.2,
                       ),
                       StyledText(
-                        '${formatDecimalPlaces(double.parse(controller.assetStik.value!.uiAmountString), controller.assetStik.value!.decimals, isAutoDecimal: true)} STIK',
+                        '${formatDecimalPlaces(double.parse(walletMasterController.stik.value.uiAmountString!), 4, isAutoDecimal: true)} STIK',
                         fontWeight: 500,
                         fontSize: 16,
                         letterSpacing: -.2,
@@ -3906,7 +4237,7 @@ void exchangeStikShortBalanceAlert(StaikaWalletController controller) {
           Padding(
             padding: EdgeInsets.only(bottom: 30.sp),
             child: const StyledText(
-              '· 부족한 STIK을 충전한 후 다시 시도해 주세요.',
+              '· 부족한 STIK을 보유한 후 다시 시도해 주세요.',
               fontSize: 14,
               lineHeight: 15,
               fontWeight: 500,
@@ -3970,6 +4301,53 @@ void successExchangeStikToGoWalletAlert(StaikaWalletController controller) {
           onTap: () {
             Get.until((route) => Get.currentRoute == Routes.wallet);
             controller.getStaikaWalletInfo();
+          },
+          buttonText: '확인',
+          buttonColor: skyBlueColor,
+        ),
+      ),
+    ],
+  );
+}
+
+void successExchangeStikToStaikaWalletAlert(GoWalletController controller) {
+  showAlert(
+    contentWidget: Padding(
+      padding: EdgeInsets.only(top: 20.0.sp, bottom: 40.sp),
+      child: Column(
+        children: [
+          Column(
+            children: [
+              const StyledText(
+                '보내기 신청이 완료 되었습니다.',
+                fontSize: 18,
+                lineHeight: 24,
+                fontWeight: 500,
+                letterSpacing: .2,
+                textAlign: TextAlign.center,
+              ),
+              Padding(
+                padding: EdgeInsets.only(top: 10.0.sp),
+                child: const StyledText(
+                  '결과는 잠시 후 거래 내역에서 조회 가능합니다.',
+                  fontSize: 16,
+                  lineHeight: 24,
+                  fontWeight: 500,
+                  letterSpacing: .2,
+                  color: lightGrayColor,
+                  textAlign: TextAlign.center,
+                ),
+              ),
+            ],
+          ),
+        ],
+      ),
+    ),
+    actions: [
+      Expanded(
+        child: GazagoButton(
+          onTap: () {
+            Get.until((route) => Get.currentRoute == Routes.wallet);
           },
           buttonText: '확인',
           buttonColor: skyBlueColor,
@@ -5746,7 +6124,7 @@ void shortTikCreateCrewAlert() async {
           buttonText: '충전하기',
           onTap: () {
             Get.back();
-            showProductList(Get.find<WalletMasterController>());
+            showProductList();
           },
         ),
       ),
@@ -7284,5 +7662,45 @@ void showModalWebview(context, {String? title, String linkUrl = ''}) {
         ),
       );
     },
+  );
+}
+
+void showModalNoticeWebview(context, {String? title, String linkUrl = ''}) {
+
+  GlobalKey webViewKey = GlobalKey();
+  Get.bottomSheet(
+      isDismissible: false,
+      ignoreSafeArea: false,
+      enableDrag: false,
+       isScrollControlled: true,
+       WillPopScope(
+        onWillPop: () async {
+          return true;
+        },
+        child: Scaffold(
+          body: SafeArea(
+            top: true,
+            child: InAppWebView(
+              key: webViewKey,
+              initialUrlRequest: URLRequest(url: WebUri(linkUrl)),
+              initialSettings: InAppWebViewSettings(
+                disableContextMenu: true,
+                javaScriptEnabled: true,
+                resourceCustomSchemes: ['intent'],
+
+              ),
+              onLoadResourceWithCustomScheme: (controller, url) async {
+                await controller.stopLoading();
+                return null;
+              },
+              onWebViewCreated: (controller) {
+                // register a JavaScript handler with name "myHandlerName"
+
+              },
+            ),
+          ),
+        ),
+      ),
+
   );
 }

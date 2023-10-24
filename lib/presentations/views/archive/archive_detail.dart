@@ -173,13 +173,14 @@ class ArchiveDetail extends StatelessWidget {
                 ],
               ),
             ),
+
             Padding(
               padding: EdgeInsets.only(left: 20.0.sp, right: 20.0.sp, top: 0.0.sp, bottom: 15.0.sp),
               child: Container(
                 width: double.infinity,
                 height: 220.sp,
                 color: Colors.grey,
-                child: NaverMap(
+                child: controller.selectedItem.value.isTwoMonthAgo != null && !controller.selectedItem.value.isTwoMonthAgo! ? NaverMap(
                   nightModeEnable: true,
                   forceGesture: true,
                   tiltGestureEnable: false,
@@ -204,7 +205,33 @@ class ArchiveDetail extends StatelessWidget {
                       // outlineColor: Colors.white,
                     )
                   },
-                ),
+                ) :
+
+                Container(
+                  decoration: BoxDecoration(
+                    color: Colors.black.withOpacity(.8),
+                  ),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      iconNoneMap,
+                      Padding(
+                        padding: EdgeInsets.only(top:14.0.sp),
+                        child: StyledText(
+                          '2개월이 지난 운동 기록은\n지도 데이터를 제공하지 않습니다.',
+                          textAlign: TextAlign.center,
+                          fontSize: 14,
+                          fontWeight: 500,
+                          lineHeight: 20,
+                          letterSpacing: -.1,
+                          color: Colors.white.withOpacity(.6),
+                        ),
+                      ),
+                    ],
+                  ),
+
+                )
               ),
             ),
             Padding(

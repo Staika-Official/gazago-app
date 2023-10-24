@@ -24,7 +24,7 @@ class VerificationCertCode extends StatelessWidget {
             children: [
               const StyledText(
                 '문자로 전달된',
-                fontSize: 24,
+                fontSize: 22,
                 fontWeight: 700,
                 lineHeight: 32,
                 fontFamily: 'Montserrat',
@@ -33,15 +33,15 @@ class VerificationCertCode extends StatelessWidget {
                 children: [
                   StyledText(
                     '인증 코드 6자리',
-                    fontSize: 24,
+                    fontSize: 22,
                     fontWeight: 700,
                     lineHeight: 32,
                     fontFamily: 'Montserrat',
                     color: skyBlueColor,
                   ),
                   const StyledText(
-                    ' 입니다.',
-                    fontSize: 24,
+                    '를 입력해주세요.',
+                    fontSize: 22,
                     fontWeight: 700,
                     lineHeight: 32,
                     fontFamily: 'Montserrat',
@@ -102,17 +102,19 @@ class VerificationCertCode extends StatelessWidget {
                                   keyboardType: TextInputType.number,
                                 ),
                               ),
-                              SizedBox(
-                                width: 45,
-                                child: StyledText(
-                                  controller.countdownString.value,
-                                  color: deepGrayColor,
-                                  fontWeight: 500,
-                                  fontSize: 14,
-                                  letterSpacing: .05,
+
+                                SizedBox(
+                                  width: 45,
+                                  child: StyledText(
+                                    controller.countdownString.value,
+                                    color: deepGrayColor,
+                                    fontWeight: 500,
+                                    fontSize: 14,
+                                    letterSpacing: .05,
+                                  ),
                                 ),
-                              ),
-                              Padding(
+
+                                Padding(
                                 padding: const EdgeInsets.all(10),
                                 child: Obx(() {
                                   bool finished = controller.countdownTime.value.inSeconds == 0;
@@ -120,25 +122,25 @@ class VerificationCertCode extends StatelessWidget {
                                     height: 35,
                                     width: 85,
                                     child: MaterialButton(
-                                      color: finished ? popupBgColor : Colors.transparent,
+                                      color: finished && !controller.isNotNext.value ? popupBgColor : Colors.transparent,
                                       elevation: 0,
                                       highlightElevation: 0,
                                       shape: RoundedRectangleBorder(
                                         side: BorderSide(
                                           color: popupBgColor,
-                                          width: finished ? 0 : 2,
+                                          width: finished && !controller.isNotNext.value ? 0 : 2,
                                         ),
                                         borderRadius: BorderRadius.circular(6),
                                       ),
                                       onPressed: () {
-                                        if (finished) {
+                                        if (finished && !controller.isNotNext.value) {
                                           // showConfirmationSnackbar();
                                           controller.resendIdentityCode();
                                         }
                                       },
                                       child: StyledText(
                                         '재전송',
-                                        color: finished ? Colors.white : deepGrayColor,
+                                        color: finished && !controller.isNotNext.value ? Colors.white : deepGrayColor,
                                         fontSize: 14,
                                         fontWeight: 500,
                                       ),
@@ -158,6 +160,8 @@ class VerificationCertCode extends StatelessWidget {
                             fontSize: 14,
                             fontWeight: 500,
                             color: speedRedColor,
+                            lineHeight: 20,
+                            letterSpacing: -.01,
                           ),
                         );
                       }),
@@ -169,7 +173,7 @@ class VerificationCertCode extends StatelessWidget {
                 return Container(
                   height: 55.sp,
                   decoration: BoxDecoration(
-                    color: controller.isFormValid.isTrue ? skyBlueColor : popupBgColor,
+                    color: controller.isFormValid.isTrue && !controller.isNotNext.value  ? skyBlueColor : popupBgColor,
                     border: Border.all(width: 2.sp, color: Colors.black),
                     borderRadius: BorderRadius.circular(8.sp),
                     boxShadow: [
@@ -180,7 +184,7 @@ class VerificationCertCode extends StatelessWidget {
                     ],
                   ),
                   child: InkWell(
-                    onTap: () => controller.isFormValid.isTrue ? controller.next() : null,
+                    onTap: () => controller.isFormValid.isTrue && !controller.isNotNext.value ? controller.next() : null,
                     child: Padding(
                       padding: EdgeInsets.symmetric(vertical: 12.0.sp),
                       child: Center(
@@ -189,7 +193,7 @@ class VerificationCertCode extends StatelessWidget {
                         fontSize: 18,
                         lineHeight: 18,
                         fontWeight: 500,
-                        color: controller.isFormValid.isTrue ? Colors.black : Colors.white,
+                        color: controller.isFormValid.isTrue && !controller.isNotNext.value  ? Colors.black : deepGrayColor,
                       )),
                     ),
                   ),

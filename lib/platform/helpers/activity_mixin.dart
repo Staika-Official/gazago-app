@@ -13,6 +13,7 @@ import 'package:gaza_go/constants/routes.dart';
 import 'package:gaza_go/platform/controllers/activity_controller.dart';
 import 'package:gaza_go/platform/controllers/archive_controller.dart';
 import 'package:gaza_go/platform/controllers/global_controller.dart';
+import 'package:gaza_go/platform/controllers/inspection_notice_controller.dart';
 import 'package:gaza_go/platform/firebase/cloud_messaging.dart';
 import 'package:gaza_go/platform/helpers/activity_helper.dart';
 import 'package:gaza_go/platform/helpers/alert_helper.dart';
@@ -37,7 +38,7 @@ import 'package:uuid/uuid.dart';
 
 mixin ActivityMixin {
   GlobalController globalController = Get.find();
-
+  InspectionNoticeController inspectionNoticeController = Get.isRegistered<InspectionNoticeController>() ? Get.find<InspectionNoticeController>() : Get.put(InspectionNoticeController());
   final Rx<CurrentUserStateModel> userState = Rx(CurrentUserStateModel());
   final RxInt loadingTime = RxInt(1);
   final Rx<Position> currentLocation = Rx(Position(speed: 0, altitude: 0, accuracy: 0, heading: 0, latitude: 0, longitude: 0, speedAccuracy: 0, timestamp: DateTime.now()));
@@ -373,6 +374,7 @@ mixin ActivityMixin {
 
   void startExercise(ExerciseType exerciseType, ChallengeCourseModel? course) async {
     // String deviceId = HiveStore.loadString(key: HiveKey.uuid.name)!;
+
     String sequence = const Uuid().v4();
 
     HiveStore.save(key: HiveKey.lastUpdatedStepCount.name, value: 0);
@@ -484,6 +486,7 @@ mixin ActivityMixin {
   }
 
   void updateExercise({bool? isPaused, String? source}) async {
+
     void errorHandler(ErrorResponseDataModel? errorData) {
       CurrentUserStateModel? savedState = HiveStore.loadCurrentUserState();
       if (savedState != null) {
@@ -911,6 +914,7 @@ mixin ActivityMixin {
     exerciseTime.value = userState.exercise!.time!;
     exerciseSteps.value = userState.exercise!.steps!;
     exerciseDistance.value = userState.exercise!.distance!;
+    HiveStore.save(key: HiveKey.savedStepCount.name, value: userState.exercise!.steps!);
 
     await Future.delayed(const Duration(milliseconds: 500));
   }

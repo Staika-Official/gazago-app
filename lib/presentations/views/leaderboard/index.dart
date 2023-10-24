@@ -22,7 +22,7 @@ class RankingHome extends StatelessWidget {
             TabBar(
               controller: controller.tabController,
               padding: EdgeInsets.symmetric(horizontal: 6.sp),
-              indicator: BoxDecoration(
+              indicator: const BoxDecoration(
                 border: Border(
                     bottom: BorderSide(
                   color: skyBlueColor,

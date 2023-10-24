@@ -2,11 +2,13 @@ import 'dart:async';
 import 'dart:io';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_inappwebview/flutter_inappwebview.dart';
 import 'package:gaza_go/constants/enums.dart';
 import 'package:gaza_go/constants/routes.dart';
 import 'package:gaza_go/flavors.dart';
 import 'package:gaza_go/platform/controllers/loader_controller.dart';
 import 'package:gaza_go/platform/controllers/loading_controller.dart';
+import 'package:gaza_go/platform/controllers/wallet_go_controller.dart';
 import 'package:gaza_go/platform/controllers/wallet_staika_controller.dart';
 import 'package:gaza_go/platform/helpers/alert_helper.dart';
 import 'package:gaza_go/platform/helpers/solana_mixin.dart';
@@ -29,11 +31,12 @@ import 'package:gaza_go/presentations/components/product_list_dialog.dart';
 import 'package:gaza_go/presentations/components/product_list_stik_dialog.dart';
 import 'package:get/get.dart';
 import 'package:in_app_purchase/in_app_purchase.dart';
+import 'package:path_provider/path_provider.dart';
 import 'package:throttling/throttling.dart';
 
 class WalletMasterController extends GetxController with SolanaMixin, GetTickerProviderStateMixin {
   LoaderController loaderController = Get.put(LoaderController());
-  // LoaderController loaderController = Get.find();
+
   late TabController tabController;
   final RxList<AssetTokenBalanceModel> spendingTokens = RxList.empty();
   final RxList<TokenInfoModel> spendingTokenInfoList = RxList.empty();
@@ -49,7 +52,7 @@ class WalletMasterController extends GetxController with SolanaMixin, GetTickerP
   final ScrollController transactionScrollController = ScrollController();
   final RxDouble transactionScrollPosition = RxDouble(0);
   GlobalKey webViewKey = GlobalKey();
-
+  late InAppWebViewController webViewController;
   StreamSubscription<List<PurchaseDetails>>? subscription;
   final RxBool storeUnavailable = RxBool(false);
   final RxBool showPendingPurchaseUI = RxBool(false);
@@ -58,6 +61,21 @@ class WalletMasterController extends GetxController with SolanaMixin, GetTickerP
   final RxBool isPurchaseSuccessful = RxBool(false);
   final RxList<ProductDetails> inAppProducts = RxList.empty();
   final Throttling thr = Throttling(duration: const Duration(milliseconds: 1000));
+  RxString clickedAssetButton = RxString('');
+
+  RxList<AssetTokenBalanceModel> get allTikUiList {
+    List<AssetTokenBalanceModel> balanceUiList = List.empty(growable: true);
+
+    for (AssetTokenBalanceModel token in spendingTokens) {
+      AssetTokenBalanceModel tokenUi;
+      if (['TIK', 'PTIK'].any((symbol) => symbol == token.symbol)) {
+        tokenUi = token;
+        balanceUiList.add(tokenUi);
+      }
+    }
+
+    return RxList(balanceUiList);
+  }
 
   RxList<AssetTokenBalanceModel> get spendingTokenUiList {
     List<AssetTokenBalanceModel> balanceUiList = List.empty(growable: true);
@@ -66,6 +84,7 @@ class WalletMasterController extends GetxController with SolanaMixin, GetTickerP
       AssetTokenBalanceModel tokenUi;
       if (['STIK', 'TOTAL_TIK'].any((symbol) => symbol == token.symbol)) {
         tokenUi = token;
+
         balanceUiList.add(tokenUi);
       }
     }
@@ -76,6 +95,17 @@ class WalletMasterController extends GetxController with SolanaMixin, GetTickerP
   Rx<AssetTokenBalanceModel> get tik {
     try {
       return Rx(spendingTokenUiList.singleWhere((token) => token.symbol == 'TOTAL_TIK', orElse: () {
+        showToastPopup('TAIKA를 찾을 수 없습니다.');
+        return AssetTokenBalanceModel();
+      }));
+    } catch (e) {
+      return Rx(AssetTokenBalanceModel());
+    }
+  }
+
+  Rx<AssetTokenBalanceModel> get exchangeAvailableTik {
+    try {
+      return Rx(spendingTokens.singleWhere((token) => token.symbol == 'TIK', orElse: () {
         showToastPopup('TAIKA를 찾을 수 없습니다.');
         return AssetTokenBalanceModel();
       }));
@@ -268,6 +298,12 @@ class WalletMasterController extends GetxController with SolanaMixin, GetTickerP
     );
   }
 
+  Future<void> clearCache() async {
+    if (webViewController != null) {
+      await webViewController.clearCache();
+    }
+  }
+
   void moveToVerification() async {
     Get.back();
     Get.toNamed(Routes.verificationTerms);
@@ -351,16 +387,11 @@ class WalletMasterController extends GetxController with SolanaMixin, GetTickerP
     }
   }
 
-  void showProductDialog() {
-    showProductList(this);
-  }
 
-  void showProductStikDialog() async {
-    loaderController.isLoading.value = true;
-    await getStikPriceInfo();
-    loaderController.isLoading.value = false;
-    showProductStikList(this);
-  }
+
+
+
+
 
   // void onLoaderShow() {
   //   Get.dialog(const Loader());
@@ -487,6 +518,8 @@ class WalletMasterController extends GetxController with SolanaMixin, GetTickerP
 
   void afterChargeTikAndReturnPage() {
     String? enteredRoute = HiveStore.loadString(key: HiveKey.enteredRoute.name);
+    print(enteredRoute);
+    print(enteredRoute?.contains('challenge_detail'));
     if (enteredRoute != null && enteredRoute.contains('challenge_detail')) {
       Get.back();
       Get.until((route) => Get.currentRoute == enteredRoute);

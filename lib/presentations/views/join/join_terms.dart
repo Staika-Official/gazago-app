@@ -98,7 +98,13 @@ class JoinTerms extends StatelessWidget {
         return true;
       },
       child: DefaultContainer(
-        isLeadingShow: false,
+        isLeadingShow: true,
+        onBackButtonTap: () {
+          if (!(controller.platform.value == 'gazago')) {
+            Get.find<WalletMasterController>().tabController.animateTo(0);
+            Get.back();
+          }
+        },
         backgroundColor: subBg01Color,
         child: Padding(
           padding: EdgeInsets.all(20.sp),
@@ -210,7 +216,7 @@ class JoinTerms extends StatelessWidget {
                     ],
                   ),
                   child: InkWell(
-                    onTap: () => controller.requestJoin(),
+                    onTap: () => controller.allRequiredAgreed.value ? controller.requestJoin() : null,
                     child: Padding(
                       padding: EdgeInsets.symmetric(vertical: 12.0.sp),
                       child: Center(
@@ -219,7 +225,7 @@ class JoinTerms extends StatelessWidget {
                         fontSize: 18,
                         lineHeight: 18,
                         fontWeight: 500,
-                        color: controller.allRequiredAgreed.value ? Colors.black : Colors.white,
+                        color: controller.allRequiredAgreed.value ? Colors.black : deepGrayColor,
                       )),
                     ),
                   ),

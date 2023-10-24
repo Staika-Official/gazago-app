@@ -1,18 +1,26 @@
 import 'dart:async';
 
 import 'package:adjust_sdk/adjust.dart';
+import 'package:firebase_remote_config/firebase_remote_config.dart';
+import 'package:flutter/material.dart';
 import 'package:gaza_go/constants/enums.dart';
 import 'package:gaza_go/constants/routes.dart';
+import 'package:gaza_go/platform/controllers/inspection_notice_controller.dart';
+import 'package:gaza_go/platform/firebase/remote_config.dart';
 import 'package:gaza_go/platform/helpers/alert_helper.dart';
+import 'package:gaza_go/platform/helpers/login_helper.dart';
 import 'package:gaza_go/platform/services/uaa_service.dart';
 import 'package:gaza_go/platform/stores/hive_store.dart';
+import 'package:gaza_go/presentations/components/alert_ui_list.dart';
 import 'package:get/get.dart';
 import 'package:internet_connection_checker/internet_connection_checker.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class GlobalController extends SuperController {
   // final Rx<ConnectivityResult> connectivityResult = Rx(ConnectivityResult.none);
   // StreamSubscription<ConnectivityResult>? connectivityStream;
   StreamSubscription<InternetConnectionStatus>? internetConnectionListener;
+
   // Create customized instance which can be registered via dependency injection
   final RxBool internetConnection = RxBool(false);
   final InternetConnectionChecker customInstance = InternetConnectionChecker.createInstance(
@@ -20,9 +28,14 @@ class GlobalController extends SuperController {
     checkInterval: const Duration(seconds: 1),
   );
   final RxBool isPopupOpen = RxBool(true);
+  final RxBool isNoticePopupOpen = RxBool(false);
   final RxBool showLoadingDialog = RxBool(false);
+
+
   @override
   void onInit() async {
+
+
     await checkMainPopupExpiredDate();
     await execute(customInstance);
     // await checkLoginStatus();
@@ -67,6 +80,8 @@ class GlobalController extends SuperController {
 
   @override
   void onResumed() async {
+    print('onResumed GlobalController');
+
     Adjust.onResume();
     if (internetConnectionListener != null) {
       internetConnectionListener?.resume();

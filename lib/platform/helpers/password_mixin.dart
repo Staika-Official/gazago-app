@@ -33,4 +33,14 @@ mixin PasswordMixin {
     }
     return FormStatus.sufficient;
   }
+
+  FormStatus verifyConfirmPassword(String confirmPassword, String password) {
+    if (confirmPassword.isEmpty) {
+      return FormStatus.empty;
+    }
+    if (!passwordRegExp.hasMatch(password) || confirmPassword != password) {
+      return FormStatus.insufficient;
+    }
+    return FormStatus.sufficient;
+  }
 }

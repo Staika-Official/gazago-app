@@ -8,9 +8,11 @@ import 'package:flutter_naver_map/flutter_naver_map.dart';
 import 'package:gaza_go/constants/config.dart';
 import 'package:gaza_go/constants/enums.dart';
 import 'package:gaza_go/constants/routes.dart';
+import 'package:gaza_go/platform/controllers/inspection_notice_controller.dart';
 import 'package:gaza_go/platform/controllers/loader_controller.dart';
 import 'package:gaza_go/platform/controllers/loading_controller.dart';
 import 'package:gaza_go/platform/controllers/wallet_master_controller.dart';
+import 'package:gaza_go/platform/firebase/remote_config.dart';
 import 'package:gaza_go/platform/helpers/activity_helper.dart';
 import 'package:gaza_go/platform/helpers/activity_mixin.dart';
 import 'package:gaza_go/platform/helpers/alert_helper.dart';
@@ -78,10 +80,9 @@ class ActivityController extends SuperController with ActivityMixin, ChallengeMi
   final RxBool isButtonDisabled = RxBool(false);
   final RxList<ChallengeModel> challengeList = RxList.empty();
 
-  Future<void> initializeController() async {
-    challengeGuideController = AnimationController(vsync: this);
-    await initController();
+  Future<void> initializeExercise() async {
 
+    challengeGuideController = AnimationController(vsync: this);
     checkConnectivityStatus();
     if ([ExerciseState.ongoing, ExerciseState.paused].any((state) => state == exerciseState.value) && !isFakeGps.value && !isTestingFakeGps()) {
       showPendingExerciseAlert(this);
@@ -89,7 +90,7 @@ class ActivityController extends SuperController with ActivityMixin, ChallengeMi
     disableActivityButton.value = false;
   }
 
-  Future<void> initController() async {
+  Future<void> initializeController() async {
     await getUserState().then((_) async {
       hasPermission.value = await checkAvailabilities();
       if (hasPermission.value) {
@@ -152,6 +153,7 @@ class ActivityController extends SuperController with ActivityMixin, ChallengeMi
   }
 
   Future<void> loadChallenges() async {
+
     await getChallenges(
       successCallback: (List<ChallengeModel> data) {
         challengeList.clear();
@@ -902,6 +904,7 @@ class ActivityController extends SuperController with ActivityMixin, ChallengeMi
   @override
   void onResumed() {
     print('onResumed activity');
+
     if (Get.currentRoute != Routes.login && Get.currentRoute != Routes.loading) {
       getUserState(showLoading: true);
     }

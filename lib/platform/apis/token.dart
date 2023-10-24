@@ -25,6 +25,13 @@ class TokenApi {
     ).get('/spending/tokens/swap?action=STIK_TO_TIK&markets=cmc');
   }
 
+  static Future<Response> getExchangeTikPriceInfo() async {
+    return await Api.client(
+      serviceUrl: ServiceUrl.goWalletService,
+      showLoading: false,
+    ).get('/spending/tokens/swap?action=TIK_TO_STIK&markets=cmc');
+  }
+
   static Future<Response> fetchChargeStikToTik(
     ChargeTikModel chargeData,
     String userId,

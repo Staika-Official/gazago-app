@@ -47,6 +47,7 @@ class VerificationPhoneController extends GetxController {
   void sendIdentityCode() async {
     verificationUserModel.mobileCompany = mobileCompany.value!.name.toUpperCase();
     verificationUserModel.mobileNumber = userMobileNumber.value;
+    verificationUserModel.clientId = 'GAZAGO';
 
     if (HiveStore.load(key: HiveKey.userId.name) == null) {
       showToastPopup('유저 정보가 없습니다');
