@@ -293,6 +293,8 @@ class ShopItems extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     ShopController shopController = Get.put(ShopController());
+    double width = MediaQuery.of(context).size.width;
+
     return Obx(() {
       return Column(
         children: [
@@ -308,7 +310,7 @@ class ShopItems extends StatelessWidget {
                 labelColor: Colors.white,
                 unselectedLabelColor: const Color(0xFF898B92),
                 labelPadding: EdgeInsets.only(left: 12.0.sp, right: 12.0.sp, top: 0.0.sp, bottom: 14.0.sp),
-                indicator: BoxDecoration(
+                indicator: const BoxDecoration(
                   border: Border(
                       bottom: BorderSide(
                     color: skyBlueColor,
@@ -322,7 +324,7 @@ class ShopItems extends StatelessWidget {
           ),
           Expanded(
             child: Container(
-              decoration: BoxDecoration(
+              decoration: const BoxDecoration(
                 color: popupBgColor,
               ),
               child: Padding(
@@ -379,7 +381,7 @@ class ShopItems extends StatelessWidget {
                             if (shopController.isSelectAllItems.value)
                               Padding(
                                 padding: EdgeInsets.only(right: 10.0.sp),
-                                child: StyledText(
+                                child: const StyledText(
                                   '전체',
                                   fontWeight: 600,
                                   fontSize: 14,
@@ -437,7 +439,7 @@ class ShopItems extends StatelessWidget {
                                     iconShopEmpty,
                                     Padding(
                                       padding: EdgeInsets.only(top: 20.sp),
-                                      child: StyledText(
+                                      child: const StyledText(
                                         '필터결과를 찾을 수 없습니다.',
                                         color: lightGrayColor,
                                         fontSize: 16,
@@ -544,7 +546,7 @@ class ShopItems extends StatelessWidget {
                                   childAspectRatio: (1 / 1.4),
                                   crossAxisSpacing: 14.sp,
                                   mainAxisSpacing: 14.sp,
-                                  crossAxisCount: 2,
+                                  crossAxisCount: width > 450 ? 4 : 2,
                                   // controller: controller.badgeScrollController,
                                   children: <Widget>[
                                     ...renderShopItemsList(context, shopController),
