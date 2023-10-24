@@ -15,9 +15,7 @@ import 'package:gaza_go/platform/controllers/loader_controller.dart';
 import 'package:gaza_go/platform/controllers/wallet_master_controller.dart';
 import 'package:gaza_go/platform/firebase/core.dart';
 import 'package:gaza_go/platform/firebase/crashlytics.dart';
-import 'package:gaza_go/platform/firebase/remote_config.dart';
 import 'package:gaza_go/platform/stores/hive_store.dart';
-import 'package:gaza_go/presentations/components/alert_ui_list.dart';
 import 'package:gaza_go/presentations/styles/colors.dart';
 import 'package:get/get.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
@@ -25,7 +23,6 @@ import 'package:hive_flutter/adapters.dart';
 import 'package:intl/date_symbol_data_local.dart';
 import 'package:kakao_flutter_sdk_share/kakao_flutter_sdk_share.dart';
 import 'package:permission_handler/permission_handler.dart';
-import 'package:url_launcher/url_launcher.dart';
 import 'package:uuid/uuid.dart';
 
 import 'constants/routes.dart';
@@ -114,20 +111,19 @@ class MyApp extends StatelessWidget {
       },
     );
 
-
     Get.put(GlobalController(), permanent: true);
     Get.put(InspectionNoticeController(), permanent: true);
     Get.put(LoaderController(), permanent: true);
     Get.put(WalletMasterController(), permanent: true);
     Get.put(ActivityController(), permanent: true);
 
-
-
     return ScreenUtilInit(
       designSize: const Size(390, 844),
       splitScreenMode: true,
       minTextAdapt: true,
-      ensureScreenSize: ,
+      fontSizeResolver: (fontSize, screenUtil) {
+        return screenUtil.screenWidth < 400 ? FontSizeResolvers.width(fontSize, screenUtil) : fontSize * screenUtil.scaleText;
+      },
       builder: (BuildContext context, Widget? child) {
         return GetMaterialApp(
           builder: (context, child) {
