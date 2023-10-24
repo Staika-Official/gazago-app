@@ -94,7 +94,7 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    MaterialColor gazagoColor = MaterialColor(
+    MaterialColor gazagoColor = const MaterialColor(
       0xFF0EE6F3,
       <int, Color>{
         50: skyBlueColor,
@@ -117,8 +117,9 @@ class MyApp extends StatelessWidget {
 
     return ScreenUtilInit(
       designSize: const Size(390, 844),
-      splitScreenMode: false,
+      splitScreenMode: true,
       minTextAdapt: true,
+      ensureScreenSize: ,
       builder: (BuildContext context, Widget? child) {
         return GetMaterialApp(
           builder: (context, child) {
@@ -126,8 +127,9 @@ class MyApp extends StatelessWidget {
             return ScrollConfiguration(
               behavior: const MaterialScrollBehavior().copyWith(overscroll: false),
               child: MediaQuery(
-                  data: MediaQuery.of(context).copyWith(textScaleFactor: 1), //텍스트가 시스템 설정에 영향받지 않음
-                  child: child!),
+                data: MediaQuery.of(context).copyWith(textScaleFactor: 1), //텍스트가 시스템 설정에 영향받지 않음
+                child: child!,
+              ),
             );
           },
           theme: ThemeData(
@@ -138,14 +140,14 @@ class MyApp extends StatelessWidget {
               indicatorColor: Colors.transparent,
               labelTextStyle: MaterialStateProperty.resolveWith((states) {
                 if (states.contains(MaterialState.selected)) {
-                  return TextStyle(
+                  return const TextStyle(
                     color: skyBlueColor,
                     fontSize: 10,
                     fontWeight: FontWeight.w600,
                   );
                 }
 
-                return TextStyle(
+                return const TextStyle(
                   color: lightGrayColor,
                   fontSize: 10,
                   wordSpacing: 0,

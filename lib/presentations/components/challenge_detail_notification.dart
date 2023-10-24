@@ -162,6 +162,7 @@ void showChallengeNotification(ChallengesDetailController controller, ChallengeN
                               setState(() {
                                 if (selectedIndex < notificationLength - 1) {
                                   selectedIndex++;
+                                  pageController.animateToPage(selectedIndex, duration: Duration(milliseconds: 300), curve: Curves.easeInOut);
                                 } else {
                                   Get.back();
                                 }
