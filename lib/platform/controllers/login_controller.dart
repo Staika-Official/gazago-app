@@ -40,7 +40,7 @@ class LoginController extends GetxController {
   Future<void> checkInspectionNotice() async {
     DatabaseReference inspectionNoticeRef = FirebaseDatabase.instance.ref('inspectionNotice');
     await inspectionNoticeRef.get().then((DataSnapshot snapshot) async {
-      if(!Get.isBottomSheetOpen!){
+      if(snapshot.value == true && !Get.isBottomSheetOpen!){
         String noticeUri = getConfig(dataType: ConfigType.string, configKey: 'notice_alert_address');
         showModalNoticeWebview(Get.context, linkUrl: noticeUri);
       }
