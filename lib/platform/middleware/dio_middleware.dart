@@ -187,8 +187,6 @@ class Api {
   }
 
   static _onErrorInterceptor(DioError e, ErrorInterceptorHandler handler) async {
-    // handler.resolve를 써야지만 errorCallback이 실행된다!
-
     _logger.e(
       '------------->'
       '\nERROR'

@@ -40,17 +40,19 @@ class ChallengesController extends GetxController with GetTickerProviderStateMix
   }
 
   Future<void> refreshController() async {
-    challengeList.value = RxList.empty();
     await getChallengesList();
   }
 
   Future<void> getChallengesList() async {
     dataGetLoading.value = true;
-    challengeList.clear();
     await ActivityService.getNewChallenges(successCallback: (List<NewChallengeModel> data) {
-      challengeList.addAll(data);
       List<int> challengeListIds = challengeList.map((element) => element.id).toSet().toList();
-      HiveStore.save(key: HiveKey.challengeListIds.name, value: challengeListIds);
+      List<int> newChallengeListIds = data.map((element) => element.id).toSet().toList();
+      if (challengeListIds.length != newChallengeListIds.length) {
+        challengeList.clear();
+        challengeList.addAll(data);
+        HiveStore.save(key: HiveKey.challengeListIds.name, value: newChallengeListIds);
+      }
       dataGetLoading.value = false;
     }, errorCallback: () {
       dataGetLoading.value = false;

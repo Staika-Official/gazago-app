@@ -60,7 +60,7 @@ class BoardService {
   static Future<void> getChallengeNotifications(int challengeId, {required Function successCallback, Function? errorCallback}) async {
     Response res = await BoardApi.getChallengeNotifications(challengeId);
     if (res.statusCode == 200) {
-      ChallengeNotificationGroupModel? challengeNotificationGroupModel = res.data != null ? ChallengeNotificationGroupModel.fromJson(res.data) : null;
+      ChallengeNotificationGroupModel? challengeNotificationGroupModel = res.data != null && res.data != '' ? ChallengeNotificationGroupModel.fromJson(res.data) : null;
 
       challengeNotificationGroupModel?.challengeNotifications.sort((a, b) => a.listOrder.compareTo(b.listOrder));
       successCallback(challengeNotificationGroupModel);
