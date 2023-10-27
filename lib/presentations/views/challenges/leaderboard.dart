@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:gaza_go/constants/config.dart';
+import 'package:gaza_go/constants/routes.dart';
+import 'package:gaza_go/flavors.dart';
 import 'package:gaza_go/platform/controllers/challenges_detail_controller.dart';
 import 'package:gaza_go/platform/helpers/base_helper.dart';
 import 'package:gaza_go/platform/models/challenge_ranker_model.dart';
@@ -440,38 +442,38 @@ class ChallengeLeaderboard extends StatelessWidget {
                     ],
                     Container(
                       padding: EdgeInsets.only(top: 30.sp, left: 20.sp, right: 20.sp, bottom: 12.sp),
-                      child: const Row(
+                      child: Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
                           StyledText(
-                            '실시간 랭킹',
+                            '실시간 TOP100',
                             color: Colors.white,
                             fontSize: 16,
                             lineHeight: 16,
                             fontWeight: 600,
                           ),
-                          // Padding(
-                          //   padding: EdgeInsets.only(left: 10.0.sp),
-                          //   child: InkWell(
-                          //     onTap: () => Get.toNamed(Routes.webView, arguments: {'linkUrl': '${F.leaderboardUrl}/challenge/${controller.challengeDetails.value.id}'}),
-                          //     child: Row(
-                          //       children: [
-                          //         StyledText(
-                          //           '더보기',
-                          //           color: lightGrayColor,
-                          //           fontSize: 14,
-                          //           lineHeight: 16,
-                          //           fontWeight: 600,
-                          //           letterSpacing: -.1,
-                          //         ),
-                          //         Padding(
-                          //           padding: EdgeInsets.only(left: 4.0.sp),
-                          //           child: iconArrowRightTriangle,
-                          //         )
-                          //       ],
-                          //     ),
-                          //   ),
-                          // ),
+                          Padding(
+                            padding: EdgeInsets.only(left: 10.0.sp),
+                            child: InkWell(
+                              onTap: () => Get.toNamed(Routes.webView, arguments: {'linkUrl': '${F.leaderboardUrl}/challenge/${controller.challengeDetails.value.id}'}),
+                              child: Row(
+                                children: [
+                                  StyledText(
+                                    '더보기',
+                                    color: lightGrayColor,
+                                    fontSize: 14,
+                                    lineHeight: 16,
+                                    fontWeight: 600,
+                                    letterSpacing: -.1,
+                                  ),
+                                  Padding(
+                                    padding: EdgeInsets.only(left: 4.0.sp),
+                                    child: iconArrowRightTriangle,
+                                  )
+                                ],
+                              ),
+                            ),
+                          ),
                         ],
                       ),
                     ),
