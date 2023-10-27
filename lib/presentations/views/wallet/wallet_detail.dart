@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg_provider/flutter_svg_provider.dart' as sp;
 import 'package:gaza_go/constants/config.dart';
+import 'package:gaza_go/constants/enums.dart';
 import 'package:gaza_go/platform/controllers/wallet_master_controller.dart';
 import 'package:gaza_go/platform/helpers/base_helper.dart';
 import 'package:gaza_go/presentations/components/default_container.dart';
@@ -84,7 +85,7 @@ class WalletDetail extends StatelessWidget {
                             fontWeight: 500,
                           ),
                           StyledText(
-                            '${transaction.type == 'IN' ? '+' : '-'} ${formatDecimalPlaces(double.parse(transaction.uiAmountString!), transaction.symbol == 'STIK' ? 4 : transaction.decimals!, isAutoDecimal: true)} ${transaction.symbol! == 'PTIK' ? 'TIK' : transaction.symbol!}',
+                            '${transaction.type == 'IN' ? '+' : '-'} ${formatDecimalPlaces(double.parse(transaction.uiAmountString!), transaction.symbol == 'STIK' ? 4 : transaction.decimals!, isAutoDecimal: true,roundType: RoundType.floor)} ${transaction.symbol! == 'PTIK' ? 'TIK' : transaction.symbol!}',
                             fontSize: 18,
                             lineHeight: 20,
                             letterSpacing: -0.5,
@@ -169,7 +170,7 @@ class WalletDetail extends StatelessWidget {
                     StyledText(
                       formatDecimalPlaces(double.parse(controller.assetDetail.value.balance.uiAmountString!),
                           controller.assetDetail.value.balance.symbol == 'STIK' ? 4 : controller.assetDetail.value.balance.decimals!,
-                          isAutoDecimal: true),
+                          isAutoDecimal: true,roundType: RoundType.floor),
                       fontSize: 28,
                       lineHeight: 28,
                       fontWeight: 600,

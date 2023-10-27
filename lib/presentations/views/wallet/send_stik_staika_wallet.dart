@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:gaza_go/constants/config.dart';
+import 'package:gaza_go/constants/enums.dart';
 import 'package:gaza_go/platform/controllers/wallet_go_controller.dart';
 import 'package:gaza_go/platform/controllers/wallet_master_controller.dart';
 import 'package:gaza_go/platform/helpers/base_helper.dart';
@@ -20,7 +21,7 @@ class SendStikStaikaWallet extends StatelessWidget {
     GoWalletController controller = Get.find();
     return GestureDetector(
       onTap: () {
-        controller.focusNode.unfocus();
+        controller.initTextController();
       },
       child: DefaultContainer(
         titleText: 'Staika 지갑으로 송금하기',
@@ -61,7 +62,7 @@ class SendStikStaikaWallet extends StatelessWidget {
                           Padding(
                             padding: EdgeInsets.only(top: 6.0.sp),
                             child: StyledText(
-                              '${formatDecimalPlaces(double.parse(walletMasterController.stik.value.uiAmountString!), 4, isAutoDecimal: true)} STIK',
+                              '${formatDecimalPlaces(double.parse(walletMasterController.stik.value.uiAmountString!), 4, isAutoDecimal: true,roundType: RoundType.floor )} STIK',
                               fontSize: 18,
                               lineHeight: 19,
                               fontWeight: 500,
@@ -144,7 +145,7 @@ class SendStikStaikaWallet extends StatelessWidget {
                       cursorColor: Colors.white,
                       focusNode: controller.focusNode,
                       onChanged: (value) => controller.setAmount(value),
-                      onSubmitted: (val) => controller.openSendStikGoWalletAlert(),
+                      onSubmitted: (val) => !controller.loaderController.isLoading.value ? controller.openSendStikGoWalletAlert() : null,
                     ),
                   ],
                 ),
@@ -184,7 +185,7 @@ class SendStikStaikaWallet extends StatelessWidget {
                         height: 60.sp,
                         alignment: Alignment.center,
                         child: InkWell(
-                          onTap: controller.isValid.value ? () => controller.openSendStikGoWalletAlert() : null,
+                          onTap: controller.isValid.value && !controller.loaderController.isLoading.value ? () => controller.openSendStikGoWalletAlert() : null,
                           child: Padding(
                             padding: EdgeInsets.symmetric(vertical: 8.0.sp),
                             child: Center(

@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg_provider/flutter_svg_provider.dart';
 import 'package:gaza_go/constants/config.dart';
+import 'package:gaza_go/constants/enums.dart';
 import 'package:gaza_go/platform/helpers/base_helper.dart';
 import 'package:gaza_go/platform/models/asset_token_balance_model.dart';
 import 'package:gaza_go/platform/models/wallet_assets_button_model.dart';
@@ -86,7 +87,7 @@ class GoAssetItemCoin extends StatelessWidget {
                                     mainAxisSize: MainAxisSize.min,
                                     children: [
                                       StyledText(
-                                        formatDecimalPlaces(double.parse(asset.uiAmountString!), asset.symbol == 'STIK' ? 4 : asset.decimals!, isAutoDecimal: true),
+                                        formatDecimalPlaces(double.parse(asset.uiAmountString!), asset.symbol == 'STIK' ? 4 : asset.decimals!, isAutoDecimal: true, roundType: RoundType.floor),
                                         fontSize: 18,
                                         lineHeight: 20,
                                         letterSpacing: 0.5,

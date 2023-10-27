@@ -92,7 +92,7 @@ List<Widget> renderMySpendingTokenList(WalletMasterController controller) {
                   Row(
                     children: [
                       StyledText(
-                          '${formatDecimalPlaces(double.parse(product.value.uiAmountString!), product.value.symbol! == 'TOTAL_TIK' ? 0 : 4, isAutoDecimal: true)}',
+                          '${formatDecimalPlaces(double.parse(product.value.uiAmountString!), product.value.symbol! == 'TOTAL_TIK' ? 0 : 4, isAutoDecimal: true, roundType: RoundType.floor)}',
                         fontSize: 14,
                         fontWeight: 700,
                         lineHeight: 20,

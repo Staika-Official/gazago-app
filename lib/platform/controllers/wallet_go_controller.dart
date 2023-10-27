@@ -34,6 +34,7 @@ class GoWalletController extends GetxController with SolanaMixin {
   Rx<ExchangeStikQuotesModel> stikQuotes = Rx(ExchangeStikQuotesModel(priceKRW: 0.0, priceUSD: 0.0, lastUpdated: ''));
 
   RxBool get isValid {
+    print(sendStikUiAmount.value);
     if (sendStikUiAmount.value != '') {
       return RxBool(double.parse(sendStikUiAmount.value) != 0 && sendStikUiAmount.value != '0.');
     }
@@ -44,7 +45,7 @@ class GoWalletController extends GetxController with SolanaMixin {
   @override
   void onInit() {
     walletMasterController.getStikPriceInfo();
-
+  initTextController();
     super.onInit();
   }
 
@@ -146,6 +147,7 @@ class GoWalletController extends GetxController with SolanaMixin {
 
   Future<void> getStaikaWalletInfo() async {
     loaderController.isLoading.value = true;
+    initTextController();
     await WalletService.getOnChainWallet(
       successCallback: (OnChainWalletModel data) async {
         loaderController.isLoading.value = false;
@@ -193,8 +195,11 @@ class GoWalletController extends GetxController with SolanaMixin {
   }
 
   void openSendStikGoWalletAlert() {
+    focusNode.unfocus();
     shortStikUiAmount.value = (double.parse(sendStikUiAmount.value) - double.parse(walletMasterController.stik.value.uiAmountString!)).toString();
-    if (double.parse(sendStikUiAmount.value) < double.parse(walletMasterController.stik.value.uiAmountString!)) {
+    print(double.parse(sendStikUiAmount.value));
+    print(double.parse(formatDecimalPlaces(double.parse(walletMasterController.stik.value.uiAmountString!), 4, roundType: RoundType.floor)));
+    if (double.parse(sendStikUiAmount.value) <= double.parse(formatDecimalPlaces(double.parse(walletMasterController.stik.value.uiAmountString!), 4, roundType: RoundType.floor))) {
       sendStikToStaikaWalletAlert(this);
     } else {
       sendStikShortBalanceAlert(this);
@@ -202,6 +207,7 @@ class GoWalletController extends GetxController with SolanaMixin {
   }
 
   void confirmSendStikStaikaWallet() async {
+    isFetching.value = true;
     loaderController.isLoading.value = true;
     await WalletService.fetchStikMoveToStaikaWallet(
       symbol: 'STIK',
@@ -210,16 +216,22 @@ class GoWalletController extends GetxController with SolanaMixin {
         loaderController.isLoading.value = false;
         successExchangeStikToStaikaWalletAlert(this);
         walletMasterController.getSpendingWalletBalances();
-        sendStikUiAmount.value = '0';
-        stikAmountTextController.text = '';
+        initTextController();
       },
       errorCallback: () {
         loaderController.isLoading.value = false;
         failureExchangeStikToGoWalletAlert();
+        initTextController();
       },
     );
     isFetching.value = false;
     // loaderController.isLoading.value = false;
+  }
+
+  void initTextController(){
+    focusNode.unfocus();
+    sendStikUiAmount.value = '0';
+    stikAmountTextController.text = '';
   }
 
 }

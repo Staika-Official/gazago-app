@@ -223,13 +223,17 @@ class WalletService {
     final SolanaClient solanaClient = F.solanaClient;
 
     String? email = HiveStore.loadString(key: HiveKey.email.name);
-
-    print('##############');
-    print('accountSecretkey: $accountSecretkey');
+    // print(email);
+    // print('##############');
+    // print('accountSecretkey: $accountSecretkey');
+    // print(walletPassword);
     String? decryptPrivateKey = decrypt(accountSecretkey, email!, walletPassword);
+    // print(decryptPrivateKey);
 
-
-    // if (decryptPrivateKey == null) {}
+    // if (decryptPrivateKey == null) {
+    //   if (errorCallback != null) errorCallback(true);
+    //   return;
+    // }
 
     final sender = await Ed25519HDKeyPair.fromPrivateKeyBytes(
       privateKey: base58.decode(decryptPrivateKey!).sublist(0, 32),

@@ -11,6 +11,7 @@ class LoaderController extends GetxController {
     isLoading.listen((val) {
       if (val == true) {
         Get.dialog(
+          barrierDismissible: false,
             const Dialog(
               shadowColor: Colors.transparent,
               backgroundColor: Colors.transparent,

@@ -3792,7 +3792,7 @@ void successChargeStikToTikAlert(GoWalletController controller) {
   );
 }
 
-void sendStikToGoWalletAlert(StaikaWalletController controller) {
+void sendStikToGoWalletAlert(StaikaWalletController controller, String password) {
   WalletMasterController walletMasterController = Get.find();
   showAlert(
     allowMultipleBottomSheet: true,
@@ -3874,8 +3874,7 @@ void sendStikToGoWalletAlert(StaikaWalletController controller) {
         child: GazagoButton(
           onTap: () async {
             Get.back();
-            String? password = await showConfirmPasswordDialog(walletMasterController);
-            if (password != null) controller.confirmSendStikToGoWallet(password);
+            controller.confirmSendStikToGoWallet(password);
           },
           buttonText: '네',
           buttonColor: skyBlueColor,
@@ -3966,7 +3965,10 @@ void sendStikToStaikaWalletAlert(GoWalletController controller) {
         child: GazagoButton(
           onTap: () async {
             Get.back();
-            controller.confirmSendStikStaikaWallet();
+            if(!controller.loaderController.isLoading.value){
+              controller.confirmSendStikStaikaWallet();
+            }
+
           },
           buttonText: '네',
           buttonColor: skyBlueColor,
@@ -4086,7 +4088,7 @@ void exchangeStikShortBalanceAlert(StaikaWalletController controller) {
                         letterSpacing: -.2,
                       ),
                       StyledText(
-                        '${formatDecimalPlaces(double.parse(controller.assetStik.value!.uiAmountString), 4, isAutoDecimal: true)} STIK',
+                        '${formatDecimalPlaces(double.parse(controller.assetStik.value!.uiAmountString), 4, isAutoDecimal: true, roundType: RoundType.floor)} STIK',
                         fontWeight: 500,
                         fontSize: 16,
                         letterSpacing: -.2,
@@ -4215,7 +4217,7 @@ void sendStikShortBalanceAlert(GoWalletController controller) {
                         letterSpacing: -.2,
                       ),
                       StyledText(
-                        '${formatDecimalPlaces(double.parse(walletMasterController.stik.value.uiAmountString!), 4, isAutoDecimal: true)} STIK',
+                        '${formatDecimalPlaces(double.parse(walletMasterController.stik.value.uiAmountString!), 4, isAutoDecimal: true,roundType: RoundType.floor)} STIK',
                         fontWeight: 500,
                         fontSize: 16,
                         letterSpacing: -.2,
@@ -7675,7 +7677,7 @@ void showModalNoticeWebview(context, {String? title, String linkUrl = ''}) {
        isScrollControlled: true,
        WillPopScope(
         onWillPop: () async {
-          return true;
+          return false;
         },
         child: Scaffold(
           body: SafeArea(

@@ -19,6 +19,7 @@ import 'package:gaza_go/platform/models/wallet_token_balance_model.dart';
 import 'package:gaza_go/platform/services/wallet_service.dart';
 import 'package:gaza_go/platform/stores/hive_store.dart';
 import 'package:gaza_go/presentations/components/alert_ui_list.dart';
+import 'package:gaza_go/presentations/views/wallet/confirm_wallet_password.dart';
 import 'package:get/get.dart';
 
 class StaikaWalletController extends GetxController with WalletMixin, SolanaMixin {
@@ -31,7 +32,7 @@ class StaikaWalletController extends GetxController with WalletMixin, SolanaMixi
   final RxString explorerUrl = RxString('');
   final Rxn<AnimationController> switchAnimation = Rxn();
   final RxString currentSumPriceUI = RxString('0');
-  final RxString sendStikUiAmount = RxString('0');
+   RxString sendStikUiAmount = RxString('0');
   final RxString shortStikUiAmount = RxString('0');
   final RxDouble fee = RxDouble(0.0);
   final Rx<Currency> currency = Rx(Currency.krw);
@@ -136,6 +137,7 @@ class StaikaWalletController extends GetxController with WalletMixin, SolanaMixi
 
   Future<void> getOnChainTokenBalance() async {
     loaderController.isLoading.value = true;
+    initTextController();
     await WalletService.getOnChainTokenBalance(successCallback: (List<WalletTokenBalanceModel> tokenData) {
       coinAssetList.clear();
       coinAssetList.addAll(tokenData);
@@ -149,7 +151,7 @@ class StaikaWalletController extends GetxController with WalletMixin, SolanaMixi
   }
 
   void stikSwapWallet() {
-    stikAmountTextController.text = '';
+    initTextController();
     Get.toNamed(Routes.sendStikGoWallet);
   }
 
@@ -157,10 +159,16 @@ class StaikaWalletController extends GetxController with WalletMixin, SolanaMixi
     sendStikUiAmount.value = changeAmount;
   }
 
-  void openSendStikGoWalletAlert() {
+  void openSendStikGoWalletAlert() async {
+    print(sendStikUiAmount.value);
     shortStikUiAmount.value = (double.parse(assetStik.value!.uiAmountString) - double.parse(sendStikUiAmount.value)).toString();
     if (double.parse(sendStikUiAmount.value) + 0.00009 <= double.parse(assetStik.value!.uiAmountString)) {
-      sendStikToGoWalletAlert(this);
+      // sendStikToGoWalletAlert(this);
+      // showConfirmPasswordDialog(walletMasterController);
+      focusNode.unfocus();
+      String password = await showConfirmPasswordDialog(walletMasterController);
+      sendStikToGoWalletAlert(this, password);
+
     } else {
       exchangeStikShortBalanceAlert(this);
     }
@@ -188,14 +196,28 @@ class StaikaWalletController extends GetxController with WalletMixin, SolanaMixi
           walletMasterController.getSpendingWalletBalances();
           sendStikUiAmount.value = '0';
           stikAmountTextController.text = '';
+          // Get.offNamedUntil(Routes.wallet);
+
         },
         errorCallback: () {
+
           loaderController.isLoading.value = false;
           failureExchangeStikToGoWalletAlert();
+
+          walletMasterController.getSpendingWalletBalances();
+          sendStikUiAmount.value = '0';
+          stikAmountTextController.text = '';
+
         },
       );
       isFetching.value = false;
       // loaderController.isLoading.value = false;
     }
+  }
+
+  void initTextController(){
+    focusNode.unfocus();
+    sendStikUiAmount.value = '0';
+    stikAmountTextController.text = '';
   }
 }

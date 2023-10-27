@@ -12,10 +12,13 @@ import 'package:gaza_go/presentations/styles/icons.dart';
 import 'package:gaza_go/presentations/styles/styled_text.dart';
 import 'package:get/get.dart';
 
-Future<String?> showConfirmPasswordDialog(WalletMasterController controller) {
+import '../../../platform/helpers/alert_helper.dart';
+
+Future<String> showConfirmPasswordDialog(WalletMasterController controller) {
   ConfirmWalletPasswordController controller = Get.put(ConfirmWalletPasswordController());
   controller.passwordFormStatus.value = FormStatus.empty;
-  Completer<String?> completer = Completer();
+  Completer<String> completer = Completer();
+
   Get.dialog(
     barrierDismissible: false,
     useSafeArea: false,
@@ -105,13 +108,9 @@ Future<String?> showConfirmPasswordDialog(WalletMasterController controller) {
                               style: const TextStyle(
                                 color: Colors.white,
                               ),
+                              focusNode: controller.passwordFocusNode,
                               onChanged: (password) => controller.updatePassword(password),
-                              onSubmitted: (String text) async {
-                                if (controller.passwordFormStatus.value == FormStatus.sufficient) {
-                                  String? password = controller.nextStep();
-                                  if (password != null) completer.complete(password);
-                                }
-                              },
+                              onSubmitted: (String text) async  => await controller.isValidPassword(completer),
                             ),
                           ),
                           Obx(
@@ -146,11 +145,8 @@ Future<String?> showConfirmPasswordDialog(WalletMasterController controller) {
               width: double.infinity,
               child: Obx(() {
                 return GazagoButton(
-                  onTap: () {
-                    if (controller.passwordFormStatus.value == FormStatus.sufficient) {
-                      String? password = controller.nextStep();
-                      if (password != null) completer.complete(password);
-                    }
+                  onTap: () async {
+                    await controller.isValidPassword(completer);
                   },
                   buttonText: '확인',
                   buttonColor: controller.passwordFormStatus.value == FormStatus.sufficient ? skyBlueColor : deepGrayColor,

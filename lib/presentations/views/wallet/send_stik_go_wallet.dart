@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:gaza_go/constants/config.dart';
+import 'package:gaza_go/constants/enums.dart';
 import 'package:gaza_go/platform/controllers/wallet_staika_controller.dart';
 import 'package:gaza_go/platform/helpers/base_helper.dart';
 import 'package:gaza_go/presentations/components/default_container.dart';
@@ -18,7 +19,7 @@ class SendStikGoWallet extends StatelessWidget {
     StaikaWalletController controller = Get.put(StaikaWalletController());
     return GestureDetector(
       onTap: () {
-        controller.focusNode.unfocus();
+        controller.initTextController();
       },
       child: DefaultContainer(
         resizeToAvoidBottomInset: true,
@@ -60,7 +61,7 @@ class SendStikGoWallet extends StatelessWidget {
                           Padding(
                             padding: EdgeInsets.only(top: 6.0.sp),
                             child: StyledText(
-                              '${formatDecimalPlaces(double.parse(controller.assetStik.value!.uiAmountString), 4, isAutoDecimal: true)} STIK',
+                              '${formatDecimalPlaces(double.parse(controller.assetStik.value!.uiAmountString), 4, isAutoDecimal: true,roundType: RoundType.floor)} STIK',
                               fontSize: 18,
                               lineHeight: 19,
                               fontWeight: 500,
@@ -143,7 +144,10 @@ class SendStikGoWallet extends StatelessWidget {
                       autofocus: false,
                       cursorColor: Colors.white,
                       focusNode: controller.focusNode,
-                      onChanged: (value) => controller.setAmount(value),
+                      onChanged: (value) {
+
+                        controller.setAmount(value);
+                      } ,
                       onSubmitted: (val) => controller.openSendStikGoWalletAlert(),
                     ),
                   ],

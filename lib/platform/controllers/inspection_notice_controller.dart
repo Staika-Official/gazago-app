@@ -31,13 +31,16 @@ class InspectionNoticeController extends GetxController {
 
   }
 
-  void getStreamData(snapshot) {
+  void getStreamData(snapshot) async {
 
     if(snapshot.value == true){
       forceLogout();
       if(Get.currentRoute == Routes.login && !Get.isBottomSheetOpen!){
         String noticeUri = getConfig(dataType: ConfigType.string, configKey: 'notice_alert_address');
-        showModalNoticeWebview(Get.context, linkUrl: noticeUri);
+        Uri url = Uri.parse(noticeUri);
+        if (await canLaunchUrl(url)) {
+          showModalNoticeWebview(Get.context, linkUrl: noticeUri);
+        }
       }
       return;
     } else {

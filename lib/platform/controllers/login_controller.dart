@@ -26,6 +26,7 @@ import 'package:get/get.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:package_info_plus/package_info_plus.dart';
 import 'package:sign_in_with_apple/sign_in_with_apple.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 
 class LoginController extends GetxController {
@@ -42,7 +43,11 @@ class LoginController extends GetxController {
     await inspectionNoticeRef.get().then((DataSnapshot snapshot) async {
       if(snapshot.value == true && !Get.isBottomSheetOpen!){
         String noticeUri = getConfig(dataType: ConfigType.string, configKey: 'notice_alert_address');
-        showModalNoticeWebview(Get.context, linkUrl: noticeUri);
+        Uri url = Uri.parse(noticeUri);
+        if (await canLaunchUrl(url)) {
+          showModalNoticeWebview(Get.context, linkUrl: noticeUri);
+        }
+
       }
 
     }).onError((error, stackTrace) {
