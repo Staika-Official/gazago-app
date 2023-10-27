@@ -437,7 +437,7 @@ mixin ActivityMixin {
     if (globalController.internetConnection.value) {
       Get.back();
       Get.toNamed(Routes.activityActive);
-      activityMixinThr.throttle(() => continueExercise(source: 'pendingExerciseDialog'));
+      continueExercise(source: 'pendingExerciseDialog');
     } else {
       showToastPopup('인터넷 상태를 확인해주세요.');
     }
@@ -460,7 +460,7 @@ mixin ActivityMixin {
     coordinates.addAll(await parseCoordinates(userState.value.exercise!.id));
 
     initStream();
-    activityMixinThr.throttle(() => updateExercise(source: source));
+    activityMixinThr.throttle(() => updateExercise(source: source, wasPaused: true));
     startPeriodicUpdate();
   }
 
@@ -485,8 +485,10 @@ mixin ActivityMixin {
     }
   }
 
-  void updateExercise({bool? isPaused, String? source}) async {
-
+  void updateExercise({bool? isPaused, String? source, bool wasPaused = false}) async {
+    if (wasPaused) {
+      print('wasPausedwasPausedwasPausedwasPausedwasPaused');
+    }
     void errorHandler(ErrorResponseDataModel? errorData) {
       CurrentUserStateModel? savedState = HiveStore.loadCurrentUserState();
       if (savedState != null) {
@@ -541,7 +543,7 @@ mixin ActivityMixin {
         // exerciseSteps.value = exerciseSteps.value + 500;
         // exerciseDistance.value = exerciseDistance.value + 500;
 
-        if (!isSameStepCount) {
+        if (!isSameStepCount || wasPaused) {
           HiveStore.save(key: HiveKey.lastUpdatedStepCount.name, value: userExerciseData.value.steps);
           initLuckAnimation();
 
