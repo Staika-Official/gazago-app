@@ -713,7 +713,11 @@ class ActivityActive extends StatelessWidget {
                         padding: EdgeInsets.only(
                             left: 35.sp,
                             right: 35.sp,
-                            bottom: (controller.userState.value.exercise!.crewBuffLevel != null && controller.userState.value.exercise!.crewBuffLevel != 'NONE') ? 40.sp : 100.sp),
+                            bottom: (controller.userState.value.exercise != null &&
+                                    controller.userState.value.exercise!.crewBuffLevel != null &&
+                                    controller.userState.value.exercise!.crewBuffLevel != 'NONE')
+                                ? 40.sp
+                                : 100.sp),
                         child: Obx(() {
                           return Row(
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,

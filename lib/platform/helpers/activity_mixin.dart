@@ -486,9 +486,6 @@ mixin ActivityMixin {
   }
 
   void updateExercise({bool? isPaused, String? source, bool wasPaused = false}) async {
-    if (wasPaused) {
-      print('wasPausedwasPausedwasPausedwasPausedwasPaused');
-    }
     void errorHandler(ErrorResponseDataModel? errorData) {
       CurrentUserStateModel? savedState = HiveStore.loadCurrentUserState();
       if (savedState != null) {
