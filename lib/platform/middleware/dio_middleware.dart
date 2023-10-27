@@ -306,8 +306,7 @@ class Api {
 
       retryAttempt++;
       if (retryAttempt > 5) {
-        showToastPopup('토큰이 만료되었습니다.\n다시 로그인해주세요.');
-        resetToLogin(e, handler);
+        showToastPopup('연결이 불안정합니다. 잠시 후 재시도 해주세요');
         _logger.e(
           '------------->'
           '\nRETRY ERROR'
@@ -371,7 +370,7 @@ class Api {
         '\nError ResponseMessage: ${error.response?.statusMessage}'
         '\nError ResponseData: ${error.response?.data}',
       );
-
+      showToastPopup('토큰이 만료되었습니다.\n다시 로그인해주세요.');
       resetToLogin(e, handler);
     });
   }
