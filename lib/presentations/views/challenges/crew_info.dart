@@ -13,6 +13,152 @@ import 'package:get/get.dart';
 class CrewInfo extends StatelessWidget {
   const CrewInfo({Key? key}) : super(key: key);
 
+  List<Widget> renderBuffStats(String buffLevel) {
+    int level = int.parse(buffLevel.substring(buffLevel.length - 1));
+    return [
+      SizedBox(
+        width: 60,
+        child: Column(
+          children: [
+            const StyledText(
+              '30',
+              fontSize: 24,
+              lineHeight: 26,
+              fontWeight: 500,
+              color: Color(0xFFB0A3FF),
+            ),
+            Padding(
+              padding: EdgeInsets.only(top: 4.0.sp),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  iconShopDurabilityLight,
+                  Padding(
+                    padding: EdgeInsets.only(left: 4.0.sp),
+                    child: const StyledText(
+                      '내구도',
+                      color: Color(0xFFB0A3FF),
+                      fontSize: 12,
+                      lineHeight: 12,
+                      letterSpacing: -.1,
+                      fontWeight: 600,
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ],
+        ),
+      ),
+      if (level > 1) ...[
+        SizedBox(
+          width: 60,
+          child: Column(
+            children: [
+              const StyledText(
+                '30',
+                fontSize: 24,
+                lineHeight: 26,
+                fontWeight: 500,
+                color: lightGreenColor,
+              ),
+              Padding(
+                padding: EdgeInsets.only(top: 4.0.sp),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Padding(
+                      padding: EdgeInsets.only(right: 4.0.sp),
+                      child: iconShopStamina,
+                    ),
+                    const StyledText(
+                      '체력',
+                      color: lightGreenColor,
+                      fontSize: 12,
+                      lineHeight: 12,
+                      fontWeight: 500,
+                      letterSpacing: -.1,
+                    ),
+                  ],
+                ),
+              ),
+            ],
+          ),
+        ),
+        SizedBox(
+          width: 60,
+          child: Column(
+            children: [
+              const StyledText(
+                '30',
+                fontSize: 24,
+                lineHeight: 26,
+                fontWeight: 500,
+                color: pinkColor,
+              ),
+              Padding(
+                padding: EdgeInsets.only(top: 4.0.sp),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Padding(
+                      padding: EdgeInsets.only(right: 4.0.sp),
+                      child: iconShopLuck,
+                    ),
+                    const StyledText(
+                      '행운',
+                      color: pinkColor,
+                      fontSize: 12,
+                      lineHeight: 12,
+                      fontWeight: 500,
+                      letterSpacing: -.1,
+                    ),
+                  ],
+                ),
+              ),
+            ],
+          ),
+        ),
+      ],
+      if (level > 2)
+        SizedBox(
+          width: 60,
+          child: Column(
+            children: [
+              const StyledText(
+                '30',
+                fontSize: 24,
+                lineHeight: 26,
+                color: skyBlueColor,
+                fontWeight: 500,
+              ),
+              Padding(
+                padding: EdgeInsets.only(top: 4.0.sp),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    iconShopReward,
+                    Padding(
+                      padding: EdgeInsets.only(left: 4.0.sp),
+                      child: const StyledText(
+                        'GO 보상',
+                        color: skyBlueColor,
+                        fontSize: 12,
+                        lineHeight: 14,
+                        fontWeight: 500,
+                        letterSpacing: -.1,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ],
+          ),
+        ),
+    ];
+  }
+
   List<Widget> renderBlocksCollected(int count) {
     List<Widget> blocks = List.empty(growable: true);
     for (int i = 0; i < count; i++) {
@@ -65,19 +211,23 @@ class CrewInfo extends StatelessWidget {
                     SizedBox(
                       width: 52.0.sp,
                       height: 52.0.sp,
-                      child: Center(
-                        child: CircleAvatar(
-                          radius: 22.sp,
-                          backgroundColor: deepGrayColor,
-                          foregroundImage: (member.imageUrl == null || member.imageUrl == '')
-                              ? Image.asset(
-                                  'assets/images/ic_launcher.png',
-                                  width: 30.sp,
-                                ).image
-                              : NetworkImage(
-                                  member.imageUrl!,
-                                ),
-                        ),
+                      child: Column(
+                        children: [
+                          Center(
+                            child: CircleAvatar(
+                              radius: 22.sp,
+                              backgroundColor: deepGrayColor,
+                              foregroundImage: (member.imageUrl == null || member.imageUrl == '')
+                                  ? Image.asset(
+                                      'assets/images/ic_launcher.png',
+                                      width: 30.sp,
+                                    ).image
+                                  : NetworkImage(
+                                      member.imageUrl!,
+                                    ),
+                            ),
+                          ),
+                        ],
                       ),
                     ),
                     Expanded(
@@ -122,45 +272,80 @@ class CrewInfo extends StatelessWidget {
                 mainAxisSize: MainAxisSize.min,
                 children: [
                   Padding(
-                    padding: const EdgeInsets.only(top: 30, bottom: 14),
-                    child: CircleAvatar(
-                      radius: 22.sp,
-                      backgroundColor: deepGrayColor,
-                      foregroundImage: (controller.selectedCrew.value.iconImageUrl == null || controller.selectedCrew.value.iconImageUrl == '')
-                          ? Image.asset(
-                              'assets/images/ic_launcher.png',
-                              width: 30.sp,
-                            ).image
-                          : controller.selectedCrew.value.iconImageUrl!.contains('.svg')
-                              ? sp.Svg(controller.selectedCrew.value.iconImageUrl!, source: sp.SvgSource.network) as ImageProvider
-                              : CachedNetworkImageProvider(
-                                  controller.selectedCrew.value.iconImageUrl!,
-                                  headers: imageNetworkHeader,
-                                ),
+                    padding: const EdgeInsets.only(top: 30, bottom: 19),
+                    child: Stack(
+                      children: [
+                        Center(
+                          child: CircleAvatar(
+                            radius: 33.sp,
+                            backgroundColor: deepGrayColor,
+                            foregroundImage: (controller.selectedCrew.value.iconImageUrl == null || controller.selectedCrew.value.iconImageUrl == '')
+                                ? Image.asset(
+                                    'assets/images/ic_launcher.png',
+                                    width: 30.sp,
+                                  ).image
+                                : controller.selectedCrew.value.iconImageUrl!.contains('.svg')
+                                    ? sp.Svg(controller.selectedCrew.value.iconImageUrl!, source: sp.SvgSource.network) as ImageProvider
+                                    : CachedNetworkImageProvider(
+                                        controller.selectedCrew.value.iconImageUrl!,
+                                        headers: imageNetworkHeader,
+                                      ),
+                          ),
+                        ),
+                        if (controller.selectedCrew.value.crewBuffLevel != 'NONE')
+                          Center(
+                            child: SizedBox(
+                              width: 66.sp,
+                              height: 66.sp,
+                              child: Image.asset(
+                                'assets/images/challenges/crewListBuff_${controller.selectedCrew.value.crewBuffLevel}.png',
+                              ),
+                            ),
+                          ),
+                      ],
                     ),
                   ),
                   StyledText(
-                    '크루 명',
-                    fontSize: 14,
+                    controller.selectedCrew.value.name!,
+                    fontSize: 26,
+                    lineHeight: 26,
                     fontWeight: 500,
-                    lineHeight: 14,
-                    color: Colors.white.withOpacity(0.6),
                   ),
-                  Padding(
-                    padding: const EdgeInsets.only(top: 12),
-                    child: StyledText(
-                      controller.selectedCrew.value.name!,
-                      fontSize: 26,
-                      lineHeight: 26,
-                      fontWeight: 500,
+                  if (controller.selectedCrew.value.crewBuffLevel != 'NONE') ...[
+                    Padding(
+                      padding: EdgeInsets.only(top: 28.sp, left: 50.sp, right: 50.sp),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceAround,
+                        children: [
+                          ...renderBuffStats(controller.selectedCrew.value.crewBuffLevel!),
+                        ],
+                      ),
                     ),
-                  ),
+                    Container(
+                      margin: EdgeInsets.only(top: 18.sp),
+                      padding: const EdgeInsets.symmetric(
+                        vertical: 8,
+                        horizontal: 14,
+                      ),
+                      decoration: BoxDecoration(
+                        color: Colors.black,
+                        borderRadius: BorderRadius.circular(20),
+                      ),
+                      child: StyledText(
+                        '${controller.selectedCrew.value.crewBuffLevel!.replaceAll('LEVEL_', 'Lv')} 크루 버프 적용중',
+                        fontSize: 14,
+                        fontWeight: 500,
+                        lineHeight: 14,
+                        color: lightGrayColor,
+                      ),
+                    )
+                  ],
                   Container(
                     decoration: BoxDecoration(
                       color: popupBgColor,
                       borderRadius: BorderRadius.circular(6),
                     ),
-                    margin: EdgeInsets.only(top: 37, left: 18.sp, right: 18.sp),
+                    margin: EdgeInsets.only(top: 25, left: 18.sp, right: 18.sp),
                     child: Row(
                       children: [
                         Expanded(

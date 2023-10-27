@@ -20,6 +20,7 @@ import 'package:gaza_go/platform/helpers/alert_helper.dart';
 import 'package:gaza_go/platform/helpers/base_helper.dart';
 import 'package:gaza_go/platform/helpers/challenge_mixin.dart';
 import 'package:gaza_go/platform/models/challenge_join_model.dart';
+import 'package:gaza_go/platform/models/challenge_notification_group_model.dart';
 import 'package:gaza_go/platform/models/challenge_ranker_model.dart';
 import 'package:gaza_go/platform/models/challenge_reward_model.dart';
 import 'package:gaza_go/platform/models/crew_create_form_model.dart';
@@ -30,10 +31,12 @@ import 'package:gaza_go/platform/models/error_response_data_model.dart';
 import 'package:gaza_go/platform/models/inventory_item_model.dart';
 import 'package:gaza_go/platform/models/new_challenge_detail_model.dart';
 import 'package:gaza_go/platform/services/activity_service.dart';
+import 'package:gaza_go/platform/services/board_service.dart';
 import 'package:gaza_go/platform/services/crew_service.dart';
 import 'package:gaza_go/platform/services/item_service.dart';
 import 'package:gaza_go/platform/stores/hive_store.dart';
 import 'package:gaza_go/presentations/components/alert_ui_list.dart';
+import 'package:gaza_go/presentations/components/challenge_detail_notification.dart';
 import 'package:gaza_go/presentations/components/product_list_dialog.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
@@ -157,6 +160,14 @@ class ChallengesDetailController extends GetxController with GetTickerProviderSt
       loadDataOnScroll();
     });
     await getFirebaseShareTemplate();
+    await BoardService.getChallengeNotifications(
+      challengeId.value,
+      successCallback: (ChallengeNotificationGroupModel? data) {
+        if (data != null) {
+          showChallengeNotification(this, data);
+        }
+      },
+    );
 
     super.onInit();
   }

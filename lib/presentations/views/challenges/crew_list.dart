@@ -36,8 +36,8 @@ class CrewList extends StatelessWidget {
                         children: [
                           (item.value.iconImageUrl != null)
                               ? SizedBox(
-                                  width: 52.0.sp,
-                                  height: 52.0.sp,
+                                  width: 44.0.sp,
+                                  height: 44.0.sp,
                                   child: Stack(
                                     clipBehavior: Clip.none,
                                     children: [
@@ -48,7 +48,6 @@ class CrewList extends StatelessWidget {
                                           foregroundImage: (item.value.iconImageUrl == null || item.value.iconImageUrl == '')
                                               ? Image.asset(
                                                   'assets/images/ic_launcher.png',
-                                                  width: 30.sp,
                                                 ).image
                                               : item.value.iconImageUrl!.contains('.svg')
                                                   ? sp.Svg(item.value.iconImageUrl!, source: sp.SvgSource.network) as ImageProvider
@@ -58,13 +57,16 @@ class CrewList extends StatelessWidget {
                                                     ),
                                         ),
                                       ),
-                                      item.value.crewRecruitStatus == 'CLOSE'
-                                          ? Positioned(
-                                              right: -2,
-                                              bottom: -2,
-                                              child: iconCircleLock,
-                                            )
-                                          : Container()
+                                      if (item.value.crewBuffLevel != 'NONE')
+                                        Center(
+                                          child: SizedBox(
+                                            width: 44.sp,
+                                            height: 44.sp,
+                                            child: Image.asset(
+                                              'assets/images/challenges/crewListBuff_${item.value.crewBuffLevel}.png',
+                                            ),
+                                          ),
+                                        ),
                                     ],
                                   ),
                                 )
@@ -79,13 +81,22 @@ class CrewList extends StatelessWidget {
                                 mainAxisAlignment: MainAxisAlignment.center,
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
-                                  StyledText(
-                                    item.value.name!,
-                                    fontWeight: 500,
-                                    fontSize: 16,
-                                    lineHeight: 20,
-                                    letterSpacing: 0,
-                                    overflowEllipsis: true,
+                                  Row(
+                                    children: [
+                                      if (item.value.crewRecruitStatus == 'CLOSE')
+                                        Padding(
+                                          padding: EdgeInsets.only(right: 5.sp),
+                                          child: iconCircleLock,
+                                        ),
+                                      StyledText(
+                                        item.value.name!,
+                                        fontWeight: 500,
+                                        fontSize: 16,
+                                        lineHeight: 20,
+                                        letterSpacing: 0,
+                                        overflowEllipsis: true,
+                                      ),
+                                    ],
                                   ),
                                   StyledText(
                                     '크루장 : ${item.value.crewFounderNickName!.split('@')[0]}',

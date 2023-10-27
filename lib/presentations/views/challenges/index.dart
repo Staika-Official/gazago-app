@@ -207,7 +207,7 @@ class ChallengesHome extends StatelessWidget {
                                 ),
                                 Padding(
                                   padding: EdgeInsets.symmetric(horizontal: 2.0.sp),
-                                  child: StyledText(
+                                  child: const StyledText(
                                     ' · ',
                                     color: lightGrayColor,
                                     fontWeight: 500,
@@ -281,7 +281,7 @@ class ChallengesHome extends StatelessWidget {
                                         child: Row(
                                           children: [
                                             item.challengeState == 'READY'
-                                                ? StyledText(
+                                                ? const StyledText(
                                                     '모집인원',
                                                     color: lightGrayColor,
                                                     fontWeight: 500,
@@ -451,7 +451,7 @@ class ChallengesHome extends StatelessWidget {
                               iconNoneChallenges,
                               Padding(
                                 padding: EdgeInsets.only(top: 22.0.sp),
-                                child: StyledText(
+                                child: const StyledText(
                                   '진행중인 챌린지가 없습니다\n빠른시일에 만나요!',
                                   color: deepGrayColor,
                                   fontSize: 16,

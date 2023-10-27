@@ -30,7 +30,11 @@ class InventoryItem extends StatelessWidget {
             childAspectRatio: (1 / 1.4),
             crossAxisSpacing: 10.sp,
             mainAxisSpacing: 10.sp,
-            crossAxisCount: (width < 350.sp) ? 2 : 3,
+            crossAxisCount: (width < 350)
+                ? 2
+                : (width > 450)
+                    ? 6
+                    : 3,
             cacheExtent: 1000,
             children: [
               ...controller.allItems[tab['itemType']]!.map(

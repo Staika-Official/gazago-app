@@ -98,7 +98,7 @@ dependencies:
   flutter_native_splash: ^2.2.13
 
   carousel_slider: ^4.1.1
-  flutter_screenutil: ^5.6.0
+  flutter_screenutil: ^5.9.0
   throttling: ^1.0.0
   # flutter_inappwebview 업데이트 하면 안됨
   # beta.24+1 요구사항이 xcode 14.3 이상인데 xcode 업데이트 하면 다른 패키지에서 에러남
@@ -127,6 +127,7 @@ dependencies:
   adjust_sdk: ^4.33.1
   kakao_flutter_sdk_share: ^1.4.1 # 카카오톡 공유
   cloud_firestore: ^4.9.2
+  expandable_page_view: ^1.0.17
   jiffy: ^6.2.1
 
 dev_dependencies:

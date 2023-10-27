@@ -85,7 +85,7 @@ class NewChallengeDetailModel {
     this.extTxtDetail,
     this.limitedPeriod,
     this.challengeLanding,
-    this.usedImageContent
+    this.usedImageContent,
   });
 
   factory NewChallengeDetailModel.fromJson(Map<String, dynamic> json) => _$NewChallengeDetailModelFromJson(json);

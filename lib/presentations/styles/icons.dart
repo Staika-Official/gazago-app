@@ -170,5 +170,5 @@ SvgPicture iconChallengeSuccess = SvgPicture.asset('assets/images/challenges/ico
 SvgPicture iconChallengeFailure = SvgPicture.asset('assets/images/challenges/ico_challenge_failure.svg', width: 76.sp, height: 76.sp);
 SvgPicture bgChallangeUserStateBox = SvgPicture.asset('assets/images/challenges/ico_challenge_failure.svg', width: 70.sp, height: 24.sp);
 SvgPicture iconNoneChallenges = SvgPicture.asset('assets/images/challenges/ico_none_challenge.svg', width: 82.sp, height: 37.sp);
-SvgPicture iconCircleLock = SvgPicture.asset('assets/images/challenges/ico_circle_lock.svg', width: 23.sp, height: 23.sp);
+SvgPicture iconCircleLock = SvgPicture.asset('assets/images/challenges/ico_circle_lock.svg', width: 18.sp, height: 18.sp);
 SvgPicture iconStackedBlocks = SvgPicture.asset('assets/images/challenges/ico_stacked_blocks.svg', width: 32.sp, height: 56.sp);
