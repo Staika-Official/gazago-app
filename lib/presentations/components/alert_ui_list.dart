@@ -4432,7 +4432,6 @@ void showForceUpdateApp() {
         child: GazagoButton(
           onTap: () {
             if (Platform.isAndroid || Platform.isIOS) {
-              print('asdasdasd');
               final url = Uri.parse(
                 Platform.isAndroid ? "https://gazago.page.link/update_android" : "https://gazago.page.link/update_ios",
               );
