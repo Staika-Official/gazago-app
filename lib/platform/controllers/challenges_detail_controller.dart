@@ -257,6 +257,7 @@ class ChallengesDetailController extends GetxController with GetTickerProviderSt
       }
     }).onError((error, stackTrace) {
       print(error);
+
     });
 
     crewChallengeLeaderboardRef.onValue.listen((DatabaseEvent event) async {
@@ -534,7 +535,6 @@ class ChallengesDetailController extends GetxController with GetTickerProviderSt
   }
 
   Future<void> getFirebaseShareTemplate() async {
-    print(challengeDetails.value.id);
     try {
       DocumentSnapshot docSnapshot = await FirebaseFirestore.instance.collection("challengeShareTemplate").doc(challengeDetails.value.id.toString()).get();
 
@@ -775,7 +775,6 @@ class ChallengesDetailController extends GetxController with GetTickerProviderSt
         }
         break;
       case 'INTERNAL_WEB_VIEW':
-        print(challengeDetails.value.challengeLanding!.linkUrl!);
         showModalWebview(Get.context, title: challengeDetails.value.challengeLanding!.title!, linkUrl: challengeDetails.value.challengeLanding!.linkUrl!);
         // Get.toNamed(Routes.inAppModalWebView, arguments: {'title': challengeDetails.value.challengeLanding!.title, 'linkUrl': challengeDetails.value.challengeLanding!.linkUrl!});
         break;

@@ -109,6 +109,7 @@ enum HiveKey {
   adjustFirstClickRankTabEvent,
   enteredRoute,
   challengeListIds,
+  onGetChainWalletBalanceTime,
 }
 
 enum ResponseStatus {

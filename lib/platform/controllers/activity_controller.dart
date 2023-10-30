@@ -624,6 +624,7 @@ class ActivityController extends SuperController with ActivityMixin, ChallengeMi
   void passThrowActivityLoading(ExerciseType exerciseType, [ChallengeCourseModel? challenge]) {
     loadingTimer?.cancel();
     loadingTimer = null;
+    print('asdasdasdasd');
     Get.back();
     exerciseStartThr.throttle(() => startExercise(exerciseType, challenge));
   }

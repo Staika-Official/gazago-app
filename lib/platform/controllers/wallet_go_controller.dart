@@ -218,10 +218,13 @@ class GoWalletController extends GetxController with SolanaMixin {
         walletMasterController.getSpendingWalletBalances();
         initTextController();
       },
-      errorCallback: () {
+      errorCallback: (ErrorResponseDataModel error) {
         loaderController.isLoading.value = false;
-        failureExchangeStikToGoWalletAlert();
-        initTextController();
+        if (error.status == 400) {
+          showToastPopup(error.errorMessage!.replaceAll('\\n', '\n'));
+        } else {
+          failureExchangeStikToGoWalletAlert();
+        }
       },
     );
     isFetching.value = false;

@@ -4426,11 +4426,13 @@ void showForceUpdateApp() {
   showAlert(
     title: '새 업데이트가 있습니다.',
     contentText: '앱을 사용하기 위해서 업데이트가 필요합니다.',
+    allowMultipleBottomSheet: true,
     actions: [
       Expanded(
         child: GazagoButton(
           onTap: () {
             if (Platform.isAndroid || Platform.isIOS) {
+              print('asdasdasd');
               final url = Uri.parse(
                 Platform.isAndroid ? "https://gazago.page.link/update_android" : "https://gazago.page.link/update_ios",
               );

@@ -19,9 +19,7 @@ Widget renderParticipateInChallenge() {
   String? challengeState = challengesDetailController.challengeDetails.value.challengeState;
   String? challengeActivationType = challengesDetailController.challengeDetails.value.challengeActivationType;
   // challengesDetailController.challengeDetails.value.userItem = NewChallengeUserItemModel(id: 0, equipped: false);
-  print(challengesDetailController.challengeDetails.value.challengeActivationType);
-  print(userState);
-  print(challengeState);
+
   Map widgets = {
     'suffix': Container(),
     'content': Container(),

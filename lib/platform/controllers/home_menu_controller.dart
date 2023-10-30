@@ -199,7 +199,7 @@ class HomeMenuController extends SuperController {
       if (Platform.isAndroid &&
           appAndroidUpdateInfo != null &&
           [UpdateAvailability.updateAvailable, UpdateAvailability.developerTriggeredUpdateInProgress].any((result) => result == appAndroidUpdateInfo?.updateAvailability)) {
-        await InAppUpdate.performImmediateUpdate().then((result) {
+        await InAppUpdate.performImmediateUpdate().then((result) async {
           if ([AppUpdateResult.userDeniedUpdate, AppUpdateResult.inAppUpdateFailed].any((resultStatus) => resultStatus == result)) {
             showForceUpdateApp();
           }

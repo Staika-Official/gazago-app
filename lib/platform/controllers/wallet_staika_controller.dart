@@ -94,6 +94,7 @@ class StaikaWalletController extends GetxController with WalletMixin, SolanaMixi
   }
 
   Future<void> getStaikaWalletInfo() async {
+    // HiveStore.save(key: HiveKey.onChainWalletRequestTime.name, value: false);
     await WalletService.getOnChainWallet(
       successCallback: (OnChainWalletModel data) async {
         HiveStore.save(key: HiveKey.solanaSecretKey.name, value: data.secretKey);
@@ -136,7 +137,8 @@ class StaikaWalletController extends GetxController with WalletMixin, SolanaMixi
   }
 
   Future<void> getOnChainTokenBalance() async {
-    loaderController.isLoading.value = true;
+    HiveStore.save(key: HiveKey.onGetChainWalletBalanceTime.name, value: DateTime.now().toString());
+    isFetching.value = true;
     initTextController();
     await WalletService.getOnChainTokenBalance(successCallback: (List<WalletTokenBalanceModel> tokenData) {
       coinAssetList.clear();
@@ -147,7 +149,7 @@ class StaikaWalletController extends GetxController with WalletMixin, SolanaMixi
         assetStik.value = null;
       }
     });
-    loaderController.isLoading.value = false;
+    isFetching.value = false;
   }
 
   void stikSwapWallet() {
@@ -160,11 +162,8 @@ class StaikaWalletController extends GetxController with WalletMixin, SolanaMixi
   }
 
   void openSendStikGoWalletAlert() async {
-    print(sendStikUiAmount.value);
     shortStikUiAmount.value = (double.parse(assetStik.value!.uiAmountString) - double.parse(sendStikUiAmount.value)).toString();
     if (double.parse(sendStikUiAmount.value) + 0.00009 <= double.parse(assetStik.value!.uiAmountString)) {
-      // sendStikToGoWalletAlert(this);
-      // showConfirmPasswordDialog(walletMasterController);
       focusNode.unfocus();
       String password = await showConfirmPasswordDialog(walletMasterController);
       sendStikToGoWalletAlert(this, password);

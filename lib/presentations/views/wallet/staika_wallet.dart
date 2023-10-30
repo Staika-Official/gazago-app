@@ -192,8 +192,13 @@ class StaikaWallet extends StatelessWidget {
                         ],
                       ),
                     ),
-                    if (controller.coinAssetList.isNotEmpty && controller.coinAssetList != null)
-                      Column(children: [...renderCoinAssetList(controller)],),
+                    controller.isFetching.value ?
+                    Padding(
+                      padding: EdgeInsets.only(top:100.sp),
+                      child: Center(child: SizedBox.square(dimension: 40, child: CircularProgressIndicator())),
+                    ) :
+                    controller.coinAssetList.isNotEmpty && controller.coinAssetList != null ?
+                      Column(children: [...renderCoinAssetList(controller)],) : Container(),
                     Expanded(
                       child: Align(
                         alignment: Alignment.bottomCenter,

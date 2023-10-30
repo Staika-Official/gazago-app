@@ -224,7 +224,7 @@ class LoginController extends GetxController {
           Get.offNamed(Routes.joinTerms, arguments: {'platform': 'gazago'});
         }
       },
-      errorCallback: (ErrorResponseDataModel? res) {
+      errorCallback: (ErrorResponseDataModel? res) async {
         forceLogout();
         if (res != null) {
           if (res.errorCode != null && res.errorCode == 'APP_UPDATE_REQUIRED') {

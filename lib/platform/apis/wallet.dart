@@ -114,6 +114,6 @@ class WalletApi {
   }
 
   static Future<Response> exchangeStikToGoWallet(String userId, String symbol, ExchangeTokenWithdrawalModel data) async {
-    return await Api.client(serviceUrl: ServiceUrl.onChainWalletService).post('/solana/tokens/$symbol/users/$userId/exchange?clientId=GAZAGO', data: data);
+    return await Api.client(serviceUrl: ServiceUrl.onChainWalletService, allowCustomErrorHandler: true,).post('/solana/tokens/$symbol/users/$userId/exchange?clientId=GAZAGO', data: data);
   }
 }

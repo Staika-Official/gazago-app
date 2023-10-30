@@ -44,7 +44,9 @@ class InspectionNoticeController extends GetxController {
       }
       return;
     } else {
+      print('12341234');
       if(Get.currentRoute == Routes.login && Get.isBottomSheetOpen!){
+        print('45454545');
         Get.back();
       }
     }
