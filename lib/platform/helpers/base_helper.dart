@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'dart:math';
 
+import 'package:firebase_remote_config/firebase_remote_config.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter_naver_map/flutter_naver_map.dart';
@@ -11,16 +12,18 @@ import 'package:gaza_go/platform/firebase/remote_config.dart';
 import 'package:gaza_go/platform/models/user_account_model.dart';
 import 'package:gaza_go/platform/services/uaa_service.dart';
 import 'package:gaza_go/platform/stores/hive_store.dart';
-import 'package:gaza_go/presentations/components/alert_ui_list.dart';
+
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
-import 'package:jiffy/jiffy.dart';
+
 import 'package:kakao_flutter_sdk_share/kakao_flutter_sdk_share.dart';
 import 'package:package_info_plus/package_info_plus.dart';
-import 'package:url_launcher/url_launcher.dart';
+
 
 Future<bool> isForceUpdateTarget() async {
+  await FirebaseRemoteConfig.instance.fetchAndActivate();
   String remoteAppVersion = getConfig(dataType: ConfigType.string, configKey: 'minimum_app_version');
+  print('remoteAppVersion${remoteAppVersion}');
   return await compareVersion(remoteAppVersion);
 }
 
@@ -32,14 +35,15 @@ Future<bool> isRecommendUpdateTarget() async {
 Future<bool> compareVersion(String versionString) async {
   String remoteAppVersion = versionString;
   PackageInfo packageInfo = await PackageInfo.fromPlatform();
-
+  print('packageInfo${packageInfo}');
   List<int> splitVersionString(String versionString) {
     return versionString.split('.').map((element) => int.parse(element)).toList();
   }
-
+  print('splitVersionString${splitVersionString}');
   List<int> targetAppVersion = splitVersionString(remoteAppVersion);
   List<int> deviceAppVersion = splitVersionString(packageInfo.version);
-
+  print('targetAppVersion${targetAppVersion}');
+  print('deviceAppVersion${deviceAppVersion}');
   bool isUnderTargetVersion = false;
 
   for (int i = 0; i < targetAppVersion.length; i++) {
@@ -50,6 +54,7 @@ Future<bool> compareVersion(String versionString) async {
       break;
     }
   }
+  print('isUnderTargetVersion${isUnderTargetVersion}');
   return isUnderTargetVersion;
 }
 

@@ -110,6 +110,7 @@ enum HiveKey {
   enteredRoute,
   challengeListIds,
   notifiedChallengeList,
+  onGetChainWalletBalanceTime,
 }
 
 enum ResponseStatus {

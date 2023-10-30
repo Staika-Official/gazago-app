@@ -31,6 +31,7 @@ import 'package:gaza_go/presentations/components/product_list_dialog.dart';
 import 'package:gaza_go/presentations/components/product_list_stik_dialog.dart';
 import 'package:get/get.dart';
 import 'package:in_app_purchase/in_app_purchase.dart';
+import 'package:jiffy/jiffy.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:throttling/throttling.dart';
 
@@ -186,7 +187,13 @@ class WalletMasterController extends GetxController with SolanaMixin, GetTickerP
       ..addListener(() {
         if (tabController.indexIsChanging && tabController.index == 1) {
           if (Get.isRegistered<StaikaWalletController>() && Get.isBottomSheetOpen == false) {
-            Get.find<StaikaWalletController>().getStaikaWalletInfo();
+            String? savedTime = HiveStore.load(key: HiveKey.onGetChainWalletBalanceTime.name);
+            final tenSecondsAgo = Jiffy.now().subtract(seconds: 10);
+            final targetDate = Jiffy.parse(savedTime!);
+            if(targetDate.isBefore(tenSecondsAgo)){
+              Get.find<StaikaWalletController>().getStaikaWalletInfo();
+            }
+
           }
         }
       });
@@ -327,10 +334,7 @@ class WalletMasterController extends GetxController with SolanaMixin, GetTickerP
 
   void _listenToPurchaseUpdated(List<PurchaseDetails> purchaseDetailsList) {
     purchaseDetailsList.forEach((PurchaseDetails purchaseDetails) async {
-      print('==========================>>');
-      print(purchaseDetails.status.name);
-      print(purchaseDetails.pendingCompletePurchase);
-      print('==========================>>');
+
 
       if (purchaseDetails.status == PurchaseStatus.error) {
         _handlePurchaseError(purchaseDetails);
@@ -518,8 +522,7 @@ class WalletMasterController extends GetxController with SolanaMixin, GetTickerP
 
   void afterChargeTikAndReturnPage() {
     String? enteredRoute = HiveStore.loadString(key: HiveKey.enteredRoute.name);
-    print(enteredRoute);
-    print(enteredRoute?.contains('challenge_detail'));
+
     if (enteredRoute != null && enteredRoute.contains('challenge_detail')) {
       Get.back();
       Get.until((route) => Get.currentRoute == enteredRoute);

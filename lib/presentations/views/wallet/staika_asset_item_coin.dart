@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg_provider/flutter_svg_provider.dart';
 import 'package:gaza_go/constants/config.dart';
+import 'package:gaza_go/constants/enums.dart';
 import 'package:gaza_go/platform/controllers/wallet_staika_controller.dart';
 import 'package:gaza_go/platform/helpers/base_helper.dart';
 import 'package:gaza_go/platform/models/wallet_token_balance_model.dart';
@@ -87,7 +88,7 @@ class StaikaAssetItemCoin extends StatelessWidget {
                                       mainAxisSize: MainAxisSize.min,
                                       children: [
                                         StyledText(
-                                          formatDecimalPlaces(double.parse(asset.uiAmountString), 4, isAutoDecimal: true),
+                                          formatDecimalPlaces(double.parse(asset.uiAmountString), 4, isAutoDecimal: true, roundType: RoundType.floor),
                                           fontSize: 18,
                                           lineHeight: 20,
                                           letterSpacing: 0.5,

@@ -96,7 +96,7 @@ class NoticePopupController extends GetxController {
     // 메인팝업 클릭 이벤트
     Adjust.trackEvent(AdjustEvent('hed7a4'));
 
-    print(item.linkUrl);
+
     if (Get.isBottomSheetOpen!) {
       Get.back();
     }

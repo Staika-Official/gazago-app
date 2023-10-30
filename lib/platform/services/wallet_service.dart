@@ -234,10 +234,12 @@ class WalletService {
     //   if (errorCallback != null) errorCallback(true);
     //   return;
     // }
-
+    // print(email);
+    // print(decryptPrivateKey);
     final sender = await Ed25519HDKeyPair.fromPrivateKeyBytes(
       privateKey: base58.decode(decryptPrivateKey!).sublist(0, 32),
     );
+    // print(sender);
     final receiver = toAddress;
 
     solana.Message message;
@@ -301,7 +303,8 @@ class WalletService {
     if (res.statusCode == 201) {
       successCallback(true);
     } else {
-      if (errorCallback != null) errorCallback();
+      // if (errorCallback != null) errorCallback();
+      if (errorCallback != null) errorCallback(res.data != null ? ErrorResponseDataModel.fromJson(res.data) : null);
     }
   }
 }
