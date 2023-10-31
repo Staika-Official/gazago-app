@@ -680,32 +680,33 @@ class ActivityActive extends StatelessWidget {
                       );
                     }),
                   ),
-                  Obx(() {
-                    if (controller.userState.value.exercise!.crewBuffLevel != null && controller.userState.value.exercise!.crewBuffLevel != 'NONE') {
-                      return Padding(
-                        padding: EdgeInsets.only(
-                          top: 10.sp,
-                          bottom: 20.sp,
-                        ),
-                        child: Container(
-                          padding: EdgeInsets.symmetric(vertical: 10.sp, horizontal: 14.sp),
-                          decoration: BoxDecoration(
-                            color: speedBlackColor,
-                            borderRadius: BorderRadius.circular(20),
+                  
+                    Obx(() {
+                      if (controller.userState.value.exercise!.crewBuffLevel != null && controller.userState.value.exercise!.crewBuffLevel != 'NONE') {
+                        return Padding(
+                          padding: EdgeInsets.only(
+                            top: 10.sp,
+                            bottom: 20.sp,
                           ),
-                          child: StyledText(
-                            '${controller.userState.value.exercise!.crewBuffLevel!.replaceAll('LEVEL_', 'Lv')} 크루 버프 적용중',
-                            fontSize: 16,
-                            fontWeight: 500,
-                            lineHeight: 16,
-                            color: lightGrayColor,
+                          child: Container(
+                            padding: EdgeInsets.symmetric(vertical: 10.sp, horizontal: 14.sp),
+                            decoration: BoxDecoration(
+                              color: speedBlackColor,
+                              borderRadius: BorderRadius.circular(20),
+                            ),
+                            child: StyledText(
+                              '${controller.userState.value.exercise!.crewBuffLevel!.replaceAll('LEVEL_', 'Lv')} 크루 버프 적용중',
+                              fontSize: 16,
+                              fontWeight: 500,
+                              lineHeight: 16,
+                              color: lightGrayColor,
+                            ),
                           ),
-                        ),
-                      );
-                    } else {
-                      return const SizedBox();
-                    }
-                  }),
+                        );
+                      } else {
+                        return const SizedBox();
+                      }
+                    }),
                   Expanded(
                     child: Align(
                       alignment: Alignment.bottomCenter,

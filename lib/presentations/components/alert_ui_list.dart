@@ -41,6 +41,7 @@ import 'package:gaza_go/platform/helpers/alert_helper.dart';
 import 'package:gaza_go/platform/helpers/base_helper.dart';
 import 'package:gaza_go/platform/helpers/inventory_helper.dart';
 import 'package:gaza_go/platform/models/challenge_course_model.dart';
+import 'package:gaza_go/platform/models/challenge_landing_model.dart';
 import 'package:gaza_go/platform/models/crew_icon_model.dart';
 import 'package:gaza_go/platform/models/crew_model.dart';
 import 'package:gaza_go/platform/models/exchange_stik_price_model.dart';
@@ -7488,7 +7489,7 @@ void joinChallengePopup(ChallengesDetailController controller) async {
   );
 }
 
-void showChallengeLandingPopup(ChallengesDetailController controller) {
+void showChallengeLandingPopup(ChallengesDetailController controller, ChallengeLandingModel landingInfo) {
   Get.dialog(
     barrierColor: Colors.transparent,
     WillPopScope(
@@ -7515,7 +7516,7 @@ void showChallengeLandingPopup(ChallengesDetailController controller) {
                     topRight: Radius.circular(12.5.sp),
                   ),
                   child: CachedNetworkImage(
-                    imageUrl: controller.challengeDetails.value.challengeLanding!.imageUrl!,
+                    imageUrl: landingInfo.imageUrl!,
                     fit: BoxFit.fitWidth,
                     placeholder: (context, url) => const Center(child: SizedBox.square(dimension: 40, child: CircularProgressIndicator())),
                     errorWidget: (context, url, error) => const Center(child: SizedBox.square(dimension: 40, child: CircularProgressIndicator())),
@@ -7552,7 +7553,7 @@ void showChallengeLandingPopup(ChallengesDetailController controller) {
                       child: InkWell(
                         onTap: () {
                           Get.back();
-                          controller.onClickChallengeLandingPage();
+                          controller.onClickChallengeLandingPage(landingInfo);
                         },
                         child: Container(
                           decoration: BoxDecoration(
@@ -7564,7 +7565,7 @@ void showChallengeLandingPopup(ChallengesDetailController controller) {
                           height: 60.sp,
                           child: Center(
                             child: StyledText(
-                              controller.challengeDetails.value.challengeLanding!.label!,
+                              landingInfo.label!,
                               fontSize: 18,
                               fontWeight: 500,
                             ),

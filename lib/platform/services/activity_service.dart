@@ -11,6 +11,7 @@ import 'package:gaza_go/platform/models/challenge_reward_model.dart';
 import 'package:gaza_go/platform/models/current_user_state_model.dart';
 import 'package:gaza_go/platform/models/equipped_item_model.dart';
 import 'package:gaza_go/platform/models/error_response_data_model.dart';
+import 'package:gaza_go/platform/models/join_challenge_response_model.dart';
 import 'package:gaza_go/platform/models/new_challenge_detail_model.dart';
 import 'package:gaza_go/platform/models/new_challenge_model.dart';
 import 'package:gaza_go/platform/models/user_exercise_model.dart';
@@ -279,7 +280,7 @@ class ActivityService {
   static Future<void> fetchJoinChallenge(int challengeId, ChallengeJoinModel params, {required Function successCallback, Function? errorCallback}) async {
     Response res = await ActivityApi.fetchJoinChallenge(userId!, challengeId, params);
     if (res.statusCode == 200) {
-      successCallback(true);
+      successCallback(JoinChallengeResponseModel.fromJson(res.data));
     } else if (res.statusCode != 500) {
       if (errorCallback != null) {
         if (res.data != null) {

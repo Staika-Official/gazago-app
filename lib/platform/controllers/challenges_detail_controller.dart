@@ -20,6 +20,7 @@ import 'package:gaza_go/platform/helpers/alert_helper.dart';
 import 'package:gaza_go/platform/helpers/base_helper.dart';
 import 'package:gaza_go/platform/helpers/challenge_mixin.dart';
 import 'package:gaza_go/platform/models/challenge_join_model.dart';
+import 'package:gaza_go/platform/models/challenge_landing_model.dart';
 import 'package:gaza_go/platform/models/challenge_notification_group_model.dart';
 import 'package:gaza_go/platform/models/challenge_ranker_model.dart';
 import 'package:gaza_go/platform/models/challenge_reward_model.dart';
@@ -29,6 +30,7 @@ import 'package:gaza_go/platform/models/crew_member_model.dart';
 import 'package:gaza_go/platform/models/crew_model.dart';
 import 'package:gaza_go/platform/models/error_response_data_model.dart';
 import 'package:gaza_go/platform/models/inventory_item_model.dart';
+import 'package:gaza_go/platform/models/join_challenge_response_model.dart';
 import 'package:gaza_go/platform/models/new_challenge_detail_model.dart';
 import 'package:gaza_go/platform/services/activity_service.dart';
 import 'package:gaza_go/platform/services/board_service.dart';
@@ -661,7 +663,7 @@ class ChallengesDetailController extends GetxController with GetTickerProviderSt
       }
       params.code = participationCode.value;
     }
-    await ActivityService.fetchJoinChallenge(challengeId.value, params, successCallback: (bool) {
+    await ActivityService.fetchJoinChallenge(challengeId.value, params, successCallback: (JoinChallengeResponseModel landingInfo) {
       walletMasterController.getSpendingWalletBalances();
       if (challengeDetails.value.challengeActivationType! != 'ITEM') {
         getChallengeDetail();
@@ -672,8 +674,8 @@ class ChallengesDetailController extends GetxController with GetTickerProviderSt
       showToastPopup('챌린지 참가가 완료되었습니다.');
 
       // 광고가 있다면 띄워주기
-      if (challengeDetails.value.challengeLanding != null) {
-        showChallengeLandingPopup(this);
+      if (landingInfo.challengeLanding != null) {
+        showChallengeLandingPopup(this, landingInfo.challengeLanding!);
       }
       if (challengeDetails.value.challengeActivationType! == 'CODE') {
         initCodeTextField();
@@ -731,13 +733,13 @@ class ChallengesDetailController extends GetxController with GetTickerProviderSt
     showProductList();
   }
 
-  void onClickChallengeLandingPage() async {
-    switch (challengeDetails.value.challengeLanding!.openType) {
+  void onClickChallengeLandingPage(ChallengeLandingModel landingInfo) async {
+    switch (landingInfo.openType) {
       case 'IN_APP':
         if (!Get.currentRoute.contains('home')) {
           Get.until((route) => Get.currentRoute == Routes.home);
         }
-        switch (challengeDetails.value.challengeLanding!.linkUrl) {
+        switch (landingInfo.linkUrl) {
           case 'CHALLENGES':
             Get.find<HomeMenuController>().selectMenu(0);
             // Get.toNamed(Routes.challengeDetail.replaceAll(':id', item.referenceId.toString()));
@@ -786,11 +788,10 @@ class ChallengesDetailController extends GetxController with GetTickerProviderSt
         }
         break;
       case 'INTERNAL_WEB_VIEW':
-        showModalWebview(Get.context, title: challengeDetails.value.challengeLanding!.title!, linkUrl: challengeDetails.value.challengeLanding!.linkUrl!);
-        // Get.toNamed(Routes.inAppModalWebView, arguments: {'title': challengeDetails.value.challengeLanding!.title, 'linkUrl': challengeDetails.value.challengeLanding!.linkUrl!});
+        showModalWebview(Get.context, title: landingInfo.title!, linkUrl: landingInfo.linkUrl!);
         break;
       case 'EXTERNAL_BROWSER':
-        Uri url = Uri.parse(challengeDetails.value.challengeLanding!.linkUrl!);
+        Uri url = Uri.parse(landingInfo.linkUrl!);
         if (await canLaunchUrl(url)) {
           await launchUrl(url, mode: LaunchMode.externalApplication);
         }

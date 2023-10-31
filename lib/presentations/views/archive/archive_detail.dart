@@ -180,7 +180,8 @@ class ArchiveDetail extends StatelessWidget {
                 width: double.infinity,
                 height: 220.sp,
                 color: Colors.grey,
-                child: controller.selectedItem.value.isTwoMonthAgo != null && !controller.selectedItem.value.isTwoMonthAgo! ? NaverMap(
+                child: controller.selectedItem.value.isTwoMonthAgo != null && !controller.selectedItem.value.isTwoMonthAgo! ?
+                NaverMap(
                   nightModeEnable: true,
                   forceGesture: true,
                   tiltGestureEnable: false,
