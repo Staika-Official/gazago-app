@@ -109,14 +109,13 @@ mixin ConsumerItemMixin {
   Future<void> fetchRepairShoes() async {
     String uuid = const Uuid().v4();
     List<RepairUseItemModel> filteredList = selectedConsumerItemList.where((item) => item.spendItemAmount != 0).toList();
-    print(filteredList);
     await ItemService.fetchRepairItemShoes(
       targetShoeId.value,
       RepairShoesModel(
         repairUuid: uuid,
         repairItems: filteredList,
       ),
-      successCallback: (repairModel) async {
+      successCallback: (repairModel) {
         print(repairModel);
         showToastPopup('+${formatDecimalPlaces(totalStat.toDouble(), 0)} 내구도 수리가 되었습니다.');
       },

@@ -5246,7 +5246,9 @@ void checkChallengeItemEquip(InventoryController controller, int itemId) {
 
 void consumerItemUsagePopup(controller, context) {
   Get.bottomSheet(
+    isDismissible: false,
     isScrollControlled: true,
+    enableDrag: false,
     Container(
       decoration: BoxDecoration(
         color: popupBgColor,
