@@ -29,6 +29,7 @@ class WebView extends StatelessWidget {
             key: webViewController.webViewKey,
             initialUrlRequest: URLRequest(url: WebUri(webViewController.linkUrl.value)),
             initialSettings: InAppWebViewSettings(
+              transparentBackground: true,
               disableContextMenu: true,
               javaScriptEnabled: true,
               resourceCustomSchemes: ['intent'],

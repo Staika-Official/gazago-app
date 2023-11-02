@@ -32,14 +32,14 @@ class BadgeService {
     }
   }
 
-  static Future<void> fetchUserIssuanceBadge(int exerciseId, {required Function successCallback, Function? errorCallback}) async {
-    Response res = await BadgeApi.fetchUserIssuanceBadge(userId!, exerciseId);
-    if (res.statusCode == 200) {
-      successCallback(InventoryBadgeModel.fromJson(res.data));
-    } else {
-      if (errorCallback != null) errorCallback();
-    }
-  }
+  // static Future<void> fetchUserIssuanceBadge(int exerciseId, {required Function successCallback, Function? errorCallback}) async {
+  //   Response res = await BadgeApi.fetchUserIssuanceBadge(userId!, exerciseId);
+  //   if (res.statusCode == 200) {
+  //     successCallback(InventoryBadgeModel.fromJson(res.data));
+  //   } else {
+  //     if (errorCallback != null) errorCallback();
+  //   }
+  // }
 
   static Future<void> fetchUserSyntheticBadge(composeData, {required Function successCallback, Function? errorCallback}) async {
     Response res = await BadgeApi.fetchUserSyntheticBadge(userId!, composeData);

@@ -304,7 +304,6 @@ mixin ActivityMixin {
     }
 
     int savedSteps = HiveStore.load(key: HiveKey.savedStepCount.name) ?? 0;
-
     stepSubscription ??= Pedometer.stepCountStream.listen((StepCount event) async {
       bool isExerciseStarted = HiveStore.load(key: HiveKey.savedStepInitialized.name) ?? false;
       if (!isExerciseStarted) {
@@ -325,7 +324,6 @@ mixin ActivityMixin {
         HiveStore.save(key: HiveKey.savedStepCount.name, value: actualSteps);
       }
     });
-
     stepSubscription!.onError((error) {
       showToastPopup('걸음 수를 측정할 수 없습니다.\n일시정지 후 다시 시작해주세요');
       HiveStore.save(key: HiveKey.savedStepInitialized.name, value: false);

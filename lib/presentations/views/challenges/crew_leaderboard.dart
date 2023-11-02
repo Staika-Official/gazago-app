@@ -94,9 +94,10 @@ class CrewRankingItem extends StatelessWidget {
                                 children: [
                                   Center(
                                     child: Padding(
-                                      padding: item.crewBuffLevel == 'NONE' || index + 1 > 3 ? EdgeInsets.zero : const EdgeInsets.only(top: 7.0),
+                                      padding: item.crewBuffLevel == 'NONE' || index + 1 > 3 ?EdgeInsets.only(top:7.0.sp) : EdgeInsets.only(top:7.0.sp),
                                       child: CircleAvatar(
                                         radius: 16.sp,
+                                        backgroundColor: Colors.black,
                                         foregroundImage: (item.iconImageUrl == null || item.iconImageUrl == '')
                                             ? Image.asset(
                                                 'assets/images/ic_launcher.png',

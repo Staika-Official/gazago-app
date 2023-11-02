@@ -16,78 +16,127 @@ class CrewInfo extends StatelessWidget {
   List<Widget> renderBuffStats(String buffLevel) {
     int level = int.parse(buffLevel.substring(buffLevel.length - 1));
     return [
-      SizedBox(
-        width: 60,
-        child: Column(
-          children: [
-            const StyledText(
-              '30',
-              fontSize: 24,
-              lineHeight: 26,
-              fontWeight: 500,
-              color: Color(0xFFB0A3FF),
-            ),
-            Padding(
-              padding: EdgeInsets.only(top: 4.0.sp),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: [
-                  iconShopDurabilityLight,
-                  Padding(
-                    padding: EdgeInsets.only(left: 4.0.sp),
-                    child: const StyledText(
-                      '내구도',
-                      color: Color(0xFFB0A3FF),
-                      fontSize: 12,
-                      lineHeight: 12,
-                      letterSpacing: -.1,
-                      fontWeight: 600,
-                    ),
-                  ),
-                ],
-              ),
-            ),
-          ],
-        ),
-      ),
-      if (level > 1) ...[
-        SizedBox(
-          width: 60,
-          child: Column(
-            children: [
-              const StyledText(
-                '30',
-                fontSize: 24,
-                lineHeight: 26,
-                fontWeight: 500,
-                color: lightGreenColor,
-              ),
-              Padding(
-                padding: EdgeInsets.only(top: 4.0.sp),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Padding(
-                      padding: EdgeInsets.only(right: 4.0.sp),
-                      child: iconShopStamina,
-                    ),
-                    const StyledText(
-                      '체력',
-                      color: lightGreenColor,
-                      fontSize: 12,
-                      lineHeight: 12,
-                      fontWeight: 500,
-                      letterSpacing: -.1,
-                    ),
-                  ],
+      if (level > 2) ...[
+        Padding(
+          padding: EdgeInsets.symmetric(horizontal: 5.0.sp),
+          child: SizedBox(
+            width: 70,
+            child: Column(
+              children: [
+                const StyledText(
+                  '30',
+                  fontSize: 24,
+                  lineHeight: 26,
+                  color: skyBlueColor,
+                  fontWeight: 500,
                 ),
-              ),
-            ],
+                Padding(
+                  padding: EdgeInsets.only(top: 4.0.sp),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      iconShopReward,
+                      Padding(
+                        padding: EdgeInsets.only(left: 4.0.sp),
+                        child: const StyledText(
+                          'GO 보상',
+                          color: skyBlueColor,
+                          fontSize: 12,
+                          lineHeight: 14,
+                          fontWeight: 500,
+                          letterSpacing: -.1,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ],
+            ),
           ),
         ),
-        SizedBox(
-          width: 60,
+      ],
+      if(level > 1) ...[
+        Padding(
+          padding: EdgeInsets.symmetric(horizontal: 5.0.sp),
+          child: SizedBox(
+            width: 70,
+            child: Column(
+              children: [
+                const StyledText(
+                  '30',
+                  fontSize: 24,
+                  lineHeight: 26,
+                  fontWeight: 500,
+                  color: lightPurpleColor,
+                ),
+                Padding(
+                  padding: EdgeInsets.only(top: 4.0.sp),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      iconShopDurabilityLight,
+                      Padding(
+                        padding: EdgeInsets.only(left: 4.0.sp),
+                        child: const StyledText(
+                          '내구도',
+                          color: lightPurpleColor,
+                          fontSize: 12,
+                          lineHeight: 12,
+                          letterSpacing: -.1,
+                          fontWeight: 600,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ),
+        Padding(
+          padding: EdgeInsets.symmetric(horizontal: 5.0.sp),
+          child: SizedBox(
+            width: 70,
+            child: Column(
+              children: [
+                const StyledText(
+                  '30',
+                  fontSize: 24,
+                  lineHeight: 26,
+                  fontWeight: 500,
+                  color: lightGreenColor,
+                ),
+                Padding(
+                  padding: EdgeInsets.only(top: 4.0.sp),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      iconShopStamina,
+                      Padding(
+                        padding: EdgeInsets.only(left: 4.0.sp),
+                        child: const StyledText(
+                          '체력',
+                          color: lightGreenColor,
+                          fontSize: 12,
+                          lineHeight: 12,
+                          letterSpacing: -.1,
+                          fontWeight: 600,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ),
+      ],
+      Padding(
+        padding: EdgeInsets.symmetric(horizontal: 5.0.sp),
+        child: SizedBox(
+          width: 70,
           child: Column(
             children: [
               const StyledText(
@@ -101,53 +150,18 @@ class CrewInfo extends StatelessWidget {
                 padding: EdgeInsets.only(top: 4.0.sp),
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.center,
+                  crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
-                    Padding(
-                      padding: EdgeInsets.only(right: 4.0.sp),
-                      child: iconShopLuck,
-                    ),
-                    const StyledText(
-                      '행운',
-                      color: pinkColor,
-                      fontSize: 12,
-                      lineHeight: 12,
-                      fontWeight: 500,
-                      letterSpacing: -.1,
-                    ),
-                  ],
-                ),
-              ),
-            ],
-          ),
-        ),
-      ],
-      if (level > 2)
-        SizedBox(
-          width: 60,
-          child: Column(
-            children: [
-              const StyledText(
-                '30',
-                fontSize: 24,
-                lineHeight: 26,
-                color: skyBlueColor,
-                fontWeight: 500,
-              ),
-              Padding(
-                padding: EdgeInsets.only(top: 4.0.sp),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    iconShopReward,
+                    iconShopLuck,
                     Padding(
                       padding: EdgeInsets.only(left: 4.0.sp),
                       child: const StyledText(
-                        'GO 보상',
-                        color: skyBlueColor,
+                        '행운',
+                        color: pinkColor,
                         fontSize: 12,
-                        lineHeight: 14,
-                        fontWeight: 500,
+                        lineHeight: 12,
                         letterSpacing: -.1,
+                        fontWeight: 600,
                       ),
                     ),
                   ],
@@ -156,6 +170,7 @@ class CrewInfo extends StatelessWidget {
             ],
           ),
         ),
+      ),
     ];
   }
 
@@ -313,9 +328,9 @@ class CrewInfo extends StatelessWidget {
                   ),
                   if (controller.selectedCrew.value.crewBuffLevel != 'NONE') ...[
                     Padding(
-                      padding: EdgeInsets.only(top: 28.sp, left: 50.sp, right: 50.sp),
+                      padding: EdgeInsets.only(top: 28.sp, left: 20.sp, right: 20.sp),
                       child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceAround,
+                        mainAxisAlignment: MainAxisAlignment.center,
                         children: [
                           ...renderBuffStats(controller.selectedCrew.value.crewBuffLevel!),
                         ],

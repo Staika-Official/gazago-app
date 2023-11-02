@@ -1,5 +1,6 @@
 import 'package:expandable_page_view/expandable_page_view.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_html/flutter_html.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:gaza_go/constants/enums.dart';
 import 'package:gaza_go/platform/controllers/challenges_detail_controller.dart';
@@ -105,12 +106,31 @@ void showChallengeNotification(ChallengesDetailController controller, ChallengeN
                             right: 25.sp,
                             bottom: 15.sp,
                           ),
-                          child: StyledText(
-                            challengeNotificationGroup.challengeNotifications[pagePosition].message,
-                            fontSize: 18,
-                            fontWeight: 500,
-                            lineHeight: 26,
-                            textAlign: TextAlign.center,
+                          child:
+
+                          Center(
+                            child: Html(
+                              shrinkWrap: true,
+                              data: challengeNotificationGroup.challengeNotifications[pagePosition].message,
+                              style: {
+                                "*": Style(
+                                  lineHeight: LineHeight.percent(130),
+                                  color: Colors.white,
+                                  fontWeight: FontWeight.w500,
+                                  fontSize: FontSize(18.sp),
+                                  textAlign: TextAlign.center,
+
+                                ),
+                                "p": Style(
+                                  margin: Margins.zero,
+                                  color: Colors.white,
+                                  fontWeight: FontWeight.w500,
+                                  fontSize: FontSize(18.sp),
+                                  lineHeight: LineHeight.percent(130),
+                                  textAlign: TextAlign.center,
+                                ),
+                              },
+                            ),
                           ),
                         ),
                       ),
@@ -149,6 +169,8 @@ void showChallengeNotification(ChallengesDetailController controller, ChallengeN
                           child: StyledText(
                             '건너뛰기',
                             color: Colors.white.withOpacity(0.4),
+                            fontSize: 14,
+                            fontWeight: 500,
                           ),
                         ),
                       ),
@@ -174,7 +196,11 @@ void showChallengeNotification(ChallengesDetailController controller, ChallengeN
                               tapTargetSize: MaterialTapTargetSize.shrinkWrap,
                               foregroundColor: Colors.transparent,
                             ),
-                            child: const StyledText('다음'),
+                            child: StyledText(
+                                selectedIndex < notificationLength - 1 ? '다음' : '시작하기',
+                              fontSize: 14,
+                              fontWeight: 500,
+                            ),
                           ),
                         ),
                       )
