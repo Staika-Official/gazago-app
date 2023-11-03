@@ -12,7 +12,7 @@ class WalletHome extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    WalletMasterController walletMasterController = Get.find<WalletMasterController>();
+    WalletMasterController walletMasterController = Get.isRegistered<WalletMasterController>() ? Get.find<WalletMasterController>() : Get.put(WalletMasterController());
 
     return DefaultContainer(
       backgroundColor: subBg01Color,

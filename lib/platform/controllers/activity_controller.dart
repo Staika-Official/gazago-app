@@ -153,10 +153,9 @@ class ActivityController extends SuperController with ActivityMixin, ChallengeMi
   }
 
   Future<void> loadChallenges() async {
-
+    challengeList.clear();
     await getChallenges(
       successCallback: (List<ChallengeModel> data) {
-        challengeList.clear();
         challengeList.addAll(data);
       },
     );

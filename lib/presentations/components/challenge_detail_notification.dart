@@ -91,10 +91,13 @@ void showChallengeNotification(ChallengesDetailController controller, ChallengeN
                   return Column(
                     mainAxisSize: MainAxisSize.min,
                     children: [
-                      Image.network(
-                        width: double.infinity,
-                        fit: BoxFit.cover,
-                        challengeNotificationGroup.challengeNotifications[pagePosition].imageUrl,
+                      SizedBox(
+                        height: 320.sp,
+                        child: Image.network(
+                          width: double.infinity,
+                          fit: BoxFit.contain,
+                          challengeNotificationGroup.challengeNotifications[pagePosition].imageUrl,
+                        ),
                       ),
                       Container(
                         width: double.infinity,

@@ -17,141 +17,142 @@ class ActivitySelect extends StatelessWidget {
   List<Widget> renderChallengeTypes(ActivityController controller) {
     return controller.challengeList.isNotEmpty
         ? controller.challengeList
-            .map(
-              (challenge) => Padding(
-                padding: EdgeInsets.only(top: 16.0.sp),
-                child: ConstrainedBox(
-                  constraints: BoxConstraints(
-                    maxWidth: double.infinity,
-                    minWidth: 280.sp,
-                    minHeight: 121.sp,
-                  ),
-                  child: Ink(
-                    width: 302.sp,
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(14),
-                      color: popupBgColor,
-                      boxShadow: const [
-                        BoxShadow(
-                          color: Color.fromRGBO(0, 0, 0, 0.25),
-                          offset: Offset(0, 0),
-                          blurRadius: 4,
-                          spreadRadius: 4,
-                        )
-                      ],
-                    ),
-                    child: Obx(() {
-                      return InkWell(
-                        onTap: controller.doableCourses.isNotEmpty &&
-                                controller.doableCourses.any((course) => course.challengeId == challenge.id) &&
-                                DateTime.now().isAfter(DateTime.parse(challenge.fromDate))
-                            ? () {
-                                Get.back();
-                                controller.moveToCourseSelection(
-                                  course: controller.doableCourses.firstWhere((course) => course.challengeId == challenge.id),
-                                  challenge: challenge,
-                                );
-                              }
-                            : () {
-                                controller.moveToChallengeDetail(challenge, false);
-                              },
-                        borderRadius: BorderRadius.circular(14),
-                        child: Padding(
-                          padding: EdgeInsets.symmetric(horizontal: 26.sp, vertical: 10.sp),
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              ClipRRect(
-                                borderRadius: BorderRadius.circular(72),
-                                child: challenge.thumbnailImageUrl.contains('.svg')
-                                    ? SvgPicture.network(
-                                        challenge.thumbnailImageUrl,
-                                        fit: BoxFit.fitHeight,
-                                        width: 72.sp,
-                                        height: 72.sp,
-                                        placeholderBuilder: (BuildContext context) => const Center(child: SizedBox.square(dimension: 30, child: CircularProgressIndicator())),
-                                        headers: imageNetworkHeader,
-                                      )
-                                    : CachedNetworkImage(
-                                        fit: BoxFit.fitHeight,
-                                        width: 72.sp,
-                                        height: 72.sp,
-                                        imageUrl: challenge.thumbnailImageUrl,
-                                        placeholder: (context, url) => const Center(child: SizedBox.square(dimension: 30, child: CircularProgressIndicator())),
-                                        httpHeaders: imageNetworkHeader,
-                                      ),
-                              ),
-                              Expanded(
-                                child: Padding(
-                                  padding: EdgeInsets.only(left: 22.sp),
-                                  child: Column(
-                                    crossAxisAlignment: CrossAxisAlignment.start,
-                                    mainAxisSize: MainAxisSize.min,
-                                    children: [
-                                      Container(
-                                        padding: EdgeInsets.symmetric(horizontal: 9.sp, vertical: 4.sp),
-                                        decoration: BoxDecoration(
-                                          borderRadius: BorderRadius.circular(9.sp),
-                                          color: const Color(0xff0E2627),
-                                        ),
-                                        child: StyledText(
-                                          challenge.challengeType == 'COURSE' ? '코스형 챌린지' : '챌린지',
-                                          color: skyBlueColor,
-                                          fontSize: 10,
-                                          fontWeight: 600,
-                                          lineHeight: 10,
-                                        ),
-                                      ),
-                                      Padding(
-                                        padding: const EdgeInsets.only(top: 9),
-                                        child: FittedBox(
-                                          fit: BoxFit.scaleDown,
-                                          child: StyledText(
-                                            challenge.simpleTitle,
-                                            color: Colors.white,
-                                            fontSize: 19,
-                                            fontWeight: 600,
-                                            lineHeight: 19,
-                                            letterSpacing: -0.3,
-                                          ),
-                                        ),
-                                      ),
-                                      Padding(
-                                        padding: const EdgeInsets.only(top: 10),
-                                        child: StyledText(
-                                          challenge.subTitle.replaceAll('\\n', '\n'),
-                                          color: Colors.white,
-                                          fontSize: 11,
-                                          fontWeight: 600,
-                                          lineHeight: 11,
-                                          letterSpacing: 0.3,
-                                        ),
-                                      ),
-                                      if (challenge.limitedPeriod)
-                                        Padding(
-                                          padding: const EdgeInsets.only(top: 13),
-                                          child: StyledText(
-                                            '${formatDateUntilDay(challenge.fromDate)} ~ ${formatDateUntilDay(challenge.toDate)}',
-                                            color: deepGrayColor,
-                                            fontSize: 10,
-                                            fontWeight: 500,
-                                            lineHeight: 10,
-                                          ),
-                                        ),
-                                    ],
-                                  ),
-                                ),
-                              )
-                            ],
-                          ),
-                        ),
-                      );
-                    }),
-                  ),
-                ),
+        .map(
+          (challenge) =>
+          Padding(
+            padding: EdgeInsets.only(top: 16.0.sp),
+            child: ConstrainedBox(
+              constraints: BoxConstraints(
+                maxWidth: double.infinity,
+                minWidth: 280.sp,
+                minHeight: 121.sp,
               ),
-            )
-            .toList()
+              child: Ink(
+                width: 302.sp,
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(14),
+                  color: popupBgColor,
+                  boxShadow: const [
+                    BoxShadow(
+                      color: Color.fromRGBO(0, 0, 0, 0.25),
+                      offset: Offset(0, 0),
+                      blurRadius: 4,
+                      spreadRadius: 4,
+                    )
+                  ],
+                ),
+                child: Obx(() {
+                  return InkWell(
+                    onTap: controller.doableCourses.isNotEmpty &&
+                        controller.doableCourses.any((course) => course.challengeId == challenge.id) &&
+                        DateTime.now().isAfter(DateTime.parse(challenge.fromDate))
+                        ? () {
+                      Get.back();
+                      controller.moveToCourseSelection(
+                        course: controller.doableCourses.firstWhere((course) => course.challengeId == challenge.id),
+                        challenge: challenge,
+                      );
+                    }
+                        : () {
+                      controller.moveToChallengeDetail(challenge, false);
+                    },
+                    borderRadius: BorderRadius.circular(14),
+                    child: Padding(
+                      padding: EdgeInsets.symmetric(horizontal: 26.sp, vertical: 10.sp),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          ClipRRect(
+                            borderRadius: BorderRadius.circular(72),
+                            child: challenge.thumbnailImageUrl.contains('.svg')
+                                ? SvgPicture.network(
+                              challenge.thumbnailImageUrl,
+                              fit: BoxFit.fitHeight,
+                              width: 72.sp,
+                              height: 72.sp,
+                              placeholderBuilder: (BuildContext context) => const Center(child: SizedBox.square(dimension: 30, child: CircularProgressIndicator())),
+                              headers: imageNetworkHeader,
+                            )
+                                : CachedNetworkImage(
+                              fit: BoxFit.fitHeight,
+                              width: 72.sp,
+                              height: 72.sp,
+                              imageUrl: challenge.thumbnailImageUrl,
+                              placeholder: (context, url) => const Center(child: SizedBox.square(dimension: 30, child: CircularProgressIndicator())),
+                              httpHeaders: imageNetworkHeader,
+                            ),
+                          ),
+                          Expanded(
+                            child: Padding(
+                              padding: EdgeInsets.only(left: 22.sp),
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                mainAxisSize: MainAxisSize.min,
+                                children: [
+                                  Container(
+                                    padding: EdgeInsets.symmetric(horizontal: 9.sp, vertical: 4.sp),
+                                    decoration: BoxDecoration(
+                                      borderRadius: BorderRadius.circular(9.sp),
+                                      color: const Color(0xff0E2627),
+                                    ),
+                                    child: StyledText(
+                                      challenge.challengeType == 'COURSE' ? '코스형 챌린지' : '챌린지',
+                                      color: skyBlueColor,
+                                      fontSize: 10,
+                                      fontWeight: 600,
+                                      lineHeight: 10,
+                                    ),
+                                  ),
+                                  Padding(
+                                    padding: const EdgeInsets.only(top: 9),
+                                    child: FittedBox(
+                                      fit: BoxFit.scaleDown,
+                                      child: StyledText(
+                                        challenge.simpleTitle,
+                                        color: Colors.white,
+                                        fontSize: 19,
+                                        fontWeight: 600,
+                                        lineHeight: 19,
+                                        letterSpacing: -0.3,
+                                      ),
+                                    ),
+                                  ),
+                                  Padding(
+                                    padding: const EdgeInsets.only(top: 10),
+                                    child: StyledText(
+                                      challenge.subTitle.replaceAll('\\n', '\n'),
+                                      color: Colors.white,
+                                      fontSize: 11,
+                                      fontWeight: 600,
+                                      lineHeight: 11,
+                                      letterSpacing: 0.3,
+                                    ),
+                                  ),
+                                  if (challenge.limitedPeriod)
+                                    Padding(
+                                      padding: const EdgeInsets.only(top: 13),
+                                      child: StyledText(
+                                        '${formatDateUntilDay(challenge.fromDate)} ~ ${formatDateUntilDay(challenge.toDate)}',
+                                        color: deepGrayColor,
+                                        fontSize: 10,
+                                        fontWeight: 500,
+                                        lineHeight: 10,
+                                      ),
+                                    ),
+                                ],
+                              ),
+                            ),
+                          )
+                        ],
+                      ),
+                    ),
+                  );
+                }),
+              ),
+            ),
+          ),
+    )
+        .toList()
         : [];
   }
 
@@ -355,23 +356,25 @@ class ActivitySelect extends StatelessWidget {
             //     ),
             //   ),
             // ),
-            Material(
-              color: Colors.transparent,
-              child: ConstrainedBox(
-                constraints: const BoxConstraints(
-                  minWidth: double.infinity,
-                  maxHeight: 300,
-                ),
-                child: SingleChildScrollView(
-                  physics: const ClampingScrollPhysics(),
-                  child: Column(
-                    children: [
-                      ...renderChallengeTypes(controller),
-                    ],
+            Obx(() {
+              return Material(
+                color: Colors.transparent,
+                child: ConstrainedBox(
+                  constraints: const BoxConstraints(
+                    minWidth: double.infinity,
+                    maxHeight: 300,
+                  ),
+                  child: SingleChildScrollView(
+                    physics: const ClampingScrollPhysics(),
+                    child: Column(
+                      children: [
+                        ...renderChallengeTypes(controller),
+                      ],
+                    ),
                   ),
                 ),
-              ),
-            ),
+              );
+            }),
             SizedBox(
               width: 302.sp,
               child: Column(

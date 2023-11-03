@@ -60,6 +60,7 @@ class WalletMasterController extends GetxController with SolanaMixin, GetTickerP
   final RxBool showVerifyingPurchaseText = RxBool(false);
   final RxBool showStoreErrorText = RxBool(false);
   final RxBool isPurchaseSuccessful = RxBool(false);
+  final RxBool isPurchasePending = RxBool(false);
   final RxList<ProductDetails> inAppProducts = RxList.empty();
   final Throttling thr = Throttling(duration: const Duration(milliseconds: 1000));
   RxString clickedAssetButton = RxString('');
@@ -335,6 +336,12 @@ class WalletMasterController extends GetxController with SolanaMixin, GetTickerP
   void _listenToPurchaseUpdated(List<PurchaseDetails> purchaseDetailsList) {
     purchaseDetailsList.forEach((PurchaseDetails purchaseDetails) async {
 
+      if(purchaseDetails.status == PurchaseStatus.pending){
+        isPurchasePending.value = true;
+        showVerifyingPurchaseText.value = true;
+      } else {
+        isPurchasePending.value = false;
+      }
 
       if (purchaseDetails.status == PurchaseStatus.error) {
         _handlePurchaseError(purchaseDetails);
@@ -403,9 +410,7 @@ class WalletMasterController extends GetxController with SolanaMixin, GetTickerP
 
   void purchaseInAppItem(ProductDetails product) async {
     showPendingPurchaseUI.value = true;
-    print('------------------------------------------asasaㄴ');
     showInAppPurchaseProgressAlert(this);
-    print('------------------------------------------asasa2ㄴ2222');
     try {
       await InAppPurchase.instance.buyConsumable(purchaseParam: PurchaseParam(productDetails: product));
     } catch (e) {

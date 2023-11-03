@@ -76,48 +76,48 @@ class ActivityActive extends StatelessWidget {
                       Expanded(
                         child: ClipRRect(
                             child: SizedBox(
-                          child: Stack(
-                            children: [
-                              Container(
-                                decoration: BoxDecoration(
-                                  color: gaugeGrayColor,
-                                  border: Border.all(
-                                    width: 2.sp,
-                                    color: Colors.black,
+                              child: Stack(
+                                children: [
+                                  Container(
+                                    decoration: BoxDecoration(
+                                      color: gaugeGrayColor,
+                                      border: Border.all(
+                                        width: 2.sp,
+                                        color: Colors.black,
+                                      ),
+                                      borderRadius: BorderRadius.all(
+                                        Radius.circular(42.sp),
+                                      ),
+                                    ),
                                   ),
-                                  borderRadius: BorderRadius.all(
-                                    Radius.circular(42.sp),
-                                  ),
-                                ),
-                              ),
-                              stat.currentStat > 1.0
-                                  ? LayoutBuilder(builder: (context, constraints) {
-                                      return Container(
-                                        width: (stat.currentStat > 20
-                                            ? constraints.maxWidth / (100 / stat.currentStat)
-                                            : stat.currentStat < 2
-                                                ? 0
-                                                : 34),
-                                        decoration: BoxDecoration(
-                                          color: stat.currentStat < 30
-                                              ? textRedColor
-                                              : stat.type == 'STAMINA'
-                                                  ? lightGreenColor
-                                                  : purpleColor,
-                                          border: Border.all(
-                                            width: 2.sp,
-                                            color: Colors.black,
-                                          ),
-                                          borderRadius: BorderRadius.all(
-                                            Radius.circular(50.sp),
-                                          ),
+                                  stat.currentStat > 1.0
+                                      ? LayoutBuilder(builder: (context, constraints) {
+                                    return Container(
+                                      width: (stat.currentStat > 20
+                                          ? constraints.maxWidth / (100 / stat.currentStat)
+                                          : stat.currentStat < 2
+                                          ? 0
+                                          : 34),
+                                      decoration: BoxDecoration(
+                                        color: stat.currentStat < 30
+                                            ? textRedColor
+                                            : stat.type == 'STAMINA'
+                                            ? lightGreenColor
+                                            : purpleColor,
+                                        border: Border.all(
+                                          width: 2.sp,
+                                          color: Colors.black,
                                         ),
-                                      );
-                                    })
-                                  : Container(),
-                            ],
-                          ),
-                        )),
+                                        borderRadius: BorderRadius.all(
+                                          Radius.circular(50.sp),
+                                        ),
+                                      ),
+                                    );
+                                  })
+                                      : Container(),
+                                ],
+                              ),
+                            )),
                       ),
                     ],
                   ),
@@ -130,13 +130,13 @@ class ActivityActive extends StatelessWidget {
                         children: [
                           stat.type == 'STAMINA'
                               ? Padding(
-                                  padding: EdgeInsets.only(left: 13.0.sp, right: 10.sp),
-                                  child: iconStamina,
-                                )
+                            padding: EdgeInsets.only(left: 13.0.sp, right: 10.sp),
+                            child: iconStamina,
+                          )
                               : Padding(
-                                  padding: EdgeInsets.only(left: 12.0.sp, right: 7.sp),
-                                  child: iconShoes,
-                                ),
+                            padding: EdgeInsets.only(left: 12.0.sp, right: 7.sp),
+                            child: iconShoes,
+                          ),
                           StyledText(
                             stat.name,
                             fontFamily: 'Montserrat',
@@ -162,63 +162,63 @@ class ActivityActive extends StatelessWidget {
                         children: [
                           stat.type == 'STAMINA'
                               ? Container(
-                                  decoration: BoxDecoration(
-                                    color: gaugeGrayColor,
-                                    border: Border.all(
-                                      width: 2.sp,
-                                      color: Colors.black,
-                                    ),
-                                    borderRadius: BorderRadius.all(
-                                      Radius.circular(42.sp),
-                                    ),
-                                    boxShadow: const [
-                                      BoxShadow(
-                                        color: Colors.black,
-                                        offset: Offset(1, 2),
-                                        blurRadius: 4.0,
-                                        spreadRadius: 0.0,
-                                      ),
-                                    ],
-                                  ),
-                                  child: CircleAvatar(
-                                    radius: 19.sp,
-                                    backgroundColor: lightGreenColor,
-                                    child: IconButton(
-                                      icon: iconPlus,
-                                      splashRadius: 19.sp,
-                                      onPressed: () => controller.loaderController.isLoading.value ? null : controller.onClickRepairStat(stat, context),
-                                    ),
-                                  ),
-                                )
-                              : Container(
-                                  decoration: BoxDecoration(
-                                    color: gaugeGrayColor,
-                                    border: Border.all(
-                                      width: 2.sp,
-                                      color: Colors.black,
-                                    ),
-                                    borderRadius: BorderRadius.all(
-                                      Radius.circular(30.sp),
-                                    ),
-                                    boxShadow: const [
-                                      BoxShadow(
-                                        color: Colors.black,
-                                        offset: Offset(1, 2),
-                                        blurRadius: 4.0,
-                                        spreadRadius: 0.0,
-                                      ),
-                                    ],
-                                  ),
-                                  child: CircleAvatar(
-                                    radius: 19.sp,
-                                    backgroundColor: purpleColor,
-                                    child: IconButton(
-                                      icon: iconPlus,
-                                      splashRadius: 15.sp,
-                                      onPressed: () => controller.loaderController.isLoading.value ? null : controller.onClickRepairStat(stat, context),
-                                    ),
-                                  ),
+                            decoration: BoxDecoration(
+                              color: gaugeGrayColor,
+                              border: Border.all(
+                                width: 2.sp,
+                                color: Colors.black,
+                              ),
+                              borderRadius: BorderRadius.all(
+                                Radius.circular(42.sp),
+                              ),
+                              boxShadow: const [
+                                BoxShadow(
+                                  color: Colors.black,
+                                  offset: Offset(1, 2),
+                                  blurRadius: 4.0,
+                                  spreadRadius: 0.0,
                                 ),
+                              ],
+                            ),
+                            child: CircleAvatar(
+                              radius: 19.sp,
+                              backgroundColor: lightGreenColor,
+                              child: IconButton(
+                                icon: iconPlus,
+                                splashRadius: 19.sp,
+                                onPressed: () => controller.loaderController.isLoading.value ? null : controller.onClickRepairStat(stat, context),
+                              ),
+                            ),
+                          )
+                              : Container(
+                            decoration: BoxDecoration(
+                              color: gaugeGrayColor,
+                              border: Border.all(
+                                width: 2.sp,
+                                color: Colors.black,
+                              ),
+                              borderRadius: BorderRadius.all(
+                                Radius.circular(30.sp),
+                              ),
+                              boxShadow: const [
+                                BoxShadow(
+                                  color: Colors.black,
+                                  offset: Offset(1, 2),
+                                  blurRadius: 4.0,
+                                  spreadRadius: 0.0,
+                                ),
+                              ],
+                            ),
+                            child: CircleAvatar(
+                              radius: 19.sp,
+                              backgroundColor: purpleColor,
+                              child: IconButton(
+                                icon: iconPlus,
+                                splashRadius: 15.sp,
+                                onPressed: () => controller.loaderController.isLoading.value ? null : controller.onClickRepairStat(stat, context),
+                              ),
+                            ),
+                          ),
                         ],
                       )
                     ],
@@ -268,22 +268,22 @@ class ActivityActive extends StatelessWidget {
             ),
             controller.exerciseSteps.value < 1
                 ? const StyledText(
-                    '운동 분석중',
-                    fontSize: 18,
-                    lineHeight: 18,
-                    fontWeight: 500,
-                  )
+              '운동 분석중',
+              fontSize: 18,
+              lineHeight: 18,
+              fontWeight: 500,
+            )
                 : StyledText(
-                    ((controller.selectedExerciseType.value == ExerciseType.hiking ? controller.avgSpeed.value < 0.7 : controller.avgSpeed.value < 1) || controller.avgSpeed.value > 7) &&
-                                controller.exerciseState.value == ExerciseState.ongoing ||
-                            controller.stoppedExercising.value
-                        ? '${controller.exerciseState.value.label} (보상 불가)'
-                        : controller.exerciseState.value.label,
-                    fontSize: 18,
-                    lineHeight: 18,
-                    fontWeight: 500,
-                    color: controller.exerciseStateTextColor.value,
-                  )
+              ((controller.selectedExerciseType.value == ExerciseType.hiking ? controller.avgSpeed.value < 0.7 : controller.avgSpeed.value < 1) || controller.avgSpeed.value > 7) &&
+                  controller.exerciseState.value == ExerciseState.ongoing ||
+                  controller.stoppedExercising.value
+                  ? '${controller.exerciseState.value.label} (보상 불가)'
+                  : controller.exerciseState.value.label,
+              fontSize: 18,
+              lineHeight: 18,
+              fontWeight: 500,
+              color: controller.exerciseStateTextColor.value,
+            )
           ],
         );
       }),
@@ -298,18 +298,18 @@ class ActivityActive extends StatelessWidget {
                     return Container(
                       child: controller.selectedCourse.value != null
                           ? Container(
-                              padding: EdgeInsets.symmetric(horizontal: 14.sp, vertical: 7.sp),
-                              decoration: BoxDecoration(
-                                color: const Color(0xff1b1b1b),
-                                borderRadius: BorderRadius.circular(50.sp),
-                              ),
-                              child: StyledText(
-                                '${controller.selectedCourse.value!.firstName} | ${controller.selectedCourse.value!.secondName}',
-                                fontSize: 14,
-                                fontWeight: 500,
-                                color: deepGrayColor,
-                              ),
-                            )
+                        padding: EdgeInsets.symmetric(horizontal: 14.sp, vertical: 7.sp),
+                        decoration: BoxDecoration(
+                          color: const Color(0xff1b1b1b),
+                          borderRadius: BorderRadius.circular(50.sp),
+                        ),
+                        child: StyledText(
+                          '${controller.selectedCourse.value!.firstName} | ${controller.selectedCourse.value!.secondName}',
+                          fontSize: 14,
+                          fontWeight: 500,
+                          color: deepGrayColor,
+                        ),
+                      )
                           : Container(),
                     );
                   }),
@@ -572,67 +572,70 @@ class ActivityActive extends StatelessWidget {
                                             height: 20,
                                             child: IconButton(
                                               padding: EdgeInsets.zero,
-                                              onPressed: () => Get.dialog(
-                                                barrierColor: Colors.black.withOpacity(.8),
-                                                Material(
-                                                  color: Colors.transparent,
-                                                  child: Padding(
-                                                    padding: EdgeInsets.symmetric(horizontal: 25.0.sp),
-                                                    child: Center(
-                                                      child: Column(
-                                                        mainAxisSize: MainAxisSize.min,
-                                                        children: [
-                                                          Stack(
+                                              onPressed: () =>
+                                                  Get.dialog(
+                                                    barrierColor: Colors.black.withOpacity(.8),
+                                                    Material(
+                                                      color: Colors.transparent,
+                                                      child: Padding(
+                                                        padding: EdgeInsets.symmetric(horizontal: 25.0.sp),
+                                                        child: Center(
+                                                          child: Column(
+                                                            mainAxisSize: MainAxisSize.min,
                                                             children: [
-                                                              Container(
-                                                                width: double.infinity,
-                                                                padding: EdgeInsets.only(top: 44.sp, left: 29.sp, right: 29.sp, bottom: 42.sp),
-                                                                decoration: BoxDecoration(
-                                                                  color: popupBgColor,
-                                                                  borderRadius: BorderRadius.circular(10.sp),
-                                                                ),
-                                                                child: Column(
-                                                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                                                  children: [
-                                                                    const StyledText(
-                                                                      '유효거리 안내',
-                                                                      fontSize: 18,
-                                                                      fontWeight: 700,
+                                                              Stack(
+                                                                children: [
+                                                                  Container(
+                                                                    width: double.infinity,
+                                                                    padding: EdgeInsets.only(top: 44.sp, left: 29.sp, right: 29.sp, bottom: 42.sp),
+                                                                    decoration: BoxDecoration(
+                                                                      color: popupBgColor,
+                                                                      borderRadius: BorderRadius.circular(10.sp),
                                                                     ),
-                                                                    Padding(
-                                                                      padding: EdgeInsets.only(top: 29.sp),
-                                                                      child: Column(
-                                                                        crossAxisAlignment: CrossAxisAlignment.start,
-                                                                        children: [
-                                                                          StyledText(
-                                                                            '유효거리는 ${controller.selectedExerciseType.value == ExerciseType.hiking ? '0.7' : '1'}~7km/h로 걸은 거리를 의미하며, 유효거리를 기준으로 GO 적립과 챌린지 거리가 측정됩니다.\n자동차나 지하철 등을 탈 때도 켜뒀다가 걸을 경우,유효거리로 바로 반영되지 않을 수 있습니다.',
-                                                                            fontSize: 14,
-                                                                            fontWeight: 600,
-                                                                            lineHeight: 24,
-                                                                            letterSpacing: -0.3,
+                                                                    child: Column(
+                                                                      crossAxisAlignment: CrossAxisAlignment.start,
+                                                                      children: [
+                                                                        const StyledText(
+                                                                          '유효거리 안내',
+                                                                          fontSize: 18,
+                                                                          fontWeight: 700,
+                                                                        ),
+                                                                        Padding(
+                                                                          padding: EdgeInsets.only(top: 29.sp),
+                                                                          child: Column(
+                                                                            crossAxisAlignment: CrossAxisAlignment.start,
+                                                                            children: [
+                                                                              StyledText(
+                                                                                '유효거리는 ${controller.selectedExerciseType.value == ExerciseType.hiking
+                                                                                    ? '0.7'
+                                                                                    : '1'}~7km/h로 걸은 거리를 의미하며, 유효거리를 기준으로 GO 적립과 챌린지 거리가 측정됩니다.\n자동차나 지하철 등을 탈 때도 켜뒀다가 걸을 경우,유효거리로 바로 반영되지 않을 수 있습니다.',
+                                                                                fontSize: 14,
+                                                                                fontWeight: 600,
+                                                                                lineHeight: 24,
+                                                                                letterSpacing: -0.3,
+                                                                              ),
+                                                                            ],
                                                                           ),
-                                                                        ],
-                                                                      ),
+                                                                        ),
+                                                                      ],
                                                                     ),
-                                                                  ],
-                                                                ),
-                                                              ),
-                                                              Positioned(
-                                                                right: 12,
-                                                                top: 12,
-                                                                child: InkWell(
-                                                                  onTap: () => Get.back(),
-                                                                  child: iconCloseWhite,
-                                                                ),
+                                                                  ),
+                                                                  Positioned(
+                                                                    right: 12,
+                                                                    top: 12,
+                                                                    child: InkWell(
+                                                                      onTap: () => Get.back(),
+                                                                      child: iconCloseWhite,
+                                                                    ),
+                                                                  ),
+                                                                ],
                                                               ),
                                                             ],
                                                           ),
-                                                        ],
+                                                        ),
                                                       ),
                                                     ),
                                                   ),
-                                                ),
-                                              ),
                                               icon: iconInfo,
                                               splashRadius: 15.sp,
                                             ),
@@ -680,14 +683,15 @@ class ActivityActive extends StatelessWidget {
                       );
                     }),
                   ),
-                  if(controller.userState.value.exercise != null && controller.userState.value.exercise!.crewBuffLevel! != 'NONE')
-                    Obx(() {
-                      return Column(
-                        children: [
+
+                  Obx(() {
+                    return Column(
+                      children: [
+                        if(controller.userState.value.exercise != null && controller.userState.value.exercise!.crewBuffLevel! != 'NONE')
                           Padding(
                             padding: EdgeInsets.only(
                               top: 10.sp,
-                              bottom: 20.sp,
+                              bottom: 30.sp,
                             ),
                             child: Container(
                               padding: EdgeInsets.symmetric(vertical: 10.sp, horizontal: 14.sp),
@@ -704,43 +708,45 @@ class ActivityActive extends StatelessWidget {
                               ),
                             ),
                           ),
-                        ],
-                      );
-                      // if (controller.userState.value.exercise?.crewBuffLevel != null && controller.userState.value.exercise!.crewBuffLevel != 'NONE') {
-                      //   return Padding(
-                      //     padding: EdgeInsets.only(
-                      //       top: 10.sp,
-                      //       bottom: 20.sp,
-                      //     ),
-                      //     child: Container(
-                      //       padding: EdgeInsets.symmetric(vertical: 10.sp, horizontal: 14.sp),
-                      //       decoration: BoxDecoration(
-                      //         color: speedBlackColor,
-                      //         borderRadius: BorderRadius.circular(20),
-                      //       ),
-                      //       child: StyledText(
-                      //         '${controller.userState.value.exercise!.crewBuffLevel!.replaceAll('LEVEL_', 'Lv')} 크루 버프 적용중',
-                      //         fontSize: 16,
-                      //         fontWeight: 500,
-                      //         lineHeight: 16,
-                      //         color: lightGrayColor,
-                      //       ),
-                      //     ),
-                      //   );
-                      // } else {
-                      //   return const SizedBox();
-                      // }
-                    }),
+                      ],
+                    );
+                    // if (controller.userState.value.exercise?.crewBuffLevel != null && controller.userState.value.exercise!.crewBuffLevel != 'NONE') {
+                    //   return Padding(
+                    //     padding: EdgeInsets.only(
+                    //       top: 10.sp,
+                    //       bottom: 20.sp,
+                    //     ),
+                    //     child: Container(
+                    //       padding: EdgeInsets.symmetric(vertical: 10.sp, horizontal: 14.sp),
+                    //       decoration: BoxDecoration(
+                    //         color: speedBlackColor,
+                    //         borderRadius: BorderRadius.circular(20),
+                    //       ),
+                    //       child: StyledText(
+                    //         '${controller.userState.value.exercise!.crewBuffLevel!.replaceAll('LEVEL_', 'Lv')} 크루 버프 적용중',
+                    //         fontSize: 16,
+                    //         fontWeight: 500,
+                    //         lineHeight: 16,
+                    //         color: lightGrayColor,
+                    //       ),
+                    //     ),
+                    //   );
+                    // } else {
+                    //   return const SizedBox();
+                    // }
+                  }),
+
                   Expanded(
-                    child: Align(
-                      alignment: Alignment.center,
-                      child: Padding(
-                        padding: EdgeInsets.only(
+                    child: Obx(() {
+                      return Align(
+                        alignment: Alignment.center,
+                        child: Padding(
+                          padding: EdgeInsets.only(
                             left: 35.sp,
                             right: 35.sp,
-                        ),
-                        child: Obx(() {
-                          return Row(
+                            bottom: 20.sp
+                          ),
+                          child: Row(
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
                               CircularButton(
@@ -753,57 +759,57 @@ class ActivityActive extends StatelessWidget {
                               ),
                               [ExerciseState.ongoing].any((state) => controller.exerciseState.value == state)
                                   ? Row(
+                                children: [
+                                  GestureDetector(
+                                    onTapDown: (tapDownDetail) => controller.onTapDownStop(tapDownDetail, controller.selectedCourse.value, controller: controller),
+                                    onTapUp: (tapUpDetail) => controller.onTapUpStop(tapUpDetail),
+                                    child: Stack(
                                       children: [
-                                        GestureDetector(
-                                          onTapDown: (tapDownDetail) => controller.onTapDownStop(tapDownDetail, controller.selectedCourse.value, controller: controller),
-                                          onTapUp: (tapUpDetail) => controller.onTapUpStop(tapUpDetail),
-                                          child: Stack(
-                                            children: [
-                                              CircularButton(
-                                                radius: 78.sp,
-                                                color: Colors.white,
-                                                child: Icon(Icons.stop, color: Colors.black, size: 35.sp),
-                                              ),
-                                              Positioned(
-                                                top: 0,
-                                                left: 0,
-                                                child: Container(
-                                                  width: 78.sp,
-                                                  height: 78.sp,
-                                                  padding: EdgeInsets.all(5.sp),
-                                                  child: CircularProgressIndicator(
-                                                    strokeWidth: 6.sp,
-                                                    color: skyBlueColor,
-                                                    value: controller.stopProgress.value,
-                                                  ),
-                                                ),
-                                              )
-                                            ],
-                                          ),
+                                        CircularButton(
+                                          radius: 78.sp,
+                                          color: Colors.white,
+                                          child: Icon(Icons.stop, color: Colors.black, size: 35.sp),
                                         ),
-                                        Padding(
-                                          padding: EdgeInsets.only(left: 11.sp),
-                                          child: CircularButton(
-                                            radius: 78.sp,
-                                            color: const Color(0xffFF2222),
-                                            onTap: () => controller.pauseExercise(),
-                                            child: Icon(Icons.pause, color: Colors.white, size: 35.sp),
+                                        Positioned(
+                                          top: 0,
+                                          left: 0,
+                                          child: Container(
+                                            width: 78.sp,
+                                            height: 78.sp,
+                                            padding: EdgeInsets.all(5.sp),
+                                            child: CircularProgressIndicator(
+                                              strokeWidth: 6.sp,
+                                              color: skyBlueColor,
+                                              value: controller.stopProgress.value,
+                                            ),
                                           ),
                                         )
                                       ],
-                                    )
-                                  : CircularButton(
-                                      radius: 90.sp,
-                                      color: const Color(0xffFF2222),
-                                      onTap: () {
-                                        if (controller.exerciseState.value == ExerciseState.paused) {
-                                          controller.exerciseUpdateThr.throttle(() => controller.continueExercise());
-                                        } else {
-                                          controller.exerciseStartThr.throttle(() => controller.startExercise(controller.selectedExerciseType.value, controller.selectedCourse.value));
-                                        }
-                                      },
-                                      child: Icon(Icons.play_arrow, color: Colors.white, size: 35.sp),
                                     ),
+                                  ),
+                                  Padding(
+                                    padding: EdgeInsets.only(left: 11.sp),
+                                    child: CircularButton(
+                                      radius: 78.sp,
+                                      color: const Color(0xffFF2222),
+                                      onTap: () => controller.pauseExercise(),
+                                      child: Icon(Icons.pause, color: Colors.white, size: 35.sp),
+                                    ),
+                                  )
+                                ],
+                              )
+                                  : CircularButton(
+                                radius: 90.sp,
+                                color: const Color(0xffFF2222),
+                                onTap: () {
+                                  if (controller.exerciseState.value == ExerciseState.paused) {
+                                    controller.exerciseUpdateThr.throttle(() => controller.continueExercise());
+                                  } else {
+                                    controller.exerciseStartThr.throttle(() => controller.startExercise(controller.selectedExerciseType.value, controller.selectedCourse.value));
+                                  }
+                                },
+                                child: Icon(Icons.play_arrow, color: Colors.white, size: 35.sp),
+                              ),
                               CircularButton(
                                 radius: 50,
                                 color: Colors.white,
@@ -815,10 +821,10 @@ class ActivityActive extends StatelessWidget {
                                 ),
                               ),
                             ],
-                          );
-                        }),
-                      ),
-                    ),
+                          ),
+                        ),
+                      );
+                    }),
                   ),
                 ],
               ),

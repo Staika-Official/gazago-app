@@ -3139,16 +3139,19 @@ void showInAppPurchaseProgressAlert(WalletMasterController controller) {
               ? Center(
                   child: Column(
                     children: [
-                      Lottie.asset(
-                        'assets/lottie/purchase_pending.json',
-                        width: 40,
-                        height: 40,
-                        repeat: true,
+                      Padding(
+                        padding: EdgeInsets.only(top:20.sp, bottom:20.0.sp),
+                        child: Lottie.asset(
+                          'assets/lottie/purchase_pending.json',
+                          width: 40,
+                          height: 40,
+                          repeat: true,
+                        ),
                       ),
                       Padding(
                         padding: const EdgeInsets.all(8.0),
                         child: StyledText(
-                          controller.showVerifyingPurchaseText.value ? 'TIK을 충전하고 있습니다.' : '결제 요청중입니다.',
+                          controller.showVerifyingPurchaseText.value ? controller.isPurchasePending.value ? '결제 진행중입니다.' :'TIK을 충전하고 있습니다.' : '결제 승인 대기중입니다.',
                           fontSize: 18.sp,
                           fontWeight: 500,
                           lineHeight: 24.sp,
