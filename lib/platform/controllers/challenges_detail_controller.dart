@@ -162,15 +162,14 @@ class ChallengesDetailController extends GetxController with GetTickerProviderSt
       loadDataOnScroll();
     });
     await getFirebaseShareTemplate();
-    // Todo 크루버프 백엔드 배포할 때 다시 복구 해야함
-    // await BoardService.getChallengeNotifications(
-    //   challengeId.value,
-    //   successCallback: (ChallengeNotificationGroupModel? data) {
-    //     if (data != null) {
-    //       showChallengeNotification(this, data);
-    //     }
-    //   },
-    // );
+    await BoardService.getChallengeNotifications(
+      challengeId.value,
+      successCallback: (ChallengeNotificationGroupModel? data) {
+        if (data != null) {
+          showChallengeNotification(this, data);
+        }
+      },
+    );
 
     super.onInit();
   }
@@ -271,7 +270,6 @@ class ChallengesDetailController extends GetxController with GetTickerProviderSt
       }
     }).onError((error, stackTrace) {
       print(error);
-
     });
 
     crewChallengeLeaderboardRef.onValue.listen((DatabaseEvent event) async {
