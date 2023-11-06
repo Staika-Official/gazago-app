@@ -158,9 +158,9 @@ class ChallengesDetailController extends GetxController with GetTickerProviderSt
       getChallengeLeaderboardMyRanking();
     }
 
-    leaderboardScrollController.addListener(() {
-      loadDataOnScroll();
-    });
+    // leaderboardScrollController.addListener(() {
+    //   loadDataOnScroll();
+    // });
     await getFirebaseShareTemplate();
     await BoardService.getChallengeNotifications(
       challengeId.value,
