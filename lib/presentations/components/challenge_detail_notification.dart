@@ -95,7 +95,7 @@ void showChallengeNotification(ChallengesDetailController controller, ChallengeN
                         height: 320.sp,
                         child: Image.network(
                           width: double.infinity,
-                          fit: BoxFit.contain,
+                          fit: BoxFit.fill,
                           challengeNotificationGroup.challengeNotifications[pagePosition].imageUrl,
                         ),
                       ),
@@ -104,35 +104,38 @@ void showChallengeNotification(ChallengesDetailController controller, ChallengeN
                         color: popupBgColor,
                         child: Padding(
                           padding: EdgeInsets.only(
-                            top: 26.sp,
-                            left: 25.sp,
-                            right: 25.sp,
-                            bottom: 15.sp,
+                            top: 12.sp,
+                            left: 20.sp,
+                            right: 20.sp,
+                            bottom: 6.sp,
                           ),
                           child:
 
-                          Center(
-                            child: Html(
-                              shrinkWrap: true,
-                              data: challengeNotificationGroup.challengeNotifications[pagePosition].message,
-                              style: {
-                                "*": Style(
-                                  lineHeight: LineHeight.percent(130),
-                                  color: Colors.white,
-                                  fontWeight: FontWeight.w500,
-                                  fontSize: FontSize(18.sp),
-                                  textAlign: TextAlign.center,
+                          SizedBox(
+                            height: 100,
+                            child: Center(
+                              child: Html(
+                                shrinkWrap: true,
+                                data: challengeNotificationGroup.challengeNotifications[pagePosition].message,
+                                style: {
+                                  "*": Style(
+                                    lineHeight: LineHeight.percent(130),
+                                    color: Colors.white,
+                                    fontWeight: FontWeight.w500,
+                                    fontSize: FontSize(18.sp),
+                                    textAlign: TextAlign.center,
 
-                                ),
-                                "p": Style(
-                                  margin: Margins.zero,
-                                  color: Colors.white,
-                                  fontWeight: FontWeight.w500,
-                                  fontSize: FontSize(18.sp),
-                                  lineHeight: LineHeight.percent(130),
-                                  textAlign: TextAlign.center,
-                                ),
-                              },
+                                  ),
+                                  "p": Style(
+                                    margin: Margins.zero,
+                                    color: Colors.white,
+                                    fontWeight: FontWeight.w500,
+                                    fontSize: FontSize(18.sp),
+                                    lineHeight: LineHeight.percent(130),
+                                    textAlign: TextAlign.center,
+                                  ),
+                                },
+                              ),
                             ),
                           ),
                         ),
