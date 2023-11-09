@@ -16,6 +16,7 @@ import 'package:get/get.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'package:intl/intl.dart';
 
+
 class DailyBenefitController extends GetxController {
   Rxn<DailyBenefitListModel> dailyBenefitList = Rxn();
   RxBool dataGetLoading = RxBool(false);
@@ -122,7 +123,7 @@ class DailyBenefitController extends GetxController {
           print('RewardedAd failed to load: $error');
           if (adLoadAttemptCount == 2) {
             adLoadAttemptCount = 0;
-            if (Get.currentRoute.contains('daily_benefits')) showToastPopup('광고 불러오기 실패, 나중에 다시 시도해주세요');
+            if (Get.currentRoute.contains('daily_benefits')) showToastPopup('현재 시청 가능한 광고가 없습니다.\n잠시 후 다시 시도해 주세요.');
           } else {
             await loadRewardedAd();
           }
@@ -220,7 +221,7 @@ class DailyBenefitController extends GetxController {
         });
       } catch (e) {
         print(e);
-        showToastPopup('광고를 시청할 수 없습니다. 잠시 후 다시 시도해주세요');
+        showToastPopup('현재 시청 가능한 광고가 없습니다.\n잠시 후 다시 시도해 주세요.');
         dailyRewardAdList[0] = null;
         dailyRewardAdList[1] = null;
         await loadAd();

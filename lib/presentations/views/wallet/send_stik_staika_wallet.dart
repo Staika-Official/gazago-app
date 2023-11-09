@@ -147,9 +147,21 @@ class SendStikStaikaWallet extends StatelessWidget {
                       onChanged: (value) => controller.setAmount(value),
                       onSubmitted: (val) => !controller.loaderController.isLoading.value ? controller.openSendStikGoWalletAlert() : null,
                     ),
+                    Padding(
+                      padding: EdgeInsets.only(top: 10.0.sp),
+                      child: StyledText(
+                        'Staika 지갑으로 송금하기는 1일 10회, 총 50STIK 까지 가능합니다.',
+                        fontWeight: 400,
+                        lineHeight: 20,
+                        fontSize: 12,
+                        letterSpacing: -.1,
+                        color: lightGrayColor,
+                      ),
+                    ),
                   ],
                 ),
               ),
+
               Expanded(
                 child: controller.isFetching.value
                     ? Container(

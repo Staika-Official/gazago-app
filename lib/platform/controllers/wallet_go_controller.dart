@@ -96,7 +96,12 @@ class GoWalletController extends GetxController with SolanaMixin {
             if (err.status == 500) {
               failureShortBalanceStikToTikAlert(this);
             } else {
-              failureChargeStikToTikAlert(this, err.errorMessage);
+              if(err.errorCode == 'CountLimitExceeded' || err.errorCode == 'AmountLimitExceeded' ){
+              errorBottomSheet(err.errorMessage);
+              } else {
+                failureChargeStikToTikAlert(this, err.errorMessage);
+              }
+
             }
           },
         );

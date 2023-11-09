@@ -189,10 +189,17 @@ class WalletMasterController extends GetxController with SolanaMixin, GetTickerP
         if (tabController.indexIsChanging && tabController.index == 1) {
           if (Get.isRegistered<StaikaWalletController>() && Get.isBottomSheetOpen == false) {
             String? savedTime = HiveStore.load(key: HiveKey.onGetChainWalletBalanceTime.name);
-            final tenSecondsAgo = Jiffy.now().subtract(seconds: 10);
-            final targetDate = Jiffy.parse(savedTime!);
-            if(targetDate.isBefore(tenSecondsAgo)){
+            bool isWalletConnectionPrompted = HiveStore.load(key: HiveKey.walletConnectionPrompted.name) ?? false;
+            if(!isWalletConnectionPrompted){
               Get.find<StaikaWalletController>().getStaikaWalletInfo();
+            } else {
+              if(savedTime != null){
+                final tenSecondsAgo = Jiffy.now().subtract(seconds: 10);
+                final targetDate = Jiffy.parse(savedTime!);
+                if(targetDate.isBefore(tenSecondsAgo)){
+                  Get.find<StaikaWalletController>().getStaikaWalletInfo();
+                }
+              }
             }
 
           }

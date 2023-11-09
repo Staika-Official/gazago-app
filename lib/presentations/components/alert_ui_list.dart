@@ -7716,3 +7716,27 @@ void showModalNoticeWebview(context, {String? title, String linkUrl = ''}) {
 
   );
 }
+
+void errorBottomSheet(String errorMsg) {
+  showAlert(
+    contentWidget: Padding(
+      padding: EdgeInsets.only(bottom: 35.0.sp, top:10.sp),
+      child: StyledText(
+        errorMsg,
+        fontSize: 18,
+        lineHeight: 24,
+        fontWeight: 500,
+        textAlign: TextAlign.center,
+      ),
+    ),
+    actions: [
+      Expanded(
+        child: GazagoButton(
+          onTap: () => Get.back(),
+          buttonText: '확인',
+          buttonColor: skyBlueColor,
+        ),
+      ),
+    ],
+  );
+}

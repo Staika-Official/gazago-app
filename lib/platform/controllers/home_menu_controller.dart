@@ -320,4 +320,9 @@ class HomeMenuController extends SuperController {
       HiveStore.deleteKey(key: HiveKey.needToForceStopExercise.name);
     }
   }
+
+  @override
+  void onHidden() {
+    // TODO: implement onHidden
+  }
 }

@@ -25,6 +25,9 @@ end
 
 require File.expand_path(File.join('packages', 'flutter_tools', 'bin', 'podhelper'), flutter_root)
 
+
+
+
 flutter_ios_podfile_setup
 
 target 'Runner' do
@@ -105,3 +108,5 @@ post_install do |installer|
 
   end
 end
+
+pod 'GoogleMobileAdsMediationFacebook'

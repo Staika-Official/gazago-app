@@ -150,4 +150,9 @@ class GlobalController extends SuperController {
       isPopupOpen.value = true;
     }
   }
+
+  @override
+  void onHidden() {
+    // TODO: implement onHidden
+  }
 }

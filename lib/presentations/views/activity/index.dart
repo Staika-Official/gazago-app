@@ -265,7 +265,7 @@ class ActivityHome extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     ActivityController controller = Get.find();
-
+    DailyBenefitController dailyBenefitController = Get.isRegistered<DailyBenefitController>() ? Get.find<DailyBenefitController>() : Get.put(DailyBenefitController());
     var challengeMovie = MovieTween()
       ..scene(begin: const Duration(seconds: 1), duration: const Duration(seconds: 2))
           .thenTween('width', Tween<double>(begin: 70.sp, end: 250.sp), duration: const Duration(milliseconds: 300), curve: Curves.easeOut)
@@ -471,7 +471,7 @@ class ActivityHome extends StatelessWidget {
                               ),
                             ),
                             Obx(() {
-                              if (Get.find<DailyBenefitController>().dailyBenefitList.value != null) {
+                              if (dailyBenefitController.dailyBenefitList.value != null) {
                                 return Positioned(
                                   bottom: 0,
                                   right: 0,
@@ -483,7 +483,7 @@ class ActivityHome extends StatelessWidget {
                                       return Obx(() {
                                         return InkWell(
                                           onTap: () async {
-                                            await Get.find<DailyBenefitController>().refreshController();
+                                            await dailyBenefitController.refreshController();
                                             Get.toNamed(Routes.dailyBenefits);
                                           },
                                           child: Container(
@@ -528,8 +528,8 @@ class ActivityHome extends StatelessWidget {
                                                             right: 70,
                                                           ),
                                                           child: StyledText(
-                                                            Get.find<DailyBenefitController>().dailyBenefitList.value != null
-                                                                ? Get.find<DailyBenefitController>().dailyBenefitList.value!.label.replaceAll('과 ', '과\n')
+                                                            dailyBenefitController.dailyBenefitList.value != null
+                                                                ? dailyBenefitController.dailyBenefitList.value!.label.replaceAll('과 ', '과\n')
                                                                 : 'GO를 누르고 걷고,\n일일 혜택도 받아보세요',
                                                             fontSize: 17,
                                                             lineHeight: 20,

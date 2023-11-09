@@ -910,4 +910,9 @@ class ActivityController extends SuperController with ActivityMixin, ChallengeMi
     }
     // TODO: implement onResumed
   }
+
+  @override
+  void onHidden() {
+    // TODO: implement onHidden
+  }
 }

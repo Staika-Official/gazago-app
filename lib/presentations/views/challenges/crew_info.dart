@@ -338,9 +338,11 @@ class CrewInfo extends StatelessWidget {
                     ),
                     Container(
                       margin: EdgeInsets.only(top: 18.sp),
-                      padding: const EdgeInsets.symmetric(
-                        vertical: 8,
-                        horizontal: 14,
+                      padding: EdgeInsets.only(
+                        top: 10.sp,
+                        left: 14.sp,
+                        right:14.sp,
+                        bottom: 8.sp,
                       ),
                       decoration: BoxDecoration(
                         color: Colors.black,
