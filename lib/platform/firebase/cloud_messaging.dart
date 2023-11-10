@@ -2,6 +2,7 @@ import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/foundation.dart' show defaultTargetPlatform, TargetPlatform;
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:gaza_go/constants/enums.dart';
+import 'package:gaza_go/constants/routes.dart';
 import 'package:gaza_go/platform/controllers/activity_controller.dart';
 import 'package:gaza_go/platform/controllers/home_menu_controller.dart';
 import 'package:gaza_go/platform/controllers/inventory_home_controller.dart';
@@ -69,12 +70,13 @@ void handleMessage() {
     }
 
     if (message.data['notificationKey'] == 'FORCE_LOGOUT') {
-      await showForceLogoutAlert();
-      forceLogout();
+      if (Get.currentRoute != Routes.login) {
+        await showForceLogoutAlert();
+        forceLogout();
+      }
     }
 
     if (message.data['notificationKey'] == 'MY_ITEM') {
-
       Get.find<HomeMenuController>().selectMenu(1);
     }
 
@@ -102,7 +104,6 @@ void handleNotification(RemoteMessage message) {
   if (message.data['notificationKey'] == 'FORCE_LOGOUT') {
     HiveStore.save(key: HiveKey.needToForceLogout.name, value: true);
   }
-
 
   if (message.data['notificationKey'] == 'MY_ITEM') {
     Get.find<HomeMenuController>().selectMenu(1);
@@ -165,7 +166,6 @@ Future<void> setForegroundConfig() async {
 }
 
 void onSelectNotification(NotificationResponse? notificationResponse) {
-
   if (notificationResponse != null && (notificationResponse.payload == null || notificationResponse.payload != '')) {
     List<String> payload = notificationResponse.payload!.split('-');
     String action = payload[0];
