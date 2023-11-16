@@ -15,8 +15,7 @@ class ActivitySelect extends StatelessWidget {
   const ActivitySelect({Key? key}) : super(key: key);
 
   List<Widget> renderChallengeTypes(ActivityController controller) {
-    return controller.challengeList.isNotEmpty
-        ? controller.challengeList
+    return controller.challengeList
         .map(
           (challenge) =>
           Padding(
@@ -152,8 +151,7 @@ class ActivitySelect extends StatelessWidget {
             ),
           ),
     )
-        .toList()
-        : [];
+        .toList();
   }
 
   @override
@@ -356,25 +354,29 @@ class ActivitySelect extends StatelessWidget {
             //     ),
             //   ),
             // ),
-            Obx(() {
-              return Material(
-                color: Colors.transparent,
-                child: ConstrainedBox(
-                  constraints: const BoxConstraints(
-                    minWidth: double.infinity,
-                    maxHeight: 300,
-                  ),
-                  child: SingleChildScrollView(
-                    physics: const ClampingScrollPhysics(),
-                    child: Column(
-                      children: [
-                        ...renderChallengeTypes(controller),
-                      ],
+              Obx(() {
+                return Material(
+                  color: Colors.transparent,
+                  child: ConstrainedBox(
+                    constraints: const BoxConstraints(
+                      minWidth: double.infinity,
+                      maxHeight: 300,
+                    ),
+                    child: SingleChildScrollView(
+                      physics: const ClampingScrollPhysics(),
+                      child: controller.isFetchingCourseList.value ? Padding(
+                        padding: EdgeInsets.symmetric(vertical: 50.0.sp),
+                        child: const Center(child: SizedBox.square(dimension: 30, child: CircularProgressIndicator())),
+                      ) : controller.challengeList.isNotEmpty ? Column(
+                        children: [
+                          ...renderChallengeTypes(controller),
+                        ],
+                      ) : Container(),
                     ),
                   ),
-                ),
-              );
-            }),
+                );
+              }),
+
             SizedBox(
               width: 302.sp,
               child: Column(

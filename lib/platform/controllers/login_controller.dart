@@ -186,9 +186,13 @@ class LoginController extends GetxController {
       loginInfo,
       successCallback: (AccessTokenModel token, int statusCode) async {
         if (statusCode == 200) {
+
           HiveStore.save(key: HiveKey.accessToken.name, value: token.accessToken);
           HiveStore.save(key: HiveKey.refreshToken.name, value: token.refreshToken);
 
+
+          print('accessToken : ${token.accessToken}');
+          print('refreshToken : ${token.refreshToken}');
           if (token.accountStatus == 'TERMINATION_COMPLETED') {
             showToastPopup('탈퇴처리된 계정입니다.');
             forceLogout();

@@ -111,7 +111,10 @@ flutter {
 dependencies {
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk8:$kotlin_version"
     implementation 'com.google.android.gms:play-services-ads-identifier:18.0.1'
+//    implementation 'com.google.android.gms:play-services-ads:22.5.0'
     implementation 'com.android.installreferrer:installreferrer:2.2'
+//    implementation 'com.google.ads.mediation:facebook:6.16.0.0'
+//    implementation 'com.google.ads.mediation:inmobi:10.6.0.0'
 }
 
 configurations.all {

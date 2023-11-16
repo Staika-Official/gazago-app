@@ -78,7 +78,8 @@ class ActivityController extends SuperController with ActivityMixin, ChallengeMi
   late AnimationController challengeGuideController;
   final Rx<Control> challengeLoadControl = Rx(Control.play);
   final RxBool isButtonDisabled = RxBool(false);
-  final RxList<ChallengeModel> challengeList = RxList.empty();
+  RxList<ChallengeModel> challengeList = RxList.empty();
+   RxBool isFetchingCourseList = RxBool(true);
 
   Future<void> initializeExercise() async {
 
@@ -96,7 +97,9 @@ class ActivityController extends SuperController with ActivityMixin, ChallengeMi
       if (hasPermission.value) {
         await initActivityStatus();
       }
+
       await loadChallenges();
+
     });
 
     // await initPlatformState();
@@ -153,12 +156,14 @@ class ActivityController extends SuperController with ActivityMixin, ChallengeMi
   }
 
   Future<void> loadChallenges() async {
-    challengeList.clear();
+    challengeList.value = RxList.empty();
     await getChallenges(
       successCallback: (List<ChallengeModel> data) {
         challengeList.addAll(data);
       },
     );
+    isFetchingCourseList.value = false;
+
     generateChallengeMarkerList();
   }
 

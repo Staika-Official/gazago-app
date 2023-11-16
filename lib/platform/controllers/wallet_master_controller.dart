@@ -30,6 +30,7 @@ import 'package:gaza_go/presentations/components/alert_ui_list.dart';
 import 'package:gaza_go/presentations/components/product_list_dialog.dart';
 import 'package:gaza_go/presentations/components/product_list_stik_dialog.dart';
 import 'package:get/get.dart';
+import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'package:in_app_purchase/in_app_purchase.dart';
 import 'package:jiffy/jiffy.dart';
 import 'package:path_provider/path_provider.dart';
@@ -64,7 +65,7 @@ class WalletMasterController extends GetxController with SolanaMixin, GetTickerP
   final RxList<ProductDetails> inAppProducts = RxList.empty();
   final Throttling thr = Throttling(duration: const Duration(milliseconds: 1000));
   RxString clickedAssetButton = RxString('');
-
+  RewardedAd? _rewardedAd;
   RxList<AssetTokenBalanceModel> get allTikUiList {
     List<AssetTokenBalanceModel> balanceUiList = List.empty(growable: true);
 
@@ -205,7 +206,64 @@ class WalletMasterController extends GetxController with SolanaMixin, GetTickerP
           }
         }
       });
+    // loadRewardedAd();
     super.onInit();
+  }
+  String getAdUnitId() {
+    // return 'ca-app-pub-3940256099942544/5224354917';
+    // return Platform.isIOS ? 'ca-app-pub-3940256099942544/1712485313' : 'ca-app-pub-3940256099942544/5224354917';
+    return Platform.isIOS ? F.dailyBenefitAd1Ios : F.dailyBenefitAd1Android;
+    // if (dailyRewardAdList.isEmpty || dailyRewardAdList.first == null) {
+    //   return Platform.isIOS ? F.dailyBenefitAd1Ios : F.dailyBenefitAd1Android;
+    // } else {
+    //   return Platform.isIOS ? F.dailyBenefitAd2Ios : F.dailyBenefitAd2Android;
+    // }
+  }
+
+
+  Future<void> loadRewardedAd() async {
+    Completer completer = Completer<void>();
+
+    await RewardedAd.load(
+      adUnitId: getAdUnitId(),
+      request: const AdRequest(),
+      rewardedAdLoadCallback: RewardedAdLoadCallback(
+        onAdLoaded: (RewardedAd ad) {
+          print('광고 로드가 되었다.');
+          print('$ad loaded: ${ad.responseInfo?.mediationAdapterClassName}');
+          ad.fullScreenContentCallback = FullScreenContentCallback(
+            // Called when the ad showed the full screen content.
+              onAdShowedFullScreenContent: (ad) {},
+              // Called when an impression occurs on the ad.
+              onAdImpression: (ad) {},
+              // Called when the ad failed to show full screen content.
+              onAdFailedToShowFullScreenContent: (ad, err) {
+                // Dispose the ad here to free resources.
+                ad.dispose();
+              },
+              // Called when the ad dismissed full screen content.
+              onAdDismissedFullScreenContent: (ad) {
+                // Dispose the ad here to free resources.
+                ad.dispose();
+              },
+              // Called when a click is recorded for an ad.
+              onAdClicked: (ad) {});
+
+          debugPrint('$ad loaded.');
+          // Keep a reference to the ad so you can show it later.
+          // _rewardedAd = ad;
+          // _rewardedAd?.show(onUserEarnedReward: (AdWithoutView ad, RewardItem rewardItem) {
+          //   // Reward the user for watching an ad.
+          // });
+          completer.complete();
+        },
+        onAdFailedToLoad: (error) async {
+          print('error ad load : ${error.message}');
+          completer.complete();
+        },
+      ),
+    );
+    await completer.future;
   }
 
   Future<void> initializeController() async {
