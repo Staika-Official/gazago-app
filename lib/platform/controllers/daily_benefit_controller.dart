@@ -122,7 +122,7 @@ class DailyBenefitController extends GetxController {
           print('RewardedAd failed to load: $error');
           if (adLoadAttemptCount == 2) {
             adLoadAttemptCount = 0;
-            if (Get.currentRoute.contains('daily_benefits')) showToastPopup('광고 불러오기 실패, 나중에 다시 시도해주세요');
+            if (Get.currentRoute.contains('daily_benefits')) showToastPopup('현재 시청 가능한 광고가 없습니다.\n 잠시 후 다시 시도해 주세요.');
           } else {
             await loadRewardedAd();
           }
@@ -179,6 +179,7 @@ class DailyBenefitController extends GetxController {
   Future<void> requestDailyBenefitAd(BenefitItemModel benefitItem) async {
     Completer completer = Completer();
     if (dailyRewardAdList.isNotEmpty && dailyRewardAdList[activeAdIndex.value] != null) {
+      showToastPopup('광고 요청 중 입니다. 잠시만 기다려주세요.');
       dailyRewardAdList[activeAdIndex.value]!.fullScreenContentCallback = FullScreenContentCallback(
         // Called when the ad showed the full screen content.
         onAdShowedFullScreenContent: (ad) {
