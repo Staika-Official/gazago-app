@@ -230,6 +230,7 @@ class WalletMasterController extends GetxController with SolanaMixin, GetTickerP
       rewardedAdLoadCallback: RewardedAdLoadCallback(
         onAdLoaded: (RewardedAd ad) {
           print('광고 로드가 되었다.');
+          print('$ad loaded: ${ad.responseInfo}');
           print('$ad loaded: ${ad.responseInfo?.mediationAdapterClassName}');
           ad.fullScreenContentCallback = FullScreenContentCallback(
             // Called when the ad showed the full screen content.
