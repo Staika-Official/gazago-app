@@ -298,8 +298,6 @@ class HomeMenuController extends SuperController {
         if (snapshot.value != deviceId) {
           handleForceLogoutWithAlert();
         }
-      } else {
-        handleForceLogoutWithAlert();
       }
     }).onError((error, stackTrace) {
       print(error);
