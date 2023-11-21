@@ -70,6 +70,8 @@ void forceLogout() async {
       activityController.exerciseTimer = null;
       activityController.updateTimer = null;
     }
+    activityController.locationSubscription?.cancel();
+    activityController.locationSubscription = null;
   }
 
   if (Get.currentRoute != Routes.login) Get.offAllNamed(Routes.login);

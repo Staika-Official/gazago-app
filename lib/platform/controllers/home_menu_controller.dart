@@ -293,17 +293,17 @@ class HomeMenuController extends SuperController {
     String deviceId = HiveStore.loadString(key: HiveKey.uuid.name)!;
     DatabaseReference userDiInfoRef = FirebaseDatabase.instance.ref('user_info/$userId/deviceId');
 
-    await userDiInfoRef.get().then((DataSnapshot snapshot) async {
-      if (snapshot.exists) {
-        if (snapshot.value != deviceId) {
-          handleForceLogoutWithAlert();
-        }
-      } else {
-        handleForceLogoutWithAlert();
-      }
-    }).onError((error, stackTrace) {
-      print(error);
-    });
+    // await userDiInfoRef.get().then((DataSnapshot snapshot) async {
+    //   if (snapshot.exists) {
+    //     if (snapshot.value != deviceId) {
+    //       handleForceLogoutWithAlert();
+    //     }
+    //   } else {
+    //     handleForceLogoutWithAlert();
+    //   }
+    // }).onError((error, stackTrace) {
+    //   print(error);
+    // });
 
     userDiInfoRef.onValue.listen((DatabaseEvent event) async {
       if (event.snapshot.value != deviceId) {

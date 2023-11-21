@@ -93,8 +93,10 @@ class ActivityController extends SuperController with ActivityMixin, ChallengeMi
 
   Future<void> initializeController() async {
     await getUserState().then((_) async {
+      print('getUserState');
       hasPermission.value = await checkAvailabilities();
       if (hasPermission.value) {
+        print('hasPermission');
         await initActivityStatus();
       }
 
@@ -776,7 +778,8 @@ class ActivityController extends SuperController with ActivityMixin, ChallengeMi
         // 첼린지 존 찾기(30초마다 요청)
         DateTime now = DateTime.now();
 
-        if (receiveLocationTime.value.add(const Duration(seconds: 30)).compareTo(now) < 0) {
+
+        if (receiveLocationTime.value.add(const Duration(seconds: 30)).compareTo(now) < 0 ) {
           await findCourses();
           receiveLocationTime.value = now;
         }
@@ -820,6 +823,7 @@ class ActivityController extends SuperController with ActivityMixin, ChallengeMi
     await getCurrentLocation();
     initLocationStream();
     initGpsServiceStream();
+    print('initializeActivity');
     //await setMarkerImages();
     await findCourses();
     detectChallengeZone(currentLocation.value);
@@ -827,6 +831,7 @@ class ActivityController extends SuperController with ActivityMixin, ChallengeMi
 
   // 챌린지 찾기
   Future<void> findCourses() async {
+    print('----------------------------------------------------------------');
     if (currentLocation.value.latitude != 0 && currentLocation.value.longitude != 0) {
       await getNearByCourses(currentLocation.value, exerciseState.value);
     } else {

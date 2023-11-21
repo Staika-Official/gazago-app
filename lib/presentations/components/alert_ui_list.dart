@@ -2423,6 +2423,7 @@ void showInvalidCertCode(String errorMsg) {
 
 void alreadyConnectedDeviceAlert(LoginController controller, LoginType socialType, String accessToken) {
   showAlert(
+    allowMultipleBottomSheet: true,
     title: '확인 요청',
     contentWidget: Padding(
       padding: EdgeInsets.only(top: 20.0.sp, bottom: 40.sp),
@@ -2461,6 +2462,7 @@ void alreadyConnectedDeviceAlert(LoginController controller, LoginType socialTyp
 Future<void> showForceLogoutAlert() {
   Completer forceLogoutAlertCompleter = Completer();
   showAlert(
+    allowMultipleBottomSheet: true,
     title: '확인 완료',
     contentWidget: Padding(
       padding: EdgeInsets.only(top: 20.0.sp, bottom: 40.sp),
@@ -2476,7 +2478,15 @@ Future<void> showForceLogoutAlert() {
     actions: [
       Expanded(
         child: GazagoButton(
-          onTap: () => !forceLogoutAlertCompleter.isCompleted ? forceLogoutAlertCompleter.complete() : null,
+          onTap: () {
+            if(!forceLogoutAlertCompleter.isCompleted){
+              print('1');
+              forceLogoutAlertCompleter.complete();
+            } else {
+              print('2');
+              return ;
+            }
+          } ,
           buttonText: '확인',
           buttonColor: skyBlueColor,
         ),

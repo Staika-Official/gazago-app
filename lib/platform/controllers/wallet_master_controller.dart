@@ -1,6 +1,8 @@
 import 'dart:async';
 import 'dart:io';
 
+import 'package:advertising_id/advertising_id.dart';
+import 'package:facebook_audience_network/facebook_audience_network.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_inappwebview/flutter_inappwebview.dart';
 import 'package:gaza_go/constants/enums.dart';
@@ -183,6 +185,7 @@ class WalletMasterController extends GetxController with SolanaMixin, GetTickerP
 
   @override
   onInit() {
+
     initInAppPurchaseStream();
     connectToStores();
     tabController = TabController(vsync: this, length: 2, initialIndex: 0)
@@ -206,7 +209,7 @@ class WalletMasterController extends GetxController with SolanaMixin, GetTickerP
           }
         }
       });
-    // loadRewardedAd();
+    loadRewardedAd();
     super.onInit();
   }
   String getAdUnitId() {
@@ -229,7 +232,7 @@ class WalletMasterController extends GetxController with SolanaMixin, GetTickerP
       request: const AdRequest(),
       rewardedAdLoadCallback: RewardedAdLoadCallback(
         onAdLoaded: (RewardedAd ad) {
-          print('광고 로드가 되었다.');
+          print('walletMaster 광고 로드가 되었다.');
           print('$ad loaded: ${ad.responseInfo}');
           print('$ad loaded: ${ad.responseInfo?.mediationAdapterClassName}');
           ad.fullScreenContentCallback = FullScreenContentCallback(
@@ -260,6 +263,8 @@ class WalletMasterController extends GetxController with SolanaMixin, GetTickerP
         },
         onAdFailedToLoad: (error) async {
           print('error ad load : ${error.message}');
+          ResponseInfo? responseInfo = error.responseInfo;
+          print('error ad load : ${responseInfo}');
           completer.complete();
         },
       ),

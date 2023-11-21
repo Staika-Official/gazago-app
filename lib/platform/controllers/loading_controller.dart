@@ -179,6 +179,7 @@ class LoadingController extends GetxController {
   }
 
   Future<void> checkTermsAgreeStatus() async {
+
     await MemberService.getTermsAgreeStatus(
       successCallback: (termsList) {
         this.termsList.value = termsList;
