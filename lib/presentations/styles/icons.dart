@@ -141,6 +141,7 @@ SvgPicture iconSwitch = SvgPicture.asset('assets/images/wallet/ico_switch.svg', 
 SvgPicture iconOutCoin = SvgPicture.asset('assets/images/wallet/ico_out_coin.svg', width: 20.sp, height: 20.sp);
 SvgPicture iconTikCharge = SvgPicture.asset('assets/images/wallet/ico_tik_charge.svg', width: 16.sp, height: 16.sp);
 SvgPicture iconStikExchange = SvgPicture.asset('assets/images/wallet/ico_stik_exchange.svg', width: 20.sp, height: 16.sp);
+SvgPicture iconExcludeRed = SvgPicture.asset('assets/images/wallet/ico_exclude_red.svg', width: 16.sp, height: 16.sp);
 
 //shop
 SvgPicture iconShopStamina = SvgPicture.asset('assets/images/shop/ico_stat_stamina.svg', width: 12.sp, height: 12.sp);

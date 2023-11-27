@@ -69,12 +69,12 @@ void handleMessage() {
       );
     }
 
-    if (message.data['notificationKey'] == 'FORCE_LOGOUT') {
-      if (Get.currentRoute != Routes.login) {
-        await showForceLogoutAlert();
-        forceLogout();
-      }
-    }
+    // if (message.data['notificationKey'] == 'FORCE_LOGOUT') {
+    //   if (Get.currentRoute != Routes.login) {
+    //     await showForceLogoutAlert();
+    //     forceLogout();
+    //   }
+    // }
 
     if (message.data['notificationKey'] == 'MY_ITEM') {
       Get.find<HomeMenuController>().selectMenu(1);
@@ -101,9 +101,9 @@ void handleNotification(RemoteMessage message) {
     HiveStore.save(key: HiveKey.needRouteToGoWallet.name, value: true);
   }
 
-  if (message.data['notificationKey'] == 'FORCE_LOGOUT') {
-    HiveStore.save(key: HiveKey.needToForceLogout.name, value: true);
-  }
+  // if (message.data['notificationKey'] == 'FORCE_LOGOUT') {
+  //   HiveStore.save(key: HiveKey.needToForceLogout.name, value: true);
+  // }
 
   if (message.data['notificationKey'] == 'MY_ITEM') {
     Get.find<HomeMenuController>().selectMenu(1);

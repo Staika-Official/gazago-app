@@ -1,3 +1,4 @@
+import 'package:flutter/material.dart';
 import 'package:gaza_go/constants/enums.dart';
 import 'package:gaza_go/constants/routes.dart';
 import 'package:gaza_go/platform/helpers/alert_helper.dart';
@@ -14,8 +15,11 @@ class CreateWalletPasswordController extends GetxController with PasswordMixin {
 
   final Rx<FormStatus> passwordFormStatus = Rx(FormStatus.empty);
   final Rx<FormStatus> confirmPasswordFormStatus = Rx(FormStatus.empty);
+  final Rx<FormStatus> confirmTextStatus = Rx(FormStatus.empty);
   final RxBool isEnableNext = false.obs;
   final Rx<ErrorStatus> errorMsg = Rx(ErrorStatus.basic);
+  final TextEditingController confirmTextController = TextEditingController();
+  RxString confirmText = RxString('');
   RxBool isShowAlert = RxBool(false);
   RxBool isAgree = RxBool(false);
   void initSamePasswordStream() {
@@ -57,6 +61,12 @@ class CreateWalletPasswordController extends GetxController with PasswordMixin {
   void updateConfirmPassword(String password) {
     _confirmPassword.value = password;
     confirmPasswordFormStatus.value = verifyConfirmPassword(password, _password.value);
+  }
+
+  void updateConfirmText(String text) {
+    confirmText.value = text;
+    confirmTextStatus.value = verifyConfirmText(text);
+    print(confirmTextStatus.value);
   }
 
   void nextStep() {

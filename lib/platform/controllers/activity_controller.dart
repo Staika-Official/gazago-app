@@ -823,7 +823,6 @@ class ActivityController extends SuperController with ActivityMixin, ChallengeMi
     await getCurrentLocation();
     initLocationStream();
     initGpsServiceStream();
-    print('initializeActivity');
     //await setMarkerImages();
     await findCourses();
     detectChallengeZone(currentLocation.value);
@@ -831,7 +830,6 @@ class ActivityController extends SuperController with ActivityMixin, ChallengeMi
 
   // 챌린지 찾기
   Future<void> findCourses() async {
-    print('----------------------------------------------------------------');
     if (currentLocation.value.latitude != 0 && currentLocation.value.longitude != 0) {
       await getNearByCourses(currentLocation.value, exerciseState.value);
     } else {

@@ -222,11 +222,7 @@ class Api {
         resetToLogin(e, handler);
       }
 
-      if (needToRefreshToken) {
-        await _getNewAccessToken(e, handler);
-      } else {
-        await _retryFailedRequest(e, handler);
-      }
+      await _getNewAccessToken(e, handler);
     } else {
       if (e.response?.data != null && e.response?.data != '') {
         ErrorResponseDataModel errorData = ErrorResponseDataModel.fromJson(e.response?.data);
@@ -318,7 +314,11 @@ class Api {
           if (e.requestOptions.extra['showLoading'] && getx.Get.isDialogOpen == true) {
             getx.Get.back();
           }
-          e.response != null ? handler.resolve(e.response!) : handler.next(e);
+          if(e.response != null) {
+            handler.resolve(e.response!);
+          } else {
+            handler.next(e);
+          }
         }
         return;
       }

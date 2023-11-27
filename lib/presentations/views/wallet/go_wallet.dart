@@ -75,7 +75,7 @@ class GoWallet extends StatelessWidget {
                   return Column(
                     mainAxisSize: MainAxisSize.min,
                     children: [
-                      GazagoButton(buttonText: '광고로드', onTap: ()=> controller.loadRewardedAd()),
+                      // GazagoButton(buttonText: '광고로드', onTap: ()=> controller.loadRewardedAd()),
                       SizedBox(
                         width: double.infinity,
                         child: Padding(

@@ -73,10 +73,11 @@ void main() async {
       initializationStatus.adapterStatuses.forEach((key, value) {
         debugPrint('Adapter status for $key: ${value.description}');
       });});
-    FacebookAudienceNetwork.init(
-      testingId: "3c2bf0f4-a8f3-4bb4-9329-41824b1dd03d",
-      iOSAdvertiserTrackingEnabled: true,
-    );
+
+    // FacebookAudienceNetwork.init(
+    //   testingId: "3c2bf0f4-a8f3-4bb4-9329-41824b1dd03d",
+    //   iOSAdvertiserTrackingEnabled: true,
+    // );
     // Geolocation Engine이 2개가 생성되는 문제가 있어서(2개가 생성되면 Foreground 운동측정이 사라지지 않는다). 주석처리
     // 추후에 백그라운드 데이터로 처리가 필요한 경우 다시 고민해보자.
     // FirebaseMessaging.onBackgroundMessage(_firebaseMessagingBackgroundHandler);

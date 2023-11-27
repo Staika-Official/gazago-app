@@ -420,11 +420,16 @@ class WalletMasterController extends GetxController with SolanaMixin, GetTickerP
         Get.until((route) => Get.isBottomSheetOpen == false);
       } else if (purchaseDetails.status == PurchaseStatus.purchased || purchaseDetails.status == PurchaseStatus.restored) {
         showVerifyingPurchaseText.value = true;
-        bool valid = await _verifyPurchase(purchaseDetails);
-        if (valid) {
+        IapValidModel res = await _verifyPurchase(purchaseDetails);
+        if (res.valid) {
           await _deliverProduct(purchaseDetails);
         } else {
-          await _handleInvalidPurchase(purchaseDetails);
+          if(res.state == 'VALIDATE_REQUEST'){
+            showInAppPurchasePendingAlert();
+          } else {
+            await _handleInvalidPurchase(purchaseDetails);
+          }
+
         }
         showVerifyingPurchaseText.value = false;
       }
@@ -496,7 +501,7 @@ class WalletMasterController extends GetxController with SolanaMixin, GetTickerP
     showStoreErrorText.value = true;
   }
 
-  Future<bool> _verifyPurchase(PurchaseDetails purchaseDetails) async {
+  Future<IapValidModel> _verifyPurchase(PurchaseDetails purchaseDetails) async {
     final data = {
       'platform': Platform.operatingSystem,
       'productId': purchaseDetails.productID,
@@ -514,7 +519,7 @@ class WalletMasterController extends GetxController with SolanaMixin, GetTickerP
     print('verificationData.source : ${purchaseDetails.verificationData.source}');
     print('#################################################');
 
-    return response.valid;
+    return response;
   }
 
   Future<void> _deliverProduct(PurchaseDetails purchaseDetails) async {

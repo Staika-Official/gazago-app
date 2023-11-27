@@ -46,6 +46,7 @@ class HomeMenuController extends SuperController {
   final RxBool hideBottomNav = RxBool(false);
   final RxBool hasNewChallenge = RxBool(false);
   final Rx<Control> newChallengeControl = Rx(Control.play);
+  final RxInt eventListener = RxInt(0);
 
   final List<PreferredSizeWidget> appbarList = [
     const MainAppbar(),
@@ -106,15 +107,15 @@ class HomeMenuController extends SuperController {
         showChallengeBadgeAcquisitionAlert(data);
       }
 
-      if (initialMessage.data['notificationKey'] == 'FORCE_LOGOUT') {
-        if (HiveStore.load(key: HiveKey.hasForcedLogout.name) != null && HiveStore.load(key: HiveKey.hasForcedLogout.name)) {
-          HiveStore.deleteKey(key: HiveKey.hasForcedLogout.name);
-        } else {
-          HiveStore.save(key: HiveKey.hasForcedLogout.name, value: true); //getInitialMessage가 중복처리되어서 처리 여부를 구분하기 위해 필요
-          await showForceLogoutAlert();
-          forceLogout();
-        }
-      }
+      // if (initialMessage.data['notificationKey'] == 'FORCE_LOGOUT') {
+      //   if (HiveStore.load(key: HiveKey.hasForcedLogout.name) != null && HiveStore.load(key: HiveKey.hasForcedLogout.name)) {
+      //     HiveStore.deleteKey(key: HiveKey.hasForcedLogout.name);
+      //   } else {
+      //     HiveStore.save(key: HiveKey.hasForcedLogout.name, value: true); //getInitialMessage가 중복처리되어서 처리 여부를 구분하기 위해 필요
+      //     await showForceLogoutAlert();
+      //     forceLogout();
+      //   }
+      // }
     }
   }
 
@@ -305,16 +306,22 @@ class HomeMenuController extends SuperController {
     //   print(error);
     // });
 
+
     userDiInfoRef.onValue.listen((DatabaseEvent event) async {
-      if (event.snapshot.value != deviceId) {
+      print('event.snapshot.value${event.snapshot.value}');
+      eventListener.value = ++eventListener.value;
+      print(eventListener.value);
+      if (event.snapshot.value != deviceId && event.snapshot.value != null && eventListener.value == 1) {
         handleForceLogoutWithAlert();
       }
+      eventListener.value = 0;
     });
   }
 
   Future<void> handleForceLogoutWithAlert() async {
     HiveStore.deleteKey(key: HiveKey.needToForceLogout.name);
     HiveStore.save(key: HiveKey.hasForcedLogout.name, value: true);
+
     await showForceLogoutAlert();
     forceLogout();
   }

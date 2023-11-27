@@ -135,6 +135,7 @@ class ChallengesDetailController extends GetxController with GetTickerProviderSt
   @override
   void onInit() async {
     focusNode.addListener(_onFocusChange);
+
     tabController = TabController(length: 2, vsync: this)
       ..addListener(() {
         if (tabController.indexIsChanging && tabController.index == 1) {}
@@ -148,6 +149,7 @@ class ChallengesDetailController extends GetxController with GetTickerProviderSt
       hideCourses.value = false;
     }
     await getChallengeDetail();
+
     if (challengeDetails.value.challengeType == 'CREW') {
       await getCrewList();
       if (challengeDetails.value.challengeState == 'CLOSED' && myCrew.value != null) {

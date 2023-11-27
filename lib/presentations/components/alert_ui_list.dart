@@ -2479,12 +2479,12 @@ Future<void> showForceLogoutAlert() {
       Expanded(
         child: GazagoButton(
           onTap: () {
+
             if(!forceLogoutAlertCompleter.isCompleted){
-              print('1');
               forceLogoutAlertCompleter.complete();
             } else {
-              print('2');
-              return ;
+              Get.back();
+              return;
             }
           } ,
           buttonText: '확인',
@@ -3224,6 +3224,47 @@ void showInAppPurchaseProgressAlert(WalletMasterController controller) {
           return Container();
         }
       }),
+    ],
+  );
+}
+
+void showInAppPurchasePendingAlert() {
+  showAlert(
+    allowMultipleBottomSheet: true,
+    contentWidget:  Center(
+      child: Column(
+        children: [
+          Padding(
+            padding: EdgeInsets.only(top:20.sp, bottom:20.0.sp),
+            child: Lottie.asset(
+              'assets/lottie/purchase_pending.json',
+              width: 40,
+              height: 40,
+              repeat: true,
+            ),
+          ),
+          Padding(
+            padding: EdgeInsets.only(bottom:35.0.sp),
+            child: StyledText(
+              '결제 진행중입니다.\n잠시 후(최대 10분) 지갑 내역을\n 확인해주세요',
+              fontSize: 18.sp,
+              fontWeight: 500,
+              lineHeight: 24.sp,
+              textAlign: TextAlign.center,
+            ),
+          ),
+        ],
+      ),
+    ),
+
+    actions: [
+      Expanded(
+        child: GazagoButton(
+          onTap: () => Get.back(),
+          buttonText: '확인',
+          buttonColor: skyBlueColor,
+        ),
+      )
     ],
   );
 }
@@ -6896,7 +6937,7 @@ void askSharedCompleteDialog(ChallengesDetailController controller, {required Ch
                   Expanded(
                     child: GazagoButton(
                       onTap: () => Get.back(),
-                      buttonText: '닫기',
+                      buttonText: '취소',
                       textColor: Colors.white,
                       buttonColor: popupBgColor,
                     ),

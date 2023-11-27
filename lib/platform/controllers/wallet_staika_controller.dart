@@ -111,10 +111,10 @@ class StaikaWalletController extends GetxController with WalletMixin, SolanaMixi
         await getOnChainTokenBalance();
       },
       errorCallback: (ErrorResponseDataModel data) {
-        if (data.errorCode == 'WalletNotFoundException') {
+        if (data.errorCode == 'NOT_FOUND_WALLET') {
           TabController controller = Get.find<WalletMasterController>().tabController;
           showStaikaStatusAlert(hasWallet: false, tabController: controller);
-        } else if (data.errorCode == 'DatabaseErrorException') {
+        } else if (data.errorCode == 'DATABASE_EXCEPTION') {
           showToastPopup('잠시 후 다시 시도해 주세요');
         }
       },

@@ -43,4 +43,14 @@ mixin PasswordMixin {
     }
     return FormStatus.sufficient;
   }
+
+  FormStatus verifyConfirmText(String confirmText) {
+    if (confirmText.isEmpty) {
+      return FormStatus.empty;
+    }
+    if (confirmText != '확인했습니다') {
+      return FormStatus.insufficient;
+    }
+    return FormStatus.sufficient;
+  }
 }
