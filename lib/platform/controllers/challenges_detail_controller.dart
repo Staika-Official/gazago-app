@@ -45,7 +45,7 @@ import 'package:intl/intl.dart';
 import 'package:kakao_flutter_sdk_share/kakao_flutter_sdk_share.dart';
 import 'package:url_launcher/url_launcher.dart';
 
-class ChallengesDetailController extends GetxController with GetTickerProviderStateMixin, ChallengeMixin {
+class ChallengesDetailController extends SuperController with GetTickerProviderStateMixin, ChallengeMixin {
   ChallengesController challengesController = Get.isRegistered<ChallengesController>() ? Get.find<ChallengesController>() : Get.put(ChallengesController());
   WalletMasterController walletMasterController = Get.isRegistered<WalletMasterController>() ? Get.find<WalletMasterController>() : Get.put(WalletMasterController());
   LoaderController loaderController = Get.put(LoaderController());
@@ -159,7 +159,7 @@ class ChallengesDetailController extends GetxController with GetTickerProviderSt
       getChallengeLeaderboard();
       getChallengeLeaderboardMyRanking();
     }
-    // checkShareChallengeStatus();
+    checkShareChallengeStatus();
     // leaderboardScrollController.addListener(() {
     //   loadDataOnScroll();
     // });
@@ -186,8 +186,19 @@ class ChallengesDetailController extends GetxController with GetTickerProviderSt
   }
 
   @override
-  void onResumed() async {
-    // checkShareChallengeStatus();
+  void onResumed() {
+    print('--------------------onResumed ChallengeDetailController--------------------');
+    checkShareChallengeStatus();
+    print('--------------------onResumed ChallengeDetailController--------------------');
+  }
+
+  @override
+  void onInactive() {
+    print('onInactive GlobalController');
+    // connectivityStream?.cancel();
+    // internetConnectionListener?.pause();
+    // TODO: implement onInactive
+    checkShareChallengeStatus();
   }
 
   @override
@@ -538,6 +549,7 @@ class ChallengesDetailController extends GetxController with GetTickerProviderSt
           'userId': userId,
           'challengeId': '${challengeId.value}',
         });
+        FirebaseDatabase.instance.ref('kakaoSharedMessageRecord/${challengeId.value}/$userId/clickedShareButton').set(true);
         await ShareClient.instance.launchKakaoTalk(uri);
       } catch (error) {
         showToastPopup('공유 실패');
@@ -565,48 +577,45 @@ class ChallengesDetailController extends GetxController with GetTickerProviderSt
     }
   }
 
+  void setChallengeShareFlag() {
+    String userId = HiveStore.loadString(key: HiveKey.userId.name)!;
+    FirebaseDatabase.instance.ref('kakaoSharedMessageRecord/${challengeId.value}/$userId/clickedShareButton').set(false);
+  }
 
 
-  // Future<void> checkShareChallengeStatus()async {
-  //   String userId = HiveStore.loadString(key: HiveKey.userId.name)!;
-  //   DatabaseReference kakaoShareStatus = FirebaseDatabase.instance.ref('kakaoSharedMessageRecord/${challengeId.value}/$userId');
-  //   String? challengeType = challengeDetails.value.challengeType;
-  //   String? challengeActivationType = challengeDetails.value.challengeActivationType;
-  //   String? challengeUserState = challengeDetails.value.challengeUserState;
-  //   print('challengeType : ${challengeType}');
-  //   print('challengeActivationType : ${challengeActivationType}');
-  //   print('challengeUserState : ${challengeUserState}');
-  //   kakaoShareStatus.get().then((DataSnapshot snapshot) {
-  //     if (snapshot.exists) {
-  //       Map data = snapshot.value as Map;
-  //
-  //       if (data['chat_TYPE'] != 'MemoChat') {
-  //         if (challengeDetails.value.challengeActivationType == 'CREW') {
-  //           askSharedCompleteDialog(this, challengeType: ChallengeType.crew, shareSource: ShareSource.createCrew);
-  //         } else {
-  //           if (challengeDetails.value.challengeType == 'PAYMENT') {
-  //             askSharedCompleteDialog(this, challengeType: ChallengeType.payment, shareSource: ShareSource.mirae);
-  //           } else {
-  //             askSharedCompleteDialog(this, challengeType: ChallengeType.payment, shareSource: ShareSource.spot);
-  //           }
-  //         }
-  //         // unableShareMyselfDialog(this, challengeType: challengeType, shareSource: shareSource);
-  //       } else {
-  //         // if (challengeDetails.value.challengeActivationType == 'CREW') {
-  //         //   requestCreateCrew('INVITE');
-  //         // } else {
-  //         //   // 납부형 챌린지 참여하기
-  //         //   onFetchJoinChallenge(isFree: true);
-  //         // }
-  //         unableShareMyselfDialog(this, challengeType: challengeType, shareSource: shareSource);
-  //       }
-  //     } else {
-  //       // unableSharedHistoryDialog(this, challengeType: challengeType, shareSource: shareSource);
-  //     }
-  //   }).onError((error, stackTrace) {
-  //     // unableSharedHistoryDialog(this, challengeType: challengeType, shareSource: shareSource);
-  //   });
-  // }
+
+  Future<void> checkShareChallengeStatus()async {
+    String userId = HiveStore.loadString(key: HiveKey.userId.name)!;
+    DatabaseReference kakaoShareStatus = FirebaseDatabase.instance.ref('kakaoSharedMessageRecord/${challengeId.value}/$userId');
+    ChallengeType challengeType = challengeDetails.value.challengeActivationType == 'CREW' ? ChallengeType.crew : ChallengeType.payment;
+    ShareSource? shareSource = challengeDetails.value.challengeActivationType == 'CREW' ? ShareSource.createCrew : challengeDetails.value.challengeType == 'PAYMENT' ? ShareSource.mirae : ShareSource.spot;
+
+    print('challengeType : ${challengeType}');
+
+    print('shareSource : ${shareSource}');
+
+    kakaoShareStatus.get().then((DataSnapshot snapshot) async {
+      if (snapshot.exists) {
+        Map data = snapshot.value as Map;
+
+        print('clickedShareButton: ${data['clickedShareButton']}');
+        if(data['clickedShareButton']){
+
+          if (data['chat_TYPE'] != 'MemoChat') {
+            askSharedCompleteDialog(this, challengeType: challengeType, shareSource: shareSource);
+          } else {
+            unableShareMyselfDialog(this, challengeType: challengeType, shareSource: shareSource);
+          }
+
+        }
+
+      } else {
+        unableSharedHistoryDialog(this, challengeType: challengeType, shareSource: shareSource);
+      }
+    }).onError((error, stackTrace) {
+      // unableSharedHistoryDialog(this, challengeType: challengeType, shareSource: shareSource);
+    });
+  }
 
   Future<void> validateKakaoShareResult({required ChallengeType challengeType, required ShareSource shareSource}) async {
     String userId = HiveStore.loadString(key: HiveKey.userId.name)!;
@@ -626,9 +635,11 @@ class ChallengesDetailController extends GetxController with GetTickerProviderSt
             onFetchJoinChallenge(isFree: true);
           }
         }
+
       } else {
         unableSharedHistoryDialog(this, challengeType: challengeType, shareSource: shareSource);
       }
+      FirebaseDatabase.instance.ref('kakaoSharedMessageRecord/${challengeId.value}/$userId/clickedShareButton').set(false);
     }).onError((error, stackTrace) {
       unableSharedHistoryDialog(this, challengeType: challengeType, shareSource: shareSource);
     });
@@ -848,5 +859,20 @@ class ChallengesDetailController extends GetxController with GetTickerProviderSt
         }
         break;
     }
+  }
+
+  @override
+  void onDetached() {
+    // TODO: implement onDetached
+  }
+
+  @override
+  void onHidden() {
+    // TODO: implement onHidden
+  }
+
+  @override
+  void onPaused() {
+    // TODO: implement onPaused
   }
 }

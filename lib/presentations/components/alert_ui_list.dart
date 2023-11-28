@@ -6860,6 +6860,7 @@ void shareCrewChallengeKakaoLinkDialog(ChallengesDetailController controller) {
                           buttonText: '공유하기',
                           onTap: () async {
                             Get.back();
+
                             if (controller.challengeDetails.value.challengeActivationType == 'CREW') {
                               controller.shareChallenge(challengeType: ChallengeType.crew, shareSource: ShareSource.createCrew);
                               await Future.delayed(const Duration(seconds: 2));
@@ -6875,6 +6876,7 @@ void shareCrewChallengeKakaoLinkDialog(ChallengesDetailController controller) {
                                 askSharedCompleteDialog(controller, challengeType: ChallengeType.payment, shareSource: ShareSource.spot);
                               }
                             }
+                            // controller.setChallengeShareFlag();
                           },
                         ),
                       ),
