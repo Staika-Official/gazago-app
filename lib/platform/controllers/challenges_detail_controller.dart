@@ -159,7 +159,7 @@ class ChallengesDetailController extends GetxController with GetTickerProviderSt
       getChallengeLeaderboard();
       getChallengeLeaderboardMyRanking();
     }
-
+    // checkShareChallengeStatus();
     // leaderboardScrollController.addListener(() {
     //   loadDataOnScroll();
     // });
@@ -172,6 +172,7 @@ class ChallengesDetailController extends GetxController with GetTickerProviderSt
         }
       },
     );
+    // 챌린지 공유 했는지 확인
 
     super.onInit();
   }
@@ -182,6 +183,11 @@ class ChallengesDetailController extends GetxController with GetTickerProviderSt
     focusNode.removeListener(_onFocusChange);
     focusNode.unfocus();
     super.onClose();
+  }
+
+  @override
+  void onResumed() async {
+    // checkShareChallengeStatus();
   }
 
   @override
@@ -526,6 +532,7 @@ class ChallengesDetailController extends GetxController with GetTickerProviderSt
     // }
 
     if (isKakaoTalkSharingAvailable) {
+
       try {
         Uri uri = await ShareClient.instance.shareDefault(template: kakaoFeedTemplate!, serverCallbackArgs: {
           'userId': userId,
@@ -557,6 +564,49 @@ class ChallengesDetailController extends GetxController with GetTickerProviderSt
       shareTemplate.value = null;
     }
   }
+
+
+
+  // Future<void> checkShareChallengeStatus()async {
+  //   String userId = HiveStore.loadString(key: HiveKey.userId.name)!;
+  //   DatabaseReference kakaoShareStatus = FirebaseDatabase.instance.ref('kakaoSharedMessageRecord/${challengeId.value}/$userId');
+  //   String? challengeType = challengeDetails.value.challengeType;
+  //   String? challengeActivationType = challengeDetails.value.challengeActivationType;
+  //   String? challengeUserState = challengeDetails.value.challengeUserState;
+  //   print('challengeType : ${challengeType}');
+  //   print('challengeActivationType : ${challengeActivationType}');
+  //   print('challengeUserState : ${challengeUserState}');
+  //   kakaoShareStatus.get().then((DataSnapshot snapshot) {
+  //     if (snapshot.exists) {
+  //       Map data = snapshot.value as Map;
+  //
+  //       if (data['chat_TYPE'] != 'MemoChat') {
+  //         if (challengeDetails.value.challengeActivationType == 'CREW') {
+  //           askSharedCompleteDialog(this, challengeType: ChallengeType.crew, shareSource: ShareSource.createCrew);
+  //         } else {
+  //           if (challengeDetails.value.challengeType == 'PAYMENT') {
+  //             askSharedCompleteDialog(this, challengeType: ChallengeType.payment, shareSource: ShareSource.mirae);
+  //           } else {
+  //             askSharedCompleteDialog(this, challengeType: ChallengeType.payment, shareSource: ShareSource.spot);
+  //           }
+  //         }
+  //         // unableShareMyselfDialog(this, challengeType: challengeType, shareSource: shareSource);
+  //       } else {
+  //         // if (challengeDetails.value.challengeActivationType == 'CREW') {
+  //         //   requestCreateCrew('INVITE');
+  //         // } else {
+  //         //   // 납부형 챌린지 참여하기
+  //         //   onFetchJoinChallenge(isFree: true);
+  //         // }
+  //         unableShareMyselfDialog(this, challengeType: challengeType, shareSource: shareSource);
+  //       }
+  //     } else {
+  //       // unableSharedHistoryDialog(this, challengeType: challengeType, shareSource: shareSource);
+  //     }
+  //   }).onError((error, stackTrace) {
+  //     // unableSharedHistoryDialog(this, challengeType: challengeType, shareSource: shareSource);
+  //   });
+  // }
 
   Future<void> validateKakaoShareResult({required ChallengeType challengeType, required ShareSource shareSource}) async {
     String userId = HiveStore.loadString(key: HiveKey.userId.name)!;
