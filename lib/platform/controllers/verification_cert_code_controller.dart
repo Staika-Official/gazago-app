@@ -87,7 +87,7 @@ class VerificationCertCodeController extends GetxController {
   void afterVerificationComplete() {
     String? enteredRoute = HiveStore.loadString(key: HiveKey.enteredRoute.name);
 
-    if (enteredRoute != null && (enteredRoute.contains('challenge_detail')|| enteredRoute.contains('shop/item/detail')|| enteredRoute.contains('/activity/challenges'))  ) {
+    if (enteredRoute != null && (enteredRoute.contains('challenge_detail')|| enteredRoute.contains('shop/item/detail')|| enteredRoute.contains('/activity/challenges')|| enteredRoute.contains('/wallet')) ) {
       Get.until((route) => Get.currentRoute == enteredRoute);
     } else {
       Get.until((route) => Get.currentRoute == Routes.home);

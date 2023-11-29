@@ -7740,3 +7740,19 @@ void errorBottomSheet(String errorMsg) {
     ],
   );
 }
+
+void showNeedVerificationExchangeAlert() {
+  showAlert(
+    title: '본인인증이 필요합니다.',
+    contentText: '안전한 거래를 위해서는 본인인증이 필요하여\n인증페이지로 이동합니다.',
+    actions: [
+      Expanded(
+        child: GazagoButton(
+          onTap: () => moveToVerification(),
+          buttonText: '확인',
+          buttonColor: skyBlueColor,
+        ),
+      ),
+    ],
+  );
+}
