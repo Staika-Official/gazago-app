@@ -150,6 +150,16 @@ class GoWalletController extends GetxController with SolanaMixin {
     await getStaikaWalletInfo();
   }
 
+  void checkUserVerified(Function callback) async {
+    // isDisableButton.value = true;
+    if (await handleCheckUserVerified()) {
+      callback();
+    } else {
+      stikSwapWallet();
+    }
+    // isDisableButton.value = false;
+  }
+
   Future<void> getStaikaWalletInfo() async {
     loaderController.isLoading.value = true;
     initTextController();
