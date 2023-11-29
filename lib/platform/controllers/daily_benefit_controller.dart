@@ -181,7 +181,7 @@ class DailyBenefitController extends GetxController {
   Future<void> requestDailyBenefitAd(BenefitItemModel benefitItem) async {
     Completer completer = Completer();
     if (dailyRewardAdList.isNotEmpty && dailyRewardAdList[activeAdIndex.value] != null) {
-      showToastPopup('광고 요청 중 입니다. 잠시만 기다려주세요.');
+      // showToastPopup('광고 요청 중 입니다. 잠시만 기다려주세요.');
       dailyRewardAdList[activeAdIndex.value]!.fullScreenContentCallback = FullScreenContentCallback(
         // Called when the ad showed the full screen content.
         onAdShowedFullScreenContent: (ad) {

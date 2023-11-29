@@ -41,8 +41,7 @@ mixin ActivityMixin {
   InspectionNoticeController inspectionNoticeController = Get.isRegistered<InspectionNoticeController>() ? Get.find<InspectionNoticeController>() : Get.put(InspectionNoticeController());
   final Rx<CurrentUserStateModel> userState = Rx(CurrentUserStateModel());
   final RxInt loadingTime = RxInt(1);
-  final Rx<Position> currentLocation =
-      Rx(Position(speed: 0, altitude: 0, accuracy: 0, heading: 0, latitude: 0, longitude: 0, speedAccuracy: 0, timestamp: DateTime.now(), altitudeAccuracy: 0.0, headingAccuracy: 0.0));
+  final Rx<Position> currentLocation = Rx(Position(speed: 0, altitude: 0, accuracy: 0, heading: 0, latitude: 0, longitude: 0, speedAccuracy: 0, timestamp: DateTime.now(), altitudeAccuracy: 0.0, headingAccuracy: 0.0));
   final RxBool isFakeGps = RxBool(false);
   final RxList<UserExerciseModel> exerciseData = RxList.empty();
   final RxList<LatLng> coordinates = RxList.empty();
