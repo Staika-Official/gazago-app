@@ -358,7 +358,7 @@ class ChallengesDetailController extends SuperController with GetTickerProviderS
     if (await canLaunchUrl(url)) {
       await ActivityService.fetchChallengeAllianceLinkRecord(challengeId.value, linkUrl);
 
-      showModalWebview(Get.context, title: challengeDetails.value.title, linkUrl: linkUrl);
+      showModalWebview(this, Get.context, title: challengeDetails.value.title, linkUrl: linkUrl);
       // Get.toNamed(Routes.inAppModalWebView, arguments: {'linkUrl': linkUrl, 'title': title});
       // await launchUrl(
       //   url,
@@ -850,7 +850,7 @@ class ChallengesDetailController extends SuperController with GetTickerProviderS
         }
         break;
       case 'INTERNAL_WEB_VIEW':
-        showModalWebview(Get.context, title: landingInfo.title!, linkUrl: landingInfo.linkUrl!);
+        showModalWebview(this, Get.context, title: landingInfo.title!, linkUrl: landingInfo.linkUrl!);
         break;
       case 'EXTERNAL_BROWSER':
         Uri url = Uri.parse(landingInfo.linkUrl!);

@@ -26,6 +26,7 @@ import 'package:gaza_go/platform/models/challenge_course_model.dart';
 import 'package:gaza_go/platform/models/challenge_hierarchy_model.dart';
 import 'package:gaza_go/platform/models/challenge_model.dart';
 import 'package:gaza_go/platform/models/current_user_state_model.dart';
+import 'package:gaza_go/platform/models/promotion_ad_model.dart';
 import 'package:gaza_go/platform/models/stat_model.dart';
 import 'package:gaza_go/platform/models/user_exercise_model.dart';
 import 'package:gaza_go/platform/services/activity_service.dart';
@@ -51,7 +52,7 @@ class ActivityController extends SuperController with ActivityMixin, ChallengeMi
       StatModel(name: '신발 내구도', currentStat: userState.value.shoes != null ? userState.value.shoes!.durability! : 0, type: 'DURABILITY'),
     ]);
   }
-
+  GlobalKey webViewKey = GlobalKey();
   // final RxDouble currentSliderValue = RxDouble(0);
   // final RxInt remainDurability = RxInt(0);
   // final RxInt repairDurability = RxInt(0);
@@ -80,6 +81,7 @@ class ActivityController extends SuperController with ActivityMixin, ChallengeMi
   final RxBool isButtonDisabled = RxBool(false);
   RxList<ChallengeModel> challengeList = RxList.empty();
    RxBool isFetchingCourseList = RxBool(true);
+  List<PromotionAdModel> promotionAdsList = List.empty(growable: true);
 
   Future<void> initializeExercise() async {
 
@@ -823,6 +825,7 @@ class ActivityController extends SuperController with ActivityMixin, ChallengeMi
     await getCurrentLocation();
     initLocationStream();
     initGpsServiceStream();
+    getPromotionAdsList();
     //await setMarkerImages();
     await findCourses();
     detectChallengeZone(currentLocation.value);
@@ -856,6 +859,13 @@ class ActivityController extends SuperController with ActivityMixin, ChallengeMi
     if (HiveStore.load(key: HiveKey.endExerciseRequested.name) != null && HiveStore.load(key: HiveKey.endExerciseRequested.name) && userState.value.exercise != null) {
       await endExercise(source: source);
     }
+  }
+
+  Future<void> getPromotionAdsList() async {
+    
+    await ActivityService.getPromotionAdsList(successCallback: (data){
+      promotionAdsList.addAll(data);
+    }, errorCallback: (){});
   }
 
   // void closeAdSelectPopup() {

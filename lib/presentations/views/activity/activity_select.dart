@@ -7,6 +7,7 @@ import 'package:gaza_go/constants/enums.dart';
 import 'package:gaza_go/constants/routes.dart';
 import 'package:gaza_go/platform/controllers/activity_controller.dart';
 import 'package:gaza_go/platform/helpers/base_helper.dart';
+import 'package:gaza_go/presentations/components/alert_ui_list.dart';
 import 'package:gaza_go/presentations/styles/colors.dart';
 import 'package:gaza_go/presentations/styles/styled_text.dart';
 import 'package:get/get.dart';
@@ -450,12 +451,14 @@ class ActivitySelect extends StatelessWidget {
               ),
             ),
           ),
-          Padding(
+
+          if(controller.promotionAdsList.isNotEmpty)
+            Padding(
             padding:  EdgeInsets.symmetric(vertical: 20.0.sp, horizontal: 20.0.sp),
             child: Align(
               alignment: Alignment.bottomCenter,
               child: InkWell(
-                onTap: () => print('광고링크'),
+                onTap: () => showModalWebview(controller, Get.context, title: controller.promotionAdsList[0].title!, linkUrl: controller.promotionAdsList[0].linkUrl!),
                 child: Stack(
                   children: [
                     Container(
@@ -466,13 +469,20 @@ class ActivitySelect extends StatelessWidget {
                       ),
                       child: Padding(
                         padding: EdgeInsets.symmetric(horizontal: 22.0.sp, vertical: 12.sp),
-                        child: const Column(
+                        child:  Column(
                           mainAxisSize: MainAxisSize.min,
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             StyledText(
-                              '최대 30,000TIK 받고\n미래에셋과 함께 운동하세요!',
+                              controller.promotionAdsList[0].title!,
                               fontSize: 16,
+                              lineHeight: 24,
+                              fontWeight: 600,
+                              letterSpacing: -.1,
+                            ),
+                            StyledText(
+                              controller.promotionAdsList[0].label!,
+                              fontSize: 14,
                               lineHeight: 24,
                               fontWeight: 600,
                               letterSpacing: -.1,
@@ -481,29 +491,30 @@ class ActivitySelect extends StatelessWidget {
                         ),
                       ),
                     ),
-                    Positioned(
-                      top: 10.sp,
-                      right: 12.sp,
-                      child: Container(
-                        decoration: BoxDecoration(
-                          color: Color(0XFFD7D8DD),
-                          borderRadius: const BorderRadius.all(
-                            Radius.circular(20),
-                          ),
 
-                        ),
-                          child: Padding(
-                            padding: EdgeInsets.only(top: 3.0, bottom: 3.0, left: 6.0, right: 6.0),
-                            child: StyledText(
-                              'AD',
-                              color: Colors.black,
-                              fontWeight: 700,
-                              fontSize: 10,
-                              letterSpacing: -.1,
+                      Positioned(
+                        top: 10.sp,
+                        right: 12.sp,
+                        child: Container(
+                          decoration: BoxDecoration(
+                            color: Color(0XFFD7D8DD),
+                            borderRadius: const BorderRadius.all(
+                              Radius.circular(20),
                             ),
+
                           ),
+                            child: Padding(
+                              padding: EdgeInsets.only(top: 3.0, bottom: 3.0, left: 6.0, right: 6.0),
+                              child: StyledText(
+                                'AD',
+                                color: Colors.black,
+                                fontWeight: 700,
+                                fontSize: 10,
+                                letterSpacing: -.1,
+                              ),
+                            ),
+                        ),
                       ),
-                    ),
                   ]
                 ),
               ),

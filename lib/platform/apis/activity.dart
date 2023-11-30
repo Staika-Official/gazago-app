@@ -222,4 +222,11 @@ class ActivityApi {
       showLoading: false,
     ).post('/user-challenges/users/${userId}/challenges/${challengeId}/join', data: params);
   }
+
+  static Future<Response> getPromotionAdsList(String userId) async {
+    return await Api.client(
+      serviceUrl: '/services/gazago/api',
+      showLoading: false,
+    ).get('/challenge-landings/users/$userId');
+  }
 }

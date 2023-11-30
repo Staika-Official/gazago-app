@@ -14,6 +14,7 @@ import 'package:gaza_go/platform/models/error_response_data_model.dart';
 import 'package:gaza_go/platform/models/join_challenge_response_model.dart';
 import 'package:gaza_go/platform/models/new_challenge_detail_model.dart';
 import 'package:gaza_go/platform/models/new_challenge_model.dart';
+import 'package:gaza_go/platform/models/promotion_ad_model.dart';
 import 'package:gaza_go/platform/models/user_exercise_model.dart';
 import 'package:gaza_go/platform/models/user_stamina_recharge_model.dart';
 import 'package:gaza_go/platform/models/user_state_model.dart';
@@ -288,6 +289,21 @@ class ActivityService {
           errorCallback(ErrorResponseDataModel.fromJson(res.data));
         }
       }
+    }
+  }
+
+  static Future<void> getPromotionAdsList({required Function successCallback, Function? errorCallback}) async {
+    Response res = await ActivityApi.getPromotionAdsList(userId!);
+    if (res.statusCode == 200) {
+      List<PromotionAdModel> adsList = List.empty(growable: true);
+      if (res.data.length > 0) {
+        res.data.forEach((ad) {
+          adsList.add(PromotionAdModel.fromJson(ad));
+        });
+      }
+      successCallback(adsList);
+    } else {
+      if (errorCallback != null) errorCallback();
     }
   }
 

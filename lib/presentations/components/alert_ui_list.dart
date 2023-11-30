@@ -7645,10 +7645,10 @@ void showChallengeLandingPopup(ChallengesDetailController controller, ChallengeL
   );
 }
 
-void showModalWebview(context, {String? title, String linkUrl = ''}) {
+void showModalWebview(controller, context, {String? title, String linkUrl = ''}) {
   InAppWebViewController? inAppWebViewController;
 
-  ChallengesDetailController controller = Get.find<ChallengesDetailController>();
+
   showCupertinoModalBottomSheet(
     isDismissible: true,
     enableDrag: false,
@@ -7712,10 +7712,10 @@ void showModalWebview(context, {String? title, String linkUrl = ''}) {
                   key: controller.webViewKey,
                   gestureRecognizers: Set()..add(Factory<VerticalDragGestureRecognizer>(() => VerticalDragGestureRecognizer())),
                   initialUrlRequest: URLRequest(url: WebUri(linkUrl)),
-                  onWebViewCreated: (InAppWebViewController controller) {
-                    inAppWebViewController = controller;
+                  onWebViewCreated: (InAppWebViewController webviewController) {
+                    inAppWebViewController = webviewController;
                   },
-                  onProgressChanged: (InAppWebViewController controller, int progress) {
+                  onProgressChanged: (InAppWebViewController webviewController, int progress) {
                     // setState(() {
                     //   this.progress = progress / 100;
                     // });
