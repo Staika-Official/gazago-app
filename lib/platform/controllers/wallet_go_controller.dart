@@ -96,7 +96,7 @@ class GoWalletController extends GetxController with SolanaMixin {
             if (err.status == 500) {
               failureShortBalanceStikToTikAlert(this);
             } else {
-              if(err.errorCode == 'CountLimitExceeded' || err.errorCode == 'AmountLimitExceeded' ){
+              if(err.errorCode == 'LIMIT_EXCEED_COUNT' || err.errorCode == 'LIMIT_EXCEED_AMOUNT' ){
               errorBottomSheet(err.errorMessage);
               } else {
                 failureChargeStikToTikAlert(this, err.errorMessage);
@@ -168,9 +168,9 @@ class GoWalletController extends GetxController with SolanaMixin {
       errorCallback: (ErrorResponseDataModel data) {
         loaderController.isLoading.value = false;
         // Future.delayed(const Duration(seconds: 3));
-        if (data.errorCode == 'WalletNotFoundException') {
+        if (data.errorCode == 'NOT_FOUND_WALLET') {
           showCreateStaikaWalletAlert();
-        } else if (data.errorCode == 'DatabaseErrorException') {
+        } else if (data.errorCode == 'DATABASE_EXCEPTION') {
           showToastPopup('잠시 후 다시 시도해 주세요');
         }
       },
