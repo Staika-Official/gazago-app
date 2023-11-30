@@ -34,7 +34,6 @@ class GoWalletController extends GetxController with SolanaMixin {
   Rx<ExchangeStikQuotesModel> stikQuotes = Rx(ExchangeStikQuotesModel(priceKRW: 0.0, priceUSD: 0.0, lastUpdated: ''));
 
   RxBool get isValid {
-    print(sendStikUiAmount.value);
     if (sendStikUiAmount.value != '') {
       return RxBool(double.parse(sendStikUiAmount.value) != 0 && sendStikUiAmount.value != '0.');
     }
@@ -45,7 +44,7 @@ class GoWalletController extends GetxController with SolanaMixin {
   @override
   void onInit() {
     walletMasterController.getStikPriceInfo();
-  initTextController();
+    initTextController();
     super.onInit();
   }
 
