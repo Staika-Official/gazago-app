@@ -6111,7 +6111,7 @@ void shortTikCreateCrewAlert() async {
     contentWidget: Padding(
       padding: EdgeInsets.only(top: 22.sp, bottom: 49.sp),
       child: const StyledText(
-        'TIK를 충전하시거나, 챌린지 공유하기로\n무료로 개설이 가능합니다',
+        '챌린지 공유하기로\n무료로 개설이 가능합니다',
         fontWeight: 500,
         fontSize: 16,
         lineHeight: 24,
@@ -6128,18 +6128,18 @@ void shortTikCreateCrewAlert() async {
           buttonColor: popupBgColor,
         ),
       ),
-      SizedBox(
-        width: 9.sp,
-      ),
-      Expanded(
-        child: GazagoButton(
-          buttonText: '충전하기',
-          onTap: () {
-            Get.back();
-            showProductList();
-          },
-        ),
-      ),
+      // SizedBox(
+      //   width: 9.sp,
+      // ),
+      // Expanded(
+      //   child: GazagoButton(
+      //     buttonText: '충전하기',
+      //     onTap: () {
+      //       Get.back();
+      //       showProductList();
+      //     },
+      //   ),
+      // ),
     ],
   );
 }
@@ -7447,27 +7447,30 @@ void joinChallengePopup(ChallengesDetailController controller) async {
                           ),
                         ],
                       ),
-                      Padding(
-                        padding: EdgeInsets.only(top: 44.sp, bottom: 27.0.sp),
-                        child: StyledText(
-                          controller.isShortTokenBalance.value ? '· TIK 충전 후 재시도 해주세요.' : '· 참가비는 납부 후 취소 및 환불이 불가합니다.',
-                          fontSize: 14,
-                          color: controller.isShortTokenBalance.value ? dangerColor : skyBlueColor,
+
+                        Padding(
+                          padding: EdgeInsets.only(top: 44.sp, bottom: 27.0.sp),
+                          child: !controller.isShortTokenBalance.value ? StyledText(
+                            '· 참가비는 납부 후 취소 및 환불이 불가합니다.',
+                            fontSize: 14,
+                            color: controller.isShortTokenBalance.value ? dangerColor : skyBlueColor,
+                          ) : Container(),
                         ),
-                      ),
                       Row(
                         children: [
-                          Expanded(
-                            child: GazagoButton(
-                              onTap: () => controller.isShortTokenBalance.value ? controller.moveToChargeTik() : controller.onFetchJoinChallenge(),
-                              buttonText: controller.isShortTokenBalance.value ? 'TIK 충전하기' : '참가하기',
-                              textColor: Colors.white,
-                              buttonColor: popupBgColor,
+                          if(!controller.isShortTokenBalance.value)
+                            Expanded(
+                              child: GazagoButton(
+                                onTap: () => controller.onFetchJoinChallenge(),
+                                buttonText: '참가하기',
+                                textColor: Colors.white,
+                                buttonColor: popupBgColor,
+                              ),
                             ),
-                          ),
-                          SizedBox(
-                            width: 9.sp,
-                          ),
+                          if(!controller.isShortTokenBalance.value)
+                            SizedBox(
+                              width: 9.sp,
+                            ),
                           Expanded(
                             child: GazagoButton(
                               buttonText: '무료 참여',
