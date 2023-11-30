@@ -188,7 +188,7 @@ class ChallengesDetailController extends SuperController with GetTickerProviderS
   @override
   void onResumed() {
     print('--------------------onResumed ChallengeDetailController--------------------');
-    checkShareChallengeStatus();
+    // checkShareChallengeStatus();
     print('--------------------onResumed ChallengeDetailController--------------------');
   }
 
@@ -602,6 +602,7 @@ class ChallengesDetailController extends SuperController with GetTickerProviderS
         if(data['clickedShareButton']){
 
           if (data['chat_TYPE'] != 'MemoChat') {
+            print('-------------------------------------');
             askSharedCompleteDialog(this, challengeType: challengeType, shareSource: shareSource);
           } else {
             unableShareMyselfDialog(this, challengeType: challengeType, shareSource: shareSource);
