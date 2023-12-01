@@ -159,6 +159,7 @@ class ChallengesDetailController extends SuperController with GetTickerProviderS
       getChallengeLeaderboard();
       getChallengeLeaderboardMyRanking();
     }
+    print('앱시작');
     checkShareChallengeStatus();
     // leaderboardScrollController.addListener(() {
     //   loadDataOnScroll();
@@ -188,7 +189,7 @@ class ChallengesDetailController extends SuperController with GetTickerProviderS
   @override
   void onResumed() {
     print('--------------------onResumed ChallengeDetailController--------------------');
-    // checkShareChallengeStatus();
+    checkShareChallengeStatus();
     print('--------------------onResumed ChallengeDetailController--------------------');
   }
 
@@ -198,7 +199,7 @@ class ChallengesDetailController extends SuperController with GetTickerProviderS
     // connectivityStream?.cancel();
     // internetConnectionListener?.pause();
     // TODO: implement onInactive
-    checkShareChallengeStatus();
+
   }
 
   @override
@@ -554,6 +555,7 @@ class ChallengesDetailController extends SuperController with GetTickerProviderS
       } catch (error) {
         showToastPopup('공유 실패');
       }
+
     } else {
       // try {
       //   Uri shareUrl = await WebSharerClient.instance.makeDefaultUrl(template: defaultText);
@@ -595,13 +597,14 @@ class ChallengesDetailController extends SuperController with GetTickerProviderS
     print('shareSource : ${shareSource}');
 
     kakaoShareStatus.get().then((DataSnapshot snapshot) async {
+      Map data = snapshot.value as Map;
       if (snapshot.exists) {
-        Map data = snapshot.value as Map;
+
 
         print('clickedShareButton: ${data['clickedShareButton']}');
         if(data['clickedShareButton']){
 
-          if (data['chat_TYPE'] != 'MemoChat') {
+          if (data['chatType'] != 'MemoChat') {
             print('-------------------------------------');
             askSharedCompleteDialog(this, challengeType: challengeType, shareSource: shareSource);
           } else {
@@ -611,10 +614,13 @@ class ChallengesDetailController extends SuperController with GetTickerProviderS
         }
 
       } else {
-        unableSharedHistoryDialog(this, challengeType: challengeType, shareSource: shareSource);
+        if(data['clickedShareButton']) {
+          unableSharedHistoryDialog(this, challengeType: challengeType, shareSource: shareSource);
+        }
       }
+      FirebaseDatabase.instance.ref('kakaoSharedMessageRecord/${challengeId.value}/$userId/clickedShareButton').set(false);
     }).onError((error, stackTrace) {
-      // unableSharedHistoryDialog(this, challengeType: challengeType, shareSource: shareSource);
+      unableSharedHistoryDialog(this, challengeType: challengeType, shareSource: shareSource);
     });
   }
 
@@ -626,7 +632,7 @@ class ChallengesDetailController extends SuperController with GetTickerProviderS
       if (snapshot.exists) {
         Map data = snapshot.value as Map;
 
-        if (data['chat_TYPE'] == 'MemoChat') {
+        if (data['chatType'] == 'MemoChat') {
           unableShareMyselfDialog(this, challengeType: challengeType, shareSource: shareSource);
         } else {
           if (challengeDetails.value.challengeActivationType == 'CREW') {

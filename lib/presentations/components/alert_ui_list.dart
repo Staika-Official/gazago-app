@@ -6864,16 +6864,16 @@ void shareCrewChallengeKakaoLinkDialog(ChallengesDetailController controller) {
                             if (controller.challengeDetails.value.challengeActivationType == 'CREW') {
                               controller.shareChallenge(challengeType: ChallengeType.crew, shareSource: ShareSource.createCrew);
                               await Future.delayed(const Duration(seconds: 2));
-                              askSharedCompleteDialog(controller, challengeType: ChallengeType.crew, shareSource: ShareSource.createCrew);
+                              // askSharedCompleteDialog(controller, challengeType: ChallengeType.crew, shareSource: ShareSource.createCrew);
                             } else {
                               if (controller.challengeDetails.value.challengeType == 'PAYMENT') {
                                 controller.shareChallenge(challengeType: ChallengeType.payment, shareSource: ShareSource.mirae);
                                 await Future.delayed(const Duration(seconds: 2));
-                                askSharedCompleteDialog(controller, challengeType: ChallengeType.payment, shareSource: ShareSource.mirae);
+                                // askSharedCompleteDialog(controller, challengeType: ChallengeType.payment, shareSource: ShareSource.mirae);
                               } else {
                                 controller.shareChallenge(challengeType: ChallengeType.payment, shareSource: ShareSource.spot);
                                 await Future.delayed(const Duration(seconds: 2));
-                                askSharedCompleteDialog(controller, challengeType: ChallengeType.payment, shareSource: ShareSource.spot);
+                                // askSharedCompleteDialog(controller, challengeType: ChallengeType.payment, shareSource: ShareSource.spot);
                               }
                             }
                             // controller.setChallengeShareFlag();
@@ -6894,7 +6894,9 @@ void shareCrewChallengeKakaoLinkDialog(ChallengesDetailController controller) {
 
 void askSharedCompleteDialog(ChallengesDetailController controller, {required ChallengeType challengeType, required ShareSource shareSource}) {
   Get.dialog(
-    Dialog(
+      WillPopScope(
+        onWillPop: () async => false,
+    child: Dialog(
       shadowColor: Colors.transparent,
       backgroundColor: Colors.transparent,
       child: Center(
@@ -6963,6 +6965,7 @@ void askSharedCompleteDialog(ChallengesDetailController controller, {required Ch
         ),
       ),
     ),
+      )
   );
 }
 
