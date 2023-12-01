@@ -1572,13 +1572,7 @@ void itemPurchaseShortBalanceAlert(ShopDetailController controller, double remai
           ),
           Padding(
             padding: EdgeInsets.only(top: 55.0.sp, bottom: 25.sp),
-            child: StyledText(
-              '· ${controller.selectedItem.value.tradeSymbol} 충전 후 재시도 해주세요',
-              fontSize: 14,
-              lineHeight: 14,
-              fontWeight: 500,
-              color: dangerColor,
-            ),
+            child: Container(),
           )
         ],
       );
