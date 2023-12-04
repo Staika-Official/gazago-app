@@ -22,6 +22,7 @@ import 'package:gaza_go/platform/helpers/consumer_item_mixin.dart';
 import 'package:gaza_go/platform/helpers/location_helper.dart';
 import 'package:gaza_go/platform/helpers/login_helper.dart';
 import 'package:gaza_go/platform/helpers/map_helper.dart';
+import 'package:gaza_go/platform/helpers/promotion_mixin.dart';
 import 'package:gaza_go/platform/models/challenge_course_model.dart';
 import 'package:gaza_go/platform/models/challenge_hierarchy_model.dart';
 import 'package:gaza_go/platform/models/challenge_model.dart';
@@ -43,7 +44,7 @@ import 'package:permission_handler/permission_handler.dart' as ph;
 import 'package:simple_animations/animation_builder/custom_animation_builder.dart';
 import 'package:throttling/throttling.dart';
 
-class ActivityController extends SuperController with ActivityMixin, ChallengeMixin, GetTickerProviderStateMixin, ConsumerItemMixin {
+class ActivityController extends SuperController with ActivityMixin, ChallengeMixin, GetTickerProviderStateMixin, ConsumerItemMixin, PromotionMixin {
   final WalletMasterController walletMasterController = Get.find();
   LoaderController loaderController = Get.isRegistered<LoaderController>() ? Get.find<LoaderController>() : Get.put(LoaderController());
   RxList<StatModel> get statList {
@@ -81,7 +82,7 @@ class ActivityController extends SuperController with ActivityMixin, ChallengeMi
   final RxBool isButtonDisabled = RxBool(false);
   RxList<ChallengeModel> challengeList = RxList.empty();
    RxBool isFetchingCourseList = RxBool(true);
-  List<PromotionAdModel> promotionAdsList = List.empty(growable: true);
+
 
   Future<void> initializeExercise() async {
 
@@ -116,6 +117,7 @@ class ActivityController extends SuperController with ActivityMixin, ChallengeMi
   Future<void> initActivityStatus() async {
     await initializeActivity();
     await loadMakerImages();
+    await getPromotionAdsList();
   }
 
   Future<void> loadMakerImages() async {
@@ -825,7 +827,7 @@ class ActivityController extends SuperController with ActivityMixin, ChallengeMi
     await getCurrentLocation();
     initLocationStream();
     initGpsServiceStream();
-    getPromotionAdsList();
+
     //await setMarkerImages();
     await findCourses();
     detectChallengeZone(currentLocation.value);
@@ -861,12 +863,7 @@ class ActivityController extends SuperController with ActivityMixin, ChallengeMi
     }
   }
 
-  Future<void> getPromotionAdsList() async {
-    
-    await ActivityService.getPromotionAdsList(successCallback: (data){
-      promotionAdsList.addAll(data);
-    }, errorCallback: (){});
-  }
+
 
   // void closeAdSelectPopup() {
   //   adLoadTimerStop();

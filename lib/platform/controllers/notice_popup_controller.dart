@@ -1,11 +1,13 @@
 import 'package:adjust_sdk/adjust.dart';
 import 'package:adjust_sdk/adjust_event.dart';
+import 'package:flutter/material.dart';
 import 'package:gaza_go/constants/enums.dart';
 import 'package:gaza_go/constants/routes.dart';
 import 'package:gaza_go/platform/controllers/activity_controller.dart';
 import 'package:gaza_go/platform/controllers/global_controller.dart';
 import 'package:gaza_go/platform/controllers/home_menu_controller.dart';
 import 'package:gaza_go/platform/controllers/leaderboard_controller.dart';
+import 'package:gaza_go/platform/helpers/promotion_mixin.dart';
 import 'package:gaza_go/platform/models/notice_popup_model.dart';
 import 'package:gaza_go/platform/services/board_service.dart';
 import 'package:gaza_go/platform/stores/hive_store.dart';
@@ -13,7 +15,7 @@ import 'package:gaza_go/presentations/components/alert_ui_list.dart';
 import 'package:get/get.dart';
 import 'package:url_launcher/url_launcher.dart';
 
-class NoticePopupController extends GetxController {
+class NoticePopupController extends GetxController with PromotionMixin {
   GlobalController globalController = Get.find();
   ActivityController activityController = Get.find();
   RxList<NoticePopupModel> noticePopupList = RxList.empty();
@@ -23,6 +25,7 @@ class NoticePopupController extends GetxController {
   RxList<double> ops = [1.0, 0.0, 0.0].obs;
   RxList<double> offsets = [0.0, 0.0, 0.0].obs;
   RxBool hasNewNotice = RxBool(false);
+  GlobalKey webViewKey = GlobalKey();
 
   @override
   void onInit() async {
@@ -58,6 +61,7 @@ class NoticePopupController extends GetxController {
   }
 
   Future<void> initController() async {
+    await getPromotionAdsList();
     await getNoticePopupList();
     await getMainNoticePopupList();
     showMainPopup();
@@ -67,6 +71,15 @@ class NoticePopupController extends GetxController {
     await BoardService.getMainNoticePopupList(
       successCallback: (List<NoticePopupModel> records) {
         records.removeWhere((element) => element.type == 'INSPECTION');
+        if(promotionAdsList.isNotEmpty){
+          NoticePopupModel promotionAd = NoticePopupModel(
+            imageUrlKo: promotionAdsList[0].imageUrl,
+            label: promotionAdsList[0].title,
+            openType: promotionAdsList[0].openType,
+            linkUrl: promotionAdsList[0].linkUrl,
+          );
+          noticeMainPopupList.add(promotionAd);
+        }
         noticeMainPopupList.addAll(records);
       },
     );
@@ -153,7 +166,8 @@ class NoticePopupController extends GetxController {
         }
         break;
       case 'INTERNAL_WEB_VIEW':
-        Get.toNamed(Routes.webView, arguments: {'id': item.id, 'linkUrl': item.linkUrl});
+        // Get.toNamed(Routes.webView, arguments: {'id': item.id, 'linkUrl': item.linkUrl});
+        showModalWebview(this, Get.context, title: item.label!, linkUrl: item.linkUrl!);
         break;
       case 'EXTERNAL_BROWSER':
         Uri url = Uri.parse(item.linkUrl!);
