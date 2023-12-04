@@ -8,11 +8,9 @@ import 'package:flutter_naver_map/flutter_naver_map.dart';
 import 'package:gaza_go/constants/config.dart';
 import 'package:gaza_go/constants/enums.dart';
 import 'package:gaza_go/constants/routes.dart';
-import 'package:gaza_go/platform/controllers/inspection_notice_controller.dart';
 import 'package:gaza_go/platform/controllers/loader_controller.dart';
 import 'package:gaza_go/platform/controllers/loading_controller.dart';
 import 'package:gaza_go/platform/controllers/wallet_master_controller.dart';
-import 'package:gaza_go/platform/firebase/remote_config.dart';
 import 'package:gaza_go/platform/helpers/activity_helper.dart';
 import 'package:gaza_go/platform/helpers/activity_mixin.dart';
 import 'package:gaza_go/platform/helpers/alert_helper.dart';
@@ -81,7 +79,6 @@ class ActivityController extends SuperController with ActivityMixin, ChallengeMi
   final RxList<ChallengeModel> challengeList = RxList.empty();
 
   Future<void> initializeExercise() async {
-
     challengeGuideController = AnimationController(vsync: this);
     checkConnectivityStatus();
     if ([ExerciseState.ongoing, ExerciseState.paused].any((state) => state == exerciseState.value) && !isFakeGps.value && !isTestingFakeGps()) {
@@ -630,6 +627,8 @@ class ActivityController extends SuperController with ActivityMixin, ChallengeMi
 
   Future<void> selectExerciseType(ExerciseType exerciseType) async {
     if (exerciseType == ExerciseType.walking) {
+      selectedCourse.value = null;
+      selectedChallenge.value = null;
       bool adjustFirstWalkingEvent = HiveStore.load(key: HiveKey.adjustFirstWalkingEvent.name) ?? false;
       if (!adjustFirstWalkingEvent) {
         Adjust.trackEvent(AdjustEvent('v2xlbe'));
