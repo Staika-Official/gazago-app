@@ -348,11 +348,7 @@ class ChallengesDetailController extends SuperController with GetTickerProviderS
     }
   }
 
-  void getSize() {
-    if (backgroundKey.currentContext != null) {
-      backgroundBoxSize.value = backgroundKey.currentContext!.size!.height;
-    }
-  }
+
 
   void moveToExternalBrowser(linkUrl) async {
     Uri url = Uri.parse(linkUrl!);
@@ -605,9 +601,10 @@ class ChallengesDetailController extends SuperController with GetTickerProviderS
         if(data['clickedShareButton']){
 
           if (data['chatType'] != 'MemoChat') {
-            print('-------------------------------------');
+            print('-----------------askSharedCompleteDialog--------------------');
             askSharedCompleteDialog(this, challengeType: challengeType, shareSource: shareSource);
           } else {
+            print('-----------------unableShareMyselfDialog--------------------');
             unableShareMyselfDialog(this, challengeType: challengeType, shareSource: shareSource);
           }
 

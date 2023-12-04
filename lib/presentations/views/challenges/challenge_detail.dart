@@ -299,7 +299,7 @@ class ChallengeDetail extends StatelessWidget {
                             ),
                           ),
                           background: Container(
-                            key: controller.backgroundKey,
+                            // key: controller.backgroundKey,
                             color: subBg01Color,
                             child: controller.backgroundBoxSize.value > 0
                                 ? Column(
