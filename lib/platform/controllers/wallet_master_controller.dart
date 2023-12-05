@@ -129,7 +129,8 @@ class WalletMasterController extends GetxController with SolanaMixin, GetTickerP
 
   RxList<AssetTokenTransactionModel> get transactionsList {
     List<AssetTokenTransactionModel> transactionsList = List.empty(growable: true);
-
+    print(rawTransactionList.length);
+    print(rawTransactionList.isNotEmpty);
     if (rawTransactionList.isNotEmpty) {
       int id = rawTransactionList.first.transactionId!;
       List<List<AssetTokenTransactionModel>> listsById = List.empty(growable: true);
@@ -174,7 +175,7 @@ class WalletMasterController extends GetxController with SolanaMixin, GetTickerP
         }
       }
     }
-
+    print(transactionsList.length);
     return RxList(transactionsList);
   }
 
@@ -243,7 +244,9 @@ class WalletMasterController extends GetxController with SolanaMixin, GetTickerP
       page: rawTransactionList.isEmpty ? 0 : (rawTransactionList.length / 10).floor(),
       successCallback: (AssetDetailModel detail) {
         assetDetail.value = detail;
+        print(assetDetail.value);
         rawTransactionList.addAll(assetDetail.value.transactions);
+        print('rawTransactionList : $rawTransactionList');
         if (assetDetail.value.transactions.isEmpty || !(assetDetail.value.transactions.length % 10 == 0)) {
           hasMoreTransactions = false;
         } else {
@@ -273,6 +276,7 @@ class WalletMasterController extends GetxController with SolanaMixin, GetTickerP
       },
     );
   }
+
 
   void moveToWalletDetail({required AssetTokenBalanceModel asset, required WalletType walletType, required AssetType assetType}) async {
     rawTransactionList.value = RxList.empty();

@@ -1572,13 +1572,7 @@ void itemPurchaseShortBalanceAlert(ShopDetailController controller, double remai
           ),
           Padding(
             padding: EdgeInsets.only(top: 55.0.sp, bottom: 25.sp),
-            child: StyledText(
-              '· ${controller.selectedItem.value.tradeSymbol} 충전 후 재시도 해주세요',
-              fontSize: 14,
-              lineHeight: 14,
-              fontWeight: 500,
-              color: dangerColor,
-            ),
+            child: Container(),
           )
         ],
       );
@@ -4325,7 +4319,7 @@ void successExchangeStikToStaikaWalletAlert(GoWalletController controller) {
           Column(
             children: [
               const StyledText(
-                '보내기 신청이 완료 되었습니다.',
+                '접수 되었습니다.',
                 fontSize: 18,
                 lineHeight: 24,
                 fontWeight: 500,
@@ -4335,7 +4329,7 @@ void successExchangeStikToStaikaWalletAlert(GoWalletController controller) {
               Padding(
                 padding: EdgeInsets.only(top: 10.0.sp),
                 child: const StyledText(
-                  '결과는 잠시 후 거래 내역에서 조회 가능합니다.',
+                  '24시간이내 처리될 예정입니다.',
                   fontSize: 16,
                   lineHeight: 24,
                   fontWeight: 500,
@@ -6111,7 +6105,7 @@ void shortTikCreateCrewAlert() async {
     contentWidget: Padding(
       padding: EdgeInsets.only(top: 22.sp, bottom: 49.sp),
       child: const StyledText(
-        'TIK를 충전하시거나, 챌린지 공유하기로\n무료로 개설이 가능합니다',
+        '챌린지 공유하기로\n무료로 개설이 가능합니다',
         fontWeight: 500,
         fontSize: 16,
         lineHeight: 24,
@@ -6128,18 +6122,18 @@ void shortTikCreateCrewAlert() async {
           buttonColor: popupBgColor,
         ),
       ),
-      SizedBox(
-        width: 9.sp,
-      ),
-      Expanded(
-        child: GazagoButton(
-          buttonText: '충전하기',
-          onTap: () {
-            Get.back();
-            showProductList();
-          },
-        ),
-      ),
+      // SizedBox(
+      //   width: 9.sp,
+      // ),
+      // Expanded(
+      //   child: GazagoButton(
+      //     buttonText: '충전하기',
+      //     onTap: () {
+      //       Get.back();
+      //       showProductList();
+      //     },
+      //   ),
+      // ),
     ],
   );
 }
@@ -7447,27 +7441,30 @@ void joinChallengePopup(ChallengesDetailController controller) async {
                           ),
                         ],
                       ),
-                      Padding(
-                        padding: EdgeInsets.only(top: 44.sp, bottom: 27.0.sp),
-                        child: StyledText(
-                          controller.isShortTokenBalance.value ? '· TIK 충전 후 재시도 해주세요.' : '· 참가비는 납부 후 취소 및 환불이 불가합니다.',
-                          fontSize: 14,
-                          color: controller.isShortTokenBalance.value ? dangerColor : skyBlueColor,
+
+                        Padding(
+                          padding: EdgeInsets.only(top: 44.sp, bottom: 27.0.sp),
+                          child: !controller.isShortTokenBalance.value ? StyledText(
+                            '· 참가비는 납부 후 취소 및 환불이 불가합니다.',
+                            fontSize: 14,
+                            color: controller.isShortTokenBalance.value ? dangerColor : skyBlueColor,
+                          ) : Container(),
                         ),
-                      ),
                       Row(
                         children: [
-                          Expanded(
-                            child: GazagoButton(
-                              onTap: () => controller.isShortTokenBalance.value ? controller.moveToChargeTik() : controller.onFetchJoinChallenge(),
-                              buttonText: controller.isShortTokenBalance.value ? 'TIK 충전하기' : '참가하기',
-                              textColor: Colors.white,
-                              buttonColor: popupBgColor,
+                          if(!controller.isShortTokenBalance.value)
+                            Expanded(
+                              child: GazagoButton(
+                                onTap: () => controller.onFetchJoinChallenge(),
+                                buttonText: '참가하기',
+                                textColor: Colors.white,
+                                buttonColor: popupBgColor,
+                              ),
                             ),
-                          ),
-                          SizedBox(
-                            width: 9.sp,
-                          ),
+                          if(!controller.isShortTokenBalance.value)
+                            SizedBox(
+                              width: 9.sp,
+                            ),
                           Expanded(
                             child: GazagoButton(
                               buttonText: '무료 참여',
@@ -7733,6 +7730,22 @@ void errorBottomSheet(String errorMsg) {
       Expanded(
         child: GazagoButton(
           onTap: () => Get.back(),
+          buttonText: '확인',
+          buttonColor: skyBlueColor,
+        ),
+      ),
+    ],
+  );
+}
+
+void showNeedVerificationExchangeAlert() {
+  showAlert(
+    title: '본인인증이 필요합니다.',
+    contentText: '안전한 거래를 위해서는 본인인증이 필요하여\n인증페이지로 이동합니다.',
+    actions: [
+      Expanded(
+        child: GazagoButton(
+          onTap: () => moveToVerification(),
           buttonText: '확인',
           buttonColor: skyBlueColor,
         ),

@@ -27,22 +27,22 @@ class GoWallet extends StatelessWidget {
               onTap: () => walletMasterController.moveToWalletDetail(asset: asset, walletType: WalletType.inventory, assetType: asset.name!.toUpperCase() == 'TAIKA' ? AssetType.token : AssetType.coin),
               asset: asset,
               actions: asset.name!.toUpperCase() == 'TAIKA' ? [
-                WalletAssetsButtonModel(
-                  buttonText: 'TIK 충전하기',
-                  onTapButton: () => goWalletController.showProductDialog(),
-                ),
+                // WalletAssetsButtonModel(
+                //   buttonText: 'TIK 충전하기',
+                //   onTapButton: () => goWalletController.showProductDialog(),
+                // ),
                 WalletAssetsButtonModel(
                   buttonText: 'STIK으로 교환하기',
                   onTapButton: () => goWalletController.showProductStikDialog(asset.name!.toUpperCase()),
                 ),
               ] : [
-                WalletAssetsButtonModel(
-                  buttonText: 'TIK으로 교환하기',
-                  onTapButton: () => goWalletController.showProductStikDialog(asset.name!.toUpperCase()),
-                ),
+                // WalletAssetsButtonModel(
+                //   buttonText: 'TIK으로 교환하기',
+                //   onTapButton: () => goWalletController.showProductStikDialog(asset.name!.toUpperCase()),
+                // ),
                 WalletAssetsButtonModel(
                   buttonText: 'Staika 지갑으로 송금하기',
-                  onTapButton: () => goWalletController.stikSwapWallet(),
+                  onTapButton: () => goWalletController.checkUserVerified(goWalletController.stikSwapWallet),
                 ),
 
               ],

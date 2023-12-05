@@ -46,6 +46,7 @@ class HomeMenuController extends SuperController {
   final RxBool hideBottomNav = RxBool(false);
   final RxBool hasNewChallenge = RxBool(false);
   final Rx<Control> newChallengeControl = Rx(Control.play);
+  final RxInt eventListener = RxInt(0);
 
   final List<PreferredSizeWidget> appbarList = [
     const MainAppbar(),
@@ -78,7 +79,7 @@ class HomeMenuController extends SuperController {
     checkItemsDb();
     handlePendingDynamicLink();
     checkForNewChallenges();
-    checkUserCI();
+    // checkUserCI();
     super.onReady();
   }
 
@@ -293,22 +294,30 @@ class HomeMenuController extends SuperController {
     String deviceId = HiveStore.loadString(key: HiveKey.uuid.name)!;
     DatabaseReference userDiInfoRef = FirebaseDatabase.instance.ref('user_info/$userId/deviceId');
 
-    await userDiInfoRef.get().then((DataSnapshot snapshot) async {
-      if (snapshot.exists) {
-        if (snapshot.value != deviceId) {
-          handleForceLogoutWithAlert();
-        }
-      } else {
-        handleForceLogoutWithAlert();
-      }
-    }).onError((error, stackTrace) {
-      print(error);
-    });
-
+    // await userDiInfoRef.get().then((DataSnapshot snapshot) async {
+    //   if (snapshot.exists) {
+    //     if (snapshot.value != deviceId) {
+    //       handleForceLogoutWithAlert();
+    //     }
+    //   }
+    // }).onError((error, stackTrace) {
+    //   print(error);
+    // });
+    //
+    // userDiInfoRef.onValue.listen((DatabaseEvent event) async {
+    //   if (event.snapshot.value != deviceId) {
+    //     handleForceLogoutWithAlert();
+    //   }
+    // });
+   print('asdasdasdsd');
     userDiInfoRef.onValue.listen((DatabaseEvent event) async {
-      if (event.snapshot.value != deviceId) {
+      print('event.snapshot.value${event.snapshot.value}');
+      eventListener.value = ++eventListener.value;
+      print(eventListener.value);
+      if (event.snapshot.value != deviceId && event.snapshot.value != null && eventListener.value == 1) {
         handleForceLogoutWithAlert();
       }
+      eventListener.value = 0;
     });
   }
 
