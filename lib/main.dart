@@ -6,6 +6,7 @@ import 'package:facebook_audience_network/facebook_audience_network.dart';
 import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:gaza_go/constants/enums.dart';
 import 'package:gaza_go/flavors.dart';
@@ -72,12 +73,8 @@ void main() async {
     MobileAds.instance.initialize().then((initializationStatus) {
       initializationStatus.adapterStatuses.forEach((key, value) {
         debugPrint('Adapter status for $key: ${value.description}');
-      });});
-
-    // FacebookAudienceNetwork.init(
-    //   testingId: "3c2bf0f4-a8f3-4bb4-9329-41824b1dd03d",
-    //   iOSAdvertiserTrackingEnabled: true,
-    // );
+      });
+    });
     // Geolocation Engine이 2개가 생성되는 문제가 있어서(2개가 생성되면 Foreground 운동측정이 사라지지 않는다). 주석처리
     // 추후에 백그라운드 데이터로 처리가 필요한 경우 다시 고민해보자.
     // FirebaseMessaging.onBackgroundMessage(_firebaseMessagingBackgroundHandler);
@@ -170,6 +167,18 @@ class MyApp extends StatelessWidget {
               }),
             ),
           ),
+          localizationsDelegates: const [
+            GlobalMaterialLocalizations.delegate,
+            GlobalCupertinoLocalizations.delegate,
+            GlobalWidgetsLocalizations.delegate,
+          ],
+          locale: const Locale.fromSubtags(languageCode: 'ko'),
+          fallbackLocale: const Locale('ko'),
+          supportedLocales: const [
+            Locale.fromSubtags(languageCode: 'ko', countryCode: 'KR'),
+            Locale.fromSubtags(languageCode: 'en', countryCode: 'US'),
+            Locale.fromSubtags(languageCode: 'ja', countryCode: 'JP'),
+          ],
           navigatorObservers: <NavigatorObserver>[observer],
           initialRoute: Routes.login,
           getPages: [...Routes.pages],

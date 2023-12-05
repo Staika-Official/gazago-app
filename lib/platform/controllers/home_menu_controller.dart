@@ -79,7 +79,7 @@ class HomeMenuController extends SuperController {
     checkItemsDb();
     handlePendingDynamicLink();
     checkForNewChallenges();
-    checkUserCI();
+    // checkUserCI();
     super.onReady();
   }
 
@@ -294,21 +294,11 @@ class HomeMenuController extends SuperController {
     String deviceId = HiveStore.loadString(key: HiveKey.uuid.name)!;
     DatabaseReference userDiInfoRef = FirebaseDatabase.instance.ref('user_info/$userId/deviceId');
 
-    // await userDiInfoRef.get().then((DataSnapshot snapshot) async {
-    //   if (snapshot.exists) {
-    //     if (snapshot.value != deviceId) {
-    //       handleForceLogoutWithAlert();
-    //     }
-    //   } else {
-    //     handleForceLogoutWithAlert();
-    //   }
-    // }).onError((error, stackTrace) {
-    //   print(error);
-    // });
-
 
     userDiInfoRef.onValue.listen((DatabaseEvent event) async {
+      
       eventListener.value = ++eventListener.value;
+      
       if (event.snapshot.value != deviceId && event.snapshot.value != null && eventListener.value == 1) {
         handleForceLogoutWithAlert();
       }

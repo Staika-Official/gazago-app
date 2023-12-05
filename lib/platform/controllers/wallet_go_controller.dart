@@ -34,7 +34,6 @@ class GoWalletController extends GetxController with SolanaMixin {
   Rx<ExchangeStikQuotesModel> stikQuotes = Rx(ExchangeStikQuotesModel(priceKRW: 0.0, priceUSD: 0.0, lastUpdated: ''));
 
   RxBool get isValid {
-    print(sendStikUiAmount.value);
     if (sendStikUiAmount.value != '') {
       return RxBool(double.parse(sendStikUiAmount.value) != 0 && sendStikUiAmount.value != '0.');
     }
@@ -45,8 +44,7 @@ class GoWalletController extends GetxController with SolanaMixin {
   @override
   void onInit() {
     walletMasterController.getStikPriceInfo();
-  initTextController();
-
+    initTextController();
     super.onInit();
   }
 
@@ -151,6 +149,17 @@ class GoWalletController extends GetxController with SolanaMixin {
     await getStaikaWalletInfo();
   }
 
+  void checkUserVerified(Function callback) async {
+    // isDisableButton.value = true;
+    if (await handleCheckUserVerified()) {
+      callback();
+    } else {
+      showNeedVerificationExchangeAlert();
+    }
+    // isDisableButton.value = false;
+  }
+
+
   Future<void> getStaikaWalletInfo() async {
     loaderController.isLoading.value = true;
     initTextController();
@@ -203,9 +212,8 @@ class GoWalletController extends GetxController with SolanaMixin {
   void openSendStikGoWalletAlert() {
     focusNode.unfocus();
     shortStikUiAmount.value = (double.parse(sendStikUiAmount.value) - double.parse(walletMasterController.stik.value.uiAmountString!)).toString();
-    print(double.parse(sendStikUiAmount.value));
-    print(double.parse(formatDecimalPlaces(double.parse(walletMasterController.stik.value.uiAmountString!), 4, roundType: RoundType.floor)));
-    if (double.parse(sendStikUiAmount.value) <= double.parse(formatDecimalPlaces(double.parse(walletMasterController.stik.value.uiAmountString!), 4, roundType: RoundType.floor))) {
+
+    if (double.parse(sendStikUiAmount.value) <= double.parse(formatDecimalPlaces(double.parse(walletMasterController.stik.value.uiAmountString!), 4, roundType: RoundType.floor).replaceAll(',',''))) {
       sendStikToStaikaWalletAlert(this);
     } else {
       sendStikShortBalanceAlert(this);

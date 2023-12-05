@@ -46,19 +46,18 @@ class WalletDetail extends StatelessWidget {
   // }
 
   List<Widget> renderTransactionList(WalletMasterController controller) {
+    print(controller.transactionsList.length);
     return controller.transactionsList
         .map(
           (transaction) => Container(
             padding: EdgeInsets.only(left: 3.sp, right: 3.sp, top: 20.sp, bottom: 20.sp),
-            decoration: controller.assetDetail.value.transactions.last == transaction
-                ? const BoxDecoration()
-                : BoxDecoration(
-                    border: BorderDirectional(
-                      bottom: BorderSide(
-                        color: popupBgColor,
-                      ),
-                    ),
-                  ),
+            decoration: BoxDecoration(
+              border: BorderDirectional(
+                bottom: BorderSide(
+                  color: popupBgColor,
+                ),
+              ),
+            ),
             child: Row(
               mainAxisSize: MainAxisSize.max,
               crossAxisAlignment: CrossAxisAlignment.start,
@@ -199,7 +198,7 @@ class WalletDetail extends StatelessWidget {
               margin: EdgeInsets.only(top: 50.sp),
             ),
             Expanded(
-              child: controller.assetDetail.value.transactions.isEmpty
+              child: controller.transactionsList.isEmpty
                   ? LayoutBuilder(builder: (context, constraints) {
                       return Padding(
                         padding: EdgeInsets.only(bottom: constraints.maxHeight / 3 * 1),

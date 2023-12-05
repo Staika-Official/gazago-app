@@ -61,6 +61,9 @@ class Api {
       'showLoading': showLoading,
     };
 
+    String headerLang = getx.Get.locale!.languageCode == 'ko' ? 'ko-KR' : 'en-US';
+    _dio.options.headers['Accept-Language'] = headerLang;
+
     if (needsToken) {
       String? accessToken = HiveStore.loadString(key: HiveKey.accessToken.name);
 
@@ -73,7 +76,7 @@ class Api {
       }
 
       if (!isPatch && !isFile) {
-        _dio.options.headers['Content-Type'] = 'application/json';
+        _dio.options.headers['Content-Type'] = 'application/json; charset=utf-8';
       }
 
       if (accessToken != null) {
