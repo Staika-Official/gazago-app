@@ -13,6 +13,7 @@ import 'package:gaza_go/platform/models/exchange_token_withdrawal_model.dart';
 import 'package:gaza_go/platform/models/on_chain_wallet_model.dart';
 import 'package:gaza_go/platform/models/pay_info_model.dart';
 import 'package:gaza_go/platform/models/pay_response_model.dart';
+import 'package:gaza_go/platform/models/setting_environment_model.dart';
 import 'package:gaza_go/platform/models/wallet_solana_model.dart';
 import 'package:gaza_go/platform/models/wallet_solana_transfer_model.dart';
 import 'package:gaza_go/platform/models/wallet_token_balance_model.dart';
@@ -82,6 +83,19 @@ class WalletService {
     }
   }
 
+  static Future<void> getWalletAddress(String type, {required Function successCallback, Function? errorCallback}) async {
+    Response res = await WalletApi.getWalletAddress(type);
+    if (res.statusCode == 200) {
+      List<SettingEnvironmentModel> addressList = [];
+      if (res.data.length > 0) {
+        res.data.forEach((item) => addressList.add(SettingEnvironmentModel.fromJson(item)));
+      }
+      return successCallback(addressList);
+    } else {
+      if (errorCallback != null) errorCallback();
+    }
+  }
+
   static Future<WalletSolanaModel?> getSolanaWallet() async {
     String? userId = HiveStore.loadString(key: HiveKey.userId.name);
     Response res = await WalletApi.getSolanaWallet(userId);
@@ -137,7 +151,13 @@ class WalletService {
     print('sender: ${sender.address}');
 
     // FeePayer
-    final feePayer = F.solanaFeePayer;
+    late final Ed25519HDPublicKey feePayer;
+    await WalletService.getWalletAddress('SOLANA_FEE_WALLET',
+      successCallback: (address) {
+        feePayer = Ed25519HDPublicKey.fromBase58(address[0].value);
+      },
+    );
+
 
     final recentBlockhash = await solanaClient.rpcClient.getLatestBlockhash(commitment: Commitment.confirmed);
     final CompiledMessage compiledMessage = message.compile(
@@ -252,7 +272,12 @@ class WalletService {
 
 
     // FeePayer
-    final feePayer = F.solanaFeePayer;
+    late final Ed25519HDPublicKey feePayer;
+    await WalletService.getWalletAddress('SOLANA_FEE_WALLET',
+      successCallback: (address) {
+        feePayer = Ed25519HDPublicKey.fromBase58(address[0].value);
+      },
+    );
 
     final recentBlockhash = await solanaClient.rpcClient.getLatestBlockhash(commitment: Commitment.confirmed);
     final CompiledMessage compiledMessage = message.compile(

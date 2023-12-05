@@ -21,6 +21,7 @@ import 'package:gaza_go/platform/stores/hive_store.dart';
 import 'package:gaza_go/presentations/components/alert_ui_list.dart';
 import 'package:gaza_go/presentations/views/wallet/confirm_wallet_password.dart';
 import 'package:get/get.dart';
+import 'package:solana/solana.dart';
 
 class StaikaWalletController extends GetxController with WalletMixin, SolanaMixin {
   LoaderController loaderController = Get.put(LoaderController());
@@ -175,6 +176,12 @@ class StaikaWalletController extends GetxController with WalletMixin, SolanaMixi
 
   void confirmSendStikToGoWallet(String password) async {
     String secretKey = HiveStore.load(key: HiveKey.solanaSecretKey.name);
+    late final Ed25519HDPublicKey solanaTokenMasterWallet;
+    await WalletService.getWalletAddress('SOLANA_GAZAGO_WALLET',
+      successCallback: (address) {
+        solanaTokenMasterWallet = Ed25519HDPublicKey.fromBase58(address[0].value);
+      },
+    );
     num mod = pow(10.0, 9);
     if (double.parse(sendStikUiAmount.value) < double.parse(assetStik.value!.uiAmountString)) {
       isFetching.value = true;
@@ -184,7 +191,7 @@ class StaikaWalletController extends GetxController with WalletMixin, SolanaMixi
         accountSecretkey: secretKey,
         walletPassword: password,
         // 회사 계정 지갑
-        toAddress: F.solanaTokenMasterWallet,
+        toAddress: solanaTokenMasterWallet,
         // 토큰 민트 주소
         tokenAddress: F.solanaTokenMint,
         decimals: assetStik.value!.decimals,

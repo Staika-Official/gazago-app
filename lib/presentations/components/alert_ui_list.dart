@@ -4319,7 +4319,7 @@ void successExchangeStikToStaikaWalletAlert(GoWalletController controller) {
           Column(
             children: [
               const StyledText(
-                '보내기 신청이 완료 되었습니다.',
+                '접수 되었습니다.',
                 fontSize: 18,
                 lineHeight: 24,
                 fontWeight: 500,
@@ -4329,7 +4329,7 @@ void successExchangeStikToStaikaWalletAlert(GoWalletController controller) {
               Padding(
                 padding: EdgeInsets.only(top: 10.0.sp),
                 child: const StyledText(
-                  '결과는 잠시 후 거래 내역에서 조회 가능합니다.',
+                  '24시간이내 처리될 예정입니다.',
                   fontSize: 16,
                   lineHeight: 24,
                   fontWeight: 500,
