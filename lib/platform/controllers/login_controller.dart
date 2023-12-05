@@ -84,10 +84,12 @@ class LoginController extends GetxController {
 
       final GoogleSignInAuthentication? googleAuth = await googleUser?.authentication;
 
+      if (googleAuth == null) return;
+
       // Create a new credential
       final credential = GoogleAuthProvider.credential(
-        accessToken: googleAuth?.accessToken,
-        idToken: googleAuth?.idToken,
+        accessToken: googleAuth.accessToken,
+        idToken: googleAuth.idToken,
       );
 
       await FirebaseAuth.instance.signInWithCredential(credential);
@@ -186,10 +188,8 @@ class LoginController extends GetxController {
       loginInfo,
       successCallback: (AccessTokenModel token, int statusCode) async {
         if (statusCode == 200) {
-
           HiveStore.save(key: HiveKey.accessToken.name, value: token.accessToken);
           HiveStore.save(key: HiveKey.refreshToken.name, value: token.refreshToken);
-
 
           print('accessToken : ${token.accessToken}');
           print('refreshToken : ${token.refreshToken}');
