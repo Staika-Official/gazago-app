@@ -459,7 +459,7 @@ class ActivitySelect extends StatelessWidget {
                 child: Align(
                   alignment: Alignment.bottomCenter,
                   child: InkWell(
-                    onTap: () => showModalWebview(controller, Get.context, title: controller.promotionAdsList[0].title!, linkUrl: controller.promotionAdsList[0].linkUrl!),
+                    onTap: () => controller.moveToWebView(controller.promotionAdsList[0]),
                     child: Stack(
                         children: [
                           Container(

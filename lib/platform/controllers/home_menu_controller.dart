@@ -79,7 +79,7 @@ class HomeMenuController extends SuperController {
     checkItemsDb();
     handlePendingDynamicLink();
     checkForNewChallenges();
-    // checkUserCI();
+    checkUserCI();
     super.onReady();
   }
 

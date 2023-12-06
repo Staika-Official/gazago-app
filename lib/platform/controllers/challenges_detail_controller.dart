@@ -159,8 +159,7 @@ class ChallengesDetailController extends SuperController with GetTickerProviderS
       getChallengeLeaderboard();
       getChallengeLeaderboardMyRanking();
     }
-    print('앱시작');
-    checkShareChallengeStatus();
+
     // leaderboardScrollController.addListener(() {
     //   loadDataOnScroll();
     // });
@@ -195,7 +194,7 @@ class ChallengesDetailController extends SuperController with GetTickerProviderS
 
   @override
   void onInactive() {
-    print('onInactive GlobalController');
+    print('onInactive ChallengeDetailController');
     // connectivityStream?.cancel();
     // internetConnectionListener?.pause();
     // TODO: implement onInactive
@@ -611,13 +610,16 @@ class ChallengesDetailController extends SuperController with GetTickerProviderS
         }
 
       } else {
+          print('11');
         if(data['clickedShareButton']) {
           unableSharedHistoryDialog(this, challengeType: challengeType, shareSource: shareSource);
         }
       }
       FirebaseDatabase.instance.ref('kakaoSharedMessageRecord/${challengeId.value}/$userId/clickedShareButton').set(false);
     }).onError((error, stackTrace) {
-      unableSharedHistoryDialog(this, challengeType: challengeType, shareSource: shareSource);
+      print('22');
+      print(error);
+      // unableSharedHistoryDialog(this, challengeType: challengeType, shareSource: shareSource);
     });
   }
 

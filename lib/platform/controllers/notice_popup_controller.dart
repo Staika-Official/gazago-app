@@ -7,6 +7,7 @@ import 'package:gaza_go/platform/controllers/activity_controller.dart';
 import 'package:gaza_go/platform/controllers/global_controller.dart';
 import 'package:gaza_go/platform/controllers/home_menu_controller.dart';
 import 'package:gaza_go/platform/controllers/leaderboard_controller.dart';
+import 'package:gaza_go/platform/helpers/alert_helper.dart';
 import 'package:gaza_go/platform/helpers/promotion_mixin.dart';
 import 'package:gaza_go/platform/models/notice_popup_model.dart';
 import 'package:gaza_go/platform/services/board_service.dart';
@@ -77,6 +78,7 @@ class NoticePopupController extends GetxController with PromotionMixin {
             label: promotionAdsList[0].title,
             openType: promotionAdsList[0].openType,
             linkUrl: promotionAdsList[0].linkUrl,
+            isAdsBanner: true,
           );
           noticeMainPopupList.add(promotionAd);
         }
@@ -108,6 +110,16 @@ class NoticePopupController extends GetxController with PromotionMixin {
   void moveToWebView(NoticePopupModel item) async {
     // 메인팝업 클릭 이벤트
     Adjust.trackEvent(AdjustEvent('hed7a4'));
+
+    // 미래에셋 광고 클릭 이벤트
+    if(item.isAdsBanner != null && item.isAdsBanner!){
+      Adjust.trackEvent(AdjustEvent('qljdfk'));
+      bool bannerAdClick = HiveStore.load(key: HiveKey.bannerAdClick.name) ?? false;
+      if(!bannerAdClick){
+        Adjust.trackEvent(AdjustEvent('ytqi48'));
+        HiveStore.save(key: HiveKey.bannerAdClick.name, value: true);
+      }
+    }
 
 
     if (Get.isBottomSheetOpen!) {

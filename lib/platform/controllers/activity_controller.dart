@@ -8,6 +8,8 @@ import 'package:flutter_naver_map/flutter_naver_map.dart';
 import 'package:gaza_go/constants/config.dart';
 import 'package:gaza_go/constants/enums.dart';
 import 'package:gaza_go/constants/routes.dart';
+import 'package:gaza_go/platform/controllers/home_menu_controller.dart';
+import 'package:gaza_go/platform/controllers/leaderboard_controller.dart';
 import 'package:gaza_go/platform/controllers/loader_controller.dart';
 import 'package:gaza_go/platform/controllers/loading_controller.dart';
 import 'package:gaza_go/platform/controllers/wallet_master_controller.dart';
@@ -41,9 +43,11 @@ import 'package:health/health.dart';
 import 'package:permission_handler/permission_handler.dart' as ph;
 import 'package:simple_animations/animation_builder/custom_animation_builder.dart';
 import 'package:throttling/throttling.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class ActivityController extends SuperController with ActivityMixin, ChallengeMixin, GetTickerProviderStateMixin, ConsumerItemMixin, PromotionMixin {
   final WalletMasterController walletMasterController = Get.find();
+  // ActivityController activityController = Get.isRegistered<ActivityController>() ? Get.find<ActivityController>() : Get.put(ActivityController());
   LoaderController loaderController = Get.isRegistered<LoaderController>() ? Get.find<LoaderController>() : Get.put(LoaderController());
   RxList<StatModel> get statList {
     return RxList([
@@ -880,6 +884,83 @@ class ActivityController extends SuperController with ActivityMixin, ChallengeMi
 
     Get.toNamed(Routes.challengeCourseDetail, arguments: {'id': challenge.id, 'hideCourses': hideLinkToCourses}, preventDuplicates: false);
   }
+
+  void moveToWebView(PromotionAdModel item) async {
+    // 메인팝업 클릭 이벤트
+    Adjust.trackEvent(AdjustEvent('4znz3j'));
+    bool bannerAdClick = HiveStore.load(key: HiveKey.bannerAdClick.name) ?? false;
+    if(!bannerAdClick){
+      Adjust.trackEvent(AdjustEvent('ytqi48'));
+      HiveStore.save(key: HiveKey.bannerAdClick.name, value: true);
+    }
+
+
+
+    if (Get.isBottomSheetOpen!) {
+      Get.back();
+    }
+    switch (item.openType) {
+      case 'IN_APP':
+        if (!Get.currentRoute.contains('home')) {
+          Get.until((route) => Get.currentRoute == Routes.home);
+        }
+        switch (item.linkUrl) {
+          case 'CHALLENGES':
+            Get.find<HomeMenuController>().selectMenu(0);
+            Get.toNamed(Routes.challengeDetail.replaceAll(':id', item.referenceId.toString()));
+            break;
+          case 'ARCHIVE':
+            Get.find<HomeMenuController>().selectMenu(4);
+            if (Get.isRegistered<LeaderboardController>()) {
+              Get.find<LeaderboardController>().tabController.animateTo(1);
+            } else {
+              LeaderboardController leaderboardController = Get.put(LeaderboardController());
+              leaderboardController.tabController.animateTo(1);
+            }
+
+            break;
+          case 'ITEM':
+            Get.find<HomeMenuController>().selectMenu(1);
+            break;
+          case 'SHOP':
+            Get.find<HomeMenuController>().selectMenu(3);
+            break;
+          case 'RANKING':
+            Get.find<HomeMenuController>().selectMenu(4);
+            if (Get.isRegistered<LeaderboardController>()) {
+              Get.find<LeaderboardController>().tabController.animateTo(0);
+            } else {
+              LeaderboardController leaderboardController = Get.put(LeaderboardController());
+              leaderboardController.tabController.animateTo(0);
+            }
+            break;
+
+          case 'WALLET':
+            Get.toNamed(Routes.wallet);
+            break;
+          case 'NOTICE':
+          // Get.toNamed(Routes.noticeList);
+            Get.toNamed(Routes.webView, arguments: {'linkUrl': 'https://eztechfin.notion.site/c5103042de5d4e3a9a61c1101508ffed'});
+            break;
+          case 'FAQ':
+          // Get.toNamed(Routes.preferenceBoard);
+            Get.toNamed(Routes.webView, arguments: {'linkUrl': 'https://eztechfin.notion.site/FAQ-2f6b0ec4d6134fd398cd7a832bfa6cd3'});
+            break;
+        }
+        break;
+      case 'INTERNAL_WEB_VIEW':
+      // Get.toNamed(Routes.webView, arguments: {'id': item.id, 'linkUrl': item.linkUrl});
+        showModalWebview(this, Get.context, title: item.label!, linkUrl: item.linkUrl!);
+        break;
+      case 'EXTERNAL_BROWSER':
+        Uri url = Uri.parse(item.linkUrl!);
+        if (await canLaunchUrl(url)) {
+          await launchUrl(url, mode: LaunchMode.externalApplication);
+        }
+        break;
+    }
+  }
+
 
   @override
   void onDetached() {

@@ -234,12 +234,14 @@ void handleRoute(String route) {
     } else if (route.contains('leaderboard')) {
       Get.find<HomeMenuController>().selectMenu(4);
     }
+    if(!route.contains('challenge_detail')){
+      if (Get.currentRoute != Routes.home) {
+        Get.until((route) => Get.currentRoute == Routes.home);
+      }
 
-    if (Get.currentRoute != Routes.home) {
-      Get.until((route) => Get.currentRoute == Routes.home);
+      Get.toNamed(route);
     }
 
-    Get.toNamed(route);
   } else {
     HiveStore.save(key: HiveKey.dynamicLinkRoute.name, value: route);
   }

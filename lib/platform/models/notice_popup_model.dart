@@ -27,6 +27,7 @@ class NoticePopupModel {
   String? createdDate;
   String? lastModifiedBy;
   String? lastModifiedDate;
+  bool? isAdsBanner;
 
   NoticePopupModel({
     this.id,
@@ -52,6 +53,7 @@ class NoticePopupModel {
     this.createdDate,
     this.lastModifiedBy,
     this.lastModifiedDate,
+    this.isAdsBanner,
   });
 
   factory NoticePopupModel.fromJson(Map<String, dynamic> json) => _$NoticePopupModelFromJson(json);

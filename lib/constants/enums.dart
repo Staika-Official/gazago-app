@@ -111,6 +111,7 @@ enum HiveKey {
   challengeListIds,
   notifiedChallengeList,
   onGetChainWalletBalanceTime,
+  bannerAdClick,
 }
 
 enum ResponseStatus {
