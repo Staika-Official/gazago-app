@@ -545,7 +545,10 @@ class ChallengesDetailController extends SuperController with GetTickerProviderS
           'userId': userId,
           'challengeId': '${challengeId.value}',
         });
-        FirebaseDatabase.instance.ref('kakaoSharedMessageRecord/${challengeId.value}/$userId/clickedShareButton').set(true);
+        if(![ShareSource.shareAppbar, ShareSource.crewDetail].any((source) => shareSource == source)){
+          FirebaseDatabase.instance.ref('kakaoSharedMessageRecord/${challengeId.value}/$userId/clickedShareButton').set(true);
+        }
+
         await ShareClient.instance.launchKakaoTalk(uri);
       } catch (error) {
         showToastPopup('공유 실패');
@@ -598,26 +601,24 @@ class ChallengesDetailController extends SuperController with GetTickerProviderS
 
         print('clickedShareButton: ${data['clickedShareButton']}');
         if(data['clickedShareButton']){
-
-          if (data['chatType'] != 'MemoChat') {
-            print('-----------------askSharedCompleteDialog--------------------');
-            askSharedCompleteDialog(this, challengeType: challengeType, shareSource: shareSource);
-          } else {
-            print('-----------------unableShareMyselfDialog--------------------');
-            unableShareMyselfDialog(this, challengeType: challengeType, shareSource: shareSource);
+          if(Get.isDialogOpen == false) {
+            if (data['chatType'] != 'MemoChat') {
+              print('-----------------askSharedCompleteDialog--------------------');
+              askSharedCompleteDialog(this, challengeType: challengeType, shareSource: shareSource);
+            } else {
+              print('-----------------unableShareMyselfDialog--------------------');
+              unableShareMyselfDialog(this, challengeType: challengeType, shareSource: shareSource);
+            }
           }
-
         }
 
       } else {
-          print('11');
         if(data['clickedShareButton']) {
           unableSharedHistoryDialog(this, challengeType: challengeType, shareSource: shareSource);
         }
       }
       FirebaseDatabase.instance.ref('kakaoSharedMessageRecord/${challengeId.value}/$userId/clickedShareButton').set(false);
     }).onError((error, stackTrace) {
-      print('22');
       print(error);
       // unableSharedHistoryDialog(this, challengeType: challengeType, shareSource: shareSource);
     });
@@ -630,17 +631,24 @@ class ChallengesDetailController extends SuperController with GetTickerProviderS
     kakaoShareStatus.get().then((DataSnapshot snapshot) {
       if (snapshot.exists) {
         Map data = snapshot.value as Map;
-
-        if (data['chatType'] == 'MemoChat') {
-          unableShareMyselfDialog(this, challengeType: challengeType, shareSource: shareSource);
-        } else {
-          if (challengeDetails.value.challengeActivationType == 'CREW') {
-            requestCreateCrew('INVITE');
-          } else {
-            // 납부형 챌린지 참여하기
-            onFetchJoinChallenge(isFree: true);
+        if(data['chatType'] != null){
+          if(Get.isDialogOpen == false){
+            if (data['chatType'] == 'MemoChat') {
+              unableShareMyselfDialog(this, challengeType: challengeType, shareSource: shareSource);
+            } else {
+              if (challengeDetails.value.challengeActivationType == 'CREW') {
+                requestCreateCrew('INVITE');
+              } else {
+                // 납부형 챌린지 참여하기
+                onFetchJoinChallenge(isFree: true);
+              }
+            }
           }
+
+        } else {
+          unableSharedHistoryDialog(this, challengeType: challengeType, shareSource: shareSource);
         }
+
 
       } else {
         unableSharedHistoryDialog(this, challengeType: challengeType, shareSource: shareSource);
@@ -733,6 +741,10 @@ class ChallengesDetailController extends SuperController with GetTickerProviderS
     }
     await ActivityService.fetchJoinChallenge(challengeId.value, params, successCallback: (JoinChallengeResponseModel landingInfo) {
       walletMasterController.getSpendingWalletBalances();
+      if(Get.isBottomSheetOpen == true){
+        Get.until((route) => Get.isDialogOpen == false && Get.isBottomSheetOpen == false);
+      }
+
       if (challengeDetails.value.challengeActivationType! != 'ITEM') {
         getChallengeDetail();
       }

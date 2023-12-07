@@ -1,3 +1,5 @@
+import 'package:collection/collection.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:gaza_go/constants/enums.dart';
 import 'package:gaza_go/constants/routes.dart';
@@ -46,6 +48,11 @@ class ChallengesController extends GetxController with GetTickerProviderStateMix
   Future<void> getChallengesList() async {
     dataGetLoading.value = true;
     await ActivityService.getNewChallenges(successCallback: (List<NewChallengeModel> data) {
+      // List<NewChallengeModel> challengeListData = challengeList.map((element) => element).toSet().toList();
+      // List newChallengeListData = data.map((element) => element).toSet().toList();
+      // Function deepEq = const ListEquality().equals;
+      // print(NewChallengeModel.fromJson(challengeList));
+      // print('배열 비교 : ${deepEq(challengeList, data)}');
       List<int> challengeListIds = challengeList.map((element) => element.id).toSet().toList();
       List<int> newChallengeListIds = data.map((element) => element.id).toSet().toList();
       if (challengeListIds.length != newChallengeListIds.length) {

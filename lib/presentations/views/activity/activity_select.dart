@@ -460,64 +460,13 @@ class ActivitySelect extends StatelessWidget {
                   alignment: Alignment.bottomCenter,
                   child: InkWell(
                     onTap: () => controller.moveToWebView(controller.promotionAdsList[0]),
-                    child: Stack(
-                        children: [
-                          Container(
-                            width: double.infinity,
-                            decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(8),
-                              color: popupBgColor,
-                            ),
-                            child: Padding(
-                              padding: EdgeInsets.symmetric(horizontal: 22.0.sp, vertical: 12.sp),
-                              child: Column(
-                                mainAxisSize: MainAxisSize.min,
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  StyledText(
-                                    controller.promotionAdsList[0].title!,
-                                    fontSize: 16,
-                                    lineHeight: 24,
-                                    fontWeight: 600,
-                                    letterSpacing: -.1,
-                                  ),
-                                  StyledText(
-                                    controller.promotionAdsList[0].label!,
-                                    fontSize: 14,
-                                    lineHeight: 24,
-                                    fontWeight: 600,
-                                    letterSpacing: -.1,
-                                  ),
-                                ],
-                              ),
-                            ),
-                          ),
-
-                          Positioned(
-                            top: 10.sp,
-                            right: 12.sp,
-                            child: Container(
-                              decoration: BoxDecoration(
-                                color: Color(0XFFD7D8DD),
-                                borderRadius: const BorderRadius.all(
-                                  Radius.circular(20),
-                                ),
-
-                              ),
-                              child: Padding(
-                                padding: EdgeInsets.only(top: 3.0, bottom: 3.0, left: 6.0, right: 6.0),
-                                child: StyledText(
-                                  'AD',
-                                  color: Colors.black,
-                                  fontWeight: 700,
-                                  fontSize: 10,
-                                  letterSpacing: -.1,
-                                ),
-                              ),
-                            ),
-                          ),
-                        ]
-                    ),
+                    child: CachedNetworkImage(
+                      imageUrl: controller.promotionAdsList[0].subImageUrl!,
+                      fit: BoxFit.fill,
+                      placeholder: (context, url) => const CircularProgressIndicator(),
+                      errorWidget: (context, url, error) => Image.asset("assets/images/@temp_badge.png"),
+                      httpHeaders: imageNetworkHeader,
+                    )
                   ),
                 ),
               ),

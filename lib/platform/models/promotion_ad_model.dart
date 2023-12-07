@@ -7,6 +7,7 @@ class PromotionAdModel {
   int? id;
   String? title;
   String? imageUrl;
+  String? subImageUrl;
   String? label;
   String? openType;
   String? linkUrl;
@@ -16,6 +17,7 @@ class PromotionAdModel {
     this.id,
     this.title,
     this.imageUrl,
+    this.subImageUrl,
     this.label,
     this.openType,
     this.linkUrl,

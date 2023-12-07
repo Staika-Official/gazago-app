@@ -22,7 +22,7 @@ publish_to: 'none' # Remove this line if you wish to publish to pub.dev
 
 
 
-version: 1.2.45+200
+version: 1.2.45+204
 
 
 
@@ -134,6 +134,7 @@ dependencies:
   jiffy: ^6.2.1
   flutter_localizations:
     sdk: flutter
+  foundation: ^0.0.5
 
 
 dev_dependencies:

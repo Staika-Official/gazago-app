@@ -7524,7 +7524,9 @@ void joinChallengePopup(ChallengesDetailController controller) async {
                           Expanded(
                             child: GazagoButton(
                               buttonText: '무료 참여',
-                              onTap: () => shareCrewChallengeKakaoLinkDialog(controller),
+                              onTap: () {
+                                shareCrewChallengeKakaoLinkDialog(controller);
+                              },
                             ),
                           ),
                         ],

@@ -75,7 +75,7 @@ class NoticePopupController extends GetxController with PromotionMixin {
         if(promotionAdsList.isNotEmpty){
           NoticePopupModel promotionAd = NoticePopupModel(
             imageUrlKo: promotionAdsList[0].imageUrl,
-            label: promotionAdsList[0].title,
+            label: promotionAdsList[0].label,
             openType: promotionAdsList[0].openType,
             linkUrl: promotionAdsList[0].linkUrl,
             isAdsBanner: true,
