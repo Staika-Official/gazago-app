@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:collection/collection.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
@@ -45,17 +47,25 @@ class ChallengesController extends GetxController with GetTickerProviderStateMix
     await getChallengesList();
   }
 
+  bool listsAreEqual(List<NewChallengeModel> list1, List<NewChallengeModel> list2) {
+    if (list1.length != list2.length) {
+      return false;
+    }
+    Function deepEq = const DeepCollectionEquality().equals;
+    for (int i = 0; i < list1.length; i++) {
+      if (!deepEq(list1[i].toJson(), list2[i].toJson())) {
+        return false;
+      }
+    }
+
+    return true;
+  }
+
   Future<void> getChallengesList() async {
     dataGetLoading.value = true;
     await ActivityService.getNewChallenges(successCallback: (List<NewChallengeModel> data) {
-      // List<NewChallengeModel> challengeListData = challengeList.map((element) => element).toSet().toList();
-      // List newChallengeListData = data.map((element) => element).toSet().toList();
-      // Function deepEq = const ListEquality().equals;
-      // print(NewChallengeModel.fromJson(challengeList));
-      // print('배열 비교 : ${deepEq(challengeList, data)}');
-      List<int> challengeListIds = challengeList.map((element) => element.id).toSet().toList();
       List<int> newChallengeListIds = data.map((element) => element.id).toSet().toList();
-      if (challengeListIds.length != newChallengeListIds.length) {
+      if (!listsAreEqual(challengeList, data)) {
         challengeList.clear();
         challengeList.addAll(data);
         HiveStore.save(key: HiveKey.challengeListIds.name, value: newChallengeListIds);
