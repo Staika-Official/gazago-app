@@ -53,6 +53,8 @@
 	<string>ca-app-pub-4234536720874912~6134851285</string>
 	<key>ITSAppUsesNonExemptEncryption</key>
 	<false/>
+	<key>FacebookAutoLogAppEventsEnabled</key>
+    <true/>
 	<key>LSApplicationCategoryType</key>
 	<string></string>
 	<key>LSApplicationQueriesSchemes</key>
