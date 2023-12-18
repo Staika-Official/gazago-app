@@ -2,6 +2,7 @@ import 'dart:async';
 import 'dart:io';
 
 import 'package:advertising_id/advertising_id.dart';
+import 'package:facebook_audience_network/facebook_audience_network.dart';
 import 'package:flutter/services.dart';
 import 'package:gaza_go/flavors.dart';
 import 'package:gaza_go/platform/controllers/activity_controller.dart';
@@ -21,11 +22,13 @@ class DailyBenefitController extends GetxController {
   Rxn<DailyBenefitListModel> dailyBenefitList = Rxn();
   RxBool dataGetLoading = RxBool(false);
   RxBool adIsLoading = RxBool(false);
-  RxList<RewardedAd?> dailyRewardAdList = RxList.empty(growable: true);
+  RxList<RewardedInterstitialAd?> dailyRewardAdList = RxList.empty(growable: true);
   RxInt activeAdIndex = RxInt(0);
   String? advertisingId = '';
   bool? isLimitAdTrackingEnabled;
   int adLoadAttemptCount = 0;
+  bool isRewardedAdLoaded = false;
+  Rxn<BenefitItemModel> selectedBenefitItem = Rxn();
 
   RxDouble get maxRewardDistance {
     if (dailyBenefitList.value != null && dailyBenefitList.value!.benefits.isNotEmpty) {
@@ -48,15 +51,62 @@ class DailyBenefitController extends GetxController {
     super.onInit();
   }
 
+
+
+
   Future<void> initController() async {
     await initPlatformState();
     await getDailyBenefitsList();
+    FacebookAudienceNetwork.init(
+      iOSAdvertiserTrackingEnabled: true,
+    );
     await loadAd();
   }
 
   Future<void> refreshController() async {
     await getDailyBenefitsList();
     todaysDate.value = DateTime.now();
+  }
+
+  Future<void> loadRewardedVideoAd() async {
+    await FacebookRewardedVideoAd.loadRewardedVideoAd(
+      placementId: getMetaAdPlacementId(),
+      listener: (result, value) async {
+        print("Rewarded Ad: $result --> $value");
+        if (result == RewardedVideoAdResult.LOADED){
+          adViewTime.value = DateTime.now();
+          FacebookRewardedVideoAd.showRewardedVideoAd();
+          if(selectedBenefitItem.value != null){
+            await fetchDailyBenefit(selectedBenefitItem.value!, formatDateUntilDay(adViewTime.toString()), value["placement_id"]);
+          }
+        }
+        if (result == RewardedVideoAdResult.VIDEO_COMPLETE){
+          print('비디오 끝');
+        }
+        if(result == RewardedVideoAdResult.VIDEO_CLOSED){
+          print('비디오 닫기');
+        }
+        if(result == RewardedVideoAdResult.ERROR){
+          if (Get.currentRoute.contains('daily_benefits')) showToastPopup('현재 시청 가능한 광고가 없습니다.\n잠시 후 다시 시도해 주세요.');
+        }
+        if (result == RewardedVideoAdResult.VIDEO_COMPLETE)
+          /// Once a Rewarded Ad has been closed and becomes invalidated,
+          /// load a fresh Ad by calling this function.
+          if (result == RewardedVideoAdResult.VIDEO_CLOSED &&
+              (value == true || value["invalidated"] == true)) {
+            isRewardedAdLoaded = false;
+            loadRewardedVideoAd();
+          }
+      },
+    );
+  }
+
+  void showRewardedAd() {
+    if (isRewardedAdLoaded == true) {
+      FacebookRewardedVideoAd.showRewardedVideoAd();
+    } else {
+      print("Rewarded Ad not yet loaded!");
+    }
   }
 
   Future<void> getDailyBenefitsList() async {
@@ -97,13 +147,17 @@ class DailyBenefitController extends GetxController {
     }
   }
 
+  String getMetaAdPlacementId() {
+    return Platform.isIOS ? F.dailyBenefitMetaAdIos : F.dailyBenefitMetaAdAndroid;
+  }
+
   Future<void> loadRewardedAd() async {
     Completer completer = Completer<void>();
-    await RewardedAd.load(
+    await RewardedInterstitialAd.load(
       adUnitId: getAdUnitId(),
       request: const AdRequest(),
-      rewardedAdLoadCallback: RewardedAdLoadCallback(
-        onAdLoaded: (RewardedAd ad) {
+      rewardedInterstitialAdLoadCallback: RewardedInterstitialAdLoadCallback(
+        onAdLoaded: (RewardedInterstitialAd ad) {
           print('ad loaded');
           if (dailyRewardAdList.isEmpty) {
             print('index: 0');
@@ -117,13 +171,22 @@ class DailyBenefitController extends GetxController {
           adIsLoading.value = false;
           completer.complete();
         },
-        onAdFailedToLoad: (error) async {
+        onAdFailedToLoad: (error ) async {
+          String domain = error.domain;
+          int code = error.code;
+          String message = error.message;
+          ResponseInfo? responseInfo = error.responseInfo;
+          print('domain : ${domain}');
+          print('code : ${code}');
+          print('message : ${message}');
+          print('responseInfo : ${responseInfo}');
+
           adLoadAttemptCount += 1;
           adIsLoading.value = false;
-          print('RewardedAd failed to load: $error');
           if (adLoadAttemptCount == 2) {
             adLoadAttemptCount = 0;
-            if (Get.currentRoute.contains('daily_benefits')) showToastPopup('현재 시청 가능한 광고가 없습니다.\n잠시 후 다시 시도해 주세요.');
+            await loadRewardedVideoAd();
+            // if (Get.currentRoute.contains('daily_benefits')) showToastPopup('현재 시청 가능한 광고가 없습니다.\n잠시 후 다시 시도해 주세요.');
           } else {
             await loadRewardedAd();
           }
@@ -146,8 +209,8 @@ class DailyBenefitController extends GetxController {
     DateTime midnight = DateTime(todaysDate.value.year, todaysDate.value.month, todaysDate.value.day + 1).toLocal();
 
     if (requestTime.isBefore(midnight)) {
+      selectedBenefitItem.value = benefitItem;
       if (benefitItem.adDisplayed) {
-
         await requestDailyBenefitAd(benefitItem);
       } else {
         await fetchDailyBenefit(benefitItem, formatDateUntilDay(requestTime.toString()), null);
@@ -168,12 +231,14 @@ class DailyBenefitController extends GetxController {
         dailyBenefitList.refresh();
         Get.find<ActivityController>().getUserState();
         Get.find<WalletMasterController>().getSpendingWalletBalances();
+        selectedBenefitItem.value = null;
       },
       errorCallback: (ErrorResponseDataModel? errorResponse) {
         if (errorResponse != null && errorResponse.errorCode == 'DAILY_BENEFIT_TIME_UP') {
           showToastPopup(errorResponse.errorMessage!);
           getDailyBenefitsList();
         }
+        selectedBenefitItem.value = null;
       },
     );
   }

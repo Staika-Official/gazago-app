@@ -135,6 +135,7 @@ dependencies:
   flutter_localizations:
     sdk: flutter
   foundation: ^0.0.5
+  facebook_audience_network: ^1.0.1
 
 
 dev_dependencies:
