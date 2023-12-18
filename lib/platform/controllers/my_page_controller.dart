@@ -101,6 +101,7 @@ class MyPageController extends GetxController {
       successCallback: (UserAccountModel account) {
         preferenceController.onInit();
         HiveStore.save(key: HiveKey.profileImageUrl.name, value: account.profileImageUrl);
+        HiveStore.save(key: HiveKey.nickname.name, value: account.nickname);
         showToastPopup('수정되었습니다.');
         Get.back();
       },
