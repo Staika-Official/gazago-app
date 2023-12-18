@@ -158,14 +158,11 @@ class DailyBenefitController extends GetxController {
       request: const AdRequest(),
       rewardedInterstitialAdLoadCallback: RewardedInterstitialAdLoadCallback(
         onAdLoaded: (RewardedInterstitialAd ad) {
-          print('ad loaded');
           if (dailyRewardAdList.isEmpty) {
-            print('index: 0');
             dailyRewardAdList.value = [null, null];
             dailyRewardAdList.first = ad;
           } else {
             int index = activeAdIndex.value == 0 ? 1 : 0;
-            print('index: $index');
             dailyRewardAdList[index] = ad;
           }
           adIsLoading.value = false;
@@ -176,10 +173,6 @@ class DailyBenefitController extends GetxController {
           int code = error.code;
           String message = error.message;
           ResponseInfo? responseInfo = error.responseInfo;
-          print('domain : ${domain}');
-          print('code : ${code}');
-          print('message : ${message}');
-          print('responseInfo : ${responseInfo}');
 
           adLoadAttemptCount += 1;
           adIsLoading.value = false;
