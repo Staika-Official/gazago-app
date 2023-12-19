@@ -75,8 +75,8 @@ class DailyBenefitController extends GetxController {
         print("Rewarded Ad: $result --> $value");
         if (result == RewardedVideoAdResult.LOADED){
           adViewTime.value = DateTime.now();
-          FacebookRewardedVideoAd.showRewardedVideoAd();
           if(selectedBenefitItem.value != null){
+            FacebookRewardedVideoAd.showRewardedVideoAd();
             await fetchDailyBenefit(selectedBenefitItem.value!, formatDateUntilDay(adViewTime.toString()), value["placement_id"]);
           }
         }
