@@ -16,6 +16,8 @@ import 'package:gaza_go/presentations/components/alert_ui_list.dart';
 import 'package:get/get.dart';
 import 'package:url_launcher/url_launcher.dart';
 
+import '../models/promotion_ad_model.dart';
+
 class NoticePopupController extends GetxController with PromotionMixin {
   GlobalController globalController = Get.find();
   ActivityController activityController = Get.find();
@@ -73,16 +75,20 @@ class NoticePopupController extends GetxController with PromotionMixin {
       successCallback: (List<NoticePopupModel> records) {
         records.removeWhere((element) => element.type == 'INSPECTION');
         if(promotionAdsList.isNotEmpty){
-          NoticePopupModel promotionAd = NoticePopupModel(
-            imageUrlKo: promotionAdsList[0].imageUrl,
-            label: promotionAdsList[0].label,
-            openType: promotionAdsList[0].openType,
-            linkUrl: promotionAdsList[0].linkUrl,
-            isAdsBanner: true,
-          );
-          noticeMainPopupList.add(promotionAd);
+          for (PromotionAdModel promotion in promotionAdsList) {
+            NoticePopupModel promotionAd = NoticePopupModel(
+              imageUrlKo: promotion.imageUrl,
+              label: promotion.label,
+              openType: promotion.openType,
+              linkUrl: promotion.linkUrl,
+              listOrder: promotion.listOrder,
+              isAdsBanner: true,
+            );
+            noticeMainPopupList.add(promotionAd);
+          }
         }
         noticeMainPopupList.addAll(records);
+        noticeMainPopupList.sort((a, b) => a.listOrder!.compareTo(b.listOrder!));
       },
     );
   }

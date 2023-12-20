@@ -635,15 +635,18 @@ class ActivityController extends SuperController with ActivityMixin, ChallengeMi
   void passThrowActivityLoading(ExerciseType exerciseType, [ChallengeCourseModel? challenge]) {
     loadingTimer?.cancel();
     loadingTimer = null;
-    print('asdasdasdasd');
     Get.back();
     exerciseStartThr.throttle(() => startExercise(exerciseType, challenge));
   }
 
   Future<void> selectExerciseType(ExerciseType exerciseType) async {
     if (exerciseType == ExerciseType.walking) {
-      selectedCourse.value = null;
-      selectedChallenge.value = null;
+      if(selectedCourse.value != null && selectedCourse.value!.challengeId == null) {
+        selectedCourse.value = null;
+        selectedChallenge.value = null;
+      }
+
+
       bool adjustFirstWalkingEvent = HiveStore.load(key: HiveKey.adjustFirstWalkingEvent.name) ?? false;
       if (!adjustFirstWalkingEvent) {
         Adjust.trackEvent(AdjustEvent('v2xlbe'));
@@ -701,6 +704,8 @@ class ActivityController extends SuperController with ActivityMixin, ChallengeMi
 
     selectedCourse.value = ChallengeCourseModel.fromJson(course.toJson());
     selectedChallenge.value = ChallengeModel.fromJson(challenge.toJson());
+
+
     Get.toNamed(Routes.activityChallenges);
   }
 
