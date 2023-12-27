@@ -12,6 +12,7 @@ class PromotionAdModel {
   String? openType;
   String? linkUrl;
   int? referenceId;
+  int? listOrder;
 
   PromotionAdModel({
     this.id,
@@ -22,6 +23,7 @@ class PromotionAdModel {
     this.openType,
     this.linkUrl,
     this.referenceId,
+    this.listOrder,
   });
 
   factory PromotionAdModel.fromJson(Map<String, dynamic> json) => _$PromotionAdModelFromJson(json);

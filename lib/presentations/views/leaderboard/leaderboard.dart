@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:gaza_go/constants/config.dart';
@@ -38,7 +40,7 @@ class LeaderboardHome extends StatelessWidget {
                     return Padding(
                       padding: EdgeInsets.only(bottom: 20.sp),
                       child: TableCalendar(
-                        rowHeight: 75,
+                        rowHeight: Platform.isIOS ?  85 : 70,
                         daysOfWeekHeight: 30,
                         locale: 'ko-KR',
                         firstDay: controller.firstDay.value!,
@@ -57,24 +59,23 @@ class LeaderboardHome extends StatelessWidget {
                             if (events.isNotEmpty) {
                               UserRewardStatisticsModel reward = events.first as UserRewardStatisticsModel;
                               return Padding(
-                                padding: EdgeInsets.only(top: 42.0.sp),
+                                padding: EdgeInsets.only(top: 40.0.sp),
                                 child: date.day != controller.today.value?.day
                                     ? Column(
+                                        mainAxisSize: MainAxisSize.min,
+                                        mainAxisAlignment: MainAxisAlignment.start,
+                                        crossAxisAlignment: CrossAxisAlignment.center,
                                         children: [
                                           if (reward.tik != null)
                                             FittedBox(
                                               fit: BoxFit.scaleDown,
-                                              child: Column(
-                                                children: [
-                                                  StyledText(
-                                                    '+${formatDecimalPlaces(reward.tik!.toDouble(), 0)}',
-                                                    fontSize: 12.sp,
-                                                    lineHeight: 16.sp,
-                                                    fontWeight: 600,
-                                                    letterSpacing: -.1,
-                                                    color: const Color(0xFFFF6B9C),
-                                                  ),
-                                                ],
+                                              child:    StyledText(
+                                                '+${formatDecimalPlaces(reward.tik!.toDouble(), 0)}',
+                                                fontSize: 12.sp,
+                                                lineHeight: 16.sp,
+                                                fontWeight: 600,
+                                                letterSpacing: -.1,
+                                                color: const Color(0xFFFF6B9C),
                                               ),
                                             ),
                                           if (reward.stik != null)
