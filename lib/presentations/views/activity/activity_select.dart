@@ -453,7 +453,7 @@ class ActivitySelect extends StatelessWidget {
               ),
             ),
 
-            if(controller.promotionAdsList.isNotEmpty)
+            if(controller.promotionAdsList.isNotEmpty && controller.promotionAdsList[0].subImageUrl != null)
               Padding(
                 padding: EdgeInsets.symmetric(vertical: 20.0.sp, horizontal: 20.0.sp),
                 child: Align(

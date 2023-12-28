@@ -18,6 +18,7 @@ class CalendarStatistics extends StatelessWidget {
     CalendarStatisticsController controller = Get.put(CalendarStatisticsController());
 
     return Scaffold(
+
       appBar: AppBar(
         title: const StyledText(
           "TIK 획득 내역",
@@ -36,6 +37,9 @@ class CalendarStatistics extends StatelessWidget {
       body: Container(
         color: subBg01Color,
         child: Column(
+          mainAxisAlignment: MainAxisAlignment.start,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          mainAxisSize: MainAxisSize.min,
           children: [
             StreamBuilder<RxMap>(
                 stream: controller.streamController.stream,
@@ -55,8 +59,8 @@ class CalendarStatistics extends StatelessWidget {
                           Icons.chevron_right,
                           color: Colors.white,
                         ),
-                        leftChevronPadding: EdgeInsets.only(left: 60.sp, top: 10.sp, bottom: 10.sp),
-                        rightChevronPadding: EdgeInsets.only(right: 60.sp, top: 10.sp, bottom: 10.sp),
+                        leftChevronPadding: EdgeInsets.only(left: 60.sp),
+                        rightChevronPadding: EdgeInsets.only(right: 60.sp),
                       ),
                       calendarFormat: controller.calendarFormat,
                       calendarBuilders: CalendarBuilders(
@@ -93,7 +97,7 @@ class CalendarStatistics extends StatelessWidget {
             Obx(() {
               return Container(
                 height: 49.0.sp,
-                margin: EdgeInsets.only(top: 38.sp, left: 30.sp, right: 31.sp),
+                margin: EdgeInsets.only(top: 0.sp, left: 30.sp, right: 31.sp, bottom:20.sp),
                 decoration: BoxDecoration(
                   color: const Color(0xFF2E3038),
                   border: Border.all(
