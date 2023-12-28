@@ -225,13 +225,39 @@ class F {
   static String get dailyBenefitAd1Android {
     switch (appFlavor) {
       case Flavor.dev:
-        return 'ca-app-pub-3940256099942544/5224354917';
+        return 'ca-app-pub-3940256099942544/5354046379';
       case Flavor.stage:
-        return 'ca-app-pub-3940256099942544/5224354917';
+        return 'ca-app-pub-3940256099942544/5354046379';
       case Flavor.prod:
-        return 'ca-app-pub-4234536720874912/1226325561';
+        return 'ca-app-pub-4234536720874912/6128284879';
       default:
-        return 'ca-app-pub-3940256099942544/5224354917';
+        return 'ca-app-pub-3940256099942544/5354046379';
+    }
+  }
+
+  static String get dailyBenefitMetaAdAndroid {
+    switch (appFlavor) {
+      case Flavor.dev:
+        return '1370832760528609_1370834690528416';
+      case Flavor.stage:
+        return '1370832760528609_1370834690528416';
+      case Flavor.prod:
+        return '1370832760528609_1370834690528416';
+      default:
+        return '1370832760528609_1370834690528416';
+    }
+  }
+
+  static String get dailyBenefitMetaAdIos {
+    switch (appFlavor) {
+      case Flavor.dev:
+        return  '1370832760528609_1370873647191187';
+      case Flavor.stage:
+        return  '1370832760528609_1370873647191187';
+      case Flavor.prod:
+        return  '1370832760528609_1370873647191187';
+      default:
+        return  '1370832760528609_1370873647191187';
     }
   }
 
