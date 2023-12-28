@@ -212,7 +212,10 @@ class GoWalletController extends GetxController with SolanaMixin {
   void openSendStikGoWalletAlert() {
     focusNode.unfocus();
     shortStikUiAmount.value = (double.parse(sendStikUiAmount.value) - double.parse(walletMasterController.stik.value.uiAmountString!)).toString();
-
+    if(double.parse(sendStikUiAmount.value) < 1){
+      showMinimumSendStikAmountAlert();
+      return;
+    }
     if (double.parse(sendStikUiAmount.value) <= double.parse(formatDecimalPlaces(double.parse(walletMasterController.stik.value.uiAmountString!), 4, roundType: RoundType.floor).replaceAll(',',''))) {
       sendStikToStaikaWalletAlert(this);
     } else {

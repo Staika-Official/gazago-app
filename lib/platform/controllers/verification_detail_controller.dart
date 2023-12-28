@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:gaza_go/constants/enums.dart';
 import 'package:gaza_go/constants/routes.dart';
+import 'package:gaza_go/platform/helpers/verification_helper.dart';
+import 'package:gaza_go/presentations/components/alert_ui_list.dart';
 import 'package:get/get.dart';
 import 'package:rxdart/rxdart.dart' as RX;
 
@@ -29,6 +31,7 @@ class VerificationDetailController extends GetxController {
     }
   }
 
+
   void updateBirthday(String dob) {
     userBirthday.value = dob;
   }
@@ -38,9 +41,14 @@ class VerificationDetailController extends GetxController {
   }
 
   void nextStep() {
-    final String birth = userBirthday.value;
-    verificationUserModel.birthday = '${birth.substring(0, 4)}-${birth.substring(4, 6)}-${birth.substring(6, 8)}';
-    verificationUserModel.gender = userGender.value.genderValue;
-    Get.toNamed(Routes.verificationPhone, arguments: {'verificationUserModel': verificationUserModel});
+    if(checkIsFourteenUnderUser(userBirthday.value)){
+      showFourteenUnderUserAlert();
+    } else {
+      final String birth = userBirthday.value;
+      verificationUserModel.birthday = '${birth.substring(0, 4)}-${birth.substring(4, 6)}-${birth.substring(6, 8)}';
+      verificationUserModel.gender = userGender.value.genderValue;
+      Get.toNamed(Routes.verificationPhone, arguments: {'verificationUserModel': verificationUserModel});
+    }
+
   }
 }

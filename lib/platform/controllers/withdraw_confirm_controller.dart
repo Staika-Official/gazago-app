@@ -1,5 +1,7 @@
 import 'package:gaza_go/constants/routes.dart';
+import 'package:gaza_go/platform/helpers/alert_helper.dart';
 import 'package:gaza_go/platform/helpers/login_helper.dart';
+import 'package:gaza_go/platform/models/error_response_data_model.dart';
 import 'package:gaza_go/platform/models/term_item_model.dart';
 import 'package:gaza_go/platform/services/uaa_service.dart';
 import 'package:gaza_go/presentations/components/alert_ui_list.dart';
@@ -65,7 +67,9 @@ class WithdrawConfirmController extends GetxController {
       successCallback: () {
         Get.toNamed(Routes.withdrawCompleted);
       },
-      errorCallback: () {},
+      errorCallback: (ErrorResponseDataModel? errorData) {
+        showToastPopup(errorData!.errorMessage!);
+      },
     );
     // Get.toNamed(Routes.withdrawCompleted)
   }

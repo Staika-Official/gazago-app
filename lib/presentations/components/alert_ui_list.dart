@@ -7811,3 +7811,69 @@ void showNeedVerificationExchangeAlert() {
     ],
   );
 }
+
+void showFourteenUnderUserAlert() {
+  showAlert(
+    contentWidget: Padding(
+      padding: EdgeInsets.only(top: 20.0.sp, bottom: 40.sp),
+      child: const Column(
+        children: [
+          StyledText(
+            '14세 미만 사용자는 본인 인증 서비스를\n이용할 수 없습니다.',
+            fontSize: 20,
+            lineHeight: 28,
+            fontWeight: 500,
+            letterSpacing: .2,
+            textAlign: TextAlign.center,
+          ),
+        ],
+      ),
+    ),
+    actions: [
+      Expanded(
+        child: GazagoButton(
+          onTap: () {
+            Get.back();
+          },
+          buttonText: '확인',
+          buttonColor: skyBlueColor,
+        ),
+      ),
+    ],
+  );
+}
+
+void showMinimumSendStikAmountAlert() {
+  showAlert(
+    contentWidget: Padding(
+      padding: EdgeInsets.only(top: 20.0.sp, bottom: 40.sp),
+      child: Column(
+        children: [
+          iconCircleSkyBlueCheck,
+          Padding(
+            padding:  EdgeInsets.only(top: 20.0.sp),
+            child: StyledText(
+              '최소 1STIK 이상 보낼 수 있습니다.',
+              fontSize: 20,
+              lineHeight: 28,
+              fontWeight: 500,
+              letterSpacing: .2,
+              textAlign: TextAlign.center,
+            ),
+          ),
+        ],
+      ),
+    ),
+    actions: [
+      Expanded(
+        child: GazagoButton(
+          onTap: () {
+            Get.back();
+          },
+          buttonText: '확인',
+          buttonColor: skyBlueColor,
+        ),
+      ),
+    ],
+  );
+}

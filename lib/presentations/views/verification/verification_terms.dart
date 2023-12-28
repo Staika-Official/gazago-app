@@ -61,6 +61,7 @@ class VerificationTerms extends StatelessWidget {
                         ),
                       ),
                     ),
+                    if(term.content != null && term.content != '')
                     Padding(
                       padding: EdgeInsets.only(top: 2.0.sp),
                       child: SizedBox(

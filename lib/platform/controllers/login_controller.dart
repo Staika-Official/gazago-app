@@ -249,7 +249,13 @@ class LoginController extends GetxController {
         await initUserInfo();
         Get.offNamed(Routes.loading);
       },
-      errorCallback: () {},
+      errorCallback: (ErrorResponseDataModel? res) {
+        if (res != null) {
+          if (res.errorCode != null && res.errorCode == 'TERMINATION_REQUESTED_WALLET') {
+            showToastPopup(res.errorMessage!);
+          }
+        }
+      },
     );
   }
 }
