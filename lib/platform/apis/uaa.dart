@@ -39,14 +39,15 @@ class UaaApi {
     ).get('/api/ping');
   }
 
-  static Future<Response> modifyAccountInfo(String userId, String? nickname, String? profileImageUrl) async {
+  static Future<Response> modifyAccountInfo(int id, String userId, String? nickname, String? profileImageUrl) async {
     return await Api.client(
-      serviceUrl: ServiceUrl.uaaService,
+      serviceUrl: ServiceUrl.userService,
       isPatch: true,
     ).patch(
       '/users/$userId',
       data: {
-        'id': userId,
+        'id': id,
+        'userId': userId,
         'nickname': nickname,
         'profileImageUrl': profileImageUrl,
         "clientId": "GAZAGO",
@@ -80,15 +81,16 @@ class UaaApi {
     );
   }
 
-  static Future<Response> fetchWithdrawMember() async {
-    return await Api.client(serviceUrl: ServiceUrl.uaaService).put('/account/termination', data: {
+  static Future<Response> fetchWithdrawMember(String userId) async {
+    return await Api.client(serviceUrl: ServiceUrl.uaaService).put('/account/users/$userId/termination', data: {
+      "userId": userId,
       "reason": "APP_GAZAGO_WITHDRAW",
       "clientId": "GAZAGO",
     });
   }
 
-  static Future<Response> fetchWithdrawCancel() async {
-    return await Api.client(serviceUrl: ServiceUrl.uaaService).put('/account/activation?clientId=GAZAGO');
+  static Future<Response> fetchWithdrawCancel(String userId) async {
+    return await Api.client(serviceUrl: ServiceUrl.uaaService).put('/account/users/$userId/activation?clientId=GAZAGO');
   }
 
   static Future<Response> pingConnection(int seconds) async {
@@ -107,5 +109,9 @@ class UaaApi {
       "username": email,
       "password": password,
     });
+  }
+
+  static Future<Response> getUserInfo(String userId) async {
+    return await Api.client(serviceUrl: ServiceUrl.userService).get('/users/$userId');
   }
 }

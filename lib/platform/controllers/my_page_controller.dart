@@ -7,6 +7,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:gaza_go/constants/enums.dart';
 import 'package:gaza_go/platform/controllers/preference_controller.dart';
 import 'package:gaza_go/platform/helpers/alert_helper.dart';
+import 'package:gaza_go/platform/helpers/preference_mixin.dart';
 import 'package:gaza_go/platform/models/error_response_data_model.dart';
 import 'package:gaza_go/platform/models/user_account_model.dart';
 import 'package:gaza_go/platform/services/uaa_service.dart';
@@ -17,50 +18,25 @@ import 'package:http_parser/http_parser.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:permission_handler/permission_handler.dart' as ph;
 
-class MyPageController extends GetxController {
-  // final PreferenceController? preferenceController;
-  //
-  // MyPageController([this.preferenceController]);
+class MyPageController extends GetxController with PreferenceMixin {
   final PreferenceController preferenceController = Get.find();
-  final Rx<UserAccountModel> profile = Rx(UserAccountModel(
-    id: -1,
-    login: '',
-    email: '',
-    nickname: '',
-    profileImageUrl: '',
-    provider: '',
-  ));
+
   final ImagePicker _picker = ImagePicker();
   final Rx<XFile?> pickedImage = Rx(null);
   final RxBool isEditMode = RxBool(false);
   final TextEditingController nicknameTextController = TextEditingController();
   final int maxNickNameLength = 20;
-  final RxString originalNickname = RxString('');
+  RxString provider = RxString('');
+
 
   @override
   void onInit() {
-    getProfileInfo();
+    Get.arguments != null ? provider.value = Get.arguments['provider'] : provider.value = '';
+    getUserInfo();
     super.onInit();
   }
 
-  void getProfileInfo() async {
-    await UaaService.getAccountInfo(
-      successCallback: (UserAccountModel account) {
-        profile.update(
-          (state) {
-            state?.nickname = account.nickname;
-            state?.profileImageUrl = account.profileImageUrl;
-            state?.availableChangeNickname = account.availableChangeNickname;
-            state?.provider = account.provider;
-            state?.email = account.email;
-            state?.id = account.id;
-            state?.authorities = account.authorities;
-          },
-        );
-        originalNickname.value = account.nickname!;
-      },
-    );
-  }
+
 
   Future<void> modifyMyAccountInfo() async {
     if (pickedImage.value == null && profile.value.nickname == originalNickname.value) {
@@ -96,6 +72,7 @@ class MyPageController extends GetxController {
     profile.value.profileImageUrl = profileImageUrl.origin + profileImageUrl.path;
 
     await UaaService.modifyAccountInfo(
+      profile.value.id,
       profile.value.nickname!,
       profile.value.profileImageUrl,
       successCallback: (UserAccountModel account) {
@@ -198,7 +175,12 @@ class MyPageController extends GetxController {
   }
 
   void validateProfileEdit() {
+
     if (profile.value.availableChangeNickname! && profile.value.nickname != originalNickname.value) {
+      if(profile.value.nickname!.length < 3) {
+        showToastPopup('닉네임은 3자 이상 입력해주세요.');
+        return;
+      }
       showConfirmNicknameChange(this);
     } else {
       modifyMyAccountInfo();

@@ -34,7 +34,7 @@ class Preferences extends StatelessWidget {
                 padding: EdgeInsets.only(bottom: 10.0.sp),
                 child: Obx(() {
                   return InkWell(
-                    onTap: () => Get.toNamed(Routes.myPage),
+                    onTap: () => Get.toNamed(Routes.myPage, arguments: {'provider': controller.profile.value.provider}),
                     child: Container(
                       color: const Color(0xFF23232D),
                       child: Padding(

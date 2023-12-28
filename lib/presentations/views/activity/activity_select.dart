@@ -166,7 +166,7 @@ class ActivitySelect extends StatelessWidget {
           children: [
             Align(
               // challengeList가 2개 이상이고, 미래에셋 광고 있을때 20.sp, 없을때 topCenter
-              alignment: controller.challengeList.length > 1 && controller.promotionAdsList.isNotEmpty ? Alignment.topCenter : Alignment.center,
+              alignment: controller.challengeList.length > 1 && controller.promotionAdsList.isNotEmpty && controller.promotionAdsList[0].imageUrl != null ? Alignment.topCenter : Alignment.center,
               child: Padding(
                 padding: EdgeInsets.only(top: 20.0.sp),
                 child: Column(

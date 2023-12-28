@@ -78,6 +78,7 @@ class MyPage extends StatelessWidget {
                             constraints: BoxConstraints(minWidth: 80.sp),
                             child: IntrinsicWidth(
                               child: TextField(
+                                readOnly: !controller.profile.value.availableChangeNickname!,
                                 scrollPadding: EdgeInsets.all(20.0.sp),
                                 controller: controller.nicknameTextController,
                                 onChanged: (nickName) => controller.updateNickName(nickName),
@@ -344,10 +345,10 @@ class MyPage extends StatelessWidget {
                                     children: [
                                       Padding(
                                         padding: EdgeInsets.only(right: 5.0.sp, bottom: 3.0.sp),
-                                        child: getMypageLoginedButtonIcon(controller.profile.value.provider!),
+                                        child: getMypageLoginedButtonIcon(controller.provider.value),
                                       ),
                                       StyledText(
-                                        controller.profile.value.provider!,
+                                        controller.provider.value,
                                         color: const Color(0xFFA8A8A8),
                                         fontSize: 16,
                                         fontWeight: 500,
@@ -474,6 +475,32 @@ class MyPage extends StatelessWidget {
                     Column(
                       children: [
                         Divider(color: subBg01Color, height: 6.sp),
+                        if(controller.profile.value.authorities!.contains('ROLE_CERTIFIED_USER'))
+                          Container(
+                            color: subBg02Color,
+                            child: Padding(
+                              padding: EdgeInsets.symmetric(vertical: 21.0.sp, horizontal: 20.0.sp),
+                              child: InkWell(
+                                onTap: () => Get.toNamed(Routes.verificationName),
+                                child: Row(
+                                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                  children: [
+                                    const StyledText(
+                                      '휴대폰 번호 변경하기',
+                                      fontSize: 18,
+                                      fontWeight: 500,
+                                      lineHeight: 20,
+                                    ),
+                                    Icon(
+                                      Icons.chevron_right,
+                                      color: const Color(0xFFBDC0C7),
+                                      size: 22.sp,
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            ),
+                          ),
                         Container(
                           color: subBg02Color,
                           child: Padding(

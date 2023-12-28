@@ -57,8 +57,8 @@ class UaaService {
     }
   }
 
-  static Future<void> modifyAccountInfo(String? nickname, String? profileImageUrl, {required Function successCallback, Function? errorCallback}) async {
-    Response res = await UaaApi.modifyAccountInfo(userId!, nickname, profileImageUrl);
+  static Future<void> modifyAccountInfo(int id, String? nickname, String? profileImageUrl, {required Function successCallback, Function? errorCallback}) async {
+    Response res = await UaaApi.modifyAccountInfo(id, userId!, nickname, profileImageUrl);
     if (res.statusCode == 200) {
       successCallback(UserAccountModel.fromJson(res.data));
     } else {
@@ -89,16 +89,16 @@ class UaaService {
   }
 
   static Future<void> fetchWithdrawMember({required Function successCallback, Function? errorCallback}) async {
-    Response res = await UaaApi.fetchWithdrawMember();
+    Response res = await UaaApi.fetchWithdrawMember(userId!);
     if (res.statusCode == 204) {
       successCallback();
     } else {
-      if (errorCallback != null) errorCallback(res.data);
+      if (errorCallback != null) errorCallback(res.data != null ? ErrorResponseDataModel.fromJson(res.data) : null);
     }
   }
 
   static Future<void> fetchWithdrawCancel({required Function successCallback, Function? errorCallback}) async {
-    Response res = await UaaApi.fetchWithdrawCancel();
+    Response res = await UaaApi.fetchWithdrawCancel(userId!);
     if (res.statusCode == 204) {
       successCallback();
     } else {
@@ -131,6 +131,15 @@ class UaaService {
       if (successCallback != null) successCallback(AccessTokenModel.fromJson(res.data));
     } else {
       if (errorCallback != null) errorCallback();
+    }
+  }
+
+  static Future<void> getUserInfo({required Function successCallback, Function? errorCallback}) async {
+    Response res = await UaaApi.getUserInfo(userId!);
+    if (res.statusCode == 200) {
+      successCallback(UserAccountModel.fromJson(res.data));
+    } else {
+      if (errorCallback != null) errorCallback(res.data);
     }
   }
 }

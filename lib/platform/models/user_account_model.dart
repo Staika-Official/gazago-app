@@ -5,7 +5,8 @@ part 'user_account_model.g.dart';
 @JsonSerializable(explicitToJson: true)
 class UserAccountModel {
   int id;
-  String login;
+  int? userId;
+  String? login;
   String email;
   String? nickname;
   bool? availableChangeNickname;
@@ -23,9 +24,10 @@ class UserAccountModel {
 
   UserAccountModel({
     required this.id,
-    required this.login,
+     this.login,
     required this.email,
     this.nickname,
+    this.userId,
     this.availableChangeNickname,
     this.profileImageUrl,
     this.phone,
