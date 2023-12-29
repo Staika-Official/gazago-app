@@ -113,7 +113,5 @@ class UaaApi {
     });
   }
 
-  static Future<Response> getUserInfo(String userId) async {
-    return await Api.client(serviceUrl: ServiceUrl.userService).get('/users/$userId');
-  }
+
 }

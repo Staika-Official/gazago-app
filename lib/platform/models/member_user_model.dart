@@ -9,7 +9,9 @@ class MemberUserModel {
   String? nickname;
   String? profileImageUrl;
   String? userCode;
+  String? countryCode;
   bool? marketingChecked;
+  bool? availableChangeNickname;
   bool? alarmEvent;
   bool? alarmTransaction;
   String? provider;
@@ -19,7 +21,9 @@ class MemberUserModel {
     this.email,
     this.nickname,
     this.profileImageUrl,
+    this.availableChangeNickname,
     this.userCode,
+    this.countryCode,
     this.marketingChecked,
     this.alarmTransaction,
     this.alarmEvent,

@@ -134,12 +134,5 @@ class UaaService {
     }
   }
 
-  static Future<void> getUserInfo({required Function successCallback, Function? errorCallback}) async {
-    Response res = await UaaApi.getUserInfo(userId!);
-    if (res.statusCode == 200) {
-      successCallback(UserAccountModel.fromJson(res.data));
-    } else {
-      if (errorCallback != null) errorCallback(res.data);
-    }
-  }
+
 }
