@@ -17,6 +17,7 @@ mixin PreferenceMixin {
       nickname: '',
       profileImageUrl: '',
       provider: '',
+      availableChangeNickname: false,
       authorities: HiveStore.load(key: HiveKey.authorities.name) ?? [''],
     ),
   );
@@ -36,6 +37,7 @@ mixin PreferenceMixin {
             state?.id = account.id;
           },
         );
+        originalNickname.value = account.nickname!;
       }, errorCallback: (message) {
         showToastPopup(message);
       },

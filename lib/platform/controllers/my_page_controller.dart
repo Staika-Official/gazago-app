@@ -175,7 +175,6 @@ class MyPageController extends GetxController with PreferenceMixin {
   }
 
   void validateProfileEdit() {
-
     if (profile.value.availableChangeNickname! && profile.value.nickname != originalNickname.value) {
       if(profile.value.nickname!.length < 3) {
         showToastPopup('닉네임은 3자 이상 입력해주세요.');
