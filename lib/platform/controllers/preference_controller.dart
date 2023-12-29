@@ -17,13 +17,24 @@ class PreferenceController extends GetxController with PreferenceMixin {
   void onInit() {
     isAbleLuckSound.value = HiveStore.load(key: HiveKey.luckSound.name) ?? false;
     getProfileInfo();
+    // getAccountInfo();
     getAppVersion();
+
     super.onInit();
   }
 
   void getAppVersion() async {
     PackageInfo packageInfo = await PackageInfo.fromPlatform();
     appVersion.value = packageInfo.version;
+  }
+
+  Future<void> getAccountInfo() async {
+    await UaaService.getAccountInfo(
+      successCallback: (UserAccountModel user) {
+        HiveStore.save(key: HiveKey.authorities.name, value: user.authorities);
+        HiveStore.save(key: HiveKey.certified.name, value: user.authorities!.contains('ROLE_CERTIFIED_USER'));
+      },
+    );
   }
 
   void showLogoutConfirmation() {

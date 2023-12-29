@@ -126,7 +126,7 @@ class DebuggingController extends GetxController {
         endPointType.value = val;
         showToastPopup('2초 후 로딩화면으로 이동합니다.');
         Timer(Duration(seconds: 2), () async {
-          await Get.put(LoginController()).getUserInfo();
+          await Get.put(LoginController()).getAccountInfo();
           Get.offAllNamed(Routes.loading);
         });
       } else {

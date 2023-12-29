@@ -1,6 +1,8 @@
 import 'dart:async';
 import 'dart:io';
 
+import 'package:adjust_sdk/adjust.dart';
+import 'package:adjust_sdk/adjust_event.dart';
 import 'package:advertising_id/advertising_id.dart';
 import 'package:facebook_audience_network/facebook_audience_network.dart';
 import 'package:flutter/services.dart';
@@ -78,6 +80,7 @@ class DailyBenefitController extends GetxController {
           if(selectedBenefitItem.value != null){
             FacebookRewardedVideoAd.showRewardedVideoAd();
             await fetchDailyBenefit(selectedBenefitItem.value!, formatDateUntilDay(adViewTime.toString()), value["placement_id"]);
+            Adjust.trackEvent(AdjustEvent('7v451z'));
           }
         }
         if (result == RewardedVideoAdResult.VIDEO_COMPLETE){
@@ -203,6 +206,9 @@ class DailyBenefitController extends GetxController {
 
     if (requestTime.isBefore(midnight)) {
       selectedBenefitItem.value = benefitItem;
+      if(benefitItem.trackingId != null && benefitItem.trackingId != ''){
+        Adjust.trackEvent(AdjustEvent(benefitItem.trackingId!));
+      }
       if (benefitItem.adDisplayed) {
         await requestDailyBenefitAd(benefitItem);
       } else {

@@ -6,8 +6,10 @@ import 'package:gaza_go/constants/enums.dart';
 import 'package:gaza_go/constants/routes.dart';
 import 'package:gaza_go/platform/helpers/alert_helper.dart';
 import 'package:gaza_go/platform/helpers/login_helper.dart';
+import 'package:gaza_go/platform/models/user_account_model.dart';
 import 'package:gaza_go/platform/models/verification_user_model.dart';
 import 'package:gaza_go/platform/services/identity_service.dart';
+import 'package:gaza_go/platform/services/uaa_service.dart';
 import 'package:gaza_go/platform/stores/hive_store.dart';
 import 'package:gaza_go/presentations/components/alert_ui_list.dart';
 import 'package:get/get.dart';
@@ -55,6 +57,19 @@ class VerificationCertCodeController extends GetxController {
     _certCode.value = code;
   }
 
+  Future<void> getAccountInfo() async {
+    await UaaService.getAccountInfo(
+      successCallback: (UserAccountModel user) {
+        HiveStore.save(key: HiveKey.userId.name, value: user.id.toString());
+        HiveStore.save(key: HiveKey.email.name, value: user.email);
+        // HiveStore.save(key: HiveKey.profileImageUrl.name, value: user.profileImageUrl);
+        // HiveStore.save(key: HiveKey.nickname.name, value: user.nickname);
+        HiveStore.save(key: HiveKey.authorities.name, value: user.authorities);
+        HiveStore.save(key: HiveKey.certified.name, value: user.authorities!.contains('ROLE_CERTIFIED_USER'));
+      },
+    );
+  }
+
   void next() async {
     await IdentityService.verifyIdentityCode({"requestId": _requestId.toInt(), "code": _certCode.toString(), "clientId": "GAZAGO"}, successCallback: () {
       // 본인인증이 완료 이벤트
@@ -62,6 +77,7 @@ class VerificationCertCodeController extends GetxController {
 
       HiveStore.save(key: HiveKey.certified.name, value: true);
       showToastPopup('본인인증이 완료되었습니다.');
+      getAccountInfo();
       afterVerificationComplete();
     }, errorCallback: (res) {
       if (res.data['errorCode'] == 'IDENTITY_CI_ALREADY_EXISTS') {

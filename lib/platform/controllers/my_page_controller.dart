@@ -32,7 +32,7 @@ class MyPageController extends GetxController with PreferenceMixin {
   @override
   void onInit() {
     Get.arguments != null ? provider.value = Get.arguments['provider'] : provider.value = '';
-    getUserInfo();
+    getProfileInfo();
     super.onInit();
   }
 

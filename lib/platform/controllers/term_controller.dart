@@ -1,8 +1,10 @@
+import 'package:gaza_go/constants/enums.dart';
 import 'package:gaza_go/platform/helpers/alert_helper.dart';
 import 'package:gaza_go/platform/models/term_item_model.dart';
 import 'package:gaza_go/platform/models/terms_history_model.dart';
 import 'package:gaza_go/platform/services/board_service.dart';
 import 'package:gaza_go/platform/services/member_service.dart';
+import 'package:gaza_go/platform/stores/hive_store.dart';
 import 'package:get/get.dart';
 
 class TermController extends GetxController {
@@ -38,6 +40,8 @@ class TermController extends GetxController {
       clientId: platform.value.toUpperCase(),
       successCallback: (memberUserModel) {
         agreeMarketing.value = memberUserModel.marketingChecked;
+        HiveStore.save(key: HiveKey.profileImageUrl.name, value: memberUserModel.profileImageUrl);
+        HiveStore.save(key: HiveKey.nickname.name, value: memberUserModel.nickname);
       },
       errorCallback: (message) {
         showToastPopup(message);
