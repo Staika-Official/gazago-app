@@ -210,6 +210,7 @@ class LoginController extends GetxController {
             showToastPopup('탈퇴처리된 계정입니다.');
             forceLogout();
           } else if (token.accountStatus == 'TERMINATION_REQUESTED') {
+            await initUserInfo();
             HiveStore.save(key: HiveKey.isAccountLocked.name, value: true);
             Get.offNamed(Routes.accountRestore);
           } else if (token.accountStatus == 'ALREADY_CONNECTED_DEVICE') {

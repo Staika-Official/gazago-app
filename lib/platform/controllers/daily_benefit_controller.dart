@@ -53,9 +53,6 @@ class DailyBenefitController extends GetxController {
     super.onInit();
   }
 
-
-
-
   Future<void> initController() async {
     await initPlatformState();
     await getDailyBenefitsList();
