@@ -221,7 +221,7 @@ mixin ChallengeMixin {
     if (listKey.currentContext != null) {
       listHeight.value = listKey.currentContext!.size!.height;
     }
-    if (selectedCourse.value!.checkpoints != null && selectedCourse.value!.checkpoints!.isNotEmpty) {
+    if (selectedCourse.value?.checkpoints != null && selectedCourse.value!.checkpoints!.isNotEmpty) {
       List<LatLng> markers = getCheckPointsCourse(selectedCourse.value!.checkpoints!);
 
       challengeMapController.moveCamera(
