@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_inappwebview/flutter_inappwebview.dart';
@@ -43,8 +45,9 @@ class WebView extends StatelessWidget {
               await controller.stopLoading();
               return null;
             },
-            onWebViewCreated: (controller) {
+            onWebViewCreated: (controller) async {
               // register a JavaScript handler with name "myHandlerName"
+              if (Platform.isAndroid) await InAppWebViewController.setWebContentsDebuggingEnabled(true);
               if (webViewController.linkUrl.value.contains('taikapay')) {
                 controller.addJavaScriptHandler(
                   handlerName: 'app',

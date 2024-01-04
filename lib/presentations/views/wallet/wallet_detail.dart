@@ -46,7 +46,6 @@ class WalletDetail extends StatelessWidget {
   // }
 
   List<Widget> renderTransactionList(WalletMasterController controller) {
-    print(controller.transactionsList.length);
     return controller.transactionsList
         .map(
           (transaction) => Container(
@@ -84,7 +83,7 @@ class WalletDetail extends StatelessWidget {
                             fontWeight: 500,
                           ),
                           StyledText(
-                            '${transaction.type == 'IN' ? '+' : '-'} ${formatDecimalPlaces(double.parse(transaction.uiAmountString!), transaction.symbol == 'STIK' ? 4 : transaction.decimals!, isAutoDecimal: true,roundType: RoundType.floor)} ${transaction.symbol! == 'PTIK' ? 'TIK' : transaction.symbol!}',
+                            '${transaction.type == 'IN' ? '+' : '-'} ${formatDecimalPlaces(double.parse(transaction.uiAmountString!), transaction.symbol == 'STIK' ? 4 : transaction.decimals!, isAutoDecimal: true, roundType: RoundType.floor)} ${transaction.symbol! == 'PTIK' ? 'TIK' : transaction.symbol!}',
                             fontSize: 18,
                             lineHeight: 20,
                             letterSpacing: -0.5,
@@ -167,9 +166,9 @@ class WalletDetail extends StatelessWidget {
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     StyledText(
-                      formatDecimalPlaces(double.parse(controller.assetDetail.value.balance.uiAmountString!),
+                      formatDecimalPlaces(double.parse(controller.assetDetail.value.balance.uiAmountString ?? '0'),
                           controller.assetDetail.value.balance.symbol == 'STIK' ? 4 : controller.assetDetail.value.balance.decimals!,
-                          isAutoDecimal: true,roundType: RoundType.floor),
+                          isAutoDecimal: true, roundType: RoundType.floor),
                       fontSize: 28,
                       lineHeight: 28,
                       fontWeight: 600,
