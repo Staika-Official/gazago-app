@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:dio/dio.dart';
 import 'package:gaza_go/constants/enums.dart';
 import 'package:gaza_go/flavors.dart';
@@ -152,12 +154,12 @@ class WalletService {
 
     // FeePayer
     late final Ed25519HDPublicKey feePayer;
-    await WalletService.getWalletAddress('SOLANA_FEE_WALLET',
+    await WalletService.getWalletAddress(
+      'SOLANA_FEE_WALLET',
       successCallback: (address) {
         feePayer = Ed25519HDPublicKey.fromBase58(address[0].value);
       },
     );
-
 
     final recentBlockhash = await solanaClient.rpcClient.getLatestBlockhash(commitment: Commitment.confirmed);
     final CompiledMessage compiledMessage = message.compile(
@@ -207,19 +209,35 @@ class WalletService {
     }
   }
 
-  static Future<void> testCreateOnChainWallet({required String walletPassword, required Function successCallback, Function? errorCallback}) async {
-    final wallet = Keypair.generateSync();
-    // String? email = HiveStore.loadString(key: HiveKey.email.name);
-    String email = 'zicnet004@gmail.com';
-    String publicKey = wallet.publicKey.toBase58();
-    // 암호화된 시크릿키
-    String encryptSecretKey = encrypt(base58.encode(wallet.secretKey), email, walletPassword);
+  static Future<bool> encryptionIsValid({required String walletPassword}) async {
+    Response res = await WalletApi.getOnChainWallet(userId!);
+    if (res.statusCode == 200) {
+      OnChainWalletModel walletPair = OnChainWalletModel.fromJson(res.data);
 
-    Response res = await WalletApi.createOnChainWallet(userId!, publicKey: publicKey, secretKey: encryptSecretKey);
-    if (res.statusCode == 201) {
-      successCallback(OnChainWalletModel.fromJson(res.data));
+      String? email = HiveStore.loadString(key: HiveKey.email.name);
+      String? decrypted = decrypt(walletPair.secretKey, email!, walletPassword);
+
+      if (decrypted != null) {
+        try {
+          const Utf8Decoder(allowMalformed: false).convert(decrypted.codeUnits);
+          return true;
+        } catch (e) {
+          return false;
+        }
+      } else {
+        return false;
+      }
     } else {
-      if (errorCallback != null) errorCallback();
+      return false;
+    }
+  }
+
+  static Future<void> disableOnChainWallet({required Function successCallback, Function? errorCallback}) async {
+    Response res = await WalletApi.disableOnChainWallet(userId!);
+    if (res.statusCode == 200) {
+      successCallback();
+    } else {
+      if (errorCallback != null) errorCallback(res.data);
     }
   }
 
@@ -286,10 +304,10 @@ class WalletService {
       message = await getSplTransferMessage(solanaClient, sender, receiver, mint, amount);
     }
 
-
     // FeePayer
     late final Ed25519HDPublicKey feePayer;
-    await WalletService.getWalletAddress('SOLANA_FEE_WALLET',
+    await WalletService.getWalletAddress(
+      'SOLANA_FEE_WALLET',
       successCallback: (address) {
         feePayer = Ed25519HDPublicKey.fromBase58(address[0].value);
       },

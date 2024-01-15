@@ -33,7 +33,7 @@ class StaikaWalletController extends GetxController with WalletMixin, SolanaMixi
   final RxString explorerUrl = RxString('');
   final Rxn<AnimationController> switchAnimation = Rxn();
   final RxString currentSumPriceUI = RxString('0');
-   RxString sendStikUiAmount = RxString('0');
+  RxString sendStikUiAmount = RxString('0');
   final RxString shortStikUiAmount = RxString('0');
   final RxDouble fee = RxDouble(0.0);
   final Rx<Currency> currency = Rx(Currency.krw);
@@ -115,6 +115,9 @@ class StaikaWalletController extends GetxController with WalletMixin, SolanaMixi
         if (data.errorCode == 'NOT_FOUND_WALLET') {
           TabController controller = Get.find<WalletMasterController>().tabController;
           showStaikaStatusAlert(hasWallet: false, tabController: controller);
+        } else if (data.errorCode == 'NOT_SUPPORT_WALLET') {
+          TabController controller = Get.find<WalletMasterController>().tabController;
+          showNotSupportedWalletAlert(message: data.errorMessage!, tabController: controller);
         } else if (data.errorCode == 'DATABASE_EXCEPTION') {
           showToastPopup('잠시 후 다시 시도해 주세요');
         }
@@ -172,7 +175,6 @@ class StaikaWalletController extends GetxController with WalletMixin, SolanaMixi
       focusNode.unfocus();
       String password = await showConfirmPasswordDialog(walletMasterController);
       sendStikToGoWalletAlert(this, password);
-
     } else {
       exchangeStikShortBalanceAlert(this);
     }
@@ -181,7 +183,8 @@ class StaikaWalletController extends GetxController with WalletMixin, SolanaMixi
   void confirmSendStikToGoWallet(String password) async {
     String secretKey = HiveStore.load(key: HiveKey.solanaSecretKey.name);
     late final Ed25519HDPublicKey solanaTokenMasterWallet;
-    await WalletService.getWalletAddress('SOLANA_GAZAGO_WALLET',
+    await WalletService.getWalletAddress(
+      'SOLANA_GAZAGO_WALLET',
       successCallback: (address) {
         solanaTokenMasterWallet = Ed25519HDPublicKey.fromBase58(address[0].value);
       },
@@ -207,17 +210,14 @@ class StaikaWalletController extends GetxController with WalletMixin, SolanaMixi
           sendStikUiAmount.value = '0';
           stikAmountTextController.text = '';
           // Get.offNamedUntil(Routes.wallet);
-
         },
         errorCallback: () {
-
           loaderController.isLoading.value = false;
           failureExchangeStikToGoWalletAlert();
 
           walletMasterController.getSpendingWalletBalances();
           sendStikUiAmount.value = '0';
           stikAmountTextController.text = '';
-
         },
       );
       isFetching.value = false;
@@ -225,7 +225,7 @@ class StaikaWalletController extends GetxController with WalletMixin, SolanaMixi
     }
   }
 
-  void initTextController(){
+  void initTextController() {
     focusNode.unfocus();
     sendStikUiAmount.value = '0';
     stikAmountTextController.text = '';
