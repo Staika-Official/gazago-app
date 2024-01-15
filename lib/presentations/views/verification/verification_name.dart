@@ -54,6 +54,7 @@ class VerificationName extends StatelessWidget {
                             color: Colors.white,
                             height: 1,
                           ),
+                          controller: controller.userNameTextController,
                           onChanged: (name) => controller.updateName(name),
                           decoration: InputDecoration(
                             focusedBorder: OutlineInputBorder(

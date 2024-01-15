@@ -7,22 +7,23 @@ String encrypt(String secretKey, String email, String password) {
 
   Key key = Key.fromUtf8(map['key']!);
   IV iv = IV.fromUtf8(map['iv']!);
-
+  // Encrypted encrypted = Encrypter(AES(key, mode: AESMode.ctr, padding: "PKCS7")).encryptBytes(Key.fromUtf8(secretKey).bytes, iv: iv);
   Encrypted encrypted = Encrypter(AES(key)).encrypt(secretKey, iv: iv);
   return encrypted.base64;
 }
 
 String? decrypt(String wrappedKey, String email, String password) {
   String base64 = Key.fromUtf8(password + email).base64;
-
+  print('base64 : $base64');
   Map<String, String> map = _getAlgorithm(base64);
-
+  print('map : $map');
   Key key = Key.fromUtf8(map['key']!);
   IV iv = IV.fromUtf8(map['iv']!);
 
   Encrypted encrypted = Encrypted.fromBase64(wrappedKey);
   try {
     String decrypt = Encrypter(AES(key)).decrypt(encrypted, iv: iv);
+    // String decrypt = Encrypter(AES(key, mode: AESMode.ctr, padding: "PKCS7")).decrypt64(wrappedKey, iv: iv);
     return decrypt;
   } catch (e) {
     return null;

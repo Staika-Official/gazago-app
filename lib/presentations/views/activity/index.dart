@@ -1,3 +1,5 @@
+import 'package:adjust_sdk/adjust.dart';
+import 'package:adjust_sdk/adjust_event.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:gaza_go/constants/enums.dart';
@@ -484,6 +486,7 @@ class ActivityHome extends StatelessWidget {
                                         return InkWell(
                                           onTap: () async {
                                             await dailyBenefitController.refreshController();
+                                            Adjust.trackEvent(AdjustEvent('h199wc'));
                                             Get.toNamed(Routes.dailyBenefits);
                                           },
                                           child: Container(

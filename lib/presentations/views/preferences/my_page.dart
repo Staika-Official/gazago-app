@@ -78,7 +78,7 @@ class MyPage extends StatelessWidget {
                             constraints: BoxConstraints(minWidth: 80.sp),
                             child: IntrinsicWidth(
                               child: TextField(
-                                readOnly: !controller.profile.value.availableChangeNickname!,
+                                // readOnly: !controller.profile.value.availableChangeNickname!,
                                 scrollPadding: EdgeInsets.all(20.0.sp),
                                 controller: controller.nicknameTextController,
                                 onChanged: (nickName) => controller.updateNickName(nickName),

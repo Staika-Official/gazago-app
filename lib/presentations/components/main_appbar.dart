@@ -1,3 +1,5 @@
+import 'package:adjust_sdk/adjust.dart';
+import 'package:adjust_sdk/adjust_event.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:gaza_go/constants/routes.dart';
@@ -73,7 +75,10 @@ class MainAppbar extends StatelessWidget implements PreferredSizeWidget {
                 ),
               ),
               IconButton(
-                onPressed: () => Get.toNamed(Routes.preferences),
+                onPressed: (){
+                  Get.toNamed(Routes.preferences);
+                  Adjust.trackEvent(AdjustEvent('j66t7q'));
+                },
                 icon: iconHeaderGear,
                 splashRadius: 20.sp,
                 iconSize: 30,

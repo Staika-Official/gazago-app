@@ -4,6 +4,10 @@ import 'package:adjust_sdk/adjust.dart';
 import 'package:adjust_sdk/adjust_event.dart';
 import 'package:gaza_go/constants/enums.dart';
 import 'package:gaza_go/constants/routes.dart';
+import 'package:gaza_go/constants/routes.dart';
+import 'package:gaza_go/platform/controllers/verification_detail_controller.dart';
+import 'package:gaza_go/platform/controllers/verification_name_controller.dart';
+import 'package:gaza_go/platform/controllers/verification_phone_controller.dart';
 import 'package:gaza_go/platform/helpers/alert_helper.dart';
 import 'package:gaza_go/platform/helpers/login_helper.dart';
 import 'package:gaza_go/platform/models/user_account_model.dart';
@@ -16,6 +20,9 @@ import 'package:get/get.dart';
 import 'package:rxdart/rxdart.dart' as RX;
 
 class VerificationCertCodeController extends GetxController {
+  final VerificationNameController verificationNameController = Get.find();
+  final VerificationDetailController verificationDetailController = Get.find();
+  final VerificationPhoneController verificationPhoneController = Get.find();
   final RxString errorMsg = RxString('');
   final RxString _certCode = RxString('');
   final RxBool isFormValid = RxBool(false);
@@ -80,22 +87,35 @@ class VerificationCertCodeController extends GetxController {
       getAccountInfo();
       afterVerificationComplete();
     }, errorCallback: (res) {
-      if (res.data['errorCode'] == 'IDENTITY_CI_ALREADY_EXISTS') {
+      if (res.data['errorCode'] == 'IDENTITY_VERIFIED_FAILURE') {
+        showInvalidCertCode(res.data['errorMessage'], res.data['errorCode']);
+      } else if (res.data['errorCode'] == 'IDENTITY_ALREADY_VERIFIED') {
         _timer.cancel();
         countdownTime.value = const Duration(minutes: 0);
         errorMsg.value = res.data['errorMessage'];
-        isNotNext.value = true;
-      }
-      else if (res.data['errorCode'] == 'IDENTITY_ALREADY_VERIFIED') {
+        verificationNameController.initValue();
         showToastPopup(res.data['errorMessage']);
-        afterVerificationComplete();
-      }
-      else if (res.data['errorCode'] == 'PENALTY_BLOCKED_USER') {
-        showToastPopup(res.data['errorMessage']);
-        forceLogout();
+        Get.until((route) => Get.currentRoute == Routes.verificationName);
       } else {
-        showInvalidCertCode(res.data['errorMessage']);
+        showToastPopup(res.data['errorMessage']);
       }
+
+      // if (res.data['errorCode'] == 'IDENTITY_CI_ALREADY_EXISTS') {
+      //   _timer.cancel();
+      //   countdownTime.value = const Duration(minutes: 0);
+      //   errorMsg.value = res.data['errorMessage'];
+      //   isNotNext.value = true;
+      // }
+      // else if (res.data['errorCode'] == 'IDENTITY_ALREADY_VERIFIED') {
+      //   showToastPopup(res.data['errorMessage']);
+      //   afterVerificationComplete();
+      // }
+      // else if (res.data['errorCode'] == 'PENALTY_BLOCKED_USER') {
+      //   showToastPopup(res.data['errorMessage']);
+      //   forceLogout();
+      // } else {
+      //   showInvalidCertCode(res.data['errorMessage'], res.data['errorCode']);
+      // }
     });
     HiveStore.deleteKey(key: HiveKey.enteredRoute.name);
   }

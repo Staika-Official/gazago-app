@@ -59,15 +59,16 @@ class Preferences extends StatelessWidget {
                                           width: 30.sp,
                                         ).image,
                                 ),
-                                Padding(
-                                  padding: EdgeInsets.only(left: 14.0.sp),
-                                  child: StyledText(
-                                    controller.profile.value.provider == 'APPLE' ? controller.profile.value.nickname!.split('@')[0] : controller.profile.value.nickname!,
-                                    fontWeight: 500,
-                                    fontSize: 14,
-                                    lineHeight: 20,
+                                if(controller.profile.value.nickname != null)
+                                  Padding(
+                                    padding: EdgeInsets.only(left: 14.0.sp),
+                                    child: StyledText(
+                                      controller.profile.value.provider == 'APPLE' ? controller.profile.value.nickname!.split('@')[0] : controller.profile.value.nickname!,
+                                      fontWeight: 500,
+                                      fontSize: 14,
+                                      lineHeight: 20,
+                                    ),
                                   ),
-                                ),
                               ],
                             ),
                             const Icon(

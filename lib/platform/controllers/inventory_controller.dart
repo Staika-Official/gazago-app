@@ -1,5 +1,7 @@
 import 'dart:async';
 
+import 'package:adjust_sdk/adjust.dart';
+import 'package:adjust_sdk/adjust_event.dart';
 import 'package:flutter/material.dart';
 import 'package:gaza_go/constants/enums.dart';
 import 'package:gaza_go/constants/routes.dart';
@@ -470,6 +472,7 @@ class InventoryController extends GetxController with LinearProgressMixin, Inven
 
   void checkConsumerItemType(InventoryItemModel useItem) async {
     isConsumerItemUsing.value = useItem;
+    Adjust.trackEvent(AdjustEvent('scaike'));
     if (useItem.itemStat!.repairDurability! > 0) {
       await fetchRepairShoesUseOneItem(useItem, equippedShoe.value.id);
     } else {
@@ -491,6 +494,11 @@ class InventoryController extends GetxController with LinearProgressMixin, Inven
 
   void showShoesRepairPopup(int id, context) async {
     isDisableButton.value = true;
+    if(Get.currentRoute.contains('home')){
+      Adjust.trackEvent(AdjustEvent('d82o3q'));
+    } else {
+      Adjust.trackEvent(AdjustEvent('j7mhac'));
+    }
     await getMyConsumerItemsByType('REPAIR', isNotEmptyCallback: () {
       targetShoeId.value = id;
       selectedType.value = 'DURABILITY';

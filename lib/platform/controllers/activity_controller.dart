@@ -260,6 +260,19 @@ class ActivityController extends SuperController with ActivityMixin, ChallengeMi
 
   void onClickRepairStat(stat, context) async {
     loaderController.isLoading.value = true;
+    if(Get.currentRoute.contains('home')){
+      if(stat.type == 'STAMINA'){
+        Adjust.trackEvent(AdjustEvent('ret2yp'));
+      } else {
+        Adjust.trackEvent(AdjustEvent('2mxi2f'));
+      }
+    } else {
+      if(stat.type == 'STAMINA'){
+        Adjust.trackEvent(AdjustEvent('m7kq1h'));
+      } else {
+        Adjust.trackEvent(AdjustEvent('spa2cy'));
+      }
+    }
     await getMyConsumerItemsByType(stat.type == 'STAMINA' ? 'RECOVERY' : 'REPAIR', isNotEmptyCallback: () {
       loaderController.isLoading.value = false;
       selectedType.value = stat.type;

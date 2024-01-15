@@ -1,6 +1,8 @@
 import 'dart:async';
 import 'dart:io';
 
+import 'package:adjust_sdk/adjust.dart';
+import 'package:adjust_sdk/adjust_event.dart';
 import 'package:advertising_id/advertising_id.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_inappwebview/flutter_inappwebview.dart';
@@ -334,6 +336,7 @@ class WalletMasterController extends GetxController with SolanaMixin, GetTickerP
   }
 
   void moveToWallet() async {
+    Adjust.trackEvent(AdjustEvent('v378bl'));
     getSpendingWalletBalances();
     Get.toNamed(Routes.wallet);
   }

@@ -10,6 +10,8 @@ void main() {
 
   final subscriptionClient = SubscriptionClient.connect('wss://api.devnet.solana.com');
 
+
+
   test('create wallet', () async {
     final randomKeyPair = await Ed25519HDKeyPair.random();
     print('address ${randomKeyPair.address}');

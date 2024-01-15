@@ -5,6 +5,7 @@ import 'package:gaza_go/platform/controllers/loader_controller.dart';
 import 'package:gaza_go/platform/controllers/wallet_master_controller.dart';
 import 'package:gaza_go/platform/helpers/alert_helper.dart';
 import 'package:gaza_go/platform/helpers/base_helper.dart';
+import 'package:gaza_go/platform/helpers/security_helper.dart';
 import 'package:gaza_go/platform/helpers/solana_mixin.dart';
 import 'package:gaza_go/platform/models/asset_token_balance_model.dart';
 import 'package:gaza_go/platform/models/charge_tik_model.dart';
@@ -20,6 +21,7 @@ import 'package:gaza_go/presentations/components/alert_ui_list.dart';
 import 'package:gaza_go/presentations/components/product_list_dialog.dart';
 import 'package:gaza_go/presentations/components/product_list_stik_dialog.dart';
 import 'package:get/get.dart';
+import 'package:solana_web3/solana_web3.dart';
 
 class GoWalletController extends GetxController with SolanaMixin {
   WalletMasterController walletMasterController = Get.find();
@@ -45,7 +47,34 @@ class GoWalletController extends GetxController with SolanaMixin {
   void onInit() {
     walletMasterController.getStikPriceInfo();
     initTextController();
+
     super.onInit();
+  }
+
+  void testEncode () async {
+    int i = 0;
+    while (i < 1000) {
+      print('---------------------------------------------------------');
+      final wallet = Keypair.generateSync();
+      // String? email = HiveStore.loadString(key: HiveKey.email.name);
+      String email = 'zicnet004@gmail.com';
+      String testWalletPassword = '!!qhd0328';
+      // String publicKey = wallet.publicKey.toBase58();
+      // 암호화된 시크릿키
+      String encryptSecretKey = encrypt(base58.encode(wallet.secretKey), email, testWalletPassword);
+
+      print('encryptSecretKey : $encryptSecretKey');
+      // 지갑 생성 완료
+      String testEmail = 'zicnet004@gmail.com';
+      // 82mt6rd86r@privaterelay.appleid.com wfNI5FyPy45L4e++c8KHxMV+fLAVB+2Id1a+MsGgZz0K3DGED1m6+5OzL1ffyo1DHWBWpsUdxQqAhdIIwHRYZyzXfl8+rWbzqxNUyai1BzVw1trWz/7RaRSWyruHdQ9i
+      // zicnet004@gmail.com LTYYb5Fl7tzSW+8td1FUDdd2VVhD6ZuSY8N1YEWQcRL/e/Kq+zL2Fs9uZ4LEAqsF2pa+RyCXB6GJRpoDHnzhoxrwg9IaUS7AQ2MHAz1p4mrUY0dbd67RaRx9kCMyj8KE
+      // String accountSecretkey = 'LTYYb5Fl7tzSW+8td1FUDdd2VVhD6ZuSY8N1YEWQcRL/e/Kq+zL2Fs9uZ4LEAqsF2pa+RyCXB6GJRpoDHnzhoxrwg9IaUS7AQ2MHAz1p4mrUY0dbd67RaRx9kCMyj8KE';
+
+      String? decryptPrivateKey = decrypt(encryptSecretKey, testEmail, testWalletPassword);
+      print('decryptPrivateKey: $decryptPrivateKey');
+      print('---------------------------------------------------------');
+      i++;
+    }
   }
 
   void checkShortBalance(ExchangeStikPriceModel item) {

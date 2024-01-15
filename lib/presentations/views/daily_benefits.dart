@@ -437,7 +437,7 @@ class _DailyBenefitItemState extends State<DailyBenefitItem> {
                         width: 50.sp,
                         height: 50.sp,
                       )
-                    : widget.benefitItem.imageUrl!.contains('.svg')
+                    : widget.benefitItem.imageUrl != null ? widget.benefitItem.imageUrl!.contains('.svg')
                         ? SvgPicture.network(
                             widget.benefitItem.imageUrl!,
                             fit: BoxFit.fitHeight,
@@ -452,7 +452,7 @@ class _DailyBenefitItemState extends State<DailyBenefitItem> {
                             width: 50.sp,
                             placeholder: (context, string) => const Center(child: SizedBox.square(dimension: 30, child: CircularProgressIndicator())),
                             httpHeaders: imageNetworkHeader,
-                          ),
+                          ) : Container(),
                 Padding(
                   padding: const EdgeInsets.symmetric(vertical: 10),
                   child: FittedBox(

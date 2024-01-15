@@ -244,6 +244,7 @@ class NoticePopupController extends GetxController with PromotionMixin {
   }
 
   void moveToNotificationsListPage() {
+    Adjust.trackEvent(AdjustEvent('fl5g4k'));
     List<int> noticePopupListIds = noticePopupList.map((element) => element.id!).toSet().toList();
     HiveStore.save(key: HiveKey.noticePopupListIds.name, value: noticePopupListIds);
     hasNewNotice.value = false;

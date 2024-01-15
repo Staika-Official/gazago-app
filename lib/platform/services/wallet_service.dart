@@ -207,6 +207,22 @@ class WalletService {
     }
   }
 
+  static Future<void> testCreateOnChainWallet({required String walletPassword, required Function successCallback, Function? errorCallback}) async {
+    final wallet = Keypair.generateSync();
+    // String? email = HiveStore.loadString(key: HiveKey.email.name);
+    String email = 'zicnet004@gmail.com';
+    String publicKey = wallet.publicKey.toBase58();
+    // 암호화된 시크릿키
+    String encryptSecretKey = encrypt(base58.encode(wallet.secretKey), email, walletPassword);
+
+    Response res = await WalletApi.createOnChainWallet(userId!, publicKey: publicKey, secretKey: encryptSecretKey);
+    if (res.statusCode == 201) {
+      successCallback(OnChainWalletModel.fromJson(res.data));
+    } else {
+      if (errorCallback != null) errorCallback();
+    }
+  }
+
   static Future<void> getOnChainTokenBalance({required Function successCallback, Function? errorCallback}) async {
     Response res = await WalletApi.getOnChainTokenBalance(userId!);
     if (res.statusCode == 200) {

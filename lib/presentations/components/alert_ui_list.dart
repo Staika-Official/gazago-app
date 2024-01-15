@@ -46,6 +46,7 @@ import 'package:gaza_go/platform/models/crew_icon_model.dart';
 import 'package:gaza_go/platform/models/crew_model.dart';
 import 'package:gaza_go/platform/models/exchange_stik_price_model.dart';
 import 'package:gaza_go/platform/models/push_message_challenge_success_model.dart';
+import 'package:gaza_go/platform/stores/hive_store.dart';
 import 'package:gaza_go/presentations/components/circular_button.dart';
 import 'package:gaza_go/presentations/components/fair_play_content.dart';
 import 'package:gaza_go/presentations/components/gazago_button.dart';
@@ -2391,7 +2392,7 @@ void showInvalidVerifyCode(String errorMsg) {
   );
 }
 
-void showInvalidCertCode(String errorMsg) {
+void showInvalidCertCode(String errorMsg, String errorCode) {
   showAlert(
     contentWidget: Padding(
       padding: EdgeInsets.only(bottom: 35.0.sp),
@@ -2406,7 +2407,23 @@ void showInvalidCertCode(String errorMsg) {
     actions: [
       Expanded(
         child: GazagoButton(
-          onTap: () => Get.back(),
+          onTap: () {
+            Get.back();
+            // String? enteredRoute = HiveStore.loadString(key: HiveKey.enteredRoute.name);
+            // print(enteredRoute);
+            // Get.until((route) => Get.currentRoute == enteredRoute);
+            // if(errorCode == 'IDENTITY_VERIFIED_FAILURE'){
+            //   Get.back();
+            // } else {
+            //   if(enteredRoute != null){
+            //     Get.until((route) => Get.currentRoute == enteredRoute);
+            //   } else {
+            //     Get.until((route) => route.isFirst);
+            //   }
+            //
+            // }
+
+          } ,
           buttonText: '확인',
           buttonColor: skyBlueColor,
         ),
@@ -4062,7 +4079,7 @@ void failureShortBalanceStikToTikAlert(GoWalletController controller) {
 void exchangeStikShortBalanceAlert(StaikaWalletController controller) {
   showAlert(
     allowMultipleBottomSheet: true,
-    title: '송금 후 최소 잔액이 부족합니다.',
+    title: '보유한 STIK이 부족합니다.',
     isScrollControlled: true,
     contentWidget: Obx(() {
       return Column(
@@ -4111,7 +4128,7 @@ void exchangeStikShortBalanceAlert(StaikaWalletController controller) {
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       const StyledText(
-                        '요청 금액',
+                        '신청한 STIK',
                         fontWeight: 500,
                         fontSize: 16,
                         letterSpacing: -.2,
@@ -4126,12 +4143,12 @@ void exchangeStikShortBalanceAlert(StaikaWalletController controller) {
                   ),
                 ),
                 Padding(
-                  padding: EdgeInsets.only(top: 15.0.sp),
+                  padding: EdgeInsets.only(top: 15.0.sp, bottom: 10.sp),
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       const StyledText(
-                        '현재 잔액',
+                          '보유한 STIK',
                         fontWeight: 500,
                         fontSize: 16,
                         letterSpacing: -.2,
@@ -4145,65 +4162,32 @@ void exchangeStikShortBalanceAlert(StaikaWalletController controller) {
                     ],
                   ),
                 ),
-                Padding(
-                  padding: EdgeInsets.only(top: 15.0.sp),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      const StyledText(
-                        '송금 후 잔액',
-                        fontWeight: 500,
-                        fontSize: 16,
-                        letterSpacing: -.2,
-                      ),
-                      StyledText(
-                        '${formatDecimalPlaces(double.parse(controller.shortStikUiAmount.value), 4, isAutoDecimal: true)} STIK',
-                        fontWeight: 500,
-                        fontSize: 16,
-                        letterSpacing: -.2,
-                      ),
-                    ],
-                  ),
-                ),
+                // Padding(
+                //   padding: EdgeInsets.only(top: 15.0.sp),
+                //   child: Row(
+                //     mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                //     children: [
+                //       const StyledText(
+                //         '필요한 STIK',
+                //         fontWeight: 500,
+                //         fontSize: 16,
+                //         letterSpacing: -.2,
+                //       ),
+                //       StyledText(
+                //         '${formatDecimalPlaces(double.parse(controller.shortStikUiAmount.value), 4, isAutoDecimal: true)} STIK',
+                //         fontWeight: 500,
+                //         fontSize: 16,
+                //         letterSpacing: -.2,
+                //       ),
+                //     ],
+                //   ),
+                // ),
 
               ],
             ),
           ),
-          Padding(
-            padding: EdgeInsets.only(bottom: 23.0.sp),
-            child: const Divider(
-              color: Color(0xFF1D1D26),
-              height: 3,
-              thickness: 1,
-            ),
-          ),
-          Padding(
-            padding: EdgeInsets.only(bottom: 30.sp),
-            child: RichText(
-              textAlign: TextAlign.center,
-              text: TextSpan(
-                style: TextStyle(
-                  color: lightGrayColor,
-                  fontWeight: FontWeight.w500,
-                  fontSize: 14.sp,
-                  height: 18.sp / 14,
-                  letterSpacing: -.1
 
-                ),
-                children: [
-                  TextSpan(
-                  text: '솔라나(Solana) 블록체인 네트워크 정책상\n지갑에 최소',
-                  ),
-                  TextSpan(
-                    text: '0.0001 STIK',
-                  ),
-                  TextSpan(
-                    text: ' 이상 잔액이 필요합니다.\n보내는 STIK 금액을 변경한 후 다시 시도해 주세요.',
-                  ),
-                ],
-              ),
-            ),
-          ),
+
         ],
       );
     }),

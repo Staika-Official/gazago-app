@@ -135,15 +135,18 @@ class HomeMenuController extends SuperController {
             Adjust.trackEvent(AdjustEvent('7uolhz'));
             HiveStore.save(key: HiveKey.adjustFirstClickChallengeTabEvent.name, value: true);
           }
+          Adjust.trackEvent(AdjustEvent('kq18ho'));
           break;
         case 1:
           if (Get.isRegistered<InventoryController>()) Get.find<InventoryController>().refreshController();
+          Adjust.trackEvent(AdjustEvent('tlnz8m'));
           break;
         case 2:
           if (Get.isRegistered<ActivityController>()) Get.find<ActivityController>().refreshController();
           break;
         case 3:
           if (Get.isRegistered<ShopController>()) Get.find<ShopController>().refreshController();
+          Adjust.trackEvent(AdjustEvent('9z4t0n'));
           break;
         case 4:
           if (Get.isRegistered<ArchiveController>()) Get.find<ArchiveController>().refreshController();
@@ -153,6 +156,7 @@ class HomeMenuController extends SuperController {
             Adjust.trackEvent(AdjustEvent('var9av'));
             HiveStore.save(key: HiveKey.adjustFirstClickRankTabEvent.name, value: true);
           }
+          Adjust.trackEvent(AdjustEvent('f206px'));
           break;
       }
     } else {

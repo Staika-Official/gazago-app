@@ -1,3 +1,4 @@
+import 'package:flutter/material.dart';
 import 'package:gaza_go/constants/enums.dart';
 import 'package:gaza_go/constants/routes.dart';
 import 'package:get/get.dart';
@@ -9,7 +10,7 @@ class VerificationNameController extends GetxController {
   final RxString userName = RxString('');
   final Rx<Nationality> nationality = Rx(Nationality.none);
   final RxBool isValidNext = RxBool(false);
-
+  final TextEditingController userNameTextController = TextEditingController();
   late VerificationUserModel verificationUserModel;
 
   @override
@@ -31,6 +32,13 @@ class VerificationNameController extends GetxController {
 
   void updateNationality(Nationality nationality) {
     this.nationality.value = nationality;
+  }
+
+  void initValue(){
+    verificationUserModel = VerificationUserModel();
+    userNameTextController.text = '';
+    userName.value = '';
+    nationality.value = Nationality.none;
   }
 
   void nextStep() {
