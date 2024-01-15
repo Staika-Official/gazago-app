@@ -18,27 +18,67 @@ class CreateWalletController extends GetxController {
 
   @override
   void onReady() {
-    createWallet();
+    safeCreateWallet(1);
   }
 
   @override
   void onClose() {}
 
-  void createWallet() async {
+  Future<OnChainWalletModel?> createWallet() async {
+    OnChainWalletModel? wallet;
     await WalletService.createOnChainWallet(
       walletPassword: Get.arguments['password'],
       successCallback: (OnChainWalletModel onChainWallet) {
-        // 지갑 생성 완료
-        Adjust.trackEvent(AdjustEvent('v2xlbe'));
-
-        HiveStore.save(key: HiveKey.solanaSecretKey.name, value: onChainWallet.secretKey);
-        isCreationSuccessful.value = true;
-        isCreatingWallet.value = false;
+        wallet = onChainWallet;
       },
       errorCallback: () {
-        isCreationSuccessful.value = false;
-        isCreatingWallet.value = false;
+        walletCreationFailed();
       },
     );
+    return wallet;
+  }
+
+  Future<bool> keyIsValid() async {
+    return await WalletService.encryptionIsValid(
+      walletPassword: Get.arguments['password'],
+    );
+  }
+
+  Future<void> disableWallet() async {
+    await WalletService.disableOnChainWallet(successCallback: () {
+      print('disabled');
+    }, errorCallback: (e) {
+      print(e);
+    });
+  }
+
+  void walletCreationFailed() {
+    isCreationSuccessful.value = false;
+    isCreatingWallet.value = false;
+  }
+
+  Future<void> safeCreateWallet(int retryAttempt) async {
+    OnChainWalletModel? wallet = await createWallet();
+    if (wallet != null) {
+      if (retryAttempt < 3) {
+        if (await keyIsValid()) {
+          // 지갑 생성 완료
+          Adjust.trackEvent(AdjustEvent('v2xlbe'));
+
+          HiveStore.save(key: HiveKey.solanaSecretKey.name, value: wallet.secretKey);
+          isCreationSuccessful.value = true;
+          isCreatingWallet.value = false;
+        } else {
+          await disableWallet();
+          if (retryAttempt == 1) {
+            await safeCreateWallet(retryAttempt + 1);
+          } else {
+            walletCreationFailed();
+          }
+        }
+      } else {
+        walletCreationFailed();
+      }
+    }
   }
 }

@@ -84,11 +84,12 @@ class WalletApi {
     return await Api.client(serviceUrl: ServiceUrl.goWalletService).get('/nft/$publicKey');
   }
 
-  // Todo 오래된 api 삭제해야 함
+  @Deprecated('오래된 api 삭제해야 함')
   static Future<Response> getSolanaWallet(String? userId) async {
     return await Api.client(serviceUrl: ServiceUrl.goWalletService).get('/solana/wallet/$userId');
   }
 
+  @Deprecated('오래된 api 삭제해야 함')
   static Future<Response> createSolanaWallet(String publicKey, String encryptedSecretKey) async {
     return await Api.client(serviceUrl: ServiceUrl.goWalletService).post('/solana/wallet', data: {"publicKey": publicKey, "encryptedSecretKey": encryptedSecretKey});
   }
@@ -109,6 +110,10 @@ class WalletApi {
     });
   }
 
+  static Future<Response> disableOnChainWallet(String userId) async {
+    return await Api.client(serviceUrl: ServiceUrl.onChainWalletService, allowCustomErrorHandler: true).patch('/solana/wallets/users/$userId/disable');
+  }
+
   static Future<Response> getOnChainBalanceByToken(String userId, String symbol) async {
     return await Api.client(serviceUrl: ServiceUrl.onChainWalletService).get('/solana/wallets/tokens/$symbol/users/$userId');
   }
@@ -118,6 +123,9 @@ class WalletApi {
   }
 
   static Future<Response> exchangeStikToGoWallet(String userId, String symbol, ExchangeTokenWithdrawalModel data) async {
-    return await Api.client(serviceUrl: ServiceUrl.onChainWalletService, allowCustomErrorHandler: true,).post('/solana/tokens/$symbol/users/$userId/exchange?clientId=GAZAGO', data: data);
+    return await Api.client(
+      serviceUrl: ServiceUrl.onChainWalletService,
+      allowCustomErrorHandler: true,
+    ).post('/solana/tokens/$symbol/users/$userId/exchange?clientId=GAZAGO', data: data);
   }
 }

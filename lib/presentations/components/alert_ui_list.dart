@@ -22,7 +22,6 @@ import 'package:gaza_go/platform/controllers/challenges_controller.dart';
 import 'package:gaza_go/platform/controllers/challenges_detail_controller.dart';
 import 'package:gaza_go/platform/controllers/crew_detail_controller.dart';
 import 'package:gaza_go/platform/controllers/debugging_controller.dart';
-import 'package:gaza_go/platform/controllers/global_controller.dart';
 import 'package:gaza_go/platform/controllers/home_menu_controller.dart';
 import 'package:gaza_go/platform/controllers/inventory_controller.dart';
 import 'package:gaza_go/platform/controllers/loading_controller.dart';
@@ -50,11 +49,9 @@ import 'package:gaza_go/presentations/components/circular_button.dart';
 import 'package:gaza_go/presentations/components/fair_play_content.dart';
 import 'package:gaza_go/presentations/components/gazago_button.dart';
 import 'package:gaza_go/presentations/components/item_counter.dart';
-import 'package:gaza_go/presentations/components/product_list_dialog.dart';
 import 'package:gaza_go/presentations/styles/colors.dart';
 import 'package:gaza_go/presentations/styles/icons.dart';
 import 'package:gaza_go/presentations/styles/styled_text.dart';
-import 'package:gaza_go/presentations/views/wallet/confirm_wallet_password.dart';
 import 'package:get/get.dart';
 import 'package:lottie/lottie.dart';
 import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
@@ -2473,14 +2470,13 @@ Future<void> showForceLogoutAlert() {
       Expanded(
         child: GazagoButton(
           onTap: () {
-
-            if(!forceLogoutAlertCompleter.isCompleted){
+            if (!forceLogoutAlertCompleter.isCompleted) {
               forceLogoutAlertCompleter.complete();
             } else {
               Get.back();
               return;
             }
-          } ,
+          },
           buttonText: '확인',
           buttonColor: skyBlueColor,
         ),
@@ -3144,7 +3140,7 @@ void showInAppPurchaseProgressAlert(WalletMasterController controller) {
                   child: Column(
                     children: [
                       Padding(
-                        padding: EdgeInsets.only(top:20.sp, bottom:20.0.sp),
+                        padding: EdgeInsets.only(top: 20.sp, bottom: 20.0.sp),
                         child: Lottie.asset(
                           'assets/lottie/purchase_pending.json',
                           width: 40,
@@ -3155,7 +3151,11 @@ void showInAppPurchaseProgressAlert(WalletMasterController controller) {
                       Padding(
                         padding: const EdgeInsets.all(8.0),
                         child: StyledText(
-                          controller.showVerifyingPurchaseText.value ? controller.isPurchasePending.value ? '결제 진행중입니다.' :'TIK을 충전하고 있습니다.' : '결제 승인 대기중입니다.',
+                          controller.showVerifyingPurchaseText.value
+                              ? controller.isPurchasePending.value
+                                  ? '결제 진행중입니다.'
+                                  : 'TIK을 충전하고 있습니다.'
+                              : '결제 승인 대기중입니다.',
                           fontSize: 18.sp,
                           fontWeight: 500,
                           lineHeight: 24.sp,
@@ -3225,11 +3225,11 @@ void showInAppPurchaseProgressAlert(WalletMasterController controller) {
 void showInAppPurchasePendingAlert() {
   showAlert(
     allowMultipleBottomSheet: true,
-    contentWidget:  Center(
+    contentWidget: Center(
       child: Column(
         children: [
           Padding(
-            padding: EdgeInsets.only(top:20.sp, bottom:20.0.sp),
+            padding: EdgeInsets.only(top: 20.sp, bottom: 20.0.sp),
             child: Lottie.asset(
               'assets/lottie/purchase_pending.json',
               width: 40,
@@ -3238,7 +3238,7 @@ void showInAppPurchasePendingAlert() {
             ),
           ),
           Padding(
-            padding: EdgeInsets.only(bottom:35.0.sp),
+            padding: EdgeInsets.only(bottom: 35.0.sp),
             child: StyledText(
               '결제 진행중입니다.\n잠시 후(최대 10분) 지갑 내역을\n 확인해주세요',
               fontSize: 18.sp,
@@ -3250,7 +3250,6 @@ void showInAppPurchasePendingAlert() {
         ],
       ),
     ),
-
     actions: [
       Expanded(
         child: GazagoButton(
@@ -3481,7 +3480,7 @@ void showStaikaStatusAlert({required bool hasWallet, TabController? tabControlle
               child: GazagoButton(
                 onTap: () async {
                   Get.back();
-                  if(tabController?.index == 0){
+                  if (tabController?.index == 0) {
                     Get.toNamed(Routes.sendStikStaikaWallet);
                   }
                 },
@@ -3524,6 +3523,55 @@ void showStaikaStatusAlert({required bool hasWallet, TabController? tabControlle
   );
 }
 
+void showNotSupportedWalletAlert({required String message, required TabController tabController}) {
+  showAlert(
+    allowMultipleBottomSheet: true,
+    contentWidget: Column(
+      children: [
+        Column(
+          children: [
+            Padding(
+              padding: const EdgeInsets.only(top: 28, bottom: 30),
+              child: Row(
+                children: [
+                  Expanded(
+                    child: StyledText(
+                      message,
+                      fontSize: 16,
+                      lineHeight: 24,
+                      fontWeight: 500,
+                      color: lightGrayColor,
+                      textAlign: TextAlign.center,
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ],
+        ),
+      ],
+    ),
+    actions: [
+      Expanded(
+        child: Row(
+          children: [
+            Expanded(
+              child: GazagoButton(
+                onTap: () {
+                  tabController.animateTo(0);
+                  Get.back();
+                },
+                buttonText: '확인',
+                buttonColor: skyBlueColor,
+              ),
+            ),
+          ],
+        ),
+      ),
+    ],
+  );
+}
+
 void showCreateStaikaWalletAlert() {
   showAlert(
     allowMultipleBottomSheet: true,
@@ -3556,7 +3604,7 @@ void showCreateStaikaWalletAlert() {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Padding(
-                    padding: EdgeInsets.only(top:8.0.sp),
+                    padding: EdgeInsets.only(top: 8.0.sp),
                     child: Container(
                       width: 2,
                       height: 2,
@@ -3579,7 +3627,6 @@ void showCreateStaikaWalletAlert() {
                 ],
               ),
             ),
-
           ],
         ),
       ],
@@ -3635,11 +3682,18 @@ void exchangeStikToTikAlert(GoWalletController controller, ExchangeStikPriceMode
                 Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    walletMasterController.clickedAssetButton.value == 'STAIKA' ? SvgPicture.asset('assets/images/wallet/ico_stik.svg', width: 24, height: 24) : SvgPicture.asset('assets/images/wallet/ico_tik.svg', width: 24, height: 24),
+                    walletMasterController.clickedAssetButton.value == 'STAIKA'
+                        ? SvgPicture.asset('assets/images/wallet/ico_stik.svg', width: 24, height: 24)
+                        : SvgPicture.asset('assets/images/wallet/ico_tik.svg', width: 24, height: 24),
                     Padding(
                       padding: EdgeInsets.only(left: 7.0.sp),
                       child: StyledText(
-                        formatDecimalPlaces(walletMasterController.clickedAssetButton.value == 'STAIKA' ? double.parse(exchangeProduct.fromUiAmountString!): productSumFeePrice(exchangeProduct.fromUiAmountString!, exchangeProduct.uiFeeString!), 4, isAutoDecimal: true),
+                        formatDecimalPlaces(
+                            walletMasterController.clickedAssetButton.value == 'STAIKA'
+                                ? double.parse(exchangeProduct.fromUiAmountString!)
+                                : productSumFeePrice(exchangeProduct.fromUiAmountString!, exchangeProduct.uiFeeString!),
+                            4,
+                            isAutoDecimal: true),
                         fontSize: 30,
                         lineHeight: 32,
                         fontWeight: 600,
@@ -3664,24 +3718,26 @@ void exchangeStikToTikAlert(GoWalletController controller, ExchangeStikPriceMode
                 Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    walletMasterController.clickedAssetButton == 'STAIKA' ? SvgPicture.asset('assets/images/wallet/ico_tik.svg', width: 24, height: 24) : SvgPicture.asset('assets/images/wallet/ico_stik.svg', width: 24, height: 24),
+                    walletMasterController.clickedAssetButton == 'STAIKA'
+                        ? SvgPicture.asset('assets/images/wallet/ico_tik.svg', width: 24, height: 24)
+                        : SvgPicture.asset('assets/images/wallet/ico_stik.svg', width: 24, height: 24),
                     Padding(
                       padding: EdgeInsets.only(left: 7.0.sp),
-                      child: walletMasterController.clickedAssetButton == 'STAIKA' ? StyledText(
-                        formatDecimalPlaces(productMinusFeePrice(exchangeProduct.toUiAmountString!, exchangeProduct.uiFeeString!), 0),
-                        fontSize: 30,
-                        lineHeight: 32,
-                        fontWeight: 600,
-                        letterSpacing: -.1,
-                      )  :
-                      StyledText(
-                      formatDecimalPlaces(double.parse(exchangeProduct.toUiAmountString!), 0),
-                      fontSize: 30,
-                      lineHeight: 32,
-                      fontWeight: 600,
-                      letterSpacing: -.1,
-                      ),
-
+                      child: walletMasterController.clickedAssetButton == 'STAIKA'
+                          ? StyledText(
+                              formatDecimalPlaces(productMinusFeePrice(exchangeProduct.toUiAmountString!, exchangeProduct.uiFeeString!), 0),
+                              fontSize: 30,
+                              lineHeight: 32,
+                              fontWeight: 600,
+                              letterSpacing: -.1,
+                            )
+                          : StyledText(
+                              formatDecimalPlaces(double.parse(exchangeProduct.toUiAmountString!), 0),
+                              fontSize: 30,
+                              lineHeight: 32,
+                              fontWeight: 600,
+                              letterSpacing: -.1,
+                            ),
                     ),
                     Padding(
                       padding: EdgeInsets.only(left: 7.0.sp),
@@ -3932,6 +3988,7 @@ void sendStikToGoWalletAlert(StaikaWalletController controller, String password)
     ],
   );
 }
+
 void sendStikToStaikaWalletAlert(GoWalletController controller) {
   WalletMasterController walletMasterController = Get.find();
   showAlert(
@@ -4014,10 +4071,9 @@ void sendStikToStaikaWalletAlert(GoWalletController controller) {
         child: GazagoButton(
           onTap: () async {
             Get.back();
-            if(!controller.loaderController.isLoading.value){
+            if (!controller.loaderController.isLoading.value) {
               controller.confirmSendStikStaikaWallet();
             }
-
           },
           buttonText: '네',
           buttonColor: skyBlueColor,
@@ -4035,7 +4091,7 @@ void failureShortBalanceStikToTikAlert(GoWalletController controller) {
     contentWidget: Padding(
       padding: EdgeInsets.only(top: 20.0.sp, bottom: 40.sp),
       child: StyledText(
-        '부족한 ${walletMasterController.clickedAssetButton.value == 'STAIKA' ? 'STIK':'TIK'} 을 보유한 후 다시 시도해 주세요.',
+        '부족한 ${walletMasterController.clickedAssetButton.value == 'STAIKA' ? 'STIK' : 'TIK'} 을 보유한 후 다시 시도해 주세요.',
         fontSize: 14,
         lineHeight: 20,
         fontWeight: 500,
@@ -4165,7 +4221,6 @@ void exchangeStikShortBalanceAlert(StaikaWalletController controller) {
                     ],
                   ),
                 ),
-
               ],
             ),
           ),
@@ -4182,17 +4237,10 @@ void exchangeStikShortBalanceAlert(StaikaWalletController controller) {
             child: RichText(
               textAlign: TextAlign.center,
               text: TextSpan(
-                style: TextStyle(
-                  color: lightGrayColor,
-                  fontWeight: FontWeight.w500,
-                  fontSize: 14.sp,
-                  height: 18.sp / 14,
-                  letterSpacing: -.1
-
-                ),
+                style: TextStyle(color: lightGrayColor, fontWeight: FontWeight.w500, fontSize: 14.sp, height: 18.sp / 14, letterSpacing: -.1),
                 children: [
                   TextSpan(
-                  text: '솔라나(Solana) 블록체인 네트워크 정책상\n지갑에 최소',
+                    text: '솔라나(Solana) 블록체인 네트워크 정책상\n지갑에 최소',
                   ),
                   TextSpan(
                     text: '0.0001 STIK',
@@ -4266,7 +4314,7 @@ void sendStikShortBalanceAlert(GoWalletController controller) {
                         letterSpacing: -.2,
                       ),
                       StyledText(
-                        '${formatDecimalPlaces(double.parse(walletMasterController.stik.value.uiAmountString!), 4, isAutoDecimal: true,roundType: RoundType.floor)} STIK',
+                        '${formatDecimalPlaces(double.parse(walletMasterController.stik.value.uiAmountString!), 4, isAutoDecimal: true, roundType: RoundType.floor)} STIK',
                         fontWeight: 500,
                         fontSize: 16,
                         letterSpacing: -.2,
@@ -6887,9 +6935,8 @@ void shareCrewChallengeKakaoLinkDialog(ChallengesDetailController controller) {
 }
 
 void askSharedCompleteDialog(ChallengesDetailController controller, {required ChallengeType challengeType, required ShareSource shareSource}) {
-  Get.dialog(
-      WillPopScope(
-        onWillPop: () async => false,
+  Get.dialog(WillPopScope(
+    onWillPop: () async => false,
     child: Dialog(
       shadowColor: Colors.transparent,
       backgroundColor: Colors.transparent,
@@ -6959,8 +7006,7 @@ void askSharedCompleteDialog(ChallengesDetailController controller, {required Ch
         ),
       ),
     ),
-      )
-  );
+  ));
 }
 
 void unableShareMyselfDialog(ChallengesDetailController controller, {required ChallengeType challengeType, required ShareSource shareSource}) {
@@ -7497,18 +7543,19 @@ void joinChallengePopup(ChallengesDetailController controller) async {
                           ),
                         ],
                       ),
-
-                        Padding(
-                          padding: EdgeInsets.only(top: 44.sp, bottom: 27.0.sp),
-                          child: !controller.isShortTokenBalance.value ? StyledText(
-                            '· 참가비는 납부 후 취소 및 환불이 불가합니다.',
-                            fontSize: 14,
-                            color: controller.isShortTokenBalance.value ? dangerColor : skyBlueColor,
-                          ) : Container(),
-                        ),
+                      Padding(
+                        padding: EdgeInsets.only(top: 44.sp, bottom: 27.0.sp),
+                        child: !controller.isShortTokenBalance.value
+                            ? StyledText(
+                                '· 참가비는 납부 후 취소 및 환불이 불가합니다.',
+                                fontSize: 14,
+                                color: controller.isShortTokenBalance.value ? dangerColor : skyBlueColor,
+                              )
+                            : Container(),
+                      ),
                       Row(
                         children: [
-                          if(!controller.isShortTokenBalance.value)
+                          if (!controller.isShortTokenBalance.value)
                             Expanded(
                               child: GazagoButton(
                                 onTap: () => controller.onFetchJoinChallenge(),
@@ -7517,7 +7564,7 @@ void joinChallengePopup(ChallengesDetailController controller) async {
                                 buttonColor: popupBgColor,
                               ),
                             ),
-                          if(!controller.isShortTokenBalance.value)
+                          if (!controller.isShortTokenBalance.value)
                             SizedBox(
                               width: 9.sp,
                             ),
@@ -7650,7 +7697,6 @@ void showChallengeLandingPopup(ChallengesDetailController controller, ChallengeL
 void showModalWebview(controller, context, {String? title, String linkUrl = ''}) {
   InAppWebViewController? inAppWebViewController;
 
-
   showCupertinoModalBottomSheet(
     isDismissible: true,
     enableDrag: false,
@@ -7733,49 +7779,45 @@ void showModalWebview(controller, context, {String? title, String linkUrl = ''})
 }
 
 void showModalNoticeWebview(context, {String? title, String linkUrl = ''}) {
-
   GlobalKey webViewKey = GlobalKey();
   Get.bottomSheet(
-      isDismissible: false,
-      ignoreSafeArea: false,
-      enableDrag: false,
-       isScrollControlled: true,
-       WillPopScope(
-        onWillPop: () async {
-          return false;
-        },
-        child: Scaffold(
-          body: SafeArea(
-            top: true,
-            child: InAppWebView(
-              key: webViewKey,
-              initialUrlRequest: URLRequest(url: WebUri(linkUrl)),
-              initialSettings: InAppWebViewSettings(
-                disableContextMenu: true,
-                javaScriptEnabled: true,
-                resourceCustomSchemes: ['intent'],
-
-              ),
-              onLoadResourceWithCustomScheme: (controller, url) async {
-                await controller.stopLoading();
-                return null;
-              },
-              onWebViewCreated: (controller) {
-                // register a JavaScript handler with name "myHandlerName"
-
-              },
+    isDismissible: false,
+    ignoreSafeArea: false,
+    enableDrag: false,
+    isScrollControlled: true,
+    WillPopScope(
+      onWillPop: () async {
+        return false;
+      },
+      child: Scaffold(
+        body: SafeArea(
+          top: true,
+          child: InAppWebView(
+            key: webViewKey,
+            initialUrlRequest: URLRequest(url: WebUri(linkUrl)),
+            initialSettings: InAppWebViewSettings(
+              disableContextMenu: true,
+              javaScriptEnabled: true,
+              resourceCustomSchemes: ['intent'],
             ),
+            onLoadResourceWithCustomScheme: (controller, url) async {
+              await controller.stopLoading();
+              return null;
+            },
+            onWebViewCreated: (controller) {
+              // register a JavaScript handler with name "myHandlerName"
+            },
           ),
         ),
       ),
-
+    ),
   );
 }
 
 void errorBottomSheet(String errorMsg) {
   showAlert(
     contentWidget: Padding(
-      padding: EdgeInsets.only(bottom: 35.0.sp, top:10.sp),
+      padding: EdgeInsets.only(bottom: 35.0.sp, top: 10.sp),
       child: StyledText(
         errorMsg,
         fontSize: 18,
@@ -7851,7 +7893,7 @@ void showMinimumSendStikAmountAlert() {
         children: [
           iconCircleSkyBlueCheck,
           Padding(
-            padding:  EdgeInsets.only(top: 20.0.sp),
+            padding: EdgeInsets.only(top: 20.0.sp),
             child: StyledText(
               '최소 1STIK 이상 보낼 수 있습니다.',
               fontSize: 20,
