@@ -14,6 +14,7 @@ class ChargeTikModel {
   double priceKRW;
   double priceUSD;
   int feeUiAmount;
+  String lastUpdatedDate;
 
   ChargeTikModel({
     required this.userId,
@@ -26,6 +27,7 @@ class ChargeTikModel {
     required this.priceKRW,
     required this.priceUSD,
     required this.feeUiAmount,
+    required this.lastUpdatedDate,
   });
 
   factory ChargeTikModel.fromJson(Map<String, dynamic> json) => _$ChargeTikModelFromJson(json);

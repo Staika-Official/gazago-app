@@ -319,7 +319,7 @@ void showProductStikList( String assetsName) {
                                   ),
                                   Expanded(
                                     child: StyledText(
-                                      '위에 안내한 금액이 5분간 유지되며 해당 가격으로 거래가 진행됩니다.',
+                                      '위에 안내한 금액이 일정 시간동안 유지되며 해당 가격으로 거래가 진행됩니다.',
                                       fontSize: 10,
                                       lineHeight: 14,
                                       fontWeight: 500,

@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:adjust_sdk/adjust.dart';
 import 'package:adjust_sdk/adjust_event.dart';
+import 'package:flutter/material.dart';
 import 'package:gaza_go/constants/enums.dart';
 import 'package:gaza_go/constants/routes.dart';
 import 'package:gaza_go/constants/routes.dart';
@@ -31,7 +32,7 @@ class VerificationCertCodeController extends GetxController {
   final RxBool isNotNext = RxBool(false);
   int _requestId = -1;
   Timer _timer = Timer.periodic(const Duration(seconds: 1), (timer) {});
-
+  final FocusNode focusNode = FocusNode();
   RxString get countdownString {
     String formatCounter(counterString) => counterString.toString().padLeft(2, '0');
     String minutes = formatCounter(countdownTime.value.inMinutes);
@@ -78,6 +79,7 @@ class VerificationCertCodeController extends GetxController {
   }
 
   void next() async {
+    focusNode.unfocus();
     await IdentityService.verifyIdentityCode({"requestId": _requestId.toInt(), "code": _certCode.toString(), "clientId": "GAZAGO"}, successCallback: () {
       // 본인인증이 완료 이벤트
       Adjust.trackEvent(AdjustEvent('hed7a4'));
@@ -87,6 +89,7 @@ class VerificationCertCodeController extends GetxController {
       getAccountInfo();
       afterVerificationComplete();
     }, errorCallback: (res) {
+      print(res.data);
       if (res.data['errorCode'] == 'IDENTITY_VERIFIED_FAILURE') {
         showInvalidCertCode(res.data['errorMessage'], res.data['errorCode']);
       } else if (res.data['errorCode'] == 'IDENTITY_ALREADY_VERIFIED') {

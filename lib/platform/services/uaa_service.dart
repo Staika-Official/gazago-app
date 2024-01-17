@@ -57,8 +57,8 @@ class UaaService {
     }
   }
 
-  static Future<void> modifyAccountInfo(int id, String? nickname, String? profileImageUrl, {required Function successCallback, Function? errorCallback}) async {
-    Response res = await UaaApi.modifyAccountInfo(id, userId!, nickname, profileImageUrl);
+  static Future<void> modifyAccountInfo(Map<String, String> params, {required Function successCallback, Function? errorCallback}) async {
+    Response res = await UaaApi.modifyAccountInfo(userId!, params);
     if (res.statusCode == 200) {
       successCallback(UserAccountModel.fromJson(res.data));
     } else {

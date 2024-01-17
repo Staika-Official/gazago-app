@@ -78,6 +78,7 @@ class MyPage extends StatelessWidget {
                             constraints: BoxConstraints(minWidth: 80.sp),
                             child: IntrinsicWidth(
                               child: TextField(
+                                focusNode: controller.focusNode,
                                 // readOnly: !controller.profile.value.availableChangeNickname!,
                                 scrollPadding: EdgeInsets.all(20.0.sp),
                                 controller: controller.nicknameTextController,
@@ -90,6 +91,7 @@ class MyPage extends StatelessWidget {
                                   height: 1.0,
                                   fontWeight: FontWeight.w500,
                                 ),
+                                onTap: () => controller.checkAvailableNicknameChange(),
                                 decoration: InputDecoration(
                                   contentPadding: EdgeInsets.symmetric(horizontal: 15.0.sp, vertical: 4.0.sp),
                                   enabledBorder: UnderlineInputBorder(

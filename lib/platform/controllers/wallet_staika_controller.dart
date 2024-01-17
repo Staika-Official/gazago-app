@@ -107,7 +107,7 @@ class StaikaWalletController extends GetxController with WalletMixin, SolanaMixi
           HiveStore.save(key: HiveKey.walletConnectionPrompted.name, value: true);
           showStaikaStatusAlert(hasWallet: true);
         }
-
+        await getStikPriceInfo();
         await getTokenPriceInfoList();
         await getOnChainTokenBalance();
       },

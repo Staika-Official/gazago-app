@@ -78,6 +78,7 @@ class VerificationCertCode extends StatelessWidget {
                             children: [
                               Expanded(
                                 child: TextField(
+                                  focusNode: controller.focusNode,
                                   decoration: InputDecoration(
                                     border: InputBorder.none,
                                     hintText: '인증 코드 입력',

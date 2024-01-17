@@ -41,17 +41,15 @@ class UaaApi {
     ).get('/api/ping');
   }
 
-  static Future<Response> modifyAccountInfo(int id, String userId, String? nickname, String? profileImageUrl) async {
+  static Future<Response> modifyAccountInfo( String userId, Map<String, String> params) async {
     return await Api.client(
       serviceUrl: ServiceUrl.userService,
       isPatch: true,
     ).patch(
       '/users/$userId',
       data: {
-        'id': id,
         'userId': userId,
-        'nickname': nickname,
-        'profileImageUrl': profileImageUrl,
+        ...params,
         "clientId": "GAZAGO",
       },
     );
