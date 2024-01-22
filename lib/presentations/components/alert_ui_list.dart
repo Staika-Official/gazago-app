@@ -21,6 +21,7 @@ import 'package:gaza_go/platform/controllers/archive_controller.dart';
 import 'package:gaza_go/platform/controllers/challenges_controller.dart';
 import 'package:gaza_go/platform/controllers/challenges_detail_controller.dart';
 import 'package:gaza_go/platform/controllers/crew_detail_controller.dart';
+import 'package:gaza_go/platform/controllers/daily_benefit_controller.dart';
 import 'package:gaza_go/platform/controllers/debugging_controller.dart';
 import 'package:gaza_go/platform/controllers/home_menu_controller.dart';
 import 'package:gaza_go/platform/controllers/inventory_controller.dart';
@@ -389,6 +390,44 @@ Future<void> showLocationAlert(ActivityController controller) async {
           onTap: () async {
             Get.back();
             await controller.requestLocationPermission();
+          },
+        ),
+      ),
+    ],
+  );
+}
+
+Future<void> checkAppPermissionAlert(DailyBenefitController controller) async {
+  await showAlert(
+    title: '알림',
+    contentWidget: Padding(
+      padding: EdgeInsets.only(top: 30.sp, bottom: 50.sp),
+      child: Text.rich(
+        textAlign: TextAlign.center,
+        style: TextStyle(
+          fontSize: 18.sp,
+          height: 24.sp / 18.sp,
+          fontWeight: FontWeight.w500,
+          color: Colors.white,
+        ),
+        const TextSpan(
+          text: '광고를 보기 위해선 \n',
+          children: [
+            TextSpan(text: '설정 -> 개인정보 보호 및 보안 -> 추적\n', style: TextStyle(color: skyBlueColor)),
+            TextSpan(text: '가자고 앱에 대한 권한을 허용해 주세요.'),
+          ],
+        ),
+      ),
+    ),
+    actions: [
+
+      Expanded(
+        child: GazagoButton(
+          buttonText: '확인',
+          onTap: () async {
+            Get.back();
+            controller.moveAppSettings();
+
           },
         ),
       ),

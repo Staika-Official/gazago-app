@@ -53,6 +53,16 @@ void initDebuggingMode() {
   HiveStore.save(key: HiveKey.responseErrorLogs.name, value: []);
 }
 
+Future<void> initializeAdMob() async {
+  await MobileAds.instance.initialize().then((initializationStatus) {
+    // isAdmobPluginInitialized.value = true;
+    initializationStatus.adapterStatuses.forEach((key, value) {
+      debugPrint('Adapter status for $key: ${value.description}');
+    });
+  });
+}
+
+
 void main() async {
   await runZonedGuarded(() async {
     WidgetsFlutterBinding.ensureInitialized(); // async로 할 때 반드시 호출
@@ -68,13 +78,9 @@ void main() async {
     initDebuggingMode();
     await initFirebase();
     await initFirebasePackages();
+    await initializeAdMob();
 
 
-    MobileAds.instance.initialize().then((initializationStatus) {
-      initializationStatus.adapterStatuses.forEach((key, value) {
-        debugPrint('Adapter status for $key: ${value.description}');
-      });
-    });
 
     // Geolocation Engine이 2개가 생성되는 문제가 있어서(2개가 생성되면 Foreground 운동측정이 사라지지 않는다). 주석처리
     // 추후에 백그라운드 데이터로 처리가 필요한 경우 다시 고민해보자.

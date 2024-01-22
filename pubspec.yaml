@@ -22,7 +22,7 @@ publish_to: 'none' # Remove this line if you wish to publish to pub.dev
 
 
 
-version: 1.2.48+225
+version: 1.2.49+226
 
 
 
@@ -56,7 +56,7 @@ dependencies:
   lottie: ^1.4.2 #https://pub.dev/packages/lottie
   share_plus: ^4.0.10+1 #https://pub.dev/packages/share_plus
   logger: ^1.1.0 #https://pub.dev/packages/logger
-  url_launcher: ^6.1.5 #https://pub.dev/packages/url_launcher
+
   connectivity_plus: ^3.0.2 #https://pub.dev/packages/connectivity_plus/install
   firebase_core: ^2.22.0 #https://pub.dev/packages/firebase_core
   firebase_auth: ^4.13.0 #https://pub.dev/packages/firebase_auth
@@ -107,7 +107,6 @@ dependencies:
   # flutter_inappwebview 업데이트 하면 안됨
   # beta.24+1 요구사항이 xcode 14.3 이상인데 xcode 업데이트 하면 다른 패키지에서 에러남
   flutter_inappwebview: 6.0.0-beta.24+1
-  google_mobile_ads: ^2.3.0
   path_provider: ^2.0.11
   advertising_id: 2.3.0
   device_info_plus: ^8.0.0
@@ -138,6 +137,10 @@ dependencies:
   foundation: ^0.0.5
   facebook_audience_network: ^1.0.1
   image: ^3.3.0
+  google_mobile_ads: ^4.0.0
+  app_tracking_transparency: ^2.0.4
+  url_launcher: ^6.2.3
+  app_settings: ^5.1.1
 
 
 dev_dependencies:

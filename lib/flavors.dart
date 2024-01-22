@@ -212,13 +212,13 @@ class F {
   static String get dailyBenefitAd1Ios {
     switch (appFlavor) {
       case Flavor.dev:
-        return 'ca-app-pub-3940256099942544/1712485313';
+        return 'ca-app-pub-3940256099942544/6978759866';
       case Flavor.stage:
-        return 'ca-app-pub-3940256099942544/1712485313';
+        return 'ca-app-pub-3940256099942544/6978759866';
       case Flavor.prod:
-        return 'ca-app-pub-4234536720874912/6534492567';
+        return 'ca-app-pub-4234536720874912/3997694956';
       default:
-        return 'ca-app-pub-3940256099942544/1712485313';
+        return 'ca-app-pub-3940256099942544/6978759866';
     }
   }
 
