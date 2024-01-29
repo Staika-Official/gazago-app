@@ -109,7 +109,7 @@ class LoginController extends GetxController {
         webAuthenticationOptions: WebAuthenticationOptions(
           clientId: F.isDev ? 'io.gazago.stage' : 'io.gazago',
           redirectUri: Uri.parse(
-            F.isDev ? 'https://apple-gazago-stage.glitch.me/callbacks/sign_in_with_apple' : 'https://apple-gazago.glitch.me/callbacks/sign_in_with_apple',
+            F.isDev ? 'https://api.stage.staika.io/services/uaa/api/callbacks/GAZAGO/sign-in/apple' : 'https://api.staika.io/services/uaa/api/callbacks/GAZAGO/sign-in/apple',
           ),
         ),
       );
