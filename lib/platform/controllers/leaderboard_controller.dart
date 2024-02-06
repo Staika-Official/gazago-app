@@ -12,6 +12,7 @@ import 'package:table_calendar/table_calendar.dart';
 
 class LeaderboardController extends GetxController with GetTickerProviderStateMixin {
   late TabController tabController;
+  HomeMenuController homeMenuController = Get.isRegistered<HomeMenuController>() ? Get.find<HomeMenuController>() : Get.put(HomeMenuController());
   Rx<DateTime?> selectedDate = Rx(DateTime.now());
   CalendarFormat calendarFormat = CalendarFormat.month;
   Rx<DateTime?> today = Rx(DateTime.now());
@@ -57,12 +58,13 @@ class LeaderboardController extends GetxController with GetTickerProviderStateMi
 
   @override
   void onInit() {
-    HomeMenuController controller = Get.find<HomeMenuController>();
+
+
     initController();
     tabController = TabController(vsync: this, length: 2, initialIndex: 0)
       ..addListener(() {
         if (tabController.indexIsChanging && tabController.index == 0) {
-          controller.hideBottomNav.value = false;
+          homeMenuController.hideBottomNav.value = false;
         }
       });
     super.onInit();
@@ -150,12 +152,11 @@ class LeaderboardController extends GetxController with GetTickerProviderStateMi
   }
 
   void calendarSelectedChanged(selectDay) {
-    HomeMenuController controller = Get.find<HomeMenuController>();
     selectedDate.value = selectDay;
     _fetchMyRank();
     _fetchRankerList(true);
 
-    controller.hideBottomNav.value = false;
+    homeMenuController.hideBottomNav.value = false;
   }
 
   void calendarChanged(focusedDay) {

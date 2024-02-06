@@ -66,7 +66,7 @@ class StaikaWallet extends StatelessWidget {
                       ),
                     ),
 
-                    if (controller.userWalletAddress.value != '')
+                    if (controller.userWalletAddress.value != null && controller.userWalletAddress.value != '')
                       Padding(
                         padding: EdgeInsets.only(top: 10.0.sp),
                         child: SizedBox(

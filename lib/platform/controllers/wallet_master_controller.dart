@@ -20,6 +20,7 @@ import 'package:gaza_go/platform/models/asset_token_balance_model.dart';
 import 'package:gaza_go/platform/models/asset_token_detail_balance_model.dart';
 import 'package:gaza_go/platform/models/asset_token_transaction_model.dart';
 import 'package:gaza_go/platform/models/buy_tik_response_model.dart';
+import 'package:gaza_go/platform/models/error_response_data_model.dart';
 import 'package:gaza_go/platform/models/iap_pay_model.dart';
 import 'package:gaza_go/platform/models/iap_valid_model.dart';
 import 'package:gaza_go/platform/models/pay_info_model.dart';
@@ -218,6 +219,7 @@ class WalletMasterController extends GetxController with SolanaMixin, GetTickerP
 
   Future<void> initializeController() async {
     await getSpendingWalletBalances();
+
     transactionScrollController.addListener(() {
       transactionScrollPosition.value = transactionScrollController.position.pixels;
       if (transactionScrollController.position.atEdge && transactionScrollController.position.pixels != 0) {
@@ -233,11 +235,20 @@ class WalletMasterController extends GetxController with SolanaMixin, GetTickerP
   }
 
   Future<void> getSpendingWalletBalances({bool showLoading = false}) async {
+    HiveStore.save(key: HiveKey.isFailureGetSpendingWallet.name, value: true);
     await WalletService.getSpendingWalletBalances(
       showLoading: showLoading,
       successCallback: (balances) {
+
+        HiveStore.save(key: HiveKey.isFailureGetSpendingWallet.name, value: false);
         spendingTokens.value = balances;
       },
+        errorCallback: (ErrorResponseDataModel? error) {
+          HiveStore.save(key: HiveKey.isFailureGetSpendingWallet.name, value: true);
+          if(Get.currentRoute != Routes.loading){
+            showRefetchGetSpendingWalletAlert();
+          }
+        }
     );
 
     if (Get.isRegistered<LoadingController>()) Get.find<LoadingController>().updateProgress("서비스를 위해 정보를 불러오는 중입니다.");
@@ -246,6 +257,7 @@ class WalletMasterController extends GetxController with SolanaMixin, GetTickerP
   Future<void> getSpendingWalletTransactions(AssetTokenBalanceModel asset) async {
     dataGetLoading.value = true;
     selectedAsset.value = asset;
+
     await WalletService.getSpendingWalletTransactions(
       asset.symbol!,
       page: rawTransactionList.isEmpty ? 0 : (rawTransactionList.length / 10).floor(),
@@ -260,6 +272,9 @@ class WalletMasterController extends GetxController with SolanaMixin, GetTickerP
           hasMoreTransactions = true;
         }
       },
+      errorCallback: (ErrorResponseDataModel? error){
+        if (error != null) showToastPopup(error.errorMessage!.replaceAll('\\n', '\n'));
+      }
     );
     dataGetLoading.value = false;
   }

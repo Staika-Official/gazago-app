@@ -17,7 +17,8 @@ class MainAppbar extends StatelessWidget implements PreferredSizeWidget {
 
   @override
   Widget build(BuildContext context) {
-    NoticePopupController controller = Get.find<NoticePopupController>();
+    NoticePopupController controller = Get.isRegistered<NoticePopupController>() ? Get.find<NoticePopupController>() : Get.put(NoticePopupController());
+    WalletMasterController walletMasterController =  Get.isRegistered<WalletMasterController>() ? Get.find<WalletMasterController>() : Get.put(WalletMasterController());
 
     return AppBar(
       backgroundColor: mainBg01Color,
@@ -66,7 +67,7 @@ class MainAppbar extends StatelessWidget implements PreferredSizeWidget {
                 ],
               ),
               IconButton(
-                onPressed: () => Get.find<WalletMasterController>().moveToWallet(),
+                onPressed: () => walletMasterController.moveToWallet(),
                 icon: iconHeaderWallet,
                 splashRadius: 20.sp,
                 iconSize: 30,

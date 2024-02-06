@@ -139,26 +139,26 @@ class LoginController extends GetxController {
     );
   }
 
-  Future<void> getUserInfo() async {
-    await UaaService.getAccountInfo(
-      successCallback: (UserAccountModel user) {
-        HiveStore.save(key: HiveKey.userId.name, value: user.id.toString());
-        HiveStore.save(key: HiveKey.email.name, value: user.email);
-        // HiveStore.save(key: HiveKey.profileImageUrl.name, value: user.profileImageUrl);
-        // HiveStore.save(key: HiveKey.nickname.name, value: user.nickname);
-        HiveStore.save(key: HiveKey.authorities.name, value: user.authorities);
-        HiveStore.save(key: HiveKey.certified.name, value: user.authorities!.contains('ROLE_CERTIFIED_USER'));
-      },
-    );
-  }
+  // Future<void> getUserInfo() async {
+  //   await UaaService.getAccountInfo(
+  //     successCallback: (UserAccountModel user) {
+  //       HiveStore.save(key: HiveKey.userId.name, value: user.id.toString());
+  //       HiveStore.save(key: HiveKey.email.name, value: user.email);
+  //       // HiveStore.save(key: HiveKey.profileImageUrl.name, value: user.profileImageUrl);
+  //       // HiveStore.save(key: HiveKey.nickname.name, value: user.nickname);
+  //       HiveStore.save(key: HiveKey.authorities.name, value: user.authorities);
+  //       HiveStore.save(key: HiveKey.certified.name, value: user.authorities!.contains('ROLE_CERTIFIED_USER'));
+  //     },
+  //   );
+  // }
 
   Future<void> initUserInfo() async {
     await getAccountInfo();
 
     String? email = HiveStore.loadString(key: HiveKey.email.name);
-    String? profileImageUrl = HiveStore.loadString(key: HiveKey.profileImageUrl.name);
-    String? nickname = HiveStore.loadString(key: HiveKey.nickname.name);
-    await MemberService.initializeUserData(email, nickname, profileImageUrl, errorCallback: () {
+    // String? profileImageUrl = HiveStore.loadString(key: HiveKey.profileImageUrl.name);
+    // String? nickname = HiveStore.loadString(key: HiveKey.nickname.name);
+    await MemberService.initializeUserData(email,  errorCallback: () {
       HiveStore.deleteMultipleKeys(keys: [
         HiveKey.accessToken.name,
         HiveKey.refreshToken.name,

@@ -43,7 +43,7 @@ class WalletService {
       }
       successCallback(balanceList);
     } else {
-      if (errorCallback != null) errorCallback();
+      if (errorCallback != null) errorCallback(ErrorResponseDataModel.fromJson(res.data));
     }
   }
 
@@ -52,7 +52,7 @@ class WalletService {
     if (res.statusCode == 200) {
       successCallback(AssetTokenBalanceModel.fromJson(res.data));
     } else {
-      if (errorCallback != null) errorCallback();
+      if (errorCallback != null) errorCallback(ErrorResponseDataModel.fromJson(res.data));
     }
   }
 
@@ -61,7 +61,7 @@ class WalletService {
     if (res.statusCode == 200) {
       successCallback(AssetDetailModel.fromJson(res.data));
     } else {
-      if (errorCallback != null) errorCallback();
+      if (errorCallback != null) errorCallback(ErrorResponseDataModel.fromJson(res.data));
     }
   }
 
