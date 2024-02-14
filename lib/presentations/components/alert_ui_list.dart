@@ -5730,7 +5730,7 @@ void consumerItemUsagePopup(controller, context) {
 }
 
 void shortConsumerItems(String itemType) {
-  HomeMenuController homeMenuController = Get.find();
+  HomeMenuController homeMenuController = Get.isRegistered<HomeMenuController>() ? Get.find<HomeMenuController>() : Get.put(HomeMenuController());
   ShopController shopController = Get.isRegistered<ShopController>() ? Get.find<ShopController>() : Get.put(ShopController());
   showAlert(
     title: itemType == 'STAMINA' ? '회복 아이템이 부족해요' : '수리 아이템이 부족해요',

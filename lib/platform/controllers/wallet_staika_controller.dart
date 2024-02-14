@@ -40,6 +40,7 @@ class StaikaWalletController extends GetxController with WalletMixin, SolanaMixi
   final TextEditingController stikAmountTextController = TextEditingController(text: '');
   final FocusNode focusNode = FocusNode();
   final RxBool isFetching = RxBool(false);
+  final RxString userEmail = RxString('');
 
   RxBool get isValid {
     if (sendStikUiAmount.value != '') {
@@ -59,7 +60,7 @@ class StaikaWalletController extends GetxController with WalletMixin, SolanaMixi
   @override
   void onInit() async {
     focusNode.addListener(_onFocusChange);
-
+    userEmail.value = await HiveStore.load(key: HiveKey.email.name) ?? '';
     await getStaikaWalletInfo();
 
     super.onInit();

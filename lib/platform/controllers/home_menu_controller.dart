@@ -311,7 +311,7 @@ class HomeMenuController extends SuperController {
     userDiInfoRef.onValue.listen((DatabaseEvent event) async {
       
       eventListener.value = ++eventListener.value;
-      
+      print(event.snapshot.value);
       if (event.snapshot.value != deviceId && event.snapshot.value != null && eventListener.value == 1) {
         handleForceLogoutWithAlert();
       }

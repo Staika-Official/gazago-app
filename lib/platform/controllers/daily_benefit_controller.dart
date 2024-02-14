@@ -58,10 +58,8 @@ class DailyBenefitController extends GetxController {
 
   @override
   void onInit() async {
-    // await initializeAdmobPlugin();
     await initializeMetaPlugin();
     await initController();
-    await getMobileAds();
     super.onInit();
   }
 
@@ -70,11 +68,6 @@ class DailyBenefitController extends GetxController {
 
   }
 
-  Future<void> getMobileAds() async {
-    print('애드몹');
-    RequestConfiguration configuration = await MobileAds.instance.getRequestConfiguration();
-    print(configuration.maxAdContentRating);
-  }
 
   Future<void> initController() async {
     await initPlatformState();
@@ -83,15 +76,6 @@ class DailyBenefitController extends GetxController {
 
   }
 
-  Future<void> initializeAdmobPlugin() async {
-    MobileAds.instance.initialize().then((initializationStatus) {
-      isAdmobPluginInitialized.value = true;
-      initializationStatus.adapterStatuses.forEach((key, value) {
-        debugPrint('Adapter status for $key: ${value.description}');
-      });
-
-    });
-  }
 
   Future<void> initializeMetaPlugin() async {
     FacebookAudienceNetwork.init(
@@ -342,11 +326,9 @@ class DailyBenefitController extends GetxController {
 
   Future<void> requestDailyBenefitAd(BenefitItemModel benefitItem) async {
     Completer completer = Completer();
-
+    print(dailyRewardAdList);
     if (dailyRewardAdList.isNotEmpty && dailyRewardAdList[activeAdIndex.value] != null) {
       // showToastPopup('광고 요청 중 입니다. 잠시만 기다려주세요.');
-      print('activeAdIndex.value : ${activeAdIndex.value}');
-      print('dailyRewardAdList[activeAdIndex.value] : ${dailyRewardAdList.value}');
       dailyRewardAdList[activeAdIndex.value]!.fullScreenContentCallback = FullScreenContentCallback(
         // Called when the ad showed the full screen content.
         onAdShowedFullScreenContent: (ad) async {

@@ -377,9 +377,12 @@ class _DailyBenefitItemState extends State<DailyBenefitItem> {
   bool _loading = false;
 
   void toggleLoadingState() {
-    setState(() {
-      _loading = !_loading;
-    });
+    if(mounted){
+      setState(() {
+        _loading = !_loading;
+      });
+    }
+
   }
 
   @override

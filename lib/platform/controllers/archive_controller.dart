@@ -72,15 +72,18 @@ class ArchiveController extends GetxController with ScrollMixin {
     await ArchiveService.getArchiveItem(id, Platform.operatingSystem, successCallback: (archive) async {
       loaderController.isLoading.value = false;
       dataGetLoading.value = false;
-      selectedItem.value = archive;
-      final targetDate = Jiffy.parse(archive.endedDate!);
-      selectedItem.value.isTwoMonthAgo = targetDate.isBefore(twoMonthAgo);
-      if(targetDate.isBefore(twoMonthAgo)){
-        locations.value = RxList.empty();
-      } else {
-        await initialiseLocations();
+      if(archive != null){
+        selectedItem.value = archive;
+        final targetDate = Jiffy.parse(archive.endedDate!);
+        selectedItem.value.isTwoMonthAgo = targetDate.isBefore(twoMonthAgo);
+        if(targetDate.isBefore(twoMonthAgo)){
+          locations.value = RxList.empty();
+        } else {
+          await initialiseLocations();
+        }
+        Get.toNamed(Routes.archiveDetail);
       }
-      Get.toNamed(Routes.archiveDetail);
+
     });
   }
 

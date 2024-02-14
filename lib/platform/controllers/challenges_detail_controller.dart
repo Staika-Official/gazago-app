@@ -267,6 +267,7 @@ class ChallengesDetailController extends SuperController with GetTickerProviderS
         });
 
         challengeRankingList.addAll(data);
+        print(challengeRankingList[5].toJson());
         loadingLeaderboard = false;
       });
     }
