@@ -78,16 +78,15 @@ class HomeMenuController extends SuperController {
 
   @override
   void onReady() async {
-
     Get.isRegistered<ActivityController>() ? Get.find<ActivityController>().initializeExercise() : Get.put(ActivityController()).initializeExercise();
-    handleAppNotification();
     await checkUpdates();
     bottomNavHeight.value = bottomNavKey.currentContext != null ? bottomNavKey.currentContext!.size!.height : 0;
     checkItemsDb();
     handlePendingDynamicLink();
     checkForNewChallenges();
-    checkUserCI();
+    await checkUserCI();
     await handleCheckGetSpendingWallet();
+    handleAppNotification();
     super.onReady();
   }
 
@@ -314,9 +313,7 @@ class HomeMenuController extends SuperController {
     String deviceId = HiveStore.loadString(key: HiveKey.uuid.name)!;
     DatabaseReference userDiInfoRef = FirebaseDatabase.instance.ref('user_info/$userId/deviceId');
 
-
     userDiInfoRef.onValue.listen((DatabaseEvent event) async {
-      
       eventListener.value = ++eventListener.value;
       print(event.snapshot.value);
       if (event.snapshot.value != deviceId && event.snapshot.value != null && eventListener.value == 1) {
