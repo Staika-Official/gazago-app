@@ -179,7 +179,6 @@ void onSelectNotification(NotificationResponse? notificationResponse) {
     List<String> payload = notificationResponse.payload!.split('-');
     String action = payload[0];
     String route = payload[1];
-
     if (action == 'NAV') {
       Get.until((route) => route.isFirst);
       switch (route) {

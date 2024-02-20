@@ -1397,7 +1397,7 @@ void itemPurchaseAlert(ShopDetailController controller, double remainMyAsset, tr
                 fontWeight: 600,
               ),
               StyledText(
-                '${formatDecimalPlaces(remainMyAsset, tradeSymbol == 'STIK' ? 9 : 0, isAutoDecimal: true)} ${controller.selectedItem.value.tradeSymbol!}',
+                '${formatDecimalPlaces(remainMyAsset, tradeSymbol == 'STIK' ? 4 : 0, isAutoDecimal: true)} ${controller.selectedItem.value.tradeSymbol!}',
                 fontSize: 18,
                 lineHeight: 18,
                 fontWeight: 400,
