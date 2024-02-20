@@ -3,7 +3,6 @@ import 'dart:io';
 
 import 'package:adjust_sdk/adjust.dart';
 import 'package:adjust_sdk/adjust_event.dart';
-import 'package:advertising_id/advertising_id.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_inappwebview/flutter_inappwebview.dart';
 import 'package:gaza_go/constants/enums.dart';
@@ -11,7 +10,6 @@ import 'package:gaza_go/constants/routes.dart';
 import 'package:gaza_go/flavors.dart';
 import 'package:gaza_go/platform/controllers/loader_controller.dart';
 import 'package:gaza_go/platform/controllers/loading_controller.dart';
-import 'package:gaza_go/platform/controllers/wallet_go_controller.dart';
 import 'package:gaza_go/platform/controllers/wallet_staika_controller.dart';
 import 'package:gaza_go/platform/helpers/alert_helper.dart';
 import 'package:gaza_go/platform/helpers/solana_mixin.dart';
@@ -31,13 +29,9 @@ import 'package:gaza_go/platform/services/uaa_service.dart';
 import 'package:gaza_go/platform/services/wallet_service.dart';
 import 'package:gaza_go/platform/stores/hive_store.dart';
 import 'package:gaza_go/presentations/components/alert_ui_list.dart';
-import 'package:gaza_go/presentations/components/product_list_dialog.dart';
-import 'package:gaza_go/presentations/components/product_list_stik_dialog.dart';
 import 'package:get/get.dart';
-import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'package:in_app_purchase/in_app_purchase.dart';
 import 'package:jiffy/jiffy.dart';
-import 'package:path_provider/path_provider.dart';
 import 'package:throttling/throttling.dart';
 
 class WalletMasterController extends GetxController with SolanaMixin, GetTickerProviderStateMixin {
@@ -188,7 +182,6 @@ class WalletMasterController extends GetxController with SolanaMixin, GetTickerP
 
   @override
   onInit() {
-
     initInAppPurchaseStream();
     connectToStores();
     tabController = TabController(vsync: this, length: 2, initialIndex: 0)
@@ -197,25 +190,23 @@ class WalletMasterController extends GetxController with SolanaMixin, GetTickerP
           if (Get.isRegistered<StaikaWalletController>() && Get.isBottomSheetOpen == false) {
             String? savedTime = HiveStore.load(key: HiveKey.onGetChainWalletBalanceTime.name);
             bool isWalletConnectionPrompted = HiveStore.load(key: HiveKey.walletConnectionPrompted.name) ?? false;
-            if(!isWalletConnectionPrompted){
+            if (!isWalletConnectionPrompted) {
               Get.find<StaikaWalletController>().getStaikaWalletInfo();
             } else {
-              if(savedTime != null){
+              if (savedTime != null) {
                 final tenSecondsAgo = Jiffy.now().subtract(seconds: 10);
                 final targetDate = Jiffy.parse(savedTime!);
-                if(targetDate.isBefore(tenSecondsAgo)){
+                if (targetDate.isBefore(tenSecondsAgo)) {
                   Get.find<StaikaWalletController>().getStaikaWalletInfo();
                 }
               }
             }
-
           }
         }
       });
 
     super.onInit();
   }
-
 
   Future<void> initializeController() async {
     HiveStore.save(key: HiveKey.isFailureGetSpendingWallet.name, value: false);
@@ -236,22 +227,19 @@ class WalletMasterController extends GetxController with SolanaMixin, GetTickerP
   }
 
   Future<void> getSpendingWalletBalances({bool showLoading = false}) async {
-
     await WalletService.getSpendingWalletBalances(
-      showLoading: showLoading,
-      successCallback: (balances) {
-
-        HiveStore.save(key: HiveKey.isFailureGetSpendingWallet.name, value: false);
-        spendingTokens.value = balances;
-      },
+        showLoading: showLoading,
+        successCallback: (balances) {
+          HiveStore.save(key: HiveKey.isFailureGetSpendingWallet.name, value: false);
+          spendingTokens.value = balances;
+        },
         errorCallback: (ErrorResponseDataModel? error) {
           HiveStore.save(key: HiveKey.isFailureGetSpendingWallet.name, value: true);
-          if(Get.currentRoute != Routes.loading){
+          if (Get.currentRoute != Routes.loading) {
             print('getSpendingWalletBalances : $getSpendingWalletBalances');
             showRefetchGetSpendingWalletAlert();
           }
-        }
-    );
+        });
 
     if (Get.isRegistered<LoadingController>()) Get.find<LoadingController>().updateProgress("서비스를 위해 정보를 불러오는 중입니다.");
   }
@@ -260,24 +248,19 @@ class WalletMasterController extends GetxController with SolanaMixin, GetTickerP
     dataGetLoading.value = true;
     selectedAsset.value = asset;
 
-    await WalletService.getSpendingWalletTransactions(
-      asset.symbol!,
-      page: rawTransactionList.isEmpty ? 0 : (rawTransactionList.length / 10).floor(),
-      successCallback: (AssetDetailModel detail) {
-        assetDetail.value = detail;
-        print(assetDetail.value);
-        rawTransactionList.addAll(assetDetail.value.transactions);
-        print('rawTransactionList : $rawTransactionList');
-        if (assetDetail.value.transactions.isEmpty || !(assetDetail.value.transactions.length % 10 == 0)) {
-          hasMoreTransactions = false;
-        } else {
-          hasMoreTransactions = true;
-        }
-      },
-      errorCallback: (ErrorResponseDataModel? error){
-        if (error != null) showToastPopup(error.errorMessage!.replaceAll('\\n', '\n'));
+    await WalletService.getSpendingWalletTransactions(asset.symbol!, page: rawTransactionList.isEmpty ? 0 : (rawTransactionList.length / 10).floor(), successCallback: (AssetDetailModel detail) {
+      assetDetail.value = detail;
+      print(assetDetail.value);
+      rawTransactionList.addAll(assetDetail.value.transactions);
+      print('rawTransactionList : $rawTransactionList');
+      if (assetDetail.value.transactions.isEmpty || !(assetDetail.value.transactions.length % 10 == 0)) {
+        hasMoreTransactions = false;
+      } else {
+        hasMoreTransactions = true;
       }
-    );
+    }, errorCallback: (ErrorResponseDataModel? error) {
+      if (error != null) showToastPopup(error.errorMessage!.replaceAll('\\n', '\n'));
+    });
     dataGetLoading.value = false;
   }
 
@@ -300,7 +283,6 @@ class WalletMasterController extends GetxController with SolanaMixin, GetTickerP
       },
     );
   }
-
 
   void moveToWalletDetail({required AssetTokenBalanceModel asset, required WalletType walletType, required AssetType assetType}) async {
     rawTransactionList.value = RxList.empty();
@@ -354,7 +336,7 @@ class WalletMasterController extends GetxController with SolanaMixin, GetTickerP
 
   void moveToWallet() async {
     Adjust.trackEvent(AdjustEvent('v378bl'));
-    getSpendingWalletBalances();
+    await getSpendingWalletBalances();
     Get.toNamed(Routes.wallet);
   }
 
@@ -371,8 +353,7 @@ class WalletMasterController extends GetxController with SolanaMixin, GetTickerP
 
   void _listenToPurchaseUpdated(List<PurchaseDetails> purchaseDetailsList) {
     purchaseDetailsList.forEach((PurchaseDetails purchaseDetails) async {
-
-      if(purchaseDetails.status == PurchaseStatus.pending){
+      if (purchaseDetails.status == PurchaseStatus.pending) {
         isPurchasePending.value = true;
         showVerifyingPurchaseText.value = true;
       } else {
@@ -389,12 +370,11 @@ class WalletMasterController extends GetxController with SolanaMixin, GetTickerP
         if (res.valid) {
           await _deliverProduct(purchaseDetails);
         } else {
-          if(res.state == 'VALIDATE_REQUEST'){
+          if (res.state == 'VALIDATE_REQUEST') {
             showInAppPurchasePendingAlert();
           } else {
             await _handleInvalidPurchase(purchaseDetails);
           }
-
         }
         showVerifyingPurchaseText.value = false;
       }
@@ -438,12 +418,6 @@ class WalletMasterController extends GetxController with SolanaMixin, GetTickerP
       inAppProducts.value = response.productDetails;
     }
   }
-
-
-
-
-
-
 
   // void onLoaderShow() {
   //   Get.dialog(const Loader());
