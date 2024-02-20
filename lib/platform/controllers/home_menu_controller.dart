@@ -71,6 +71,12 @@ class HomeMenuController extends SuperController {
   }
 
   @override
+  void onInit() async {
+
+    super.onInit();
+  }
+
+  @override
   void onReady() async {
 
     Get.isRegistered<ActivityController>() ? Get.find<ActivityController>().initializeExercise() : Get.put(ActivityController()).initializeExercise();
@@ -86,7 +92,8 @@ class HomeMenuController extends SuperController {
   }
 
   Future<void> handleCheckGetSpendingWallet() async {
-    bool isNotLoadWallet = HiveStore.load(key: HiveKey.isFailureGetSpendingWallet.name);
+    bool isNotLoadWallet = await HiveStore.load(key: HiveKey.isFailureGetSpendingWallet.name) ?? false;
+    print('isNotLoadWallet : $isNotLoadWallet');
     if (isNotLoadWallet) {
       showRefetchGetSpendingWalletAlert();
     }
@@ -344,9 +351,13 @@ class HomeMenuController extends SuperController {
 
   @override
   void onResumed() async {
+    handleAppNotification();
+    print('111111111111111111111111111111111111111111');
+    
     if (HiveStore.load(key: HiveKey.needRouteToGoWallet.name) != null && HiveStore.load(key: HiveKey.needRouteToGoWallet.name)) {
-      HiveStore.deleteKey(key: HiveKey.needRouteToGoWallet.name);
+      print('2222222222222222222222222222222222');
       Get.isRegistered<WalletMasterController>() ? Get.find<WalletMasterController>().moveToWallet() : Get.put(WalletMasterController()).moveToWallet();
+      HiveStore.deleteKey(key: HiveKey.needRouteToGoWallet.name);
     } else if (HiveStore.load(key: HiveKey.needToForceLogout.name) != null && HiveStore.load(key: HiveKey.needToForceLogout.name)) {
       handleForceLogoutWithAlert();
     } else if (HiveStore.load(key: HiveKey.needToForceStopExercise.name) != null && HiveStore.load(key: HiveKey.needToForceStopExercise.name)) {
@@ -354,6 +365,8 @@ class HomeMenuController extends SuperController {
       HiveStore.deleteKey(key: HiveKey.needToForceStopExercise.name);
     }
   }
+
+
 
   @override
   void onHidden() {

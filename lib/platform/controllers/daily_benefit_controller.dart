@@ -93,6 +93,7 @@ class DailyBenefitController extends GetxController {
     TrackingStatus status = await AppTrackingTransparency.requestTrackingAuthorization();
     print('status: $status');
     AppSettings.openAppSettings(type: AppSettingsType.settings);
+
   }
 
   Future<bool> requestTrackingPermission() async {

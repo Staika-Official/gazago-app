@@ -160,6 +160,7 @@ class DailyBenefits extends StatelessWidget {
                   Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
+
                       const StyledText(
                         '현재 거리',
                         fontSize: 16,

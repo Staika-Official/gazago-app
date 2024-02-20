@@ -80,9 +80,9 @@ void handleMessage() {
     // }
     print('notificationKey : ${message.data['notificationKey']}');
     if (message.data['notificationKey'] == 'DAILY_REWARD_COMPLETED') {
-      Get.find<WalletMasterController>().moveToWallet();
+      // Get.find<WalletMasterController>().moveToWallet();
       print('DAILY_REWARD_COMPLETED : handleMessage');
-      // Get.isRegistered<WalletMasterController>() ? Get.find<WalletMasterController>().moveToWallet() : Get.put(WalletMasterController()).moveToWallet();
+      Get.isRegistered<WalletMasterController>() ? Get.find<WalletMasterController>().moveToWallet() : Get.put(WalletMasterController()).moveToWallet();
     }
 
     if (message.data['notificationKey'] == 'MY_ITEM') {

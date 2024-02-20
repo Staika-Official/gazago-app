@@ -218,6 +218,7 @@ class WalletMasterController extends GetxController with SolanaMixin, GetTickerP
 
 
   Future<void> initializeController() async {
+    HiveStore.save(key: HiveKey.isFailureGetSpendingWallet.name, value: false);
     await getSpendingWalletBalances();
 
     transactionScrollController.addListener(() {
@@ -235,7 +236,7 @@ class WalletMasterController extends GetxController with SolanaMixin, GetTickerP
   }
 
   Future<void> getSpendingWalletBalances({bool showLoading = false}) async {
-    HiveStore.save(key: HiveKey.isFailureGetSpendingWallet.name, value: true);
+
     await WalletService.getSpendingWalletBalances(
       showLoading: showLoading,
       successCallback: (balances) {
@@ -246,6 +247,7 @@ class WalletMasterController extends GetxController with SolanaMixin, GetTickerP
         errorCallback: (ErrorResponseDataModel? error) {
           HiveStore.save(key: HiveKey.isFailureGetSpendingWallet.name, value: true);
           if(Get.currentRoute != Routes.loading){
+            print('getSpendingWalletBalances : $getSpendingWalletBalances');
             showRefetchGetSpendingWalletAlert();
           }
         }
