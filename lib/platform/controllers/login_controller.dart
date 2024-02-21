@@ -203,7 +203,7 @@ class LoginController extends GetxController {
         if (statusCode == 200) {
           HiveStore.save(key: HiveKey.accessToken.name, value: token.accessToken);
           HiveStore.save(key: HiveKey.refreshToken.name, value: token.refreshToken);
-
+          print('token : ${token.toJson().toString()}');
           print('accessToken : ${token.accessToken}');
           print('refreshToken : ${token.refreshToken}');
           if (token.accountStatus == 'TERMINATION_COMPLETED') {

@@ -78,6 +78,7 @@ class HomeMenuController extends SuperController {
 
   @override
   void onReady() async {
+
     Get.isRegistered<ActivityController>() ? Get.find<ActivityController>().initializeExercise() : Get.put(ActivityController()).initializeExercise();
     await checkUpdates();
     bottomNavHeight.value = bottomNavKey.currentContext != null ? bottomNavKey.currentContext!.size!.height : 0;
@@ -92,7 +93,6 @@ class HomeMenuController extends SuperController {
 
   Future<void> handleCheckGetSpendingWallet() async {
     bool isNotLoadWallet = await HiveStore.load(key: HiveKey.isFailureGetSpendingWallet.name) ?? false;
-    print('isNotLoadWallet : $isNotLoadWallet');
     if (isNotLoadWallet) {
       showRefetchGetSpendingWalletAlert();
     }
@@ -326,7 +326,17 @@ class HomeMenuController extends SuperController {
   Future<void> handleForceLogoutWithAlert() async {
     HiveStore.deleteKey(key: HiveKey.needToForceLogout.name);
     HiveStore.save(key: HiveKey.hasForcedLogout.name, value: true);
-
+    if (Get.isRegistered<ActivityController>()) {
+      ActivityController activityController = Get.find<ActivityController>();
+      if (activityController.exerciseTimer != null) {
+        activityController.exerciseTimer!.cancel();
+        activityController.updateTimer!.cancel();
+        activityController.exerciseTimer = null;
+        activityController.updateTimer = null;
+      }
+      activityController.locationSubscription?.cancel();
+      activityController.locationSubscription = null;
+    }
     await showForceLogoutAlert();
     forceLogout();
   }
