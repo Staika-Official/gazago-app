@@ -222,7 +222,9 @@ class Api {
       final String refreshToken = HiveStore.loadString(key: HiveKey.refreshToken.name) ?? '';
 
       if (refreshToken == '') {
+        showToastPopup('토큰이 만료되었습니다.\n다시 로그인해주세요.');
         resetToLogin(e, handler);
+        return;
       }
 
       await _getNewAccessToken(e, handler);
@@ -317,7 +319,7 @@ class Api {
           if (e.requestOptions.extra['showLoading'] && getx.Get.isDialogOpen == true) {
             getx.Get.back();
           }
-          if(e.response != null) {
+          if (e.response != null) {
             handler.resolve(e.response!);
           } else {
             handler.next(e);
