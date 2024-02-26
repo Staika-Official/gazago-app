@@ -1397,7 +1397,7 @@ void itemPurchaseAlert(ShopDetailController controller, double remainMyAsset, tr
                 fontWeight: 600,
               ),
               StyledText(
-                '${formatDecimalPlaces(remainMyAsset, tradeSymbol == 'STIK' ? 4 : 0, isAutoDecimal: true)} ${controller.selectedItem.value.tradeSymbol!}',
+                '${formatDecimalPlaces(remainMyAsset, tradeSymbol == 'STIK' ? 4 : 0, isAutoDecimal: true, roundType: RoundType.floor)} ${controller.selectedItem.value.tradeSymbol!}',
                 fontSize: 18,
                 lineHeight: 18,
                 fontWeight: 400,
@@ -1599,7 +1599,7 @@ void itemPurchaseShortBalanceAlert(ShopDetailController controller, double remai
                 color: dangerColor,
               ),
               StyledText(
-                '${formatDecimalPlaces(remainMyTik, tradeSymbol == 'STIK' ? 9 : 0, isAutoDecimal: true)} ${controller.selectedItem.value.tradeSymbol}',
+                '${formatDecimalPlaces(remainMyTik, tradeSymbol == 'STIK' ? 4 : 0, isAutoDecimal: true, roundType: RoundType.floor)} ${controller.selectedItem.value.tradeSymbol}',
                 fontSize: 18,
                 lineHeight: 18,
                 fontWeight: 400,
@@ -8032,60 +8032,72 @@ void showIOSAdPermissionAlert(DailyBenefitController controller) {
                     Radius.circular(12.5.sp),
                   ),
                 ),
-                child: Padding(
-                  padding: EdgeInsets.all(20.0.sp),
-                  child: Column(
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      Padding(
-                        padding: EdgeInsets.only( bottom: 20.sp),
-                        child: StyledText(
-                          '광고 시청을 위해\n앱 추적 요청을 허용해주세요.',
-                          fontSize: 20,
-                          lineHeight: 29,
-                          fontWeight: 500,
-                          letterSpacing: -.1,
-                          textAlign: TextAlign.center,
-                        ),
+                child: Stack(
+                  children:[
+                    Positioned(
+                        right: 10,
+                        top: 10,
+                        child: InkWell(
+                          onTap: () => Get.back(),
+                          child: iconCloseWhite,
+                        )
+                    ),
+                    Padding(
+                      padding: EdgeInsets.all(20.0.sp),
+                      child: Column(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          Padding(
+                            padding: EdgeInsets.only( bottom: 20.sp),
+                            child: StyledText(
+                              '광고 시청을 위해\n앱 추적 요청을 허용해주세요.',
+                              fontSize: 20,
+                              lineHeight: 29,
+                              fontWeight: 500,
+                              letterSpacing: -.1,
+                              textAlign: TextAlign.center,
+                            ),
+                          ),
+                          Padding(
+                            padding: EdgeInsets.symmetric(horizontal: 20.0.sp),
+                            child: Image.asset(
+                              'assets/images/activity/img_ios_ad_permission.png',
+                              fit: BoxFit.fitWidth,
+                            ),
+                          ),
+                          Padding(
+                            padding: EdgeInsets.symmetric(vertical: 16.0.sp),
+                            child: RichText(
+                                textAlign: TextAlign.center,
+                                text: TextSpan(
+                                  style: TextStyle(color: lightGrayColor, fontWeight: FontWeight.w500, fontSize: 14, height: 22 / 14, letterSpacing: -.1),
+                                  children: [
+                                    TextSpan(
+                                      text: '그림과 같이',
+                                    ),
+                                    TextSpan(
+                                      text: ' 설정→개인정보 보호 및 보안→\n추적 페이지',
+                                      style: TextStyle(fontWeight: FontWeight.w700,),
+                                    ),
+                                    TextSpan(
+                                      text: '에서 가자고 앱을 선택해주세요.',
+                                    ),
+                                  ],
+                                )
+                            ),
+                          ),
+                          GazagoButton(
+                            onTap: () {
+
+                              controller.moveAppSettings();
+                            },
+                            buttonText: '확인',
+                            buttonColor: skyBlueColor,
+                          ),
+                        ],
                       ),
-                      Padding(
-                        padding: EdgeInsets.symmetric(horizontal: 20.0.sp),
-                        child: Image.asset(
-                          'assets/images/activity/img_ios_ad_permission.png',
-                          fit: BoxFit.fitWidth,
-                        ),
-                      ),
-                      Padding(
-                        padding: EdgeInsets.symmetric(vertical: 16.0.sp),
-                        child: RichText(
-                            textAlign: TextAlign.center,
-                            text: TextSpan(
-                              style: TextStyle(color: lightGrayColor, fontWeight: FontWeight.w500, fontSize: 14, height: 22 / 14, letterSpacing: -.1),
-                              children: [
-                                TextSpan(
-                                  text: '그림과 같이',
-                                ),
-                                TextSpan(
-                                  text: ' 설정→개인정보 보호 및 보안→\n추적 페이지',
-                                  style: TextStyle(fontWeight: FontWeight.w700,),
-                                ),
-                                TextSpan(
-                                  text: '에서 가자고 앱을 선택해주세요.',
-                                ),
-                              ],
-                            )
-                        ),
-                      ),
-                      GazagoButton(
-                        onTap: () {
-                          Get.back();
-                          controller.moveAppSettings();
-                        },
-                        buttonText: '확인',
-                        buttonColor: skyBlueColor,
-                      ),
-                    ],
-                  ),
+                    ),
+                  ]
                 ),
               ),
             )),

@@ -37,7 +37,6 @@ class DailyBenefitController extends GetxController {
   int adLoadFacebookAttemptCount = 0;
   bool isRewardedAdLoaded = false;
   Rxn<BenefitItemModel> selectedBenefitItem = Rxn();
-  RxBool loadingProgress = RxBool(true);
   RxBool isCancelAds = RxBool(false);
   RxBool isAdmobPluginInitialized = RxBool(false);
 
@@ -63,11 +62,6 @@ class DailyBenefitController extends GetxController {
     super.onInit();
   }
 
-  void toggleLoadingState() {
-    loadingProgress.value = !loadingProgress.value;
-
-  }
-
 
   Future<void> initController() async {
     await initPlatformState();
@@ -90,23 +84,19 @@ class DailyBenefitController extends GetxController {
 
 
   void moveAppSettings() async {
-    TrackingStatus status = await AppTrackingTransparency.requestTrackingAuthorization();
-    print('status: $status');
+    Get.back();
     AppSettings.openAppSettings(type: AppSettingsType.settings);
-
   }
 
   Future<bool> requestTrackingPermission() async {
     TrackingStatus status = await AppTrackingTransparency.trackingAuthorizationStatus;
     print("Tracking status: $status");
-    if (status == TrackingStatus.notDetermined || status == TrackingStatus.restricted || status == TrackingStatus.denied){
+    if (status == TrackingStatus.notDetermined){
+      await AppTrackingTransparency.requestTrackingAuthorization();
+    } else if (status == TrackingStatus.restricted || status == TrackingStatus.denied){
       // AppSettings.openAppSettings(type: AppSettingsType.settings);
       showIOSAdPermissionAlert(this);
-    }
-
-    TrackingStatus trackingStatus = await AppTrackingTransparency.requestTrackingAuthorization();
-    print("Tracking status after: $trackingStatus");
-    if(trackingStatus == TrackingStatus.authorized) {
+    } else if(status == TrackingStatus.authorized) {
       return true;
     }
     return false;
@@ -215,22 +205,25 @@ class DailyBenefitController extends GetxController {
   Future<void> loadRewardedAd() async {
     print('광고 로드 시작');
     Completer completer = Completer<void>();
+    adIsLoading.value = true;
     await RewardedInterstitialAd.load(
       adUnitId: getAdUnitId(),
       request: const AdRequest(),
       rewardedInterstitialAdLoadCallback: RewardedInterstitialAdLoadCallback(
         onAdLoaded: (RewardedInterstitialAd ad) {
-
+          adIsLoading.value = false;
           if (dailyRewardAdList.isEmpty) {
             dailyRewardAdList.value = [null, null];
             dailyRewardAdList.first = ad;
           } else {
-            int index = activeAdIndex.value == 0 ? 1 : 0;
             dailyRewardAdList[activeAdIndex.value] = ad;
           }
-          if( adLoadAttemptCount > 0 && selectedBenefitItem.value != null){
-            requestDailyBenefitAd(selectedBenefitItem.value!);
-          }
+          print('광고 로드 성공 dailyRewardAdList : ${dailyRewardAdList}');
+          print('광고 로드 성공 activeAdIndex : ${activeAdIndex.value}');
+          print('광고 로드 성공 adLoadAttemptCount : ${adLoadAttemptCount}');
+          // if( adLoadAttemptCount > 0 && selectedBenefitItem.value != null){
+          //   requestDailyBenefitAd(selectedBenefitItem.value!);
+          // }
           completer.complete();
         },
         onAdFailedToLoad: (error ) async {
@@ -239,6 +232,7 @@ class DailyBenefitController extends GetxController {
           String message = error.message;
           ResponseInfo? responseInfo = error.responseInfo;
           print(error);
+          adIsLoading.value = false;
           adLoadAttemptCount += 1;
           print('광고 로드 실패 : $dailyRewardAdList');
           if (adLoadAttemptCount == 2) {
@@ -256,7 +250,7 @@ class DailyBenefitController extends GetxController {
         },
       ),
     );
-    loadingProgress.value = false;
+
     await completer.future;
   }
 
@@ -264,6 +258,7 @@ class DailyBenefitController extends GetxController {
     if (!adIsLoading.value) {
       await loadRewardedAd();
     }
+
   }
 
   Future<void> requestBenefit(BenefitItemModel benefitItem) async {
@@ -306,12 +301,7 @@ class DailyBenefitController extends GetxController {
         Get.find<ActivityController>().getUserState();
         Get.find<WalletMasterController>().getSpendingWalletBalances();
         selectedBenefitItem.value = null;
-        if (benefitItem.adDisplayed) {
 
-          dailyRewardAdList[activeAdIndex.value]!.dispose();
-          dailyRewardAdList[activeAdIndex.value] = null;
-          activeAdIndex.value = activeAdIndex.value == 0 ? 1 : 0;
-        }
 
       },
       errorCallback: (ErrorResponseDataModel? errorResponse) {
@@ -327,14 +317,16 @@ class DailyBenefitController extends GetxController {
 
   Future<void> requestDailyBenefitAd(BenefitItemModel benefitItem) async {
     Completer completer = Completer();
-    print(dailyRewardAdList);
+
     if (dailyRewardAdList.isNotEmpty && dailyRewardAdList[activeAdIndex.value] != null) {
       // showToastPopup('광고 요청 중 입니다. 잠시만 기다려주세요.');
       dailyRewardAdList[activeAdIndex.value]!.fullScreenContentCallback = FullScreenContentCallback(
         // Called when the ad showed the full screen content.
         onAdShowedFullScreenContent: (ad) async {
           adViewTime.value = DateTime.now();
-          adLoadAttemptCount  = 0;
+
+          print('광고 보여짐 : ${activeAdIndex.value}');
+
           await loadAd();
         },
         // Called when an impression occurs on the ad.
@@ -351,15 +343,19 @@ class DailyBenefitController extends GetxController {
             showToastPopup('잠금상태에선 광고를 시청할 수 없습니다.');
             completer.complete();
           } else {
-            completer.complete();
+            showToastPopup('광고를 로딩중입니다.\n 잠시 후 다시 시도해 주세요.');
             dailyRewardAdList[activeAdIndex.value]!.dispose();
+            dailyRewardAdList.value = [null, null];
+            activeAdIndex.value = 0;
+            loadAd();
+            completer.complete();
           }
         },
         // Called when the ad dismissed full screen content.
         onAdDismissedFullScreenContent: (ad) async {
           // Dispose the ad here to free resources.
-          print('광고닫음');
           isCancelAds.value = true;
+          // dailyRewardAdList[activeAdIndex.value]!.dispose();
           await loadAd();
 
         },
@@ -372,6 +368,11 @@ class DailyBenefitController extends GetxController {
             onUserEarnedReward: (AdWithoutView ad, RewardItem reward) async {
           await fetchDailyBenefit(benefitItem, formatDateUntilDay(adViewTime.toString()), dailyRewardAdList[activeAdIndex.value]!.adUnitId);
           print('$ad with reward $RewardItem(${reward.amount}, ${reward.type})');
+
+          dailyRewardAdList[activeAdIndex.value]!.dispose();
+          dailyRewardAdList[activeAdIndex.value] = null;
+          activeAdIndex.value = activeAdIndex.value == 0 ? 1 : 0;
+          adLoadAttemptCount  = 0;
 
           completer.complete();
         });
@@ -386,6 +387,9 @@ class DailyBenefitController extends GetxController {
         completer.complete();
       }
     } else {
+      if(adIsLoading.value){
+        showToastPopup('광고를 로딩중입니다.\n 잠시 후 다시 시도해 주세요.');
+      }
       print('아무고토없다');
 
       await loadAd();
@@ -394,6 +398,20 @@ class DailyBenefitController extends GetxController {
     }
     isCancelAds.value = true;
     return completer.future;
+  }
+
+  void reCheckPermissionStatus() async {
+    TrackingStatus status = await AppTrackingTransparency.trackingAuthorizationStatus;
+    print("Tracking status: $status");
+    if (status == TrackingStatus.authorized && Get.isBottomSheetOpen!) {
+      Get.back();
+    }
+  }
+
+
+  @override
+  void onResumed() {
+    reCheckPermissionStatus();
   }
 
 }

@@ -359,10 +359,8 @@ class HomeMenuController extends SuperController {
   @override
   void onResumed() async {
     handleAppNotification();
-    print('111111111111111111111111111111111111111111');
 
     if (HiveStore.load(key: HiveKey.needRouteToGoWallet.name) != null && HiveStore.load(key: HiveKey.needRouteToGoWallet.name)) {
-      print('2222222222222222222222222222222222');
       Get.isRegistered<WalletMasterController>() ? Get.find<WalletMasterController>().moveToWallet() : Get.put(WalletMasterController()).moveToWallet();
       HiveStore.deleteKey(key: HiveKey.needRouteToGoWallet.name);
     } else if (HiveStore.load(key: HiveKey.needToForceLogout.name) != null && HiveStore.load(key: HiveKey.needToForceLogout.name)) {
