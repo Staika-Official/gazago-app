@@ -33,6 +33,7 @@ class PermissionController extends GetxController {
     await checkLocationPermissionAndAccuracy();
     await checkPhotoPermission();
     await checkCameraPermission();
+    await checkTrackingPermission();
     HiveStore.save(key: HiveKey.permissionRequestOnFirstLaunch.name, value: true);
 
     bool? isNewUser = HiveStore.load(key: HiveKey.isNewUser.name);
@@ -101,6 +102,21 @@ class PermissionController extends GetxController {
       hasActivityPermission = await requestActivityPermission();
     }
     return hasActivityPermission;
+  }
+
+  Future<bool> checkTrackingPermission() async {
+    bool hasTrackingPermission = false;
+    ph.PermissionStatus status = await ph.Permission.appTrackingTransparency.status;
+    print('상태');
+    print(status);
+
+    if (Platform.isIOS) {
+      hasTrackingPermission = ph.PermissionStatus.permanentlyDenied == await ph.Permission.appTrackingTransparency.status;
+    }
+    if (hasTrackingPermission) {
+      hasTrackingPermission = await requestTrakingPermission();
+    }
+    return hasTrackingPermission;
   }
 
   Future<bool> requestActivityPermission() async {
@@ -178,5 +194,14 @@ class PermissionController extends GetxController {
     mediaPermissionCompleter.complete(permissionGranted);
 
     return mediaPermissionCompleter.future;
+  }
+
+  Future<bool> requestTrakingPermission() async {
+    Completer<bool> trackingPermissionCompleter = Completer();
+    bool permissionGranted = false;
+    permissionGranted = ph.PermissionStatus.granted == await ph.Permission.appTrackingTransparency.request();
+    trackingPermissionCompleter.complete(permissionGranted);
+
+    return trackingPermissionCompleter.future;
   }
 }

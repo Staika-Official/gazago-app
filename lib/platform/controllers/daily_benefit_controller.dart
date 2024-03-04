@@ -91,9 +91,7 @@ class DailyBenefitController extends GetxController {
   Future<bool> requestTrackingPermission() async {
     TrackingStatus status = await AppTrackingTransparency.trackingAuthorizationStatus;
     print("Tracking status: $status");
-    if (status == TrackingStatus.notDetermined){
-      await AppTrackingTransparency.requestTrackingAuthorization();
-    } else if (status == TrackingStatus.restricted || status == TrackingStatus.denied){
+    if (status == TrackingStatus.restricted || status == TrackingStatus.denied){
       // AppSettings.openAppSettings(type: AppSettingsType.settings);
       showIOSAdPermissionAlert(this);
     } else if(status == TrackingStatus.authorized) {
