@@ -411,7 +411,7 @@ class InventoryItemDetail extends StatelessWidget {
                                                                       fontSize: 26,
                                                                       lineHeight: 26,
                                                                       fontWeight: 500,
-                                                                      color: pinkColor,
+                                                                      color: pointPink,
                                                                       letterSpacing: -.1,
                                                                     ),
                                                                     Padding(
@@ -425,7 +425,7 @@ class InventoryItemDetail extends StatelessWidget {
                                                                           ),
                                                                           StyledText(
                                                                             '행운',
-                                                                            color: pinkColor,
+                                                                            color: pointPink,
                                                                             fontSize: 12,
                                                                             lineHeight: 12,
                                                                             fontWeight: 500,
@@ -1092,7 +1092,7 @@ class InventoryItemDetail extends StatelessWidget {
                       //               formatDecimalPlaces(controller.selectedItem.value.itemStat!.luck!, 0),
                       //               fontSize: 12,
                       //               fontWeight: 500,
-                      //               color: pinkColor,
+                      //               color: pointPink,
                       //               letterSpacing: -.1,
                       //             ),
                       //           ],
@@ -1117,7 +1117,7 @@ class InventoryItemDetail extends StatelessWidget {
                       //                       return Container(
                       //                         width: constraints.maxWidth / (double.parse(controller.itemLuckMax.value) / controller.selectedItem.value.itemStat!.luck!),
                       //                         decoration: BoxDecoration(
-                      //                           color: pinkColor,
+                      //                           color: pointPink,
                       //                           borderRadius: BorderRadius.all(
                       //                             Radius.circular(30.sp),
                       //                           ),

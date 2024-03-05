@@ -139,12 +139,12 @@ class CrewInfo extends StatelessWidget {
           width: 70,
           child: Column(
             children: [
-              const StyledText(
+               StyledText(
                 '30',
                 fontSize: 24,
                 lineHeight: 26,
                 fontWeight: 500,
-                color: pinkColor,
+                color: pointPink,
               ),
               Padding(
                 padding: EdgeInsets.only(top: 4.0.sp),
@@ -155,9 +155,9 @@ class CrewInfo extends StatelessWidget {
                     iconShopLuck,
                     Padding(
                       padding: EdgeInsets.only(left: 4.0.sp),
-                      child: const StyledText(
+                      child:  StyledText(
                         '행운',
-                        color: pinkColor,
+                        color: pointPink,
                         fontSize: 12,
                         lineHeight: 12,
                         letterSpacing: -.1,

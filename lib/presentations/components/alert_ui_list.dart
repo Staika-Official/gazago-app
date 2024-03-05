@@ -1869,7 +1869,7 @@ void itemPurchaseCompleteAlert(ShopDetailController controller) {
                                     fontSize: 26,
                                     lineHeight: 26,
                                     fontWeight: 500,
-                                    color: pinkColor,
+                                    color: pointPink,
                                     letterSpacing: -.1,
                                   ),
                                   Padding(
@@ -1881,9 +1881,9 @@ void itemPurchaseCompleteAlert(ShopDetailController controller) {
                                           padding: EdgeInsets.only(right: 4.0.sp),
                                           child: iconShopLuck,
                                         ),
-                                        const StyledText(
+                                         StyledText(
                                           '행운',
-                                          color: pinkColor,
+                                          color: pointPink,
                                           fontSize: 12,
                                           lineHeight: 12,
                                           fontWeight: 500,
