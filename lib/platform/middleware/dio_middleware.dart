@@ -336,18 +336,31 @@ class Api {
     final String refreshToken = HiveStore.loadString(key: HiveKey.refreshToken.name) ?? '';
     PackageInfo packageInfo = await PackageInfo.fromPlatform();
     String deviceId = HiveStore.loadString(key: HiveKey.uuid.name)!;
-    dynamic deviceInfo;
+    AndroidDeviceInfo? androidDeviceInfo;
+    IosDeviceInfo? iosDeviceInfo;
 
-    if (Platform.isAndroid) {
-      deviceInfo = await DeviceInfoPlugin().androidInfo;
-    } else if (Platform.isIOS) {
-      deviceInfo = await DeviceInfoPlugin().iosInfo;
+    Future<void> getDeviceInfo() async {
+      final DeviceInfoPlugin deviceInfo = DeviceInfoPlugin();
+
+      if (Platform.isAndroid) {
+        androidDeviceInfo = await deviceInfo.androidInfo;
+      } else {
+        iosDeviceInfo = await deviceInfo.iosInfo;
+      }
     }
+
+    await getDeviceInfo();
 
     Dio refreshDio = Dio();
     refreshDio.options.headers['Authorization'] = 'Bearer $refreshToken';
-    await refreshDio.post('${F.baseUrl}/services/uaa/api/sign-in/token',
-        data: {'clientId': 'GAZAGO', 'appVersion': packageInfo.version, 'deviceId': deviceId, 'deviceInfo': deviceInfo.toString()}).then((Response res) async {
+    await refreshDio.post('${F.baseUrl}/services/uaa/api/sign-in/token', data: {
+      'clientId': 'GAZAGO',
+      'appVersion': packageInfo.version,
+      'deviceId': deviceId,
+      'platform': Platform.isAndroid ? 'Android' : 'iOS',
+      "deviceModel": Platform.isAndroid ? androidDeviceInfo!.model : iosDeviceInfo!.utsname.machine!,
+      "osVersion": Platform.isAndroid ? androidDeviceInfo!.version.sdkInt.toString() : iosDeviceInfo!.systemVersion!,
+    }).then((Response res) async {
       _logger.d(
         '------------->'
         '\nRESPONSE'

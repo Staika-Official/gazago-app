@@ -9,10 +9,11 @@ class SocialLoginInfoModel {
   String fcmToken;
   String token;
   String appVersion;
+  String deviceModel;
+  String osVersion;
   String platform;
   String clientId;
   bool forceLogin;
-  dynamic deviceInfo;
   String? providerEnv;
   String? inviteUserId;
 
@@ -22,10 +23,11 @@ class SocialLoginInfoModel {
     required this.fcmToken,
     required this.token,
     required this.appVersion,
+    required this.deviceModel,
+    required this.osVersion,
     required this.platform,
     required this.clientId,
     required this.forceLogin,
-    this.deviceInfo,
     this.providerEnv,
     this.inviteUserId,
   });
