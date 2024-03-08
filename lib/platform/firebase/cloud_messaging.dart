@@ -4,6 +4,7 @@ import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:gaza_go/constants/enums.dart';
 import 'package:gaza_go/platform/controllers/activity_controller.dart';
 import 'package:gaza_go/platform/controllers/home_menu_controller.dart';
+import 'package:gaza_go/platform/controllers/inventory_controller.dart';
 import 'package:gaza_go/platform/controllers/inventory_home_controller.dart';
 import 'package:gaza_go/platform/controllers/wallet_master_controller.dart';
 import 'package:gaza_go/platform/models/push_message_challenge_success_model.dart';
@@ -97,6 +98,10 @@ void handleMessage() {
     if (message.data['notificationKey'] == 'CHALLENGE_REWARD_BADGE_ISSUED') {
       PushMessageChallengeSuccessModel data = PushMessageChallengeSuccessModel.fromJson(message.data);
       showChallengeBadgeAcquisitionAlert(data);
+    }
+
+    if (message.data['notificationKey'] == 'EXPIRED_ITEM') {
+      if (Get.isRegistered<InventoryController>()) Get.find<InventoryController>().refreshController();
     }
   });
 
