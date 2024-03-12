@@ -3,12 +3,10 @@ import 'dart:async';
 import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:gaza_go/constants/enums.dart';
+import 'package:gaza_go/constants/events.dart';
 import 'package:gaza_go/constants/routes.dart';
-import 'package:gaza_go/platform/controllers/activity_controller.dart';
-import 'package:gaza_go/platform/controllers/wallet_master_controller.dart';
 import 'package:gaza_go/platform/firebase/remote_config.dart';
 import 'package:gaza_go/platform/helpers/alert_helper.dart';
-import 'package:gaza_go/platform/helpers/base_helper.dart';
 import 'package:gaza_go/platform/helpers/login_helper.dart';
 import 'package:gaza_go/platform/models/error_response_data_model.dart';
 import 'package:gaza_go/platform/models/notice_popup_model.dart';
@@ -18,7 +16,7 @@ import 'package:gaza_go/platform/services/member_service.dart';
 import 'package:gaza_go/platform/stores/hive_store.dart';
 import 'package:gaza_go/presentations/components/alert_ui_list.dart';
 import 'package:get/get.dart';
-import 'package:url_launcher/url_launcher.dart';
+import 'package:get_event_bus/get_event_bus.dart';
 
 class LoadingController extends GetxController {
   final RxInt retryCount = RxInt(0);
@@ -51,7 +49,6 @@ class LoadingController extends GetxController {
 
   @override
   void onReady() async {
-
     if (isUnderMaintenance()) {
       String emergencyNoticeContent = getConfig(dataType: ConfigType.string, configKey: 'emergency_notice_content');
       if (underMaintenance) {
@@ -179,13 +176,12 @@ class LoadingController extends GetxController {
   }
 
   Future<void> checkTermsAgreeStatus() async {
-
     await MemberService.getTermsAgreeStatus(
       successCallback: (termsList) {
         this.termsList.value = termsList;
         if (allRequiredAgreed.value) {
-          if (Get.isRegistered<WalletMasterController>()) Get.find<WalletMasterController>().initializeController();
-          if (Get.isRegistered<ActivityController>()) Get.find<ActivityController>().initializeController();
+          Get.bus.fire(InitializeWalletMasterControllerEvent());
+          Get.bus.fire(InitializeActivityControllerEvent());
         } else {
           timerStop();
           Get.offNamed(Routes.joinTerms, arguments: {'platform': 'gazago'});

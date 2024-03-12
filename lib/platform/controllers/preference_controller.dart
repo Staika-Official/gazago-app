@@ -1,4 +1,5 @@
 import 'package:gaza_go/constants/enums.dart';
+import 'package:gaza_go/constants/events.dart';
 import 'package:gaza_go/platform/helpers/login_helper.dart';
 import 'package:gaza_go/platform/helpers/preference_mixin.dart';
 import 'package:gaza_go/platform/models/user_account_model.dart';
@@ -6,10 +7,10 @@ import 'package:gaza_go/platform/services/uaa_service.dart';
 import 'package:gaza_go/platform/stores/hive_store.dart';
 import 'package:gaza_go/presentations/components/alert_ui_list.dart';
 import 'package:get/get.dart';
+import 'package:get_event_bus/get_event_bus.dart';
 import 'package:package_info_plus/package_info_plus.dart';
 
 class PreferenceController extends GetxController with PreferenceMixin {
-
   final RxString appVersion = RxString('');
   final RxBool isAbleLuckSound = RxBool(false);
 
@@ -19,6 +20,10 @@ class PreferenceController extends GetxController with PreferenceMixin {
     getProfileInfo();
     // getAccountInfo();
     getAppVersion();
+
+    Get.bus.on<InitializeActivityControllerEvent>((_) {
+      getProfileInfo();
+    });
 
     super.onInit();
   }

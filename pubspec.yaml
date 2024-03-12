@@ -141,6 +141,7 @@ dependencies:
   app_tracking_transparency: ^2.0.4
   url_launcher: ^6.2.3
   app_settings: ^5.1.1
+  get_event_bus: ^1.0.0
 
 
 dev_dependencies:

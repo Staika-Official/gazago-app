@@ -7,15 +7,10 @@ import 'package:firebase_database/firebase_database.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:gaza_go/constants/enums.dart';
+import 'package:gaza_go/constants/events.dart';
 import 'package:gaza_go/flavors.dart';
 import 'package:gaza_go/platform/controllers/activity_controller.dart';
-import 'package:gaza_go/platform/controllers/archive_controller.dart';
-import 'package:gaza_go/platform/controllers/challenges_controller.dart';
-import 'package:gaza_go/platform/controllers/inventory_controller.dart';
 import 'package:gaza_go/platform/controllers/inventory_home_controller.dart';
-import 'package:gaza_go/platform/controllers/leaderboard_controller.dart';
-import 'package:gaza_go/platform/controllers/shop_controller.dart';
-import 'package:gaza_go/platform/controllers/wallet_master_controller.dart';
 import 'package:gaza_go/platform/firebase/cloud_messaging.dart';
 import 'package:gaza_go/platform/helpers/alert_helper.dart';
 import 'package:gaza_go/platform/helpers/base_helper.dart';
@@ -33,6 +28,7 @@ import 'package:gaza_go/presentations/views/inventory/index.dart';
 import 'package:gaza_go/presentations/views/leaderboard/index.dart';
 import 'package:gaza_go/presentations/views/shop/index.dart';
 import 'package:get/get.dart';
+import 'package:get_event_bus/get_event_bus.dart';
 import 'package:in_app_update/in_app_update.dart';
 import 'package:new_version_plus/new_version_plus.dart';
 import 'package:simple_animations/simple_animations.dart';
@@ -72,14 +68,19 @@ class HomeMenuController extends SuperController {
 
   @override
   void onInit() async {
+    Get.bus.fire(InitExerciseEvent());
+    Get.bus.on<SetHomeTabMenuEvent>((tabEvent) {
+      selectMenu(tabEvent.index);
+    });
 
+    Get.bus.on<SetBottomNavStateEvent>((event) {
+      hideBottomNav.value = event.isShow;
+    });
     super.onInit();
   }
 
   @override
   void onReady() async {
-
-    Get.isRegistered<ActivityController>() ? Get.find<ActivityController>().initializeExercise() : Get.put(ActivityController()).initializeExercise();
     await checkUpdates();
     bottomNavHeight.value = bottomNavKey.currentContext != null ? bottomNavKey.currentContext!.size!.height : 0;
     checkItemsDb();
@@ -103,12 +104,11 @@ class HomeMenuController extends SuperController {
     print('initialMessage : $initialMessage');
     if (initialMessage != null) {
       if (initialMessage.data['notificationKey'] == 'DAILY_REWARD_COMPLETED') {
-        // Get.find<WalletMasterController>().moveToWallet();
         print('DAILY_REWARD_COMPLETED : handleAppNotification');
-        Get.isRegistered<WalletMasterController>() ? Get.find<WalletMasterController>().moveToWallet() : Get.put(WalletMasterController()).moveToWallet();
+        Get.bus.fire(MoveToWalletEvent());
       }
       if (initialMessage.data['notificationKey'] == 'MY_ITEM') {
-        Get.isRegistered<HomeMenuController>() ? Get.find<HomeMenuController>().selectMenu(1) : Get.put(HomeMenuController()).selectMenu(1);
+        selectMenu(1);
       }
       // 챌린지 보상 푸쉬 알림
       if (initialMessage.data['notificationKey'] == 'CHALLENGE_REWARD_BADGE_ISSUED') {
@@ -141,12 +141,12 @@ class HomeMenuController extends SuperController {
       hasNewChallenge.value = false;
     }
     if (index != 1 && Get.isRegistered<InventoryHomeController>()) {
-      Get.find<InventoryHomeController>().tabController.animateTo(0);
+      Get.bus.fire(ResetItemsTabMenuEvent());
     }
     if (visitedTabs.any((tabIndex) => tabIndex == index) && prevIndex.value != index) {
       switch (index) {
         case 0:
-          if (Get.isRegistered<ChallengesController>()) Get.find<ChallengesController>().refreshController();
+          Get.bus.fire(RefreshChallengeControllerEvent());
           bool adjustFirstClickChallengeTabEvent = HiveStore.load(key: HiveKey.adjustFirstClickChallengeTabEvent.name) ?? false;
           if (!adjustFirstClickChallengeTabEvent) {
             Adjust.trackEvent(AdjustEvent('7uolhz'));
@@ -155,19 +155,19 @@ class HomeMenuController extends SuperController {
           Adjust.trackEvent(AdjustEvent('kq18ho'));
           break;
         case 1:
-          if (Get.isRegistered<InventoryController>()) Get.find<InventoryController>().refreshController();
+          Get.bus.fire(RefreshInventoryControllerEvent());
           Adjust.trackEvent(AdjustEvent('tlnz8m'));
           break;
         case 2:
-          if (Get.isRegistered<ActivityController>()) Get.find<ActivityController>().refreshController();
+          Get.bus.fire(RefreshActivityControllerEvent());
           break;
         case 3:
-          if (Get.isRegistered<ShopController>()) Get.find<ShopController>().refreshController();
+          Get.bus.fire(RefreshShopControllerEvent());
           Adjust.trackEvent(AdjustEvent('9z4t0n'));
           break;
         case 4:
-          if (Get.isRegistered<ArchiveController>()) Get.find<ArchiveController>().refreshController();
-          if (Get.isRegistered<LeaderboardController>()) Get.find<LeaderboardController>().refreshController();
+          Get.bus.fire(RefreshArchiveControllerEvent());
+          Get.bus.fire(RefreshLeaderboardControllerEvent());
           bool adjustFirstClickRankTabEvent = HiveStore.load(key: HiveKey.adjustFirstClickRankTabEvent.name) ?? false;
           if (!adjustFirstClickRankTabEvent) {
             Adjust.trackEvent(AdjustEvent('var9av'));
@@ -361,17 +361,15 @@ class HomeMenuController extends SuperController {
     handleAppNotification();
 
     if (HiveStore.load(key: HiveKey.needRouteToGoWallet.name) != null && HiveStore.load(key: HiveKey.needRouteToGoWallet.name)) {
-      Get.isRegistered<WalletMasterController>() ? Get.find<WalletMasterController>().moveToWallet() : Get.put(WalletMasterController()).moveToWallet();
+      Get.bus.fire(MoveToWalletEvent());
       HiveStore.deleteKey(key: HiveKey.needRouteToGoWallet.name);
     } else if (HiveStore.load(key: HiveKey.needToForceLogout.name) != null && HiveStore.load(key: HiveKey.needToForceLogout.name)) {
       handleForceLogoutWithAlert();
     } else if (HiveStore.load(key: HiveKey.needToForceStopExercise.name) != null && HiveStore.load(key: HiveKey.needToForceStopExercise.name)) {
-      Get.find<ActivityController>().handleAlreadyFinishedExercise();
+      Get.bus.fire(MoveToWalletEvent());
       HiveStore.deleteKey(key: HiveKey.needToForceStopExercise.name);
     }
   }
-
-
 
   @override
   void onHidden() {
