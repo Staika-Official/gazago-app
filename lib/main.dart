@@ -204,6 +204,7 @@ class MyApp extends StatelessWidget {
               navigatorObservers: <NavigatorObserver>[observer],
               initialRoute: Routes.login,
               getPages: [...Routes.pages],
+
             );
           },
         );
