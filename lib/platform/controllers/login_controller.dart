@@ -158,7 +158,7 @@ class LoginController extends GetxController {
     String? email = HiveStore.loadString(key: HiveKey.email.name);
     // String? profileImageUrl = HiveStore.loadString(key: HiveKey.profileImageUrl.name);
     // String? nickname = HiveStore.loadString(key: HiveKey.nickname.name);
-    await MemberService.initializeUserData(email,  errorCallback: () {
+    await MemberService.initializeUserData(email, errorCallback: () {
       HiveStore.deleteMultipleKeys(keys: [
         HiveKey.accessToken.name,
         HiveKey.refreshToken.name,
@@ -173,15 +173,20 @@ class LoginController extends GetxController {
     String? inviteUserId = HiveStore.loadString(key: HiveKey.inviteUserId.name);
     String appVersion = await PackageInfo.fromPlatform().then((info) => info.version);
 
-    dynamic deviceInfo;
+    AndroidDeviceInfo? androidDeviceInfo;
+    IosDeviceInfo? iosDeviceInfo;
 
-    if (Platform.isAndroid) {
-      deviceInfo = await DeviceInfoPlugin().androidInfo;
-    } else if (Platform.isIOS) {
-      deviceInfo = await DeviceInfoPlugin().iosInfo;
+    Future<void> getDeviceInfo() async {
+      final DeviceInfoPlugin deviceInfo = DeviceInfoPlugin();
+
+      if (Platform.isAndroid) {
+        androidDeviceInfo = await deviceInfo.androidInfo;
+      } else {
+        iosDeviceInfo = await deviceInfo.iosInfo;
+      }
     }
 
-    String platform = Platform.operatingSystem;
+    await getDeviceInfo();
 
     SocialLoginInfoModel loginInfo = SocialLoginInfoModel(
       provider: loginType.name.toUpperCase(),
@@ -189,10 +194,11 @@ class LoginController extends GetxController {
       fcmToken: fcmToken,
       token: accessToken,
       appVersion: appVersion,
-      platform: platform,
       clientId: 'GAZAGO',
       forceLogin: forceLogin,
-      deviceInfo: deviceInfo.toString(),
+      platform: Platform.isAndroid ? 'Android' : 'iOS',
+      deviceModel: Platform.isAndroid ? androidDeviceInfo!.model : iosDeviceInfo!.utsname.machine!,
+      osVersion: Platform.isAndroid ? androidDeviceInfo!.version.sdkInt.toString() : iosDeviceInfo!.systemVersion!,
       providerEnv: appliedEndpoint != null && appliedEndpoint!['activateStageMode'] ? 'STAGE' : null,
       inviteUserId: inviteUserId,
     );

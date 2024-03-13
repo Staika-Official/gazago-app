@@ -45,6 +45,9 @@ import 'constants/routes.dart';
 Future<PermissionStatus> requestNotificationPermission() async {
   return await Permission.notification.request();
 }
+Future<PermissionStatus> requestTrackingPermission() async {
+  return await Permission.appTrackingTransparency.request();
+}
 
 void initDebuggingMode() {
   HiveStore.save(key: HiveKey.isDebuggingMode.name, value: false);
@@ -98,6 +101,7 @@ void main() async {
     }
     await initializeDateFormatting();
     await requestNotificationPermission();
+    await requestTrackingPermission();
 
     runApp(const MyApp());
   }, (error, stack) {
