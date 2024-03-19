@@ -297,12 +297,18 @@ class WalletService {
     final receiver = toAddress;
 
     solana.Message message;
-    if (symbol == 'SOL') {
-      message = getSolTransferMessage(sender.publicKey, receiver, amount);
-    } else {
-      final mint = tokenAddress;
-      message = await getSplTransferMessage(solanaClient, sender, receiver, mint, amount);
+    try{
+      if (symbol == 'SOL') {
+        message = getSolTransferMessage(sender.publicKey, receiver, amount);
+      } else {
+        final mint = tokenAddress;
+        message = await getSplTransferMessage(solanaClient, sender, receiver, mint, amount);
+      }
+    } catch (e) {
+      if (errorCallback != null) errorCallback(true);
+      return;
     }
+
 
     // FeePayer
     late final Ed25519HDPublicKey feePayer;

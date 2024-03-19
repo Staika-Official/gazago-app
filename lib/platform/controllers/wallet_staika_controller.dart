@@ -212,10 +212,9 @@ class StaikaWalletController extends GetxController with WalletMixin, SolanaMixi
           stikAmountTextController.text = '';
           // Get.offNamedUntil(Routes.wallet);
         },
-        errorCallback: () {
+        errorCallback: (error) {
           loaderController.isLoading.value = false;
           failureExchangeStikToGoWalletAlert();
-
           walletMasterController.getSpendingWalletBalances();
           sendStikUiAmount.value = '0';
           stikAmountTextController.text = '';

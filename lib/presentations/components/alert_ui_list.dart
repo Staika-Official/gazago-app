@@ -4531,7 +4531,7 @@ void failureExchangeStikToGoWalletAlert() {
               Padding(
                 padding: EdgeInsets.only(top: 10.0.sp),
                 child: const StyledText(
-                  '블록체인 네트워크 이상으로 완료하지 못했습니다.',
+                  '블록체인 네트워크 지연으로 완료하지 못했습니다.',
                   fontSize: 16,
                   lineHeight: 24,
                   fontWeight: 500,
