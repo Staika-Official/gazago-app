@@ -219,6 +219,7 @@ class ShopDetailController extends GetxController {
 
 
   void handleCheckPurchaseAvailable(tradeSymbol){
+    print(walletMasterController.tik.value.toString());
     if ((tradeSymbol == 'STIK' ? double.parse(walletMasterController.stik.value.uiAmountString!) : double.parse(walletMasterController.tik.value.uiAmountString!)) <
         (selectedItem.value.itemCategory == 'DISPOSABLE' ? purchaseItemSumPrice.value : selectedItem.value.price)) {
       isShortBalance.value = true;

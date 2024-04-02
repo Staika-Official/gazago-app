@@ -91,7 +91,7 @@ class DailyBenefits extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    DailyBenefitController controller = Get.find<DailyBenefitController>();
+    DailyBenefitController controller = Get.isRegistered<DailyBenefitController>() ? Get.find<DailyBenefitController>() : Get.put(DailyBenefitController());
 
     return Obx(() {
       return DefaultContainer(
@@ -137,10 +137,18 @@ class DailyBenefits extends StatelessWidget {
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
-                        StyledText(
-                          controller.dailyBenefitList.value!.userExercise.distance! >= 1000
-                              ? formatDecimalPlaces(double.parse(formatMeterToKilometer(controller.dailyBenefitList.value!.userExercise.distance!.toInt())), 1, roundType: RoundType.floor)
-                              : formatDecimalPlaces(controller.dailyBenefitList.value!.userExercise.distance!, 0),
+                        controller.dailyBenefitList.value != null ?
+                          StyledText(
+                            controller.dailyBenefitList.value!.userExercise.distance! >= 1000
+                                ? formatDecimalPlaces(double.parse(formatMeterToKilometer(controller.dailyBenefitList.value!.userExercise.distance!.toInt())), 1, roundType: RoundType.floor)
+                                : formatDecimalPlaces(controller.dailyBenefitList.value!.userExercise.distance!, 0),
+                            fontFamily: 'Montserrat',
+                            fontSize: 50,
+                            lineHeight: 50,
+                            fontWeight: 500,
+                            letterSpacing: -0.3,
+                          ) :  StyledText(
+                          '0',
                           fontFamily: 'Montserrat',
                           fontSize: 50,
                           lineHeight: 50,
@@ -160,6 +168,7 @@ class DailyBenefits extends StatelessWidget {
                   Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
+
                       const StyledText(
                         '현재 거리',
                         fontSize: 16,
@@ -178,7 +187,8 @@ class DailyBenefits extends StatelessWidget {
                             child: iconRefresh,
                           ),
                         ),
-                      )
+                      ),
+
                     ],
                   ),
                   Padding(
@@ -377,9 +387,12 @@ class _DailyBenefitItemState extends State<DailyBenefitItem> {
   bool _loading = false;
 
   void toggleLoadingState() {
-    setState(() {
-      _loading = !_loading;
-    });
+    if(mounted){
+      setState(() {
+        _loading = !_loading;
+      });
+    }
+
   }
 
   @override
@@ -522,6 +535,7 @@ class _DailyBenefitItemState extends State<DailyBenefitItem> {
                             showToastPopup('혜택은 순서대로 받을 수 있어요.');
                             return;
                           }
+                          print('controller.isCancelAds.value : ${controller.isCancelAds.value}');
                           if(controller.isCancelAds.value){
                             _loading = false;
                             controller.isCancelAds.value = false;

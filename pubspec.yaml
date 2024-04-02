@@ -22,7 +22,7 @@ publish_to: 'none' # Remove this line if you wish to publish to pub.dev
 
 
 
-version: 1.2.49+226
+version: 1.2.51+236
 
 
 
@@ -106,7 +106,7 @@ dependencies:
   throttling: ^1.0.0
   # flutter_inappwebview 업데이트 하면 안됨
   # beta.24+1 요구사항이 xcode 14.3 이상인데 xcode 업데이트 하면 다른 패키지에서 에러남
-  flutter_inappwebview: 6.0.0-beta.24+1
+  flutter_inappwebview: ^6.0.0
   path_provider: ^2.0.11
   advertising_id: 2.3.0
   device_info_plus: ^8.0.0
@@ -160,11 +160,11 @@ dev_dependencies:
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec
 
-dependency_overrides:
-  flutter_inappwebview:
-    git:
-      url: https://github.com/Estrelio/flutter_inappwebview.git
-      ref: fix-xcode-17
+#dependency_overrides:
+ # flutter_inappwebview:
+  #  git:
+   #   url: https://github.com/Estrelio/flutter_inappwebview.git
+    #  ref: fix-xcode-17
 
 # The following section is specific to Flutter packages.
 flutter:

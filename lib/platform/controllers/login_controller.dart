@@ -109,7 +109,7 @@ class LoginController extends GetxController {
         webAuthenticationOptions: WebAuthenticationOptions(
           clientId: F.isDev ? 'io.gazago.stage' : 'io.gazago',
           redirectUri: Uri.parse(
-            F.isDev ? 'https://apple-gazago-stage.glitch.me/callbacks/sign_in_with_apple' : 'https://apple-gazago.glitch.me/callbacks/sign_in_with_apple',
+            F.isDev ? 'https://api.stage.staika.io/services/uaa/api/callbacks/GAZAGO/sign-in/apple' : 'https://api.staika.io/services/uaa/api/callbacks/GAZAGO/sign-in/apple',
           ),
         ),
       );
@@ -139,26 +139,26 @@ class LoginController extends GetxController {
     );
   }
 
-  Future<void> getUserInfo() async {
-    await UaaService.getAccountInfo(
-      successCallback: (UserAccountModel user) {
-        HiveStore.save(key: HiveKey.userId.name, value: user.id.toString());
-        HiveStore.save(key: HiveKey.email.name, value: user.email);
-        // HiveStore.save(key: HiveKey.profileImageUrl.name, value: user.profileImageUrl);
-        // HiveStore.save(key: HiveKey.nickname.name, value: user.nickname);
-        HiveStore.save(key: HiveKey.authorities.name, value: user.authorities);
-        HiveStore.save(key: HiveKey.certified.name, value: user.authorities!.contains('ROLE_CERTIFIED_USER'));
-      },
-    );
-  }
+  // Future<void> getUserInfo() async {
+  //   await UaaService.getAccountInfo(
+  //     successCallback: (UserAccountModel user) {
+  //       HiveStore.save(key: HiveKey.userId.name, value: user.id.toString());
+  //       HiveStore.save(key: HiveKey.email.name, value: user.email);
+  //       // HiveStore.save(key: HiveKey.profileImageUrl.name, value: user.profileImageUrl);
+  //       // HiveStore.save(key: HiveKey.nickname.name, value: user.nickname);
+  //       HiveStore.save(key: HiveKey.authorities.name, value: user.authorities);
+  //       HiveStore.save(key: HiveKey.certified.name, value: user.authorities!.contains('ROLE_CERTIFIED_USER'));
+  //     },
+  //   );
+  // }
 
   Future<void> initUserInfo() async {
     await getAccountInfo();
 
     String? email = HiveStore.loadString(key: HiveKey.email.name);
-    String? profileImageUrl = HiveStore.loadString(key: HiveKey.profileImageUrl.name);
-    String? nickname = HiveStore.loadString(key: HiveKey.nickname.name);
-    await MemberService.initializeUserData(email, nickname, profileImageUrl, errorCallback: () {
+    // String? profileImageUrl = HiveStore.loadString(key: HiveKey.profileImageUrl.name);
+    // String? nickname = HiveStore.loadString(key: HiveKey.nickname.name);
+    await MemberService.initializeUserData(email, errorCallback: () {
       HiveStore.deleteMultipleKeys(keys: [
         HiveKey.accessToken.name,
         HiveKey.refreshToken.name,
@@ -173,15 +173,20 @@ class LoginController extends GetxController {
     String? inviteUserId = HiveStore.loadString(key: HiveKey.inviteUserId.name);
     String appVersion = await PackageInfo.fromPlatform().then((info) => info.version);
 
-    dynamic deviceInfo;
+    AndroidDeviceInfo? androidDeviceInfo;
+    IosDeviceInfo? iosDeviceInfo;
 
-    if (Platform.isAndroid) {
-      deviceInfo = await DeviceInfoPlugin().androidInfo;
-    } else if (Platform.isIOS) {
-      deviceInfo = await DeviceInfoPlugin().iosInfo;
+    Future<void> getDeviceInfo() async {
+      final DeviceInfoPlugin deviceInfo = DeviceInfoPlugin();
+
+      if (Platform.isAndroid) {
+        androidDeviceInfo = await deviceInfo.androidInfo;
+      } else {
+        iosDeviceInfo = await deviceInfo.iosInfo;
+      }
     }
 
-    String platform = Platform.operatingSystem;
+    await getDeviceInfo();
 
     SocialLoginInfoModel loginInfo = SocialLoginInfoModel(
       provider: loginType.name.toUpperCase(),
@@ -189,10 +194,11 @@ class LoginController extends GetxController {
       fcmToken: fcmToken,
       token: accessToken,
       appVersion: appVersion,
-      platform: platform,
       clientId: 'GAZAGO',
       forceLogin: forceLogin,
-      deviceInfo: deviceInfo.toString(),
+      platform: Platform.isAndroid ? 'Android' : 'iOS',
+      deviceModel: Platform.isAndroid ? androidDeviceInfo!.model : iosDeviceInfo!.utsname.machine!,
+      osVersion: Platform.isAndroid ? androidDeviceInfo!.version.sdkInt.toString() : iosDeviceInfo!.systemVersion!,
       providerEnv: appliedEndpoint != null && appliedEndpoint!['activateStageMode'] ? 'STAGE' : null,
       inviteUserId: inviteUserId,
     );
@@ -203,7 +209,7 @@ class LoginController extends GetxController {
         if (statusCode == 200) {
           HiveStore.save(key: HiveKey.accessToken.name, value: token.accessToken);
           HiveStore.save(key: HiveKey.refreshToken.name, value: token.refreshToken);
-
+          print('token : ${token.toJson().toString()}');
           print('accessToken : ${token.accessToken}');
           print('refreshToken : ${token.refreshToken}');
           if (token.accountStatus == 'TERMINATION_COMPLETED') {

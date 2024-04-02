@@ -473,6 +473,7 @@ class InventoryController extends GetxController with LinearProgressMixin, Inven
   void checkConsumerItemType(InventoryItemModel useItem) async {
     isConsumerItemUsing.value = useItem;
     Adjust.trackEvent(AdjustEvent('scaike'));
+    await Future.delayed(Duration(milliseconds: 400));
     if (useItem.itemStat!.repairDurability! > 0) {
       await fetchRepairShoesUseOneItem(useItem, equippedShoe.value.id);
     } else {

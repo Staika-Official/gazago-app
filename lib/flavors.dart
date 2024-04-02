@@ -107,8 +107,8 @@ class F {
         );
       case Flavor.prod:
         return SolanaClient(
-          rpcUrl: Uri.parse('https://api.metaplex.solana.com'),
-          websocketUrl: Uri.parse('wss://api.metaplex.solana.com'),
+          rpcUrl: Uri.parse('https://solana-mainnet.g.alchemy.com/v2/7doIm9toFmc5cZGDeN0pPzNmuVx4Od3e'),
+          websocketUrl: Uri.parse('wss://solana-mainnet.g.alchemy.com/v2/7doIm9toFmc5cZGDeN0pPzNmuVx4Od3e'),
         );
       default:
         return SolanaClient(

@@ -58,8 +58,8 @@ class SecondaryAppbar extends StatelessWidget implements PreferredSizeWidget {
 
   @override
   Widget build(BuildContext context) {
-    WalletMasterController walletMasterController = Get.find();
-    HomeMenuController homeMenuController = Get.find();
+    WalletMasterController walletMasterController = Get.isRegistered<WalletMasterController>() ? Get.find<WalletMasterController>() : Get.put(WalletMasterController());
+    HomeMenuController homeMenuController = Get.isRegistered<HomeMenuController>() ? Get.find<HomeMenuController>() : Get.put(HomeMenuController());
     return AppBar(
       backgroundColor: subBg01Color,
       automaticallyImplyLeading: false,
@@ -130,7 +130,7 @@ class SecondaryAppbar extends StatelessWidget implements PreferredSizeWidget {
                         right: 8,
                       ),
                       child: InkWell(
-                        onTap: () => Get.find<WalletMasterController>().moveToWallet(),
+                        onTap: () => walletMasterController.moveToWallet(),
                         child: Row(
                           children: [
                             ...renderWalletItems(walletMasterController),

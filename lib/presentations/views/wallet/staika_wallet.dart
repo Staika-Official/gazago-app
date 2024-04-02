@@ -51,22 +51,41 @@ class StaikaWallet extends StatelessWidget {
                   mainAxisSize: MainAxisSize.min,
                   children: [
                     Padding(
-                      padding: EdgeInsets.only(top: 28.0.sp),
-                      child: CircleAvatar(
-                        radius: 23.sp,
-                        foregroundImage: HiveStore.loadString(key: HiveKey.profileImageUrl.name) != null && HiveStore.loadString(key: HiveKey.profileImageUrl.name) != ''
-                            ? CachedNetworkImageProvider(
-                                HiveStore.loadString(key: HiveKey.profileImageUrl.name)!,
-                                headers: imageNetworkHeader,
-                              )
-                            : Image.asset(
-                                'assets/images/ic_launcher.png',
-                                width: 23.sp,
-                              ).image,
+                      padding: EdgeInsets.only(top: 15.0.sp),
+                      child: Padding(
+                        padding: EdgeInsets.symmetric(horizontal: 20.0.sp),
+                        child: SizedBox(
+                          height: 50.sp,
+                            child: Center(
+                                child: FittedBox(
+                                  child: StyledText(
+                                      controller.userEmail.value,
+                                      fontWeight: 500,
+                                      fontSize: 16,
+                                  ),
+                                )
+                            )
+                        ),
                       ),
                     ),
+                    // 프로필 사진
+                    // Padding(
+                    //   padding: EdgeInsets.only(top: 28.0.sp),
+                    //   child: CircleAvatar(
+                    //     radius: 23.sp,
+                    //     foregroundImage: HiveStore.loadString(key: HiveKey.profileImageUrl.name) != null && HiveStore.loadString(key: HiveKey.profileImageUrl.name) != ''
+                    //         ? CachedNetworkImageProvider(
+                    //             HiveStore.loadString(key: HiveKey.profileImageUrl.name)!,
+                    //             headers: imageNetworkHeader,
+                    //           )
+                    //         : Image.asset(
+                    //             'assets/images/ic_launcher.png',
+                    //             width: 23.sp,
+                    //           ).image,
+                    //   ),
+                    // ),
 
-                    if (controller.userWalletAddress.value != '')
+                    if (controller.userWalletAddress.value != null && controller.userWalletAddress.value != '')
                       Padding(
                         padding: EdgeInsets.only(top: 10.0.sp),
                         child: SizedBox(

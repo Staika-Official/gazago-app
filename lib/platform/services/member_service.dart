@@ -16,8 +16,8 @@ class MemberService {
     return HiveStore.loadString(key: HiveKey.userId.name);
   }
 
-  static Future<void> initializeUserData(String? email, String? nickname, String? profileImageUrl, {required Function errorCallback}) async {
-    Response res = await MemberApi.initializeUserData(userId!, email, nickname, profileImageUrl);
+  static Future<void> initializeUserData(String? email, {required Function errorCallback}) async {
+    Response res = await MemberApi.initializeUserData(userId!, email);
     if (![200, 201].any((statusCode) => statusCode == res.statusCode)) {
       errorCallback();
     }

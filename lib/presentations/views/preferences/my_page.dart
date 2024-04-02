@@ -57,6 +57,7 @@ class MyPage extends StatelessWidget {
                                         'assets/images/ic_launcher.png',
                                         width: 30.sp,
                                       ).image,
+                            backgroundColor: Colors.black,
                           ),
                           controller.isEditMode.value
                               ? Positioned(

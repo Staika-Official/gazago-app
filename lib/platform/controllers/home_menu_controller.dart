@@ -71,27 +71,44 @@ class HomeMenuController extends SuperController {
   }
 
   @override
+  void onInit() async {
+
+    super.onInit();
+  }
+
+  @override
   void onReady() async {
-    if (Get.isRegistered<ActivityController>()) Get.find<ActivityController>().initializeExercise();
-    handleAppNotification();
+
+    Get.isRegistered<ActivityController>() ? Get.find<ActivityController>().initializeExercise() : Get.put(ActivityController()).initializeExercise();
     await checkUpdates();
     bottomNavHeight.value = bottomNavKey.currentContext != null ? bottomNavKey.currentContext!.size!.height : 0;
     checkItemsDb();
     handlePendingDynamicLink();
     checkForNewChallenges();
-    checkUserCI();
+    await checkUserCI();
+    await handleCheckGetSpendingWallet();
+    handleAppNotification();
     super.onReady();
+  }
+
+  Future<void> handleCheckGetSpendingWallet() async {
+    bool isNotLoadWallet = await HiveStore.load(key: HiveKey.isFailureGetSpendingWallet.name) ?? false;
+    if (isNotLoadWallet) {
+      showRefetchGetSpendingWalletAlert();
+    }
   }
 
   void handleAppNotification() async {
     RemoteMessage? initialMessage = await FirebaseMessaging.instance.getInitialMessage();
-
+    print('initialMessage : $initialMessage');
     if (initialMessage != null) {
       if (initialMessage.data['notificationKey'] == 'DAILY_REWARD_COMPLETED') {
-        Get.find<WalletMasterController>().moveToWallet();
+        // Get.find<WalletMasterController>().moveToWallet();
+        print('DAILY_REWARD_COMPLETED : handleAppNotification');
+        Get.isRegistered<WalletMasterController>() ? Get.find<WalletMasterController>().moveToWallet() : Get.put(WalletMasterController()).moveToWallet();
       }
       if (initialMessage.data['notificationKey'] == 'MY_ITEM') {
-        Get.find<HomeMenuController>().selectMenu(1);
+        Get.isRegistered<HomeMenuController>() ? Get.find<HomeMenuController>().selectMenu(1) : Get.put(HomeMenuController()).selectMenu(1);
       }
       // 챌린지 보상 푸쉬 알림
       if (initialMessage.data['notificationKey'] == 'CHALLENGE_REWARD_BADGE_ISSUED') {
@@ -296,11 +313,9 @@ class HomeMenuController extends SuperController {
     String deviceId = HiveStore.loadString(key: HiveKey.uuid.name)!;
     DatabaseReference userDiInfoRef = FirebaseDatabase.instance.ref('user_info/$userId/deviceId');
 
-
     userDiInfoRef.onValue.listen((DatabaseEvent event) async {
-      
       eventListener.value = ++eventListener.value;
-      
+      print(event.snapshot.value);
       if (event.snapshot.value != deviceId && event.snapshot.value != null && eventListener.value == 1) {
         handleForceLogoutWithAlert();
       }
@@ -311,7 +326,17 @@ class HomeMenuController extends SuperController {
   Future<void> handleForceLogoutWithAlert() async {
     HiveStore.deleteKey(key: HiveKey.needToForceLogout.name);
     HiveStore.save(key: HiveKey.hasForcedLogout.name, value: true);
-
+    if (Get.isRegistered<ActivityController>()) {
+      ActivityController activityController = Get.find<ActivityController>();
+      if (activityController.exerciseTimer != null) {
+        activityController.exerciseTimer!.cancel();
+        activityController.updateTimer!.cancel();
+        activityController.exerciseTimer = null;
+        activityController.updateTimer = null;
+      }
+      activityController.locationSubscription?.cancel();
+      activityController.locationSubscription = null;
+    }
     await showForceLogoutAlert();
     forceLogout();
   }
@@ -333,9 +358,11 @@ class HomeMenuController extends SuperController {
 
   @override
   void onResumed() async {
+    handleAppNotification();
+
     if (HiveStore.load(key: HiveKey.needRouteToGoWallet.name) != null && HiveStore.load(key: HiveKey.needRouteToGoWallet.name)) {
+      Get.isRegistered<WalletMasterController>() ? Get.find<WalletMasterController>().moveToWallet() : Get.put(WalletMasterController()).moveToWallet();
       HiveStore.deleteKey(key: HiveKey.needRouteToGoWallet.name);
-      Get.find<WalletMasterController>().moveToWallet();
     } else if (HiveStore.load(key: HiveKey.needToForceLogout.name) != null && HiveStore.load(key: HiveKey.needToForceLogout.name)) {
       handleForceLogoutWithAlert();
     } else if (HiveStore.load(key: HiveKey.needToForceStopExercise.name) != null && HiveStore.load(key: HiveKey.needToForceStopExercise.name)) {
@@ -343,6 +370,8 @@ class HomeMenuController extends SuperController {
       HiveStore.deleteKey(key: HiveKey.needToForceStopExercise.name);
     }
   }
+
+
 
   @override
   void onHidden() {

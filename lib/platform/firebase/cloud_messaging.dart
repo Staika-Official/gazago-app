@@ -4,7 +4,9 @@ import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:gaza_go/constants/enums.dart';
 import 'package:gaza_go/platform/controllers/activity_controller.dart';
 import 'package:gaza_go/platform/controllers/home_menu_controller.dart';
+import 'package:gaza_go/platform/controllers/inventory_controller.dart';
 import 'package:gaza_go/platform/controllers/inventory_home_controller.dart';
+import 'package:gaza_go/platform/controllers/wallet_master_controller.dart';
 import 'package:gaza_go/platform/models/push_message_challenge_success_model.dart';
 import 'package:gaza_go/platform/stores/hive_store.dart';
 import 'package:gaza_go/presentations/components/alert_ui_list.dart';
@@ -49,7 +51,11 @@ void handleMessage() {
     AndroidNotification? android = message.notification?.android;
 
     print('FCM Foreground handleMessage ${notification!.title}');
+    print('FCM Foreground handleMessage ${notification!.body}');
     print('FCM Foreground handleMessage ${message.data['notificationKey']}');
+    print('FCM Foreground handleMessage ${message.data}');
+    print('FCM Foreground handleMessage ${message.toString()}');
+    print('FCM Foreground handleMessage ${message.data.toString()}');
 
     if (android != null) {
       flutterLocalNotificationsPlugin.show(
@@ -73,6 +79,12 @@ void handleMessage() {
     //     forceLogout();
     //   }
     // }
+    print('notificationKey : ${message.data['notificationKey']}');
+    if (message.data['notificationKey'] == 'DAILY_REWARD_COMPLETED') {
+      // Get.find<WalletMasterController>().moveToWallet();
+      print('DAILY_REWARD_COMPLETED : handleMessage');
+      Get.isRegistered<WalletMasterController>() ? Get.find<WalletMasterController>().moveToWallet() : Get.put(WalletMasterController()).moveToWallet();
+    }
 
     if (message.data['notificationKey'] == 'MY_ITEM') {
       Get.find<HomeMenuController>().selectMenu(1);
@@ -86,6 +98,10 @@ void handleMessage() {
     if (message.data['notificationKey'] == 'CHALLENGE_REWARD_BADGE_ISSUED') {
       PushMessageChallengeSuccessModel data = PushMessageChallengeSuccessModel.fromJson(message.data);
       showChallengeBadgeAcquisitionAlert(data);
+    }
+
+    if (message.data['notificationKey'] == 'EXPIRED_ITEM') {
+      if (Get.isRegistered<InventoryController>()) Get.find<InventoryController>().refreshController();
     }
   });
 
@@ -168,7 +184,6 @@ void onSelectNotification(NotificationResponse? notificationResponse) {
     List<String> payload = notificationResponse.payload!.split('-');
     String action = payload[0];
     String route = payload[1];
-
     if (action == 'NAV') {
       Get.until((route) => route.isFirst);
       switch (route) {

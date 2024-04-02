@@ -43,7 +43,7 @@ class WalletService {
       }
       successCallback(balanceList);
     } else {
-      if (errorCallback != null) errorCallback();
+      if (errorCallback != null) errorCallback(ErrorResponseDataModel.fromJson(res.data));
     }
   }
 
@@ -52,7 +52,7 @@ class WalletService {
     if (res.statusCode == 200) {
       successCallback(AssetTokenBalanceModel.fromJson(res.data));
     } else {
-      if (errorCallback != null) errorCallback();
+      if (errorCallback != null) errorCallback(ErrorResponseDataModel.fromJson(res.data));
     }
   }
 
@@ -61,7 +61,7 @@ class WalletService {
     if (res.statusCode == 200) {
       successCallback(AssetDetailModel.fromJson(res.data));
     } else {
-      if (errorCallback != null) errorCallback();
+      if (errorCallback != null) errorCallback(ErrorResponseDataModel.fromJson(res.data));
     }
   }
 
@@ -297,12 +297,18 @@ class WalletService {
     final receiver = toAddress;
 
     solana.Message message;
-    if (symbol == 'SOL') {
-      message = getSolTransferMessage(sender.publicKey, receiver, amount);
-    } else {
-      final mint = tokenAddress;
-      message = await getSplTransferMessage(solanaClient, sender, receiver, mint, amount);
+    try{
+      if (symbol == 'SOL') {
+        message = getSolTransferMessage(sender.publicKey, receiver, amount);
+      } else {
+        final mint = tokenAddress;
+        message = await getSplTransferMessage(solanaClient, sender, receiver, mint, amount);
+      }
+    } catch (e) {
+      if (errorCallback != null) errorCallback(true);
+      return;
     }
+
 
     // FeePayer
     late final Ed25519HDPublicKey feePayer;

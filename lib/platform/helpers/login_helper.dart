@@ -53,6 +53,9 @@ void handleKeysOnLogout() {
     HiveKey.hasSeenFairPlayAlert.name,
     HiveKey.certified.name,
     HiveKey.walletConnectionPrompted.name,
+    HiveKey.profileImageUrl.name,
+    HiveKey.nickname.name,
+    HiveKey.email.name
   ]);
 }
 

@@ -226,6 +226,7 @@ class ChallengeLeaderboard extends StatelessWidget {
                                               item.profileImageUrl!,
                                               headers: imageNetworkHeader,
                                             ),
+                                      backgroundColor: Colors.black,
                                     ),
                                   ),
                                 ),

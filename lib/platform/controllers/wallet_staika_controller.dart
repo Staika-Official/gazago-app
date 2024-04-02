@@ -40,6 +40,7 @@ class StaikaWalletController extends GetxController with WalletMixin, SolanaMixi
   final TextEditingController stikAmountTextController = TextEditingController(text: '');
   final FocusNode focusNode = FocusNode();
   final RxBool isFetching = RxBool(false);
+  final RxString userEmail = RxString('');
 
   RxBool get isValid {
     if (sendStikUiAmount.value != '') {
@@ -59,7 +60,7 @@ class StaikaWalletController extends GetxController with WalletMixin, SolanaMixi
   @override
   void onInit() async {
     focusNode.addListener(_onFocusChange);
-
+    userEmail.value = await HiveStore.load(key: HiveKey.email.name) ?? '';
     await getStaikaWalletInfo();
 
     super.onInit();
@@ -168,7 +169,7 @@ class StaikaWalletController extends GetxController with WalletMixin, SolanaMixi
   void openSendStikGoWalletAlert() async {
     shortStikUiAmount.value = (double.parse(assetStik.value!.uiAmountString) - double.parse(sendStikUiAmount.value)).toString();
     if (double.parse(sendStikUiAmount.value) < double.parse(assetStik.value!.uiAmountString)) {
-      if(double.parse(sendStikUiAmount.value) < 1){
+      if (double.parse(sendStikUiAmount.value) < 1) {
         showMinimumSendStikAmountAlert();
         return;
       }
@@ -211,10 +212,9 @@ class StaikaWalletController extends GetxController with WalletMixin, SolanaMixi
           stikAmountTextController.text = '';
           // Get.offNamedUntil(Routes.wallet);
         },
-        errorCallback: () {
+        errorCallback: (error) {
           loaderController.isLoading.value = false;
           failureExchangeStikToGoWalletAlert();
-
           walletMasterController.getSpendingWalletBalances();
           sendStikUiAmount.value = '0';
           stikAmountTextController.text = '';

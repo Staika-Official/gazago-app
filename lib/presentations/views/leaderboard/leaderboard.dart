@@ -341,6 +341,7 @@ class LeaderboardHome extends StatelessWidget {
                               myRank.profileImageUrl!,
                               headers: imageNetworkHeader,
                             ),
+                            backgroundColor: Colors.black,
                           ),
                         ),
                       )
