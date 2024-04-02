@@ -4,6 +4,7 @@ import 'dart:io';
 
 import 'package:device_info_plus/device_info_plus.dart';
 import 'package:dio/dio.dart';
+import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:gaza_go/constants/base_urls.dart';
 import 'package:gaza_go/constants/config.dart';
 import 'package:gaza_go/constants/enums.dart';
@@ -199,6 +200,15 @@ class Api {
       '\nError ResponseCode: ${e.response?.statusCode}'
       '\nError ResponseMessage: ${e.response?.statusMessage}'
       '\nError ResponseData: ${e.response?.data}',
+    );
+
+    String errorMessage = e.response?.statusMessage ?? 'error';
+
+    FirebaseCrashlytics.instance.recordError(
+      e,
+      e.stackTrace,
+      reason: 'api error : ${e.response?.statusCode}, ${errorMessage}, ${e.requestOptions.path}, ${getx.Get.currentRoute}',
+
     );
 
     if (HiveStore.load(key: HiveKey.isDebuggingMode.name)) {
