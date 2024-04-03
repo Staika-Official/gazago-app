@@ -344,6 +344,7 @@ class Api {
 
   static Future<void> _getNewAccessToken(DioError e, ErrorInterceptorHandler handler) async {
     final String refreshToken = HiveStore.loadString(key: HiveKey.refreshToken.name) ?? '';
+    String fcmToken = HiveStore.loadString(key: HiveKey.fcmToken.name)!;
     PackageInfo packageInfo = await PackageInfo.fromPlatform();
     String deviceId = HiveStore.loadString(key: HiveKey.uuid.name)!;
     AndroidDeviceInfo? androidDeviceInfo;
@@ -367,9 +368,11 @@ class Api {
       'clientId': 'GAZAGO',
       'appVersion': packageInfo.version,
       'deviceId': deviceId,
+      'fcmToken': fcmToken,
       'platform': Platform.isAndroid ? 'Android' : 'iOS',
       "deviceModel": Platform.isAndroid ? androidDeviceInfo!.model : iosDeviceInfo!.utsname.machine!,
       "osVersion": Platform.isAndroid ? androidDeviceInfo!.version.sdkInt.toString() : iosDeviceInfo!.systemVersion!,
+      "providerEnv": appliedEndpoint != null && appliedEndpoint!['activateStageMode'] ? 'STAGE' : null,
     }).then((Response res) async {
       _logger.d(
         '------------->'
