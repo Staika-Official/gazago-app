@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:gaza_go/constants/events.dart';
 import 'package:gaza_go/constants/routes.dart';
 import 'package:gaza_go/platform/controllers/loader_controller.dart';
-import 'package:gaza_go/platform/controllers/wallet_master_controller.dart';
 import 'package:gaza_go/platform/firebase/remote_config.dart';
 import 'package:gaza_go/platform/helpers/alert_helper.dart';
 import 'package:gaza_go/platform/helpers/base_helper.dart';
@@ -13,10 +13,9 @@ import 'package:gaza_go/platform/services/item_service.dart';
 import 'package:gaza_go/platform/services/shop_service.dart';
 import 'package:gaza_go/presentations/components/alert_ui_list.dart';
 import 'package:get/get.dart';
+import 'package:get_event_bus/get_event_bus.dart';
 
 class ShopController extends GetxController with GetTickerProviderStateMixin {
-  final WalletMasterController walletMasterController = Get.find();
-
   LoaderController loaderController = Get.put(LoaderController());
   final RxList<ShopItemModel> shopItemsList = RxList.empty();
   late TabController tabController;
@@ -116,6 +115,13 @@ class ShopController extends GetxController with GetTickerProviderStateMixin {
   @override
   void onInit() async {
     initController();
+    Get.bus.on<RefreshShopControllerEvent>((event) {
+      refreshController();
+    });
+
+    Get.bus.on<GetShopItemsListEvent>((event) {
+      getShopItemsList();
+    });
 
     super.onInit();
   }

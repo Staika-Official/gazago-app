@@ -6,6 +6,7 @@ import 'package:adjust_sdk/adjust_event.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_inappwebview/flutter_inappwebview.dart';
 import 'package:gaza_go/constants/enums.dart';
+import 'package:gaza_go/constants/events.dart';
 import 'package:gaza_go/constants/routes.dart';
 import 'package:gaza_go/flavors.dart';
 import 'package:gaza_go/platform/controllers/loader_controller.dart';
@@ -30,6 +31,7 @@ import 'package:gaza_go/platform/services/wallet_service.dart';
 import 'package:gaza_go/platform/stores/hive_store.dart';
 import 'package:gaza_go/presentations/components/alert_ui_list.dart';
 import 'package:get/get.dart';
+import 'package:get_event_bus/get_event_bus.dart';
 import 'package:in_app_purchase/in_app_purchase.dart';
 import 'package:jiffy/jiffy.dart';
 import 'package:throttling/throttling.dart';
@@ -174,7 +176,6 @@ class WalletMasterController extends GetxController with SolanaMixin, GetTickerP
         }
       }
     }
-    print(transactionsList.length);
     return RxList(transactionsList);
   }
 
@@ -191,19 +192,35 @@ class WalletMasterController extends GetxController with SolanaMixin, GetTickerP
             String? savedTime = HiveStore.load(key: HiveKey.onGetChainWalletBalanceTime.name);
             bool isWalletConnectionPrompted = HiveStore.load(key: HiveKey.walletConnectionPrompted.name) ?? false;
             if (!isWalletConnectionPrompted) {
-              Get.find<StaikaWalletController>().getStaikaWalletInfo();
+              Get.bus.fire(GetStaikaWalletInfoEvent());
             } else {
               if (savedTime != null) {
                 final tenSecondsAgo = Jiffy.now().subtract(seconds: 10);
                 final targetDate = Jiffy.parse(savedTime!);
                 if (targetDate.isBefore(tenSecondsAgo)) {
-                  Get.find<StaikaWalletController>().getStaikaWalletInfo();
+                  Get.bus.fire(GetStaikaWalletInfoEvent());
                 }
               }
             }
           }
         }
       });
+
+    Get.bus.on<MoveToWalletEvent>((event) {
+      moveToWallet();
+    });
+
+    Get.bus.on<GetSpendingWalletBalancesEvent>((event) {
+      getSpendingWalletBalances();
+    });
+
+    Get.bus.on<InitializeWalletMasterControllerEvent>((event) {
+      initializeController();
+    });
+
+    Get.bus.on<GetStikPriceInfoEvent>((event) {
+      getStikPriceInfo();
+    });
 
     super.onInit();
   }
@@ -241,7 +258,8 @@ class WalletMasterController extends GetxController with SolanaMixin, GetTickerP
           }
         });
 
-    if (Get.isRegistered<LoadingController>()) Get.find<LoadingController>().updateProgress("서비스를 위해 정보를 불러오는 중입니다.");
+    if (Get.isRegistered<LoadingController>()) Get.bus.fire(UpdateProgressEvent("서비스를 위해 정보를 불러오는 중입니다."));
+    ;
   }
 
   Future<void> getSpendingWalletTransactions(AssetTokenBalanceModel asset) async {

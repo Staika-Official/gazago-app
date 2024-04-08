@@ -7,12 +7,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter_naver_map/flutter_naver_map.dart';
 import 'package:gaza_go/constants/config.dart';
 import 'package:gaza_go/constants/enums.dart';
+import 'package:gaza_go/constants/events.dart';
 import 'package:gaza_go/constants/routes.dart';
-import 'package:gaza_go/platform/controllers/home_menu_controller.dart';
-import 'package:gaza_go/platform/controllers/leaderboard_controller.dart';
 import 'package:gaza_go/platform/controllers/loader_controller.dart';
 import 'package:gaza_go/platform/controllers/loading_controller.dart';
-import 'package:gaza_go/platform/controllers/wallet_master_controller.dart';
 import 'package:gaza_go/platform/helpers/activity_helper.dart';
 import 'package:gaza_go/platform/helpers/activity_mixin.dart';
 import 'package:gaza_go/platform/helpers/alert_helper.dart';
@@ -39,6 +37,7 @@ import 'package:gaza_go/presentations/views/activity/activity_loading.dart';
 import 'package:gaza_go/presentations/views/activity/activity_select.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:get/get.dart';
+import 'package:get_event_bus/get_event_bus.dart';
 import 'package:health/health.dart';
 import 'package:permission_handler/permission_handler.dart' as ph;
 import 'package:simple_animations/animation_builder/custom_animation_builder.dart';
@@ -46,8 +45,6 @@ import 'package:throttling/throttling.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class ActivityController extends SuperController with ActivityMixin, ChallengeMixin, GetTickerProviderStateMixin, ConsumerItemMixin, PromotionMixin {
-  final WalletMasterController walletMasterController = Get.find();
-  // ActivityController activityController = Get.isRegistered<ActivityController>() ? Get.find<ActivityController>() : Get.put(ActivityController());
   LoaderController loaderController = Get.isRegistered<LoaderController>() ? Get.find<LoaderController>() : Get.put(LoaderController());
   RxList<StatModel> get statList {
     return RxList([
@@ -55,6 +52,7 @@ class ActivityController extends SuperController with ActivityMixin, ChallengeMi
       StatModel(name: '신발 내구도', currentStat: userState.value.shoes != null ? userState.value.shoes!.durability! : 0, type: 'DURABILITY'),
     ]);
   }
+
   GlobalKey webViewKey = GlobalKey();
   // final RxDouble currentSliderValue = RxDouble(0);
   // final RxInt remainDurability = RxInt(0);
@@ -83,8 +81,27 @@ class ActivityController extends SuperController with ActivityMixin, ChallengeMi
   final Rx<Control> challengeLoadControl = Rx(Control.play);
   final RxBool isButtonDisabled = RxBool(false);
   RxList<ChallengeModel> challengeList = RxList.empty();
-   RxBool isFetchingCourseList = RxBool(true);
+  RxBool isFetchingCourseList = RxBool(true);
 
+  @override
+  onInit() {
+    Get.bus.on<InitializeActivityControllerEvent>((event) {
+      getUserState();
+    });
+    Get.bus.on<InitExerciseEvent>((event) {
+      initializeExercise();
+    });
+    Get.bus.on<RefreshActivityControllerEvent>((event) {
+      refreshController();
+    });
+    Get.bus.on<HandleAlreadyFinishedExerciseEvent>((event) {
+      handleAlreadyFinishedExercise();
+    });
+    Get.bus.on<GetUserStateEvent>((event) {
+      getUserState();
+    });
+    super.onInit();
+  }
 
   Future<void> initializeExercise() async {
     challengeGuideController = AnimationController(vsync: this);
@@ -105,7 +122,6 @@ class ActivityController extends SuperController with ActivityMixin, ChallengeMi
       }
 
       await loadChallenges();
-
     });
 
     // await initPlatformState();
@@ -259,22 +275,22 @@ class ActivityController extends SuperController with ActivityMixin, ChallengeMi
   }
 
   void onClickRepairStat(stat, context) async {
-    loaderController.isLoading.value = true;
-    if(Get.currentRoute.contains('home')){
-      if(stat.type == 'STAMINA'){
+    Get.bus.fire(SetLoaderEvent(true));
+    if (Get.currentRoute.contains('home')) {
+      if (stat.type == 'STAMINA') {
         Adjust.trackEvent(AdjustEvent('ret2yp'));
       } else {
         Adjust.trackEvent(AdjustEvent('2mxi2f'));
       }
     } else {
-      if(stat.type == 'STAMINA'){
+      if (stat.type == 'STAMINA') {
         Adjust.trackEvent(AdjustEvent('m7kq1h'));
       } else {
         Adjust.trackEvent(AdjustEvent('spa2cy'));
       }
     }
     await getMyConsumerItemsByType(stat.type == 'STAMINA' ? 'RECOVERY' : 'REPAIR', isNotEmptyCallback: () {
-      loaderController.isLoading.value = false;
+      Get.bus.fire(SetLoaderEvent(false));
       selectedType.value = stat.type;
       if (stat.type != 'STAMINA') {
         targetShoeId.value = userState.value.shoes!.id!;
@@ -282,7 +298,7 @@ class ActivityController extends SuperController with ActivityMixin, ChallengeMi
       currentStat.value = stat.type == 'STAMINA' ? userState.value.state!.stamina! : userState.value.shoes!.durability!;
       consumerItemUsagePopup(this, context);
     }, isEmptyCallback: () {
-      loaderController.isLoading.value = false;
+      Get.bus.fire(SetLoaderEvent(false));
       shortConsumerItems(stat.type);
     });
   }
@@ -443,7 +459,7 @@ class ActivityController extends SuperController with ActivityMixin, ChallengeMi
 
         await retrySavedRequests(source: 'getUserState');
 
-        if (Get.isRegistered<LoadingController>()) Get.find<LoadingController>().updateProgress("곧 가자고와 가자고~!");
+        if (Get.isRegistered<LoadingController>()) Get.bus.fire(UpdateProgressEvent("곧 가자고와 가자고~!"));
       },
       errorCallback: (int? statusCode) {
         if (statusCode != null && statusCode == 404) {
@@ -654,11 +670,10 @@ class ActivityController extends SuperController with ActivityMixin, ChallengeMi
 
   Future<void> selectExerciseType(ExerciseType exerciseType) async {
     if (exerciseType == ExerciseType.walking) {
-      if(selectedCourse.value != null && selectedCourse.value!.challengeId == null) {
+      if (selectedCourse.value != null && selectedCourse.value!.challengeId == null) {
         selectedCourse.value = null;
         selectedChallenge.value = null;
       }
-
 
       bool adjustFirstWalkingEvent = HiveStore.load(key: HiveKey.adjustFirstWalkingEvent.name) ?? false;
       if (!adjustFirstWalkingEvent) {
@@ -717,7 +732,6 @@ class ActivityController extends SuperController with ActivityMixin, ChallengeMi
 
     selectedCourse.value = ChallengeCourseModel.fromJson(course.toJson());
     selectedChallenge.value = ChallengeModel.fromJson(challenge.toJson());
-
 
     Get.toNamed(Routes.activityChallenges);
   }
@@ -803,8 +817,7 @@ class ActivityController extends SuperController with ActivityMixin, ChallengeMi
         // 첼린지 존 찾기(30초마다 요청)
         DateTime now = DateTime.now();
 
-
-        if (receiveLocationTime.value.add(const Duration(seconds: 30)).compareTo(now) < 0 ) {
+        if (receiveLocationTime.value.add(const Duration(seconds: 30)).compareTo(now) < 0) {
           await findCourses();
           receiveLocationTime.value = now;
         }
@@ -884,8 +897,6 @@ class ActivityController extends SuperController with ActivityMixin, ChallengeMi
     }
   }
 
-
-
   // void closeAdSelectPopup() {
   //   adLoadTimerStop();
   //   selectedCourse.value = null;
@@ -907,12 +918,10 @@ class ActivityController extends SuperController with ActivityMixin, ChallengeMi
     // 메인팝업 클릭 이벤트
     Adjust.trackEvent(AdjustEvent('4znz3j'));
     bool bannerAdClick = HiveStore.load(key: HiveKey.bannerAdClick.name) ?? false;
-    if(!bannerAdClick){
+    if (!bannerAdClick) {
       Adjust.trackEvent(AdjustEvent('ytqi48'));
       HiveStore.save(key: HiveKey.bannerAdClick.name, value: true);
     }
-
-
 
     if (Get.isBottomSheetOpen!) {
       Get.back();
@@ -924,50 +933,40 @@ class ActivityController extends SuperController with ActivityMixin, ChallengeMi
         }
         switch (item.linkUrl) {
           case 'CHALLENGES':
-            Get.find<HomeMenuController>().selectMenu(0);
+            Get.bus.fire(SetHomeTabMenuEvent(0));
             Get.toNamed(Routes.challengeDetail.replaceAll(':id', item.referenceId.toString()));
             break;
           case 'ARCHIVE':
-            Get.find<HomeMenuController>().selectMenu(4);
-            if (Get.isRegistered<LeaderboardController>()) {
-              Get.find<LeaderboardController>().tabController.animateTo(1);
-            } else {
-              LeaderboardController leaderboardController = Get.put(LeaderboardController());
-              leaderboardController.tabController.animateTo(1);
-            }
+            Get.bus.fire(SetHomeTabMenuEvent(4));
+            Get.bus.fire(SetLeaderboardTabMenuEvent(1));
 
             break;
           case 'ITEM':
-            Get.find<HomeMenuController>().selectMenu(1);
+            Get.bus.fire(SetHomeTabMenuEvent(1));
             break;
           case 'SHOP':
-            Get.find<HomeMenuController>().selectMenu(3);
+            Get.bus.fire(SetHomeTabMenuEvent(3));
             break;
           case 'RANKING':
-            Get.find<HomeMenuController>().selectMenu(4);
-            if (Get.isRegistered<LeaderboardController>()) {
-              Get.find<LeaderboardController>().tabController.animateTo(0);
-            } else {
-              LeaderboardController leaderboardController = Get.put(LeaderboardController());
-              leaderboardController.tabController.animateTo(0);
-            }
+            Get.bus.fire(SetHomeTabMenuEvent(4));
+            Get.bus.fire(SetLeaderboardTabMenuEvent(0));
             break;
 
           case 'WALLET':
             Get.toNamed(Routes.wallet);
             break;
           case 'NOTICE':
-          // Get.toNamed(Routes.noticeList);
+            // Get.toNamed(Routes.noticeList);
             Get.toNamed(Routes.webView, arguments: {'linkUrl': 'https://eztechfin.notion.site/c5103042de5d4e3a9a61c1101508ffed'});
             break;
           case 'FAQ':
-          // Get.toNamed(Routes.preferenceBoard);
+            // Get.toNamed(Routes.preferenceBoard);
             Get.toNamed(Routes.webView, arguments: {'linkUrl': 'https://eztechfin.notion.site/FAQ-2f6b0ec4d6134fd398cd7a832bfa6cd3'});
             break;
         }
         break;
       case 'INTERNAL_WEB_VIEW':
-      // Get.toNamed(Routes.webView, arguments: {'id': item.id, 'linkUrl': item.linkUrl});
+        // Get.toNamed(Routes.webView, arguments: {'id': item.id, 'linkUrl': item.linkUrl});
         showModalWebview(this, Get.context, title: item.label!, linkUrl: item.linkUrl!);
         break;
       case 'EXTERNAL_BROWSER':
@@ -978,7 +977,6 @@ class ActivityController extends SuperController with ActivityMixin, ChallengeMi
         break;
     }
   }
-
 
   @override
   void onDetached() {

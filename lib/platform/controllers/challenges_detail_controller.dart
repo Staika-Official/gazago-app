@@ -9,11 +9,10 @@ import 'package:firebase_database/firebase_database.dart';
 import 'package:firebase_dynamic_links/firebase_dynamic_links.dart';
 import 'package:flutter/material.dart';
 import 'package:gaza_go/constants/enums.dart';
+import 'package:gaza_go/constants/events.dart';
 import 'package:gaza_go/constants/routes.dart';
 import 'package:gaza_go/flavors.dart';
 import 'package:gaza_go/platform/controllers/challenges_controller.dart';
-import 'package:gaza_go/platform/controllers/home_menu_controller.dart';
-import 'package:gaza_go/platform/controllers/leaderboard_controller.dart';
 import 'package:gaza_go/platform/controllers/loader_controller.dart';
 import 'package:gaza_go/platform/controllers/wallet_master_controller.dart';
 import 'package:gaza_go/platform/helpers/alert_helper.dart';
@@ -41,6 +40,7 @@ import 'package:gaza_go/presentations/components/alert_ui_list.dart';
 import 'package:gaza_go/presentations/components/challenge_detail_notification.dart';
 import 'package:gaza_go/presentations/components/product_list_dialog.dart';
 import 'package:get/get.dart';
+import 'package:get_event_bus/get_event_bus.dart';
 import 'package:intl/intl.dart';
 import 'package:kakao_flutter_sdk_share/kakao_flutter_sdk_share.dart';
 import 'package:url_launcher/url_launcher.dart';
@@ -179,7 +179,7 @@ class ChallengesDetailController extends SuperController with GetTickerProviderS
 
   @override
   void onClose() {
-    challengesController.getChallengesList();
+    Get.bus.fire(RefreshChallengeControllerEvent());
     focusNode.removeListener(_onFocusChange);
     focusNode.unfocus();
     super.onClose();
@@ -198,7 +198,6 @@ class ChallengesDetailController extends SuperController with GetTickerProviderS
     // connectivityStream?.cancel();
     // internetConnectionListener?.pause();
     // TODO: implement onInactive
-
   }
 
   @override
@@ -347,8 +346,6 @@ class ChallengesDetailController extends SuperController with GetTickerProviderS
       });
     }
   }
-
-
 
   void moveToExternalBrowser(linkUrl) async {
     Uri url = Uri.parse(linkUrl!);
@@ -540,13 +537,12 @@ class ChallengesDetailController extends SuperController with GetTickerProviderS
     // }
 
     if (isKakaoTalkSharingAvailable) {
-
       try {
         Uri uri = await ShareClient.instance.shareDefault(template: kakaoFeedTemplate!, serverCallbackArgs: {
           'userId': userId,
           'challengeId': '${challengeId.value}',
         });
-        if(![ShareSource.shareAppbar, ShareSource.crewDetail].any((source) => shareSource == source)){
+        if (![ShareSource.shareAppbar, ShareSource.crewDetail].any((source) => shareSource == source)) {
           FirebaseDatabase.instance.ref('kakaoSharedMessageRecord/${challengeId.value}/$userId/clickedShareButton').set(true);
         }
 
@@ -554,7 +550,6 @@ class ChallengesDetailController extends SuperController with GetTickerProviderS
       } catch (error) {
         showToastPopup('공유 실패');
       }
-
     } else {
       // try {
       //   Uri shareUrl = await WebSharerClient.instance.makeDefaultUrl(template: defaultText);
@@ -583,13 +578,15 @@ class ChallengesDetailController extends SuperController with GetTickerProviderS
     FirebaseDatabase.instance.ref('kakaoSharedMessageRecord/${challengeId.value}/$userId/clickedShareButton').set(false);
   }
 
-
-
-  Future<void> checkShareChallengeStatus()async {
+  Future<void> checkShareChallengeStatus() async {
     String userId = HiveStore.loadString(key: HiveKey.userId.name)!;
     DatabaseReference kakaoShareStatus = FirebaseDatabase.instance.ref('kakaoSharedMessageRecord/${challengeId.value}/$userId');
     ChallengeType challengeType = challengeDetails.value.challengeActivationType == 'CREW' ? ChallengeType.crew : ChallengeType.payment;
-    ShareSource? shareSource = challengeDetails.value.challengeActivationType == 'CREW' ? ShareSource.createCrew : challengeDetails.value.challengeType == 'PAYMENT' ? ShareSource.mirae : ShareSource.spot;
+    ShareSource? shareSource = challengeDetails.value.challengeActivationType == 'CREW'
+        ? ShareSource.createCrew
+        : challengeDetails.value.challengeType == 'PAYMENT'
+            ? ShareSource.mirae
+            : ShareSource.spot;
 
     print('challengeType : ${challengeType}');
 
@@ -598,11 +595,9 @@ class ChallengesDetailController extends SuperController with GetTickerProviderS
     kakaoShareStatus.get().then((DataSnapshot snapshot) async {
       Map data = snapshot.value as Map;
       if (snapshot.exists) {
-
-
         print('clickedShareButton: ${data['clickedShareButton']}');
-        if(data['clickedShareButton']){
-          if(Get.isDialogOpen == false) {
+        if (data['clickedShareButton']) {
+          if (Get.isDialogOpen == false) {
             if (data['chatType'] != 'MemoChat') {
               print('-----------------askSharedCompleteDialog--------------------');
               askSharedCompleteDialog(this, challengeType: challengeType, shareSource: shareSource);
@@ -612,9 +607,8 @@ class ChallengesDetailController extends SuperController with GetTickerProviderS
             }
           }
         }
-
       } else {
-        if(data['clickedShareButton']) {
+        if (data['clickedShareButton']) {
           unableSharedHistoryDialog(this, challengeType: challengeType, shareSource: shareSource);
         }
       }
@@ -632,8 +626,8 @@ class ChallengesDetailController extends SuperController with GetTickerProviderS
     kakaoShareStatus.get().then((DataSnapshot snapshot) {
       if (snapshot.exists) {
         Map data = snapshot.value as Map;
-        if(data['chatType'] != null){
-          if(Get.isDialogOpen == false){
+        if (data['chatType'] != null) {
+          if (Get.isDialogOpen == false) {
             if (data['chatType'] == 'MemoChat') {
               unableShareMyselfDialog(this, challengeType: challengeType, shareSource: shareSource);
             } else {
@@ -645,12 +639,9 @@ class ChallengesDetailController extends SuperController with GetTickerProviderS
               }
             }
           }
-
         } else {
           unableSharedHistoryDialog(this, challengeType: challengeType, shareSource: shareSource);
         }
-
-
       } else {
         unableSharedHistoryDialog(this, challengeType: challengeType, shareSource: shareSource);
       }
@@ -742,7 +733,7 @@ class ChallengesDetailController extends SuperController with GetTickerProviderS
     }
     await ActivityService.fetchJoinChallenge(challengeId.value, params, successCallback: (JoinChallengeResponseModel landingInfo) {
       walletMasterController.getSpendingWalletBalances();
-      if(Get.isBottomSheetOpen == true){
+      if (Get.isBottomSheetOpen == true) {
         Get.until((route) => Get.isDialogOpen == false && Get.isBottomSheetOpen == false);
       }
 
@@ -822,7 +813,7 @@ class ChallengesDetailController extends SuperController with GetTickerProviderS
         }
         switch (landingInfo.linkUrl) {
           case 'CHALLENGES':
-            Get.find<HomeMenuController>().selectMenu(0);
+            Get.bus.fire(SetHomeTabMenuEvent(0));
             // Get.toNamed(Routes.challengeDetail.replaceAll(':id', item.referenceId.toString()));
             break;
           // case 'COURSE_CHALLENGES':
@@ -830,29 +821,18 @@ class ChallengesDetailController extends SuperController with GetTickerProviderS
           //   checkBlockUser(item);
           //   break;
           case 'ARCHIVE':
-            Get.find<HomeMenuController>().selectMenu(4);
-            if (Get.isRegistered<LeaderboardController>()) {
-              Get.find<LeaderboardController>().tabController.animateTo(1);
-            } else {
-              LeaderboardController leaderboardController = Get.put(LeaderboardController());
-              leaderboardController.tabController.animateTo(1);
-            }
-
+            Get.bus.fire(SetHomeTabMenuEvent(4));
+            Get.bus.fire(SetLeaderboardTabMenuEvent(1));
             break;
           case 'ITEM':
-            Get.find<HomeMenuController>().selectMenu(1);
+            Get.bus.fire(SetHomeTabMenuEvent(1));
             break;
           case 'SHOP':
-            Get.find<HomeMenuController>().selectMenu(3);
+            Get.bus.fire(SetHomeTabMenuEvent(3));
             break;
           case 'RANKING':
-            Get.find<HomeMenuController>().selectMenu(4);
-            if (Get.isRegistered<LeaderboardController>()) {
-              Get.find<LeaderboardController>().tabController.animateTo(0);
-            } else {
-              LeaderboardController leaderboardController = Get.put(LeaderboardController());
-              leaderboardController.tabController.animateTo(0);
-            }
+            Get.bus.fire(SetHomeTabMenuEvent(4));
+            Get.bus.fire(SetLeaderboardTabMenuEvent(0));
             break;
 
           case 'WALLET':

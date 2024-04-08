@@ -2,24 +2,21 @@ import 'package:adjust_sdk/adjust.dart';
 import 'package:adjust_sdk/adjust_event.dart';
 import 'package:flutter/material.dart';
 import 'package:gaza_go/constants/enums.dart';
+import 'package:gaza_go/constants/events.dart';
 import 'package:gaza_go/constants/routes.dart';
 import 'package:gaza_go/platform/controllers/activity_controller.dart';
-import 'package:gaza_go/platform/controllers/global_controller.dart';
-import 'package:gaza_go/platform/controllers/home_menu_controller.dart';
-import 'package:gaza_go/platform/controllers/leaderboard_controller.dart';
-import 'package:gaza_go/platform/helpers/alert_helper.dart';
 import 'package:gaza_go/platform/helpers/promotion_mixin.dart';
 import 'package:gaza_go/platform/models/notice_popup_model.dart';
 import 'package:gaza_go/platform/services/board_service.dart';
 import 'package:gaza_go/platform/stores/hive_store.dart';
 import 'package:gaza_go/presentations/components/alert_ui_list.dart';
 import 'package:get/get.dart';
+import 'package:get_event_bus/get_event_bus.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 import '../models/promotion_ad_model.dart';
 
 class NoticePopupController extends GetxController with PromotionMixin {
-  GlobalController globalController = Get.find();
   ActivityController activityController = Get.find();
   RxList<NoticePopupModel> noticePopupList = RxList.empty();
   RxList<NoticePopupModel> noticeMainPopupList = RxList.empty();
@@ -74,7 +71,7 @@ class NoticePopupController extends GetxController with PromotionMixin {
     await BoardService.getMainNoticePopupList(
       successCallback: (List<NoticePopupModel> records) {
         records.removeWhere((element) => element.type == 'INSPECTION');
-        if(promotionAdsList.isNotEmpty){
+        if (promotionAdsList.isNotEmpty) {
           for (PromotionAdModel promotion in promotionAdsList) {
             NoticePopupModel promotionAd = NoticePopupModel(
               imageUrlKo: promotion.imageUrl,
@@ -118,15 +115,14 @@ class NoticePopupController extends GetxController with PromotionMixin {
     Adjust.trackEvent(AdjustEvent('hed7a4'));
 
     // 미래에셋 광고 클릭 이벤트
-    if(item.isAdsBanner != null && item.isAdsBanner!){
+    if (item.isAdsBanner != null && item.isAdsBanner!) {
       Adjust.trackEvent(AdjustEvent('qljdfk'));
       bool bannerAdClick = HiveStore.load(key: HiveKey.bannerAdClick.name) ?? false;
-      if(!bannerAdClick){
+      if (!bannerAdClick) {
         Adjust.trackEvent(AdjustEvent('ytqi48'));
         HiveStore.save(key: HiveKey.bannerAdClick.name, value: true);
       }
     }
-
 
     if (Get.isBottomSheetOpen!) {
       Get.back();
@@ -138,36 +134,25 @@ class NoticePopupController extends GetxController with PromotionMixin {
         }
         switch (item.linkUrl) {
           case 'CHALLENGES':
-            Get.find<HomeMenuController>().selectMenu(0);
+            Get.bus.fire(SetHomeTabMenuEvent(0));
             Get.toNamed(Routes.challengeDetail.replaceAll(':id', item.referenceId.toString()));
             break;
           case 'COURSE_CHALLENGES':
             checkBlockUser(item);
             break;
           case 'ARCHIVE':
-            Get.find<HomeMenuController>().selectMenu(4);
-            if (Get.isRegistered<LeaderboardController>()) {
-              Get.find<LeaderboardController>().tabController.animateTo(1);
-            } else {
-              LeaderboardController leaderboardController = Get.put(LeaderboardController());
-              leaderboardController.tabController.animateTo(1);
-            }
-
+            Get.bus.fire(SetHomeTabMenuEvent(4));
+            Get.bus.fire(SetLeaderboardTabMenuEvent(1));
             break;
           case 'ITEM':
-            Get.find<HomeMenuController>().selectMenu(1);
+            Get.bus.fire(SetHomeTabMenuEvent(1));
             break;
           case 'SHOP':
-            Get.find<HomeMenuController>().selectMenu(3);
+            Get.bus.fire(SetHomeTabMenuEvent(3));
             break;
           case 'RANKING':
-            Get.find<HomeMenuController>().selectMenu(4);
-            if (Get.isRegistered<LeaderboardController>()) {
-              Get.find<LeaderboardController>().tabController.animateTo(0);
-            } else {
-              LeaderboardController leaderboardController = Get.put(LeaderboardController());
-              leaderboardController.tabController.animateTo(0);
-            }
+            Get.bus.fire(SetHomeTabMenuEvent(4));
+            Get.bus.fire(SetLeaderboardTabMenuEvent(0));
             break;
 
           case 'WALLET':

@@ -1,9 +1,7 @@
-import 'dart:convert';
-
 import 'package:collection/collection.dart';
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:gaza_go/constants/enums.dart';
+import 'package:gaza_go/constants/events.dart';
 import 'package:gaza_go/constants/routes.dart';
 import 'package:gaza_go/platform/helpers/challenge_mixin.dart';
 import 'package:gaza_go/platform/models/new_challenge_model.dart';
@@ -11,6 +9,7 @@ import 'package:gaza_go/platform/services/activity_service.dart';
 import 'package:gaza_go/platform/stores/hive_store.dart';
 import 'package:gaza_go/presentations/components/alert_ui_list.dart';
 import 'package:get/get.dart';
+import 'package:get_event_bus/get_event_bus.dart';
 
 class ChallengesController extends GetxController with GetTickerProviderStateMixin, ChallengeMixin {
   ScrollController challengesScrollController = ScrollController();
@@ -40,6 +39,9 @@ class ChallengesController extends GetxController with GetTickerProviderStateMix
   @override
   void onInit() async {
     await getChallengesList();
+    Get.bus.on<RefreshChallengeControllerEvent>((event) {
+      refreshController();
+    });
     super.onInit();
   }
 

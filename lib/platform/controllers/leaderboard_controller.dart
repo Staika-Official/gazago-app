@@ -1,12 +1,14 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
+import 'package:gaza_go/constants/events.dart';
 import 'package:gaza_go/platform/controllers/home_menu_controller.dart';
 import 'package:gaza_go/platform/helpers/base_helper.dart';
 import 'package:gaza_go/platform/models/ranker_model.dart';
 import 'package:gaza_go/platform/models/user_reward_statistics_model.dart';
 import 'package:gaza_go/platform/services/dashboard_service.dart';
 import 'package:get/get.dart';
+import 'package:get_event_bus/get_event_bus.dart';
 import 'package:intl/intl.dart';
 import 'package:table_calendar/table_calendar.dart';
 
@@ -58,15 +60,21 @@ class LeaderboardController extends GetxController with GetTickerProviderStateMi
 
   @override
   void onInit() {
-
-
     initController();
     tabController = TabController(vsync: this, length: 2, initialIndex: 0)
       ..addListener(() {
         if (tabController.indexIsChanging && tabController.index == 0) {
-          homeMenuController.hideBottomNav.value = false;
+          Get.bus.fire(SetBottomNavStateEvent(false));
         }
       });
+
+    Get.bus.on<RefreshLeaderboardControllerEvent>((event) {
+      refreshController();
+    });
+
+    Get.bus.on<SetLeaderboardTabMenuEvent>((tabEvent) {
+      tabController.animateTo(tabEvent.index);
+    });
     super.onInit();
   }
 
@@ -156,7 +164,7 @@ class LeaderboardController extends GetxController with GetTickerProviderStateMi
     _fetchMyRank();
     _fetchRankerList(true);
 
-    homeMenuController.hideBottomNav.value = false;
+    Get.bus.fire(SetBottomNavStateEvent(false));
   }
 
   void calendarChanged(focusedDay) {
