@@ -2,18 +2,33 @@
 import 'package:solana/solana.dart';
 import 'package:solana/dto.dart';
 
-Message getSolTransferMessage(Ed25519HDPublicKey fundingAccount, Ed25519HDPublicKey recipientAccount, int amount) {
+Message getSolTransferMessage(Ed25519HDPublicKey fundingAccount, Ed25519HDPublicKey recipientAccount, int amount, int priorityFee) {
   final instruction = SystemInstruction.transfer(
     fundingAccount: fundingAccount,
     recipientAccount: recipientAccount,
     lamports: amount,
   );
-  return Message.only(instruction);
+  // return Message.only(instruction);
+  return Message(
+    instructions: [
+      instruction,
+      ComputeBudgetInstruction.setComputeUnitLimit(
+        units: 100000,
+      ),
+      ComputeBudgetInstruction.setComputeUnitPrice(
+        microLamports: priorityFee,
+      ),
+
+      /*,
+        if (memo != null && memo.isNotEmpty)
+          MemoInstruction(signers: [owner.publicKey], memo: memo),*/
+    ],
+  );
 }
 
-Future<Message> getSplTransferMessage(SolanaClient solanaClient, Ed25519HDKeyPair sender, Ed25519HDPublicKey destination, Ed25519HDPublicKey mint, int amount) async {
+Future<Message> getSplTransferMessage(SolanaClient solanaClient, Ed25519HDKeyPair sender, Ed25519HDPublicKey destination, Ed25519HDPublicKey mint, int amount, int priorityFee) async {
   final commitment = Commitment.confirmed;
-
+  print('priorityFee : $priorityFee');
   ProgramAccount? associatedRecipientAccount = await solanaClient.getAssociatedTokenAccount(
     owner: destination,
     mint: mint,
@@ -54,7 +69,13 @@ Future<Message> getSplTransferMessage(SolanaClient solanaClient, Ed25519HDKeyPai
 
   return Message(
     instructions: [
-      instruction
+      instruction,
+      ComputeBudgetInstruction.setComputeUnitLimit(
+        units: 100000,
+      ),
+      ComputeBudgetInstruction.setComputeUnitPrice(
+        microLamports: priorityFee,
+      ),
       /*,
         if (memo != null && memo.isNotEmpty)
           MemoInstruction(signers: [owner.publicKey], memo: memo),*/

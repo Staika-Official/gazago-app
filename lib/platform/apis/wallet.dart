@@ -128,4 +128,11 @@ class WalletApi {
       allowCustomErrorHandler: true,
     ).post('/solana/tokens/$symbol/users/$userId/exchange?clientId=GAZAGO', data: data);
   }
+
+  static Future<Response> getTokenPriorityFee(String platform, String symbol) async {
+    return await Api.client(
+      serviceUrl: ServiceUrl.onChainWalletService,
+      // allowCustomErrorHandler: true,
+    ).get('/${platform}/tokens/${symbol}/priority-fee?type=exchange&feePayer=true');
+  }
 }

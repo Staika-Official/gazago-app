@@ -4,6 +4,7 @@ import 'package:dio/dio.dart';
 import 'package:gaza_go/constants/enums.dart';
 import 'package:gaza_go/flavors.dart';
 import 'package:gaza_go/platform/apis/wallet.dart';
+import 'package:gaza_go/platform/helpers/alert_helper.dart';
 import 'package:gaza_go/platform/helpers/base_helper.dart';
 import 'package:gaza_go/platform/helpers/security_helper.dart';
 import 'package:gaza_go/platform/helpers/solana_helper.dart';
@@ -16,10 +17,12 @@ import 'package:gaza_go/platform/models/on_chain_wallet_model.dart';
 import 'package:gaza_go/platform/models/pay_info_model.dart';
 import 'package:gaza_go/platform/models/pay_response_model.dart';
 import 'package:gaza_go/platform/models/setting_environment_model.dart';
+import 'package:gaza_go/platform/models/token_priority_fee_model.dart';
 import 'package:gaza_go/platform/models/wallet_solana_model.dart';
 import 'package:gaza_go/platform/models/wallet_solana_transfer_model.dart';
 import 'package:gaza_go/platform/models/wallet_token_balance_model.dart';
 import 'package:gaza_go/platform/stores/hive_store.dart';
+import 'package:solana/dto.dart';
 import 'package:solana/encoder.dart';
 import 'package:solana/solana.dart';
 import 'package:solana/solana.dart' as solana;
@@ -111,15 +114,15 @@ class WalletService {
   static Future<WalletSolanaModel> createSolanaWallet(String walletPassword) async {
     // Solana Dart가 SecretKey 를 프라이빗으로 해둬서 값을 가져올수 없음. solana_web3 라이브러리 필요함
     final wallet = Keypair.generateSync();
-    final address = wallet.publicKey;
+    final address = wallet.pubkey;
 
     String? email = HiveStore.loadString(key: HiveKey.email.name);
 
     print('address: ${address.toBase58()}');
-    print('secretKey: ${base58.encode(wallet.secretKey)}');
+    print('secretKey: ${base58.encode(wallet.seckey)}');
 
     // 암호화된 시크릿키
-    String encryptSecretKey = encrypt(base58.encode(wallet.secretKey), email!, walletPassword);
+    String encryptSecretKey = encrypt(base58.encode(wallet.seckey), email!, walletPassword);
     Response res = await WalletApi.createSolanaWallet(address.toBase58(), encryptSecretKey);
 
     return WalletSolanaModel.fromJson(res.data);
@@ -127,7 +130,16 @@ class WalletService {
 
   static Future<WalletSolanaTransferModel> transferSolana(String accountSecretkey, String walletPassword, String toAddress, String symbol, String tokenAddress, int decimals, int amount) async {
     final SolanaClient solanaClient = F.solanaClient;
-
+    int priorityFee = 0;
+    String platform = 'solana';
+    String symbol = 'STIK';
+    await WalletService.getTokenPriorityFee(platform,symbol, successCallback: (fees) {
+      print('fees: $fees');
+      priorityFee = fees.priorityFee;
+    }, errorCallback: () {
+      showToastPopup('Failed to get fee');
+      return;
+    });
     String? email = HiveStore.loadString(key: HiveKey.email.name);
 
     print('##############');
@@ -144,10 +156,10 @@ class WalletService {
 
     solana.Message message;
     if (symbol == 'SOL') {
-      message = getSolTransferMessage(sender.publicKey, receiver, amount);
+      message = getSolTransferMessage(sender.publicKey, receiver, amount, priorityFee);
     } else {
       final mint = Ed25519HDPublicKey.fromBase58(tokenAddress);
-      message = await getSplTransferMessage(solanaClient, sender, receiver, mint, amount);
+      message = await getSplTransferMessage(solanaClient, sender, receiver, mint, amount, priorityFee);
     }
 
     print('sender: ${sender.address}');
@@ -161,7 +173,7 @@ class WalletService {
       },
     );
 
-    final recentBlockhash = await solanaClient.rpcClient.getLatestBlockhash(commitment: Commitment.confirmed);
+    final recentBlockhash = await solanaClient.rpcClient.getLatestBlockhash(commitment: solana.Commitment.confirmed);
     final CompiledMessage compiledMessage = message.compile(
       recentBlockhash: recentBlockhash.value.blockhash,
       feePayer: feePayer,
@@ -197,9 +209,9 @@ class WalletService {
     final wallet = Keypair.generateSync();
     String? email = HiveStore.loadString(key: HiveKey.email.name);
 
-    String publicKey = wallet.publicKey.toBase58();
+    String publicKey = wallet.pubkey.toBase58();
     // 암호화된 시크릿키
-    String encryptSecretKey = encrypt(base58.encode(wallet.secretKey), email!, walletPassword);
+    String encryptSecretKey = encrypt(base58.encode(wallet.seckey), email!, walletPassword);
 
     Response res = await WalletApi.createOnChainWallet(userId!, publicKey: publicKey, secretKey: encryptSecretKey);
     if (res.statusCode == 201) {
@@ -275,7 +287,17 @@ class WalletService {
     required int amount,
   }) async {
     final SolanaClient solanaClient = F.solanaClient;
-
+    int priorityFee = 0;
+    String platform = 'solana';
+    String symbol = 'STIK';
+    await WalletService.getTokenPriorityFee(platform,symbol, successCallback: (fees) {
+      print('fees: $fees');
+      priorityFee = fees.priorityFee;
+      print('fees: ${fees.priorityFee}');
+    }, errorCallback: () {
+      showToastPopup('Failed to get fee');
+      return;
+    });
     String? email = HiveStore.loadString(key: HiveKey.email.name);
     // print(email);
     // print('##############');
@@ -299,12 +321,13 @@ class WalletService {
     solana.Message message;
     try{
       if (symbol == 'SOL') {
-        message = getSolTransferMessage(sender.publicKey, receiver, amount);
+        message = getSolTransferMessage(sender.publicKey, receiver, amount, priorityFee);
       } else {
         final mint = tokenAddress;
-        message = await getSplTransferMessage(solanaClient, sender, receiver, mint, amount);
+        message = await getSplTransferMessage(solanaClient, sender, receiver, mint, amount, priorityFee);
       }
     } catch (e) {
+      showToastPopup('메세지 안돼');
       if (errorCallback != null) errorCallback(true);
       return;
     }
@@ -319,7 +342,7 @@ class WalletService {
       },
     );
 
-    final recentBlockhash = await solanaClient.rpcClient.getLatestBlockhash(commitment: Commitment.confirmed);
+    final recentBlockhash = await solanaClient.rpcClient.getLatestBlockhash(commitment: solana.Commitment.confirmed);
     final CompiledMessage compiledMessage = message.compile(
       recentBlockhash: recentBlockhash.value.blockhash,
       feePayer: feePayer,
@@ -370,6 +393,15 @@ class WalletService {
     } else {
       // if (errorCallback != null) errorCallback();
       if (errorCallback != null) errorCallback(res.data != null ? ErrorResponseDataModel.fromJson(res.data) : null);
+    }
+  }
+
+  static Future<void> getTokenPriorityFee(String platform, String symbol, {required Function successCallback, Function? errorCallback}) async {
+    Response res = await WalletApi.getTokenPriorityFee(platform, symbol);
+    if (res.statusCode == 200) {
+      successCallback(TokenPriorityFeeModel.fromJson(res.data));
+    } else {
+      if (errorCallback != null) errorCallback(ErrorResponseDataModel.fromJson(res.data));
     }
   }
 }
