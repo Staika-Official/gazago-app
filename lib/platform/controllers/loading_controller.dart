@@ -47,6 +47,12 @@ class LoadingController extends GetxController {
     Get.bus.on<UpdateProgressEvent>((event) {
       progress.value = progress.value + 0.5;
       progressMessage.value = event.message;
+
+      if (progress.value >= 0.9) {
+        timerStop();
+        terminateDebugMode();
+        Get.offAllNamed(Routes.home);
+      }
     });
 
     super.onInit();
