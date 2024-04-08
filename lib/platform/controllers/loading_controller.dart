@@ -44,6 +44,11 @@ class LoadingController extends GetxController {
     String userId = HiveStore.loadString(key: HiveKey.userId.name)!;
     await FirebaseCrashlytics.instance.setUserIdentifier(userId);
 
+    Get.bus.on<UpdateProgressEvent>((event) {
+      progress.value = progress.value + 0.5;
+      progressMessage.value = event.message;
+    });
+
     super.onInit();
   }
 
