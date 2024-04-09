@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:gaza_go/constants/enums.dart';
-import 'package:gaza_go/constants/events.dart';
 import 'package:gaza_go/constants/routes.dart';
 import 'package:gaza_go/platform/controllers/loader_controller.dart';
 import 'package:gaza_go/platform/controllers/wallet_master_controller.dart';
@@ -21,7 +20,6 @@ import 'package:gaza_go/presentations/components/alert_ui_list.dart';
 import 'package:gaza_go/presentations/components/product_list_dialog.dart';
 import 'package:gaza_go/presentations/components/product_list_stik_dialog.dart';
 import 'package:get/get.dart';
-import 'package:get_event_bus/get_event_bus.dart';
 import 'package:solana_web3/solana_web3.dart';
 
 class GoWalletController extends GetxController with SolanaMixin {
@@ -46,7 +44,7 @@ class GoWalletController extends GetxController with SolanaMixin {
 
   @override
   void onInit() {
-    Get.bus.fire(GetStikPriceInfoEvent());
+    walletMasterController.getStikPriceInfo();
     initTextController();
 
     super.onInit();
@@ -108,7 +106,7 @@ class GoWalletController extends GetxController with SolanaMixin {
     double myAssetAmount = walletMasterController.clickedAssetButton.value == 'STAIKA' ? walletMasterController.stik.value.amount! : walletMasterController.tik.value.amount!;
 
     if (myAssetAmount >= fromAmount) {
-      Get.bus.fire(SetLoaderEvent(true));
+      loaderController.isLoading.value = true;
       await SolanaService.fetchChargeStikToTik(
         ChargeTikModel(
           userId: int.parse(userId!),
@@ -124,11 +122,11 @@ class GoWalletController extends GetxController with SolanaMixin {
           lastUpdatedDate: stikPriceInfoKRW.value.lastUpdated!,
         ),
         successCallback: (data) {
-          Get.bus.fire(SetLoaderEvent(false));
+          loaderController.isLoading.value = false;
           successChargeStikToTikAlert(this);
         },
         errorCallback: (err) {
-          Get.bus.fire(SetLoaderEvent(false));
+          loaderController.isLoading.value = false;
           if (err.status == 500) {
             failureShortBalanceStikToTikAlert(this);
           } else {
@@ -150,28 +148,28 @@ class GoWalletController extends GetxController with SolanaMixin {
   }
 
   void handleSuccessChargeTik() {
-    Get.bus.fire(GetSpendingWalletBalancesEvent());
+    walletMasterController.getSpendingWalletBalances();
     handleReGetStikPriceAndProductList();
   }
 
   void handleReGetStikPriceAndProductList() async {
-    Get.bus.fire(GetSpendingWalletBalancesEvent());
-    Get.bus.fire(GetStikPriceInfoEvent());
+    walletMasterController.getSpendingWalletBalances();
+    walletMasterController.getStikPriceInfo();
     await getProductList();
   }
 
   void showProductDialog() async {
-    Get.bus.fire(SetLoaderEvent(true));
+    loaderController.isLoading.value = true;
     await getProductList();
-    Get.bus.fire(SetLoaderEvent(false));
+    loaderController.isLoading.value = false;
     showProductList();
   }
 
   void showProductStikDialog(String assetName) async {
     walletMasterController.clickedAssetButton.value = assetName;
-    Get.bus.fire(SetLoaderEvent(true));
+    loaderController.isLoading.value = true;
     await getProductList();
-    Get.bus.fire(SetLoaderEvent(false));
+    loaderController.isLoading.value = false;
     showProductStikList(assetName);
   }
 
@@ -191,11 +189,11 @@ class GoWalletController extends GetxController with SolanaMixin {
   }
 
   Future<void> getStaikaWalletInfo() async {
-    Get.bus.fire(SetLoaderEvent(true));
+    loaderController.isLoading.value = true;
     initTextController();
     await WalletService.getOnChainWallet(
       successCallback: (OnChainWalletModel data) async {
-        Get.bus.fire(SetLoaderEvent(false));
+        loaderController.isLoading.value = false;
         bool isWalletConnectionPrompted = HiveStore.load(key: HiveKey.walletConnectionPrompted.name) ?? false;
         if (!isWalletConnectionPrompted) {
           HiveStore.save(key: HiveKey.walletConnectionPrompted.name, value: true);
@@ -205,7 +203,7 @@ class GoWalletController extends GetxController with SolanaMixin {
         }
       },
       errorCallback: (ErrorResponseDataModel data) {
-        Get.bus.fire(SetLoaderEvent(false));
+        loaderController.isLoading.value = false;
         // Future.delayed(const Duration(seconds: 3));
         if (data.errorCode == 'NOT_FOUND_WALLET') {
           showCreateStaikaWalletAlert();
@@ -261,18 +259,18 @@ class GoWalletController extends GetxController with SolanaMixin {
 
   void confirmSendStikStaikaWallet() async {
     isFetching.value = true;
-    Get.bus.fire(SetLoaderEvent(true));
+    loaderController.isLoading.value = true;
     await WalletService.fetchStikMoveToStaikaWallet(
       symbol: 'STIK',
       amount: double.parse(sendStikUiAmount.value),
       successCallback: (boolean) {
-        Get.bus.fire(SetLoaderEvent(false));
+        loaderController.isLoading.value = false;
         successExchangeStikToStaikaWalletAlert(this);
         walletMasterController.getSpendingWalletBalances();
         initTextController();
       },
       errorCallback: (ErrorResponseDataModel error) {
-        Get.bus.fire(SetLoaderEvent(false));
+        loaderController.isLoading.value = false;
         if (error.status == 400) {
           showToastPopup(error.errorMessage!.replaceAll('\\n', '\n'));
         } else {

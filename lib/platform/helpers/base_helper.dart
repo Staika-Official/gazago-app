@@ -6,18 +6,19 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter_naver_map/flutter_naver_map.dart';
 import 'package:gaza_go/constants/enums.dart';
-import 'package:gaza_go/constants/events.dart';
 import 'package:gaza_go/constants/routes.dart';
 import 'package:gaza_go/platform/controllers/home_menu_controller.dart';
 import 'package:gaza_go/platform/firebase/remote_config.dart';
 import 'package:gaza_go/platform/models/user_account_model.dart';
 import 'package:gaza_go/platform/services/uaa_service.dart';
 import 'package:gaza_go/platform/stores/hive_store.dart';
+
 import 'package:get/get.dart';
-import 'package:get_event_bus/get_event_bus.dart';
 import 'package:intl/intl.dart';
+
 import 'package:kakao_flutter_sdk_share/kakao_flutter_sdk_share.dart';
 import 'package:package_info_plus/package_info_plus.dart';
+
 
 Future<bool> isForceUpdateTarget() async {
   await FirebaseRemoteConfig.instance.fetchAndActivate();
@@ -38,7 +39,6 @@ Future<bool> compareVersion(String versionString) async {
   List<int> splitVersionString(String versionString) {
     return versionString.split('.').map((element) => int.parse(element)).toList();
   }
-
   print('splitVersionString${splitVersionString}');
   List<int> targetAppVersion = splitVersionString(remoteAppVersion);
   List<int> deviceAppVersion = splitVersionString(packageInfo.version);
@@ -201,12 +201,12 @@ void toggleBottomNav(ScrollController scroll) {
   HomeMenuController controller = Get.find<HomeMenuController>();
 
   if (scroll.position.pixels.floor() == 0) {
-    Get.bus.fire(SetBottomNavStateEvent(false));
+    controller.hideBottomNav.value = false;
   } else {
     if (scroll.position.userScrollDirection == ScrollDirection.reverse) {
-      Get.bus.fire(SetBottomNavStateEvent(true));
+      controller.hideBottomNav.value = true;
     } else if (scroll.position.userScrollDirection == ScrollDirection.forward) {
-      Get.bus.fire(SetBottomNavStateEvent(false));
+      controller.hideBottomNav.value = false;
     }
   }
 }
@@ -234,13 +234,14 @@ void handleRoute(String route) {
     } else if (route.contains('leaderboard')) {
       Get.find<HomeMenuController>().selectMenu(4);
     }
-    if (!route.contains('challenge_detail')) {
+    if(!route.contains('challenge_detail')){
       if (Get.currentRoute != Routes.home) {
         Get.until((route) => Get.currentRoute == Routes.home);
       }
 
       Get.toNamed(route);
     }
+
   } else {
     HiveStore.save(key: HiveKey.dynamicLinkRoute.name, value: route);
   }
@@ -356,3 +357,4 @@ double productMinusFeePrice(String price, String fee) {
 
   return result;
 }
+

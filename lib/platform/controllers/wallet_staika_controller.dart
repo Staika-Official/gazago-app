@@ -3,7 +3,6 @@ import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:gaza_go/constants/enums.dart';
-import 'package:gaza_go/constants/events.dart';
 import 'package:gaza_go/constants/routes.dart';
 import 'package:gaza_go/flavors.dart';
 import 'package:gaza_go/platform/controllers/loader_controller.dart';
@@ -22,7 +21,6 @@ import 'package:gaza_go/platform/stores/hive_store.dart';
 import 'package:gaza_go/presentations/components/alert_ui_list.dart';
 import 'package:gaza_go/presentations/views/wallet/confirm_wallet_password.dart';
 import 'package:get/get.dart';
-import 'package:get_event_bus/get_event_bus.dart';
 import 'package:solana/solana.dart';
 
 class StaikaWalletController extends GetxController with WalletMixin, SolanaMixin {
@@ -64,10 +62,6 @@ class StaikaWalletController extends GetxController with WalletMixin, SolanaMixi
     focusNode.addListener(_onFocusChange);
     userEmail.value = await HiveStore.load(key: HiveKey.email.name) ?? '';
     await getStaikaWalletInfo();
-
-    Get.bus.on<GetStaikaWalletInfoEvent>((_) {
-      getStaikaWalletInfo();
-    });
 
     super.onInit();
   }
@@ -199,7 +193,7 @@ class StaikaWalletController extends GetxController with WalletMixin, SolanaMixi
     num mod = pow(10.0, 9);
     if (double.parse(sendStikUiAmount.value) < double.parse(assetStik.value!.uiAmountString)) {
       isFetching.value = true;
-      Get.bus.fire(SetLoaderEvent(true));
+      loaderController.isLoading.value = true;
       await WalletService.fetchStikMoveToGoWallet(
         symbol: 'STIK',
         accountSecretkey: secretKey,
@@ -211,15 +205,15 @@ class StaikaWalletController extends GetxController with WalletMixin, SolanaMixi
         decimals: assetStik.value!.decimals,
         amount: (double.parse(sendStikUiAmount.value) * mod).toInt(),
         successCallback: (boolean) {
-          Get.bus.fire(SetLoaderEvent(false));
+          loaderController.isLoading.value = false;
           successExchangeStikToGoWalletAlert(this);
           walletMasterController.getSpendingWalletBalances();
           sendStikUiAmount.value = '0';
           stikAmountTextController.text = '';
           // Get.offNamedUntil(Routes.wallet);
         },
-        errorCallback: () {
-          Get.bus.fire(SetLoaderEvent(false));
+        errorCallback: (error) {
+          loaderController.isLoading.value = false;
           failureExchangeStikToGoWalletAlert();
           walletMasterController.getSpendingWalletBalances();
           sendStikUiAmount.value = '0';

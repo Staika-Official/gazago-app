@@ -1,7 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:gaza_go/constants/events.dart';
 import 'package:get/get.dart';
-import 'package:get_event_bus/get_event_bus.dart';
 
 class LoaderController extends GetxController {
   GlobalKey<State<StatefulWidget>> dialogKey = GlobalKey();
@@ -13,7 +11,7 @@ class LoaderController extends GetxController {
     isLoading.listen((val) {
       if (val == true) {
         Get.dialog(
-            barrierDismissible: false,
+          barrierDismissible: false,
             const Dialog(
               shadowColor: Colors.transparent,
               backgroundColor: Colors.transparent,
@@ -40,10 +38,6 @@ class LoaderController extends GetxController {
         // dialogKey.currentState?.pop();
         // Navigator.pop()
       }
-    });
-
-    Get.bus.on<SetLoaderEvent>((event) {
-      isLoading.value = event.isShow;
     });
     super.onInit();
   }

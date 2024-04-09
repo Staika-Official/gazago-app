@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:gaza_go/constants/events.dart';
 import 'package:gaza_go/constants/routes.dart';
 import 'package:gaza_go/platform/controllers/challenges_detail_controller.dart';
+import 'package:gaza_go/platform/controllers/home_menu_controller.dart';
 import 'package:gaza_go/platform/controllers/loader_controller.dart';
+import 'package:gaza_go/platform/controllers/shop_controller.dart';
 import 'package:gaza_go/platform/controllers/wallet_master_controller.dart';
 import 'package:gaza_go/platform/firebase/remote_config.dart';
 import 'package:gaza_go/platform/helpers/alert_helper.dart';
@@ -16,13 +17,19 @@ import 'package:gaza_go/platform/services/activity_service.dart';
 import 'package:gaza_go/platform/services/item_service.dart';
 import 'package:gaza_go/platform/services/shop_service.dart';
 import 'package:gaza_go/platform/services/uaa_service.dart';
+import 'package:gaza_go/platform/stores/hive_store.dart';
 import 'package:gaza_go/presentations/components/alert_ui_list.dart';
 import 'package:get/get.dart';
-import 'package:get_event_bus/get_event_bus.dart';
 import 'package:url_launcher/url_launcher.dart';
+
+import '../../constants/enums.dart';
 
 class ShopDetailController extends GetxController {
   final WalletMasterController walletMasterController = Get.find();
+  final HomeMenuController homeMenuController = Get.put(HomeMenuController());
+  ShopController shopController = Get.isRegistered<ShopController>() ? Get.find<ShopController>() : Get.put(ShopController());
+  // ChallengesDetailController challengesDetailController = Get.isRegistered<ChallengesDetailController>() ? Get.find<ChallengesDetailController>() : Get.put(ChallengesDetailController());
+
   LoaderController loaderController = Get.put(LoaderController());
   final RxList<ShopItemModel> shopItemsList = RxList.empty();
   final RxInt purchaseItemCount = RxInt(1);
@@ -127,9 +134,10 @@ class ShopDetailController extends GetxController {
   @override
   void onClose() {
     itemScrollController.removeListener(() => toggleBottomNav(itemScrollController));
-    Get.bus.fire(GetShopItemsListEvent());
+    shopController.getShopItemsList();
 
-    if (Get.previousRoute.contains('challenge_detail') && Get.isRegistered<ChallengesDetailController>()) {
+
+    if(Get.previousRoute.contains('challenge_detail') && Get.isRegistered<ChallengesDetailController>()  ){
       Get.find<ChallengesDetailController>().refreshController();
     }
     super.onClose();
@@ -169,17 +177,17 @@ class ShopDetailController extends GetxController {
   void handlePurchaseShopItem(int itemId) async {
     Get.back();
     int itemCount = selectedItem.value.itemCategory == 'DISPOSABLE' ? purchaseItemCount.value : 1;
-    Get.bus.fire(SetLoaderEvent(true));
+    loaderController.isLoading.value = true;
     await ShopService.fetchPurchaseShopItem(itemId, itemCount, successCallback: (ShopItemPurchaseResponseModel items) {
-      Get.bus.fire(SetLoaderEvent(false));
+      loaderController.isLoading.value = false;
       purchaseCompleteItem.value = items;
 
       showItemPurchaseCompletePopup();
-      Get.bus.fire(GetSpendingWalletBalancesEvent());
-      Get.bus.fire(GetShopItemsListEvent());
+      walletMasterController.getSpendingWalletBalances();
+      shopController.getShopItemsList();
       getItemDetail(itemId);
     }, errorCallback: (errorData) {
-      Get.bus.fire(SetLoaderEvent(false));
+      loaderController.isLoading.value = false;
       if (errorData.status == 422) {
         isShortBalance.value = true;
         showTikShortBalancePopup(selectedItem.value.tradeSymbol);
@@ -209,7 +217,9 @@ class ShopDetailController extends GetxController {
     showItemTipAlert();
   }
 
-  void handleCheckPurchaseAvailable(tradeSymbol) {
+
+  void handleCheckPurchaseAvailable(tradeSymbol){
+    print(walletMasterController.tik.value.toString());
     if ((tradeSymbol == 'STIK' ? double.parse(walletMasterController.stik.value.uiAmountString!) : double.parse(walletMasterController.tik.value.uiAmountString!)) <
         (selectedItem.value.itemCategory == 'DISPOSABLE' ? purchaseItemSumPrice.value : selectedItem.value.price)) {
       isShortBalance.value = true;
@@ -222,7 +232,7 @@ class ShopDetailController extends GetxController {
   Future<void> onClickPurchaseItem(tradeSymbol) async {
     purchaseItemCount.value = 1;
 
-    if (selectedItem.value.challengeId != null) {
+    if(selectedItem.value.challengeId != null){
       await UaaService.getAccountInfo(
         successCallback: (UserAccountModel user) {
           if (user.authorities!.contains('ROLE_CERTIFIED_USER')) {
@@ -236,6 +246,8 @@ class ShopDetailController extends GetxController {
       handleCheckPurchaseAvailable(tradeSymbol);
     }
   }
+
+
 
   void showItemPurchasePopup(tradeSymbol) {
     itemPurchaseAlert(

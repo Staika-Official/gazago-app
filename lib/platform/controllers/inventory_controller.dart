@@ -4,9 +4,10 @@ import 'package:adjust_sdk/adjust.dart';
 import 'package:adjust_sdk/adjust_event.dart';
 import 'package:flutter/material.dart';
 import 'package:gaza_go/constants/enums.dart';
-import 'package:gaza_go/constants/events.dart';
 import 'package:gaza_go/constants/routes.dart';
+import 'package:gaza_go/platform/controllers/activity_controller.dart';
 import 'package:gaza_go/platform/controllers/inventory_home_controller.dart';
+import 'package:gaza_go/platform/controllers/wallet_master_controller.dart';
 import 'package:gaza_go/platform/firebase/remote_config.dart';
 import 'package:gaza_go/platform/helpers/activity_mixin.dart';
 import 'package:gaza_go/platform/helpers/alert_helper.dart';
@@ -24,10 +25,11 @@ import 'package:gaza_go/platform/services/activity_service.dart';
 import 'package:gaza_go/platform/services/item_service.dart';
 import 'package:gaza_go/presentations/components/alert_ui_list.dart';
 import 'package:get/get.dart';
-import 'package:get_event_bus/get_event_bus.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class InventoryController extends GetxController with LinearProgressMixin, InventoryMixin, ActivityMixin, ConsumerItemMixin, GetTickerProviderStateMixin {
+  final WalletMasterController walletMasterController = Get.find();
+  ActivityController activityController = Get.isRegistered<ActivityController>() ? Get.find<ActivityController>() : Get.put(ActivityController());
   late AnimationController progressController;
   final RxDouble viewportWidth = RxDouble(0);
   final RxDouble listHeight = RxDouble(0);
@@ -192,15 +194,6 @@ class InventoryController extends GetxController with LinearProgressMixin, Inven
       vsync: this,
       duration: Duration(seconds: 2),
     );
-
-    Get.bus.on<RefreshInventoryControllerEvent>((event) {
-      refreshController();
-    });
-
-    Get.bus.on<CalculateItemTabHeightEvent>((event) {
-      calculateTabHeight(event.tabIndex, event.itemType);
-    });
-
     super.onInit();
   }
 
@@ -336,7 +329,7 @@ class InventoryController extends GetxController with LinearProgressMixin, Inven
   }
 
   Future<void> getUserAllItems() async {
-    InventoryHomeController inventoryHomeController = Get.isRegistered<InventoryHomeController>() ? Get.find<InventoryHomeController>() : Get.put(InventoryHomeController());
+    Get.isRegistered<InventoryHomeController>() ? Get.find<InventoryHomeController>() : Get.put(InventoryHomeController());
     dataGetLoading.value = true;
     await ItemService.getAllMyItems(
       page.value,
@@ -347,7 +340,8 @@ class InventoryController extends GetxController with LinearProgressMixin, Inven
         }
         myAllItems.value = allItems;
         getUniqueItemList(allItems);
-        calculateTabHeight(inventoryHomeController.tabController.index, inventoryHomeController.itemSubTabList[inventoryHomeController.subTabController.index]['itemType']!);
+        calculateTabHeight(
+            Get.find<InventoryHomeController>().tabController.index, Get.find<InventoryHomeController>().itemSubTabList[Get.find<InventoryHomeController>().subTabController.index]['itemType']!);
         dataGetLoading.value = false;
       },
     );
@@ -501,7 +495,7 @@ class InventoryController extends GetxController with LinearProgressMixin, Inven
 
   void showShoesRepairPopup(int id, context) async {
     isDisableButton.value = true;
-    if (Get.currentRoute.contains('home')) {
+    if(Get.currentRoute.contains('home')){
       Adjust.trackEvent(AdjustEvent('d82o3q'));
     } else {
       Adjust.trackEvent(AdjustEvent('j7mhac'));
@@ -522,7 +516,7 @@ class InventoryController extends GetxController with LinearProgressMixin, Inven
     await fetchRepairShoes();
     getUserAllItems();
     getUserEquippedItems();
-    Get.bus.fire(GetUserStateEvent());
+    activityController.getUserState();
     if (Get.currentRoute == Routes.itemDetail) {
       getItemDetail(targetShoeId.value);
     }

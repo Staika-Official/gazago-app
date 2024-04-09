@@ -5,7 +5,7 @@ import 'package:device_info_plus/device_info_plus.dart';
 import 'package:dio/dio.dart' as dio;
 import 'package:flutter/cupertino.dart';
 import 'package:gaza_go/constants/enums.dart';
-import 'package:gaza_go/constants/events.dart';
+import 'package:gaza_go/platform/controllers/preference_controller.dart';
 import 'package:gaza_go/platform/helpers/alert_helper.dart';
 import 'package:gaza_go/platform/helpers/preference_mixin.dart';
 import 'package:gaza_go/platform/models/error_response_data_model.dart';
@@ -14,12 +14,13 @@ import 'package:gaza_go/platform/services/uaa_service.dart';
 import 'package:gaza_go/platform/stores/hive_store.dart';
 import 'package:gaza_go/presentations/components/alert_ui_list.dart';
 import 'package:get/get.dart';
-import 'package:get_event_bus/get_event_bus.dart';
 import 'package:http_parser/http_parser.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:permission_handler/permission_handler.dart' as ph;
 
 class MyPageController extends GetxController with PreferenceMixin {
+  final PreferenceController preferenceController = Get.find();
+
   final ImagePicker _picker = ImagePicker();
   final Rx<XFile?> pickedImage = Rx(null);
   final RxBool isEditMode = RxBool(false);
@@ -28,6 +29,7 @@ class MyPageController extends GetxController with PreferenceMixin {
   RxString provider = RxString('');
   final FocusNode focusNode = FocusNode();
 
+
   @override
   void onInit() {
     Get.arguments != null ? provider.value = Get.arguments['provider'] : provider.value = '';
@@ -35,13 +37,15 @@ class MyPageController extends GetxController with PreferenceMixin {
     super.onInit();
   }
 
-  void checkAvailableNicknameChange() {
+  void checkAvailableNicknameChange () {
     if (!profile.value.availableChangeNickname!) {
       focusNode.unfocus();
       showToastPopup('닉네임 수정 이력이 있어요.\n닉네임은 최초 1회 이후 수정할 수 없어요');
       return;
     }
   }
+
+
 
   Future<void> modifyMyAccountInfo() async {
     if (pickedImage.value == null && profile.value.nickname == originalNickname.value) {
@@ -89,7 +93,7 @@ class MyPageController extends GetxController with PreferenceMixin {
     await UaaService.modifyAccountInfo(
       params,
       successCallback: (UserAccountModel account) {
-        Get.bus.fire(InitializeActivityControllerEvent());
+        preferenceController.onInit();
         HiveStore.save(key: HiveKey.profileImageUrl.name, value: account.profileImageUrl);
         HiveStore.save(key: HiveKey.nickname.name, value: account.nickname);
         showToastPopup('수정되었습니다.');
@@ -102,6 +106,7 @@ class MyPageController extends GetxController with PreferenceMixin {
   }
 
   void toggleEditMode() {
+
     if (profile.value.provider == 'APPLE') {
       nicknameTextController.text = profile.value.nickname!.split('@')[0];
       profile.value.nickname = profile.value.nickname!.split('@')[0];
@@ -192,7 +197,7 @@ class MyPageController extends GetxController with PreferenceMixin {
   void validateProfileEdit() {
     focusNode.unfocus();
     if (profile.value.availableChangeNickname! && profile.value.nickname != originalNickname.value) {
-      if (profile.value.nickname!.length < 3) {
+      if(profile.value.nickname!.length < 3) {
         showToastPopup('닉네임은 3자 이상 입력해주세요.');
         return;
       }

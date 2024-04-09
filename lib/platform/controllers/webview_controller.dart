@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
-import 'package:gaza_go/constants/events.dart';
+import 'package:gaza_go/platform/controllers/wallet_master_controller.dart';
 import 'package:get/get.dart';
-import 'package:get_event_bus/get_event_bus.dart';
 
 class WebViewController extends GetxController {
   GlobalKey webViewKey = GlobalKey();
   RxString linkUrl = RxString('');
   RxString title = RxString('');
+  WalletMasterController walletController = Get.find();
 
   @override
   void onInit() async {
@@ -17,7 +17,7 @@ class WebViewController extends GetxController {
   @override
   void onClose() async {
     if (linkUrl.value.contains('taikapay')) {
-      Get.bus.fire(GetSpendingWalletBalancesEvent());
+      await walletController.getSpendingWalletBalances();
     }
     super.onClose();
   }

@@ -1,9 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:gaza_go/constants/enums.dart';
-import 'package:gaza_go/constants/events.dart';
+import 'package:gaza_go/platform/controllers/inventory_controller.dart';
 import 'package:gaza_go/platform/models/inventory_item_model.dart';
 import 'package:get/get.dart';
-import 'package:get_event_bus/get_event_bus.dart';
 
 class InventoryHomeController extends GetxController with GetTickerProviderStateMixin {
   final RxList<InventoryItemModel> statList = RxList.empty();
@@ -45,9 +44,6 @@ class InventoryHomeController extends GetxController with GetTickerProviderState
   @override
   void onInit() {
     initController();
-    Get.bus.on<ResetItemsTabMenuEvent>((event) {
-      tabController.animateTo(0);
-    });
     super.onInit();
   }
 
@@ -66,13 +62,13 @@ class InventoryHomeController extends GetxController with GetTickerProviderState
 
     tabController.addListener(() {
       if (tabController.indexIsChanging) {
-        Get.bus.fire(CalculateItemTabHeightEvent(tabController.index, itemSubTabList[subTabController.index]['itemType']!));
+        Get.find<InventoryController>().calculateTabHeight(tabController.index, itemSubTabList[subTabController.index]['itemType']!);
       }
     });
 
     subTabController.addListener(() {
       if (subTabController.indexIsChanging) {
-        Get.bus.fire(CalculateItemTabHeightEvent(tabController.index, itemSubTabList[subTabController.index]['itemType']!));
+        Get.find<InventoryController>().calculateTabHeight(tabController.index, itemSubTabList[subTabController.index]['itemType']!);
       }
     });
   }
