@@ -57,6 +57,10 @@ class WalletApi {
     return await Api.client(serviceUrl: ServiceUrl.goWalletService).get('/settings/codes/address?keys=${type}');
   }
 
+  static Future<Response> getProviderUrl() async {
+    return await Api.client(serviceUrl: ServiceUrl.goWalletService).get('/settings/codes/provider-url');
+  }
+
   //mint(토큰): TIK = 1 , STIK = 2
   static Future<Response> payWithToken(PayInfoModel payInfo) async {
     return await Api.client(serviceUrl: ServiceUrl.goWalletService).post('/wallet/pay', data: payInfo, queryParameters: {

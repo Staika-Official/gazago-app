@@ -22,7 +22,6 @@ import 'package:gaza_go/platform/models/wallet_solana_model.dart';
 import 'package:gaza_go/platform/models/wallet_solana_transfer_model.dart';
 import 'package:gaza_go/platform/models/wallet_token_balance_model.dart';
 import 'package:gaza_go/platform/stores/hive_store.dart';
-import 'package:solana/dto.dart';
 import 'package:solana/encoder.dart';
 import 'package:solana/solana.dart';
 import 'package:solana/solana.dart' as solana;
@@ -101,6 +100,15 @@ class WalletService {
     }
   }
 
+  static Future<void> getProviderUrl({required Function successCallback, Function? errorCallback}) async {
+    Response res = await WalletApi.getProviderUrl();
+    if (res.statusCode == 200) {
+      return successCallback(res.data);
+    } else {
+      if (errorCallback != null) errorCallback(ErrorResponseDataModel.fromJson(res.data));
+    }
+  }
+
   static Future<WalletSolanaModel?> getSolanaWallet() async {
     String? userId = HiveStore.loadString(key: HiveKey.userId.name);
     Response res = await WalletApi.getSolanaWallet(userId);
@@ -129,11 +137,22 @@ class WalletService {
   }
 
   static Future<WalletSolanaTransferModel> transferSolana(String accountSecretkey, String walletPassword, String toAddress, String symbol, String tokenAddress, int decimals, int amount) async {
-    final SolanaClient solanaClient = F.solanaClient;
+    late final SolanaClient solanaClient;
     int priorityFee = 0;
     String platform = 'solana';
     String symbol = 'STIK';
-    await WalletService.getTokenPriorityFee(platform,symbol, successCallback: (fees) {
+
+    await getProviderUrl(successCallback: (url) {
+      solanaClient = SolanaClient(
+        rpcUrl: Uri.parse(url),
+        websocketUrl: Uri.parse(url),
+      );
+    }, errorCallback: (ErrorResponseDataModel e) {
+      showToastPopup(e.errorMessage!);
+      return;
+    });
+
+    await WalletService.getTokenPriorityFee(platform, symbol, successCallback: (fees) {
       print('fees: $fees');
       priorityFee = fees.priorityFee;
     }, errorCallback: () {
@@ -286,11 +305,22 @@ class WalletService {
     required int decimals,
     required int amount,
   }) async {
-    final SolanaClient solanaClient = F.solanaClient;
+    late final SolanaClient solanaClient;
     int priorityFee = 0;
     String platform = 'solana';
     String symbol = 'STIK';
-    await WalletService.getTokenPriorityFee(platform,symbol, successCallback: (fees) {
+
+    await getProviderUrl(successCallback: (url) {
+      solanaClient = SolanaClient(
+        rpcUrl: Uri.parse(url),
+        websocketUrl: Uri.parse(url),
+      );
+    }, errorCallback: (ErrorResponseDataModel e) {
+      showToastPopup(e.errorMessage!);
+      return;
+    });
+
+    await WalletService.getTokenPriorityFee(platform, symbol, successCallback: (fees) {
       print('fees: $fees');
       priorityFee = fees.priorityFee;
       print('fees: ${fees.priorityFee}');
@@ -319,7 +349,7 @@ class WalletService {
     final receiver = toAddress;
 
     solana.Message message;
-    try{
+    try {
       if (symbol == 'SOL') {
         message = getSolTransferMessage(sender.publicKey, receiver, amount, priorityFee);
       } else {
@@ -331,7 +361,6 @@ class WalletService {
       if (errorCallback != null) errorCallback(true);
       return;
     }
-
 
     // FeePayer
     late final Ed25519HDPublicKey feePayer;
