@@ -2,7 +2,6 @@ import 'dart:convert';
 
 import 'package:dio/dio.dart';
 import 'package:gaza_go/constants/enums.dart';
-import 'package:gaza_go/flavors.dart';
 import 'package:gaza_go/platform/apis/wallet.dart';
 import 'package:gaza_go/platform/helpers/alert_helper.dart';
 import 'package:gaza_go/platform/helpers/base_helper.dart';
@@ -145,7 +144,7 @@ class WalletService {
     await getProviderUrl(successCallback: (url) {
       solanaClient = SolanaClient(
         rpcUrl: Uri.parse(url),
-        websocketUrl: Uri.parse(url),
+        websocketUrl: Uri.parse(url.replaceAll('https', 'wss')),
       );
     }, errorCallback: (ErrorResponseDataModel e) {
       showToastPopup(e.errorMessage!);
@@ -313,7 +312,7 @@ class WalletService {
     await getProviderUrl(successCallback: (url) {
       solanaClient = SolanaClient(
         rpcUrl: Uri.parse(url),
-        websocketUrl: Uri.parse(url),
+        websocketUrl: Uri.parse(url.replaceAll('https', 'wss')),
       );
     }, errorCallback: (ErrorResponseDataModel e) {
       showToastPopup(e.errorMessage!);
