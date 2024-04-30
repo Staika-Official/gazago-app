@@ -1,18 +1,23 @@
 import 'package:adjust_sdk/adjust.dart';
 import 'package:adjust_sdk/adjust_event.dart';
+import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
 import 'package:gaza_go/constants/enums.dart';
 import 'package:gaza_go/constants/routes.dart';
 import 'package:gaza_go/platform/controllers/activity_controller.dart';
+import 'package:gaza_go/platform/controllers/challenges_controller.dart';
 import 'package:gaza_go/platform/controllers/global_controller.dart';
 import 'package:gaza_go/platform/controllers/home_menu_controller.dart';
 import 'package:gaza_go/platform/controllers/leaderboard_controller.dart';
 import 'package:gaza_go/platform/helpers/alert_helper.dart';
 import 'package:gaza_go/platform/helpers/promotion_mixin.dart';
+import 'package:gaza_go/platform/models/new_challenge_detail_model.dart';
 import 'package:gaza_go/platform/models/notice_popup_model.dart';
+import 'package:gaza_go/platform/services/activity_service.dart';
 import 'package:gaza_go/platform/services/board_service.dart';
 import 'package:gaza_go/platform/stores/hive_store.dart';
 import 'package:gaza_go/presentations/components/alert_ui_list.dart';
+import 'package:gaza_go/presentations/components/mirae/alert_ui_list.dart';
 import 'package:get/get.dart';
 import 'package:url_launcher/url_launcher.dart';
 
@@ -116,7 +121,7 @@ class NoticePopupController extends GetxController with PromotionMixin {
   void moveToWebView(NoticePopupModel item) async {
     // 메인팝업 클릭 이벤트
     Adjust.trackEvent(AdjustEvent('hed7a4'));
-
+    String? userId = HiveStore.loadString(key: HiveKey.userId.name);
     // 미래에셋 광고 클릭 이벤트
     if(item.isAdsBanner != null && item.isAdsBanner!){
       Adjust.trackEvent(AdjustEvent('qljdfk'));
@@ -140,6 +145,37 @@ class NoticePopupController extends GetxController with PromotionMixin {
           case 'CHALLENGES':
             Get.find<HomeMenuController>().selectMenu(0);
             Get.toNamed(Routes.challengeDetail.replaceAll(':id', item.referenceId.toString()));
+            break;
+          case 'COMPANY_CHALLENGES':
+
+
+            ChallengesController challengesController = Get.isRegistered<ChallengesController>() ? Get.find<ChallengesController>() : Get.put(ChallengesController());
+
+            String? userId = HiveStore.loadString(key: HiveKey.userId.name);
+            DatabaseReference userDiInfoRef = FirebaseDatabase.instance.ref('crewChallengeLeaderboard/${item.referenceId}');
+            Query query = userDiInfoRef.child(userId!);
+            query.get().then((DataSnapshot snapshot) async {
+              print('snapshot : ${snapshot.value}');
+              if (snapshot.value != null) {
+                // Get.find<HomeMenuController>().selectMenu(0);
+                Get.toNamed(Routes.companyChallengeDetail.replaceAll(':id', item.referenceId.toString()));
+
+              } else {
+                await ActivityService.getChallengeDetails(item.referenceId!, successCallback: (NewChallengeDetailModel data) async {
+                  if(data.challengeUserState == null){
+                    miraeAssetAlert(challengesController, int.parse(item.referenceId.toString()), null);
+                  } else {
+                    miraeAssetAlert(challengesController, int.parse(item.referenceId.toString()), data.challengeUserState!);
+                  }
+
+                });
+
+              }
+            }).catchError((error) {
+              // 오류 처리
+              print('데이터를 가져오는 중 오류가 발생했습니다: $error');
+            });
+
             break;
           case 'COURSE_CHALLENGES':
             checkBlockUser(item);

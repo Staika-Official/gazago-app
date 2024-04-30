@@ -13,6 +13,8 @@ import 'package:gaza_go/presentations/views/archive/archive_detail.dart';
 import 'package:gaza_go/presentations/views/auth/account_restore.dart';
 import 'package:gaza_go/presentations/views/auth/signup_complete.dart';
 import 'package:gaza_go/presentations/views/challenges/challenge_detail.dart';
+import 'package:gaza_go/presentations/views/challenges/company_challenge_detail.dart';
+import 'package:gaza_go/presentations/views/challenges/company_crew_detail.dart';
 import 'package:gaza_go/presentations/views/challenges/crew_detail.dart';
 import 'package:gaza_go/presentations/views/daily_benefits.dart';
 import 'package:gaza_go/presentations/views/debugging/position_raw_data_logs.dart';
@@ -130,10 +132,12 @@ class Routes {
   static const sendStikGoWallet = '/wallet/send_stik_go_wallet';
   static const sendStikStaikaWallet = '/wallet/send_stik_staika_wallet';
   static const challengeDetail = '/challenges/challenge_detail/:id';
+  static const companyChallengeDetail = '/challenges/company_challenge_detail/:id';
   static const challengeCourseDetail = '/activity/challenge_course_detail';
   static const leaderboard = '/leaderboard';
   static const fairPlayView = '/fair_play_view';
   static const crewDetail = '/crew_detail';
+  static const companyCrewDetail = '/company_crew_detail';
   static const dailyBenefits = '/daily_benefits';
   static const inAppModalWebView = '/modal_webview';
 
@@ -204,10 +208,12 @@ class Routes {
     stepPage(name: Routes.sendStikGoWallet, page: const SendStikGoWallet()),
     stepPage(name: Routes.sendStikStaikaWallet, page: const SendStikStaikaWallet()),
     stepPage(name: Routes.challengeDetail, page: const ChallengeDetail()),
+    stepPage(name: Routes.companyChallengeDetail, page: const CompanyChallengeDetail()),
     stepPage(name: Routes.challengeCourseDetail, page: const ChallengeCourseDetail()),
     stepPage(name: Routes.leaderboard, page: const RankingHome()),
     stepPage(name: Routes.fairPlayView, page: const FairPlayView()),
     stepPage(name: Routes.crewDetail, page: const CrewDetail()),
+    stepPage(name: Routes.companyCrewDetail, page: const CompanyCrewDetail()),
     stepPage(name: Routes.dailyBenefits, page: const DailyBenefits()),
     stepPage(name: Routes.dailyBenefits, page: DailyBenefits()),
     stepPage(name: Routes.inAppModalWebView, page: const InAppModalWebView()),

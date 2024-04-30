@@ -16,6 +16,7 @@ import 'package:gaza_go/presentations/styles/styled_text.dart';
 import 'package:gaza_go/presentations/views/challenges/challenge_info.dart';
 import 'package:gaza_go/presentations/views/challenges/crew_leaderboard.dart';
 import 'package:gaza_go/presentations/views/challenges/leaderboard.dart';
+import 'package:gaza_go/theme/theme.g.dart';
 import 'package:get/get.dart';
 import 'package:intrinsic_dimension/intrinsic_dimension.dart';
 import 'package:skeletons/skeletons.dart';
@@ -42,7 +43,7 @@ class ChallengeDetail extends StatelessWidget {
                     isShowBackButton: true,
                     isShowPreferencesButton: false,
                   )),
-        backgroundColor: subBg01Color,
+        backgroundColor: AppColorData.regular().colorBgPrimary,
         body: Obx(() {
           if (controller.isLoading.value) {
             return const Center(

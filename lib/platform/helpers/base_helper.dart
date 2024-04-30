@@ -1,17 +1,22 @@
 import 'dart:async';
 import 'dart:math';
 
+import 'package:firebase_database/firebase_database.dart';
 import 'package:firebase_remote_config/firebase_remote_config.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter_naver_map/flutter_naver_map.dart';
 import 'package:gaza_go/constants/enums.dart';
 import 'package:gaza_go/constants/routes.dart';
+import 'package:gaza_go/platform/controllers/challenges_controller.dart';
 import 'package:gaza_go/platform/controllers/home_menu_controller.dart';
 import 'package:gaza_go/platform/firebase/remote_config.dart';
+import 'package:gaza_go/platform/models/new_challenge_detail_model.dart';
 import 'package:gaza_go/platform/models/user_account_model.dart';
+import 'package:gaza_go/platform/services/activity_service.dart';
 import 'package:gaza_go/platform/services/uaa_service.dart';
 import 'package:gaza_go/platform/stores/hive_store.dart';
+import 'package:gaza_go/presentations/components/mirae/alert_ui_list.dart';
 
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
@@ -76,7 +81,7 @@ String formatDateUntilDay(String? isoDateString) {
 
 String formatDateUntilTime(String? isoDateString) {
   if (isoDateString != null) {
-    return DateFormat("yy.MM.dd HH:mm").format(DateTime.parse(isoDateString).toLocal());
+    return DateFormat("yyyy-MM-dd HH:mm").format(DateTime.parse(isoDateString).toLocal());
   } else {
     return '';
   }
@@ -223,7 +228,9 @@ String formatMeterToKilometer(int meter) {
   return kilometer;
 }
 
-void handleRoute(String route) {
+
+
+void handleRoute(String route) async {
   if ((Get.currentRoute != Routes.login || Get.currentRoute != Routes.loading) && Get.isRegistered<HomeMenuController>()) {
     if (route.contains('challenge')) {
       Get.find<HomeMenuController>().selectMenu(0);
@@ -241,10 +248,82 @@ void handleRoute(String route) {
 
       Get.toNamed(route);
     }
+    if(route.contains('company_challenge_detail')){
+      if (Get.currentRoute != Routes.home) {
+        Get.until((route) => Get.currentRoute == Routes.home);
+      }
+      String? challengeId = route.split('company_challenge_detail/')[1];
+      ChallengesController challengesController = Get.isRegistered<ChallengesController>() ? Get.find<ChallengesController>() : Get.put(ChallengesController());
+      await ActivityService.getChallengeDetails(int.parse(challengeId), successCallback: (NewChallengeDetailModel data) {
+        if(data.challengeUserState == null){
+          miraeAssetAlert(challengesController, int.parse(challengeId), null);
+        } else {
+          miraeAssetAlert(challengesController, int.parse(challengeId), data.challengeUserState!);
+        }
+
+
+      });
+
+      print(challengeId);
+      // DatabaseReference userDiInfoRef = FirebaseDatabase.instance.ref('crewChallengeLeaderboard/$challengeId/$userId');
+
+      // await getChallengeDetail(challengeId);
+      // userDiInfoRef.onValue.listen((DatabaseEvent event) async {
+      //     if(event.snapshot.value != null){
+      //
+      //       Get.toNamed(Routes.companyChallengeDetail.replaceAll(':id', challengeId.toString()));
+      //     } else {
+      //       miraeAssetAlert(challengesController, int.parse(challengeId));
+      //     }
+      //
+      //
+      // });
+
+    }
 
   } else {
     HiveStore.save(key: HiveKey.dynamicLinkRoute.name, value: route);
   }
+}
+
+Future<void> getChallengeDetail(challengeId) async {
+  String? userId = HiveStore.loadString(key: HiveKey.userId.name);
+  ChallengesController challengesController = Get.isRegistered<ChallengesController>() ? Get.find<ChallengesController>() : Get.put(ChallengesController());
+  await ActivityService.getChallengeDetails(int.parse(challengeId), successCallback: (NewChallengeDetailModel data) async {
+    print(data);
+    DatabaseReference userDiInfoRef = FirebaseDatabase.instance.ref('crewChallengeLeaderboard/$challengeId/$userId');
+
+
+    await userDiInfoRef.get().then((DataSnapshot snapshot) async {
+      print(snapshot.value);
+      if (snapshot.exists) {
+        Get.find<HomeMenuController>().selectMenu(0);
+        Get.toNamed(Routes.companyChallengeDetail.replaceAll(':id', challengeId.toString()));
+      } else {
+        if(data.challengeState == 'READY' ){
+          if(data.challengeUserState == 'REGISTER_READY'){
+            notOpenCompanyChallenge();
+          } else {
+            participateInMiraeChallengeByCodeAlert(challengeId);
+          }
+
+        } else if(data.challengeState == 'IN_PROGRESS'){
+          if(data.challengeUserState != 'JOIN_CLOSED'){
+            closedCompanyChallenge();
+          } else {
+            participateInMiraeChallengeByCodeAlert(challengeId);
+          }
+
+        } else {
+          closedCompanyChallenge();
+        }
+
+      }
+    }).onError((error, stackTrace) {
+      print(error);
+    });
+  });
+
 }
 
 void handlePendingDynamicLink() {

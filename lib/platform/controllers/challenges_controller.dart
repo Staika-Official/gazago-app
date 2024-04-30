@@ -1,15 +1,20 @@
+import 'dart:async';
 import 'dart:convert';
 
 import 'package:collection/collection.dart';
+import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:gaza_go/constants/enums.dart';
 import 'package:gaza_go/constants/routes.dart';
+import 'package:gaza_go/platform/controllers/home_menu_controller.dart';
 import 'package:gaza_go/platform/helpers/challenge_mixin.dart';
+import 'package:gaza_go/platform/models/new_challenge_detail_model.dart';
 import 'package:gaza_go/platform/models/new_challenge_model.dart';
 import 'package:gaza_go/platform/services/activity_service.dart';
 import 'package:gaza_go/platform/stores/hive_store.dart';
 import 'package:gaza_go/presentations/components/alert_ui_list.dart';
+import 'package:gaza_go/presentations/components/mirae/alert_ui_list.dart';
 import 'package:get/get.dart';
 
 class ChallengesController extends GetxController with GetTickerProviderStateMixin, ChallengeMixin {
@@ -33,10 +38,14 @@ class ChallengesController extends GetxController with GetTickerProviderStateMix
   RxBool isSelectAllItems = RxBool(true);
   RxBool isFilteredItems = RxBool(false);
   RxBool dataGetLoading = RxBool(false);
-
+  late StreamSubscription subscription;
   Rx isSelectedSortValue = Rx({'title': '전체', 'value': 'id,DESC'});
   RxString isSelectedSortString = RxString('전체');
-
+  final TextEditingController codeTextController = TextEditingController(text: '');
+  final RxString participationCode = RxString('');
+  final FocusNode focusNode = FocusNode();
+  final RxString errorMessage = RxString('');
+  final RxString companyChallengeStatus = RxString('');
   @override
   void onInit() async {
     await getChallengesList();
@@ -76,8 +85,96 @@ class ChallengesController extends GetxController with GetTickerProviderStateMix
     });
   }
 
-  void moveToDetail(id) {
-    Get.toNamed(Routes.challengeDetail.replaceAll(':id', id.toString()));
+  void moveToDetail(id, challengeType, challengeUserState, challengeState) async {
+
+    if( challengeType == 'CREW_COMPANY'){
+
+      String? userId = HiveStore.loadString(key: HiveKey.userId.name);
+
+      // DatabaseReference userDiInfoRef = FirebaseDatabase.instance.ref('crewChallengeLeaderboard/$id/$userId');
+      DatabaseReference userDiInfoRef = FirebaseDatabase.instance.ref('crewChallengeLeaderboard/$id');
+      Query query = userDiInfoRef.child(userId!);
+
+      await query.get().then((DataSnapshot snapshot) async {
+
+        if (snapshot.value != null) {
+
+          Get.toNamed(Routes.companyChallengeDetail.replaceAll(':id', id.toString()));
+
+        } else {
+
+          showMiraeAssetPopup(id);
+        }
+      }).catchError((error) {
+        // 오류 처리
+        print('데이터를 가져오는 중 오류가 발생했습니다: $error');
+      });
+    } else {
+      Get.toNamed(Routes.challengeDetail.replaceAll(':id', id.toString()));
+    }
+
+  }
+
+  bool checkUserIdExistence( data, String userId) {
+    return data.keys.contains(userId);
+  }
+
+  void onJoinCompanyChallenge(challengeId){
+
+  }
+
+  Future<void> getChallengeDetail(challengeId) async {
+    await ActivityService.getChallengeDetails(challengeId, successCallback: (NewChallengeDetailModel data) async {
+      String? userId = HiveStore.loadString(key: HiveKey.userId.name);
+      DatabaseReference userDiInfoRef = FirebaseDatabase.instance.ref('crewChallengeLeaderboard/$challengeId');
+      Query query = userDiInfoRef.child(userId!);
+      query.get().then((DataSnapshot snapshot)  {
+        if (snapshot.value != null) {
+                if(Get.isDialogOpen == true){
+                  Get.back();
+                }
+                Get.find<HomeMenuController>().selectMenu(0);
+                Get.toNamed(Routes.companyChallengeDetail.replaceAll(':id', challengeId.toString()));
+
+        } else {
+          print('data.challengeState : ${data.challengeState}');
+          print(data.challengeUserState);
+          if(data.challengeState == 'READY' ){
+            if(data.challengeUserState == 'REGISTER_READY'){
+              notOpenCompanyChallenge();
+            } else {
+              participateInMiraeChallengeByCodeAlert(challengeId);
+            }
+
+          } else if(data.challengeState == 'IN_PROGRESS'){
+            if(data.challengeUserState == 'JOIN_CLOSED'){
+              closedCompanyChallenge();
+            } else {
+              participateInMiraeChallengeByCodeAlert(challengeId);
+            }
+
+          } else {
+            closedCompanyChallenge();
+          }
+
+        }
+      }).catchError((error) {
+        // 오류 처리
+        print('데이터를 가져오는 중 오류가 발생했습니다: $error');
+      });
+    });
+  }
+
+  void showMiraeAssetPopup(id) async {
+    await ActivityService.getChallengeDetails(id, successCallback: (NewChallengeDetailModel data) async {
+      if(data.challengeUserState == null){
+        miraeAssetAlert(this, id, null);
+      } else {
+        miraeAssetAlert(this, id, data.challengeUserState!);
+      }
+
+    });
+
   }
 
   void showChallengesSortingPopup() {

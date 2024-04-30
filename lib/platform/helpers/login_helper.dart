@@ -55,7 +55,8 @@ void handleKeysOnLogout() {
     HiveKey.walletConnectionPrompted.name,
     HiveKey.profileImageUrl.name,
     HiveKey.nickname.name,
-    HiveKey.email.name
+    HiveKey.email.name,
+    HiveKey.userId.name
   ]);
 }
 

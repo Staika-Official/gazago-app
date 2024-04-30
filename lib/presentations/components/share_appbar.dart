@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:gaza_go/constants/enums.dart';
@@ -94,8 +96,8 @@ class ShareAppbar extends StatelessWidget implements PreferredSizeWidget {
                   : Padding(
                       padding: EdgeInsets.only(left: 4.sp),
                       child: IconButton(
-                        onPressed: () => controller.shareChallenge(challengeType: ChallengeType.crew, shareSource: ShareSource.shareAppbar),
-                        icon: iconHeaderShare,
+                        onPressed: () => controller.shareChallenge(challengeType: Get.currentRoute.contains('company') ? ChallengeType.companyCrew: ChallengeType.crew, shareSource: ShareSource.shareAppbar),
+                        icon: Platform.isAndroid ? iconHeaderShare : iconHeaderShareIOS,
                         splashRadius: 20.sp,
                         constraints: BoxConstraints(
                           minWidth: 30.sp,

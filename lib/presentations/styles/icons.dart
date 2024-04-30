@@ -52,6 +52,7 @@ SvgPicture iconHeaderGear = SvgPicture.asset('assets/images/common/ico_header_ge
 SvgPicture iconHeaderWallet = SvgPicture.asset('assets/images/common/ico_header_wallet.svg', width: 30.sp, height: 30.sp);
 SvgPicture iconHeaderBell = SvgPicture.asset('assets/images/common/ico_header_bell.svg', width: 30.sp, height: 30.sp);
 SvgPicture iconHeaderShare = SvgPicture.asset('assets/images/common/ico_header_share.svg', width: 17.sp, height: 25.sp);
+SvgPicture iconHeaderShareIOS = SvgPicture.asset('assets/images/common/ico_header_share_ios.svg', width: 18.sp, height: 16.sp);
 SvgPicture iconHeaderLock = SvgPicture.asset('assets/images/common/ico_header_lock.svg', width: 20.sp, height: 26.sp);
 SvgPicture iconHeaderUnlock = SvgPicture.asset('assets/images/common/ico_header_unlock.svg', width: 20.sp, height: 26.sp);
 
@@ -173,3 +174,6 @@ SvgPicture bgChallangeUserStateBox = SvgPicture.asset('assets/images/challenges/
 SvgPicture iconNoneChallenges = SvgPicture.asset('assets/images/challenges/ico_none_challenge.svg', width: 82.sp, height: 37.sp);
 SvgPicture iconCircleLock = SvgPicture.asset('assets/images/challenges/ico_circle_lock.svg', width: 18.sp, height: 18.sp);
 SvgPicture iconStackedBlocks = SvgPicture.asset('assets/images/challenges/ico_stacked_blocks.svg', width: 32.sp, height: 56.sp);
+SvgPicture iconFieldInvalid = SvgPicture.asset('assets/images/challenges/ico_field_invalid.svg', width: 9.sp, height: 9.sp);
+SvgPicture iconChallengeManager = SvgPicture.asset('assets/images/challenges/ico_company_crew_manager.svg', width: 18.sp, height: 18.sp);
+SvgPicture iconCompanyChallengeShare = SvgPicture.asset('assets/images/challenges/ico_company_crew_share.svg', width: 110.sp, height: 70.sp);

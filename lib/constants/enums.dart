@@ -367,7 +367,7 @@ enum ChallengeStatusType {
   beforeOpen,
 }
 
-enum ChallengeType { crew, alliance, code, item, payment }
+enum ChallengeType { crew, companyCrew, alliance, code, item, payment }
 
 enum ShareSource {
   shareAppbar,
