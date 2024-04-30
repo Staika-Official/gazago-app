@@ -66,21 +66,21 @@ class CompanyCrewDetail extends StatelessWidget {
                         child: Container(
                           width: double.infinity,
                           decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(14),
+                            borderRadius: BorderRadius.circular(15.sp),
                             color: AppColorData
                                 .regular()
                                 .colorBgPrimary,
                             border: Border.all(
-                              width: 1,
+                              width: 2,
                               style: BorderStyle.solid,
                               color: Colors.black,
                             ),
                             boxShadow: const [
                               BoxShadow(
                                 color: Color.fromRGBO(0, 0, 0, 1),
-                                offset: Offset(0, 2),
+                                offset: Offset(0, 3),
                                 blurRadius: 0,
-                                spreadRadius: 2,
+                                spreadRadius: 1,
                               )
                             ],
                           ),
