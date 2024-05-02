@@ -11,6 +11,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:gaza_go/constants/enums.dart';
 import 'package:gaza_go/flavors.dart';
 import 'package:gaza_go/platform/controllers/activity_controller.dart';
+import 'package:gaza_go/platform/controllers/challenges_controller.dart';
 import 'package:gaza_go/platform/controllers/global_controller.dart';
 import 'package:gaza_go/platform/controllers/inspection_notice_controller.dart';
 import 'package:gaza_go/platform/controllers/loader_controller.dart';
@@ -134,6 +135,7 @@ class MyApp extends StatelessWidget {
     Get.put(LoaderController(), permanent: true);
     Get.put(WalletMasterController(), permanent: true);
     Get.put(ActivityController(), permanent: true);
+
 
     return ScreenUtilInit(
       designSize: const Size(390, 844),

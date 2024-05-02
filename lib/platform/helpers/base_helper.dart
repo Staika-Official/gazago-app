@@ -231,6 +231,7 @@ String formatMeterToKilometer(int meter) {
 
 
 void handleRoute(String route) async {
+
   if ((Get.currentRoute != Routes.login || Get.currentRoute != Routes.loading) && Get.isRegistered<HomeMenuController>()) {
     if (route.contains('challenge')) {
       Get.find<HomeMenuController>().selectMenu(0);
@@ -252,13 +253,17 @@ void handleRoute(String route) async {
       if (Get.currentRoute != Routes.home) {
         Get.until((route) => Get.currentRoute == Routes.home);
       }
+
       String? challengeId = route.split('company_challenge_detail/')[1];
-      ChallengesController challengesController = Get.isRegistered<ChallengesController>() ? Get.find<ChallengesController>() : Get.put(ChallengesController());
+
       await ActivityService.getChallengeDetails(int.parse(challengeId), successCallback: (NewChallengeDetailModel data) {
+        if(Get.isDialogOpen == true){
+          Get.back();
+        }
         if(data.challengeUserState == null){
-          miraeAssetAlert(challengesController, int.parse(challengeId), null);
+          miraeAssetAlert( int.parse(challengeId), null);
         } else {
-          miraeAssetAlert(challengesController, int.parse(challengeId), data.challengeUserState!);
+          miraeAssetAlert( int.parse(challengeId), data.challengeUserState!);
         }
 
 

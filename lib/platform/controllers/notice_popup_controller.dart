@@ -26,6 +26,7 @@ import '../models/promotion_ad_model.dart';
 class NoticePopupController extends GetxController with PromotionMixin {
   GlobalController globalController = Get.find();
   ActivityController activityController = Get.find();
+
   RxList<NoticePopupModel> noticePopupList = RxList.empty();
   RxList<NoticePopupModel> noticeMainPopupList = RxList.empty();
   final RxInt _current = 0.obs;
@@ -118,6 +119,7 @@ class NoticePopupController extends GetxController with PromotionMixin {
     );
   }
 
+
   void moveToWebView(NoticePopupModel item) async {
     // 메인팝업 클릭 이벤트
     Adjust.trackEvent(AdjustEvent('hed7a4'));
@@ -149,7 +151,7 @@ class NoticePopupController extends GetxController with PromotionMixin {
           case 'COMPANY_CHALLENGES':
 
 
-            ChallengesController challengesController = Get.isRegistered<ChallengesController>() ? Get.find<ChallengesController>() : Get.put(ChallengesController());
+
 
             String? userId = HiveStore.loadString(key: HiveKey.userId.name);
             DatabaseReference userDiInfoRef = FirebaseDatabase.instance.ref('crewChallengeLeaderboard/${item.referenceId}');
@@ -163,9 +165,9 @@ class NoticePopupController extends GetxController with PromotionMixin {
               } else {
                 await ActivityService.getChallengeDetails(item.referenceId!, successCallback: (NewChallengeDetailModel data) async {
                   if(data.challengeUserState == null){
-                    miraeAssetAlert(challengesController, int.parse(item.referenceId.toString()), null);
+                    miraeAssetAlert(int.parse(item.referenceId.toString()), null);
                   } else {
-                    miraeAssetAlert(challengesController, int.parse(item.referenceId.toString()), data.challengeUserState!);
+                    miraeAssetAlert(int.parse(item.referenceId.toString()), data.challengeUserState!);
                   }
 
                 });

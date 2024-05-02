@@ -121,8 +121,8 @@ void showConfirmMiraeMemberChallenge(MiraeChallengeController controller, int ch
 
 
 
-void miraeAssetAlert(ChallengesController controller , int challengeId, String? challengeUserState) {
-
+void miraeAssetAlert( int challengeId, String? challengeUserState) {
+  ChallengesController controller = Get.isRegistered<ChallengesController>() ? Get.find<ChallengesController>() : Get.put(ChallengesController());
 
   Get.dialog(
     barrierColor: subBg01Color.withOpacity(0.2),
@@ -131,6 +131,7 @@ void miraeAssetAlert(ChallengesController controller , int challengeId, String? 
     WillPopScope(
       onWillPop: () async => false,
       child: Dialog(
+        key: const Key('miraeAsset'),
         insetPadding: EdgeInsets.zero,
         backgroundColor: subBg01Color.withOpacity(0.2),
         child: Stack(
@@ -232,10 +233,11 @@ void participateInMiraeChallengeByCodeAlert(int challengeId) {
                           Padding(
                             padding: EdgeInsets.only(bottom: 28.0.sp),
                             child: const StyledText(
-                              '미래에셋 기업전용 챌린지 입니다.',
+                              '기업전용 챌린지는 사번을 입력해야\n참가할 수 있어요.',
                               fontSize: 16,
-                              lineHeight: 17,
+                              lineHeight: 22,
                               fontWeight: 500,
+                              textAlign: TextAlign.center,
                             ),
                           ),
                           Obx(() {

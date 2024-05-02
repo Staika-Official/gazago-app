@@ -107,6 +107,7 @@ class ChallengesController extends GetxController with GetTickerProviderStateMix
         }
       }).catchError((error) {
         // 오류 처리
+        print('123');
         print('데이터를 가져오는 중 오류가 발생했습니다: $error');
       });
     } else {
@@ -127,6 +128,8 @@ class ChallengesController extends GetxController with GetTickerProviderStateMix
     await ActivityService.getChallengeDetails(challengeId, successCallback: (NewChallengeDetailModel data) async {
       String? userId = HiveStore.loadString(key: HiveKey.userId.name);
       DatabaseReference userDiInfoRef = FirebaseDatabase.instance.ref('crewChallengeLeaderboard/$challengeId');
+      print('challengeId : $challengeId');
+      print('userId : $userId');
       Query query = userDiInfoRef.child(userId!);
       query.get().then((DataSnapshot snapshot)  {
         if (snapshot.value != null) {
@@ -135,6 +138,8 @@ class ChallengesController extends GetxController with GetTickerProviderStateMix
                 }
                 Get.find<HomeMenuController>().selectMenu(0);
                 Get.toNamed(Routes.companyChallengeDetail.replaceAll(':id', challengeId.toString()));
+
+
 
         } else {
           print('data.challengeState : ${data.challengeState}');
@@ -158,8 +163,10 @@ class ChallengesController extends GetxController with GetTickerProviderStateMix
           }
 
         }
-      }).catchError((error) {
+      }).catchError((error, stackTrace) {
         // 오류 처리
+        print('111111');
+        print(stackTrace);
         print('데이터를 가져오는 중 오류가 발생했습니다: $error');
       });
     });
@@ -167,10 +174,13 @@ class ChallengesController extends GetxController with GetTickerProviderStateMix
 
   void showMiraeAssetPopup(id) async {
     await ActivityService.getChallengeDetails(id, successCallback: (NewChallengeDetailModel data) async {
+      if(Get.isBottomSheetOpen == true){
+        Get.back();
+      }
       if(data.challengeUserState == null){
-        miraeAssetAlert(this, id, null);
+        miraeAssetAlert( id, null);
       } else {
-        miraeAssetAlert(this, id, data.challengeUserState!);
+        miraeAssetAlert( id, data.challengeUserState!);
       }
 
     });

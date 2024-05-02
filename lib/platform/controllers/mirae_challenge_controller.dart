@@ -20,7 +20,7 @@ import 'package:gaza_go/presentations/components/mirae/alert_ui_list.dart';
 import 'package:get/get.dart';
 
 class MiraeChallengeController extends GetxController with GetTickerProviderStateMixin, ChallengeMixin {
-  ChallengesController challengesController = Get.find();
+  ChallengesController challengesController = Get.isRegistered<ChallengesController>() ? Get.find<ChallengesController>() : Get.put(ChallengesController());
   final TextEditingController codeTextController = TextEditingController(text: '');
   final TextEditingController nameTextController = TextEditingController(text: '');
   final Rx<FormStatus> codeFormStatus = Rx(FormStatus.empty);
