@@ -3042,7 +3042,7 @@ void showLeaderboardInfo() {
 
 Future<void> showMainPopupAlert(NoticePopupController noticePopupController) async {
   final CarouselController carouselController = CarouselController();
-  if (Get.isBottomSheetOpen == null || !Get.isBottomSheetOpen!) {
+  if (Get.isBottomSheetOpen == null || !Get.isBottomSheetOpen! || !Get.isDialogOpen!) {
     await Get.bottomSheet(
       isDismissible: false,
       isScrollControlled: true,
@@ -7951,7 +7951,7 @@ void showMinimumSendStikAmountAlert() {
           Padding(
             padding: EdgeInsets.only(top: 20.0.sp),
             child: StyledText(
-              '최소 1STIK 이상 보낼 수 있습니다.',
+              '최소 5STIK 이상 보낼 수 있습니다.',
               fontSize: 20,
               lineHeight: 28,
               fontWeight: 500,

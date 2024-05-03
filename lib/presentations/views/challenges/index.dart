@@ -9,6 +9,7 @@ import 'package:gaza_go/platform/helpers/base_helper.dart';
 import 'package:gaza_go/presentations/styles/colors.dart';
 import 'package:gaza_go/presentations/styles/icons.dart';
 import 'package:gaza_go/presentations/styles/styled_text.dart';
+import 'package:gaza_go/theme/theme.g.dart';
 import 'package:get/get.dart';
 
 class ChallengesHome extends StatelessWidget {
@@ -18,7 +19,7 @@ class ChallengesHome extends StatelessWidget {
     return controller.challengeList
         .map(
           (item) => InkWell(
-            onTap: () => controller.moveToDetail(item.id),
+            onTap: () => controller.moveToDetail(item.id, item.challengeType, item.challengeUserState, item.challengeState),
             child: Container(
               margin: EdgeInsets.only(bottom: 15.sp),
               decoration: BoxDecoration(
@@ -79,84 +80,81 @@ class ChallengesHome extends StatelessWidget {
                           Positioned(
                             top: 12.sp,
                             left: 15.sp,
-                            child: Container(
-                              decoration: BoxDecoration(
-                                color: subBg01Color,
-                                borderRadius: BorderRadius.all(
-                                  Radius.circular(6.sp),
+                            child: Row(
+                              children: [
+                                Padding(
+                                  padding: EdgeInsets.only(right: 8.0.sp),
+                                  child: Container(
+                                    decoration: BoxDecoration(
+                                      color: subBg01Color,
+                                      borderRadius: BorderRadius.all(
+                                        Radius.circular(3.sp),
+                                      ),
+                                    ),
+                                    child: Padding(
+                                      padding: EdgeInsets.symmetric(vertical: 5.0.sp, horizontal: 8.0.sp),
+                                      child: StyledText(
+                                        controller.getChallengeActivationTypeString(item.challengeActivationType),
+                                        fontWeight: 500,
+                                        fontSize: 12,
+                                        lineHeight: 14,
+                                        letterSpacing: -.1,
+
+                                      ),
+                                    ),
+                                  ),
                                 ),
-                              ),
-                              child: Padding(
-                                padding: EdgeInsets.symmetric(vertical: 8.0.sp, horizontal: 11.0.sp),
-                                child: StyledText(
-                                  controller.getChallengeActivationTypeString(item.challengeActivationType),
-                                  fontWeight: 600,
-                                  fontSize: 12,
-                                  lineHeight: 14,
-                                  letterSpacing: -.1,
-                                ),
-                              ),
+                                if (item.challengeUserState != 'COMPLETE' && item.challengeUserState != 'INCOMPLETE')
+                                  item.challengeUserState == 'JOINED' && item.challengeState == 'READY'
+                                      ? Container(
+                                    decoration: BoxDecoration(
+                                      color: Colors.white,
+                                      borderRadius: BorderRadius.all(
+                                        Radius.circular(3.sp),
+                                      ),
+                                    ),
+                                    child: Padding(
+                                      padding: EdgeInsets.symmetric(vertical: 7.0.sp, horizontal: 8.0.sp),
+                                      child: StyledText(
+                                        controller.getChallengeUserStatus(item.challengeUserState!, item.challengeState!),
+                                        fontWeight: 500,
+                                        fontSize: 12,
+                                        lineHeight: 14,
+                                        color: Colors.black,
+                                        letterSpacing: -.1,
+                                      ),
+                                    ),
+                                  )
+                                      : item.challengeUserState != null
+                                      ? Container(
+
+                                    decoration: BoxDecoration(
+                                      color: item.challengeUserState == 'JOINED'
+                                          ? AppColorData.regular().colorBgInteractivePrimaryPressed
+                                          : item.challengeUserState == 'JOIN_AVAILABLE' || item.challengeUserState == 'REGISTER_AVAILABLE'
+                                          ? AppColorData.regular().colorBgInteractivePrimary
+                                          : AppColorData.regular().colorBgInteractivePrimaryDisabled,
+                                        borderRadius: BorderRadius.all(
+                                         Radius.circular(3.sp),
+                                        ),
+                                    ),
+                                    child: Padding(
+                                      padding: EdgeInsets.symmetric(vertical: 4.0.sp, horizontal: 8.0.sp),
+                                      child: StyledText(
+                                        controller.getChallengeUserStatus(item.challengeUserState!, item.challengeState!),
+                                        fontWeight: 500,
+                                        fontSize: 12,
+                                        lineHeight: 15,
+                                        color: Colors.black,
+                                        letterSpacing: -.1,
+                                      ),
+                                    ),
+                                  )
+                                      : Container(),
+                              ],
                             ),
                           ),
-                          if (item.challengeUserState != 'COMPLETE' && item.challengeUserState != 'INCOMPLETE')
-                            Positioned(
-                              bottom: 12.sp,
-                              left: 15.sp,
-                              child: item.challengeUserState == 'REGISTER_AVAILABLE' || item.challengeUserState == 'REGISTER_READY'
-                                  ? Container(
-                                      decoration: BoxDecoration(
-                                        color: Colors.white,
-                                        border: Border.all(width: 1.sp, color: Colors.black),
-                                        borderRadius: BorderRadius.all(
-                                          Radius.circular(2.sp),
-                                        ),
-                                      ),
-                                      child: Padding(
-                                        padding: const EdgeInsets.symmetric(vertical: 6.0, horizontal: 13.0),
-                                        child: FittedBox(
-                                          fit: BoxFit.scaleDown,
-                                          child: StyledText(
-                                            controller.getChallengeUserStatus(item.challengeUserState!),
-                                            fontWeight: 700,
-                                            fontSize: 12,
-                                            lineHeight: 14,
-                                            color: Colors.black.withOpacity(.6),
-                                            letterSpacing: -.1,
-                                          ),
-                                        ),
-                                      ),
-                                    )
-                                  : item.challengeUserState != null
-                                      ? Container(
-                                          width: 70,
-                                          height: 24,
-                                          decoration: BoxDecoration(
-                                            image: DecorationImage(
-                                              fit: BoxFit.fitWidth,
-                                              image: item.challengeUserState == 'JOINED'
-                                                  ? const sp.Svg('assets/images/challenges/bg_challenge_user_state_skyblue.svg')
-                                                  : item.challengeUserState == 'JOIN_AVAILABLE'
-                                                      ? const sp.Svg('assets/images/challenges/bg_challenge_user_state_white.svg')
-                                                      : const sp.Svg('assets/images/challenges/bg_challenge_user_state_gray.svg'), // 배경 이미지/ 배경 이미지
-                                            ),
-                                          ),
-                                          child: Padding(
-                                            padding: const EdgeInsets.symmetric(vertical: 6.0, horizontal: 13.0),
-                                            child: FittedBox(
-                                              fit: BoxFit.scaleDown,
-                                              child: StyledText(
-                                                controller.getChallengeUserStatus(item.challengeUserState!),
-                                                fontWeight: 700,
-                                                fontSize: 12,
-                                                lineHeight: 14,
-                                                color: Colors.black,
-                                                letterSpacing: -.1,
-                                              ),
-                                            ),
-                                          ),
-                                        )
-                                      : Container(),
-                            ),
+
                           if (item.challengeUserState == 'COMPLETE' || item.challengeUserState == 'INCOMPLETE')
                             Positioned(
                               right: 5.sp,
@@ -198,7 +196,7 @@ class ChallengesHome extends StatelessWidget {
                             Row(
                               children: [
                                 StyledText(
-                                  '${formatDateUntilDay(item.fromDate)} - ${formatDateUntilDay(item.toDate)}',
+                                  '${formatDateUntilDay(item.fromDate)} ~ ${formatDateUntilDay(item.toDate)}',
                                   color: lightGrayColor,
                                   fontWeight: 500,
                                   fontSize: 12,
@@ -241,7 +239,7 @@ class ChallengesHome extends StatelessWidget {
                                           padding: EdgeInsets.only(right: 5.0.sp),
                                           child: Container(
                                             decoration: BoxDecoration(
-                                              color: Colors.white,
+                                              color: AppColorData.regular().colorIconSecondary,
                                               border: Border.all(width: 1.sp, color: Colors.black),
                                               borderRadius: BorderRadius.all(
                                                 Radius.circular(15.sp),

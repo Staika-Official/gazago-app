@@ -93,31 +93,6 @@ class F {
     }
   }
 
-  static SolanaClient get solanaClient {
-    switch (appFlavor) {
-      case Flavor.dev:
-        return SolanaClient(
-          rpcUrl: Uri.parse('https://api.devnet.solana.com'),
-          websocketUrl: Uri.parse('wss://api.devnet.solana.com'),
-        );
-      case Flavor.stage:
-        return SolanaClient(
-          rpcUrl: Uri.parse('https://api.devnet.solana.com'),
-          websocketUrl: Uri.parse('wss://api.devnet.solana.com'),
-        );
-      case Flavor.prod:
-        return SolanaClient(
-          rpcUrl: Uri.parse('https://solana-mainnet.g.alchemy.com/v2/7doIm9toFmc5cZGDeN0pPzNmuVx4Od3e'),
-          websocketUrl: Uri.parse('wss://solana-mainnet.g.alchemy.com/v2/7doIm9toFmc5cZGDeN0pPzNmuVx4Od3e'),
-        );
-      default:
-        return SolanaClient(
-          rpcUrl: Uri.parse('https://api.devnet.solana.com'),
-          websocketUrl: Uri.parse('wss://api.devnet.solana.com'),
-        );
-    }
-  }
-
   static Ed25519HDPublicKey get solanaFeePayer {
     switch (appFlavor) {
       case Flavor.dev:
@@ -251,13 +226,13 @@ class F {
   static String get dailyBenefitMetaAdIos {
     switch (appFlavor) {
       case Flavor.dev:
-        return  '1370832760528609_1370873647191187';
+        return '1370832760528609_1370873647191187';
       case Flavor.stage:
-        return  '1370832760528609_1370873647191187';
+        return '1370832760528609_1370873647191187';
       case Flavor.prod:
-        return  '1370832760528609_1370873647191187';
+        return '1370832760528609_1370873647191187';
       default:
-        return  '1370832760528609_1370873647191187';
+        return '1370832760528609_1370873647191187';
     }
   }
 

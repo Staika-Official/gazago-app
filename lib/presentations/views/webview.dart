@@ -19,7 +19,7 @@ class WebView extends StatelessWidget {
     WalletMasterController walletController = Get.find();
 
     return AnnotatedRegion(
-      value: SystemUiOverlayStyle.dark,
+      value: SystemUiOverlayStyle.light,
       child: Container(
         color: webViewController.linkUrl.value.contains('leaderboard')
             ? subBg01Color

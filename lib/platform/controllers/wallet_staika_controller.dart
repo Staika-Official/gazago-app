@@ -169,7 +169,7 @@ class StaikaWalletController extends GetxController with WalletMixin, SolanaMixi
   void openSendStikGoWalletAlert() async {
     shortStikUiAmount.value = (double.parse(assetStik.value!.uiAmountString) - double.parse(sendStikUiAmount.value)).toString();
     if (double.parse(sendStikUiAmount.value) < double.parse(assetStik.value!.uiAmountString)) {
-      if (double.parse(sendStikUiAmount.value) < 1) {
+      if (double.parse(sendStikUiAmount.value) < 5) {
         showMinimumSendStikAmountAlert();
         return;
       }
@@ -208,16 +208,14 @@ class StaikaWalletController extends GetxController with WalletMixin, SolanaMixi
           loaderController.isLoading.value = false;
           successExchangeStikToGoWalletAlert(this);
           walletMasterController.getSpendingWalletBalances();
-          sendStikUiAmount.value = '0';
-          stikAmountTextController.text = '';
+          initTextController();
           // Get.offNamedUntil(Routes.wallet);
         },
         errorCallback: (error) {
           loaderController.isLoading.value = false;
           failureExchangeStikToGoWalletAlert();
           walletMasterController.getSpendingWalletBalances();
-          sendStikUiAmount.value = '0';
-          stikAmountTextController.text = '';
+          initTextController();
         },
       );
       isFetching.value = false;

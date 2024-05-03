@@ -60,7 +60,7 @@ class GoWalletController extends GetxController with SolanaMixin {
       String testWalletPassword = '!!qhd0328';
       // String publicKey = wallet.publicKey.toBase58();
       // 암호화된 시크릿키
-      String encryptSecretKey = encrypt(base58.encode(wallet.secretKey), email, testWalletPassword);
+      String encryptSecretKey = encrypt(base58.encode(wallet.seckey), email, testWalletPassword);
 
       print('encryptSecretKey : $encryptSecretKey');
       // 지갑 생성 완료
@@ -246,7 +246,7 @@ class GoWalletController extends GetxController with SolanaMixin {
   void openSendStikGoWalletAlert() {
     focusNode.unfocus();
     shortStikUiAmount.value = (double.parse(sendStikUiAmount.value) - double.parse(walletMasterController.stik.value.uiAmountString!)).toString();
-    if (double.parse(sendStikUiAmount.value) < 1) {
+    if (double.parse(sendStikUiAmount.value) < 5) {
       showMinimumSendStikAmountAlert();
       return;
     }

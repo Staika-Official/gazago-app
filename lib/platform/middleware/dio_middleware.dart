@@ -4,6 +4,7 @@ import 'dart:io';
 
 import 'package:device_info_plus/device_info_plus.dart';
 import 'package:dio/dio.dart';
+import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:gaza_go/constants/base_urls.dart';
 import 'package:gaza_go/constants/config.dart';
 import 'package:gaza_go/constants/enums.dart';
@@ -201,6 +202,15 @@ class Api {
       '\nError ResponseData: ${e.response?.data}',
     );
 
+    String errorMessage = e.response?.statusMessage ?? 'error';
+
+    FirebaseCrashlytics.instance.recordError(
+      e,
+      e.stackTrace,
+      reason: 'api error : ${e.response?.statusCode}, ${errorMessage}, ${e.requestOptions.path}, ${getx.Get.currentRoute}',
+
+    );
+
     if (HiveStore.load(key: HiveKey.isDebuggingMode.name)) {
       List responseErrorLogs = HiveStore.load(key: HiveKey.responseErrorLogs.name) ?? [];
       dynamic errorLogForm;
@@ -334,6 +344,7 @@ class Api {
 
   static Future<void> _getNewAccessToken(DioError e, ErrorInterceptorHandler handler) async {
     final String refreshToken = HiveStore.loadString(key: HiveKey.refreshToken.name) ?? '';
+    String fcmToken = HiveStore.loadString(key: HiveKey.fcmToken.name)!;
     PackageInfo packageInfo = await PackageInfo.fromPlatform();
     String deviceId = HiveStore.loadString(key: HiveKey.uuid.name)!;
     AndroidDeviceInfo? androidDeviceInfo;
@@ -357,9 +368,11 @@ class Api {
       'clientId': 'GAZAGO',
       'appVersion': packageInfo.version,
       'deviceId': deviceId,
+      'fcmToken': fcmToken,
       'platform': Platform.isAndroid ? 'Android' : 'iOS',
       "deviceModel": Platform.isAndroid ? androidDeviceInfo!.model : iosDeviceInfo!.utsname.machine!,
       "osVersion": Platform.isAndroid ? androidDeviceInfo!.version.sdkInt.toString() : iosDeviceInfo!.systemVersion!,
+      "providerEnv": appliedEndpoint != null && appliedEndpoint!['activateStageMode'] ? 'STAGE' : null,
     }).then((Response res) async {
       _logger.d(
         '------------->'
