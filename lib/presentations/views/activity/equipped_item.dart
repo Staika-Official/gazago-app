@@ -143,7 +143,7 @@ class EquippedItems extends StatelessWidget {
                               '${controller.equippedLuckRate.toInt()}',
                               fontSize: 30,
                               fontWeight: 500,
-                              color: pinkColor,
+                              color: pointPink,
                               letterSpacing: -.1,
                             ),
                             Padding(
@@ -157,7 +157,7 @@ class EquippedItems extends StatelessWidget {
                                   ),
                                   StyledText(
                                     '행운',
-                                    color: pinkColor,
+                                    color: pointPink,
                                     fontSize: 12,
                                     lineHeight: 12,
                                     fontWeight: 500,

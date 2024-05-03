@@ -194,6 +194,7 @@ flutter:
     - assets/images/challenges/
     - assets/lottie/
     - assets/audio/
+    - assets/design/
 
 
   # An image asset can refer to one or more resolution-specific "variants", see

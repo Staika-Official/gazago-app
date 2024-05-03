@@ -211,7 +211,7 @@ class InventoryBadgeDetail extends StatelessWidget {
                                                 fontSize: 26,
                                                 lineHeight: 26,
                                                 fontWeight: 500,
-                                                color: pinkColor,
+                                                color: pointPink,
                                                 letterSpacing: -.1,
                                               ),
                                               Padding(
@@ -225,7 +225,7 @@ class InventoryBadgeDetail extends StatelessWidget {
                                                     ),
                                                     StyledText(
                                                       '행운',
-                                                      color: pinkColor,
+                                                      color: pointPink,
                                                       fontSize: 12,
                                                       lineHeight: 12,
                                                       fontWeight: 500,
@@ -485,7 +485,7 @@ class InventoryBadgeDetail extends StatelessWidget {
             //               formatDecimalPlaces(controller.selectedBadge.value.luckRate, 0),
             //               fontSize: 12,
             //               fontWeight: 500,
-            //               color: pinkColor,
+            //               color: pointPink,
             //               letterSpacing: -.1,
             //             ),
             //           ],
@@ -510,7 +510,7 @@ class InventoryBadgeDetail extends StatelessWidget {
             //                       return Container(
             //                         width: constraints.maxWidth / (double.parse(controller.badgeLuckMax.value) / controller.selectedBadge.value.luckRate),
             //                         decoration: BoxDecoration(
-            //                           color: pinkColor,
+            //                           color: pointPink,
             //                           borderRadius: BorderRadius.circular(30),
             //                         ),
             //                       );

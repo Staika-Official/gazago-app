@@ -4,4 +4,6 @@
 /.flutter-plugins
 /.flutter-plugins-dependencies
 **/*.g.dart
-**/.history/
+
+**/.history/**
+
