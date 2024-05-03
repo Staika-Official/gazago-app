@@ -26,19 +26,20 @@ class GazagoButton extends StatelessWidget {
     return Material(
       borderRadius: BorderRadius.circular(8.sp),
       child: Container(
-
-        child: Ink(
-          decoration: BoxDecoration(
-            color: buttonColor,
-            border: Border.all(width: 2.sp, color: borderColor),
-            borderRadius: BorderRadius.circular(8.sp),
-            // boxShadow: [
-            //   BoxShadow(
-            //     color: Colors.black,
-            //     offset: Offset(0, 4.sp),
-            //   )
-            // ],
-          ),
+        decoration: BoxDecoration(
+          color: buttonColor,
+          border: Border.all(width: 2.sp, color: borderColor, strokeAlign: BorderSide.strokeAlignOutside),
+          borderRadius: BorderRadius.circular(8.sp),
+          // boxShadow: [
+          //   BoxShadow(
+          //     color: Colors.black,
+          //     offset: Offset(0, 4.sp),
+          //   )
+          // ],
+        ),
+        child: Material(
+          color: Colors.transparent,
+          borderRadius: BorderRadius.circular(8.sp),
           child: InkWell(
             onTap: disableButton ? null : onTap,
             borderRadius: BorderRadius.circular(8.sp),

@@ -25,6 +25,8 @@ SvgPicture iconEaPlus = SvgPicture.asset('assets/images/common/ico_ea_plus.svg',
 SvgPicture iconKey = SvgPicture.asset('assets/images/common/ico_key.svg', width: 26.sp, height: 26.sp);
 SvgPicture iconStar = SvgPicture.asset('assets/images/common/ico_star.svg', width: 14.sp, height: 14.sp);
 SvgPicture iconRefresh = SvgPicture.asset('assets/images/ico_refresh.svg', width: 18.sp, height: 18.sp);
+SvgPicture iconInputWarning = SvgPicture.asset('assets/images/common/ico_input_warning_red.svg', width: 9.sp, height: 9.sp);
+SvgPicture iconInputClear = SvgPicture.asset('assets/images/common/ico_input_clear.svg', width: 14.sp, height: 14.sp);
 
 // Bottom Navigation Icon
 SvgPicture iconMenuHome = SvgPicture.asset('assets/images/common/ico_menu_home.svg', width: 20.5.sp, height: 20.sp);

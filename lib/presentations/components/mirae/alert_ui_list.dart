@@ -38,15 +38,15 @@ void showConfirmMiraeMemberChallenge(MiraeChallengeController controller, int ch
                 Container(
                   decoration: BoxDecoration(
                     color: popupBgColor,
-                    borderRadius: BorderRadius.circular(15),
+                    borderRadius: BorderRadius.circular(AppDoubleData.regular().numberRadius20),
                   ),
                   child: Padding(
-                    padding: EdgeInsets.symmetric(horizontal: 20.0.sp, vertical: 32.0.sp),
+                    padding: EdgeInsets.only(left: 20.0.sp, right: 20.sp, bottom: 32.sp, top: 36.sp),
                     child: Column(
                       mainAxisSize: MainAxisSize.min,
                       children: [
                         Padding(
-                          padding: EdgeInsets.only(top:4.0.sp, bottom: 28.sp),
+                          padding: EdgeInsets.only( bottom: 28.sp),
                           child: Column(
                             mainAxisAlignment: MainAxisAlignment.center,
                             children: [
@@ -54,10 +54,10 @@ void showConfirmMiraeMemberChallenge(MiraeChallengeController controller, int ch
                                 '회원 정보 확인',
                                 fontWeight: 600,
                                 fontSize: 20,
-                                lineHeight: 28,
+                                lineHeight: 21,
                               ),
                               Padding(
-                                padding: EdgeInsets.only(top:12.0.sp),
+                                padding: EdgeInsets.only(top:14.0.sp),
                                 child: StyledText(
                                   '${controller.part}',
                                   fontWeight: 500,
@@ -125,7 +125,7 @@ void miraeAssetAlert( int challengeId, String? challengeUserState) {
   ChallengesController controller = Get.isRegistered<ChallengesController>() ? Get.find<ChallengesController>() : Get.put(ChallengesController());
 
   Get.dialog(
-    barrierColor: subBg01Color.withOpacity(0.2),
+    barrierColor: Colors.black.withOpacity(0.8),
     useSafeArea: false,
     barrierDismissible: false,
     WillPopScope(
@@ -195,7 +195,7 @@ void participateInMiraeChallengeByCodeAlert(int challengeId) {
 
   MiraeChallengeController controller = Get.put(MiraeChallengeController());
   Get.dialog(
-    barrierColor: subBg01Color.withOpacity(0.5),
+    barrierColor: Colors.black.withOpacity(0.8),
     useSafeArea: false,
     barrierDismissible: false,
     WillPopScope(
@@ -213,11 +213,11 @@ void participateInMiraeChallengeByCodeAlert(int challengeId) {
                     decoration: BoxDecoration(
                       color: popupBgColor,
                       borderRadius: BorderRadius.all(
-                        Radius.circular(20.sp),
+                        Radius.circular(AppDoubleData.regular().numberRadius20),
                       ),
                     ),
                     child: Padding(
-                      padding: EdgeInsets.symmetric(horizontal: 20.0.sp, vertical: 30.sp),
+                      padding: EdgeInsets.only(left: 20.0.sp, right: 20.sp, bottom: 32.sp, top: 36.sp),
                       child: Column(
                         mainAxisSize: MainAxisSize.min,
                         children: [
@@ -251,52 +251,64 @@ void participateInMiraeChallengeByCodeAlert(int challengeId) {
                                 Row(
                                   children: [
                                     Expanded(
-                                      child: TextField(
+                                      child: Stack(
+                                        children: [
+                                          TextField(
+                                            decoration: InputDecoration(
+                                              filled: true,
+                                              fillColor: subBg01Color,
+                                              hintText: '이름을 입력해주세요.',
+                                              hintStyle: const TextStyle(
+                                                color: deepGrayColor,
+                                                fontSize: 18,
+                                                height: 20 / 18,
+                                                fontWeight: FontWeight.w500,
+                                              ),
+                                              suffixIcon: controller.nameErrorMessage.value != '' ? Padding(
+                                                padding: EdgeInsets.only(right: 20.0.sp),
+                                                child: IconButton(
+                                                  icon: iconInputClear,
+                                                  onPressed: () => controller.clearInputName(),
+                                                ),
+                                              ) : null,
+                                              focusedBorder: OutlineInputBorder(
+                                                borderRadius: const BorderRadius.all(Radius.circular(10.0)),
+                                                borderSide: BorderSide(width: 2, color: controller.nameErrorMessage.value == '' ? skyBlueColor : AppColorData.regular().colorBorderWarning),
+                                              ),
+                                              enabledBorder: OutlineInputBorder(
+                                                borderRadius: const BorderRadius.all(Radius.circular(10.0)),
+                                                borderSide: BorderSide(width: 2, color: controller.nameErrorMessage.value == '' ? Colors.transparent : AppColorData.regular().colorBorderWarning),
+                                              ),
+                                              border: OutlineInputBorder(
+                                                borderSide: BorderSide(width: 2, color: controller.nameErrorMessage.value == '' ? Colors.transparent : AppColorData.regular().colorBorderWarning),
+                                                borderRadius: const BorderRadius.all(Radius.circular(10.0)),
+                                              ),
+                                            ),
+                                            controller: controller.nameTextController,
+                                            textInputAction: TextInputAction.go,
 
-                                        decoration: InputDecoration(
-                                          filled: true,
-                                          fillColor: subBg01Color,
-                                          hintText: '이름을 입력해주세요.',
-                                          hintStyle: const TextStyle(
-                                            color: deepGrayColor,
-                                            fontSize: 18,
-                                            height: 20 / 18,
-                                            fontWeight: FontWeight.w500,
+                                            style: TextStyle(
+                                              color: Colors.white,
+                                              fontSize: 18.sp,
+                                              height: 20 / 18,
+                                              fontWeight: FontWeight.w600,
+                                            ),
+                                            autofocus: false,
+                                            cursorColor: Colors.white,
+                                            focusNode: controller.nameFocusNode,
+                                            onChanged: (value) => controller.setName(value),
+                                            onSubmitted: (val) {
+                                              // Get.back();
+                                              controller.checkOnAvailableChallenge(challengeId);
+                                            },
                                           ),
-                                            suffixIcon: controller.nameErrorMessage.value != '' ? IconButton(
-                                            icon: const Icon(Icons.clear, color: Colors.red),
-                                            onPressed: () => controller.codeTextController.clear(),
-                                            ) : null,
-                                          focusedBorder: OutlineInputBorder(
-                                            borderRadius: const BorderRadius.all(Radius.circular(10.0)),
-                                            borderSide: BorderSide(width: 2, color: controller.nameErrorMessage.value == '' ? skyBlueColor : const Color(0xFFFF4C4C)),
-                                          ),
-                                          enabledBorder: OutlineInputBorder(
-                                            borderRadius: const BorderRadius.all(Radius.circular(10.0)),
-                                            borderSide: BorderSide(width: 2, color: controller.nameErrorMessage.value == '' ? Colors.transparent : const Color(0xFFFF4C4C)),
-                                          ),
-                                          border: OutlineInputBorder(
-                                            borderSide: BorderSide(width: 2, color: controller.nameErrorMessage.value == '' ? Colors.transparent : const Color(0xFFFF4C4C)),
-                                            borderRadius: const BorderRadius.all(Radius.circular(10.0)),
-                                          ),
-                                        ),
-                                        controller: controller.nameTextController,
-                                        textInputAction: TextInputAction.go,
-
-                                        style: TextStyle(
-                                          color: Colors.white,
-                                          fontSize: 18.sp,
-                                          height: 20 / 18,
-                                          fontWeight: FontWeight.w600,
-                                        ),
-                                        autofocus: false,
-                                        cursorColor: Colors.white,
-                                        focusNode: controller.nameFocusNode,
-                                        onChanged: (value) => controller.setName(value),
-                                        onSubmitted: (val) {
-                                          // Get.back();
-                                          controller.checkOnAvailableChallenge(challengeId);
-                                        },
+                                          if(controller.nameErrorMessage.value != '')
+                                            Positioned(
+                                              right: 20,
+                                                top:26,
+                                                child: iconInputWarning
+                                            )
+                                        ]
                                       ),
                                     ),
                                     Obx(() => validateName(controller.nameFormStatus.value)),
@@ -307,7 +319,7 @@ void participateInMiraeChallengeByCodeAlert(int challengeId) {
                                     height: 20.sp,
                                     child: Padding(
                                       padding: EdgeInsets.symmetric(vertical: 10.0.sp, horizontal: 5.sp),
-                                      child: StyledText(controller.nameErrorMessage.value, fontSize: 14, color: Colors.redAccent, fontWeight: 500, lineHeight: 15),
+                                      child: StyledText(controller.nameErrorMessage.value, fontSize: 14, color: AppColorData.regular().colorBorderWarning, fontWeight: 500, lineHeight: 15),
                                     ),
                                   ),
                                 Padding(
@@ -322,52 +334,65 @@ void participateInMiraeChallengeByCodeAlert(int challengeId) {
                                       Row(
                                         children: [
                                           Expanded(
-                                            child: TextField(
-                                              decoration: InputDecoration(
-                                                filled: true,
-                                                fillColor: subBg01Color,
-                                                hintText: '사번을 입력해주세요.',
-                                                hintStyle: const TextStyle(
-                                                  color: deepGrayColor,
-                                                  fontSize: 18,
-                                                  height: 20 / 18,
-                                                  fontWeight: FontWeight.w500,
-                                                ),
-                                                suffixIcon: controller.codeErrorMessage.value != '' ? IconButton(
-                                                  icon: const Icon(Icons.clear, color: Colors.red),
-                                                  onPressed: () => controller.codeTextController.clear(),
-                                                ) : null,
-                                                focusedBorder: OutlineInputBorder(
-                                                  borderRadius: const BorderRadius.all(Radius.circular(10.0)),
-                                                  borderSide: BorderSide(width: 2, color: controller.codeErrorMessage.value == '' ? skyBlueColor : const Color(0xFFFF4C4C)),
-                                                ),
-                                                enabledBorder: OutlineInputBorder(
-                                                  borderRadius: const BorderRadius.all(Radius.circular(10.0)),
-                                                  borderSide: BorderSide(width: 2, color: controller.codeErrorMessage.value == '' ? Colors.transparent : const Color(0xFFFF4C4C)),
-                                                ),
-                                                border: OutlineInputBorder(
-                                                  borderSide: BorderSide(width: 2, color: controller.codeErrorMessage.value == '' ? Colors.transparent : const Color(0xFFFF4C4C)),
-                                                  borderRadius: const BorderRadius.all(Radius.circular(10.0)),
-                                                ),
-                                              ),
+                                            child: Stack(
+                                              children: [
+                                                TextField(
+                                                  decoration: InputDecoration(
+                                                    filled: true,
+                                                    fillColor: subBg01Color,
+                                                    hintText: '사번을 입력해주세요.',
+                                                    hintStyle: const TextStyle(
+                                                      color: deepGrayColor,
+                                                      fontSize: 18,
+                                                      height: 20 / 18,
+                                                      fontWeight: FontWeight.w500,
+                                                    ),
+                                                    suffixIcon: controller.codeErrorMessage.value != '' ? Padding(
+                                                      padding: EdgeInsets.only(right: 20.0.sp),
+                                                      child: IconButton(
+                                                        icon:  iconInputClear,
+                                                        onPressed: () => controller.clearInputCode(),
+                                                      ),
+                                                    ) : null,
+                                                    focusedBorder: OutlineInputBorder(
+                                                      borderRadius: const BorderRadius.all(Radius.circular(10.0)),
+                                                      borderSide: BorderSide(width: 2, color: controller.codeErrorMessage.value == '' ? skyBlueColor : AppColorData.regular().colorBorderWarning),
+                                                    ),
+                                                    enabledBorder: OutlineInputBorder(
+                                                      borderRadius: const BorderRadius.all(Radius.circular(10.0)),
+                                                      borderSide: BorderSide(width: 2, color: controller.codeErrorMessage.value == '' ? Colors.transparent : AppColorData.regular().colorBorderWarning),
+                                                    ),
+                                                    border: OutlineInputBorder(
+                                                      borderSide: BorderSide(width: 2, color: controller.codeErrorMessage.value == '' ? Colors.transparent : AppColorData.regular().colorBorderWarning),
+                                                      borderRadius: const BorderRadius.all(Radius.circular(10.0)),
+                                                    ),
+                                                  ),
 
-                                              controller: controller.codeTextController,
-                                              textInputAction: TextInputAction.go,
+                                                  controller: controller.codeTextController,
+                                                  textInputAction: TextInputAction.go,
 
-                                              style: TextStyle(
-                                                color: Colors.white,
-                                                fontSize: 18.sp,
-                                                height: 20 / 18,
-                                                fontWeight: FontWeight.w600,
-                                              ),
-                                              autofocus: false,
-                                              cursorColor: Colors.white,
-                                              focusNode: controller.codeFocusNode,
-                                              onChanged: (value) => controller.setCode(value),
-                                              onSubmitted: (val) {
-                                                // Get.back();
-                                                controller.checkOnAvailableChallenge(challengeId);
-                                              },
+                                                  style: TextStyle(
+                                                    color: Colors.white,
+                                                    fontSize: 18.sp,
+                                                    height: 20 / 18,
+                                                    fontWeight: FontWeight.w600,
+                                                  ),
+                                                  autofocus: false,
+                                                  cursorColor: Colors.white,
+                                                  focusNode: controller.codeFocusNode,
+                                                  onChanged: (value) => controller.setCode(value),
+                                                  onSubmitted: (val) {
+                                                    // Get.back();
+                                                    controller.checkOnAvailableChallenge(challengeId);
+                                                  },
+                                                ),
+                                                if(controller.codeErrorMessage.value != '')
+                                                  Positioned(
+                                                      right: 20,
+                                                      top:26,
+                                                      child: iconInputWarning
+                                                  )
+                                              ]
                                             ),
                                           ),
                                           Obx(() => validateName(controller.codeFormStatus.value)),
@@ -378,7 +403,7 @@ void participateInMiraeChallengeByCodeAlert(int challengeId) {
                                           height: 20.sp,
                                           child: Padding(
                                             padding: EdgeInsets.symmetric(vertical: 10.0.sp, horizontal: 5.sp),
-                                            child: StyledText(controller.codeErrorMessage.value, fontSize: 14, color: Colors.redAccent, fontWeight: 500, lineHeight: 15),
+                                            child: StyledText(controller.codeErrorMessage.value, fontSize: 14, color: AppColorData.regular().colorBorderWarning, fontWeight: 500, lineHeight: 15),
                                           ),
                                         ),
                                     ],
@@ -446,7 +471,7 @@ void alreadyVerifiedCompanyChallenge(){
 
               decoration: BoxDecoration(
                 color: popupBgColor,
-                borderRadius: BorderRadius.circular(15),
+                borderRadius: BorderRadius.circular(AppDoubleData.regular().numberRadius20),
               ),
               child: Padding(
                 padding: EdgeInsets.symmetric(horizontal: 20.0.sp, vertical: 30.0.sp),
@@ -502,7 +527,7 @@ void notOpenCompanyChallenge(){
 
                 decoration: BoxDecoration(
                   color: popupBgColor,
-                  borderRadius: BorderRadius.circular(15),
+                  borderRadius: BorderRadius.circular(AppDoubleData.regular().numberRadius20),
                 ),
                 child: Padding(
                   padding: EdgeInsets.symmetric(horizontal: 20.0.sp, vertical: 30.0.sp),
@@ -554,7 +579,7 @@ void notOpenCompanyChallenge(){
 
 void closedCompanyChallenge(){
   Get.dialog(
-
+      barrierColor: Colors.black.withOpacity(0.8),
       WillPopScope(
         onWillPop: () async => false,
         child: Dialog(
@@ -568,10 +593,10 @@ void closedCompanyChallenge(){
 
                 decoration: BoxDecoration(
                   color: popupBgColor,
-                  borderRadius: BorderRadius.circular(15),
+                  borderRadius: BorderRadius.circular(AppDoubleData.regular().numberRadius20),
                 ),
                 child: Padding(
-                  padding: EdgeInsets.symmetric(horizontal: 20.0.sp, vertical: 30.0.sp),
+                  padding: EdgeInsets.only(left: 20.0.sp, right: 20.sp, bottom: 32.sp, top: 36.sp),
                   child: Column(
                     mainAxisSize: MainAxisSize.min,
                     children: [

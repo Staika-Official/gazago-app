@@ -43,7 +43,7 @@ void showToastPopup(String message) {
     timeInSecForIosWeb: 2,
     msg: message, 
     gravity: ToastGravity.BOTTOM,
-    backgroundColor: Colors.black.withOpacity(0.9),
+    backgroundColor: Colors.black.withOpacity(0.8),
     textColor: Colors.white,
     fontSize: 18.0,
   );

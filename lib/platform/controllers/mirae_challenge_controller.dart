@@ -71,12 +71,13 @@ print(value);
   }
 
   void checkOnAvailableChallenge(int challengeId) async {
-
+    nameFocusNode.unfocus();
+    codeFocusNode.unfocus();
     if(name.value.isEmpty || memberCode.value.isEmpty){
       nameErrorMessage.value = '이름 확인 후 다시 입력해 주세요';
       codeErrorMessage.value = '사번 확인 후 다시 입력해 주세요';
 
-      showErrorToast();
+      showToastPopup('회원정보 확인 후 다시 입력해주세요');
       return;
 
     }
@@ -93,7 +94,7 @@ print(value);
             alreadyVerifiedCompanyChallenge();
             challengesController.getChallengesList();
           } else {
-            showErrorToast();
+            showToastPopup('회원정보 확인 후 다시 입력해주세요');
 
             nameErrorMessage.value = '이름 확인 후 다시 입력해 주세요';
             codeErrorMessage.value = '사번 확인 후 다시 입력해 주세요';
@@ -115,6 +116,20 @@ print(value);
     } else {
       showToastPopup('회원정보 확인 후 다시 입력해주세요');
     }
+  }
+
+  void clearInputName(){
+    name.value = '';
+    nameTextController.value = TextEditingValue.empty;
+    nameTextController.clear();
+    nameErrorMessage.value = '';
+  }
+
+  void clearInputCode(){
+    memberCode.value = '';
+    codeTextController.value = TextEditingValue.empty;
+    codeTextController.clear();
+    codeErrorMessage.value = '';
   }
 
   void onCloseJoinPopup(){
