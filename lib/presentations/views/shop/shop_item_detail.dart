@@ -502,21 +502,21 @@ class ShopItemDetail extends StatelessWidget {
                                         formatDecimalPlaces(controller.selectedItem.value.minLuck!, 0),
                                         fontSize: 12,
                                         fontWeight: 500,
-                                        color: pointPink,
+                                        color: pinkColor,
                                         letterSpacing: -.1,
                                       ),
                                       StyledText(
                                         ' - ',
                                         fontSize: 12,
                                         fontWeight: 500,
-                                        color: pointPink,
+                                        color: pinkColor,
                                         letterSpacing: -.1,
                                       ),
                                       StyledText(
                                         formatDecimalPlaces(controller.selectedItem.value.maxLuck!, 0),
                                         fontSize: 12,
                                         fontWeight: 500,
-                                        color: pointPink,
+                                        color: pinkColor,
                                         letterSpacing: -.1,
                                       ),
                                     ],
@@ -543,7 +543,7 @@ class ShopItemDetail extends StatelessWidget {
                                             return Container(
                                               width: constraints.maxWidth / (controller.selectedItem.value.maxLuck! / controller.selectedItem.value.minLuck!),
                                               decoration: BoxDecoration(
-                                                color: pointPink,
+                                                color: pinkColor,
                                                 borderRadius: controller.selectedItem.value.maxLuck == controller.selectedItem.value.minLuck
                                                     ? BorderRadius.all(
                                                         Radius.circular(30.sp),
@@ -558,7 +558,7 @@ class ShopItemDetail extends StatelessWidget {
                                             return Container(
                                               width: constraints.maxWidth / (controller.selectedItem.value.maxLuck! / controller.selectedItem.value.maxLuck!),
                                               decoration: BoxDecoration(
-                                                color: pointPink.withOpacity(.5),
+                                                color: pinkColor.withOpacity(.5),
                                                 borderRadius: BorderRadius.all(
                                                   Radius.circular(30.sp),
                                                 ),

@@ -84,7 +84,7 @@ void main() async {
     await initFirebase();
     await initFirebasePackages();
     await initializeAdMob();
-    await initializeColors();
+
 
 
 
@@ -110,13 +110,6 @@ void main() async {
   });
 }
 
-Future<Map<String, dynamic>> loadDesignToken() async {
-  // assets 폴더에서 design token JSON 파일을 로드합니다.
-  String jsonString = await rootBundle.loadString('assets/design/tokens.json');
-  // JSON을 파싱하여 Map으로 변환합니다.
-  Map<String, dynamic> designToken = json.decode(jsonString);
-  return designToken;
-}
 
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
@@ -166,24 +159,47 @@ class MyApp extends StatelessWidget {
                 data: MediaQuery.of(context).copyWith(textScaleFactor: 1), //텍스트가 시스템 설정에 영향받지 않음
                 child: child!,
               ),
-              localizationsDelegates: const [
-                GlobalMaterialLocalizations.delegate,
-                GlobalCupertinoLocalizations.delegate,
-                GlobalWidgetsLocalizations.delegate,
-              ],
-              locale: const Locale.fromSubtags(languageCode: 'ko'),
-              fallbackLocale: const Locale('ko'),
-              supportedLocales: const [
-                Locale.fromSubtags(languageCode: 'ko', countryCode: 'KR'),
-                Locale.fromSubtags(languageCode: 'en', countryCode: 'US'),
-                Locale.fromSubtags(languageCode: 'ja', countryCode: 'JP'),
-              ],
-              navigatorObservers: <NavigatorObserver>[observer],
-              initialRoute: Routes.login,
-              getPages: [...Routes.pages],
-
             );
           },
+          theme: ThemeData(
+            fontFamily: 'Pretendard',
+            primarySwatch: gazagoColor,
+            navigationBarTheme: NavigationBarThemeData(
+              elevation: 0,
+              indicatorColor: Colors.transparent,
+              labelTextStyle: MaterialStateProperty.resolveWith((states) {
+                if (states.contains(MaterialState.selected)) {
+                  return const TextStyle(
+                    color: skyBlueColor,
+                    fontSize: 10,
+                    fontWeight: FontWeight.w600,
+                  );
+                }
+
+                return const TextStyle(
+                  color: lightGrayColor,
+                  fontSize: 10,
+                  wordSpacing: 0,
+                  fontWeight: FontWeight.w600,
+                );
+              }),
+            ),
+          ),
+          localizationsDelegates: const [
+            GlobalMaterialLocalizations.delegate,
+            GlobalCupertinoLocalizations.delegate,
+            GlobalWidgetsLocalizations.delegate,
+          ],
+          locale: const Locale.fromSubtags(languageCode: 'ko'),
+          fallbackLocale: const Locale('ko'),
+          supportedLocales: const [
+            Locale.fromSubtags(languageCode: 'ko', countryCode: 'KR'),
+            Locale.fromSubtags(languageCode: 'en', countryCode: 'US'),
+            Locale.fromSubtags(languageCode: 'ja', countryCode: 'JP'),
+          ],
+          navigatorObservers: <NavigatorObserver>[observer],
+          initialRoute: Routes.login,
+          getPages: [...Routes.pages],
         );
       },
     );

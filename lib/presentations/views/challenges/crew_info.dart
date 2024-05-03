@@ -144,7 +144,7 @@ class CrewInfo extends StatelessWidget {
                 fontSize: 24,
                 lineHeight: 26,
                 fontWeight: 500,
-                color: pointPink,
+                color: pinkColor,
               ),
               Padding(
                 padding: EdgeInsets.only(top: 4.0.sp),
@@ -157,7 +157,7 @@ class CrewInfo extends StatelessWidget {
                       padding: EdgeInsets.only(left: 4.0.sp),
                       child:  StyledText(
                         '행운',
-                        color: pointPink,
+                        color: pinkColor,
                         fontSize: 12,
                         lineHeight: 12,
                         letterSpacing: -.1,

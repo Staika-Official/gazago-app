@@ -1869,7 +1869,7 @@ void itemPurchaseCompleteAlert(ShopDetailController controller) {
                                     fontSize: 26,
                                     lineHeight: 26,
                                     fontWeight: 500,
-                                    color: pointPink,
+                                    color: pinkColor,
                                     letterSpacing: -.1,
                                   ),
                                   Padding(
@@ -1883,7 +1883,7 @@ void itemPurchaseCompleteAlert(ShopDetailController controller) {
                                         ),
                                          StyledText(
                                           '행운',
-                                          color: pointPink,
+                                          color: pinkColor,
                                           fontSize: 12,
                                           lineHeight: 12,
                                           fontWeight: 500,

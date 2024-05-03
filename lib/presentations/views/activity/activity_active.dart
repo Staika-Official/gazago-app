@@ -351,7 +351,7 @@ class ActivityActive extends StatelessWidget {
                                                           padding: EdgeInsets.only(left: 5.0.sp, right: 5.0.sp),
                                                           child: StyledText(
                                                             '행운효과',
-                                                            color: pointPink,
+                                                            color: pinkColor,
                                                             fontSize: 14,
                                                             fontWeight: 500,
                                                             letterSpacing: -.1,

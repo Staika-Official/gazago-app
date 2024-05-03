@@ -150,7 +150,7 @@ class InventoryHome extends StatelessWidget {
                                 '${controller.equippedLuckRate.toInt()}',
                                 fontSize: 30,
                                 fontWeight: 500,
-                                color: pointPink,
+                                color: pinkColor  ,
                                 letterSpacing: -.1,
                               ),
                               Padding(
@@ -164,7 +164,7 @@ class InventoryHome extends StatelessWidget {
                                     ),
                                     StyledText(
                                       '행운',
-                                      color: pointPink,
+                                      color: pinkColor,
                                       fontSize: 12,
                                       lineHeight: 12,
                                       fontWeight: 500,

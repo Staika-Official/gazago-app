@@ -169,7 +169,7 @@ class ShopItems extends StatelessWidget {
                                             children: [
                                               CircleAvatar(
                                                 radius: 6,
-                                                backgroundColor: pointPink,
+                                                backgroundColor: pinkColor,
                                                 child: iconShopLuck,
                                               ),
                                               Padding(
@@ -178,7 +178,7 @@ class ShopItems extends StatelessWidget {
                                                   '${formatDecimalPlaces(item.minLuck!, 0)}-${formatDecimalPlaces(item.maxLuck!, 0)}',
                                                   fontSize: 12,
                                                   fontWeight: 600,
-                                                  color: pointPink,
+                                                  color: pinkColor,
                                                   letterSpacing: -.1,
                                                 ),
                                               ),
