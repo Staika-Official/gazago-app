@@ -399,7 +399,7 @@ class WalletService {
     if (res.statusCode == 201) {
       successCallback(true);
     } else {
-      if (errorCallback != null) errorCallback();
+      if (errorCallback != null) errorCallback(res.data != null ? ErrorResponseDataModel.fromJson(res.data) : null);
     }
   }
 

@@ -9,6 +9,7 @@ import 'package:gaza_go/platform/helpers/base_helper.dart';
 import 'package:gaza_go/presentations/styles/colors.dart';
 import 'package:gaza_go/presentations/styles/icons.dart';
 import 'package:gaza_go/presentations/styles/styled_text.dart';
+import 'package:gaza_go/theme/theme.g.dart';
 import 'package:get/get.dart';
 
 class ChallengeInfo extends StatelessWidget {
@@ -21,7 +22,7 @@ class ChallengeInfo extends StatelessWidget {
     return SingleChildScrollView(
       child: Obx(() {
         return Container(
-          color: subBg01Color,
+          color: AppColorData.regular().colorBgPrimary,
           padding: EdgeInsets.only(bottom: 180.0.sp),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,

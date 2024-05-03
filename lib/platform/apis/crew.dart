@@ -58,4 +58,28 @@ class CrewApi {
       showLoading: false,
     ).get('/crews/$crewId/users/$userId/daily-blocks');
   }
+
+  static Future<Response> joinCompanyCrew(String userId, int challengeId, String employeeId, String employeeName) async {
+    return await Api.client(
+      serviceUrl: '/services/gazago/api',
+      showLoading: false,
+      allowCustomErrorHandler: true,
+    ).post('/user-crews/users/$userId', data: {
+      "employeeId": employeeId,
+      "employeeName": employeeName,
+      "userId": userId,
+      "challengeId": challengeId,
+    });
+  }
+
+  static Future<Response> checkAvailableCompanyCrewChallenge(String userId, int challengeId, String employeeId, String employeeName) async {
+    return await Api.client(
+      serviceUrl: '/services/gazago/api',
+      showLoading: false,
+      allowCustomErrorHandler: true,
+    ).get('/companies/users/${userId}/challenges/${challengeId}/join-available', queryParameters: {
+      "employeeId": employeeId,
+      "employeeName": employeeName,
+    });
+  }
 }

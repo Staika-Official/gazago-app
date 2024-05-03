@@ -43,15 +43,17 @@ mixin ChallengeMixin {
   String getChallengeActivationTypeString(String activationType) {
     switch (activationType) {
       case 'ITEM':
-        return '아이템 장착형';
+        return '아이템 장착';
       case 'COURSE':
-        return '코스형';
+        return '코스';
       case 'CODE':
-        return '참여코드형';
+        return '참가코드';
       case 'CREW':
         return '크루릴레이';
+      case 'CREW_COMPANY':
+        return '기업전용';
       default:
-        return '참가비 납부형';
+        return '참가비 납부';
     }
   }
 
@@ -94,28 +96,50 @@ mixin ChallengeMixin {
     }
   }
 
-  String getChallengeUserStatus(status) {
+  String getChallengeUserStatus(userStatus, challengeState) {
     String text = '';
-
-    switch (status) {
-      case 'REGISTER_AVAILABLE':
-        text = '접수 중';
-        break;
-      case 'REGISTER_READY':
-        text = '접수 ';
-        break;
-      case 'JOINED':
-        text = '참가 중';
-        break;
-      case 'JOIN_AVAILABLE':
-        text = '참가 가능';
-        break;
-      case 'JOIN_CLOSED':
-        text = '참가 마감';
-        break;
-      default:
-        text = '이거야';
+    if(challengeState == 'READY'){
+      switch (userStatus) {
+        case 'REGISTER_AVAILABLE':
+          text = '참가 가능';
+          break;
+        case 'REGISTER_READY':
+          text = '접수 전';
+          break;
+        case 'JOINED':
+          text = '시작 전';
+          break;
+        case 'JOIN_AVAILABLE':
+          text = '참가 가능';
+          break;
+        case 'JOIN_CLOSED':
+          text = '참가 마감';
+          break;
+        default:
+          text = '';
+      }
+    } else {
+      switch (userStatus) {
+        case 'REGISTER_AVAILABLE':
+          text = '접수 중';
+          break;
+        case 'REGISTER_READY':
+          text = '접수 전';
+          break;
+        case 'JOINED':
+          text = '참가 중';
+          break;
+        case 'JOIN_AVAILABLE':
+          text = '참가 가능';
+          break;
+        case 'JOIN_CLOSED':
+          text = '참가 마감';
+          break;
+        default:
+          text = '';
+      }
     }
+
     return text;
   }
 

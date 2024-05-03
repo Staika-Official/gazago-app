@@ -1,6 +1,7 @@
 import 'package:dio/dio.dart';
 import 'package:gaza_go/constants/enums.dart';
 import 'package:gaza_go/platform/apis/crew.dart';
+import 'package:gaza_go/platform/models/company_challenge_available_model.dart';
 import 'package:gaza_go/platform/models/crew_create_form_model.dart';
 import 'package:gaza_go/platform/models/crew_icon_model.dart';
 import 'package:gaza_go/platform/models/error_response_data_model.dart';
@@ -60,6 +61,26 @@ class CrewService {
     } else {
       print('fetch failure');
       if (errorCallback != null) errorCallback();
+    }
+  }
+
+  static Future<dynamic> joinCompanyCrewChallenge(int challengeId, String employeeId, String employeeName, {required Function successCallback, Function? errorCallback}) async {
+    Response res = await CrewApi.joinCompanyCrew(userId!, challengeId, employeeId, employeeName);
+    if (res.statusCode == 201) {
+      successCallback(res.data);
+    } else {
+      print('fetch failure');
+      if (errorCallback != null) errorCallback(res);
+    }
+  }
+
+  static Future<dynamic> checkAvailableCompanyCrewChallenge(int challengeId, String employeeId, String employeeName, {required Function successCallback, Function? errorCallback}) async {
+    Response res = await CrewApi.checkAvailableCompanyCrewChallenge(userId!, challengeId, employeeId, employeeName);
+    if (res.statusCode == 200) {
+      successCallback(CompanyChallengeAvailableModel.fromJson(res.data));
+    } else {
+      print('fetch failure');
+      if (errorCallback != null) errorCallback(res);
     }
   }
 }

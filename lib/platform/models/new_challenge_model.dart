@@ -7,6 +7,7 @@ class NewChallengeModel {
   int id;
   String? challengeState;
   String? challengeUserState;
+  String challengeType;
   String challengeActivationType;
   List<String>? exerciseTypes;
   String title;
@@ -31,6 +32,7 @@ class NewChallengeModel {
 
   NewChallengeModel({
     required this.id,
+    required this.challengeType,
     this.challengeState,
     this.challengeUserState,
     required this.challengeActivationType,

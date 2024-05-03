@@ -3042,7 +3042,7 @@ void showLeaderboardInfo() {
 
 Future<void> showMainPopupAlert(NoticePopupController noticePopupController) async {
   final CarouselController carouselController = CarouselController();
-  if (Get.isBottomSheetOpen == null || !Get.isBottomSheetOpen!) {
+  if (Get.isBottomSheetOpen == null || !Get.isBottomSheetOpen! || !Get.isDialogOpen!) {
     await Get.bottomSheet(
       isDismissible: false,
       isScrollControlled: true,

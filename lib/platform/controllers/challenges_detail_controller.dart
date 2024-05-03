@@ -39,7 +39,9 @@ import 'package:gaza_go/platform/services/item_service.dart';
 import 'package:gaza_go/platform/stores/hive_store.dart';
 import 'package:gaza_go/presentations/components/alert_ui_list.dart';
 import 'package:gaza_go/presentations/components/challenge_detail_notification.dart';
+import 'package:gaza_go/presentations/components/mirae/alert_ui_list.dart';
 import 'package:gaza_go/presentations/components/product_list_dialog.dart';
+import 'package:gaza_go/presentations/views/challenges/company_crew_detail.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
 import 'package:kakao_flutter_sdk_share/kakao_flutter_sdk_share.dart';
@@ -155,6 +157,9 @@ class ChallengesDetailController extends SuperController with GetTickerProviderS
       if (challengeDetails.value.challengeState == 'CLOSED' && myCrew.value != null) {
         crewChallengeCloseAlert(this);
       }
+    } else if(challengeDetails.value.challengeType == 'CREW_COMPANY') {
+      // firebase에서 가져온 데이터 이용
+
     } else {
       getChallengeLeaderboard();
       getChallengeLeaderboardMyRanking();
@@ -267,7 +272,7 @@ class ChallengesDetailController extends SuperController with GetTickerProviderS
         });
 
         challengeRankingList.addAll(data);
-        print(challengeRankingList[5].toJson());
+        print(challengeRankingList);
         loadingLeaderboard = false;
       });
     }
@@ -478,12 +483,12 @@ class ChallengesDetailController extends SuperController with GetTickerProviderS
     String packageName = F.isDev ? "kr.co.eztechfin.gazaGo.dev" : "kr.co.eztechfin.gazaGo";
 
     DynamicLinkParameters? dynamicLinkParams = DynamicLinkParameters(
-      link: Uri.parse("https://gazago.io?route=${Routes.challengeDetail.replaceAll(':id', challengeId.value.toString())}"),
+      link: Uri.parse("https://gazago.io?route=${challengeType == ChallengeType.companyCrew ? Routes.companyChallengeDetail.replaceAll(':id', challengeId.value.toString()) : Routes.challengeDetail.replaceAll(':id', challengeId.value.toString())}"),
       uriPrefix: uriPrefix,
       androidParameters: AndroidParameters(packageName: packageName),
       iosParameters: IOSParameters(bundleId: packageName),
     );
-
+    print('challengeType : $dynamicLinkParams');
     if (challengeType == ChallengeType.crew) {
       if (![ShareSource.shareAppbar, ShareSource.createCrew].any((source) => shareSource == source)) {
         dynamicLinkParams = DynamicLinkParameters(
@@ -517,7 +522,7 @@ class ChallengesDetailController extends SuperController with GetTickerProviderS
     } else {
       showToastPopup('공유하기 템플릿 설정 미적용');
     }
-
+    print(kakaoFeedTemplate);
     // if (challengeType == ChallengeType.crew) {
     //   kakaoFeedTemplate = generateFeedTemplate(dynamicLink.shortUrl, challengeType: challengeType, shareSource: shareSource, crewName: crewName);
     // } else {
@@ -546,6 +551,7 @@ class ChallengesDetailController extends SuperController with GetTickerProviderS
           'userId': userId,
           'challengeId': '${challengeId.value}',
         });
+        print(uri);
         if(![ShareSource.shareAppbar, ShareSource.crewDetail].any((source) => shareSource == source)){
           FirebaseDatabase.instance.ref('kakaoSharedMessageRecord/${challengeId.value}/$userId/clickedShareButton').set(true);
         }
@@ -571,7 +577,7 @@ class ChallengesDetailController extends SuperController with GetTickerProviderS
   Future<void> getFirebaseShareTemplate() async {
     try {
       DocumentSnapshot docSnapshot = await FirebaseFirestore.instance.collection("challengeShareTemplate").doc(challengeDetails.value.id.toString()).get();
-
+      print(docSnapshot.data());
       shareTemplate.value = docSnapshot.data();
     } catch (e) {
       shareTemplate.value = null;
@@ -628,7 +634,9 @@ class ChallengesDetailController extends SuperController with GetTickerProviderS
   Future<void> validateKakaoShareResult({required ChallengeType challengeType, required ShareSource shareSource}) async {
     String userId = HiveStore.loadString(key: HiveKey.userId.name)!;
     DatabaseReference kakaoShareStatus = FirebaseDatabase.instance.ref('kakaoSharedMessageRecord/${challengeId.value}/$userId');
-
+    print('challengeId.value');
+    print(challengeId.value);
+    print(userId);
     kakaoShareStatus.get().then((DataSnapshot snapshot) {
       if (snapshot.exists) {
         Map data = snapshot.value as Map;
@@ -878,6 +886,11 @@ class ChallengesDetailController extends SuperController with GetTickerProviderS
         }
         break;
     }
+  }
+
+
+  void moveToCompanyMyCrew() {
+    Get.toNamed(Routes.companyCrewDetail);
   }
 
   @override

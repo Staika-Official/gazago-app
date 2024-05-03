@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:gaza_go/platform/controllers/challenges_detail_controller.dart';
 import 'package:gaza_go/platform/helpers/base_helper.dart';
+import 'package:gaza_go/presentations/components/challenge_bottom_sheet/company_crew_challenge.dart';
 import 'package:gaza_go/presentations/styles/colors.dart';
 import 'package:gaza_go/presentations/styles/styled_text.dart';
 import 'package:get/get.dart';
@@ -172,6 +173,22 @@ Widget renderParticipateInChallenge() {
       widgets = renderItemEndedElse(challengesDetailController);
     }
   }
+  print('challengeActivationType: $challengeActivationType');
+  print('challengeState: $challengeState');
+
+  if (challengeActivationType == 'CREW_COMPANY') {
+    if (challengeState == 'READY') {
+      if (userState == 'JOINED') {
+        // 챌린지 종료
+        widgets = renderCompanyCrewReadyJoined(challengesDetailController);
+      }
+    } else if (challengeState == 'IN_PROGRESS') {
+      widgets = renderCompanyCrewInProgressJoined(challengesDetailController);
+    } else {
+      // 챌린지 종료
+      widgets = renderCompanyCrewEnded(challengesDetailController);
+    }
+  }
 
   return Container(
     decoration: BoxDecoration(
@@ -207,7 +224,7 @@ Widget renderParticipateInChallenge() {
         ),
         Container(
           width: double.infinity,
-          color: subBg01Color,
+          color: Colors.black,
           child: Padding(
             padding: EdgeInsets.only(top: 10.0.sp, bottom: Platform.isAndroid ? 10.0.sp : 24.sp),
             child: Row(
@@ -225,14 +242,14 @@ Widget renderParticipateInChallenge() {
                           Rect.fromLTWH(0, 0, size.width, 16),
                         ),
                         child: const StyledText(
-                          '챌린지 기간',
+                          '기간 :',
                           fontSize: 14,
                           lineHeight: 20,
                           fontWeight: 600,
                         ),
                       )
                     : StyledText(
-                        '챌린지 기간',
+                        '기간 :',
                         fontSize: 14,
                         lineHeight: 20,
                         fontWeight: 600,
@@ -251,7 +268,7 @@ Widget renderParticipateInChallenge() {
                             Rect.fromLTWH(0, 0, size.width, 16),
                           ),
                           child: Text(
-                            '${formatDateUntilTime(challengesDetailController.challengeDetails.value.fromDate)} - ${formatDateUntilTime(challengesDetailController.challengeDetails.value.toDate)}',
+                            '${formatDateUntilTime(challengesDetailController.challengeDetails.value.fromDate)} ~ ${formatDateUntilTime(challengesDetailController.challengeDetails.value.toDate)}',
                             style: TextStyle(
                               color: Colors.white,
                               fontStyle: FontStyle.normal,
@@ -262,7 +279,7 @@ Widget renderParticipateInChallenge() {
                           ),
                         )
                       : Text(
-                          '${formatDateUntilTime(challengesDetailController.challengeDetails.value.fromDate)} - ${formatDateUntilTime(challengesDetailController.challengeDetails.value.toDate)}',
+                          '${formatDateUntilTime(challengesDetailController.challengeDetails.value.fromDate)} ~ ${formatDateUntilTime(challengesDetailController.challengeDetails.value.toDate)}',
                           style: TextStyle(
                             color: deepGrayColor,
                             fontStyle: FontStyle.normal,
