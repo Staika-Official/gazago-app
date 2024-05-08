@@ -131,6 +131,7 @@ void miraeAssetAlert( int challengeId, String? challengeUserState) {
     WillPopScope(
       onWillPop: () async => false,
       child: Dialog(
+
         key: const Key('miraeAsset'),
         insetPadding: EdgeInsets.zero,
         backgroundColor: subBg01Color.withOpacity(0.2),
@@ -264,8 +265,8 @@ void participateInMiraeChallengeByCodeAlert(int challengeId) {
                                                 height: 20 / 18,
                                                 fontWeight: FontWeight.w500,
                                               ),
-                                              suffixIcon: controller.nameErrorMessage.value != '' ? Padding(
-                                                padding: EdgeInsets.only(right: 20.0.sp),
+                                              suffixIcon: controller.name.value != ''  ? Padding(
+                                                padding: EdgeInsets.only(right: controller.nameErrorMessage.value != '' ? 20.0.sp : 0),
                                                 child: IconButton(
                                                   icon: iconInputClear,
                                                   onPressed: () => controller.clearInputName(),
@@ -347,8 +348,8 @@ void participateInMiraeChallengeByCodeAlert(int challengeId) {
                                                       height: 20 / 18,
                                                       fontWeight: FontWeight.w500,
                                                     ),
-                                                    suffixIcon: controller.codeErrorMessage.value != '' ? Padding(
-                                                      padding: EdgeInsets.only(right: 20.0.sp),
+                                                    suffixIcon: controller.memberCode.value != '' ? Padding(
+                                                      padding: EdgeInsets.only(right: controller.codeErrorMessage.value != '' ? 20.0.sp : 0),
                                                       child: IconButton(
                                                         icon:  iconInputClear,
                                                         onPressed: () => controller.clearInputCode(),

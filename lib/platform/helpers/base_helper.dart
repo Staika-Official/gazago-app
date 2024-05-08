@@ -257,9 +257,9 @@ void handleRoute(String route) async {
       String? challengeId = route.split('company_challenge_detail/')[1];
 
       await ActivityService.getChallengeDetails(int.parse(challengeId), successCallback: (NewChallengeDetailModel data) {
-        if(Get.isDialogOpen == true){
-          Get.back();
-        }
+        // if(Get.isDialogOpen == true){
+        //   Get.back();
+        // }
         if(data.challengeUserState == null){
           miraeAssetAlert( int.parse(challengeId), null);
         } else {

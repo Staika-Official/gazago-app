@@ -133,9 +133,9 @@ class ChallengesController extends GetxController with GetTickerProviderStateMix
       Query query = userDiInfoRef.child(userId!);
       query.get().then((DataSnapshot snapshot)  {
         if (snapshot.value != null) {
-                if(Get.isDialogOpen == true){
-                  Get.back();
-                }
+                // if(Get.isDialogOpen == true){
+                //   Get.back();
+                // }
                 Get.find<HomeMenuController>().selectMenu(0);
                 Get.toNamed(Routes.companyChallengeDetail.replaceAll(':id', challengeId.toString()));
 
@@ -174,9 +174,7 @@ class ChallengesController extends GetxController with GetTickerProviderStateMix
 
   void showMiraeAssetPopup(id) async {
     await ActivityService.getChallengeDetails(id, successCallback: (NewChallengeDetailModel data) async {
-      if(Get.isBottomSheetOpen == true){
-        Get.back();
-      }
+
       if(data.challengeUserState == null){
         miraeAssetAlert( id, null);
       } else {

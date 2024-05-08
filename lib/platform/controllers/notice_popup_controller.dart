@@ -269,7 +269,7 @@ class NoticePopupController extends GetxController with PromotionMixin {
 
   void showMainPopup() async {
     bool isShowPopup = await checkPopupExpired();
-    if (isShowPopup) {
+    if (isShowPopup && !Get.isDialogOpen!) {
       setCurrent(0);
       showMainPopupAlert(this);
     }

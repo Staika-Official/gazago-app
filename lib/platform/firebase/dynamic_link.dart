@@ -6,10 +6,12 @@ import 'package:gaza_go/platform/stores/hive_store.dart';
 Future<void> initDynamicLink() async {
   final PendingDynamicLinkData? initialLink = await FirebaseDynamicLinks.instance.getInitialLink();
   print('initialLink $initialLink');
+
   if (initialLink != null) {
     print('initialLink $initialLink');
     print('initialLink ${initialLink.link.queryParameters}');
     Map<String, String> queryParams = initialLink.link.queryParameters;
+
     if (queryParams['route'] != null) {
       handleRoute(queryParams['route']!);
     }
