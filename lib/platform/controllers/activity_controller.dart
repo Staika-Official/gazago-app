@@ -4,6 +4,7 @@ import 'dart:io';
 import 'package:adjust_sdk/adjust.dart';
 import 'package:adjust_sdk/adjust_event.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_naver_map/flutter_naver_map.dart';
 import 'package:gaza_go/constants/config.dart';
 import 'package:gaza_go/constants/enums.dart';
@@ -84,11 +85,15 @@ class ActivityController extends SuperController with ActivityMixin, ChallengeMi
   final RxBool isButtonDisabled = RxBool(false);
   RxList<ChallengeModel> challengeList = RxList.empty();
    RxBool isFetchingCourseList = RxBool(true);
+   RxDouble gpsAccuracySensitive = RxDouble(0.0);
+  RxnInt showGpsAlertCount = RxnInt(0);
 
 
   Future<void> initializeExercise() async {
     challengeGuideController = AnimationController(vsync: this);
     checkConnectivityStatus();
+
+
     if ([ExerciseState.ongoing, ExerciseState.paused].any((state) => state == exerciseState.value) && !isFakeGps.value && !isTestingFakeGps()) {
       showPendingExerciseAlert(this);
     }
@@ -763,9 +768,13 @@ class ActivityController extends SuperController with ActivityMixin, ChallengeMi
       );
     }
 
-    locationSubscription ??= Geolocator.getPositionStream(locationSettings: locationSettings).listen((Position position) async {
+    locationSubscription ??= Geolocator.getPositionStream(locationSettings: locationSettings).listen((Position position, ) async {
       currentLocation.value = position;
+      gpsAccuracySensitive.value = position.accuracy;
       isFakeGps.value = position.isMocked;
+      print('position : $position');
+      print('position.accuracy : ${position.accuracy}');
+
       detectFakeGps();
 
       if (HiveStore.load(key: HiveKey.isDebuggingMode.name) && exerciseState.value == ExerciseState.ongoing) {
@@ -838,6 +847,7 @@ class ActivityController extends SuperController with ActivityMixin, ChallengeMi
     print('getCurrentLocation');
     await Geolocator.getCurrentPosition(desiredAccuracy: locationAccuracyQuality, timeLimit: const Duration(seconds: 5)).then((location) {
       currentLocation.value = location;
+      print('location.acc : ${location.accuracy}');
       isListeningToLocation.value = true;
     }).onError((error, stackTrace) {
       showToastPopup('위치정보를 가져오지 못했습니다.');
@@ -876,6 +886,10 @@ class ActivityController extends SuperController with ActivityMixin, ChallengeMi
     if (globalController.internetConnection.value) {
       await retrySavedRequests(source: 'connectivityListener');
     }
+  }
+
+  Future<void> checkGPSStatus() async {
+    // GpsService.getGpsAccuracy();
   }
 
   Future<void> retrySavedRequests({required String source}) async {

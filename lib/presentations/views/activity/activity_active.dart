@@ -23,20 +23,20 @@ class ActivityActive extends StatelessWidget {
 
   List<Widget> renderGauge(ExerciseType exerciseType, Color color) {
     List<Widget> gaugeList = List.empty(growable: true);
-    for (int i = 0; i < 75; i++) {
+    for (int i = 0; i < 35; i++) {
       //15km / 0.20 = 75
       Widget? gauge;
-      if (i > (exerciseType == ExerciseType.hiking ? 1 : 3) && i < 35) {
+      if (i > (exerciseType == ExerciseType.hiking ? 1 : 3) && i < 18) {
         // hiking? 0.6 : 1 ~ 7km
         gauge = Container(
           width: 3.sp,
-          height: 21.sp,
+          height: 24.sp,
           color: color,
         );
       } else {
         gauge = Container(
           width: 3.sp,
-          height: 18.sp,
+          height: 20.sp,
           color: speedGrayColor,
         );
       }
@@ -47,8 +47,8 @@ class ActivityActive extends StatelessWidget {
   }
 
   double calculateGaugePosition(BoxConstraints constraints, double speed) {
-    double spaceLeft = constraints.maxWidth - (75 * 3); //75 = bar 개수, 3= bar width
-    double spacesBetweenBars = spaceLeft / 74;
+    double spaceLeft = constraints.maxWidth - (35 * 3); //75 = bar 개수, 3= bar width
+    double spacesBetweenBars = spaceLeft / 35;
     int barStep = ((speed > 15 ? 15 : speed) / 0.20).floor();
 
     if (barStep < 2) {
@@ -475,7 +475,8 @@ class ActivityActive extends StatelessWidget {
                                 ),
                                 Positioned(
                                   top: -26.sp,
-                                  left: calculateGaugePosition(constraints, controller.realTimeSpeed.value),
+                                  // left: calculateGaugePosition(constraints, controller.realTimeSpeed.value),
+                                  left: calculateGaugePosition(constraints, 16),
                                   child: GaugeCursor(
                                     color: controller.exerciseStateGaugeColor.value,
                                     speed: controller.realTimeSpeed.value,
