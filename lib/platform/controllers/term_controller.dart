@@ -1,4 +1,5 @@
 import 'package:gaza_go/constants/enums.dart';
+import 'package:gaza_go/constants/routes.dart';
 import 'package:gaza_go/platform/helpers/alert_helper.dart';
 import 'package:gaza_go/platform/models/term_item_model.dart';
 import 'package:gaza_go/platform/models/terms_history_model.dart';
@@ -21,7 +22,10 @@ class TermController extends GetxController {
     platform.value = Get.arguments['platform'] ?? 'gazago';
     termType.value = Get.arguments['termType'] ?? '';
     termId.value = Get.arguments['termId'] ?? 0;
-    initMarketingAgreeStatus();
+    if (termType.value == 'MARKETING' && Get.previousRoute != Routes.joinTerms){
+      initMarketingAgreeStatus();
+    }
+
     await getTermInfo();
     super.onInit();
   }
