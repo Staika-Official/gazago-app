@@ -55,8 +55,8 @@ class Api {
   }) {
     _dio.options.baseUrl = '${F.baseUrl}$serviceUrl';
     // _dio.options.connectTimeout = 2000;
-    _dio.options.sendTimeout = 10000;
-    _dio.options.receiveTimeout = 10000;
+    _dio.options.sendTimeout = const Duration(milliseconds: 10000);
+    _dio.options.receiveTimeout = const Duration(milliseconds: 10000);
     _dio.options.extra = {
       'allowCustomErrorHandler': allowCustomErrorHandler,
       'showLoading': showLoading,
@@ -190,7 +190,7 @@ class Api {
     });
   }
 
-  static _onErrorInterceptor(DioError e, ErrorInterceptorHandler handler) async {
+  static _onErrorInterceptor(DioException e, ErrorInterceptorHandler handler) async {
     _logger.e(
       '------------->'
       '\nERROR'
@@ -208,7 +208,6 @@ class Api {
       e,
       e.stackTrace,
       reason: 'api error : ${e.response?.statusCode}, ${errorMessage}, ${e.requestOptions.path}, ${getx.Get.currentRoute}',
-
     );
 
     if (HiveStore.load(key: HiveKey.isDebuggingMode.name)) {
@@ -245,11 +244,13 @@ class Api {
         if (errorData.errorMessage != null && !e.requestOptions.extra['allowCustomErrorHandler']) {
           showToastPopup(errorData.errorMessage!);
         }
-      } else if ([DioErrorType.connectTimeout, DioErrorType.sendTimeout, DioErrorType.receiveTimeout, DioErrorType.other].any((element) => element == e.type)) {
-        e.response = Response(
-          requestOptions: RequestOptions(
-            path: e.requestOptions.path,
-            data: 'unknown',
+      } else if ([DioExceptionType.connectionTimeout, DioExceptionType.sendTimeout, DioExceptionType.receiveTimeout, DioExceptionType.unknown].any((element) => element == e.type)) {
+        e.copyWith(
+          response: Response(
+            requestOptions: RequestOptions(
+              path: e.requestOptions.path,
+              data: 'unknown',
+            ),
           ),
         );
 
@@ -370,8 +371,8 @@ class Api {
       'deviceId': deviceId,
       'fcmToken': fcmToken,
       'platform': Platform.isAndroid ? 'Android' : 'iOS',
-      "deviceModel": Platform.isAndroid ? androidDeviceInfo!.model : iosDeviceInfo!.utsname.machine!,
-      "osVersion": Platform.isAndroid ? androidDeviceInfo!.version.sdkInt.toString() : iosDeviceInfo!.systemVersion!,
+      "deviceModel": Platform.isAndroid ? androidDeviceInfo!.model : iosDeviceInfo!.utsname.machine,
+      "osVersion": Platform.isAndroid ? androidDeviceInfo!.version.sdkInt.toString() : iosDeviceInfo!.systemVersion,
       "providerEnv": appliedEndpoint != null && appliedEndpoint!['activateStageMode'] ? 'STAGE' : null,
     }).then((Response res) async {
       _logger.d(

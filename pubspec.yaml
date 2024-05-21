@@ -47,18 +47,18 @@ dependencies:
   # The following adds the Cupertino Icons font to your application.
   # Use with the CupertinoIcons class for iOS style icons.
   cupertino_icons: ^1.0.5
-  dio: ^4.0.4 #https://pub.dev/packages/dio
+  dio: ^5.4.3+1 #https://pub.dev/packages/dio
   get: ^4.6.5 #https://pub.dev/packages/get
   intl: ^0.18.0 #https://pub.dev/packages/intl
   hive: ^2.2.3 #https://pub.dev/packages/hive
   hive_flutter: ^1.1.0
   hive_generator: ^2.0.0
   rxdart: ^0.27.5 #https://pub.dev/packages/rxdart
-  lottie: ^1.4.2 #https://pub.dev/packages/lottie
-  share_plus: ^4.0.10+1 #https://pub.dev/packages/share_plus
-  logger: ^1.1.0 #https://pub.dev/packages/logger
+  lottie: ^3.1.2 #https://pub.dev/packages/lottie
+  share_plus: ^9.0.0 #https://pub.dev/packages/share_plus
+  logger: ^2.3.0 #https://pub.dev/packages/logger
 
-  connectivity_plus: ^3.0.2 #https://pub.dev/packages/connectivity_plus/install
+  connectivity_plus: ^6.0.2 #https://pub.dev/packages/connectivity_plus/install
   firebase_core: ^2.22.0 #https://pub.dev/packages/firebase_core
   firebase_auth: ^4.13.0 #https://pub.dev/packages/firebase_auth
   firebase_analytics: ^10.6.4 #https://pub.dev/packages/firebase_analytics/install
@@ -69,48 +69,48 @@ dependencies:
   firebase_in_app_messaging: ^0.7.4+4 #https://pub.dev/packages/firebase_in_app_messaging
   firebase_messaging: ^14.7.4 #https://pub.dev/packages/firebase_messaging
   flutter_svg: ^2.0.7 #https://pub.dev/packages/flutter_svg
-  flutter_local_notifications: ^15.1.0+1 #https://pub.dev/packages/flutter_local_notifications
+  flutter_local_notifications: ^17.1.2 #https://pub.dev/packages/flutter_local_notifications
   package_info_plus: ^4.1.0 #https://pub.dev/packages/package_info_plus
-  json_annotation: ^4.8.1 #https://pub.dev/packages/json_annotation
-  flutter_staggered_grid_view: ^0.6.2
+  json_annotation: ^4.9.0 #https://pub.dev/packages/json_annotation
+  flutter_staggered_grid_view: ^0.7.0
   cached_network_image: ^3.2.2
-  image_picker: ^0.8.5+3
+  image_picker: ^1.1.1
   flutter_gallery_assets: ^1.0.2
-  flutter_flavorizr: ^2.1.4
-  google_sign_in: ^5.4.1
-  sign_in_with_apple: ^4.1.0
+  flutter_flavorizr: ^2.2.3
+  google_sign_in: ^6.2.1
+  sign_in_with_apple: ^6.1.0
   uuid: ^3.0.6
   flutter_naver_map:
     git: https://github.com/wnsgh78b/flutter_naver_map.git
-  geolocator: ^9.0.2
+  geolocator: ^11.1.0
   pedometer: ^4.0.1
-  permission_handler: ^10.0.2
+  permission_handler: ^11.3.1
   flutter_svg_provider: ^1.0.4
   percent_indicator: ^4.2.2
-  infinite_scroll_pagination: ^3.2.0
+  infinite_scroll_pagination: ^4.0.0
   table_calendar: ^3.0.7
   modal_bottom_sheet: ^3.0.0-pre
   smooth_page_indicator: ^1.0.0+2
   fluttertoast: ^8.0.9
-  custom_rounded_rectangle_border: ^0.2.0-nullsafety.0
-  another_xlider: ^1.1.2
-  animated_flip_counter: ^0.2.5
-  health: ^4.1.1
+  custom_rounded_rectangle_border: ^0.3.0
+  another_xlider: ^3.0.2
+  animated_flip_counter: ^0.3.4
+  health: ^10.2.0
   expandable_bottom_sheet: ^1.1.1+1
 
   simple_animations: ^5.0.2
-  flutter_launcher_icons: ^0.10.0
-  flutter_native_splash: ^2.2.13
+  flutter_launcher_icons: ^0.13.1
+  flutter_native_splash: ^2.4.0
 
   carousel_slider: ^4.1.1
-  flutter_screenutil: ^5.9.0
-  throttling: ^1.0.0
+  flutter_screenutil: ^5.9.1
+  throttling: ^2.0.1
   # flutter_inappwebview 업데이트 하면 안됨
   # beta.24+1 요구사항이 xcode 14.3 이상인데 xcode 업데이트 하면 다른 패키지에서 에러남
   flutter_inappwebview: ^6.0.0
   path_provider: ^2.0.11
-  advertising_id: 2.3.0
-  device_info_plus: ^8.0.0
+  advertising_id: 2.6.0
+  device_info_plus: ^10.1.0
   internet_connection_checker: ^1.0.0+1
 
 
@@ -123,12 +123,12 @@ dependencies:
   intrinsic_dimension: ^0.3.1
   flutter_html: ^3.0.0-beta.1
   skeletons: ^0.0.3
-  shape_of_view_null_safe: ^2.0.0
+  shape_of_view_null_safe: ^3.0.0
   assets_audio_player: ^3.0.6
   collection: ^1.17.0
   firebase_database: ^10.3.4
   adjust_sdk: ^4.33.1
-  kakao_flutter_sdk_share: ^1.4.1 # 카카오톡 공유
+  kakao_flutter_sdk_share: ^1.9.1+2 # 카카오톡 공유
   cloud_firestore: ^4.13.0
   expandable_page_view: ^1.0.17
   jiffy: ^6.2.1
@@ -136,13 +136,14 @@ dependencies:
     sdk: flutter
   foundation: ^0.0.5
   facebook_audience_network: ^1.0.1
-  image: ^3.3.0
-  google_mobile_ads: ^4.0.0
+  image: ^4.1.7
+  google_mobile_ads: ^5.1.0
   app_tracking_transparency: ^2.0.4
   url_launcher: ^6.2.3
   app_settings: ^5.1.1
   solana: ^0.30.0
   solana_web3: ^0.1.3
+  design_tokens_builder: ^0.2.0+1
 
 
 dev_dependencies:
@@ -154,10 +155,9 @@ dev_dependencies:
   # activated in the `analysis_options.yaml` file located at the root of your
   # package. See that file for information about deactivating specific lint
   # rules and activating additional ones.
-  flutter_lints: ^2.0.2
+  flutter_lints: ^4.0.0
   json_serializable: ^6.3.1 #https://pub.dev/packages/json_serializable
   build_runner: ^2.2.0 #https://pub.dev/packages/build_runner
-  geolocator_android: 4.1.4
 
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec

@@ -15,7 +15,7 @@ import 'package:health/health.dart';
 import 'package:permission_handler/permission_handler.dart' as ph;
 
 class PermissionController extends GetxController {
-  final HealthFactory health = HealthFactory();
+  final Health health = Health();
   final Rx<LocationPermission> _locationPermission = Rx(LocationPermission.unableToDetermine);
   final Rx<LocationAccuracyStatus> _locationAccuracyStatus = Rx(LocationAccuracyStatus.unknown);
   StreamSubscription<ServiceStatus>? _serviceStatusStream;
