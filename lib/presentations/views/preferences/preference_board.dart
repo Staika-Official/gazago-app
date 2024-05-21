@@ -58,8 +58,8 @@ class PreferenceBoard extends StatelessWidget {
                     title: Row(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Padding(
-                          padding: const EdgeInsets.only(top: 2),
+                        const Padding(
+                          padding: EdgeInsets.only(top: 2),
                           child: StyledText(
                             'Q',
                             color: skyBlueColor,
@@ -115,12 +115,12 @@ class PreferenceBoard extends StatelessWidget {
                             Expanded(
                                 child: ShaderMask(
                               blendMode: BlendMode.srcIn,
-                              shaderCallback: (bounds) => LinearGradient(
+                              shaderCallback: (bounds) => const LinearGradient(
                                 begin: Alignment.topLeft,
                                 end: Alignment.bottomRight,
                                 colors: [
                                   skyBlueColor,
-                                  const Color(0xff0EF3D8),
+                                  Color(0xff0EF3D8),
                                 ],
                               ).createShader(
                                 Rect.fromLTWH(0, 0, bounds.width, bounds.height),

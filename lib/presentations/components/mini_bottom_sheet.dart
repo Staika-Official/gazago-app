@@ -33,7 +33,7 @@ Widget renderParticipateInChallenge() {
       if (userState == 'REGISTER_READY') {
         // 접수 전
         widgets = renderCodeReadyRegisterReady(challengesDetailController);
-      } else if(userState == 'JOIN_CLOSED'){
+      } else if (userState == 'JOIN_CLOSED') {
         widgets = renderCodeInProgressJoinedClosed(challengesDetailController);
       } else {
         // 접수 중
@@ -76,7 +76,7 @@ Widget renderParticipateInChallenge() {
       if (userState == 'REGISTER_READY') {
         // 접수 전
         widgets = renderItemReadyRegisterReady(challengesDetailController);
-      } else if(userState == 'JOIN_CLOSED'){
+      } else if (userState == 'JOIN_CLOSED') {
         widgets = renderItemInProgressJoinedClosed(challengesDetailController);
       } else {
         // 접수 중
@@ -100,7 +100,7 @@ Widget renderParticipateInChallenge() {
         } else {
           widgets = renderItemInProgressJoinedAvailable(challengesDetailController);
         }
-      } else if(userState == 'JOINED_UNEQUIPPED_ITEM'){
+      } else if (userState == 'JOINED_UNEQUIPPED_ITEM') {
         widgets = renderItemInProgressJoinedAvailableHaveItem(challengesDetailController);
       } else if (userState == 'JOIN_CLOSED') {
         // 참가 마감
@@ -129,7 +129,7 @@ Widget renderParticipateInChallenge() {
       if (userState == 'REGISTER_READY') {
         // 접수 전
         widgets = renderPayReadyRegisterReady(challengesDetailController);
-      } else if(userState == 'JOIN_CLOSED'){
+      } else if (userState == 'JOIN_CLOSED') {
         widgets = renderPayInProgressJoinedClosed(challengesDetailController);
       } else {
         // 접수 중
@@ -234,7 +234,7 @@ Widget renderParticipateInChallenge() {
                 challengeState != 'CLOSED'
                     ? ShaderMask(
                         blendMode: BlendMode.modulate,
-                        shaderCallback: (size) => LinearGradient(
+                        shaderCallback: (size) => const LinearGradient(
                           colors: [skyBlueColor, skyBlueColor],
                           begin: Alignment.topCenter,
                           end: Alignment.bottomCenter,
@@ -248,7 +248,7 @@ Widget renderParticipateInChallenge() {
                           fontWeight: 600,
                         ),
                       )
-                    : StyledText(
+                    : const StyledText(
                         '기간 :',
                         fontSize: 14,
                         lineHeight: 20,
@@ -260,7 +260,7 @@ Widget renderParticipateInChallenge() {
                   child: challengeState != 'CLOSED'
                       ? ShaderMask(
                           blendMode: BlendMode.modulate,
-                          shaderCallback: (size) => LinearGradient(
+                          shaderCallback: (size) => const LinearGradient(
                             colors: [skyBlueColor, skyBlueColor],
                             begin: Alignment.topCenter,
                             end: Alignment.bottomCenter,

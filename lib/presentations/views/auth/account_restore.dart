@@ -43,7 +43,7 @@ class AccountRestore extends StatelessWidget {
                         ),
                         Padding(
                           padding: EdgeInsets.only(top: 14.0.sp),
-                          child: StyledText(
+                          child: const StyledText(
                             '탈퇴 후 14일 내 로그인 시\n기존 회원 계정으로 복구 됩니다.\n복구 하시겠습니까?',
                             fontSize: 16,
                             fontWeight: 500,

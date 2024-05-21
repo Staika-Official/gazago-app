@@ -147,9 +147,9 @@ class InventoryBadgeDetail extends StatelessWidget {
                             Padding(
                               padding: EdgeInsets.only(top: 25.0.sp, left: 20.sp, right: 20.sp),
                               child: Container(
-                                decoration: BoxDecoration(
+                                decoration: const BoxDecoration(
                                   color: subBg01Color,
-                                  borderRadius: const BorderRadius.all(
+                                  borderRadius: BorderRadius.all(
                                     Radius.circular(12),
                                   ),
                                 ),
@@ -178,7 +178,7 @@ class InventoryBadgeDetail extends StatelessWidget {
                                                     iconShopReward,
                                                     Padding(
                                                       padding: EdgeInsets.only(left: 4.0.sp),
-                                                      child: StyledText(
+                                                      child: const StyledText(
                                                         'GO 보상',
                                                         color: skyBlueColor,
                                                         fontSize: 12,
@@ -196,7 +196,7 @@ class InventoryBadgeDetail extends StatelessWidget {
                                       if (controller.selectedBadge.value.rewardRate > 0 && controller.selectedBadge.value.luckRate > 0)
                                         SizedBox(
                                           height: 35.sp,
-                                          child: VerticalDivider(
+                                          child: const VerticalDivider(
                                             color: popupBgColor,
                                             width: 1,
                                             thickness: 1,
@@ -223,7 +223,7 @@ class InventoryBadgeDetail extends StatelessWidget {
                                                       padding: EdgeInsets.only(right: 4.0.sp),
                                                       child: iconShopLuck,
                                                     ),
-                                                    StyledText(
+                                                    const StyledText(
                                                       '행운',
                                                       color: pinkColor,
                                                       fontSize: 12,
@@ -265,7 +265,7 @@ class InventoryBadgeDetail extends StatelessWidget {
                                         ),
                                         Container(
                                           padding: EdgeInsets.only(left: 5.sp),
-                                          child: StyledText(
+                                          child: const StyledText(
                                             '·',
                                             fontSize: 14,
                                             fontWeight: 500,
@@ -317,7 +317,7 @@ class InventoryBadgeDetail extends StatelessWidget {
                                               onTap: () => null,
                                               child: Padding(
                                                 padding: EdgeInsets.symmetric(vertical: 13.0.sp, horizontal: 20.sp),
-                                                child: Column(
+                                                child: const Column(
                                                   mainAxisAlignment: MainAxisAlignment.center,
                                                   children: [
                                                     StyledText(
@@ -356,9 +356,9 @@ class InventoryBadgeDetail extends StatelessWidget {
                                               onTap: () => controller.fetchEquipBadge(controller.selectedBadge.value.badgeId),
                                               child: Padding(
                                                 padding: EdgeInsets.symmetric(vertical: 13.0.sp, horizontal: 20.sp),
-                                                child: Column(
+                                                child: const Column(
                                                   mainAxisAlignment: MainAxisAlignment.center,
-                                                  children: const [
+                                                  children: [
                                                     StyledText(
                                                       '장착',
                                                       fontSize: 18,

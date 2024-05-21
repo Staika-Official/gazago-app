@@ -125,7 +125,7 @@ class DebuggingController extends GetxController {
       if (isPasswordConfirmed) {
         endPointType.value = val;
         showToastPopup('2초 후 로딩화면으로 이동합니다.');
-        Timer(Duration(seconds: 2), () async {
+        Timer(const Duration(seconds: 2), () async {
           await Get.put(LoginController()).getAccountInfo();
           Get.offAllNamed(Routes.loading);
         });

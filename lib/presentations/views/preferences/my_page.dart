@@ -142,7 +142,7 @@ class MyPage extends StatelessWidget {
                                                     fontSize: 12.sp,
                                                   ),
                                                 ),
-                                          TextSpan(
+                                          const TextSpan(
                                             text: ' / ',
                                             style: TextStyle(
                                               color: deepGrayColor,
@@ -221,13 +221,13 @@ class MyPage extends StatelessWidget {
                       child: Align(
                         alignment: Alignment.bottomCenter,
                         child: Container(
-                          padding: EdgeInsets.only(
+                          padding: const EdgeInsets.only(
                             top: 26,
                             left: 20,
                             right: 20,
                             bottom: 90,
                           ),
-                          decoration: BoxDecoration(
+                          decoration: const BoxDecoration(
                             border: Border(
                               top: BorderSide(
                                 color: Color(0xff26272F),
@@ -235,7 +235,7 @@ class MyPage extends StatelessWidget {
                               ),
                             ),
                           ),
-                          child: Column(
+                          child: const Column(
                             mainAxisSize: MainAxisSize.min,
                             mainAxisAlignment: MainAxisAlignment.start,
                             crossAxisAlignment: CrossAxisAlignment.start,
@@ -478,7 +478,7 @@ class MyPage extends StatelessWidget {
                     Column(
                       children: [
                         Divider(color: subBg01Color, height: 6.sp),
-                        if(controller.profile.value.authorities!.contains('ROLE_CERTIFIED_USER'))
+                        if (controller.profile.value.authorities!.contains('ROLE_CERTIFIED_USER'))
                           Container(
                             color: subBg02Color,
                             child: Padding(

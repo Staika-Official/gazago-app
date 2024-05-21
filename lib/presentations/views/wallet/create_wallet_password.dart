@@ -29,14 +29,10 @@ class CreateWalletPassword extends StatelessWidget {
     double appBarHeight = AppBar().preferredSize.height;
     return LayoutBuilder(builder: (context, constraints) {
       return DefaultContainer(
-
         backgroundColor: subBg01Color,
         resizeToAvoidBottomInset: true,
         onBackButtonTap: () {
-          Get
-              .find<WalletMasterController>()
-              .tabController
-              .animateTo(0);
+          Get.find<WalletMasterController>().tabController.animateTo(0);
           Get.back();
         },
         child: SingleChildScrollView(
@@ -65,14 +61,14 @@ class CreateWalletPassword extends StatelessWidget {
                           height: 32.sp / 22,
                         ),
                         children: const [
-                           TextSpan(
+                          TextSpan(
                             text: '안전한 지갑 사용을 위해\n',
                           ),
                           TextSpan(
                             text: '이체 비밀번호',
                             style: TextStyle(color: skyBlueColor),
                           ),
-                           TextSpan(
+                          TextSpan(
                             text: '를 등록해주세요.',
                           ),
                         ],
@@ -86,7 +82,7 @@ class CreateWalletPassword extends StatelessWidget {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         const Padding(
-                          padding:  EdgeInsets.only(left: 10),
+                          padding: EdgeInsets.only(left: 10),
                           child: StyledText(
                             '이체 비밀번호',
                             color: lightGrayColor,
@@ -114,7 +110,7 @@ class CreateWalletPassword extends StatelessWidget {
                                   obscureText: true,
                                   decoration: const InputDecoration(
                                     border: InputBorder.none,
-                                    contentPadding:  EdgeInsets.symmetric(horizontal: 15),
+                                    contentPadding: EdgeInsets.symmetric(horizontal: 15),
                                     hintText: '이체 비밀번호를 입력해주세요',
                                     hintStyle: TextStyle(
                                       color: deepGrayColor,
@@ -215,7 +211,7 @@ class CreateWalletPassword extends StatelessWidget {
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
                                 Padding(
-                                  padding: EdgeInsets.only(bottom:12.0.sp),
+                                  padding: EdgeInsets.only(bottom: 12.0.sp),
                                   child: Row(
                                     children: [
                                       iconExcludeRed,
@@ -233,113 +229,113 @@ class CreateWalletPassword extends StatelessWidget {
                                   ),
                                 ),
                                 Padding(
-                                  padding: EdgeInsets.only(left:2.0.sp),
-                                  child: Column(children: [
-                                    const Row(
-                                      mainAxisSize: MainAxisSize.max,
-                                      crossAxisAlignment: CrossAxisAlignment.start,
-                                      children: [
-                                        StyledText(
-                                          '• ',
-                                          fontWeight: 500,
-                                          fontSize: 16,
-                                          lineHeight: 22,
-                                          letterSpacing: -.1,
-                                          color: lightGrayColor,
-                                        ),
-                                        Flexible(
-                                          child: StyledText(
-                                            '스타이카 월렛은 탈중앙화 지갑이에요',
+                                  padding: EdgeInsets.only(left: 2.0.sp),
+                                  child: const Column(
+                                    children: [
+                                      Row(
+                                        mainAxisSize: MainAxisSize.max,
+                                        crossAxisAlignment: CrossAxisAlignment.start,
+                                        children: [
+                                          StyledText(
+                                            '• ',
                                             fontWeight: 500,
-                                            fontSize: 14,
-                                            lineHeight: 22,
-                                            color: lightGrayColor,
-                                          ),
-                                        ),
-                                      ],
-                                    ),
-                                    const Row(
-                                      mainAxisSize: MainAxisSize.max,
-                                      crossAxisAlignment: CrossAxisAlignment.start,
-                                      children: [
-                                        StyledText(
-                                          '• ',
-                                          fontWeight: 500,
-                                          fontSize: 16,
-                                          lineHeight: 22,
-                                          letterSpacing: -.1,
-                                          color: lightGrayColor,
-                                        ),
-                                        Flexible(
-                                          child: StyledText(
-                                            '이체 비밀번호는 ‘개인키’이므로 저희 서비스에서는 일체 보관하지 않고 있어요.',
-                                            fontWeight: 500,
-                                            fontSize: 14,
+                                            fontSize: 16,
                                             lineHeight: 22,
                                             letterSpacing: -.1,
                                             color: lightGrayColor,
                                           ),
-                                        ),
-                                      ],
-                                    ),
-                                    const Row(
-                                      mainAxisSize: MainAxisSize.max,
-                                      crossAxisAlignment: CrossAxisAlignment.start,
-                                      children: [
-                                        StyledText(
-                                          '• ',
-                                          fontWeight: 500,
-                                          fontSize: 16,
-                                          lineHeight: 22,
-                                          letterSpacing: -.1,
-                                          color: lightGrayColor,
-                                        ),
-                                        Flexible(
-                                          child: StyledText(
-                                            '이체 비밀번호를 분실할 시 계정을 복구할 수 없어요.',
+                                          Flexible(
+                                            child: StyledText(
+                                              '스타이카 월렛은 탈중앙화 지갑이에요',
+                                              fontWeight: 500,
+                                              fontSize: 14,
+                                              lineHeight: 22,
+                                              color: lightGrayColor,
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                      Row(
+                                        mainAxisSize: MainAxisSize.max,
+                                        crossAxisAlignment: CrossAxisAlignment.start,
+                                        children: [
+                                          StyledText(
+                                            '• ',
                                             fontWeight: 500,
-                                            fontSize: 14,
+                                            fontSize: 16,
                                             lineHeight: 22,
                                             letterSpacing: -.1,
                                             color: lightGrayColor,
                                           ),
-                                        ),
-                                      ],
-                                    ),
-                                    const Row(
-                                      mainAxisSize: MainAxisSize.max,
-                                      crossAxisAlignment: CrossAxisAlignment.start,
-                                      children: [
-                                        StyledText(
-                                          '• ',
-                                          fontWeight: 500,
-                                          fontSize: 16,
-                                          lineHeight: 22,
-                                          letterSpacing: -.1,
-                                          color: lightGrayColor,
-                                        ),
-                                        Flexible(
-                                          child: StyledText(
-                                            '이체 비밀번호를 안전한 곳에 기록하여 보관해 주세요.',
+                                          Flexible(
+                                            child: StyledText(
+                                              '이체 비밀번호는 ‘개인키’이므로 저희 서비스에서는 일체 보관하지 않고 있어요.',
+                                              fontWeight: 500,
+                                              fontSize: 14,
+                                              lineHeight: 22,
+                                              letterSpacing: -.1,
+                                              color: lightGrayColor,
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                      Row(
+                                        mainAxisSize: MainAxisSize.max,
+                                        crossAxisAlignment: CrossAxisAlignment.start,
+                                        children: [
+                                          StyledText(
+                                            '• ',
                                             fontWeight: 500,
-                                            fontSize: 14,
+                                            fontSize: 16,
                                             lineHeight: 22,
                                             letterSpacing: -.1,
                                             color: lightGrayColor,
                                           ),
-                                        ),
-                                      ],
-                                    ),
-                                  ],),
+                                          Flexible(
+                                            child: StyledText(
+                                              '이체 비밀번호를 분실할 시 계정을 복구할 수 없어요.',
+                                              fontWeight: 500,
+                                              fontSize: 14,
+                                              lineHeight: 22,
+                                              letterSpacing: -.1,
+                                              color: lightGrayColor,
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                      Row(
+                                        mainAxisSize: MainAxisSize.max,
+                                        crossAxisAlignment: CrossAxisAlignment.start,
+                                        children: [
+                                          StyledText(
+                                            '• ',
+                                            fontWeight: 500,
+                                            fontSize: 16,
+                                            lineHeight: 22,
+                                            letterSpacing: -.1,
+                                            color: lightGrayColor,
+                                          ),
+                                          Flexible(
+                                            child: StyledText(
+                                              '이체 비밀번호를 안전한 곳에 기록하여 보관해 주세요.',
+                                              fontWeight: 500,
+                                              fontSize: 14,
+                                              lineHeight: 22,
+                                              letterSpacing: -.1,
+                                              color: lightGrayColor,
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                    ],
+                                  ),
                                 )
-
                               ],
                             ),
                           ),
                         ),
-
                         Padding(
-                          padding: EdgeInsets.only(top:8.0.sp),
+                          padding: EdgeInsets.only(top: 8.0.sp),
                           child: Container(
                             margin: const EdgeInsets.only(top: 10),
                             decoration: BoxDecoration(
@@ -360,7 +356,7 @@ class CreateWalletPassword extends StatelessWidget {
                                     obscureText: false,
                                     decoration: const InputDecoration(
                                       border: InputBorder.none,
-                                      contentPadding:  EdgeInsets.symmetric(horizontal: 15),
+                                      contentPadding: EdgeInsets.symmetric(horizontal: 15),
                                       hintText: '확인했습니다',
                                       hintStyle: TextStyle(
                                         color: deepGrayColor,
@@ -384,7 +380,7 @@ class CreateWalletPassword extends StatelessWidget {
                         Padding(
                           padding: EdgeInsets.only(top: 20.0.sp, left: 15.0.sp),
                           child: const StyledText(
-                              '위 내용을 인지했다면 \'확인했습니다\'를 입력해주세요',
+                            '위 내용을 인지했다면 \'확인했습니다\'를 입력해주세요',
                             fontSize: 12,
                             fontWeight: 500,
                             color: deepGrayColor,
@@ -409,8 +405,10 @@ class CreateWalletPassword extends StatelessWidget {
                               }
                             },
                             buttonText: '확인',
-                            buttonColor: (controller.confirmPasswordFormStatus.value == FormStatus.sufficient && controller.confirmTextStatus.value == FormStatus.sufficient) ? skyBlueColor : popupBgColor,
-                            textColor: (controller.confirmPasswordFormStatus.value == FormStatus.sufficient && controller.confirmTextStatus.value == FormStatus.sufficient) ? Colors.black : deepGrayColor,
+                            buttonColor:
+                                (controller.confirmPasswordFormStatus.value == FormStatus.sufficient && controller.confirmTextStatus.value == FormStatus.sufficient) ? skyBlueColor : popupBgColor,
+                            textColor:
+                                (controller.confirmPasswordFormStatus.value == FormStatus.sufficient && controller.confirmTextStatus.value == FormStatus.sufficient) ? Colors.black : deepGrayColor,
                             // buttonColor: popupBgColor,
                           ),
                         ),

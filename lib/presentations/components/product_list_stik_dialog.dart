@@ -50,7 +50,7 @@ List<Widget> renderMyTikList(WalletMasterController controller) {
                   ),
                   Padding(
                     padding: EdgeInsets.only(left: 3.0.sp),
-                    child: StyledText(
+                    child: const StyledText(
                       'TIK',
                       fontSize: 12,
                       fontWeight: 400,
@@ -241,7 +241,7 @@ void showProductStikList(String assetsName) {
             children: [
               Padding(
                 padding: EdgeInsets.only(top: 30.0.sp, bottom: 10.sp, left: 20.sp, right: 20.sp),
-                child: StyledText(
+                child: const StyledText(
                   '현재 보유 자산',
                   fontSize: 16,
                   fontWeight: 600,
@@ -251,7 +251,7 @@ void showProductStikList(String assetsName) {
               ),
               ...renderMySpendingTokenList(controller),
               Padding(
-                padding: EdgeInsets.only(top: 8.0),
+                padding: const EdgeInsets.only(top: 8.0),
                 child: Divider(
                   thickness: 6,
                   color: popupBgColor.withOpacity(0.3),
@@ -315,7 +315,7 @@ void showProductStikList(String assetsName) {
                                       borderRadius: BorderRadius.circular(2),
                                     ),
                                   ),
-                                  Expanded(
+                                  const Expanded(
                                     child: StyledText(
                                       '위에 안내한 금액이 일정 시간동안 유지되며 해당 가격으로 거래가 진행됩니다.',
                                       fontSize: 10,
@@ -341,7 +341,7 @@ void showProductStikList(String assetsName) {
                                       borderRadius: BorderRadius.circular(2),
                                     ),
                                   ),
-                                  Expanded(
+                                  const Expanded(
                                     child: StyledText(
                                       '본 화면 이탈 후 재접근 시 가격이 변경될 수 있습니다.',
                                       fontSize: 10,

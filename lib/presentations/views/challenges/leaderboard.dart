@@ -390,7 +390,7 @@ class ChallengeLeaderboard extends StatelessWidget {
                             ),
                             Padding(
                               padding: EdgeInsets.only(left: 4.0.sp),
-                              child: StyledText(
+                              child: const StyledText(
                                 '분배할 전체 리워드',
                                 color: deepGrayColor,
                                 fontWeight: 600,
@@ -446,7 +446,7 @@ class ChallengeLeaderboard extends StatelessWidget {
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
-                          StyledText(
+                          const StyledText(
                             '실시간 TOP100',
                             color: Colors.white,
                             fontSize: 16,
@@ -459,7 +459,7 @@ class ChallengeLeaderboard extends StatelessWidget {
                               onTap: () => Get.toNamed(Routes.webView, arguments: {'linkUrl': '${F.leaderboardUrl}/challenge/${controller.challengeDetails.value.id}'}),
                               child: Row(
                                 children: [
-                                  StyledText(
+                                  const StyledText(
                                     '더보기',
                                     color: lightGrayColor,
                                     fontSize: 14,

@@ -29,7 +29,7 @@ class VerificationCertCode extends StatelessWidget {
                 lineHeight: 32,
                 fontFamily: 'Montserrat',
               ),
-              Row(
+              const Row(
                 children: [
                   StyledText(
                     '인증 코드 6자리',
@@ -39,7 +39,7 @@ class VerificationCertCode extends StatelessWidget {
                     fontFamily: 'Montserrat',
                     color: skyBlueColor,
                   ),
-                  const StyledText(
+                  StyledText(
                     '를 입력해주세요.',
                     fontSize: 22,
                     fontWeight: 700,
@@ -56,7 +56,7 @@ class VerificationCertCode extends StatelessWidget {
                     children: [
                       Padding(
                         padding: EdgeInsets.all(8.0.sp),
-                        child: StyledText(
+                        child: const StyledText(
                           '인증코드',
                           color: lightGrayColor,
                           fontSize: 16,
@@ -79,13 +79,13 @@ class VerificationCertCode extends StatelessWidget {
                               Expanded(
                                 child: TextField(
                                   focusNode: controller.focusNode,
-                                  decoration: InputDecoration(
+                                  decoration: const InputDecoration(
                                     border: InputBorder.none,
                                     hintText: '인증 코드 입력',
                                     hintStyle: TextStyle(
                                       color: deepGrayColor,
                                     ),
-                                    contentPadding: const EdgeInsets.symmetric(
+                                    contentPadding: EdgeInsets.symmetric(
                                       horizontal: 15,
                                       vertical: 0,
                                     ),
@@ -103,19 +103,17 @@ class VerificationCertCode extends StatelessWidget {
                                   keyboardType: TextInputType.number,
                                 ),
                               ),
-
-                                SizedBox(
-                                  width: 45,
-                                  child: StyledText(
-                                    controller.countdownString.value,
-                                    color: deepGrayColor,
-                                    fontWeight: 500,
-                                    fontSize: 14,
-                                    letterSpacing: .05,
-                                  ),
+                              SizedBox(
+                                width: 45,
+                                child: StyledText(
+                                  controller.countdownString.value,
+                                  color: deepGrayColor,
+                                  fontWeight: 500,
+                                  fontSize: 14,
+                                  letterSpacing: .05,
                                 ),
-
-                                Padding(
+                              ),
+                              Padding(
                                 padding: const EdgeInsets.all(10),
                                 child: Obx(() {
                                   bool finished = controller.countdownTime.value.inSeconds == 0;
@@ -174,7 +172,7 @@ class VerificationCertCode extends StatelessWidget {
                 return Container(
                   height: 55.sp,
                   decoration: BoxDecoration(
-                    color: controller.isFormValid.isTrue && !controller.isNotNext.value  ? skyBlueColor : popupBgColor,
+                    color: controller.isFormValid.isTrue && !controller.isNotNext.value ? skyBlueColor : popupBgColor,
                     border: Border.all(width: 2.sp, color: Colors.black),
                     borderRadius: BorderRadius.circular(8.sp),
                     boxShadow: [
@@ -194,7 +192,7 @@ class VerificationCertCode extends StatelessWidget {
                         fontSize: 18,
                         lineHeight: 18,
                         fontWeight: 500,
-                        color: controller.isFormValid.isTrue && !controller.isNotNext.value  ? Colors.black : deepGrayColor,
+                        color: controller.isFormValid.isTrue && !controller.isNotNext.value ? Colors.black : deepGrayColor,
                       )),
                     ),
                   ),

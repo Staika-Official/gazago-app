@@ -42,8 +42,8 @@ class CreateWallet extends StatelessWidget {
                         fontWeight: 600,
                         lineHeight: 26,
                       ),
-                      Padding(
-                        padding: const EdgeInsets.only(top: 16, bottom: 200),
+                      const Padding(
+                        padding: EdgeInsets.only(top: 16, bottom: 200),
                         child: StyledText(
                           '잠시만 기다려주세요!',
                           fontSize: 16,
@@ -92,8 +92,8 @@ class CreateWallet extends StatelessWidget {
                                     lineHeight: 26,
                                   ),
                                 ),
-                                Padding(
-                                  padding: const EdgeInsets.only(top: 16, bottom: 200),
+                                const Padding(
+                                  padding: EdgeInsets.only(top: 16, bottom: 200),
                                   child: StyledText(
                                     '이제 스타이카와 함께 편안한\n디지털 자산관리를 시작해보세요.',
                                     fontSize: 16,
@@ -111,7 +111,7 @@ class CreateWallet extends StatelessWidget {
                           padding: const EdgeInsets.all(20),
                           child: GazagoButton(
                             onTap: () async {
-                              if(Get.isRegistered<StaikaWalletController>()){
+                              if (Get.isRegistered<StaikaWalletController>()) {
                                 await Get.find<StaikaWalletController>().getStaikaWalletInfo();
                               }
                               Get.until((route) => Get.currentRoute == Routes.wallet);
@@ -139,8 +139,8 @@ class CreateWallet extends StatelessWidget {
                                     lineHeight: 26,
                                   ),
                                 ),
-                                Padding(
-                                  padding: const EdgeInsets.only(top: 16, bottom: 200),
+                                const Padding(
+                                  padding: EdgeInsets.only(top: 16, bottom: 200),
                                   child: StyledText(
                                     '블록체인 네트워크의 불안정 혹은 일시적인\n오류로 지갑 생성을 완료할 수 없었습니다.\n죄송하지만 잠시 후 다시 시도해 주세요.',
                                     fontSize: 16,

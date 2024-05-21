@@ -37,7 +37,7 @@ class WithdrawCompleted extends StatelessWidget {
                         ),
                         Padding(
                           padding: EdgeInsets.only(top: 14.0.sp),
-                          child: StyledText(
+                          child: const StyledText(
                             '그동안 이용해 주셔서 감사합니다.',
                             fontSize: 16,
                             fontWeight: 500,

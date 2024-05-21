@@ -202,7 +202,7 @@ class ShopItemDetail extends StatelessWidget {
                                         color: skyBlueColor,
                                         letterSpacing: -.1,
                                       ),
-                                      StyledText(
+                                      const StyledText(
                                         ' - ',
                                         fontSize: 12,
                                         fontWeight: 500,
@@ -303,7 +303,7 @@ class ShopItemDetail extends StatelessWidget {
                                         color: lightPurpleColor,
                                         letterSpacing: -.1,
                                       ),
-                                      StyledText(
+                                      const StyledText(
                                         ' - ',
                                         fontSize: 12,
                                         fontWeight: 500,
@@ -404,7 +404,7 @@ class ShopItemDetail extends StatelessWidget {
                                         color: lightGreenColor,
                                         letterSpacing: -.1,
                                       ),
-                                      StyledText(
+                                      const StyledText(
                                         ' - ',
                                         fontSize: 12,
                                         fontWeight: 500,
@@ -505,7 +505,7 @@ class ShopItemDetail extends StatelessWidget {
                                         color: pinkColor,
                                         letterSpacing: -.1,
                                       ),
-                                      StyledText(
+                                      const StyledText(
                                         ' - ',
                                         fontSize: 12,
                                         fontWeight: 500,
@@ -725,7 +725,7 @@ class ShopItemDetail extends StatelessWidget {
                                           onTap: () => controller.moveChallengeDetail(),
                                           child: Row(
                                             children: [
-                                              StyledText(
+                                              const StyledText(
                                                 '바로가기',
                                                 color: lightGrayColor,
                                                 fontSize: 14,
@@ -1004,7 +1004,7 @@ class ShopItemDetail extends StatelessWidget {
                                 ),
                                 child: Padding(
                                   padding: EdgeInsets.symmetric(vertical: 8.0.sp, horizontal: 15.sp),
-                                  child: StyledText(
+                                  child: const StyledText(
                                     '구매하기',
                                     fontSize: 18,
                                     lineHeight: 20,
@@ -1025,7 +1025,7 @@ class ShopItemDetail extends StatelessWidget {
                                     ),
                                     child: Padding(
                                       padding: EdgeInsets.symmetric(vertical: 8.0.sp, horizontal: 15.sp),
-                                      child: StyledText(
+                                      child: const StyledText(
                                         '구매하기',
                                         fontSize: 18,
                                         lineHeight: 20,

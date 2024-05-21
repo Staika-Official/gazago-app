@@ -41,7 +41,7 @@ void showConfirmMiraeMemberChallenge(MiraeChallengeController controller, int ch
                       child: Column(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
-                          StyledText(
+                          const StyledText(
                             '회원 정보 확인',
                             fontWeight: 600,
                             fontSize: 20,
@@ -454,7 +454,7 @@ void alreadyVerifiedCompanyChallenge() {
             child: Column(
               mainAxisSize: MainAxisSize.min,
               children: [
-                StyledText(
+                const StyledText(
                   '회원 정보 확인 요청',
                   fontWeight: 600,
                   fontSize: 20,
@@ -462,7 +462,7 @@ void alreadyVerifiedCompanyChallenge() {
                 ),
                 Padding(
                   padding: EdgeInsets.only(top: 20.0.sp, bottom: 30.sp),
-                  child: StyledText(
+                  child: const StyledText(
                     '이미 인증된 회원입니다.\n 회원 정보를 다시 입력해주세요.',
                     fontWeight: 500,
                     fontSize: 18,
@@ -509,7 +509,7 @@ void notOpenCompanyChallenge() {
                     padding: EdgeInsets.only(top: 0.0.sp, bottom: 25.sp),
                     child: Column(
                       children: [
-                        StyledText(
+                        const StyledText(
                           '챌린지 접수 전',
                           fontWeight: 600,
                           fontSize: 20,
@@ -517,7 +517,7 @@ void notOpenCompanyChallenge() {
                         ),
                         Padding(
                           padding: EdgeInsets.only(top: 15.0.sp),
-                          child: StyledText(
+                          child: const StyledText(
                             '챌린지 모집 기간에 다시\n참가해주세요.',
                             fontWeight: 500,
                             fontSize: 18,
@@ -568,7 +568,7 @@ void closedCompanyChallenge() {
                     children: [
                       Padding(
                         padding: EdgeInsets.only(top: 10.0.sp, bottom: 30.sp),
-                        child: Column(
+                        child: const Column(
                           children: [
                             StyledText(
                               '챌린지가 끝났어요.',

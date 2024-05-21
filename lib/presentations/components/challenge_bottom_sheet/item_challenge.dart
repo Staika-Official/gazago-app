@@ -28,7 +28,7 @@ Map renderItemReadyRegisterReady(ChallengesDetailController challengesDetailCont
         ),
         child: Padding(
           padding: EdgeInsets.symmetric(vertical: 13.0.sp, horizontal: 25.sp),
-          child: StyledText(
+          child: const StyledText(
             '접수 전',
             fontWeight: 500,
             fontSize: 18,
@@ -50,18 +50,14 @@ Map renderItemReadyRegisterReady(ChallengesDetailController challengesDetailCont
       children: [
         TextSpan(
           text: '접수 예정일  ${DateFormat('MM.dd HH:mm', 'ko').format(DateTime.parse(challengesDetailController.challengeDetails.value.reservedDate!).toLocal())}',
-          style: TextStyle(color: skyBlueColor),
+          style: const TextStyle(color: skyBlueColor),
         ),
       ],
     ),
   );
 
-  return {
-    'suffix': suffix,
-    'content': content
-  };
+  return {'suffix': suffix, 'content': content};
 }
-
 
 // 챌린지 전 - 접수 중 - 아이템 장착
 Map renderItemReadyJoinedEquipped(ChallengesDetailController challengesDetailController) {
@@ -84,7 +80,7 @@ Map renderItemReadyJoinedEquipped(ChallengesDetailController challengesDetailCon
         ),
         child: Padding(
           padding: EdgeInsets.symmetric(vertical: 13.0.sp, horizontal: 25.sp),
-          child: StyledText(
+          child: const StyledText(
             '챌린지 전',
             fontWeight: 500,
             fontSize: 18,
@@ -103,25 +99,22 @@ Map renderItemReadyJoinedEquipped(ChallengesDetailController challengesDetailCon
         fontSize: 16.sp,
         height: 20.sp / 16,
       ),
-      children: [
-        const TextSpan(
+      children: const [
+        TextSpan(
           text: '이미 챌린지 아이템을\n',
         ),
         TextSpan(
           text: '장착중',
           style: TextStyle(color: skyBlueColor),
         ),
-        const TextSpan(
+        TextSpan(
           text: '입니다',
         ),
       ],
     ),
   );
 
-  return {
-    'suffix': suffix,
-    'content': content
-  };
+  return {'suffix': suffix, 'content': content};
 }
 
 // 챌린지 전 - 접수 중 - 아이템 미장착
@@ -163,25 +156,22 @@ Map renderItemReadyJoinedNotEquipped(ChallengesDetailController challengesDetail
         fontSize: 16.sp,
         height: 20.sp / 16,
       ),
-      children: [
-        const TextSpan(
+      children: const [
+        TextSpan(
           text: '이미 챌린지 아이템을\n',
         ),
         TextSpan(
           text: '보유중',
           style: TextStyle(color: skyBlueColor),
         ),
-        const TextSpan(
+        TextSpan(
           text: '입니다',
         ),
       ],
     ),
   );
 
-  return {
-    'suffix': suffix,
-    'content': content
-  };
+  return {'suffix': suffix, 'content': content};
 }
 
 // 챌린지 전 - 접수 중
@@ -223,8 +213,8 @@ Map renderItemReadyJoinedElse(ChallengesDetailController challengesDetailControl
         fontSize: 16.sp,
         height: 20.sp / 16,
       ),
-      children: [
-        const TextSpan(
+      children: const [
+        TextSpan(
           text: '아이템 구매 후 장착하고\n',
         ),
         TextSpan(
@@ -235,10 +225,7 @@ Map renderItemReadyJoinedElse(ChallengesDetailController challengesDetailControl
     ),
   );
 
-  return {
-    'suffix': suffix,
-    'content': content
-  };
+  return {'suffix': suffix, 'content': content};
 }
 
 // 챌린지 진행 중 - 참가 중
@@ -276,31 +263,28 @@ Map renderItemInProgressJoined(ChallengesDetailController challengesDetailContro
         fontSize: 16.sp,
         height: 20.sp / 16,
       ),
-      children: [
-        const TextSpan(
+      children: const [
+        TextSpan(
           text: '아이템 장착으로\n',
         ),
         TextSpan(
           text: '챌린지 참가중',
           style: TextStyle(color: skyBlueColor),
         ),
-        const TextSpan(
+        TextSpan(
           text: '입니다.',
         ),
       ],
     ),
   );
 
-  return {
-    'suffix': suffix,
-    'content': content
-  };
+  return {'suffix': suffix, 'content': content};
 }
 
 // 챌린지 진행 중 - 참가 가능
 Map renderItemInProgressJoinedAvailableEquippedItem(ChallengesDetailController challengesDetailController) {
   Widget suffix = InkWell(
-    onTap: () => challengesDetailController.isDisableButton.value ? null :challengesDetailController.requestJoinChallenge(challengesDetailController.onFetchJoinChallenge),
+    onTap: () => challengesDetailController.isDisableButton.value ? null : challengesDetailController.requestJoinChallenge(challengesDetailController.onFetchJoinChallenge),
     child: Container(
         decoration: BoxDecoration(
           color: popupBgColor,
@@ -336,25 +320,22 @@ Map renderItemInProgressJoinedAvailableEquippedItem(ChallengesDetailController c
         fontSize: 16.sp,
         height: 20.sp / 16,
       ),
-      children: [
-        const TextSpan(
+      children: const [
+        TextSpan(
           text: '이미 챌린지 아이템을\n',
         ),
         TextSpan(
           text: '장착중',
           style: TextStyle(color: skyBlueColor),
         ),
-        const TextSpan(
+        TextSpan(
           text: '입니다',
         ),
       ],
     ),
   );
 
-  return {
-    'suffix': suffix,
-    'content': content
-  };
+  return {'suffix': suffix, 'content': content};
 }
 
 // 챌린지 진행 중 - 참가 가능
@@ -396,31 +377,28 @@ Map renderItemInProgressJoinedAvailableHaveItem(ChallengesDetailController chall
         fontSize: 16.sp,
         height: 20.sp / 16,
       ),
-      children: [
-        const TextSpan(
+      children: const [
+        TextSpan(
           text: '이미 챌린지 아이템을\n',
         ),
         TextSpan(
           text: '보유중',
           style: TextStyle(color: skyBlueColor),
         ),
-        const TextSpan(
+        TextSpan(
           text: '입니다',
         ),
       ],
     ),
   );
 
-  return {
-    'suffix': suffix,
-    'content': content
-  };
+  return {'suffix': suffix, 'content': content};
 }
 
 // 챌린지 진행 중 - 참가 가능
 Map renderItemInProgressJoinedAvailable(ChallengesDetailController challengesDetailController) {
   Widget suffix = InkWell(
-    onTap: () => challengesDetailController.isDisableButton.value ? null :challengesDetailController.requestJoinChallenge(challengesDetailController.showMoveToShopItem),
+    onTap: () => challengesDetailController.isDisableButton.value ? null : challengesDetailController.requestJoinChallenge(challengesDetailController.showMoveToShopItem),
     child: Container(
         decoration: BoxDecoration(
           color: popupBgColor,
@@ -456,8 +434,8 @@ Map renderItemInProgressJoinedAvailable(ChallengesDetailController challengesDet
         fontSize: 16.sp,
         height: 20.sp / 16,
       ),
-      children: [
-        const TextSpan(
+      children: const [
+        TextSpan(
           text: '아이템 구매 후 장착하고\n',
         ),
         TextSpan(
@@ -468,10 +446,7 @@ Map renderItemInProgressJoinedAvailable(ChallengesDetailController challengesDet
     ),
   );
 
-  return {
-    'suffix': suffix,
-    'content': content
-  };
+  return {'suffix': suffix, 'content': content};
 }
 
 // 챌린지 진행 중 - 참가 마감
@@ -495,7 +470,7 @@ Map renderItemInProgressJoinedClosed(ChallengesDetailController challengesDetail
         ),
         child: Padding(
           padding: EdgeInsets.symmetric(vertical: 13.0.sp, horizontal: 25.sp),
-          child: StyledText(
+          child: const StyledText(
             '참가마감',
             fontWeight: 500,
             fontSize: 18,
@@ -514,22 +489,19 @@ Map renderItemInProgressJoinedClosed(ChallengesDetailController challengesDetail
         fontSize: 16.sp,
         height: 20.sp / 16,
       ),
-      children: [
+      children: const [
         TextSpan(
           text: '아이템 판매완료',
           style: TextStyle(color: skyBlueColor),
         ),
-        const TextSpan(
+        TextSpan(
           text: '로\n챌린지 참가가 마감되었습니다.',
         ),
       ],
     ),
   );
 
-  return {
-    'suffix': suffix,
-    'content': content
-  };
+  return {'suffix': suffix, 'content': content};
 }
 
 // 챌린지 진행 중 - 챌린지 달성
@@ -555,10 +527,7 @@ Map renderItemInProgressElse(ChallengesDetailController challengesDetailControll
     ),
   );
 
-  return {
-    'suffix': suffix,
-    'content': content
-  };
+  return {'suffix': suffix, 'content': content};
 }
 
 // 챌린지 종료 - 챌린지 달성
@@ -584,10 +553,7 @@ Map renderItemEndedComplete(ChallengesDetailController challengesDetailControlle
     ),
   );
 
-  return {
-    'suffix': suffix,
-    'content': content
-  };
+  return {'suffix': suffix, 'content': content};
 }
 
 // 챌린지 종료 - 챌린지 미달성
@@ -613,10 +579,7 @@ Map renderItemEndedInComplete(ChallengesDetailController challengesDetailControl
     ),
   );
 
-  return {
-    'suffix': suffix,
-    'content': content
-  };
+  return {'suffix': suffix, 'content': content};
 }
 
 // 챌린지 종료 - 참여하지 않음
@@ -640,7 +603,7 @@ Map renderItemEndedElse(ChallengesDetailController challengesDetailController) {
         ),
         child: Padding(
           padding: EdgeInsets.symmetric(vertical: 13.0.sp, horizontal: 40.sp),
-          child: StyledText(
+          child: const StyledText(
             '종료',
             fontWeight: 500,
             fontSize: 18,
@@ -651,7 +614,7 @@ Map renderItemEndedElse(ChallengesDetailController challengesDetailController) {
         )),
   );
 
-  Widget content =  RichText(
+  Widget content = RichText(
     text: TextSpan(
       style: TextStyle(
         color: skyBlueColor,
@@ -670,8 +633,5 @@ Map renderItemEndedElse(ChallengesDetailController challengesDetailController) {
     ),
   );
 
-  return {
-    'suffix': suffix,
-    'content': content
-  };
+  return {'suffix': suffix, 'content': content};
 }

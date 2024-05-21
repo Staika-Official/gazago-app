@@ -38,20 +38,20 @@ class SendStikGoWallet extends StatelessWidget {
                       radius: 19.sp,
                       foregroundImage: controller.assetStik.value != null
                           ? CachedNetworkImageProvider(
-                        controller.assetStik.value!.logoUrl,
-                        headers: imageNetworkHeader,
-                      )
+                              controller.assetStik.value!.logoUrl,
+                              headers: imageNetworkHeader,
+                            )
                           : Image.asset(
-                        'assets/images/ic_launcher.png',
-                        width: 23.sp,
-                      ).image,
+                              'assets/images/ic_launcher.png',
+                              width: 23.sp,
+                            ).image,
                     ),
                     Padding(
                       padding: EdgeInsets.only(left: 10.0.sp),
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          StyledText(
+                          const StyledText(
                             '보유 중',
                             color: lightGrayColor,
                             fontSize: 12,
@@ -61,7 +61,7 @@ class SendStikGoWallet extends StatelessWidget {
                           Padding(
                             padding: EdgeInsets.only(top: 6.0.sp),
                             child: StyledText(
-                              '${formatDecimalPlaces(double.parse(controller.assetStik.value!.uiAmountString), 4, isAutoDecimal: true,roundType: RoundType.floor)} STIK',
+                              '${formatDecimalPlaces(double.parse(controller.assetStik.value!.uiAmountString), 4, isAutoDecimal: true, roundType: RoundType.floor)} STIK',
                               fontSize: 18,
                               lineHeight: 19,
                               fontWeight: 500,
@@ -90,19 +90,19 @@ class SendStikGoWallet extends StatelessWidget {
                     TextField(
                       decoration: InputDecoration(
                         hintText: '0',
-                        hintStyle: TextStyle(
+                        hintStyle: const TextStyle(
                           color: Colors.white,
                           fontWeight: FontWeight.w400,
                         ),
                         suffixIcon: Padding(
-                          padding: EdgeInsets.only(right:12.0.sp),
-                          child: StyledText(' STIK',
+                          padding: EdgeInsets.only(right: 12.0.sp),
+                          child: const StyledText(
+                            ' STIK',
                             fontSize: 24,
                             fontWeight: 400,
                             lineHeight: 40,
                           ),
                         ),
-
                         focusedBorder: const OutlineInputBorder(
                           borderRadius: BorderRadius.all(Radius.circular(10.0)),
                           borderSide: BorderSide(width: 2, color: Color(0xFF363841)),
@@ -145,9 +145,8 @@ class SendStikGoWallet extends StatelessWidget {
                       cursorColor: Colors.white,
                       focusNode: controller.focusNode,
                       onChanged: (value) {
-
                         controller.setAmount(value);
-                      } ,
+                      },
                       onSubmitted: (val) => controller.openSendStikGoWalletAlert(),
                     ),
                   ],
@@ -156,53 +155,55 @@ class SendStikGoWallet extends StatelessWidget {
               Expanded(
                 child: controller.isFetching.value
                     ? Container(
-                    color: subBg01Color,
-                    child: Align(
-                      alignment: Alignment.bottomCenter,
-                      child: Container(
-                        color: popupBgColor,
-                        height: 60.sp,
-                        alignment: Alignment.center,
-                        child: InkWell(
-                          onTap: null,
-                          child: Padding(
-                            padding: EdgeInsets.symmetric(vertical: 8.0.sp),
-                            child: Center(
-                              child: StyledText(
-                                '보내기',
-                                color: deepGrayColor,
-                                fontSize: 18,
-                                fontWeight: 500,
+                        color: subBg01Color,
+                        child: Align(
+                          alignment: Alignment.bottomCenter,
+                          child: Container(
+                            color: popupBgColor,
+                            height: 60.sp,
+                            alignment: Alignment.center,
+                            child: InkWell(
+                              onTap: null,
+                              child: Padding(
+                                padding: EdgeInsets.symmetric(vertical: 8.0.sp),
+                                child: const Center(
+                                  child: StyledText(
+                                    '보내기',
+                                    color: deepGrayColor,
+                                    fontSize: 18,
+                                    fontWeight: 500,
+                                  ),
+                                ),
                               ),
                             ),
                           ),
                         ),
-                      ),
-                    ))
+                      )
                     : Container(
-                    color: subBg01Color,
-                    child: Align(
-                      alignment: Alignment.bottomCenter,
-                      child: Container(
-                        color: controller.isValid.value ? skyBlueColor : popupBgColor,
-                        height: 60.sp,
-                        alignment: Alignment.center,
-                        child: InkWell(
-                          onTap: controller.isValid.value ? () => controller.openSendStikGoWalletAlert() : null,
-                          child: Padding(
-                            padding: EdgeInsets.symmetric(vertical: 8.0.sp),
-                            child: Center(
-                              child: StyledText(
-                                '보내기',
-                                color: controller.isValid.value ? Colors.black : deepGrayColor,
-                                fontSize: 18,
-                                fontWeight: 500,
+                        color: subBg01Color,
+                        child: Align(
+                          alignment: Alignment.bottomCenter,
+                          child: Container(
+                            color: controller.isValid.value ? skyBlueColor : popupBgColor,
+                            height: 60.sp,
+                            alignment: Alignment.center,
+                            child: InkWell(
+                              onTap: controller.isValid.value ? () => controller.openSendStikGoWalletAlert() : null,
+                              child: Padding(
+                                padding: EdgeInsets.symmetric(vertical: 8.0.sp),
+                                child: Center(
+                                  child: StyledText(
+                                    '보내기',
+                                    color: controller.isValid.value ? Colors.black : deepGrayColor,
+                                    fontSize: 18,
+                                    fontWeight: 500,
+                                  ),
+                                ),
                               ),
                             ),
                           ),
                         ),
                       ),
-                    )),
               )
             ],
           );

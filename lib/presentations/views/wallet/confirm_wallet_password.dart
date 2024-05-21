@@ -42,15 +42,15 @@ Future<String> showConfirmPasswordDialog(WalletMasterController controller) {
                     fontSize: 22.sp,
                     height: 32.sp / 22,
                   ),
-                  children: [
-                    const TextSpan(
+                  children: const [
+                    TextSpan(
                       text: '안전한 지갑 사용을 위해\n',
                     ),
                     TextSpan(
                       text: '이체 비밀번호',
                       style: TextStyle(color: skyBlueColor),
                     ),
-                    const TextSpan(
+                    TextSpan(
                       text: '를 한번 확인합니다.',
                     ),
                   ],
@@ -64,8 +64,8 @@ Future<String> showConfirmPasswordDialog(WalletMasterController controller) {
                   mainAxisSize: MainAxisSize.max,
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Padding(
-                      padding: const EdgeInsets.only(left: 10),
+                    const Padding(
+                      padding: EdgeInsets.only(left: 10),
                       child: StyledText(
                         '이체 비밀번호',
                         color: lightGrayColor,
@@ -91,9 +91,9 @@ Future<String> showConfirmPasswordDialog(WalletMasterController controller) {
                             child: TextField(
                               cursorColor: Colors.white,
                               obscureText: true,
-                              decoration: InputDecoration(
+                              decoration: const InputDecoration(
                                 border: InputBorder.none,
-                                contentPadding: const EdgeInsets.symmetric(horizontal: 15),
+                                contentPadding: EdgeInsets.symmetric(horizontal: 15),
                                 hintText: '이체 비밀번호를 입력해주세요',
                                 hintStyle: TextStyle(
                                   color: deepGrayColor,

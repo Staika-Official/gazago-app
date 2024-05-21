@@ -232,7 +232,7 @@ class ChallengeInfo extends StatelessWidget {
                                       controller.challengeDetails.value.challengeActivationType == 'CODE'
                                           ? Padding(
                                               padding: EdgeInsets.only(left: 5.0.sp),
-                                              child: StyledText(
+                                              child: const StyledText(
                                                 '참여코드 입력',
                                                 color: deepGrayColor,
                                                 fontSize: 14,

@@ -40,7 +40,7 @@ class VerificationDetail extends StatelessWidget {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      StyledText(
+                      const StyledText(
                         '생년월일',
                         fontSize: 16,
                         fontWeight: 500,
@@ -59,14 +59,14 @@ class VerificationDetail extends StatelessWidget {
                           controller: controller.textEditingController,
                           decoration: InputDecoration(
                             focusedBorder: OutlineInputBorder(
-                              borderSide: BorderSide(
+                              borderSide: const BorderSide(
                                 color: popupBgColor,
                                 width: 2,
                               ),
                               borderRadius: BorderRadius.circular(10),
                             ),
                             enabledBorder: OutlineInputBorder(
-                              borderSide: BorderSide(
+                              borderSide: const BorderSide(
                                 color: popupBgColor,
                                 width: 2,
                               ),
@@ -93,7 +93,7 @@ class VerificationDetail extends StatelessWidget {
                       ),
                       Padding(
                         padding: EdgeInsets.only(top: 22.0.sp),
-                        child: StyledText(
+                        child: const StyledText(
                           '성별',
                           fontSize: 16,
                           fontWeight: 500,
@@ -120,7 +120,7 @@ class VerificationDetail extends StatelessWidget {
                                   ),
                                   side: controller.userGender.value == Gender.male
                                       ? BorderSide.none
-                                      : BorderSide(
+                                      : const BorderSide(
                                           color: popupBgColor,
                                           width: 2,
                                           style: BorderStyle.solid,
@@ -154,7 +154,7 @@ class VerificationDetail extends StatelessWidget {
                                   ),
                                   side: controller.userGender.value == Gender.female
                                       ? BorderSide.none
-                                      : BorderSide(
+                                      : const BorderSide(
                                           color: popupBgColor,
                                           width: 2,
                                           style: BorderStyle.solid,

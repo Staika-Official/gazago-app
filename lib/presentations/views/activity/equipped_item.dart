@@ -60,7 +60,7 @@ class EquippedItems extends StatelessWidget {
                                   iconShopReward,
                                   Padding(
                                     padding: EdgeInsets.only(left: 4.0.sp),
-                                    child: StyledText(
+                                    child: const StyledText(
                                       'GO 보상',
                                       color: skyBlueColor,
                                       fontSize: 12,
@@ -124,7 +124,7 @@ class EquippedItems extends StatelessWidget {
                                     padding: EdgeInsets.only(right: 4.0.sp),
                                     child: iconShopStamina,
                                   ),
-                                  StyledText(
+                                  const StyledText(
                                     '체력',
                                     color: lightGreenColor,
                                     fontSize: 12,
@@ -143,7 +143,7 @@ class EquippedItems extends StatelessWidget {
                               '${controller.equippedLuckRate.toInt()}',
                               fontSize: 30,
                               fontWeight: 500,
-                              color: pinkColor  ,
+                              color: pinkColor,
                               letterSpacing: -.1,
                             ),
                             Padding(
@@ -155,7 +155,7 @@ class EquippedItems extends StatelessWidget {
                                     padding: EdgeInsets.only(right: 4.0.sp),
                                     child: iconShopLuck,
                                   ),
-                                  StyledText(
+                                  const StyledText(
                                     '행운',
                                     color: pinkColor,
                                     fontSize: 12,

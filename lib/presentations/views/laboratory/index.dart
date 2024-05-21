@@ -29,9 +29,9 @@ class Laboratory extends StatelessWidget {
                     children: [
                       TextField(
                         onSubmitted: (String text) => debuggingController.verifyLabPassword(),
-                        decoration: InputDecoration(
+                        decoration: const InputDecoration(
                           focusColor: skyBlueColor,
-                          enabledBorder: const OutlineInputBorder(
+                          enabledBorder: OutlineInputBorder(
                             borderSide: BorderSide(
                               color: Colors.white,
                             ),

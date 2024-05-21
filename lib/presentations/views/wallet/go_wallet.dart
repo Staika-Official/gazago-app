@@ -74,9 +74,9 @@ class GoWallet extends StatelessWidget {
                       width: double.infinity,
                       child: Padding(
                         padding: EdgeInsets.only(left: 25.sp, right: 33.sp),
-                        child: Row(
+                        child: const Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: const [
+                          children: [
                             StyledText(
                               '디지털 자산',
                               fontSize: 16,
@@ -92,9 +92,9 @@ class GoWallet extends StatelessWidget {
                     Container(
                       width: double.infinity,
                       padding: EdgeInsets.only(left: 25.sp, right: 33.sp, top: 28.sp),
-                      child: Row(
+                      child: const Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: const [
+                        children: [
                           StyledText(
                             '디지털 자산 사용',
                             fontSize: 16,
@@ -140,7 +140,7 @@ class GoWallet extends StatelessWidget {
                                         child: Column(
                                           crossAxisAlignment: CrossAxisAlignment.start,
                                           children: [
-                                            StyledText(
+                                            const StyledText(
                                               'TIK 사용하기',
                                               fontSize: 14,
                                               lineHeight: 14,
@@ -172,7 +172,7 @@ class GoWallet extends StatelessWidget {
                     Expanded(
                       child: Padding(
                         padding: EdgeInsets.only(top: 20.sp, bottom: 20.0.sp, left: 20.sp, right: 20.sp),
-                        child: Align(
+                        child: const Align(
                           alignment: Alignment.bottomCenter,
                           child: StyledText('· GO 지갑은 가자고 내에서 TIK과 STIK을 관리하는 지갑입니다.', fontWeight: 500, fontSize: 10, letterSpacing: -.1, color: deepGrayColor, textAlign: TextAlign.center),
                         ),

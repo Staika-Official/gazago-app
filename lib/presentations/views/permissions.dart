@@ -87,7 +87,7 @@ class Permissions extends StatelessWidget {
                 const StyledText('접근 권한 안내', fontSize: 22, fontWeight: 500, lineHeight: 22),
                 Padding(
                   padding: EdgeInsets.only(top: 9.sp, bottom: 10.sp),
-                  child: StyledText(
+                  child: const StyledText(
                     '원활한 서비스 이용을 위하여 아래 권한들을\n허용해 주시기 바랍니다.',
                     fontSize: 16,
                     fontWeight: 500,
@@ -109,7 +109,7 @@ class Permissions extends StatelessWidget {
                 horizontal: 0,
                 vertical: 20.sp,
               ),
-              child: StyledText(
+              child: const StyledText(
                 "ㆍgazaGO는 운동 기록과 뱃지 획득 등의 기능 사용을 위해 앱이 닫혀 있을 때도 위치 데이터를 필요로 합니다. 원활한 서비스 이용을 위해 단말의 설정에서 위치 엑세스  권한을 ‘항상 허용'으로 설정해 주시길 바랍니다.",
                 fontSize: 13,
                 fontWeight: 500,

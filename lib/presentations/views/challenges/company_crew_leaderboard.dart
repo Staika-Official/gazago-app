@@ -45,7 +45,7 @@ class CompanyCrewLeaderboard extends StatelessWidget {
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    StyledText(
+                    const StyledText(
                       '실시간 TOP 10',
                       color: Colors.white,
                       fontSize: 16,
@@ -58,7 +58,7 @@ class CompanyCrewLeaderboard extends StatelessWidget {
                         onTap: () => Get.toNamed(Routes.webView, arguments: {'linkUrl': '${F.leaderboardUrl}/company/challenge/${controller.challengeId}/${controller.userId}'}),
                         child: Row(
                           children: [
-                            StyledText(
+                            const StyledText(
                               '더보기',
                               color: lightGrayColor,
                               fontSize: 14,

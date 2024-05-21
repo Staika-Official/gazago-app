@@ -251,9 +251,9 @@ class InventoryItemDetail extends StatelessWidget {
                                               Padding(
                                                 padding: EdgeInsets.only(top: 20.0.sp),
                                                 child: Container(
-                                                  decoration: BoxDecoration(
+                                                  decoration: const BoxDecoration(
                                                     color: subBg01Color,
-                                                    borderRadius: const BorderRadius.all(
+                                                    borderRadius: BorderRadius.all(
                                                       Radius.circular(12),
                                                     ),
                                                   ),
@@ -284,7 +284,7 @@ class InventoryItemDetail extends StatelessWidget {
                                                                           iconShopReward,
                                                                           Padding(
                                                                             padding: EdgeInsets.only(left: 4.0.sp),
-                                                                            child: StyledText(
+                                                                            child: const StyledText(
                                                                               'GO 보상',
                                                                               color: skyBlueColor,
                                                                               fontSize: 12,
@@ -305,7 +305,7 @@ class InventoryItemDetail extends StatelessWidget {
                                                                 (controller.selectedItem.value.itemStat!.durability! > 0 || controller.selectedItem.value.itemStat!.stamina! > 0))
                                                               SizedBox(
                                                                 height: 35.sp,
-                                                                child: VerticalDivider(
+                                                                child: const VerticalDivider(
                                                                   color: popupBgColor,
                                                                   width: 1,
                                                                   thickness: 1,
@@ -352,7 +352,7 @@ class InventoryItemDetail extends StatelessWidget {
                                                                 controller.selectedItem.value.itemStat!.goProfit! < 1)
                                                               SizedBox(
                                                                 height: 35.sp,
-                                                                child: VerticalDivider(
+                                                                child: const VerticalDivider(
                                                                   color: popupBgColor,
                                                                   width: 1,
                                                                   thickness: 1,
@@ -379,7 +379,7 @@ class InventoryItemDetail extends StatelessWidget {
                                                                             padding: EdgeInsets.only(right: 4.0.sp),
                                                                             child: iconShopStamina,
                                                                           ),
-                                                                          StyledText(
+                                                                          const StyledText(
                                                                             '체력',
                                                                             color: lightGreenColor,
                                                                             fontSize: 12,
@@ -396,7 +396,7 @@ class InventoryItemDetail extends StatelessWidget {
                                                             if (controller.selectedItem.value.itemStat != null && controller.selectedItem.value.itemStat!.luck! > 0)
                                                               SizedBox(
                                                                 height: 35.sp,
-                                                                child: VerticalDivider(
+                                                                child: const VerticalDivider(
                                                                   color: popupBgColor,
                                                                   width: 1,
                                                                   thickness: 1,
@@ -423,7 +423,7 @@ class InventoryItemDetail extends StatelessWidget {
                                                                             padding: EdgeInsets.only(right: 4.0.sp),
                                                                             child: iconShopLuck,
                                                                           ),
-                                                                          StyledText(
+                                                                          const StyledText(
                                                                             '행운',
                                                                             color: pinkColor,
                                                                             fontSize: 12,
@@ -494,7 +494,7 @@ class InventoryItemDetail extends StatelessWidget {
                                                                           iconShopStamina,
                                                                           Padding(
                                                                             padding: EdgeInsets.only(left: 4.0.sp),
-                                                                            child: StyledText(
+                                                                            child: const StyledText(
                                                                               '체력 회복',
                                                                               color: lightGreenColor,
                                                                               fontSize: 12,
@@ -675,7 +675,7 @@ class InventoryItemDetail extends StatelessWidget {
                                                             onTap: () => controller.moveChallengeDetail(),
                                                             child: Row(
                                                               children: [
-                                                                StyledText(
+                                                                const StyledText(
                                                                   '바로가기',
                                                                   color: lightGrayColor,
                                                                   fontSize: 14,
@@ -773,7 +773,7 @@ class InventoryItemDetail extends StatelessWidget {
                                                         onTap: null,
                                                         child: Padding(
                                                           padding: EdgeInsets.symmetric(vertical: 13.0.sp, horizontal: 30.sp),
-                                                          child: Column(
+                                                          child: const Column(
                                                             mainAxisAlignment: MainAxisAlignment.center,
                                                             children: [
                                                               StyledText(
@@ -817,7 +817,7 @@ class InventoryItemDetail extends StatelessWidget {
                                                         onTap: () => controller.checkEquippedChallengeItem(controller.selectedItem.value.equippedChallengeItem, controller.selectedItem.value.id),
                                                         child: Padding(
                                                           padding: EdgeInsets.symmetric(vertical: 13.0.sp, horizontal: 30.sp),
-                                                          child: Column(
+                                                          child: const Column(
                                                             mainAxisAlignment: MainAxisAlignment.center,
                                                             children: [
                                                               StyledText(

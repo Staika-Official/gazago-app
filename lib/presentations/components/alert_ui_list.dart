@@ -1878,7 +1878,7 @@ void itemPurchaseCompleteAlert(ShopDetailController controller) {
                                           padding: EdgeInsets.only(right: 4.0.sp),
                                           child: iconShopLuck,
                                         ),
-                                        StyledText(
+                                        const StyledText(
                                           '행운',
                                           color: pinkColor,
                                           fontSize: 12,
@@ -3639,10 +3639,10 @@ void showCreateStaikaWalletAlert() {
               fontWeight: FontWeight.w500,
               color: Colors.white,
             ),
-            TextSpan(
+            const TextSpan(
               text: 'Staika Wallet을 ',
               children: [
-                TextSpan(text: '생성', style: const TextStyle(color: skyBlueColor)),
+                TextSpan(text: '생성', style: TextStyle(color: skyBlueColor)),
                 TextSpan(text: '합니다.'),
               ],
             ),
@@ -4289,7 +4289,7 @@ void exchangeStikShortBalanceAlert(StaikaWalletController controller) {
               textAlign: TextAlign.center,
               text: TextSpan(
                 style: TextStyle(color: lightGrayColor, fontWeight: FontWeight.w500, fontSize: 14.sp, height: 18.sp / 14, letterSpacing: -.1),
-                children: [
+                children: const [
                   TextSpan(
                     text: '솔라나(Solana) 블록체인 네트워크 정책상\n지갑에 최소',
                   ),
@@ -4676,22 +4676,22 @@ void showItemTipAlert() {
                                   fontSize: 16.sp,
                                   height: 24.sp / 16.sp,
                                 ),
-                                children: [
-                                  const TextSpan(
+                                children: const [
+                                  TextSpan(
                                     text: '능력치의 수치는 각 아이템 등급에 따라\n',
                                   ),
-                                  const TextSpan(
+                                  TextSpan(
                                     text: '등급별 기준치 ',
                                     style: TextStyle(color: skyBlueColor),
                                   ),
-                                  const TextSpan(
+                                  TextSpan(
                                     text: '내에서\n',
                                   ),
-                                  const TextSpan(
+                                  TextSpan(
                                     text: '확률적으로 구매시 부여',
                                     style: TextStyle(color: skyBlueColor),
                                   ),
-                                  const TextSpan(
+                                  TextSpan(
                                     text: '됩니다',
                                   ),
                                 ],
@@ -5622,95 +5622,93 @@ void consumerItemUsagePopup(controller, context) {
                           thickness: 2,
                         ),
                       ),
-                      Container(
-                        child: Column(
-                          children: [
-                            Padding(
-                              padding: EdgeInsets.only(bottom: 1.0.sp),
-                              child: Row(
-                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                children: [
-                                  StyledText(
-                                    controller.selectedType.value == 'STAMINA' ? '회복 후 체력' : '수리 후 내구도',
-                                    fontSize: 17,
-                                    fontWeight: 500,
-                                    lineHeight: 18,
-                                    color: controller.resultStat.value > controller.currentStat.value
-                                        ? controller.resultStat.value > 9999
-                                            ? const Color(0xFFFF2222)
-                                            : skyBlueColor
-                                        : Colors.white,
-                                  ),
-                                  StyledText(
-                                    formatDecimalPlaces(controller.resultStat.value, 2),
-                                    fontSize: 17,
-                                    fontWeight: 500,
-                                    lineHeight: 18,
-                                    color: controller.resultStat.value > controller.currentStat.value
-                                        ? controller.resultStat.value > 9999
-                                            ? const Color(0xFFFF2222)
-                                            : skyBlueColor
-                                        : Colors.white,
-                                  ),
-                                ],
-                              ),
-                            ),
-                            controller.resultStat.value > 9999
-                                ? Padding(
-                                    padding: EdgeInsets.symmetric(vertical: 13.0.sp),
-                                    child: const StyledText(
-                                      '9999 이하로만 회복이 가능 합니다.',
-                                      fontSize: 14,
-                                      fontWeight: 500,
-                                      lineHeight: 14,
-                                      color: Color(0xFFFF2222),
-                                    ),
-                                  )
-                                : SizedBox(height: 40.sp),
-                            Row(
+                      Column(
+                        children: [
+                          Padding(
+                            padding: EdgeInsets.only(bottom: 1.0.sp),
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               children: [
-                                Expanded(
-                                  child: GazagoButton(
-                                    onTap: () {
-                                      Get.back();
-                                      controller.initStat();
-                                    },
-                                    buttonText: '취소',
-                                    textColor: Colors.white,
-                                    buttonColor: popupBgColor,
+                                StyledText(
+                                  controller.selectedType.value == 'STAMINA' ? '회복 후 체력' : '수리 후 내구도',
+                                  fontSize: 17,
+                                  fontWeight: 500,
+                                  lineHeight: 18,
+                                  color: controller.resultStat.value > controller.currentStat.value
+                                      ? controller.resultStat.value > 9999
+                                          ? const Color(0xFFFF2222)
+                                          : skyBlueColor
+                                      : Colors.white,
+                                ),
+                                StyledText(
+                                  formatDecimalPlaces(controller.resultStat.value, 2),
+                                  fontSize: 17,
+                                  fontWeight: 500,
+                                  lineHeight: 18,
+                                  color: controller.resultStat.value > controller.currentStat.value
+                                      ? controller.resultStat.value > 9999
+                                          ? const Color(0xFFFF2222)
+                                          : skyBlueColor
+                                      : Colors.white,
+                                ),
+                              ],
+                            ),
+                          ),
+                          controller.resultStat.value > 9999
+                              ? Padding(
+                                  padding: EdgeInsets.symmetric(vertical: 13.0.sp),
+                                  child: const StyledText(
+                                    '9999 이하로만 회복이 가능 합니다.',
+                                    fontSize: 14,
+                                    fontWeight: 500,
+                                    lineHeight: 14,
+                                    color: Color(0xFFFF2222),
                                   ),
+                                )
+                              : SizedBox(height: 40.sp),
+                          Row(
+                            children: [
+                              Expanded(
+                                child: GazagoButton(
+                                  onTap: () {
+                                    Get.back();
+                                    controller.initStat();
+                                  },
+                                  buttonText: '취소',
+                                  textColor: Colors.white,
+                                  buttonColor: popupBgColor,
                                 ),
-                                SizedBox(
-                                  width: 9.sp,
-                                ),
-                                Expanded(
-                                  child: GazagoButton(
-                                    onTap: () {
-                                      if (controller.resultStat.value <= 9999 && controller.totalStat > 0) {
-                                        if (controller.selectedType.value == 'STAMINA') {
-                                          if (controller.exerciseState.value != ExerciseState.ongoing) {
-                                            Get.back();
-                                            showAutoRechargeStaminaAlert(controller);
-                                          } else {
-                                            Get.back();
-                                            controller.confirmRecoveryOrRepairStat(controller.selectedType.value);
-                                          }
+                              ),
+                              SizedBox(
+                                width: 9.sp,
+                              ),
+                              Expanded(
+                                child: GazagoButton(
+                                  onTap: () {
+                                    if (controller.resultStat.value <= 9999 && controller.totalStat > 0) {
+                                      if (controller.selectedType.value == 'STAMINA') {
+                                        if (controller.exerciseState.value != ExerciseState.ongoing) {
+                                          Get.back();
+                                          showAutoRechargeStaminaAlert(controller);
                                         } else {
                                           Get.back();
                                           controller.confirmRecoveryOrRepairStat(controller.selectedType.value);
                                         }
+                                      } else {
+                                        Get.back();
+                                        controller.confirmRecoveryOrRepairStat(controller.selectedType.value);
                                       }
-                                      return;
-                                    },
-                                    buttonText: controller.selectedType == 'STAMINA' ? '회복하기' : '수리하기',
-                                    textColor: Colors.black,
-                                    buttonColor: controller.resultStat.value <= 9999 && controller.totalStat > 0 ? skyBlueColor : const Color(0xFF11A4AD),
-                                  ),
+                                    }
+                                    return;
+                                  },
+                                  buttonText: controller.selectedType == 'STAMINA' ? '회복하기' : '수리하기',
+                                  textColor: Colors.black,
+                                  buttonColor: controller.resultStat.value <= 9999 && controller.totalStat > 0 ? skyBlueColor : const Color(0xFF11A4AD),
                                 ),
-                              ],
-                            ),
-                          ],
-                        ),
+                              ),
+                            ],
+                          ),
+                        ],
                       ),
                     ],
                   );
@@ -7756,7 +7754,7 @@ void showModalWebview(controller, context, {String? title, String linkUrl = ''})
       return Material(
         child: Scaffold(
           body: Container(
-            decoration: BoxDecoration(
+            decoration: const BoxDecoration(
               borderRadius: BorderRadius.only(topLeft: Radius.circular(20.0), topRight: Radius.circular(20.0)),
             ),
             child: CupertinoPageScaffold(
@@ -7764,13 +7762,13 @@ void showModalWebview(controller, context, {String? title, String linkUrl = ''})
               navigationBar: CupertinoNavigationBar(
                 backgroundColor: popupBgColor,
                 leading: InkWell(
-                  child: Icon(Icons.close, color: Colors.white),
+                  child: const Icon(Icons.close, color: Colors.white),
                   onTap: () {
                     Get.back();
                   },
                 ),
                 trailing: InkWell(
-                  child: Icon(Icons.refresh, color: Colors.white),
+                  child: const Icon(Icons.refresh, color: Colors.white),
                   onTap: () {
                     // webViewController.webViewKey.currentState?.reloadWebView();
                     if (inAppWebViewController != null) {
@@ -7779,7 +7777,7 @@ void showModalWebview(controller, context, {String? title, String linkUrl = ''})
                   },
                 ),
                 middle: Padding(
-                  padding: EdgeInsets.symmetric(horizontal: 5.0),
+                  padding: const EdgeInsets.symmetric(horizontal: 5.0),
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
@@ -7945,7 +7943,7 @@ void showMinimumSendStikAmountAlert() {
           iconCircleSkyBlueCheck,
           Padding(
             padding: EdgeInsets.only(top: 20.0.sp),
-            child: StyledText(
+            child: const StyledText(
               '최소 5STIK 이상 보낼 수 있습니다.',
               fontSize: 20,
               lineHeight: 28,
@@ -7981,7 +7979,7 @@ void showRefetchGetSpendingWalletAlert() {
         children: [
           Padding(
             padding: EdgeInsets.only(top: 20.0.sp),
-            child: StyledText(
+            child: const StyledText(
               '지갑 정보를 불러오지 못했습니다.\n확인을 누르시면 재조회를 시도합니다.',
               fontSize: 20,
               lineHeight: 28,
@@ -8042,7 +8040,7 @@ void showIOSAdPermissionAlert(DailyBenefitController controller) {
                   children: [
                     Padding(
                       padding: EdgeInsets.only(bottom: 20.sp),
-                      child: StyledText(
+                      child: const StyledText(
                         '광고 시청을 위해\n앱 추적 요청을 허용해주세요.',
                         fontSize: 20,
                         lineHeight: 29,
@@ -8062,7 +8060,7 @@ void showIOSAdPermissionAlert(DailyBenefitController controller) {
                       padding: EdgeInsets.symmetric(vertical: 16.0.sp),
                       child: RichText(
                           textAlign: TextAlign.center,
-                          text: TextSpan(
+                          text: const TextSpan(
                             style: TextStyle(color: lightGrayColor, fontWeight: FontWeight.w500, fontSize: 14, height: 22 / 14, letterSpacing: -.1),
                             children: [
                               TextSpan(

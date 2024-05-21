@@ -109,9 +109,7 @@ void showChallengeNotification(ChallengesDetailController controller, ChallengeN
                             right: 20.sp,
                             bottom: 6.sp,
                           ),
-                          child:
-
-                          SizedBox(
+                          child: SizedBox(
                             height: 100,
                             child: Center(
                               child: Html(
@@ -124,7 +122,6 @@ void showChallengeNotification(ChallengesDetailController controller, ChallengeN
                                     fontWeight: FontWeight.w500,
                                     fontSize: FontSize(18.sp),
                                     textAlign: TextAlign.center,
-
                                   ),
                                   "p": Style(
                                     margin: Margins.zero,
@@ -190,7 +187,7 @@ void showChallengeNotification(ChallengesDetailController controller, ChallengeN
                               setState(() {
                                 if (selectedIndex < notificationLength - 1) {
                                   selectedIndex++;
-                                  pageController.animateToPage(selectedIndex, duration: Duration(milliseconds: 300), curve: Curves.easeInOut);
+                                  pageController.animateToPage(selectedIndex, duration: const Duration(milliseconds: 300), curve: Curves.easeInOut);
                                 } else {
                                   Get.back();
                                 }
@@ -203,7 +200,7 @@ void showChallengeNotification(ChallengesDetailController controller, ChallengeN
                               foregroundColor: Colors.transparent,
                             ),
                             child: StyledText(
-                                selectedIndex < notificationLength - 1 ? '다음' : '시작하기',
+                              selectedIndex < notificationLength - 1 ? '다음' : '시작하기',
                               fontSize: 14,
                               fontWeight: 500,
                             ),

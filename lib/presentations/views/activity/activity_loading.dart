@@ -53,7 +53,7 @@ class ActivityLoading extends StatelessWidget {
                     child: Padding(
                       padding: EdgeInsets.all(8.0.sp),
                       child: Container(
-                        decoration: BoxDecoration(
+                        decoration: const BoxDecoration(
                           border: Border(
                             bottom: BorderSide(
                               // POINT
@@ -64,7 +64,7 @@ class ActivityLoading extends StatelessWidget {
                         ),
                         child: Padding(
                           padding: EdgeInsets.only(bottom: 4.0.sp),
-                          child: StyledText(
+                          child: const StyledText(
                             '건너뛰기',
                             color: lightGrayColor,
                             fontSize: 18,

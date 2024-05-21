@@ -45,7 +45,7 @@ class SignupComplete extends StatelessWidget {
                         ),
                         Padding(
                           padding: EdgeInsets.only(top: 14.0.sp),
-                          child: StyledText(
+                          child: const StyledText(
                             '이제 gazaGO와 함께\n즐거운 운동을 시작해 보세요.!',
                             fontSize: 16,
                             fontWeight: 500,
@@ -75,7 +75,7 @@ class SignupComplete extends StatelessWidget {
                       ),
                       child: Padding(
                         padding: EdgeInsets.all(10.0.sp),
-                        child: StyledText(
+                        child: const StyledText(
                           '기존에 가입된 회원정보가 있어 계정 연동이 완료되었습니다. 연결된 계정은 ‘설정 > 계정정보 > SNS로그인 에서 확인 가능합니다.',
                           color: lightGrayColor,
                           fontSize: 14,

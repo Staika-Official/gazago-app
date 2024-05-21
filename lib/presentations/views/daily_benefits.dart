@@ -141,7 +141,7 @@ class DailyBenefits extends StatelessWidget {
                                 fontWeight: 500,
                                 letterSpacing: -0.3,
                               )
-                            : StyledText(
+                            : const StyledText(
                                 '0',
                                 fontFamily: 'Montserrat',
                                 fontSize: 50,

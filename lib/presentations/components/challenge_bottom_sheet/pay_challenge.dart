@@ -27,7 +27,7 @@ Map renderPayReadyRegisterReady(ChallengesDetailController challengesDetailContr
         ),
         child: Padding(
           padding: EdgeInsets.symmetric(vertical: 13.0.sp, horizontal: 25.sp),
-          child: StyledText(
+          child: const StyledText(
             '접수 전',
             fontWeight: 500,
             fontSize: 18,
@@ -49,7 +49,7 @@ Map renderPayReadyRegisterReady(ChallengesDetailController challengesDetailContr
       children: [
         TextSpan(
           text: '접수 예정일  ${DateFormat('MM.dd HH:mm', 'ko').format(DateTime.parse(challengesDetailController.challengeDetails.value.reservedDate!).toLocal())}',
-          style: TextStyle(color: skyBlueColor),
+          style: const TextStyle(color: skyBlueColor),
         ),
       ],
     ),
@@ -79,7 +79,7 @@ Map renderPayReadyJoined(ChallengesDetailController challengesDetailController) 
         ),
         child: Padding(
           padding: EdgeInsets.symmetric(vertical: 13.0.sp, horizontal: 25.sp),
-          child: StyledText(
+          child: const StyledText(
             '챌린지 전',
             fontWeight: 500,
             fontSize: 18,
@@ -98,8 +98,8 @@ Map renderPayReadyJoined(ChallengesDetailController challengesDetailController) 
         fontSize: 16.sp,
         height: 20.sp / 16,
       ),
-      children: [
-        const TextSpan(
+      children: const [
+        TextSpan(
           text: '참가비 납부 완료!\n',
         ),
         TextSpan(
@@ -153,8 +153,8 @@ Map renderPayReadyJoinedElse(ChallengesDetailController challengesDetailControll
         fontSize: 16.sp,
         height: 20.sp / 16,
       ),
-      children: [
-        const TextSpan(
+      children: const [
+        TextSpan(
           text: '참가비 납부하고\n',
         ),
         TextSpan(
@@ -172,7 +172,7 @@ Map renderPayReadyJoinedElse(ChallengesDetailController challengesDetailControll
 Map renderPayInProgressJoinedAvailable(ChallengesDetailController challengesDetailController) {
   Widget suffix = InkWell(
     // onTap: () => challengesDetailController.showMoveToShopItem(),
-    onTap: () => challengesDetailController.isDisableButton.value ? null :challengesDetailController.requestJoinChallenge(challengesDetailController.onJoinPayChallenge),
+    onTap: () => challengesDetailController.isDisableButton.value ? null : challengesDetailController.requestJoinChallenge(challengesDetailController.onJoinPayChallenge),
     child: Container(
         decoration: BoxDecoration(
           color: popupBgColor,
@@ -208,8 +208,8 @@ Map renderPayInProgressJoinedAvailable(ChallengesDetailController challengesDeta
         fontSize: 16.sp,
         height: 20.sp / 16,
       ),
-      children: [
-        const TextSpan(
+      children: const [
+        TextSpan(
           text: '참가비 납부하고\n',
         ),
         TextSpan(
@@ -258,15 +258,15 @@ Map renderPayInProgressJoined(ChallengesDetailController challengesDetailControl
         fontSize: 16.sp,
         height: 20.sp / 16,
       ),
-      children: [
-        const TextSpan(
+      children: const [
+        TextSpan(
           text: '참가비 납부가 완료되어\n',
         ),
         TextSpan(
           text: '챌린지 참가중',
           style: TextStyle(color: skyBlueColor),
         ),
-        const TextSpan(
+        TextSpan(
           text: '입니다.',
         ),
       ],
@@ -297,7 +297,7 @@ Map renderPayInProgressJoinedClosed(ChallengesDetailController challengesDetailC
         ),
         child: Padding(
           padding: EdgeInsets.symmetric(vertical: 13.0.sp, horizontal: 25.sp),
-          child: StyledText(
+          child: const StyledText(
             '참가마감',
             fontWeight: 500,
             fontSize: 18,
@@ -316,12 +316,12 @@ Map renderPayInProgressJoinedClosed(ChallengesDetailController challengesDetailC
         fontSize: 16.sp,
         height: 20.sp / 16,
       ),
-      children: [
+      children: const [
         TextSpan(
           text: '모집인원 달성!\n',
           style: TextStyle(color: skyBlueColor),
         ),
-        const TextSpan(
+        TextSpan(
           text: '다음 챌린지를 기대해주세요.',
         ),
       ],
@@ -430,7 +430,7 @@ Map renderPayEndedElse(ChallengesDetailController challengesDetailController) {
         ),
         child: Padding(
           padding: EdgeInsets.symmetric(vertical: 13.0.sp, horizontal: 40.sp),
-          child: StyledText(
+          child: const StyledText(
             '종료',
             fontWeight: 500,
             fontSize: 18,

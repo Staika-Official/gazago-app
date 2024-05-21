@@ -63,12 +63,12 @@ class Home extends StatelessWidget {
                           clipBehavior: Clip.none,
                           children: [
                             Container(
-                              padding: EdgeInsets.all(14),
+                              padding: const EdgeInsets.all(14),
                               decoration: BoxDecoration(
                                 color: Colors.black,
                                 borderRadius: BorderRadius.circular(8),
                               ),
-                              child: StyledText(
+                              child: const StyledText(
                                 '새로운 챌린지가 오픈했어요',
                                 color: skyBlueColor,
                                 fontSize: 14,
@@ -85,7 +85,7 @@ class Home extends StatelessWidget {
                                 child: Container(
                                   width: 15,
                                   height: 15,
-                                  decoration: BoxDecoration(
+                                  decoration: const BoxDecoration(
                                     color: Colors.black,
                                   ),
                                 ),

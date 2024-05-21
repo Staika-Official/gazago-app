@@ -55,7 +55,7 @@ class CrewInfo extends StatelessWidget {
           ),
         ),
       ],
-      if(level > 1) ...[
+      if (level > 1) ...[
         Padding(
           padding: EdgeInsets.symmetric(horizontal: 5.0.sp),
           child: SizedBox(
@@ -139,7 +139,7 @@ class CrewInfo extends StatelessWidget {
           width: 70,
           child: Column(
             children: [
-               StyledText(
+              const StyledText(
                 '30',
                 fontSize: 24,
                 lineHeight: 26,
@@ -155,7 +155,7 @@ class CrewInfo extends StatelessWidget {
                     iconShopLuck,
                     Padding(
                       padding: EdgeInsets.only(left: 4.0.sp),
-                      child:  StyledText(
+                      child: const StyledText(
                         '행운',
                         color: pinkColor,
                         fontSize: 12,
@@ -341,7 +341,7 @@ class CrewInfo extends StatelessWidget {
                       padding: EdgeInsets.only(
                         top: 10.sp,
                         left: 14.sp,
-                        right:14.sp,
+                        right: 14.sp,
                         bottom: 8.sp,
                       ),
                       decoration: BoxDecoration(

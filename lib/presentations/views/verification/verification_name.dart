@@ -39,7 +39,7 @@ class VerificationName extends StatelessWidget {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      StyledText(
+                      const StyledText(
                         '이름',
                         fontSize: 16,
                         fontWeight: 500,
@@ -58,14 +58,14 @@ class VerificationName extends StatelessWidget {
                           onChanged: (name) => controller.updateName(name),
                           decoration: InputDecoration(
                             focusedBorder: OutlineInputBorder(
-                              borderSide: BorderSide(
+                              borderSide: const BorderSide(
                                 color: popupBgColor,
                                 width: 2,
                               ),
                               borderRadius: BorderRadius.circular(10),
                             ),
                             enabledBorder: OutlineInputBorder(
-                              borderSide: BorderSide(
+                              borderSide: const BorderSide(
                                 color: popupBgColor,
                                 width: 2,
                               ),
@@ -84,7 +84,7 @@ class VerificationName extends StatelessWidget {
                       ),
                       Padding(
                         padding: EdgeInsets.only(top: 22.0.sp),
-                        child: StyledText(
+                        child: const StyledText(
                           '국적',
                           fontSize: 16,
                           fontWeight: 500,
@@ -111,7 +111,7 @@ class VerificationName extends StatelessWidget {
                                   ),
                                   side: controller.nationality.value == Nationality.local
                                       ? BorderSide.none
-                                      : BorderSide(
+                                      : const BorderSide(
                                           color: popupBgColor,
                                           width: 2,
                                           style: BorderStyle.solid,
@@ -145,7 +145,7 @@ class VerificationName extends StatelessWidget {
                                   ),
                                   side: controller.nationality.value == Nationality.foreigner
                                       ? BorderSide.none
-                                      : BorderSide(
+                                      : const BorderSide(
                                           color: popupBgColor,
                                           width: 2,
                                           style: BorderStyle.solid,

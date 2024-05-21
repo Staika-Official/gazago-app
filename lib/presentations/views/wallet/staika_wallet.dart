@@ -143,7 +143,7 @@ class StaikaWallet extends StatelessWidget {
                             child: Row(
                               mainAxisAlignment: MainAxisAlignment.center,
                               children: [
-                                StyledText(
+                                const StyledText(
                                   '거래내역',
                                   fontSize: 14,
                                   lineHeight: 15,
@@ -210,7 +210,7 @@ class StaikaWallet extends StatelessWidget {
                     controller.isFetching.value
                         ? Padding(
                             padding: EdgeInsets.only(top: 100.sp),
-                            child: Center(child: SizedBox.square(dimension: 40, child: CircularProgressIndicator())),
+                            child: const Center(child: SizedBox.square(dimension: 40, child: CircularProgressIndicator())),
                           )
                         : controller.coinAssetList.isNotEmpty && controller.coinAssetList != null
                             ? Column(
@@ -222,7 +222,7 @@ class StaikaWallet extends StatelessWidget {
                         alignment: Alignment.bottomCenter,
                         child: Padding(
                           padding: EdgeInsets.only(top: 20.sp, bottom: 20.0.sp, left: 20.sp, right: 20.sp),
-                          child: StyledText(
+                          child: const StyledText(
                             '· Staika 지갑은 블록체인 상에 기록되는 블록체인 지갑입니다.',
                             fontWeight: 500,
                             fontSize: 10,

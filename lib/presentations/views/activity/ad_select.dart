@@ -9,7 +9,7 @@ class AdSelect extends StatelessWidget {
   Widget build(BuildContext context) {
     ActivityController controller = Get.find();
 
-    return Material(
+    return const Material(
       color: Colors.transparent,
       child: Center(
           // child: Column(

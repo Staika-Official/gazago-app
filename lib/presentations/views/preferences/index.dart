@@ -59,7 +59,7 @@ class Preferences extends StatelessWidget {
                                           width: 30.sp,
                                         ).image,
                                 ),
-                                if(controller.profile.value.nickname != null)
+                                if (controller.profile.value.nickname != null)
                                   Padding(
                                     padding: EdgeInsets.only(left: 14.0.sp),
                                     child: StyledText(
@@ -107,7 +107,7 @@ class Preferences extends StatelessWidget {
                                   ),
                                   child: Padding(
                                     padding: EdgeInsets.symmetric(vertical: 2.0.sp, horizontal: 10.sp),
-                                    child: StyledText(
+                                    child: const StyledText(
                                       '인증완료',
                                       color: skyBlueColor,
                                       fontWeight: 500,

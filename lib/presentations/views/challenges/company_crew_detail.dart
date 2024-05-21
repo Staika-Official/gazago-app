@@ -49,7 +49,7 @@ class CompanyCrewDetail extends StatelessWidget {
             fit: StackFit.expand,
             children: [
               Padding(
-                padding: EdgeInsets.only(bottom: 90.0),
+                padding: const EdgeInsets.only(bottom: 90.0),
                 child: SingleChildScrollView(
                   child: Column(
                     children: [
@@ -252,7 +252,7 @@ class CompanyCrewDetail extends StatelessWidget {
                               iconCompanyChallengeShare,
                               Padding(
                                 padding: EdgeInsets.only(top: 42.0.sp),
-                                child: StyledText(
+                                child: const StyledText(
                                   '내 크루를 공유해 보세요.',
                                   fontWeight: 500,
                                   fontSize: 20,
@@ -262,7 +262,7 @@ class CompanyCrewDetail extends StatelessWidget {
                               ),
                               Padding(
                                 padding: EdgeInsets.only(top: 12.0.sp),
-                                child: StyledText(
+                                child: const StyledText(
                                   '챌린지 기간 동안 함께 걸어\n리워드를 받아보세요!',
                                   fontWeight: 500,
                                   fontSize: 16,
@@ -279,7 +279,7 @@ class CompanyCrewDetail extends StatelessWidget {
                                   child: Row(
                                     mainAxisAlignment: MainAxisAlignment.center,
                                     children: [
-                                      StyledText(
+                                      const StyledText(
                                         '공유하기',
                                         fontSize: 14,
                                         fontWeight: 500,

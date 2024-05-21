@@ -72,9 +72,9 @@ class BuyTik extends StatelessWidget {
                 children: [
                   Padding(
                     padding: EdgeInsets.only(bottom: 20.sp),
-                    child: Row(
+                    child: const Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: const [
+                      children: [
                         StyledText(
                           '사용 STIK',
                           fontSize: 18,
@@ -92,9 +92,9 @@ class BuyTik extends StatelessWidget {
                   ),
                   Padding(
                     padding: EdgeInsets.only(bottom: 20.sp),
-                    child: Row(
+                    child: const Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: const [
+                      children: [
                         StyledText(
                           '충전 수수료',
                           fontSize: 18,
@@ -112,9 +112,9 @@ class BuyTik extends StatelessWidget {
                   ),
                   Padding(
                     padding: EdgeInsets.only(bottom: 20.sp),
-                    child: Row(
+                    child: const Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: const [
+                      children: [
                         StyledText(
                           '충전 후 STIK잔액',
                           fontSize: 18,
@@ -140,17 +140,17 @@ class BuyTik extends StatelessWidget {
             ),
             Padding(
               padding: EdgeInsets.only(top: 25.sp, bottom: 30.sp, left: 30.sp, right: 30.sp),
-              child: Row(
+              child: const Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  const StyledText(
+                  StyledText(
                     '총 충전 TIK',
                     fontSize: 18,
                     lineHeight: 18,
                     fontWeight: 500,
                   ),
                   Row(
-                    children: const [
+                    children: [
                       StyledText(
                         '000',
                         fontSize: 24,
@@ -168,7 +168,7 @@ class BuyTik extends StatelessWidget {
                 ],
               ),
             ),
-            SizedBox(
+            const SizedBox(
               width: double.infinity,
               child: StyledText(
                 '충전이 완료되면 취소할 수 없습니다.',
@@ -371,7 +371,7 @@ class BuyTik extends StatelessWidget {
                         onTap: () => null,
                         child: Padding(
                           padding: EdgeInsets.all(7.5.sp),
-                          child: Center(
+                          child: const Center(
                             child: StyledText(
                               '10',
                               fontSize: 16,
@@ -400,7 +400,7 @@ class BuyTik extends StatelessWidget {
                         onTap: () => null,
                         child: Padding(
                           padding: EdgeInsets.all(7.5.sp),
-                          child: Center(
+                          child: const Center(
                             child: StyledText(
                               '100',
                               fontSize: 16,
@@ -429,7 +429,7 @@ class BuyTik extends StatelessWidget {
                         onTap: () => null,
                         child: Padding(
                           padding: EdgeInsets.all(7.5.sp),
-                          child: Center(
+                          child: const Center(
                             child: StyledText(
                               '1000',
                               fontSize: 16,
@@ -458,7 +458,7 @@ class BuyTik extends StatelessWidget {
                         onTap: () => null,
                         child: Padding(
                           padding: EdgeInsets.all(7.5.sp),
-                          child: Center(
+                          child: const Center(
                             child: StyledText(
                               'Max',
                               fontSize: 16,
@@ -530,7 +530,7 @@ class BuyTik extends StatelessWidget {
                     ),
                     Expanded(
                       child: Ink(
-                        decoration: BoxDecoration(color: skyBlueColor),
+                        decoration: const BoxDecoration(color: skyBlueColor),
                         child: InkWell(
                           onTap: () => controller.showBuyConfirmation(getConfirmationBottomSheet(controller)),
                           child: Padding(

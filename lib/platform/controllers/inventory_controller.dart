@@ -192,7 +192,7 @@ class InventoryController extends GetxController with LinearProgressMixin, Inven
       /// [AnimationController]s can be created with `vsync: this` because of
       /// [TickerProviderStateMixin].
       vsync: this,
-      duration: Duration(seconds: 2),
+      duration: const Duration(seconds: 2),
     );
     super.onInit();
   }
@@ -473,13 +473,13 @@ class InventoryController extends GetxController with LinearProgressMixin, Inven
   void checkConsumerItemType(InventoryItemModel useItem) async {
     isConsumerItemUsing.value = useItem;
     Adjust.trackEvent(AdjustEvent('scaike'));
-    await Future.delayed(Duration(milliseconds: 400));
+    await Future.delayed(const Duration(milliseconds: 400));
     if (useItem.itemStat!.repairDurability! > 0) {
       await fetchRepairShoesUseOneItem(useItem, equippedShoe.value.id);
     } else {
       await fetchRecoveryUseOneItem(useItem);
     }
-    await Future.delayed(Duration(milliseconds: 400));
+    await Future.delayed(const Duration(milliseconds: 400));
     isConsumerItemUsing.value = null;
     getUserAllItems();
     getUserEquippedItems();
@@ -495,7 +495,7 @@ class InventoryController extends GetxController with LinearProgressMixin, Inven
 
   void showShoesRepairPopup(int id, context) async {
     isDisableButton.value = true;
-    if(Get.currentRoute.contains('home')){
+    if (Get.currentRoute.contains('home')) {
       Adjust.trackEvent(AdjustEvent('d82o3q'));
     } else {
       Adjust.trackEvent(AdjustEvent('j7mhac'));

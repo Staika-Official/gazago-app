@@ -44,7 +44,7 @@ class VerificationPhone extends StatelessWidget {
                     children: [
                       Padding(
                         padding: EdgeInsets.all(8.0.sp),
-                        child: StyledText(
+                        child: const StyledText(
                           '전화번호',
                           fontWeight: 500,
                           fontSize: 16,
@@ -81,7 +81,7 @@ class VerificationPhone extends StatelessWidget {
                                         ),
                                         child: Obx(() {
                                           return controller.mobileCompany.value == null
-                                              ? StyledText(
+                                              ? const StyledText(
                                                   '통신사',
                                                   fontSize: 20,
                                                   lineHeight: 24,

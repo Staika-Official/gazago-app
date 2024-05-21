@@ -125,9 +125,9 @@ class SyntheticBadgeController extends GetxController with InventoryMixin {
 
     Get.dialog(
       AlertDialog(
-        title: Row(
+        title: const Row(
           mainAxisAlignment: MainAxisAlignment.center,
-          children: const [
+          children: [
             Text('뱃지 선택'),
           ],
         ),

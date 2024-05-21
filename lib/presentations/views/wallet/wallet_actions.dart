@@ -22,8 +22,8 @@ class WalletActions extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
                 const Text('From'),
-                Row(
-                  children: const [
+                const Row(
+                  children: [
                     Expanded(child: TextField()),
                     Text('STIK'),
                   ],
@@ -53,8 +53,8 @@ class WalletActions extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
                 const Text('To'),
-                Row(
-                  children: const [
+                const Row(
+                  children: [
                     Expanded(child: TextField()),
                     Text('TIK'),
                   ],
@@ -74,9 +74,9 @@ class WalletActions extends StatelessWidget {
                   if (controller.actionType.value == WalletActionType.recharge)
                     Padding(
                       padding: EdgeInsets.all(8.0.sp),
-                      child: Row(
+                      child: const Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: const [
+                        children: [
                           Text('교환 비용'),
                           Text(
                             '1 STIK \u2248 100 TIK',

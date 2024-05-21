@@ -149,8 +149,8 @@ class FairPlayContent extends StatelessWidget {
             contentWidget('위 내용은 운영 상황에 따라 사전 고지 없이 변경될 수 있습니다.', null, lightGrayColor),
             contentWidget('카드 발급시 관련된 모든 계정에 동일하게 발급됩니다.', null, lightGrayColor),
             contentWidget('경고 및 퇴장 카드 이력은 삭제되지 않습니다.', null, lightGrayColor),
-            Padding(
-              padding: const EdgeInsets.only(top: 20),
+            const Padding(
+              padding: EdgeInsets.only(top: 20),
               child: StyledText(
                 '공정하고 클린한 가자고 활동을 위해 여러분들의 많은 협조 부탁 드립니다.',
                 fontWeight: 500,

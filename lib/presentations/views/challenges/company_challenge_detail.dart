@@ -47,11 +47,6 @@ class CompanyChallengeDetail extends StatelessWidget {
             if (controller.challengeDetails.value.title != null)
               IntrinsicDimension(
                 listener: (context, width, height, startOffset) {
-                  print(height);
-                  print(context.height);
-                  print(width);
-                  print(startOffset);
-
                   controller.backgroundBoxSize.value = height + kTextTabBarHeight + 50;
                 },
                 builder: (_, __, ___, ____) {

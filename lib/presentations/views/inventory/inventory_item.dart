@@ -157,7 +157,7 @@ class InventoryItem extends StatelessWidget {
                                       alignment: Alignment.center,
                                       child: Padding(
                                         padding: EdgeInsets.all(8.0.sp),
-                                        child: StyledText('장착중', fontWeight: 500, fontSize: 14, color: deepGrayColor),
+                                        child: const StyledText('장착중', fontWeight: 500, fontSize: 14, color: deepGrayColor),
                                       ),
                                     ),
                             ],
@@ -169,7 +169,7 @@ class InventoryItem extends StatelessWidget {
                             top: 8.sp,
                             child: Container(
                               decoration: BoxDecoration(
-                                color: Color(0xFF0E0E13),
+                                color: const Color(0xFF0E0E13),
                                 borderRadius: BorderRadius.circular(6),
                               ),
                               child: Padding(

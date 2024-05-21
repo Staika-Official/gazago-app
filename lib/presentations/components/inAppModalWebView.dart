@@ -21,14 +21,14 @@ class InAppModalWebView extends StatelessWidget {
             title: Row(
               children: <Widget>[
                 InkWell(
-                  child: Icon(Icons.close),
+                  child: const Icon(Icons.close),
                   onTap: () {
                     Get.back();
                   },
                 ),
                 Expanded(
                   child: Container(
-                    padding: EdgeInsets.all(20.0),
+                    padding: const EdgeInsets.all(20.0),
                     child: Column(
                       children: [
                         StyledText(
@@ -52,7 +52,7 @@ class InAppModalWebView extends StatelessWidget {
                   ),
                 ),
                 InkWell(
-                  child: Icon(Icons.refresh),
+                  child: const Icon(Icons.refresh),
                   onTap: () {
                     // webViewController.webViewKey.currentState?.reloadWebView();
                     if (inAppWebViewController != null) {

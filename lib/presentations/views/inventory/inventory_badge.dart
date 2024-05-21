@@ -85,7 +85,7 @@ class InventoryBadge extends StatelessWidget {
                                 alignment: Alignment.center,
                                 child: Padding(
                                   padding: EdgeInsets.all(8.0.sp),
-                                  child: StyledText(
+                                  child: const StyledText(
                                     '장착중',
                                     fontWeight: 500,
                                     fontSize: 14,

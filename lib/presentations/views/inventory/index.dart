@@ -67,7 +67,7 @@ class InventoryHome extends StatelessWidget {
                                     iconShopReward,
                                     Padding(
                                       padding: EdgeInsets.only(left: 4.0.sp),
-                                      child: StyledText(
+                                      child: const StyledText(
                                         'GO 보상',
                                         color: skyBlueColor,
                                         fontSize: 12,
@@ -131,7 +131,7 @@ class InventoryHome extends StatelessWidget {
                                       padding: EdgeInsets.only(right: 4.0.sp),
                                       child: iconShopStamina,
                                     ),
-                                    StyledText(
+                                    const StyledText(
                                       '체력',
                                       color: lightGreenColor,
                                       fontSize: 12,
@@ -150,7 +150,7 @@ class InventoryHome extends StatelessWidget {
                                 '${controller.equippedLuckRate.toInt()}',
                                 fontSize: 30,
                                 fontWeight: 500,
-                                color: pinkColor  ,
+                                color: pinkColor,
                                 letterSpacing: -.1,
                               ),
                               Padding(
@@ -162,7 +162,7 @@ class InventoryHome extends StatelessWidget {
                                       padding: EdgeInsets.only(right: 4.0.sp),
                                       child: iconShopLuck,
                                     ),
-                                    StyledText(
+                                    const StyledText(
                                       '행운',
                                       color: pinkColor,
                                       fontSize: 12,
@@ -232,10 +232,10 @@ class InventoryHome extends StatelessWidget {
                                   topSide: BorderSide(color: Colors.black, width: 2.sp),
                                 ),
                               ),
-                              child: Row(
+                              child: const Row(
                                 mainAxisAlignment: MainAxisAlignment.center,
                                 crossAxisAlignment: CrossAxisAlignment.center,
-                                children: const [
+                                children: [
                                   Text('아이템'),
                                 ],
                               ),
@@ -255,10 +255,10 @@ class InventoryHome extends StatelessWidget {
                                   topSide: BorderSide(color: Colors.black, width: 2.sp),
                                 ),
                               ),
-                              child: Row(
+                              child: const Row(
                                 mainAxisAlignment: MainAxisAlignment.center,
                                 crossAxisAlignment: CrossAxisAlignment.center,
-                                children: const [
+                                children: [
                                   Text('뱃지'),
                                 ],
                               ),

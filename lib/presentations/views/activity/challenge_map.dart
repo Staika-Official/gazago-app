@@ -66,7 +66,6 @@ class ChallengeMap extends StatelessWidget {
   }
 
   Widget _renderCourseList(ActivityController controller, ChallengeCourseModel course) {
-    print('${controller.challengeSelectedIndex.value} ===== ${course.id}');
     return Builder(builder: (context) {
       return Obx(() {
         return ListTile(

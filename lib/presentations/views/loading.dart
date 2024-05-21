@@ -63,7 +63,7 @@ class Loading extends StatelessWidget {
                         return Obx(() {
                           return Column(
                             children: [
-                              StyledText(
+                              const StyledText(
                                 'LOADING...',
                                 color: skyBlueColor,
                                 fontWeight: 900,

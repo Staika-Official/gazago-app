@@ -60,14 +60,14 @@ class LaboratorySolanaTransfer extends StatelessWidget {
                   onChanged: (name) => solanaController.setToAddress(name),
                   decoration: InputDecoration(
                     focusedBorder: OutlineInputBorder(
-                      borderSide: BorderSide(
+                      borderSide: const BorderSide(
                         color: popupBgColor,
                         width: 2,
                       ),
                       borderRadius: BorderRadius.circular(10),
                     ),
                     enabledBorder: OutlineInputBorder(
-                      borderSide: BorderSide(
+                      borderSide: const BorderSide(
                         color: popupBgColor,
                         width: 2,
                       ),

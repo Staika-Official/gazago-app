@@ -50,7 +50,7 @@ class WalletDetail extends StatelessWidget {
         .map(
           (transaction) => Container(
             padding: EdgeInsets.only(left: 3.sp, right: 3.sp, top: 20.sp, bottom: 20.sp),
-            decoration: BoxDecoration(
+            decoration: const BoxDecoration(
               border: BorderDirectional(
                 bottom: BorderSide(
                   color: popupBgColor,
@@ -103,7 +103,7 @@ class WalletDetail extends StatelessWidget {
                               fontWeight: 500,
                               color: deepGrayColor,
                             ),
-                            StyledText(
+                            const StyledText(
                               '완료',
                               fontSize: 12,
                               lineHeight: 10,

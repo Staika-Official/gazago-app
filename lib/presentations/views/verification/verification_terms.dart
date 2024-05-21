@@ -61,20 +61,20 @@ class VerificationTerms extends StatelessWidget {
                         ),
                       ),
                     ),
-                    if(term.content != null && term.content != '')
-                    Padding(
-                      padding: EdgeInsets.only(top: 2.0.sp),
-                      child: SizedBox(
-                        child: GestureDetector(
-                          onTap: () => Get.toNamed(Routes.term, arguments: {'termType': term.boardType, 'termId': term.id}),
-                          child: Icon(
-                            Icons.chevron_right,
-                            color: deepGrayColor,
-                            size: 20.sp,
+                    if (term.content != null && term.content != '')
+                      Padding(
+                        padding: EdgeInsets.only(top: 2.0.sp),
+                        child: SizedBox(
+                          child: GestureDetector(
+                            onTap: () => Get.toNamed(Routes.term, arguments: {'termType': term.boardType, 'termId': term.id}),
+                            child: Icon(
+                              Icons.chevron_right,
+                              color: deepGrayColor,
+                              size: 20.sp,
+                            ),
                           ),
                         ),
-                      ),
-                    )
+                      )
                   ],
                 ),
               ),
@@ -95,7 +95,7 @@ class VerificationTerms extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Column(
+            const Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Row(

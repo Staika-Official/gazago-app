@@ -145,7 +145,7 @@ class ChallengeCourseDetail extends StatelessWidget {
                                       lineHeight: 14,
                                       letterSpacing: -.1,
                                     ),
-                                    StyledText(
+                                    const StyledText(
                                       ' · ',
                                       color: lightGrayColor,
                                       fontWeight: 500,
@@ -216,7 +216,7 @@ class ChallengeCourseDetail extends StatelessWidget {
                                             child: Row(
                                               children: [
                                                 controller.challengeDetails.value.challengeState == 'READY'
-                                                    ? StyledText(
+                                                    ? const StyledText(
                                                         '모집인원',
                                                         color: lightGrayColor,
                                                         fontWeight: 500,
@@ -466,7 +466,7 @@ class ChallengeCourseDetail extends StatelessWidget {
                                         children: [
                                           TextSpan(
                                             text: '${controller.challengeDetails.value.title}\n',
-                                            style: TextStyle(
+                                            style: const TextStyle(
                                               color: lightGrayColor,
                                             ),
                                           ),
@@ -522,7 +522,7 @@ class ChallengeCourseDetail extends StatelessWidget {
                                 padding: EdgeInsets.only(top: 10.0.sp, bottom: Platform.isAndroid ? 10.0.sp : 24.sp),
                                 child: Row(mainAxisAlignment: MainAxisAlignment.center, crossAxisAlignment: CrossAxisAlignment.center, children: [
                                   ShaderMask(
-                                    shaderCallback: (size) => LinearGradient(
+                                    shaderCallback: (size) => const LinearGradient(
                                       colors: [skyBlueColor, skyBlueColor],
                                       begin: Alignment.topCenter,
                                       end: Alignment.bottomCenter,
@@ -538,7 +538,7 @@ class ChallengeCourseDetail extends StatelessWidget {
                                   ),
                                   ShaderMask(
                                     blendMode: BlendMode.modulate,
-                                    shaderCallback: (size) => LinearGradient(
+                                    shaderCallback: (size) => const LinearGradient(
                                       colors: [skyBlueColor, skyBlueColor],
                                       begin: Alignment.topCenter,
                                       end: Alignment.bottomCenter,

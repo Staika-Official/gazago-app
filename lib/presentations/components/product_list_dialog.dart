@@ -169,7 +169,7 @@ void showProductList() {
                     ),
                     Padding(
                       padding: EdgeInsets.only(left: 3.0.sp),
-                      child: StyledText(
+                      child: const StyledText(
                         'TIK',
                         fontSize: 12,
                         fontWeight: 400,
@@ -203,7 +203,7 @@ void showProductList() {
                 children: [
                   Padding(
                     padding: EdgeInsets.only(left: 24.sp, top: 16.sp, right: 24.sp, bottom: 16.sp),
-                    child: StyledText(
+                    child: const StyledText(
                       '현재 보유 자산',
                       fontSize: 16,
                       fontWeight: 600,
@@ -220,7 +220,7 @@ void showProductList() {
                           child: Row(
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
-                              StyledText(
+                              const StyledText(
                                 'Taika',
                                 fontSize: 16,
                                 fontWeight: 400,

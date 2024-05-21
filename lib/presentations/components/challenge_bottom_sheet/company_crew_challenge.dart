@@ -90,8 +90,8 @@ Map renderCompanyCrewInProgressJoined(ChallengesDetailController challengesDetai
         fontSize: 16.sp,
         height: 20.sp / 16,
       ),
-      children: [
-        const TextSpan(
+      children: const [
+        TextSpan(
           text: '챌린지 기간까지 화이팅!',
         ),
       ],
@@ -119,7 +119,7 @@ Map renderCompanyCrewEnded(ChallengesDetailController challengesDetailController
         ),
         child: Padding(
           padding: EdgeInsets.symmetric(vertical: 13.0.sp, horizontal: 40.sp),
-          child: StyledText(
+          child: const StyledText(
             '종료',
             fontWeight: 500,
             fontSize: 18,

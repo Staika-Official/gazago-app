@@ -412,7 +412,7 @@ class ActivitySelect extends StatelessWidget {
                                 borderRadius: BorderRadius.circular(10),
                                 child: Padding(
                                   padding: EdgeInsets.symmetric(horizontal: 16.sp, vertical: 14.sp),
-                                  child: StyledText(
+                                  child: const StyledText(
                                     '경고 & 퇴장 카드 규정',
                                     color: lightGrayColor,
                                     fontSize: 14,
