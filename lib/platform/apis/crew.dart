@@ -77,7 +77,7 @@ class CrewApi {
       serviceUrl: '/services/gazago/api',
       showLoading: false,
       allowCustomErrorHandler: true,
-    ).get('/companies/users/${userId}/challenges/${challengeId}/join-available', queryParameters: {
+    ).get('/companies/users/$userId/challenges/$challengeId/join-available', queryParameters: {
       "employeeId": employeeId,
       "employeeName": employeeName,
     });

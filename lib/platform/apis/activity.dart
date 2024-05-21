@@ -206,21 +206,21 @@ class ActivityApi {
     return await Api.client(
       serviceUrl: '/services/gazago/api',
       showLoading: false,
-    ).post('/user-challenges/users/${userId}/challenges/${challengeId}/codes/${code}');
+    ).post('/user-challenges/users/$userId/challenges/$challengeId/codes/$code');
   }
 
   static Future<Response> fetchParticipateInPayChallenge(String userId, int challengeId, int entryfee) async {
     return await Api.client(
       serviceUrl: '/services/gazago/api',
       showLoading: false,
-    ).post('/user-challenges/users/${userId}/challenges/${challengeId}/entryFees/${entryfee}');
+    ).post('/user-challenges/users/$userId/challenges/$challengeId/entryFees/$entryfee');
   }
 
   static Future<Response> fetchJoinChallenge(String userId, int challengeId, ChallengeJoinModel params) async {
     return await Api.client(
       serviceUrl: '/services/gazago/api',
       showLoading: false,
-    ).post('/user-challenges/users/${userId}/challenges/${challengeId}/join', data: params);
+    ).post('/user-challenges/users/$userId/challenges/$challengeId/join', data: params);
   }
 
   static Future<Response> getPromotionAdsList(String userId) async {

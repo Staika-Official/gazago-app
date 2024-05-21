@@ -54,7 +54,7 @@ class WalletApi {
   }
 
   static Future<Response> getWalletAddress(type) async {
-    return await Api.client(serviceUrl: ServiceUrl.goWalletService).get('/settings/codes/address?keys=${type}');
+    return await Api.client(serviceUrl: ServiceUrl.goWalletService).get('/settings/codes/address?keys=$type');
   }
 
   static Future<Response> getProviderUrl() async {
@@ -137,6 +137,6 @@ class WalletApi {
     return await Api.client(
       serviceUrl: ServiceUrl.onChainWalletService,
       // allowCustomErrorHandler: true,
-    ).get('/${platform}/tokens/${symbol}/priority-fee?type=exchange&feePayer=true');
+    ).get('/$platform/tokens/$symbol/priority-fee?type=exchange&feePayer=true');
   }
 }
