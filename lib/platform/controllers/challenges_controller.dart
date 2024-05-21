@@ -1,9 +1,7 @@
 import 'dart:async';
-import 'dart:convert';
 
 import 'package:collection/collection.dart';
 import 'package:firebase_database/firebase_database.dart';
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:gaza_go/constants/enums.dart';
 import 'package:gaza_go/constants/routes.dart';
@@ -86,9 +84,7 @@ class ChallengesController extends GetxController with GetTickerProviderStateMix
   }
 
   void moveToDetail(id, challengeType, challengeUserState, challengeState) async {
-
-    if( challengeType == 'CREW_COMPANY'){
-
+    if (challengeType == 'CREW_COMPANY') {
       String? userId = HiveStore.loadString(key: HiveKey.userId.name);
 
       // DatabaseReference userDiInfoRef = FirebaseDatabase.instance.ref('crewChallengeLeaderboard/$id/$userId');
@@ -96,93 +92,68 @@ class ChallengesController extends GetxController with GetTickerProviderStateMix
       Query query = userDiInfoRef.child(userId!);
 
       await query.get().then((DataSnapshot snapshot) async {
-
         if (snapshot.value != null) {
-
           Get.toNamed(Routes.companyChallengeDetail.replaceAll(':id', id.toString()));
-
         } else {
-
           showMiraeAssetPopup(id);
         }
       }).catchError((error) {
         // 오류 처리
-        print('123');
-        print('데이터를 가져오는 중 오류가 발생했습니다: $error');
       });
     } else {
       Get.toNamed(Routes.challengeDetail.replaceAll(':id', id.toString()));
     }
-
   }
 
-  bool checkUserIdExistence( data, String userId) {
+  bool checkUserIdExistence(data, String userId) {
     return data.keys.contains(userId);
   }
 
-  void onJoinCompanyChallenge(challengeId){
-
-  }
+  void onJoinCompanyChallenge(challengeId) {}
 
   Future<void> getChallengeDetail(challengeId) async {
     await ActivityService.getChallengeDetails(challengeId, successCallback: (NewChallengeDetailModel data) async {
       String? userId = HiveStore.loadString(key: HiveKey.userId.name);
       DatabaseReference userDiInfoRef = FirebaseDatabase.instance.ref('crewChallengeLeaderboard/$challengeId');
-      print('challengeId : $challengeId');
-      print('userId : $userId');
       Query query = userDiInfoRef.child(userId!);
-      query.get().then((DataSnapshot snapshot)  {
+      query.get().then((DataSnapshot snapshot) {
         if (snapshot.value != null) {
-                // if(Get.isDialogOpen == true){
-                //   Get.back();
-                // }
-                Get.find<HomeMenuController>().selectMenu(0);
-                Get.toNamed(Routes.companyChallengeDetail.replaceAll(':id', challengeId.toString()));
-
-
-
+          // if(Get.isDialogOpen == true){
+          //   Get.back();
+          // }
+          Get.find<HomeMenuController>().selectMenu(0);
+          Get.toNamed(Routes.companyChallengeDetail.replaceAll(':id', challengeId.toString()));
         } else {
-          print('data.challengeState : ${data.challengeState}');
-          print(data.challengeUserState);
-          if(data.challengeState == 'READY' ){
-            if(data.challengeUserState == 'REGISTER_READY'){
+          if (data.challengeState == 'READY') {
+            if (data.challengeUserState == 'REGISTER_READY') {
               notOpenCompanyChallenge();
             } else {
               participateInMiraeChallengeByCodeAlert(challengeId);
             }
-
-          } else if(data.challengeState == 'IN_PROGRESS'){
-            if(data.challengeUserState == 'JOIN_CLOSED'){
+          } else if (data.challengeState == 'IN_PROGRESS') {
+            if (data.challengeUserState == 'JOIN_CLOSED') {
               closedCompanyChallenge();
             } else {
               participateInMiraeChallengeByCodeAlert(challengeId);
             }
-
           } else {
             closedCompanyChallenge();
           }
-
         }
       }).catchError((error, stackTrace) {
         // 오류 처리
-        print('111111');
-        print(stackTrace);
-        print('데이터를 가져오는 중 오류가 발생했습니다: $error');
       });
     });
   }
 
   void showMiraeAssetPopup(id) async {
     await ActivityService.getChallengeDetails(id, successCallback: (NewChallengeDetailModel data) async {
-
-      if(data.challengeUserState == null){
-        miraeAssetAlert( id, null);
+      if (data.challengeUserState == null) {
+        miraeAssetAlert(id, null);
       } else {
-        miraeAssetAlert( id, data.challengeUserState!);
+        miraeAssetAlert(id, data.challengeUserState!);
       }
-
     });
-
   }
 
   void showChallengesSortingPopup() {

@@ -106,9 +106,6 @@ class PermissionController extends GetxController {
 
   Future<bool> checkTrackingPermission() async {
     bool hasTrackingPermission = false;
-    ph.PermissionStatus status = await ph.Permission.appTrackingTransparency.status;
-    print('상태');
-    print(status);
 
     if (Platform.isIOS) {
       hasTrackingPermission = ph.PermissionStatus.permanentlyDenied == await ph.Permission.appTrackingTransparency.status;

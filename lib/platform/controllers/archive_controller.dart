@@ -2,7 +2,6 @@ import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
 
-
 import 'package:flutter_naver_map/flutter_naver_map.dart';
 import 'package:flutter_svg_provider/flutter_svg_provider.dart';
 import 'package:gaza_go/constants/routes.dart';
@@ -72,18 +71,17 @@ class ArchiveController extends GetxController with ScrollMixin {
     await ArchiveService.getArchiveItem(id, Platform.operatingSystem, successCallback: (archive) async {
       loaderController.isLoading.value = false;
       dataGetLoading.value = false;
-      if(archive != null){
+      if (archive != null) {
         selectedItem.value = archive;
         final targetDate = Jiffy.parse(archive.endedDate!);
         selectedItem.value.isTwoMonthAgo = targetDate.isBefore(twoMonthAgo);
-        if(targetDate.isBefore(twoMonthAgo)){
+        if (targetDate.isBefore(twoMonthAgo)) {
           locations.value = RxList.empty();
         } else {
           await initialiseLocations();
         }
         Get.toNamed(Routes.archiveDetail);
       }
-
     });
   }
 
@@ -172,12 +170,9 @@ class ArchiveController extends GetxController with ScrollMixin {
 
   @override
   Future<void> onTopScroll() {
-    print('top reached');
     return Future.delayed(
       const Duration(milliseconds: 10),
-      () {
-        print('top reached');
-      },
+      () {},
     );
   }
 }

@@ -1,4 +1,3 @@
-import 'package:gaza_go/platform/models/inventory_item_stat_model.dart';
 import 'package:gaza_go/platform/models/shop_item_challenge_model.dart';
 import 'package:json_annotation/json_annotation.dart';
 

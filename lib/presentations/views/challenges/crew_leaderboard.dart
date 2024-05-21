@@ -42,9 +42,9 @@ class CrewLeaderboard extends StatelessWidget {
 class CrewRankingItem extends StatelessWidget {
   final int index;
   final CrewModel item;
-  bool isMyCrew;
+  final bool isMyCrew;
 
-  CrewRankingItem(
+  const CrewRankingItem(
     this.index,
     this.item, {
     this.isMyCrew = false,
@@ -94,7 +94,7 @@ class CrewRankingItem extends StatelessWidget {
                                 children: [
                                   Center(
                                     child: Padding(
-                                      padding: item.crewBuffLevel == 'NONE' || index + 1 > 3 ?EdgeInsets.only(top:7.0.sp) : EdgeInsets.only(top:7.0.sp),
+                                      padding: item.crewBuffLevel == 'NONE' || index + 1 > 3 ? EdgeInsets.only(top: 7.0.sp) : EdgeInsets.only(top: 7.0.sp),
                                       child: CircleAvatar(
                                         radius: 16.sp,
                                         backgroundColor: Colors.black,

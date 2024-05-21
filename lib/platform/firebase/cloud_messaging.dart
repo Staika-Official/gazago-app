@@ -25,7 +25,6 @@ Future<void> initFcm() async {
   await requestPermission();
 
   await FirebaseMessaging.instance.getToken().then((fcmToken) async {
-    print('fcmToken: $fcmToken');
     if (fcmToken != null && fcmToken.isNotEmpty) {
       HiveStore.save(key: HiveKey.fcmToken.name, value: fcmToken);
     }
@@ -50,18 +49,11 @@ void handleMessage() {
     RemoteNotification? notification = message.notification;
     AndroidNotification? android = message.notification?.android;
 
-    print('FCM Foreground handleMessage ${notification!.title}');
-    print('FCM Foreground handleMessage ${notification!.body}');
-    print('FCM Foreground handleMessage ${message.data['notificationKey']}');
-    print('FCM Foreground handleMessage ${message.data}');
-    print('FCM Foreground handleMessage ${message.toString()}');
-    print('FCM Foreground handleMessage ${message.data.toString()}');
-
     if (android != null) {
       flutterLocalNotificationsPlugin.show(
         notification.hashCode,
-        notification.title,
-        notification.body,
+        notification?.title ?? '',
+        notification?.body ?? '',
         NotificationDetails(
           android: AndroidNotificationDetails(
             channel.id,
@@ -79,10 +71,8 @@ void handleMessage() {
     //     forceLogout();
     //   }
     // }
-    print('notificationKey : ${message.data['notificationKey']}');
     if (message.data['notificationKey'] == 'DAILY_REWARD_COMPLETED') {
       // Get.find<WalletMasterController>().moveToWallet();
-      print('DAILY_REWARD_COMPLETED : handleMessage');
       Get.isRegistered<WalletMasterController>() ? Get.find<WalletMasterController>().moveToWallet() : Get.put(WalletMasterController()).moveToWallet();
     }
 

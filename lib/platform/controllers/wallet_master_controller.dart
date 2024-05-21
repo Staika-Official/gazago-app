@@ -128,8 +128,6 @@ class WalletMasterController extends GetxController with SolanaMixin, GetTickerP
 
   RxList<AssetTokenTransactionModel> get transactionsList {
     List<AssetTokenTransactionModel> transactionsList = List.empty(growable: true);
-    print(rawTransactionList.length);
-    print(rawTransactionList.isNotEmpty);
     if (rawTransactionList.isNotEmpty) {
       int id = rawTransactionList.first.transactionId!;
       List<List<AssetTokenTransactionModel>> listsById = List.empty(growable: true);
@@ -174,7 +172,6 @@ class WalletMasterController extends GetxController with SolanaMixin, GetTickerP
         }
       }
     }
-    print(transactionsList.length);
     return RxList(transactionsList);
   }
 
@@ -236,7 +233,6 @@ class WalletMasterController extends GetxController with SolanaMixin, GetTickerP
         errorCallback: (ErrorResponseDataModel? error) {
           HiveStore.save(key: HiveKey.isFailureGetSpendingWallet.name, value: true);
           if (Get.currentRoute != Routes.loading) {
-            print('getSpendingWalletBalances : $getSpendingWalletBalances');
             showRefetchGetSpendingWalletAlert();
           }
         });
@@ -250,9 +246,7 @@ class WalletMasterController extends GetxController with SolanaMixin, GetTickerP
 
     await WalletService.getSpendingWalletTransactions(asset.symbol!, page: rawTransactionList.isEmpty ? 0 : (rawTransactionList.length / 10).floor(), successCallback: (AssetDetailModel detail) {
       assetDetail.value = detail;
-      print(assetDetail.value);
       rawTransactionList.addAll(assetDetail.value.transactions);
-      print('rawTransactionList : $rawTransactionList');
       if (assetDetail.value.transactions.isEmpty || !(assetDetail.value.transactions.length % 10 == 0)) {
         hasMoreTransactions = false;
       } else {
@@ -324,9 +318,7 @@ class WalletMasterController extends GetxController with SolanaMixin, GetTickerP
   }
 
   Future<void> clearCache() async {
-    if (webViewController != null) {
-      await webViewController.clearCache();
-    }
+    InAppWebViewController.clearAllCache();
   }
 
   void moveToVerification() async {
@@ -441,6 +433,7 @@ class WalletMasterController extends GetxController with SolanaMixin, GetTickerP
   }
 
   Future<IapValidModel> _verifyPurchase(PurchaseDetails purchaseDetails) async {
+    // 백앤드 검증
     final data = {
       'platform': Platform.operatingSystem,
       'productId': purchaseDetails.productID,
@@ -448,15 +441,6 @@ class WalletMasterController extends GetxController with SolanaMixin, GetTickerP
       'receipt': purchaseDetails.verificationData.localVerificationData,
     };
     IapValidModel response = await IapService.validateReceipt(data);
-
-    // 백앤드 검증
-    print('#################################################');
-    print('purchaseDetails.productID : ${purchaseDetails.productID}');
-    print('purchaseDetails.purchaseID : ${purchaseDetails.purchaseID}');
-    print('verificationData.localVerificationData : ${purchaseDetails.verificationData.localVerificationData}');
-    print('verificationData.serverVerificationData : ${purchaseDetails.verificationData.serverVerificationData}');
-    print('verificationData.source : ${purchaseDetails.verificationData.source}');
-    print('#################################################');
 
     return response;
   }

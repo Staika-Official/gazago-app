@@ -1,9 +1,7 @@
 import 'dart:async';
-import 'dart:convert';
 
 import 'package:adjust_sdk/adjust.dart';
 import 'package:adjust_sdk/adjust_config.dart';
-import 'package:facebook_audience_network/facebook_audience_network.dart';
 import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -12,7 +10,6 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:gaza_go/constants/enums.dart';
 import 'package:gaza_go/flavors.dart';
 import 'package:gaza_go/platform/controllers/activity_controller.dart';
-import 'package:gaza_go/platform/controllers/challenges_controller.dart';
 import 'package:gaza_go/platform/controllers/global_controller.dart';
 import 'package:gaza_go/platform/controllers/inspection_notice_controller.dart';
 import 'package:gaza_go/platform/controllers/loader_controller.dart';
@@ -46,6 +43,7 @@ import 'constants/routes.dart';
 Future<PermissionStatus> requestNotificationPermission() async {
   return await Permission.notification.request();
 }
+
 Future<PermissionStatus> requestTrackingPermission() async {
   return await Permission.appTrackingTransparency.request();
 }
@@ -67,11 +65,10 @@ Future<void> initializeAdMob() async {
   });
 }
 
-
 void main() async {
   await runZonedGuarded(() async {
     WidgetsFlutterBinding.ensureInitialized(); // async로 할 때 반드시 호출
-    AdjustConfig adjustConfig = new AdjustConfig('egsa3l7qwj5s', F.isDev ? AdjustEnvironment.sandbox : AdjustEnvironment.production);
+    AdjustConfig adjustConfig = AdjustConfig('egsa3l7qwj5s', F.isDev ? AdjustEnvironment.sandbox : AdjustEnvironment.production);
     adjustConfig.logLevel = AdjustLogLevel.verbose;
     Adjust.start(adjustConfig);
     await Hive.initFlutter();
@@ -84,11 +81,6 @@ void main() async {
     await initFirebase();
     await initFirebasePackages();
     await initializeAdMob();
-
-
-
-
-
 
     // Geolocation Engine이 2개가 생성되는 문제가 있어서(2개가 생성되면 Foreground 운동측정이 사라지지 않는다). 주석처리
     // 추후에 백그라운드 데이터로 처리가 필요한 경우 다시 고민해보자.
@@ -109,7 +101,6 @@ void main() async {
     recordCrashlyticsError(error, stack);
   });
 }
-
 
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
@@ -140,7 +131,6 @@ class MyApp extends StatelessWidget {
     Get.put(LoaderController(), permanent: true);
     Get.put(WalletMasterController(), permanent: true);
     Get.put(ActivityController(), permanent: true);
-
 
     return ScreenUtilInit(
       designSize: const Size(390, 844),

@@ -66,11 +66,9 @@ class CreateWalletPasswordController extends GetxController with PasswordMixin {
   void updateConfirmText(String text) {
     confirmText.value = text;
     confirmTextStatus.value = verifyConfirmText(text);
-    print(confirmTextStatus.value);
   }
 
   void nextStep() {
-    print("go!!!!!!!!!!!!!!!!");
     if (isEnableNext.value) {
       Get.offNamed(Routes.createWallet, arguments: {'password': _password.value});
     } else {
@@ -78,17 +76,15 @@ class CreateWalletPasswordController extends GetxController with PasswordMixin {
     }
   }
 
-  void showPasswordNoticeAlert(){
+  void showPasswordNoticeAlert() {
     isShowAlert.value = true;
   }
 
-  void closePasswordNoticeAlert(){
+  void closePasswordNoticeAlert() {
     isShowAlert.value = false;
   }
 
   void toggleAgree() {
-
     isAgree.value = !isAgree.value;
-
   }
 }

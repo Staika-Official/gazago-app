@@ -55,6 +55,7 @@ class ActivityController extends SuperController with ActivityMixin, ChallengeMi
       StatModel(name: '신발 내구도', currentStat: userState.value.shoes != null ? userState.value.shoes!.durability! : 0, type: 'DURABILITY'),
     ]);
   }
+
   GlobalKey webViewKey = GlobalKey();
   // final RxDouble currentSliderValue = RxDouble(0);
   // final RxInt remainDurability = RxInt(0);
@@ -83,8 +84,7 @@ class ActivityController extends SuperController with ActivityMixin, ChallengeMi
   final Rx<Control> challengeLoadControl = Rx(Control.play);
   final RxBool isButtonDisabled = RxBool(false);
   RxList<ChallengeModel> challengeList = RxList.empty();
-   RxBool isFetchingCourseList = RxBool(true);
-
+  RxBool isFetchingCourseList = RxBool(true);
 
   Future<void> initializeExercise() async {
     challengeGuideController = AnimationController(vsync: this);
@@ -97,15 +97,12 @@ class ActivityController extends SuperController with ActivityMixin, ChallengeMi
 
   Future<void> initializeController() async {
     await getUserState().then((_) async {
-      print('getUserState');
       hasPermission.value = await checkAvailabilities();
       if (hasPermission.value) {
-        print('hasPermission');
         await initActivityStatus();
       }
 
       await loadChallenges();
-
     });
 
     // await initPlatformState();
@@ -197,7 +194,6 @@ class ActivityController extends SuperController with ActivityMixin, ChallengeMi
 
     if (course.checkpoints != null && course.checkpoints!.isNotEmpty) {
       List<LatLng> markers = getfitBoundCourseMarker(selectedChallengeMarkers);
-      print(markers);
       challengeMapController.moveCamera(
         CameraUpdate.fitBounds(
           LatLngBounds.fromLatLngList(markers),
@@ -237,6 +233,7 @@ class ActivityController extends SuperController with ActivityMixin, ChallengeMi
     return outermostCoords;
   }
 
+  @override
   void initRepairInfo() {
     // repairDurability.value = 0;
     // remainDurability.value = 0;
@@ -260,14 +257,14 @@ class ActivityController extends SuperController with ActivityMixin, ChallengeMi
 
   void onClickRepairStat(stat, context) async {
     loaderController.isLoading.value = true;
-    if(Get.currentRoute.contains('home')){
-      if(stat.type == 'STAMINA'){
+    if (Get.currentRoute.contains('home')) {
+      if (stat.type == 'STAMINA') {
         Adjust.trackEvent(AdjustEvent('ret2yp'));
       } else {
         Adjust.trackEvent(AdjustEvent('2mxi2f'));
       }
     } else {
-      if(stat.type == 'STAMINA'){
+      if (stat.type == 'STAMINA') {
         Adjust.trackEvent(AdjustEvent('m7kq1h'));
       } else {
         Adjust.trackEvent(AdjustEvent('spa2cy'));
@@ -288,7 +285,6 @@ class ActivityController extends SuperController with ActivityMixin, ChallengeMi
   }
 
   void confirmRecoveryOrRepairStat(stat) async {
-    print(stat);
     if (selectedType.value == 'STAMINA') {
       await fetchRecoveryStamina();
     } else {
@@ -654,11 +650,10 @@ class ActivityController extends SuperController with ActivityMixin, ChallengeMi
 
   Future<void> selectExerciseType(ExerciseType exerciseType) async {
     if (exerciseType == ExerciseType.walking) {
-      if(selectedCourse.value != null && selectedCourse.value!.challengeId == null) {
+      if (selectedCourse.value != null && selectedCourse.value!.challengeId == null) {
         selectedCourse.value = null;
         selectedChallenge.value = null;
       }
-
 
       bool adjustFirstWalkingEvent = HiveStore.load(key: HiveKey.adjustFirstWalkingEvent.name) ?? false;
       if (!adjustFirstWalkingEvent) {
@@ -717,7 +712,6 @@ class ActivityController extends SuperController with ActivityMixin, ChallengeMi
 
     selectedCourse.value = ChallengeCourseModel.fromJson(course.toJson());
     selectedChallenge.value = ChallengeModel.fromJson(challenge.toJson());
-
 
     Get.toNamed(Routes.activityChallenges);
   }
@@ -803,8 +797,7 @@ class ActivityController extends SuperController with ActivityMixin, ChallengeMi
         // 첼린지 존 찾기(30초마다 요청)
         DateTime now = DateTime.now();
 
-
-        if (receiveLocationTime.value.add(const Duration(seconds: 30)).compareTo(now) < 0 ) {
+        if (receiveLocationTime.value.add(const Duration(seconds: 30)).compareTo(now) < 0) {
           await findCourses();
           receiveLocationTime.value = now;
         }
@@ -813,9 +806,7 @@ class ActivityController extends SuperController with ActivityMixin, ChallengeMi
       locationThr.throttle(() {
         detectChallengeZone(position);
       });
-    }, onError: (e) {
-      print(e.toString());
-    });
+    }, onError: (e) {});
   }
 
   void detectFakeGps() async {
@@ -835,7 +826,6 @@ class ActivityController extends SuperController with ActivityMixin, ChallengeMi
   }
 
   Future<void> getCurrentLocation() async {
-    print('getCurrentLocation');
     await Geolocator.getCurrentPosition(desiredAccuracy: locationAccuracyQuality, timeLimit: const Duration(seconds: 5)).then((location) {
       currentLocation.value = location;
       isListeningToLocation.value = true;
@@ -872,7 +862,6 @@ class ActivityController extends SuperController with ActivityMixin, ChallengeMi
   }
 
   void checkConnectivityStatus() async {
-    print('인터넷 연결됐는지 확인중');
     if (globalController.internetConnection.value) {
       await retrySavedRequests(source: 'connectivityListener');
     }
@@ -883,8 +872,6 @@ class ActivityController extends SuperController with ActivityMixin, ChallengeMi
       await endExercise(source: source);
     }
   }
-
-
 
   // void closeAdSelectPopup() {
   //   adLoadTimerStop();
@@ -907,12 +894,10 @@ class ActivityController extends SuperController with ActivityMixin, ChallengeMi
     // 메인팝업 클릭 이벤트
     Adjust.trackEvent(AdjustEvent('4znz3j'));
     bool bannerAdClick = HiveStore.load(key: HiveKey.bannerAdClick.name) ?? false;
-    if(!bannerAdClick){
+    if (!bannerAdClick) {
       Adjust.trackEvent(AdjustEvent('ytqi48'));
       HiveStore.save(key: HiveKey.bannerAdClick.name, value: true);
     }
-
-
 
     if (Get.isBottomSheetOpen!) {
       Get.back();
@@ -957,17 +942,17 @@ class ActivityController extends SuperController with ActivityMixin, ChallengeMi
             Get.toNamed(Routes.wallet);
             break;
           case 'NOTICE':
-          // Get.toNamed(Routes.noticeList);
+            // Get.toNamed(Routes.noticeList);
             Get.toNamed(Routes.webView, arguments: {'linkUrl': 'https://eztechfin.notion.site/c5103042de5d4e3a9a61c1101508ffed'});
             break;
           case 'FAQ':
-          // Get.toNamed(Routes.preferenceBoard);
+            // Get.toNamed(Routes.preferenceBoard);
             Get.toNamed(Routes.webView, arguments: {'linkUrl': 'https://eztechfin.notion.site/FAQ-2f6b0ec4d6134fd398cd7a832bfa6cd3'});
             break;
         }
         break;
       case 'INTERNAL_WEB_VIEW':
-      // Get.toNamed(Routes.webView, arguments: {'id': item.id, 'linkUrl': item.linkUrl});
+        // Get.toNamed(Routes.webView, arguments: {'id': item.id, 'linkUrl': item.linkUrl});
         showModalWebview(this, Get.context, title: item.label!, linkUrl: item.linkUrl!);
         break;
       case 'EXTERNAL_BROWSER':
@@ -978,7 +963,6 @@ class ActivityController extends SuperController with ActivityMixin, ChallengeMi
         break;
     }
   }
-
 
   @override
   void onDetached() {
@@ -1001,14 +985,12 @@ class ActivityController extends SuperController with ActivityMixin, ChallengeMi
 
   @override
   void onInactive() {
-    print('onInactive');
     // adLoadTimerStop();
     HiveStore.save(key: HiveKey.savedStepInitialized.name, value: false);
   }
 
   @override
   void onPaused() {
-    print('onPaused');
     // adLoadTimerStop();
     initLuckAnimation();
     HiveStore.save(key: HiveKey.savedStepInitialized.name, value: false);
@@ -1016,8 +998,6 @@ class ActivityController extends SuperController with ActivityMixin, ChallengeMi
 
   @override
   void onResumed() {
-    print('onResumed activity');
-
     if (Get.currentRoute != Routes.login && Get.currentRoute != Routes.loading) {
       getUserState(showLoading: true);
     }

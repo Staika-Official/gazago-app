@@ -116,7 +116,6 @@ mixin ConsumerItemMixin {
         repairItems: filteredList,
       ),
       successCallback: (repairModel) {
-        print(repairModel);
         showToastPopup('+${formatDecimalPlaces(totalStat.toDouble(), 0)} 내구도 수리가 되었습니다.');
       },
       errorCallback: (ErrorResponseDataModel data) {
@@ -156,7 +155,6 @@ mixin ConsumerItemMixin {
     await ItemService.getUserConsumerItemByType(itemType, successCallback: (data) {
       consumerItemList.value = data;
 
-      print(consumerItemList.isNotEmpty);
       if (consumerItemList.isNotEmpty) {
         for (var item in consumerItemList) {
           RepairUseItemModel counterObj = RepairUseItemModel();

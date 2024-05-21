@@ -29,7 +29,6 @@ class MyPageController extends GetxController with PreferenceMixin {
   RxString provider = RxString('');
   final FocusNode focusNode = FocusNode();
 
-
   @override
   void onInit() {
     Get.arguments != null ? provider.value = Get.arguments['provider'] : provider.value = '';
@@ -37,15 +36,13 @@ class MyPageController extends GetxController with PreferenceMixin {
     super.onInit();
   }
 
-  void checkAvailableNicknameChange () {
+  void checkAvailableNicknameChange() {
     if (!profile.value.availableChangeNickname!) {
       focusNode.unfocus();
       showToastPopup('닉네임 수정 이력이 있어요.\n닉네임은 최초 1회 이후 수정할 수 없어요');
       return;
     }
   }
-
-
 
   Future<void> modifyMyAccountInfo() async {
     if (pickedImage.value == null && profile.value.nickname == originalNickname.value) {
@@ -80,7 +77,6 @@ class MyPageController extends GetxController with PreferenceMixin {
     Uri profileImageUrl = Uri.parse(uploadUrl ?? 'https://image.staika.io/ic_launcher.png');
     profile.value.profileImageUrl = profileImageUrl.origin + profileImageUrl.path;
 
-    print(profile.value.nickname);
     final Map<String, String> params = {};
     if (profile.value.nickname != originalNickname.value) {
       params['nickname'] = profile.value.nickname!;
@@ -106,7 +102,6 @@ class MyPageController extends GetxController with PreferenceMixin {
   }
 
   void toggleEditMode() {
-
     if (profile.value.provider == 'APPLE') {
       nicknameTextController.text = profile.value.nickname!.split('@')[0];
       profile.value.nickname = profile.value.nickname!.split('@')[0];
@@ -197,7 +192,7 @@ class MyPageController extends GetxController with PreferenceMixin {
   void validateProfileEdit() {
     focusNode.unfocus();
     if (profile.value.availableChangeNickname! && profile.value.nickname != originalNickname.value) {
-      if(profile.value.nickname!.length < 3) {
+      if (profile.value.nickname!.length < 3) {
         showToastPopup('닉네임은 3자 이상 입력해주세요.');
         return;
       }

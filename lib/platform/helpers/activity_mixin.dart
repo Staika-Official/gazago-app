@@ -366,9 +366,7 @@ mixin ActivityMixin {
     pedestrianStatusSubscription ??= Pedometer.pedestrianStatusStream.skip(1).listen((PedestrianStatus event) {
       pedestrianStatus.value = event.status.toUpperCase();
     });
-    stepSubscription!.onError((error) {
-      print(error);
-    });
+    stepSubscription!.onError((error) {});
   }
 
   void startExercise(ExerciseType exerciseType, ChallengeCourseModel? course) async {
@@ -866,9 +864,7 @@ mixin ActivityMixin {
       if (!assetsAudioPlayer.isPlaying.value) {
         assetsAudioPlayer.open(Audio("assets/audio/bonus_go.mp3")).then((value) {
           assetsAudioPlayer.play();
-        }).onError((error, stackTrace) {
-          print(error);
-        });
+        }).onError((error, stackTrace) {});
       }
     }
   }

@@ -112,7 +112,6 @@ class SyntheticBadgeController extends GetxController with InventoryMixin {
   }
 
   void showSelectBadgePopup(List<InventoryBadgeListModel> badgeItems, selectedBadgeItem, index) {
-    print(index);
     // selectedBadgeList[index] =
     userBadgesList.removeWhere((element) => element.badgeId == selectedBadgePrev.value.badgeId);
     if (selectedBadgePrev.value.level >= 5) {
@@ -206,7 +205,6 @@ class SyntheticBadgeController extends GetxController with InventoryMixin {
   }
 
   void handleOpenSyntheticBadgeConfirmPopup() {
-    print(syntheticBadgeFee);
     Get.dialog(
       AlertDialog(
         title: const Text(

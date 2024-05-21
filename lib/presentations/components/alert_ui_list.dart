@@ -46,7 +46,6 @@ import 'package:gaza_go/platform/models/crew_icon_model.dart';
 import 'package:gaza_go/platform/models/crew_model.dart';
 import 'package:gaza_go/platform/models/exchange_stik_price_model.dart';
 import 'package:gaza_go/platform/models/push_message_challenge_success_model.dart';
-import 'package:gaza_go/platform/stores/hive_store.dart';
 import 'package:gaza_go/presentations/components/circular_button.dart';
 import 'package:gaza_go/presentations/components/fair_play_content.dart';
 import 'package:gaza_go/presentations/components/gazago_button.dart';
@@ -420,14 +419,12 @@ Future<void> checkAppPermissionAlert(DailyBenefitController controller) async {
       ),
     ),
     actions: [
-
       Expanded(
         child: GazagoButton(
           buttonText: '확인',
           onTap: () async {
             Get.back();
             controller.moveAppSettings();
-
           },
         ),
       ),
@@ -1332,7 +1329,7 @@ void itemPurchaseAlert(ShopDetailController controller, double remainMyAsset, tr
                               ),
                               Padding(
                                 padding: EdgeInsets.symmetric(horizontal: 5.0.sp),
-                                child: Container(
+                                child: SizedBox(
                                   width: 80.sp,
                                   child: Center(
                                     child: StyledText(
@@ -1881,7 +1878,7 @@ void itemPurchaseCompleteAlert(ShopDetailController controller) {
                                           padding: EdgeInsets.only(right: 4.0.sp),
                                           child: iconShopLuck,
                                         ),
-                                         StyledText(
+                                        StyledText(
                                           '행운',
                                           color: pinkColor,
                                           fontSize: 12,
@@ -2458,8 +2455,7 @@ void showInvalidCertCode(String errorMsg, String errorCode) {
             //   }
             //
             // }
-
-          } ,
+          },
           buttonText: '확인',
           buttonColor: skyBlueColor,
         ),
@@ -3954,7 +3950,6 @@ void successChargeStikToTikAlert(GoWalletController controller) {
 }
 
 void sendStikToGoWalletAlert(StaikaWalletController controller, String password) {
-  WalletMasterController walletMasterController = Get.find();
   showAlert(
     allowMultipleBottomSheet: true,
     title: '전송 하시겠습니까?',
@@ -4243,7 +4238,7 @@ void exchangeStikShortBalanceAlert(StaikaWalletController controller) {
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       const StyledText(
-                          '보유한 STIK',
+                        '보유한 STIK',
                         fontWeight: 500,
                         fontSize: 16,
                         letterSpacing: -.2,
@@ -7979,7 +7974,7 @@ void showMinimumSendStikAmountAlert() {
 void showRefetchGetSpendingWalletAlert() {
   WalletMasterController walletMasterController = Get.isRegistered<WalletMasterController>() ? Get.find<WalletMasterController>() : Get.put(WalletMasterController());
   showAlert(
-      allowMultipleBottomSheet: true,
+    allowMultipleBottomSheet: true,
     contentWidget: Padding(
       padding: EdgeInsets.only(top: 20.0.sp, bottom: 40.sp),
       child: Column(
@@ -8016,7 +8011,7 @@ void showRefetchGetSpendingWalletAlert() {
 void showIOSAdPermissionAlert(DailyBenefitController controller) {
   Get.dialog(
     barrierColor: Colors.transparent,
-      useSafeArea : false,
+    useSafeArea: false,
     WillPopScope(
       onWillPop: () async => false,
       child: Dialog(
@@ -8024,83 +8019,80 @@ void showIOSAdPermissionAlert(DailyBenefitController controller) {
         backgroundColor: subBg01Color.withOpacity(.8),
         child: Center(
             child: Padding(
-              padding: EdgeInsets.all(35.0.sp),
-              child: Container(
-                decoration: BoxDecoration(
-                  color: popupBgColor,
-                  borderRadius: BorderRadius.all(
-                    Radius.circular(12.5.sp),
-                  ),
-                ),
-                child: Stack(
-                  children:[
-                    Positioned(
-                        right: 10,
-                        top: 10,
-                        child: InkWell(
-                          onTap: () => Get.back(),
-                          child: iconCloseWhite,
-                        )
-                    ),
+          padding: EdgeInsets.all(35.0.sp),
+          child: Container(
+            decoration: BoxDecoration(
+              color: popupBgColor,
+              borderRadius: BorderRadius.all(
+                Radius.circular(12.5.sp),
+              ),
+            ),
+            child: Stack(children: [
+              Positioned(
+                  right: 10,
+                  top: 10,
+                  child: InkWell(
+                    onTap: () => Get.back(),
+                    child: iconCloseWhite,
+                  )),
+              Padding(
+                padding: EdgeInsets.all(20.0.sp),
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
                     Padding(
-                      padding: EdgeInsets.all(20.0.sp),
-                      child: Column(
-                        mainAxisSize: MainAxisSize.min,
-                        children: [
-                          Padding(
-                            padding: EdgeInsets.only( bottom: 20.sp),
-                            child: StyledText(
-                              '광고 시청을 위해\n앱 추적 요청을 허용해주세요.',
-                              fontSize: 20,
-                              lineHeight: 29,
-                              fontWeight: 500,
-                              letterSpacing: -.1,
-                              textAlign: TextAlign.center,
-                            ),
-                          ),
-                          Padding(
-                            padding: EdgeInsets.symmetric(horizontal: 20.0.sp),
-                            child: Image.asset(
-                              'assets/images/activity/img_ios_ad_permission.png',
-                              fit: BoxFit.fitWidth,
-                            ),
-                          ),
-                          Padding(
-                            padding: EdgeInsets.symmetric(vertical: 16.0.sp),
-                            child: RichText(
-                                textAlign: TextAlign.center,
-                                text: TextSpan(
-                                  style: TextStyle(color: lightGrayColor, fontWeight: FontWeight.w500, fontSize: 14, height: 22 / 14, letterSpacing: -.1),
-                                  children: [
-                                    TextSpan(
-                                      text: '그림과 같이',
-                                    ),
-                                    TextSpan(
-                                      text: ' 설정→개인정보 보호 및 보안→\n추적 페이지',
-                                      style: TextStyle(fontWeight: FontWeight.w700,),
-                                    ),
-                                    TextSpan(
-                                      text: '에서 가자고 앱을 선택해주세요.',
-                                    ),
-                                  ],
-                                )
-                            ),
-                          ),
-                          GazagoButton(
-                            onTap: () {
-
-                              controller.moveAppSettings();
-                            },
-                            buttonText: '확인',
-                            buttonColor: skyBlueColor,
-                          ),
-                        ],
+                      padding: EdgeInsets.only(bottom: 20.sp),
+                      child: StyledText(
+                        '광고 시청을 위해\n앱 추적 요청을 허용해주세요.',
+                        fontSize: 20,
+                        lineHeight: 29,
+                        fontWeight: 500,
+                        letterSpacing: -.1,
+                        textAlign: TextAlign.center,
                       ),
                     ),
-                  ]
+                    Padding(
+                      padding: EdgeInsets.symmetric(horizontal: 20.0.sp),
+                      child: Image.asset(
+                        'assets/images/activity/img_ios_ad_permission.png',
+                        fit: BoxFit.fitWidth,
+                      ),
+                    ),
+                    Padding(
+                      padding: EdgeInsets.symmetric(vertical: 16.0.sp),
+                      child: RichText(
+                          textAlign: TextAlign.center,
+                          text: TextSpan(
+                            style: TextStyle(color: lightGrayColor, fontWeight: FontWeight.w500, fontSize: 14, height: 22 / 14, letterSpacing: -.1),
+                            children: [
+                              TextSpan(
+                                text: '그림과 같이',
+                              ),
+                              TextSpan(
+                                text: ' 설정→개인정보 보호 및 보안→\n추적 페이지',
+                                style: TextStyle(
+                                  fontWeight: FontWeight.w700,
+                                ),
+                              ),
+                              TextSpan(
+                                text: '에서 가자고 앱을 선택해주세요.',
+                              ),
+                            ],
+                          )),
+                    ),
+                    GazagoButton(
+                      onTap: () {
+                        controller.moveAppSettings();
+                      },
+                      buttonText: '확인',
+                      buttonColor: skyBlueColor,
+                    ),
+                  ],
                 ),
               ),
-            )),
+            ]),
+          ),
+        )),
       ),
     ),
   );

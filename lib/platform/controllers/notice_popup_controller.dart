@@ -5,11 +5,9 @@ import 'package:flutter/material.dart';
 import 'package:gaza_go/constants/enums.dart';
 import 'package:gaza_go/constants/routes.dart';
 import 'package:gaza_go/platform/controllers/activity_controller.dart';
-import 'package:gaza_go/platform/controllers/challenges_controller.dart';
 import 'package:gaza_go/platform/controllers/global_controller.dart';
 import 'package:gaza_go/platform/controllers/home_menu_controller.dart';
 import 'package:gaza_go/platform/controllers/leaderboard_controller.dart';
-import 'package:gaza_go/platform/helpers/alert_helper.dart';
 import 'package:gaza_go/platform/helpers/promotion_mixin.dart';
 import 'package:gaza_go/platform/models/new_challenge_detail_model.dart';
 import 'package:gaza_go/platform/models/notice_popup_model.dart';
@@ -80,7 +78,7 @@ class NoticePopupController extends GetxController with PromotionMixin {
     await BoardService.getMainNoticePopupList(
       successCallback: (List<NoticePopupModel> records) {
         records.removeWhere((element) => element.type == 'INSPECTION');
-        if(promotionAdsList.isNotEmpty){
+        if (promotionAdsList.isNotEmpty) {
           for (PromotionAdModel promotion in promotionAdsList) {
             NoticePopupModel promotionAd = NoticePopupModel(
               imageUrlKo: promotion.imageUrl,
@@ -119,21 +117,18 @@ class NoticePopupController extends GetxController with PromotionMixin {
     );
   }
 
-
   void moveToWebView(NoticePopupModel item) async {
     // 메인팝업 클릭 이벤트
     Adjust.trackEvent(AdjustEvent('hed7a4'));
-    String? userId = HiveStore.loadString(key: HiveKey.userId.name);
     // 미래에셋 광고 클릭 이벤트
-    if(item.isAdsBanner != null && item.isAdsBanner!){
+    if (item.isAdsBanner != null && item.isAdsBanner!) {
       Adjust.trackEvent(AdjustEvent('qljdfk'));
       bool bannerAdClick = HiveStore.load(key: HiveKey.bannerAdClick.name) ?? false;
-      if(!bannerAdClick){
+      if (!bannerAdClick) {
         Adjust.trackEvent(AdjustEvent('ytqi48'));
         HiveStore.save(key: HiveKey.bannerAdClick.name, value: true);
       }
     }
-
 
     if (Get.isBottomSheetOpen!) {
       Get.back();
@@ -149,33 +144,24 @@ class NoticePopupController extends GetxController with PromotionMixin {
             Get.toNamed(Routes.challengeDetail.replaceAll(':id', item.referenceId.toString()));
             break;
           case 'COMPANY_CHALLENGES':
-
-
-
-
             String? userId = HiveStore.loadString(key: HiveKey.userId.name);
             DatabaseReference userDiInfoRef = FirebaseDatabase.instance.ref('crewChallengeLeaderboard/${item.referenceId}');
             Query query = userDiInfoRef.child(userId!);
             query.get().then((DataSnapshot snapshot) async {
-              print('snapshot : ${snapshot.value}');
               if (snapshot.value != null) {
                 // Get.find<HomeMenuController>().selectMenu(0);
                 Get.toNamed(Routes.companyChallengeDetail.replaceAll(':id', item.referenceId.toString()));
-
               } else {
                 await ActivityService.getChallengeDetails(item.referenceId!, successCallback: (NewChallengeDetailModel data) async {
-                  if(data.challengeUserState == null){
+                  if (data.challengeUserState == null) {
                     miraeAssetAlert(int.parse(item.referenceId.toString()), null);
                   } else {
                     miraeAssetAlert(int.parse(item.referenceId.toString()), data.challengeUserState!);
                   }
-
                 });
-
               }
             }).catchError((error) {
               // 오류 처리
-              print('데이터를 가져오는 중 오류가 발생했습니다: $error');
             });
 
             break;

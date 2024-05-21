@@ -45,11 +45,7 @@ class CreateWalletController extends GetxController {
   }
 
   Future<void> disableWallet() async {
-    await WalletService.disableOnChainWallet(successCallback: () {
-      print('disabled');
-    }, errorCallback: (e) {
-      print(e);
-    });
+    await WalletService.disableOnChainWallet(successCallback: () {}, errorCallback: (e) {});
   }
 
   void walletCreationFailed() {

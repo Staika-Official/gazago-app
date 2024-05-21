@@ -12,8 +12,6 @@ import 'package:gaza_go/presentations/styles/icons.dart';
 import 'package:gaza_go/presentations/styles/styled_text.dart';
 import 'package:get/get.dart';
 
-import '../../../platform/helpers/alert_helper.dart';
-
 Future<String> showConfirmPasswordDialog(WalletMasterController controller) {
   ConfirmWalletPasswordController controller = Get.put(ConfirmWalletPasswordController());
   controller.passwordFormStatus.value = FormStatus.empty;
@@ -110,7 +108,7 @@ Future<String> showConfirmPasswordDialog(WalletMasterController controller) {
                               ),
                               focusNode: controller.passwordFocusNode,
                               onChanged: (password) => controller.updatePassword(password),
-                              onSubmitted: (String text) async  => await controller.isValidPassword(completer),
+                              onSubmitted: (String text) async => await controller.isValidPassword(completer),
                             ),
                           ),
                           Obx(

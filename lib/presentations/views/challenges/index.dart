@@ -2,7 +2,6 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:flutter_svg_provider/flutter_svg_provider.dart' as sp;
 import 'package:gaza_go/constants/config.dart';
 import 'package:gaza_go/platform/controllers/challenges_controller.dart';
 import 'package:gaza_go/platform/helpers/base_helper.dart';
@@ -99,7 +98,6 @@ class ChallengesHome extends StatelessWidget {
                                         fontSize: 12,
                                         lineHeight: 14,
                                         letterSpacing: -.1,
-
                                       ),
                                     ),
                                   ),
@@ -107,50 +105,49 @@ class ChallengesHome extends StatelessWidget {
                                 if (item.challengeUserState != 'COMPLETE' && item.challengeUserState != 'INCOMPLETE')
                                   item.challengeUserState == 'JOINED' && item.challengeState == 'READY'
                                       ? Container(
-                                    decoration: BoxDecoration(
-                                      color: Colors.white,
-                                      borderRadius: BorderRadius.all(
-                                        Radius.circular(3.sp),
-                                      ),
-                                    ),
-                                    child: Padding(
-                                      padding: EdgeInsets.symmetric(vertical: 7.0.sp, horizontal: 8.0.sp),
-                                      child: StyledText(
-                                        controller.getChallengeUserStatus(item.challengeUserState!, item.challengeState!),
-                                        fontWeight: 500,
-                                        fontSize: 12,
-                                        lineHeight: 14,
-                                        color: Colors.black,
-                                        letterSpacing: -.1,
-                                      ),
-                                    ),
-                                  )
+                                          decoration: BoxDecoration(
+                                            color: Colors.white,
+                                            borderRadius: BorderRadius.all(
+                                              Radius.circular(3.sp),
+                                            ),
+                                          ),
+                                          child: Padding(
+                                            padding: EdgeInsets.symmetric(vertical: 7.0.sp, horizontal: 8.0.sp),
+                                            child: StyledText(
+                                              controller.getChallengeUserStatus(item.challengeUserState!, item.challengeState!),
+                                              fontWeight: 500,
+                                              fontSize: 12,
+                                              lineHeight: 14,
+                                              color: Colors.black,
+                                              letterSpacing: -.1,
+                                            ),
+                                          ),
+                                        )
                                       : item.challengeUserState != null
-                                      ? Container(
-
-                                    decoration: BoxDecoration(
-                                      color: item.challengeUserState == 'JOINED'
-                                          ? AppColorData.regular().colorBgInteractivePrimaryPressed
-                                          : item.challengeUserState == 'JOIN_AVAILABLE' || item.challengeUserState == 'REGISTER_AVAILABLE'
-                                          ? AppColorData.regular().colorBgInteractivePrimary
-                                          : AppColorData.regular().colorBgInteractivePrimaryDisabled,
-                                        borderRadius: BorderRadius.all(
-                                         Radius.circular(3.sp),
-                                        ),
-                                    ),
-                                    child: Padding(
-                                      padding: EdgeInsets.symmetric(vertical: 4.0.sp, horizontal: 8.0.sp),
-                                      child: StyledText(
-                                        controller.getChallengeUserStatus(item.challengeUserState!, item.challengeState!),
-                                        fontWeight: 500,
-                                        fontSize: 12,
-                                        lineHeight: 15,
-                                        color: Colors.black,
-                                        letterSpacing: -.1,
-                                      ),
-                                    ),
-                                  )
-                                      : Container(),
+                                          ? Container(
+                                              decoration: BoxDecoration(
+                                                color: item.challengeUserState == 'JOINED'
+                                                    ? AppColorData.regular().colorBgInteractivePrimaryPressed
+                                                    : item.challengeUserState == 'JOIN_AVAILABLE' || item.challengeUserState == 'REGISTER_AVAILABLE'
+                                                        ? AppColorData.regular().colorBgInteractivePrimary
+                                                        : AppColorData.regular().colorBgInteractivePrimaryDisabled,
+                                                borderRadius: BorderRadius.all(
+                                                  Radius.circular(3.sp),
+                                                ),
+                                              ),
+                                              child: Padding(
+                                                padding: EdgeInsets.symmetric(vertical: 4.0.sp, horizontal: 8.0.sp),
+                                                child: StyledText(
+                                                  controller.getChallengeUserStatus(item.challengeUserState!, item.challengeState!),
+                                                  fontWeight: 500,
+                                                  fontSize: 12,
+                                                  lineHeight: 15,
+                                                  color: Colors.black,
+                                                  letterSpacing: -.1,
+                                                ),
+                                              ),
+                                            )
+                                          : Container(),
                               ],
                             ),
                           ),

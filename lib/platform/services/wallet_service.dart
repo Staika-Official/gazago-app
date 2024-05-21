@@ -22,8 +22,8 @@ import 'package:gaza_go/platform/models/wallet_solana_transfer_model.dart';
 import 'package:gaza_go/platform/models/wallet_token_balance_model.dart';
 import 'package:gaza_go/platform/stores/hive_store.dart';
 import 'package:solana/encoder.dart';
-import 'package:solana/solana.dart';
 import 'package:solana/solana.dart' as solana;
+import 'package:solana/solana.dart';
 import 'package:solana_web3/solana_web3.dart';
 
 class WalletService {
@@ -109,8 +109,7 @@ class WalletService {
   }
 
   static Future<WalletSolanaModel?> getSolanaWallet() async {
-    String? userId = HiveStore.loadString(key: HiveKey.userId.name);
-    Response res = await WalletApi.getSolanaWallet(userId);
+    Response res = await WalletApi.getOnChainWallet(userId!);
 
     if (res.data == null || res.data == '') {
       return null;
@@ -125,12 +124,9 @@ class WalletService {
 
     String? email = HiveStore.loadString(key: HiveKey.email.name);
 
-    print('address: ${address.toBase58()}');
-    print('secretKey: ${base58.encode(wallet.seckey)}');
-
     // 암호화된 시크릿키
     String encryptSecretKey = encrypt(base58.encode(wallet.seckey), email!, walletPassword);
-    Response res = await WalletApi.createSolanaWallet(address.toBase58(), encryptSecretKey);
+    Response res = await WalletApi.createOnChainWallet(userId!, publicKey: address.toBase58(), secretKey: encryptSecretKey);
 
     return WalletSolanaModel.fromJson(res.data);
   }
@@ -152,7 +148,6 @@ class WalletService {
     });
 
     await WalletService.getTokenPriorityFee(platform, symbol, successCallback: (fees) {
-      print('fees: $fees');
       priorityFee = fees.priorityFee;
     }, errorCallback: () {
       showToastPopup('Failed to get fee');
@@ -160,10 +155,7 @@ class WalletService {
     });
     String? email = HiveStore.loadString(key: HiveKey.email.name);
 
-    print('##############');
-    print('accountSecretkey: $accountSecretkey');
     String? decryptPrivateKey = decrypt(accountSecretkey, email!, walletPassword);
-    print('decryptPrivateKey: $decryptPrivateKey');
 
     if (decryptPrivateKey == null) {}
 
@@ -179,8 +171,6 @@ class WalletService {
       final mint = Ed25519HDPublicKey.fromBase58(tokenAddress);
       message = await getSplTransferMessage(solanaClient, sender, receiver, mint, amount, priorityFee);
     }
-
-    print('sender: ${sender.address}');
 
     // FeePayer
     late final Ed25519HDPublicKey feePayer;
@@ -320,9 +310,7 @@ class WalletService {
     });
 
     await WalletService.getTokenPriorityFee(platform, symbol, successCallback: (fees) {
-      print('fees: $fees');
       priorityFee = fees.priorityFee;
-      print('fees: ${fees.priorityFee}');
     }, errorCallback: () {
       showToastPopup('Failed to get fee');
       return;
@@ -386,7 +374,6 @@ class WalletService {
       signatures: signatures,
     );
     String uiAmount = getUiAmountString(amount, decimals);
-    print(uiAmount);
     // API Call
     // Map<String, String> body = {'clientId': 'GAZAGO', 'encodeTransaction': tx.encode()};
     ExchangeTokenWithdrawalModel params = ExchangeTokenWithdrawalModel(

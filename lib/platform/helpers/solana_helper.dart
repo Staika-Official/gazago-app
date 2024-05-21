@@ -1,6 +1,5 @@
-
-import 'package:solana/solana.dart';
 import 'package:solana/dto.dart';
+import 'package:solana/solana.dart';
 
 Message getSolTransferMessage(Ed25519HDPublicKey fundingAccount, Ed25519HDPublicKey recipientAccount, int amount, int priorityFee) {
   final instruction = SystemInstruction.transfer(
@@ -27,8 +26,7 @@ Message getSolTransferMessage(Ed25519HDPublicKey fundingAccount, Ed25519HDPublic
 }
 
 Future<Message> getSplTransferMessage(SolanaClient solanaClient, Ed25519HDKeyPair sender, Ed25519HDPublicKey destination, Ed25519HDPublicKey mint, int amount, int priorityFee) async {
-  final commitment = Commitment.confirmed;
-  print('priorityFee : $priorityFee');
+  const commitment = Commitment.confirmed;
   ProgramAccount? associatedRecipientAccount = await solanaClient.getAssociatedTokenAccount(
     owner: destination,
     mint: mint,
@@ -50,19 +48,15 @@ Future<Message> getSplTransferMessage(SolanaClient solanaClient, Ed25519HDKeyPai
 
   // Also throw an adequate exception if the recipient has no associated
   associatedRecipientAccount ??= await solanaClient.createAssociatedTokenAccount(
-      mint: mint,
-      funder: sender,
-      owner: destination,
-      commitment: commitment,
-    );
-
-  print('associatedSenderAccount: ${associatedSenderAccount.pubkey}');
-  print('associatedRecipientAccount: ${associatedRecipientAccount.pubkey}');
+    mint: mint,
+    funder: sender,
+    owner: destination,
+    commitment: commitment,
+  );
 
   final instruction = TokenInstruction.transfer(
     source: Ed25519HDPublicKey.fromBase58(associatedSenderAccount.pubkey),
-    destination:
-    Ed25519HDPublicKey.fromBase58(associatedRecipientAccount.pubkey),
+    destination: Ed25519HDPublicKey.fromBase58(associatedRecipientAccount.pubkey),
     owner: sender.publicKey,
     amount: amount,
   );
@@ -82,4 +76,3 @@ Future<Message> getSplTransferMessage(SolanaClient solanaClient, Ed25519HDKeyPai
     ],
   );
 }
-

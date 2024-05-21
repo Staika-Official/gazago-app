@@ -17,18 +17,14 @@ import 'package:gaza_go/platform/services/activity_service.dart';
 import 'package:gaza_go/platform/services/uaa_service.dart';
 import 'package:gaza_go/platform/stores/hive_store.dart';
 import 'package:gaza_go/presentations/components/mirae/alert_ui_list.dart';
-
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
-
 import 'package:kakao_flutter_sdk_share/kakao_flutter_sdk_share.dart';
 import 'package:package_info_plus/package_info_plus.dart';
-
 
 Future<bool> isForceUpdateTarget() async {
   await FirebaseRemoteConfig.instance.fetchAndActivate();
   String remoteAppVersion = getConfig(dataType: ConfigType.string, configKey: 'minimum_app_version');
-  print('remoteAppVersion${remoteAppVersion}');
   return await compareVersion(remoteAppVersion);
 }
 
@@ -40,15 +36,12 @@ Future<bool> isRecommendUpdateTarget() async {
 Future<bool> compareVersion(String versionString) async {
   String remoteAppVersion = versionString;
   PackageInfo packageInfo = await PackageInfo.fromPlatform();
-  print('packageInfo${packageInfo}');
   List<int> splitVersionString(String versionString) {
     return versionString.split('.').map((element) => int.parse(element)).toList();
   }
-  print('splitVersionString${splitVersionString}');
+
   List<int> targetAppVersion = splitVersionString(remoteAppVersion);
   List<int> deviceAppVersion = splitVersionString(packageInfo.version);
-  print('targetAppVersion${targetAppVersion}');
-  print('deviceAppVersion${deviceAppVersion}');
   bool isUnderTargetVersion = false;
 
   for (int i = 0; i < targetAppVersion.length; i++) {
@@ -59,7 +52,6 @@ Future<bool> compareVersion(String versionString) async {
       break;
     }
   }
-  print('isUnderTargetVersion${isUnderTargetVersion}');
   return isUnderTargetVersion;
 }
 
@@ -228,10 +220,7 @@ String formatMeterToKilometer(int meter) {
   return kilometer;
 }
 
-
-
 void handleRoute(String route) async {
-
   if ((Get.currentRoute != Routes.login || Get.currentRoute != Routes.loading) && Get.isRegistered<HomeMenuController>()) {
     if (route.contains('challenge')) {
       Get.find<HomeMenuController>().selectMenu(0);
@@ -242,14 +231,14 @@ void handleRoute(String route) async {
     } else if (route.contains('leaderboard')) {
       Get.find<HomeMenuController>().selectMenu(4);
     }
-    if(!route.contains('challenge_detail')){
+    if (!route.contains('challenge_detail')) {
       if (Get.currentRoute != Routes.home) {
         Get.until((route) => Get.currentRoute == Routes.home);
       }
 
       Get.toNamed(route);
     }
-    if(route.contains('company_challenge_detail')){
+    if (route.contains('company_challenge_detail')) {
       if (Get.currentRoute != Routes.home) {
         Get.until((route) => Get.currentRoute == Routes.home);
       }
@@ -260,16 +249,13 @@ void handleRoute(String route) async {
         // if(Get.isDialogOpen == true){
         //   Get.back();
         // }
-        if(data.challengeUserState == null){
-          miraeAssetAlert( int.parse(challengeId), null);
+        if (data.challengeUserState == null) {
+          miraeAssetAlert(int.parse(challengeId), null);
         } else {
-          miraeAssetAlert( int.parse(challengeId), data.challengeUserState!);
+          miraeAssetAlert(int.parse(challengeId), data.challengeUserState!);
         }
-
-
       });
 
-      print(challengeId);
       // DatabaseReference userDiInfoRef = FirebaseDatabase.instance.ref('crewChallengeLeaderboard/$challengeId/$userId');
 
       // await getChallengeDetail(challengeId);
@@ -283,9 +269,7 @@ void handleRoute(String route) async {
       //
       //
       // });
-
     }
-
   } else {
     HiveStore.save(key: HiveKey.dynamicLinkRoute.name, value: route);
   }
@@ -295,40 +279,31 @@ Future<void> getChallengeDetail(challengeId) async {
   String? userId = HiveStore.loadString(key: HiveKey.userId.name);
   ChallengesController challengesController = Get.isRegistered<ChallengesController>() ? Get.find<ChallengesController>() : Get.put(ChallengesController());
   await ActivityService.getChallengeDetails(int.parse(challengeId), successCallback: (NewChallengeDetailModel data) async {
-    print(data);
     DatabaseReference userDiInfoRef = FirebaseDatabase.instance.ref('crewChallengeLeaderboard/$challengeId/$userId');
 
-
     await userDiInfoRef.get().then((DataSnapshot snapshot) async {
-      print(snapshot.value);
       if (snapshot.exists) {
         Get.find<HomeMenuController>().selectMenu(0);
         Get.toNamed(Routes.companyChallengeDetail.replaceAll(':id', challengeId.toString()));
       } else {
-        if(data.challengeState == 'READY' ){
-          if(data.challengeUserState == 'REGISTER_READY'){
+        if (data.challengeState == 'READY') {
+          if (data.challengeUserState == 'REGISTER_READY') {
             notOpenCompanyChallenge();
           } else {
             participateInMiraeChallengeByCodeAlert(challengeId);
           }
-
-        } else if(data.challengeState == 'IN_PROGRESS'){
-          if(data.challengeUserState != 'JOIN_CLOSED'){
+        } else if (data.challengeState == 'IN_PROGRESS') {
+          if (data.challengeUserState != 'JOIN_CLOSED') {
             closedCompanyChallenge();
           } else {
             participateInMiraeChallengeByCodeAlert(challengeId);
           }
-
         } else {
           closedCompanyChallenge();
         }
-
       }
-    }).onError((error, stackTrace) {
-      print(error);
-    });
+    }).onError((error, stackTrace) {});
   });
-
 }
 
 void handlePendingDynamicLink() {
@@ -360,7 +335,6 @@ Future<bool> handleCheckUserVerified() async {
 }
 
 void moveToVerification() {
-  print(Get.currentRoute);
   HiveStore.save(key: HiveKey.enteredRoute.name, value: Get.currentRoute);
   Get.back();
   Get.toNamed(Routes.verificationTerms);
@@ -410,7 +384,7 @@ FeedTemplate? generateFeedTemplate(Uri shareUrl, {required ChallengeType challen
               imageUrl: Uri.parse('https://s3.ap-northeast-2.amazonaws.com/image.staika.io/social/share_crew.png'),
               imageHeight: 400,
               imageWidth: 400,
-              title: '너, ${crewName!} 크루가 돼라!🎯\n${crewName} 크루에서 당신을 초대했어요.',
+              title: '너, ${crewName!} 크루가 돼라!🎯\n$crewName 크루에서 당신을 초대했어요.',
               description: '지금 참여하면 걸음블럭 2개를 쌓을 수 있어요!',
               link: Link(
                 webUrl: shareUrl,
@@ -441,4 +415,3 @@ double productMinusFeePrice(String price, String fee) {
 
   return result;
 }
-

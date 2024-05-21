@@ -1,11 +1,7 @@
 import 'package:animate_do/animate_do.dart';
-import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:gaza_go/constants/config.dart';
-import 'package:gaza_go/constants/enums.dart';
 import 'package:gaza_go/platform/controllers/wallet_staika_controller.dart';
-import 'package:gaza_go/platform/stores/hive_store.dart';
 import 'package:gaza_go/presentations/styles/colors.dart';
 import 'package:gaza_go/presentations/styles/icons.dart';
 import 'package:gaza_go/presentations/styles/styled_text.dart';
@@ -18,8 +14,7 @@ class StaikaWallet extends StatelessWidget {
   List<Widget> renderCoinAssetList(StaikaWalletController controller) {
     return controller.coinAssetList
         .map(
-          (asset) =>
-          Padding(
+          (asset) => Padding(
             padding: EdgeInsets.only(top: 14.sp, left: 21.sp, right: 21.sp),
             child: StaikaAssetItemCoin(
               asset: asset,
@@ -28,7 +23,8 @@ class StaikaWallet extends StatelessWidget {
               showPrice: false,
             ),
           ),
-    ).toList();
+        )
+        .toList();
   }
 
   @override
@@ -56,15 +52,15 @@ class StaikaWallet extends StatelessWidget {
                         padding: EdgeInsets.symmetric(horizontal: 20.0.sp),
                         child: SizedBox(
                           height: 50.sp,
-                            child: Center(
-                                child: FittedBox(
-                                  child: StyledText(
-                                      controller.userEmail.value,
-                                      fontWeight: 500,
-                                      fontSize: 16,
-                                  ),
-                                )
-                            )
+                          child: Center(
+                            child: FittedBox(
+                              child: StyledText(
+                                controller.userEmail.value,
+                                fontWeight: 500,
+                                fontSize: 16,
+                              ),
+                            ),
+                          ),
                         ),
                       ),
                     ),
@@ -211,13 +207,16 @@ class StaikaWallet extends StatelessWidget {
                         ],
                       ),
                     ),
-                    controller.isFetching.value ?
-                    Padding(
-                      padding: EdgeInsets.only(top:100.sp),
-                      child: Center(child: SizedBox.square(dimension: 40, child: CircularProgressIndicator())),
-                    ) :
-                    controller.coinAssetList.isNotEmpty && controller.coinAssetList != null ?
-                      Column(children: [...renderCoinAssetList(controller)],) : Container(),
+                    controller.isFetching.value
+                        ? Padding(
+                            padding: EdgeInsets.only(top: 100.sp),
+                            child: Center(child: SizedBox.square(dimension: 40, child: CircularProgressIndicator())),
+                          )
+                        : controller.coinAssetList.isNotEmpty && controller.coinAssetList != null
+                            ? Column(
+                                children: [...renderCoinAssetList(controller)],
+                              )
+                            : Container(),
                     Expanded(
                       child: Align(
                         alignment: Alignment.bottomCenter,

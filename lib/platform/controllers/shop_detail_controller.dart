@@ -17,12 +17,9 @@ import 'package:gaza_go/platform/services/activity_service.dart';
 import 'package:gaza_go/platform/services/item_service.dart';
 import 'package:gaza_go/platform/services/shop_service.dart';
 import 'package:gaza_go/platform/services/uaa_service.dart';
-import 'package:gaza_go/platform/stores/hive_store.dart';
 import 'package:gaza_go/presentations/components/alert_ui_list.dart';
 import 'package:get/get.dart';
 import 'package:url_launcher/url_launcher.dart';
-
-import '../../constants/enums.dart';
 
 class ShopDetailController extends GetxController {
   final WalletMasterController walletMasterController = Get.find();
@@ -136,8 +133,7 @@ class ShopDetailController extends GetxController {
     itemScrollController.removeListener(() => toggleBottomNav(itemScrollController));
     shopController.getShopItemsList();
 
-
-    if(Get.previousRoute.contains('challenge_detail') && Get.isRegistered<ChallengesDetailController>()  ){
+    if (Get.previousRoute.contains('challenge_detail') && Get.isRegistered<ChallengesDetailController>()) {
       Get.find<ChallengesDetailController>().refreshController();
     }
     super.onClose();
@@ -217,9 +213,7 @@ class ShopDetailController extends GetxController {
     showItemTipAlert();
   }
 
-
-  void handleCheckPurchaseAvailable(tradeSymbol){
-    print(walletMasterController.tik.value.toString());
+  void handleCheckPurchaseAvailable(tradeSymbol) {
     if ((tradeSymbol == 'STIK' ? double.parse(walletMasterController.stik.value.uiAmountString!) : double.parse(walletMasterController.tik.value.uiAmountString!)) <
         (selectedItem.value.itemCategory == 'DISPOSABLE' ? purchaseItemSumPrice.value : selectedItem.value.price)) {
       isShortBalance.value = true;
@@ -232,7 +226,7 @@ class ShopDetailController extends GetxController {
   Future<void> onClickPurchaseItem(tradeSymbol) async {
     purchaseItemCount.value = 1;
 
-    if(selectedItem.value.challengeId != null){
+    if (selectedItem.value.challengeId != null) {
       await UaaService.getAccountInfo(
         successCallback: (UserAccountModel user) {
           if (user.authorities!.contains('ROLE_CERTIFIED_USER')) {
@@ -246,8 +240,6 @@ class ShopDetailController extends GetxController {
       handleCheckPurchaseAvailable(tradeSymbol);
     }
   }
-
-
 
   void showItemPurchasePopup(tradeSymbol) {
     itemPurchaseAlert(

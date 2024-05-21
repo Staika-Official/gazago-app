@@ -1,19 +1,11 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:flutter_inappwebview/flutter_inappwebview.dart';
-import 'package:gaza_go/constants/enums.dart';
-import 'package:gaza_go/platform/controllers/wallet_master_controller.dart';
-import 'package:gaza_go/platform/controllers/webview_controller.dart';
-import 'package:gaza_go/platform/stores/hive_store.dart';
-import 'package:gaza_go/presentations/styles/colors.dart';
-import 'package:get/get.dart';
 
 class NoticeWebView extends StatelessWidget {
   const NoticeWebView({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-
     GlobalKey webViewKey = GlobalKey();
     return WillPopScope(
       onWillPop: () async {
@@ -27,7 +19,6 @@ class NoticeWebView extends StatelessWidget {
             disableContextMenu: true,
             javaScriptEnabled: true,
             resourceCustomSchemes: ['intent'],
-
           ),
           onLoadResourceWithCustomScheme: (controller, url) async {
             await controller.stopLoading();
@@ -35,10 +26,9 @@ class NoticeWebView extends StatelessWidget {
           },
           onWebViewCreated: (controller) {
             // register a JavaScript handler with name "myHandlerName"
-
           },
         ),
       ),
-    );;
+    );
   }
 }

@@ -8,7 +8,6 @@ import 'package:gaza_go/platform/controllers/activity_controller.dart';
 import 'package:gaza_go/platform/controllers/wallet_master_controller.dart';
 import 'package:gaza_go/platform/firebase/remote_config.dart';
 import 'package:gaza_go/platform/helpers/alert_helper.dart';
-import 'package:gaza_go/platform/helpers/base_helper.dart';
 import 'package:gaza_go/platform/helpers/login_helper.dart';
 import 'package:gaza_go/platform/models/error_response_data_model.dart';
 import 'package:gaza_go/platform/models/notice_popup_model.dart';
@@ -18,7 +17,6 @@ import 'package:gaza_go/platform/services/member_service.dart';
 import 'package:gaza_go/platform/stores/hive_store.dart';
 import 'package:gaza_go/presentations/components/alert_ui_list.dart';
 import 'package:get/get.dart';
-import 'package:url_launcher/url_launcher.dart';
 
 class LoadingController extends GetxController {
   final RxInt retryCount = RxInt(0);
@@ -51,7 +49,6 @@ class LoadingController extends GetxController {
 
   @override
   void onReady() async {
-
     if (isUnderMaintenance()) {
       String emergencyNoticeContent = getConfig(dataType: ConfigType.string, configKey: 'emergency_notice_content');
       if (underMaintenance) {
@@ -130,9 +127,7 @@ class LoadingController extends GetxController {
       if (snapshot.value == false) {
         await checkTermsAgreeStatus();
       }
-    }).onError((error, stackTrace) {
-      print(error);
-    });
+    }).onError((error, stackTrace) {});
 
     Future.delayed(Duration.zero, () => timerStart());
   }
@@ -157,7 +152,6 @@ class LoadingController extends GetxController {
         timerStop();
       }
 
-      print('LoadingController time: ${time.value}');
       if (time.value > 60) {
         if (retryCount.value == 1) {
           showToastPopup('재시도에 실패하여 로그아웃 되었습니다.');
@@ -171,7 +165,6 @@ class LoadingController extends GetxController {
   }
 
   void timerStop() {
-    print('timerStop');
     if (_timer != null) {
       _timer?.cancel();
       _timer = null;
@@ -179,7 +172,6 @@ class LoadingController extends GetxController {
   }
 
   Future<void> checkTermsAgreeStatus() async {
-
     await MemberService.getTermsAgreeStatus(
       successCallback: (termsList) {
         this.termsList.value = termsList;
@@ -207,12 +199,9 @@ class LoadingController extends GetxController {
     progress.value = progress.value + 0.5;
     progressMessage.value = message;
 
-    print('progressMessage ${progressMessage.value}');
-
     if (progress.value >= 0.9) {
       timerStop();
       terminateDebugMode();
-      print('11111111');
       Get.offAllNamed(Routes.home);
     }
   }

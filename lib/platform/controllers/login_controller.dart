@@ -44,9 +44,7 @@ class LoginController extends GetxController {
           showModalNoticeWebview(Get.context, linkUrl: noticeUri);
         }
       }
-    }).onError((error, stackTrace) {
-      print(error);
-    });
+    }).onError((error, stackTrace) {});
   }
 
   void login(LoginType loginType) async {
@@ -94,9 +92,7 @@ class LoginController extends GetxController {
 
       await FirebaseAuth.instance.signInWithCredential(credential);
       await requestLogin(LoginType.google, credential.idToken!);
-    } catch (e) {
-      print(e);
-    }
+    } catch (e) {}
   }
 
   Future<void> signInWithApple() async {
@@ -121,9 +117,7 @@ class LoginController extends GetxController {
 
       await FirebaseAuth.instance.signInWithCredential(credential);
       await requestLogin(LoginType.apple, credential.accessToken!);
-    } catch (e) {
-      print(e);
-    }
+    } catch (e) {}
   }
 
   Future<void> getAccountInfo() async {
@@ -209,9 +203,6 @@ class LoginController extends GetxController {
         if (statusCode == 200) {
           HiveStore.save(key: HiveKey.accessToken.name, value: token.accessToken);
           HiveStore.save(key: HiveKey.refreshToken.name, value: token.refreshToken);
-          print('token : ${token.toJson().toString()}');
-          print('accessToken : ${token.accessToken}');
-          print('refreshToken : ${token.refreshToken}');
           if (token.accountStatus == 'TERMINATION_COMPLETED') {
             showToastPopup('탈퇴처리된 계정입니다.');
             forceLogout();

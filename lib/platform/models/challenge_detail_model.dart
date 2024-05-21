@@ -1,5 +1,4 @@
 import 'package:gaza_go/platform/models/challenge_info_model.dart';
-import 'package:gaza_go/platform/models/challenge_landing_model.dart';
 import 'package:json_annotation/json_annotation.dart';
 
 part 'challenge_detail_model.g.dart';
@@ -7,7 +6,6 @@ part 'challenge_detail_model.g.dart';
 @JsonSerializable(explicitToJson: true)
 class ChallengeDetailModel {
   ChallengeInfoModel? challenge;
-
 
   ChallengeDetailModel({
     this.challenge,

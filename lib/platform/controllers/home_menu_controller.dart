@@ -71,14 +71,7 @@ class HomeMenuController extends SuperController {
   }
 
   @override
-  void onInit() async {
-
-    super.onInit();
-  }
-
-  @override
   void onReady() async {
-
     Get.isRegistered<ActivityController>() ? Get.find<ActivityController>().initializeExercise() : Get.put(ActivityController()).initializeExercise();
     await checkUpdates();
     bottomNavHeight.value = bottomNavKey.currentContext != null ? bottomNavKey.currentContext!.size!.height : 0;
@@ -100,11 +93,9 @@ class HomeMenuController extends SuperController {
 
   void handleAppNotification() async {
     RemoteMessage? initialMessage = await FirebaseMessaging.instance.getInitialMessage();
-    print('initialMessage : $initialMessage');
     if (initialMessage != null) {
       if (initialMessage.data['notificationKey'] == 'DAILY_REWARD_COMPLETED') {
         // Get.find<WalletMasterController>().moveToWallet();
-        print('DAILY_REWARD_COMPLETED : handleAppNotification');
         Get.isRegistered<WalletMasterController>() ? Get.find<WalletMasterController>().moveToWallet() : Get.put(WalletMasterController()).moveToWallet();
       }
       if (initialMessage.data['notificationKey'] == 'MY_ITEM') {
@@ -287,9 +278,7 @@ class HomeMenuController extends SuperController {
       } else {
         HiveStore.save(key: HiveKey.expirationNotificationState.name, value: {});
       }
-    }).onError((error, stackTrace) {
-      print(error);
-    });
+    }).onError((error, stackTrace) {});
   }
 
   void checkForNewChallenges() async {
@@ -315,7 +304,6 @@ class HomeMenuController extends SuperController {
 
     userDiInfoRef.onValue.listen((DatabaseEvent event) async {
       eventListener.value = ++eventListener.value;
-      print(event.snapshot.value);
       if (event.snapshot.value != deviceId && event.snapshot.value != null && eventListener.value == 1) {
         handleForceLogoutWithAlert();
       }
@@ -370,8 +358,6 @@ class HomeMenuController extends SuperController {
       HiveStore.deleteKey(key: HiveKey.needToForceStopExercise.name);
     }
   }
-
-
 
   @override
   void onHidden() {

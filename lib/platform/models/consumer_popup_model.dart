@@ -1,4 +1,3 @@
-import 'package:gaza_go/platform/models/inventory_item_model.dart';
 import 'package:json_annotation/json_annotation.dart';
 
 part 'consumer_popup_model.g.dart';

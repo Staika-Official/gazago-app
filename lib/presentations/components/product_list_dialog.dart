@@ -1,13 +1,9 @@
 import 'dart:io';
 
-import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:gaza_go/constants/config.dart';
-import 'package:gaza_go/constants/enums.dart';
 import 'package:gaza_go/platform/controllers/wallet_master_controller.dart';
 import 'package:gaza_go/platform/helpers/base_helper.dart';
-import 'package:gaza_go/platform/stores/hive_store.dart';
 import 'package:gaza_go/presentations/components/alert_ui_list.dart';
 import 'package:gaza_go/presentations/components/default_container.dart';
 import 'package:gaza_go/presentations/styles/colors.dart';
@@ -138,9 +134,7 @@ void showProductList() {
     return controller.allTikUiList
         .asMap()
         .entries
-        .map(
-            (product) =>
-            Row(
+        .map((product) => Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 Row(
@@ -148,7 +142,7 @@ void showProductList() {
                     Container(
                       width: 2,
                       height: 2,
-                      margin: EdgeInsets.only(top:5.sp, left:6.sp, right: 6.sp),
+                      margin: EdgeInsets.only(top: 5.sp, left: 6.sp, right: 6.sp),
                       decoration: BoxDecoration(
                         color: Colors.white,
                         borderRadius: BorderRadius.circular(2),
@@ -160,14 +154,13 @@ void showProductList() {
                       fontWeight: 400,
                       lineHeight: 18,
                       letterSpacing: -0.1,
-
                     ),
                   ],
                 ),
                 Row(
                   children: [
                     StyledText(
-                      '${formatDecimalPlaces(double.parse(product.value.uiAmountString!),  0)}',
+                      '${formatDecimalPlaces(double.parse(product.value.uiAmountString!), 0)}',
                       fontSize: 12,
                       fontWeight: 700,
                       lineHeight: 20,
@@ -175,7 +168,7 @@ void showProductList() {
                       color: lightGrayColor,
                     ),
                     Padding(
-                      padding: EdgeInsets.only(left:3.0.sp),
+                      padding: EdgeInsets.only(left: 3.0.sp),
                       child: StyledText(
                         'TIK',
                         fontSize: 12,
@@ -187,7 +180,9 @@ void showProductList() {
                     ),
                   ],
                 ),
-              ],)).toList();
+              ],
+            ))
+        .toList();
   }
 
   WalletMasterController controller = Get.find();
@@ -204,11 +199,10 @@ void showProductList() {
             mainAxisSize: MainAxisSize.max,
             children: [
               Column(
-
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Padding(
-                    padding: EdgeInsets.only(left: 24.sp,top:16.sp, right: 24.sp, bottom: 16.sp),
+                    padding: EdgeInsets.only(left: 24.sp, top: 16.sp, right: 24.sp, bottom: 16.sp),
                     child: StyledText(
                       '현재 보유 자산',
                       fontSize: 16,
@@ -218,11 +212,11 @@ void showProductList() {
                     ),
                   ),
                   Padding(
-                    padding: EdgeInsets.only(left: 24.sp,  right: 24.sp, bottom: 16.sp),
+                    padding: EdgeInsets.only(left: 24.sp, right: 24.sp, bottom: 16.sp),
                     child: Column(
                       children: [
                         Padding(
-                          padding: EdgeInsets.only(bottom:8.0.sp),
+                          padding: EdgeInsets.only(bottom: 8.0.sp),
                           child: Row(
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
@@ -258,7 +252,6 @@ void showProductList() {
                       ],
                     ),
                   ),
-
                   Divider(
                     thickness: 6,
                     color: popupBgColor.withOpacity(0.3),
@@ -477,5 +470,3 @@ void showProductList() {
     showStoreNotAvailableAlert();
   }
 }
-
-

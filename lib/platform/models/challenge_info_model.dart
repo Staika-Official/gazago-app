@@ -1,6 +1,5 @@
 import 'package:gaza_go/platform/models/challenge_badge_model.dart';
 import 'package:gaza_go/platform/models/challenge_item_model.dart';
-import 'package:gaza_go/platform/models/challenge_landing_model.dart';
 import 'package:json_annotation/json_annotation.dart';
 
 part 'challenge_info_model.g.dart';
@@ -41,44 +40,41 @@ class ChallengeInfoModel {
   String? introduce;
   String? description;
 
-
-
-  ChallengeInfoModel(
-      {this.id,
-      this.item,
-      this.userItem,
-      this.badge,
-      this.badges,
-      this.itemTradeStoreId,
-      this.challengeState,
-      this.challengeUserState,
-      this.challengeActivationType,
-      this.exerciseTypes,
-      this.title,
-      this.subTitle,
-      this.minDistance,
-      this.quantity,
-      this.soldQuantity,
-      this.publishedDate,
-      this.reservedDate,
-      this.fromDate,
-      this.toDate,
-      this.imageUrl,
-      this.bannerImageUrl,
-      this.thumbnailImageUrl,
-      this.allianceType,
-      this.linkUrl,
-      this.extBtnLabel,
-      this.extTxt,
-      this.extTxtDetail,
-      this.previewDisplayed,
-      this.challengeRewardRuleType,
-      this.rewardAmount,
-      this.rewardQuantity,
-      this.introduce,
-      this.description,
-
-      });
+  ChallengeInfoModel({
+    this.id,
+    this.item,
+    this.userItem,
+    this.badge,
+    this.badges,
+    this.itemTradeStoreId,
+    this.challengeState,
+    this.challengeUserState,
+    this.challengeActivationType,
+    this.exerciseTypes,
+    this.title,
+    this.subTitle,
+    this.minDistance,
+    this.quantity,
+    this.soldQuantity,
+    this.publishedDate,
+    this.reservedDate,
+    this.fromDate,
+    this.toDate,
+    this.imageUrl,
+    this.bannerImageUrl,
+    this.thumbnailImageUrl,
+    this.allianceType,
+    this.linkUrl,
+    this.extBtnLabel,
+    this.extTxt,
+    this.extTxtDetail,
+    this.previewDisplayed,
+    this.challengeRewardRuleType,
+    this.rewardAmount,
+    this.rewardQuantity,
+    this.introduce,
+    this.description,
+  });
 
   factory ChallengeInfoModel.fromJson(Map<String, dynamic> json) => _$ChallengeInfoModelFromJson(json);
 

@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:gaza_go/constants/enums.dart';
 import 'package:gaza_go/constants/routes.dart';
 import 'package:get/get.dart';
-import 'package:rxdart/rxdart.dart' as RX;
+import 'package:rxdart/rxdart.dart' as rx;
 
 import '../models/verification_user_model.dart';
 
@@ -18,7 +18,7 @@ class VerificationNameController extends GetxController {
     super.onInit();
     verificationUserModel = VerificationUserModel();
     isValidNext.bindStream(
-      RX.CombineLatestStream.combine2<String, Nationality, bool>(
+      rx.CombineLatestStream.combine2<String, Nationality, bool>(
         userName.stream,
         nationality.stream,
         (a, b) => a.isNotEmpty && b != Nationality.none,
@@ -34,7 +34,7 @@ class VerificationNameController extends GetxController {
     this.nationality.value = nationality;
   }
 
-  void initValue(){
+  void initValue() {
     verificationUserModel = VerificationUserModel();
     userNameTextController.text = '';
     userName.value = '';

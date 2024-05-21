@@ -7,7 +7,6 @@ import 'package:gaza_go/constants/enums.dart';
 import 'package:gaza_go/constants/routes.dart';
 import 'package:gaza_go/platform/controllers/activity_controller.dart';
 import 'package:gaza_go/platform/helpers/base_helper.dart';
-import 'package:gaza_go/presentations/components/alert_ui_list.dart';
 import 'package:gaza_go/presentations/styles/colors.dart';
 import 'package:gaza_go/presentations/styles/styled_text.dart';
 import 'package:get/get.dart';
@@ -18,8 +17,7 @@ class ActivitySelect extends StatelessWidget {
   List<Widget> renderChallengeTypes(ActivityController controller) {
     return controller.challengeList
         .map(
-          (challenge) =>
-          Padding(
+          (challenge) => Padding(
             padding: EdgeInsets.only(top: 10.0.sp),
             child: ConstrainedBox(
               constraints: BoxConstraints(
@@ -44,18 +42,18 @@ class ActivitySelect extends StatelessWidget {
                 child: Obx(() {
                   return InkWell(
                     onTap: controller.doableCourses.isNotEmpty &&
-                        controller.doableCourses.any((course) => course.challengeId == challenge.id) &&
-                        DateTime.now().isAfter(DateTime.parse(challenge.fromDate))
+                            controller.doableCourses.any((course) => course.challengeId == challenge.id) &&
+                            DateTime.now().isAfter(DateTime.parse(challenge.fromDate))
                         ? () {
-                      Get.back();
-                      controller.moveToCourseSelection(
-                        course: controller.doableCourses.firstWhere((course) => course.challengeId == challenge.id),
-                        challenge: challenge,
-                      );
-                    }
+                            Get.back();
+                            controller.moveToCourseSelection(
+                              course: controller.doableCourses.firstWhere((course) => course.challengeId == challenge.id),
+                              challenge: challenge,
+                            );
+                          }
                         : () {
-                      controller.moveToChallengeDetail(challenge, false);
-                    },
+                            controller.moveToChallengeDetail(challenge, false);
+                          },
                     borderRadius: BorderRadius.circular(14),
                     child: Padding(
                       padding: EdgeInsets.symmetric(horizontal: 26.sp, vertical: 10.sp),
@@ -66,21 +64,21 @@ class ActivitySelect extends StatelessWidget {
                             borderRadius: BorderRadius.circular(72),
                             child: challenge.thumbnailImageUrl.contains('.svg')
                                 ? SvgPicture.network(
-                              challenge.thumbnailImageUrl,
-                              fit: BoxFit.fitHeight,
-                              width: 72.sp,
-                              height: 72.sp,
-                              placeholderBuilder: (BuildContext context) => const Center(child: SizedBox.square(dimension: 30, child: CircularProgressIndicator())),
-                              headers: imageNetworkHeader,
-                            )
+                                    challenge.thumbnailImageUrl,
+                                    fit: BoxFit.fitHeight,
+                                    width: 72.sp,
+                                    height: 72.sp,
+                                    placeholderBuilder: (BuildContext context) => const Center(child: SizedBox.square(dimension: 30, child: CircularProgressIndicator())),
+                                    headers: imageNetworkHeader,
+                                  )
                                 : CachedNetworkImage(
-                              fit: BoxFit.fitHeight,
-                              width: 72.sp,
-                              height: 72.sp,
-                              imageUrl: challenge.thumbnailImageUrl,
-                              placeholder: (context, url) => const Center(child: SizedBox.square(dimension: 30, child: CircularProgressIndicator())),
-                              httpHeaders: imageNetworkHeader,
-                            ),
+                                    fit: BoxFit.fitHeight,
+                                    width: 72.sp,
+                                    height: 72.sp,
+                                    imageUrl: challenge.thumbnailImageUrl,
+                                    placeholder: (context, url) => const Center(child: SizedBox.square(dimension: 30, child: CircularProgressIndicator())),
+                                    httpHeaders: imageNetworkHeader,
+                                  ),
                           ),
                           Expanded(
                             child: Padding(
@@ -151,7 +149,7 @@ class ActivitySelect extends StatelessWidget {
               ),
             ),
           ),
-    )
+        )
         .toList();
   }
 
@@ -372,14 +370,18 @@ class ActivitySelect extends StatelessWidget {
                           ),
                           child: SingleChildScrollView(
                             physics: const ClampingScrollPhysics(),
-                            child: controller.isFetchingCourseList.value ? Padding(
-                              padding: EdgeInsets.symmetric(vertical: 50.0.sp),
-                              child: const Center(child: SizedBox.square(dimension: 30, child: CircularProgressIndicator())),
-                            ) : controller.challengeList.isNotEmpty ? Column(
-                              children: [
-                                ...renderChallengeTypes(controller),
-                              ],
-                            ) : Container(),
+                            child: controller.isFetchingCourseList.value
+                                ? Padding(
+                                    padding: EdgeInsets.symmetric(vertical: 50.0.sp),
+                                    child: const Center(child: SizedBox.square(dimension: 30, child: CircularProgressIndicator())),
+                                  )
+                                : controller.challengeList.isNotEmpty
+                                    ? Column(
+                                        children: [
+                                          ...renderChallengeTypes(controller),
+                                        ],
+                                      )
+                                    : Container(),
                           ),
                         ),
                       );
@@ -447,27 +449,24 @@ class ActivitySelect extends StatelessWidget {
                         ),
                       ),
                     ),
-
                   ],
                 ),
               ),
             ),
-
-            if(controller.promotionAdsList.isNotEmpty && controller.promotionAdsList[0].subImageUrl != null)
+            if (controller.promotionAdsList.isNotEmpty && controller.promotionAdsList[0].subImageUrl != null)
               Padding(
                 padding: EdgeInsets.symmetric(vertical: 20.0.sp, horizontal: 20.0.sp),
                 child: Align(
                   alignment: Alignment.bottomCenter,
                   child: InkWell(
-                    onTap: () => controller.moveToWebView(controller.promotionAdsList[0]),
-                    child: CachedNetworkImage(
-                      imageUrl: controller.promotionAdsList[0].subImageUrl!,
-                      fit: BoxFit.fill,
-                      placeholder: (context, url) => const CircularProgressIndicator(),
-                      errorWidget: (context, url, error) => Image.asset("assets/images/@temp_badge.png"),
-                      httpHeaders: imageNetworkHeader,
-                    )
-                  ),
+                      onTap: () => controller.moveToWebView(controller.promotionAdsList[0]),
+                      child: CachedNetworkImage(
+                        imageUrl: controller.promotionAdsList[0].subImageUrl!,
+                        fit: BoxFit.fill,
+                        placeholder: (context, url) => const CircularProgressIndicator(),
+                        errorWidget: (context, url, error) => Image.asset("assets/images/@temp_badge.png"),
+                        httpHeaders: imageNetworkHeader,
+                      )),
                 ),
               ),
           ],

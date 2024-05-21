@@ -5,10 +5,8 @@ import 'package:flutter_svg_provider/flutter_svg_provider.dart' as sp;
 import 'package:gaza_go/constants/config.dart';
 import 'package:gaza_go/constants/routes.dart';
 import 'package:gaza_go/flavors.dart';
-import 'package:gaza_go/platform/controllers/challenges_detail_controller.dart';
 import 'package:gaza_go/platform/controllers/company_crew_controller.dart';
 import 'package:gaza_go/platform/helpers/base_helper.dart';
-import 'package:gaza_go/platform/models/crew_model.dart';
 import 'package:gaza_go/presentations/styles/colors.dart';
 import 'package:gaza_go/presentations/styles/icons.dart';
 import 'package:gaza_go/presentations/styles/styled_text.dart';
@@ -79,10 +77,14 @@ class CompanyCrewLeaderboard extends StatelessWidget {
                   ],
                 ),
               ),
-              if(controller.crewManagerList.isNotEmpty)
-                CompanyCrewRankingItem(controller.crewManagerList[0]['rank'] - 1, controller.crewManagerList[0], isManager: true, isMyCrew: controller.crewManagerList[0]['crewId'] == controller.myCrewId,),
-              if(controller.myCrewInfo.isNotEmpty && !controller.myCrewInfo['listFixed'])
-                CompanyCrewRankingItem(controller.myCrewInfo['rank'] - 1, controller.myCrewInfo, isMyCrew: true),
+              if (controller.crewManagerList.isNotEmpty)
+                CompanyCrewRankingItem(
+                  controller.crewManagerList[0]['rank'] - 1,
+                  controller.crewManagerList[0],
+                  isManager: true,
+                  isMyCrew: controller.crewManagerList[0]['crewId'] == controller.myCrewId,
+                ),
+              if (controller.myCrewInfo.isNotEmpty && !controller.myCrewInfo['listFixed']) CompanyCrewRankingItem(controller.myCrewInfo['rank'] - 1, controller.myCrewInfo, isMyCrew: true),
               ...renderCrewLeaderboardList(controller),
             ],
           ),
@@ -95,10 +97,10 @@ class CompanyCrewLeaderboard extends StatelessWidget {
 class CompanyCrewRankingItem extends StatelessWidget {
   final int index;
   final item;
-  bool isMyCrew;
-  bool isManager;
+  final bool isMyCrew;
+  final bool isManager;
 
-  CompanyCrewRankingItem(
+  const CompanyCrewRankingItem(
     this.index,
     this.item, {
     this.isMyCrew = false,
@@ -111,7 +113,6 @@ class CompanyCrewRankingItem extends StatelessWidget {
     return Material(
       color: Colors.transparent,
       child: Ink(
-
         decoration: BoxDecoration(
           color: isMyCrew || isManager ? AppColorData.regular().colorBgSecondary : AppColorData.regular().colorBgPrimary,
           border: Border(
@@ -121,7 +122,6 @@ class CompanyCrewRankingItem extends StatelessWidget {
             ),
           ),
         ),
-
         height: isMyCrew || isManager ? 92.sp : 64.sp,
         child: InkWell(
           // onTap: isMyCrew ? () => Get.find<ChallengesDetailController>().moveToMyCrew() : null,
@@ -144,10 +144,12 @@ class CompanyCrewRankingItem extends StatelessWidget {
                             fit: BoxFit.scaleDown,
                             child: Row(
                               children: [
-                                isMyCrew || isManager ? Padding(
-                                  padding: EdgeInsets.only(right:5.0.sp),
-                                  child: iconMyRankArrow,
-                                ) : Container(),
+                                isMyCrew || isManager
+                                    ? Padding(
+                                        padding: EdgeInsets.only(right: 5.0.sp),
+                                        child: iconMyRankArrow,
+                                      )
+                                    : Container(),
                                 StyledText(
                                   item['distance'] > 0 ? (index + 1).toString() : '-',
                                   fontWeight: 600,
@@ -160,49 +162,50 @@ class CompanyCrewRankingItem extends StatelessWidget {
                         ),
                         Padding(
                           padding: EdgeInsets.only(left: 10.0.sp),
-                          child: isMyCrew ? Container(
-                            width: 50.sp,
-                            height: 50.sp,
-                            decoration: BoxDecoration(
-                              borderRadius: BorderRadius.all(Radius.circular(50.0.sp)),
-                              border: Border.all(
-                                color: skyBlueColor,
-                                width: 1.5.sp,
-                              ),
-                            ),
-                            child: Center(
-                              child: CircleAvatar(
-                                radius: 20.sp,
-                                backgroundColor: Colors.black,
-                                foregroundImage: (item['crewIconImageUrl'] == null || item['crewIconImageUrl'] == '')
-                                    ? Image.asset(
-                                        'assets/images/ic_launcher.png',
-                                        width:  40.sp,
-                                      ).image
-                                    : item['crewIconImageUrl'].contains('.svg')
-                                        ? sp.Svg(item['crewIconImageUrl'], source: sp.SvgSource.network) as ImageProvider
-                                        : CachedNetworkImageProvider(
-                                  item['crewIconImageUrl'],
-                                            headers: imageNetworkHeader,
-                                          ),
-                              ),
-                            ),
-                          ) :
-                          CircleAvatar(
-                            radius: 20.sp,
-                            backgroundColor: Colors.black,
-                            foregroundImage: (item['crewIconImageUrl'] == null || item['crewIconImageUrl'] == '')
-                                ? Image.asset(
-                              'assets/images/ic_launcher.png',
-                              width:  40.sp,
-                            ).image
-                                : item['crewIconImageUrl'].contains('.svg')
-                                ? sp.Svg(item['crewIconImageUrl'], source: sp.SvgSource.network) as ImageProvider
-                                : CachedNetworkImageProvider(
-                              item['crewIconImageUrl'],
-                              headers: imageNetworkHeader,
-                            ),
-                          ),
+                          child: isMyCrew
+                              ? Container(
+                                  width: 50.sp,
+                                  height: 50.sp,
+                                  decoration: BoxDecoration(
+                                    borderRadius: BorderRadius.all(Radius.circular(50.0.sp)),
+                                    border: Border.all(
+                                      color: skyBlueColor,
+                                      width: 1.5.sp,
+                                    ),
+                                  ),
+                                  child: Center(
+                                    child: CircleAvatar(
+                                      radius: 20.sp,
+                                      backgroundColor: Colors.black,
+                                      foregroundImage: (item['crewIconImageUrl'] == null || item['crewIconImageUrl'] == '')
+                                          ? Image.asset(
+                                              'assets/images/ic_launcher.png',
+                                              width: 40.sp,
+                                            ).image
+                                          : item['crewIconImageUrl'].contains('.svg')
+                                              ? sp.Svg(item['crewIconImageUrl'], source: sp.SvgSource.network) as ImageProvider
+                                              : CachedNetworkImageProvider(
+                                                  item['crewIconImageUrl'],
+                                                  headers: imageNetworkHeader,
+                                                ),
+                                    ),
+                                  ),
+                                )
+                              : CircleAvatar(
+                                  radius: 20.sp,
+                                  backgroundColor: Colors.black,
+                                  foregroundImage: (item['crewIconImageUrl'] == null || item['crewIconImageUrl'] == '')
+                                      ? Image.asset(
+                                          'assets/images/ic_launcher.png',
+                                          width: 40.sp,
+                                        ).image
+                                      : item['crewIconImageUrl'].contains('.svg')
+                                          ? sp.Svg(item['crewIconImageUrl'], source: sp.SvgSource.network) as ImageProvider
+                                          : CachedNetworkImageProvider(
+                                              item['crewIconImageUrl'],
+                                              headers: imageNetworkHeader,
+                                            ),
+                                ),
                         ),
                         Expanded(
                           child: Padding(
@@ -222,9 +225,8 @@ class CompanyCrewRankingItem extends StatelessWidget {
                                         lineHeight: 20,
                                         letterSpacing: 0,
                                         overflowEllipsis: true,
-
                                       ),
-                                      if(isManager)
+                                      if (isManager)
                                         Padding(
                                           padding: EdgeInsets.only(left: 5.0.sp),
                                           child: iconChallengeManager,

@@ -18,11 +18,10 @@ class TermController extends GetxController {
 
   @override
   void onInit() async {
-    print(Get.arguments['platform']);
     platform.value = Get.arguments['platform'] ?? 'gazago';
     termType.value = Get.arguments['termType'] ?? '';
     termId.value = Get.arguments['termId'] ?? 0;
-    if (termType.value == 'MARKETING' && Get.previousRoute != Routes.joinTerms){
+    if (termType.value == 'MARKETING' && Get.previousRoute != Routes.joinTerms) {
       initMarketingAgreeStatus();
     }
 

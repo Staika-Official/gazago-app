@@ -85,16 +85,12 @@ mixin AdmobMixin {
 
   // 운동 시작 광고
   void exerciseStartRewardedAdInit(String adType, {Function? successCallback, Function? errorCallback}) async {
-    print(adType);
-
     await RewardedAd.load(
       // adUnitId: Platform.isIOS ? 'ca-app-pub-3940256099942544/1712485313' : 'ca-app-pub-3940256099942544/5224354917',
       adUnitId: Platform.isIOS ? F.startAdIos : F.startAdAndroid,
       request: const AdRequest(),
       rewardedAdLoadCallback: RewardedAdLoadCallback(
         onAdLoaded: (RewardedAd ad) {
-          print('RewardedAd loaded');
-
           if (!adUpdateLocked) {
             startAd.value = ad;
           }
@@ -103,7 +99,6 @@ mixin AdmobMixin {
           if (successCallback != null) successCallback();
         },
         onAdFailedToLoad: (error) {
-          print('RewardedAd failed to load: $error adType $adType');
           startAd.value = null;
           isLoadedAd.value = false;
           adLoadAttempts[adType] = adLoadAttempts[adType]! + 1;
@@ -115,15 +110,12 @@ mixin AdmobMixin {
 
   // 운동 종료 광고
   Future exerciseEndRewardedAdInit(String adType, {Function? successCallback, Function? errorCallback}) async {
-    print(adType);
     await RewardedAd.load(
       // adUnitId: Platform.isIOS ? 'ca-app-pub-3940256099942544/1712485313' : 'ca-app-pub-3940256099942544/5224354917',
       adUnitId: Platform.isIOS ? F.endAdIos : F.endAdAndroid,
       request: const AdRequest(),
       rewardedAdLoadCallback: RewardedAdLoadCallback(
         onAdLoaded: (RewardedAd ad) {
-          print('RewardedAd loaded');
-
           if (!adUpdateLocked) {
             endAd.value = ad;
           }
@@ -133,7 +125,6 @@ mixin AdmobMixin {
           // numRewardedLoadAttempts = 0;
         },
         onAdFailedToLoad: (error) {
-          print('RewardedAd failed to load: $error adType $adType');
           endAd.value = null;
           adLoadAttempts[adType] = adLoadAttempts[adType]! + 1;
           if (errorCallback != null) errorCallback();
@@ -143,16 +134,11 @@ mixin AdmobMixin {
   }
 
   void showExerciseStartAd(ActivityController activityController, String adType) {
-    print(adType);
     if (startAd.value == null) {
-      print('Warning: attempt to show rewarded before loaded.');
       return;
     }
     startAd.value!.fullScreenContentCallback = FullScreenContentCallback(
-      onAdShowedFullScreenContent: (RewardedAd ad) => print('ad onAdShowedFullScreenContent.'),
       onAdDismissedFullScreenContent: (RewardedAd ad) {
-        print('$ad onAdDismissedFullScreenContent.');
-
         // if (ad.adUnitId.isNotEmpty) {
         //
         // }
@@ -161,15 +147,12 @@ mixin AdmobMixin {
         ad.dispose();
       },
       onAdFailedToShowFullScreenContent: (RewardedAd ad, AdError error) {
-        print('$ad onAdFailedToShowFullScreenContent: $error');
         ad.dispose();
       },
-      onAdImpression: (RewardedAd ad) => print('$ad impression occurred.'),
     );
 
     startAd.value!.setImmersiveMode(true);
     startAd.value!.show(onUserEarnedReward: (AdWithoutView ad, RewardItem reward) {
-      print('$ad with reward $RewardItem(${reward.amount}, ${reward.type})');
       // DateTime now = DateTime.now();
       // HiveStore.save(key: 'exerciseStartAd', value: now);
     });
@@ -182,16 +165,11 @@ mixin AdmobMixin {
     // String endAdName =
     //     await checkActivityType(selectedAd.value);
 
-    print('끝내는운동이뭐냐${selectedAd.value}');
     if (endAd.value == null) {
-      print('Warning: attempt to show rewarded before loaded.');
       return;
     }
     endAd.value!.fullScreenContentCallback = FullScreenContentCallback(
-      onAdShowedFullScreenContent: (RewardedAd ad) => print('ad onAdShowedFullScreenContent.'),
       onAdDismissedFullScreenContent: (RewardedAd ad) {
-        print('$ad onAdDismissedFullScreenContent.');
-
         // if (ad.adUnitId.isNotEmpty) {
         //   activityController.endExercise(source: 'showEndADExerciseAlert', adId: ad.adUnitId);
         //   endAd.value = null;
@@ -205,15 +183,12 @@ mixin AdmobMixin {
         ad.dispose();
       },
       onAdFailedToShowFullScreenContent: (RewardedAd ad, AdError error) {
-        print('$ad onAdFailedToShowFullScreenContent: $error');
         ad.dispose();
       },
-      onAdImpression: (RewardedAd ad) => print('$ad impression occurred.'),
     );
 
     endAd.value!.setImmersiveMode(true);
     endAd.value!.show(onUserEarnedReward: (AdWithoutView ad, RewardItem reward) {
-      print('$ad with reward $RewardItem(${reward.amount}, ${reward.type})');
       // DateTime now = DateTime.now();
       // HiveStore.save(key: 'exerciseEndAd', value: now);
     });

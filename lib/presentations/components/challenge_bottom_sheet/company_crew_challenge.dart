@@ -1,13 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:gaza_go/platform/controllers/challenges_detail_controller.dart';
-import 'package:gaza_go/presentations/components/alert_ui_list.dart';
 import 'package:gaza_go/presentations/styles/colors.dart';
-import 'package:gaza_go/presentations/styles/icons.dart';
 import 'package:gaza_go/presentations/styles/styled_text.dart';
 import 'package:gaza_go/theme/theme.g.dart';
-import 'package:intl/intl.dart';
-
 
 // 챌린지 전 - 참가중
 Map renderCompanyCrewReadyJoined(ChallengesDetailController challengesDetailController) {
@@ -24,7 +20,6 @@ Map renderCompanyCrewReadyJoined(ChallengesDetailController challengesDetailCont
           borderRadius: BorderRadius.all(
             Radius.circular(25.sp),
           ),
-
         ),
         child: Padding(
           padding: EdgeInsets.symmetric(vertical: 13.0.sp, horizontal: 25.sp),
@@ -47,22 +42,16 @@ Map renderCompanyCrewReadyJoined(ChallengesDetailController challengesDetailCont
         fontSize: 16.sp,
         height: 20.sp / 16,
       ),
-      children: const[
+      children: const [
         TextSpan(
           text: '곧 챌린지가 시작돼요.',
         ),
-
       ],
     ),
   );
 
-  return {
-    'suffix': suffix,
-    'content': content
-  };
+  return {'suffix': suffix, 'content': content};
 }
-
-
 
 // 챌린지 진행 중 - 참가 중
 Map renderCompanyCrewInProgressJoined(ChallengesDetailController challengesDetailController) {
@@ -105,15 +94,11 @@ Map renderCompanyCrewInProgressJoined(ChallengesDetailController challengesDetai
         const TextSpan(
           text: '챌린지 기간까지 화이팅!',
         ),
-
       ],
     ),
   );
 
-  return {
-    'suffix': suffix,
-    'content': content
-  };
+  return {'suffix': suffix, 'content': content};
 }
 
 // 챌린지 종료
@@ -131,7 +116,6 @@ Map renderCompanyCrewEnded(ChallengesDetailController challengesDetailController
           borderRadius: BorderRadius.all(
             Radius.circular(25.sp),
           ),
-
         ),
         child: Padding(
           padding: EdgeInsets.symmetric(vertical: 13.0.sp, horizontal: 40.sp),
@@ -146,7 +130,7 @@ Map renderCompanyCrewEnded(ChallengesDetailController challengesDetailController
         )),
   );
 
-  Widget content =  RichText(
+  Widget content = RichText(
     text: TextSpan(
       style: TextStyle(
         color: AppColorData.regular().colorTextSecondary,
@@ -165,8 +149,5 @@ Map renderCompanyCrewEnded(ChallengesDetailController challengesDetailController
     ),
   );
 
-  return {
-    'suffix': suffix,
-    'content': content
-  };
+  return {'suffix': suffix, 'content': content};
 }

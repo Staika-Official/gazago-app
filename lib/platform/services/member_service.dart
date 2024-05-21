@@ -66,7 +66,7 @@ class MemberService {
     String deviceModel;
     if (Platform.isIOS) {
       IosDeviceInfo iosInfo = await deviceInfo.iosInfo;
-      deviceModel = iosInfo.utsname.machine ?? 'ios model unknown';
+      deviceModel = iosInfo.utsname.machine;
     } else {
       AndroidDeviceInfo androidInfo = await deviceInfo.androidInfo;
       deviceModel = androidInfo.model;

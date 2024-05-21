@@ -1,4 +1,3 @@
-import 'package:gaza_go/platform/models/token_quotes_model.dart';
 import 'package:json_annotation/json_annotation.dart';
 
 part 'token_priority_fee_model.g.dart';

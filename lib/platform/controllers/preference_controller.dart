@@ -9,7 +9,6 @@ import 'package:get/get.dart';
 import 'package:package_info_plus/package_info_plus.dart';
 
 class PreferenceController extends GetxController with PreferenceMixin {
-
   final RxString appVersion = RxString('');
   final RxBool isAbleLuckSound = RxBool(false);
 
@@ -38,7 +37,6 @@ class PreferenceController extends GetxController with PreferenceMixin {
   }
 
   void showLogoutConfirmation() {
-    print('logout!');
     showLogoutAlert(this);
   }
 

@@ -98,7 +98,7 @@ mixin ChallengeMixin {
 
   String getChallengeUserStatus(userStatus, challengeState) {
     String text = '';
-    if(challengeState == 'READY'){
+    if (challengeState == 'READY') {
       switch (userStatus) {
         case 'REGISTER_AVAILABLE':
           text = '참가 가능';
@@ -281,7 +281,6 @@ mixin ChallengeMixin {
         ),
       );
     }
-    print(course.checkpoints);
   }
 
   List<LatLng> getCheckPointsCourse(markers) {

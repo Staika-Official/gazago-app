@@ -5,12 +5,10 @@ import 'package:adjust_sdk/adjust_event.dart';
 import 'package:flutter/material.dart';
 import 'package:gaza_go/constants/enums.dart';
 import 'package:gaza_go/constants/routes.dart';
-import 'package:gaza_go/constants/routes.dart';
 import 'package:gaza_go/platform/controllers/verification_detail_controller.dart';
 import 'package:gaza_go/platform/controllers/verification_name_controller.dart';
 import 'package:gaza_go/platform/controllers/verification_phone_controller.dart';
 import 'package:gaza_go/platform/helpers/alert_helper.dart';
-import 'package:gaza_go/platform/helpers/login_helper.dart';
 import 'package:gaza_go/platform/models/user_account_model.dart';
 import 'package:gaza_go/platform/models/verification_user_model.dart';
 import 'package:gaza_go/platform/services/identity_service.dart';
@@ -18,7 +16,7 @@ import 'package:gaza_go/platform/services/uaa_service.dart';
 import 'package:gaza_go/platform/stores/hive_store.dart';
 import 'package:gaza_go/presentations/components/alert_ui_list.dart';
 import 'package:get/get.dart';
-import 'package:rxdart/rxdart.dart' as RX;
+import 'package:rxdart/rxdart.dart' as rx;
 
 class VerificationCertCodeController extends GetxController {
   final VerificationNameController verificationNameController = Get.find();
@@ -44,7 +42,7 @@ class VerificationCertCodeController extends GetxController {
   void onInit() {
     super.onInit();
 
-    isFormValid.bindStream(RX.CombineLatestStream.combine2<String, Duration, bool>(_certCode.stream, countdownTime.stream, (code, count) => (code.length == 6) && (count.inSeconds != 0)));
+    isFormValid.bindStream(rx.CombineLatestStream.combine2<String, Duration, bool>(_certCode.stream, countdownTime.stream, (code, count) => (code.length == 6) && (count.inSeconds != 0)));
 
     _requestId = Get.arguments['requestId'];
   }
@@ -89,7 +87,6 @@ class VerificationCertCodeController extends GetxController {
       getAccountInfo();
       afterVerificationComplete();
     }, errorCallback: (res) {
-      print(res.data);
       if (res.data['errorCode'] == 'IDENTITY_VERIFIED_FAILURE') {
         showInvalidCertCode(res.data['errorMessage'], res.data['errorCode']);
       } else if (res.data['errorCode'] == 'IDENTITY_ALREADY_VERIFIED') {
@@ -126,7 +123,8 @@ class VerificationCertCodeController extends GetxController {
   void afterVerificationComplete() {
     String? enteredRoute = HiveStore.loadString(key: HiveKey.enteredRoute.name);
 
-    if (enteredRoute != null && (enteredRoute.contains('challenge_detail')|| enteredRoute.contains('shop/item/detail')|| enteredRoute.contains('/activity/challenges')|| enteredRoute.contains('/wallet')) ) {
+    if (enteredRoute != null &&
+        (enteredRoute.contains('challenge_detail') || enteredRoute.contains('shop/item/detail') || enteredRoute.contains('/activity/challenges') || enteredRoute.contains('/wallet'))) {
       Get.until((route) => Get.currentRoute == enteredRoute);
     } else {
       Get.until((route) => Get.currentRoute == Routes.home);

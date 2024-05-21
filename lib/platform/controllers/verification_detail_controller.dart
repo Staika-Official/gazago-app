@@ -4,7 +4,7 @@ import 'package:gaza_go/constants/routes.dart';
 import 'package:gaza_go/platform/helpers/verification_helper.dart';
 import 'package:gaza_go/presentations/components/alert_ui_list.dart';
 import 'package:get/get.dart';
-import 'package:rxdart/rxdart.dart' as RX;
+import 'package:rxdart/rxdart.dart' as rx;
 
 import '../models/verification_user_model.dart';
 
@@ -21,7 +21,7 @@ class VerificationDetailController extends GetxController {
     super.onInit();
 
     isValidNext
-        .bindStream(RX.CombineLatestStream.combine2<Gender, String, bool>(userGender.stream, userBirthday.stream, (gender, birthDay) => (gender != Gender.none) && (userBirthday.value.length == 8)));
+        .bindStream(rx.CombineLatestStream.combine2<Gender, String, bool>(userGender.stream, userBirthday.stream, (gender, birthDay) => (gender != Gender.none) && (userBirthday.value.length == 8)));
 
     verificationUserModel = Get.arguments['verificationUserModel'];
     userBirthday.value = verificationUserModel.birthday.isNotEmpty ? verificationUserModel.birthday.replaceAll('-', '') : '';
@@ -30,7 +30,6 @@ class VerificationDetailController extends GetxController {
       userGender.value = Gender.values.where((element) => element.genderValue == verificationUserModel.gender).first;
     }
   }
-
 
   void updateBirthday(String dob) {
     userBirthday.value = dob;
@@ -41,7 +40,7 @@ class VerificationDetailController extends GetxController {
   }
 
   void nextStep() {
-    if(checkIsFourteenUnderUser(userBirthday.value)){
+    if (checkIsFourteenUnderUser(userBirthday.value)) {
       showFourteenUnderUserAlert();
     } else {
       final String birth = userBirthday.value;
@@ -49,6 +48,5 @@ class VerificationDetailController extends GetxController {
       verificationUserModel.gender = userGender.value.genderValue;
       Get.toNamed(Routes.verificationPhone, arguments: {'verificationUserModel': verificationUserModel});
     }
-
   }
 }

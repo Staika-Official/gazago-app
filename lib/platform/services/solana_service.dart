@@ -6,16 +6,10 @@ import 'package:gaza_go/platform/models/error_response_data_model.dart';
 import 'package:gaza_go/platform/models/exchange_stik_token_model.dart';
 import 'package:gaza_go/platform/models/token_model.dart';
 import 'package:gaza_go/platform/stores/hive_store.dart';
-import 'package:solana/solana.dart';
 
 class SolanaService {
   static String? get userId {
     return HiveStore.loadString(key: HiveKey.userId.name);
-  }
-
-  createWallet() async {
-    Wallet wallet = await Ed25519HDKeyPair.random();
-    print(wallet.address);
   }
 
   static Future<void> getStikPriceInfo({required Function successCallback, Function? errorCallback}) async {

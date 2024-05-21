@@ -40,14 +40,7 @@ class GlobalController extends SuperController {
   }
 
   @override
-  void onReady() {
-    print('Ready GlobalController');
-    super.onReady();
-  }
-
-  @override
   void onDetached() {
-    print('onDetached GlobalController');
     // connectivityStream?.cancel();
     internetConnectionListener?.cancel();
     // TODO: implement onDetached
@@ -55,7 +48,6 @@ class GlobalController extends SuperController {
 
   @override
   void onInactive() {
-    print('onInactive GlobalController');
     // connectivityStream?.cancel();
     // internetConnectionListener?.pause();
     // TODO: implement onInactive
@@ -63,15 +55,12 @@ class GlobalController extends SuperController {
 
   @override
   void onPaused() {
-    print('onPaused GlobalController');
     // TODO: implement onPaused
     Adjust.onPause();
   }
 
   @override
   void onResumed() async {
-    print('onResumed GlobalController');
-
     Adjust.onResume();
     if (internetConnectionListener != null) {
       internetConnectionListener?.resume();
@@ -127,7 +116,6 @@ class GlobalController extends SuperController {
 
   Future<void> checkMainPopupExpiredDate() async {
     DateTime? date = await HiveStore.load(key: HiveKey.closePopupDate.name);
-    print('팝업데이트$date');
     if (date != null) {
       DateTime viewableTime = date.add(const Duration(hours: 24));
       DateTime now = DateTime.now();

@@ -44,7 +44,6 @@ class CalendarStatisticsController extends GetxController {
       month,
       successCallback: (list) {
         totalTik.value = 0;
-        print(list);
 
         for (var item in list) {
           userMonthlyRewardMap[item.date!] = [item];

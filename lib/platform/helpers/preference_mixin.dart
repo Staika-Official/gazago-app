@@ -1,12 +1,9 @@
-
 import 'package:gaza_go/constants/enums.dart';
 import 'package:gaza_go/platform/helpers/alert_helper.dart';
 import 'package:gaza_go/platform/models/user_account_model.dart';
 import 'package:gaza_go/platform/services/member_service.dart';
-import 'package:gaza_go/platform/services/uaa_service.dart';
 import 'package:gaza_go/platform/stores/hive_store.dart';
 import 'package:get/get.dart';
-
 
 mixin PreferenceMixin {
   final Rx<UserAccountModel> profile = Rx(
@@ -28,7 +25,7 @@ mixin PreferenceMixin {
     await MemberService.getMemberUserInfo(
       successCallback: (account) {
         profile.update(
-              (state) {
+          (state) {
             state?.nickname = account.nickname;
             state?.profileImageUrl = account.profileImageUrl;
             state?.availableChangeNickname = account.availableChangeNickname;
@@ -38,7 +35,8 @@ mixin PreferenceMixin {
           },
         );
         originalNickname.value = account.nickname!;
-      }, errorCallback: (message) {
+      },
+      errorCallback: (message) {
         showToastPopup(message);
       },
     );

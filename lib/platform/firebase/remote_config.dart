@@ -12,9 +12,7 @@ Future<void> initRemoteConfig() async {
   try {
     await FirebaseRemoteConfig.instance.fetchAndActivate();
     await initRemoteConfigData();
-  } catch (e) {
-    print(e);
-  }
+  } catch (e) {}
 }
 
 //리모트 컨피그에서 값을 받아오기 전에 세팅할 기본값을 넣기 위한 메소드

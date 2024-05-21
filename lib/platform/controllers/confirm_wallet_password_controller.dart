@@ -34,7 +34,6 @@ class ConfirmWalletPasswordController extends GetxController with PasswordMixin 
 
   @override
   void onInit() {
-
     super.onInit();
     isEnableNextStep();
     _errorStatus.listen((event) {
@@ -46,7 +45,8 @@ class ConfirmWalletPasswordController extends GetxController with PasswordMixin 
     _password.value = password;
     passwordFormStatus.value = verifyPassword(password);
   }
-  Future<void> isValidPassword (Completer completer) async {
+
+  Future<void> isValidPassword(Completer completer) async {
     passwordFocusNode.unfocus();
     if (passwordFormStatus.value == FormStatus.sufficient) {
       String? password = nextStep();
@@ -61,9 +61,6 @@ class ConfirmWalletPasswordController extends GetxController with PasswordMixin 
     String? secretKey = HiveStore.loadString(key: HiveKey.solanaSecretKey.name);
     String? email = HiveStore.loadString(key: HiveKey.email.name);
     String? decryptPrivateKey = decrypt(secretKey!, email!, _password.value);
-    print('decryptPrivateKey: $decryptPrivateKey');
-    print('email: $email');
-    print('_password: ${_password.value}');
 
     if (decryptPrivateKey != null) {
       return _password.value;

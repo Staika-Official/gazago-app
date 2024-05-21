@@ -59,7 +59,6 @@ class CrewService {
     if (res.statusCode == 200) {
       successCallback(res.data);
     } else {
-      print('fetch failure');
       if (errorCallback != null) errorCallback();
     }
   }
@@ -69,7 +68,6 @@ class CrewService {
     if (res.statusCode == 201) {
       successCallback(res.data);
     } else {
-      print('fetch failure');
       if (errorCallback != null) errorCallback(res);
     }
   }
@@ -79,7 +77,6 @@ class CrewService {
     if (res.statusCode == 200) {
       successCallback(CompanyChallengeAvailableModel.fromJson(res.data));
     } else {
-      print('fetch failure');
       if (errorCallback != null) errorCallback(res);
     }
   }
