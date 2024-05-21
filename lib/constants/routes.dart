@@ -215,7 +215,6 @@ class Routes {
     stepPage(name: Routes.crewDetail, page: const CrewDetail()),
     stepPage(name: Routes.companyCrewDetail, page: const CompanyCrewDetail()),
     stepPage(name: Routes.dailyBenefits, page: const DailyBenefits()),
-    stepPage(name: Routes.dailyBenefits, page: DailyBenefits()),
     stepPage(name: Routes.inAppModalWebView, page: const InAppModalWebView()),
   ];
 }
