@@ -32,7 +32,7 @@ class Api {
         onResponse: (Response response, ResponseInterceptorHandler handler) => _responseInterceptor(response, handler),
       ),
       QueuedInterceptorsWrapper(
-        onError: (DioError e, ErrorInterceptorHandler handler) => _onErrorInterceptor(e, handler),
+        onError: (DioException e, ErrorInterceptorHandler handler) => _onErrorInterceptor(e, handler),
       ),
       // LogInterceptor(
       //   error: true,
@@ -207,7 +207,7 @@ class Api {
     FirebaseCrashlytics.instance.recordError(
       e,
       e.stackTrace,
-      reason: 'api error : ${e.response?.statusCode}, ${errorMessage}, ${e.requestOptions.path}, ${getx.Get.currentRoute}',
+      reason: 'api error : ${e.response?.statusCode}, $errorMessage, ${e.requestOptions.path}, ${getx.Get.currentRoute}',
     );
 
     if (HiveStore.load(key: HiveKey.isDebuggingMode.name)) {
@@ -266,7 +266,7 @@ class Api {
     }
   }
 
-  static Future<void> _retryFailedRequest(DioError e, ErrorInterceptorHandler handler) async {
+  static Future<void> _retryFailedRequest(DioException e, ErrorInterceptorHandler handler) async {
     String? accessToken = HiveStore.loadString(key: HiveKey.accessToken.name);
     if (accessToken == null) {
       resetToLogin(e, handler);
@@ -304,7 +304,7 @@ class Api {
           response,
         );
       },
-    ).onError((DioError error, stackTrace) async {
+    ).onError((DioException error, stackTrace) async {
       _logger.e(
         '------------->'
         '\nRETRY FAILED REQUEST ERROR'
@@ -343,7 +343,7 @@ class Api {
     });
   }
 
-  static Future<void> _getNewAccessToken(DioError e, ErrorInterceptorHandler handler) async {
+  static Future<void> _getNewAccessToken(DioException e, ErrorInterceptorHandler handler) async {
     final String refreshToken = HiveStore.loadString(key: HiveKey.refreshToken.name) ?? '';
     String fcmToken = HiveStore.loadString(key: HiveKey.fcmToken.name)!;
     PackageInfo packageInfo = await PackageInfo.fromPlatform();
@@ -391,7 +391,7 @@ class Api {
       needToRefreshToken = false;
 
       await _retryFailedRequest(e, handler);
-    }).onError((DioError error, stacktrace) {
+    }).onError((DioException error, stacktrace) {
       _logger.e(
         '------------->'
         '\nERROR'
@@ -407,7 +407,7 @@ class Api {
     });
   }
 
-  static void resetToLogin(DioError e, ErrorInterceptorHandler handler) async {
+  static void resetToLogin(DioException e, ErrorInterceptorHandler handler) async {
     if (e.requestOptions.extra['showLoading'] && getx.Get.isDialogOpen == true) {
       getx.Get.back();
     }
