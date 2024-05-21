@@ -88,16 +88,6 @@ class WalletApi {
     return await Api.client(serviceUrl: ServiceUrl.goWalletService).get('/nft/$publicKey');
   }
 
-  @Deprecated('오래된 api 삭제해야 함')
-  static Future<Response> getSolanaWallet(String? userId) async {
-    return await Api.client(serviceUrl: ServiceUrl.goWalletService).get('/solana/wallet/$userId');
-  }
-
-  @Deprecated('오래된 api 삭제해야 함')
-  static Future<Response> createSolanaWallet(String publicKey, String encryptedSecretKey) async {
-    return await Api.client(serviceUrl: ServiceUrl.goWalletService).post('/solana/wallet', data: {"publicKey": publicKey, "encryptedSecretKey": encryptedSecretKey});
-  }
-
   static Future<Response> transferSolana(Map<String, String> body) async {
     return await Api.client(serviceUrl: ServiceUrl.goWalletService).post('/solana/transfer', data: body);
   }
