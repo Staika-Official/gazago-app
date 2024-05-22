@@ -10,7 +10,7 @@ import 'package:gaza_go/presentations/styles/styled_text.dart';
 import 'package:get/get.dart';
 
 class BuyTik extends StatelessWidget {
-  const BuyTik({Key? key}) : super(key: key);
+  const BuyTik({super.key});
 
   Widget getConfirmationBottomSheet(WalletMasterController controller) {
     return Container(

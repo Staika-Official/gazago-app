@@ -7,7 +7,7 @@ import 'package:gaza_go/presentations/styles/styled_text.dart';
 import 'package:get/get.dart';
 
 class LaboratorySolanaCreateWallet extends StatelessWidget {
-  const LaboratorySolanaCreateWallet({Key? key}) : super(key: key);
+  const LaboratorySolanaCreateWallet({super.key});
 
   @override
   Widget build(BuildContext context) {

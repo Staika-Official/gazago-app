@@ -11,7 +11,7 @@ import 'package:gaza_go/presentations/styles/styled_text.dart';
 import 'package:get/get.dart';
 
 class CrewInfo extends StatelessWidget {
-  const CrewInfo({Key? key}) : super(key: key);
+  const CrewInfo({super.key});
 
   List<Widget> renderBuffStats(String buffLevel) {
     int level = int.parse(buffLevel.substring(buffLevel.length - 1));

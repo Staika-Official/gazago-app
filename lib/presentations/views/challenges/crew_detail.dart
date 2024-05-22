@@ -6,7 +6,7 @@ import 'package:gaza_go/presentations/views/challenges/crew_info.dart';
 import 'package:get/get.dart';
 
 class CrewDetail extends StatelessWidget {
-  const CrewDetail({Key? key}) : super(key: key);
+  const CrewDetail({super.key});
   Size get preferredSize => const Size.fromHeight(kToolbarHeight);
 
   @override

@@ -5,7 +5,7 @@ import 'package:gaza_go/presentations/styles/styled_text.dart';
 class GazagoSnackbar extends StatelessWidget {
   final String message;
 
-  const GazagoSnackbar({Key? key, required this.message}) : super(key: key);
+  const GazagoSnackbar({super.key, required this.message});
 
   @override
   Widget build(BuildContext context) {

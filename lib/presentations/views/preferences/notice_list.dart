@@ -8,7 +8,7 @@ import 'package:gaza_go/presentations/styles/styled_text.dart';
 import 'package:get/get.dart';
 
 class NoticeList extends StatelessWidget {
-  const NoticeList({Key? key}) : super(key: key);
+  const NoticeList({super.key});
 
   List<dynamic> renderNoticeList(PreferenceBoardController controller) {
     return controller.boardList

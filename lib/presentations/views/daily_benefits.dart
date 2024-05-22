@@ -527,7 +527,6 @@ class _DailyBenefitItemState extends State<DailyBenefitItem> {
                                   showToastPopup('혜택은 순서대로 받을 수 있어요.');
                                   return;
                                 }
-                                print('controller.isCancelAds.value : ${controller.isCancelAds.value}');
                                 if (controller.isCancelAds.value) {
                                   _loading = false;
                                   controller.isCancelAds.value = false;

@@ -1,3 +1,4 @@
+import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:firebase_remote_config/firebase_remote_config.dart';
 import 'package:gaza_go/constants/config.dart';
 import 'package:logger/logger.dart';
@@ -12,7 +13,9 @@ Future<void> initRemoteConfig() async {
   try {
     await FirebaseRemoteConfig.instance.fetchAndActivate();
     await initRemoteConfigData();
-  } catch (e) {}
+  } catch (e, stack) {
+    FirebaseCrashlytics.instance.recordError(e, stack);
+  }
 }
 
 //리모트 컨피그에서 값을 받아오기 전에 세팅할 기본값을 넣기 위한 메소드

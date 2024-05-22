@@ -2,15 +2,13 @@ import 'package:flutter/material.dart';
 import 'package:flutter_inappwebview/flutter_inappwebview.dart';
 
 class NoticeWebView extends StatelessWidget {
-  const NoticeWebView({Key? key}) : super(key: key);
+  const NoticeWebView({super.key});
 
   @override
   Widget build(BuildContext context) {
     GlobalKey webViewKey = GlobalKey();
-    return WillPopScope(
-      onWillPop: () async {
-        return false;
-      },
+    return PopScope(
+      canPop: false,
       child: SafeArea(
         child: InAppWebView(
           key: webViewKey,

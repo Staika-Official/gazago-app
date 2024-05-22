@@ -8,7 +8,7 @@ import 'package:gaza_go/presentations/styles/styled_text.dart';
 import 'package:get/get.dart';
 
 class SignupComplete extends StatelessWidget {
-  const SignupComplete({Key? key}) : super(key: key);
+  const SignupComplete({super.key});
 
   @override
   Widget build(BuildContext context) {

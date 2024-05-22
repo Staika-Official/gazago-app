@@ -11,7 +11,7 @@ import 'package:gaza_go/presentations/styles/styled_text.dart';
 import 'package:get/get.dart';
 
 class CreateWalletPassword extends StatelessWidget {
-  const CreateWalletPassword({Key? key}) : super(key: key);
+  const CreateWalletPassword({super.key});
 
   Widget validatePassword(FormStatus status) {
     return Visibility(

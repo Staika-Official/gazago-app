@@ -11,14 +11,13 @@ import 'package:table_calendar/table_calendar.dart';
 
 //TODO. 삭제 예정
 class CalendarStatistics extends StatelessWidget {
-  const CalendarStatistics({Key? key}) : super(key: key);
+  const CalendarStatistics({super.key});
 
   @override
   Widget build(BuildContext context) {
     CalendarStatisticsController controller = Get.put(CalendarStatisticsController());
 
     return Scaffold(
-
       appBar: AppBar(
         title: const StyledText(
           "TIK 획득 내역",
@@ -97,7 +96,7 @@ class CalendarStatistics extends StatelessWidget {
             Obx(() {
               return Container(
                 height: 49.0.sp,
-                margin: EdgeInsets.only(top: 0.sp, left: 30.sp, right: 31.sp, bottom:20.sp),
+                margin: EdgeInsets.only(top: 0.sp, left: 30.sp, right: 31.sp, bottom: 20.sp),
                 decoration: BoxDecoration(
                   color: const Color(0xFF2E3038),
                   border: Border.all(

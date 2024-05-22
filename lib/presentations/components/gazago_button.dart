@@ -12,14 +12,14 @@ class GazagoButton extends StatelessWidget {
   final bool disableButton;
 
   const GazagoButton({
-    Key? key,
+    super.key,
     required this.buttonText,
     required this.onTap,
     this.textColor = Colors.black,
     this.borderColor = Colors.black,
     this.buttonColor = skyBlueColor,
     this.disableButton = false,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {

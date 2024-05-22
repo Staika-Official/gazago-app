@@ -7,7 +7,7 @@ import 'package:gaza_go/presentations/styles/styled_text.dart';
 import 'package:get/get.dart';
 
 class WithdrawConfirm extends StatelessWidget {
-  const WithdrawConfirm({Key? key}) : super(key: key);
+  const WithdrawConfirm({super.key});
 
   List<Widget> renderCheckList(WithdrawConfirmController controller) {
     return controller.withdrawCheckList
@@ -58,9 +58,9 @@ class WithdrawConfirm extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Column(
+            const Column(
               crossAxisAlignment: CrossAxisAlignment.start,
-              children: const [
+              children: [
                 StyledText(
                   '정말로 gazaGO 서비스를',
                   fontSize: 22,

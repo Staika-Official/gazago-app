@@ -17,7 +17,7 @@ import 'package:gaza_go/presentations/styles/styled_text.dart';
 import 'package:get/get.dart';
 
 class ActivityChallengeCourses extends StatelessWidget {
-  const ActivityChallengeCourses({Key? key}) : super(key: key);
+  const ActivityChallengeCourses({super.key});
 
   List<Widget> renderCourseList(ActivityController controller) {
     if (controller.doableCoursesByChallenge.isNotEmpty) {
@@ -183,7 +183,7 @@ class ActivityChallengeCourses extends StatelessWidget {
                       child: InkWell(
                         onTap: controller.doableCoursesByChallenge.isNotEmpty
                             ? () async {
-                                if(await handleCheckUserVerified()) {
+                                if (await handleCheckUserVerified()) {
                                   if (controller.selectedCourse.value != null && controller.selectedChallenge.value != null) {
                                     ExerciseType type = ExerciseType.values.singleWhere((type) => type.value == controller.selectedChallenge.value?.exerciseTypes[0]);
                                     controller.selectExerciseType(type);

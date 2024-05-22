@@ -13,13 +13,13 @@ class ActivityLoading extends StatelessWidget {
   final ExerciseType exerciseType;
   final String? adId;
   final ChallengeCourseModel? challenge;
-  const ActivityLoading({Key? key, required this.exerciseType, this.adId, this.challenge}) : super(key: key);
+  const ActivityLoading({super.key, required this.exerciseType, this.adId, this.challenge});
 
   @override
   Widget build(BuildContext context) {
     ActivityController controller = Get.find();
-    return WillPopScope(
-      onWillPop: () async => false,
+    return PopScope(
+      canPop: false,
       child: Obx(() {
         return Scaffold(
           backgroundColor: Colors.transparent,

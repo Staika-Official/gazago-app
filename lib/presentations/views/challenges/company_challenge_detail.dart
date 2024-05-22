@@ -20,7 +20,7 @@ import 'package:intrinsic_dimension/intrinsic_dimension.dart';
 import 'package:skeletons/skeletons.dart';
 
 class CompanyChallengeDetail extends StatelessWidget {
-  const CompanyChallengeDetail({Key? key}) : super(key: key);
+  const CompanyChallengeDetail({super.key});
   Size get preferredSize => const Size.fromHeight(kToolbarHeight);
   @override
   Widget build(BuildContext context) {

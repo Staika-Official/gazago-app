@@ -961,8 +961,8 @@ void showConfirmWithdrawAlert(WithdrawConfirmController controller) {
 void showPendingExerciseAlert(ActivityController controller) {
   Get.dialog(
     barrierColor: Colors.transparent,
-    WillPopScope(
-      onWillPop: () async => false,
+    PopScope(
+      canPop: false,
       child: Material(
         color: Colors.transparent,
         child: Stack(
@@ -2542,8 +2542,8 @@ Future<void> showForceLogoutAlert() {
 void showAdTipAlert(int? challengeId, ExerciseType exerciseType) {
   Get.dialog(
     barrierColor: Colors.transparent,
-    WillPopScope(
-      onWillPop: () async => false,
+    PopScope(
+      canPop: false,
       child: Material(
         color: Colors.black.withOpacity(0.6),
         child: Padding(
@@ -3042,8 +3042,8 @@ Future<void> showMainPopupAlert(NoticePopupController noticePopupController) asy
     await Get.bottomSheet(
       isDismissible: false,
       isScrollControlled: true,
-      WillPopScope(
-        onWillPop: () async => false,
+      PopScope(
+        canPop: false,
         child: Container(
           decoration: const BoxDecoration(
             color: Colors.transparent,
@@ -3770,12 +3770,12 @@ void exchangeStikToTikAlert(GoWalletController controller, ExchangeStikPriceMode
                 Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    walletMasterController.clickedAssetButton == 'STAIKA'
+                    walletMasterController.clickedAssetButton.value == 'STAIKA'
                         ? SvgPicture.asset('assets/images/wallet/ico_tik.svg', width: 24, height: 24)
                         : SvgPicture.asset('assets/images/wallet/ico_stik.svg', width: 24, height: 24),
                     Padding(
                       padding: EdgeInsets.only(left: 7.0.sp),
-                      child: walletMasterController.clickedAssetButton == 'STAIKA'
+                      child: walletMasterController.clickedAssetButton.value == 'STAIKA'
                           ? StyledText(
                               formatDecimalPlaces(productMinusFeePrice(exchangeProduct.toUiAmountString!, exchangeProduct.uiFeeString!), 0),
                               fontSize: 30,
@@ -4637,8 +4637,8 @@ void showRecommendUpdateApp() {
 void showItemTipAlert() {
   Get.dialog(
     barrierColor: Colors.transparent,
-    WillPopScope(
-      onWillPop: () async => false,
+    PopScope(
+      canPop: false,
       child: Material(
         color: Colors.black.withOpacity(0.8),
         child: Padding(
@@ -4944,8 +4944,8 @@ void showMaintenanceAlert({String type = 'ING', required String contentText, Lis
   }
 
   Get.dialog(
-    WillPopScope(
-      onWillPop: () async => false,
+    PopScope(
+      canPop: false,
       child: Dialog(
         insetPadding: EdgeInsets.zero,
         backgroundColor: subBg01Color,
@@ -5396,8 +5396,8 @@ void consumerItemUsagePopup(controller, context) {
     isDismissible: false,
     isScrollControlled: true,
     enableDrag: false,
-    WillPopScope(
-      onWillPop: () async => false,
+    PopScope(
+      canPop: false,
       child: Container(
         decoration: BoxDecoration(
           color: popupBgColor,
@@ -5543,7 +5543,7 @@ void consumerItemUsagePopup(controller, context) {
                                                   if (controller.getRepairUseItem(item.id) != null)
                                                     Padding(
                                                       padding: EdgeInsets.only(top: 8.0.sp),
-                                                      child: Container(
+                                                      child: SizedBox(
                                                         width: double.infinity,
                                                         child: Align(
                                                           alignment: Alignment.centerRight,
@@ -5772,8 +5772,8 @@ void participateInChallengeByCodeAlert() {
     barrierColor: subBg01Color.withOpacity(0.2),
     useSafeArea: true,
     barrierDismissible: false,
-    WillPopScope(
-      onWillPop: () async => false,
+    PopScope(
+      canPop: false,
       child: Dialog(
         insetPadding: EdgeInsets.zero,
         backgroundColor: subBg01Color.withOpacity(0.2),
@@ -5918,8 +5918,8 @@ Future<void> showFairPlayAlert() async {
     barrierColor: subBg01Color.withOpacity(0.2),
     useSafeArea: true,
     barrierDismissible: false,
-    WillPopScope(
-      onWillPop: () async => false,
+    PopScope(
+      canPop: false,
       child: Dialog(
         insetPadding: EdgeInsets.zero,
         backgroundColor: subBg01Color.withOpacity(0.8),
@@ -6685,8 +6685,8 @@ void crewCreatePopup(ChallengesDetailController controller) async {
     isDismissible: false,
     isScrollControlled: true,
     enableDrag: false,
-    WillPopScope(
-      onWillPop: () async => false,
+    PopScope(
+      canPop: false,
       child: GestureDetector(
         onTap: () => FocusScope.of(Get.context!).requestFocus(FocusNode()),
         child: Container(
@@ -6984,78 +6984,80 @@ void shareCrewChallengeKakaoLinkDialog(ChallengesDetailController controller) {
 }
 
 void askSharedCompleteDialog(ChallengesDetailController controller, {required ChallengeType challengeType, required ShareSource shareSource}) {
-  Get.dialog(WillPopScope(
-    onWillPop: () async => false,
-    child: Dialog(
-      shadowColor: Colors.transparent,
-      backgroundColor: Colors.transparent,
-      child: Center(
-        child: Container(
-          height: 270.sp,
-          decoration: BoxDecoration(
-            color: popupBgColor,
-            borderRadius: BorderRadius.all(
-              Radius.circular(12.sp),
+  Get.dialog(
+    PopScope(
+      canPop: false,
+      child: Dialog(
+        shadowColor: Colors.transparent,
+        backgroundColor: Colors.transparent,
+        child: Center(
+          child: Container(
+            height: 270.sp,
+            decoration: BoxDecoration(
+              color: popupBgColor,
+              borderRadius: BorderRadius.all(
+                Radius.circular(12.sp),
+              ),
             ),
-          ),
-          child: Padding(
-            padding: EdgeInsets.all(20.0.sp),
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                Expanded(
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      const StyledText(
-                        '공유하기를 완료했나요?',
-                        textAlign: TextAlign.center,
-                        fontWeight: 500,
-                        fontSize: 20,
-                        lineHeight: 30,
-                      ),
-                      Padding(
-                        padding: EdgeInsets.only(top: 12.0.sp),
-                        child: StyledText(
-                          controller.challengeDetails.value.challengeActivationType == 'CREW' ? '완료 버튼을 누르면 크루를\n무료로 개설할 수 있어요!' : '완료 버튼을 누르면\n챌린지에 무료로 참여할 수 있어요!',
+            child: Padding(
+              padding: EdgeInsets.all(20.0.sp),
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Expanded(
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        const StyledText(
+                          '공유하기를 완료했나요?',
                           textAlign: TextAlign.center,
                           fontWeight: 500,
-                          fontSize: 16,
-                          lineHeight: 24,
+                          fontSize: 20,
+                          lineHeight: 30,
                         ),
+                        Padding(
+                          padding: EdgeInsets.only(top: 12.0.sp),
+                          child: StyledText(
+                            controller.challengeDetails.value.challengeActivationType == 'CREW' ? '완료 버튼을 누르면 크루를\n무료로 개설할 수 있어요!' : '완료 버튼을 누르면\n챌린지에 무료로 참여할 수 있어요!',
+                            textAlign: TextAlign.center,
+                            fontWeight: 500,
+                            fontSize: 16,
+                            lineHeight: 24,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                  Row(children: [
+                    Expanded(
+                      child: GazagoButton(
+                        onTap: () => Get.back(),
+                        buttonText: '취소',
+                        textColor: Colors.white,
+                        buttonColor: popupBgColor,
                       ),
-                    ],
-                  ),
-                ),
-                Row(children: [
-                  Expanded(
-                    child: GazagoButton(
-                      onTap: () => Get.back(),
-                      buttonText: '취소',
-                      textColor: Colors.white,
-                      buttonColor: popupBgColor,
                     ),
-                  ),
-                  SizedBox(
-                    width: 9.sp,
-                  ),
-                  Expanded(
-                    child: GazagoButton(
-                      buttonText: '완료',
-                      onTap: () {
-                        Get.back();
-                        controller.validateKakaoShareResult(challengeType: challengeType, shareSource: shareSource);
-                      },
+                    SizedBox(
+                      width: 9.sp,
                     ),
-                  ),
-                ])
-              ],
+                    Expanded(
+                      child: GazagoButton(
+                        buttonText: '완료',
+                        onTap: () {
+                          Get.back();
+                          controller.validateKakaoShareResult(challengeType: challengeType, shareSource: shareSource);
+                        },
+                      ),
+                    ),
+                  ])
+                ],
+              ),
             ),
           ),
         ),
       ),
     ),
-  ));
+  );
 }
 
 void unableShareMyselfDialog(ChallengesDetailController controller, {required ChallengeType challengeType, required ShareSource shareSource}) {
@@ -7339,8 +7341,8 @@ void showConfirmNicknameChange(MyPageController controller) {
 void showChallengeNeedVerificationAlert() {
   Get.dialog(
     barrierColor: subBg01Color.withOpacity(0.8),
-    WillPopScope(
-      onWillPop: () async => false,
+    PopScope(
+      canPop: false,
       child: Dialog(
         insetPadding: EdgeInsets.zero,
         backgroundColor: Colors.transparent,
@@ -7417,8 +7419,8 @@ void showChallengeNeedVerificationAlert() {
 void showChallengeItemBuyNeedVerificationAlert() {
   Get.dialog(
     barrierColor: Colors.transparent,
-    WillPopScope(
-      onWillPop: () async => false,
+    PopScope(
+      canPop: false,
       child: Dialog(
         insetPadding: EdgeInsets.zero,
         backgroundColor: subBg01Color.withOpacity(0.8),
@@ -7497,8 +7499,8 @@ void joinChallengePopup(ChallengesDetailController controller) async {
     isDismissible: false,
     isScrollControlled: true,
     enableDrag: false,
-    WillPopScope(
-      onWillPop: () async => false,
+    PopScope(
+      canPop: false,
       child: GestureDetector(
         onTap: () => FocusScope.of(Get.context!).requestFocus(FocusNode()),
         child: Container(
@@ -7651,8 +7653,8 @@ void joinChallengePopup(ChallengesDetailController controller) async {
 void showChallengeLandingPopup(ChallengesDetailController controller, ChallengeLandingModel landingInfo) {
   Get.dialog(
     barrierColor: Colors.transparent,
-    WillPopScope(
-      onWillPop: () async => false,
+    PopScope(
+      canPop: false,
       child: Dialog(
         insetPadding: EdgeInsets.zero,
         backgroundColor: subBg01Color.withOpacity(0.8),
@@ -7834,10 +7836,8 @@ void showModalNoticeWebview(context, {String? title, String linkUrl = ''}) {
     ignoreSafeArea: false,
     enableDrag: false,
     isScrollControlled: true,
-    WillPopScope(
-      onWillPop: () async {
-        return false;
-      },
+    PopScope(
+      canPop: false,
       child: Scaffold(
         body: SafeArea(
           top: true,
@@ -8010,8 +8010,8 @@ void showIOSAdPermissionAlert(DailyBenefitController controller) {
   Get.dialog(
     barrierColor: Colors.transparent,
     useSafeArea: false,
-    WillPopScope(
-      onWillPop: () async => false,
+    PopScope(
+      canPop: false,
       child: Dialog(
         insetPadding: EdgeInsets.zero,
         backgroundColor: subBg01Color.withOpacity(.8),

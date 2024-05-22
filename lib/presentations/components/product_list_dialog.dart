@@ -160,7 +160,7 @@ void showProductList() {
                 Row(
                   children: [
                     StyledText(
-                      '${formatDecimalPlaces(double.parse(product.value.uiAmountString!), 0)}',
+                      formatDecimalPlaces(double.parse(product.value.uiAmountString!), 0),
                       fontSize: 12,
                       fontWeight: 700,
                       lineHeight: 20,
@@ -440,8 +440,8 @@ void showProductList() {
                                   Expanded(
                                     child: StyledText(
                                       Platform.isIOS
-                                          ? 'iOS앱에서 충전한 TIK은 모바일 기기에서는 \‘OS설정 > 계정\’에서, 데스크탑에서는 \‘iTunes > 계정 > 나의 계정보기 > 구입내역\' 메뉴에서 확인 가능합니다.'
-                                          : '안드로이드 앱에서 충전한 TIK은 모바일 기기에서는 \‘Play 스토어 > 프로필 > 결제 및 정기 결제 > 예산 및 내역\’에서, 데스크탑에서는 \‘play.google.com > 프로필 > 결제 및 정기 결제 > 예산 및 주문 내역\’ 메뉴에서 확인 가능합니다.',
+                                          ? 'iOS앱에서 충전한 TIK은 모바일 기기에서는 ‘OS설정 > 계정’에서, 데스크탑에서는 ‘iTunes > 계정 > 나의 계정보기 > 구입내역\' 메뉴에서 확인 가능합니다.'
+                                          : '안드로이드 앱에서 충전한 TIK은 모바일 기기에서는 ‘Play 스토어 > 프로필 > 결제 및 정기 결제 > 예산 및 내역’에서, 데스크탑에서는 ‘play.google.com > 프로필 > 결제 및 정기 결제 > 예산 및 주문 내역’ 메뉴에서 확인 가능합니다.',
                                       fontSize: 10,
                                       lineHeight: 14,
                                       fontWeight: 500,

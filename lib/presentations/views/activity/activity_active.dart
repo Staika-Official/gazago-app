@@ -19,7 +19,7 @@ import 'package:simple_animations/animation_builder/custom_animation_builder.dar
 import 'package:simple_animations/movie_tween/movie_tween.dart';
 
 class ActivityActive extends StatelessWidget {
-  const ActivityActive({Key? key}) : super(key: key);
+  const ActivityActive({super.key});
 
   List<Widget> renderGauge(ExerciseType exerciseType, Color color) {
     List<Widget> gaugeList = List.empty(growable: true);
@@ -829,7 +829,7 @@ class GaugeCursor extends StatelessWidget {
   final Color color;
   final double speed;
 
-  const GaugeCursor({Key? key, required this.color, required this.speed}) : super(key: key);
+  const GaugeCursor({super.key, required this.color, required this.speed});
 
   @override
   Widget build(BuildContext context) {

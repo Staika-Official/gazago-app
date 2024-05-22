@@ -15,7 +15,7 @@ import 'package:get/get.dart';
 import 'package:simple_animations/simple_animations.dart';
 
 class Home extends StatelessWidget {
-  Home({Key? key}) : super(key: key);
+  Home({super.key});
 
   MovieTween challengeMovie = MovieTween()
     ..scene(begin: const Duration(seconds: 1), duration: const Duration(milliseconds: 300))
@@ -169,9 +169,9 @@ class Home extends StatelessWidget {
     Get.put(DailyBenefitController());
     HomeMenuController controller = Get.put(HomeMenuController());
 
-    GlobalKey<NavigatorState> navigatorKey = GlobalKey<NavigatorState>();
-    return WillPopScope(
-      onWillPop: () async {
+    return PopScope(
+      canPop: false,
+      onPopInvoked: (bool canPop) async {
         showAlert(
           title: '알림',
           contentText: '운동 중인 기록은 저장되지 않습니다.\ngazaGO를 종료 하시겠습니까?',
@@ -198,9 +198,6 @@ class Home extends StatelessWidget {
             ),
           ],
         );
-        // maypop : pop 할께 있으면 pop을 하고, 아니면, app 을 종료 시키는것
-        // pop 할께 있으면 true 인데, true 이면 app 이 종료가 되기 때문에 false 로 바꿔 줘야 되기 때문에 await 앞에 ! 을 넣어 줌
-        return !await navigatorKey.currentState!.maybePop();
       },
       child: Obx(() {
         return Scaffold(

@@ -9,7 +9,7 @@ import 'package:get/get.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 
 class RequestInfo extends StatelessWidget {
-  const RequestInfo({Key? key}) : super(key: key);
+  const RequestInfo({super.key});
 
   List<Widget> renderRequestLogList(List<dynamic> logs) {
     return logs.isNotEmpty

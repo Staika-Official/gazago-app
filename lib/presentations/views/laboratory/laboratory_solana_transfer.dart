@@ -8,7 +8,7 @@ import 'package:gaza_go/presentations/styles/styled_text.dart';
 import 'package:get/get.dart';
 
 class LaboratorySolanaTransfer extends StatelessWidget {
-  const LaboratorySolanaTransfer({Key? key}) : super(key: key);
+  const LaboratorySolanaTransfer({super.key});
 
   @override
   Widget build(BuildContext context) {

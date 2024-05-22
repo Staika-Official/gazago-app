@@ -8,7 +8,7 @@ import 'package:gaza_go/presentations/styles/styled_text.dart';
 import 'package:get/get.dart';
 
 class PreferenceBoard extends StatelessWidget {
-  const PreferenceBoard({Key? key}) : super(key: key);
+  const PreferenceBoard({super.key});
 
   @override
   Widget build(BuildContext context) {

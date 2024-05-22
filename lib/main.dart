@@ -146,7 +146,7 @@ class MyApp extends StatelessWidget {
             return ScrollConfiguration(
               behavior: const MaterialScrollBehavior().copyWith(overscroll: false),
               child: MediaQuery(
-                data: MediaQuery.of(context).copyWith(textScaleFactor: 1), //텍스트가 시스템 설정에 영향받지 않음
+                data: MediaQuery.of(context).copyWith(textScaler: const TextScaler.linear(1)), //텍스트가 시스템 설정에 영향받지 않음
                 child: child!,
               ),
             );
@@ -157,8 +157,8 @@ class MyApp extends StatelessWidget {
             navigationBarTheme: NavigationBarThemeData(
               elevation: 0,
               indicatorColor: Colors.transparent,
-              labelTextStyle: MaterialStateProperty.resolveWith((states) {
-                if (states.contains(MaterialState.selected)) {
+              labelTextStyle: WidgetStateProperty.resolveWith((states) {
+                if (states.contains(WidgetState.selected)) {
                   return const TextStyle(
                     color: skyBlueColor,
                     fontSize: 10,

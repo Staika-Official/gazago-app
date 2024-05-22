@@ -7,7 +7,7 @@ import 'package:gaza_go/platform/models/asset_item_nft_model.dart';
 class AssetItemNft extends StatelessWidget {
   final AssetItemNftModel asset;
   final VoidCallback onTap;
-  const AssetItemNft({Key? key, required this.asset, required this.onTap}) : super(key: key);
+  const AssetItemNft({super.key, required this.asset, required this.onTap});
 
   @override
   Widget build(BuildContext context) {

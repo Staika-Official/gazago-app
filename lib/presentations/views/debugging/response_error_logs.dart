@@ -10,7 +10,7 @@ import 'package:hive_flutter/hive_flutter.dart';
 import '../../../constants/enums.dart';
 
 class ResponseErrorLogs extends StatelessWidget {
-  const ResponseErrorLogs({Key? key}) : super(key: key);
+  const ResponseErrorLogs({super.key});
 
   List<Widget> renderErrorLogList(List<dynamic> logs) {
     return logs.isNotEmpty

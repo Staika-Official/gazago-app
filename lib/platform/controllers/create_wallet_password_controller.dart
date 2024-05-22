@@ -4,7 +4,7 @@ import 'package:gaza_go/constants/routes.dart';
 import 'package:gaza_go/platform/helpers/alert_helper.dart';
 import 'package:gaza_go/platform/helpers/password_mixin.dart';
 import 'package:get/get.dart';
-import 'package:rxdart/rxdart.dart' as RX;
+import 'package:rxdart/rxdart.dart' as rx;
 
 class CreateWalletPasswordController extends GetxController with PasswordMixin {
   final RxString _password = ''.obs;
@@ -23,11 +23,11 @@ class CreateWalletPasswordController extends GetxController with PasswordMixin {
   RxBool isShowAlert = RxBool(false);
   RxBool isAgree = RxBool(false);
   void initSamePasswordStream() {
-    _isSamePassword = RX.CombineLatestStream.combine2<String, String, bool>(_password.stream, _confirmPassword.stream, (a, b) => a == b);
+    _isSamePassword = rx.CombineLatestStream.combine2<String, String, bool>(_password.stream, _confirmPassword.stream, (a, b) => a == b);
   }
 
   Stream<bool> isEnableNextStep() {
-    return RX.CombineLatestStream.combine2<FormStatus, bool, bool>(passwordFormStatus.stream, _isSamePassword, (status, isSame) {
+    return rx.CombineLatestStream.combine2<FormStatus, bool, bool>(passwordFormStatus.stream, _isSamePassword, (status, isSame) {
       setErrorState(status, _errorStatus.value, isSame: isSame);
       return status == FormStatus.sufficient && isSame;
     });

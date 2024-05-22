@@ -10,7 +10,7 @@ import 'package:gaza_go/presentations/styles/icons.dart';
 import 'package:get/get.dart';
 
 class MainAppbar extends StatelessWidget implements PreferredSizeWidget {
-  const MainAppbar({Key? key}) : super(key: key);
+  const MainAppbar({super.key});
 
   @override
   Size get preferredSize => const Size.fromHeight(kToolbarHeight);
@@ -18,7 +18,7 @@ class MainAppbar extends StatelessWidget implements PreferredSizeWidget {
   @override
   Widget build(BuildContext context) {
     NoticePopupController controller = Get.isRegistered<NoticePopupController>() ? Get.find<NoticePopupController>() : Get.put(NoticePopupController());
-    WalletMasterController walletMasterController =  Get.isRegistered<WalletMasterController>() ? Get.find<WalletMasterController>() : Get.put(WalletMasterController());
+    WalletMasterController walletMasterController = Get.isRegistered<WalletMasterController>() ? Get.find<WalletMasterController>() : Get.put(WalletMasterController());
 
     return AppBar(
       backgroundColor: mainBg01Color,
@@ -76,7 +76,7 @@ class MainAppbar extends StatelessWidget implements PreferredSizeWidget {
                 ),
               ),
               IconButton(
-                onPressed: (){
+                onPressed: () {
                   Get.toNamed(Routes.preferences);
                   Adjust.trackEvent(AdjustEvent('j66t7q'));
                 },

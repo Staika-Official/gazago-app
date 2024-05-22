@@ -7,7 +7,7 @@ import 'package:gaza_go/presentations/views/leaderboard/leaderboard.dart';
 import 'package:get/get.dart';
 
 class RankingHome extends StatelessWidget {
-  const RankingHome({Key? key}) : super(key: key);
+  const RankingHome({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -38,6 +38,8 @@ class RankingHome extends StatelessWidget {
                 height: 20.sp / 16.sp,
                 letterSpacing: 0.5,
               ),
+              dividerColor: Colors.transparent,
+              indicatorSize: TabBarIndicatorSize.tab,
               tabs: [
                 Tab(
                   height: 50.sp,

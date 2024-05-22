@@ -19,8 +19,8 @@ Future<void> showAlert({
 }) async {
   if (Get.isBottomSheetOpen == null || !Get.isBottomSheetOpen! || allowMultipleBottomSheet) {
     await Get.bottomSheet(
-      WillPopScope(
-        onWillPop: () async => false,
+      PopScope(
+        canPop: false,
         child: BottomSheetAlert(
           title: title,
           contentWidget: contentWidget,
@@ -41,7 +41,7 @@ Future<void> showAlert({
 void showToastPopup(String message) {
   Fluttertoast.showToast(
     timeInSecForIosWeb: 2,
-    msg: message, 
+    msg: message,
     gravity: ToastGravity.BOTTOM,
     backgroundColor: Colors.black.withOpacity(0.8),
     textColor: Colors.white,
@@ -65,7 +65,7 @@ void showUpdateSnackbar() {
       ),
       mainButton: TextButton(
         onPressed: () => InAppUpdate.completeFlexibleUpdate(),
-        child: StyledText(
+        child: const StyledText(
           '업데이트',
           fontSize: 12,
           color: skyBlueColor,

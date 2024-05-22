@@ -13,7 +13,7 @@ import 'package:gaza_go/presentations/styles/styled_text.dart';
 import 'package:get/get.dart';
 
 class InventoryItemDetail extends StatelessWidget {
-  const InventoryItemDetail({Key? key}) : super(key: key);
+  const InventoryItemDetail({super.key});
 
   @override
   Widget build(BuildContext context) {

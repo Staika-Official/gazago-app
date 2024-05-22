@@ -7,7 +7,7 @@ import 'package:gaza_go/presentations/styles/colors.dart';
 import 'package:get/get.dart';
 
 class ActivityMap extends StatelessWidget {
-  const ActivityMap({Key? key}) : super(key: key);
+  const ActivityMap({super.key});
 
   @override
   Widget build(BuildContext context) {

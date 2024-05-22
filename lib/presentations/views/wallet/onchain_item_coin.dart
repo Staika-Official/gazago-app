@@ -11,7 +11,7 @@ class OnChainItemCoin extends StatelessWidget {
   final AssetSolanaBalanceModel asset;
   final VoidCallback? onTapButton;
   final String? buttonText;
-  const OnChainItemCoin({Key? key, required this.asset, this.onTapButton, this.buttonText}) : super(key: key);
+  const OnChainItemCoin({super.key, required this.asset, this.onTapButton, this.buttonText});
 
   @override
   Widget build(BuildContext context) {

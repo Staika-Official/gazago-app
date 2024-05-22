@@ -9,7 +9,7 @@ import 'package:gaza_go/presentations/views/inventory/equipped_items_grid.dart';
 import 'package:get/get.dart';
 
 class EquippedItems extends StatelessWidget {
-  const EquippedItems({Key? key}) : super(key: key);
+  const EquippedItems({super.key});
 
   @override
   Widget build(BuildContext context) {

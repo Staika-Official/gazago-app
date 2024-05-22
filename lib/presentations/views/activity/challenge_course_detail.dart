@@ -17,7 +17,7 @@ import 'package:get/get.dart';
 import 'package:skeletons/skeletons.dart';
 
 class ChallengeCourseDetail extends StatelessWidget {
-  const ChallengeCourseDetail({Key? key}) : super(key: key);
+  const ChallengeCourseDetail({super.key});
 
   @override
   Widget build(BuildContext context) {

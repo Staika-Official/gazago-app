@@ -12,7 +12,7 @@ import 'package:gaza_go/presentations/styles/styled_text.dart';
 import 'package:get/get.dart';
 
 class SendStikGoWallet extends StatelessWidget {
-  const SendStikGoWallet({Key? key}) : super(key: key);
+  const SendStikGoWallet({super.key});
 
   @override
   Widget build(BuildContext context) {

@@ -12,44 +12,44 @@ import 'package:gaza_go/theme/theme.g.dart';
 import 'package:get/get.dart';
 
 class ChallengesHome extends StatelessWidget {
-  const ChallengesHome({Key? key}) : super(key: key);
+  const ChallengesHome({super.key});
 
   List<Widget> renderChallengeList(ChallengesController controller) {
     return controller.challengeList
         .map(
-          (item) => InkWell(
-            onTap: () => controller.moveToDetail(item.id, item.challengeType, item.challengeUserState, item.challengeState),
-            child: Container(
-              margin: EdgeInsets.only(bottom: 15.sp),
-              decoration: BoxDecoration(
-                color: subBg02Color,
-                border: Border.all(
-                  width: 2,
-                  color: Colors.black,
-                ),
-                borderRadius: const BorderRadius.only(
-                  topLeft: Radius.circular(14),
-                  topRight: Radius.circular(14),
-                  bottomLeft: Radius.circular(14),
-                  bottomRight: Radius.circular(14),
-                ),
-                boxShadow: [
-                  BoxShadow(
-                    color: const Color(0xFF000000),
-                    spreadRadius: 0,
-                    blurRadius: 0,
-                    offset: Offset(0, 4.sp), // changes position of shadow
-                  ),
-                ],
+          (item) => Container(
+            margin: EdgeInsets.only(bottom: 15.sp),
+            decoration: BoxDecoration(
+              color: subBg02Color,
+              border: Border.all(
+                width: 2,
+                color: Colors.black,
               ),
-              child: Card(
-                margin: EdgeInsets.zero,
-                elevation: 0,
-                clipBehavior: Clip.antiAlias,
-                color: popupBgColor,
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(14),
+              borderRadius: const BorderRadius.only(
+                topLeft: Radius.circular(14),
+                topRight: Radius.circular(14),
+                bottomLeft: Radius.circular(14),
+                bottomRight: Radius.circular(14),
+              ),
+              boxShadow: [
+                BoxShadow(
+                  color: const Color(0xFF000000),
+                  spreadRadius: 0,
+                  blurRadius: 0,
+                  offset: Offset(0, 4.sp), // changes position of shadow
                 ),
+              ],
+            ),
+            child: Card(
+              margin: EdgeInsets.zero,
+              elevation: 0,
+              clipBehavior: Clip.antiAlias,
+              color: popupBgColor,
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(14),
+              ),
+              child: InkWell(
+                onTap: () => controller.moveToDetail(item.id, item.challengeType, item.challengeUserState, item.challengeState),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [

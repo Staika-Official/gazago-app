@@ -24,7 +24,7 @@ import 'package:skeletons/skeletons.dart';
 import 'crew_list.dart';
 
 class ChallengeDetail extends StatelessWidget {
-  const ChallengeDetail({Key? key}) : super(key: key);
+  const ChallengeDetail({super.key});
   Size get preferredSize => const Size.fromHeight(kToolbarHeight);
   @override
   Widget build(BuildContext context) {

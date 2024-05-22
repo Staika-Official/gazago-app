@@ -12,7 +12,7 @@ import 'package:gaza_go/presentations/styles/styled_text.dart';
 import 'package:get/get.dart';
 
 class ChallengeLeaderboard extends StatelessWidget {
-  const ChallengeLeaderboard({Key? key}) : super(key: key);
+  const ChallengeLeaderboard({super.key});
 
   Widget renderMyRank(ChallengesDetailController controller) {
     ChallengeRankerModel myRank = controller.myRank.value!;

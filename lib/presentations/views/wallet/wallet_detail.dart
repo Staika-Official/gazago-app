@@ -13,7 +13,7 @@ import 'package:gaza_go/presentations/styles/styled_text.dart';
 import 'package:get/get.dart';
 
 class WalletDetail extends StatelessWidget {
-  const WalletDetail({Key? key}) : super(key: key);
+  const WalletDetail({super.key});
 
   // Widget renderButtons(WalletDetailController controller) {
   //   Widget child;

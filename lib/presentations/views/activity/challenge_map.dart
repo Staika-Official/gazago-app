@@ -11,7 +11,7 @@ import 'package:gaza_go/presentations/styles/styled_text.dart';
 import 'package:get/get.dart';
 
 class ChallengeMap extends StatelessWidget {
-  const ChallengeMap({Key? key}) : super(key: key);
+  const ChallengeMap({super.key});
 
   List<CircleOverlay> renderStartPoint(ActivityController controller) {
     List<CircleOverlay> centerCircles = controller.allCoursesList

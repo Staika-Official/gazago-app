@@ -4,7 +4,7 @@ import 'package:gaza_go/presentations/components/default_container.dart';
 import 'package:get/get.dart';
 
 class EditBiometrics extends StatelessWidget {
-  const EditBiometrics({Key? key}) : super(key: key);
+  const EditBiometrics({super.key});
 
   @override
   Widget build(BuildContext context) {

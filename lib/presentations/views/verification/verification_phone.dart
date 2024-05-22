@@ -12,7 +12,7 @@ import '../../../constants/enums.dart';
 import '../../components/alert_ui_list.dart';
 
 class VerificationPhone extends StatelessWidget {
-  const VerificationPhone({Key? key}) : super(key: key);
+  const VerificationPhone({super.key});
 
   @override
   Widget build(BuildContext context) {

@@ -15,7 +15,7 @@ import 'package:gaza_go/presentations/styles/styled_text.dart';
 import 'package:get/get.dart';
 
 class Preferences extends StatelessWidget {
-  const Preferences({Key? key}) : super(key: key);
+  const Preferences({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -142,8 +142,8 @@ class Preferences extends StatelessWidget {
                         activeColor: skyBlueColor,
                         activeTrackColor: skyBlueColor,
                         inactiveTrackColor: const Color.fromRGBO(120, 120, 128, 0.16),
-                        thumbColor: MaterialStateProperty.all(Colors.white),
-                        overlayColor: MaterialStateProperty.all(Colors.transparent),
+                        thumbColor: WidgetStateProperty.all(Colors.white),
+                        overlayColor: WidgetStateProperty.all(Colors.transparent),
                         value: controller.isAbleLuckSound.value,
                         onChanged: (val) => controller.toggleLuckSoundAlarm(val),
                       )
@@ -268,7 +268,7 @@ class PreferenceItem extends StatelessWidget {
   final VoidCallback? onTap;
   final String? description;
 
-  const PreferenceItem({Key? key, required this.title, this.type = ItemType.functional, this.onTap, this.description}) : super(key: key);
+  const PreferenceItem({super.key, required this.title, this.type = ItemType.functional, this.onTap, this.description});
 
   @override
   Widget build(BuildContext context) {

@@ -9,7 +9,7 @@ import 'package:get/get.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 
 class PositionRawDataLogs extends StatelessWidget {
-  const PositionRawDataLogs({Key? key}) : super(key: key);
+  const PositionRawDataLogs({super.key});
 
   List<Widget> renderPositionLowDataList(List<dynamic> logs) {
     return logs.isNotEmpty

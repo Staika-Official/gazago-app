@@ -8,7 +8,7 @@ import 'package:gaza_go/presentations/styles/styled_text.dart';
 import 'package:get/get.dart';
 
 class VerificationTerms extends StatelessWidget {
-  const VerificationTerms({Key? key}) : super(key: key);
+  const VerificationTerms({super.key});
 
   List<Widget> renderTermsList(VerificationTermsController controller) {
     return controller.termsList

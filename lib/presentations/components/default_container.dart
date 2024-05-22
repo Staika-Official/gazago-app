@@ -19,7 +19,7 @@ class DefaultContainer extends StatelessWidget {
   final Color? headerBackgroundColor;
 
   const DefaultContainer({
-    Key? key,
+    super.key,
     required this.child,
     this.backgroundColor = const Color(0xff2A2B33),
     this.disableSafeArea = false,
@@ -33,7 +33,7 @@ class DefaultContainer extends StatelessWidget {
     this.headerBackgroundColor,
     this.onBackButtonTap,
     this.resizeToAvoidBottomInset = true,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {

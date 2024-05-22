@@ -6,7 +6,7 @@ import 'package:gaza_go/presentations/components/default_container.dart';
 import 'package:get/get.dart';
 
 class WalletActions extends StatelessWidget {
-  const WalletActions({Key? key}) : super(key: key);
+  const WalletActions({super.key});
 
   @override
   Widget build(BuildContext context) {

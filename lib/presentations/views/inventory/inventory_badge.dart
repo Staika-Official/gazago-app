@@ -10,7 +10,7 @@ import 'package:gaza_go/presentations/styles/styled_text.dart';
 import 'package:get/get.dart';
 
 class InventoryBadge extends StatelessWidget {
-  const InventoryBadge({Key? key}) : super(key: key);
+  const InventoryBadge({super.key});
 
   List<Widget> renderUserBadgesList(InventoryController controller) {
     return controller.userBadgesList
@@ -159,7 +159,7 @@ class InventoryBadge extends StatelessWidget {
                   children: [
                     iconEmpty,
                     Padding(
-                      padding: EdgeInsets.only(top: 20.sp),
+                      padding: EdgeInsets.only(top: 16.sp),
                       child: const StyledText(
                         '뱃지가 없습니다.',
                         color: Color(0xff7b7b7b),
@@ -169,7 +169,7 @@ class InventoryBadge extends StatelessWidget {
                       ),
                     ),
                     Padding(
-                      padding: EdgeInsets.only(top: 13.sp),
+                      padding: EdgeInsets.only(top: 12.sp),
                       child: const StyledText(
                         '등산해서 뱃지를 받아보세요!',
                         color: Color(0xff7b7b7b),

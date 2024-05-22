@@ -14,7 +14,7 @@ import 'package:gaza_go/theme/theme.g.dart';
 import 'package:get/get.dart';
 
 class CompanyCrewLeaderboard extends StatelessWidget {
-  const CompanyCrewLeaderboard({Key? key}) : super(key: key);
+  const CompanyCrewLeaderboard({super.key});
 
   List<Widget> renderCrewLeaderboardList(CompanyCrewController controller) {
     final limitedList = controller.crewRankingList.take(10).toList();

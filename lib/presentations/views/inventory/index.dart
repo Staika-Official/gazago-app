@@ -12,7 +12,7 @@ import 'package:gaza_go/presentations/views/inventory/inventory_item.dart';
 import 'package:get/get.dart';
 
 class InventoryHome extends StatelessWidget {
-  const InventoryHome({Key? key}) : super(key: key);
+  const InventoryHome({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -217,6 +217,7 @@ class InventoryHome extends StatelessWidget {
                             topLeft: Radius.circular(15.sp),
                           ),
                         ),
+                        dividerColor: Colors.transparent,
                         tabs: <Widget>[
                           Tab(
                             child: Container(

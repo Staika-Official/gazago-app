@@ -11,12 +11,15 @@ import 'package:gaza_go/presentations/styles/styled_text.dart';
 import 'package:get/get.dart';
 
 class InventoryItem extends StatelessWidget {
-  const InventoryItem({Key? key}) : super(key: key);
+  const InventoryItem({super.key});
 
   List<Widget> renderItemSubTabList(InventoryHomeController controller) {
     return controller.itemSubTabList
         .map(
-          (item) => Text(item['title']!),
+          (item) => Padding(
+            padding: EdgeInsets.only(left: 12.0.sp, right: 12.0.sp, top: 6.0.sp, bottom: 3.0.sp),
+            child: Text(item['title']!),
+          ),
         )
         .toList();
   }
@@ -239,26 +242,23 @@ class InventoryItem extends StatelessWidget {
         children: [
           Padding(
             padding: EdgeInsets.symmetric(vertical: 10.0.sp),
-            child: SizedBox(
-              height: 28.sp,
-              child: Align(
-                alignment: Alignment.centerLeft,
-                child: TabBar(
-                  padding: EdgeInsets.symmetric(horizontal: 20.0.sp),
-                  controller: controller.subTabController,
-                  isScrollable: true,
-                  labelStyle: TextStyle(fontWeight: FontWeight.w500, fontSize: 14.sp),
-                  labelColor: Colors.black,
-                  unselectedLabelColor: const Color(0xFF898B92),
-                  labelPadding: EdgeInsets.only(left: 12.0.sp, right: 12.0.sp, top: 6.0.sp, bottom: 3.0.sp),
-                  indicator: BoxDecoration(
-                    borderRadius: BorderRadius.circular(80.0.sp),
-                    color: const Color(0xFFECECEC),
-                  ),
-                  tabs: [...renderItemSubTabList(controller)],
-                  onTap: (index) => inventoryController.getUserItemsByCategory(controller.itemSubTabList, index),
-                ),
+            child: TabBar(
+              padding: EdgeInsets.symmetric(horizontal: 20.0.sp),
+              controller: controller.subTabController,
+              isScrollable: true,
+              labelStyle: TextStyle(fontWeight: FontWeight.w500, fontSize: 14.sp, height: 1),
+              labelPadding: EdgeInsets.zero,
+              labelColor: Colors.black,
+              unselectedLabelColor: const Color(0xFF898B92),
+              indicator: BoxDecoration(
+                borderRadius: BorderRadius.circular(80.0.sp),
+                color: const Color(0xFFECECEC),
               ),
+              tabAlignment: TabAlignment.start,
+              indicatorSize: TabBarIndicatorSize.label,
+              dividerColor: Colors.transparent,
+              tabs: [...renderItemSubTabList(controller)],
+              onTap: (index) => inventoryController.getUserItemsByCategory(controller.itemSubTabList, index),
             ),
           ),
           Obx(() {

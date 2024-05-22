@@ -10,7 +10,7 @@ import 'package:hive_flutter/hive_flutter.dart';
 import '../../../constants/enums.dart';
 
 class ActivityLogs extends StatelessWidget {
-  const ActivityLogs({Key? key}) : super(key: key);
+  const ActivityLogs({super.key});
 
   List<Widget> renderActivityLogList(List<dynamic> logs) {
     return logs.isNotEmpty

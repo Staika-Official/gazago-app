@@ -9,7 +9,7 @@ import 'package:gaza_go/presentations/styles/styled_text.dart';
 import 'package:get/get.dart';
 
 class Permissions extends StatelessWidget {
-  Permissions({Key? key}) : super(key: key);
+  Permissions({super.key});
 
   final List<PermissionItemModel> permissionsList = [
     PermissionItemModel(iconPath: 'assets/images/permissions/ico_activity.svg', permissionName: '신체활동', isRequired: true, description: '걸음 수 확인 등'),

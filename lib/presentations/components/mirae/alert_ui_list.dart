@@ -14,97 +14,99 @@ import 'package:gaza_go/theme/theme.g.dart';
 import 'package:get/get.dart';
 
 void showConfirmMiraeMemberChallenge(MiraeChallengeController controller, int challengeId) {
-  Get.dialog(WillPopScope(
-    onWillPop: () async => false,
-    child: Dialog(
-      alignment: Alignment.center,
-      insetPadding: EdgeInsets.zero,
-      shadowColor: Colors.transparent,
-      backgroundColor: Colors.transparent,
-      child: Padding(
-        padding: EdgeInsets.all(32.0.sp),
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            Container(
-              decoration: BoxDecoration(
-                color: popupBgColor,
-                borderRadius: BorderRadius.circular(AppDoubleData.regular().numberRadius20),
-              ),
-              child: Padding(
-                padding: EdgeInsets.only(left: 20.0.sp, right: 20.sp, bottom: 32.sp, top: 36.sp),
-                child: Column(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    Padding(
-                      padding: EdgeInsets.only(bottom: 28.sp),
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          const StyledText(
-                            '회원 정보 확인',
-                            fontWeight: 600,
-                            fontSize: 20,
-                            lineHeight: 21,
-                          ),
-                          Padding(
-                            padding: EdgeInsets.only(top: 14.0.sp),
-                            child: StyledText(
-                              '${controller.part}',
-                              fontWeight: 500,
-                              fontSize: 18,
-                              lineHeight: 25,
+  Get.dialog(
+    PopScope(
+      canPop: false,
+      child: Dialog(
+        alignment: Alignment.center,
+        insetPadding: EdgeInsets.zero,
+        shadowColor: Colors.transparent,
+        backgroundColor: Colors.transparent,
+        child: Padding(
+          padding: EdgeInsets.all(32.0.sp),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Container(
+                decoration: BoxDecoration(
+                  color: popupBgColor,
+                  borderRadius: BorderRadius.circular(AppDoubleData.regular().numberRadius20),
+                ),
+                child: Padding(
+                  padding: EdgeInsets.only(left: 20.0.sp, right: 20.sp, bottom: 32.sp, top: 36.sp),
+                  child: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      Padding(
+                        padding: EdgeInsets.only(bottom: 28.sp),
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            const StyledText(
+                              '회원 정보 확인',
+                              fontWeight: 600,
+                              fontSize: 20,
+                              lineHeight: 21,
                             ),
-                          ),
-                          Padding(
-                            padding: EdgeInsets.only(top: 2.0.sp),
-                            child: StyledText(
-                              controller.name.value,
-                              fontWeight: 500,
-                              fontSize: 18,
-                              lineHeight: 25,
+                            Padding(
+                              padding: EdgeInsets.only(top: 14.0.sp),
+                              child: StyledText(
+                                '${controller.part}',
+                                fontWeight: 500,
+                                fontSize: 18,
+                                lineHeight: 25,
+                              ),
                             ),
-                          ),
-                        ],
+                            Padding(
+                              padding: EdgeInsets.only(top: 2.0.sp),
+                              child: StyledText(
+                                controller.name.value,
+                                fontWeight: 500,
+                                fontSize: 18,
+                                lineHeight: 25,
+                              ),
+                            ),
+                          ],
+                        ),
                       ),
-                    ),
-                    Padding(
-                      padding: EdgeInsets.only(top: 0.0.sp),
-                      child: Row(children: [
-                        Expanded(
-                          child: GazagoButton(
-                            onTap: () {
-                              controller.onCloseJoinPopup();
-                              // Get.back();
-                              participateInMiraeChallengeByCodeAlert(challengeId);
-                            },
-                            buttonText: '취소',
-                            textColor: Colors.white,
-                            buttonColor: popupBgColor,
+                      Padding(
+                        padding: EdgeInsets.only(top: 0.0.sp),
+                        child: Row(children: [
+                          Expanded(
+                            child: GazagoButton(
+                              onTap: () {
+                                controller.onCloseJoinPopup();
+                                // Get.back();
+                                participateInMiraeChallengeByCodeAlert(challengeId);
+                              },
+                              buttonText: '취소',
+                              textColor: Colors.white,
+                              buttonColor: popupBgColor,
+                            ),
                           ),
-                        ),
-                        SizedBox(
-                          width: 9.sp,
-                        ),
-                        Expanded(
-                          child: GazagoButton(
-                            buttonText: '확인 후 참가',
-                            onTap: () {
-                              controller.onFetchJoinChallenge(challengeId);
-                            },
+                          SizedBox(
+                            width: 9.sp,
                           ),
-                        ),
-                      ]),
-                    )
-                  ],
+                          Expanded(
+                            child: GazagoButton(
+                              buttonText: '확인 후 참가',
+                              onTap: () {
+                                controller.onFetchJoinChallenge(challengeId);
+                              },
+                            ),
+                          ),
+                        ]),
+                      )
+                    ],
+                  ),
                 ),
               ),
-            ),
-          ],
+            ],
+          ),
         ),
       ),
     ),
-  ));
+  );
 }
 
 void miraeAssetAlert(int challengeId, String? challengeUserState) {
@@ -114,8 +116,8 @@ void miraeAssetAlert(int challengeId, String? challengeUserState) {
     barrierColor: Colors.black.withOpacity(0.8),
     useSafeArea: false,
     barrierDismissible: false,
-    WillPopScope(
-      onWillPop: () async => false,
+    PopScope(
+      canPop: false,
       child: Dialog(
         key: const Key('miraeAsset'),
         insetPadding: EdgeInsets.zero,
@@ -182,8 +184,8 @@ void participateInMiraeChallengeByCodeAlert(int challengeId) {
     barrierColor: Colors.black.withOpacity(0.8),
     useSafeArea: false,
     barrierDismissible: false,
-    WillPopScope(
-      onWillPop: () async => false,
+    PopScope(
+      canPop: false,
       child: Dialog(
         insetPadding: EdgeInsets.zero,
         backgroundColor: Colors.transparent,
@@ -436,63 +438,13 @@ void participateInMiraeChallengeByCodeAlert(int challengeId) {
 }
 
 void alreadyVerifiedCompanyChallenge() {
-  Get.dialog(WillPopScope(
-    onWillPop: () async => false,
-    child: Dialog(
-      insetPadding: EdgeInsets.zero,
-      shadowColor: Colors.transparent,
-      backgroundColor: Colors.transparent,
-      child: Padding(
-        padding: EdgeInsets.all(25.0.sp),
-        child: Container(
-          decoration: BoxDecoration(
-            color: popupBgColor,
-            borderRadius: BorderRadius.circular(AppDoubleData.regular().numberRadius20),
-          ),
-          child: Padding(
-            padding: EdgeInsets.symmetric(horizontal: 20.0.sp, vertical: 30.0.sp),
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                const StyledText(
-                  '회원 정보 확인 요청',
-                  fontWeight: 600,
-                  fontSize: 20,
-                  lineHeight: 28,
-                ),
-                Padding(
-                  padding: EdgeInsets.only(top: 20.0.sp, bottom: 30.sp),
-                  child: const StyledText(
-                    '이미 인증된 회원입니다.\n 회원 정보를 다시 입력해주세요.',
-                    fontWeight: 500,
-                    fontSize: 18,
-                    lineHeight: 26,
-                    textAlign: TextAlign.center,
-                  ),
-                ),
-                GazagoButton(
-                  buttonText: '확인',
-                  onTap: () async {
-                    Get.back();
-                  },
-                ),
-              ],
-            ),
-          ),
-        ),
-      ),
-    ),
-  ));
-}
-
-void notOpenCompanyChallenge() {
-  Get.dialog(WillPopScope(
-    onWillPop: () async => false,
-    child: Dialog(
-      insetPadding: EdgeInsets.zero,
-      shadowColor: Colors.transparent,
-      backgroundColor: Colors.transparent,
-      child: Center(
+  Get.dialog(
+    PopScope(
+      canPop: false,
+      child: Dialog(
+        insetPadding: EdgeInsets.zero,
+        shadowColor: Colors.transparent,
+        backgroundColor: Colors.transparent,
         child: Padding(
           padding: EdgeInsets.all(25.0.sp),
           child: Container(
@@ -505,33 +457,26 @@ void notOpenCompanyChallenge() {
               child: Column(
                 mainAxisSize: MainAxisSize.min,
                 children: [
+                  const StyledText(
+                    '회원 정보 확인 요청',
+                    fontWeight: 600,
+                    fontSize: 20,
+                    lineHeight: 28,
+                  ),
                   Padding(
-                    padding: EdgeInsets.only(top: 0.0.sp, bottom: 25.sp),
-                    child: Column(
-                      children: [
-                        const StyledText(
-                          '챌린지 접수 전',
-                          fontWeight: 600,
-                          fontSize: 20,
-                          lineHeight: 28,
-                        ),
-                        Padding(
-                          padding: EdgeInsets.only(top: 15.0.sp),
-                          child: const StyledText(
-                            '챌린지 모집 기간에 다시\n참가해주세요.',
-                            fontWeight: 500,
-                            fontSize: 18,
-                            lineHeight: 26,
-                            textAlign: TextAlign.center,
-                          ),
-                        ),
-                      ],
+                    padding: EdgeInsets.only(top: 20.0.sp, bottom: 30.sp),
+                    child: const StyledText(
+                      '이미 인증된 회원입니다.\n 회원 정보를 다시 입력해주세요.',
+                      fontWeight: 500,
+                      fontSize: 18,
+                      lineHeight: 26,
+                      textAlign: TextAlign.center,
                     ),
                   ),
                   GazagoButton(
-                    buttonText: '홈화면으로 이동',
+                    buttonText: '확인',
                     onTap: () async {
-                      Get.offAllNamed(Routes.home);
+                      Get.back();
                     },
                   ),
                 ],
@@ -541,14 +486,75 @@ void notOpenCompanyChallenge() {
         ),
       ),
     ),
-  ));
+  );
+}
+
+void notOpenCompanyChallenge() {
+  Get.dialog(
+    PopScope(
+      canPop: false,
+      child: Dialog(
+        insetPadding: EdgeInsets.zero,
+        shadowColor: Colors.transparent,
+        backgroundColor: Colors.transparent,
+        child: Center(
+          child: Padding(
+            padding: EdgeInsets.all(25.0.sp),
+            child: Container(
+              decoration: BoxDecoration(
+                color: popupBgColor,
+                borderRadius: BorderRadius.circular(AppDoubleData.regular().numberRadius20),
+              ),
+              child: Padding(
+                padding: EdgeInsets.symmetric(horizontal: 20.0.sp, vertical: 30.0.sp),
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Padding(
+                      padding: EdgeInsets.only(top: 0.0.sp, bottom: 25.sp),
+                      child: Column(
+                        children: [
+                          const StyledText(
+                            '챌린지 접수 전',
+                            fontWeight: 600,
+                            fontSize: 20,
+                            lineHeight: 28,
+                          ),
+                          Padding(
+                            padding: EdgeInsets.only(top: 15.0.sp),
+                            child: const StyledText(
+                              '챌린지 모집 기간에 다시\n참가해주세요.',
+                              fontWeight: 500,
+                              fontSize: 18,
+                              lineHeight: 26,
+                              textAlign: TextAlign.center,
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                    GazagoButton(
+                      buttonText: '홈화면으로 이동',
+                      onTap: () async {
+                        Get.offAllNamed(Routes.home);
+                      },
+                    ),
+                  ],
+                ),
+              ),
+            ),
+          ),
+        ),
+      ),
+    ),
+  );
 }
 
 void closedCompanyChallenge() {
   Get.dialog(
       barrierColor: Colors.black.withOpacity(0.8),
-      WillPopScope(
-        onWillPop: () async => false,
+      PopScope(
+        canPop: false,
         child: Dialog(
           insetPadding: EdgeInsets.zero,
           shadowColor: Colors.transparent,

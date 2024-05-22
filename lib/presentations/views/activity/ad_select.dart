@@ -3,7 +3,7 @@ import 'package:gaza_go/platform/controllers/activity_controller.dart';
 import 'package:get/get.dart';
 
 class AdSelect extends StatelessWidget {
-  const AdSelect({Key? key}) : super(key: key);
+  const AdSelect({super.key});
 
   @override
   Widget build(BuildContext context) {

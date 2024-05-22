@@ -7,7 +7,7 @@ import 'package:get/get.dart';
 import '../../platform/controllers/onboarding_controller.dart';
 
 class OnBoarding extends StatelessWidget {
-  const OnBoarding({Key? key}) : super(key: key);
+  const OnBoarding({super.key});
 
   List<Widget> _getImageSliders(OnBoardingController controller) {
     return controller.imgList
@@ -83,8 +83,8 @@ class OnBoarding extends StatelessWidget {
                 },
                 style: ButtonStyle(
                   alignment: Alignment.centerRight,
-                  foregroundColor: MaterialStateProperty.all(const Color.fromARGB(255, 165, 165, 165)),
-                  padding: MaterialStateProperty.all(EdgeInsets.symmetric(horizontal: 20.sp)),
+                  foregroundColor: WidgetStateProperty.all(const Color.fromARGB(255, 165, 165, 165)),
+                  padding: WidgetStateProperty.all(EdgeInsets.symmetric(horizontal: 20.sp)),
                 ),
                 child: const Text('건너뛰기'),
               ),

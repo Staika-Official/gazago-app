@@ -9,7 +9,7 @@ import 'package:gaza_go/presentations/styles/styled_text.dart';
 import 'package:get/get.dart';
 
 class JoinTerms extends StatelessWidget {
-  const JoinTerms({Key? key}) : super(key: key);
+  const JoinTerms({super.key});
 
   List<Widget> renderTermsList(JoinTermsController controller) {
     return controller.termsList
@@ -89,13 +89,12 @@ class JoinTerms extends StatelessWidget {
   Widget build(BuildContext context) {
     JoinTermsController controller = Get.put(JoinTermsController());
 
-    return WillPopScope(
-      onWillPop: () async {
+    return PopScope(
+      onPopInvoked: (bool didPop) async {
         if (!(controller.platform.value == 'gazago')) {
           Get.find<WalletMasterController>().tabController.animateTo(0);
           Get.back();
         }
-        return true;
       },
       child: DefaultContainer(
         isLeadingShow: true,

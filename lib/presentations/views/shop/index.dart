@@ -3,7 +3,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:gaza_go/presentations/views/shop/shop_items.dart';
 
 class ShopHome extends StatelessWidget {
-  const ShopHome({Key? key}) : super(key: key);
+  const ShopHome({super.key});
 
   @override
   Widget build(BuildContext context) {

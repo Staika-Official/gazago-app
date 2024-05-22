@@ -7,7 +7,7 @@ import 'package:gaza_go/presentations/styles/styled_text.dart';
 import 'package:get/get.dart';
 
 class VerificationCertCode extends StatelessWidget {
-  const VerificationCertCode({Key? key}) : super(key: key);
+  const VerificationCertCode({super.key});
 
   @override
   Widget build(BuildContext context) {

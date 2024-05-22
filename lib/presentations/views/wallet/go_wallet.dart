@@ -10,7 +10,7 @@ import 'package:gaza_go/presentations/views/wallet/go_asset_item_coin.dart';
 import 'package:get/get.dart';
 
 class GoWallet extends StatelessWidget {
-  const GoWallet({Key? key}) : super(key: key);
+  const GoWallet({super.key});
 
   List<Widget> renderAssetsList(WalletMasterController walletMasterController, GoWalletController goWalletController) {
     return walletMasterController.spendingTokenUiList

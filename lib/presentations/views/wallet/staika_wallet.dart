@@ -9,7 +9,7 @@ import 'package:gaza_go/presentations/views/wallet/staika_asset_item_coin.dart';
 import 'package:get/get.dart';
 
 class StaikaWallet extends StatelessWidget {
-  const StaikaWallet({Key? key}) : super(key: key);
+  const StaikaWallet({super.key});
 
   List<Widget> renderCoinAssetList(StaikaWalletController controller) {
     return controller.coinAssetList
@@ -185,7 +185,6 @@ class StaikaWallet extends StatelessWidget {
                                   animate: true,
                                   manualTrigger: true,
                                   controller: (con) {
-                                    print(con);
                                     controller.switchAnimation.value = con;
                                   },
                                   child: SizedBox(

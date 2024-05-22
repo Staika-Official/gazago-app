@@ -15,7 +15,7 @@ import 'package:get/get.dart';
 class SecondaryAppbar extends StatelessWidget implements PreferredSizeWidget {
   final bool isShowBackButton;
   final bool isShowPreferencesButton;
-  const SecondaryAppbar({Key? key, this.isShowBackButton = false, this.isShowPreferencesButton = true}) : super(key: key);
+  const SecondaryAppbar({super.key, this.isShowBackButton = false, this.isShowPreferencesButton = true});
 
   List<Widget> renderWalletItems(WalletMasterController walletMasterController) {
     return walletMasterController.spendingTokenUiList.map((token) {

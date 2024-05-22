@@ -13,14 +13,14 @@ import 'package:get/get.dart';
 import 'package:lottie/lottie.dart';
 
 class CreateWallet extends StatelessWidget {
-  const CreateWallet({Key? key}) : super(key: key);
+  const CreateWallet({super.key});
 
   @override
   Widget build(BuildContext context) {
     CreateWalletController controller = Get.put(CreateWalletController());
 
-    return WillPopScope(
-      onWillPop: () async => false,
+    return PopScope(
+      canPop: false,
       child: DefaultContainer(
         isLeadingShow: false,
         backgroundColor: subBg01Color,

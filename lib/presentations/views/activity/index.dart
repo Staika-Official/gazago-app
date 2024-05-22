@@ -16,7 +16,7 @@ import 'package:simple_animations/animation_builder/custom_animation_builder.dar
 import 'package:simple_animations/movie_tween/movie_tween.dart';
 
 class ActivityHome extends StatelessWidget {
-  const ActivityHome({Key? key}) : super(key: key);
+  const ActivityHome({super.key});
 
   List<Widget> renderStatList(ActivityController controller, context) {
     return controller.statList.map((stat) {

@@ -13,7 +13,7 @@ import 'package:gaza_go/theme/theme.g.dart';
 import 'package:get/get.dart';
 
 class ChallengeInfo extends StatelessWidget {
-  const ChallengeInfo({Key? key}) : super(key: key);
+  const ChallengeInfo({super.key});
 
   @override
   Widget build(BuildContext context) {

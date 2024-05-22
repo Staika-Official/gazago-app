@@ -8,7 +8,7 @@ import 'package:gaza_go/presentations/views/wallet/staika_wallet.dart';
 import 'package:get/get.dart';
 
 class WalletHome extends StatelessWidget {
-  const WalletHome({Key? key}) : super(key: key);
+  const WalletHome({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -18,7 +18,7 @@ class WalletHome extends StatelessWidget {
       backgroundColor: subBg01Color,
       titleText: '지갑',
       child: Column(
-        children: [ 
+        children: [
           Padding(
             padding: EdgeInsets.only(bottom: 20.0.sp, left: 20.sp, right: 20.sp),
             child: Container(
@@ -55,6 +55,8 @@ class WalletHome extends StatelessWidget {
                   height: 20 / 18,
                   letterSpacing: 0.5,
                 ),
+                dividerColor: Colors.transparent,
+                indicatorSize: TabBarIndicatorSize.tab,
                 tabs: const [
                   Tab(
                     text: 'GO 지갑',

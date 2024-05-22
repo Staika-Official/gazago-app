@@ -16,7 +16,7 @@ class ShareAppbar extends StatelessWidget implements PreferredSizeWidget {
   final bool isBeta;
   final bool? isLockButton;
 
-  const ShareAppbar({Key? key, this.titleText, this.isBeta = false, this.isLockButton = false}) : super(key: key);
+  const ShareAppbar({super.key, this.titleText, this.isBeta = false, this.isLockButton = false});
 
   @override
   Size get preferredSize => const Size.fromHeight(kToolbarHeight);
@@ -96,7 +96,8 @@ class ShareAppbar extends StatelessWidget implements PreferredSizeWidget {
                   : Padding(
                       padding: EdgeInsets.only(left: 4.sp),
                       child: IconButton(
-                        onPressed: () => controller.shareChallenge(challengeType: Get.currentRoute.contains('company') ? ChallengeType.companyCrew: ChallengeType.crew, shareSource: ShareSource.shareAppbar),
+                        onPressed: () =>
+                            controller.shareChallenge(challengeType: Get.currentRoute.contains('company') ? ChallengeType.companyCrew : ChallengeType.crew, shareSource: ShareSource.shareAppbar),
                         icon: Platform.isAndroid ? iconHeaderShare : iconHeaderShareIOS,
                         splashRadius: 20.sp,
                         constraints: BoxConstraints(

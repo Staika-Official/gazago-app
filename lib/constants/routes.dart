@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:gaza_go/flavors.dart';
 import 'package:gaza_go/platform/controllers/loading_controller.dart';
 import 'package:gaza_go/platform/middleware/router_middleware.dart';
-import 'package:gaza_go/presentations/components/inAppModalWebView.dart';
+import 'package:gaza_go/presentations/components/in_app_modal_webview.dart';
 import 'package:gaza_go/presentations/views/activity/activity_active.dart';
 import 'package:gaza_go/presentations/views/activity/activity_courses.dart';
 import 'package:gaza_go/presentations/views/activity/challenge_course_detail.dart';
@@ -35,7 +35,7 @@ import 'package:gaza_go/presentations/views/laboratory/laboratory_solana_transfe
 import 'package:gaza_go/presentations/views/leaderboard/index.dart';
 import 'package:gaza_go/presentations/views/loading.dart';
 import 'package:gaza_go/presentations/views/login.dart';
-import 'package:gaza_go/presentations/views/noticeWebview.dart';
+import 'package:gaza_go/presentations/views/notice_webview.dart';
 import 'package:gaza_go/presentations/views/on_boarding.dart';
 import 'package:gaza_go/presentations/views/permissions.dart';
 import 'package:gaza_go/presentations/views/preferences/edit_biometrics.dart';

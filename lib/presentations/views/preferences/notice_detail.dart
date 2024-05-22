@@ -8,7 +8,7 @@ import 'package:gaza_go/presentations/styles/styled_text.dart';
 import 'package:get/get.dart';
 
 class NoticeDetail extends StatelessWidget {
-  const NoticeDetail({Key? key}) : super(key: key);
+  const NoticeDetail({super.key});
 
   @override
   Widget build(BuildContext context) {

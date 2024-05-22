@@ -9,7 +9,7 @@ import 'package:get/get.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 
 class UserExerciseDataLogs extends StatelessWidget {
-  const UserExerciseDataLogs({Key? key}) : super(key: key);
+  const UserExerciseDataLogs({super.key});
 
   List<Widget> renderRequestLogList(List<dynamic> logs) {
     return logs.isNotEmpty

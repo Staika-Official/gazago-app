@@ -12,14 +12,14 @@ class DefaultHeader extends StatelessWidget {
   final VoidCallback? onBackButtonTap;
 
   const DefaultHeader({
-    Key? key,
+    super.key,
     this.isPrevButtonHide,
     this.isLeadingShow,
     this.trailingChild,
     this.titleText,
     this.titleWidget,
     this.onBackButtonTap,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {

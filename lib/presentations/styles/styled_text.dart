@@ -18,7 +18,7 @@ class StyledText extends StatelessWidget {
 
   const StyledText(
     this.text, {
-    Key? key,
+    super.key,
     this.fontFamily = 'Pretendard',
     this.fontSize = 12,
     this.lineHeight = 12,
@@ -31,7 +31,7 @@ class StyledText extends StatelessWidget {
     this.softWrap = true,
     this.decoration = TextDecoration.none,
     this.maxLines,
-  }) : super(key: key);
+  });
 
   FontWeight get getFontWeight {
     FontWeight fw = FontWeight.w400;

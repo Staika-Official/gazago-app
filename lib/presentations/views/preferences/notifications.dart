@@ -5,7 +5,7 @@ import 'package:gaza_go/presentations/styles/colors.dart';
 import 'package:get/get.dart';
 
 class Notifications extends StatelessWidget {
-  const Notifications({Key? key}) : super(key: key);
+  const Notifications({super.key});
 
   @override
   Widget build(BuildContext context) {

@@ -13,7 +13,7 @@ import 'package:gaza_go/presentations/styles/styled_text.dart';
 import 'package:get/get.dart';
 
 class InventoryBadgeDetail extends StatelessWidget {
-  const InventoryBadgeDetail({Key? key}) : super(key: key);
+  const InventoryBadgeDetail({super.key});
 
   List<Widget> renderBadgeList(InventoryController controller) {
     return controller.syntheticBadgeList
@@ -533,13 +533,13 @@ class InventoryBadgeDetail extends StatelessWidget {
 
 class Tile extends StatelessWidget {
   const Tile({
-    Key? key,
+    super.key,
     required this.index,
     required this.imageUrl,
     this.extent,
     this.backgroundColor,
     this.bottomSpace,
-  }) : super(key: key);
+  });
 
   final int index;
   final String imageUrl;

@@ -18,7 +18,7 @@ import 'package:gaza_go/theme/theme.g.dart';
 import 'package:get/get.dart';
 
 class CompanyCrewDetail extends StatelessWidget {
-  const CompanyCrewDetail({Key? key}) : super(key: key);
+  const CompanyCrewDetail({super.key});
 
   Size get preferredSize => const Size.fromHeight(kToolbarHeight);
 
@@ -332,7 +332,7 @@ class CompanyCrewRankingItem extends StatelessWidget {
   final int index;
   final item;
 
-  CompanyCrewRankingItem(
+  const CompanyCrewRankingItem(
     this.index,
     this.item, {
     super.key,

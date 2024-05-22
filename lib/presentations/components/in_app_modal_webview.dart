@@ -6,7 +6,7 @@ import 'package:gaza_go/presentations/styles/styled_text.dart';
 import 'package:get/get.dart';
 
 class InAppModalWebView extends StatelessWidget {
-  const InAppModalWebView({Key? key}) : super(key: key);
+  const InAppModalWebView({super.key});
 
   @override
   Widget build(BuildContext context) {

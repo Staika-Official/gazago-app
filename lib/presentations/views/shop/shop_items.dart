@@ -12,7 +12,7 @@ import 'package:gaza_go/presentations/styles/styled_text.dart';
 import 'package:get/get.dart';
 
 class ShopItems extends StatelessWidget {
-  const ShopItems({Key? key}) : super(key: key);
+  const ShopItems({super.key});
 
   List<Widget> renderItemTabList(ShopController controller) {
     return controller.categoryFilterList
@@ -317,6 +317,12 @@ class ShopItems extends StatelessWidget {
                     width: 2,
                   )),
                 ),
+                tabAlignment: TabAlignment.start,
+                indicatorPadding: EdgeInsets.zero,
+                indicatorSize: TabBarIndicatorSize.tab,
+                dividerColor: Colors.transparent,
+                splashFactory: NoSplash.splashFactory,
+                overlayColor: const WidgetStatePropertyAll(Colors.transparent),
                 tabs: [...renderItemTabList(shopController)],
                 onTap: (index) => shopController.onSelectCategory(shopController.categoryFilterList[index]['value']),
               ),

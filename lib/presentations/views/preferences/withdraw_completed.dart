@@ -7,7 +7,7 @@ import 'package:gaza_go/presentations/styles/styled_text.dart';
 import 'package:get/get.dart';
 
 class WithdrawCompleted extends StatelessWidget {
-  const WithdrawCompleted({Key? key}) : super(key: key);
+  const WithdrawCompleted({super.key});
 
   @override
   Widget build(BuildContext context) {

@@ -7,13 +7,13 @@ import 'package:gaza_go/presentations/styles/styled_text.dart';
 import 'package:get/get.dart';
 
 class LaboratoryKakaoShare extends StatelessWidget {
-  const LaboratoryKakaoShare({Key? key}) : super(key: key);
+  const LaboratoryKakaoShare({super.key});
 
   @override
   Widget build(BuildContext context) {
     DebuggingController debuggingController = Get.find<DebuggingController>();
 
-    List<Widget> _renderChallengeList() {
+    List<Widget> renderChallengeList() {
       return debuggingController.challengesList
           .map(
             (challenge) => RadioListTile(
@@ -39,7 +39,7 @@ class LaboratoryKakaoShare extends StatelessWidget {
                     child: SingleChildScrollView(
                       child: Column(
                         children: [
-                          ..._renderChallengeList(),
+                          ...renderChallengeList(),
                         ],
                       ),
                     ),

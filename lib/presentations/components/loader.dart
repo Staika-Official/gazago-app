@@ -3,7 +3,7 @@ import 'package:gaza_go/platform/controllers/loader_controller.dart';
 import 'package:get/get.dart';
 
 class Loader extends StatelessWidget {
-  const Loader({Key? key}) : super(key: key);
+  const Loader({super.key});
 
   @override
   Widget build(BuildContext context) {

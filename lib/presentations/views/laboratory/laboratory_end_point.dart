@@ -6,7 +6,7 @@ import 'package:gaza_go/presentations/styles/styled_text.dart';
 import 'package:get/get.dart';
 
 class LaboratoryEndPoint extends StatelessWidget {
-  const LaboratoryEndPoint({Key? key}) : super(key: key);
+  const LaboratoryEndPoint({super.key});
 
   @override
   Widget build(BuildContext context) {

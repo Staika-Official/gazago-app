@@ -8,7 +8,7 @@ import 'package:get/get.dart';
 import '../../../constants/routes.dart';
 
 class Laboratory extends StatelessWidget {
-  const Laboratory({Key? key}) : super(key: key);
+  const Laboratory({super.key});
 
   @override
   Widget build(BuildContext context) {

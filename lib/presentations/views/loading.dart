@@ -7,7 +7,7 @@ import 'package:gaza_go/presentations/styles/styled_text.dart';
 import 'package:get/get.dart';
 
 class Loading extends StatelessWidget {
-  const Loading({Key? key}) : super(key: key);
+  const Loading({super.key});
 
   List<Widget> renderGauge(LoadingController controller, elWidth) {
     List<Widget> gaugeList = List.empty(growable: true);

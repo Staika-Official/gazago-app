@@ -18,7 +18,7 @@ class StaikaAssetItemCoin extends StatelessWidget {
   final VoidCallback? onTapButton;
   final String? buttonText;
   final bool showPrice;
-  const StaikaAssetItemCoin({Key? key, required this.asset, this.onTap, this.onTapButton, this.buttonText, this.showPrice = true}) : super(key: key);
+  const StaikaAssetItemCoin({super.key, required this.asset, this.onTap, this.onTapButton, this.buttonText, this.showPrice = true});
 
   @override
   Widget build(BuildContext context) {

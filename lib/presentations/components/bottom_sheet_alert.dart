@@ -14,7 +14,7 @@ class BottomSheetAlert extends StatelessWidget {
   final bool? isNonePaddingOuter;
   final bool? isFullHeight;
 
-  const BottomSheetAlert({Key? key, this.title, this.contentText, this.contentWidget, this.isDangerTitle, this.isNonePaddingOuter, this.isFullHeight, required this.actions}) : super(key: key);
+  const BottomSheetAlert({super.key, this.title, this.contentText, this.contentWidget, this.isDangerTitle, this.isNonePaddingOuter, this.isFullHeight, required this.actions});
 
   @override
   Widget build(BuildContext context) {

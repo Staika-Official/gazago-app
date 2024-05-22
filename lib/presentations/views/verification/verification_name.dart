@@ -9,7 +9,7 @@ import 'package:get/get.dart';
 import '../../../constants/enums.dart';
 
 class VerificationName extends StatelessWidget {
-  const VerificationName({Key? key}) : super(key: key);
+  const VerificationName({super.key});
 
   @override
   Widget build(BuildContext context) {

@@ -11,7 +11,7 @@ import 'package:gaza_go/presentations/styles/colors.dart';
 import 'package:get/get.dart';
 
 class WebView extends StatelessWidget {
-  const WebView({Key? key}) : super(key: key);
+  const WebView({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -29,7 +29,6 @@ class WebView extends StatelessWidget {
         child: SafeArea(
           child: InAppWebView(
             key: webViewController.webViewKey,
-
             initialUrlRequest: URLRequest(url: WebUri(webViewController.linkUrl.value)),
             initialSettings: InAppWebViewSettings(
               transparentBackground: true,
@@ -46,7 +45,6 @@ class WebView extends StatelessWidget {
               await controller.stopLoading();
               return null;
             },
-
             onWebViewCreated: (controller) async {
               // register a JavaScript handler with name "myHandlerName"
               if (Platform.isAndroid) await InAppWebViewController.setWebContentsDebuggingEnabled(true);

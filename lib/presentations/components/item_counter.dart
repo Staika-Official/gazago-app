@@ -10,7 +10,7 @@ class ItemCounter extends StatelessWidget {
   final Function callbackFnc;
   final int maxCount;
 
-  const ItemCounter({Key? key, required this.item, required this.callbackFnc, required this.maxCount}) : super(key: key);
+  const ItemCounter({super.key, required this.item, required this.callbackFnc, required this.maxCount});
 
   @override
   Widget build(BuildContext context) {
@@ -57,7 +57,7 @@ class ItemCounter extends StatelessWidget {
                 ),
                 Padding(
                   padding: EdgeInsets.symmetric(horizontal: 5.0.sp),
-                  child: Container(
+                  child: SizedBox(
                     width: 80.sp,
                     child: Center(
                       child: StyledText(

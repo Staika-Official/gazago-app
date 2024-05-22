@@ -13,14 +13,12 @@ import 'package:gaza_go/presentations/styles/colors.dart';
 import 'package:gaza_go/presentations/styles/icons.dart';
 import 'package:gaza_go/presentations/styles/styled_text.dart';
 
-
-
 class GoAssetItemCoin extends StatelessWidget {
   final AssetTokenBalanceModel asset;
   final bool showPrice;
   final List<WalletAssetsButtonModel> actions;
   final VoidCallback onTap;
-  const GoAssetItemCoin({Key? key, required this.asset, required this.onTap, required this.actions, this.showPrice = true}) : super(key: key);
+  const GoAssetItemCoin({super.key, required this.asset, required this.onTap, required this.actions, this.showPrice = true});
 
   @override
   Widget build(BuildContext context) {
@@ -39,7 +37,7 @@ class GoAssetItemCoin extends StatelessWidget {
       child: InkWell(
         onTap: onTap,
         child: Padding(
-          padding: EdgeInsets.only(bottom:8.0.sp),
+          padding: EdgeInsets.only(bottom: 8.0.sp),
           child: Stack(children: [
             Padding(
               padding: EdgeInsets.symmetric(horizontal: 16.sp),
@@ -62,20 +60,26 @@ class GoAssetItemCoin extends StatelessWidget {
                               radius: 19.sp,
                               foregroundImage: asset.logoUrl != null && asset.logoUrl != ''
                                   ? CachedNetworkImageProvider(
-                                asset.logoUrl!,
-                                headers: imageNetworkHeader,
-                              )
+                                      asset.logoUrl!,
+                                      headers: imageNetworkHeader,
+                                    )
                                   : const Svg('assets/images/common/ico_token_tik.svg') as ImageProvider,
                             ),
                             Padding(
-                              padding: EdgeInsets.only(left:10.0.sp),
-                              child: StyledText(asset.name!, fontSize: 18, lineHeight: 20, fontWeight: 500, letterSpacing: -.1, ),
+                              padding: EdgeInsets.only(left: 10.0.sp),
+                              child: StyledText(
+                                asset.name!,
+                                fontSize: 18,
+                                lineHeight: 20,
+                                fontWeight: 500,
+                                letterSpacing: -.1,
+                              ),
                             ),
                           ],
                         ),
                         Expanded(
                           child: Padding(
-                            padding: EdgeInsets.only(left:10.0.sp),
+                            padding: EdgeInsets.only(left: 10.0.sp),
                             child: FittedBox(
                               alignment: Alignment.centerRight,
                               fit: BoxFit.scaleDown,
@@ -107,18 +111,18 @@ class GoAssetItemCoin extends StatelessWidget {
                                   ),
                                   showPrice
                                       ? Padding(
-                                    padding: EdgeInsets.only(top: 4.sp),
-                                    child: StyledText(
-                                      '\u2248 \$${asset.amount! / pow(10, asset.decimals!)}',
-                                      fontSize: 14,
-                                      lineHeight: 20,
-                                      letterSpacing: -0.5,
-                                      fontWeight: 500,
-                                    ),
-                                  )
+                                          padding: EdgeInsets.only(top: 4.sp),
+                                          child: StyledText(
+                                            '\u2248 \$${asset.amount! / pow(10, asset.decimals!)}',
+                                            fontSize: 14,
+                                            lineHeight: 20,
+                                            letterSpacing: -0.5,
+                                            fontWeight: 500,
+                                          ),
+                                        )
                                       : Container(),
                                   Padding(
-                                    padding: EdgeInsets.only(left:10.0.sp, right: 5.sp),
+                                    padding: EdgeInsets.only(left: 10.0.sp, right: 5.sp),
                                     child: iconArrowRightTriangle,
                                   )
                                 ],
@@ -130,18 +134,17 @@ class GoAssetItemCoin extends StatelessWidget {
                     ),
                   ),
                   Padding(
-                    padding: EdgeInsets.only(bottom:16.0.sp),
+                    padding: EdgeInsets.only(bottom: 16.0.sp),
                     child: Divider(
                       height: 1,
                       thickness: 2.0.sp,
                       color: subBg01Color,
                     ),
                   ),
-                  ...actions.map((item) =>
-                      GestureDetector(
+                  ...actions.map((item) => GestureDetector(
                         onTap: () => item.onTapButton!(),
                         child: Padding(
-                          padding: EdgeInsets.only(bottom:8.0.sp),
+                          padding: EdgeInsets.only(bottom: 8.0.sp),
                           child: Container(
                             width: double.infinity,
                             alignment: Alignment.center,
@@ -157,7 +160,7 @@ class GoAssetItemCoin extends StatelessWidget {
                                 ),
                               ],
                             ),
-                            child:  StyledText(
+                            child: StyledText(
                               item.buttonText,
                               color: Colors.white,
                               fontWeight: 600,
@@ -166,14 +169,10 @@ class GoAssetItemCoin extends StatelessWidget {
                             ),
                           ),
                         ),
-                      )
-                  ).toList(),
-
-
+                      )),
                 ],
               ),
             ),
-
           ]),
         ),
       ),

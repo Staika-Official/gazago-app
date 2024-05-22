@@ -173,8 +173,6 @@ Widget renderParticipateInChallenge() {
       widgets = renderItemEndedElse(challengesDetailController);
     }
   }
-  print('challengeActivationType: $challengeActivationType');
-  print('challengeState: $challengeState');
 
   if (challengeActivationType == 'CREW_COMPANY') {
     if (challengeState == 'READY') {

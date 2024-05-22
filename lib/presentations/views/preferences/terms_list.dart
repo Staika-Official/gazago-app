@@ -7,7 +7,7 @@ import 'package:gaza_go/presentations/styles/styled_text.dart';
 import 'package:get/get.dart';
 
 class TermsList extends StatelessWidget {
-  const TermsList({Key? key}) : super(key: key);
+  const TermsList({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -46,7 +46,7 @@ class TermsListItem extends StatelessWidget {
   final VoidCallback? onTap;
   final String? description;
 
-  const TermsListItem({Key? key, required this.title, this.type = ItemType.functional, this.onTap, this.description}) : super(key: key);
+  const TermsListItem({super.key, required this.title, this.type = ItemType.functional, this.onTap, this.description});
 
   @override
   Widget build(BuildContext context) {

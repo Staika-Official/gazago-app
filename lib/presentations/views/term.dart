@@ -8,7 +8,7 @@ import 'package:gaza_go/presentations/styles/styled_text.dart';
 import 'package:get/get.dart';
 
 class Term extends StatelessWidget {
-  const Term({Key? key}) : super(key: key);
+  const Term({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -48,8 +48,8 @@ class Term extends StatelessWidget {
                         activeColor: skyBlueColor,
                         activeTrackColor: skyBlueColor,
                         inactiveTrackColor: const Color.fromRGBO(120, 120, 128, 0.16),
-                        thumbColor: MaterialStateProperty.all(Colors.white),
-                        overlayColor: MaterialStateProperty.all(Colors.transparent),
+                        thumbColor: WidgetStateProperty.all(Colors.white),
+                        overlayColor: WidgetStateProperty.all(Colors.transparent),
                         value: controller.agreeMarketing.value,
                         onChanged: (val) => controller.toggleSwitch(val),
                       )

@@ -12,7 +12,7 @@ import 'package:gaza_go/presentations/styles/styled_text.dart';
 import 'package:get/get.dart';
 
 class ArchiveHome extends StatelessWidget {
-  const ArchiveHome({Key? key}) : super(key: key);
+  const ArchiveHome({super.key});
 
   List<Widget> renderArchiveList(ArchiveController controller) {
     return controller.archiveList
@@ -191,6 +191,7 @@ class ArchiveHome extends StatelessWidget {
                         )
                       : Container(
                           width: double.infinity,
+                          margin: EdgeInsets.only(top: 20.sp),
                           padding: EdgeInsets.symmetric(vertical: 50.sp),
                           decoration: BoxDecoration(
                             color: popupBgColor,

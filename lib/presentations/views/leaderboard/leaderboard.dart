@@ -19,7 +19,7 @@ import 'package:modal_bottom_sheet/modal_bottom_sheet.dart' as bs;
 import 'package:table_calendar/table_calendar.dart';
 
 class LeaderboardHome extends StatelessWidget {
-  const LeaderboardHome({Key? key}) : super(key: key);
+  const LeaderboardHome({super.key});
 
   Widget showBottomCalender(BuildContext context, LeaderboardController controller) {
     return Container(
@@ -40,7 +40,7 @@ class LeaderboardHome extends StatelessWidget {
                     return Padding(
                       padding: EdgeInsets.only(bottom: 20.sp),
                       child: TableCalendar(
-                        rowHeight: Platform.isIOS ?  85 : 70,
+                        rowHeight: Platform.isIOS ? 85 : 70,
                         daysOfWeekHeight: 30,
                         locale: 'ko-KR',
                         firstDay: controller.firstDay.value!,
@@ -69,7 +69,7 @@ class LeaderboardHome extends StatelessWidget {
                                           if (reward.tik != null)
                                             FittedBox(
                                               fit: BoxFit.scaleDown,
-                                              child:    StyledText(
+                                              child: StyledText(
                                                 '+${formatDecimalPlaces(reward.tik!.toDouble(), 0)}',
                                                 fontSize: 12.sp,
                                                 lineHeight: 16.sp,

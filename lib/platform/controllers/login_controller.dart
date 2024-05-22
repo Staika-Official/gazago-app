@@ -5,6 +5,7 @@ import 'package:adjust_sdk/adjust.dart';
 import 'package:adjust_sdk/adjust_event.dart';
 import 'package:device_info_plus/device_info_plus.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:gaza_go/constants/config.dart';
 import 'package:gaza_go/constants/enums.dart';
@@ -92,7 +93,9 @@ class LoginController extends GetxController {
 
       await FirebaseAuth.instance.signInWithCredential(credential);
       await requestLogin(LoginType.google, credential.idToken!);
-    } catch (e) {}
+    } catch (e, stack) {
+      FirebaseCrashlytics.instance.recordError(e, stack);
+    }
   }
 
   Future<void> signInWithApple() async {
@@ -117,7 +120,9 @@ class LoginController extends GetxController {
 
       await FirebaseAuth.instance.signInWithCredential(credential);
       await requestLogin(LoginType.apple, credential.accessToken!);
-    } catch (e) {}
+    } catch (e, stack) {
+      FirebaseCrashlytics.instance.recordError(e, stack);
+    }
   }
 
   Future<void> getAccountInfo() async {

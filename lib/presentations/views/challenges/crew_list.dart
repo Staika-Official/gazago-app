@@ -10,7 +10,7 @@ import 'package:gaza_go/presentations/styles/styled_text.dart';
 import 'package:get/get.dart';
 
 class CrewList extends StatelessWidget {
-  const CrewList({Key? key}) : super(key: key);
+  const CrewList({super.key});
 
   List<Widget> renderCrewList(ChallengesDetailController controller) {
     return controller.crewList.asMap().entries.map((item) {

@@ -12,7 +12,7 @@ import 'package:get/get.dart';
 
 class InventoryTile extends StatelessWidget {
   const InventoryTile({
-    Key? key,
+    super.key,
     this.id,
     required this.index,
     required this.imageUrl,
@@ -22,7 +22,7 @@ class InventoryTile extends StatelessWidget {
     this.durability,
     this.itemGrade,
     this.badgeId,
-  }) : super(key: key);
+  });
 
   final int index;
   final int? id;
@@ -41,12 +41,12 @@ class InventoryTile extends StatelessWidget {
     final child = Container(
       color: Colors.transparent,
       height: extent,
-      child: InkWell(
+      child: GestureDetector(
         onTap: () {
           if (badgeId != null && badgeId != -1) {
             controller.toBadgeDetail(badgeId!);
           } else {
-            controller.toItemDetail(id!);
+            if (id != null) controller.toItemDetail(id!);
           }
         },
         child: Container(
@@ -276,8 +276,8 @@ class InventoryTile extends StatelessWidget {
 
 class InventoryTilePlaceHolder extends StatelessWidget {
   const InventoryTilePlaceHolder({
-    Key? key,
-  }) : super(key: key);
+    super.key,
+  });
 
   @override
   Widget build(BuildContext context) {

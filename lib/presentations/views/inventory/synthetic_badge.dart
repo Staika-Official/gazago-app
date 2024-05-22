@@ -7,7 +7,7 @@ import 'package:gaza_go/presentations/styles/colors.dart';
 import 'package:get/get.dart';
 
 class SyntheticBadge extends StatelessWidget {
-  const SyntheticBadge({Key? key}) : super(key: key);
+  const SyntheticBadge({super.key});
 
   @override
   Widget build(BuildContext context) {

@@ -9,14 +9,14 @@ import 'package:get/get.dart';
 
 // Todo 웹뷰 통합으로 삭제 예정
 class TaikaPay extends StatelessWidget {
-  const TaikaPay({Key? key}) : super(key: key);
+  const TaikaPay({super.key});
 
   @override
   Widget build(BuildContext context) {
     WalletMasterController walletController = Get.find();
 
-    return WillPopScope(
-      onWillPop: () async => await walletController.getSpendingWalletBalances().then((value) => true),
+    return PopScope(
+      onPopInvoked: (bool didPop) async => await walletController.getSpendingWalletBalances(),
       child: AnnotatedRegion(
         value: SystemUiOverlayStyle.dark,
         child: Container(
@@ -33,7 +33,6 @@ class TaikaPay extends StatelessWidget {
                 javaScriptEnabled: true,
               ),
               onWebViewCreated: (controller) {
-
                 // register a JavaScript handler with name "myHandlerName"
                 controller.addJavaScriptHandler(
                     handlerName: 'app',
