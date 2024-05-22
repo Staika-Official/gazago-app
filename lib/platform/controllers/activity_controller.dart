@@ -1,10 +1,12 @@
 import 'dart:async';
 import 'dart:io';
+import 'dart:math';
 
 import 'package:adjust_sdk/adjust.dart';
 import 'package:adjust_sdk/adjust_event.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:flutter_naver_map/flutter_naver_map.dart';
 import 'package:gaza_go/constants/config.dart';
 import 'package:gaza_go/constants/enums.dart';
@@ -14,6 +16,7 @@ import 'package:gaza_go/platform/controllers/leaderboard_controller.dart';
 import 'package:gaza_go/platform/controllers/loader_controller.dart';
 import 'package:gaza_go/platform/controllers/loading_controller.dart';
 import 'package:gaza_go/platform/controllers/wallet_master_controller.dart';
+import 'package:gaza_go/platform/firebase/cloud_messaging.dart';
 import 'package:gaza_go/platform/helpers/activity_helper.dart';
 import 'package:gaza_go/platform/helpers/activity_mixin.dart';
 import 'package:gaza_go/platform/helpers/alert_helper.dart';
@@ -85,8 +88,11 @@ class ActivityController extends SuperController with ActivityMixin, ChallengeMi
   final RxBool isButtonDisabled = RxBool(false);
   RxList<ChallengeModel> challengeList = RxList.empty();
    RxBool isFetchingCourseList = RxBool(true);
-   RxDouble gpsAccuracySensitive = RxDouble(0.0);
-  RxnInt showGpsAlertCount = RxnInt(0);
+   RxDouble gpsAccuracySensitive = RxDouble(15.0);
+  RxBool isShowGpsAccuracyAlert = RxBool(false);
+  RxnInt isShowGpsAccuracyCount = RxnInt(0);
+  Timer? gpsAccuracyTimer;
+  List gpsNoticeList = ['절전모드 중이라면 해제해주세요.','넓게 트인 야외로 이동해보세요.','지속적으로 GPS 수신이 원활하지 않을 경우, 휴대폰을 껐다 켠 다음 다시 시도해주세요.'];
 
 
   Future<void> initializeExercise() async {
@@ -110,10 +116,30 @@ class ActivityController extends SuperController with ActivityMixin, ChallengeMi
       }
 
       await loadChallenges();
+      gpsAccuracyTimer = Timer.periodic(const Duration(minutes: 10), (timer) async {
+        if(gpsAccuracySensitive.value > 30){
+          showLocalNotificationLowGps();
+        }
+      });
+      gpsAccuracySensitive.stream.listen((event) {
+        print(event);
+        if (event > 30 && isShowGpsAccuracyCount.value! < 1) {
+          showNotGpsSensorAlert(this);
+          isShowGpsAccuracyCount.value = 1;
+          isShowGpsAccuracyAlert.value = true;
+        } else if(event < 30 && isShowGpsAccuracyAlert.value){
+          isShowGpsAccuracyAlert.value = false;
+          Get.back();
+        }
 
+      });
     });
 
     // await initPlatformState();
+  }
+
+  void showLocalNotificationLowGps(){
+    showLocalNotification(notificationType: NotificationType.gpsLow, title: 'gps가 안떠', message: 'gps 확인 좀');
   }
 
   Future<void> refreshController() async {
@@ -771,6 +797,7 @@ class ActivityController extends SuperController with ActivityMixin, ChallengeMi
     locationSubscription ??= Geolocator.getPositionStream(locationSettings: locationSettings).listen((Position position, ) async {
       currentLocation.value = position;
       gpsAccuracySensitive.value = position.accuracy;
+
       isFakeGps.value = position.isMocked;
       print('position : $position');
       print('position.accuracy : ${position.accuracy}');
@@ -1011,6 +1038,13 @@ class ActivityController extends SuperController with ActivityMixin, ChallengeMi
     // adTimer?.cancel();
     // adTimer = null;
     HiveStore.save(key: HiveKey.savedStepInitialized.name, value: false);
+  }
+
+  @override
+  void onClose() {
+    gpsAccuracyTimer?.cancel();
+    gpsAccuracyTimer = null;
+    super.onClose();
   }
 
   @override

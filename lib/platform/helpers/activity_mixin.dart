@@ -28,6 +28,7 @@ import 'package:gaza_go/platform/services/member_service.dart';
 import 'package:gaza_go/platform/stores/hive_store.dart';
 import 'package:gaza_go/presentations/components/alert_ui_list.dart';
 import 'package:gaza_go/presentations/styles/colors.dart';
+import 'package:gaza_go/theme/theme.g.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:get/get.dart';
 import 'package:health/health.dart';
@@ -77,16 +78,16 @@ mixin ActivityMixin {
     switch (exerciseState.value) {
       case ExerciseState.ongoing:
         if (((userState.value.exercise!.type! == ExerciseType.hiking.name ? avgSpeed.value < 0.7 : avgSpeed.value < 1) || avgSpeed.value > 7) || stoppedExercising.value) {
-          color = textRedColor;
+          color = AppColorData.regular().colorTextWarning;
         } else {
-          color = textGreenColor;
+          color = AppColorData.regular().colorTextSuccess;
         }
         break;
       case ExerciseState.paused:
-        color = textYellowColor;
+        color = AppColorData.regular().colorTextSuccess;
         break;
       default:
-        color = Colors.white;
+        color = AppColorData.regular().colorBgWhite;
         break;
     }
     return Rx(color);
@@ -97,16 +98,16 @@ mixin ActivityMixin {
     switch (exerciseState.value) {
       case ExerciseState.ongoing:
         if ((userState.value.exercise!.type! == ExerciseType.hiking.name ? realTimeSpeed.value < 0.7 : realTimeSpeed.value < 1) || realTimeSpeed.value > 7) {
-          color = speedRedColor;
+          color = AppColorData.regular().colorTextWarning;
         } else {
-          color = speedGreenColor;
+          color = AppColorData.regular().colorTextSuccess;
         }
         break;
       case ExerciseState.paused:
-        color = speedYellowColor;
+        color = AppColorData.regular().colorPointYellow;
         break;
       default:
-        color = Colors.white;
+        color = AppColorData.regular().colorBgWhite;
         break;
     }
     return Rx(color);
@@ -535,8 +536,8 @@ mixin ActivityMixin {
           errorCallback: errorHandler,
         );
       } else {
-        // exerciseSteps.value = exerciseSteps.value + 500;
-        // exerciseDistance.value = exerciseDistance.value + 500;
+        // exerciseSteps.value = exerciseSteps.value + 10;
+        // exerciseDistance.value = exerciseDistance.value + 10;
 
         if (!isSameStepCount || wasPaused) {
           HiveStore.save(key: HiveKey.lastUpdatedStepCount.name, value: userExerciseData.value.steps);

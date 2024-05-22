@@ -263,6 +263,7 @@ enum NotificationType {
   staminaDepleted,
   durabilityLow,
   durabilityDepleted,
+  gpsLow,
   normal,
 }
 
@@ -279,8 +280,10 @@ extension NotificationId on NotificationType {
       case NotificationType.durabilityLow:
       case NotificationType.durabilityDepleted:
         return 3;
-      case NotificationType.normal:
+      case NotificationType.gpsLow:
         return 4;
+      case NotificationType.normal:
+        return 5;
     }
   }
 }

@@ -209,7 +209,7 @@ class LoadingController extends GetxController {
 
     print('progressMessage ${progressMessage.value}');
 
-    if (progress.value >= 0.9) {
+    if (progress.value >= .5) {
       timerStop();
       terminateDebugMode();
       print('11111111');

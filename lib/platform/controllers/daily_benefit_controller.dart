@@ -89,10 +89,14 @@ class DailyBenefitController extends GetxController {
   }
 
   Future<bool> requestTrackingPermission() async {
+
     TrackingStatus status = await AppTrackingTransparency.trackingAuthorizationStatus;
-    print("Tracking status: $status");
+
     if (status == TrackingStatus.restricted || status == TrackingStatus.denied){
+      showIOSAdPermissionAlert(this);
       // AppSettings.openAppSettings(type: AppSettingsType.settings);
+    } else if(status == TrackingStatus.notDetermined){
+      // 앱 개인정보보호 및 보안에서 추적을 허용하긴 했음
       showIOSAdPermissionAlert(this);
     } else if(status == TrackingStatus.authorized) {
       return true;

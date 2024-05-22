@@ -63,6 +63,7 @@ class WalletMasterController extends GetxController with SolanaMixin, GetTickerP
   final RxList<ProductDetails> inAppProducts = RxList.empty();
   final Throttling thr = Throttling(duration: const Duration(milliseconds: 1000));
   RxString clickedAssetButton = RxString('');
+  final RxBool isGetFailSpendingWallet = RxBool(false);
 
   RxList<AssetTokenBalanceModel> get allTikUiList {
     List<AssetTokenBalanceModel> balanceUiList = List.empty(growable: true);
@@ -237,7 +238,10 @@ class WalletMasterController extends GetxController with SolanaMixin, GetTickerP
           HiveStore.save(key: HiveKey.isFailureGetSpendingWallet.name, value: true);
           if (Get.currentRoute != Routes.loading) {
             print('getSpendingWalletBalances : $getSpendingWalletBalances');
-            showRefetchGetSpendingWalletAlert();
+            if(!isGetFailSpendingWallet.value){
+              showRefetchGetSpendingWalletAlert();
+            }
+            isGetFailSpendingWallet.value = true;
           }
         });
 
