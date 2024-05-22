@@ -53,6 +53,7 @@ import 'package:gaza_go/presentations/components/item_counter.dart';
 import 'package:gaza_go/presentations/styles/colors.dart';
 import 'package:gaza_go/presentations/styles/icons.dart';
 import 'package:gaza_go/presentations/styles/styled_text.dart';
+import 'package:gaza_go/theme/theme.g.dart';
 import 'package:get/get.dart';
 import 'package:lottie/lottie.dart';
 import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
@@ -1343,7 +1344,7 @@ void itemPurchaseAlert(ShopDetailController controller, double remainMyAsset, tr
                               ),
                               InkWell(
                                 onTap: () {
-                                  if (remainMyAsset - controller.selectedItem.value.price > controller.purchaseItemSumPrice.value) {
+                                  if (remainMyAsset - controller.selectedItem.value.price >= controller.purchaseItemSumPrice.value) {
                                     controller.purchaseItemCount.value = controller.purchaseItemCount.value + 1;
                                   }
                                   return;
@@ -1352,7 +1353,7 @@ void itemPurchaseAlert(ShopDetailController controller, double remainMyAsset, tr
                                   width: 26.sp,
                                   height: 26.sp,
                                   decoration: BoxDecoration(
-                                    color: remainMyAsset - controller.selectedItem.value.price > controller.purchaseItemSumPrice.value ? skyBlueColor : lightGrayColor,
+                                    color: remainMyAsset - controller.selectedItem.value.price >= controller.purchaseItemSumPrice.value ? skyBlueColor : lightGrayColor,
                                     boxShadow: [
                                       BoxShadow(
                                         color: Colors.black,
@@ -1401,7 +1402,7 @@ void itemPurchaseAlert(ShopDetailController controller, double remainMyAsset, tr
               ),
             ],
           ),
-          remainMyAsset - controller.selectedItem.value.price > controller.purchaseItemSumPrice.value
+          remainMyAsset - controller.selectedItem.value.price >= controller.purchaseItemSumPrice.value
               ? Padding(
                   padding: EdgeInsets.only(top: 55.0.sp, bottom: 25.sp),
                   child: const StyledText(
@@ -3950,6 +3951,7 @@ void successChargeStikToTikAlert(GoWalletController controller) {
 }
 
 void sendStikToGoWalletAlert(StaikaWalletController controller, String password) {
+  WalletMasterController walletMasterController = Get.find();
   showAlert(
     allowMultipleBottomSheet: true,
     title: '전송 하시겠습니까?',
@@ -5622,93 +5624,95 @@ void consumerItemUsagePopup(controller, context) {
                           thickness: 2,
                         ),
                       ),
-                      Column(
-                        children: [
-                          Padding(
-                            padding: EdgeInsets.only(bottom: 1.0.sp),
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: [
-                                StyledText(
-                                  controller.selectedType.value == 'STAMINA' ? '회복 후 체력' : '수리 후 내구도',
-                                  fontSize: 17,
-                                  fontWeight: 500,
-                                  lineHeight: 18,
-                                  color: controller.resultStat.value > controller.currentStat.value
-                                      ? controller.resultStat.value > 9999
-                                          ? const Color(0xFFFF2222)
-                                          : skyBlueColor
-                                      : Colors.white,
-                                ),
-                                StyledText(
-                                  formatDecimalPlaces(controller.resultStat.value, 2),
-                                  fontSize: 17,
-                                  fontWeight: 500,
-                                  lineHeight: 18,
-                                  color: controller.resultStat.value > controller.currentStat.value
-                                      ? controller.resultStat.value > 9999
-                                          ? const Color(0xFFFF2222)
-                                          : skyBlueColor
-                                      : Colors.white,
-                                ),
-                              ],
-                            ),
-                          ),
-                          controller.resultStat.value > 9999
-                              ? Padding(
-                                  padding: EdgeInsets.symmetric(vertical: 13.0.sp),
-                                  child: const StyledText(
-                                    '9999 이하로만 회복이 가능 합니다.',
-                                    fontSize: 14,
+                      Container(
+                        child: Column(
+                          children: [
+                            Padding(
+                              padding: EdgeInsets.only(bottom: 1.0.sp),
+                              child: Row(
+                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                children: [
+                                  StyledText(
+                                    controller.selectedType.value == 'STAMINA' ? '회복 후 체력' : '수리 후 내구도',
+                                    fontSize: 17,
                                     fontWeight: 500,
-                                    lineHeight: 14,
-                                    color: Color(0xFFFF2222),
+                                    lineHeight: 18,
+                                    color: controller.resultStat.value > controller.currentStat.value
+                                        ? controller.resultStat.value > 9999
+                                            ? const Color(0xFFFF2222)
+                                            : skyBlueColor
+                                        : Colors.white,
                                   ),
-                                )
-                              : SizedBox(height: 40.sp),
-                          Row(
-                            children: [
-                              Expanded(
-                                child: GazagoButton(
-                                  onTap: () {
-                                    Get.back();
-                                    controller.initStat();
-                                  },
-                                  buttonText: '취소',
-                                  textColor: Colors.white,
-                                  buttonColor: popupBgColor,
+                                  StyledText(
+                                    formatDecimalPlaces(controller.resultStat.value, 2),
+                                    fontSize: 17,
+                                    fontWeight: 500,
+                                    lineHeight: 18,
+                                    color: controller.resultStat.value > controller.currentStat.value
+                                        ? controller.resultStat.value > 9999
+                                            ? const Color(0xFFFF2222)
+                                            : skyBlueColor
+                                        : Colors.white,
+                                  ),
+                                ],
+                              ),
+                            ),
+                            controller.resultStat.value > 9999
+                                ? Padding(
+                                    padding: EdgeInsets.symmetric(vertical: 13.0.sp),
+                                    child: const StyledText(
+                                      '9999 이하로만 회복이 가능 합니다.',
+                                      fontSize: 14,
+                                      fontWeight: 500,
+                                      lineHeight: 14,
+                                      color: Color(0xFFFF2222),
+                                    ),
+                                  )
+                                : SizedBox(height: 40.sp),
+                            Row(
+                              children: [
+                                Expanded(
+                                  child: GazagoButton(
+                                    onTap: () {
+                                      Get.back();
+                                      controller.initStat();
+                                    },
+                                    buttonText: '취소',
+                                    textColor: Colors.white,
+                                    buttonColor: popupBgColor,
+                                  ),
                                 ),
-                              ),
-                              SizedBox(
-                                width: 9.sp,
-                              ),
-                              Expanded(
-                                child: GazagoButton(
-                                  onTap: () {
-                                    if (controller.resultStat.value <= 9999 && controller.totalStat > 0) {
-                                      if (controller.selectedType.value == 'STAMINA') {
-                                        if (controller.exerciseState.value != ExerciseState.ongoing) {
-                                          Get.back();
-                                          showAutoRechargeStaminaAlert(controller);
+                                SizedBox(
+                                  width: 9.sp,
+                                ),
+                                Expanded(
+                                  child: GazagoButton(
+                                    onTap: () {
+                                      if (controller.resultStat.value <= 9999 && controller.totalStat > 0) {
+                                        if (controller.selectedType.value == 'STAMINA') {
+                                          if (controller.exerciseState.value != ExerciseState.ongoing) {
+                                            Get.back();
+                                            showAutoRechargeStaminaAlert(controller);
+                                          } else {
+                                            Get.back();
+                                            controller.confirmRecoveryOrRepairStat(controller.selectedType.value);
+                                          }
                                         } else {
                                           Get.back();
                                           controller.confirmRecoveryOrRepairStat(controller.selectedType.value);
                                         }
-                                      } else {
-                                        Get.back();
-                                        controller.confirmRecoveryOrRepairStat(controller.selectedType.value);
                                       }
-                                    }
-                                    return;
-                                  },
-                                  buttonText: controller.selectedType == 'STAMINA' ? '회복하기' : '수리하기',
-                                  textColor: Colors.black,
-                                  buttonColor: controller.resultStat.value <= 9999 && controller.totalStat > 0 ? skyBlueColor : const Color(0xFF11A4AD),
+                                      return;
+                                    },
+                                    buttonText: controller.selectedType == 'STAMINA' ? '회복하기' : '수리하기',
+                                    textColor: Colors.black,
+                                    buttonColor: controller.resultStat.value <= 9999 && controller.totalStat > 0 ? skyBlueColor : const Color(0xFF11A4AD),
+                                  ),
                                 ),
-                              ),
-                            ],
-                          ),
-                        ],
+                              ],
+                            ),
+                          ],
+                        ),
                       ),
                     ],
                   );
@@ -8067,13 +8071,13 @@ void showIOSAdPermissionAlert(DailyBenefitController controller) {
                                 text: '그림과 같이',
                               ),
                               TextSpan(
-                                text: ' 설정→개인정보 보호 및 보안→\n추적 페이지',
+                                text: ' 설정→가자고 앱→추적 허용을\n',
                                 style: TextStyle(
                                   fontWeight: FontWeight.w700,
                                 ),
                               ),
                               TextSpan(
-                                text: '에서 가자고 앱을 선택해주세요.',
+                                text: '선택해주세요.',
                               ),
                             ],
                           )),
@@ -8093,5 +8097,174 @@ void showIOSAdPermissionAlert(DailyBenefitController controller) {
         )),
       ),
     ),
+  );
+}
+
+void showNotGpsSensor() {
+  ActivityController controller = Get.isRegistered<ActivityController>() ? Get.find<ActivityController>() : Get.put(ActivityController());
+  Get.dialog(PopScope(
+    canPop: false,
+    child: Dialog(
+      alignment: Alignment.center,
+      insetPadding: EdgeInsets.zero,
+      shadowColor: Colors.transparent,
+      backgroundColor: Colors.transparent,
+      child: Padding(
+        padding: EdgeInsets.all(32.0.sp),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Container(
+              decoration: BoxDecoration(
+                color: popupBgColor,
+                borderRadius: BorderRadius.circular(AppDoubleData.regular().numberRadius20),
+              ),
+              child: Padding(
+                padding: EdgeInsets.only(left: 20.0.sp, right: 20.sp, bottom: 32.sp, top: 36.sp),
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    const StyledText(
+                      'GPS 미수신 시 이렇게 해보세요',
+                      fontWeight: 600,
+                      fontSize: 20,
+                      lineHeight: 28,
+                      textAlign: TextAlign.center,
+                    ),
+                    Padding(
+                      padding: EdgeInsets.only(top: 8.sp, bottom: 28.sp),
+                      child: Column(
+                        mainAxisSize: MainAxisSize.min,
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: controller.gpsNoticeList
+                            .asMap()
+                            .entries
+                            .map((e) => Padding(
+                                  padding: EdgeInsets.only(top: 2.0.sp),
+                                  child: Row(
+                                    mainAxisSize: MainAxisSize.min,
+                                    crossAxisAlignment: CrossAxisAlignment.start,
+                                    children: [
+                                      StyledText(
+                                        '${e.key + 1}.',
+                                        fontSize: 16,
+                                        lineHeight: 22,
+                                        fontWeight: 500,
+                                      ),
+                                      Expanded(
+                                        child: StyledText(
+                                          ' ${e.value}',
+                                          fontSize: 16,
+                                          lineHeight: 22,
+                                          fontWeight: 500,
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                ))
+                            .toList(),
+                      ),
+                    ),
+                    Padding(
+                      padding: EdgeInsets.only(top: 0.0.sp),
+                      child: GazagoButton(
+                        buttonText: '확인',
+                        onTap: () {
+                          Get.back();
+                        },
+                      ),
+                    )
+                  ],
+                ),
+              ),
+            ),
+          ],
+        ),
+      ),
+    ),
+  ));
+}
+
+void showNotGpsSensorAlert(ActivityController controller) {
+  showAlert(
+    contentWidget: Padding(
+      padding: EdgeInsets.only(bottom: 32.0.sp),
+      child: Column(
+        children: [
+          iconPopupExclamationMark,
+          Padding(
+            padding: EdgeInsets.only(top: 20.0.sp, bottom: 20.0.sp),
+            child: const StyledText(
+              'GPS 수신이 원활하지 않아\n운동을 기록하기 어려워요',
+              fontWeight: 500,
+              fontSize: 20,
+              lineHeight: 28,
+              textAlign: TextAlign.center,
+            ),
+          ),
+          const StyledText(
+            '1. 절전모드 등 휴대폰 설정에 따라 GPS 수신이 \n원활하지 않을 수 있어요',
+            fontWeight: 500,
+            fontSize: 16,
+            lineHeight: 22,
+            textAlign: TextAlign.center,
+          ),
+          const StyledText(
+            '2. 넓게 트인 야외로 이동해보세요.',
+            fontWeight: 500,
+            fontSize: 16,
+            lineHeight: 22,
+            textAlign: TextAlign.center,
+          ),
+          const StyledText(
+            '3. 지속적으로 GPS 수신이 원활하지 않을 경우\n휴대폰을 껐다가 켠 다음 다시 시도해주세요.',
+            fontWeight: 500,
+            fontSize: 16,
+            lineHeight: 22,
+            textAlign: TextAlign.center,
+          ),
+        ],
+      ),
+    ),
+    actions: [
+      Expanded(
+        child: GazagoButton(
+          onTap: () {
+            controller.isShowGpsAccuracyAlert.value = true;
+            Get.back();
+          },
+          buttonText: '확인',
+          buttonColor: skyBlueColor,
+        ),
+      ),
+    ],
+  );
+}
+
+void requireShowEmailAlert() {
+  showAlert(
+    allowMultipleBottomSheet: true,
+    title: '이메일을 확인할 수 없습니다.',
+    contentWidget: Padding(
+      padding: EdgeInsets.only(top: 20.0.sp, bottom: 32.sp),
+      child: const StyledText(
+        '설정 > [사용자 이름] > iCloud >\n나의 이메일 가리기에서 가자고 앱을 검색하여\n전달 받을 이메일 주소를 활성화한 후\n 다시 시도해 주세요.',
+        fontSize: 16,
+        lineHeight: 23,
+        fontWeight: 500,
+        letterSpacing: .2,
+        textAlign: TextAlign.center,
+      ),
+    ),
+    actions: [
+      Expanded(
+        child: GazagoButton(
+          onTap: () => Get.back(),
+          buttonText: '확인',
+          buttonColor: skyBlueColor,
+        ),
+      ),
+    ],
   );
 }

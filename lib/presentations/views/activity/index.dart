@@ -11,6 +11,7 @@ import 'package:gaza_go/platform/helpers/base_helper.dart';
 import 'package:gaza_go/presentations/styles/colors.dart';
 import 'package:gaza_go/presentations/styles/icons.dart';
 import 'package:gaza_go/presentations/styles/styled_text.dart';
+import 'package:gaza_go/theme/theme.g.dart';
 import 'package:get/get.dart';
 import 'package:simple_animations/animation_builder/custom_animation_builder.dart';
 import 'package:simple_animations/movie_tween/movie_tween.dart';
@@ -22,12 +23,25 @@ class ActivityHome extends StatelessWidget {
     return controller.statList.map((stat) {
       return Padding(
         padding: EdgeInsets.symmetric(
-          vertical: 6.0.sp,
+          vertical: 4.0.sp,
         ),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
-            SizedBox(
+            Container(
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.all(
+                  Radius.circular(100.sp),
+                ),
+                boxShadow: const [
+                  BoxShadow(
+                    color: Colors.black,
+                    offset: Offset(0, 1),
+                    blurRadius: 0,
+                    spreadRadius: 1,
+                  ),
+                ],
+              ),
               height: 42.sp,
               child: Stack(
                 children: [
@@ -46,17 +60,10 @@ class ActivityHome extends StatelessWidget {
                                             width: 2.sp,
                                             color: Colors.black,
                                           ),
-                                          borderRadius: const BorderRadius.all(
-                                            Radius.circular(100),
+                                          borderRadius: BorderRadius.all(
+                                            Radius.circular(100.sp),
                                           ),
-                                          boxShadow: const [
-                                            BoxShadow(
-                                              color: Colors.black,
-                                              offset: Offset(0, 0),
-                                              blurRadius: 0.0,
-                                              spreadRadius: 0.0,
-                                            ),
-                                          ],
+
                                         ),
                                       ),
                                       stat.currentStat > 1.0
@@ -68,7 +75,7 @@ class ActivityHome extends StatelessWidget {
                                                         ? 0
                                                         : 34,
                                                 decoration: BoxDecoration(
-                                                  color: stat.currentStat < 30 ? textRedColor : lightGreenColor,
+                                                  color: stat.currentStat <= 30 ? AppColorData.regular().colorBgWarning : AppColorData.regular().colorPointYellowgreen,
                                                   border: Border.all(
                                                     width: 2.sp,
                                                     color: Colors.black,
@@ -76,14 +83,15 @@ class ActivityHome extends StatelessWidget {
                                                   borderRadius: const BorderRadius.all(
                                                     Radius.circular(100),
                                                   ),
-                                                  boxShadow: [
-                                                    BoxShadow(
-                                                      color: Colors.black.withOpacity(0.5),
-                                                      offset: const Offset(1, 0),
-                                                      blurRadius: 0.0,
-                                                      spreadRadius: 0.0,
-                                                    ),
-                                                  ],
+                                                  // boxShadow: [
+                                                  //   BoxShadow(
+                                                  //     color: Colors.black.withOpacity(0.5),
+                                                  //     offset: const Offset(1, 0),
+                                                  //     blurRadius: 0.0,
+                                                  //     spreadRadius: 0.0,
+                                                  //   ),
+                                                  // ],
+
                                                 ),
                                               );
                                             })
@@ -101,17 +109,18 @@ class ActivityHome extends StatelessWidget {
                                             width: 2,
                                             color: Colors.black,
                                           ),
-                                          borderRadius: const BorderRadius.all(
-                                            Radius.circular(100),
+                                          borderRadius: BorderRadius.all(
+                                            Radius.circular(42.sp),
                                           ),
-                                          boxShadow: const [
-                                            BoxShadow(
-                                              color: Colors.black,
-                                              offset: Offset(1, 0),
-                                              blurRadius: 0.0,
-                                              spreadRadius: 0.0,
-                                            ),
-                                          ],
+                                          // boxShadow: const [
+                                          //   BoxShadow(
+                                          //     color: Colors.black,
+                                          //     offset: Offset(1, 0),
+                                          //     blurRadius: 0.0,
+                                          //     spreadRadius: 0.0,
+                                          //   ),
+                                          // ],
+
                                         ),
                                       ),
                                       stat.currentStat > 1.0
@@ -123,7 +132,7 @@ class ActivityHome extends StatelessWidget {
                                                         ? 0
                                                         : 34,
                                                 decoration: BoxDecoration(
-                                                  color: stat.currentStat <= 30 ? textRedColor : purpleColor,
+                                                  color: stat.currentStat <= 30 ? AppColorData.regular().colorBgWarning : AppColorData.regular().colorPointPurple,
                                                   border: Border.all(
                                                     width: 2,
                                                     color: Colors.black,
@@ -131,14 +140,14 @@ class ActivityHome extends StatelessWidget {
                                                   borderRadius: const BorderRadius.all(
                                                     Radius.circular(100),
                                                   ),
-                                                  boxShadow: [
-                                                    BoxShadow(
-                                                      color: Colors.black.withOpacity(0.5),
-                                                      offset: const Offset(1, 0),
-                                                      blurRadius: 4.0,
-                                                      spreadRadius: 0.0,
-                                                    ),
-                                                  ],
+                                                  // boxShadow: [
+                                                  //   BoxShadow(
+                                                  //     color: Colors.black.withOpacity(0.5),
+                                                  //     offset: const Offset(1, 0),
+                                                  //     blurRadius: 4.0,
+                                                  //     spreadRadius: 0.0,
+                                                  //   ),
+                                                  // ],
                                                 ),
                                               );
                                             })
@@ -159,34 +168,27 @@ class ActivityHome extends StatelessWidget {
                         children: [
                           stat.type == 'STAMINA'
                               ? Padding(
-                                  padding: EdgeInsets.only(left: 13.0.sp, right: 10.sp),
+                                  padding: EdgeInsets.only(left: 17.0.sp, right: 5.sp),
                                   child: iconStamina,
                                 )
                               : Padding(
-                                  padding: EdgeInsets.only(left: 12.0.sp, right: 7.sp),
+                                  padding: EdgeInsets.only(left: 15.0.sp, right: 3.sp),
                                   child: iconShoes,
                                 ),
-                          StyledText(
+                          Text(
                             stat.name,
-                            fontFamily: 'Montserrat',
-                            fontWeight: 800,
-                            fontSize: 15,
-                            lineHeight: 18,
-                            color: stat.currentStat <= 30 ? Colors.white : Colors.black,
+                            style: AppTextStyleData.regular().koBodySemiboldMd.copyWith(
+                                height: 1,
+                                color: stat.currentStat <= 30 ? AppColorData.regular().colorTextPrimary : AppColorData.regular().colorTextInverse
+                            ),
                           ),
                           Padding(
-                            padding: EdgeInsets.only(left: 5.0.sp),
-                            child: Align(
-                              alignment: Alignment.center,
-                              child: Padding(
-                                padding: EdgeInsets.only(left: 5.0.sp),
-                                child: StyledText(
-                                  formatDecimalPlaces(stat.currentStat, 2),
-                                  fontWeight: 800,
-                                  fontSize: 15,
-                                  lineHeight: 15,
-                                  color: stat.currentStat <= 30 ? Colors.white : Colors.black,
-                                ),
+                            padding: EdgeInsets.only(left: 3.0.sp),
+                            child: Text(
+                              formatDecimalPlaces(stat.currentStat, 2),
+                              style: AppTextStyleData.regular().enBodySemiboldMd.copyWith(
+                                  height: 1,
+                                  color: stat.currentStat <= 30 ? AppColorData.regular().colorTextPrimary : AppColorData.regular().colorTextInverse
                               ),
                             ),
                           )
@@ -202,23 +204,23 @@ class ActivityHome extends StatelessWidget {
                                       width: 2.sp,
                                       color: Colors.black,
                                     ),
-                                    borderRadius: const BorderRadius.all(
-                                      Radius.circular(100),
+                                    borderRadius: BorderRadius.all(
+                                      Radius.circular(50.sp),
                                     ),
                                     boxShadow: const [
                                       BoxShadow(
                                         color: Colors.black,
-                                        offset: Offset(1, 2),
-                                        blurRadius: 4.0,
-                                        spreadRadius: 0.0,
+                                        offset: Offset(0, 1),
+                                        blurRadius: 0,
+                                        spreadRadius: 1,
                                       ),
                                     ],
                                   ),
                                   child: CircleAvatar(
-                                    radius: 19.sp,
-                                    backgroundColor: lightGreenColor,
+                                    radius: 18.sp,
+                                    backgroundColor:  AppColorData.regular().colorPointYellowgreen,
                                     child: IconButton(
-                                      icon: iconPlus,
+                                      icon: iconRepairPlus,
                                       onPressed: () => {controller.onClickRepairStat(stat, context)},
                                     ),
                                   ),
@@ -230,23 +232,23 @@ class ActivityHome extends StatelessWidget {
                                       width: 2.sp,
                                       color: Colors.black,
                                     ),
-                                    borderRadius: const BorderRadius.all(
-                                      Radius.circular(100),
+                                    borderRadius: BorderRadius.all(
+                                      Radius.circular(30.sp),
                                     ),
                                     boxShadow: const [
                                       BoxShadow(
                                         color: Colors.black,
-                                        offset: Offset(1, 2),
-                                        blurRadius: 4.0,
-                                        spreadRadius: 0.0,
+                                        offset: Offset(0, 1),
+                                        blurRadius: 0,
+                                        spreadRadius: 1,
                                       ),
                                     ],
                                   ),
                                   child: CircleAvatar(
-                                    radius: 19.sp,
-                                    backgroundColor: purpleColor,
+                                    radius: 18.sp,
+                                    backgroundColor: AppColorData.regular().colorPointPurple,
                                     child: IconButton(
-                                      icon: iconPlus,
+                                      icon: iconRepairPlus,
                                       onPressed: () => {controller.onClickRepairStat(stat, context)},
                                     ),
                                   ),

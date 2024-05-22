@@ -47,6 +47,7 @@ class HomeMenuController extends SuperController {
   final RxBool hasNewChallenge = RxBool(false);
   final Rx<Control> newChallengeControl = Rx(Control.play);
   final RxInt eventListener = RxInt(0);
+  final RxBool isGetFailSpendingWallet = RxBool(false);
 
   final List<PreferredSizeWidget> appbarList = [
     const MainAppbar(),
@@ -86,8 +87,9 @@ class HomeMenuController extends SuperController {
 
   Future<void> handleCheckGetSpendingWallet() async {
     bool isNotLoadWallet = await HiveStore.load(key: HiveKey.isFailureGetSpendingWallet.name) ?? false;
-    if (isNotLoadWallet) {
+    if (isNotLoadWallet && !isGetFailSpendingWallet.value) {
       showRefetchGetSpendingWalletAlert();
+      isGetFailSpendingWallet.value = true;
     }
   }
 

@@ -29,17 +29,17 @@ class BottomSheetAlert extends StatelessWidget {
       child: SizedBox(
         height: isFullHeight! ? MediaQuery.of(context).size.height - 80 : null,
         child: Padding(
-          padding: isNonePaddingOuter! ? const EdgeInsets.all(0) : EdgeInsets.only(top: 30.0.sp, left: 20.sp, right: 20.sp, bottom: 40.sp),
+          padding: isNonePaddingOuter! ? const EdgeInsets.all(0) : EdgeInsets.only(top: 32.0.sp, left: 16.sp, right: 16.sp, bottom: 32.sp),
           child: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
               if (title != null)
                 Padding(
-                  padding: EdgeInsets.only(top: 8.0.sp),
+                  padding: EdgeInsets.only(top: 0.sp),
                   child: StyledText(
                     title!,
-                    fontSize: 22,
-                    lineHeight: 24,
+                    fontSize: 20,
+                    lineHeight: 28,
                     fontWeight: 500,
                     letterSpacing: .2,
                     color: isDangerTitle! ? dangerColor : Colors.white,
@@ -50,10 +50,10 @@ class BottomSheetAlert extends StatelessWidget {
                     padding: EdgeInsets.only(top: 12.0.sp, bottom: 30.sp),
                     child: StyledText(
                       contentText!,
-                      fontSize: 18,
-                      lineHeight: 24,
+                      fontSize: 16,
+                      lineHeight: 23,
                       fontWeight: 500,
-                      letterSpacing: .2,
+                      letterSpacing: -.1,
                       color: lightGrayColor,
                       textAlign: TextAlign.center,
                     ),

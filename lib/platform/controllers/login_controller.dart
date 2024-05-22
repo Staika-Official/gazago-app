@@ -32,6 +32,7 @@ class LoginController extends GetxController {
   @override
   void onInit() async {
     await checkInspectionNotice();
+
     super.onInit();
   }
 
@@ -237,8 +238,10 @@ class LoginController extends GetxController {
       errorCallback: (ErrorResponseDataModel? res) async {
         forceLogout();
         if (res != null) {
-          if (res.errorCode != null && res.errorCode == 'APP_UPDATE_REQUIRED') {
+          if (res.errorCode == 'APP_UPDATE_REQUIRED') {
             showForceUpdateApp();
+          } else if ( res.errorCode == 'MISSING_PARAMETER_EMAIL') {
+            requireShowEmailAlert();
           }
         }
       },

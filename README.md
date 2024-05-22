@@ -36,7 +36,7 @@ flutter build [apk | appbundle] --flavor [dev | prod] [--debug | --release(defau
 flutter build ipa --flavor [dev | prod] --export-method [ad-hoc | app-store(default) | development] -t lib/main_[dev/stage/prod].dart [--debug | --release(default) | --profile]
 ```
 
-### Design Token file gen
+### 디자인 토큰 설치 및 빌드
 
 ```bash
 npm install -g style-dictionary-figma-flutter

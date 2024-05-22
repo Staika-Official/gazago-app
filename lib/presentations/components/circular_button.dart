@@ -38,7 +38,7 @@ class CircularButton extends StatelessWidget {
             color: Colors.black,
           ),
           boxShadow: [
-            BoxShadow(offset: Offset(2.sp, 4.sp), color: Colors.black),
+            BoxShadow(offset: Offset(0.sp, 4.sp), color: Colors.black),
           ],
         ),
         child: child,

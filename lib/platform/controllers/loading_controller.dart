@@ -199,7 +199,7 @@ class LoadingController extends GetxController {
     progress.value = progress.value + 0.5;
     progressMessage.value = message;
 
-    if (progress.value >= 0.9) {
+    if (progress.value >= 0.5) {
       timerStop();
       terminateDebugMode();
       Get.offAllNamed(Routes.home);
