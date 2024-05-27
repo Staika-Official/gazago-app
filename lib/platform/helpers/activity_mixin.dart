@@ -84,7 +84,7 @@ mixin ActivityMixin {
         }
         break;
       case ExerciseState.paused:
-        color = AppColorData.regular().colorTextSuccess;
+        color = AppColorData.regular().colorPointYellow;
         break;
       default:
         color = AppColorData.regular().colorBgWhite;
@@ -657,7 +657,7 @@ mixin ActivityMixin {
 
   void onTapUpStop(TapUpDetails tapUpDetails, {String? source}) {
     // if (source != null && source != 'pendingExerciseDialog') showToastPopup('3초간 눌러야 정지됩니다.');
-    showToastPopup('길게 눌러주세요!');
+    showToastPopup('길게 눌러주세요.');
     initializeStopTimer();
   }
 

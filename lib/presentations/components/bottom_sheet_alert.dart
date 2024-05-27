@@ -3,6 +3,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:gaza_go/presentations/components/gazago_button.dart';
 import 'package:gaza_go/presentations/styles/colors.dart';
 import 'package:gaza_go/presentations/styles/styled_text.dart';
+import 'package:gaza_go/theme/theme.g.dart';
 import 'package:get/get.dart';
 
 class BottomSheetAlert extends StatelessWidget {
@@ -29,33 +30,31 @@ class BottomSheetAlert extends StatelessWidget {
       child: SizedBox(
         height: isFullHeight! ? MediaQuery.of(context).size.height - 80 : null,
         child: Padding(
-          padding: isNonePaddingOuter! ? const EdgeInsets.all(0) : EdgeInsets.only(top: 32.0.sp, left: 16.sp, right: 16.sp, bottom: 32.sp),
+          padding: isNonePaddingOuter! ? const EdgeInsets.all(0) : EdgeInsets.only(top: 32.0.sp, left: 16.sp, right: 16.sp, bottom: 36.sp),
           child: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
               if (title != null)
                 Padding(
                   padding: EdgeInsets.only(top: 0.sp),
-                  child: StyledText(
+                  child: Text(
                     title!,
-                    fontSize: 20,
-                    lineHeight: 28,
-                    fontWeight: 500,
-                    letterSpacing: .2,
-                    color: isDangerTitle! ? dangerColor : Colors.white,
+                    style: AppTextStyleData.regular().koHeadingMediumSm.copyWith(
+                      height: 1,
+                      color: isDangerTitle! ? AppColorData.regular().colorTextWarning : AppColorData.regular().colorTextPrimary,
+                    ),
+
                   ),
                 ),
               contentWidget ??
                   Padding(
-                    padding: EdgeInsets.only(top: 12.0.sp, bottom: 30.sp),
-                    child: StyledText(
+                    padding: EdgeInsets.only(top: 20.0.sp, bottom: 32.sp),
+                    child: Text(
                       contentText!,
-                      fontSize: 16,
-                      lineHeight: 23,
-                      fontWeight: 500,
-                      letterSpacing: -.1,
-                      color: lightGrayColor,
-                      textAlign: TextAlign.center,
+                      style: AppTextStyleData.regular().koBodyMediumLg.copyWith(
+                        color: AppColorData.regular().colorTextPrimary,
+                        height: 1.4,
+                      ),
                     ),
                   ),
               Row(

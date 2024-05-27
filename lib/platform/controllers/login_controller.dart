@@ -246,6 +246,8 @@ class LoginController extends GetxController {
             showForceUpdateApp();
           } else if ( res.errorCode == 'MISSING_PARAMETER_EMAIL') {
             requireShowEmailAlert();
+          } else {
+            showToastPopup(res.errorMessage!);
           }
         }
       },

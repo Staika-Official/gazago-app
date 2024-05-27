@@ -25,7 +25,7 @@ class UaaApi {
   }
 
   static Future<Response> socialLogin(SocialLoginInfoModel loginInfo) async {
-    return await Api.client(serviceUrl: ServiceUrl.uaaService, needsToken: false).post('/sign-in/social', data: loginInfo);
+    return await Api.client(serviceUrl: ServiceUrl.uaaService, needsToken: false, allowCustomErrorHandler: true).post('/sign-in/social', data: loginInfo);
   }
 
   static Future<Response> getAccountInfo() async {
