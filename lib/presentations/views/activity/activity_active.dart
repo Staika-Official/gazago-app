@@ -107,14 +107,19 @@ class ActivityActive extends StatelessWidget {
                       Expanded(
                         child: ClipRRect(
                             child: SizedBox(
-                          child: Stack(
-                            children: [
-                              Container(
-                                decoration: BoxDecoration(
-                                  color: gaugeGrayColor,
-                                  border: Border.all(
-                                    width: 2.sp,
-                                    color: Colors.black,
+                              child: Stack(
+                                children: [
+                                  Container(
+                                    decoration: BoxDecoration(
+                                      color: gaugeGrayColor,
+                                      border: Border.all(
+                                        width: 2.sp,
+                                        color: Colors.black,
+                                      ),
+                                      borderRadius: BorderRadius.all(
+                                        Radius.circular(42.sp),
+                                      ),
+                                    ),
                                   ),
                                   stat.currentStat > 1.0
                                       ? LayoutBuilder(builder: (context, constraints) {
@@ -143,34 +148,7 @@ class ActivityActive extends StatelessWidget {
                                       : Container(),
                                 ],
                               ),
-                              stat.currentStat > 1.0
-                                  ? LayoutBuilder(builder: (context, constraints) {
-                                      return Container(
-                                        width: (stat.currentStat > 20
-                                            ? constraints.maxWidth / (100 / stat.currentStat)
-                                            : stat.currentStat < 2
-                                                ? 0
-                                                : 34),
-                                        decoration: BoxDecoration(
-                                          color: stat.currentStat <= 30
-                                              ? AppColorData.regular().colorBgWarning
-                                              : stat.type == 'STAMINA'
-                                                  ? AppColorData.regular().colorPointYellowgreen
-                                                  : AppColorData.regular().colorPointPurple,
-                                          border: Border.all(
-                                            width: 2.sp,
-                                            color: Colors.black,
-                                          ),
-                                          borderRadius: BorderRadius.all(
-                                            Radius.circular(50.sp),
-                                          ),
-                                        ),
-                                      );
-                                    })
-                                  : Container(),
-                            ],
-                          ),
-                        )),
+                            )),
                       ),
                     ],
                   ),
@@ -773,8 +751,8 @@ class ActivityActive extends StatelessWidget {
                                                                               ),
                                                                             ],
                                                                           ),
-                                                                        ],
-                                                                      ),
+                                                                        ),
+                                                                      ],
                                                                     ),
                                                                   ),
                                                                   Positioned(

@@ -8205,33 +8205,15 @@ void showNotGpsSensorAlert(ActivityController controller) {
               textAlign: TextAlign.center,
             ),
           ),
-<<<<<<< HEAD
-          const StyledText(
-            '1. 절전모드 등 휴대폰 설정에 따라 GPS 수신이 \n원활하지 않을 수 있어요',
-=======
+
           StyledText(
             '1.\n절전모드 등 휴대폰 설정에 따라 GPS 수신이 \n원활하지 않을 수 있어요',
->>>>>>> 7a4bacd9b99df58d199651b71d88a5a16b93fa7f
             fontWeight: 500,
             fontSize: 16,
             lineHeight: 22,
             textAlign: TextAlign.center,
           ),
-<<<<<<< HEAD
-          const StyledText(
-            '2. 넓게 트인 야외로 이동해보세요.',
-            fontWeight: 500,
-            fontSize: 16,
-            lineHeight: 22,
-            textAlign: TextAlign.center,
-          ),
-          const StyledText(
-            '3. 지속적으로 GPS 수신이 원활하지 않을 경우\n휴대폰을 껐다가 켠 다음 다시 시도해주세요.',
-            fontWeight: 500,
-            fontSize: 16,
-            lineHeight: 22,
-            textAlign: TextAlign.center,
-=======
+
           Padding(
             padding: EdgeInsets.only(top:12.0.sp),
             child: StyledText(
@@ -8251,7 +8233,7 @@ void showNotGpsSensorAlert(ActivityController controller) {
               lineHeight: 22,
               textAlign: TextAlign.center,
             ),
->>>>>>> 7a4bacd9b99df58d199651b71d88a5a16b93fa7f
+
           ),
         ],
       ),
