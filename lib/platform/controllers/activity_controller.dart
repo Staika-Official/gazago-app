@@ -111,29 +111,35 @@ class ActivityController extends SuperController with ActivityMixin, ChallengeMi
 
       await loadChallenges();
 
+
       gpsAccuracyTimer = Timer.periodic(const Duration(minutes: 10), (timer) async {
-        if (gpsAccuracySensitive.value > 30) {
+        if(gpsAccuracySensitive.value > 30 && exerciseState.value == ExerciseState.ongoing){
           showLocalNotificationLowGps();
         }
       });
 
       gpsAccuracySensitive.stream.listen((event) {
-        if (event > 30 && isShowGpsAccuracyCount.value! < 1) {
-          showNotGpsSensorAlert(this);
-          isShowGpsAccuracyCount.value = 1;
-          isShowGpsAccuracyAlert.value = true;
-        } else if (event < 30 && isShowGpsAccuracyAlert.value) {
-          isShowGpsAccuracyAlert.value = false;
-          Get.back();
+        if(exerciseState.value == ExerciseState.ongoing){
+          if (event > 30 && isShowGpsAccuracyCount.value! < 1) {
+            showNotGpsSensorAlert(this);
+            showLocalNotificationLowGps();
+            isShowGpsAccuracyCount.value = 1;
+            isShowGpsAccuracyAlert.value = true;
+          } else if(event < 30 && isShowGpsAccuracyAlert.value){
+            isShowGpsAccuracyAlert.value = false;
+            Get.back();
+          }
         }
+
+
       });
     });
 
     // await initPlatformState();
   }
 
-  void showLocalNotificationLowGps() {
-    showLocalNotification(notificationType: NotificationType.gpsLow, title: 'gps가 안떠', message: 'gps 확인 좀');
+  void showLocalNotificationLowGps(){
+    showLocalNotification(notificationType: NotificationType.gpsLow, title: 'GPS 수신이 원활하지 않습니다.', message: '운동 기록이 되지 않고 있습니다.');
   }
 
   Future<void> refreshController() async {
@@ -143,7 +149,7 @@ class ActivityController extends SuperController with ActivityMixin, ChallengeMi
   Future<void> initActivityStatus() async {
     await initializeActivity();
     await loadMakerImages();
-    await getPromotionAdsList();
+    // await getPromotionAdsList();
   }
 
   Future<void> loadMakerImages() async {
@@ -790,6 +796,7 @@ class ActivityController extends SuperController with ActivityMixin, ChallengeMi
     ) async {
       currentLocation.value = position;
       gpsAccuracySensitive.value = position.accuracy;
+      // gpsAccuracySensitive.value = 40;
 
       isFakeGps.value = position.isMocked;
 

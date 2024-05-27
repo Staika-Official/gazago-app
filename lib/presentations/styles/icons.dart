@@ -16,7 +16,7 @@ SvgPicture iconShopFilter = SvgPicture.asset('assets/images/common/ico_item_filt
 SvgPicture iconShopFilterActive = SvgPicture.asset('assets/images/common/ico_item_filter_active.svg', width: 18.sp, height: 16.sp);
 SvgPicture iconShopEmpty = SvgPicture.asset('assets/images/common/ico_shop_list_none.svg', width: 90.sp, height: 90.sp);
 SvgPicture iconSkyBlueCheck = SvgPicture.asset('assets/images/common/ico_check_sky_blue.svg', width: 48.sp, height: 26.sp);
-SvgPicture iconCloseWhite = SvgPicture.asset('assets/images/common/ico_close_white.svg', width: 28.sp, height: 28.sp);
+SvgPicture iconCloseWhite = SvgPicture.asset('assets/images/common/ico_close_white.svg', width: 14.sp, height: 14.sp);
 SvgPicture iconHand = SvgPicture.asset('assets/images/common/ico_hand.svg', width: 65.sp, height: 65.sp);
 SvgPicture iconCircleSkyBlueCheck = SvgPicture.asset('assets/images/common/ico_circle_check_skyblue.svg', width: 40.sp, height: 40.sp);
 SvgPicture iconCircleSkyBlueExclamention = SvgPicture.asset('assets/images/common/ico_circle_exclamention_skyblue.svg', width: 62.sp, height: 62.sp);
@@ -92,6 +92,7 @@ SvgPicture iconActivityInfo = SvgPicture.asset('assets/images/activity/ico_info.
 SvgPicture iconExerciseStop = SvgPicture.asset('assets/images/activity/ico_exercise_stop.svg', width: 21.67.sp, height: 21.67.sp);
 SvgPicture iconRepairPlus = SvgPicture.asset('assets/images/activity/ico_plus.svg', width: 12.sp, height: 12.sp);
 SvgPicture iconPause = SvgPicture.asset('assets/images/activity/ico_pause.svg', width: 26.sp, height: 30.3.sp);
+SvgPicture iconActivityLuck = SvgPicture.asset('assets/images/activity/ico_activity_luck.svg', width: 14.sp, height: 14.sp);
 // archive
 SvgPicture iconArchiveDetailBadge = SvgPicture.asset('assets/images/archive/ico_archive_detail_badge.svg', width: 15.sp, height: 20.sp);
 SvgPicture iconWasteBasket = SvgPicture.asset('assets/images/common/ico_wastebasket.svg', width: 15.sp, height: 20.sp);
@@ -119,6 +120,7 @@ SvgPicture iconStatDurability = SvgPicture.asset('assets/images/inventory/ico_st
 SvgPicture iconStatStamina = SvgPicture.asset('assets/images/inventory/ico_stat_stamina.svg', width: 16.sp, height: 16.sp);
 SvgPicture iconStatGo = SvgPicture.asset('assets/images/inventory/ico_stat_go.svg', width: 16.sp, height: 16.sp);
 SvgPicture iconStatLuck = SvgPicture.asset('assets/images/inventory/ico_stat_luck.svg', width: 16.sp, height: 16.sp);
+
 SvgPicture iconStatDurabilityLight = SvgPicture.asset('assets/images/shop/ico_stat_durability_light.svg', width: 16.sp, height: 16.sp);
 SvgPicture iconStatEtc = SvgPicture.asset('assets/images/shop/ico_stat_etc.svg', width: 16.sp, height: 16.sp);
 //mypage

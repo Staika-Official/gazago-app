@@ -583,7 +583,7 @@ Future<bool> showGalleryPermissionAlert(MyPageController controller) async {
 
 void showEndExerciseAlert(ActivityMixin mixin) {
   showAlert(
-    title: '활동 종료',
+    title: '운동 종료',
     contentText: '지금까지의 기록만 저장됩니다.',
     actions: [
       Expanded(
@@ -600,7 +600,7 @@ void showEndExerciseAlert(ActivityMixin mixin) {
       Expanded(
         child: GazagoButton(
           onTap: () => mixin.endExercise(source: 'showEndExerciseAlert'),
-          buttonText: '활동 종료',
+          buttonText: '종료',
           buttonColor: skyBlueColor,
         ),
       ),
@@ -4639,8 +4639,9 @@ void showRecommendUpdateApp() {
 void showItemTipAlert() {
   Get.dialog(
     barrierColor: Colors.transparent,
-    PopScope(
-      canPop: false,
+      useSafeArea: false,
+    WillPopScope(
+      onWillPop: () async => false,
       child: Material(
         color: Colors.black.withOpacity(0.8),
         child: Padding(
@@ -8188,6 +8189,7 @@ void showNotGpsSensor() {
 
 void showNotGpsSensorAlert(ActivityController controller) {
   showAlert(
+      isScrollControlled: true,
     contentWidget: Padding(
       padding: EdgeInsets.only(bottom: 32.0.sp),
       child: Column(
@@ -8203,13 +8205,19 @@ void showNotGpsSensorAlert(ActivityController controller) {
               textAlign: TextAlign.center,
             ),
           ),
+<<<<<<< HEAD
           const StyledText(
             '1. 절전모드 등 휴대폰 설정에 따라 GPS 수신이 \n원활하지 않을 수 있어요',
+=======
+          StyledText(
+            '1.\n절전모드 등 휴대폰 설정에 따라 GPS 수신이 \n원활하지 않을 수 있어요',
+>>>>>>> 7a4bacd9b99df58d199651b71d88a5a16b93fa7f
             fontWeight: 500,
             fontSize: 16,
             lineHeight: 22,
             textAlign: TextAlign.center,
           ),
+<<<<<<< HEAD
           const StyledText(
             '2. 넓게 트인 야외로 이동해보세요.',
             fontWeight: 500,
@@ -8223,6 +8231,27 @@ void showNotGpsSensorAlert(ActivityController controller) {
             fontSize: 16,
             lineHeight: 22,
             textAlign: TextAlign.center,
+=======
+          Padding(
+            padding: EdgeInsets.only(top:12.0.sp),
+            child: StyledText(
+              '2.\n넓게 트인 야외로 이동해보세요.',
+              fontWeight: 500,
+              fontSize: 16,
+              lineHeight: 22,
+              textAlign: TextAlign.center,
+            ),
+          ),
+          Padding(
+            padding: EdgeInsets.only(top:12.0.sp),
+            child: StyledText(
+              '3.\n지속적으로 GPS 수신이 원활하지 않을 경우\n휴대폰을 껐다가 켠 다음 다시 시도해주세요.',
+              fontWeight: 500,
+              fontSize: 16,
+              lineHeight: 22,
+              textAlign: TextAlign.center,
+            ),
+>>>>>>> 7a4bacd9b99df58d199651b71d88a5a16b93fa7f
           ),
         ],
       ),

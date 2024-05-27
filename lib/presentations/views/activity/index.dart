@@ -42,7 +42,7 @@ class ActivityHome extends StatelessWidget {
                   ),
                 ],
               ),
-              height: 42.sp,
+              height: 36.sp,
               child: Stack(
                 children: [
                   Row(
@@ -178,7 +178,7 @@ class ActivityHome extends StatelessWidget {
                           Text(
                             stat.name,
                             style: AppTextStyleData.regular().koBodySemiboldMd.copyWith(
-                                height: 1,
+                                height: 1.1,
                                 color: stat.currentStat <= 30 ? AppColorData.regular().colorTextPrimary : AppColorData.regular().colorTextInverse
                             ),
                           ),
@@ -187,7 +187,7 @@ class ActivityHome extends StatelessWidget {
                             child: Text(
                               formatDecimalPlaces(stat.currentStat, 2),
                               style: AppTextStyleData.regular().enBodySemiboldMd.copyWith(
-                                  height: 1,
+                                  height: 1.1,
                                   color: stat.currentStat <= 30 ? AppColorData.regular().colorTextPrimary : AppColorData.regular().colorTextInverse
                               ),
                             ),
@@ -201,7 +201,7 @@ class ActivityHome extends StatelessWidget {
                                   decoration: BoxDecoration(
                                     color: gaugeGrayColor,
                                     border: Border.all(
-                                      width: 2.sp,
+                                      width: 1.sp,
                                       color: Colors.black,
                                     ),
                                     borderRadius: BorderRadius.all(
@@ -217,10 +217,11 @@ class ActivityHome extends StatelessWidget {
                                     ],
                                   ),
                                   child: CircleAvatar(
-                                    radius: 18.sp,
+                                    radius: 17.sp,
                                     backgroundColor:  AppColorData.regular().colorPointYellowgreen,
                                     child: IconButton(
                                       icon: iconRepairPlus,
+                                      splashRadius: 17.sp,
                                       onPressed: () => {controller.onClickRepairStat(stat, context)},
                                     ),
                                   ),
@@ -229,11 +230,11 @@ class ActivityHome extends StatelessWidget {
                                   decoration: BoxDecoration(
                                     color: gaugeGrayColor,
                                     border: Border.all(
-                                      width: 2.sp,
+                                      width: 1.sp,
                                       color: Colors.black,
                                     ),
                                     borderRadius: BorderRadius.all(
-                                      Radius.circular(30.sp),
+                                      Radius.circular(50.sp),
                                     ),
                                     boxShadow: const [
                                       BoxShadow(
@@ -245,10 +246,11 @@ class ActivityHome extends StatelessWidget {
                                     ],
                                   ),
                                   child: CircleAvatar(
-                                    radius: 18.sp,
+                                    radius: 17.sp,
                                     backgroundColor: AppColorData.regular().colorPointPurple,
                                     child: IconButton(
                                       icon: iconRepairPlus,
+                                      splashRadius: 17.sp,
                                       onPressed: () => {controller.onClickRepairStat(stat, context)},
                                     ),
                                   ),
