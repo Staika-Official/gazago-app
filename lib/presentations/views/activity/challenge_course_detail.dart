@@ -13,8 +13,10 @@ import 'package:gaza_go/presentations/components/secondary_appbar.dart';
 import 'package:gaza_go/presentations/styles/colors.dart';
 import 'package:gaza_go/presentations/styles/icons.dart';
 import 'package:gaza_go/presentations/styles/styled_text.dart';
+import 'package:gaza_go/theme/theme.g.dart';
 import 'package:get/get.dart';
-import 'package:skeletons/skeletons.dart';
+import 'package:skeletonizer/skeletonizer.dart';
+
 
 class ChallengeCourseDetail extends StatelessWidget {
   const ChallengeCourseDetail({super.key});
@@ -62,194 +64,153 @@ class ChallengeCourseDetail extends StatelessWidget {
                   ),
                   Padding(
                     padding: EdgeInsets.all(20.0.sp),
-                    child: controller.challengeDetails.value.title == null
-                        ? Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              SkeletonLine(
-                                style: SkeletonLineStyle(
-                                  height: 28,
-                                  width: 88,
-                                  borderRadius: BorderRadius.circular(0),
-                                ),
-                              ),
-                              Padding(
-                                padding: EdgeInsets.only(top: 10.0.sp),
-                                child: SkeletonLine(
-                                  style: SkeletonLineStyle(
-                                    height: 20,
-                                    minLength: MediaQuery.of(context).size.width / 2,
-                                    maxLength: MediaQuery.of(context).size.width,
-                                    borderRadius: BorderRadius.circular(0),
-                                  ),
-                                ),
-                              ),
-                              Padding(
-                                padding: EdgeInsets.only(top: 12.0.sp),
-                                child: SkeletonLine(
-                                  style: SkeletonLineStyle(
-                                    height: 14,
-                                    minLength: MediaQuery.of(context).size.width / 4,
-                                    maxLength: MediaQuery.of(context).size.width / 2,
-                                    borderRadius: BorderRadius.circular(0),
-                                  ),
-                                ),
-                              ),
-                              Padding(
-                                padding: EdgeInsets.only(top: 10.0.sp),
-                                child: SkeletonLine(
-                                  style: SkeletonLineStyle(
-                                    height: 14,
-                                    minLength: MediaQuery.of(context).size.width / 4,
-                                    maxLength: MediaQuery.of(context).size.width / 2,
-                                    borderRadius: BorderRadius.circular(0),
-                                  ),
-                                ),
-                              ),
-                            ],
-                          )
-                        : Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              if (controller.challengeDetails.value.subTitle != null || controller.challengeDetails.value.subTitle == '')
-                                Padding(
-                                  padding: EdgeInsets.only(top: 4.sp, bottom: 10.0.sp),
-                                  child: StyledText(
-                                    controller.challengeDetails.value.subTitle!,
-                                    fontSize: 14,
-                                    lineHeight: 14,
-                                    fontWeight: 500,
-                                    letterSpacing: -.1,
-                                    color: lightGrayColor,
-                                  ),
-                                ),
-                              if (controller.challengeDetails.value.title != null)
-                                Padding(
-                                  padding: EdgeInsets.only(bottom: 10.0.sp),
-                                  child: StyledText(
-                                    controller.challengeDetails.value.title!,
-                                    fontSize: 20,
-                                    lineHeight: 25,
-                                    fontWeight: 500,
-                                    letterSpacing: -.1,
-                                  ),
-                                ),
-                              if (controller.challengeDetails.value.limitedPeriod != null && controller.challengeDetails.value.limitedPeriod!)
-                                Row(
-                                  children: [
-                                    StyledText(
-                                      '${formatDateUntilTime(controller.challengeDetails.value.fromDate)} - ${formatDateUntilTime(controller.challengeDetails.value.toDate)}',
-                                      color: lightGrayColor,
-                                      fontWeight: 500,
-                                      fontSize: 12,
+                    child:  Skeletonizer(
+                      enabled: controller.challengeDetails.value.title == null,
+                      textBoneBorderRadius: TextBoneBorderRadius.fromHeightFactor(.2),
+                      effect:  ShimmerEffect(baseColor: Colors.white, highlightColor: AppColorData.regular().colorTextTertiary, duration: Duration(seconds:2)),
+                          child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                if (controller.challengeDetails.value.subTitle != null || controller.challengeDetails.value.subTitle == '')
+                                  Padding(
+                                    padding: EdgeInsets.only(top: 4.sp, bottom: 10.0.sp),
+                                    child: StyledText(
+                                      controller.challengeDetails.value.subTitle!,
+                                      fontSize: 14,
                                       lineHeight: 14,
+                                      fontWeight: 500,
+                                      letterSpacing: -.1,
+                                      color: lightGrayColor,
+                                    ),
+                                  ),
+                                if (controller.challengeDetails.value.title != null)
+                                  Padding(
+                                    padding: EdgeInsets.only(bottom: 10.0.sp),
+                                    child: StyledText(
+                                      controller.challengeDetails.value.title!,
+                                      fontSize: 20,
+                                      lineHeight: 25,
+                                      fontWeight: 500,
                                       letterSpacing: -.1,
                                     ),
-                                    const StyledText(
-                                      ' · ',
-                                      color: lightGrayColor,
-                                      fontWeight: 500,
-                                      fontSize: 12,
-                                      lineHeight: 14,
-                                      letterSpacing: -.1,
-                                    ),
-                                    if (controller.challengeDetails.value.challengeState != null)
+                                  ),
+                                if (controller.challengeDetails.value.limitedPeriod != null && controller.challengeDetails.value.limitedPeriod!)
+                                  Row(
+                                    children: [
                                       StyledText(
-                                        controller.getChallengeStatus(controller.challengeDetails.value.challengeState!),
-                                        color: controller.challengeDetails.value.challengeState == 'READY'
-                                            ? lightGreenColor
-                                            : controller.challengeDetails.value.challengeState == 'IN_PROGRESS'
-                                                ? skyBlueColor
-                                                : lightGrayColor,
+                                        '${formatDateUntilTime(controller.challengeDetails.value.fromDate)} - ${formatDateUntilTime(controller.challengeDetails.value.toDate)}',
+                                        color: lightGrayColor,
                                         fontWeight: 500,
                                         fontSize: 12,
                                         lineHeight: 14,
                                         letterSpacing: -.1,
                                       ),
-                                  ],
-                                ),
-                              Padding(
-                                padding: const EdgeInsets.only(top: 18.0),
-                                child: Row(
-                                  children: [
-                                    if (controller.challengeDetails.value.exerciseTypes != null)
-                                      Row(
-                                        children: [
-                                          ...controller.challengeDetails.value.exerciseTypes!.map(
-                                            (type) => Container(
-                                              decoration: BoxDecoration(
-                                                color: Colors.white,
-                                                border: Border.all(width: 1.sp, color: Colors.black),
-                                                borderRadius: BorderRadius.all(
-                                                  Radius.circular(15.sp),
-                                                ),
-                                              ),
-                                              child: Padding(
-                                                padding: EdgeInsets.symmetric(vertical: 3.0.sp, horizontal: 8.sp),
-                                                child: StyledText(
-                                                  controller.getChallengeExerciseType(type),
-                                                  color: subBg01Color,
-                                                  fontSize: 10,
-                                                  fontWeight: 600,
-                                                  lineHeight: 12,
-                                                ),
-                                              ),
-                                            ),
-                                          )
-                                        ],
-                                      ),
-                                    if (controller.challengeDetails.value.quantity != 0)
                                       const StyledText(
                                         ' · ',
-                                        color: Color(0xffd9d9d9),
+                                        color: lightGrayColor,
                                         fontWeight: 500,
-                                        fontSize: 16,
-                                        lineHeight: 18,
+                                        fontSize: 12,
+                                        lineHeight: 14,
                                         letterSpacing: -.1,
                                       ),
-                                    if (controller.challengeDetails.value.quantity != 0)
-                                      Row(
-                                        children: [
-                                          iconPeople,
-                                          Padding(
-                                            padding: EdgeInsets.only(left: 5.0.sp),
-                                            child: Row(
-                                              children: [
-                                                controller.challengeDetails.value.challengeState == 'READY'
-                                                    ? const StyledText(
-                                                        '모집인원',
-                                                        color: lightGrayColor,
-                                                        fontWeight: 500,
-                                                        fontSize: 12,
-                                                        lineHeight: 13,
-                                                        letterSpacing: -.1,
-                                                      )
-                                                    : StyledText(
-                                                        '${formatDecimalPlaces((controller.challengeDetails.value.soldQuantity ?? 0).toDouble(), 0)}명 /',
-                                                        color: lightGrayColor,
-                                                        fontWeight: 500,
-                                                        fontSize: 12,
-                                                        lineHeight: 13,
-                                                        letterSpacing: -.1,
-                                                      ),
-                                                StyledText(
-                                                  ' ${formatDecimalPlaces(controller.challengeDetails.value.quantity!.toDouble(), 0)}명',
-                                                  color: lightGrayColor,
-                                                  fontWeight: 500,
-                                                  fontSize: 12,
-                                                  lineHeight: 13,
-                                                  letterSpacing: -.1,
+                                      if (controller.challengeDetails.value.challengeState != null)
+                                        StyledText(
+                                          controller.getChallengeStatus(controller.challengeDetails.value.challengeState!),
+                                          color: controller.challengeDetails.value.challengeState == 'READY'
+                                              ? lightGreenColor
+                                              : controller.challengeDetails.value.challengeState == 'IN_PROGRESS'
+                                                  ? skyBlueColor
+                                                  : lightGrayColor,
+                                          fontWeight: 500,
+                                          fontSize: 12,
+                                          lineHeight: 14,
+                                          letterSpacing: -.1,
+                                        ),
+                                    ],
+                                  ),
+                                Padding(
+                                  padding: const EdgeInsets.only(top: 18.0),
+                                  child: Row(
+                                    children: [
+                                      if (controller.challengeDetails.value.exerciseTypes != null)
+                                        Row(
+                                          children: [
+                                            ...controller.challengeDetails.value.exerciseTypes!.map(
+                                              (type) => Container(
+                                                decoration: BoxDecoration(
+                                                  color: Colors.white,
+                                                  border: Border.all(width: 1.sp, color: Colors.black),
+                                                  borderRadius: BorderRadius.all(
+                                                    Radius.circular(15.sp),
+                                                  ),
                                                 ),
-                                              ],
+                                                child: Padding(
+                                                  padding: EdgeInsets.symmetric(vertical: 3.0.sp, horizontal: 8.sp),
+                                                  child: StyledText(
+                                                    controller.getChallengeExerciseType(type),
+                                                    color: subBg01Color,
+                                                    fontSize: 10,
+                                                    fontWeight: 600,
+                                                    lineHeight: 12,
+                                                  ),
+                                                ),
+                                              ),
+                                            )
+                                          ],
+                                        ),
+                                      if (controller.challengeDetails.value.quantity != 0)
+                                        const StyledText(
+                                          ' · ',
+                                          color: Color(0xffd9d9d9),
+                                          fontWeight: 500,
+                                          fontSize: 16,
+                                          lineHeight: 18,
+                                          letterSpacing: -.1,
+                                        ),
+                                      if (controller.challengeDetails.value.quantity != 0)
+                                        Row(
+                                          children: [
+                                            iconPeople,
+                                            Padding(
+                                              padding: EdgeInsets.only(left: 5.0.sp),
+                                              child: Row(
+                                                children: [
+                                                  controller.challengeDetails.value.challengeState == 'READY'
+                                                      ? const StyledText(
+                                                          '모집인원',
+                                                          color: lightGrayColor,
+                                                          fontWeight: 500,
+                                                          fontSize: 12,
+                                                          lineHeight: 13,
+                                                          letterSpacing: -.1,
+                                                        )
+                                                      : StyledText(
+                                                          '${formatDecimalPlaces((controller.challengeDetails.value.soldQuantity ?? 0).toDouble(), 0)}명 /',
+                                                          color: lightGrayColor,
+                                                          fontWeight: 500,
+                                                          fontSize: 12,
+                                                          lineHeight: 13,
+                                                          letterSpacing: -.1,
+                                                        ),
+                                                  StyledText(
+                                                    ' ${formatDecimalPlaces(controller.challengeDetails.value.quantity!.toDouble(), 0)}명',
+                                                    color: lightGrayColor,
+                                                    fontWeight: 500,
+                                                    fontSize: 12,
+                                                    lineHeight: 13,
+                                                    letterSpacing: -.1,
+                                                  ),
+                                                ],
+                                              ),
                                             ),
-                                          ),
-                                        ],
-                                      )
-                                  ],
+                                          ],
+                                        )
+                                    ],
+                                  ),
                                 ),
-                              ),
-                            ],
-                          ),
+                              ],
+                            ),
+                        ),
                   ),
                   const Divider(
                     color: Color(0xFF2E3038),

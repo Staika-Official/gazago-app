@@ -7852,7 +7852,6 @@ void showModalNoticeWebview(context, {String? title, String linkUrl = ''}) {
             initialSettings: InAppWebViewSettings(
               disableContextMenu: true,
               javaScriptEnabled: true,
-              resourceCustomSchemes: ['intent'],
             ),
             onLoadResourceWithCustomScheme: (controller, url) async {
               await controller.stopLoading();
