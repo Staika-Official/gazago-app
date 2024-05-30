@@ -263,7 +263,9 @@ class CompanyChallengeDetail extends StatelessWidget {
                                 width: 2,
                               )),
                             ),
-                            indicatorPadding: EdgeInsets.only(left: 33.sp, right: 33.sp),
+                            indicatorPadding: EdgeInsets.zero,
+                            dividerColor : Colors.transparent,
+                            indicatorSize: TabBarIndicatorSize.tab,
                             labelColor: Colors.white,
                             unselectedLabelColor: const Color(0xFFA5A5A5),
                             labelStyle: TextStyle(

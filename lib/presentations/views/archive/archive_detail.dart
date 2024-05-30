@@ -182,30 +182,37 @@ class ArchiveDetail extends StatelessWidget {
                   color: Colors.grey,
                   child: controller.selectedItem.value.isTwoMonthAgo != null && !controller.selectedItem.value.isTwoMonthAgo!
                       ? NaverMap(
-                          nightModeEnable: true,
+                      onMapReady: (mapController) {
+                        controller.recordMapCreated(mapController, controller.locations);
+                        mapController.
+                      },
+                    options:  NaverMapViewOptions(
+                      nightModeEnable: true,
+                      tiltGesturesEnable: false,
+                      mapType: NMapType.basic,
+                      activeLayerGroups: const [NLayerGroup.mountain],
+                      initialCameraPosition: NCameraPosition(
+                        target: controller.locations.isNotEmpty ? controller.locations.first : const NLatLng(37.5525, 126.9883), zoom: 10,
+                      ),
+                      circles: [
+                        if (controller.selectedItem.value.challengeCourse != null) ...renderCircleOverlays(controller.selectedItem.value.challengeCourse),
+                      ],
+                      markers: [
+                        if (controller.selectedItem.value.challengeCourse != null) ...renderMarkers(controller.selectedItem.value.challengeCourse),
+                      ],
+                      pathOverlays: {
+                        PathOverlay(
+                          PathOverlayId('detail path'),
+                          controller.locations.length > 1 ? controller.locations : [const NLatLng(37.5551, 126.9933), const NLatLng(37.5551, 126.9933)],
+                          width: 3,
+                          color: Colors.red,
+                          // outlineColor: Colors.white,
+                        )
+                      },
+                    ),
+
                           forceGesture: true,
-                          tiltGestureEnable: false,
-                          mapType: MapType.Basic,
-                          activeLayers: const [MapLayer.LAYER_GROUP_MOUNTAIN],
-                          onMapCreated: (mapController) => controller.recordMapCreated(mapController, controller.locations),
-                          initialCameraPosition: CameraPosition(
-                            target: controller.locations.isNotEmpty ? controller.locations.first : const LatLng(37.5525, 126.9883),
-                          ),
-                          circles: [
-                            if (controller.selectedItem.value.challengeCourse != null) ...renderCircleOverlays(controller.selectedItem.value.challengeCourse),
-                          ],
-                          markers: [
-                            if (controller.selectedItem.value.challengeCourse != null) ...renderMarkers(controller.selectedItem.value.challengeCourse),
-                          ],
-                          pathOverlays: {
-                            PathOverlay(
-                              PathOverlayId('detail path'),
-                              controller.locations.length > 1 ? controller.locations : [const LatLng(37.5551, 126.9933), const LatLng(37.5551, 126.9933)],
-                              width: 3,
-                              color: Colors.red,
-                              // outlineColor: Colors.white,
-                            )
-                          },
+
                         )
                       : Container(
                           decoration: BoxDecoration(

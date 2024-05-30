@@ -2,6 +2,7 @@ import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
 
+import 'package:flutter/material.dart';
 import 'package:flutter_naver_map/flutter_naver_map.dart';
 import 'package:flutter_svg_provider/flutter_svg_provider.dart';
 import 'package:gaza_go/constants/routes.dart';
@@ -85,22 +86,30 @@ class ArchiveController extends GetxController with ScrollMixin {
     });
   }
 
-  void recordMapCreated(NaverMapController controller, RxList<LatLng> locations) {
+  void recordMapCreated(NaverMapController controller, RxList<NLatLng> locations) {
     if (locations.length > 1) {
       double highestLat = locations.reduce((previousValue, element) => previousValue.latitude > element.latitude ? previousValue : element).latitude;
       double lowestLat = locations.reduce((previousValue, element) => previousValue.latitude < element.latitude ? previousValue : element).latitude;
       double highestLng = locations.reduce((previousValue, element) => previousValue.longitude > element.longitude ? previousValue : element).longitude;
       double lowestLng = locations.reduce((previousValue, element) => previousValue.longitude < element.longitude ? previousValue : element).longitude;
-
-      controller.moveCamera(
-        CameraUpdate.fitBounds(
-          LatLngBounds(
-            northeast: LatLng(highestLat, highestLng),
-            southwest: LatLng(lowestLat, lowestLng),
+      controller.updateCamera(
+        NCameraUpdate.fitBounds(
+          NLatLngBounds(
+            northEast: NLatLng(highestLat, highestLng),
+            southWest: NLatLng(lowestLat, lowestLng),
           ),
-          padding: 50,
+          padding: EdgeInsets.all(50),
         ),
       );
+      // controller.moveCamera(
+      //   CameraUpdate.fitBounds(
+      //     LatLngBounds(
+      //       northeast: LatLng(highestLat, highestLng),
+      //       southwest: LatLng(lowestLat, lowestLng),
+      //     ),
+      //     padding: 50,
+      //   ),
+      // );
     }
   }
 

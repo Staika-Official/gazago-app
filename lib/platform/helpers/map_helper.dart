@@ -7,42 +7,42 @@ import 'package:gaza_go/platform/models/checkpoint_model.dart';
 import 'package:gaza_go/presentations/styles/colors.dart';
 import 'package:get/get.dart';
 
-List<CircleOverlay> renderCircleOverlays(ChallengeCourseModel? course) {
+List<NCircleOverlay> renderCircleOverlays(ChallengeCourseModel? course) {
   if (course != null) {
-    CircleOverlay startCenterCircle = CircleOverlay(
-      overlayId: 'ChallengeStartCenter${course.id!}',
-      center: LatLng(course.startLat!, course.startLon!),
+    NCircleOverlay startCenterCircle = NCircleOverlay(
+      id: 'ChallengeStartCenter${course.id!}',
+      center: NLatLng(course.startLat!, course.startLon!),
       radius: 9,
       color: skyBlueColor,
     );
 
-    CircleOverlay startOuterCircle = CircleOverlay(
-      overlayId: 'ChallengeStart${course.id!}',
-      center: LatLng(course.startLat!, course.startLon!),
+    NCircleOverlay startOuterCircle = NCircleOverlay(
+      id: 'ChallengeStart${course.id!}',
+      center: NLatLng(course.startLat!, course.startLon!),
       radius: course.startRadius!,
       color: const Color.fromRGBO(14, 230, 243, 0.3),
     );
 
-    CircleOverlay endCenterCircle = CircleOverlay(
-      overlayId: 'ChallengeEndCenter${course.id!}',
-      center: LatLng(course.endLat!, course.endLon!),
+    NCircleOverlay endCenterCircle = NCircleOverlay(
+      id: 'ChallengeEndCenter${course.id!}',
+      center: NLatLng(course.endLat!, course.endLon!),
       radius: 9,
       color: Colors.red,
     );
 
-    CircleOverlay endOuterCircle = CircleOverlay(
-      overlayId: 'ChallengeEnd${course.id!}',
-      center: LatLng(course.endLat!, course.endLon!),
+    NCircleOverlay endOuterCircle = NCircleOverlay(
+      id: 'ChallengeEnd${course.id!}',
+      center: NLatLng(course.endLat!, course.endLon!),
       radius: course.endRadius!,
-      color: Colors.red[300]?.withOpacity(0.3),
+      color: Colors.red[300]!.withOpacity(0.3),
     );
 
-    List<CircleOverlay> renderCheckpoints() {
+    List<NCircleOverlay> renderCheckpoints() {
       if (course.checkpoints != null) {
         return course.checkpoints!
-            .map((checkpoint) => CircleOverlay(
-                  overlayId: 'checkpoint${checkpoint.id!}',
-                  center: LatLng(checkpoint.lat!, checkpoint.lon!),
+            .map((checkpoint) => NCircleOverlay(
+                  id: 'checkpoint${checkpoint.id!}',
+                  center: NLatLng(checkpoint.lat!, checkpoint.lon!),
                   radius: checkpoint.radius!,
                   color: const Color.fromRGBO(14, 230, 243, 0.3),
                 ))
@@ -58,16 +58,16 @@ List<CircleOverlay> renderCircleOverlays(ChallengeCourseModel? course) {
   }
 }
 
-List<Marker> renderMarkers(ChallengeCourseModel? course) {
+List<NMarker> renderMarkers(ChallengeCourseModel? course) {
   ActivityController controller = Get.find<ActivityController>();
   if (course != null) {
-    Marker startMaker = getCustomMarker(markerType: "START", course: course, markerIcon: controller.startMarker);
+    NMarker startMaker = getCustomMarker(markerType: "START", course: course, markerIcon: controller.startMarker);
 
-    Marker endMaker = getCustomMarker(markerType: "END", course: course, markerIcon: controller.startMarker);
+    NMarker endMaker = getCustomMarker(markerType: "END", course: course, markerIcon: controller.startMarker);
 
-    List<Marker> checkpointMarker() {
+    List<NMarker> checkpointMarker() {
       if (course.checkpoints != null && course.checkpoints!.isNotEmpty) {
-        List<Marker> list = List.empty(growable: true);
+        List<NMarker> list = List.empty(growable: true);
         course.checkpoints!.asMap().forEach((index, checkpoint) {
           list.add(getCheckpointMarker(checkpoint, controller.checkpointMarkers[index]));
         });
@@ -83,14 +83,18 @@ List<Marker> renderMarkers(ChallengeCourseModel? course) {
   }
 }
 
-Marker getCustomMarker({required String markerType, required ChallengeCourseModel course, OverlayImage? markerIcon, Function(Marker?, Map<String, int?>)? onMarkerTab}) {
-  Marker startMarker = Marker(
-    markerId: course.id!.toString(),
-    position: LatLng(course.startLat!, course.startLon!),
-    captionText: '시작: ${course.startPointName}',
-    captionColor: skyBlueColor,
-    captionHaloColor: Colors.black,
-    captionTextSize: 16.0.sp,
+NMarker getCustomMarker({required String markerType, required ChallengeCourseModel course, OverlayImage? markerIcon, Function(Marker?, Map<String, int?>)? onMarkerTab}) {
+  NMarker startMarker = NMarker(
+    id: course.id!.toString(),
+    position: NLatLng(course.startLat!, course.startLon!),
+    caption: NOverlayCaption(
+      text: '시작: ${course.startPointName}',
+      color: skyBlueColor,
+      haloColor: Colors.black,
+      textSize: 16.0.sp,
+    ),
+
+
     // subCaptionTextSize: 14.sp,
     // subCaptionText: course.secondName,
     // subCaptionColor: (Platform.isAndroid) ? Colors.white : Colors.black,
