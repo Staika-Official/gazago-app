@@ -29,18 +29,18 @@ SvgPicture iconInputWarning = SvgPicture.asset('assets/images/common/ico_input_w
 SvgPicture iconInputClear = SvgPicture.asset('assets/images/common/ico_input_clear.svg', width: 14.sp, height: 14.sp);
 SvgPicture iconPopupExclamationMark = SvgPicture.asset('assets/images/common/ico_popup_circle_exclamention.svg', width: 33.sp, height: 33.sp);
 // Bottom Navigation Icon
-SvgPicture iconMenuHome = SvgPicture.asset('assets/images/common/ico_menu_home.svg', width: 20.5.sp, height: 20.sp);
-SvgPicture iconMenuHomeActive = SvgPicture.asset('assets/images/common/ico_menu_home_active.svg', width: 20.5.sp, height: 20.sp);
+SvgPicture iconMenuHome = SvgPicture.asset('assets/images/common/ico_menu_home.svg', width: 20.5.sp, height: 20.5.sp);
+SvgPicture iconMenuHomeActive = SvgPicture.asset('assets/images/common/ico_menu_home_active.svg', width: 20.5.sp, height: 20.5.sp);
 SvgPicture iconMenuArchive = SvgPicture.asset('assets/images/common/ico_menu_archive.svg', width: 27.sp, height: 17.sp);
 SvgPicture iconMenuArchiveActive = SvgPicture.asset('assets/images/common/ico_menu_archive_active.svg', width: 27.sp, height: 17.sp);
-SvgPicture iconMenuItems = SvgPicture.asset('assets/images/common/ico_menu_items.svg', width: 30.sp, height: 30.sp);
-SvgPicture iconMenuItemsActive = SvgPicture.asset('assets/images/common/ico_menu_items_active.svg', width: 30.sp, height: 30.sp);
-SvgPicture iconMenuRanking = SvgPicture.asset('assets/images/common/ico_menu_ranking.svg', width: 22.sp, height: 19.sp);
-SvgPicture iconMenuRankingActive = SvgPicture.asset('assets/images/common/ico_menu_ranking_active.svg', width: 22.sp, height: 19.sp);
-SvgPicture iconMenuShop = SvgPicture.asset('assets/images/common/ico_menu_shop.svg', width: 24.sp, height: 24.sp);
-SvgPicture iconMenuShopActive = SvgPicture.asset('assets/images/common/ico_menu_shop_active.svg', width: 24.sp, height: 24.sp);
-SvgPicture iconMenuChallenges = SvgPicture.asset('assets/images/common/ico_menu_challenges.svg', width: 30.sp, height: 30.sp);
-SvgPicture iconMenuChallengesActive = SvgPicture.asset('assets/images/common/ico_menu_challenges_active.svg', width: 30.sp, height: 30.sp);
+SvgPicture iconMenuItems = SvgPicture.asset('assets/images/common/ico_menu_items.svg', width: 23.3.sp, height: 23.3.sp);
+SvgPicture iconMenuItemsActive = SvgPicture.asset('assets/images/common/ico_menu_items_active.svg', width: 23.3.sp, height: 23.3.sp);
+SvgPicture iconMenuRanking = SvgPicture.asset('assets/images/common/ico_menu_ranking.svg', width: 23.3.sp, height: 21.sp);
+SvgPicture iconMenuRankingActive = SvgPicture.asset('assets/images/common/ico_menu_ranking_active.svg', width: 23.3.sp, height: 21.sp);
+SvgPicture iconMenuShop = SvgPicture.asset('assets/images/common/ico_menu_shop.svg', width: 22.4.sp, height: 24.2.sp);
+SvgPicture iconMenuShopActive = SvgPicture.asset('assets/images/common/ico_menu_shop_active.svg', width: 22.4.sp, height: 24.2.sp);
+SvgPicture iconMenuChallenges = SvgPicture.asset('assets/images/common/ico_menu_challenges.svg', width: 18.76.sp, height: 24.15.sp);
+SvgPicture iconMenuChallengesActive = SvgPicture.asset('assets/images/common/ico_menu_challenges_active.svg', width: 18.76.sp, height: 24.15.sp, );
 
 // Login
 SvgPicture iconLoginApple = SvgPicture.asset('assets/images/login/ico_apple.svg', width: 11.sp, height: 14.sp);
@@ -67,7 +67,9 @@ SvgPicture iconArchiveDistanceDetail = SvgPicture.asset('assets/images/archive/i
 SvgPicture iconArchiveStepsDetail = SvgPicture.asset('assets/images/archive/ico_archive_steps.svg', width: 20.sp, height: 20.sp);
 
 //activity
-SvgPicture iconActivityTokenGo = SvgPicture.asset('assets/images/activity/ico_activity_token_go.svg', width: 41.84.sp, height: 43.sp);
+SvgPicture iconDailyMission = SvgPicture.asset('assets/images/activity/ico_daily_mission.svg', width: 40.sp, height: 40.sp);
+SvgPicture iconCollection = SvgPicture.asset('assets/images/activity/ico_collection.svg', width: 40.sp, height: 40.sp);
+SvgPicture iconActivityTokenGo = SvgPicture.asset('assets/images/activity/ico_activity_token_go.svg', width: 33.33.sp, height: 33.33.sp);
 SvgPicture iconActivityStoryWatch = SvgPicture.asset('assets/images/activity/ico_activity_story_watch.svg', width: 19.sp, height: 21.sp);
 SvgPicture iconActivityStoryDistance = SvgPicture.asset('assets/images/activity/ico_activity_story_distance.svg', width: 14.5.sp, height: 13.44.sp);
 SvgPicture iconActivityStorySteps = SvgPicture.asset('assets/images/activity/ico_activity_story_steps.svg', width: 21.74.sp, height: 24.sp);
