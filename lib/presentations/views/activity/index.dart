@@ -529,67 +529,72 @@ class ActivityHome extends StatelessWidget {
                               ),
                               SizedBox(width: 10.sp,),
                               Expanded(
-                                child: Container(
-                                  decoration: BoxDecoration(
-                                    color: AppColorData
-                                        .regular()
-                                        .colorBgSecondary,
-                                    borderRadius: BorderRadius.all(
-                                      Radius.circular(AppDoubleData
+                                child: InkWell(
+                                  onTap: (){
+                                    Get.toNamed(Routes.collectionHome);
+                                  },
+                                  child: Container(
+                                    decoration: BoxDecoration(
+                                      color: AppColorData
                                           .regular()
-                                          .numberRadius12),
+                                          .colorBgSecondary,
+                                      borderRadius: BorderRadius.all(
+                                        Radius.circular(AppDoubleData
+                                            .regular()
+                                            .numberRadius12),
+                                      ),
                                     ),
-                                  ),
-                                  child: Padding(
-                                    padding: EdgeInsets.all(12.0.sp),
-                                    child: Column(
-                                      mainAxisSize: MainAxisSize.max,
-                                      crossAxisAlignment: CrossAxisAlignment.start,
-                                      children: [
-                                        Text(
-                                          '컬렉션',
-                                          style: AppTextStyleData
-                                              .regular()
-                                              .enBodyMediumLg
-                                              .copyWith(
-                                            color: AppColorData
+                                    child: Padding(
+                                      padding: EdgeInsets.all(12.0.sp),
+                                      child: Column(
+                                        mainAxisSize: MainAxisSize.max,
+                                        crossAxisAlignment: CrossAxisAlignment.start,
+                                        children: [
+                                          Text(
+                                            '컬렉션',
+                                            style: AppTextStyleData
                                                 .regular()
-                                                .colorTextPrimary,
-                                            fontWeight: FontWeight.w400,
+                                                .enBodyMediumLg
+                                                .copyWith(
+                                              color: AppColorData
+                                                  .regular()
+                                                  .colorTextPrimary,
+                                              fontWeight: FontWeight.w400,
+                                            ),
                                           ),
-                                        ),
-                                        Padding(
-                                          padding: EdgeInsets.only(top: 4.0.sp),
-                                          child: Row(
-                                            mainAxisSize: MainAxisSize.max,
-                                            crossAxisAlignment: CrossAxisAlignment.start,
-                                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                            children: [
-                                              Expanded(
-                                                child: FittedBox(
-                                                  fit: BoxFit.scaleDown,
-                                                  alignment: Alignment.centerLeft,
-                                                  child: Text(
-                                                    '재료를 모아\n리워드 받기!',
-                                                    style: AppTextStyleData
-                                                        .regular()
-                                                        .enBodyMediumMd
-                                                        .copyWith(
-                                                      color: AppColorData
+                                          Padding(
+                                            padding: EdgeInsets.only(top: 4.0.sp),
+                                            child: Row(
+                                              mainAxisSize: MainAxisSize.max,
+                                              crossAxisAlignment: CrossAxisAlignment.start,
+                                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                              children: [
+                                                Expanded(
+                                                  child: FittedBox(
+                                                    fit: BoxFit.scaleDown,
+                                                    alignment: Alignment.centerLeft,
+                                                    child: Text(
+                                                      '재료를 모아\n리워드 받기!',
+                                                      style: AppTextStyleData
                                                           .regular()
-                                                          .colorTextSecondary,
-                                                      fontWeight: FontWeight.w400,
+                                                          .enBodyMediumMd
+                                                          .copyWith(
+                                                        color: AppColorData
+                                                            .regular()
+                                                            .colorTextSecondary,
+                                                        fontWeight: FontWeight.w400,
+                                                      ),
                                                     ),
                                                   ),
                                                 ),
-                                              ),
-                                              iconCollection
-                                            ],
+                                                iconCollection
+                                              ],
+                                            ),
                                           ),
-                                        ),
 
 
-                                      ],
+                                        ],
+                                      ),
                                     ),
                                   ),
                                 ),

@@ -16,6 +16,7 @@ import 'package:gaza_go/presentations/views/challenges/challenge_detail.dart';
 import 'package:gaza_go/presentations/views/challenges/company_challenge_detail.dart';
 import 'package:gaza_go/presentations/views/challenges/company_crew_detail.dart';
 import 'package:gaza_go/presentations/views/challenges/crew_detail.dart';
+import 'package:gaza_go/presentations/views/collection/index.dart';
 import 'package:gaza_go/presentations/views/daily_benefits.dart';
 import 'package:gaza_go/presentations/views/debugging/position_raw_data_logs.dart';
 import 'package:gaza_go/presentations/views/debugging/request_info.dart';
@@ -140,6 +141,7 @@ class Routes {
   static const companyCrewDetail = '/company_crew_detail';
   static const dailyBenefits = '/daily_benefits';
   static const inAppModalWebView = '/modal_webview';
+  static const collectionHome = '/collection';
 
   static List<GetPage> pages = [
     stepPage(name: Routes.login, page: const Login()),
@@ -217,6 +219,7 @@ class Routes {
     stepPage(name: Routes.dailyBenefits, page: const DailyBenefits()),
     stepPage(name: Routes.dailyBenefits, page: DailyBenefits()),
     stepPage(name: Routes.inAppModalWebView, page: const InAppModalWebView()),
+    stepPage(name: Routes.collectionHome, page: const CollectionHome()),
   ];
 }
 
