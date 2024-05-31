@@ -165,7 +165,7 @@ class Home extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    Get.put(NoticePopupController());
+
     Get.put(DailyBenefitController());
     HomeMenuController controller = Get.put(HomeMenuController());
 

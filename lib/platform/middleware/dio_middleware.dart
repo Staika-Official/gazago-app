@@ -62,7 +62,7 @@ class Api {
       'showLoading': showLoading,
     };
 
-    String headerLang = getx.Get.locale!.languageCode == 'ko' ? 'ko-KR' : 'en-US';
+    String headerLang = getx.Get.locale?.languageCode == 'ko' ? 'ko-KR' : 'en-US';
     _dio.options.headers['Accept-Language'] = headerLang;
 
     if (needsToken) {
