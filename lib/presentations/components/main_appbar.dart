@@ -17,7 +17,7 @@ class MainAppbar extends StatelessWidget implements PreferredSizeWidget {
 
   @override
   Widget build(BuildContext context) {
-    NoticePopupController controller = Get.isRegistered<NoticePopupController>() ? Get.find<NoticePopupController>() : Get.put(NoticePopupController());
+    NoticePopupController controller = Get.put(NoticePopupController(), permanent: true);
     WalletMasterController walletMasterController =  Get.isRegistered<WalletMasterController>() ? Get.find<WalletMasterController>() : Get.put(WalletMasterController());
 
     return AppBar(
