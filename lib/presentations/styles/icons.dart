@@ -28,6 +28,8 @@ SvgPicture iconRefresh = SvgPicture.asset('assets/images/ico_refresh.svg', width
 SvgPicture iconInputWarning = SvgPicture.asset('assets/images/common/ico_input_warning_red.svg', width: 9.sp, height: 9.sp);
 SvgPicture iconInputClear = SvgPicture.asset('assets/images/common/ico_input_clear.svg', width: 14.sp, height: 14.sp);
 SvgPicture iconPopupExclamationMark = SvgPicture.asset('assets/images/common/ico_popup_circle_exclamention.svg', width: 33.sp, height: 33.sp);
+SvgPicture iconRightLinkArrow = SvgPicture.asset('assets/images/common/ico_right_link_arrow.svg', width: 16.sp, height: 16.sp);
+SvgPicture iconCheckGetAble = SvgPicture.asset('assets/images/common/ico_check_getable.svg', width: 18.82.sp, height: 13.92.sp);
 // Bottom Navigation Icon
 SvgPicture iconMenuHome = SvgPicture.asset('assets/images/common/ico_menu_home.svg', width: 20.5.sp, height: 20.5.sp);
 SvgPicture iconMenuHomeActive = SvgPicture.asset('assets/images/common/ico_menu_home_active.svg', width: 20.5.sp, height: 20.5.sp);
