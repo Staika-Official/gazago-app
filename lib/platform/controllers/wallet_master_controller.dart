@@ -245,7 +245,7 @@ class WalletMasterController extends GetxController with SolanaMixin, GetTickerP
           }
         });
 
-    if (Get.isRegistered<LoadingController>()) Get.find<LoadingController>().updateProgress("서비스를 위해 정보를 불러오는 중입니다.");
+    // if (Get.isRegistered<LoadingController>()) Get.find<LoadingController>().updateProgress("서비스를 위해 정보를 불러오는 중입니다.");
   }
 
   Future<void> getSpendingWalletTransactions(AssetTokenBalanceModel asset) async {
