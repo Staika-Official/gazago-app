@@ -22,7 +22,7 @@ publish_to: 'none' # Remove this line if you wish to publish to pub.dev
 
 
 
-version: 1.2.58+269
+version: 1.2.59+271
 
 
 
@@ -193,6 +193,7 @@ flutter:
     - assets/images/shop/
     - assets/images/maintenance/
     - assets/images/challenges/
+    - assets/images/collection/
     - assets/lottie/
     - assets/audio/
     - assets/design/

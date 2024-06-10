@@ -4,6 +4,7 @@ import 'package:gaza_go/platform/apis/badge.dart';
 import 'package:gaza_go/platform/apis/collection.dart';
 import 'package:gaza_go/platform/models/collection_model.dart';
 import 'package:gaza_go/platform/models/error_response_data_model.dart';
+import 'package:gaza_go/platform/models/gathering_condition_model.dart';
 import 'package:gaza_go/platform/models/inventory_badge_list_model.dart';
 import 'package:gaza_go/platform/models/inventory_badge_model.dart';
 import 'package:gaza_go/platform/models/user_badges_summaries_model.dart';
@@ -49,6 +50,15 @@ class CollectionService {
         res.data.forEach((item) => badges.add(UserBadgesSummariesModel.fromJson(item)));
       }
       successCallback(badges);
+    } else {
+      if (errorCallback != null) errorCallback(res.data != null ? ErrorResponseDataModel.fromJson(res.data) : ErrorResponseDataModel());
+    }
+  }
+
+  static Future<void> getCollectionReward(int gatheringId, {required Function successCallback, Function? errorCallback}) async {
+    Response res = await CollectionApi.getCollectionReward(gatheringId, userId!);
+    if (res.statusCode == 201) {
+      successCallback(GatheringConditionModel.fromJson(res.data));
     } else {
       if (errorCallback != null) errorCallback(res.data != null ? ErrorResponseDataModel.fromJson(res.data) : ErrorResponseDataModel());
     }

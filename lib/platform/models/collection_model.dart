@@ -18,6 +18,7 @@ class CollectionModel {
   GatheringConditionModel gatheringReward;
   bool alreadyIssued;
   bool? getAble;
+  int? completeQuantity;
 
   CollectionModel({
     required this.id,
@@ -33,6 +34,7 @@ class CollectionModel {
     required this.gatheringReward,
     required this.alreadyIssued,
     this.getAble,
+    this.completeQuantity,
   });
 
   factory CollectionModel.fromJson(Map<String, dynamic> json) => _$CollectionModelFromJson(json);

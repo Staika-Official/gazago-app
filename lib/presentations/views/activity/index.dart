@@ -5,9 +5,11 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:gaza_go/constants/enums.dart';
 import 'package:gaza_go/constants/routes.dart';
 import 'package:gaza_go/platform/controllers/activity_controller.dart';
+import 'package:gaza_go/platform/controllers/collection_controller.dart';
 import 'package:gaza_go/platform/controllers/daily_benefit_controller.dart';
 import 'package:gaza_go/platform/helpers/alert_helper.dart';
 import 'package:gaza_go/platform/helpers/base_helper.dart';
+import 'package:gaza_go/platform/stores/hive_store.dart';
 import 'package:gaza_go/presentations/styles/colors.dart';
 import 'package:gaza_go/presentations/styles/icons.dart';
 import 'package:gaza_go/presentations/styles/styled_text.dart';
@@ -298,15 +300,7 @@ class ActivityHome extends StatelessWidget {
   Widget build(BuildContext context) {
     ActivityController controller = Get.find();
     DailyBenefitController dailyBenefitController = Get.isRegistered<DailyBenefitController>() ? Get.find<DailyBenefitController>() : Get.put(DailyBenefitController());
-    var challengeMovie = MovieTween()
-      ..scene(begin: const Duration(seconds: 1), duration: const Duration(seconds: 2))
-          .thenTween('width', Tween<double>(begin: 70.sp, end: 250.sp), duration: const Duration(milliseconds: 300), curve: Curves.easeOut)
-          .tween('opacity', Tween<double>(begin: 0, end: 1), curve: Curves.easeOut)
-          .thenFor(duration: const Duration(seconds: 5))
-          .thenTween('opacity', Tween<double>(begin: 1, end: 0), duration: const Duration(milliseconds: 300), curve: Curves.easeOut)
-          .tween('width', Tween<double>(begin: 250.sp, end: 70.sp), curve: Curves.easeOut)
-          .thenTween('bottom', Tween<double>(begin: 0, end: 10.sp), duration: const Duration(milliseconds: 300), curve: Curves.easeOut)
-          .thenTween('bottom', Tween<double>(begin: 10.sp, end: 0), duration: const Duration(milliseconds: 300), curve: Curves.easeIn);
+    CollectionController collectionController = Get.isRegistered<CollectionController>() ? Get.find<CollectionController>() : Get.put(CollectionController());
 
     return LayoutBuilder(
       builder: (context, constraint) {
@@ -531,71 +525,87 @@ class ActivityHome extends StatelessWidget {
                               Expanded(
                                 child: InkWell(
                                   onTap: (){
+                                    controller.isNewCollection.value = false;
+                                    collectionController.initController();
+                                    HiveStore.save(key: HiveKey.isNewCollection.name, value: false);
                                     Get.toNamed(Routes.collectionHome);
+
                                   },
-                                  child: Container(
-                                    decoration: BoxDecoration(
-                                      color: AppColorData
-                                          .regular()
-                                          .colorBgSecondary,
-                                      borderRadius: BorderRadius.all(
-                                        Radius.circular(AppDoubleData
-                                            .regular()
-                                            .numberRadius12),
-                                      ),
-                                    ),
-                                    child: Padding(
-                                      padding: EdgeInsets.all(12.0.sp),
-                                      child: Column(
-                                        mainAxisSize: MainAxisSize.max,
-                                        crossAxisAlignment: CrossAxisAlignment.start,
-                                        children: [
-                                          Text(
-                                            '컬렉션',
-                                            style: AppTextStyleData
+                                  child: Stack(
+                                    clipBehavior: Clip.none,
+                                    children: [
+                                      Container(
+                                        decoration: BoxDecoration(
+                                          color: AppColorData
+                                              .regular()
+                                              .colorBgSecondary,
+                                          borderRadius: BorderRadius.all(
+                                            Radius.circular(AppDoubleData
                                                 .regular()
-                                                .enBodyMediumLg
-                                                .copyWith(
-                                              color: AppColorData
-                                                  .regular()
-                                                  .colorTextPrimary,
-                                              fontWeight: FontWeight.w400,
-                                            ),
+                                                .numberRadius12),
                                           ),
-                                          Padding(
-                                            padding: EdgeInsets.only(top: 4.0.sp),
-                                            child: Row(
-                                              mainAxisSize: MainAxisSize.max,
-                                              crossAxisAlignment: CrossAxisAlignment.start,
-                                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                              children: [
-                                                Expanded(
-                                                  child: FittedBox(
-                                                    fit: BoxFit.scaleDown,
-                                                    alignment: Alignment.centerLeft,
-                                                    child: Text(
-                                                      '재료를 모아\n리워드 받기!',
-                                                      style: AppTextStyleData
-                                                          .regular()
-                                                          .enBodyMediumMd
-                                                          .copyWith(
-                                                        color: AppColorData
-                                                            .regular()
-                                                            .colorTextSecondary,
-                                                        fontWeight: FontWeight.w400,
+                                        ),
+                                        child: Padding(
+                                          padding: EdgeInsets.all(12.0.sp),
+                                          child: Column(
+                                            mainAxisSize: MainAxisSize.max,
+                                            crossAxisAlignment: CrossAxisAlignment.start,
+                                            children: [
+                                              Text(
+                                                '컬렉션',
+                                                style: AppTextStyleData
+                                                    .regular()
+                                                    .enBodyMediumLg
+                                                    .copyWith(
+                                                  color: AppColorData
+                                                      .regular()
+                                                      .colorTextPrimary,
+                                                  fontWeight: FontWeight.w400,
+                                                ),
+                                              ),
+                                              Padding(
+                                                padding: EdgeInsets.only(top: 4.0.sp),
+                                                child: Row(
+                                                  mainAxisSize: MainAxisSize.max,
+                                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                                  children: [
+                                                    Expanded(
+                                                      child: FittedBox(
+                                                        fit: BoxFit.scaleDown,
+                                                        alignment: Alignment.centerLeft,
+                                                        child: Text(
+                                                          '재료를 모아\n리워드 받기!',
+                                                          style: AppTextStyleData
+                                                              .regular()
+                                                              .enBodyMediumMd
+                                                              .copyWith(
+                                                            color: AppColorData
+                                                                .regular()
+                                                                .colorTextSecondary,
+                                                            fontWeight: FontWeight.w400,
+                                                          ),
+                                                        ),
                                                       ),
                                                     ),
-                                                  ),
+
+                                                      iconCollection
+                                                  ],
                                                 ),
-                                                iconCollection
-                                              ],
-                                            ),
+                                              ),
+
+
+                                            ],
                                           ),
-
-
-                                        ],
+                                        ),
                                       ),
-                                    ),
+                                      if(controller.isNewCollection.value)
+                                        Positioned(
+                                          right: 0,
+                                          top: -5.sp,
+                                            child: iconNew
+                                        )
+                                    ],
                                   ),
                                 ),
                               ),

@@ -1,4 +1,4 @@
-import 'package:gaza_go/platform/models/gathering_compose_config_model.dart';
+import 'package:gaza_go/platform/models/gathering_reward_badge_model.dart';
 import 'package:json_annotation/json_annotation.dart';
 
 part 'user_items_summaries_model.g.dart';

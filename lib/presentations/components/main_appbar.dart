@@ -112,23 +112,26 @@ class MainAppbar extends StatelessWidget implements PreferredSizeWidget {
             ),
           ),
           Row(
+            mainAxisAlignment: MainAxisAlignment.end,
+            crossAxisAlignment: CrossAxisAlignment.center,
             children: [
               Stack(
                 children: [
                   IconButton(
+                    padding: EdgeInsets.all(7.sp),
                     onPressed: () => controller.moveToNotificationsListPage(),
                     icon: iconHeaderBell,
-                    splashRadius: 20.sp,
-                    iconSize: 30,
+                    splashRadius: 15.sp,
+                    iconSize: 21.sp,
                     constraints: BoxConstraints(
-                      minWidth: 30.sp,
+                      minWidth: 21.sp,
                     ),
                   ),
                   Obx(() {
                     return controller.hasNewNotice.value
                         ? Positioned(
-                            top: 10,
-                            right: 10,
+                            top: 7.sp,
+                            right: 6.sp,
                             child: Container(
                               width: 8,
                               height: 8,
@@ -144,15 +147,16 @@ class MainAppbar extends StatelessWidget implements PreferredSizeWidget {
               ),
 
               IconButton(
+                padding: EdgeInsets.all(7.sp),
                 onPressed: () {
                   Get.toNamed(Routes.preferences);
                   Adjust.trackEvent(AdjustEvent('j66t7q'));
                 },
                 icon: iconHeaderGear,
-                splashRadius: 20.sp,
-                iconSize: 30,
+                splashRadius: 15.sp,
+                iconSize: 21,
                 constraints: BoxConstraints(
-                  minWidth: 30.sp,
+                  minWidth: 21.sp,
                 ),
               ),
             ],

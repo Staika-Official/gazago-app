@@ -58,15 +58,34 @@ class Home extends StatelessWidget {
           child: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
-              SizedBox(
-                width: 28.sp,
-                height: 28.sp,
-                child: Center(
-                  child: controller.selectedIndex.value == item.key
-                      ? item.value['selectedIcon']
-                      : item.value['icon'],
+                Stack(
+                  clipBehavior: Clip.none,
+                  children: [
+                    SizedBox(
+                      width: 28.sp,
+                      height: 28.sp,
+                      child: Center(
+                        child: controller.selectedIndex.value == item.key
+                            ? item.value['selectedIcon']
+                            : item.value['icon'],
+                      ),
+                    ),
+                    if (controller.hasNewChallenge.value == true && item.key == 0)
+                      Positioned(
+                        top: 0.sp,
+                        right: -2.sp,
+                        child: Container(
+                          width: 8,
+                          height: 8,
+                          decoration: BoxDecoration(
+                            color: const Color(0xffFF1414),
+                            borderRadius: BorderRadius.circular(8),
+                          ),
+                        ),
+                      )
+                  ],
                 ),
-              ),
+
 
               Padding(
                 padding: EdgeInsets.only(top:4.0.sp),
