@@ -25,6 +25,7 @@ class MemberService {
 
   static Future<void> getMemberUserInfo({String clientId = 'GAZAGO', required Function successCallback, required Function errorCallback}) async {
     Response res = await MemberApi.getMemberUserInfo(userId!, clientId);
+
     if (res.statusCode == 200) {
       successCallback(MemberUserModel.fromJson(res.data));
     } else {

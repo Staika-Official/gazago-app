@@ -93,6 +93,15 @@ class ActivityController extends SuperController with ActivityMixin, ChallengeMi
   RxnInt isShowGpsAccuracyCount = RxnInt(0);
   Timer? gpsAccuracyTimer;
   List gpsNoticeList = ['절전모드 중이라면 해제해주세요.','넓게 트인 야외로 이동해보세요.','지속적으로 GPS 수신이 원활하지 않을 경우, 휴대폰을 껐다 켠 다음 다시 시도해주세요.'];
+  RxBool isNewCollection = RxBool(false);
+
+  void checkNewCollectionStatus() {
+    if(HiveStore.load(key: HiveKey.isNewCollection.name) != null && HiveStore.load(key: HiveKey.isNewCollection.name) == true  ){
+      isNewCollection.value = true;
+    } else {
+      isNewCollection.value = false;
+    }
+  }
 
 
   Future<void> initializeExercise() async {
@@ -150,6 +159,7 @@ class ActivityController extends SuperController with ActivityMixin, ChallengeMi
 
   Future<void> refreshController() async {
     getUserState(showLoading: true);
+    checkNewCollectionStatus();
   }
 
   Future<void> initActivityStatus() async {
@@ -1072,7 +1082,7 @@ class ActivityController extends SuperController with ActivityMixin, ChallengeMi
   @override
   void onResumed() {
     print('onResumed activity');
-
+    checkNewCollectionStatus();
     if (Get.currentRoute != Routes.login && Get.currentRoute != Routes.loading) {
       getUserState(showLoading: true);
     }

@@ -20,6 +20,7 @@ import 'package:gaza_go/platform/controllers/activity_controller.dart';
 import 'package:gaza_go/platform/controllers/archive_controller.dart';
 import 'package:gaza_go/platform/controllers/challenges_controller.dart';
 import 'package:gaza_go/platform/controllers/challenges_detail_controller.dart';
+import 'package:gaza_go/platform/controllers/collection_detail_controller.dart';
 import 'package:gaza_go/platform/controllers/crew_detail_controller.dart';
 import 'package:gaza_go/platform/controllers/daily_benefit_controller.dart';
 import 'package:gaza_go/platform/controllers/debugging_controller.dart';
@@ -47,6 +48,7 @@ import 'package:gaza_go/platform/models/challenge_landing_model.dart';
 import 'package:gaza_go/platform/models/crew_icon_model.dart';
 import 'package:gaza_go/platform/models/crew_model.dart';
 import 'package:gaza_go/platform/models/exchange_stik_price_model.dart';
+import 'package:gaza_go/platform/models/gathering_condition_model.dart';
 import 'package:gaza_go/platform/models/inventory_item_model.dart';
 import 'package:gaza_go/platform/models/push_message_challenge_success_model.dart';
 import 'package:gaza_go/presentations/components/circular_button.dart';
@@ -8809,6 +8811,189 @@ void showSendToStaikaConfirmAlert(InventoryController controller, InventoryItemM
           onTap: () => {controller.sendNftToStaika(item)},
           buttonText: '보내기',
           buttonColor: AppColorData.regular().colorBgInteractivePrimary,
+        ),
+      ),
+    ],
+  );
+}
+
+void showConfirmCollectionRewardAlert(CollectionDetailController controller) {
+  showAlert(
+    isScrollControlled: true,
+    title: '정말로 리워드를 받을까요?',
+    contentWidget: Column(
+      children: [
+        Padding(
+          padding: EdgeInsets.only(top: 30.sp),
+          child: controller.renderCollectionImage(controller.detailCollection.value.gatheringReward),
+        ),
+        Padding(
+          padding: EdgeInsets.only(top: controller.detailCollection.value.gatheringReward.type == 'ITEM' || controller.detailCollection.value.gatheringReward.type == 'BADGE' ? 16.sp : 10.0.sp),
+          child: Container(
+              decoration: BoxDecoration(
+                color: AppColorData.regular().colorBgPrimary,
+                borderRadius: BorderRadius.all(
+                  Radius.circular(AppDoubleData.regular().numberRadius8),
+                ),
+              ),
+              child: Padding(
+                padding: EdgeInsets.only(left: 16.0.sp, right: 16.sp, top: 9.sp, bottom: 12.sp),
+                child: Text(
+                  controller.gatheringRewardName(controller.detailCollection.value.gatheringReward),
+                  style: AppTextStyleData.regular().koBodyMediumLg.copyWith(
+                        color: AppColorData.regular().colorTextPrimary,
+                      ),
+                ),
+              )),
+        ),
+        Padding(
+            padding: EdgeInsets.only(top: 16.sp, bottom: 32.sp),
+            child: Text(
+              '리워드를 받으면 컬렉션 재료는 모두 사라져요.',
+              style: AppTextStyleData.regular().koBodyMediumMd.copyWith(
+                    color: AppColorData.regular().colorTextPrimary,
+                  ),
+            )),
+      ],
+    ),
+    actions: [
+      Expanded(
+        child: GazagoButton(
+          onTap: () => Get.back(),
+          buttonText: '취소',
+          textColor: Colors.white,
+          buttonColor: popupBgColor,
+        ),
+      ),
+      SizedBox(
+        width: 9.sp,
+      ),
+      Expanded(
+        child: GazagoButton(
+          buttonText: '리워드 받기',
+          onTap: () async {
+            Get.back();
+            controller.getCollectionReward(controller.detailCollection.value.id);
+          },
+        ),
+      ),
+    ],
+  );
+}
+
+void showGetCollectionRewardAlert(GatheringConditionModel responseData) {
+  CollectionDetailController controller = Get.find();
+  showAlert(
+    isScrollControlled: true,
+    title: '리워드 획득',
+    contentWidget: Column(
+      children: [
+        Padding(
+          padding: EdgeInsets.only(top: 30.sp),
+          child: controller.renderCollectionImage(responseData),
+        ),
+        Padding(
+          padding: EdgeInsets.only(top: responseData.type == 'ITEM' || responseData.type == 'BADGE' ? 16.sp : 10.0.sp),
+          child: Container(
+              decoration: BoxDecoration(
+                color: AppColorData.regular().colorBgPrimary,
+                borderRadius: BorderRadius.all(
+                  Radius.circular(AppDoubleData.regular().numberRadius8),
+                ),
+              ),
+              child: Padding(
+                padding: EdgeInsets.only(left: 16.0.sp, right: 16.sp, top: 9.sp, bottom: 12.sp),
+                child: Text(
+                  controller.gatheringRewardName(responseData),
+                  style: AppTextStyleData.regular().koBodyMediumLg.copyWith(
+                        color: AppColorData.regular().colorTextPrimary,
+                      ),
+                ),
+              )),
+        ),
+        Padding(
+          padding: EdgeInsets.only(top: 16.sp, bottom: 32.sp),
+          child: Text.rich(
+            textAlign: TextAlign.center,
+            style: AppTextStyleData.regular().koBodyMediumMd.copyWith(
+                  color: AppColorData.regular().colorTextSecondary,
+                ),
+            TextSpan(
+              children: responseData.type == 'BADGE' || responseData.type == 'ITEM'
+                  ? [
+                      TextSpan(text: '컬렉션 리워드는\n내 장비에서 확인할 수 있어요.'),
+                    ]
+                  : responseData.type == 'STIK'
+                      ? [
+                          TextSpan(text: '지갑 > GO지갑 > Staika', style: TextStyle(color: AppColorData.regular().colorTextBrand)),
+                          TextSpan(text: ' 에서\n확인할 수 있어요.'),
+                        ]
+                      : [
+                          TextSpan(text: '지갑 > GO지갑 > Taika', style: TextStyle(color: AppColorData.regular().colorTextBrand)),
+                          TextSpan(text: ' 에서\n확인할 수 있어요.'),
+                        ],
+            ),
+          ),
+        ),
+      ],
+    ),
+    actions: [
+      Expanded(
+        child: GazagoButton(
+          buttonText: '확인',
+          onTap: () async {
+            controller.confirmGetReward();
+          },
+        ),
+      ),
+    ],
+  );
+}
+
+void showGetCollectionRewardErrorAlert() {
+  showAlert(
+    allowMultipleBottomSheet: true,
+    title: '일시적인 오류가 발생했습니다',
+    contentWidget: Padding(
+      padding: EdgeInsets.only(top: 20.0.sp, bottom: 32.sp),
+      child: Text(
+        '잠시 후에 다시 시도해 주세요.',
+        style: AppTextStyleData.regular().koBodyMediumLg.copyWith(
+              color: AppColorData.regular().colorTextPrimary,
+            ),
+      ),
+    ),
+    actions: [
+      Expanded(
+        child: GazagoButton(
+          onTap: () => Get.back(),
+          buttonText: '확인',
+          buttonColor: skyBlueColor,
+        ),
+      ),
+    ],
+  );
+}
+
+void showNotEnoughGatheringConditionErrorAlert() {
+  showAlert(
+    allowMultipleBottomSheet: true,
+    title: '컬렉션 재료 확인 요청',
+    contentWidget: Padding(
+      padding: EdgeInsets.only(top: 20.0.sp, bottom: 32.sp),
+      child: Text(
+        '컬렉션 재료가 더 필요해요.',
+        style: AppTextStyleData.regular().koBodyMediumLg.copyWith(
+              color: AppColorData.regular().colorTextPrimary,
+            ),
+      ),
+    ),
+    actions: [
+      Expanded(
+        child: GazagoButton(
+          onTap: () => Get.back(),
+          buttonText: '확인',
+          buttonColor: skyBlueColor,
         ),
       ),
     ],

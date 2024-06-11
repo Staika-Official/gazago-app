@@ -127,6 +127,29 @@ class WalletMasterController extends GetxController with SolanaMixin, GetTickerP
     }
   }
 
+  Rx<AssetTokenBalanceModel> get ptik {
+    try {
+      return Rx(spendingTokens.singleWhere((token) => token.symbol == 'PTIK', orElse: () {
+        showToastPopup('TAIKA를 찾을 수 없습니다.');
+        return AssetTokenBalanceModel();
+      }));
+    } catch (e) {
+      return Rx(AssetTokenBalanceModel());
+    }
+  }
+  Rx<AssetTokenBalanceModel> get originTik {
+    try {
+      return Rx(spendingTokens.singleWhere((token) => token.symbol == 'TIK', orElse: () {
+        showToastPopup('TAIKA를 찾을 수 없습니다.');
+        return AssetTokenBalanceModel();
+      }));
+    } catch (e) {
+      return Rx(AssetTokenBalanceModel());
+    }
+  }
+
+
+
   RxList<AssetTokenTransactionModel> get transactionsList {
     List<AssetTokenTransactionModel> transactionsList = List.empty(growable: true);
     print(rawTransactionList.length);
