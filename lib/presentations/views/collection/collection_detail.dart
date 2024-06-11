@@ -132,7 +132,7 @@ class CollectionDetail extends StatelessWidget {
           width: (MediaQuery
               .of(context)
               .size
-              .width / 3) - 16.sp,
+              .width / 3) - 17.sp,
           height: 180.sp,
           decoration: BoxDecoration(
             color: AppColorData
@@ -156,6 +156,8 @@ class CollectionDetail extends StatelessWidget {
                       child: Center(
                         child: Text(
                           renderGatheringRewardName(item),
+                            maxLines: 2,
+                            overflow: TextOverflow.ellipsis,
                           style: AppTextStyleData
                               .regular()
                               .koBodyMediumMd
@@ -183,28 +185,32 @@ class CollectionDetail extends StatelessWidget {
                     item.type == 'ITEM' || item.type == 'BADGE' ?
                     Padding(
                       padding: EdgeInsets.only(top: 2.0.sp),
-                      child: Text(
-                        '${item.completeAmount ?? 0} / ${formatDecimalPlaces(item.quantity, 0)}',
-                        style: AppTextStyleData
-                            .regular()
-                            .koBodyMediumSm
-                            .copyWith(
-                          color: AppColorData
+                      child: FittedBox(
+                        child: Text(
+                          '${item.completeAmount ?? 0} / ${formatDecimalPlaces(item.quantity, 0)}',
+                          style: AppTextStyleData
                               .regular()
-                              .colorTextPrimary,
+                              .koBodyMediumSm
+                              .copyWith(
+                            color: AppColorData
+                                .regular()
+                                .colorTextPrimary,
+                          ),
                         ),
                       ),
                     ) : Padding(
                       padding: EdgeInsets.only(top: 2.0.sp),
-                      child: Text(
-                        '${formatDecimalPlaces(controller.currentMyTokenCondition(item.type), 0)} / ${formatDecimalPlaces(item.quantity, 0)}',
-                        style: AppTextStyleData
-                            .regular()
-                            .koBodyMediumSm
-                            .copyWith(
-                          color: AppColorData
+                      child: FittedBox(
+                        child: Text(
+                          '${formatDecimalPlaces(controller.currentMyTokenCondition(item.type), 2, isAutoDecimal: true)} / ${formatDecimalPlaces(item.quantity, 2, isAutoDecimal: true)}',
+                          style: AppTextStyleData
                               .regular()
-                              .colorTextPrimary,
+                              .koBodyMediumSm
+                              .copyWith(
+                            color: AppColorData
+                                .regular()
+                                .colorTextPrimary,
+                          ),
                         ),
                       ),
                     ),
@@ -423,8 +429,8 @@ class CollectionDetail extends StatelessWidget {
                           ),
                         ),
                       ),
-
-                      Padding(
+                      if(controller.detailCollection.value.completeQuantity != null)
+                        Padding(
                         padding: EdgeInsets.only(top: 20.0.sp),
                         child: Row(
                           mainAxisSize: MainAxisSize.max,

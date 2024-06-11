@@ -180,32 +180,32 @@ class CollectionHome extends StatelessWidget {
                             .colorBgTertiary
                     ),
                   ),
-
-                  Padding(
-                    padding: EdgeInsets.only(top: 2.0.sp),
-                    child: item.completeQuantity == item.gatheringConditions.length ? Text(
-                      '리워드 받기!',
-                      style: AppTextStyleData
-                          .regular()
-                          .koBodyMediumSm
-                          .copyWith(
+                  if(item.completeQuantity != null)
+                    Padding(
+                      padding: EdgeInsets.only(top: 2.0.sp),
+                      child: item.completeQuantity == item.gatheringConditions.length ? Text(
+                        '리워드 받기!',
+                        style: AppTextStyleData
+                            .regular()
+                            .koBodyMediumSm
+                            .copyWith(
+                            color: AppColorData
+                                .regular()
+                                .colorTextPrimary,
+                            height: 1.5
+                        ),
+                      ) : Text(
+                        '${item.completeQuantity != null ? item.completeQuantity : 0}/${item.gatheringConditions.length}',
+                        style: AppTextStyleData
+                            .regular()
+                            .koBodyMediumSm
+                            .copyWith(
                           color: AppColorData
                               .regular()
                               .colorTextPrimary,
-                          height: 1.5
+                        ),
                       ),
-                    ) : Text(
-                      '${item.completeQuantity != null ? item.completeQuantity : 0}/${item.gatheringConditions.length}',
-                      style: AppTextStyleData
-                          .regular()
-                          .koBodyMediumSm
-                          .copyWith(
-                        color: AppColorData
-                            .regular()
-                            .colorTextPrimary,
-                      ),
-                    ),
-                  )
+                    )
                 ],
               )
             ],
@@ -280,8 +280,8 @@ class CollectionHome extends StatelessWidget {
                 return Column(
                   mainAxisSize: MainAxisSize.min,
                   children: [
-
-                    InkWell(
+                    controller.fixedCollection.value.id != 0 ?
+                      InkWell(
                       onTap: () {
                         controller.moveToDetailCollection(controller.fixedCollection.value);
                       },
@@ -455,9 +455,11 @@ class CollectionHome extends StatelessWidget {
                           ),
                         ),
                       ),
-                    ),
-
-                    if(controller.collectionList.value != null)
+                    ) : const Center(child: Padding(
+                      padding: EdgeInsets.all(20.0),
+                      child: SizedBox.square(dimension: 50, child: CircularProgressIndicator()),
+                    )),
+                    controller.collectionList.isNotEmpty ?
                       Padding(
                         padding: EdgeInsets.all(16.0.sp),
                         child: GridView.count(
@@ -468,10 +470,13 @@ class CollectionHome extends StatelessWidget {
                           crossAxisCount: 3,
                           childAspectRatio: 0.55,
                           children: [
-                            ...renderCollectionList(controller, controller.collectionList.value),
+                            ...renderCollectionList(controller, controller.collectionList),
                           ],
                         ),
-                      ),
+                      ) : Center(child: Padding(
+                      padding: EdgeInsets.only(top:150.0.sp),
+                      child: SizedBox.square(dimension: 50, child: CircularProgressIndicator()),
+                    )),
                   ],
                 );
               }),

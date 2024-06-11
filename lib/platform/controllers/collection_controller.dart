@@ -5,6 +5,7 @@ import 'package:gaza_go/constants/enums.dart';
 import 'package:gaza_go/constants/routes.dart';
 import 'package:gaza_go/platform/controllers/activity_controller.dart';
 import 'package:gaza_go/platform/controllers/wallet_master_controller.dart';
+import 'package:gaza_go/platform/helpers/alert_helper.dart';
 import 'package:gaza_go/platform/models/collection_model.dart';
 import 'package:gaza_go/platform/models/error_response_data_model.dart';
 import 'package:gaza_go/platform/models/gathering_condition_model.dart';
@@ -90,6 +91,23 @@ class CollectionController extends SuperController {
 
   }
 
+  void initData(){
+    fixedCollection.value = CollectionModel(
+      id: 0,
+      name: "Fixed Collection",
+      description: "Fixed Collection",
+      type: '',
+      gatheringDifficultyType: '',
+      imageUrl: '',
+      grayscaleImageUrl: '',
+      gatheringConditions: [],
+      gatheringReward: GatheringConditionModel(id: 0, type: '', quantity: 0),
+      alreadyIssued: false,
+      completeQuantity: 0,
+    );
+    collectionList.value = RxList(List.empty());
+  }
+
   Future<void> getAllCollectionList() async {
     String? loadedString = HiveStore.loadString(key: HiveKey.collectionIdList.name);
 
@@ -98,20 +116,7 @@ class CollectionController extends SuperController {
         successCallback:(List<CollectionModel> data) async {
           List<int> collectionIdList = [];
           collectionIdList = extractIds(data);
-          fixedCollection.value = CollectionModel(
-            id: 0,
-            name: "Fixed Collection",
-            description: "Fixed Collection",
-            type: '',
-            gatheringDifficultyType: '',
-            imageUrl: '',
-            grayscaleImageUrl: '',
-            gatheringConditions: [],
-            gatheringReward: GatheringConditionModel(id: 0, type: '', quantity: 0),
-            alreadyIssued: false,
-            completeQuantity: 0,
-          );
-          collectionList.value = RxList(List.empty());
+
           if(selectedCollection.value.id != 0){
             selectedCollection.value = data.firstWhere((item) => item.id == selectedCollection.value.id);
           }
@@ -160,6 +165,7 @@ class CollectionController extends SuperController {
           print('myAllItems : $myAllItems');
         } ,
         errorCallback:(ErrorResponseDataModel? error){
+          showToastPopup(error!.errorMessage!);
         }
     );
   }
@@ -171,6 +177,7 @@ class CollectionController extends SuperController {
           print('myAllBadges : $myAllBadges');
         } ,
         errorCallback:(ErrorResponseDataModel? error){
+          showToastPopup(error!.errorMessage!);
         }
     );
   }
@@ -212,20 +219,14 @@ class CollectionController extends SuperController {
             condition.completeAmount = 0;
           }
         }else if(condition.type == 'STIK'){
-          if (condition.quantity <= double.parse(walletMasterController.stik.value.amount.toString())) {
+          print('condition.quantity : ${condition.quantity}');
+          print('walletMasterController.stik.value.uiAmountString.toString() : ${walletMasterController.stik.value.uiAmountString.toString()}');
+          if (condition.quantity <= double.parse(walletMasterController.stik.value.uiAmountString.toString()).floorToDouble()) {
             condition.completeAmount = 1;
           } else {
             condition.completeAmount = 0;
           }
         }
-
-
-
-
-
-
-
-
 
       }
 
@@ -253,7 +254,7 @@ class CollectionController extends SuperController {
           count++;
         }
 
-        if (condition.type == 'STIK' && condition.quantity <= walletMasterController.stik.value.amount) {
+        if (condition.type == 'STIK' && condition.quantity <= double.parse(walletMasterController.stik.value.uiAmountString.toString())) {
           count++;
         }
       }

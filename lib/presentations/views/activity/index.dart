@@ -526,6 +526,7 @@ class ActivityHome extends StatelessWidget {
                                 child: InkWell(
                                   onTap: (){
                                     controller.isNewCollection.value = false;
+                                    collectionController.initData();
                                     collectionController.initController();
                                     HiveStore.save(key: HiveKey.isNewCollection.name, value: false);
                                     Get.toNamed(Routes.collectionHome);
@@ -627,8 +628,8 @@ class ActivityHome extends StatelessWidget {
                                           decoration: BoxDecoration(
                                             color: skyBlueColor,
                                             border: Border.all(width: 10.sp, color: const Color(0xFF4A4D57)),
-                                            borderRadius: const BorderRadius.all(
-                                              Radius.circular(150),
+                                            borderRadius:  BorderRadius.all(
+                                              Radius.circular(150.sp),
                                             ),
                                             boxShadow: const [
                                               BoxShadow(
@@ -647,8 +648,8 @@ class ActivityHome extends StatelessWidget {
                                                     .regular()
                                                     .colorBorderPrimary,
                                               ),
-                                              borderRadius: const BorderRadius.all(
-                                                Radius.circular(150),
+                                              borderRadius:  BorderRadius.all(
+                                                Radius.circular(150.sp),
                                               ),
                                             ),
                                             child: MaterialButton(
@@ -658,7 +659,7 @@ class ActivityHome extends StatelessWidget {
                                                   ? () => controller.requestExerciseInitialization()
                                                   : () => showToastPopup('지속적으로 문제가 발생한다면 앱을 재시작해주세요'),
                                               shape: RoundedRectangleBorder(
-                                                borderRadius: BorderRadius.circular(150),
+                                                borderRadius: BorderRadius.circular(150.sp),
                                               ),
                                               color: skyBlueColor,
                                               height: 148.sp,

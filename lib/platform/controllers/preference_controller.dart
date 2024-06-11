@@ -14,9 +14,9 @@ class PreferenceController extends GetxController with PreferenceMixin {
   final RxBool isAbleLuckSound = RxBool(false);
 
   @override
-  void onInit() {
+  void onInit() async {
     isAbleLuckSound.value = HiveStore.load(key: HiveKey.luckSound.name) ?? false;
-    getProfileInfo();
+    await getProfileInfo();
     // getAccountInfo();
     getAppVersion();
 
