@@ -271,7 +271,7 @@ class ShopItems extends StatelessWidget {
                                     )
                                   : Container(),
                               StyledText(
-                                '${formatDecimalPlaces(item.price.toDouble(), 0)} ${item.tradeSymbol}',
+                                '${formatDecimalPlaces(item.price.toDouble(), item.tradeSymbol == 'STIK' ? 2 : 0, isAutoDecimal: true)} ${item.tradeSymbol}',
                                 fontSize: 14.sp,
                                 fontWeight: 700,
                                 letterSpacing: .3,
