@@ -1109,7 +1109,7 @@ void itemPurchaseAlert(ShopDetailController controller, double remainMyAsset, tr
                         fontWeight: 600,
                       )
                     : StyledText(
-                        '${formatDecimalPlaces(controller.selectedItem.value.price, 0)} ',
+                        '${formatDecimalPlaces(controller.selectedItem.value.price, controller.selectedItem.value.tradeSymbol == 'STIK' ? 2 : 0, isAutoDecimal: true)} ',
                         fontSize: 30,
                         lineHeight: 32,
                         fontWeight: 600,
@@ -1398,7 +1398,7 @@ void itemPurchaseAlert(ShopDetailController controller, double remainMyAsset, tr
                 fontWeight: 600,
               ),
               StyledText(
-                '${formatDecimalPlaces(remainMyAsset, tradeSymbol == 'STIK' ? 4 : 0, isAutoDecimal: true, roundType: RoundType.floor)} ${controller.selectedItem.value.tradeSymbol!}',
+                '${formatDecimalPlaces(remainMyAsset, tradeSymbol == 'STIK' ? 2 : 0, isAutoDecimal: true, roundType: RoundType.floor)} ${controller.selectedItem.value.tradeSymbol!}',
                 fontSize: 18,
                 lineHeight: 18,
                 fontWeight: 400,
@@ -1465,7 +1465,7 @@ void itemPurchaseShortBalanceAlert(ShopDetailController controller, double remai
       return Column(
         children: [
           Padding(
-            padding: EdgeInsets.only(top: 22.0.sp, bottom: 70.sp),
+            padding: EdgeInsets.only(top: 22.0.sp, bottom: 20.sp),
             child: Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
@@ -1477,7 +1477,7 @@ void itemPurchaseShortBalanceAlert(ShopDetailController controller, double remai
                         fontWeight: 600,
                       )
                     : StyledText(
-                        '${formatDecimalPlaces(controller.selectedItem.value.price, 0)} ',
+                        '${formatDecimalPlaces(controller.selectedItem.value.price, controller.selectedItem.value.tradeSymbol == 'STIK' ? 2 : 0, isAutoDecimal: true)} ',
                         fontSize: 30,
                         lineHeight: 32,
                         fontWeight: 600,
@@ -1563,27 +1563,27 @@ void itemPurchaseShortBalanceAlert(ShopDetailController controller, double remai
                 ),
               ],
             ),
-          if (controller.purchaseItemCount > 0)
-            Padding(
-              padding: EdgeInsets.only(top: 30.0.sp),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  StyledText(
-                    controller.selectedItem.value.name,
-                    fontSize: 18,
-                    lineHeight: 32,
-                    fontWeight: 600,
-                  ),
-                  StyledText(
-                    '${controller.purchaseItemCount.value}개',
-                    fontSize: 18,
-                    lineHeight: 32,
-                    fontWeight: 400,
-                  ),
-                ],
-              ),
-            ),
+          // if (controller.purchaseItemCount > 0)
+          //   Padding(
+          //     padding: EdgeInsets.only(top: 30.0.sp),
+          //     child: Row(
+          //       mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          //       children: [
+          //         StyledText(
+          //           controller.selectedItem.value.name,
+          //           fontSize: 18,
+          //           lineHeight: 32,
+          //           fontWeight: 600,
+          //         ),
+          //         StyledText(
+          //           '${controller.purchaseItemCount.value}개',
+          //           fontSize: 18,
+          //           lineHeight: 32,
+          //           fontWeight: 400,
+          //         ),
+          //       ],
+          //     ),
+          //   ),
           Divider(
             height: 40.sp,
             thickness: 2.0.sp,
@@ -1600,7 +1600,7 @@ void itemPurchaseShortBalanceAlert(ShopDetailController controller, double remai
                 color: dangerColor,
               ),
               StyledText(
-                '${formatDecimalPlaces(remainMyTik, tradeSymbol == 'STIK' ? 4 : 0, isAutoDecimal: true, roundType: RoundType.floor)} ${controller.selectedItem.value.tradeSymbol}',
+                '${formatDecimalPlaces(remainMyTik, tradeSymbol == 'STIK' ? 2 : 0, isAutoDecimal: true, roundType: RoundType.floor)} ${controller.selectedItem.value.tradeSymbol}',
                 fontSize: 18,
                 lineHeight: 18,
                 fontWeight: 400,
@@ -1609,7 +1609,7 @@ void itemPurchaseShortBalanceAlert(ShopDetailController controller, double remai
             ],
           ),
           Padding(
-            padding: EdgeInsets.only(top: 55.0.sp, bottom: 25.sp),
+            padding: EdgeInsets.only(top: 10.0.sp, bottom: 25.sp),
             child: Container(),
           )
         ],
