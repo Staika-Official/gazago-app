@@ -976,7 +976,7 @@ class ShopItemDetail extends StatelessWidget {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           StyledText(
-                            '${formatDecimalPlaces(controller.selectedItem.value.price.toDouble(), 0)} ${controller.selectedItem.value.tradeSymbol ?? 'TIK'}',
+                            '${formatDecimalPlaces(controller.selectedItem.value.price.toDouble(), controller.selectedItem.value.tradeSymbol == 'STIK' ? 2 : 0, isAutoDecimal: true)} ${controller.selectedItem.value.tradeSymbol ?? 'TIK'}',
                             fontWeight: 500,
                             fontSize: 22,
                             lineHeight: 24,

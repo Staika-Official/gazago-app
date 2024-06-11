@@ -271,7 +271,7 @@ class ShopItems extends StatelessWidget {
                                     )
                                   : Container(),
                               Text(
-                                '${formatDecimalPlaces(item.price.toDouble(), 0)} ${item.tradeSymbol}',
+                                '${formatDecimalPlaces(item.price.toDouble(), item.tradeSymbol == 'STIK' ? 2 : 0, isAutoDecimal: true)} ${item.tradeSymbol}',
                                 style: AppTextStyleData.regular().koBodySemiboldMd.copyWith(
                                       color: AppColorData.regular().colorTextPrimary,
                                     ),

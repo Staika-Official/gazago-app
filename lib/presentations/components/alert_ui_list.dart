@@ -1112,7 +1112,7 @@ void itemPurchaseAlert(ShopDetailController controller, double remainMyAsset, tr
                             ),
                       )
                     : Text(
-                        '${formatDecimalPlaces(controller.selectedItem.value.price, 0)} ',
+                        '${formatDecimalPlaces(controller.selectedItem.value.price, controller.selectedItem.value.tradeSymbol == 'STIK' ? 2 : 0, isAutoDecimal: true)} ',
                         style: AppTextStyleData.regular().koHeadingSemiboldXl.copyWith(
                               color: AppColorData.regular().colorTextPrimary,
                             ),
@@ -1413,7 +1413,7 @@ void itemPurchaseAlert(ShopDetailController controller, double remainMyAsset, tr
                     ),
               ),
               Text(
-                '${formatDecimalPlaces(remainMyAsset, tradeSymbol == 'STIK' ? 4 : 0, isAutoDecimal: true, roundType: RoundType.floor)} ${controller.selectedItem.value.tradeSymbol!}',
+                '${formatDecimalPlaces(remainMyAsset, tradeSymbol == 'STIK' ? 2 : 0, isAutoDecimal: true, roundType: RoundType.floor)} ${controller.selectedItem.value.tradeSymbol!}',
                 style: AppTextStyleData.regular().koBodyMediumXl.copyWith(
                       color: AppColorData.regular().colorTextPrimary,
                     ),
@@ -1543,7 +1543,7 @@ void itemPurchaseShortBalanceAlert(ShopDetailController controller, double remai
                             ),
                       )
                     : Text(
-                        '${formatDecimalPlaces(controller.selectedItem.value.price, 0)} ',
+                        '${formatDecimalPlaces(controller.selectedItem.value.price, controller.selectedItem.value.tradeSymbol == 'STIK' ? 2 : 0, isAutoDecimal: true)} ',
                         style: AppTextStyleData.regular().koHeadingSemiboldXl.copyWith(
                               color: AppColorData.regular().colorTextPrimary,
                             ),
@@ -1677,7 +1677,7 @@ void itemPurchaseShortBalanceAlert(ShopDetailController controller, double remai
                     ),
               ),
               Text(
-                '${formatDecimalPlaces(remainMyTik, tradeSymbol == 'STIK' ? 4 : 0, isAutoDecimal: true, roundType: RoundType.floor)} ${controller.selectedItem.value.tradeSymbol}',
+                '${formatDecimalPlaces(remainMyTik, tradeSymbol == 'STIK' ? 2 : 0, isAutoDecimal: true, roundType: RoundType.floor)} ${controller.selectedItem.value.tradeSymbol}',
                 style: AppTextStyleData.regular().koBodyMediumXl.copyWith(
                       color: AppColorData.regular().colorTextWarning,
                     ),
@@ -1685,7 +1685,7 @@ void itemPurchaseShortBalanceAlert(ShopDetailController controller, double remai
             ],
           ),
           Padding(
-            padding: EdgeInsets.only(top: 55.0.sp, bottom: 25.sp),
+            padding: EdgeInsets.only(top: 10.0.sp, bottom: 25.sp),
             child: Container(),
           )
         ],

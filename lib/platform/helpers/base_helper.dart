@@ -131,7 +131,7 @@ String getUiAmountString(int val, int decimalPlaces) {
   return formattedNumber.toString();
 }
 
-String formatDecimalPlaces(double val, int decimalPlaces, {RoundType roundType = RoundType.round, bool isAutoDecimal = false}) {
+String formatDecimalPlaces(double val, int decimalPlaces, {RoundType roundType = RoundType.floor, bool isAutoDecimal = false}) {
   num mod = pow(10.0, decimalPlaces);
 
   double? formattedNumber;
