@@ -1,15 +1,14 @@
 import 'package:animate_do/animate_do.dart';
-import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:gaza_go/constants/config.dart';
-import 'package:gaza_go/constants/enums.dart';
+import 'package:gaza_go/constants/routes.dart';
 import 'package:gaza_go/platform/controllers/wallet_staika_controller.dart';
-import 'package:gaza_go/platform/stores/hive_store.dart';
+import 'package:gaza_go/presentations/components/wallet/nft_asset_item.dart';
+import 'package:gaza_go/presentations/components/wallet/staika_asset_item_coin.dart';
 import 'package:gaza_go/presentations/styles/colors.dart';
 import 'package:gaza_go/presentations/styles/icons.dart';
 import 'package:gaza_go/presentations/styles/styled_text.dart';
-import 'package:gaza_go/presentations/views/wallet/staika_asset_item_coin.dart';
+import 'package:gaza_go/theme/theme.g.dart';
 import 'package:get/get.dart';
 
 class StaikaWallet extends StatelessWidget {
@@ -18,8 +17,7 @@ class StaikaWallet extends StatelessWidget {
   List<Widget> renderCoinAssetList(StaikaWalletController controller) {
     return controller.coinAssetList
         .map(
-          (asset) =>
-          Padding(
+          (asset) => Padding(
             padding: EdgeInsets.only(top: 14.sp, left: 21.sp, right: 21.sp),
             child: StaikaAssetItemCoin(
               asset: asset,
@@ -28,7 +26,8 @@ class StaikaWallet extends StatelessWidget {
               showPrice: false,
             ),
           ),
-    ).toList();
+        )
+        .toList();
   }
 
   @override
@@ -55,17 +54,15 @@ class StaikaWallet extends StatelessWidget {
                       child: Padding(
                         padding: EdgeInsets.symmetric(horizontal: 20.0.sp),
                         child: SizedBox(
-                          height: 50.sp,
+                            height: 50.sp,
                             child: Center(
                                 child: FittedBox(
-                                  child: StyledText(
-                                      controller.userEmail.value,
-                                      fontWeight: 500,
-                                      fontSize: 16,
-                                  ),
-                                )
-                            )
-                        ),
+                              child: StyledText(
+                                controller.userEmail.value,
+                                fontWeight: 500,
+                                fontSize: 16,
+                              ),
+                            ))),
                       ),
                     ),
                     // 프로필 사진
@@ -101,16 +98,13 @@ class StaikaWallet extends StatelessWidget {
                               child: Row(
                                 mainAxisSize: MainAxisSize.min,
                                 mainAxisAlignment: MainAxisAlignment.center,
+                                crossAxisAlignment: CrossAxisAlignment.center,
                                 children: [
                                   RichText(
                                     text: TextSpan(
-                                      style: TextStyle(
-                                        color: Colors.white,
-                                        fontSize: 16.sp,
-                                        fontWeight: FontWeight.w500,
-                                        height: (16 / 14).sp,
-                                        letterSpacing: -0.2,
-                                      ),
+                                      style: AppTextStyleData.regular().koBodyMediumLg.copyWith(
+                                            color: AppColorData.regular().colorTextSecondary,
+                                          ),
                                       children: [
                                         TextSpan(
                                           text: controller.userWalletAddress.value.substring(0, 4),
@@ -125,7 +119,7 @@ class StaikaWallet extends StatelessWidget {
                                     ),
                                   ),
                                   Padding(
-                                    padding: EdgeInsets.only(left: 12.0.sp),
+                                    padding: EdgeInsets.only(left: 4.0.sp, top: 3.sp),
                                     child: InkWell(
                                       child: iconCopy,
                                       onTap: () => controller.handleCopyWalletAddress(),
@@ -147,16 +141,15 @@ class StaikaWallet extends StatelessWidget {
                             child: Row(
                               mainAxisAlignment: MainAxisAlignment.center,
                               children: [
-                                StyledText(
-                                  '거래내역',
-                                  fontSize: 14,
-                                  lineHeight: 15,
-                                  fontWeight: 500,
-                                  color: lightGrayColor,
+                                Text(
+                                  'Solscan 보기',
+                                  style: AppTextStyleData.regular().koBodySemiboldMd.copyWith(
+                                        color: AppColorData.regular().colorTextTertiary,
+                                      ),
                                 ),
                                 Padding(
-                                  padding: const EdgeInsets.only(left: 3.0),
-                                  child: iconTransactionHistory,
+                                  padding: const EdgeInsets.only(left: 1.0, top: 3),
+                                  child: iconWebview,
                                 ),
                               ],
                             ),
@@ -170,11 +163,11 @@ class StaikaWallet extends StatelessWidget {
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         crossAxisAlignment: CrossAxisAlignment.center,
                         children: [
-                          const StyledText(
+                          Text(
                             '디지털 자산',
-                            fontWeight: 500,
-                            fontSize: 16,
-                            lineHeight: 18,
+                            style: AppTextStyleData.regular().koBodyMediumXl.copyWith(
+                                  color: AppColorData.regular().colorTextPrimary,
+                                ),
                           ),
                           GestureDetector(
                             onTap: () {
@@ -183,6 +176,16 @@ class StaikaWallet extends StatelessWidget {
                             child: Row(
                               mainAxisAlignment: MainAxisAlignment.end,
                               children: [
+                                Container(
+                                  margin: const EdgeInsets.only(right: 5),
+                                  child: Text(
+                                    controller.isKRW.value ? 'KRW' : 'USD',
+                                    textAlign: TextAlign.end,
+                                    style: AppTextStyleData.regular().koBodyMediumSm.copyWith(
+                                          color: AppColorData.regular().colorTextTertiary,
+                                        ),
+                                  ),
+                                ),
                                 Spin(
                                   spins: 0.5,
                                   duration: const Duration(milliseconds: 500),
@@ -197,27 +200,27 @@ class StaikaWallet extends StatelessWidget {
                                     child: iconSwitch,
                                   ),
                                 ),
-                                Container(
-                                  margin: const EdgeInsets.only(left: 3),
-                                  child: Text(
-                                    controller.isKRW.value ? 'KRW' : 'USD',
-                                    textAlign: TextAlign.end,
-                                    style: const TextStyle(fontSize: 12, color: Color.fromARGB(255, 165, 165, 165), fontWeight: FontWeight.w500),
-                                  ),
-                                )
                               ],
                             ),
                           ),
                         ],
                       ),
                     ),
-                    controller.isFetching.value ?
-                    Padding(
-                      padding: EdgeInsets.only(top:100.sp),
-                      child: Center(child: SizedBox.square(dimension: 40, child: CircularProgressIndicator())),
-                    ) :
-                    controller.coinAssetList.isNotEmpty && controller.coinAssetList != null ?
-                      Column(children: [...renderCoinAssetList(controller)],) : Container(),
+                    controller.isFetching.value
+                        ? Padding(
+                            padding: EdgeInsets.only(top: 100.sp),
+                            child: Center(child: SizedBox.square(dimension: 40, child: CircularProgressIndicator())),
+                          )
+                        : controller.coinAssetList.isNotEmpty && controller.coinAssetList != null
+                            ? Column(
+                                children: [
+                                  ...renderCoinAssetList(controller),
+                                  NftAssetItem(
+                                    onTap: () => Get.toNamed(Routes.walletNftList, arguments: {'prevRoute': 'STAIKA_WALLET'}),
+                                  ),
+                                ],
+                              )
+                            : Container(),
                     Expanded(
                       child: Align(
                         alignment: Alignment.bottomCenter,

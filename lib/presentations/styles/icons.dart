@@ -1,3 +1,4 @@
+import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
@@ -28,6 +29,8 @@ SvgPicture iconRefresh = SvgPicture.asset('assets/images/ico_refresh.svg', width
 SvgPicture iconInputWarning = SvgPicture.asset('assets/images/common/ico_input_warning_red.svg', width: 9.sp, height: 9.sp);
 SvgPicture iconInputClear = SvgPicture.asset('assets/images/common/ico_input_clear.svg', width: 14.sp, height: 14.sp);
 SvgPicture iconPopupExclamationMark = SvgPicture.asset('assets/images/common/ico_popup_circle_exclamention.svg', width: 33.sp, height: 33.sp);
+SvgPicture iconChevronRightWhite = SvgPicture.asset('assets/images/icons/icon_chevron_right_white.svg', width: 16.sp, height: 16.sp);
+SvgPicture iconChevronRightTertiary = SvgPicture.asset('assets/images/icons/icon_chevron_right_tertiary.svg', width: 16.sp, height: 16.sp);
 // Bottom Navigation Icon
 SvgPicture iconMenuHome = SvgPicture.asset('assets/images/common/ico_menu_home.svg', width: 20.5.sp, height: 20.sp);
 SvgPicture iconMenuHomeActive = SvgPicture.asset('assets/images/common/ico_menu_home_active.svg', width: 20.5.sp, height: 20.sp);
@@ -110,19 +113,10 @@ SvgPicture iconTodayTik = SvgPicture.asset('assets/images/leaderboard/ico_today_
 SvgPicture iconInfo = SvgPicture.asset('assets/images/leaderboard/ico_info.svg', width: 18.sp, height: 18.sp);
 
 // inventory
-SvgPicture iconGoReward = SvgPicture.asset('assets/images/inventory/ico_go_reward.svg', width: 20.sp, height: 16.sp);
-SvgPicture iconItemAbrasion = SvgPicture.asset('assets/images/inventory/ico_item_abrasion.svg', width: 18.sp, height: 14.sp);
-SvgPicture iconStaminaReduce = SvgPicture.asset('assets/images/inventory/ico_stamina_reduce.svg', width: 20.sp, height: 16.sp);
-SvgPicture iconLucky = SvgPicture.asset('assets/images/inventory/ico_lucky.svg', width: 12.sp, height: 9.sp);
-SvgPicture iconCirclePlus = SvgPicture.asset('assets/images/inventory/ico_circle_plus.svg', width: 37.sp, height: 37.sp);
 SvgPicture iconNoBadge = SvgPicture.asset('assets/images/inventory/ico_no_badge.svg', width: 92.sp, height: 112.sp);
-SvgPicture iconStatDurability = SvgPicture.asset('assets/images/inventory/ico_stat_durability.svg', width: 16.sp, height: 16.sp);
-SvgPicture iconStatStamina = SvgPicture.asset('assets/images/inventory/ico_stat_stamina.svg', width: 16.sp, height: 16.sp);
-SvgPicture iconStatGo = SvgPicture.asset('assets/images/inventory/ico_stat_go.svg', width: 16.sp, height: 16.sp);
-SvgPicture iconStatLuck = SvgPicture.asset('assets/images/inventory/ico_stat_luck.svg', width: 16.sp, height: 16.sp);
-
-SvgPicture iconStatDurabilityLight = SvgPicture.asset('assets/images/shop/ico_stat_durability_light.svg', width: 16.sp, height: 16.sp);
 SvgPicture iconStatEtc = SvgPicture.asset('assets/images/shop/ico_stat_etc.svg', width: 16.sp, height: 16.sp);
+SvgPicture iconWebview = SvgPicture.asset('assets/images/ico_webview.svg', width: 16.sp, height: 16.sp);
+
 //mypage
 SvgPicture iconCamera = SvgPicture.asset('assets/images/common/ico_camera.svg', width: 22.sp, height: 22.sp);
 SvgPicture iconApple = SvgPicture.asset('assets/images/preference/ico_apple.svg', width: 12.sp, height: 14.sp);
@@ -133,6 +127,7 @@ SvgPicture iconChevronUp = SvgPicture.asset('assets/images/preference/ico_chevro
 
 //wallet
 SvgPicture iconEmpty = SvgPicture.asset('assets/images/wallet/ico_empty.svg', width: 90.sp, height: 90.sp);
+SvgPicture iconEmptyRoundedBg = SvgPicture.asset('assets/images/wallet/ico_empty_rounded_bg.svg', width: 84.sp, height: 84.sp);
 SvgPicture iconIn = SvgPicture.asset('assets/images/wallet/ico_in.svg', width: 20.sp, height: 20.sp);
 SvgPicture iconOut = SvgPicture.asset('assets/images/wallet/ico_out.svg', width: 20.sp, height: 20.sp);
 SvgPicture iconArrowRight = SvgPicture.asset('assets/images/wallet/ico_arrow_right.svg', width: 20.sp, height: 20.sp);
@@ -154,11 +149,10 @@ SvgPicture iconStikExchange = SvgPicture.asset('assets/images/wallet/ico_stik_ex
 SvgPicture iconExcludeRed = SvgPicture.asset('assets/images/wallet/ico_exclude_red.svg', width: 16.sp, height: 16.sp);
 
 //shop
-SvgPicture iconShopStamina = SvgPicture.asset('assets/images/shop/ico_stat_stamina.svg', width: 12.sp, height: 12.sp);
-SvgPicture iconShopDurability = SvgPicture.asset('assets/images/shop/ico_stat_durability.svg', width: 12.sp, height: 12.sp);
-SvgPicture iconShopDurabilityLight = SvgPicture.asset('assets/images/shop/ico_stat_durability_light.svg', width: 12.sp, height: 12.sp);
-SvgPicture iconShopReward = SvgPicture.asset('assets/images/shop/ico_stat_go.svg', width: 12.sp, height: 12.sp);
-SvgPicture iconShopLuck = SvgPicture.asset('assets/images/shop/ico_stat_luck.svg', width: 12.sp, height: 12.sp);
+Image iconShopStamina = Image.asset('assets/images/shop/ico_stat_stamina.png', width: 16.sp, height: 16.sp);
+Image iconShopDurabilityLight = Image.asset('assets/images/shop/ico_stat_durability_light.png', width: 16.sp, height: 16.sp);
+Image iconShopReward = Image.asset('assets/images/shop/ico_go_reward.png', width: 16.sp, height: 16.sp);
+Image iconShopLuck = Image.asset('assets/images/shop/ico_stat_luck.png', width: 16.sp, height: 16.sp);
 SvgPicture iconUp = SvgPicture.asset('assets/images/wallet/ico_up.svg', width: 22.sp, height: 22.sp);
 
 //grade

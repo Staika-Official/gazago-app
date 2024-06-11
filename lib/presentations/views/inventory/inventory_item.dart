@@ -49,6 +49,7 @@ class InventoryItem extends StatelessWidget {
                     ),
                     child: Stack(
                       children: [
+                        if (item.itemPublishType == 'NFT') Positioned(right: 8.sp, top: 8.sp, child: SvgPicture.asset('assets/images/inventory/ico_nft.svg')),
                         Padding(
                           padding: EdgeInsets.symmetric(vertical: 7.0.sp, horizontal: 15.0.sp),
                           child: Column(

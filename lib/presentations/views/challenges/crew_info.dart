@@ -8,6 +8,7 @@ import 'package:gaza_go/presentations/components/alert_ui_list.dart';
 import 'package:gaza_go/presentations/styles/colors.dart';
 import 'package:gaza_go/presentations/styles/icons.dart';
 import 'package:gaza_go/presentations/styles/styled_text.dart';
+import 'package:gaza_go/theme/theme.g.dart';
 import 'package:get/get.dart';
 
 class CrewInfo extends StatelessWidget {
@@ -39,7 +40,7 @@ class CrewInfo extends StatelessWidget {
                       Padding(
                         padding: EdgeInsets.only(left: 4.0.sp),
                         child: const StyledText(
-                          'GO 보상',
+                          'GO 적립량',
                           color: skyBlueColor,
                           fontSize: 12,
                           lineHeight: 14,
@@ -55,19 +56,19 @@ class CrewInfo extends StatelessWidget {
           ),
         ),
       ],
-      if(level > 1) ...[
+      if (level > 1) ...[
         Padding(
           padding: EdgeInsets.symmetric(horizontal: 5.0.sp),
           child: SizedBox(
             width: 70,
             child: Column(
               children: [
-                const StyledText(
+                StyledText(
                   '30',
                   fontSize: 24,
                   lineHeight: 26,
                   fontWeight: 500,
-                  color: lightPurpleColor,
+                  color: AppColorData.regular().colorPointPurple,
                 ),
                 Padding(
                   padding: EdgeInsets.only(top: 4.0.sp),
@@ -78,9 +79,9 @@ class CrewInfo extends StatelessWidget {
                       iconShopDurabilityLight,
                       Padding(
                         padding: EdgeInsets.only(left: 4.0.sp),
-                        child: const StyledText(
-                          '내구도',
-                          color: lightPurpleColor,
+                        child: StyledText(
+                          '내구도 저항',
+                          color: AppColorData.regular().colorPointPurple,
                           fontSize: 12,
                           lineHeight: 12,
                           letterSpacing: -.1,
@@ -117,7 +118,7 @@ class CrewInfo extends StatelessWidget {
                       Padding(
                         padding: EdgeInsets.only(left: 4.0.sp),
                         child: const StyledText(
-                          '체력',
+                          '체력 저항',
                           color: lightGreenColor,
                           fontSize: 12,
                           lineHeight: 12,
@@ -139,7 +140,7 @@ class CrewInfo extends StatelessWidget {
           width: 70,
           child: Column(
             children: [
-               StyledText(
+              StyledText(
                 '30',
                 fontSize: 24,
                 lineHeight: 26,
@@ -155,7 +156,7 @@ class CrewInfo extends StatelessWidget {
                     iconShopLuck,
                     Padding(
                       padding: EdgeInsets.only(left: 4.0.sp),
-                      child:  StyledText(
+                      child: StyledText(
                         '행운',
                         color: pinkColor,
                         fontSize: 12,
@@ -341,7 +342,7 @@ class CrewInfo extends StatelessWidget {
                       padding: EdgeInsets.only(
                         top: 10.sp,
                         left: 14.sp,
-                        right:14.sp,
+                        right: 14.sp,
                         bottom: 8.sp,
                       ),
                       decoration: BoxDecoration(

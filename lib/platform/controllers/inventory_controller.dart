@@ -5,6 +5,7 @@ import 'package:adjust_sdk/adjust_event.dart';
 import 'package:flutter/material.dart';
 import 'package:gaza_go/constants/enums.dart';
 import 'package:gaza_go/constants/routes.dart';
+import 'package:gaza_go/flavors.dart';
 import 'package:gaza_go/platform/controllers/activity_controller.dart';
 import 'package:gaza_go/platform/controllers/inventory_home_controller.dart';
 import 'package:gaza_go/platform/controllers/wallet_master_controller.dart';
@@ -23,6 +24,7 @@ import 'package:gaza_go/platform/models/inventory_item_stat_model.dart';
 import 'package:gaza_go/platform/models/stat_model.dart';
 import 'package:gaza_go/platform/services/activity_service.dart';
 import 'package:gaza_go/platform/services/item_service.dart';
+import 'package:gaza_go/platform/services/nft_service.dart';
 import 'package:gaza_go/presentations/components/alert_ui_list.dart';
 import 'package:get/get.dart';
 import 'package:url_launcher/url_launcher.dart';
@@ -295,7 +297,7 @@ class InventoryController extends GetxController with LinearProgressMixin, Inven
   void toItemDetail(int itemId) async {
     await ItemService.getItemDetailInfo(
       itemId,
-      successCallback: (item) {
+      successCallback: (item) async {
         selectedItem.value = item;
         isShoe.value = selectedItem.value.itemCategory == 'SHOES';
         if (selectedItem.value.itemCategory == 'SHOES') {
@@ -495,7 +497,7 @@ class InventoryController extends GetxController with LinearProgressMixin, Inven
 
   void showShoesRepairPopup(int id, context) async {
     isDisableButton.value = true;
-    if(Get.currentRoute.contains('home')){
+    if (Get.currentRoute.contains('home')) {
       Adjust.trackEvent(AdjustEvent('d82o3q'));
     } else {
       Adjust.trackEvent(AdjustEvent('j7mhac'));
@@ -587,5 +589,28 @@ class InventoryController extends GetxController with LinearProgressMixin, Inven
     DateTime now = DateTime.now().toUtc();
 
     return expiryUTCDateTime.difference(now).inDays;
+  }
+
+  void moveToSolscan(String tokenAddress) {
+    Get.toNamed(Routes.webView, arguments: {'linkUrl': "https://solscan.io/token/${tokenAddress}${F.isDev ? '?cluster=devnet' : ''}"});
+  }
+
+  void confirmSendNftToStaika(InventoryController controller, InventoryItemModel item) {
+    if (item.nftTokenAddress == null || item.nftTokenAddress == '') {
+      errorBottomSheet('스타이카로 보낼 수 없는 아이템입니다.');
+      return;
+    }
+    showSendToStaikaConfirmAlert(controller, item);
+  }
+
+  void sendNftToStaika(InventoryItemModel item) {
+    Get.back();
+    NftService.requestTransferNftToStaika(
+      nftId: item.nftId!,
+      userItemId: item.id,
+      successCallback: () {
+        showNftTransferSuccess(isOnChain: false);
+      },
+    );
   }
 }

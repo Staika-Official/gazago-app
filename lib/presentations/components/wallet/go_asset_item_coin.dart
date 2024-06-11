@@ -9,11 +9,9 @@ import 'package:gaza_go/constants/enums.dart';
 import 'package:gaza_go/platform/helpers/base_helper.dart';
 import 'package:gaza_go/platform/models/asset_token_balance_model.dart';
 import 'package:gaza_go/platform/models/wallet_assets_button_model.dart';
-import 'package:gaza_go/presentations/styles/colors.dart';
 import 'package:gaza_go/presentations/styles/icons.dart';
 import 'package:gaza_go/presentations/styles/styled_text.dart';
-
-
+import 'package:gaza_go/theme/theme.g.dart';
 
 class GoAssetItemCoin extends StatelessWidget {
   final AssetTokenBalanceModel asset;
@@ -26,7 +24,7 @@ class GoAssetItemCoin extends StatelessWidget {
   Widget build(BuildContext context) {
     return Ink(
       decoration: BoxDecoration(
-        color: subBg02Color,
+        color: AppColorData.regular().colorBgTertiary,
         border: Border.all(width: 2.sp, color: Colors.black),
         borderRadius: BorderRadius.circular(12.sp),
         boxShadow: [
@@ -39,7 +37,7 @@ class GoAssetItemCoin extends StatelessWidget {
       child: InkWell(
         onTap: onTap,
         child: Padding(
-          padding: EdgeInsets.only(bottom:8.0.sp),
+          padding: EdgeInsets.only(bottom: 8.0.sp),
           child: Stack(children: [
             Padding(
               padding: EdgeInsets.symmetric(horizontal: 16.sp),
@@ -50,7 +48,7 @@ class GoAssetItemCoin extends StatelessWidget {
                   Padding(
                     padding: EdgeInsets.only(
                       top: 22.sp,
-                      bottom: 19.sp,
+                      bottom: 16.sp,
                     ),
                     child: Row(
                       mainAxisSize: MainAxisSize.max,
@@ -59,23 +57,28 @@ class GoAssetItemCoin extends StatelessWidget {
                         Row(
                           children: [
                             CircleAvatar(
-                              radius: 19.sp,
+                              radius: 16.5.sp,
                               foregroundImage: asset.logoUrl != null && asset.logoUrl != ''
                                   ? CachedNetworkImageProvider(
-                                asset.logoUrl!,
-                                headers: imageNetworkHeader,
-                              )
+                                      asset.logoUrl!,
+                                      headers: imageNetworkHeader,
+                                    )
                                   : const Svg('assets/images/common/ico_token_tik.svg') as ImageProvider,
                             ),
                             Padding(
-                              padding: EdgeInsets.only(left:10.0.sp),
-                              child: StyledText(asset.name!, fontSize: 18, lineHeight: 20, fontWeight: 500, letterSpacing: -.1, ),
+                              padding: EdgeInsets.only(left: 10.0.sp),
+                              child: Text(
+                                asset.name!,
+                                style: AppTextStyleData.regular().koBodyMediumXl.copyWith(
+                                      color: AppColorData.regular().colorTextPrimary,
+                                    ),
+                              ),
                             ),
                           ],
                         ),
                         Expanded(
                           child: Padding(
-                            padding: EdgeInsets.only(left:10.0.sp),
+                            padding: EdgeInsets.only(left: 10.0.sp),
                             child: FittedBox(
                               alignment: Alignment.centerRight,
                               fit: BoxFit.scaleDown,
@@ -86,40 +89,38 @@ class GoAssetItemCoin extends StatelessWidget {
                                   Row(
                                     mainAxisSize: MainAxisSize.min,
                                     children: [
-                                      StyledText(
+                                      Text(
                                         formatDecimalPlaces(double.parse(asset.uiAmountString!), asset.symbol == 'STIK' ? 4 : asset.decimals!, isAutoDecimal: true, roundType: RoundType.floor),
-                                        fontSize: 18,
-                                        lineHeight: 20,
-                                        letterSpacing: 0.5,
-                                        fontWeight: 700,
+                                        style: AppTextStyleData.regular().koBodySemiboldXl.copyWith(
+                                              color: AppColorData.regular().colorTextPrimary,
+                                            ),
                                       ),
                                       Padding(
                                         padding: const EdgeInsets.only(left: 3),
-                                        child: StyledText(
+                                        child: Text(
                                           asset.symbol == 'TOTAL_TIK' ? 'TIK' : asset.symbol!,
-                                          fontSize: 18,
-                                          lineHeight: 20,
-                                          letterSpacing: 0.5,
-                                          fontWeight: 400,
+                                          style: AppTextStyleData.regular().koBodyMediumXl.copyWith(
+                                                color: AppColorData.regular().colorTextPrimary,
+                                              ),
                                         ),
                                       ),
                                     ],
                                   ),
                                   showPrice
                                       ? Padding(
-                                    padding: EdgeInsets.only(top: 4.sp),
-                                    child: StyledText(
-                                      '\u2248 \$${asset.amount! / pow(10, asset.decimals!)}',
-                                      fontSize: 14,
-                                      lineHeight: 20,
-                                      letterSpacing: -0.5,
-                                      fontWeight: 500,
-                                    ),
-                                  )
+                                          padding: EdgeInsets.only(top: 4.sp),
+                                          child: StyledText(
+                                            '\u2248 \$${asset.amount! / pow(10, asset.decimals!)}',
+                                            fontSize: 14,
+                                            lineHeight: 20,
+                                            letterSpacing: -0.5,
+                                            fontWeight: 500,
+                                          ),
+                                        )
                                       : Container(),
                                   Padding(
-                                    padding: EdgeInsets.only(left:10.0.sp, right: 5.sp),
-                                    child: iconArrowRightTriangle,
+                                    padding: EdgeInsets.only(left: 4.sp, top: 2.sp),
+                                    child: iconChevronRightWhite,
                                   )
                                 ],
                               ),
@@ -129,51 +130,48 @@ class GoAssetItemCoin extends StatelessWidget {
                       ],
                     ),
                   ),
-                  Padding(
-                    padding: EdgeInsets.only(bottom:16.0.sp),
-                    child: Divider(
-                      height: 1,
-                      thickness: 2.0.sp,
-                      color: subBg01Color,
-                    ),
-                  ),
-                  ...actions.map((item) =>
-                      GestureDetector(
-                        onTap: () => item.onTapButton!(),
-                        child: Padding(
-                          padding: EdgeInsets.only(bottom:8.0.sp),
-                          child: Container(
-                            width: double.infinity,
-                            alignment: Alignment.center,
-                            padding: EdgeInsets.all(16.sp),
-                            decoration: BoxDecoration(
-                              color: subBg02Color,
-                              border: Border.all(width: 1, color: Colors.black),
-                              borderRadius: BorderRadius.circular(12.sp),
-                              boxShadow: [
-                                BoxShadow(
-                                  color: Colors.black,
-                                  offset: Offset(0, 2.sp),
+                  Row(
+                    children: [
+                      for (var item in actions.asMap().entries) ...[
+                        if (item.key > 0)
+                          SizedBox(
+                            width: 8,
+                          ),
+                        Expanded(
+                          child: GestureDetector(
+                            onTap: () => item.value.onTapButton!(),
+                            child: Padding(
+                              padding: EdgeInsets.only(bottom: 8.0.sp),
+                              child: Container(
+                                width: double.infinity,
+                                alignment: Alignment.center,
+                                padding: EdgeInsets.symmetric(horizontal: 10.sp, vertical: 12.sp),
+                                decoration: BoxDecoration(
+                                  color: AppColorData.regular().colorBgTertiary,
+                                  border: Border.all(
+                                    width: 2,
+                                    color: AppColorData.regular().colorBorderBlack,
+                                  ),
+                                  borderRadius: BorderRadius.circular(8.sp),
                                 ),
-                              ],
-                            ),
-                            child:  StyledText(
-                              item.buttonText,
-                              color: Colors.white,
-                              fontWeight: 600,
-                              fontSize: 16,
-                              lineHeight: 16,
+                                child: FittedBox(
+                                  child: Text(
+                                    item.value.buttonText,
+                                    style: AppTextStyleData.regular().koBodyMediumXl.copyWith(
+                                          color: AppColorData.regular().colorTextPrimary,
+                                        ),
+                                  ),
+                                ),
+                              ),
                             ),
                           ),
                         ),
-                      )
-                  ).toList(),
-
-
+                      ],
+                    ],
+                  )
                 ],
               ),
             ),
-
           ]),
         ),
       ),

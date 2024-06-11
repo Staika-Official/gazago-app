@@ -3,7 +3,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:gaza_go/platform/models/repair_use_item_model.dart';
 import 'package:gaza_go/presentations/styles/colors.dart';
 import 'package:gaza_go/presentations/styles/icons.dart';
-import 'package:gaza_go/presentations/styles/styled_text.dart';
+import 'package:gaza_go/theme/theme.g.dart';
 
 class ItemCounter extends StatelessWidget {
   final RepairUseItemModel item;
@@ -26,6 +26,7 @@ class ItemCounter extends StatelessWidget {
           child: Padding(
             padding: EdgeInsets.all(8.0.sp),
             child: Row(
+              crossAxisAlignment: CrossAxisAlignment.center,
               children: [
                 InkWell(
                   onTap: () {
@@ -34,10 +35,10 @@ class ItemCounter extends StatelessWidget {
                     }
                   },
                   child: Container(
-                    width: 26.sp,
-                    height: 26.sp,
+                    width: 20.sp,
+                    height: 20.sp,
                     decoration: BoxDecoration(
-                      color: item.spendItemAmount! > 0 ? skyBlueColor : lightGrayColor,
+                      color: item.spendItemAmount! > 0 ? AppColorData.regular().colorBgInteractivePrimary : AppColorData.regular().colorBgInteractivePrimaryDisabled,
                       borderRadius: BorderRadius.circular(50),
                       boxShadow: [
                         BoxShadow(
@@ -58,13 +59,13 @@ class ItemCounter extends StatelessWidget {
                 Padding(
                   padding: EdgeInsets.symmetric(horizontal: 5.0.sp),
                   child: Container(
-                    width: 80.sp,
+                    width: 40.sp,
                     child: Center(
-                      child: StyledText(
+                      child: Text(
                         item.spendItemAmount.toString(),
-                        fontSize: 20,
-                        lineHeight: 26,
-                        fontWeight: 600,
+                        style: AppTextStyleData.regular().koBodyMediumXl.copyWith(
+                              color: AppColorData.regular().colorTextPrimary,
+                            ),
                       ),
                     ),
                   ),
@@ -76,10 +77,10 @@ class ItemCounter extends StatelessWidget {
                     }
                   },
                   child: Container(
-                    width: 26.sp,
-                    height: 26.sp,
+                    width: 20.sp,
+                    height: 20.sp,
                     decoration: BoxDecoration(
-                      color: item.spendItemAmount! == maxCount ? lightGrayColor : skyBlueColor,
+                      color: item.spendItemAmount! == maxCount ? AppColorData.regular().colorBgInteractivePrimaryDisabled : AppColorData.regular().colorBgInteractivePrimary,
                       boxShadow: [
                         BoxShadow(
                           color: Colors.black,

@@ -9,7 +9,7 @@ class ShopItemPurchaseResponseModel {
   int id;
   int userId;
   int? nftId;
-  String serialNumber;
+  String? serialNumber;
   String itemName;
   String itemImageUrl;
   String? publishType;
@@ -20,6 +20,7 @@ class ShopItemPurchaseResponseModel {
   double? rewardRate;
   double? staminaReduceRate;
   String? description;
+  String? expiredDate;
   InventoryItemStatModel? itemStat;
   bool? equippedChallengeItem;
   bool? equipped;
@@ -40,6 +41,7 @@ class ShopItemPurchaseResponseModel {
     this.rewardRate,
     this.staminaReduceRate,
     this.description,
+    this.expiredDate,
     this.itemStat,
     this.equippedChallengeItem,
     this.equipped,

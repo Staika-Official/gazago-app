@@ -4,27 +4,17 @@ import 'package:dio/dio.dart';
 import 'package:gaza_go/constants/base_urls.dart';
 import 'package:gaza_go/constants/enums.dart';
 import 'package:gaza_go/platform/middleware/dio_middleware.dart';
-import 'package:gaza_go/platform/models/inventory_item_model.dart';
 import 'package:gaza_go/platform/models/recovery_stamina_model.dart';
 import 'package:gaza_go/platform/stores/hive_store.dart';
 
 import '../models/repair_shoes_model.dart';
 
 class ItemApi {
-  static Future<List<InventoryItemModel>> getMyEquipmentItemsList(userId) async {
-    Response res = await Api.client(
-      serviceUrl: ServiceUrl.itemService,
-      showLoading: false,
-    ).get('/users/$userId');
-    List<InventoryItemModel> items = res.data.map((item) => InventoryItemModel.fromJson(item));
-    return items;
-  }
-
-  static Future<Response> getAllMyItems(String userId, int page) async {
+  static Future<Response> getAllMyItems(String userId, int page, String? publishType) async {
     return await Api.client(
       serviceUrl: ServiceUrl.itemService,
       showLoading: false,
-    ).get('/users/$userId', queryParameters: {'size': 100, 'page': page});
+    ).get('/users/$userId', queryParameters: {'size': 100, 'page': page, 'publishType': publishType});
   }
 
   static Future<Response> getMyItemsByCategory(String userId, String itemCategory, int page) async {

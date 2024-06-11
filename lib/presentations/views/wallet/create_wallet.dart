@@ -9,6 +9,7 @@ import 'package:gaza_go/presentations/components/gazago_button.dart';
 import 'package:gaza_go/presentations/styles/colors.dart';
 import 'package:gaza_go/presentations/styles/icons.dart';
 import 'package:gaza_go/presentations/styles/styled_text.dart';
+import 'package:gaza_go/theme/theme.g.dart';
 import 'package:get/get.dart';
 import 'package:lottie/lottie.dart';
 
@@ -83,23 +84,22 @@ class CreateWallet extends StatelessWidget {
                                     ],
                                   ),
                                 ),
-                                const Padding(
+                                Padding(
                                   padding: EdgeInsets.only(top: 34),
-                                  child: StyledText(
-                                    '지갑 생성이 완료 되었습니다.',
-                                    fontSize: 22,
-                                    fontWeight: 600,
-                                    lineHeight: 26,
+                                  child: Text(
+                                    'Staika 지갑을 만들었어요.',
+                                    style: AppTextStyleData.regular().koHeadingMediumSm.copyWith(
+                                          color: AppColorData.regular().colorTextPrimary,
+                                        ),
                                   ),
                                 ),
                                 Padding(
                                   padding: const EdgeInsets.only(top: 16, bottom: 200),
-                                  child: StyledText(
-                                    '이제 스타이카와 함께 편안한\n디지털 자산관리를 시작해보세요.',
-                                    fontSize: 16,
-                                    lineHeight: 22,
-                                    fontWeight: 500,
-                                    color: deepGrayColor,
+                                  child: Text(
+                                    '이제 Staika wallet과 함께 편안한\n디지털 자산관리를 시작해보세요.',
+                                    style: AppTextStyleData.regular().koBodyMediumLg.copyWith(
+                                          color: AppColorData.regular().colorTextPrimary,
+                                        ),
                                     textAlign: TextAlign.center,
                                   ),
                                 ),
@@ -111,12 +111,12 @@ class CreateWallet extends StatelessWidget {
                           padding: const EdgeInsets.all(20),
                           child: GazagoButton(
                             onTap: () async {
-                              if(Get.isRegistered<StaikaWalletController>()){
+                              if (Get.isRegistered<StaikaWalletController>()) {
                                 await Get.find<StaikaWalletController>().getStaikaWalletInfo();
                               }
                               Get.until((route) => Get.currentRoute == Routes.wallet);
                             },
-                            buttonText: '시작하기',
+                            buttonText: '시작',
                             buttonColor: skyBlueColor,
                           ),
                         ),
