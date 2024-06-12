@@ -8869,7 +8869,7 @@ void showConfirmCollectionRewardAlert(CollectionDetailController controller) {
             child: Text(
               '리워드를 받으면 컬렉션 재료는 모두 사라져요.',
               style: AppTextStyleData.regular().koBodyMediumMd.copyWith(
-                    color: AppColorData.regular().colorTextPrimary,
+                    color: AppColorData.regular().colorTextSecondary,
                   ),
             )),
       ],

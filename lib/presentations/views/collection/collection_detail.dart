@@ -146,7 +146,7 @@ class CollectionDetail extends StatelessWidget {
 
           ),
           child: Padding(
-            padding: EdgeInsets.symmetric(vertical: 12.0.sp, horizontal: 12.sp),
+            padding: EdgeInsets.only(top: 8.0.sp, bottom: 16.sp, left: 12.sp, right: 12.sp),
             child: Column(
               children: [
                 Column(
@@ -187,7 +187,7 @@ class CollectionDetail extends StatelessWidget {
                       padding: EdgeInsets.only(top: 2.0.sp),
                       child: FittedBox(
                         child: Text(
-                          '${item.completeAmount ?? 0} / ${formatDecimalPlaces(item.quantity, 0)}',
+                          '${item.completeAmount != null ? item.completeAmount >= item.quantity ? item.quantity : item.completeAmount : 0} / ${formatDecimalPlaces(item.quantity, 0)}',
                           style: AppTextStyleData
                               .regular()
                               .koBodyMediumSm
@@ -202,7 +202,7 @@ class CollectionDetail extends StatelessWidget {
                       padding: EdgeInsets.only(top: 2.0.sp),
                       child: FittedBox(
                         child: Text(
-                          '${formatDecimalPlaces(controller.currentMyTokenCondition(item.type), 2, isAutoDecimal: true)} / ${formatDecimalPlaces(item.quantity, 2, isAutoDecimal: true)}',
+                          '${formatDecimalPlaces(controller.currentMyTokenCondition(item.type, item.quantity), 2, isAutoDecimal: true)} / ${formatDecimalPlaces(item.quantity, 2, isAutoDecimal: true)}',
                           style: AppTextStyleData
                               .regular()
                               .koBodyMediumSm
@@ -291,7 +291,7 @@ class CollectionDetail extends StatelessWidget {
 
 
     return Scaffold(
-      resizeToAvoidBottomInset: false,
+      resizeToAvoidBottomInset: true,
       appBar: PreferredSize(
           preferredSize: preferredSize, // here the desired height
           child: const SecondaryAppbar(
@@ -300,9 +300,10 @@ class CollectionDetail extends StatelessWidget {
           )),
       backgroundColor: AppColorData
           .regular()
-          .colorBgPrimary,
+          .colorBgTertiary,
       body:
       SingleChildScrollView(
+        physics:  ClampingScrollPhysics(),
         child: Obx(() {
           return Column(
             children: [
@@ -383,14 +384,18 @@ class CollectionDetail extends StatelessWidget {
                               padding: EdgeInsets.all(20.0.sp),
                               child: Column(
                                 children: [
-                                  controller.renderCollectionImage(controller.detailCollection.value.gatheringReward),
+                                  SizedBox(
+                                    width: 148.sp,
+                                      height: 148.sp,
+                                      child: controller.renderCollectionImage(controller.detailCollection.value.gatheringReward)
+                                  ),
                                   Padding(
                                     padding: EdgeInsets.only(top: 9.0.sp),
                                     child: Row(
                                       mainAxisAlignment: MainAxisAlignment.center,
                                       crossAxisAlignment: CrossAxisAlignment.center,
                                       children: [
-                                        controller.detailCollection.value.gatheringReward.type == 'ITEM' || controller.detailCollection.value.gatheringReward == 'BADGE' ?
+                                        controller.detailCollection.value.gatheringReward.type == 'ITEM' || controller.detailCollection.value.gatheringReward.type == 'BADGE' ?
                                         Text(
                                           controller.detailCollection.value.gatheringReward.item == null ? controller.detailCollection.value.gatheringReward.badgeComposeConfig!.name : controller
                                               .detailCollection.value
@@ -564,7 +569,7 @@ class CollectionDetail extends StatelessWidget {
                     .regular()
                     .colorBgTertiary,
                 child: Padding(
-                  padding: EdgeInsets.symmetric(vertical: 24.0.sp, horizontal: 16.sp),
+                  padding: EdgeInsets.only(top: 24.0.sp, left: 16.sp, right: 16.sp, bottom: 40.sp),
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [

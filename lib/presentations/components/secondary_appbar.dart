@@ -71,17 +71,14 @@ class SecondaryAppbar extends StatelessWidget implements PreferredSizeWidget {
           children: [
             isShowBackButton
                 ? Container(
-                    width: 30,
+                    width: 24,
                     padding: EdgeInsets.zero,
                     child: IconButton(
                       onPressed: () => Get.back(),
                       padding: EdgeInsets.zero,
-                      iconSize: 30,
-                      splashRadius: 30.sp,
-                      icon: const Icon(
-                        Icons.chevron_left_sharp,
-                        color: Colors.white,
-                      ),
+                      iconSize: 24,
+                      splashRadius: 24.sp,
+                      icon: iconHeaderBack,
                     ),
                   )
                 : Container(
@@ -109,14 +106,7 @@ class SecondaryAppbar extends StatelessWidget implements PreferredSizeWidget {
                     borderRadius: const BorderRadius.all(
                       Radius.circular(20),
                     ),
-                    boxShadow: const [
-                      BoxShadow(
-                        color: Colors.black,
-                        offset: Offset(0, 2),
-                        blurRadius: 0.0,
-                        spreadRadius: 0.0,
-                      ),
-                    ],
+
                   ),
                   child: ClipRRect(
                     borderRadius: BorderRadius.all(

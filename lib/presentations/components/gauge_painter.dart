@@ -13,6 +13,7 @@ class GaugePainter extends CustomPainter {
   final Color backgroundColor;
   final GaugeType gaugeType;
 
+
   GaugePainter({
     required this.percentage,
     this.fillColor = Colors.blue,
@@ -97,5 +98,59 @@ class GaugePainter extends CustomPainter {
   @override
   bool shouldRepaint(CustomPainter oldDelegate) {
     return true;
+  }
+}
+
+class AnimatedGauge extends StatefulWidget {
+  final double percentage;
+  final Color fillColor;
+  final Color backgroundColor;
+  final GaugeType gaugeType;
+
+  AnimatedGauge({
+    required this.percentage,
+    this.fillColor = Colors.blue,
+    this.backgroundColor = Colors.grey,
+    this.gaugeType = GaugeType.linear,});
+
+  @override
+  _AnimatedGaugeState createState() => _AnimatedGaugeState();
+}
+
+class _AnimatedGaugeState extends State<AnimatedGauge> with SingleTickerProviderStateMixin {
+  late AnimationController _controller;
+  late Animation<double> _animation;
+
+  @override
+  void initState() {
+    super.initState();
+    _controller = AnimationController(
+      vsync: this,
+      duration: Duration(seconds: 2),
+    );
+
+    _animation = Tween<double>(begin: 0, end: 100).animate(_controller)
+      ..addListener(() {
+        setState(() {});
+      });
+
+    _controller.forward();
+  }
+
+  @override
+  void dispose() {
+    _controller.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return CustomPaint(
+      size: Size(200, 8),
+      painter: GaugePainter(
+        percentage: _animation.value,
+        gaugeType: widget.gaugeType,
+      ),
+    );
   }
 }

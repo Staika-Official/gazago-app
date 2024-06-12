@@ -3,7 +3,6 @@ import 'package:adjust_sdk/adjust_event.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:flutter_svg_provider/flutter_svg_provider.dart' as sp;
 import 'package:gaza_go/constants/config.dart';
 import 'package:gaza_go/constants/routes.dart';
 import 'package:gaza_go/platform/controllers/notice_popup_controller.dart';
@@ -11,8 +10,10 @@ import 'package:gaza_go/platform/controllers/wallet_master_controller.dart';
 import 'package:gaza_go/platform/helpers/base_helper.dart';
 import 'package:gaza_go/presentations/styles/colors.dart';
 import 'package:gaza_go/presentations/styles/icons.dart';
+import 'package:gaza_go/presentations/styles/styled_text.dart';
 import 'package:gaza_go/theme/theme.g.dart';
 import 'package:get/get.dart';
+import 'package:flutter_svg_provider/flutter_svg_provider.dart' as sp;
 
 class MainAppbar extends StatelessWidget implements PreferredSizeWidget {
   const MainAppbar({super.key});
@@ -27,9 +28,10 @@ class MainAppbar extends StatelessWidget implements PreferredSizeWidget {
               radius: 11.sp,
               foregroundImage: token.logoUrl != '' && token.logoUrl != null
                   ? CachedNetworkImageProvider(
-                      token.logoUrl!,
-                      headers: imageNetworkHeader,
-                    )
+                token.logoUrl!,
+                headers: imageNetworkHeader,
+
+              )
                   : sp.Svg('assets/images/common/ico_token_tik.svg') as ImageProvider,
             ),
             Padding(
@@ -38,11 +40,17 @@ class MainAppbar extends StatelessWidget implements PreferredSizeWidget {
                 constraints: const BoxConstraints(maxWidth: 90),
                 child: FittedBox(
                   fit: BoxFit.scaleDown,
-                  child: Text(token.symbol! == 'STIK' ? formatDecimalPlaces(double.parse(token.uiAmountString!), 2, isAutoDecimal: true) : formatDecimalPlaces(double.parse(token.uiAmountString!), 0),
-                      style: AppTextStyleData.regular().koBodyMediumSm.copyWith(
-                            color: Colors.white,
-                            fontSize: 12.sp,
-                          )),
+                  child: Text(
+                      token.symbol! == 'STIK' ? formatDecimalPlaces(double.parse(token.uiAmountString!), 2, isAutoDecimal: true) : formatDecimalPlaces(double.parse(token.uiAmountString!), 0),
+                      style: AppTextStyleData
+                          .regular()
+                          .koBodyMediumSm
+                          .copyWith(
+                        color: Colors.white,
+                        fontSize: 12.sp,
+
+                      )
+                  ),
                 ),
               ),
             ),
@@ -61,7 +69,9 @@ class MainAppbar extends StatelessWidget implements PreferredSizeWidget {
     WalletMasterController walletMasterController = Get.isRegistered<WalletMasterController>() ? Get.find<WalletMasterController>() : Get.put(WalletMasterController());
 
     return AppBar(
-      backgroundColor: AppColorData.regular().colorBgPrimary,
+      backgroundColor: AppColorData
+          .regular()
+          .colorBgPrimary,
       bottomOpacity: 0.0,
       elevation: 0.0,
       automaticallyImplyLeading: false,
@@ -79,14 +89,7 @@ class MainAppbar extends StatelessWidget implements PreferredSizeWidget {
                 borderRadius: const BorderRadius.all(
                   Radius.circular(20),
                 ),
-                boxShadow: const [
-                  BoxShadow(
-                    color: Colors.black,
-                    offset: Offset(0, 2),
-                    blurRadius: 0.0,
-                    spreadRadius: 0.0,
-                  ),
-                ],
+
               ),
               child: ClipRRect(
                 borderRadius: BorderRadius.all(
@@ -117,7 +120,7 @@ class MainAppbar extends StatelessWidget implements PreferredSizeWidget {
                 Stack(
                   children: [
                     IconButton(
-                      padding: EdgeInsets.all(7.sp),
+                      padding: EdgeInsets.symmetric(horizontal:9.sp),
                       onPressed: () => controller.moveToNotificationsListPage(),
                       icon: iconHeaderBell,
                       splashRadius: 15.sp,
@@ -129,23 +132,24 @@ class MainAppbar extends StatelessWidget implements PreferredSizeWidget {
                     Obx(() {
                       return controller.hasNewNotice.value
                           ? Positioned(
-                              top: 7.sp,
-                              right: 6.sp,
-                              child: Container(
-                                width: 8,
-                                height: 8,
-                                decoration: BoxDecoration(
-                                  color: const Color(0xffFF1414),
-                                  borderRadius: BorderRadius.circular(8),
-                                ),
-                              ),
-                            )
+                        top: 0.sp,
+                        right: 6.sp,
+                        child: Container(
+                          width: 8,
+                          height: 8,
+                          decoration: BoxDecoration(
+                            color: const Color(0xffFF1414),
+                            borderRadius: BorderRadius.circular(8),
+                          ),
+                        ),
+                      )
                           : Container();
                     })
                   ],
                 ),
+
                 IconButton(
-                  padding: EdgeInsets.all(7.sp),
+                  padding: EdgeInsets.symmetric(horizontal:9.sp),
                   onPressed: () {
                     Get.toNamed(Routes.preferences);
                     Adjust.trackEvent(AdjustEvent('j66t7q'));

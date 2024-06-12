@@ -1,6 +1,7 @@
 import 'package:adjust_sdk/adjust.dart';
 import 'package:adjust_sdk/adjust_event.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_html/flutter_html.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:gaza_go/constants/enums.dart';
@@ -18,6 +19,8 @@ import 'package:gaza_go/presentations/styles/styled_text.dart';
 import 'package:gaza_go/theme/theme.g.dart';
 import 'package:get/get.dart';
 import 'package:simple_animations/animation_builder/custom_animation_builder.dart';
+import 'package:simple_animations/animation_builder/mirror_animation_builder.dart';
+import 'package:simple_animations/animation_builder/play_animation_builder.dart';
 import 'package:simple_animations/movie_tween/movie_tween.dart';
 
 class CollectionHome extends StatelessWidget {
@@ -75,7 +78,7 @@ class CollectionHome extends StatelessWidget {
               .regular()
               .colorBgPrimary,
           border: Border.all(
-            width: 2.sp,
+            width: 1.sp,
             color: renderDifficultyColor(gatheringDifficultyType),
           ),
           borderRadius: BorderRadius.all(
@@ -109,106 +112,136 @@ class CollectionHome extends StatelessWidget {
     );
   }
 
-  List<dynamic> renderCollectionList(CollectionController controller, data) {
+  List<dynamic> renderCollectionList(context, CollectionController controller, data) {
+
     return data.map((item) {
-      return InkWell(
-        onTap: () {
-          controller.moveToDetailCollection(item);
-        },
-        child: Padding(
-          padding: EdgeInsets.all(12.0.sp),
-          child: Column(
-            children: [
-              renderCollectionDifficultyGrade(item.gatheringDifficultyType),
-              Stack(
-                  children: [
-                    SizedBox(
-                        width: 114.sp,
-                        height: 114.sp,
-                        child: Center(
-                            child: item.gatheringConditions == item.completeQuantity || item.alreadyIssued
-                                ? renderCollectionImage(item.gatheringReward)
-                                : ColorFiltered(
-                                colorFilter: const ColorFilter.matrix(<double>[
-                                  0.2126, 0.7152, 0.0722, 0, 0,
-                                  0.2126, 0.7152, 0.0722, 0, 0,
-                                  0.2126, 0.7152, 0.0722, 0, 0,
-                                  0, 0, 0, 1, 0,
-                                ]),
-                                child: renderCollectionImage(item.gatheringReward)
-                            )
-                        )
-                    ),
-                    if(item.toDateTime != null)
-                      Positioned(left: 0, top: 2.sp, child: renderCollectionDdayLabel(item.toDateTime)),
-                  ]
-              ),
-              item.alreadyIssued ? Padding(
-                padding: EdgeInsets.only(top: 4.0.sp),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    iconCollectionComplete,
-                    Padding(
-                      padding: EdgeInsets.only(left: 3.0.sp),
-                      child: Text(
-                        '컬렉션 완료',
-                        style: AppTextStyleData
-                            .regular()
-                            .koBodyMediumSm
-                            .copyWith(
-                            color: AppColorData
-                                .regular()
-                                .colorTextPrimary,
-                            height: 1.1
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
-              ) : Column(
+      double endValue = item.completeQuantity != null
+          ? (item.completeQuantity / item.gatheringConditions.length) * 100
+          : 0;
+      var tween = MovieTween()
+        ..tween(
+          'progress',
+          Tween<double>(begin: 0, end: endValue),
+          duration: Duration(milliseconds: 200),
+        );
+
+      return Padding(
+        padding: EdgeInsets.symmetric(vertical: 20.0.sp),
+        child: InkWell(
+          onTap: () {
+            controller.moveToDetailCollection(item);
+          },
+          child: Container(
+            width: (MediaQuery
+                .of(context)
+                .size
+                .width / 3) - 12.sp,
+            child: Padding(
+              padding: EdgeInsets.only(left: 12.0.sp, right: 12.sp),
+              child: Column(
                 children: [
-                  CustomPaint(
-                    size: Size(double.infinity, 8.sp),
-                    painter: GaugePainter(
-                        percentage: item.completeQuantity != null ? (item.completeQuantity / item.gatheringConditions.length) * 100 : 0,
-                        fillColor: AppColorData
-                            .regular()
-                            .colorPointCyan,
-                        backgroundColor: AppColorData
-                            .regular()
-                            .colorBgTertiary
-                    ),
+                  renderCollectionDifficultyGrade(item.gatheringDifficultyType),
+                  Stack(
+                      children: [
+                        SizedBox(
+                            width: 114.sp,
+                            height: 114.sp,
+                            child: Center(
+                                child: item.gatheringConditions.length == item.completeQuantity || item.alreadyIssued
+                                    ? renderCollectionImage(item.gatheringReward)
+                                    : Opacity(
+                                      opacity: .4,
+                                      child: ColorFiltered(
+                                      colorFilter: const ColorFilter.matrix(<double>[
+                                        0.2126, 0.7152, 0.0722, 0, 0,
+                                        0.2126, 0.7152, 0.0722, 0, 0,
+                                        0.2126, 0.7152, 0.0722, 0, 0,
+                                        0, 0, 0, 1, 0,
+                                      ]),
+                                      child: renderCollectionImage(item.gatheringReward)
+                                ),
+                                    )
+                            )
+                        ),
+                        if(item.toDateTime != null && !item.alreadyIssued)
+                          Positioned(left: 0, top: 2.sp, child: renderCollectionDdayLabel(item.toDateTime)),
+                      ]
                   ),
-                  if(item.completeQuantity != null)
-                    Padding(
-                      padding: EdgeInsets.only(top: 2.0.sp),
-                      child: item.completeQuantity == item.gatheringConditions.length ? Text(
-                        '리워드 받기!',
-                        style: AppTextStyleData
-                            .regular()
-                            .koBodyMediumSm
-                            .copyWith(
-                            color: AppColorData
+                  item.alreadyIssued ? Padding(
+                    padding: EdgeInsets.only(top: 4.0.sp),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        iconCollectionComplete,
+                        Padding(
+                          padding: EdgeInsets.only(left: 3.0.sp),
+                          child: Text(
+                            '컬렉션 완료',
+                            style: AppTextStyleData
                                 .regular()
-                                .colorTextPrimary,
-                            height: 1.5
+                                .koBodyMediumSm
+                                .copyWith(
+                                color: AppColorData
+                                    .regular()
+                                    .colorTextPrimary,
+                                height: 1.1
+                            ),
+                          ),
                         ),
-                      ) : Text(
-                        '${item.completeQuantity != null ? item.completeQuantity : 0}/${item.gatheringConditions.length}',
-                        style: AppTextStyleData
-                            .regular()
-                            .koBodyMediumSm
-                            .copyWith(
-                          color: AppColorData
-                              .regular()
-                              .colorTextPrimary,
-                        ),
-                      ),
-                    )
+                      ],
+                    ),
+                  ) : Column(
+                    children: [
+                      PlayAnimationBuilder<Movie>(
+                        tween: tween,
+                        builder: (BuildContext context, Movie value, Widget? child) {
+                        var progress = value.get('progress');
+                        return CustomPaint(
+                          size: Size(double.infinity, 8.sp),
+                          painter: GaugePainter(
+                              percentage: progress,
+                              fillColor: AppColorData
+                                  .regular()
+                                  .colorPointCyan,
+                              backgroundColor: AppColorData
+                                  .regular()
+                                  .colorBgTertiary
+                          ),
+                        );
+                      }, duration: const Duration(milliseconds: 500),),
+
+
+
+                        Padding(
+                          padding: EdgeInsets.only(top: 2.0.sp),
+                          child: item.completeQuantity == item.gatheringConditions.length ? Text(
+                            '리워드 받기!',
+                            style: AppTextStyleData
+                                .regular()
+                                .koBodyMediumSm
+                                .copyWith(
+                                color: AppColorData
+                                    .regular()
+                                    .colorTextPrimary,
+                                height: 1.5
+                            ),
+                          ) : Text(
+                            '${item.completeQuantity != null ? item.completeQuantity : 0}/${item.gatheringConditions.length}',
+                            style: AppTextStyleData
+                                .regular()
+                                .koBodyMediumSm
+                                .copyWith(
+                              color: AppColorData
+                                  .regular()
+                                  .colorTextPrimary,
+                            ),
+                          ),
+                        )
+                    ],
+                  )
                 ],
-              )
-            ],
+              ),
+            ),
           ),
         ),
       );
@@ -256,15 +289,16 @@ class CollectionHome extends StatelessWidget {
 
     return DefaultContainer(
       // titleText: controller.selectedItem.value.itemName,
-      titleWidget: const Row(
+      titleWidget: Row(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          StyledText(
+          Text(
             '컬렉션',
-            fontSize: 18,
-            lineHeight: 20,
-            fontWeight: 500,
-            letterSpacing: -0.02,
+            style: AppTextStyleData.regular().koHeadingMediumSm.copyWith(
+                color: AppColorData
+                    .regular()
+                    .colorTextPrimary,
+            ),
           ),
         ],
       ),
@@ -286,7 +320,7 @@ class CollectionHome extends StatelessWidget {
                         controller.moveToDetailCollection(controller.fixedCollection.value);
                       },
                       child: Padding(
-                        padding: EdgeInsets.only(left: 16.sp, right: 16.0.sp, top: 12.sp, bottom: 16.0.sp),
+                        padding: EdgeInsets.only(left: 16.sp, right: 16.0.sp, top: 12.sp, bottom: 12.0.sp),
                         child: Container(
                           width: double.infinity,
                           decoration: BoxDecoration(
@@ -461,17 +495,16 @@ class CollectionHome extends StatelessWidget {
                     )),
                     controller.collectionList.isNotEmpty ?
                       Padding(
-                        padding: EdgeInsets.all(16.0.sp),
-                        child: GridView.count(
-                          shrinkWrap: true,
-                          physics: const NeverScrollableScrollPhysics(),
-                          crossAxisSpacing: 0,
-                          mainAxisSpacing: 0,
-                          crossAxisCount: 3,
-                          childAspectRatio: 0.55,
-                          children: [
-                            ...renderCollectionList(controller, controller.collectionList),
-                          ],
+                        padding: EdgeInsets.only(left: 16.0.sp, right: 16.sp),
+                        child: AnimatedSwitcher(
+                          duration: Duration(seconds: 2),
+                          child: Wrap(
+                            spacing: 0,
+                            runSpacing: 0,
+                            children: [
+                              ...renderCollectionList(context, controller, controller.collectionList),
+                            ],
+                          ),
                         ),
                       ) : Center(child: Padding(
                       padding: EdgeInsets.only(top:150.0.sp),

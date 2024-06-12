@@ -38,16 +38,24 @@ class CollectionDetailController extends GetxController {
 
   @override
   void onInit() async {
-
-
-    await initController();
     collectionController.selectedCollection.listen((event) {
       detailCollection.value  = event;
       detailCollection.refresh();
       print(event.toJson());
     });
 
+    await initController();
+
+
     super.onInit();
+  }
+
+
+
+  @override
+  void onResumed() async {
+    print('onResumed collection');
+
   }
 
   @override
@@ -63,6 +71,10 @@ class CollectionDetailController extends GetxController {
   }
 
 
+  Future<void> refreshController() async {
+    await initController();
+  }
+
   Future<void> initController() async {
     detailCollection.value = collectionController.selectedCollection.value;
 
@@ -70,15 +82,18 @@ class CollectionDetailController extends GetxController {
 
     if(detailCollection.value.completeQuantity == detailCollection.value.gatheringConditions.length){
       detailCollection.value.getAble = true;
-    }
+      detailCollection.refresh();
 
+    }
     print(detailCollection.toJson());
   }
 
 
-  double currentMyTokenCondition(itemType){
+  double currentMyTokenCondition(itemType, requireQuantity) {
     double parseAmount(AssetTokenBalanceModel token) {
-      return double.parse(token.uiAmountString.toString());
+      return double.parse(token.uiAmountString.toString()) >= requireQuantity
+          ? requireQuantity
+          : double.parse(token.uiAmountString.toString());
     }
     switch (itemType) {
       case 'TIK':
