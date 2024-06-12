@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'dart:convert';
 
+import 'package:flutter/material.dart';
 import 'package:gaza_go/constants/enums.dart';
 import 'package:gaza_go/constants/routes.dart';
 import 'package:gaza_go/platform/controllers/activity_controller.dart';
@@ -138,7 +139,7 @@ class CollectionController extends SuperController {
           }
           fixedCollection.value = data.firstWhere((item) => item.type == 'FIXED');
           collectionList.value = data.where((item) => item.type != 'FIXED').toList();
-
+          sortObjectsByGatheringDifficulty(collectionList);
           await Future.delayed(const Duration(milliseconds: 200));
           calculatePercentage(fixedCollection.value);
           for(var collection in collectionList){
@@ -152,6 +153,16 @@ class CollectionController extends SuperController {
         errorCallback:(ErrorResponseDataModel? error){
         }
     );
+  }
+
+  void sortObjectsByGatheringDifficulty(data) async {
+    const difficultyOrder = {
+      'LEVEL_1': 1,
+      'LEVEL_2': 2,
+      'LEVEL_3': 3
+    };
+
+     data.sort((a, b) => difficultyOrder[a.gatheringDifficultyType]! - difficultyOrder[b.gatheringDifficultyType]!);
   }
 
   List<int> extractIds(List<CollectionModel> collectionList) {

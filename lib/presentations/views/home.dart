@@ -192,7 +192,7 @@ class Home extends StatelessWidget {
             ClipRRect(
               borderRadius: BorderRadius.only(topLeft: Radius.circular(15.sp), topRight: Radius.circular(15.sp)),
               child: Padding(
-                padding: EdgeInsets.only(top:8.0.sp, bottom: 20.sp),
+                padding: EdgeInsets.only(top:8.0.sp, bottom: 28.sp),
                 child: Container(
                   child: Row(
                     crossAxisAlignment: CrossAxisAlignment.start,

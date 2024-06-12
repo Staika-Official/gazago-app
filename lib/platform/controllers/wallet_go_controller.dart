@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:gaza_go/constants/enums.dart';
 import 'package:gaza_go/constants/routes.dart';
+import 'package:gaza_go/platform/controllers/collection_controller.dart';
 import 'package:gaza_go/platform/controllers/loader_controller.dart';
 import 'package:gaza_go/platform/controllers/wallet_master_controller.dart';
 import 'package:gaza_go/platform/helpers/alert_helper.dart';
@@ -24,6 +25,7 @@ import 'package:solana_web3/solana_web3.dart';
 
 class GoWalletController extends GetxController with SolanaMixin {
   WalletMasterController walletMasterController = Get.find();
+  CollectionController collectionController = Get.isRegistered<CollectionController>() ? Get.find<CollectionController>() : Get.put(CollectionController());
   LoaderController loaderController = Get.find();
   RxList productList = RxList.empty();
   Rx<ChargeTikModel> chargeTikData =
@@ -48,6 +50,16 @@ class GoWalletController extends GetxController with SolanaMixin {
     initTextController();
 
     super.onInit();
+  }
+
+  @override
+  void onClose() {
+
+    if(Get.previousRoute == Routes.collectionDetail){
+      collectionController.initController();
+    }
+
+    super.onClose();
   }
 
   void testEncode() async {

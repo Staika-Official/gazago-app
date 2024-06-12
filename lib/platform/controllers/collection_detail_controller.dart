@@ -50,6 +50,14 @@ class CollectionDetailController extends GetxController {
     super.onInit();
   }
 
+
+
+  @override
+  void onResumed() async {
+    print('onResumed collection');
+
+  }
+
   @override
   void onReady() async {
 
@@ -76,9 +84,11 @@ class CollectionDetailController extends GetxController {
   }
 
 
-  double currentMyTokenCondition(itemType){
+  double currentMyTokenCondition(itemType, requireQuantity) {
     double parseAmount(AssetTokenBalanceModel token) {
-      return double.parse(token.uiAmountString.toString());
+      return double.parse(token.uiAmountString.toString()) >= requireQuantity
+          ? requireQuantity
+          : double.parse(token.uiAmountString.toString());
     }
     switch (itemType) {
       case 'TIK':

@@ -14,8 +14,10 @@ import 'package:gaza_go/presentations/styles/styled_text.dart';
 import 'package:gaza_go/theme/theme.g.dart';
 import 'package:get/get.dart';
 import 'package:flutter_svg_provider/flutter_svg_provider.dart' as sp;
+
 class MainAppbar extends StatelessWidget implements PreferredSizeWidget {
   const MainAppbar({super.key});
+
   List<Widget> renderWalletItems(WalletMasterController walletMasterController) {
     return walletMasterController.spendingTokenUiList.map((token) {
       return Padding(
@@ -30,7 +32,7 @@ class MainAppbar extends StatelessWidget implements PreferredSizeWidget {
                 headers: imageNetworkHeader,
 
               )
-                  :  sp.Svg('assets/images/common/ico_token_tik.svg') as ImageProvider,
+                  : sp.Svg('assets/images/common/ico_token_tik.svg') as ImageProvider,
             ),
             Padding(
               padding: EdgeInsets.only(left: 4.sp),
@@ -39,12 +41,15 @@ class MainAppbar extends StatelessWidget implements PreferredSizeWidget {
                 child: FittedBox(
                   fit: BoxFit.scaleDown,
                   child: Text(
-                    token.symbol! == 'STIK' ? formatDecimalPlaces(double.parse(token.uiAmountString!), 2, isAutoDecimal: true) : formatDecimalPlaces(double.parse(token.uiAmountString!), 0),
-                    style: AppTextStyleData.regular().koBodyMediumSm.copyWith(
-                      color: Colors.white,
-                      fontSize: 12.sp,
+                      token.symbol! == 'STIK' ? formatDecimalPlaces(double.parse(token.uiAmountString!), 2, isAutoDecimal: true) : formatDecimalPlaces(double.parse(token.uiAmountString!), 0),
+                      style: AppTextStyleData
+                          .regular()
+                          .koBodyMediumSm
+                          .copyWith(
+                        color: Colors.white,
+                        fontSize: 12.sp,
 
-                    )
+                      )
                   ),
                 ),
               ),
@@ -54,115 +59,113 @@ class MainAppbar extends StatelessWidget implements PreferredSizeWidget {
       );
     }).toList();
   }
+
   @override
   Size get preferredSize => const Size.fromHeight(kToolbarHeight);
 
   @override
   Widget build(BuildContext context) {
     NoticePopupController controller = Get.put(NoticePopupController());
-    WalletMasterController walletMasterController =  Get.isRegistered<WalletMasterController>() ? Get.find<WalletMasterController>() : Get.put(WalletMasterController());
+    WalletMasterController walletMasterController = Get.isRegistered<WalletMasterController>() ? Get.find<WalletMasterController>() : Get.put(WalletMasterController());
 
     return AppBar(
-      backgroundColor: AppColorData.regular().colorBgPrimary,
+      backgroundColor: AppColorData
+          .regular()
+          .colorBgPrimary,
       bottomOpacity: 0.0,
       elevation: 0.0,
       automaticallyImplyLeading: false,
-      title: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: [
-          Container(
-            decoration: BoxDecoration(
-              color: popupBgColor,
-              border: Border.all(
-                width: 1,
-                color: Colors.black,
-              ),
-              borderRadius: const BorderRadius.all(
-                Radius.circular(20),
-              ),
-              boxShadow: const [
-                BoxShadow(
+      title: Obx(() {
+        return Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            Container(
+              decoration: BoxDecoration(
+                color: popupBgColor,
+                border: Border.all(
+                  width: 1,
                   color: Colors.black,
-                  offset: Offset(0, 2),
-                  blurRadius: 0.0,
-                  spreadRadius: 0.0,
                 ),
-              ],
-            ),
-            child: ClipRRect(
-              borderRadius: BorderRadius.all(
-                Radius.circular(20.sp),
+                borderRadius: const BorderRadius.all(
+                  Radius.circular(20),
+                ),
+
               ),
-              child: Padding(
-                padding: EdgeInsets.only(
-                  top: 4.0.sp,
-                  bottom: 4.0.sp,
-                  left: 8.sp,
-                  right: 6.sp,
+              child: ClipRRect(
+                borderRadius: BorderRadius.all(
+                  Radius.circular(20.sp),
                 ),
-                child: InkWell(
-                  onTap: () => walletMasterController.moveToWallet(),
-                  child: Row(
-                    children: [
-                      ...renderWalletItems(walletMasterController),
-                    ],
+                child: Padding(
+                  padding: EdgeInsets.only(
+                    top: 4.0.sp,
+                    bottom: 4.0.sp,
+                    left: 8.sp,
+                    right: 6.sp,
                   ),
-                ),
-              ),
-            ),
-          ),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.end,
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: [
-              Stack(
-                children: [
-                  IconButton(
-                    padding: EdgeInsets.all(7.sp),
-                    onPressed: () => controller.moveToNotificationsListPage(),
-                    icon: iconHeaderBell,
-                    splashRadius: 15.sp,
-                    iconSize: 21.sp,
-                    constraints: BoxConstraints(
-                      minWidth: 21.sp,
+                  child: InkWell(
+                    onTap: () => walletMasterController.moveToWallet(),
+                    child: Row(
+                      children: [
+                        ...renderWalletItems(walletMasterController),
+                      ],
                     ),
                   ),
-                  Obx(() {
-                    return controller.hasNewNotice.value
-                        ? Positioned(
-                            top: 7.sp,
-                            right: 6.sp,
-                            child: Container(
-                              width: 8,
-                              height: 8,
-                              decoration: BoxDecoration(
-                                color: const Color(0xffFF1414),
-                                borderRadius: BorderRadius.circular(8),
-                              ),
-                            ),
-                          )
-                        : Container();
-                  })
-                ],
-              ),
-
-              IconButton(
-                padding: EdgeInsets.all(7.sp),
-                onPressed: () {
-                  Get.toNamed(Routes.preferences);
-                  Adjust.trackEvent(AdjustEvent('j66t7q'));
-                },
-                icon: iconHeaderGear,
-                splashRadius: 15.sp,
-                iconSize: 21,
-                constraints: BoxConstraints(
-                  minWidth: 21.sp,
                 ),
               ),
-            ],
-          )
-        ],
-      ),
+            ),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.end,
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                Stack(
+                  children: [
+                    IconButton(
+                      padding: EdgeInsets.symmetric(horizontal:9.sp),
+                      onPressed: () => controller.moveToNotificationsListPage(),
+                      icon: iconHeaderBell,
+                      splashRadius: 15.sp,
+                      iconSize: 21.sp,
+                      constraints: BoxConstraints(
+                        minWidth: 21.sp,
+                      ),
+                    ),
+                    Obx(() {
+                      return controller.hasNewNotice.value
+                          ? Positioned(
+                        top: 0.sp,
+                        right: 6.sp,
+                        child: Container(
+                          width: 8,
+                          height: 8,
+                          decoration: BoxDecoration(
+                            color: const Color(0xffFF1414),
+                            borderRadius: BorderRadius.circular(8),
+                          ),
+                        ),
+                      )
+                          : Container();
+                    })
+                  ],
+                ),
+
+                IconButton(
+                  padding: EdgeInsets.symmetric(horizontal:9.sp),
+                  onPressed: () {
+                    Get.toNamed(Routes.preferences);
+                    Adjust.trackEvent(AdjustEvent('j66t7q'));
+                  },
+                  icon: iconHeaderGear,
+                  splashRadius: 15.sp,
+                  iconSize: 21,
+                  constraints: BoxConstraints(
+                    minWidth: 21.sp,
+                  ),
+                ),
+              ],
+            )
+          ],
+        );
+      }),
     );
   }
 }

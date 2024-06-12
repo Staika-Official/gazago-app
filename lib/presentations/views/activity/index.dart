@@ -338,14 +338,7 @@ class ActivityHome extends StatelessWidget {
                                     .regular()
                                     .numberRadius12),
                               ),
-                              boxShadow: const [
-                                BoxShadow(
-                                  color: Color(0xFF000000),
-                                  spreadRadius: 0,
-                                  blurRadius: 0,
-                                  offset: Offset(0, 1), // changes position of shadow
-                                ),
-                              ],
+
                             ),
                             child: Padding(
                               padding: EdgeInsets.only(left: 20.0.sp, right: 20.0.sp, top: 28.0.sp, bottom: 26.0.sp),
@@ -386,37 +379,42 @@ class ActivityHome extends StatelessWidget {
                                                 fontWeight: FontWeight.w400,
                                               ),
                                             ),
-                                            Row(
-                                              children: [
-                                                Text(
-                                                  controller.userState.value.state != null ? formatDecimalPlaces(controller.userState.value.state!.dailyGoReward!, 2) : formatDecimalPlaces(0, 2),
-                                                  style: AppTextStyleData
-                                                      .regular()
-                                                      .enHeadingBoldLg
-                                                      .copyWith(
-                                                    color: AppColorData
-                                                        .regular()
-                                                        .colorTextBrand,
-                                                    fontWeight: FontWeight.w600,
-                                                  ),
-                                                ),
-                                                Padding(
-                                                  padding: EdgeInsets.only(left: 4.0.sp, right: 5.0.sp),
-                                                  child: Text(
-                                                    'GO',
+                                            Padding(
+                                              padding: EdgeInsets.only(top:3.0.sp),
+                                              child: Row(
+                                                children: [
+                                                  Text(
+                                                    controller.userState.value.state != null ? formatDecimalPlaces(controller.userState.value.state!.dailyGoReward!, 2) : formatDecimalPlaces(0, 2),
                                                     style: AppTextStyleData
                                                         .regular()
-                                                        .enHeadingMediumSm
+                                                        .enHeadingBoldLg
                                                         .copyWith(
                                                       color: AppColorData
                                                           .regular()
-                                                          .colorTextSecondary,
-                                                      fontWeight: FontWeight.w400,
+                                                          .colorTextBrand,
+                                                      fontWeight: FontWeight.w600,
+                                                      height: 1
                                                     ),
                                                   ),
-                                                ),
-                                              ],
+                                                  Padding(
+                                                    padding: EdgeInsets.only(left: 4.0.sp, right: 5.0.sp),
+                                                    child: Text(
+                                                      'GO',
+                                                      style: AppTextStyleData
+                                                          .regular()
+                                                          .enHeadingMediumSm
+                                                          .copyWith(
+                                                        color: AppColorData
+                                                            .regular()
+                                                            .colorTextSecondary,
+                                                        fontWeight: FontWeight.w400,
+                                                        height: 1.1
+                                                      ),
+                                                    ),
+                                                  ),
+                                                ],
 
+                                              ),
                                             ),
                                           ],
                                         ),
@@ -627,7 +625,9 @@ class ActivityHome extends StatelessWidget {
                                         Container(
                                           decoration: BoxDecoration(
                                             color: skyBlueColor,
-                                            border: Border.all(width: 10.sp, color: const Color(0xFF4A4D57)),
+                                            border: Border.all(width: 10.sp, color: AppColorData
+                                                .regular()
+                                                .colorBgTertiary),
                                             borderRadius:  BorderRadius.all(
                                               Radius.circular(150.sp),
                                             ),
@@ -661,9 +661,11 @@ class ActivityHome extends StatelessWidget {
                                               shape: RoundedRectangleBorder(
                                                 borderRadius: BorderRadius.circular(150.sp),
                                               ),
-                                              color: skyBlueColor,
-                                              height: 148.sp,
-                                              minWidth: 148.sp,
+                                              color: AppColorData
+                                                  .regular()
+                                                  .colorBgBrand,
+                                              height: 144.sp,
+                                              minWidth: 144.sp,
                                               child: controller.disableActivityButton.value
                                                   ? Text(
                                                 '준비중..',
@@ -687,6 +689,7 @@ class ActivityHome extends StatelessWidget {
                                                       .regular()
                                                       .colorTextInverse,
                                                   fontWeight: FontWeight.w600,
+                                                  height: 1
                                                 ),
                                               ),
                                             ),

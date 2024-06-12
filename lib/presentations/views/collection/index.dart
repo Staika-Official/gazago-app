@@ -126,7 +126,7 @@ class CollectionHome extends StatelessWidget {
                         width: 114.sp,
                         height: 114.sp,
                         child: Center(
-                            child: item.gatheringConditions == item.completeQuantity || item.alreadyIssued
+                            child: item.gatheringConditions.length == item.completeQuantity || item.alreadyIssued
                                 ? renderCollectionImage(item.gatheringReward)
                                 : ColorFiltered(
                                 colorFilter: const ColorFilter.matrix(<double>[
@@ -139,7 +139,7 @@ class CollectionHome extends StatelessWidget {
                             )
                         )
                     ),
-                    if(item.toDateTime != null)
+                    if(item.toDateTime != null && !item.alreadyIssued)
                       Positioned(left: 0, top: 2.sp, child: renderCollectionDdayLabel(item.toDateTime)),
                   ]
               ),
