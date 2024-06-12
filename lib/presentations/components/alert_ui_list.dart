@@ -1460,7 +1460,7 @@ void itemPurchaseAlert(ShopDetailController controller, double remainMyAsset, tr
                     ),
                     Expanded(
                       child: Text(
-                        'Loyalty는 0%이에요.',
+                        'Royalty는 0%이에요.',
                         style: AppTextStyleData.regular().koBodyMediumMd.copyWith(
                               color: AppColorData.regular().colorTextSecondary,
                             ),
@@ -2250,38 +2250,6 @@ void itemFilterListAlert(ShopController controller) {
         mainAxisAlignment: MainAxisAlignment.start,
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Obx(() {
-            return Padding(
-              padding: EdgeInsets.only(bottom: 10.0.sp),
-              child: Align(
-                alignment: Alignment.topRight,
-                child: InkWell(
-                  onTap: () => controller.onSelectAllItems(),
-                  child: Container(
-                    decoration: BoxDecoration(
-                      color: controller.isSelectAllItems.value ? Colors.white : popupBgColor,
-                      border: Border.all(
-                        width: 1,
-                        color: Colors.white,
-                      ),
-                      borderRadius: BorderRadius.circular(20.sp),
-                    ),
-                    child: Padding(
-                      padding: EdgeInsets.symmetric(horizontal: 12.0.sp, vertical: 6.sp),
-                      child: StyledText(
-                        '전체',
-                        fontSize: 14,
-                        lineHeight: 16,
-                        letterSpacing: .2,
-                        fontWeight: 500,
-                        color: controller.isSelectAllItems.value ? Colors.black : Colors.white,
-                      ),
-                    ),
-                  ),
-                ),
-              ),
-            );
-          }),
           // Padding(
           //   padding: EdgeInsets.only(bottom: 10.0.sp),
           //   child: const StyledText(
@@ -2331,10 +2299,10 @@ void itemFilterListAlert(ShopController controller) {
           // }),
           Padding(
             padding: EdgeInsets.only(
-              bottom: 10.0.sp,
+              bottom: 28.sp,
             ),
             child: const StyledText(
-              '등급',
+              '필터',
               fontWeight: 500,
               fontSize: 16,
               lineHeight: 22,
@@ -2345,6 +2313,33 @@ void itemFilterListAlert(ShopController controller) {
               width: double.infinity,
               child: Wrap(
                 children: [
+                  Padding(
+                    padding: EdgeInsets.only(right: 8.sp, bottom: 10.0.sp),
+                    child: InkWell(
+                      onTap: () => controller.onSelectAllItems(),
+                      child: Container(
+                        decoration: BoxDecoration(
+                          color: controller.isSelectAllItems.value ? Colors.white : popupBgColor,
+                          border: Border.all(
+                            width: 1,
+                            color: Colors.white,
+                          ),
+                          borderRadius: BorderRadius.circular(20.sp),
+                        ),
+                        child: Padding(
+                          padding: EdgeInsets.symmetric(horizontal: 12.0.sp, vertical: 6.sp),
+                          child: StyledText(
+                            '전체',
+                            fontSize: 14,
+                            lineHeight: 16,
+                            letterSpacing: .2,
+                            fontWeight: 500,
+                            color: controller.isSelectAllItems.value ? Colors.black : Colors.white,
+                          ),
+                        ),
+                      ),
+                    ),
+                  ),
                   ...controller.gradeFilterList.asMap().entries.map(
                         (entry) => Padding(
                           padding: EdgeInsets.only(right: 8.sp, bottom: 10.sp),
@@ -2361,19 +2356,42 @@ void itemFilterListAlert(ShopController controller) {
                               ),
                               child: Padding(
                                 padding: EdgeInsets.symmetric(horizontal: 12.0.sp, vertical: 6.sp),
-                                child: StyledText(
+                                child: Text(
                                   entry.value['title']!,
-                                  fontSize: 14,
-                                  lineHeight: 16,
-                                  letterSpacing: .2,
-                                  fontWeight: 500,
-                                  color: controller.selectedGrade.any((element) => element == entry.value['value']) ? Colors.black : getItemGradeColor(entry.value['value']!),
+                                  style: AppTextStyleData.regular().enBodySemiboldMd.copyWith(
+                                        color: controller.selectedGrade.any((element) => element == entry.value['value']) ? Colors.black : getItemGradeColor(entry.value['value']!),
+                                      ),
                                 ),
                               ),
                             ),
                           ),
                         ),
                       ),
+                  Padding(
+                    padding: EdgeInsets.only(right: 8.sp, bottom: 10.sp),
+                    child: InkWell(
+                      onTap: () => controller.onSelectNftFilter(),
+                      child: Container(
+                        decoration: BoxDecoration(
+                          color: controller.isSelectNftItems.value ? AppColorData.regular().colorPointOrange : popupBgColor,
+                          border: Border.all(
+                            width: 1,
+                            color: AppColorData.regular().colorPointOrange,
+                          ),
+                          borderRadius: BorderRadius.circular(20.sp),
+                        ),
+                        child: Padding(
+                          padding: EdgeInsets.symmetric(horizontal: 12.0.sp, vertical: 6.sp),
+                          child: Text(
+                            'NFT',
+                            style: AppTextStyleData.regular().enBodySemiboldMd.copyWith(
+                                  color: controller.isSelectNftItems.value ? Colors.black : AppColorData.regular().colorPointOrange,
+                                ),
+                          ),
+                        ),
+                      ),
+                    ),
+                  ),
                 ],
               ),
             );

@@ -292,8 +292,9 @@ class NftList extends StatelessWidget {
                             ),
                           ),
                         ),
-                        SizedBox(
+                        Container(
                           height: 50,
+                          padding: EdgeInsets.symmetric(horizontal: 10.sp),
                           child: Text(
                             nftItem.name!,
                             style: AppTextStyleData.regular().koBodyMediumMd.copyWith(

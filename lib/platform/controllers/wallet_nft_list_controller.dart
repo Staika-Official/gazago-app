@@ -3,6 +3,7 @@ import 'package:gaza_go/platform/controllers/home_menu_controller.dart';
 import 'package:gaza_go/platform/controllers/inventory_controller.dart';
 import 'package:gaza_go/platform/controllers/loader_controller.dart';
 import 'package:gaza_go/platform/events/index.dart';
+import 'package:gaza_go/platform/events/replay_event_bus.dart';
 import 'package:gaza_go/platform/helpers/alert_helper.dart';
 import 'package:gaza_go/platform/models/inventory_item_model.dart';
 import 'package:gaza_go/platform/models/nft_model.dart';
@@ -49,6 +50,7 @@ class WalletNftListController extends GetxController {
   }
 
   void moveToShop() {
+    ReplayEventBus.instance.addEvent(BuyNftEvent());
     homeMenuController.selectMenu(3);
     Get.until((route) => Get.currentRoute == Routes.home);
   }

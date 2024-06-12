@@ -1,1 +1,3 @@
 class RefreshNftListEvent {}
+
+class BuyNftEvent {}
