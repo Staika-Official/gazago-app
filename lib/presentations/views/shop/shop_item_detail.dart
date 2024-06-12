@@ -11,6 +11,7 @@ import 'package:gaza_go/presentations/components/secondary_appbar.dart';
 import 'package:gaza_go/presentations/styles/colors.dart';
 import 'package:gaza_go/presentations/styles/icons.dart';
 import 'package:gaza_go/presentations/styles/styled_text.dart';
+import 'package:gaza_go/theme/theme.g.dart';
 import 'package:get/get.dart';
 
 class ShopItemDetail extends StatelessWidget {
@@ -181,11 +182,11 @@ class ShopItemDetail extends StatelessWidget {
                                 children: [
                                   Row(
                                     children: [
-                                      iconStatGo,
+                                      iconShopReward,
                                       const Padding(
                                         padding: EdgeInsets.only(left: 8.0),
                                         child: StyledText(
-                                          'GO 보상',
+                                          'GO 적립량',
                                           fontWeight: 500,
                                           fontSize: 14,
                                           lineHeight: 15,
@@ -282,11 +283,11 @@ class ShopItemDetail extends StatelessWidget {
                                 children: [
                                   Row(
                                     children: [
-                                      iconStatDurabilityLight,
+                                      iconShopDurabilityLight,
                                       const Padding(
                                         padding: EdgeInsets.only(left: 8.0),
                                         child: StyledText(
-                                          '내구도',
+                                          '내구도 저항',
                                           fontWeight: 500,
                                           fontSize: 14,
                                           lineHeight: 15,
@@ -300,21 +301,21 @@ class ShopItemDetail extends StatelessWidget {
                                         formatDecimalPlaces(controller.selectedItem.value.minDurability!, 0),
                                         fontSize: 12,
                                         fontWeight: 500,
-                                        color: lightPurpleColor,
+                                        color: AppColorData.regular().colorPointPurple,
                                         letterSpacing: -.1,
                                       ),
                                       StyledText(
                                         ' - ',
                                         fontSize: 12,
                                         fontWeight: 500,
-                                        color: lightPurpleColor,
+                                        color: AppColorData.regular().colorPointPurple,
                                         letterSpacing: -.1,
                                       ),
                                       StyledText(
                                         formatDecimalPlaces(controller.selectedItem.value.maxDurability!, 0),
                                         fontSize: 12,
                                         fontWeight: 500,
-                                        color: lightPurpleColor,
+                                        color: AppColorData.regular().colorPointPurple,
                                         letterSpacing: -.1,
                                       ),
                                     ],
@@ -341,7 +342,7 @@ class ShopItemDetail extends StatelessWidget {
                                             return Container(
                                               width: constraints.maxWidth / (controller.selectedItem.value.maxDurability! / controller.selectedItem.value.minDurability!),
                                               decoration: BoxDecoration(
-                                                color: lightPurpleColor,
+                                                color: AppColorData.regular().colorPointPurple,
                                                 borderRadius: controller.selectedItem.value.maxDurability == controller.selectedItem.value.minDurability
                                                     ? BorderRadius.all(
                                                         Radius.circular(30.sp),
@@ -356,7 +357,7 @@ class ShopItemDetail extends StatelessWidget {
                                             return Container(
                                               width: constraints.maxWidth / (controller.selectedItem.value.maxDurability! / controller.selectedItem.value.maxDurability!),
                                               decoration: BoxDecoration(
-                                                color: lightPurpleColor.withOpacity(.5),
+                                                color: AppColorData.regular().colorPointPurple.withOpacity(.5),
                                                 borderRadius: BorderRadius.all(
                                                   Radius.circular(30.sp),
                                                 ),
@@ -383,11 +384,11 @@ class ShopItemDetail extends StatelessWidget {
                                 children: [
                                   Row(
                                     children: [
-                                      iconStatStamina,
+                                      iconShopStamina,
                                       const Padding(
                                         padding: EdgeInsets.only(left: 8.0),
                                         child: StyledText(
-                                          '체력',
+                                          '체력 저항',
                                           fontWeight: 500,
                                           fontSize: 14,
                                           lineHeight: 15,
@@ -484,7 +485,7 @@ class ShopItemDetail extends StatelessWidget {
                                 children: [
                                   Row(
                                     children: [
-                                      iconStatLuck,
+                                      iconShopLuck,
                                       const Padding(
                                         padding: EdgeInsets.only(left: 8.0),
                                         child: StyledText(
@@ -791,7 +792,7 @@ class ShopItemDetail extends StatelessWidget {
                                         children: [
                                           Row(
                                             children: [
-                                              iconStatStamina,
+                                              iconShopStamina,
                                               const Padding(
                                                 padding: EdgeInsets.only(left: 8.0),
                                                 child: StyledText(
@@ -858,7 +859,7 @@ class ShopItemDetail extends StatelessWidget {
                                         children: [
                                           Row(
                                             children: [
-                                              iconStatDurabilityLight,
+                                              iconShopDurabilityLight,
                                               const Padding(
                                                 padding: EdgeInsets.only(left: 8.0),
                                                 child: StyledText(
@@ -874,7 +875,7 @@ class ShopItemDetail extends StatelessWidget {
                                             '+${formatDecimalPlaces(controller.selectedItem.value.repairDurability!, 0)}',
                                             fontSize: 12,
                                             fontWeight: 500,
-                                            color: lightPurpleColor,
+                                            color: AppColorData.regular().colorPointPurple,
                                             letterSpacing: -.1,
                                           ),
                                         ],
@@ -899,7 +900,7 @@ class ShopItemDetail extends StatelessWidget {
                                                     return Container(
                                                       width: double.infinity,
                                                       decoration: BoxDecoration(
-                                                        color: lightPurpleColor,
+                                                        color: AppColorData.regular().colorPointPurple,
                                                         borderRadius: BorderRadius.all(
                                                           Radius.circular(30.sp),
                                                         ),

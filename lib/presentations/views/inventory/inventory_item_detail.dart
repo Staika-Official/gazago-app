@@ -10,6 +10,7 @@ import 'package:gaza_go/presentations/components/default_container.dart';
 import 'package:gaza_go/presentations/styles/colors.dart';
 import 'package:gaza_go/presentations/styles/icons.dart';
 import 'package:gaza_go/presentations/styles/styled_text.dart';
+import 'package:gaza_go/theme/theme.g.dart';
 import 'package:get/get.dart';
 
 class InventoryItemDetail extends StatelessWidget {
@@ -98,7 +99,7 @@ class InventoryItemDetail extends StatelessWidget {
                                                 child: Stack(
                                                   children: [
                                                     if (controller.selectedItem.value.publishType == 'NFT')
-                                                      Positioned.fill(left: 24.sp, right: 24.sp, child: SvgPicture.asset('assets/images/shop/ico_nft_detail.svg')),
+                                                      Positioned.fill(left: 5.sp, right: 5.sp, child: SvgPicture.asset('assets/images/shop/ico_nft_detail.svg')),
                                                     Center(
                                                       child: SizedBox(
                                                         child: controller.selectedItem.value.itemImageUrl.contains('.svg')
@@ -124,22 +125,47 @@ class InventoryItemDetail extends StatelessWidget {
                                               if (controller.selectedItem.value.nftId != null)
                                                 Container(
                                                   margin: EdgeInsets.only(top: 10.sp, bottom: 10.sp),
-                                                  padding: EdgeInsets.symmetric(horizontal: 15.sp, vertical: 8.sp),
+                                                  padding: EdgeInsets.symmetric(horizontal: 8.sp, vertical: 4.sp),
                                                   decoration: BoxDecoration(
-                                                    border: Border.all(color: deepGrayColor),
+                                                    border: Border.all(color: AppColorData.regular().colorBorderTertiary),
                                                     borderRadius: BorderRadius.circular(30),
                                                   ),
-                                                  child: StyledText(
-                                                    '#${controller.selectedItem.value.nftId!}',
-                                                    fontSize: 14,
-                                                    lineHeight: 14,
-                                                    fontWeight: 600,
-                                                    color: deepGrayColor,
+                                                  child: Text(
+                                                    '#${controller.selectedItem.value.serialNumber ?? ''}',
+                                                    style: AppTextStyleData.regular().koBodySemiboldMd.copyWith(
+                                                          color: AppColorData.regular().colorTextTertiary,
+                                                        ),
+                                                  ),
+                                                ),
+                                              if (controller.selectedItem.value.tokenAddress != null)
+                                                SizedBox(
+                                                  child: InkWell(
+                                                    onTap: () => controller.moveToSolscan(controller.selectedItem.value.tokenAddress!),
+                                                    child: Padding(
+                                                      padding: EdgeInsets.only(top: 8.sp),
+                                                      child: Row(
+                                                        mainAxisSize: MainAxisSize.min,
+                                                        crossAxisAlignment: CrossAxisAlignment.center,
+                                                        children: [
+                                                          Text(
+                                                            'Solscan 보기',
+                                                            style: AppTextStyleData.regular().koBodySemiboldMd.copyWith(
+                                                                  color: AppColorData.regular().colorTextTertiary,
+                                                                ),
+                                                          ),
+                                                          Padding(
+                                                            padding: const EdgeInsets.only(top: 3),
+                                                            child: iconWebview,
+                                                          )
+                                                        ],
+                                                      ),
+                                                    ),
                                                   ),
                                                 ),
                                               if (controller.isShoe.value)
-                                                SizedBox(
-                                                  height: 27.sp,
+                                                Container(
+                                                  margin: EdgeInsets.only(top: 32),
+                                                  height: 36.sp,
                                                   child: Stack(
                                                     children: [
                                                       Row(
@@ -161,14 +187,6 @@ class InventoryItemDetail extends StatelessWidget {
                                                                         borderRadius: BorderRadius.all(
                                                                           Radius.circular(50.sp),
                                                                         ),
-                                                                        boxShadow: const [
-                                                                          BoxShadow(
-                                                                            color: Colors.black,
-                                                                            offset: Offset(0, 0),
-                                                                            blurRadius: 0.0,
-                                                                            spreadRadius: 0.0,
-                                                                          ),
-                                                                        ],
                                                                       ),
                                                                     ),
                                                                     controller.selectedItem.value.durability! > 1.0
@@ -189,14 +207,6 @@ class InventoryItemDetail extends StatelessWidget {
                                                                                   borderRadius: BorderRadius.all(
                                                                                     Radius.circular(30.sp),
                                                                                   ),
-                                                                                  boxShadow: [
-                                                                                    BoxShadow(
-                                                                                      color: Colors.black.withOpacity(0.5),
-                                                                                      offset: Offset(4.sp, 0),
-                                                                                      blurRadius: 4.0,
-                                                                                      spreadRadius: 0.0,
-                                                                                    ),
-                                                                                  ],
                                                                                 ),
                                                                               );
                                                                             },
@@ -245,6 +255,30 @@ class InventoryItemDetail extends StatelessWidget {
                                                           ),
                                                         ],
                                                       ),
+                                                      Positioned(
+                                                        top: 1,
+                                                        right: 1,
+                                                        child: GestureDetector(
+                                                          onTap: () => controller.isDisableButton.value ? null : controller.showShoesRepairPopup(controller.selectedItem.value.id, context),
+                                                          child: Container(
+                                                            width: 34,
+                                                            height: 34,
+                                                            padding: const EdgeInsets.all(2),
+                                                            decoration: ShapeDecoration(
+                                                              color: Color(0xFFB85DFF),
+                                                              shape: RoundedRectangleBorder(
+                                                                side: BorderSide(width: 2),
+                                                                borderRadius: BorderRadius.circular(999),
+                                                              ),
+                                                            ),
+                                                            child: Center(
+                                                              child: SizedBox(
+                                                                child: iconPlus,
+                                                              ),
+                                                            ),
+                                                          ),
+                                                        ),
+                                                      ),
                                                     ],
                                                   ),
                                                 ),
@@ -285,7 +319,7 @@ class InventoryItemDetail extends StatelessWidget {
                                                                           Padding(
                                                                             padding: EdgeInsets.only(left: 4.0.sp),
                                                                             child: StyledText(
-                                                                              'GO 보상',
+                                                                              'GO 적립량',
                                                                               color: skyBlueColor,
                                                                               fontSize: 12,
                                                                               lineHeight: 14,
@@ -321,7 +355,7 @@ class InventoryItemDetail extends StatelessWidget {
                                                                       lineHeight: 26,
                                                                       fontWeight: 500,
                                                                       letterSpacing: -.1,
-                                                                      color: const Color(0xFFB0A3FF),
+                                                                      color: AppColorData.regular().colorPointPurple,
                                                                     ),
                                                                     Padding(
                                                                       padding: EdgeInsets.only(top: 8.0.sp),
@@ -332,9 +366,9 @@ class InventoryItemDetail extends StatelessWidget {
                                                                           iconShopDurabilityLight,
                                                                           Padding(
                                                                             padding: EdgeInsets.only(left: 4.0.sp),
-                                                                            child: const StyledText(
-                                                                              '내구도',
-                                                                              color: Color(0xFFB0A3FF),
+                                                                            child: StyledText(
+                                                                              '내구도 저항',
+                                                                              color: AppColorData.regular().colorPointPurple,
                                                                               fontSize: 12,
                                                                               lineHeight: 12,
                                                                               letterSpacing: -.1,
@@ -380,7 +414,7 @@ class InventoryItemDetail extends StatelessWidget {
                                                                             child: iconShopStamina,
                                                                           ),
                                                                           StyledText(
-                                                                            '체력',
+                                                                            '체력 저항',
                                                                             color: lightGreenColor,
                                                                             fontSize: 12,
                                                                             lineHeight: 12,
@@ -447,7 +481,7 @@ class InventoryItemDetail extends StatelessWidget {
                                                                       lineHeight: 26,
                                                                       fontWeight: 500,
                                                                       letterSpacing: -.1,
-                                                                      color: const Color(0xFFB0A3FF),
+                                                                      color: AppColorData.regular().colorPointPurple,
                                                                     ),
                                                                     Padding(
                                                                       padding: EdgeInsets.only(top: 8.0.sp),
@@ -458,9 +492,9 @@ class InventoryItemDetail extends StatelessWidget {
                                                                           iconShopDurabilityLight,
                                                                           Padding(
                                                                             padding: EdgeInsets.only(left: 4.0.sp),
-                                                                            child: const StyledText(
+                                                                            child: StyledText(
                                                                               '내구도 수리',
-                                                                              color: Color(0xFFB0A3FF),
+                                                                              color: AppColorData.regular().colorPointPurple,
                                                                               fontSize: 12,
                                                                               lineHeight: 12,
                                                                               letterSpacing: -.1,
@@ -755,7 +789,7 @@ class InventoryItemDetail extends StatelessWidget {
                                                         border: Border.all(
                                                           width: 1,
                                                           style: BorderStyle.solid,
-                                                          color: deepGrayColor,
+                                                          color: AppColorData.regular().colorTextInteractivePrimaryPressed,
                                                         ),
                                                         borderRadius: BorderRadius.all(
                                                           Radius.circular(30.sp),
@@ -776,12 +810,11 @@ class InventoryItemDetail extends StatelessWidget {
                                                           child: Column(
                                                             mainAxisAlignment: MainAxisAlignment.center,
                                                             children: [
-                                                              StyledText(
+                                                              Text(
                                                                 '장착중',
-                                                                fontSize: 18,
-                                                                lineHeight: 18,
-                                                                fontWeight: 500,
-                                                                color: deepGrayColor,
+                                                                style: AppTextStyleData.regular().koBodyMediumXl.copyWith(
+                                                                      color: AppColorData.regular().colorTextInteractivePrimaryPressed,
+                                                                    ),
                                                               ),
                                                             ],
                                                           ),
@@ -797,9 +830,9 @@ class InventoryItemDetail extends StatelessWidget {
                                                       decoration: BoxDecoration(
                                                         color: popupBgColor,
                                                         border: Border.all(
-                                                          width: 1,
+                                                          width: 2,
                                                           style: BorderStyle.solid,
-                                                          color: const Color(0xFF54F5FF),
+                                                          color: AppColorData.regular().colorBorderInteractivePrimary,
                                                         ),
                                                         borderRadius: BorderRadius.all(
                                                           Radius.circular(30.sp),
@@ -820,11 +853,11 @@ class InventoryItemDetail extends StatelessWidget {
                                                           child: Column(
                                                             mainAxisAlignment: MainAxisAlignment.center,
                                                             children: [
-                                                              StyledText(
-                                                                '장착',
-                                                                fontSize: 18,
-                                                                lineHeight: 18,
-                                                                fontWeight: 500,
+                                                              Text(
+                                                                '장착하기',
+                                                                style: AppTextStyleData.regular().koBodyMediumXl.copyWith(
+                                                                      color: AppColorData.regular().colorTextPrimary,
+                                                                    ),
                                                               ),
                                                             ],
                                                           ),
@@ -835,21 +868,22 @@ class InventoryItemDetail extends StatelessWidget {
                                                 ),
                                         if (controller.selectedItem.value.expiredDate != null)
                                           Container(
-                                              decoration: BoxDecoration(
-                                                color: Colors.black.withOpacity(.2),
-                                              ),
-                                              child: Padding(
-                                                padding: EdgeInsets.symmetric(vertical: 10.0.sp),
-                                                child: Center(
-                                                  child: StyledText(
-                                                    '아이템 사용 기한: ${formatDateUntilTime(controller.selectedItem.value.expiredDate)} 소멸 예정',
-                                                    color: lightGrayColor,
-                                                    fontSize: 12,
-                                                    fontWeight: 500,
-                                                    letterSpacing: -0.1,
-                                                  ),
+                                            decoration: BoxDecoration(
+                                              color: Colors.black.withOpacity(.2),
+                                            ),
+                                            child: Padding(
+                                              padding: EdgeInsets.symmetric(vertical: 10.0.sp),
+                                              child: Center(
+                                                child: StyledText(
+                                                  '아이템 사용 기한: ${formatDateUntilTime(controller.selectedItem.value.expiredDate)} 소멸 예정',
+                                                  color: lightGrayColor,
+                                                  fontSize: 12,
+                                                  fontWeight: 500,
+                                                  letterSpacing: -0.1,
                                                 ),
-                                              ))
+                                              ),
+                                            ),
+                                          ),
                                       ],
                                     );
                                   },
@@ -859,322 +893,52 @@ class InventoryItemDetail extends StatelessWidget {
                           ),
                         ),
                       ),
-
-                      // // Go 보상
-                      // if (controller.selectedItem.value.itemStat!.goProfit! > 0)
-                      //   Padding(
-                      //     padding: EdgeInsets.only(top: 16.0.sp),
-                      //     child: Column(
-                      //       children: [
-                      //         Row(
-                      //           mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      //           children: [
-                      //             Row(
-                      //               children: [
-                      //                 iconStatGo,
-                      //                 const Padding(
-                      //                   padding: EdgeInsets.only(left: 8.0),
-                      //                   child: StyledText(
-                      //                     'GO 보상',
-                      //                     fontWeight: 500,
-                      //                     fontSize: 14,
-                      //                     lineHeight: 15,
-                      //                   ),
-                      //                 ),
-                      //               ],
-                      //             ),
-                      //             StyledText(
-                      //               formatDecimalPlaces(controller.selectedItem.value.itemStat!.goProfit!, 0),
-                      //               fontSize: 12,
-                      //               fontWeight: 500,
-                      //               color: skyBlueColor,
-                      //               letterSpacing: -.1,
-                      //             ),
-                      //           ],
-                      //         ),
-                      //         Padding(
-                      //           padding: EdgeInsets.only(top: 8.0.sp),
-                      //           child: ClipRRect(
-                      //             child: SizedBox(
-                      //               height: 11,
-                      //               child: Stack(
-                      //                 children: [
-                      //                   Container(
-                      //                     decoration: BoxDecoration(
-                      //                       color: subBg02Color,
-                      //                       borderRadius: BorderRadius.all(
-                      //                         Radius.circular(50.sp),
-                      //                       ),
-                      //                     ),
-                      //                   ),
-                      //                   LayoutBuilder(
-                      //                     builder: (context, constraints) {
-                      //                       return Container(
-                      //                         width: constraints.maxWidth / (double.parse(controller.itemGoMax.value) / controller.selectedItem.value.itemStat!.goProfit!),
-                      //                         decoration: BoxDecoration(
-                      //                           color: skyBlueColor,
-                      //                           borderRadius: BorderRadius.all(
-                      //                             Radius.circular(30.sp),
-                      //                           ),
-                      //                         ),
-                      //                       );
-                      //                     },
-                      //                   )
-                      //                 ],
-                      //               ),
-                      //             ),
-                      //           ),
-                      //         )
-                      //       ],
-                      //     ),
-                      //   ),
-                      // // 내구도
-                      // if (controller.selectedItem.value.itemStat!.durability! > 0)
-                      //   Padding(
-                      //     padding: EdgeInsets.only(top: 20.0.sp),
-                      //     child: Column(
-                      //       children: [
-                      //         Row(
-                      //           mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      //           children: [
-                      //             Row(
-                      //               children: [
-                      //                 iconStatDurabilityLight,
-                      //                 const Padding(
-                      //                   padding: EdgeInsets.only(left: 8.0),
-                      //                   child: StyledText(
-                      //                     '내구도',
-                      //                     fontWeight: 500,
-                      //                     fontSize: 14,
-                      //                     lineHeight: 15,
-                      //                   ),
-                      //                 ),
-                      //               ],
-                      //             ),
-                      //             StyledText(
-                      //               formatDecimalPlaces(controller.selectedItem.value.itemStat!.durability!, 0),
-                      //               fontSize: 12,
-                      //               fontWeight: 500,
-                      //               color: lightPurpleColor,
-                      //               letterSpacing: -.1,
-                      //             ),
-                      //           ],
-                      //         ),
-                      //         Padding(
-                      //           padding: EdgeInsets.only(top: 8.0.sp),
-                      //           child: ClipRRect(
-                      //             child: SizedBox(
-                      //               height: 11,
-                      //               child: Stack(
-                      //                 children: [
-                      //                   Container(
-                      //                     decoration: BoxDecoration(
-                      //                       color: subBg02Color,
-                      //                       borderRadius: BorderRadius.all(
-                      //                         Radius.circular(50.sp),
-                      //                       ),
-                      //                     ),
-                      //                   ),
-                      //                   LayoutBuilder(
-                      //                     builder: (context, constraints) {
-                      //                       return Container(
-                      //                         width: constraints.maxWidth / (double.parse(controller.itemDurabilityMax.value) / controller.selectedItem.value.itemStat!.durability!),
-                      //                         decoration: BoxDecoration(
-                      //                           color: lightPurpleColor,
-                      //                           borderRadius: BorderRadius.all(
-                      //                             Radius.circular(30.sp),
-                      //                           ),
-                      //                         ),
-                      //                       );
-                      //                     },
-                      //                   )
-                      //                 ],
-                      //               ),
-                      //             ),
-                      //           ),
-                      //         )
-                      //       ],
-                      //     ),
-                      //   ),
-                      // // 체력
-                      // if (controller.selectedItem.value.itemStat!.stamina! > 0)
-                      //   Padding(
-                      //     padding: EdgeInsets.only(top: 16.0.sp),
-                      //     child: Column(
-                      //       children: [
-                      //         Row(
-                      //           mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      //           children: [
-                      //             Row(
-                      //               children: [
-                      //                 iconStatStamina,
-                      //                 const Padding(
-                      //                   padding: EdgeInsets.only(left: 8.0),
-                      //                   child: StyledText(
-                      //                     '체력',
-                      //                     fontWeight: 500,
-                      //                     fontSize: 14,
-                      //                     lineHeight: 15,
-                      //                   ),
-                      //                 ),
-                      //               ],
-                      //             ),
-                      //             StyledText(
-                      //               formatDecimalPlaces(controller.selectedItem.value.itemStat!.stamina!, 0),
-                      //               fontSize: 12,
-                      //               fontWeight: 500,
-                      //               color: lightGreenColor,
-                      //               letterSpacing: -.1,
-                      //             ),
-                      //           ],
-                      //         ),
-                      //         Padding(
-                      //           padding: EdgeInsets.only(top: 8.0.sp),
-                      //           child: ClipRRect(
-                      //             child: SizedBox(
-                      //               height: 11,
-                      //               child: Stack(
-                      //                 children: [
-                      //                   Container(
-                      //                     decoration: BoxDecoration(
-                      //                       color: subBg02Color,
-                      //                       borderRadius: BorderRadius.all(
-                      //                         Radius.circular(50.sp),
-                      //                       ),
-                      //                     ),
-                      //                   ),
-                      //                   LayoutBuilder(
-                      //                     builder: (context, constraints) {
-                      //                       return Container(
-                      //                         width: constraints.maxWidth / (double.parse(controller.itemHealthMax.value) / controller.selectedItem.value.itemStat!.stamina!),
-                      //                         decoration: BoxDecoration(
-                      //                           color: lightGreenColor,
-                      //                           borderRadius: BorderRadius.all(
-                      //                             Radius.circular(30.sp),
-                      //                           ),
-                      //                         ),
-                      //                       );
-                      //                     },
-                      //                   )
-                      //                 ],
-                      //               ),
-                      //             ),
-                      //           ),
-                      //         )
-                      //       ],
-                      //     ),
-                      //   ),
-                      //
-                      // // 행운
-                      // if (controller.selectedItem.value.itemStat!.luck! > 0)
-                      //   Padding(
-                      //     padding: EdgeInsets.only(top: 16.0.sp),
-                      //     child: Column(
-                      //       children: [
-                      //         Row(
-                      //           mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      //           children: [
-                      //             Row(
-                      //               children: [
-                      //                 iconStatLuck,
-                      //                 const Padding(
-                      //                   padding: EdgeInsets.only(left: 8.0),
-                      //                   child: StyledText(
-                      //                     '행운',
-                      //                     fontWeight: 500,
-                      //                     fontSize: 14,
-                      //                     lineHeight: 15,
-                      //                   ),
-                      //                 ),
-                      //               ],
-                      //             ),
-                      //             StyledText(
-                      //               formatDecimalPlaces(controller.selectedItem.value.itemStat!.luck!, 0),
-                      //               fontSize: 12,
-                      //               fontWeight: 500,
-                      //               color: pointPink,
-                      //               letterSpacing: -.1,
-                      //             ),
-                      //           ],
-                      //         ),
-                      //         Padding(
-                      //           padding: EdgeInsets.only(top: 8.0.sp),
-                      //           child: ClipRRect(
-                      //             child: SizedBox(
-                      //               height: 11,
-                      //               child: Stack(
-                      //                 children: [
-                      //                   Container(
-                      //                     decoration: BoxDecoration(
-                      //                       color: subBg02Color,
-                      //                       borderRadius: BorderRadius.all(
-                      //                         Radius.circular(50.sp),
-                      //                       ),
-                      //                     ),
-                      //                   ),
-                      //                   LayoutBuilder(
-                      //                     builder: (context, constraints) {
-                      //                       return Container(
-                      //                         width: constraints.maxWidth / (double.parse(controller.itemLuckMax.value) / controller.selectedItem.value.itemStat!.luck!),
-                      //                         decoration: BoxDecoration(
-                      //                           color: pointPink,
-                      //                           borderRadius: BorderRadius.all(
-                      //                             Radius.circular(30.sp),
-                      //                           ),
-                      //                         ),
-                      //                       );
-                      //                     },
-                      //                   )
-                      //                 ],
-                      //               ),
-                      //             ),
-                      //           ),
-                      //         )
-                      //       ],
-                      //     ),
-                      //   ),
                     ],
                   ),
                 ),
               ],
             ),
           ),
-          if (controller.isShoe.value)
+          if (controller.selectedItem.value.publishType == 'NFT')
             Positioned(
               left: 20,
               right: 20,
               bottom: 10,
-              child: InkWell(
-                onTap: () => controller.isDisableButton.value ? null : controller.showShoesRepairPopup(controller.selectedItem.value.id, context),
-                child: Container(
-                  padding: EdgeInsets.all(20.sp),
-                  margin: const EdgeInsets.only(bottom: 20),
-                  width: double.infinity,
-                  decoration: BoxDecoration(
-                    color: skyBlueColor,
-                    borderRadius: BorderRadius.circular(12.sp),
-                    border: Border.all(
-                      width: 2,
-                      style: BorderStyle.solid,
+              child: Container(
+                margin: const EdgeInsets.only(bottom: 20),
+                height: 56,
+                decoration: BoxDecoration(
+                  color: skyBlueColor,
+                  borderRadius: BorderRadius.circular(12.sp),
+                  border: Border.all(
+                    width: 2,
+                    style: BorderStyle.solid,
+                    color: Colors.black,
+                  ),
+                  boxShadow: [
+                    BoxShadow(
+                      offset: Offset(0, 4.sp),
+                      blurRadius: 0,
+                      spreadRadius: 0,
                       color: Colors.black,
                     ),
-                    boxShadow: [
-                      BoxShadow(
-                        offset: Offset(0, 4.sp),
-                        blurRadius: 0,
-                        spreadRadius: 0,
-                        color: Colors.black,
-                      ),
-                    ],
-                  ),
+                  ],
+                ),
+                child: MaterialButton(
+                  onPressed: controller.selectedItem.value.equipped == true
+                      ? null
+                      : () => controller.confirmSendNftToStaika(
+                            controller,
+                            controller.selectedItem.value,
+                          ),
+                  color: AppColorData.regular().colorBgInteractivePrimary,
+                  disabledColor: AppColorData.regular().colorBgInteractivePrimaryDisabled,
+                  textColor: AppColorData.regular().colorTextInverse,
+                  elevation: 0,
                   child: Text(
-                    '신발 내구도 수리하기',
+                    'Staika 지갑으로 보내기',
                     textAlign: TextAlign.center,
-                    style: TextStyle(
-                      fontSize: 18.sp,
-                      fontWeight: FontWeight.w600,
-                      height: 16.sp / 18.sp,
-                    ),
+                    style: AppTextStyleData.regular().koBodyMediumXl,
                   ),
                 ),
               ),

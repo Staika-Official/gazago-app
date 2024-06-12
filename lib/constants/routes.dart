@@ -61,6 +61,8 @@ import 'package:gaza_go/presentations/views/wallet/buy_tik.dart';
 import 'package:gaza_go/presentations/views/wallet/create_wallet.dart';
 import 'package:gaza_go/presentations/views/wallet/create_wallet_password.dart';
 import 'package:gaza_go/presentations/views/wallet/index.dart';
+import 'package:gaza_go/presentations/views/wallet/nft_list.dart';
+import 'package:gaza_go/presentations/views/wallet/on_chain_nft_detail.dart';
 import 'package:gaza_go/presentations/views/wallet/send_stik_go_wallet.dart';
 import 'package:gaza_go/presentations/views/wallet/send_stik_staika_wallet.dart';
 import 'package:gaza_go/presentations/views/wallet/taika_pay.dart';
@@ -106,6 +108,8 @@ class Routes {
   static const buyTik = '/wallet/buy_tik';
   static const walletDetail = '/wallet/detail';
   static const walletActions = '/wallet/action';
+  static const walletNftList = '/wallet/nft/list';
+  static const walletOnChainNftDetail = '/wallet/nft/on_chain/detail';
   static const taikaPay = '/wallet/taika_pay';
   static const inventory = '/inventory';
   static const itemDetail = '/inventory/item/detail';
@@ -186,6 +190,8 @@ class Routes {
     stepPage(name: Routes.walletDetail, page: const WalletDetail()),
     stepPage(name: Routes.buyTik, page: const BuyTik()),
     stepPage(name: Routes.walletActions, page: const WalletActions()),
+    stepPage(name: Routes.walletNftList, page: const NftList()),
+    stepPage(name: Routes.walletOnChainNftDetail, page: const OnChainNftDetail()),
     stepPage(name: Routes.taikaPay, page: const TaikaPay()),
     stepPage(name: Routes.inventory, page: const InventoryHome()),
     stepPage(name: Routes.itemDetail, page: const InventoryItemDetail()),

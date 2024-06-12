@@ -9,6 +9,7 @@ import 'package:gaza_go/platform/helpers/inventory_helper.dart';
 import 'package:gaza_go/presentations/styles/colors.dart';
 import 'package:gaza_go/presentations/styles/icons.dart';
 import 'package:gaza_go/presentations/styles/styled_text.dart';
+import 'package:gaza_go/theme/theme.g.dart';
 import 'package:get/get.dart';
 
 class ShopItems extends StatelessWidget {
@@ -29,7 +30,7 @@ class ShopItems extends StatelessWidget {
             onTap: () => shopController.toItemDetail(item.id),
             child: Container(
               decoration: BoxDecoration(
-                color: item.publishType == 'NFT' ? const Color(0xFF151519) : subBg01Color,
+                color: AppColorData.regular().colorBgTertiary,
                 border: Border.all(
                   width: 2,
                   color: Colors.black,
@@ -42,203 +43,202 @@ class ShopItems extends StatelessWidget {
                 alignment: Alignment.bottomCenter,
                 children: [
                   if (item.publishType == 'NFT') Positioned(right: 10.sp, top: 10.sp, child: SvgPicture.asset('assets/images/shop/ico_nft.svg')),
-                  Center(
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.start,
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      children: [
-                        Container(
-                          child: item.itemGrade != 'NONE'
-                              ? getItemGradeIcon(item.itemGrade)
-                              : const SizedBox(
-                                  width: 90,
-                                  height: 24,
+                  Column(
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      Container(
+                        child: item.itemGrade != 'NONE'
+                            ? getItemGradeIcon(item.itemGrade)
+                            : const SizedBox(
+                                width: 90,
+                                height: 24,
+                              ),
+                      ),
+                      Column(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children: [
+                          Padding(
+                            padding: EdgeInsets.only(top: 15.sp, bottom: 6.sp),
+                            child: item.itemImageUrl != null
+                                ? AspectRatio(
+                                    aspectRatio: 1.9,
+                                    child: item.itemImageUrl!.contains('.svg')
+                                        ? SvgPicture.network(
+                                            fit: BoxFit.contain,
+                                            item.itemImageUrl!,
+                                            placeholderBuilder: (BuildContext context) => const Center(child: SizedBox.square(dimension: 40, child: CircularProgressIndicator())),
+                                            headers: imageNetworkHeader,
+                                          )
+                                        : CachedNetworkImage(
+                                            imageUrl: item.itemImageUrl!,
+                                            fit: BoxFit.fitHeight,
+                                            placeholder: (context, url) => const Center(child: SizedBox.square(dimension: 40, child: CircularProgressIndicator())),
+                                            errorWidget: (context, url, error) => Image.asset("assets/images/@temp_bal.png"),
+                                            httpHeaders: imageNetworkHeader,
+                                          ),
+                                  )
+                                : Container(),
+                          ),
+                          Text(
+                            item.name,
+                            style: AppTextStyleData.regular().koBodyMediumMd.copyWith(
+                                  color: AppColorData.regular().colorTextSecondary,
                                 ),
-                        ),
-                        Column(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          crossAxisAlignment: CrossAxisAlignment.center,
-                          children: [
+                          ),
+                          if (item.maxGoProfit != 0 || item.maxDurability != 0 || item.maxStamina != 0 || item.maxLuck != 0 || item.recoveryStamina != 0 || item.repairDurability != 0)
                             Padding(
-                              padding: EdgeInsets.symmetric(horizontal: 20.0.sp, vertical: 20.0.sp),
-                              child: item.itemImageUrl != null
-                                  ? AspectRatio(
-                                      aspectRatio: 1.5,
-                                      child: item.itemImageUrl!.contains('.svg')
-                                          ? SvgPicture.network(
-                                              fit: BoxFit.contain,
-                                              item.itemImageUrl!,
-                                              placeholderBuilder: (BuildContext context) => const Center(child: SizedBox.square(dimension: 40, child: CircularProgressIndicator())),
-                                              headers: imageNetworkHeader,
-                                            )
-                                          : CachedNetworkImage(
-                                              imageUrl: item.itemImageUrl!,
-                                              fit: BoxFit.fitHeight,
-                                              placeholder: (context, url) => const Center(child: SizedBox.square(dimension: 40, child: CircularProgressIndicator())),
-                                              errorWidget: (context, url, error) => Image.asset("assets/images/@temp_bal.png"),
-                                              httpHeaders: imageNetworkHeader,
+                              padding: EdgeInsets.symmetric(vertical: 10.0.sp, horizontal: 5.sp),
+                              child: FittedBox(
+                                child: Row(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  children: [
+                                    if (item.maxGoProfit! > 0)
+                                      Padding(
+                                        padding: const EdgeInsets.symmetric(horizontal: 4),
+                                        child: Row(
+                                          children: [
+                                            SizedBox(
+                                              width: 12.sp,
+                                              height: 12.sp,
+                                              child: iconShopReward,
                                             ),
-                                    )
-                                  : Container(),
-                            ),
-                            StyledText(
-                              item.name,
-                              fontSize: 14,
-                              fontWeight: 500,
-                              color: lightGrayColor,
-                            ),
-                            if (item.maxGoProfit != 0 || item.maxDurability != 0 || item.maxStamina != 0 || item.maxLuck != 0 || item.recoveryStamina != 0 || item.repairDurability != 0)
-                              Padding(
-                                padding: EdgeInsets.symmetric(vertical: 10.0.sp, horizontal: 5.sp),
-                                child: FittedBox(
-                                  child: Row(
-                                    mainAxisAlignment: MainAxisAlignment.center,
-                                    children: [
-                                      if (item.maxGoProfit! > 0)
-                                        Padding(
-                                          padding: const EdgeInsets.symmetric(horizontal: 4),
-                                          child: Row(
-                                            children: [
-                                              CircleAvatar(
-                                                radius: 6,
-                                                child: iconShopReward,
+                                            Padding(
+                                              padding: EdgeInsets.only(left: 3.0.sp),
+                                              child: StyledText(
+                                                '${formatDecimalPlaces(item.minGoProfit!, 0)}-${formatDecimalPlaces(item.maxGoProfit!, 0)}',
+                                                fontSize: 12,
+                                                fontWeight: 600,
+                                                letterSpacing: -.1,
+                                                color: skyBlueColor,
                                               ),
-                                              Padding(
-                                                padding: EdgeInsets.only(left: 3.0.sp),
-                                                child: StyledText(
-                                                  '${formatDecimalPlaces(item.minGoProfit!, 0)}-${formatDecimalPlaces(item.maxGoProfit!, 0)}',
-                                                  fontSize: 12,
-                                                  fontWeight: 600,
-                                                  letterSpacing: -.1,
-                                                  color: skyBlueColor,
-                                                ),
-                                              ),
-                                            ],
-                                          ),
+                                            ),
+                                          ],
                                         ),
-                                      if (item.maxDurability! > 0)
-                                        Padding(
-                                          padding: const EdgeInsets.symmetric(horizontal: 4),
-                                          child: Row(
-                                            children: [
-                                              CircleAvatar(
-                                                radius: 6,
-                                                backgroundColor: lightPurpleColor,
-                                                child: iconShopDurabilityLight,
+                                      ),
+                                    if (item.maxDurability! > 0)
+                                      Padding(
+                                        padding: const EdgeInsets.symmetric(horizontal: 4),
+                                        child: Row(
+                                          children: [
+                                            SizedBox(
+                                              width: 12.sp,
+                                              height: 12.sp,
+                                              child: iconShopDurabilityLight,
+                                            ),
+                                            Padding(
+                                              padding: EdgeInsets.only(left: 3.0.sp),
+                                              child: StyledText(
+                                                '${formatDecimalPlaces(item.minDurability!, 0)}-${formatDecimalPlaces(item.maxDurability!, 0)}',
+                                                fontSize: 12,
+                                                fontWeight: 600,
+                                                letterSpacing: -.1,
+                                                color: AppColorData.regular().colorPointPurple,
                                               ),
-                                              Padding(
-                                                padding: EdgeInsets.only(left: 3.0.sp),
-                                                child: StyledText(
-                                                  '${formatDecimalPlaces(item.minDurability!, 0)}-${formatDecimalPlaces(item.maxDurability!, 0)}',
-                                                  fontSize: 12,
-                                                  fontWeight: 600,
-                                                  letterSpacing: -.1,
-                                                  color: lightPurpleColor,
-                                                ),
-                                              ),
-                                            ],
-                                          ),
+                                            ),
+                                          ],
                                         ),
-                                      if (item.maxStamina! > 0)
-                                        Padding(
-                                          padding: const EdgeInsets.symmetric(horizontal: 4),
-                                          child: Row(
-                                            children: [
-                                              CircleAvatar(
-                                                radius: 6,
-                                                backgroundColor: lightGreenColor,
-                                                child: iconShopStamina,
+                                      ),
+                                    if (item.maxStamina! > 0)
+                                      Padding(
+                                        padding: const EdgeInsets.symmetric(horizontal: 4),
+                                        child: Row(
+                                          children: [
+                                            SizedBox(
+                                              width: 12.sp,
+                                              height: 12.sp,
+                                              child: iconShopStamina,
+                                            ),
+                                            Padding(
+                                              padding: EdgeInsets.only(left: 3.0.sp),
+                                              child: StyledText(
+                                                '${formatDecimalPlaces(item.minStamina!, 0)}-${formatDecimalPlaces(item.maxStamina!, 0)}',
+                                                fontSize: 12,
+                                                fontWeight: 600,
+                                                letterSpacing: -.1,
+                                                color: lightGreenColor,
                                               ),
-                                              Padding(
-                                                padding: EdgeInsets.only(left: 3.0.sp),
-                                                child: StyledText(
-                                                  '${formatDecimalPlaces(item.minStamina!, 0)}-${formatDecimalPlaces(item.maxStamina!, 0)}',
-                                                  fontSize: 12,
-                                                  fontWeight: 600,
-                                                  letterSpacing: -.1,
-                                                  color: lightGreenColor,
-                                                ),
-                                              ),
-                                            ],
-                                          ),
+                                            ),
+                                          ],
                                         ),
-                                      if (item.maxLuck! > 0)
-                                        Padding(
-                                          padding: const EdgeInsets.symmetric(horizontal: 4),
-                                          child: Row(
-                                            children: [
-                                              CircleAvatar(
-                                                radius: 6,
-                                                backgroundColor: pinkColor,
-                                                child: iconShopLuck,
+                                      ),
+                                    if (item.maxLuck! > 0)
+                                      Padding(
+                                        padding: const EdgeInsets.symmetric(horizontal: 4),
+                                        child: Row(
+                                          children: [
+                                            SizedBox(
+                                              width: 12.sp,
+                                              height: 12.sp,
+                                              child: iconShopLuck,
+                                            ),
+                                            Padding(
+                                              padding: EdgeInsets.only(left: 3.0.sp),
+                                              child: StyledText(
+                                                '${formatDecimalPlaces(item.minLuck!, 0)}-${formatDecimalPlaces(item.maxLuck!, 0)}',
+                                                fontSize: 12,
+                                                fontWeight: 600,
+                                                color: pinkColor,
+                                                letterSpacing: -.1,
                                               ),
-                                              Padding(
-                                                padding: EdgeInsets.only(left: 3.0.sp),
-                                                child: StyledText(
-                                                  '${formatDecimalPlaces(item.minLuck!, 0)}-${formatDecimalPlaces(item.maxLuck!, 0)}',
-                                                  fontSize: 12,
-                                                  fontWeight: 600,
-                                                  color: pinkColor,
-                                                  letterSpacing: -.1,
-                                                ),
-                                              ),
-                                            ],
-                                          ),
+                                            ),
+                                          ],
                                         ),
-                                      if (item.recoveryStamina! > 0)
-                                        Padding(
-                                          padding: const EdgeInsets.symmetric(horizontal: 4),
-                                          child: Row(
-                                            children: [
-                                              CircleAvatar(
-                                                radius: 6,
-                                                backgroundColor: lightGreenColor,
-                                                child: iconShopStamina,
+                                      ),
+                                    if (item.recoveryStamina! > 0)
+                                      Padding(
+                                        padding: const EdgeInsets.symmetric(horizontal: 4),
+                                        child: Row(
+                                          children: [
+                                            SizedBox(
+                                              width: 12.sp,
+                                              height: 12.sp,
+                                              child: iconShopStamina,
+                                            ),
+                                            Padding(
+                                              padding: EdgeInsets.only(left: 3.0.sp),
+                                              child: StyledText(
+                                                '+${formatDecimalPlaces(item.recoveryStamina!, 0)} 회복',
+                                                fontSize: 12,
+                                                fontWeight: 600,
+                                                color: lightGreenColor,
+                                                letterSpacing: -.1,
                                               ),
-                                              Padding(
-                                                padding: EdgeInsets.only(left: 3.0.sp),
-                                                child: StyledText(
-                                                  '+${formatDecimalPlaces(item.recoveryStamina!, 0)} 회복',
-                                                  fontSize: 12,
-                                                  fontWeight: 600,
-                                                  color: lightGreenColor,
-                                                  letterSpacing: -.1,
-                                                ),
-                                              ),
-                                            ],
-                                          ),
+                                            ),
+                                          ],
                                         ),
-                                      if (item.repairDurability! > 0)
-                                        Padding(
-                                          padding: const EdgeInsets.symmetric(horizontal: 4),
-                                          child: Row(
-                                            children: [
-                                              CircleAvatar(
-                                                radius: 6,
-                                                backgroundColor: lightPurpleColor,
-                                                child: iconShopDurabilityLight,
+                                      ),
+                                    if (item.repairDurability! > 0)
+                                      Padding(
+                                        padding: const EdgeInsets.symmetric(horizontal: 4),
+                                        child: Row(
+                                          children: [
+                                            SizedBox(
+                                              width: 12.sp,
+                                              height: 12.sp,
+                                              child: iconShopDurabilityLight,
+                                            ),
+                                            Padding(
+                                              padding: EdgeInsets.only(left: 3.0.sp),
+                                              child: StyledText(
+                                                '+${formatDecimalPlaces(item.repairDurability!, 0)} 수리',
+                                                fontSize: 12,
+                                                fontWeight: 600,
+                                                color: AppColorData.regular().colorPointPurple,
+                                                letterSpacing: -.1,
                                               ),
-                                              Padding(
-                                                padding: EdgeInsets.only(left: 3.0.sp),
-                                                child: StyledText(
-                                                  '+${formatDecimalPlaces(item.repairDurability!, 0)} 수리',
-                                                  fontSize: 12,
-                                                  fontWeight: 600,
-                                                  color: lightPurpleColor,
-                                                  letterSpacing: -.1,
-                                                ),
-                                              ),
-                                            ],
-                                          ),
+                                            ),
+                                          ],
                                         ),
-                                    ],
-                                  ),
+                                      ),
+                                  ],
                                 ),
                               ),
-                          ],
-                        ),
-                      ],
-                    ),
+                            ),
+                        ],
+                      ),
+                    ],
                   ),
                   Positioned.fill(
                     left: 0,
@@ -246,7 +246,7 @@ class ShopItems extends StatelessWidget {
                     top: null,
                     child: Container(
                       decoration: BoxDecoration(
-                        color: popupBgColor,
+                        color: Color(0xff222229),
                         borderRadius: BorderRadius.only(
                           bottomRight: Radius.circular(12.sp),
                           bottomLeft: Radius.circular(12.sp),
@@ -262,19 +262,19 @@ class ShopItems extends StatelessWidget {
                               item.itemLabel != null
                                   ? Padding(
                                       padding: EdgeInsets.only(right: 5.0.sp),
-                                      child: StyledText(
+                                      child: Text(
                                         item.itemLabel! == 'CLOSE_DEADLINE' ? '마감임박' : '품절',
-                                        fontSize: 12.sp,
-                                        fontWeight: 600,
-                                        color: skyBlueColor,
+                                        style: AppTextStyleData.regular().koCaptionMediumMd.copyWith(
+                                              color: AppColorData.regular().colorTextBrand,
+                                            ),
                                       ),
                                     )
                                   : Container(),
-                              StyledText(
+                              Text(
                                 '${formatDecimalPlaces(item.price.toDouble(), item.tradeSymbol == 'STIK' ? 2 : 0, isAutoDecimal: true)} ${item.tradeSymbol}',
-                                fontSize: 14.sp,
-                                fontWeight: 700,
-                                letterSpacing: .3,
+                                style: AppTextStyleData.regular().koBodySemiboldMd.copyWith(
+                                      color: AppColorData.regular().colorTextPrimary,
+                                    ),
                               ),
                             ],
                           ),
@@ -324,8 +324,8 @@ class ShopItems extends StatelessWidget {
           ),
           Expanded(
             child: Container(
-              decoration: const BoxDecoration(
-                color: popupBgColor,
+              decoration: BoxDecoration(
+                color: AppColorData.regular().colorBgPrimary,
               ),
               child: Padding(
                 padding: EdgeInsets.only(top: 15.0.sp, left: 20.sp, right: 20.sp),

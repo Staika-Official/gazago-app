@@ -6,6 +6,7 @@ import 'package:gaza_go/presentations/styles/colors.dart';
 import 'package:gaza_go/presentations/styles/icons.dart';
 import 'package:gaza_go/presentations/styles/styled_text.dart';
 import 'package:gaza_go/presentations/views/inventory/equipped_items_grid.dart';
+import 'package:gaza_go/theme/theme.g.dart';
 import 'package:get/get.dart';
 
 class EquippedItems extends StatelessWidget {
@@ -61,7 +62,7 @@ class EquippedItems extends StatelessWidget {
                                   Padding(
                                     padding: EdgeInsets.only(left: 4.0.sp),
                                     child: StyledText(
-                                      'GO 보상',
+                                      'GO 적립량',
                                       color: skyBlueColor,
                                       fontSize: 12,
                                       lineHeight: 14,
@@ -81,7 +82,7 @@ class EquippedItems extends StatelessWidget {
                               fontSize: 30,
                               fontWeight: 500,
                               letterSpacing: -.1,
-                              color: const Color(0xFFB0A3FF),
+                              color: AppColorData.regular().colorPointPurple,
                             ),
                             Padding(
                               padding: EdgeInsets.only(top: 12.0.sp),
@@ -92,9 +93,9 @@ class EquippedItems extends StatelessWidget {
                                   iconShopDurabilityLight,
                                   Padding(
                                     padding: EdgeInsets.only(left: 4.0.sp),
-                                    child: const StyledText(
-                                      '내구도',
-                                      color: Color(0xFFB0A3FF),
+                                    child: StyledText(
+                                      '내구도 저항',
+                                      color: AppColorData.regular().colorPointPurple,
                                       fontSize: 12,
                                       lineHeight: 12,
                                       letterSpacing: -.1,
@@ -125,7 +126,7 @@ class EquippedItems extends StatelessWidget {
                                     child: iconShopStamina,
                                   ),
                                   StyledText(
-                                    '체력',
+                                    '체력 자힝',
                                     color: lightGreenColor,
                                     fontSize: 12,
                                     lineHeight: 12,
@@ -143,7 +144,7 @@ class EquippedItems extends StatelessWidget {
                               '${controller.equippedLuckRate.toInt()}',
                               fontSize: 30,
                               fontWeight: 500,
-                              color: pinkColor  ,
+                              color: pinkColor,
                               letterSpacing: -.1,
                             ),
                             Padding(

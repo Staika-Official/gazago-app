@@ -179,7 +179,7 @@ class InventoryBadgeDetail extends StatelessWidget {
                                                     Padding(
                                                       padding: EdgeInsets.only(left: 4.0.sp),
                                                       child: StyledText(
-                                                        'GO 보상',
+                                                        'GO 적립량',
                                                         color: skyBlueColor,
                                                         fontSize: 12,
                                                         lineHeight: 14,

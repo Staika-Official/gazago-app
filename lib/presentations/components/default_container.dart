@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:gaza_go/presentations/components/default_header.dart';
+import 'package:gaza_go/theme/theme.g.dart';
 
 class DefaultContainer extends StatelessWidget {
   final Widget child;
@@ -21,7 +22,7 @@ class DefaultContainer extends StatelessWidget {
   const DefaultContainer({
     Key? key,
     required this.child,
-    this.backgroundColor = const Color(0xff2A2B33),
+    this.backgroundColor,
     this.disableSafeArea = false,
     this.customHeader,
     this.isLeadingShow = true,
@@ -38,11 +39,11 @@ class DefaultContainer extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: backgroundColor,
+      backgroundColor: backgroundColor ?? AppColorData.regular().colorBgPrimary,
       resizeToAvoidBottomInset: resizeToAvoidBottomInset,
       appBar: AppBar(
         automaticallyImplyLeading: false,
-        backgroundColor: headerBackgroundColor ?? backgroundColor,
+        backgroundColor: headerBackgroundColor ?? AppColorData.regular().colorBgPrimary,
         elevation: 0,
         titleSpacing: 0,
         title: customHeader ??

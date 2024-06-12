@@ -7,9 +7,7 @@ import 'package:gaza_go/constants/enums.dart';
 import 'package:gaza_go/platform/controllers/wallet_staika_controller.dart';
 import 'package:gaza_go/platform/helpers/base_helper.dart';
 import 'package:gaza_go/platform/models/wallet_token_balance_model.dart';
-import 'package:gaza_go/presentations/styles/colors.dart';
-import 'package:gaza_go/presentations/styles/icons.dart';
-import 'package:gaza_go/presentations/styles/styled_text.dart';
+import 'package:gaza_go/theme/theme.g.dart';
 import 'package:get/get.dart';
 
 class StaikaAssetItemCoin extends StatelessWidget {
@@ -25,7 +23,7 @@ class StaikaAssetItemCoin extends StatelessWidget {
     StaikaWalletController staikaWalletController = Get.find();
     return Ink(
       decoration: BoxDecoration(
-        color: subBg02Color,
+        color: AppColorData.regular().colorBgTertiary,
         border: Border.all(width: 2.sp, color: Colors.black),
         borderRadius: BorderRadius.circular(12.sp),
         boxShadow: [
@@ -69,12 +67,11 @@ class StaikaAssetItemCoin extends StatelessWidget {
                         children: [
                           Padding(
                             padding: EdgeInsets.only(right: 20.0.sp),
-                            child: StyledText(
+                            child: Text(
                               asset.name,
-                              fontSize: 18,
-                              lineHeight: 18,
-                              fontWeight: 500,
-                              color: Colors.white,
+                              style: AppTextStyleData.regular().koBodyMediumXl.copyWith(
+                                    color: AppColorData.regular().colorTextPrimary,
+                                  ),
                             ),
                           ),
                           Expanded(
@@ -87,55 +84,39 @@ class StaikaAssetItemCoin extends StatelessWidget {
                                     child: Row(
                                       mainAxisSize: MainAxisSize.min,
                                       children: [
-                                        StyledText(
+                                        Text(
                                           formatDecimalPlaces(double.parse(asset.uiAmountString), 4, isAutoDecimal: true, roundType: RoundType.floor),
-                                          fontSize: 18,
-                                          lineHeight: 20,
-                                          letterSpacing: 0.5,
-                                          fontWeight: 700,
+                                          style: AppTextStyleData.regular().koBodySemiboldXl.copyWith(
+                                                color: AppColorData.regular().colorTextPrimary,
+                                              ),
                                         ),
                                         Padding(
                                           padding: const EdgeInsets.only(left: 3),
-                                          child: StyledText(
+                                          child: Text(
                                             asset.symbol,
-                                            fontSize: 18,
-                                            lineHeight: 20,
-                                            letterSpacing: 0.5,
-                                            fontWeight: 400,
+                                            style: AppTextStyleData.regular().koBodyMediumXl.copyWith(
+                                                  color: AppColorData.regular().colorTextPrimary,
+                                                ),
                                           ),
                                         ),
                                       ],
                                     ),
                                   ),
-                                  StyledText(
+                                  Text(
                                     '${staikaWalletController.currencyString.value} ${formatDecimalPlaces(double.parse(
                                           staikaWalletController.getCurrencyPrice(
                                             staikaWalletController.priceInfoList.firstWhere((priceInfo) => priceInfo.name == asset.name),
                                             double.parse(asset.uiAmountString),
                                           ),
                                         ), staikaWalletController.isKRW.value ? 0 : 2)}',
-                                    fontSize: 14,
-                                    lineHeight: 16,
-                                    letterSpacing: 0.5,
-                                    fontWeight: 500,
-                                    color: const Color(0xFFA5A5A5),
+                                    style: AppTextStyleData.regular().koBodyMediumMd.copyWith(
+                                          color: AppColorData.regular().colorTextTertiary,
+                                        ),
                                   ),
                                 ],
                               ),
                             ),
                           ),
-                          // showPrice
-                          //     ? Padding(
-                          //         padding: EdgeInsets.only(top: 4.sp),
-                          //         child: StyledText(
-                          //           '\u2248 \$${asset.amount! / pow(10, asset.decimals!)}',
-                          //           fontSize: 14,
-                          //           lineHeight: 20,
-                          //           letterSpacing: -0.5,
-                          //           fontWeight: 500,
-                          //         ),
-                          //       )
-                          //     : Container(),
                         ],
                       ),
                     ),
@@ -150,33 +131,22 @@ class StaikaAssetItemCoin extends StatelessWidget {
                       onTap: onTapButton,
                       child: Container(
                         width: double.infinity,
-                        padding: EdgeInsets.all(16.sp),
+                        height: 56.sp,
+                        padding: EdgeInsets.symmetric(horizontal: 20.sp, vertical: 8.sp),
                         decoration: BoxDecoration(
-                          color: subBg02Color,
-                          border: Border.all(width: 1, color: Colors.black),
-                          borderRadius: BorderRadius.circular(12.sp),
-                          boxShadow: [
-                            BoxShadow(
-                              color: Colors.black,
-                              offset: Offset(0, 2.sp),
-                            ),
-                          ],
+                          color: AppColorData.regular().colorBgTertiary,
+                          border: Border.all(width: 2, color: Colors.black),
+                          borderRadius: BorderRadius.circular(8.sp),
                         ),
                         child: Row(
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
-                            if (asset.symbol == 'STIK')
-                              Padding(
-                                padding: EdgeInsets.only(right: 6.0.sp),
-                                child: iconOutCoin,
-                              ),
                             Center(
-                              child: StyledText(
+                              child: Text(
                                 buttonText!,
-                                color: Colors.white,
-                                fontWeight: 600,
-                                fontSize: 16,
-                                lineHeight: 16,
+                                style: AppTextStyleData.regular().koBodyMediumXl.copyWith(
+                                      color: AppColorData.regular().colorTextPrimary,
+                                    ),
                               ),
                             ),
                           ],
