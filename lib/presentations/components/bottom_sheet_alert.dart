@@ -23,8 +23,8 @@ class BottomSheetAlert extends StatelessWidget {
       decoration: BoxDecoration(
         color: popupBgColor,
         borderRadius: BorderRadius.only(
-          topLeft: Radius.circular(12.sp),
-          topRight: Radius.circular(12.sp),
+          topLeft: Radius.circular(AppDoubleData.regular().numberRadius20.sp),
+          topRight: Radius.circular(AppDoubleData.regular().numberRadius20.sp),
         ),
       ),
       child: SizedBox(

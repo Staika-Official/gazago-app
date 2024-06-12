@@ -16,10 +16,11 @@ import 'package:gaza_go/platform/services/collection_service.dart';
 import 'package:gaza_go/platform/stores/hive_store.dart';
 import 'package:get/get.dart';
 
-class CollectionController extends SuperController {
+class CollectionController extends SuperController with GetTickerProviderStateMixin  {
   ActivityController activityController = Get.find();
   WalletMasterController walletMasterController = Get.find();
   RxList<CollectionModel> collectionList = RxList.empty();
+  late AnimationController animationController;
   Rx<CollectionModel> fixedCollection = Rx(CollectionModel(
     id: 0,
     name: "Fixed Collection",
@@ -52,7 +53,10 @@ class CollectionController extends SuperController {
   @override
   void onInit() async {
     await initController();
-
+    animationController = AnimationController(
+      vsync: this,
+      duration: Duration(seconds: 2),
+    );
     super.onInit();
   }
 
@@ -120,6 +124,7 @@ class CollectionController extends SuperController {
 
           if(selectedCollection.value.id != 0){
             selectedCollection.value = data.firstWhere((item) => item.id == selectedCollection.value.id);
+            calculatePercentage(selectedCollection.value);
           }
 
 

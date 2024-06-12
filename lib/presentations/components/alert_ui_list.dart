@@ -8339,7 +8339,7 @@ void showConfirmCollectionRewardAlert(CollectionDetailController controller) {
                     .koBodyMediumMd.copyWith(
                 color: AppColorData
                     .regular()
-                    .colorTextPrimary,
+                    .colorTextSecondary,
                 ),
           )
         ),
