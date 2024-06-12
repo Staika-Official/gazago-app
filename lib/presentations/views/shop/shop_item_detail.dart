@@ -182,7 +182,7 @@ class ShopItemDetail extends StatelessWidget {
                                 children: [
                                   Row(
                                     children: [
-                                      iconShopReward,
+                                      iconShopRewardPng,
                                       const Padding(
                                         padding: EdgeInsets.only(left: 8.0),
                                         child: StyledText(
@@ -283,7 +283,7 @@ class ShopItemDetail extends StatelessWidget {
                                 children: [
                                   Row(
                                     children: [
-                                      iconShopDurabilityLight,
+                                      iconShopDurabilityLightPng,
                                       const Padding(
                                         padding: EdgeInsets.only(left: 8.0),
                                         child: StyledText(
@@ -384,7 +384,7 @@ class ShopItemDetail extends StatelessWidget {
                                 children: [
                                   Row(
                                     children: [
-                                      iconShopStamina,
+                                      iconShopStaminaPng,
                                       const Padding(
                                         padding: EdgeInsets.only(left: 8.0),
                                         child: StyledText(
@@ -485,7 +485,7 @@ class ShopItemDetail extends StatelessWidget {
                                 children: [
                                   Row(
                                     children: [
-                                      iconShopLuck,
+                                      iconShopLuckPng,
                                       const Padding(
                                         padding: EdgeInsets.only(left: 8.0),
                                         child: StyledText(
@@ -792,7 +792,7 @@ class ShopItemDetail extends StatelessWidget {
                                         children: [
                                           Row(
                                             children: [
-                                              iconShopStamina,
+                                              iconShopStaminaPng,
                                               const Padding(
                                                 padding: EdgeInsets.only(left: 8.0),
                                                 child: StyledText(
@@ -859,7 +859,7 @@ class ShopItemDetail extends StatelessWidget {
                                         children: [
                                           Row(
                                             children: [
-                                              iconShopDurabilityLight,
+                                              iconShopDurabilityLightPng,
                                               const Padding(
                                                 padding: EdgeInsets.only(left: 8.0),
                                                 child: StyledText(

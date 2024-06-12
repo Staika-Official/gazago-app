@@ -102,7 +102,7 @@ class ShopItems extends StatelessWidget {
                                             SizedBox(
                                               width: 12.sp,
                                               height: 12.sp,
-                                              child: iconShopReward,
+                                              child: iconShopRewardPng,
                                             ),
                                             Padding(
                                               padding: EdgeInsets.only(left: 3.0.sp),
@@ -125,7 +125,7 @@ class ShopItems extends StatelessWidget {
                                             SizedBox(
                                               width: 12.sp,
                                               height: 12.sp,
-                                              child: iconShopDurabilityLight,
+                                              child: iconShopDurabilityLightPng,
                                             ),
                                             Padding(
                                               padding: EdgeInsets.only(left: 3.0.sp),
@@ -148,7 +148,7 @@ class ShopItems extends StatelessWidget {
                                             SizedBox(
                                               width: 12.sp,
                                               height: 12.sp,
-                                              child: iconShopStamina,
+                                              child: iconShopStaminaPng,
                                             ),
                                             Padding(
                                               padding: EdgeInsets.only(left: 3.0.sp),
@@ -171,7 +171,7 @@ class ShopItems extends StatelessWidget {
                                             SizedBox(
                                               width: 12.sp,
                                               height: 12.sp,
-                                              child: iconShopLuck,
+                                              child: iconShopLuckPng,
                                             ),
                                             Padding(
                                               padding: EdgeInsets.only(left: 3.0.sp),
@@ -194,7 +194,7 @@ class ShopItems extends StatelessWidget {
                                             SizedBox(
                                               width: 12.sp,
                                               height: 12.sp,
-                                              child: iconShopStamina,
+                                              child: iconShopStaminaPng,
                                             ),
                                             Padding(
                                               padding: EdgeInsets.only(left: 3.0.sp),
@@ -217,7 +217,7 @@ class ShopItems extends StatelessWidget {
                                             SizedBox(
                                               width: 12.sp,
                                               height: 12.sp,
-                                              child: iconShopDurabilityLight,
+                                              child: iconShopDurabilityLightPng,
                                             ),
                                             Padding(
                                               padding: EdgeInsets.only(left: 3.0.sp),

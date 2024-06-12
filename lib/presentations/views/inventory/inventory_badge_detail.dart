@@ -175,7 +175,7 @@ class InventoryBadgeDetail extends StatelessWidget {
                                                 child: Row(
                                                   mainAxisAlignment: MainAxisAlignment.center,
                                                   children: [
-                                                    iconShopReward,
+                                                    iconShopRewardPng,
                                                     Padding(
                                                       padding: EdgeInsets.only(left: 4.0.sp),
                                                       child: StyledText(
@@ -221,7 +221,7 @@ class InventoryBadgeDetail extends StatelessWidget {
                                                   children: [
                                                     Padding(
                                                       padding: EdgeInsets.only(right: 4.0.sp),
-                                                      child: iconShopLuck,
+                                                      child: iconShopLuckPng,
                                                     ),
                                                     StyledText(
                                                       '행운',

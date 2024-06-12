@@ -68,7 +68,7 @@ class InventoryHome extends StatelessWidget {
                                       child: SizedBox(
                                         width: 16.sp,
                                         height: 16.sp,
-                                        child: iconShopReward,
+                                        child: iconShopRewardPng,
                                       ),
                                     ),
                                     Text(
@@ -101,7 +101,7 @@ class InventoryHome extends StatelessWidget {
                                       child: SizedBox(
                                         width: 16.sp,
                                         height: 16.sp,
-                                        child: iconShopDurabilityLight,
+                                        child: iconShopDurabilityLightPng,
                                       ),
                                     ),
                                     Text(
@@ -133,7 +133,7 @@ class InventoryHome extends StatelessWidget {
                                       child: SizedBox(
                                         width: 16.sp,
                                         height: 16.sp,
-                                        child: iconShopStamina,
+                                        child: iconShopStaminaPng,
                                       ),
                                     ),
                                     Text(
@@ -165,7 +165,7 @@ class InventoryHome extends StatelessWidget {
                                       child: SizedBox(
                                         width: 16.sp,
                                         height: 16.sp,
-                                        child: iconShopLuck,
+                                        child: iconShopLuckPng,
                                       ),
                                     ),
                                     Text(

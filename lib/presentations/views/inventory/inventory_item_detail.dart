@@ -315,7 +315,7 @@ class InventoryItemDetail extends StatelessWidget {
                                                                       child: Row(
                                                                         mainAxisAlignment: MainAxisAlignment.center,
                                                                         children: [
-                                                                          iconShopReward,
+                                                                          iconShopRewardPng,
                                                                           Padding(
                                                                             padding: EdgeInsets.only(left: 4.0.sp),
                                                                             child: StyledText(
@@ -363,7 +363,7 @@ class InventoryItemDetail extends StatelessWidget {
                                                                         mainAxisAlignment: MainAxisAlignment.center,
                                                                         crossAxisAlignment: CrossAxisAlignment.center,
                                                                         children: [
-                                                                          iconShopDurabilityLight,
+                                                                          iconShopDurabilityLightPng,
                                                                           Padding(
                                                                             padding: EdgeInsets.only(left: 4.0.sp),
                                                                             child: StyledText(
@@ -411,7 +411,7 @@ class InventoryItemDetail extends StatelessWidget {
                                                                         children: [
                                                                           Padding(
                                                                             padding: EdgeInsets.only(right: 4.0.sp),
-                                                                            child: iconShopStamina,
+                                                                            child: iconShopStaminaPng,
                                                                           ),
                                                                           StyledText(
                                                                             '체력 저항',
@@ -455,7 +455,7 @@ class InventoryItemDetail extends StatelessWidget {
                                                                         children: [
                                                                           Padding(
                                                                             padding: EdgeInsets.only(right: 4.0.sp),
-                                                                            child: iconShopLuck,
+                                                                            child: iconShopLuckPng,
                                                                           ),
                                                                           StyledText(
                                                                             '행운',
@@ -489,7 +489,7 @@ class InventoryItemDetail extends StatelessWidget {
                                                                         mainAxisAlignment: MainAxisAlignment.center,
                                                                         crossAxisAlignment: CrossAxisAlignment.center,
                                                                         children: [
-                                                                          iconShopDurabilityLight,
+                                                                          iconShopDurabilityLightPng,
                                                                           Padding(
                                                                             padding: EdgeInsets.only(left: 4.0.sp),
                                                                             child: StyledText(
@@ -525,7 +525,7 @@ class InventoryItemDetail extends StatelessWidget {
                                                                         mainAxisAlignment: MainAxisAlignment.center,
                                                                         crossAxisAlignment: CrossAxisAlignment.center,
                                                                         children: [
-                                                                          iconShopStamina,
+                                                                          iconShopStaminaPng,
                                                                           Padding(
                                                                             padding: EdgeInsets.only(left: 4.0.sp),
                                                                             child: StyledText(

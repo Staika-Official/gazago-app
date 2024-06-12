@@ -58,7 +58,7 @@ class EquippedItems extends StatelessWidget {
                               child: Row(
                                 mainAxisAlignment: MainAxisAlignment.center,
                                 children: [
-                                  iconShopReward,
+                                  iconShopRewardPng,
                                   Padding(
                                     padding: EdgeInsets.only(left: 4.0.sp),
                                     child: StyledText(
@@ -90,7 +90,7 @@ class EquippedItems extends StatelessWidget {
                                 mainAxisAlignment: MainAxisAlignment.center,
                                 crossAxisAlignment: CrossAxisAlignment.center,
                                 children: [
-                                  iconShopDurabilityLight,
+                                  iconShopDurabilityLightPng,
                                   Padding(
                                     padding: EdgeInsets.only(left: 4.0.sp),
                                     child: StyledText(
@@ -121,17 +121,17 @@ class EquippedItems extends StatelessWidget {
                               child: Row(
                                 mainAxisAlignment: MainAxisAlignment.center,
                                 children: [
+                                  iconShopStaminaPng,
                                   Padding(
                                     padding: EdgeInsets.only(right: 4.0.sp),
-                                    child: iconShopStamina,
-                                  ),
-                                  StyledText(
-                                    '체력 자힝',
-                                    color: lightGreenColor,
-                                    fontSize: 12,
-                                    lineHeight: 12,
-                                    fontWeight: 500,
-                                    letterSpacing: -.1,
+                                    child: StyledText(
+                                      '체력 저항',
+                                      color: lightGreenColor,
+                                      fontSize: 12,
+                                      lineHeight: 12,
+                                      fontWeight: 500,
+                                      letterSpacing: -.1,
+                                    ),
                                   ),
                                 ],
                               ),
@@ -154,7 +154,7 @@ class EquippedItems extends StatelessWidget {
                                 children: [
                                   Padding(
                                     padding: EdgeInsets.only(right: 4.0.sp),
-                                    child: iconShopLuck,
+                                    child: iconShopLuckPng,
                                   ),
                                   StyledText(
                                     '행운',

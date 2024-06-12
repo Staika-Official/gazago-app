@@ -170,6 +170,10 @@ SvgPicture iconStikExchange = SvgPicture.asset('assets/images/wallet/ico_stik_ex
 SvgPicture iconExcludeRed = SvgPicture.asset('assets/images/wallet/ico_exclude_red.svg', width: 16.sp, height: 16.sp);
 
 //shop
+Image iconShopStaminaPng = Image.asset('assets/images/shop/ico_stat_stamina.png', width: 16.sp, height: 16.sp);
+Image iconShopDurabilityLightPng = Image.asset('assets/images/shop/ico_stat_durability_light.png', width: 16.sp, height: 16.sp);
+Image iconShopRewardPng = Image.asset('assets/images/shop/ico_go_reward.png', width: 16.sp, height: 16.sp);
+Image iconShopLuckPng = Image.asset('assets/images/shop/ico_stat_luck.png', width: 16.sp, height: 16.sp);
 SvgPicture iconShopStamina = SvgPicture.asset('assets/images/shop/ico_stat_stamina.svg', width: 12.sp, height: 12.sp);
 SvgPicture iconShopDurability = SvgPicture.asset('assets/images/shop/ico_stat_durability.svg', width: 12.sp, height: 12.sp);
 SvgPicture iconShopDurabilityLight = SvgPicture.asset('assets/images/shop/ico_stat_durability_light.svg', width: 12.sp, height: 12.sp);
@@ -178,10 +182,6 @@ SvgPicture iconShopLuck = SvgPicture.asset('assets/images/shop/ico_stat_luck.svg
 SvgPicture iconUp = SvgPicture.asset('assets/images/wallet/ico_up.svg', width: 22.sp, height: 22.sp);
 
 //grade
-Image iconShopStaminaPng = Image.asset('assets/images/shop/ico_stat_stamina.png', width: 16.sp, height: 16.sp);
-Image iconShopDurabilityLightPng = Image.asset('assets/images/shop/ico_stat_durability_light.png', width: 16.sp, height: 16.sp);
-Image iconShopRewardPng = Image.asset('assets/images/shop/ico_go_reward.png', width: 16.sp, height: 16.sp);
-Image iconShopLuckPng = Image.asset('assets/images/shop/ico_stat_luck.png', width: 16.sp, height: 16.sp);
 SvgPicture iconGradePoor = SvgPicture.asset('assets/images/common/ico_grade_poor.svg', width: 90.sp, height: 24.sp);
 SvgPicture iconGradeCommon = SvgPicture.asset('assets/images/common/ico_grade_common.svg', width: 90.sp, height: 24.sp);
 SvgPicture iconGradeUncommon = SvgPicture.asset('assets/images/common/ico_grade_uncommon.svg', width: 90.sp, height: 24.sp);
