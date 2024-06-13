@@ -321,7 +321,7 @@ class WalletService {
       );
     }, errorCallback: (ErrorResponseDataModel e) {
       showToastPopup(e.errorMessage!);
-      return;
+      if (errorCallback != null) errorCallback(true);
     });
 
     await WalletService.getTokenPriorityFee(platform, symbol, successCallback: (fees) {
@@ -330,7 +330,7 @@ class WalletService {
       print('fees: ${fees.priorityFee}');
     }, errorCallback: () {
       showToastPopup('Failed to get fee');
-      return;
+      if (errorCallback != null) errorCallback(true);
     });
     String? email = HiveStore.loadString(key: HiveKey.email.name);
     // print(email);
@@ -352,7 +352,7 @@ class WalletService {
     // print(sender);
     final receiver = toAddress;
 
-    solana.Message message;
+    solana.Message? message;
     try {
       if (symbol == 'SOL') {
         message = getSolTransferMessage(sender.publicKey, receiver, amount, priorityFee);
@@ -361,9 +361,10 @@ class WalletService {
         message = await getSplTransferMessage(solanaClient, sender, receiver, mint, amount, priorityFee);
       }
     } catch (e) {
-      showToastPopup('메세지 안돼');
+      showToastPopup('서명 오류');
+      message = null;
       if (errorCallback != null) errorCallback(true);
-      return;
+
     }
 
     // FeePayer
@@ -376,36 +377,40 @@ class WalletService {
     );
 
     final recentBlockhash = await solanaClient.rpcClient.getLatestBlockhash(commitment: solana.Commitment.confirmed);
-    final CompiledMessage compiledMessage = message.compile(
-      recentBlockhash: recentBlockhash.value.blockhash,
-      feePayer: feePayer,
-    );
+    if(message != null){
+      final CompiledMessage compiledMessage = message.compile(
+        recentBlockhash: recentBlockhash.value.blockhash,
+        feePayer: feePayer,
+      );
+      final List<Signature> signatures = [];
+      final feePayerSign = Signature(List.filled(64, 0), publicKey: feePayer);
+      signatures.add(feePayerSign);
+      signatures.add(await sender.sign(compiledMessage.toByteArray()));
 
-    final List<Signature> signatures = [];
-    final feePayerSign = Signature(List.filled(64, 0), publicKey: feePayer);
-    signatures.add(feePayerSign);
-    signatures.add(await sender.sign(compiledMessage.toByteArray()));
-
-    SignedTx tx = SignedTx(
-      compiledMessage: compiledMessage,
-      signatures: signatures,
-    );
-    String uiAmount = getUiAmountString(amount, decimals);
-    print(uiAmount);
-    // API Call
-    // Map<String, String> body = {'clientId': 'GAZAGO', 'encodeTransaction': tx.encode()};
-    ExchangeTokenWithdrawalModel params = ExchangeTokenWithdrawalModel(
-      type: 'withdrawal',
-      uiAmount: double.parse(uiAmount),
-      fee: 0,
-      encodedTransaction: tx.encode(),
-    );
-    Response res = await WalletApi.exchangeStikToGoWallet(userId!, symbol, params);
-    if (res.statusCode == 201) {
-      successCallback(true);
+      SignedTx tx = SignedTx(
+        compiledMessage: compiledMessage,
+        signatures: signatures,
+      );
+      String uiAmount = getUiAmountString(amount, decimals);
+      print(uiAmount);
+      // API Call
+      // Map<String, String> body = {'clientId': 'GAZAGO', 'encodeTransaction': tx.encode()};
+      ExchangeTokenWithdrawalModel params = ExchangeTokenWithdrawalModel(
+        type: 'withdrawal',
+        uiAmount: double.parse(uiAmount),
+        fee: 0,
+        encodedTransaction: tx.encode(),
+      );
+      Response res = await WalletApi.exchangeStikToGoWallet(userId!, symbol, params);
+      if (res.statusCode == 201) {
+        successCallback(true);
+      } else {
+        if (errorCallback != null) errorCallback(res.data != null ? ErrorResponseDataModel.fromJson(res.data) : null);
+      }
     } else {
-      if (errorCallback != null) errorCallback(res.data != null ? ErrorResponseDataModel.fromJson(res.data) : null);
+      if (errorCallback != null) errorCallback(true);
     }
+
   }
 
   static Future<void> fetchStikMoveToStaikaWallet({
