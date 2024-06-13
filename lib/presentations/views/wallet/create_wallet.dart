@@ -114,7 +114,7 @@ class CreateWallet extends StatelessWidget {
                               if (Get.isRegistered<StaikaWalletController>()) {
                                 await Get.find<StaikaWalletController>().getStaikaWalletInfo();
                               }
-                              Get.until((route) => Get.currentRoute == Routes.wallet);
+                              Get.until((route) => Get.currentRoute == Routes.wallet || Get.currentRoute == Routes.itemDetail);
                             },
                             buttonText: '시작',
                             buttonColor: skyBlueColor,

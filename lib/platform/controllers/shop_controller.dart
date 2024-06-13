@@ -120,8 +120,7 @@ class ShopController extends GetxController with GetTickerProviderStateMixin {
     initController();
 
     ReplayEventBus.instance.stream.listen((event) {
-      onSelectNftFilter();
-      getShopItemsList();
+      moveToAll();
     });
 
     super.onInit();
@@ -174,6 +173,16 @@ class ShopController extends GetxController with GetTickerProviderStateMixin {
   void moveToETC() {
     tabController.animateTo(6);
     selectedCategory.value = 'DISPOSABLE';
+    initItemsFilter();
+    getShopItemsList();
+  }
+
+  void moveToAll() {
+    print('moveToAll');
+    tabController.animateTo(0);
+    selectedCategory.value = 'ALL';
+    initItemsFilter();
+    onSelectNftFilter();
     getShopItemsList();
   }
 

@@ -49,7 +49,7 @@ class InventoryItem extends StatelessWidget {
                     ),
                     child: Stack(
                       children: [
-                        if (item.itemPublishType == 'NFT') Positioned(right: 8.sp, top: 8.sp, child: SvgPicture.asset('assets/images/inventory/ico_nft.svg')),
+                        if (item.publishType == 'NFT') Positioned(right: 8.sp, top: 8.sp, child: SvgPicture.asset('assets/images/inventory/ico_nft.svg')),
                         Padding(
                           padding: EdgeInsets.symmetric(vertical: 7.0.sp, horizontal: 15.0.sp),
                           child: Column(
@@ -127,7 +127,7 @@ class InventoryItem extends StatelessWidget {
                                         child: Padding(
                                           padding: EdgeInsets.all(8.0.sp),
                                           child: StyledText(
-                                            item.itemCategory == 'DISPOSABLE' ? '사용하기' : '장착',
+                                            item.itemCategory == 'DISPOSABLE' ? '사용하기' : '장착하기',
                                             fontWeight: 500,
                                             fontSize: 14,
                                           ),
@@ -158,7 +158,7 @@ class InventoryItem extends StatelessWidget {
                                       alignment: Alignment.center,
                                       child: Padding(
                                         padding: EdgeInsets.all(8.0.sp),
-                                        child: StyledText('장착중', fontWeight: 500, fontSize: 14, color: deepGrayColor),
+                                        child: StyledText('장착 중', fontWeight: 500, fontSize: 14, color: deepGrayColor),
                                       ),
                                     ),
                             ],

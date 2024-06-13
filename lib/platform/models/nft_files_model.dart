@@ -4,7 +4,7 @@ part 'nft_files_model.g.dart';
 
 @JsonSerializable(explicitToJson: true)
 class Files {
-  String? type;
+  dynamic type;
   String? uri;
 
   Files({

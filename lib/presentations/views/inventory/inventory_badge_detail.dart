@@ -321,7 +321,7 @@ class InventoryBadgeDetail extends StatelessWidget {
                                                   mainAxisAlignment: MainAxisAlignment.center,
                                                   children: [
                                                     StyledText(
-                                                      '장착중',
+                                                      '장착 중',
                                                       fontSize: 18,
                                                       lineHeight: 18,
                                                       fontWeight: 500,
@@ -360,7 +360,7 @@ class InventoryBadgeDetail extends StatelessWidget {
                                                   mainAxisAlignment: MainAxisAlignment.center,
                                                   children: const [
                                                     StyledText(
-                                                      '장착',
+                                                      '장착하기',
                                                       fontSize: 18,
                                                       lineHeight: 18,
                                                       fontWeight: 500,

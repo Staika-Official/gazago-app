@@ -86,7 +86,7 @@ class InventoryBadge extends StatelessWidget {
                                 child: Padding(
                                   padding: EdgeInsets.all(8.0.sp),
                                   child: StyledText(
-                                    '장착중',
+                                    '장착 중',
                                     fontWeight: 500,
                                     fontSize: 14,
                                     color: deepGrayColor,
@@ -121,7 +121,7 @@ class InventoryBadge extends StatelessWidget {
                                 child: Padding(
                                   padding: EdgeInsets.all(8.0.sp),
                                   child: const StyledText(
-                                    '장착',
+                                    '장착하기',
                                     fontWeight: 500,
                                     fontSize: 14,
                                   ),
