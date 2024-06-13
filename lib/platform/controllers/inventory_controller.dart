@@ -9,6 +9,7 @@ import 'package:gaza_go/flavors.dart';
 import 'package:gaza_go/platform/controllers/activity_controller.dart';
 import 'package:gaza_go/platform/controllers/inventory_home_controller.dart';
 import 'package:gaza_go/platform/controllers/wallet_master_controller.dart';
+import 'package:gaza_go/platform/events/index.dart';
 import 'package:gaza_go/platform/firebase/remote_config.dart';
 import 'package:gaza_go/platform/helpers/activity_mixin.dart';
 import 'package:gaza_go/platform/helpers/alert_helper.dart';
@@ -16,6 +17,7 @@ import 'package:gaza_go/platform/helpers/base_helper.dart';
 import 'package:gaza_go/platform/helpers/consumer_item_mixin.dart';
 import 'package:gaza_go/platform/helpers/inventory_mixin.dart';
 import 'package:gaza_go/platform/helpers/linear_progress_mixin.dart';
+import 'package:gaza_go/platform/models/error_response_data_model.dart';
 import 'package:gaza_go/platform/models/inventory_badge_item_model.dart';
 import 'package:gaza_go/platform/models/inventory_badge_list_model.dart';
 import 'package:gaza_go/platform/models/inventory_badge_model.dart';
@@ -27,6 +29,7 @@ import 'package:gaza_go/platform/services/item_service.dart';
 import 'package:gaza_go/platform/services/nft_service.dart';
 import 'package:gaza_go/presentations/components/alert_ui_list.dart';
 import 'package:get/get.dart';
+import 'package:get_event_bus/get_event_bus.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class InventoryController extends GetxController with LinearProgressMixin, InventoryMixin, ActivityMixin, ConsumerItemMixin, GetTickerProviderStateMixin {
@@ -196,6 +199,10 @@ class InventoryController extends GetxController with LinearProgressMixin, Inven
       vsync: this,
       duration: Duration(seconds: 2),
     );
+
+    Get.bus.on<RefreshNftListEvent>((event) async {
+      refreshController();
+    });
     super.onInit();
   }
 
@@ -597,7 +604,7 @@ class InventoryController extends GetxController with LinearProgressMixin, Inven
 
   void confirmSendNftToStaika(InventoryController controller, InventoryItemModel item) {
     if (item.nftTokenAddress == null || item.nftTokenAddress == '') {
-      errorBottomSheet('스타이카로 보낼 수 없는 아이템입니다.');
+      errorBottomSheet('NFT가 민팅 중입니다.\n잠시 후 시도해주세요.');
       return;
     }
     showSendToStaikaConfirmAlert(controller, item);
@@ -610,6 +617,13 @@ class InventoryController extends GetxController with LinearProgressMixin, Inven
       userItemId: item.id,
       successCallback: () {
         showNftTransferSuccess(isOnChain: false);
+      },
+      errorCallback: (ErrorResponseDataModel error) {
+        if (error.errorCode == 'SOLANA_CUSTOM_EXCEPTION') {
+          showBlockchainNetworkErrorAlert();
+        } else if (error.status == 'NOT_FOUND_WALLET') {
+          showStaikaStatusAlert(hasWallet: false);
+        }
       },
     );
   }

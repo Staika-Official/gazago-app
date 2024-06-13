@@ -8526,7 +8526,7 @@ void showNftTransferSuccess({required bool isOnChain}) {
       Expanded(
         child: GazagoButton(
           onTap: () {
-            Get.until((route) => Get.currentRoute == Routes.walletNftList);
+            Get.until((route) => Get.currentRoute == Routes.walletNftList || Get.currentRoute == Routes.home);
             Get.bus.fire(RefreshNftListEvent());
           },
           buttonText: '확인',
@@ -8757,6 +8757,26 @@ void showSendToStaikaConfirmAlert(InventoryController controller, InventoryItemM
               ],
             ),
           ),
+        Padding(
+          padding: EdgeInsets.only(top: AppDoubleData.regular().numberSpacing12.sp),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Text(
+                '전송 수수료',
+                style: AppTextStyleData.regular().koBodyMediumXl.copyWith(
+                      color: AppColorData.regular().colorTextPrimary,
+                    ),
+              ),
+              Text(
+                '0 TIK',
+                style: AppTextStyleData.regular().koBodyMediumXl.copyWith(
+                      color: AppColorData.regular().colorTextPrimary,
+                    ),
+              ),
+            ],
+          ),
+        ),
         Divider(
           height: 40.sp,
           thickness: 2.0.sp,

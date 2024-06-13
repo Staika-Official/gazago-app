@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:gaza_go/constants/routes.dart';
 import 'package:gaza_go/platform/controllers/wallet_staika_controller.dart';
+import 'package:gaza_go/presentations/components/view_solscan_button.dart';
 import 'package:gaza_go/presentations/components/wallet/nft_asset_item.dart';
 import 'package:gaza_go/presentations/components/wallet/staika_asset_item_coin.dart';
 import 'package:gaza_go/presentations/styles/colors.dart';
@@ -136,24 +137,7 @@ class StaikaWallet extends StatelessWidget {
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
-                          InkWell(
-                            onTap: () => controller.onOpenSolScanWallet(),
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: [
-                                Text(
-                                  'Solscan 보기',
-                                  style: AppTextStyleData.regular().koBodySemiboldMd.copyWith(
-                                        color: AppColorData.regular().colorTextTertiary,
-                                      ),
-                                ),
-                                Padding(
-                                  padding: const EdgeInsets.only(left: 1.0, top: 3),
-                                  child: iconWebview,
-                                ),
-                              ],
-                            ),
-                          ),
+                          ViewSolscanButton(onTap: () => controller.onOpenSolScanWallet()),
                         ],
                       ),
                     ),
@@ -226,12 +210,11 @@ class StaikaWallet extends StatelessWidget {
                         alignment: Alignment.bottomCenter,
                         child: Padding(
                           padding: EdgeInsets.only(top: 20.sp, bottom: 20.0.sp, left: 20.sp, right: 20.sp),
-                          child: StyledText(
-                            '· Staika 지갑은 블록체인 상에 기록되는 블록체인 지갑입니다.',
-                            fontWeight: 500,
-                            fontSize: 10,
-                            letterSpacing: -.1,
-                            color: deepGrayColor,
+                          child: Text(
+                            '· Staika 지갑은 블록체인 지갑이에요.',
+                            style: AppTextStyleData.regular().koCaptionMediumMd.copyWith(
+                                  color: AppColorData.regular().colorTextTertiary,
+                                ),
                           ),
                         ),
                       ),

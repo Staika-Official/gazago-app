@@ -14,7 +14,6 @@ class NftService {
     if (res.statusCode == 204) {
       successCallback();
     } else {
-      print(res.data);
       if (errorCallback != null) errorCallback(ErrorResponseDataModel.fromJson(res.data));
     }
   }

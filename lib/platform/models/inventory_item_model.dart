@@ -13,7 +13,6 @@ class InventoryItemModel {
   String? serialNumber;
   String itemName;
   String? publishType;
-  String? itemPublishType;
   String itemCategory;
   String itemGrade;
   String? itemType;
@@ -47,7 +46,6 @@ class InventoryItemModel {
     this.itemType,
     this.expiredDate,
     this.publishType,
-    this.itemPublishType,
     required this.itemCategory,
     this.durability,
     this.abrasionRate,

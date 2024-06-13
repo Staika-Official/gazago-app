@@ -10,7 +10,6 @@ import 'package:gaza_go/platform/models/nft_model.dart';
 import 'package:gaza_go/presentations/components/default_container.dart';
 import 'package:gaza_go/presentations/styles/colors.dart';
 import 'package:gaza_go/presentations/styles/icons.dart';
-import 'package:gaza_go/presentations/styles/styled_text.dart';
 import 'package:gaza_go/theme/theme.g.dart';
 import 'package:get/get.dart';
 
@@ -108,16 +107,15 @@ class NftList extends StatelessWidget {
                                                 SizedBox(
                                                   width: 12.sp,
                                                   height: 12.sp,
-                                                  child: iconShopReward,
+                                                  child: iconShopRewardPng,
                                                 ),
                                                 Padding(
                                                   padding: EdgeInsets.only(left: 3.0.sp),
-                                                  child: StyledText(
-                                                    '${formatDecimalPlaces(nftItem.itemStat!.goProfit!, 0)}',
-                                                    fontSize: 12,
-                                                    fontWeight: 600,
-                                                    letterSpacing: -.1,
-                                                    color: skyBlueColor,
+                                                  child: Text(
+                                                    formatDecimalPlaces(nftItem.itemStat!.goProfit!, 0),
+                                                    style: AppTextStyleData.regular().koBodySemiboldSm.copyWith(
+                                                          color: AppColorData.regular().colorPointCyan,
+                                                        ),
                                                   ),
                                                 ),
                                               ],
@@ -131,16 +129,15 @@ class NftList extends StatelessWidget {
                                                 SizedBox(
                                                   width: 12.sp,
                                                   height: 12.sp,
-                                                  child: iconShopDurabilityLight,
+                                                  child: iconShopDurabilityLightPng,
                                                 ),
                                                 Padding(
                                                   padding: EdgeInsets.only(left: 3.0.sp),
-                                                  child: StyledText(
-                                                    '${formatDecimalPlaces(nftItem.itemStat!.durability!, 0)}',
-                                                    fontSize: 12,
-                                                    fontWeight: 600,
-                                                    letterSpacing: -.1,
-                                                    color: AppColorData.regular().colorPointPurple,
+                                                  child: Text(
+                                                    formatDecimalPlaces(nftItem.itemStat!.durability!, 0),
+                                                    style: AppTextStyleData.regular().koBodySemiboldSm.copyWith(
+                                                          color: AppColorData.regular().colorPointPurple,
+                                                        ),
                                                   ),
                                                 ),
                                               ],
@@ -154,16 +151,15 @@ class NftList extends StatelessWidget {
                                                 SizedBox(
                                                   width: 12.sp,
                                                   height: 12.sp,
-                                                  child: iconShopStamina,
+                                                  child: iconShopStaminaPng,
                                                 ),
                                                 Padding(
                                                   padding: EdgeInsets.only(left: 3.0.sp),
-                                                  child: StyledText(
-                                                    '${formatDecimalPlaces(nftItem.itemStat!.stamina!, 0)}',
-                                                    fontSize: 12,
-                                                    fontWeight: 600,
-                                                    letterSpacing: -.1,
-                                                    color: lightGreenColor,
+                                                  child: Text(
+                                                    formatDecimalPlaces(nftItem.itemStat!.stamina!, 0),
+                                                    style: AppTextStyleData.regular().koBodySemiboldSm.copyWith(
+                                                          color: AppColorData.regular().colorPointYellowgreen,
+                                                        ),
                                                   ),
                                                 ),
                                               ],
@@ -177,16 +173,15 @@ class NftList extends StatelessWidget {
                                                 SizedBox(
                                                   width: 12.sp,
                                                   height: 12.sp,
-                                                  child: iconShopLuck,
+                                                  child: iconShopLuckPng,
                                                 ),
                                                 Padding(
                                                   padding: EdgeInsets.only(left: 3.0.sp),
-                                                  child: StyledText(
-                                                    '${formatDecimalPlaces(nftItem.itemStat!.luck!, 0)}',
-                                                    fontSize: 12,
-                                                    fontWeight: 600,
-                                                    color: pinkColor,
-                                                    letterSpacing: -.1,
+                                                  child: Text(
+                                                    formatDecimalPlaces(nftItem.itemStat!.luck!, 0),
+                                                    style: AppTextStyleData.regular().koBodySemiboldSm.copyWith(
+                                                          color: AppColorData.regular().colorPointPink,
+                                                        ),
                                                   ),
                                                 ),
                                               ],
@@ -374,7 +369,7 @@ class NftList extends StatelessWidget {
                     child: GridView.count(
                       primary: false,
                       padding: EdgeInsets.only(bottom: 30.sp),
-                      childAspectRatio: controller.isFromGoWallet.value ? (1 / 1.5) : 1,
+                      childAspectRatio: controller.isFromGoWallet.value ? (1 / 1.4) : 1,
                       crossAxisSpacing: 10.sp,
                       mainAxisSpacing: 10.sp,
                       crossAxisCount: width > 450 ? 4 : 2,

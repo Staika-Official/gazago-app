@@ -7,6 +7,7 @@ import 'package:gaza_go/platform/controllers/inventory_controller.dart';
 import 'package:gaza_go/platform/helpers/base_helper.dart';
 import 'package:gaza_go/platform/helpers/inventory_helper.dart';
 import 'package:gaza_go/presentations/components/default_container.dart';
+import 'package:gaza_go/presentations/components/view_solscan_button.dart';
 import 'package:gaza_go/presentations/styles/colors.dart';
 import 'package:gaza_go/presentations/styles/icons.dart';
 import 'package:gaza_go/presentations/styles/styled_text.dart';
@@ -25,11 +26,11 @@ class InventoryItemDetail extends StatelessWidget {
       titleWidget: Row(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          if (controller.selectedItem.value.publishType == 'NFT')
-            Padding(
-              padding: EdgeInsets.only(right: 8.0.sp),
-              child: SvgPicture.asset('assets/images/shop/ico_nft_label.svg'),
-            ),
+          // if (controller.selectedItem.value.publishType == 'NFT')
+          //   Padding(
+          //     padding: EdgeInsets.only(right: 8.0.sp),
+          //     child: SvgPicture.asset('assets/images/shop/ico_nft_label.svg'),
+          //   ),
           StyledText(
             controller.selectedItem.value.itemName,
             fontSize: 18,
@@ -48,7 +49,7 @@ class InventoryItemDetail extends StatelessWidget {
             child: Column(
               children: [
                 Padding(
-                  padding: EdgeInsets.only(left: 22.0.sp, right: 22.0.sp, bottom: controller.isShoe.value ? 120.sp : 22.0.sp),
+                  padding: EdgeInsets.only(left: 22.0.sp, right: 22.0.sp, bottom: context.mediaQuerySize.height < 750 && controller.selectedItem.value.publishType == 'NFT' ? 120.sp : 22.0.sp),
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
@@ -122,7 +123,7 @@ class InventoryItemDetail extends StatelessWidget {
                                                   ],
                                                 ),
                                               ),
-                                              if (controller.selectedItem.value.nftId != null)
+                                              if (controller.selectedItem.value.serialNumber != null)
                                                 Container(
                                                   margin: EdgeInsets.only(top: 10.sp, bottom: 10.sp),
                                                   padding: EdgeInsets.symmetric(horizontal: 8.sp, vertical: 4.sp),
@@ -137,35 +138,12 @@ class InventoryItemDetail extends StatelessWidget {
                                                         ),
                                                   ),
                                                 ),
-                                              if (controller.selectedItem.value.tokenAddress != null)
-                                                SizedBox(
-                                                  child: InkWell(
-                                                    onTap: () => controller.moveToSolscan(controller.selectedItem.value.tokenAddress!),
-                                                    child: Padding(
-                                                      padding: EdgeInsets.only(top: 8.sp),
-                                                      child: Row(
-                                                        mainAxisSize: MainAxisSize.min,
-                                                        crossAxisAlignment: CrossAxisAlignment.center,
-                                                        children: [
-                                                          Text(
-                                                            'Solscan 보기',
-                                                            style: AppTextStyleData.regular().koBodySemiboldMd.copyWith(
-                                                                  color: AppColorData.regular().colorTextTertiary,
-                                                                ),
-                                                          ),
-                                                          Padding(
-                                                            padding: const EdgeInsets.only(top: 3),
-                                                            child: iconWebview,
-                                                          )
-                                                        ],
-                                                      ),
-                                                    ),
-                                                  ),
-                                                ),
+                                              if (controller.selectedItem.value.nftTokenAddress != null)
+                                                ViewSolscanButton(onTap: () => controller.moveToSolscan(controller.selectedItem.value.nftTokenAddress!)),
                                               if (controller.isShoe.value)
                                                 Container(
-                                                  margin: EdgeInsets.only(top: 32),
-                                                  height: 36.sp,
+                                                  margin: const EdgeInsets.only(top: 32),
+                                                  height: 36,
                                                   child: Stack(
                                                     children: [
                                                       Row(
@@ -761,7 +739,7 @@ class InventoryItemDetail extends StatelessWidget {
                                               Padding(
                                                 padding: EdgeInsets.only(bottom: 10.sp),
                                                 child: const StyledText(
-                                                  '제품 설명',
+                                                  '아이템 설명',
                                                   fontWeight: 600,
                                                   fontSize: 18,
                                                   lineHeight: 18,
@@ -811,7 +789,7 @@ class InventoryItemDetail extends StatelessWidget {
                                                             mainAxisAlignment: MainAxisAlignment.center,
                                                             children: [
                                                               Text(
-                                                                '장착중',
+                                                                '장착 중',
                                                                 style: AppTextStyleData.regular().koBodyMediumXl.copyWith(
                                                                       color: AppColorData.regular().colorTextInteractivePrimaryPressed,
                                                                     ),
@@ -924,23 +902,27 @@ class InventoryItemDetail extends StatelessWidget {
                     ),
                   ],
                 ),
-                child: MaterialButton(
-                  onPressed: controller.selectedItem.value.equipped == true
-                      ? null
-                      : () => controller.confirmSendNftToStaika(
-                            controller,
-                            controller.selectedItem.value,
-                          ),
-                  color: AppColorData.regular().colorBgInteractivePrimary,
-                  disabledColor: AppColorData.regular().colorBgInteractivePrimaryDisabled,
-                  textColor: AppColorData.regular().colorTextInverse,
-                  elevation: 0,
-                  child: Text(
-                    'Staika 지갑으로 보내기',
-                    textAlign: TextAlign.center,
-                    style: AppTextStyleData.regular().koBodyMediumXl,
-                  ),
-                ),
+                child: Obx(() {
+                  return MaterialButton(
+                    onPressed: controller.selectedItem.value.equipped == true
+                        ? () => controller.confirmSendNftToStaika(
+                              controller,
+                              controller.selectedItem.value,
+                            )
+                        : () => controller.confirmSendNftToStaika(
+                              controller,
+                              controller.selectedItem.value,
+                            ),
+                    color: controller.selectedItem.value.equipped == true ? AppColorData.regular().colorBgInteractivePrimaryDisabled : AppColorData.regular().colorBgInteractivePrimary,
+                    textColor: AppColorData.regular().colorTextInverse,
+                    elevation: 0,
+                    child: Text(
+                      'Staika 지갑으로 보내기',
+                      textAlign: TextAlign.center,
+                      style: AppTextStyleData.regular().koBodyMediumXl,
+                    ),
+                  );
+                }),
               ),
             ),
         ],
