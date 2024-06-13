@@ -223,6 +223,7 @@ class LoginController extends GetxController {
           } else if (token.accountStatus == 'ALREADY_CONNECTED_DEVICE') {
             showDuplicateLoginWarning(loginType, accessToken);
           } else {
+
             await initUserInfo();
             bool? permissionRequestBefore = HiveStore.load(key: HiveKey.permissionRequestOnFirstLaunch.name);
             if (permissionRequestBefore != null && permissionRequestBefore) {
@@ -230,7 +231,11 @@ class LoginController extends GetxController {
             } else {
               Get.offNamed(Routes.permissions);
             }
+
+
           }
+
+
         } else {
           HiveStore.save(key: HiveKey.accessToken.name, value: token.accessToken);
           HiveStore.save(key: HiveKey.refreshToken.name, value: token.refreshToken);

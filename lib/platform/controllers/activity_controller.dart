@@ -911,6 +911,7 @@ class ActivityController extends SuperController with ActivityMixin, ChallengeMi
   // 챌린지 찾기
   Future<void> findCourses() async {
     if (currentLocation.value.latitude != 0 && currentLocation.value.longitude != 0) {
+      // lan or lon의 오차범위가 5m 이상일 경우 새로운 코스를 찾는다. (추후 작업 필요)
       await getNearByCourses(currentLocation.value, exerciseState.value);
     } else {
       await getCourseList();
