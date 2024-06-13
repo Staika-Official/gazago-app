@@ -7,6 +7,7 @@ import 'package:gaza_go/constants/routes.dart';
 import 'package:gaza_go/platform/controllers/activity_controller.dart';
 import 'package:gaza_go/platform/controllers/collection_controller.dart';
 import 'package:gaza_go/platform/controllers/daily_benefit_controller.dart';
+import 'package:gaza_go/platform/controllers/home_menu_controller.dart';
 import 'package:gaza_go/platform/helpers/alert_helper.dart';
 import 'package:gaza_go/platform/helpers/base_helper.dart';
 import 'package:gaza_go/platform/stores/hive_store.dart';
@@ -302,6 +303,9 @@ class ActivityHome extends StatelessWidget {
     DailyBenefitController dailyBenefitController = Get.isRegistered<DailyBenefitController>() ? Get.find<DailyBenefitController>() : Get.put(DailyBenefitController());
     CollectionController collectionController = Get.isRegistered<CollectionController>() ? Get.find<CollectionController>() : Get.put(CollectionController());
 
+
+    HomeMenuController homeMenuController = Get.isRegistered<HomeMenuController>() ? Get.find<HomeMenuController>() : Get.put(HomeMenuController());
+
     return LayoutBuilder(
       builder: (context, constraint) {
         return Obx(() {
@@ -325,6 +329,10 @@ class ActivityHome extends StatelessWidget {
                     padding: EdgeInsets.only(left: 16.sp, right: 16.sp, bottom: 0.sp),
                     child: Column(
                       children: <Widget>[
+                        InkWell(
+                          onTap: () => homeMenuController.checkUserCI(),
+                          child: StyledText('테스트'),
+                        ),
                         Padding(
                           padding: EdgeInsets.only(top: 14.0.sp),
                           child: Container(
@@ -615,6 +623,7 @@ class ActivityHome extends StatelessWidget {
                           child: Stack(
                             alignment: Alignment.center,
                             children: [
+
                               Padding(
                                 padding: const EdgeInsets.only(bottom: 0),
                                 child: Center(

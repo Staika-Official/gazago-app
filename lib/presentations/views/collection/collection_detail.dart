@@ -261,7 +261,7 @@ class CollectionDetail extends StatelessWidget {
                           ) : CustomPaint(
                             size: Size(89.sp, 89.sp),
                             painter: GaugePainter(
-                              percentage: controller.currentMyTokenConditionPercentage(item.type, item.quantity),
+                              percentage: controller.detailCollection.value.alreadyIssued ? 100 : controller.currentMyTokenConditionPercentage(item.type, item.quantity),
                               fillColor: AppColorData
                                   .regular()
                                   .colorPointCyan,
