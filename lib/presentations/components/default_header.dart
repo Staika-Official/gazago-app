@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:gaza_go/presentations/styles/icons.dart';
 import 'package:get/get.dart';
 
 class DefaultHeader extends StatelessWidget {
@@ -32,22 +33,15 @@ class DefaultHeader extends StatelessWidget {
           if (isPrevButtonHide! == false)
             Positioned(
               left: 15.sp,
-              child: SizedBox(
-                width: 30.sp,
-                height: 30.sp,
-                child: Visibility(
-                  visible: isLeadingShow ?? true,
-                  child: InkWell(
-                    borderRadius: const BorderRadius.all(Radius.circular(30)),
-                    onTap: onBackButtonTap ??
-                        () {
-                          Get.back();
-                        },
-                    child: SvgPicture.asset(
-                      fit: BoxFit.contain,
-                      'assets/images/icons/icon_chevron_left_white.svg',
-                    ),
-                  ),
+              child: Container(
+                width: 24,
+                padding: EdgeInsets.zero,
+                child: IconButton(
+                  onPressed: () => Get.back(),
+                  padding: EdgeInsets.zero,
+                  iconSize: 24,
+                  splashRadius: 24.sp,
+                  icon: iconHeaderBack,
                 ),
               ),
             ),

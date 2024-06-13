@@ -187,14 +187,14 @@ class CollectionDetail extends StatelessWidget {
                       padding: EdgeInsets.only(top: 2.0.sp),
                       child: FittedBox(
                         child: Text(
-                          '${item.completeAmount != null ? item.completeAmount >= item.quantity ? item.quantity : item.completeAmount : 0} / ${formatDecimalPlaces(item.quantity, 0)}',
+                          '${item.completeAmount != null ? item.completeAmount >= item.quantity ? formatDecimalPlaces(item.quantity, 0) : item.completeAmount : 0} / ${formatDecimalPlaces(item.quantity, 0)}',
                           style: AppTextStyleData
                               .regular()
                               .koBodyMediumSm
                               .copyWith(
                             color: AppColorData
                                 .regular()
-                                .colorTextPrimary,
+                                .colorTextSecondary,
                           ),
                         ),
                       ),
@@ -209,7 +209,7 @@ class CollectionDetail extends StatelessWidget {
                               .copyWith(
                             color: AppColorData
                                 .regular()
-                                .colorTextPrimary,
+                                .colorTextSecondary,
                           ),
                         ),
                       ),
@@ -303,7 +303,7 @@ class CollectionDetail extends StatelessWidget {
           .colorBgTertiary,
       body:
       SingleChildScrollView(
-        physics:  ClampingScrollPhysics(),
+        physics: const ClampingScrollPhysics(),
         child: Obx(() {
           return Column(
             children: [

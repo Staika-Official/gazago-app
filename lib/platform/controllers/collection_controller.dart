@@ -127,7 +127,7 @@ class CollectionController extends SuperController with GetTickerProviderStateMi
             calculatePercentage(selectedCollection.value);
           }
 
-
+          print('coleectionID : $collectionIdList');
 
           // 100대 명산 컬렉션 정보
           if(loadedString == null){
@@ -136,7 +136,7 @@ class CollectionController extends SuperController with GetTickerProviderStateMi
             HiveStore.save(key: HiveKey.collectionIdList.name, value: collectionIdList.toString());
           } else {
             List<dynamic> transformList = jsonDecode(loadedString);
-
+            print('loadedString : $transformList');
             HiveStore.save(key: HiveKey.isNewCollection.name, value: transformList.length != collectionIdList.length);
             if(transformList.length != collectionIdList.length){
               HiveStore.save(key: HiveKey.collectionIdList.name, value: collectionIdList.toString());

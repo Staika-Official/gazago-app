@@ -57,7 +57,6 @@ void handleKeysOnLogout() {
     HiveKey.nickname.name,
     HiveKey.email.name,
     HiveKey.userId.name,
-    HiveKey.isNewCollection.name,
     HiveKey.collectionIdList.name,
 
   ]);

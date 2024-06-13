@@ -149,8 +149,8 @@ SvgPicture iconChevronUp = SvgPicture.asset('assets/images/preference/ico_chevro
 //wallet
 SvgPicture iconEmpty = SvgPicture.asset('assets/images/wallet/ico_empty.svg', width: 90.sp, height: 90.sp);
 SvgPicture iconEmptyRoundedBg = SvgPicture.asset('assets/images/wallet/ico_empty_rounded_bg.svg', width: 84.sp, height: 84.sp);
-SvgPicture iconIn = SvgPicture.asset('assets/images/wallet/ico_in.svg', width: 20.sp, height: 20.sp);
-SvgPicture iconOut = SvgPicture.asset('assets/images/wallet/ico_out.svg', width: 20.sp, height: 20.sp);
+SvgPicture iconIn = SvgPicture.asset('assets/images/wallet/ico_in.svg', width: 18.67.sp, height: 18.67.sp);
+SvgPicture iconOut = SvgPicture.asset('assets/images/wallet/ico_out.svg', width: 18.67.sp, height: 18.67.sp);
 SvgPicture iconArrowRight = SvgPicture.asset('assets/images/wallet/ico_arrow_right.svg', width: 20.sp, height: 20.sp);
 SvgPicture iconArrowRightTriangle = SvgPicture.asset('assets/images/wallet/ico_arrow_right_triangle.svg', width: 12.sp, height: 12.sp);
 SvgPicture iconCoupon = SvgPicture.asset('assets/images/wallet/ico_coupon.svg', width: 38.sp, height: 38.sp);

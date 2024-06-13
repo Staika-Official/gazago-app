@@ -304,7 +304,7 @@ class ActivityHome extends StatelessWidget {
     CollectionController collectionController = Get.isRegistered<CollectionController>() ? Get.find<CollectionController>() : Get.put(CollectionController());
 
 
-    HomeMenuController homeMenuController = Get.isRegistered<HomeMenuController>() ? Get.find<HomeMenuController>() : Get.put(HomeMenuController());
+
 
     return LayoutBuilder(
       builder: (context, constraint) {
@@ -329,10 +329,7 @@ class ActivityHome extends StatelessWidget {
                     padding: EdgeInsets.only(left: 16.sp, right: 16.sp, bottom: 0.sp),
                     child: Column(
                       children: <Widget>[
-                        InkWell(
-                          onTap: () => homeMenuController.checkUserCI(),
-                          child: StyledText('테스트'),
-                        ),
+
                         Padding(
                           padding: EdgeInsets.only(top: 14.0.sp),
                           child: Container(
@@ -636,16 +633,16 @@ class ActivityHome extends StatelessWidget {
                                             color: skyBlueColor,
                                             border: Border.all(width: 10.sp, color: AppColorData
                                                 .regular()
-                                                .colorBgTertiary),
+                                                .colorBgTertiary, strokeAlign: BorderSide.strokeAlignOutside),
                                             borderRadius:  BorderRadius.all(
                                               Radius.circular(150.sp),
                                             ),
                                             boxShadow: const [
                                               BoxShadow(
                                                 color: Colors.black,
-                                                offset: Offset(0, 6),
+                                                offset: Offset(0, 10),
                                                 blurRadius: 0.0,
-                                                spreadRadius: 0.0,
+                                                spreadRadius: 8,
                                               ),
                                             ],
                                           ),
@@ -655,7 +652,7 @@ class ActivityHome extends StatelessWidget {
                                                 width: 4.sp,
                                                 color: AppColorData
                                                     .regular()
-                                                    .colorBorderPrimary,
+                                                    .colorBorderPrimary, strokeAlign: BorderSide.strokeAlignOutside,
                                               ),
                                               borderRadius:  BorderRadius.all(
                                                 Radius.circular(150.sp),

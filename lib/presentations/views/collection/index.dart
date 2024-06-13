@@ -309,7 +309,6 @@ class CollectionHome extends StatelessWidget {
         children: [
           Expanded(
             child: SingleChildScrollView(
-              physics: const ClampingScrollPhysics(),
               child: Obx(() {
                 return Column(
                   mainAxisSize: MainAxisSize.min,
@@ -367,15 +366,18 @@ class CollectionHome extends StatelessWidget {
                                     child:
                                         controller.fixedCollection.value.completeQuantity == controller.fixedCollection.value.gatheringConditions.length
                                         ? renderCollectionImage(controller.fixedCollection.value.gatheringReward)
-                                        : ColorFiltered(
-                                        colorFilter: ColorFilter.matrix(<double>[
-                                          0.2126, 0.7152, 0.0722, 0, 0,
-                                          0.2126, 0.7152, 0.0722, 0, 0,
-                                          0.2126, 0.7152, 0.0722, 0, 0,
-                                          0, 0, 0, 1, 0,
-                                        ]),
-                                        child: renderCollectionImage(controller.fixedCollection.value.gatheringReward)
+                                        : Opacity(
+                                          opacity: 0.4,
+                                          child: ColorFiltered(
+                                          colorFilter: ColorFilter.matrix(<double>[
+                                            0.2126, 0.7152, 0.0722, 0, 0,
+                                            0.2126, 0.7152, 0.0722, 0, 0,
+                                            0.2126, 0.7152, 0.0722, 0, 0,
+                                            0, 0, 0, 1, 0,
+                                          ]),
+                                          child: renderCollectionImage(controller.fixedCollection.value.gatheringReward)
                                     ),
+                                        ),
                                   ),
                                 ),
                                 SizedBox(width: 12.sp),
@@ -495,7 +497,7 @@ class CollectionHome extends StatelessWidget {
                     )),
                     controller.collectionList.isNotEmpty ?
                       Padding(
-                        padding: EdgeInsets.only(left: 16.0.sp, right: 16.sp),
+                        padding: EdgeInsets.only(left: 16.0.sp, right: 16.sp, bottom: 40.sp),
                         child: AnimatedSwitcher(
                           duration: Duration(seconds: 2),
                           child: Wrap(
