@@ -7,6 +7,7 @@ import 'package:gaza_go/platform/controllers/inventory_controller.dart';
 import 'package:gaza_go/presentations/styles/colors.dart';
 import 'package:gaza_go/presentations/styles/icons.dart';
 import 'package:gaza_go/presentations/styles/styled_text.dart';
+import 'package:gaza_go/theme/theme.g.dart';
 import 'package:get/get.dart';
 
 class InventoryBadge extends StatelessWidget {
@@ -59,38 +60,27 @@ class InventoryBadge extends StatelessWidget {
                     Padding(
                       padding: EdgeInsets.only(top: 10.0.sp),
                       child: item.state == 'EQUIPPED'
-                          ? InkWell(
-                              onTap: () => null,
-                              child: Container(
-                                width: double.infinity,
-                                decoration: BoxDecoration(
-                                  color: popupBgColor,
-                                  border: Border.all(
-                                    width: 1,
-                                    style: BorderStyle.solid,
-                                    color: deepGrayColor,
-                                  ),
-                                  borderRadius: BorderRadius.all(
-                                    Radius.circular(20.sp),
-                                  ),
-                                  boxShadow: [
-                                    BoxShadow(
-                                      offset: Offset(0, 3.sp),
-                                      blurRadius: 0,
-                                      spreadRadius: 0,
-                                      color: Colors.black,
-                                    ),
-                                  ],
+                          ? Container(
+                              width: double.infinity,
+                              decoration: BoxDecoration(
+                                color: Colors.transparent,
+                                border: Border.all(
+                                  width: 1,
+                                  style: BorderStyle.solid,
+                                  color: AppColorData.regular().colorBorderInteractivePrimaryPressed,
                                 ),
-                                alignment: Alignment.center,
-                                child: Padding(
-                                  padding: EdgeInsets.all(8.0.sp),
-                                  child: StyledText(
-                                    '장착 중',
-                                    fontWeight: 500,
-                                    fontSize: 14,
-                                    color: deepGrayColor,
-                                  ),
+                                borderRadius: BorderRadius.all(
+                                  Radius.circular(20.sp),
+                                ),
+                              ),
+                              alignment: Alignment.center,
+                              child: Padding(
+                                padding: const EdgeInsets.symmetric(vertical: 4, horizontal: 10),
+                                child: Text(
+                                  '장착 중',
+                                  style: AppTextStyleData.regular().koBodyMediumSm.copyWith(
+                                        color: AppColorData.regular().colorTextInteractivePrimaryPressed,
+                                      ),
                                 ),
                               ),
                             )
@@ -99,31 +89,24 @@ class InventoryBadge extends StatelessWidget {
                               child: Container(
                                 width: double.infinity,
                                 decoration: BoxDecoration(
-                                  color: popupBgColor,
+                                  color: Colors.transparent,
                                   border: Border.all(
                                     width: 1,
                                     style: BorderStyle.solid,
-                                    color: const Color(0xFF54F5FF),
+                                    color: AppColorData.regular().colorBorderInteractivePrimary,
                                   ),
                                   borderRadius: BorderRadius.all(
                                     Radius.circular(20.sp),
                                   ),
-                                  boxShadow: [
-                                    BoxShadow(
-                                      offset: Offset(0, 3.sp),
-                                      blurRadius: 0,
-                                      spreadRadius: 0,
-                                      color: Colors.black,
-                                    ),
-                                  ],
                                 ),
                                 alignment: Alignment.center,
                                 child: Padding(
-                                  padding: EdgeInsets.all(8.0.sp),
-                                  child: const StyledText(
+                                  padding: const EdgeInsets.symmetric(vertical: 4, horizontal: 10),
+                                  child: Text(
                                     '장착하기',
-                                    fontWeight: 500,
-                                    fontSize: 14,
+                                    style: AppTextStyleData.regular().koBodyMediumSm.copyWith(
+                                          color: AppColorData.regular().colorTextPrimary,
+                                        ),
                                   ),
                                 ),
                               ),

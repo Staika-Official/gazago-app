@@ -16,6 +16,7 @@ class ConfirmWalletPasswordController extends GetxController with PasswordMixin 
   final Rx<FormStatus> passwordFormStatus = Rx(FormStatus.empty);
   final RxBool isEnableNext = false.obs;
   final Rx<ErrorStatus> errorMsg = Rx(ErrorStatus.basic);
+  final RxBool isFocused = RxBool(false);
 
   void isEnableNextStep() {
     passwordFormStatus.listen((status) {
@@ -34,19 +35,29 @@ class ConfirmWalletPasswordController extends GetxController with PasswordMixin 
 
   @override
   void onInit() {
-
     super.onInit();
     isEnableNextStep();
     _errorStatus.listen((event) {
       errorMsg.value = event;
     });
+
+    passwordFocusNode.addListener(() {
+      isFocused.value = passwordFocusNode.hasFocus;
+    });
+  }
+
+  @override
+  void onClose() {
+    passwordFocusNode.dispose();
+    super.onClose();
   }
 
   void updatePassword(String password) {
     _password.value = password;
     passwordFormStatus.value = verifyPassword(password);
   }
-  Future<void> isValidPassword (Completer completer) async {
+
+  Future<void> isValidPassword(Completer completer) async {
     passwordFocusNode.unfocus();
     if (passwordFormStatus.value == FormStatus.sufficient) {
       String? password = nextStep();

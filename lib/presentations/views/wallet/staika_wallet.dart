@@ -209,9 +209,9 @@ class StaikaWallet extends StatelessWidget {
                       child: Align(
                         alignment: Alignment.bottomCenter,
                         child: Padding(
-                          padding: EdgeInsets.only(top: 20.sp, bottom: 40.0.sp, left: 20.sp, right: 20.sp),
+                          padding: EdgeInsets.only(top: 20.sp, bottom: 52.0.sp, left: 20.sp, right: 20.sp),
                           child: Text(
-                            '· Staika 지갑은 블록체인 지갑이에요.',
+                            'Staika 지갑은 블록체인 지갑이에요.',
                             style: AppTextStyleData.regular().koCaptionMediumMd.copyWith(
                                   color: AppColorData.regular().colorTextTertiary,
                                 ),

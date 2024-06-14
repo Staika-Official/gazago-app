@@ -106,7 +106,7 @@ class InventoryItem extends StatelessWidget {
                                       child: Container(
                                         width: double.infinity,
                                         decoration: BoxDecoration(
-                                          color: popupBgColor,
+                                          color: Colors.transparent,
                                           border: Border.all(
                                             width: 1,
                                             style: BorderStyle.solid,
@@ -118,18 +118,20 @@ class InventoryItem extends StatelessWidget {
                                         ),
                                         alignment: Alignment.center,
                                         child: Padding(
-                                          padding: const EdgeInsets.symmetric(vertical: 6, horizontal: 10),
-                                          child: Text(item.itemCategory == 'DISPOSABLE' ? '사용하기' : '장착하기',
-                                              style: AppTextStyleData.regular().koBodyMediumSm.copyWith(
-                                                    color: AppColorData.regular().colorTextPrimary,
-                                                  )),
+                                          padding: const EdgeInsets.symmetric(vertical: 4, horizontal: 10),
+                                          child: Text(
+                                            item.itemCategory == 'DISPOSABLE' ? '사용하기' : '장착하기',
+                                            style: AppTextStyleData.regular().koBodyMediumSm.copyWith(
+                                                  color: AppColorData.regular().colorTextPrimary,
+                                                ),
+                                          ),
                                         ),
                                       ),
                                     )
                                   : Container(
                                       width: double.infinity,
                                       decoration: BoxDecoration(
-                                        color: popupBgColor,
+                                        color: Colors.transparent,
                                         border: Border.all(
                                           width: 1,
                                           style: BorderStyle.solid,
@@ -141,7 +143,7 @@ class InventoryItem extends StatelessWidget {
                                       ),
                                       alignment: Alignment.center,
                                       child: Padding(
-                                        padding: const EdgeInsets.symmetric(vertical: 6, horizontal: 10),
+                                        padding: const EdgeInsets.symmetric(vertical: 4, horizontal: 10),
                                         child: Text(
                                           '장착 중',
                                           style: AppTextStyleData.regular().koBodyMediumSm.copyWith(
