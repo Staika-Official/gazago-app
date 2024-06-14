@@ -212,7 +212,7 @@ class ShopItems extends StatelessWidget {
                   ),
                   Positioned.fill(
                     left: 0,
-                    bottom: 0,
+                    bottom: -1,
                     top: null,
                     child: Container(
                       decoration: BoxDecoration(

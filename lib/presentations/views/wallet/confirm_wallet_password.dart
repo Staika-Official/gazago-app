@@ -88,28 +88,30 @@ Future<String> showConfirmPasswordDialog(WalletMasterController controller) {
                       child: Row(
                         children: [
                           Expanded(
-                            child: TextField(
-                              cursorColor: Colors.white,
-                              obscureText: true,
-                              decoration: InputDecoration(
-                                border: InputBorder.none,
-                                contentPadding: const EdgeInsets.symmetric(horizontal: 15),
-                                hintText: '이체 비밀번호를 입력해주세요',
-                                hintStyle: TextStyle(
-                                  color: deepGrayColor,
-                                  fontSize: 20,
-                                  fontWeight: FontWeight.w500,
-                                  height: 1,
-                                  letterSpacing: -0.5,
+                            child: Obx(() {
+                              return TextField(
+                                cursorColor: Colors.white,
+                                obscureText: true,
+                                decoration: InputDecoration(
+                                  border: InputBorder.none,
+                                  contentPadding: const EdgeInsets.symmetric(horizontal: 15),
+                                  hintText: controller.isFocused.value ? '이체 비밀번호를 입력해주세요' : '',
+                                  hintStyle: TextStyle(
+                                    color: deepGrayColor,
+                                    fontSize: 20,
+                                    fontWeight: FontWeight.w500,
+                                    height: 1,
+                                    letterSpacing: -0.5,
+                                  ),
                                 ),
-                              ),
-                              style: const TextStyle(
-                                color: Colors.white,
-                              ),
-                              focusNode: controller.passwordFocusNode,
-                              onChanged: (password) => controller.updatePassword(password),
-                              onSubmitted: (String text) async => await controller.isValidPassword(completer),
-                            ),
+                                style: const TextStyle(
+                                  color: Colors.white,
+                                ),
+                                focusNode: controller.passwordFocusNode,
+                                onChanged: (password) => controller.updatePassword(password),
+                                onSubmitted: (String text) async => await controller.isValidPassword(completer),
+                              );
+                            }),
                           ),
                           Obx(
                             () => Visibility(

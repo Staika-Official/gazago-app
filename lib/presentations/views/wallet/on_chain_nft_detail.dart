@@ -112,8 +112,12 @@ class OnChainNftDetail extends StatelessWidget {
                 shimmerGradient: LinearGradient(
                   colors: [
                     AppColorData.regular().colorBgSecondary,
+                    AppColorData.regular().colorBgTertiary,
+                    AppColorData.regular().colorBgSecondary,
                   ],
                   stops: [
+                    0,
+                    0.5,
                     1,
                   ],
                   begin: Alignment(-2.4, -0.2),
@@ -124,16 +128,19 @@ class OnChainNftDetail extends StatelessWidget {
                   padding: const EdgeInsets.all(16),
                   child: Column(
                     children: [
-                      SkeletonLine(
-                        style: SkeletonLineStyle(
-                          height: 230,
-                          maxLength: MediaQuery.of(context).size.width,
-                          borderRadius: BorderRadius.circular(12),
+                      Padding(
+                        padding: const EdgeInsets.only(bottom: 8),
+                        child: SkeletonLine(
+                          style: SkeletonLineStyle(
+                            height: 230,
+                            maxLength: MediaQuery.of(context).size.width,
+                            borderRadius: BorderRadius.circular(12),
+                          ),
                         ),
                       ),
                       for (int i = 0; i < 7; i++)
                         Padding(
-                          padding: const EdgeInsets.only(top: 10),
+                          padding: const EdgeInsets.only(top: 16),
                           child: Row(
                             children: [
                               SkeletonLine(

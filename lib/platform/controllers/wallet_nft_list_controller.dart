@@ -21,30 +21,23 @@ class WalletNftListController extends GetxController {
   final RxList<InventoryItemModel> nftList = RxList<InventoryItemModel>.empty();
   final RxInt totalItemCount = RxInt(0);
   final RxBool stopLoading = RxBool(false);
+  final RxBool isLoadingInProgress = RxBool(false);
 
   @override
   void onReady() async {
     isFromGoWallet.value = Get.arguments['prevRoute'] == 'GO_WALLET';
     if (isFromGoWallet.value) {
-      loaderController.isLoading.value = true;
       await getNftList();
-      loaderController.isLoading.value = false;
     } else {
-      loaderController.isLoading.value = true;
       await getOnChainNftList();
-      loaderController.isLoading.value = false;
     }
 
     Get.bus.on<RefreshNftListEvent>((event) async {
-      loaderController.isLoading.value = true;
       if (isFromGoWallet.value) {
-        nftList.clear();
         await getNftList();
       } else {
-        onChainNftList.clear();
         await getOnChainNftList();
       }
-      loaderController.isLoading.value = false;
     });
     super.onReady();
   }
@@ -64,6 +57,8 @@ class WalletNftListController extends GetxController {
   }
 
   Future<void> getNftList() async {
+    loaderController.isLoading.value = true;
+    isLoadingInProgress.value = true;
     await ItemService.getAllMyItems(
       0,
       publishType: 'NFT',
@@ -72,21 +67,29 @@ class WalletNftListController extends GetxController {
         if (nftItems.length < 100) {
           stopLoading.value = true;
         }
+        if (nftList.isNotEmpty) nftList.clear();
         nftList.addAll(nftItems);
       },
     );
+    loaderController.isLoading.value = false;
+    isLoadingInProgress.value = false;
   }
 
   Future<void> getOnChainNftList() async {
+    loaderController.isLoading.value = true;
+    isLoadingInProgress.value = true;
     await WalletService.getNftList(successCallback: (list) {
+      if (onChainNftList.isNotEmpty) onChainNftList.clear();
       onChainNftList.addAll(list);
     }, errorCallback: (e) {
       showToastPopup(e.errorMessage ?? 'Error');
     });
+    loaderController.isLoading.value = false;
+    isLoadingInProgress.value = false;
   }
 
   void toItemDetail(int itemId) {
     InventoryController controller = Get.put(InventoryController());
-    controller.toItemDetail(itemId);
+    controller.toItemDetail(itemId, prevRoute: Routes.walletNftList);
   }
 }

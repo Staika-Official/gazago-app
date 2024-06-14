@@ -94,7 +94,7 @@ class InventoryItemDetail extends StatelessWidget {
                                       crossAxisAlignment: CrossAxisAlignment.start,
                                       children: [
                                         Padding(
-                                          padding: EdgeInsets.symmetric(vertical: 10.0.sp, horizontal: 16.sp),
+                                          padding: EdgeInsets.only(top: 10.0.sp, left: 16.sp, right: 16.sp, bottom: controller.requestDetailFromWallet.value ? 28 : 10),
                                           child: Column(
                                             children: [
                                               SizedBox(
@@ -283,7 +283,7 @@ class InventoryItemDetail extends StatelessWidget {
                                                                   children: [
                                                                     Text(
                                                                       formatDecimalPlaces(controller.selectedItem.value.itemStat!.goProfit!, 0),
-                                                                      style: AppTextStyleData.regular().koBodyMediumXl.copyWith(
+                                                                      style: AppTextStyleData.regular().enBodyMediumXl.copyWith(
                                                                             color: AppColorData.regular().colorPointCyan,
                                                                           ),
                                                                     ),
@@ -327,7 +327,7 @@ class InventoryItemDetail extends StatelessWidget {
                                                                   children: [
                                                                     Text(
                                                                       formatDecimalPlaces(controller.selectedItem.value.itemStat!.durability!, 0),
-                                                                      style: AppTextStyleData.regular().koBodyMediumXl.copyWith(
+                                                                      style: AppTextStyleData.regular().enBodyMediumXl.copyWith(
                                                                             color: AppColorData.regular().colorPointPurple,
                                                                           ),
                                                                     ),
@@ -370,7 +370,7 @@ class InventoryItemDetail extends StatelessWidget {
                                                                   children: [
                                                                     Text(
                                                                       formatDecimalPlaces(controller.selectedItem.value.itemStat!.stamina!, 0),
-                                                                      style: AppTextStyleData.regular().koBodyMediumXl.copyWith(
+                                                                      style: AppTextStyleData.regular().enBodyMediumXl.copyWith(
                                                                             color: AppColorData.regular().colorPointYellowgreen,
                                                                           ),
                                                                     ),
@@ -414,7 +414,7 @@ class InventoryItemDetail extends StatelessWidget {
                                                                   children: [
                                                                     Text(
                                                                       formatDecimalPlaces(controller.selectedItem.value.itemStat!.luck!, 0),
-                                                                      style: AppTextStyleData.regular().koBodyMediumXl.copyWith(
+                                                                      style: AppTextStyleData.regular().enBodyMediumXl.copyWith(
                                                                             color: AppColorData.regular().colorPointPink,
                                                                           ),
                                                                     ),
@@ -713,32 +713,33 @@ class InventoryItemDetail extends StatelessWidget {
                                               ],
                                             ),
                                           ),
-                                        Padding(
-                                          padding: EdgeInsets.only(top: 25.sp, bottom: 40.sp, left: 18.sp, right: 18.sp),
-                                          child: Column(
-                                            crossAxisAlignment: CrossAxisAlignment.start,
-                                            children: [
-                                              Padding(
-                                                padding: EdgeInsets.only(bottom: 10.sp),
-                                                child: const StyledText(
-                                                  '아이템 설명',
-                                                  fontWeight: 600,
-                                                  fontSize: 18,
-                                                  lineHeight: 18,
+                                        if (!controller.requestDetailFromWallet.value)
+                                          Padding(
+                                            padding: EdgeInsets.only(top: 25.sp, bottom: 40.sp, left: 18.sp, right: 18.sp),
+                                            child: Column(
+                                              crossAxisAlignment: CrossAxisAlignment.start,
+                                              children: [
+                                                Padding(
+                                                  padding: EdgeInsets.only(bottom: 10.sp),
+                                                  child: const StyledText(
+                                                    '아이템 설명',
+                                                    fontWeight: 600,
+                                                    fontSize: 18,
+                                                    lineHeight: 18,
+                                                  ),
                                                 ),
-                                              ),
-                                              StyledText(
-                                                controller.selectedItem.value.description.toString(),
-                                                color: lightGrayColor,
-                                                fontWeight: 500,
-                                                fontSize: 14,
-                                                lineHeight: 22,
-                                                letterSpacing: -.1,
-                                              ),
-                                            ],
+                                                StyledText(
+                                                  controller.selectedItem.value.description.toString(),
+                                                  color: lightGrayColor,
+                                                  fontWeight: 500,
+                                                  fontSize: 14,
+                                                  lineHeight: 22,
+                                                  letterSpacing: -.1,
+                                                ),
+                                              ],
+                                            ),
                                           ),
-                                        ),
-                                        if (controller.selectedItem.value.itemCategory != 'DISPOSABLE')
+                                        if (controller.selectedItem.value.itemCategory != 'DISPOSABLE' && !controller.requestDetailFromWallet.value)
                                           controller.selectedItem.value.equipped == true
                                               ? Center(
                                                   child: Padding(

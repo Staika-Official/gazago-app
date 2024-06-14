@@ -1,8 +1,7 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:flutter_svg_provider/flutter_svg_provider.dart';
-import 'package:gaza_go/constants/config.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:gaza_go/constants/enums.dart';
 import 'package:gaza_go/platform/controllers/wallet_staika_controller.dart';
 import 'package:gaza_go/platform/helpers/base_helper.dart';
@@ -50,15 +49,18 @@ class StaikaAssetItemCoin extends StatelessWidget {
               child: Row(
                 mainAxisSize: MainAxisSize.max,
                 children: [
-                  CircleAvatar(
-                    radius: 20.sp,
-                    foregroundImage: asset.logoUrl != ''
-                        ? CachedNetworkImageProvider(
-                            asset.logoUrl,
-                            headers: imageNetworkHeader,
-                          )
-                        : const Svg('assets/images/wallet/ico_stik.svg') as ImageProvider,
-                  ),
+                  asset.logoUrl != ''
+                      ? ClipRRect(
+                          borderRadius: BorderRadius.circular(20),
+                          child: CachedNetworkImage(
+                            imageUrl: asset.logoUrl,
+                            width: 40,
+                            height: 40,
+                          ),
+                        )
+                      : SvgPicture.asset(
+                          'assets/images/common/ico_stik.svg',
+                        ),
                   Expanded(
                     child: Padding(
                       padding: EdgeInsets.only(left: 10.0.sp),

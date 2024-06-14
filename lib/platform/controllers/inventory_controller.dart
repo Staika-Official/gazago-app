@@ -65,6 +65,7 @@ class InventoryController extends GetxController with LinearProgressMixin, Inven
   ScrollController badgeScrollController = ScrollController(keepScrollOffset: false);
 
   final Rxn isConsumerItemUsing = Rxn(null);
+  final RxBool requestDetailFromWallet = RxBool(false);
 
   Rx<InventoryBadgeModel> equippedBadge = Rx(
     InventoryBadgeModel(
@@ -301,7 +302,7 @@ class InventoryController extends GetxController with LinearProgressMixin, Inven
     ];
   }
 
-  void toItemDetail(int itemId) async {
+  void toItemDetail(int itemId, {String? prevRoute}) async {
     await ItemService.getItemDetailInfo(
       itemId,
       successCallback: (item) async {
@@ -309,6 +310,11 @@ class InventoryController extends GetxController with LinearProgressMixin, Inven
         isShoe.value = selectedItem.value.itemCategory == 'SHOES';
         if (selectedItem.value.itemCategory == 'SHOES') {
           currentStat.value = selectedItem.value.durability!;
+        }
+        if (prevRoute == Routes.walletNftList) {
+          requestDetailFromWallet.value = true;
+        } else {
+          requestDetailFromWallet.value = false;
         }
         Get.toNamed(Routes.itemDetail);
       },
@@ -612,8 +618,6 @@ class InventoryController extends GetxController with LinearProgressMixin, Inven
 
   void sendNftToStaika(InventoryItemModel item) {
     Get.back();
-    showStaikaStatusAlert(hasWallet: false);
-    return;
     NftService.requestTransferNftToStaika(
       nftId: item.nftId!,
       userItemId: item.id,

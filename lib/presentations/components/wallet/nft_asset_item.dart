@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:flutter_svg_provider/flutter_svg_provider.dart' as sp;
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:gaza_go/theme/theme.g.dart';
 
 class NftAssetItem extends StatelessWidget {
@@ -46,11 +46,8 @@ class NftAssetItem extends StatelessWidget {
                       children: [
                         Row(
                           children: [
-                            CircleAvatar(
-                              radius: 20.sp,
-                              foregroundImage: sp.Svg('assets/images/icons/icon_nft.svg', source: sp.SvgSource.asset) as ImageProvider,
-                              foregroundColor: Colors.black,
-                              backgroundColor: Colors.black,
+                            SvgPicture.asset(
+                              'assets/images/icons/icon_nft.svg',
                             ),
                             Padding(
                               padding: EdgeInsets.only(left: 10.0.sp),
