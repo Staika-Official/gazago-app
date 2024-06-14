@@ -4679,7 +4679,7 @@ void showItemTipAlert() {
                               children: [
                                 Row(
                                   children: [
-                                    iconShopReward,
+                                    iconStatGo,
                                     const Padding(
                                       padding: EdgeInsets.only(left: 8.0),
                                       child: StyledText(
@@ -4711,7 +4711,7 @@ void showItemTipAlert() {
                               children: [
                                 Row(
                                   children: [
-                                    iconShopDurabilityLight,
+                                    iconStatDurability,
                                     const Padding(
                                       padding: EdgeInsets.only(left: 8.0),
                                       child: StyledText(
@@ -4743,7 +4743,7 @@ void showItemTipAlert() {
                               children: [
                                 Row(
                                   children: [
-                                    iconShopStamina,
+                                    iconStatStamina,
                                     const Padding(
                                       padding: EdgeInsets.only(left: 8.0),
                                       child: StyledText(
@@ -4775,7 +4775,7 @@ void showItemTipAlert() {
                               children: [
                                 Row(
                                   children: [
-                                    iconShopLuck,
+                                    iconStatLuck,
                                     const Padding(
                                       padding: EdgeInsets.only(left: 8.0),
                                       child: StyledText(

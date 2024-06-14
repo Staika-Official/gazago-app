@@ -172,7 +172,7 @@ class CollectionRewardDetail extends StatelessWidget {
                                        Padding(
                                         padding: EdgeInsets.only(left: 5.0.sp),
                                         child: Text(
-                                          'GO 보상',
+                                          'GO 적립량',
                                           style: AppTextStyleData.regular().koBodyMediumLg.copyWith(
                                             color: AppColorData.regular().colorTextPrimary,
                                             height: 1.1
@@ -262,7 +262,7 @@ class CollectionRewardDetail extends StatelessWidget {
                                        Padding(
                                         padding: EdgeInsets.only(left: 5.0.sp),
                                         child: Text(
-                                          '내구도',
+                                          '내구도 저항',
                                           style: AppTextStyleData.regular().koBodyMediumLg.copyWith(
                                             color: AppColorData.regular().colorTextPrimary,
                                               height: 1.1
@@ -351,7 +351,7 @@ class CollectionRewardDetail extends StatelessWidget {
                                        Padding(
                                         padding: EdgeInsets.only(left: 5.0.sp),
                                         child: Text(
-                                          '체력',
+                                          '체력 저항',
                                           style: AppTextStyleData.regular().koBodyMediumLg.copyWith(
                                             color: AppColorData.regular().colorTextPrimary,
                                             height: 1.1
@@ -528,7 +528,7 @@ class CollectionRewardDetail extends StatelessWidget {
                                        Padding(
                                         padding: EdgeInsets.only(left: 5.0.sp),
                                         child: Text(
-                                          'GO 보상',
+                                          'GO 적립량',
                                           style: AppTextStyleData.regular().koBodyMediumLg.copyWith(
                                               color: AppColorData.regular().colorTextPrimary,
                                               height: 1.1

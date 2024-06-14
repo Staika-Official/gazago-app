@@ -76,7 +76,7 @@ class CrewInfo extends StatelessWidget {
                     mainAxisAlignment: MainAxisAlignment.center,
                     crossAxisAlignment: CrossAxisAlignment.center,
                     children: [
-                      iconShopDurabilityLight,
+                      iconShopDurabilityLightPng,
                       Padding(
                         padding: EdgeInsets.only(left: 4.0.sp),
                         child: StyledText(
