@@ -43,7 +43,7 @@ class NftList extends StatelessWidget {
                       ),
                       Positioned(
                         left: 0.sp,
-                        top: 0,
+                        top: -1,
                         child: SizedBox(
                           width: constraints.maxWidth,
                           child: Center(child: getItemGradeIcon(nftItem.itemGrade)),
@@ -56,6 +56,7 @@ class NftList extends StatelessWidget {
                             child: Center(
                               child: SizedBox(
                                 width: 92.sp,
+                                height: 92.sp,
                                 child: CachedNetworkImage(
                                   imageUrl: nftItem.itemImageUrl,
                                   fit: BoxFit.cover,
@@ -93,10 +94,10 @@ class NftList extends StatelessWidget {
                               nftItem.itemStat!.repairDurability != 0)
                             Expanded(
                               child: Center(
-                                child: Padding(
-                                  padding: const EdgeInsets.only(top: 10),
-                                  child: FittedBox(
-                                    child: Row(
+                                child: Column(
+                                  mainAxisSize: MainAxisSize.min,
+                                  children: [
+                                    Row(
                                       mainAxisAlignment: MainAxisAlignment.center,
                                       children: [
                                         if (nftItem.itemStat!.goProfit! > 0)
@@ -105,15 +106,15 @@ class NftList extends StatelessWidget {
                                             child: Row(
                                               children: [
                                                 SizedBox(
-                                                  width: 12.sp,
-                                                  height: 12.sp,
+                                                  width: 16.sp,
+                                                  height: 16.sp,
                                                   child: iconShopRewardPng,
                                                 ),
                                                 Padding(
                                                   padding: EdgeInsets.only(left: 3.0.sp),
                                                   child: Text(
                                                     formatDecimalPlaces(nftItem.itemStat!.goProfit!, 0),
-                                                    style: AppTextStyleData.regular().koBodySemiboldSm.copyWith(
+                                                    style: AppTextStyleData.regular().numBodySemiboldSm.copyWith(
                                                           color: AppColorData.regular().colorPointCyan,
                                                         ),
                                                   ),
@@ -127,15 +128,15 @@ class NftList extends StatelessWidget {
                                             child: Row(
                                               children: [
                                                 SizedBox(
-                                                  width: 12.sp,
-                                                  height: 12.sp,
+                                                  width: 16.sp,
+                                                  height: 16.sp,
                                                   child: iconShopDurabilityLightPng,
                                                 ),
                                                 Padding(
                                                   padding: EdgeInsets.only(left: 3.0.sp),
                                                   child: Text(
                                                     formatDecimalPlaces(nftItem.itemStat!.durability!, 0),
-                                                    style: AppTextStyleData.regular().koBodySemiboldSm.copyWith(
+                                                    style: AppTextStyleData.regular().numBodySemiboldSm.copyWith(
                                                           color: AppColorData.regular().colorPointPurple,
                                                         ),
                                                   ),
@@ -149,15 +150,15 @@ class NftList extends StatelessWidget {
                                             child: Row(
                                               children: [
                                                 SizedBox(
-                                                  width: 12.sp,
-                                                  height: 12.sp,
+                                                  width: 16.sp,
+                                                  height: 16.sp,
                                                   child: iconShopStaminaPng,
                                                 ),
                                                 Padding(
                                                   padding: EdgeInsets.only(left: 3.0.sp),
                                                   child: Text(
                                                     formatDecimalPlaces(nftItem.itemStat!.stamina!, 0),
-                                                    style: AppTextStyleData.regular().koBodySemiboldSm.copyWith(
+                                                    style: AppTextStyleData.regular().numBodySemiboldSm.copyWith(
                                                           color: AppColorData.regular().colorPointYellowgreen,
                                                         ),
                                                   ),
@@ -171,15 +172,15 @@ class NftList extends StatelessWidget {
                                             child: Row(
                                               children: [
                                                 SizedBox(
-                                                  width: 12.sp,
-                                                  height: 12.sp,
+                                                  width: 16.sp,
+                                                  height: 16.sp,
                                                   child: iconShopLuckPng,
                                                 ),
                                                 Padding(
                                                   padding: EdgeInsets.only(left: 3.0.sp),
                                                   child: Text(
                                                     formatDecimalPlaces(nftItem.itemStat!.luck!, 0),
-                                                    style: AppTextStyleData.regular().koBodySemiboldSm.copyWith(
+                                                    style: AppTextStyleData.regular().numBodySemiboldSm.copyWith(
                                                           color: AppColorData.regular().colorPointPink,
                                                         ),
                                                   ),
@@ -189,59 +190,57 @@ class NftList extends StatelessWidget {
                                           ),
                                       ],
                                     ),
-                                  ),
+                                    if (nftItem.itemCategory == 'SHOES')
+                                      Container(
+                                        width: constraints.maxWidth,
+                                        height: 12,
+                                        margin: EdgeInsets.only(
+                                          left: 17.sp,
+                                          right: 17.sp,
+                                          top: 12.sp,
+                                        ),
+                                        decoration: ShapeDecoration(
+                                          color: AppColorData.regular().colorBgSecondary,
+                                          shape: RoundedRectangleBorder(
+                                            side: BorderSide(width: 1),
+                                            borderRadius: BorderRadius.circular(999),
+                                          ),
+                                          shadows: [
+                                            BoxShadow(
+                                              color: AppColorData.regular().colorBorderBlack,
+                                              blurRadius: 0,
+                                              offset: Offset(0, 2),
+                                              spreadRadius: 0,
+                                            )
+                                          ],
+                                        ),
+                                        child: LayoutBuilder(builder: (context, constraints) {
+                                          return Row(
+                                            mainAxisSize: MainAxisSize.min,
+                                            mainAxisAlignment: MainAxisAlignment.start,
+                                            crossAxisAlignment: CrossAxisAlignment.center,
+                                            children: [
+                                              Container(
+                                                width: nftItem.durability! > 100 ? constraints.maxWidth : constraints.maxWidth * (nftItem.durability! / 100),
+                                                height: 12,
+                                                padding: const EdgeInsets.all(2),
+                                                clipBehavior: Clip.antiAlias,
+                                                decoration: ShapeDecoration(
+                                                  // color: nftItem.durability! < 30 ? textRedColor : AppColorData.regular().colorPointPurple,
+                                                  color: nftItem.durability! < 30 ? textRedColor : AppColorData.regular().colorPointPurple,
+                                                  shape: RoundedRectangleBorder(
+                                                    borderRadius: BorderRadius.circular(999),
+                                                  ),
+                                                ),
+                                              ),
+                                            ],
+                                          );
+                                        }),
+                                      )
+                                  ],
                                 ),
                               ),
                             ),
-                          if (nftItem.itemCategory == 'SHOES')
-                            Container(
-                              width: constraints.maxWidth,
-                              height: 12,
-                              margin: EdgeInsets.only(
-                                left: 17.sp,
-                                right: 17.sp,
-                                top: 12.sp,
-                                bottom: 16.sp,
-                              ),
-                              decoration: ShapeDecoration(
-                                color: AppColorData.regular().colorBgSecondary,
-                                shape: RoundedRectangleBorder(
-                                  side: BorderSide(width: 1),
-                                  borderRadius: BorderRadius.circular(999),
-                                ),
-                                shadows: [
-                                  BoxShadow(
-                                    color: AppColorData.regular().colorBorderBlack,
-                                    blurRadius: 0,
-                                    offset: Offset(0, 2),
-                                    spreadRadius: 0,
-                                  )
-                                ],
-                              ),
-                              child: LayoutBuilder(builder: (context, constraints) {
-                                return Row(
-                                  mainAxisSize: MainAxisSize.min,
-                                  mainAxisAlignment: MainAxisAlignment.start,
-                                  crossAxisAlignment: CrossAxisAlignment.center,
-                                  children: [
-                                    Container(
-                                      width: nftItem.durability! > 100 ? constraints.maxWidth : constraints.maxWidth * (nftItem.durability! / 100),
-                                      height: 12,
-                                      padding: const EdgeInsets.all(2),
-                                      clipBehavior: Clip.antiAlias,
-                                      decoration: ShapeDecoration(
-                                        // color: nftItem.durability! < 30 ? textRedColor : AppColorData.regular().colorPointPurple,
-                                        color: nftItem.durability! < 30 ? textRedColor : AppColorData.regular().colorPointPurple,
-                                        shape: RoundedRectangleBorder(
-                                          side: BorderSide(width: 1),
-                                          borderRadius: BorderRadius.circular(999),
-                                        ),
-                                      ),
-                                    ),
-                                  ],
-                                );
-                              }),
-                            )
                         ],
                       )
                     ],
@@ -291,7 +290,7 @@ class NftList extends StatelessWidget {
                           height: 50,
                           padding: EdgeInsets.symmetric(horizontal: 10.sp),
                           child: Text(
-                            nftItem.name!,
+                            removeSerialNumberString(nftItem.name!),
                             style: AppTextStyleData.regular().koBodyMediumMd.copyWith(
                                   color: AppColorData.regular().colorTextSecondary,
                                 ),
@@ -317,136 +316,85 @@ class NftList extends StatelessWidget {
     return Obx(() {
       return DefaultContainer(
         titleText: 'NFT',
-        child: controller.isFromGoWallet.value
-            ? controller.nftList.isEmpty
-                ? Center(
-                    heightFactor: 2.5,
-                    child: Column(
-                      mainAxisSize: MainAxisSize.min,
-                      children: [
-                        Container(child: iconEmptyRoundedBg),
-                        Padding(
-                          padding: EdgeInsets.only(top: 20.sp),
-                          child: Text(
-                            '보유한 NFT가 없어요',
-                            style: AppTextStyleData.regular().koBodyMediumLg.copyWith(
-                                  color: AppColorData.regular().colorTextSecondary,
-                                ),
-                          ),
-                        ),
-                        Padding(
-                          padding: EdgeInsets.only(top: 12.sp),
-                          child: Text(
-                            'NFT는 STIK로 구매할 수 있어요.',
-                            style: AppTextStyleData.regular().koBodyMediumMd.copyWith(
-                                  color: AppColorData.regular().colorTextTertiary,
-                                ),
-                          ),
-                        ),
-                        Padding(
-                          padding: EdgeInsets.only(top: 32.sp),
-                          child: GestureDetector(
-                            onTap: () => controller.moveToShop(),
-                            child: Row(
-                              mainAxisSize: MainAxisSize.min,
-                              children: [
-                                Text(
-                                  'NFT 구매하기',
-                                  style: AppTextStyleData.regular().koBodyMediumMd.copyWith(
-                                        color: AppColorData.regular().colorTextTertiary,
-                                      ),
-                                ),
-                                iconChevronRightTertiary,
-                              ],
-                            ),
-                          ),
-                        ),
-                      ],
-                    ),
-                  )
-                : Padding(
-                    padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 16),
-                    child: GridView.count(
-                      primary: false,
-                      padding: EdgeInsets.only(bottom: 30.sp),
-                      childAspectRatio: controller.isFromGoWallet.value ? (1 / 1.4) : 1,
-                      crossAxisSpacing: 10.sp,
-                      mainAxisSpacing: 10.sp,
-                      crossAxisCount: width > 450 ? 4 : 2,
-                      children: <Widget>[
-                        ...renderNftItems(
-                          controller.isFromGoWallet.value,
-                          controller,
-                          controller.nftList,
-                        )
-                      ],
-                    ),
-                  )
-            : controller.onChainNftList.isEmpty
-                ? Center(
-                    heightFactor: 2.5,
-                    child: Column(
-                      mainAxisSize: MainAxisSize.min,
-                      children: [
-                        Container(child: iconEmptyRoundedBg),
-                        Padding(
-                          padding: EdgeInsets.only(top: 20.sp),
-                          child: Text(
-                            '보유한 NFT가 없어요',
-                            style: AppTextStyleData.regular().koBodyMediumLg.copyWith(
-                                  color: AppColorData.regular().colorTextSecondary,
-                                ),
-                          ),
-                        ),
-                        Padding(
-                          padding: EdgeInsets.only(top: 12.sp),
-                          child: Text(
-                            'NFT는 STIK로 구매할 수 있어요.',
-                            style: AppTextStyleData.regular().koBodyMediumMd.copyWith(
-                                  color: AppColorData.regular().colorTextTertiary,
-                                ),
-                          ),
-                        ),
-                        Padding(
-                          padding: EdgeInsets.only(top: 32.sp),
-                          child: GestureDetector(
-                            onTap: () => controller.moveToShop(),
-                            child: Row(
-                              mainAxisSize: MainAxisSize.min,
-                              children: [
-                                Text(
-                                  'NFT 구매하기',
-                                  style: AppTextStyleData.regular().koBodyMediumMd.copyWith(
-                                        color: AppColorData.regular().colorTextTertiary,
-                                      ),
-                                ),
-                                iconChevronRightTertiary,
-                              ],
-                            ),
-                          ),
-                        ),
-                      ],
-                    ),
-                  )
-                : Padding(
-                    padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 16),
-                    child: GridView.count(
-                      primary: false,
-                      padding: EdgeInsets.only(bottom: 30.sp),
-                      childAspectRatio: controller.isFromGoWallet.value ? (1 / 1.4) : 1,
-                      crossAxisSpacing: 10.sp,
-                      mainAxisSpacing: 10.sp,
-                      crossAxisCount: width > 450 ? 4 : 2,
-                      children: <Widget>[
-                        ...renderNftItems(
-                          controller.isFromGoWallet.value,
-                          controller,
-                          controller.onChainNftList,
-                        )
-                      ],
-                    ),
-                  ),
+        child: (controller.isFromGoWallet.value && controller.nftList.isEmpty) || (!controller.isFromGoWallet.value && controller.onChainNftList.isEmpty)
+            ? NoNftInPossession(controller: controller)
+            : Padding(
+                padding: const EdgeInsets.symmetric(vertical: 4, horizontal: 16),
+                child: GridView.count(
+                  primary: false,
+                  padding: EdgeInsets.only(bottom: 30.sp),
+                  childAspectRatio: controller.isFromGoWallet.value ? (1 / 1.5) : 1,
+                  crossAxisSpacing: 10.sp,
+                  mainAxisSpacing: 10.sp,
+                  crossAxisCount: width > 450 ? 4 : 2,
+                  children: <Widget>[
+                    ...renderNftItems(
+                      controller.isFromGoWallet.value,
+                      controller,
+                      controller.isFromGoWallet.value ? controller.nftList : controller.onChainNftList,
+                    )
+                  ],
+                ),
+              ),
       );
     });
+  }
+}
+
+class NoNftInPossession extends StatelessWidget {
+  const NoNftInPossession({
+    super.key,
+    required this.controller,
+  });
+
+  final WalletNftListController controller;
+
+  @override
+  Widget build(BuildContext context) {
+    return Center(
+      heightFactor: 2.5,
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Container(child: iconEmptyRoundedBg),
+          Padding(
+            padding: EdgeInsets.only(top: 20.sp),
+            child: Text(
+              '보유한 NFT가 없어요',
+              style: AppTextStyleData.regular().koBodyMediumLg.copyWith(
+                    color: AppColorData.regular().colorTextSecondary,
+                  ),
+            ),
+          ),
+          Padding(
+            padding: EdgeInsets.only(top: 12.sp),
+            child: Text(
+              'NFT는 STIK로 구매할 수 있어요.',
+              style: AppTextStyleData.regular().koBodyMediumMd.copyWith(
+                    color: AppColorData.regular().colorTextTertiary,
+                  ),
+            ),
+          ),
+          Padding(
+            padding: EdgeInsets.only(top: 32.sp),
+            child: GestureDetector(
+              onTap: () => controller.moveToShop(),
+              child: Row(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Text(
+                    'NFT 구매하기',
+                    style: AppTextStyleData.regular().koBodyMediumMd.copyWith(
+                          color: AppColorData.regular().colorTextTertiary,
+                        ),
+                  ),
+                  iconChevronRightTertiary,
+                ],
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
   }
 }

@@ -115,7 +115,7 @@ class Home extends StatelessWidget {
       decoration: BoxDecoration(
         color: controller.selectedIndex.value == 2
             ? AppColorData.regular().colorBgPrimary
-            : controller.selectedIndex.value == 1 || controller.selectedIndex.value == 3
+            : controller.selectedIndex.value == 1
                 ? AppColorData.regular().colorBgTertiary
                 : AppColorData.regular().colorBgPrimary,
       ),
@@ -189,7 +189,10 @@ class Home extends StatelessWidget {
               );
             }),
             ClipRRect(
-              borderRadius: BorderRadius.only(topLeft: Radius.circular(15.sp), topRight: Radius.circular(15.sp)),
+              borderRadius: BorderRadius.only(
+                topLeft: Radius.circular(15.sp),
+                topRight: Radius.circular(15.sp),
+              ),
               child: Padding(
                 padding: EdgeInsets.only(top: 8.0.sp, bottom: 28.sp),
                 child: Container(

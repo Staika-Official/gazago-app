@@ -57,3 +57,31 @@ Widget getItemGradeCircleIcon(String itemGrade) {
   }
   return iconGradeCirclePoor;
 }
+
+String removeSerialNumberString(String nftName) {
+  // 정규 표현식 패턴 생성
+  RegExp regExp = RegExp(r"(.+)\s+#\d+");
+
+  // 패턴에 맞는 첫 번째 문자열 추출
+  Match? match = regExp.firstMatch(nftName);
+
+  if (match != null) {
+    return match.group(1)!;
+  } else {
+    return nftName;
+  }
+}
+
+String extractSerialNumberString(String nftName) {
+  // 정규 표현식 패턴 생성
+  RegExp regExp = RegExp(r"#\d+");
+
+  // 패턴에 맞는 첫 번째 문자열 추출
+  Match? match = regExp.firstMatch(nftName);
+
+  if (match != null) {
+    return match.group(0)!;
+  } else {
+    return nftName;
+  }
+}

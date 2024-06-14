@@ -102,7 +102,7 @@ class GoWallet extends StatelessWidget {
 
                     Expanded(
                       child: Padding(
-                        padding: EdgeInsets.only(top: 20.sp, bottom: 20.0.sp, left: 20.sp, right: 20.sp),
+                        padding: EdgeInsets.only(top: 20.sp, bottom: 40.0.sp, left: 20.sp, right: 20.sp),
                         child: Align(
                           alignment: Alignment.bottomCenter,
                           child: Text(

@@ -51,7 +51,7 @@ class StaikaAssetItemCoin extends StatelessWidget {
                 mainAxisSize: MainAxisSize.max,
                 children: [
                   CircleAvatar(
-                    radius: 19.sp,
+                    radius: 20.sp,
                     foregroundImage: asset.logoUrl != ''
                         ? CachedNetworkImageProvider(
                             asset.logoUrl,

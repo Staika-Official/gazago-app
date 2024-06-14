@@ -26,6 +26,7 @@ class GazagoButton extends StatelessWidget {
     return Material(
       borderRadius: BorderRadius.circular(8.sp),
       child: Container(
+        height: 56,
         decoration: BoxDecoration(
           color: buttonColor,
           border: Border.all(width: 2.sp, color: borderColor, strokeAlign: BorderSide.strokeAlignOutside),

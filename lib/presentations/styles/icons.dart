@@ -5,12 +5,13 @@ import 'package:flutter_svg/flutter_svg.dart';
 // Common Icons
 SvgPicture iconSplashLogo = SvgPicture.asset('assets/images/common/img_splash_logo.svg', width: 261, height: 61.15);
 SvgPicture iconPlus = SvgPicture.asset('assets/images/common/ico_plus.svg', width: 10.sp, height: 10.sp);
+SvgPicture iconPlusThin = SvgPicture.asset('assets/images/common/ico_plus_thin.svg', width: 18.sp, height: 18.sp);
 SvgPicture iconSliderShoe = SvgPicture.asset('assets/images/common/ico_slider_shoe.svg', width: 14.7.sp, height: 16.sp);
 SvgPicture iconSliderStamina = SvgPicture.asset('assets/images/common/ico_slider_stamina.svg', width: 13.33.sp, height: 20.8.sp);
 SvgPicture iconCopy = SvgPicture.asset('assets/images/common/ico_copy.svg', width: 12.33.sp, height: 14.2.sp);
 SvgPicture iconExclamationMark = SvgPicture.asset('assets/images/common/ico_circle_exclamation_mark.svg', width: 78.sp, height: 78.sp);
 SvgPicture iconExclamationMarkSmall = SvgPicture.asset('assets/images/common/ico_circle_exclamention_small.svg', width: 20.sp, height: 20.sp);
-SvgPicture iconArrowDown = SvgPicture.asset('assets/images/common/ico_arrow_down.svg', width: 6.2.sp, height: 6.2.sp);
+SvgPicture iconArrowDown = SvgPicture.asset('assets/images/common/ico_arrow_down.svg', width: 18.sp, height: 18.sp);
 SvgPicture iconSelectArrowDown = SvgPicture.asset('assets/images/common/ico_select_arrow_down.svg', width: 7.sp, height: 7.sp);
 SvgPicture iconSortChecked = SvgPicture.asset('assets/images/common/ico_sort_checked.svg', width: 16.sp, height: 11.sp);
 SvgPicture iconShopFilter = SvgPicture.asset('assets/images/common/ico_item_filter.svg', width: 18.sp, height: 16.sp);

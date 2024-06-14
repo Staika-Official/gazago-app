@@ -47,10 +47,10 @@ class NftAssetItem extends StatelessWidget {
                         Row(
                           children: [
                             CircleAvatar(
-                              radius: 16.5.sp,
+                              radius: 20.sp,
                               foregroundImage: sp.Svg('assets/images/icons/icon_nft.svg', source: sp.SvgSource.asset) as ImageProvider,
-                              foregroundColor: Colors.transparent,
-                              backgroundColor: Colors.transparent,
+                              foregroundColor: Colors.black,
+                              backgroundColor: Colors.black,
                             ),
                             Padding(
                               padding: EdgeInsets.only(left: 10.0.sp),

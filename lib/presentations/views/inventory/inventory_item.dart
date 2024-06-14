@@ -8,6 +8,7 @@ import 'package:gaza_go/platform/controllers/inventory_home_controller.dart';
 import 'package:gaza_go/platform/helpers/inventory_helper.dart';
 import 'package:gaza_go/presentations/styles/colors.dart';
 import 'package:gaza_go/presentations/styles/styled_text.dart';
+import 'package:gaza_go/theme/theme.g.dart';
 import 'package:get/get.dart';
 
 class InventoryItem extends StatelessWidget {
@@ -109,28 +110,19 @@ class InventoryItem extends StatelessWidget {
                                           border: Border.all(
                                             width: 1,
                                             style: BorderStyle.solid,
-                                            color: const Color(0xFF54F5FF),
+                                            color: AppColorData.regular().colorBorderInteractivePrimary,
                                           ),
                                           borderRadius: BorderRadius.all(
                                             Radius.circular(20.sp),
                                           ),
-                                          boxShadow: [
-                                            BoxShadow(
-                                              offset: Offset(0, 3.sp),
-                                              blurRadius: 0,
-                                              spreadRadius: 0,
-                                              color: Colors.black,
-                                            ),
-                                          ],
                                         ),
                                         alignment: Alignment.center,
                                         child: Padding(
-                                          padding: EdgeInsets.all(8.0.sp),
-                                          child: StyledText(
-                                            item.itemCategory == 'DISPOSABLE' ? '사용하기' : '장착하기',
-                                            fontWeight: 500,
-                                            fontSize: 14,
-                                          ),
+                                          padding: const EdgeInsets.symmetric(vertical: 6, horizontal: 10),
+                                          child: Text(item.itemCategory == 'DISPOSABLE' ? '사용하기' : '장착하기',
+                                              style: AppTextStyleData.regular().koBodyMediumSm.copyWith(
+                                                    color: AppColorData.regular().colorTextPrimary,
+                                                  )),
                                         ),
                                       ),
                                     )
@@ -141,24 +133,21 @@ class InventoryItem extends StatelessWidget {
                                         border: Border.all(
                                           width: 1,
                                           style: BorderStyle.solid,
-                                          color: deepGrayColor,
+                                          color: AppColorData.regular().colorBorderInteractivePrimaryPressed,
                                         ),
                                         borderRadius: BorderRadius.all(
                                           Radius.circular(20.sp),
                                         ),
-                                        boxShadow: [
-                                          BoxShadow(
-                                            offset: Offset(0, 3.sp),
-                                            blurRadius: 0,
-                                            spreadRadius: 0,
-                                            color: Colors.black,
-                                          ),
-                                        ],
                                       ),
                                       alignment: Alignment.center,
                                       child: Padding(
-                                        padding: EdgeInsets.all(8.0.sp),
-                                        child: StyledText('장착 중', fontWeight: 500, fontSize: 14, color: deepGrayColor),
+                                        padding: const EdgeInsets.symmetric(vertical: 6, horizontal: 10),
+                                        child: Text(
+                                          '장착 중',
+                                          style: AppTextStyleData.regular().koBodyMediumSm.copyWith(
+                                                color: AppColorData.regular().colorTextInteractivePrimaryPressed,
+                                              ),
+                                        ),
                                       ),
                                     ),
                             ],
@@ -170,7 +159,7 @@ class InventoryItem extends StatelessWidget {
                             top: 8.sp,
                             child: Container(
                               decoration: BoxDecoration(
-                                color: Color(0xFF0E0E13),
+                                color: const Color(0xFF0E0E13),
                                 borderRadius: BorderRadius.circular(6),
                               ),
                               child: Padding(

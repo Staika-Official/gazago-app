@@ -26,6 +26,7 @@ import 'package:gaza_go/platform/controllers/daily_benefit_controller.dart';
 import 'package:gaza_go/platform/controllers/debugging_controller.dart';
 import 'package:gaza_go/platform/controllers/home_menu_controller.dart';
 import 'package:gaza_go/platform/controllers/inventory_controller.dart';
+import 'package:gaza_go/platform/controllers/inventory_home_controller.dart';
 import 'package:gaza_go/platform/controllers/loading_controller.dart';
 import 'package:gaza_go/platform/controllers/login_controller.dart';
 import 'package:gaza_go/platform/controllers/my_page_controller.dart';
@@ -1777,17 +1778,19 @@ void itemPurchaseCompleteAlert(ShopDetailController controller) {
                 borderRadius: BorderRadius.circular(30),
               ),
               child: Text(
-                '#${controller.purchaseCompleteItem.value.nftId!}',
+                '#${controller.purchaseCompleteItem.value.serialNumber!}',
                 style: AppTextStyleData.regular().koBodySemiboldMd.copyWith(
                       color: AppColorData.regular().colorTextTertiary,
                     ),
               ),
             ),
           Padding(
-            padding: EdgeInsets.only(top: AppDoubleData.regular().numberSpacing28.sp, bottom: AppDoubleData.regular().numberSpacing28.sp),
+            padding: EdgeInsets.only(
+              top: AppDoubleData.regular().numberSpacing28.sp,
+            ),
             child: Container(
-              decoration: const BoxDecoration(
-                color: subBg01Color,
+              decoration: BoxDecoration(
+                color: AppColorData.regular().colorBgPrimary,
                 borderRadius: BorderRadius.all(
                   Radius.circular(12),
                 ),
@@ -1795,29 +1798,26 @@ void itemPurchaseCompleteAlert(ShopDetailController controller) {
               child: Column(
                 children: [
                   Padding(
-                    padding: EdgeInsets.symmetric(vertical: 24.0.sp),
+                    padding: EdgeInsets.only(top: 12, bottom: 16),
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                       children: [
-                        if (controller.purchaseCompleteItem.value.itemStat!.goProfit! > 0)
+                        if (controller.purchaseCompleteItem.value.itemStat != null && controller.purchaseCompleteItem.value.itemStat!.goProfit! > 0)
                           Expanded(
                             child: Column(
                               children: [
                                 Text(
                                   formatDecimalPlaces(controller.purchaseCompleteItem.value.itemStat!.goProfit!, 0),
                                   style: AppTextStyleData.regular().koBodyMediumXl.copyWith(
-                                        color: AppColorData.regular().colorTextBrand,
+                                        color: AppColorData.regular().colorPointCyan,
                                       ),
                                 ),
                                 Padding(
-                                  padding: EdgeInsets.only(top: AppDoubleData.regular().numberSpacing2.sp),
+                                  padding: EdgeInsets.only(top: 3.sp),
                                   child: Row(
                                     mainAxisAlignment: MainAxisAlignment.center,
                                     children: [
-                                      Padding(
-                                        padding: EdgeInsets.all(AppDoubleData.regular().numberSpacing2.sp),
-                                        child: iconShopReward,
-                                      ),
+                                      iconShopRewardPng,
                                       Padding(
                                         padding: EdgeInsets.only(left: AppDoubleData.regular().numberSpacing4.sp),
                                         child: Text(
@@ -1833,9 +1833,11 @@ void itemPurchaseCompleteAlert(ShopDetailController controller) {
                               ],
                             ),
                           ),
-                        if (controller.purchaseCompleteItem.value.itemStat!.goProfit! > 0 &&
-                            controller.purchaseCompleteItem.value.itemStat!.luck! < 1 &&
-                            (controller.purchaseCompleteItem.value.itemStat!.durability! > 0 || controller.purchaseCompleteItem.value.itemStat!.stamina! > 0))
+                        if (controller.purchaseCompleteItem.value.itemStat != null &&
+                            controller.purchaseCompleteItem.value.itemStat!.goProfit! > 0 &&
+                            (controller.purchaseCompleteItem.value.itemStat!.durability! > 0 ||
+                                controller.purchaseCompleteItem.value.itemStat!.stamina! > 0 ||
+                                controller.purchaseCompleteItem.value.itemStat!.luck! > 0))
                           SizedBox(
                             height: 42.sp,
                             child: VerticalDivider(
@@ -1844,7 +1846,7 @@ void itemPurchaseCompleteAlert(ShopDetailController controller) {
                               thickness: 1,
                             ),
                           ),
-                        if (controller.purchaseCompleteItem.value.itemStat!.durability! > 0)
+                        if (controller.purchaseCompleteItem.value.itemStat != null && controller.purchaseCompleteItem.value.itemStat!.durability! > 0)
                           Expanded(
                             child: Column(
                               children: [
@@ -1855,17 +1857,14 @@ void itemPurchaseCompleteAlert(ShopDetailController controller) {
                                       ),
                                 ),
                                 Padding(
-                                  padding: EdgeInsets.only(top: AppDoubleData.regular().numberSpacing2.sp),
+                                  padding: EdgeInsets.only(top: 3.sp),
                                   child: Row(
                                     mainAxisAlignment: MainAxisAlignment.center,
                                     crossAxisAlignment: CrossAxisAlignment.center,
                                     children: [
+                                      iconShopDurabilityLightPng,
                                       Padding(
-                                        padding: EdgeInsets.all(AppDoubleData.regular().numberSpacing2.sp),
-                                        child: iconShopDurabilityLight,
-                                      ),
-                                      Padding(
-                                        padding: EdgeInsets.only(left: AppDoubleData.regular().numberSpacing4.sp),
+                                        padding: EdgeInsets.only(left: 4.0.sp),
                                         child: Text(
                                           '내구도 저항',
                                           style: AppTextStyleData.regular().koCaptionMediumMd.copyWith(
@@ -1879,7 +1878,9 @@ void itemPurchaseCompleteAlert(ShopDetailController controller) {
                               ],
                             ),
                           ),
-                        if (controller.purchaseCompleteItem.value.itemStat!.durability! > 0 && controller.purchaseCompleteItem.value.itemStat!.goProfit! < 1)
+                        if (controller.purchaseCompleteItem.value.itemStat != null &&
+                            (controller.purchaseCompleteItem.value.itemStat!.goProfit! > 0 || controller.purchaseCompleteItem.value.itemStat!.durability! > 0) &&
+                            (controller.purchaseCompleteItem.value.itemStat!.stamina! > 0 || controller.purchaseCompleteItem.value.itemStat!.luck! > 0))
                           SizedBox(
                             height: 42.sp,
                             child: VerticalDivider(
@@ -1888,7 +1889,7 @@ void itemPurchaseCompleteAlert(ShopDetailController controller) {
                               thickness: 1,
                             ),
                           ),
-                        if (controller.purchaseCompleteItem.value.itemStat!.stamina! > 0)
+                        if (controller.purchaseCompleteItem.value.itemStat != null && controller.purchaseCompleteItem.value.itemStat!.stamina! > 0)
                           Expanded(
                             child: Column(
                               children: [
@@ -1899,20 +1900,17 @@ void itemPurchaseCompleteAlert(ShopDetailController controller) {
                                       ),
                                 ),
                                 Padding(
-                                  padding: EdgeInsets.only(top: AppDoubleData.regular().numberSpacing2.sp),
+                                  padding: EdgeInsets.only(top: 3.sp),
                                   child: Row(
                                     mainAxisAlignment: MainAxisAlignment.center,
                                     children: [
+                                      iconShopStaminaPng,
                                       Padding(
-                                        padding: EdgeInsets.all(AppDoubleData.regular().numberSpacing2.sp),
-                                        child: iconShopStamina,
-                                      ),
-                                      Padding(
-                                        padding: EdgeInsets.only(left: AppDoubleData.regular().numberSpacing4.sp),
+                                        padding: EdgeInsets.only(left: 4.0.sp),
                                         child: Text(
                                           '체력 저항',
                                           style: AppTextStyleData.regular().koCaptionMediumMd.copyWith(
-                                                color: AppColorData.regular().colorYellowgreen500,
+                                                color: AppColorData.regular().colorPointYellowgreen,
                                               ),
                                         ),
                                       ),
@@ -1922,7 +1920,11 @@ void itemPurchaseCompleteAlert(ShopDetailController controller) {
                               ],
                             ),
                           ),
-                        if (controller.purchaseCompleteItem.value.itemStat!.luck! > 0)
+                        if (controller.purchaseCompleteItem.value.itemStat != null &&
+                            controller.purchaseCompleteItem.value.itemStat!.luck! > 0 &&
+                            (controller.purchaseCompleteItem.value.itemStat!.durability! > 0 ||
+                                controller.purchaseCompleteItem.value.itemStat!.stamina! > 0 ||
+                                controller.purchaseCompleteItem.value.itemStat!.goProfit! > 0))
                           SizedBox(
                             height: 42.sp,
                             child: VerticalDivider(
@@ -1931,7 +1933,7 @@ void itemPurchaseCompleteAlert(ShopDetailController controller) {
                               thickness: 1,
                             ),
                           ),
-                        if (controller.purchaseCompleteItem.value.itemStat!.luck! > 0)
+                        if (controller.purchaseCompleteItem.value.itemStat != null && controller.purchaseCompleteItem.value.itemStat!.luck! > 0)
                           Expanded(
                             child: Column(
                               children: [
@@ -1942,16 +1944,13 @@ void itemPurchaseCompleteAlert(ShopDetailController controller) {
                                       ),
                                 ),
                                 Padding(
-                                  padding: EdgeInsets.only(top: AppDoubleData.regular().numberSpacing2.sp),
+                                  padding: EdgeInsets.only(top: 3.sp),
                                   child: Row(
                                     mainAxisAlignment: MainAxisAlignment.center,
                                     children: [
+                                      iconShopLuckPng,
                                       Padding(
-                                        padding: EdgeInsets.all(AppDoubleData.regular().numberSpacing2.sp),
-                                        child: iconShopLuck,
-                                      ),
-                                      Padding(
-                                        padding: EdgeInsets.only(left: AppDoubleData.regular().numberSpacing4.sp),
+                                        padding: EdgeInsets.only(left: 4.0.sp),
                                         child: Text(
                                           '행운',
                                           style: AppTextStyleData.regular().koCaptionMediumMd.copyWith(
@@ -1976,14 +1975,14 @@ void itemPurchaseCompleteAlert(ShopDetailController controller) {
                                       ),
                                 ),
                                 Padding(
-                                  padding: EdgeInsets.only(top: AppDoubleData.regular().numberSpacing2.sp),
+                                  padding: EdgeInsets.only(top: 3.sp),
                                   child: Row(
                                     mainAxisAlignment: MainAxisAlignment.center,
                                     crossAxisAlignment: CrossAxisAlignment.center,
                                     children: [
-                                      Padding(padding: EdgeInsets.all(AppDoubleData.regular().numberSpacing2.sp), child: iconShopDurabilityLight),
+                                      iconShopDurabilityLightPng,
                                       Padding(
-                                        padding: EdgeInsets.only(left: AppDoubleData.regular().numberSpacing4.sp),
+                                        padding: EdgeInsets.only(left: 4.0.sp),
                                         child: Text(
                                           '내구도 수리',
                                           style: AppTextStyleData.regular().koCaptionMediumMd.copyWith(
@@ -2004,24 +2003,21 @@ void itemPurchaseCompleteAlert(ShopDetailController controller) {
                                 Text(
                                   '+${formatDecimalPlaces(controller.purchaseCompleteItem.value.itemStat!.recoveryStamina!, 0)}',
                                   style: AppTextStyleData.regular().koBodyMediumXl.copyWith(
-                                        color: AppColorData.regular().colorYellowgreen500,
+                                        color: AppColorData.regular().colorPointYellowgreen,
                                       ),
                                 ),
                                 Padding(
-                                  padding: EdgeInsets.only(top: AppDoubleData.regular().numberSpacing2.sp),
+                                  padding: EdgeInsets.only(top: 3.sp),
                                   child: Row(
                                     mainAxisAlignment: MainAxisAlignment.center,
                                     children: [
+                                      iconShopStaminaPng,
                                       Padding(
-                                        padding: EdgeInsets.all(AppDoubleData.regular().numberSpacing2.sp),
-                                        child: iconShopStamina,
-                                      ),
-                                      Padding(
-                                        padding: EdgeInsets.only(left: AppDoubleData.regular().numberSpacing4.sp),
+                                        padding: EdgeInsets.only(left: 4.0.sp),
                                         child: Text(
                                           '체력 회복',
                                           style: AppTextStyleData.regular().koCaptionMediumMd.copyWith(
-                                                color: AppColorData.regular().colorYellowgreen500,
+                                                color: AppColorData.regular().colorPointYellowgreen,
                                               ),
                                         ),
                                       ),
@@ -2328,13 +2324,11 @@ void itemFilterListAlert(ShopController controller) {
                         ),
                         child: Padding(
                           padding: EdgeInsets.symmetric(horizontal: 12.0.sp, vertical: 6.sp),
-                          child: StyledText(
+                          child: Text(
                             '전체',
-                            fontSize: 14,
-                            lineHeight: 16,
-                            letterSpacing: .2,
-                            fontWeight: 500,
-                            color: controller.isSelectAllItems.value ? Colors.black : Colors.white,
+                            style: AppTextStyleData.regular().enBodySemiboldMd.copyWith(
+                                  color: controller.isSelectAllItems.value ? Colors.black : Colors.white,
+                                ),
                           ),
                         ),
                       ),
@@ -8371,7 +8365,7 @@ void showSendNftToGoWalletAlert(WalletOnChainNftDetailController controller) {
           Padding(
             padding: EdgeInsets.only(top: 8.sp),
             child: Text(
-              controller.nftDetail.value!.name!,
+              removeSerialNumberString(controller.nftDetail.value!.name!),
               style: AppTextStyleData.regular().koBodyMediumXl.copyWith(
                     color: AppColorData.regular().colorTextPrimary,
                   ),
@@ -8388,7 +8382,7 @@ void showSendNftToGoWalletAlert(WalletOnChainNftDetailController controller) {
               borderRadius: BorderRadius.circular(100),
             ),
             child: Text(
-              controller.nftDetail.value!.name!.substring(controller.nftDetail.value!.name!.indexOf('#'), controller.nftDetail.value!.name!.length),
+              extractSerialNumberString(controller.nftDetail.value!.name!),
               style: AppTextStyleData.regular().koBodySemiboldMd.copyWith(
                     color: AppColorData.regular().colorTextTertiary,
                   ),
@@ -8435,7 +8429,61 @@ void showSendNftToGoWalletAlert(WalletOnChainNftDetailController controller) {
   );
 }
 
-void showNotCompatibleItemAlert(WalletOnChainNftDetailController controller) {
+void showItemIsEquippedAlert() {
+  showAlert(
+    contentWidget: Center(
+      child: Column(
+        children: [
+          Text(
+            '장착중인 아이템은\nStaika지갑으로 보낼 수 없어요.',
+            style: AppTextStyleData.regular().koHeadingSemiboldSm.copyWith(
+                  color: AppColorData.regular().colorTextPrimary,
+                ),
+            textAlign: TextAlign.center,
+          ),
+          Padding(
+            padding: EdgeInsets.only(top: 8.sp, bottom: 28.sp),
+            child: Text(
+              '다른 아이템으로 장착 후 다시 시도해주세요.',
+              style: AppTextStyleData.regular().koBodyMediumLg.copyWith(
+                    color: AppColorData.regular().colorTextPrimary,
+                  ),
+              textAlign: TextAlign.center,
+            ),
+          ),
+        ],
+      ),
+    ),
+    actions: [
+      Expanded(
+        child: GazagoButton(
+          onTap: () {
+            Get.back();
+          },
+          buttonText: '취소',
+          textColor: AppColorData.regular().colorTextPrimary,
+          buttonColor: AppColorData.regular().colorBgInteractiveSecondary,
+        ),
+      ),
+      SizedBox(
+        width: 9.sp,
+      ),
+      Expanded(
+        child: GazagoButton(
+          onTap: () {
+            Get.until((route) => route.isFirst);
+            Get.find<HomeMenuController>().selectMenu(1);
+            Get.find<InventoryHomeController>().tabController.animateTo(0);
+          },
+          buttonText: '내 장비 가기',
+          buttonColor: AppColorData.regular().colorBgInteractivePrimary,
+        ),
+      ),
+    ],
+  );
+}
+
+void showNotCompatibleItemAlert() {
   showAlert(
     contentWidget: Center(
       child: Column(

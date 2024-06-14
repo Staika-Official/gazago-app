@@ -45,16 +45,17 @@ class WalletOnChainNftDetailController extends GetxController {
     if (nftDetail.value!.belongTo == 'GAZAGO') {
       showSendNftToGoWalletAlert(this);
     } else {
-      showNotCompatibleItemAlert(this);
+      showNotCompatibleItemAlert();
     }
   }
 
   void requestSendNft() async {
     Get.back();
-    loaderController.isLoading.value = true;
     String secretKey = HiveStore.load(key: HiveKey.solanaSecretKey.name);
     String password = await showConfirmPasswordDialog(walletMasterController);
     late final Ed25519HDPublicKey solanaTokenMasterWallet;
+
+    loaderController.isLoading.value = true;
     await WalletService.getWalletAddress(
       'SOLANA_GAZAGO_WALLET',
       successCallback: (address) {

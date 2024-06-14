@@ -6,7 +6,9 @@ import 'package:gaza_go/constants/config.dart';
 import 'package:gaza_go/platform/controllers/inventory_controller.dart';
 import 'package:gaza_go/platform/helpers/base_helper.dart';
 import 'package:gaza_go/platform/helpers/inventory_helper.dart';
+import 'package:gaza_go/presentations/components/alert_ui_list.dart';
 import 'package:gaza_go/presentations/components/default_container.dart';
+import 'package:gaza_go/presentations/components/gazago_button.dart';
 import 'package:gaza_go/presentations/components/view_solscan_button.dart';
 import 'package:gaza_go/presentations/styles/colors.dart';
 import 'package:gaza_go/presentations/styles/icons.dart';
@@ -49,13 +51,13 @@ class InventoryItemDetail extends StatelessWidget {
             child: Column(
               children: [
                 Padding(
-                  padding: EdgeInsets.only(left: 22.0.sp, right: 22.0.sp, bottom: context.mediaQuerySize.height < 750 && controller.selectedItem.value.publishType == 'NFT' ? 120.sp : 22.0.sp),
+                  padding: EdgeInsets.only(left: 22.0.sp, right: 22.0.sp, bottom: controller.selectedItem.value.publishType == 'NFT' ? 120.sp : 22.0.sp),
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Container(
                         decoration: BoxDecoration(
-                          color: subBg02Color,
+                          color: AppColorData.regular().colorBgTertiary,
                           border: Border.all(
                             width: 2.sp,
                             color: Colors.black,
@@ -64,12 +66,12 @@ class InventoryItemDetail extends StatelessWidget {
                             Radius.circular(14.sp),
                           ),
                           boxShadow: [
-                            BoxShadow(
-                              color: Colors.black,
-                              offset: Offset(0, 1.sp),
-                              blurRadius: 1.0,
-                              spreadRadius: 0.0,
-                            ),
+                            const BoxShadow(
+                              color: Color(0xFF000000),
+                              blurRadius: 0,
+                              offset: Offset(0, 4),
+                              spreadRadius: 0,
+                            )
                           ],
                         ),
                         child: SizedBox(
@@ -151,47 +153,53 @@ class InventoryItemDetail extends StatelessWidget {
                                                         mainAxisAlignment: MainAxisAlignment.center,
                                                         children: [
                                                           Expanded(
-                                                            child: ClipRRect(
-                                                              child: SizedBox(
-                                                                child: Stack(
-                                                                  children: [
-                                                                    Container(
-                                                                      decoration: BoxDecoration(
-                                                                        color: gaugeGrayColor,
-                                                                        border: Border.all(
-                                                                          width: 2.sp,
-                                                                          color: Colors.black,
-                                                                        ),
-                                                                        borderRadius: BorderRadius.all(
-                                                                          Radius.circular(50.sp),
-                                                                        ),
+                                                            child: SizedBox(
+                                                              child: Stack(
+                                                                children: [
+                                                                  Container(
+                                                                    decoration: BoxDecoration(
+                                                                      color: gaugeGrayColor,
+                                                                      border: Border.all(
+                                                                        width: 2.sp,
+                                                                        color: Colors.black,
                                                                       ),
+                                                                      borderRadius: BorderRadius.all(
+                                                                        Radius.circular(50.sp),
+                                                                      ),
+                                                                      boxShadow: [
+                                                                        BoxShadow(
+                                                                          color: Color(0xFF000000),
+                                                                          blurRadius: 0,
+                                                                          offset: Offset(0, 2),
+                                                                          spreadRadius: 0,
+                                                                        )
+                                                                      ],
                                                                     ),
-                                                                    controller.selectedItem.value.durability! > 1.0
-                                                                        ? LayoutBuilder(
-                                                                            builder: (context, constraints) {
-                                                                              return Container(
-                                                                                width: controller.selectedItem.value.durability! > 20
-                                                                                    ? constraints.maxWidth / (100 / controller.selectedItem.value.durability!)
-                                                                                    : controller.selectedItem.value.durability! < 2
-                                                                                        ? 0
-                                                                                        : 34,
-                                                                                decoration: BoxDecoration(
-                                                                                  color: controller.selectedItem.value.durability! <= 30 ? textRedColor : purpleColor,
-                                                                                  border: Border.all(
-                                                                                    width: 2.sp,
-                                                                                    color: Colors.black,
-                                                                                  ),
-                                                                                  borderRadius: BorderRadius.all(
-                                                                                    Radius.circular(30.sp),
-                                                                                  ),
+                                                                  ),
+                                                                  controller.selectedItem.value.durability! > 1.0
+                                                                      ? LayoutBuilder(
+                                                                          builder: (context, constraints) {
+                                                                            return Container(
+                                                                              width: controller.selectedItem.value.durability! > 20
+                                                                                  ? constraints.maxWidth / (100 / controller.selectedItem.value.durability!)
+                                                                                  : controller.selectedItem.value.durability! < 2
+                                                                                      ? 0
+                                                                                      : 34,
+                                                                              decoration: BoxDecoration(
+                                                                                color: controller.selectedItem.value.durability! <= 30 ? textRedColor : AppColorData.regular().colorPointPurple,
+                                                                                border: Border.all(
+                                                                                  width: 2.sp,
+                                                                                  color: Colors.black,
                                                                                 ),
-                                                                              );
-                                                                            },
-                                                                          )
-                                                                        : Container(),
-                                                                  ],
-                                                                ),
+                                                                                borderRadius: BorderRadius.all(
+                                                                                  Radius.circular(30.sp),
+                                                                                ),
+                                                                              ),
+                                                                            );
+                                                                          },
+                                                                        )
+                                                                      : Container(),
+                                                                ],
                                                               ),
                                                             ),
                                                           ),
@@ -210,23 +218,16 @@ class InventoryItemDetail extends StatelessWidget {
                                                                   padding: EdgeInsets.only(left: 12.0.sp, right: 7.sp),
                                                                   child: iconShoes,
                                                                 ),
-                                                                StyledText(
-                                                                  '신발 내구도',
-                                                                  fontFamily: 'Montserrat',
-                                                                  fontWeight: 800,
-                                                                  fontSize: 15,
-                                                                  lineHeight: 21,
-                                                                  color: controller.selectedItem.value.durability!.toInt() <= 30 ? Colors.white : Colors.black,
-                                                                ),
+                                                                Text('내구도',
+                                                                    style: AppTextStyleData.regular().koBodySemiboldMd.copyWith(
+                                                                          color: controller.selectedItem.value.durability!.toInt() <= 30 ? Colors.white : Colors.black,
+                                                                        )),
                                                                 Padding(
-                                                                  padding: EdgeInsets.only(left: 5.0.sp),
-                                                                  child: StyledText(
-                                                                    formatDecimalPlaces(controller.selectedItem.value.durability!, 2),
-                                                                    fontWeight: 800,
-                                                                    fontSize: 14,
-                                                                    lineHeight: 15,
-                                                                    color: controller.selectedItem.value.durability!.toInt() <= 30 ? Colors.white : Colors.black,
-                                                                  ),
+                                                                  padding: EdgeInsets.only(left: 2.0.sp),
+                                                                  child: Text(formatDecimalPlaces(controller.selectedItem.value.durability!, 2),
+                                                                      style: AppTextStyleData.regular().enBodySemiboldMd.copyWith(
+                                                                            color: controller.selectedItem.value.durability!.toInt() <= 30 ? Colors.white : Colors.black,
+                                                                          )),
                                                                 ),
                                                               ],
                                                             ),
@@ -234,24 +235,24 @@ class InventoryItemDetail extends StatelessWidget {
                                                         ],
                                                       ),
                                                       Positioned(
-                                                        top: 1,
-                                                        right: 1,
+                                                        top: 0,
+                                                        right: 0,
                                                         child: GestureDetector(
                                                           onTap: () => controller.isDisableButton.value ? null : controller.showShoesRepairPopup(controller.selectedItem.value.id, context),
                                                           child: Container(
-                                                            width: 34,
-                                                            height: 34,
+                                                            width: 36,
+                                                            height: 36,
                                                             padding: const EdgeInsets.all(2),
                                                             decoration: ShapeDecoration(
-                                                              color: Color(0xFFB85DFF),
+                                                              color: AppColorData.regular().colorPointPurple,
                                                               shape: RoundedRectangleBorder(
-                                                                side: BorderSide(width: 2),
+                                                                side: const BorderSide(width: 2),
                                                                 borderRadius: BorderRadius.circular(999),
                                                               ),
                                                             ),
                                                             child: Center(
                                                               child: SizedBox(
-                                                                child: iconPlus,
+                                                                child: iconPlusThin,
                                                               ),
                                                             ),
                                                           ),
@@ -264,7 +265,7 @@ class InventoryItemDetail extends StatelessWidget {
                                                 padding: EdgeInsets.only(top: 20.0.sp),
                                                 child: Container(
                                                   decoration: BoxDecoration(
-                                                    color: subBg01Color,
+                                                    color: AppColorData.regular().colorBgPrimary,
                                                     borderRadius: const BorderRadius.all(
                                                       Radius.circular(12),
                                                     ),
@@ -272,7 +273,7 @@ class InventoryItemDetail extends StatelessWidget {
                                                   child: Column(
                                                     children: [
                                                       Padding(
-                                                        padding: EdgeInsets.symmetric(vertical: 24.0.sp),
+                                                        padding: const EdgeInsets.only(top: 12, bottom: 16),
                                                         child: Row(
                                                           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                                                           children: [
@@ -280,29 +281,25 @@ class InventoryItemDetail extends StatelessWidget {
                                                               Expanded(
                                                                 child: Column(
                                                                   children: [
-                                                                    StyledText(
+                                                                    Text(
                                                                       formatDecimalPlaces(controller.selectedItem.value.itemStat!.goProfit!, 0),
-                                                                      fontSize: 26,
-                                                                      lineHeight: 26,
-                                                                      color: skyBlueColor,
-                                                                      fontWeight: 500,
-                                                                      letterSpacing: -.1,
+                                                                      style: AppTextStyleData.regular().koBodyMediumXl.copyWith(
+                                                                            color: AppColorData.regular().colorPointCyan,
+                                                                          ),
                                                                     ),
                                                                     Padding(
-                                                                      padding: EdgeInsets.only(top: 8.0.sp),
+                                                                      padding: EdgeInsets.only(top: 3.sp),
                                                                       child: Row(
                                                                         mainAxisAlignment: MainAxisAlignment.center,
                                                                         children: [
                                                                           iconShopRewardPng,
                                                                           Padding(
                                                                             padding: EdgeInsets.only(left: 4.0.sp),
-                                                                            child: StyledText(
+                                                                            child: Text(
                                                                               'GO 적립량',
-                                                                              color: skyBlueColor,
-                                                                              fontSize: 12,
-                                                                              lineHeight: 14,
-                                                                              fontWeight: 500,
-                                                                              letterSpacing: -.1,
+                                                                              style: AppTextStyleData.regular().koCaptionMediumMd.copyWith(
+                                                                                    color: AppColorData.regular().colorPointCyan,
+                                                                                  ),
                                                                             ),
                                                                           ),
                                                                         ],
@@ -313,12 +310,13 @@ class InventoryItemDetail extends StatelessWidget {
                                                               ),
                                                             if (controller.selectedItem.value.itemStat != null &&
                                                                 controller.selectedItem.value.itemStat!.goProfit! > 0 &&
-                                                                controller.selectedItem.value.itemStat!.luck! < 1 &&
-                                                                (controller.selectedItem.value.itemStat!.durability! > 0 || controller.selectedItem.value.itemStat!.stamina! > 0))
+                                                                (controller.selectedItem.value.itemStat!.durability! > 0 ||
+                                                                    controller.selectedItem.value.itemStat!.stamina! > 0 ||
+                                                                    controller.selectedItem.value.itemStat!.luck! > 0))
                                                               SizedBox(
-                                                                height: 35.sp,
+                                                                height: 42.sp,
                                                                 child: VerticalDivider(
-                                                                  color: popupBgColor,
+                                                                  color: AppColorData.regular().colorBorderPrimary,
                                                                   width: 1,
                                                                   thickness: 1,
                                                                 ),
@@ -327,16 +325,14 @@ class InventoryItemDetail extends StatelessWidget {
                                                               Expanded(
                                                                 child: Column(
                                                                   children: [
-                                                                    StyledText(
+                                                                    Text(
                                                                       formatDecimalPlaces(controller.selectedItem.value.itemStat!.durability!, 0),
-                                                                      fontSize: 26,
-                                                                      lineHeight: 26,
-                                                                      fontWeight: 500,
-                                                                      letterSpacing: -.1,
-                                                                      color: AppColorData.regular().colorPointPurple,
+                                                                      style: AppTextStyleData.regular().koBodyMediumXl.copyWith(
+                                                                            color: AppColorData.regular().colorPointPurple,
+                                                                          ),
                                                                     ),
                                                                     Padding(
-                                                                      padding: EdgeInsets.only(top: 8.0.sp),
+                                                                      padding: EdgeInsets.only(top: 3.sp),
                                                                       child: Row(
                                                                         mainAxisAlignment: MainAxisAlignment.center,
                                                                         crossAxisAlignment: CrossAxisAlignment.center,
@@ -344,13 +340,11 @@ class InventoryItemDetail extends StatelessWidget {
                                                                           iconShopDurabilityLightPng,
                                                                           Padding(
                                                                             padding: EdgeInsets.only(left: 4.0.sp),
-                                                                            child: StyledText(
+                                                                            child: Text(
                                                                               '내구도 저항',
-                                                                              color: AppColorData.regular().colorPointPurple,
-                                                                              fontSize: 12,
-                                                                              lineHeight: 12,
-                                                                              letterSpacing: -.1,
-                                                                              fontWeight: 600,
+                                                                              style: AppTextStyleData.regular().koCaptionMediumMd.copyWith(
+                                                                                    color: AppColorData.regular().colorPointPurple,
+                                                                                  ),
                                                                             ),
                                                                           ),
                                                                         ],
@@ -360,12 +354,12 @@ class InventoryItemDetail extends StatelessWidget {
                                                                 ),
                                                               ),
                                                             if (controller.selectedItem.value.itemStat != null &&
-                                                                controller.selectedItem.value.itemStat!.durability! > 0 &&
-                                                                controller.selectedItem.value.itemStat!.goProfit! < 1)
+                                                                (controller.selectedItem.value.itemStat!.goProfit! > 0 || controller.selectedItem.value.itemStat!.durability! > 0) &&
+                                                                (controller.selectedItem.value.itemStat!.stamina! > 0 || controller.selectedItem.value.itemStat!.luck! > 0))
                                                               SizedBox(
-                                                                height: 35.sp,
+                                                                height: 42.sp,
                                                                 child: VerticalDivider(
-                                                                  color: popupBgColor,
+                                                                  color: AppColorData.regular().colorBorderPrimary,
                                                                   width: 1,
                                                                   thickness: 1,
                                                                 ),
@@ -374,30 +368,26 @@ class InventoryItemDetail extends StatelessWidget {
                                                               Expanded(
                                                                 child: Column(
                                                                   children: [
-                                                                    StyledText(
+                                                                    Text(
                                                                       formatDecimalPlaces(controller.selectedItem.value.itemStat!.stamina!, 0),
-                                                                      fontSize: 26,
-                                                                      lineHeight: 26,
-                                                                      fontWeight: 500,
-                                                                      color: lightGreenColor,
-                                                                      letterSpacing: -.1,
+                                                                      style: AppTextStyleData.regular().koBodyMediumXl.copyWith(
+                                                                            color: AppColorData.regular().colorPointYellowgreen,
+                                                                          ),
                                                                     ),
                                                                     Padding(
-                                                                      padding: EdgeInsets.only(top: 8.0.sp),
+                                                                      padding: EdgeInsets.only(top: 3.sp),
                                                                       child: Row(
                                                                         mainAxisAlignment: MainAxisAlignment.center,
                                                                         children: [
+                                                                          iconShopStaminaPng,
                                                                           Padding(
-                                                                            padding: EdgeInsets.only(right: 4.0.sp),
-                                                                            child: iconShopStaminaPng,
-                                                                          ),
-                                                                          StyledText(
-                                                                            '체력 저항',
-                                                                            color: lightGreenColor,
-                                                                            fontSize: 12,
-                                                                            lineHeight: 12,
-                                                                            fontWeight: 500,
-                                                                            letterSpacing: -.1,
+                                                                            padding: EdgeInsets.only(left: 4.0.sp),
+                                                                            child: Text(
+                                                                              '체력 저항',
+                                                                              style: AppTextStyleData.regular().koCaptionMediumMd.copyWith(
+                                                                                    color: AppColorData.regular().colorPointYellowgreen,
+                                                                                  ),
+                                                                            ),
                                                                           ),
                                                                         ],
                                                                       ),
@@ -405,11 +395,15 @@ class InventoryItemDetail extends StatelessWidget {
                                                                   ],
                                                                 ),
                                                               ),
-                                                            if (controller.selectedItem.value.itemStat != null && controller.selectedItem.value.itemStat!.luck! > 0)
+                                                            if (controller.selectedItem.value.itemStat != null &&
+                                                                controller.selectedItem.value.itemStat!.luck! > 0 &&
+                                                                (controller.selectedItem.value.itemStat!.durability! > 0 ||
+                                                                    controller.selectedItem.value.itemStat!.stamina! > 0 ||
+                                                                    controller.selectedItem.value.itemStat!.goProfit! > 0))
                                                               SizedBox(
-                                                                height: 35.sp,
+                                                                height: 42.sp,
                                                                 child: VerticalDivider(
-                                                                  color: popupBgColor,
+                                                                  color: AppColorData.regular().colorBorderPrimary,
                                                                   width: 1,
                                                                   thickness: 1,
                                                                 ),
@@ -418,30 +412,26 @@ class InventoryItemDetail extends StatelessWidget {
                                                               Expanded(
                                                                 child: Column(
                                                                   children: [
-                                                                    StyledText(
+                                                                    Text(
                                                                       formatDecimalPlaces(controller.selectedItem.value.itemStat!.luck!, 0),
-                                                                      fontSize: 26,
-                                                                      lineHeight: 26,
-                                                                      fontWeight: 500,
-                                                                      color: pinkColor,
-                                                                      letterSpacing: -.1,
+                                                                      style: AppTextStyleData.regular().koBodyMediumXl.copyWith(
+                                                                            color: AppColorData.regular().colorPointPink,
+                                                                          ),
                                                                     ),
                                                                     Padding(
-                                                                      padding: EdgeInsets.only(top: 8.0.sp),
+                                                                      padding: EdgeInsets.only(top: 3.sp),
                                                                       child: Row(
                                                                         mainAxisAlignment: MainAxisAlignment.center,
                                                                         children: [
+                                                                          iconShopLuckPng,
                                                                           Padding(
-                                                                            padding: EdgeInsets.only(right: 4.0.sp),
-                                                                            child: iconShopLuckPng,
-                                                                          ),
-                                                                          StyledText(
-                                                                            '행운',
-                                                                            color: pinkColor,
-                                                                            fontSize: 12,
-                                                                            lineHeight: 12,
-                                                                            fontWeight: 500,
-                                                                            letterSpacing: -.1,
+                                                                            padding: EdgeInsets.only(left: 4.0.sp),
+                                                                            child: Text(
+                                                                              '행운',
+                                                                              style: AppTextStyleData.regular().koCaptionMediumMd.copyWith(
+                                                                                    color: AppColorData.regular().colorPointPink,
+                                                                                  ),
+                                                                            ),
                                                                           ),
                                                                         ],
                                                                       ),
@@ -453,16 +443,14 @@ class InventoryItemDetail extends StatelessWidget {
                                                               Expanded(
                                                                 child: Column(
                                                                   children: [
-                                                                    StyledText(
+                                                                    Text(
                                                                       '+${formatDecimalPlaces(controller.selectedItem.value.itemStat!.repairDurability!, 0)}',
-                                                                      fontSize: 26,
-                                                                      lineHeight: 26,
-                                                                      fontWeight: 500,
-                                                                      letterSpacing: -.1,
-                                                                      color: AppColorData.regular().colorPointPurple,
+                                                                      style: AppTextStyleData.regular().koBodyMediumXl.copyWith(
+                                                                            color: AppColorData.regular().colorPointPurple,
+                                                                          ),
                                                                     ),
                                                                     Padding(
-                                                                      padding: EdgeInsets.only(top: 8.0.sp),
+                                                                      padding: EdgeInsets.only(top: 3.sp),
                                                                       child: Row(
                                                                         mainAxisAlignment: MainAxisAlignment.center,
                                                                         crossAxisAlignment: CrossAxisAlignment.center,
@@ -470,13 +458,11 @@ class InventoryItemDetail extends StatelessWidget {
                                                                           iconShopDurabilityLightPng,
                                                                           Padding(
                                                                             padding: EdgeInsets.only(left: 4.0.sp),
-                                                                            child: StyledText(
+                                                                            child: Text(
                                                                               '내구도 수리',
-                                                                              color: AppColorData.regular().colorPointPurple,
-                                                                              fontSize: 12,
-                                                                              lineHeight: 12,
-                                                                              letterSpacing: -.1,
-                                                                              fontWeight: 600,
+                                                                              style: AppTextStyleData.regular().koCaptionMediumMd.copyWith(
+                                                                                    color: AppColorData.regular().colorPointPurple,
+                                                                                  ),
                                                                             ),
                                                                           ),
                                                                         ],
@@ -489,16 +475,14 @@ class InventoryItemDetail extends StatelessWidget {
                                                               Expanded(
                                                                 child: Column(
                                                                   children: [
-                                                                    StyledText(
+                                                                    Text(
                                                                       '+${formatDecimalPlaces(controller.selectedItem.value.itemStat!.recoveryStamina!, 0)}',
-                                                                      fontSize: 26,
-                                                                      lineHeight: 26,
-                                                                      fontWeight: 500,
-                                                                      letterSpacing: -.1,
-                                                                      color: lightGreenColor,
+                                                                      style: AppTextStyleData.regular().koBodyMediumXl.copyWith(
+                                                                            color: AppColorData.regular().colorPointYellowgreen,
+                                                                          ),
                                                                     ),
                                                                     Padding(
-                                                                      padding: EdgeInsets.only(top: 8.0.sp),
+                                                                      padding: EdgeInsets.only(top: 3.sp),
                                                                       child: Row(
                                                                         mainAxisAlignment: MainAxisAlignment.center,
                                                                         crossAxisAlignment: CrossAxisAlignment.center,
@@ -506,13 +490,11 @@ class InventoryItemDetail extends StatelessWidget {
                                                                           iconShopStaminaPng,
                                                                           Padding(
                                                                             padding: EdgeInsets.only(left: 4.0.sp),
-                                                                            child: StyledText(
+                                                                            child: Text(
                                                                               '체력 회복',
-                                                                              color: lightGreenColor,
-                                                                              fontSize: 12,
-                                                                              lineHeight: 12,
-                                                                              letterSpacing: -.1,
-                                                                              fontWeight: 600,
+                                                                              style: AppTextStyleData.regular().koCaptionMediumMd.copyWith(
+                                                                                    color: AppColorData.regular().colorPointYellowgreen,
+                                                                                  ),
                                                                             ),
                                                                           ),
                                                                         ],
@@ -687,7 +669,7 @@ class InventoryItemDetail extends StatelessWidget {
                                                             onTap: () => controller.moveChallengeDetail(),
                                                             child: Row(
                                                               children: [
-                                                                StyledText(
+                                                                const StyledText(
                                                                   '바로가기',
                                                                   color: lightGrayColor,
                                                                   fontSize: 14,
@@ -879,48 +861,23 @@ class InventoryItemDetail extends StatelessWidget {
           ),
           if (controller.selectedItem.value.publishType == 'NFT')
             Positioned(
-              left: 20,
-              right: 20,
-              bottom: 10,
+              left: 0,
+              bottom: 0,
               child: Container(
-                margin: const EdgeInsets.only(bottom: 20),
-                height: 56,
-                decoration: BoxDecoration(
-                  color: skyBlueColor,
-                  borderRadius: BorderRadius.circular(12.sp),
-                  border: Border.all(
-                    width: 2,
-                    style: BorderStyle.solid,
-                    color: Colors.black,
-                  ),
-                  boxShadow: [
-                    BoxShadow(
-                      offset: Offset(0, 4.sp),
-                      blurRadius: 0,
-                      spreadRadius: 0,
-                      color: Colors.black,
-                    ),
-                  ],
-                ),
+                width: context.mediaQuerySize.width,
+                padding: const EdgeInsets.only(left: 20, top: 12, right: 20, bottom: 36),
+                color: AppColorData.regular().colorBgPrimary,
                 child: Obx(() {
-                  return MaterialButton(
-                    onPressed: controller.selectedItem.value.equipped == true
-                        ? () => controller.confirmSendNftToStaika(
-                              controller,
-                              controller.selectedItem.value,
-                            )
+                  return GazagoButton(
+                    onTap: controller.selectedItem.value.equipped == true
+                        ? () => showItemIsEquippedAlert()
                         : () => controller.confirmSendNftToStaika(
                               controller,
                               controller.selectedItem.value,
                             ),
-                    color: controller.selectedItem.value.equipped == true ? AppColorData.regular().colorBgInteractivePrimaryDisabled : AppColorData.regular().colorBgInteractivePrimary,
+                    buttonText: 'Staika 지갑으로 보내기',
+                    buttonColor: controller.selectedItem.value.equipped == true ? AppColorData.regular().colorBgInteractivePrimaryDisabled : AppColorData.regular().colorBgInteractivePrimary,
                     textColor: AppColorData.regular().colorTextInverse,
-                    elevation: 0,
-                    child: Text(
-                      'Staika 지갑으로 보내기',
-                      textAlign: TextAlign.center,
-                      style: AppTextStyleData.regular().koBodyMediumXl,
-                    ),
                   );
                 }),
               ),
