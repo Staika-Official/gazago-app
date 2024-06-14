@@ -187,7 +187,7 @@ class CollectionDetail extends StatelessWidget {
                       padding: EdgeInsets.only(top: 2.0.sp),
                       child: FittedBox(
                         child: Text(
-                          '${item.completeAmount != null ? item.completeAmount >= item.quantity ? formatDecimalPlaces(item.quantity, 0) : item.completeAmount : 0} / ${formatDecimalPlaces(item.quantity, 0)}',
+                          '${controller.detailCollection.value.alreadyIssued ?item.quantity : item.completeAmount != null ? item.completeAmount >= item.quantity ? formatDecimalPlaces(item.quantity, 0) : item.completeAmount : 0} / ${formatDecimalPlaces(item.quantity, 0)}',
                           style: AppTextStyleData
                               .regular()
                               .koBodyMediumSm
@@ -202,7 +202,7 @@ class CollectionDetail extends StatelessWidget {
                       padding: EdgeInsets.only(top: 2.0.sp),
                       child: FittedBox(
                         child: Text(
-                          '${formatDecimalPlaces(controller.currentMyTokenCondition(item.type, item.quantity), 2, isAutoDecimal: true)} / ${formatDecimalPlaces(item.quantity, 2, isAutoDecimal: true)}',
+                          '${controller.detailCollection.value.alreadyIssued ? formatDecimalPlaces(item.quantity, 2, isAutoDecimal: true) : formatDecimalPlaces(controller.currentMyTokenCondition(item.type, item.quantity), 2, isAutoDecimal: true)} / ${formatDecimalPlaces(item.quantity, 2, isAutoDecimal: true)}',
                           style: AppTextStyleData
                               .regular()
                               .koBodyMediumSm
@@ -241,7 +241,7 @@ class CollectionDetail extends StatelessWidget {
                                       opacity: controller.detailCollection.value.alreadyIssued ? 1 : item.completeAmount / item.quantity >= 1 ? 1 : 0.5,
                                       child: renderGatheringRewardImage(item)
                                   ) : Opacity(
-                                      opacity: controller.imageConditions(item.type, item.quantity) ? 1 : 0.5,
+                                      opacity: controller.detailCollection.value.alreadyIssued ? 1 : controller.imageConditions(item.type, item.quantity) ? 1 : 0.5,
                                       child: renderGatheringRewardImage(item)
                                   ),
                                 )

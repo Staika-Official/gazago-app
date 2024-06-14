@@ -153,7 +153,7 @@ class WalletDetail extends StatelessWidget {
             //       )
             //     : Container(),
             Padding(
-              padding: EdgeInsets.only(top: 40.sp),
+              padding: EdgeInsets.only(top: 16.5.sp),
               child: CircleAvatar(
                 foregroundImage: controller.selectedAsset.value.logoUrl != '' && controller.selectedAsset.value.logoUrl != null
                     ? CachedNetworkImageProvider(
@@ -164,26 +164,26 @@ class WalletDetail extends StatelessWidget {
               ),
             ),
             Padding(
-              padding: EdgeInsets.only(top: 18.sp, left: 25.sp, right: 25.sp),
+              padding: EdgeInsets.only(top: 8.sp, left: 25.sp, right: 25.sp),
               child: FittedBox(
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    StyledText(
+                    Text(
                       formatDecimalPlaces(double.parse(controller.assetDetail.value.balance.uiAmountString ?? '0'),
                           controller.assetDetail.value.balance.symbol == 'STIK' ? 4 : controller.assetDetail.value.balance.decimals!,
                           isAutoDecimal: true, roundType: RoundType.floor),
-                      fontSize: 28,
-                      lineHeight: 28,
-                      fontWeight: 600,
+                      style: AppTextStyleData.regular().koHeadingSemiboldLg.copyWith(
+                        color: AppColorData.regular().colorTextPrimary,
+                      ),
                     ),
                     Padding(
                       padding: EdgeInsets.only(left: 5.sp),
-                      child: StyledText(
+                      child: Text(
                         controller.selectedAsset.value.symbol! == 'TOTAL_TIK' ? 'TIK' : controller.selectedAsset.value.symbol!,
-                        fontSize: 28,
-                        lineHeight: 28,
-                        fontWeight: 500,
+                        style: AppTextStyleData.regular().koHeadingSemiboldLg.copyWith(
+                          color: AppColorData.regular().colorTextPrimary,
+                        ),
                       ),
                     ),
                   ],
@@ -198,7 +198,7 @@ class WalletDetail extends StatelessWidget {
               color: subBg02Color,
               height: 6,
               width: double.infinity,
-              margin: EdgeInsets.only(top: 50.sp),
+              margin: EdgeInsets.only(top: 16.sp),
             ),
             Expanded(
               child: controller.transactionsList.isEmpty
