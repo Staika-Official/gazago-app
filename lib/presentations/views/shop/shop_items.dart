@@ -35,8 +35,8 @@ class ShopItems extends StatelessWidget {
                   width: 2,
                   color: Colors.black,
                 ),
-                borderRadius: BorderRadius.all(
-                  Radius.circular(12.sp),
+                borderRadius: const BorderRadius.all(
+                  Radius.circular(12),
                 ),
               ),
               child: Stack(
@@ -99,19 +99,14 @@ class ShopItems extends StatelessWidget {
                                         padding: const EdgeInsets.symmetric(horizontal: 4),
                                         child: Row(
                                           children: [
-                                            SizedBox(
-                                              width: 12.sp,
-                                              height: 12.sp,
-                                              child: iconShopRewardPng,
-                                            ),
+                                            iconShopRewardPng,
                                             Padding(
                                               padding: EdgeInsets.only(left: 3.0.sp),
-                                              child: StyledText(
+                                              child: Text(
                                                 '${formatDecimalPlaces(item.minGoProfit!, 0)}-${formatDecimalPlaces(item.maxGoProfit!, 0)}',
-                                                fontSize: 12,
-                                                fontWeight: 600,
-                                                letterSpacing: -.1,
-                                                color: skyBlueColor,
+                                                style: AppTextStyleData.regular().numBodySemiboldSm.copyWith(
+                                                      color: AppColorData.regular().colorPointCyan,
+                                                    ),
                                               ),
                                             ),
                                           ],
@@ -122,19 +117,14 @@ class ShopItems extends StatelessWidget {
                                         padding: const EdgeInsets.symmetric(horizontal: 4),
                                         child: Row(
                                           children: [
-                                            SizedBox(
-                                              width: 12.sp,
-                                              height: 12.sp,
-                                              child: iconShopDurabilityLightPng,
-                                            ),
+                                            iconShopDurabilityLightPng,
                                             Padding(
                                               padding: EdgeInsets.only(left: 3.0.sp),
-                                              child: StyledText(
+                                              child: Text(
                                                 '${formatDecimalPlaces(item.minDurability!, 0)}-${formatDecimalPlaces(item.maxDurability!, 0)}',
-                                                fontSize: 12,
-                                                fontWeight: 600,
-                                                letterSpacing: -.1,
-                                                color: AppColorData.regular().colorPointPurple,
+                                                style: AppTextStyleData.regular().numBodySemiboldSm.copyWith(
+                                                      color: AppColorData.regular().colorPointPurple,
+                                                    ),
                                               ),
                                             ),
                                           ],
@@ -145,19 +135,14 @@ class ShopItems extends StatelessWidget {
                                         padding: const EdgeInsets.symmetric(horizontal: 4),
                                         child: Row(
                                           children: [
-                                            SizedBox(
-                                              width: 12.sp,
-                                              height: 12.sp,
-                                              child: iconShopStaminaPng,
-                                            ),
+                                            iconShopStaminaPng,
                                             Padding(
                                               padding: EdgeInsets.only(left: 3.0.sp),
-                                              child: StyledText(
+                                              child: Text(
                                                 '${formatDecimalPlaces(item.minStamina!, 0)}-${formatDecimalPlaces(item.maxStamina!, 0)}',
-                                                fontSize: 12,
-                                                fontWeight: 600,
-                                                letterSpacing: -.1,
-                                                color: lightGreenColor,
+                                                style: AppTextStyleData.regular().numBodySemiboldSm.copyWith(
+                                                      color: AppColorData.regular().colorPointYellowgreen,
+                                                    ),
                                               ),
                                             ),
                                           ],
@@ -168,19 +153,14 @@ class ShopItems extends StatelessWidget {
                                         padding: const EdgeInsets.symmetric(horizontal: 4),
                                         child: Row(
                                           children: [
-                                            SizedBox(
-                                              width: 12.sp,
-                                              height: 12.sp,
-                                              child: iconShopLuckPng,
-                                            ),
+                                            iconShopLuckPng,
                                             Padding(
                                               padding: EdgeInsets.only(left: 3.0.sp),
-                                              child: StyledText(
+                                              child: Text(
                                                 '${formatDecimalPlaces(item.minLuck!, 0)}-${formatDecimalPlaces(item.maxLuck!, 0)}',
-                                                fontSize: 12,
-                                                fontWeight: 600,
-                                                color: pinkColor,
-                                                letterSpacing: -.1,
+                                                style: AppTextStyleData.regular().numBodySemiboldSm.copyWith(
+                                                      color: AppColorData.regular().colorPointPink,
+                                                    ),
                                               ),
                                             ),
                                           ],
@@ -191,19 +171,14 @@ class ShopItems extends StatelessWidget {
                                         padding: const EdgeInsets.symmetric(horizontal: 4),
                                         child: Row(
                                           children: [
-                                            SizedBox(
-                                              width: 12.sp,
-                                              height: 12.sp,
-                                              child: iconShopStaminaPng,
-                                            ),
+                                            iconShopStaminaPng,
                                             Padding(
                                               padding: EdgeInsets.only(left: 3.0.sp),
-                                              child: StyledText(
+                                              child: Text(
                                                 '+${formatDecimalPlaces(item.recoveryStamina!, 0)} 회복',
-                                                fontSize: 12,
-                                                fontWeight: 600,
-                                                color: lightGreenColor,
-                                                letterSpacing: -.1,
+                                                style: AppTextStyleData.regular().numBodySemiboldSm.copyWith(
+                                                      color: AppColorData.regular().colorPointYellowgreen,
+                                                    ),
                                               ),
                                             ),
                                           ],
@@ -214,19 +189,14 @@ class ShopItems extends StatelessWidget {
                                         padding: const EdgeInsets.symmetric(horizontal: 4),
                                         child: Row(
                                           children: [
-                                            SizedBox(
-                                              width: 12.sp,
-                                              height: 12.sp,
-                                              child: iconShopDurabilityLightPng,
-                                            ),
+                                            iconShopDurabilityLightPng,
                                             Padding(
                                               padding: EdgeInsets.only(left: 3.0.sp),
-                                              child: StyledText(
+                                              child: Text(
                                                 '+${formatDecimalPlaces(item.repairDurability!, 0)} 수리',
-                                                fontSize: 12,
-                                                fontWeight: 600,
-                                                color: AppColorData.regular().colorPointPurple,
-                                                letterSpacing: -.1,
+                                                style: AppTextStyleData.regular().numBodySemiboldSm.copyWith(
+                                                      color: AppColorData.regular().colorPointPurple,
+                                                    ),
                                               ),
                                             ),
                                           ],
@@ -246,7 +216,7 @@ class ShopItems extends StatelessWidget {
                     top: null,
                     child: Container(
                       decoration: BoxDecoration(
-                        color: Color(0xff222229),
+                        color: const Color(0xff222229),
                         borderRadius: BorderRadius.only(
                           bottomRight: Radius.circular(12.sp),
                           bottomLeft: Radius.circular(12.sp),
@@ -298,8 +268,14 @@ class ShopItems extends StatelessWidget {
     return Obx(() {
       return Column(
         children: [
-          SizedBox(
+          Container(
             height: 35.sp,
+            decoration: BoxDecoration(
+                border: BorderDirectional(
+                    bottom: BorderSide(
+              width: 1,
+              color: AppColorData.regular().colorBorderSecondary,
+            ))),
             child: Align(
               alignment: Alignment.centerLeft,
               child: TabBar(
@@ -339,14 +315,16 @@ class ShopItems extends StatelessWidget {
                         InkWell(
                           onTap: () => shopController.showItemSortingPopup(),
                           child: Container(
+                            width: 140,
+                            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
                             decoration: BoxDecoration(
-                              color: popupBgColor,
+                              color: AppColorData.regular().colorBgPrimary,
                               border: Border.all(
                                 width: 1,
-                                color: Colors.black,
+                                color: AppColorData.regular().colorBorderSecondary,
                               ),
                               borderRadius: const BorderRadius.all(
-                                Radius.circular(100),
+                                Radius.circular(8),
                               ),
                               boxShadow: const [
                                 BoxShadow(
@@ -357,21 +335,16 @@ class ShopItems extends StatelessWidget {
                                 ),
                               ],
                             ),
-                            child: Stack(
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               children: [
-                                Padding(
-                                  padding: EdgeInsets.only(left: 18.0.sp, top: 11.sp, bottom: 11.sp, right: 58.sp),
-                                  child: StyledText(
-                                    shopController.isSelectedSortString.value,
-                                    fontWeight: 500,
-                                    fontSize: 14,
-                                  ),
+                                Text(
+                                  shopController.isSelectedSortString.value,
+                                  style: AppTextStyleData.regular().koBodyMediumMd.copyWith(
+                                        color: AppColorData.regular().colorTextSecondary,
+                                      ),
                                 ),
-                                Positioned(
-                                  right: 15.sp,
-                                  top: 14.sp,
-                                  child: iconArrowDown,
-                                ),
+                                iconArrowDown,
                               ],
                             ),
                           ),
@@ -381,39 +354,27 @@ class ShopItems extends StatelessWidget {
                             if (shopController.isSelectAllItems.value)
                               Padding(
                                 padding: EdgeInsets.only(right: 10.0.sp),
-                                child: const StyledText(
+                                child: Text(
                                   '전체',
-                                  fontWeight: 600,
-                                  fontSize: 14,
-                                  lineHeight: 22,
-                                  color: lightGrayColor,
+                                  style: AppTextStyleData.regular().koBodyMediumLg.copyWith(
+                                        color: AppColorData.regular().colorTextSecondary,
+                                      ),
                                 ),
                               ),
                             InkWell(
                               onTap: () => shopController.showItemFilterPopup(),
                               child: Container(
-                                decoration: BoxDecoration(
-                                  color: popupBgColor,
-                                  border: Border.all(
-                                    width: 1.sp,
-                                    color: Colors.black,
+                                width: 32,
+                                height: 32,
+                                padding: const EdgeInsets.all(6),
+                                decoration: ShapeDecoration(
+                                  color: AppColorData.regular().colorBorderSecondary,
+                                  shape: RoundedRectangleBorder(
+                                    side: BorderSide(width: 2),
+                                    borderRadius: BorderRadius.circular(4),
                                   ),
-                                  borderRadius: BorderRadius.all(
-                                    Radius.circular(5.sp),
-                                  ),
-                                  boxShadow: [
-                                    BoxShadow(
-                                      color: Colors.black,
-                                      offset: Offset(2.sp, 2.sp),
-                                      blurRadius: 0.0,
-                                      spreadRadius: 0.0,
-                                    ),
-                                  ],
                                 ),
-                                child: Padding(
-                                  padding: const EdgeInsets.symmetric(horizontal: 5.0, vertical: 6.0),
-                                  child: shopController.isSelectAllItems.value ? iconShopFilter : iconShopFilterActive,
-                                ),
+                                child: shopController.isSelectAllItems.value ? iconShopFilter : iconShopFilterActive,
                               ),
                             )
                           ],
@@ -429,10 +390,6 @@ class ShopItems extends StatelessWidget {
                             : Container(
                                 width: double.infinity,
                                 padding: EdgeInsets.symmetric(vertical: 120.sp),
-                                decoration: BoxDecoration(
-                                  color: popupBgColor,
-                                  borderRadius: BorderRadius.circular(12.sp),
-                                ),
                                 child: Column(
                                   mainAxisSize: MainAxisSize.min,
                                   children: [
@@ -440,7 +397,7 @@ class ShopItems extends StatelessWidget {
                                     Padding(
                                       padding: EdgeInsets.only(top: 20.sp),
                                       child: const StyledText(
-                                        '필터결과를 찾을 수 없습니다.',
+                                        '검색 결과가 없어요.',
                                         color: lightGrayColor,
                                         fontSize: 16,
                                         lineHeight: 18,
@@ -449,48 +406,49 @@ class ShopItems extends StatelessWidget {
                                     ),
                                     Column(
                                       children: [
-                                        Padding(
-                                          padding: EdgeInsets.only(top: 50.0.sp),
-                                          child: Row(
-                                            mainAxisAlignment: MainAxisAlignment.center,
-                                            children: [
-                                              Expanded(
-                                                child: Wrap(
-                                                  runSpacing: 10.0,
-                                                  spacing: 10.0,
-                                                  alignment: WrapAlignment.center,
-                                                  crossAxisAlignment: WrapCrossAlignment.start,
-                                                  children: [
-                                                    ...shopController.filteredCategory.asMap().entries.map(
-                                                          (entry) => Container(
-                                                            decoration: BoxDecoration(
-                                                              color: popupBgColor,
-                                                              border: Border.all(
-                                                                width: 1,
-                                                                color: Colors.white,
+                                        if (shopController.filteredCategory.isNotEmpty)
+                                          Padding(
+                                            padding: EdgeInsets.only(top: 50.0.sp),
+                                            child: Row(
+                                              mainAxisAlignment: MainAxisAlignment.center,
+                                              children: [
+                                                Expanded(
+                                                  child: Wrap(
+                                                    runSpacing: 10.0,
+                                                    spacing: 10.0,
+                                                    alignment: WrapAlignment.center,
+                                                    crossAxisAlignment: WrapCrossAlignment.start,
+                                                    children: [
+                                                      ...shopController.filteredCategory.asMap().entries.map(
+                                                            (entry) => Container(
+                                                              decoration: BoxDecoration(
+                                                                color: popupBgColor,
+                                                                border: Border.all(
+                                                                  width: 1,
+                                                                  color: Colors.white,
+                                                                ),
+                                                                borderRadius: BorderRadius.circular(20.sp),
                                                               ),
-                                                              borderRadius: BorderRadius.circular(20.sp),
-                                                            ),
-                                                            child: Padding(
-                                                              padding: EdgeInsets.symmetric(horizontal: 12.0.sp, vertical: 6.sp),
-                                                              child: StyledText(
-                                                                shopController.categoryFilterList.firstWhere((element) => element['value'] == entry.value)['title']!,
-                                                                fontSize: 14,
-                                                                lineHeight: 16,
-                                                                letterSpacing: .2,
-                                                                fontWeight: 500,
+                                                              child: Padding(
+                                                                padding: EdgeInsets.symmetric(horizontal: 12.0.sp, vertical: 6.sp),
+                                                                child: StyledText(
+                                                                  shopController.categoryFilterList.firstWhere((element) => element['value'] == entry.value)['title']!,
+                                                                  fontSize: 14,
+                                                                  lineHeight: 16,
+                                                                  letterSpacing: .2,
+                                                                  fontWeight: 500,
+                                                                ),
                                                               ),
                                                             ),
                                                           ),
-                                                        ),
-                                                  ],
+                                                    ],
+                                                  ),
                                                 ),
-                                              ),
-                                            ],
+                                              ],
+                                            ),
                                           ),
-                                        ),
                                         Padding(
-                                          padding: EdgeInsets.only(top: 12.0.sp),
+                                          padding: EdgeInsets.only(top: 32.0.sp),
                                           child: Row(
                                             mainAxisAlignment: MainAxisAlignment.center,
                                             children: [
@@ -503,24 +461,19 @@ class ShopItems extends StatelessWidget {
                                                   children: [
                                                     ...shopController.filteredGrade.asMap().entries.map(
                                                           (entry) => Container(
+                                                            padding: const EdgeInsets.symmetric(horizontal: 12.0, vertical: 4),
                                                             decoration: BoxDecoration(
-                                                              color: popupBgColor,
                                                               border: Border.all(
                                                                 width: 1,
                                                                 color: getItemGradeColor(entry.value),
                                                               ),
                                                               borderRadius: BorderRadius.circular(20.sp),
                                                             ),
-                                                            child: Padding(
-                                                              padding: const EdgeInsets.symmetric(horizontal: 12.0, vertical: 6),
-                                                              child: StyledText(
-                                                                entry.value!,
-                                                                fontSize: 14,
-                                                                lineHeight: 16,
-                                                                letterSpacing: .2,
-                                                                fontWeight: 500,
-                                                                color: getItemGradeColor(entry.value),
-                                                              ),
+                                                            child: Text(
+                                                              entry.value!,
+                                                              style: AppTextStyleData.regular().enBodySemiboldMd.copyWith(
+                                                                    color: getItemGradeColor(entry.value),
+                                                                  ),
                                                             ),
                                                           ),
                                                         ),

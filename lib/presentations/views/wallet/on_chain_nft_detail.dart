@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:gaza_go/platform/controllers/wallet_on_chain_nft_detail_controller.dart';
+import 'package:gaza_go/platform/helpers/inventory_helper.dart';
 import 'package:gaza_go/presentations/components/default_container.dart';
 import 'package:gaza_go/presentations/components/gazago_button.dart';
 import 'package:gaza_go/theme/theme.g.dart';
@@ -18,7 +19,7 @@ class OnChainNftDetail extends StatelessWidget {
 
     return Obx(() {
       return DefaultContainer(
-        titleText: controller.nftDetail.value?.name ?? '',
+        titleText: removeSerialNumberString(controller.nftDetail.value?.name ?? ''),
         child: controller.nftDetail.value != null
             ? Column(
                 children: [
@@ -29,7 +30,7 @@ class OnChainNftDetail extends StatelessWidget {
                           Container(
                             margin: EdgeInsets.only(top: 8, left: 16.sp, right: 16.sp, bottom: 28.sp),
                             width: double.infinity,
-                            padding: EdgeInsets.all(20),
+                            padding: const EdgeInsets.all(20),
                             decoration: BoxDecoration(
                               color: AppColorData.regular().colorBgTertiary,
                               borderRadius: BorderRadius.circular(12),
@@ -37,7 +38,7 @@ class OnChainNftDetail extends StatelessWidget {
                                 color: AppColorData.regular().colorBorderBlack,
                               ),
                               boxShadow: [
-                                BoxShadow(
+                                const BoxShadow(
                                   color: Color(0xFF000000),
                                   blurRadius: 0,
                                   offset: Offset(0, 4),
@@ -106,48 +107,59 @@ class OnChainNftDetail extends StatelessWidget {
                   ),
                 ],
               )
-            : Padding(
-                padding: const EdgeInsets.all(16),
-                child: Column(
-                  children: [
-                    SkeletonLine(
-                      style: SkeletonLineStyle(
-                        height: 300,
-                        maxLength: MediaQuery.of(context).size.width,
-                        borderRadius: BorderRadius.circular(20),
-                      ),
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.only(top: 10),
-                      child: SkeletonLine(
-                        style: SkeletonLineStyle(
-                          height: 20,
-                          maxLength: MediaQuery.of(context).size.width,
-                          borderRadius: BorderRadius.circular(20),
-                        ),
-                      ),
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.only(top: 10),
-                      child: SkeletonLine(
-                        style: SkeletonLineStyle(
-                          height: 20,
-                          maxLength: MediaQuery.of(context).size.width,
-                          borderRadius: BorderRadius.circular(20),
-                        ),
-                      ),
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.only(top: 10),
-                      child: SkeletonLine(
-                        style: SkeletonLineStyle(
-                          height: 20,
-                          maxLength: MediaQuery.of(context).size.width,
-                          borderRadius: BorderRadius.circular(20),
-                        ),
-                      ),
-                    ),
+            : SkeletonTheme(
+                shimmerGradient: LinearGradient(
+                  colors: [
+                    AppColorData.regular().colorBgSecondary,
                   ],
+                  stops: [
+                    1,
+                  ],
+                  begin: Alignment(-2.4, -0.2),
+                  end: Alignment(2.4, 0.2),
+                  tileMode: TileMode.clamp,
+                ),
+                child: Padding(
+                  padding: const EdgeInsets.all(16),
+                  child: Column(
+                    children: [
+                      SkeletonLine(
+                        style: SkeletonLineStyle(
+                          height: 230,
+                          maxLength: MediaQuery.of(context).size.width,
+                          borderRadius: BorderRadius.circular(12),
+                        ),
+                      ),
+                      for (int i = 0; i < 7; i++)
+                        Padding(
+                          padding: const EdgeInsets.only(top: 10),
+                          child: Row(
+                            children: [
+                              SkeletonLine(
+                                style: SkeletonLineStyle(
+                                  width: 70,
+                                  height: 32,
+                                  maxLength: MediaQuery.of(context).size.width,
+                                  borderRadius: BorderRadius.circular(8),
+                                ),
+                              ),
+                              SizedBox(
+                                width: 16,
+                              ),
+                              Expanded(
+                                child: SkeletonLine(
+                                  style: SkeletonLineStyle(
+                                    height: 32,
+                                    maxLength: MediaQuery.of(context).size.width,
+                                    borderRadius: BorderRadius.circular(8),
+                                  ),
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                    ],
+                  ),
                 ),
               ),
       );
