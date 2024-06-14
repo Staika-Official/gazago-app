@@ -137,8 +137,9 @@ class CollectionController extends SuperController with GetTickerProviderStateMi
           } else {
             List<dynamic> transformList = jsonDecode(loadedString);
             print('loadedString : $transformList');
-            HiveStore.save(key: HiveKey.isNewCollection.name, value: transformList.length != collectionIdList.length);
+
             if(transformList.length != collectionIdList.length){
+              HiveStore.save(key: HiveKey.isNewCollection.name, value: true);
               HiveStore.save(key: HiveKey.collectionIdList.name, value: collectionIdList.toString());
             }
           }
