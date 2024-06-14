@@ -4615,9 +4615,9 @@ void showItemTipAlert() {
       onWillPop: () async => false,
       child: Material(
         color: Colors.black.withOpacity(0.8),
-        child: Padding(
-          padding: EdgeInsets.symmetric(horizontal: 25.0.sp),
-          child: Center(
+        child: Center(
+          child: Container(
+            width: 316.sp,
             child: Column(
               mainAxisSize: MainAxisSize.min,
               children: [
@@ -4625,185 +4625,171 @@ void showItemTipAlert() {
                   children: [
                     Container(
                       width: double.infinity,
-                      padding: EdgeInsets.only(top: 50.sp, left: 18.sp, right: 18.sp, bottom: 50.sp),
+                      padding: EdgeInsets.only(top: 40.sp, left: 20.sp, right: 20.sp, bottom: 32.sp),
                       decoration: BoxDecoration(
-                        color: popupBgColor,
-                        borderRadius: BorderRadius.circular(10.sp),
+                        color: AppColorData.regular().colorBgTertiary,
+                        borderRadius: BorderRadius.circular(AppDoubleData.regular().numberRadius20),
                       ),
                       child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
+                        crossAxisAlignment: CrossAxisAlignment.center,
                         children: [
-                          const StyledText(
-                            '능력치 TIP',
-                            fontSize: 20,
-                            lineHeight: 22,
-                            fontWeight: 700,
-                            textAlign: TextAlign.center,
+                          Text(
+                            '능력치 안내',
+                            style: AppTextStyleData.regular().koHeadingSemiboldSm.copyWith(
+                              color: AppColorData.regular().colorTextPrimary
+                            )
                           ),
                           Padding(
-                            padding: EdgeInsets.only(top: 21.0.sp),
-                            child: RichText(
-                              text: TextSpan(
-                                style: TextStyle(
-                                  color: Colors.white,
-                                  fontWeight: FontWeight.w700,
-                                  fontSize: 16.sp,
-                                  height: 24.sp / 16.sp,
+                            padding: EdgeInsets.only(top: 8.0.sp),
+                            child: Text(
+                                '아이템 구매시 아이템 등급에 따라 능력치가\n확률적으로 결정돼요.',
+                                style: AppTextStyleData.regular().koBodyMediumMd.copyWith(
+                                    color: AppColorData.regular().colorTextPrimary
                                 ),
-                                children: [
-                                  const TextSpan(
-                                    text: '능력치의 수치는 각 아이템 등급에 따라\n',
-                                  ),
-                                  const TextSpan(
-                                    text: '등급별 기준치 ',
-                                    style: TextStyle(color: skyBlueColor),
-                                  ),
-                                  const TextSpan(
-                                    text: '내에서\n',
-                                  ),
-                                  const TextSpan(
-                                    text: '확률적으로 구매시 부여',
-                                    style: TextStyle(color: skyBlueColor),
-                                  ),
-                                  const TextSpan(
-                                    text: '됩니다',
-                                  ),
-                                ],
-                              ),
+                                textAlign: TextAlign.center,
                             ),
                           ),
                           Padding(
-                            padding: EdgeInsets.only(top: 36.0.sp),
+                            padding: EdgeInsets.only(top: 20.0.sp),
                             child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
+                              crossAxisAlignment: CrossAxisAlignment.center,
                               children: [
                                 Row(
+                                  mainAxisAlignment: MainAxisAlignment.center,
                                   children: [
                                     iconStatGo,
-                                    const Padding(
-                                      padding: EdgeInsets.only(left: 8.0),
-                                      child: StyledText(
+                                    Padding(
+                                      padding: EdgeInsets.only(left: 6.0.sp),
+                                      child: Text(
                                         'GO 적립량',
-                                        fontWeight: 500,
-                                        fontSize: 14,
-                                        lineHeight: 16,
-                                        letterSpacing: -.1,
+                                        style: AppTextStyleData.regular().koBodyMediumMd.copyWith(
+                                          color: AppColorData.regular().colorTextPrimary,
+                                          height: 1.1,
+                                        ),
                                       ),
                                     ),
                                   ],
                                 ),
                                 Padding(
-                                  padding: EdgeInsets.only(top: 8.0.sp),
-                                  child: const StyledText(
-                                    '수치가 높을수록 같은 운동량에 더 많은 GO를 얻을 수 있어요!',
-                                    fontSize: 12,
-                                    lineHeight: 16,
-                                    fontWeight: 500,
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ),
-                          Padding(
-                            padding: EdgeInsets.only(top: 18.0.sp),
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Row(
-                                  children: [
-                                    iconStatDurability,
-                                    const Padding(
-                                      padding: EdgeInsets.only(left: 8.0),
-                                      child: StyledText(
-                                        '내구도 저항',
-                                        fontWeight: 500,
-                                        fontSize: 14,
-                                        lineHeight: 16,
-                                        letterSpacing: -.1,
-                                      ),
+                                  padding: EdgeInsets.only(top:4.0.sp),
+                                  child: Text(
+                                    '수치가 높을수록 같은 운동량에\n더 많은 GO를 얻을 수 있어요.',
+                                    style: AppTextStyleData.regular().koBodyMediumSm.copyWith(
+                                        color: AppColorData.regular().colorTextPrimary
                                     ),
-                                  ],
+                                    textAlign: TextAlign.center,
+                                  ),
                                 ),
                                 Padding(
-                                  padding: EdgeInsets.only(top: 8.0.sp),
-                                  child: const StyledText(
-                                    '수치가 높을수록 같은 운동량에 신발 내구도가 덜 감소해요!',
-                                    fontSize: 12,
-                                    lineHeight: 16,
-                                    fontWeight: 500,
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ),
-                          Padding(
-                            padding: EdgeInsets.only(top: 18.0.sp),
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Row(
-                                  children: [
-                                    iconStatStamina,
-                                    const Padding(
-                                      padding: EdgeInsets.only(left: 8.0),
-                                      child: StyledText(
-                                        '체력 저항',
-                                        fontWeight: 500,
-                                        fontSize: 14,
-                                        lineHeight: 16,
-                                        letterSpacing: -.1,
+                                  padding: EdgeInsets.only(top:16.0.sp),
+                                  child: Column(
+                                    crossAxisAlignment: CrossAxisAlignment.center,
+                                    children: [
+                                      Row(
+                                        mainAxisAlignment: MainAxisAlignment.center,
+                                        children: [
+                                          iconStatDurability,
+                                          Padding(
+                                            padding: EdgeInsets.only(left: 6.0.sp),
+                                            child: Text(
+                                              '내구도 저항',
+                                              style: AppTextStyleData.regular().koBodyMediumMd.copyWith(
+                                                  color: AppColorData.regular().colorTextPrimary,
+                                                height: 1.1,
+                                              ),
+                                            ),
+                                          ),
+                                        ],
                                       ),
-                                    ),
-                                  ],
+                                      Padding(
+                                        padding: EdgeInsets.only(top:4.0.sp),
+                                        child: Text(
+                                          '수치가 높을수록 같은 운동량에\n신발 내구도가 덜 감소해요.',
+                                          style: AppTextStyleData.regular().koBodyMediumSm.copyWith(
+                                              color: AppColorData.regular().colorTextPrimary
+                                          ),
+                                          textAlign: TextAlign.center,
+                                        ),
+                                      ),
+                                    ],
+                                  ),
                                 ),
                                 Padding(
-                                  padding: EdgeInsets.only(top: 8.0.sp),
-                                  child: const StyledText(
-                                    '수치가 높을수록 같은 운동량에 체력이 덜 감소해요!',
-                                    fontSize: 12,
-                                    lineHeight: 16,
-                                    fontWeight: 500,
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ),
-                          Padding(
-                            padding: EdgeInsets.only(top: 18.0.sp),
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Row(
-                                  children: [
-                                    iconStatLuck,
-                                    const Padding(
-                                      padding: EdgeInsets.only(left: 8.0),
-                                      child: StyledText(
-                                        '행운',
-                                        fontWeight: 500,
-                                        fontSize: 14,
-                                        lineHeight: 16,
-                                        letterSpacing: -.1,
+                                  padding: EdgeInsets.only(top:16.0.sp),
+                                  child: Column(
+                                    crossAxisAlignment: CrossAxisAlignment.center,
+                                    children: [
+                                      Row(
+                                        mainAxisAlignment: MainAxisAlignment.center,
+                                        children: [
+                                          iconStatStamina,
+                                          Padding(
+                                            padding: EdgeInsets.only(left: 6.0.sp),
+                                            child: Text(
+                                              '체력 저항',
+                                              style: AppTextStyleData.regular().koBodyMediumMd.copyWith(
+                                                  color: AppColorData.regular().colorTextPrimary,
+                                                height: 1.1,
+                                              ),
+                                            ),
+                                          ),
+                                        ],
                                       ),
-                                    ),
-                                  ],
+                                      Padding(
+                                        padding: EdgeInsets.only(top:4.0.sp),
+                                        child: Text(
+                                          '수치가 높을수록 같은 운동량에\n체력이 덜 감소해요.',
+                                          style: AppTextStyleData.regular().koBodyMediumSm.copyWith(
+                                              color: AppColorData.regular().colorTextPrimary
+                                          ),
+                                          textAlign: TextAlign.center,
+                                        ),
+                                      ),
+                                    ],
+                                  ),
                                 ),
                                 Padding(
-                                  padding: EdgeInsets.only(top: 8.0.sp),
-                                  child: const StyledText(
-                                    '수치가 높을수록 아이템 구매했을 경우 좋은 스탯을 얻을 수 있는 확률이 높아져요!',
-                                    fontSize: 12,
-                                    lineHeight: 16,
-                                    fontWeight: 500,
+                                  padding: EdgeInsets.only(top:16.0.sp),
+                                  child: Column(
+                                    crossAxisAlignment: CrossAxisAlignment.center,
+                                    children: [
+                                      Row(
+                                        mainAxisAlignment: MainAxisAlignment.center,
+                                        children: [
+                                          iconStatLuck,
+                                          Padding(
+                                            padding: EdgeInsets.only(left: 6.0.sp),
+                                            child: Text(
+                                              '행운',
+                                              style: AppTextStyleData.regular().koBodyMediumMd.copyWith(
+                                                  color: AppColorData.regular().colorTextPrimary,
+                                                height: 1.1,
+                                              ),
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                      Padding(
+                                        padding: EdgeInsets.only(top:4.0.sp),
+                                        child: Text(
+                                          '수치가 높을수록 운동 중에 행운 GO를\n더 크게, 더 자주 얻을 수 있어요.',
+                                          style: AppTextStyleData.regular().koBodyMediumSm.copyWith(
+                                              color: AppColorData.regular().colorTextPrimary
+                                          ),
+                                          textAlign: TextAlign.center,
+                                        ),
+                                      ),
+                                    ],
                                   ),
                                 ),
                               ],
                             ),
                           ),
+
                         ],
                       ),
                     ),
-                    Positioned(right: 14, top: 14, child: InkWell(onTap: () => Get.back(), child: iconCloseWhite)),
+                    Positioned(right: 16.8.sp, top: 16.8.sp, child: InkWell(onTap: () => Get.back(), child: iconCloseWhite)),
                   ],
                 ),
               ],
