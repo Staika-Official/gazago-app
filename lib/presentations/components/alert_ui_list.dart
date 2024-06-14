@@ -8390,13 +8390,49 @@ void showSendNftToGoWalletAlert(WalletOnChainNftDetailController controller) {
             ),
           ),
           Padding(
-            padding: EdgeInsets.only(top: 20.sp, bottom: 32.sp),
-            child: Text(
-              'GO 지갑으로 이동한 아이템은 가자고에서\n사용할 수 있으며, Staika 지갑에서 보여지지 않습니다.',
-              style: AppTextStyleData.regular().koBodyMediumMd.copyWith(
-                    color: AppColorData.regular().colorTextSecondary,
+            padding: EdgeInsets.only(top: 20.sp),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.start,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  '  ·  ',
+                  style: AppTextStyleData.regular().koBodyMediumMd.copyWith(
+                        color: AppColorData.regular().colorTextSecondary,
+                      ),
+                ),
+                Expanded(
+                  child: Text(
+                    '전송 수수료는 gazaGO에서 부담해요.',
+                    style: AppTextStyleData.regular().koBodyMediumMd.copyWith(
+                          color: AppColorData.regular().colorTextSecondary,
+                        ),
                   ),
-              textAlign: TextAlign.center,
+                ),
+              ],
+            ),
+          ),
+          Padding(
+            padding: EdgeInsets.only(top: 8.sp, bottom: 32.sp),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.start,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  '  ·  ',
+                  style: AppTextStyleData.regular().koBodyMediumMd.copyWith(
+                        color: AppColorData.regular().colorTextSecondary,
+                      ),
+                ),
+                Expanded(
+                  child: Text(
+                    'GO 지갑으로 이동한 아이템은 가자고에서\n사용할 수 있으며, Staika 지갑에서 보여지지 않습니다.',
+                    style: AppTextStyleData.regular().koBodyMediumMd.copyWith(
+                          color: AppColorData.regular().colorTextSecondary,
+                        ),
+                  ),
+                ),
+              ],
             ),
           ),
         ],
