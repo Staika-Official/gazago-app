@@ -39,7 +39,11 @@ class NftList extends StatelessWidget {
                       Positioned(
                         right: 10.sp,
                         top: 10.sp,
-                        child: SvgPicture.asset('assets/images/shop/ico_nft.svg'),
+                        child: SvgPicture.asset(
+                          'assets/images/shop/ico_nft.svg',
+                          height: 120,
+                          width: 48,
+                        ),
                       ),
                       Positioned(
                         left: 0.sp,
@@ -81,7 +85,7 @@ class NftList extends StatelessWidget {
                             ),
                             child: Text(
                               '#${nftItem.serialNumber}',
-                              style: AppTextStyleData.regular().koBodyMediumMd.copyWith(
+                              style: AppTextStyleData.regular().numBodySemiboldSm.copyWith(
                                     color: AppColorData.regular().colorTextTertiary,
                                   ),
                             ),

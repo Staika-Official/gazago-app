@@ -61,32 +61,33 @@ class OnChainNftDetail extends StatelessWidget {
                               ],
                             ),
                           ),
-                          Column(
-                            children: [
-                              ...controller.nftDetail.value!.json!.attributes!
-                                  .map((attribute) => Padding(
-                                        padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 16),
-                                        child: Row(
-                                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                          children: [
-                                            Text(
-                                              attribute.traitType,
-                                              style: AppTextStyleData.regular().koBodyMediumLg.copyWith(
-                                                    color: AppColorData.regular().colorTextPrimary,
-                                                  ),
-                                            ),
-                                            Text(
-                                              '${attribute.value}',
-                                              style: AppTextStyleData.regular().koBodyMediumLg.copyWith(
-                                                    color: AppColorData.regular().colorTextTertiary,
-                                                  ),
-                                            ),
-                                          ],
-                                        ),
-                                      ))
-                                  .toList()
-                            ],
-                          )
+                          if (controller.nftDetail.value!.json!.attributes != null)
+                            Column(
+                              children: [
+                                ...controller.nftDetail.value!.json!.attributes!
+                                    .map((attribute) => Padding(
+                                          padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 16),
+                                          child: Row(
+                                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                            children: [
+                                              Text(
+                                                attribute.traitType,
+                                                style: AppTextStyleData.regular().koBodyMediumLg.copyWith(
+                                                      color: AppColorData.regular().colorTextPrimary,
+                                                    ),
+                                              ),
+                                              Text(
+                                                '${attribute.value}',
+                                                style: AppTextStyleData.regular().koBodyMediumLg.copyWith(
+                                                      color: AppColorData.regular().colorTextTertiary,
+                                                    ),
+                                              ),
+                                            ],
+                                          ),
+                                        ))
+                                    .toList()
+                              ],
+                            )
                         ],
                       ),
                     ),

@@ -3473,16 +3473,13 @@ void showStaikaStatusAlert({required bool hasWallet, TabController? tabControlle
     contentWidget: Column(
       children: [
         Padding(
-          padding: const EdgeInsets.only(top: 28, bottom: 28),
+          padding: const EdgeInsets.only(bottom: 20),
           child: hasWallet
               ? Text.rich(
                   textAlign: TextAlign.center,
-                  style: TextStyle(
-                    fontSize: 22.sp,
-                    height: 22.sp / 22.sp,
-                    fontWeight: FontWeight.w500,
-                    color: Colors.white,
-                  ),
+                  style: AppTextStyleData.regular().koHeadingMediumSm.copyWith(
+                        color: AppColorData.regular().colorTextPrimary,
+                      ),
                   TextSpan(
                     text: 'Staika Wallet을 ',
                     children: [
@@ -3492,7 +3489,7 @@ void showStaikaStatusAlert({required bool hasWallet, TabController? tabControlle
                   ))
               : Text(
                   "Staika 지갑 만들기",
-                  style: AppTextStyleData.regular().koBodyMediumLg.copyWith(
+                  style: AppTextStyleData.regular().koHeadingMediumSm.copyWith(
                         color: AppColorData.regular().colorTextPrimary,
                       ),
                 ),
@@ -3503,15 +3500,13 @@ void showStaikaStatusAlert({required bool hasWallet, TabController? tabControlle
                   Padding(
                     padding: const EdgeInsets.only(bottom: 14),
                     child: Row(
+                      crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Container(
-                          width: 2,
-                          height: 2,
-                          margin: const EdgeInsets.all(5),
-                          decoration: BoxDecoration(
-                            color: AppColorData.regular().colorTextPrimary,
-                            borderRadius: BorderRadius.circular(2),
-                          ),
+                        Text(
+                          '  ·  ',
+                          style: AppTextStyleData.regular().koBodyMediumLg.copyWith(
+                                color: AppColorData.regular().colorTextPrimary,
+                              ),
                         ),
                         Expanded(
                           child: Text(
@@ -3527,15 +3522,13 @@ void showStaikaStatusAlert({required bool hasWallet, TabController? tabControlle
                   Padding(
                     padding: const EdgeInsets.only(bottom: 30),
                     child: Row(
+                      crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Container(
-                          width: 2,
-                          height: 2,
-                          margin: const EdgeInsets.all(5),
-                          decoration: BoxDecoration(
-                            color: AppColorData.regular().colorTextPrimary,
-                            borderRadius: BorderRadius.circular(2),
-                          ),
+                        Text(
+                          '  ·  ',
+                          style: AppTextStyleData.regular().koBodyMediumLg.copyWith(
+                                color: AppColorData.regular().colorTextPrimary,
+                              ),
                         ),
                         Expanded(
                           child: Text(
@@ -3555,15 +3548,13 @@ void showStaikaStatusAlert({required bool hasWallet, TabController? tabControlle
                   Padding(
                     padding: const EdgeInsets.only(bottom: 14),
                     child: Row(
+                      crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Container(
-                          width: 2,
-                          height: 2,
-                          margin: const EdgeInsets.all(5),
-                          decoration: BoxDecoration(
-                            color: AppColorData.regular().colorTextPrimary,
-                            borderRadius: BorderRadius.circular(2),
-                          ),
+                        Text(
+                          '  ·  ',
+                          style: AppTextStyleData.regular().koBodyMediumLg.copyWith(
+                                color: AppColorData.regular().colorTextPrimary,
+                              ),
                         ),
                         Expanded(
                           child: Text(
@@ -3579,15 +3570,13 @@ void showStaikaStatusAlert({required bool hasWallet, TabController? tabControlle
                   Padding(
                     padding: const EdgeInsets.only(bottom: 30),
                     child: Row(
+                      crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Container(
-                          width: 2,
-                          height: 2,
-                          margin: const EdgeInsets.all(5),
-                          decoration: BoxDecoration(
-                            color: AppColorData.regular().colorTextPrimary,
-                            borderRadius: BorderRadius.circular(2),
-                          ),
+                        Text(
+                          '  ·  ',
+                          style: AppTextStyleData.regular().koBodyMediumLg.copyWith(
+                                color: AppColorData.regular().colorTextPrimary,
+                              ),
                         ),
                         Expanded(
                           child: Text(
@@ -3624,9 +3613,8 @@ void showStaikaStatusAlert({required bool hasWallet, TabController? tabControlle
                   Expanded(
                     child: GazagoButton(
                       onTap: () {
-                        // print(Get.arguments['previousRoute'] );
-                        tabController?.animateTo(0);
                         Get.back();
+                        if (tabController != null) tabController.animateTo(0);
                       },
                       buttonText: '취소',
                       textColor: Colors.white,
@@ -3692,100 +3680,6 @@ void showNotSupportedWalletAlert({required String message, required TabControlle
                   Get.back();
                 },
                 buttonText: '확인',
-                buttonColor: skyBlueColor,
-              ),
-            ),
-          ],
-        ),
-      ),
-    ],
-  );
-}
-
-void showCreateStaikaWalletAlert() {
-  showAlert(
-    allowMultipleBottomSheet: true,
-    contentWidget: Column(
-      children: [
-        Padding(
-          padding: const EdgeInsets.only(top: 28, bottom: 28),
-          child: Text.rich(
-            textAlign: TextAlign.center,
-            style: TextStyle(
-              fontSize: 22.sp,
-              height: 22.sp / 22.sp,
-              fontWeight: FontWeight.w500,
-              color: Colors.white,
-            ),
-            TextSpan(
-              text: 'Staika Wallet을 ',
-              children: [
-                TextSpan(text: '생성', style: const TextStyle(color: skyBlueColor)),
-                TextSpan(text: '합니다.'),
-              ],
-            ),
-          ),
-        ),
-        Column(
-          children: [
-            Padding(
-              padding: const EdgeInsets.only(bottom: 34),
-              child: Row(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Padding(
-                    padding: EdgeInsets.only(top: 8.0.sp),
-                    child: Container(
-                      width: 2,
-                      height: 2,
-                      margin: const EdgeInsets.all(5),
-                      decoration: BoxDecoration(
-                        color: lightGrayColor,
-                        borderRadius: BorderRadius.circular(2),
-                      ),
-                    ),
-                  ),
-                  const Expanded(
-                    child: StyledText(
-                      '모두가 누리는 스마트한 자산관리! 편하고 안전한 블록체인 지갑, Staika Wallet을 생성합니다.',
-                      fontSize: 16,
-                      lineHeight: 24,
-                      fontWeight: 500,
-                      color: lightGrayColor,
-                    ),
-                  ),
-                ],
-              ),
-            ),
-          ],
-        ),
-      ],
-    ),
-    actions: [
-      Expanded(
-        child: Row(
-          children: [
-            Expanded(
-              child: GazagoButton(
-                onTap: () {
-                  Get.back();
-                  // Get.until((route) => Get.currentRoute == Routes.wallet);
-                },
-                buttonText: '아니요',
-                textColor: Colors.white,
-                buttonColor: popupBgColor,
-              ),
-            ),
-            SizedBox(
-              width: 9.sp,
-            ),
-            Expanded(
-              child: GazagoButton(
-                onTap: () async {
-                  Get.back();
-                  Get.toNamed(Routes.joinTerms, arguments: {'platform': 'wallet'});
-                },
-                buttonText: '네',
                 buttonColor: skyBlueColor,
               ),
             ),
@@ -8561,7 +8455,7 @@ void showNotCompatibleItemAlert() {
       Expanded(
         child: GazagoButton(
           onTap: () {
-            Get.back();
+            Get.until((route) => Get.currentRoute == Routes.walletNftList);
           },
           buttonText: '다시 고르기',
           buttonColor: AppColorData.regular().colorBgInteractivePrimary,
