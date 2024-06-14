@@ -612,6 +612,8 @@ class InventoryController extends GetxController with LinearProgressMixin, Inven
 
   void sendNftToStaika(InventoryItemModel item) {
     Get.back();
+    showStaikaStatusAlert(hasWallet: false);
+    return;
     NftService.requestTransferNftToStaika(
       nftId: item.nftId!,
       userItemId: item.id,

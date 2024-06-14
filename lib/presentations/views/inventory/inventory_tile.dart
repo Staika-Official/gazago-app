@@ -7,7 +7,7 @@ import 'package:gaza_go/platform/controllers/inventory_controller.dart';
 import 'package:gaza_go/platform/helpers/inventory_helper.dart';
 import 'package:gaza_go/presentations/styles/colors.dart';
 import 'package:gaza_go/presentations/styles/icons.dart';
-import 'package:gaza_go/presentations/styles/styled_text.dart';
+import 'package:gaza_go/theme/theme.g.dart';
 import 'package:get/get.dart';
 
 class InventoryTile extends StatelessWidget {
@@ -102,25 +102,19 @@ class InventoryTile extends StatelessWidget {
                 Padding(
                   padding: EdgeInsets.all(10.sp),
                   child: Container(
-                    padding: EdgeInsets.symmetric(
-                      vertical: 5.sp,
-                      horizontal: 10.sp,
-                    ),
+                    padding: const EdgeInsets.symmetric(vertical: 2, horizontal: 8),
                     decoration: BoxDecoration(
                       borderRadius: BorderRadius.circular(60.sp),
                       border: Border.all(
                         width: 1,
-                        color: deepGrayColor,
+                        color: AppColorData.regular().colorBorderTertiary,
                       ),
                     ),
-                    child: StyledText(
+                    child: Text(
                       '#${badgeId.toString()}',
-                      fontSize: 10,
-                      lineHeight: 10,
-                      fontWeight: 500,
-                      letterSpacing: 1,
-                      fontFamily: 'Montserrat',
-                      color: deepGrayColor,
+                      style: AppTextStyleData.regular().numBodySemiboldMd.copyWith(
+                            color: AppColorData.regular().colorTextTertiary,
+                          ),
                     ),
                   ),
                 ),
@@ -128,7 +122,7 @@ class InventoryTile extends StatelessWidget {
                   ? Padding(
                       padding: EdgeInsets.symmetric(horizontal: 15.0.sp, vertical: 9.0.sp),
                       child: SizedBox(
-                        height: 22.sp,
+                        height: 28.sp,
                         child: Stack(
                           clipBehavior: Clip.none,
                           alignment: AlignmentDirectional.center,
@@ -136,111 +130,91 @@ class InventoryTile extends StatelessWidget {
                             Row(
                               children: [
                                 Expanded(
-                                  child: ClipRRect(
-                                    child: SizedBox(
-                                      child: Stack(
-                                        children: [
-                                          Padding(
-                                            padding: EdgeInsets.all(2.0.sp),
-                                            child: Container(
-                                              decoration: BoxDecoration(
-                                                color: const Color(0xFF606167),
-                                                borderRadius: BorderRadius.all(
-                                                  Radius.circular(50.sp),
-                                                ),
-                                                boxShadow: [
-                                                  BoxShadow(
-                                                    color: Colors.black,
-                                                    offset: Offset(0, 1.sp),
-                                                    blurRadius: 0.0,
-                                                    spreadRadius: 0.0,
-                                                  ),
-                                                ],
+                                  child: SizedBox(
+                                    child: Stack(
+                                      children: [
+                                        Padding(
+                                          padding: EdgeInsets.all(2.0.sp),
+                                          child: Container(
+                                            decoration: ShapeDecoration(
+                                              color: const Color(0xFF2E3038),
+                                              shape: RoundedRectangleBorder(
+                                                side: const BorderSide(width: 2),
+                                                borderRadius: BorderRadius.circular(12),
                                               ),
+                                              shadows: [
+                                                const BoxShadow(
+                                                  color: Color(0xFF000000),
+                                                  blurRadius: 0,
+                                                  offset: Offset(0, 4),
+                                                  spreadRadius: 0,
+                                                )
+                                              ],
                                             ),
                                           ),
-                                          durability! > 1.0
-                                              ? Padding(
-                                                  padding: EdgeInsets.only(top: 2.0.sp, left: 2.0.sp),
-                                                  child: LayoutBuilder(builder: (context, constraints) {
-                                                    return Container(
-                                                      height: 18.sp,
-                                                      margin: EdgeInsets.zero,
-                                                      width: durability! > 20
-                                                          ? constraints.maxWidth / (100 / durability!)
-                                                          : durability! < 2
-                                                              ? 0
-                                                              : 34,
-                                                      decoration: BoxDecoration(
-                                                        color: durability! < 30 ? textRedColor : purpleColor,
-                                                        borderRadius: BorderRadius.all(
-                                                          Radius.circular(50.sp),
-                                                        ),
+                                        ),
+                                        durability! > 1.0
+                                            ? Padding(
+                                                padding: EdgeInsets.only(top: 2.0.sp, left: 2.0.sp),
+                                                child: LayoutBuilder(builder: (context, constraints) {
+                                                  return Container(
+                                                    height: 28.sp,
+                                                    margin: EdgeInsets.zero,
+                                                    width: durability! > 20
+                                                        ? constraints.maxWidth / (100 / durability!)
+                                                        : durability! < 2
+                                                            ? 0
+                                                            : 34,
+                                                    decoration: ShapeDecoration(
+                                                      color: durability! < 30 ? textRedColor : AppColorData.regular().colorPointPurple,
+                                                      shape: RoundedRectangleBorder(
+                                                        side: const BorderSide(width: 2),
+                                                        borderRadius: BorderRadius.circular(999),
                                                       ),
-                                                    );
-                                                  }),
-                                                )
-                                              : Container(),
-                                        ],
-                                      ),
+                                                      shadows: [
+                                                        const BoxShadow(
+                                                          color: Color(0xFF000000),
+                                                          blurRadius: 0,
+                                                          offset: Offset(0, 2),
+                                                          spreadRadius: 0,
+                                                        )
+                                                      ],
+                                                    ),
+                                                  );
+                                                }),
+                                              )
+                                            : Container(),
+                                      ],
                                     ),
                                   ),
-                                ),
-                              ],
-                            ),
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              crossAxisAlignment: CrossAxisAlignment.center,
-                              children: [
-                                Row(
-                                  children: [
-                                    Padding(
-                                      padding: EdgeInsets.symmetric(horizontal: 5.0.sp),
-                                      child: iconShoes,
-                                    ),
-                                  ],
                                 ),
                               ],
                             ),
                             Positioned(
-                              right: -1,
-                              top: -1,
-                              child: Padding(
-                                padding: EdgeInsets.only(top: 1.0.sp),
+                              right: 0,
+                              top: 2,
+                              child: InkWell(
+                                onTap: () => controller.isDisableButton.value ? null : controller.showShoesRepairPopup(id!, context),
                                 child: Container(
-                                  decoration: BoxDecoration(
-                                    color: gaugeGrayColor,
-                                    border: Border.all(
-                                      width: 1.sp,
-                                      color: Colors.black,
+                                  width: 26,
+                                  height: 26,
+                                  padding: const EdgeInsets.all(2),
+                                  decoration: ShapeDecoration(
+                                    color: const Color(0xFFB85DFF),
+                                    shape: RoundedRectangleBorder(
+                                      side: const BorderSide(width: 2),
+                                      borderRadius: BorderRadius.circular(999),
                                     ),
-                                    borderRadius: BorderRadius.all(
-                                      Radius.circular(30.sp),
-                                    ),
-                                    boxShadow: [
-                                      BoxShadow(
-                                        color: Colors.black,
-                                        offset: Offset(0, 1.sp),
-                                        blurRadius: 0.0,
-                                        spreadRadius: 0.0,
-                                      ),
+                                    shadows: [
+                                      const BoxShadow(
+                                        color: Color(0xFF000000),
+                                        blurRadius: 0,
+                                        offset: Offset(0, 2),
+                                        spreadRadius: 0,
+                                      )
                                     ],
                                   ),
-                                  child: InkWell(
-                                    onTap: () => controller.isDisableButton.value ? null : controller.showShoesRepairPopup(id!, context),
-                                    child: CircleAvatar(
-                                      radius: 10.sp,
-                                      backgroundColor: purpleColor,
-                                      child: IconButton(
-                                        alignment: Alignment.center,
-                                        padding: EdgeInsets.zero,
-                                        iconSize: 20.0.sp,
-                                        icon: iconPlus,
-                                        onPressed: null,
-                                        // onPressed: () => {controller.onClickRepairStat(stat)},
-                                      ),
-                                    ),
-                                  ),
+                                  child: iconPlusThin,
                                 ),
                               ),
                             ),

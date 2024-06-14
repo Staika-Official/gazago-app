@@ -28,11 +28,11 @@ class InventoryItemDetail extends StatelessWidget {
       titleWidget: Row(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          // if (controller.selectedItem.value.publishType == 'NFT')
-          //   Padding(
-          //     padding: EdgeInsets.only(right: 8.0.sp),
-          //     child: SvgPicture.asset('assets/images/shop/ico_nft_label.svg'),
-          //   ),
+          if (controller.selectedItem.value.publishType == 'NFT')
+            Padding(
+              padding: EdgeInsets.only(right: 8.0.sp),
+              child: SvgPicture.asset('assets/images/shop/ico_nft_label.svg'),
+            ),
           StyledText(
             controller.selectedItem.value.itemName,
             fontSize: 18,
@@ -125,7 +125,7 @@ class InventoryItemDetail extends StatelessWidget {
                                                   ],
                                                 ),
                                               ),
-                                              if (controller.selectedItem.value.serialNumber != null)
+                                              if (controller.selectedItem.value.serialNumber != null && controller.selectedItem.value.serialNumber != '')
                                                 Container(
                                                   margin: EdgeInsets.only(top: 10.sp, bottom: 10.sp),
                                                   padding: EdgeInsets.symmetric(horizontal: 8.sp, vertical: 4.sp),

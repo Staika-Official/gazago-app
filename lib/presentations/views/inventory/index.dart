@@ -192,7 +192,7 @@ class InventoryHome extends StatelessWidget {
                       child: Padding(
                         padding: EdgeInsets.symmetric(vertical: 8.0.sp, horizontal: 15.sp),
                         child: Text(
-                          '능력치는 수치가 높을수록 좋아요!',
+                          '수치가 높을수록 좋은 아이템이에요.',
                           style: AppTextStyleData.regular().koBodyMediumSm.copyWith(
                                 color: AppColorData.regular().colorTextPrimary,
                               ),

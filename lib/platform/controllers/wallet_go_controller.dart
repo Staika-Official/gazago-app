@@ -56,8 +56,7 @@ class GoWalletController extends GetxController with SolanaMixin {
 
   @override
   void onClose() async {
-
-    if(Get.previousRoute == Routes.collectionDetail){
+    if (Get.previousRoute == Routes.collectionDetail) {
       collectionController.initData();
       await collectionController.initController();
       await collectionDetailController.refreshController();
@@ -223,7 +222,7 @@ class GoWalletController extends GetxController with SolanaMixin {
         loaderController.isLoading.value = false;
         // Future.delayed(const Duration(seconds: 3));
         if (data.errorCode == 'NOT_FOUND_WALLET') {
-          showCreateStaikaWalletAlert();
+          showStaikaStatusAlert(hasWallet: false, tabController: walletMasterController.tabController);
         } else if (data.errorCode == 'DATABASE_EXCEPTION') {
           showToastPopup('잠시 후 다시 시도해 주세요');
         }
