@@ -112,7 +112,7 @@ class WalletDetail extends StatelessWidget {
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
                             Text(
-                              formatDate(transaction.createdDate!),
+                                formatHipenDate(transaction.createdDate!),
                                 style: AppTextStyleData.regular().koBodyMediumMd.copyWith(
                                     color: AppColorData.regular().colorTextTertiary
                                 )

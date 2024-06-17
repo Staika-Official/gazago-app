@@ -73,6 +73,14 @@ String formatDate(String? isoDateString) {
   }
 }
 
+String formatHipenDate(String? isoDateString) {
+  if (isoDateString != null) {
+    return DateFormat("yyyy-MM-dd HH:mm:ss").format(DateTime.parse(isoDateString).toLocal());
+  } else {
+    return '';
+  }
+}
+
 String formatDateUntilDay(String? isoDateString) {
   if (isoDateString != null) {
     return DateFormat("yyyy-MM-dd").format(DateTime.parse(isoDateString).toLocal());
