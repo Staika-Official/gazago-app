@@ -187,7 +187,7 @@ class CollectionDetail extends StatelessWidget {
                       padding: EdgeInsets.only(top: 2.0.sp),
                       child: FittedBox(
                         child: Text(
-                          '${controller.detailCollection.value.alreadyIssued ?item.quantity : item.completeAmount != null ? item.completeAmount >= item.quantity ? formatDecimalPlaces(item.quantity, 0) : item.completeAmount : 0} / ${formatDecimalPlaces(item.quantity, 0)}',
+                          '${controller.detailCollection.value.alreadyIssued ? formatDecimalPlaces(item.quantity, 0) : item.completeAmount != null ? item.completeAmount >= item.quantity ? formatDecimalPlaces(item.quantity, 0) : item.completeAmount : 0} / ${formatDecimalPlaces(item.quantity, 0)}',
                           style: AppTextStyleData
                               .regular()
                               .koBodyMediumSm
