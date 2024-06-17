@@ -46,11 +46,16 @@ class NftAssetItem extends StatelessWidget {
                       children: [
                         Row(
                           children: [
-                            SvgPicture.asset(
-                              'assets/images/icons/icon_nft.svg',
+                            ClipRRect(
+                              borderRadius: BorderRadius.circular(20),
+                              child: SvgPicture.asset(
+                                'assets/images/icons/icon_nft.svg',
+                                width: 40,
+                                height: 40,
+                              ),
                             ),
                             Padding(
-                              padding: EdgeInsets.only(left: 10.0.sp),
+                              padding: EdgeInsets.only(left: 4.sp),
                               child: Text(
                                 'NFT',
                                 style: AppTextStyleData.regular().koBodyMediumXl.copyWith(

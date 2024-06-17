@@ -955,12 +955,12 @@ class ShopItemDetail extends StatelessWidget {
                 bottom: 0,
                 right: 0,
                 child: Container(
-                  padding: EdgeInsets.only(top: 24, left: 25.sp, right: 25.sp, bottom: 36.sp),
+                  padding: EdgeInsets.only(top: 24, left: 25.sp, right: 25.sp, bottom: 36),
                   width: double.infinity,
                   decoration: ShapeDecoration(
                     color: popupBgColor,
                     shape: CustomRoundedRectangleBorder(
-                      borderRadius: BorderRadius.only(topLeft: Radius.circular(15.sp), topRight: Radius.circular(15.sp)),
+                      borderRadius: BorderRadius.only(topLeft: Radius.circular(20.sp), topRight: Radius.circular(20.sp)),
                       leftSide: BorderSide(color: skyBlueColor, width: 2.sp),
                       topLeftCornerSide: BorderSide(color: skyBlueColor, width: 2.sp),
                       rightSide: BorderSide(color: skyBlueColor, width: 2.sp),

@@ -64,7 +64,7 @@ class GoAssetItemCoin extends StatelessWidget {
                                 'assets/images/common/ico_token_tik.svg',
                               ),
                         Padding(
-                          padding: EdgeInsets.only(left: 10.0.sp),
+                          padding: EdgeInsets.only(left: 4.sp),
                           child: Text(
                             asset.name!,
                             style: AppTextStyleData.regular().koBodyMediumXl.copyWith(

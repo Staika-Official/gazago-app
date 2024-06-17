@@ -63,7 +63,7 @@ class StaikaAssetItemCoin extends StatelessWidget {
                         ),
                   Expanded(
                     child: Padding(
-                      padding: EdgeInsets.only(left: 10.0.sp),
+                      padding: EdgeInsets.only(left: 4.sp),
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
