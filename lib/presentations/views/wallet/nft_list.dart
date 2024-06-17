@@ -287,6 +287,7 @@ class NftList extends StatelessWidget {
                           child: Center(
                             child: SizedBox(
                               width: 92.sp,
+                              height: 92.sp,
                               child: CachedNetworkImage(
                                 imageUrl: nftItem.metadata!.image!,
                                 fit: BoxFit.cover,
