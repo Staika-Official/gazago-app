@@ -901,15 +901,15 @@ class ActivityActive extends StatelessWidget {
                             mainAxisAlignment: MainAxisAlignment.center,
                             children: [
                               Padding(
-                                padding: EdgeInsets.only(right: controller.exerciseState.value == ExerciseState.ready || controller.exerciseState.value == ExerciseState.paused ? 40.0.sp : 16.sp),
+                                padding: EdgeInsets.only(right: controller.exerciseState.value == ExerciseState.ready || controller.exerciseState.value == ExerciseState.paused ? 40.0.sp : 16.5.sp),
                                 child: CircularButton(
-                                  radius: 48.sp,
+                                  radius: 54.8.sp,
                                   color: Colors.white,
                                   onTap: () => controller.showExerciseMap(const ActivityMap()),
                                   child: SvgPicture.asset(
-                                    'assets/images/activity/ico_map.svg',
-                                    width: 21.sp,
-                                    height: 21.5.sp,
+                                    'assets/images/activity/ico_exercise_location.svg',
+                                    width: 28.sp,
+                                    height: 28.sp,
                                     fit: BoxFit.scaleDown,
                                   ),
                                 ),
@@ -987,17 +987,17 @@ class ActivityActive extends StatelessWidget {
                                 ),
                               ),
                               Padding(
-                                padding: EdgeInsets.only(left: controller.exerciseState.value == ExerciseState.ready || controller.exerciseState.value == ExerciseState.paused ? 40.0.sp : 16.sp),
+                                padding: EdgeInsets.only(left: controller.exerciseState.value == ExerciseState.ready || controller.exerciseState.value == ExerciseState.paused ? 40.0.sp : 16.5.sp),
                                 child: CircularButton(
-                                  radius: 48.sp,
+                                  radius: 54.8.sp,
                                   color: Colors.white,
                                   onTap: () {
                                     Get.toNamed(Routes.equippedItems);
                                   },
                                   child: SvgPicture.asset(
-                                    'assets/images/activity/ico_item.svg',
-                                    width: 23.3.sp,
-                                    height: 21.sp,
+                                    'assets/images/activity/ico_exercise_shoe.svg',
+                                    width: 28.sp,
+                                    height: 28.sp,
                                       fit: BoxFit.scaleDown,
                                   ),
                                 ),
