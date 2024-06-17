@@ -871,13 +871,17 @@ class InventoryItemDetail extends StatelessWidget {
                 child: Obx(() {
                   return GazagoButton(
                     onTap: controller.selectedItem.value.equipped == true
-                        ? () => showItemIsEquippedAlert()
+                        ? controller.requestDetailFromWallet.value
+                            ? () => showItemIsEquippedAlert()
+                            : null
                         : () => controller.confirmSendNftToStaika(
                               controller,
                               controller.selectedItem.value,
                             ),
                     buttonText: 'Staika 지갑으로 보내기',
-                    buttonColor: controller.selectedItem.value.equipped == true ? AppColorData.regular().colorBgInteractivePrimaryDisabled : AppColorData.regular().colorBgInteractivePrimary,
+                    buttonColor: controller.selectedItem.value.equipped == true && !controller.requestDetailFromWallet.value
+                        ? AppColorData.regular().colorBgInteractivePrimaryDisabled
+                        : AppColorData.regular().colorBgInteractivePrimary,
                     textColor: AppColorData.regular().colorTextInverse,
                   );
                 }),

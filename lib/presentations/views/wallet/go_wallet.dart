@@ -106,7 +106,7 @@ class GoWallet extends StatelessWidget {
                         child: Align(
                           alignment: Alignment.bottomCenter,
                           child: Text(
-                            'GO 지갑은 가자고에서 TIK과 STIK을 관리하는 지갑이에요.',
+                            'GO 지갑은 gazaGO에서 TIK과 STIK을 관리하는 지갑이에요.',
                             style: AppTextStyleData.regular().koCaptionMediumMd.copyWith(
                                   color: AppColorData.regular().colorTextTertiary,
                                 ),

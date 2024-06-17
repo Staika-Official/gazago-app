@@ -8306,7 +8306,7 @@ void showSendNftToGoWalletAlert(WalletOnChainNftDetailController controller) {
                 ),
                 Expanded(
                   child: Text(
-                    'GO 지갑으로 이동한 아이템은 가자고에서\n사용할 수 있으며, Staika 지갑에서 보여지지 않습니다.',
+                    'GO 지갑으로 이동한 아이템은 gazaGO에서\n사용할 수 있으며, Staika 지갑에서 보여지지 않습니다.',
                     style: AppTextStyleData.regular().koBodyMediumMd.copyWith(
                           color: AppColorData.regular().colorTextSecondary,
                         ),
@@ -8405,7 +8405,7 @@ void showNotCompatibleItemAlert() {
       child: Column(
         children: [
           Text(
-            '가자고에서 사용할 수 없는\n아이템이에요',
+            'gazaGO에서 사용할 수 없는\n아이템이에요',
             style: AppTextStyleData.regular().koHeadingSemiboldSm.copyWith(
                   color: AppColorData.regular().colorTextPrimary,
                 ),

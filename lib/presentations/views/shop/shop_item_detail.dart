@@ -955,7 +955,7 @@ class ShopItemDetail extends StatelessWidget {
                 bottom: 0,
                 right: 0,
                 child: Container(
-                  padding: EdgeInsets.symmetric(vertical: 20.sp, horizontal: 25.sp),
+                  padding: EdgeInsets.only(top: 24, left: 25.sp, right: 25.sp, bottom: 36.sp),
                   width: double.infinity,
                   decoration: ShapeDecoration(
                     color: popupBgColor,
@@ -975,63 +975,61 @@ class ShopItemDetail extends StatelessWidget {
                       Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          StyledText(
-                            '${formatDecimalPlaces(controller.selectedItem.value.price.toDouble(), controller.selectedItem.value.tradeSymbol == 'STIK' ? 2 : 0, isAutoDecimal: true)} ${controller.selectedItem.value.tradeSymbol ?? 'TIK'}',
-                            fontWeight: 500,
-                            fontSize: 22,
-                            lineHeight: 24,
-                          ),
                           if (controller.selectedItem.value.itemLabel != null)
-                            Padding(
-                              padding: EdgeInsets.only(top: 5.0.sp),
-                              child: StyledText(
-                                controller.selectedItem.value.itemLabel! == 'CLOSE_DEADLINE' ? '마감임박' : '품절',
-                                fontWeight: 500,
-                                fontSize: 14,
-                                lineHeight: 16,
-                                color: skyBlueColor,
-                              ),
+                            Text(
+                              controller.selectedItem.value.itemLabel! == 'CLOSE_DEADLINE' ? '마감임박' : '품절',
+                              style: AppTextStyleData.regular().koBodyMediumSm.copyWith(
+                                    color: AppColorData.regular().colorPointCyan,
+                                  ),
                             ),
+                          Text(
+                            '${formatDecimalPlaces(controller.selectedItem.value.price.toDouble(), controller.selectedItem.value.tradeSymbol == 'STIK' ? 2 : 0, isAutoDecimal: true)} ${controller.selectedItem.value.tradeSymbol ?? 'TIK'}',
+                            style: AppTextStyleData.regular().koHeadingMediumSm.copyWith(
+                                  color: AppColorData.regular().colorTextPrimary,
+                                ),
+                          ),
                         ],
                       ),
                       controller.selectedItem.value.itemLabel != null && controller.selectedItem.value.itemLabel == 'SOLD_OUT'
                           ? InkWell(
-                              onTap: () => null,
+                              onTap: null,
                               child: Container(
                                 decoration: BoxDecoration(
-                                  color: subBg01Color,
-                                  border: Border.all(width: 2.sp, color: deepGrayColor),
+                                  border: Border.all(
+                                    width: 2.sp,
+                                    color: AppColorData.regular().colorBorderInteractivePrimaryDisabled,
+                                  ),
                                   borderRadius: BorderRadius.circular(30.sp),
                                 ),
                                 child: Padding(
                                   padding: EdgeInsets.symmetric(vertical: 8.0.sp, horizontal: 15.sp),
-                                  child: StyledText(
+                                  child: Text(
                                     '구매하기',
-                                    fontSize: 18,
-                                    lineHeight: 20,
-                                    color: deepGrayColor,
-                                    letterSpacing: -.1,
+                                    style: AppTextStyleData.regular().koBodyMediumXl.copyWith(
+                                          color: AppColorData.regular().colorTextInteractivePrimaryDisabled,
+                                        ),
                                   ),
                                 ),
                               ),
                             )
                           : controller.selectedItem.value.itemCategory == 'DISPOSABLE' && controller.purchaseItemCount < 1
                               ? InkWell(
-                                  onTap: () => null,
+                                  onTap: null,
                                   child: Container(
                                     decoration: BoxDecoration(
-                                      color: subBg01Color,
-                                      border: Border.all(width: 2.sp, color: deepGrayColor),
+                                      border: Border.all(
+                                        width: 2.sp,
+                                        color: AppColorData.regular().colorBorderInteractivePrimaryDisabled,
+                                      ),
                                       borderRadius: BorderRadius.circular(30.sp),
                                     ),
                                     child: Padding(
                                       padding: EdgeInsets.symmetric(vertical: 8.0.sp, horizontal: 15.sp),
-                                      child: StyledText(
+                                      child: Text(
                                         '구매하기',
-                                        fontSize: 18,
-                                        lineHeight: 20,
-                                        color: deepGrayColor,
-                                        letterSpacing: -.1,
+                                        style: AppTextStyleData.regular().koBodyMediumXl.copyWith(
+                                              color: AppColorData.regular().colorTextInteractivePrimaryDisabled,
+                                            ),
                                       ),
                                     ),
                                   ),
@@ -1040,16 +1038,19 @@ class ShopItemDetail extends StatelessWidget {
                                   onTap: () => controller.onClickPurchaseItem(controller.selectedItem.value.tradeSymbol),
                                   child: Container(
                                     decoration: BoxDecoration(
-                                      border: Border.all(width: 2.sp, color: skyBlueColor),
+                                      border: Border.all(
+                                        width: 2.sp,
+                                        color: AppColorData.regular().colorPointCyan,
+                                      ),
                                       borderRadius: BorderRadius.circular(30.sp),
                                     ),
                                     child: Padding(
                                       padding: EdgeInsets.symmetric(vertical: 8.0.sp, horizontal: 15.sp),
-                                      child: const StyledText(
+                                      child: Text(
                                         '구매하기',
-                                        fontSize: 18,
-                                        lineHeight: 20,
-                                        letterSpacing: -.1,
+                                        style: AppTextStyleData.regular().koBodyMediumXl.copyWith(
+                                              color: AppColorData.regular().colorTextPrimary,
+                                            ),
                                       ),
                                     ),
                                   ),
