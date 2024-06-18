@@ -220,6 +220,7 @@ class DailyBenefitController extends GetxController {
           } else {
             dailyRewardAdList[activeAdIndex.value] = ad;
           }
+          // dailyRewardAdList[activeAdIndex.value] = null;
           print('광고 로드 성공 dailyRewardAdList : ${dailyRewardAdList}');
           print('광고 로드 성공 activeAdIndex : ${activeAdIndex.value}');
           print('광고 로드 성공 adLoadAttemptCount : ${adLoadAttemptCount}');
@@ -258,6 +259,7 @@ class DailyBenefitController extends GetxController {
 
   Future<void> loadAd() async {
     if (!adIsLoading.value) {
+      print('333');
       await loadRewardedAd();
     }
 
@@ -307,9 +309,14 @@ class DailyBenefitController extends GetxController {
 
       },
       errorCallback: (ErrorResponseDataModel? errorResponse) {
-        if (errorResponse != null && errorResponse.errorCode == 'DAILY_BENEFIT_TIME_UP') {
+
+        if (errorResponse != null) {
           showToastPopup(errorResponse.errorMessage!);
-          getDailyBenefitsList();
+          if(errorResponse.errorCode == 'DAILY_BENEFIT_TIME_UP'){
+            getDailyBenefitsList();
+          }
+
+
 
         }
         selectedBenefitItem.value = null;
@@ -317,11 +324,27 @@ class DailyBenefitController extends GetxController {
     );
   }
 
+  Future<int> findNonNullIndices(List<dynamic> arr) async {
+    int indices = 0;
+
+    for (int i = 0; i < arr.length; i++) {
+      if (arr[i] != null) {
+        indices = i;
+      }
+    }
+
+    return indices;
+  }
+
+
   Future<void> requestDailyBenefitAd(BenefitItemModel benefitItem) async {
     Completer completer = Completer();
 
-    if (dailyRewardAdList.isNotEmpty && dailyRewardAdList[activeAdIndex.value] != null) {
+    activeAdIndex.value = await findNonNullIndices(dailyRewardAdList);
+
+    if (dailyRewardAdList[0] != null || dailyRewardAdList[1] != null) {
       // showToastPopup('광고 요청 중 입니다. 잠시만 기다려주세요.');
+
       dailyRewardAdList[activeAdIndex.value]!.fullScreenContentCallback = FullScreenContentCallback(
         // Called when the ad showed the full screen content.
         onAdShowedFullScreenContent: (ad) async {
@@ -392,7 +415,6 @@ class DailyBenefitController extends GetxController {
       if(adIsLoading.value){
         showToastPopup('광고를 로딩중입니다.\n 잠시 후 다시 시도해 주세요.');
       }
-      print('아무고토없다');
 
       await loadAd();
       // await loadRewardedVideoAd();
