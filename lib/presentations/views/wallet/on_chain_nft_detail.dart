@@ -57,7 +57,8 @@ class OnChainNftDetail extends StatelessWidget {
                                     decoration: BoxDecoration(
                                       borderRadius: BorderRadius.circular(12),
                                     ),
-                                    child: controller.nftDetail.value!.json!.properties!.files![0].type.contains('svg')
+                                    child: (controller.nftDetail.value!.json!.properties!.files![0].type.runtimeType != bool &&
+                                            controller.nftDetail.value!.json!.properties!.files![0].type.contains('svg'))
                                         ? SvgPicture.network(
                                             fit: BoxFit.cover,
                                             controller.nftDetail.value!.json!.image!,

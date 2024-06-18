@@ -297,7 +297,7 @@ class NftList extends StatelessWidget {
                             child: SizedBox(
                               width: 92.sp,
                               height: 92.sp,
-                              child: nftItem.metadata!.properties!.files![0].type.contains('svg')
+                              child: (nftItem.metadata!.properties!.files![0].type.runtimeType != bool && nftItem.metadata!.properties!.files![0].type.contains('svg'))
                                   ? SvgPicture.network(
                                       fit: BoxFit.cover,
                                       nftItem.metadata!.image!,

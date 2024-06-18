@@ -40,7 +40,7 @@ class ShopItemDetail extends StatelessWidget {
                     children: [
                       Container(
                         decoration: BoxDecoration(
-                          color: subBg02Color,
+                          color: AppColorData.regular().colorBgTertiary,
                           border: Border.all(
                             width: 2.sp,
                             color: Colors.black,
