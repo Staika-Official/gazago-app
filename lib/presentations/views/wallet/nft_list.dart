@@ -2,6 +2,7 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:gaza_go/constants/config.dart';
 import 'package:gaza_go/platform/controllers/wallet_nft_list_controller.dart';
 import 'package:gaza_go/platform/helpers/base_helper.dart';
 import 'package:gaza_go/platform/helpers/inventory_helper.dart';
@@ -61,10 +62,18 @@ class NftList extends StatelessWidget {
                               child: SizedBox(
                                 width: 92.sp,
                                 height: 92.sp,
-                                child: CachedNetworkImage(
-                                  imageUrl: nftItem.itemImageUrl,
-                                  fit: BoxFit.cover,
-                                ),
+                                child: nftItem.itemImageUrl.contains('.svg')
+                                    ? SvgPicture.network(
+                                        fit: BoxFit.cover,
+                                        nftItem.itemImageUrl,
+                                        placeholderBuilder: (BuildContext context) => const Center(child: SizedBox.square(dimension: 40, child: CircularProgressIndicator())),
+                                        headers: imageNetworkHeader,
+                                      )
+                                    : CachedNetworkImage(
+                                        imageUrl: nftItem.itemImageUrl,
+                                        fit: BoxFit.cover,
+                                        httpHeaders: imageNetworkHeader,
+                                      ),
                               ),
                             ),
                           ),
@@ -288,10 +297,17 @@ class NftList extends StatelessWidget {
                             child: SizedBox(
                               width: 92.sp,
                               height: 92.sp,
-                              child: CachedNetworkImage(
-                                imageUrl: nftItem.metadata!.image!,
-                                fit: BoxFit.cover,
-                              ),
+                              child: nftItem.metadata!.properties!.files![0].type.contains('svg')
+                                  ? SvgPicture.network(
+                                      fit: BoxFit.cover,
+                                      nftItem.metadata!.image!,
+                                      placeholderBuilder: (BuildContext context) => const Center(child: SizedBox.square(dimension: 40, child: CircularProgressIndicator())),
+                                      headers: imageNetworkHeader,
+                                    )
+                                  : CachedNetworkImage(
+                                      imageUrl: nftItem.metadata!.image!,
+                                      fit: BoxFit.cover,
+                                    ),
                             ),
                           ),
                         ),

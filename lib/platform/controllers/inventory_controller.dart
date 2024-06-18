@@ -604,8 +604,12 @@ class InventoryController extends GetxController with LinearProgressMixin, Inven
     return expiryUTCDateTime.difference(now).inDays;
   }
 
-  void moveToSolscan(String tokenAddress) {
-    Get.toNamed(Routes.webView, arguments: {'linkUrl': "https://solscan.io/token/${tokenAddress}${F.isDev ? '?cluster=devnet' : ''}"});
+  void moveToSolscan(String? tokenAddress) {
+    if (tokenAddress != null) {
+      Get.toNamed(Routes.webView, arguments: {'linkUrl': "https://solscan.io/token/${tokenAddress}${F.isDev ? '?cluster=devnet' : ''}"});
+    } else {
+      Get.toNamed(Routes.webView, arguments: {'linkUrl': "https://solscan.io${F.isDev ? '?cluster=devnet' : ''}"});
+    }
   }
 
   void confirmSendNftToStaika(InventoryController controller, InventoryItemModel item) {
@@ -627,7 +631,7 @@ class InventoryController extends GetxController with LinearProgressMixin, Inven
       errorCallback: (ErrorResponseDataModel error) {
         if (error.errorCode == 'SOLANA_CUSTOM_EXCEPTION') {
           showBlockchainNetworkErrorAlert();
-        } else if (error.status == 'NOT_FOUND_WALLET') {
+        } else if (error.errorCode == 'NOT_FOUND_WALLET') {
           showStaikaStatusAlert(hasWallet: false);
         }
       },

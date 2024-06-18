@@ -929,7 +929,7 @@ class ShopItemDetail extends StatelessWidget {
                             Padding(
                               padding: EdgeInsets.only(bottom: 10.sp),
                               child: const StyledText(
-                                '제품 설명',
+                                '아이템 설명',
                                 fontWeight: 600,
                                 fontSize: 18,
                                 lineHeight: 18,
