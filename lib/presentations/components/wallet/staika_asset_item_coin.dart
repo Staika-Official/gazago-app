@@ -50,12 +50,18 @@ class StaikaAssetItemCoin extends StatelessWidget {
                 mainAxisSize: MainAxisSize.max,
                 children: [
                   asset.logoUrl != ''
-                      ? ClipRRect(
-                          borderRadius: BorderRadius.circular(20),
-                          child: CachedNetworkImage(
-                            imageUrl: asset.logoUrl,
-                            width: 40,
-                            height: 40,
+                      ? SizedBox(
+                          width: 40,
+                          height: 40,
+                          child: Center(
+                            child: ClipRRect(
+                              borderRadius: BorderRadius.circular(20),
+                              child: CachedNetworkImage(
+                                imageUrl: asset.logoUrl,
+                                width: 32,
+                                height: 32,
+                              ),
+                            ),
                           ),
                         )
                       : SvgPicture.asset(

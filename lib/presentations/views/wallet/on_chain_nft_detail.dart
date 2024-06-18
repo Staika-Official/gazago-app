@@ -36,6 +36,7 @@ class OnChainNftDetail extends StatelessWidget {
                               color: AppColorData.regular().colorBgTertiary,
                               borderRadius: BorderRadius.circular(12),
                               border: Border.all(
+                                width: 2,
                                 color: AppColorData.regular().colorBorderBlack,
                               ),
                               boxShadow: [

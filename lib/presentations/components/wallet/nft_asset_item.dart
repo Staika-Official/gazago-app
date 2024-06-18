@@ -46,12 +46,18 @@ class NftAssetItem extends StatelessWidget {
                       children: [
                         Row(
                           children: [
-                            ClipRRect(
-                              borderRadius: BorderRadius.circular(20),
-                              child: SvgPicture.asset(
-                                'assets/images/icons/icon_nft.svg',
-                                width: 40,
-                                height: 40,
+                            SizedBox(
+                              width: 40,
+                              height: 40,
+                              child: Center(
+                                child: ClipRRect(
+                                  borderRadius: BorderRadius.circular(20),
+                                  child: SvgPicture.asset(
+                                    'assets/images/icons/icon_nft.svg',
+                                    width: 32,
+                                    height: 32,
+                                  ),
+                                ),
                               ),
                             ),
                             Padding(
