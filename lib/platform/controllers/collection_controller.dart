@@ -179,7 +179,6 @@ class CollectionController extends SuperController with GetTickerProviderStateMi
     await CollectionService.getUserAllItems(
         successCallback:(List<UserItemsSummariesModel> data){
           myAllItems.value = data;
-          print('myAllItems : $myAllItems');
         } ,
         errorCallback:(ErrorResponseDataModel? error){
           showToastPopup(error!.errorMessage!);
@@ -191,7 +190,6 @@ class CollectionController extends SuperController with GetTickerProviderStateMi
     await CollectionService.getUserAllBadges(
         successCallback:(List<UserBadgesSummariesModel> data){
           myAllBadges.value = data;
-          print('myAllBadges : $myAllBadges');
         } ,
         errorCallback:(ErrorResponseDataModel? error){
           showToastPopup(error!.errorMessage!);
@@ -200,60 +198,54 @@ class CollectionController extends SuperController with GetTickerProviderStateMi
   }
 
   void calculatePercentage(CollectionModel data) async {
-    if(data != null){
-      print(data.toString());
-      for (var condition in data.gatheringConditions) {
-        // 내가 가진 뱃지와 조건이 일치하는 뱃지를 찾아서 개수를 세어준다.
-        if(condition.type == 'BADGE'){
-          if ( condition.badgeComposeConfig != null) {
-            int badgeComposeConfigId = condition.badgeComposeConfig!.id;
-            int ownedBadgesCount = myAllBadges.where((badge) => (badge.badgeComposeConfigId == badgeComposeConfigId) && badge.state == 'INVENTORY').length;
-            condition.completeAmount = ownedBadgesCount;
-          } else {
-            condition.completeAmount = 0;
-          }
-        } else if(condition.type == 'ITEM'){
-          // 내가 가진 아이템과 조건이 일치하는 아이템을 찾아서 개수를 세어준다.
-          if (condition.item != null) {
-            int itemId = condition.item!.id;
-            int ownedBadgesCount = myAllItems.where((item) => (item.itemId == itemId) && item.equipped == false).length;
-            condition.completeAmount = ownedBadgesCount;
-          } else {
-            condition.completeAmount = 0;
-          }
-        }else if(condition.type == 'PTIK'){
-          if (condition.quantity <= double.parse(walletMasterController.ptik.value.amount.toString())) {
-            condition.completeAmount = 1;
-          } else {
-            condition.completeAmount = 0;
-          }
-        }else if(condition.type == 'TIK'){
-          print('condition.quantity : ${condition.quantity}');
-          print('walletMasterController.originTik.value.amount : ${walletMasterController.originTik.value.amount}');
-          if (condition.quantity <= double.parse(walletMasterController.originTik.value.amount.toString())) {
-            condition.completeAmount = 1;
-          } else {
-            condition.completeAmount = 0;
-          }
-        }else if(condition.type == 'STIK'){
-          print('condition.quantity : ${condition.quantity}');
-          print('walletMasterController.stik.value.uiAmountString.toString() : ${walletMasterController.stik.value.uiAmountString.toString()}');
-          if (condition.quantity <= double.parse(walletMasterController.stik.value.uiAmountString.toString()).floorToDouble()) {
-            condition.completeAmount = 1;
-          } else {
-            condition.completeAmount = 0;
-          }
+    for (var condition in data.gatheringConditions) {
+      // 내가 가진 뱃지와 조건이 일치하는 뱃지를 찾아서 개수를 세어준다.
+      if(condition.type == 'BADGE'){
+        if ( condition.badgeComposeConfig != null) {
+          int badgeComposeConfigId = condition.badgeComposeConfig!.id;
+          int ownedBadgesCount = myAllBadges.where((badge) => (badge.badgeComposeConfigId == badgeComposeConfigId) && badge.state == 'INVENTORY').length;
+          condition.completeAmount = ownedBadgesCount;
+        } else {
+          condition.completeAmount = 0;
         }
+      } else if(condition.type == 'ITEM'){
+        // 내가 가진 아이템과 조건이 일치하는 아이템을 찾아서 개수를 세어준다.
+        if (condition.item != null) {
+          int itemId = condition.item!.id;
+          int ownedBadgesCount = myAllItems.where((item) => (item.itemId == itemId) && item.equipped == false).length;
+          condition.completeAmount = ownedBadgesCount;
+        } else {
+          condition.completeAmount = 0;
+        }
+      }else if(condition.type == 'PTIK'){
+        if (condition.quantity <= double.parse(walletMasterController.ptik.value.amount.toString())) {
+          condition.completeAmount = 1;
+        } else {
+          condition.completeAmount = 0;
+        }
+      }else if(condition.type == 'TIK'){
 
+        if (condition.quantity <= double.parse(walletMasterController.originTik.value.amount.toString())) {
+          condition.completeAmount = 1;
+        } else {
+          condition.completeAmount = 0;
+        }
+      }else if(condition.type == 'STIK'){
+
+        if (condition.quantity <= double.parse(walletMasterController.stik.value.uiAmountString.toString()).floorToDouble()) {
+          condition.completeAmount = 1;
+        } else {
+          condition.completeAmount = 0;
+        }
       }
 
-      checkComepleteQuantity(data);
     }
+
+    checkComepleteQuantity(data);
 
   }
 
   void checkComepleteQuantity(data){
-    print(data);
     int count = 0;
     for (var condition in data.gatheringConditions) {
       double quantity = condition.quantity;
@@ -279,7 +271,6 @@ class CollectionController extends SuperController with GetTickerProviderStateMi
     }
 
     data.completeQuantity = count;
-    print('data.completeQuantity : ${data.completeQuantity}');
   }
 
   double currentMyTokenConditionPercentage(itemType , quantity){
@@ -296,12 +287,10 @@ class CollectionController extends SuperController with GetTickerProviderStateMi
   }
 
   void moveToDetailCollection ( item) {
-    print('moveToDetailCollection : ${item.toJson()}');
     selectedCollection.value = item;
-
-    Get.toNamed(Routes.collectionDetail);
-    print('moveToDetailCollection : ${selectedCollection.value.toJson()}');
     selectedCollection.refresh();
+    Get.toNamed(Routes.collectionDetail);
+
   }
 
 

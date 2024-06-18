@@ -11,6 +11,7 @@ class CollectionRewardModel {
   String description;
   String imageUrl;
   String? itemGrade;
+  String? publishType;
   double? luckRateFrom;
   double? luckRateTo;
   double? rewardRateFrom;
@@ -31,6 +32,8 @@ class CollectionRewardModel {
     required this.name,
     required this.description,
     required this.imageUrl,
+    this.publishType,
+    this.itemGrade,
     this.luckRateFrom,
     this.luckRateTo,
     this.rewardRateFrom,

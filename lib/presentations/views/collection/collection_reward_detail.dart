@@ -79,7 +79,8 @@ class CollectionRewardDetail extends StatelessWidget {
                                           width: double.infinity,
                                           child: Stack(
                                             children: [
-
+                                              if(controller.rewardItem.publishType == 'NFT')
+                                                Positioned.fill(left: 24.sp, right: 24.sp, child: SvgPicture.asset('assets/images/shop/ico_nft_detail.svg')),
                                               Padding(
                                                 padding: EdgeInsets.symmetric(vertical: 0.0.sp),
                                                 child: Center(
@@ -116,7 +117,11 @@ class CollectionRewardDetail extends StatelessWidget {
                                         crossAxisAlignment: CrossAxisAlignment.center,
                                         mainAxisAlignment: MainAxisAlignment.center,
                                         children: [
-
+                                          if(controller.rewardItem.publishType == 'NFT')
+                                            Padding(
+                                              padding: EdgeInsets.only(right: 5.0.sp, top:2.8.sp),
+                                              child: SvgPicture.asset('assets/images/shop/ico_nft_label.svg'),
+                                            ),
                                           Text(
                                             controller.rewardItem.name,
                                             style: AppTextStyleData.regular().koBodySemiboldXl.copyWith(

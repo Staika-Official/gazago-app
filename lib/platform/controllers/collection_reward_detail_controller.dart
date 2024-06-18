@@ -64,6 +64,7 @@ class CollectionRewardDetailController extends GetxController {
       rewardItem.maxGoProfit = gatheringRewardData.item!.maxGoProfit;
       rewardItem.minDurability = gatheringRewardData.item!.minDurability;
       rewardItem.maxDurability = gatheringRewardData.item!.maxDurability;
+      rewardItem.publishType = gatheringRewardData.item!.publishType;
       // rewardItem.minLuck = gatheringRewardData.item!.minLuck;
       // rewardItem.maxLuck = gatheringRewardData.item!.maxLuck;
       // rewardItem.minStamina = gatheringRewardData.item!.minStamina;

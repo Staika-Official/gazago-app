@@ -41,7 +41,7 @@ class CollectionDetailController extends GetxController {
     collectionController.selectedCollection.listen((event) {
       detailCollection.value  = event;
       detailCollection.refresh();
-      print(event.toJson());
+
     });
 
     await initController();
@@ -110,11 +110,9 @@ class CollectionDetailController extends GetxController {
   double currentMyTokenConditionPercentage(itemType, quantity) {
     double parseAndCalculatePercentage(String uiAmountString, double quantity) {
       double amount = double.parse(uiAmountString).floorToDouble();
-      print('amount : ${amount / quantity}');
+
       return (amount / quantity) >= 1 ? 100 : (amount / quantity) * 100;
     }
-    print('walletMasterController.stik.value.uiAmountString : ${walletMasterController.stik.value.uiAmountString}');
-    print('quantity : ${quantity}');
 
     switch (itemType) {
       case 'TIK':

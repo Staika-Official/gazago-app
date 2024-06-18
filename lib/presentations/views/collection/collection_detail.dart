@@ -382,53 +382,64 @@ class CollectionDetail extends StatelessWidget {
                             ),
                             child: Padding(
                               padding: EdgeInsets.all(20.0.sp),
-                              child: Column(
+                              child: Stack(
                                 children: [
-                                  SizedBox(
-                                    width: 148.sp,
-                                      height: 148.sp,
-                                      child: controller.renderCollectionImage(controller.detailCollection.value.gatheringReward)
-                                  ),
-                                  Padding(
-                                    padding: EdgeInsets.only(top: 9.0.sp),
-                                    child: Row(
-                                      mainAxisAlignment: MainAxisAlignment.center,
-                                      crossAxisAlignment: CrossAxisAlignment.center,
-                                      children: [
-                                        controller.detailCollection.value.gatheringReward.type == 'ITEM' || controller.detailCollection.value.gatheringReward.type == 'BADGE' ?
-                                        Text(
-                                          controller.detailCollection.value.gatheringReward.item == null ? controller.detailCollection.value.gatheringReward.badgeComposeConfig!.name : controller
-                                              .detailCollection.value
-                                              .gatheringReward.item!.name,
-                                          style: AppTextStyleData
-                                              .regular()
-                                              .koBodyMediumLg
-                                              .copyWith(
-                                            color: AppColorData
-                                                .regular()
-                                                .colorTextPrimary,
-                                          ),
-                                        ) :
-                                        Text(
-                                          '${formatDecimalPlaces(controller.detailCollection.value.gatheringReward.quantity, 0)} ${controller.detailCollection.value.gatheringReward.type}',
-                                          style: AppTextStyleData
-                                              .regular()
-                                              .koBodyMediumLg
-                                              .copyWith(
-                                            color: AppColorData
-                                                .regular()
-                                                .colorTextPrimary,
-                                          ),
-                                        ),
-                                        controller.detailCollection.value.gatheringReward.type == 'ITEM' || controller.detailCollection.value.gatheringReward.type == 'BADGE' ? Padding(
-                                          padding: EdgeInsets.only(top: 3.0.sp),
-                                          child: iconRightLinkArrow,
-                                        ) : Container(),
+                                  if(controller.detailCollection.value.gatheringReward.item != null && controller.detailCollection.value.gatheringReward.item!.publishType == 'NFT')
+                                    Positioned.fill(left: 24.sp, right: 24.sp, child: SvgPicture.asset('assets/images/shop/ico_nft_detail.svg')),
+                                  Column(
+                                    children: [
+                                      SizedBox(
+                                          width: 148.sp,
+                                          height: 148.sp,
+                                          child: controller.renderCollectionImage(controller.detailCollection.value.gatheringReward)
+                                      ),
+                                      Padding(
+                                        padding: EdgeInsets.only(top: 9.0.sp),
+                                        child: Row(
+                                          mainAxisAlignment: MainAxisAlignment.center,
+                                          crossAxisAlignment: CrossAxisAlignment.center,
+                                          children: [
+                                            if(controller.detailCollection.value.gatheringReward.item != null && controller.detailCollection.value.gatheringReward.item!.publishType == 'NFT')
+                                              Padding(
+                                                padding: EdgeInsets.only(right: 5.0.sp, top:2.8.sp),
+                                                child: SvgPicture.asset('assets/images/shop/ico_nft_label.svg'),
+                                              ),
+                                            controller.detailCollection.value.gatheringReward.type == 'ITEM' || controller.detailCollection.value.gatheringReward.type == 'BADGE' ?
+                                            Text(
+                                              controller.detailCollection.value.gatheringReward.item == null ? controller.detailCollection.value.gatheringReward.badgeComposeConfig!.name : controller
+                                                  .detailCollection.value
+                                                  .gatheringReward.item!.name,
+                                              style: AppTextStyleData
+                                                  .regular()
+                                                  .koBodyMediumLg
+                                                  .copyWith(
+                                                color: AppColorData
+                                                    .regular()
+                                                    .colorTextPrimary,
+                                              ),
+                                            ) :
+                                            Text(
+                                              '${formatDecimalPlaces(controller.detailCollection.value.gatheringReward.quantity, 0)} ${controller.detailCollection.value.gatheringReward.type}',
+                                              style: AppTextStyleData
+                                                  .regular()
+                                                  .koBodyMediumLg
+                                                  .copyWith(
+                                                color: AppColorData
+                                                    .regular()
+                                                    .colorTextPrimary,
+                                              ),
+                                            ),
+                                            controller.detailCollection.value.gatheringReward.type == 'ITEM' || controller.detailCollection.value.gatheringReward.type == 'BADGE' ? Padding(
+                                              padding: EdgeInsets.only(top: 3.0.sp),
+                                              child: iconRightLinkArrow,
+                                            ) : Container(),
 
-                                      ],
-                                    ),
-                                  )
-                                ],
+                                          ],
+                                        ),
+                                      )
+                                    ],
+                                  ),
+                                ]
                               ),
                             ),
                           ),

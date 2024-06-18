@@ -9,6 +9,7 @@ class GatheringRewardItemModel {
   String imageUrl;
   String? description;
   String? itemGrade;
+  String? publishType;
   double? minGoProfit;
   double? maxGoProfit;
   double? minDurability;
@@ -23,6 +24,7 @@ class GatheringRewardItemModel {
     required this.name,
     required this.imageUrl,
     this.description,
+    this.publishType,
     this.itemGrade,
     this.minGoProfit,
     this.maxGoProfit,
