@@ -113,6 +113,21 @@ class CollectionController extends SuperController with GetTickerProviderStateMi
     collectionList.value = RxList(List.empty());
   }
 
+  bool compareArrays(List<dynamic> arr1, List<dynamic> arr2) {
+    if (arr1.length != arr2.length) {
+      return true;
+    }
+    List<int> sortedArr1 = List.from(arr1)..sort();
+    List<int> sortedArr2 = List.from(arr2)..sort();
+    for (int i = 0; i < sortedArr1.length; i++) {
+      if (sortedArr1[i] != sortedArr2[i]) {
+        return true;
+      }
+    }
+
+    return false;
+  }
+
   Future<void> getAllCollectionList() async {
     String? loadedString = HiveStore.loadString(key: HiveKey.collectionIdList.name);
 
@@ -132,13 +147,15 @@ class CollectionController extends SuperController with GetTickerProviderStateMi
           // 100대 명산 컬렉션 정보
           if(loadedString == null){
             print(extractIds(data));
-            HiveStore.save(key: HiveKey.isNewCollection.name, value: true);
-            HiveStore.save(key: HiveKey.collectionIdList.name, value: collectionIdList.toString());
+            if(collectionIdList.length > 0){
+              HiveStore.save(key: HiveKey.isNewCollection.name, value: true);
+              HiveStore.save(key: HiveKey.collectionIdList.name, value: collectionIdList.toString());
+            }
           } else {
             List<dynamic> transformList = jsonDecode(loadedString);
             print('loadedString : $transformList');
 
-            if(transformList.length != collectionIdList.length){
+            if(compareArrays(transformList, collectionIdList)){
               HiveStore.save(key: HiveKey.isNewCollection.name, value: true);
               HiveStore.save(key: HiveKey.collectionIdList.name, value: collectionIdList.toString());
             }
