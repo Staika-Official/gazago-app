@@ -140,8 +140,10 @@ class InventoryItemDetail extends StatelessWidget {
                                                         ),
                                                   ),
                                                 ),
-                                              if (controller.selectedItem.value.nftTokenAddress != null)
-                                                ViewSolscanButton(onTap: () => controller.moveToSolscan(controller.selectedItem.value.nftTokenAddress!)),
+                                              if (controller.selectedItem.value.publishType == 'NFT')
+                                                ViewSolscanButton(
+                                                  onTap: () => controller.moveToSolscan(controller.selectedItem.value.nftTokenAddress),
+                                                ),
                                               if (controller.isShoe.value)
                                                 Container(
                                                   margin: const EdgeInsets.only(top: 32),

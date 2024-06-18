@@ -306,7 +306,8 @@ class ShopController extends GetxController with GetTickerProviderStateMixin {
   }
 
   void initItemsFilter() {
-    selectedGrade.value = [];
+    filteredGrade.clear();
+    selectedGrade.clear();
     isSelectAllItems.value = true;
     isSelectNftItems.value = false;
   }
@@ -345,24 +346,31 @@ class ShopController extends GetxController with GetTickerProviderStateMixin {
 
   void getShopItemsList() async {
     dataGetLoading.value = true;
-    await ShopService.getShopItems(isSelectedSortValue.value['value'], selectedGrade.join(','), selectedCategory.value == 'ALL' ? '' : selectedCategory.value, isSelectNftItems.value ? 'NFT' : null,
-        successCallback: (List<ShopItemModel> items) {
-      // List newSelectedCategory = [...selectedCategory];
-      List newSelectedGrade = [...selectedGrade];
-      shopItemsList.value = items;
-      if (selectedGrade.join(',') != '') {
-        isFilteredItems.value = true;
-        // filteredCategory.value = newSelectedCategory;
-        filteredGrade.value = newSelectedGrade;
-      } else if (isSelectNftItems.value) {
-        isSelectAllItems.value = false;
-        isFilteredItems.value = true;
-      } else {
-        isSelectAllItems.value = true;
-        isFilteredItems.value = false;
-      }
+    await ShopService.getShopItems(
+      isSelectedSortValue.value['value'],
+      selectedGrade.join(','),
+      selectedCategory.value == 'ALL' ? '' : selectedCategory.value,
+      isSelectNftItems.value ? 'NFT' : null,
+      successCallback: (List<ShopItemModel> items) {
+        // List newSelectedCategory = [...selectedCategory];
+        List newSelectedGrade = [...selectedGrade];
+        shopItemsList.value = items;
+        if (selectedGrade.join(',') != '') {
+          isFilteredItems.value = true;
+          // filteredCategory.value = newSelectedCategory;
+          filteredGrade.value = newSelectedGrade;
+        } else if (isSelectNftItems.value) {
+          filteredGrade.clear();
+          isSelectAllItems.value = false;
+          isFilteredItems.value = true;
+        } else {
+          filteredGrade.clear();
+          isSelectAllItems.value = true;
+          isFilteredItems.value = false;
+        }
 
-      dataGetLoading.value = false;
-    });
+        dataGetLoading.value = false;
+      },
+    );
   }
 }

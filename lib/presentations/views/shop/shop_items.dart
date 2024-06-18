@@ -477,6 +477,23 @@ class ShopItems extends StatelessWidget {
                                                             ),
                                                           ),
                                                         ),
+                                                    if (shopController.isSelectNftItems.value)
+                                                      Container(
+                                                        padding: const EdgeInsets.symmetric(horizontal: 12.0, vertical: 4),
+                                                        decoration: BoxDecoration(
+                                                          border: Border.all(
+                                                            width: 1,
+                                                            color: AppColorData.regular().colorPointOrange,
+                                                          ),
+                                                          borderRadius: BorderRadius.circular(20.sp),
+                                                        ),
+                                                        child: Text(
+                                                          'NFT',
+                                                          style: AppTextStyleData.regular().enBodySemiboldMd.copyWith(
+                                                                color: AppColorData.regular().colorPointOrange,
+                                                              ),
+                                                        ),
+                                                      ),
                                                   ],
                                                 ),
                                               )

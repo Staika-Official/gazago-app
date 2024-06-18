@@ -2,6 +2,7 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:gaza_go/constants/config.dart';
 import 'package:gaza_go/platform/controllers/wallet_on_chain_nft_detail_controller.dart';
 import 'package:gaza_go/platform/helpers/inventory_helper.dart';
 import 'package:gaza_go/presentations/components/default_container.dart';
@@ -51,12 +52,24 @@ class OnChainNftDetail extends StatelessWidget {
                                 Positioned.fill(left: 24.sp, right: 24.sp, child: SvgPicture.asset('assets/images/shop/ico_nft_detail.svg')),
                                 Center(
                                   child: Container(
-                                      width: 174.sp,
-                                      height: 174.sp,
-                                      decoration: BoxDecoration(
-                                        borderRadius: BorderRadius.circular(12),
-                                      ),
-                                      child: CachedNetworkImage(imageUrl: controller.nftDetail.value!.json!.image!)),
+                                    width: 174.sp,
+                                    height: 174.sp,
+                                    decoration: BoxDecoration(
+                                      borderRadius: BorderRadius.circular(12),
+                                    ),
+                                    child: controller.nftDetail.value!.json!.properties!.files![0].type.contains('svg')
+                                        ? SvgPicture.network(
+                                            fit: BoxFit.cover,
+                                            controller.nftDetail.value!.json!.image!,
+                                            placeholderBuilder: (BuildContext context) => const Center(child: SizedBox.square(dimension: 40, child: CircularProgressIndicator())),
+                                            headers: imageNetworkHeader,
+                                          )
+                                        : CachedNetworkImage(
+                                            imageUrl: controller.nftDetail.value!.json!.image!,
+                                            fit: BoxFit.cover,
+                                            httpHeaders: imageNetworkHeader,
+                                          ),
+                                  ),
                                 ),
                               ],
                             ),
