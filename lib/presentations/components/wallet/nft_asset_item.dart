@@ -30,7 +30,7 @@ class NftAssetItem extends StatelessWidget {
           padding: EdgeInsets.only(bottom: 8.0.sp),
           child: Stack(children: [
             Padding(
-              padding: EdgeInsets.symmetric(horizontal: 16.sp),
+              padding: EdgeInsets.symmetric(horizontal: 20.sp),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.center,
                 mainAxisAlignment: MainAxisAlignment.start,
