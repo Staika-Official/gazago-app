@@ -90,7 +90,17 @@ class ActivityController extends SuperController with ActivityMixin, ChallengeMi
   RxBool isShowGpsAccuracyAlert = RxBool(false);
   RxnInt isShowGpsAccuracyCount = RxnInt(0);
   Timer? gpsAccuracyTimer;
-  List gpsNoticeList = ['절전모드 중이라면 해제해주세요.', '넓게 트인 야외로 이동해보세요.', '지속적으로 GPS 수신이 원활하지 않을 경우, 휴대폰을 껐다 켠 다음 다시 시도해주세요.'];
+  List gpsNoticeList = ['절전모드 중이라면 해제해주세요.','넓게 트인 야외로 이동해보세요.','지속적으로 GPS 수신이 원활하지 않을 경우, 휴대폰을 껐다 켠 다음 다시 시도해주세요.'];
+  RxBool isNewCollection = RxBool(false);
+
+  void checkNewCollectionStatus() {
+    if(HiveStore.load(key: HiveKey.isNewCollection.name) != null && HiveStore.load(key: HiveKey.isNewCollection.name) == true  ){
+      isNewCollection.value = true;
+    } else {
+      isNewCollection.value = false;
+    }
+  }
+
 
   Future<void> initializeExercise() async {
     challengeGuideController = AnimationController(vsync: this);
@@ -144,6 +154,7 @@ class ActivityController extends SuperController with ActivityMixin, ChallengeMi
 
   Future<void> refreshController() async {
     getUserState(showLoading: true);
+    checkNewCollectionStatus();
   }
 
   Future<void> initActivityStatus() async {
@@ -887,6 +898,7 @@ class ActivityController extends SuperController with ActivityMixin, ChallengeMi
   // 챌린지 찾기
   Future<void> findCourses() async {
     if (currentLocation.value.latitude != 0 && currentLocation.value.longitude != 0) {
+      // lan or lon의 오차범위가 5m 이상일 경우 새로운 코스를 찾는다. (추후 작업 필요)
       await getNearByCourses(currentLocation.value, exerciseState.value);
     } else {
       await getCourseList();
@@ -1049,6 +1061,11 @@ class ActivityController extends SuperController with ActivityMixin, ChallengeMi
 
   @override
   void onResumed() {
+<<<<<<< HEAD
+=======
+    print('onResumed activity');
+    checkNewCollectionStatus();
+>>>>>>> dae5603c699177421397b699cecdcc8670b9faf2
     if (Get.currentRoute != Routes.login && Get.currentRoute != Routes.loading) {
       getUserState(showLoading: true);
     }

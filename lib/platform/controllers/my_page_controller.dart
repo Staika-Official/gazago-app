@@ -5,6 +5,7 @@ import 'package:device_info_plus/device_info_plus.dart';
 import 'package:dio/dio.dart' as dio;
 import 'package:flutter/cupertino.dart';
 import 'package:gaza_go/constants/enums.dart';
+import 'package:gaza_go/platform/controllers/loader_controller.dart';
 import 'package:gaza_go/platform/controllers/preference_controller.dart';
 import 'package:gaza_go/platform/helpers/alert_helper.dart';
 import 'package:gaza_go/platform/helpers/preference_mixin.dart';
@@ -20,7 +21,7 @@ import 'package:permission_handler/permission_handler.dart' as ph;
 
 class MyPageController extends GetxController with PreferenceMixin {
   final PreferenceController preferenceController = Get.find();
-
+  
   final ImagePicker _picker = ImagePicker();
   final Rx<XFile?> pickedImage = Rx(null);
   final RxBool isEditMode = RxBool(false);
@@ -30,9 +31,11 @@ class MyPageController extends GetxController with PreferenceMixin {
   final FocusNode focusNode = FocusNode();
 
   @override
-  void onInit() {
+  void onInit() async {
     Get.arguments != null ? provider.value = Get.arguments['provider'] : provider.value = '';
-    getProfileInfo();
+
+    await getProfileInfo();
+
     super.onInit();
   }
 

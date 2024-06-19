@@ -10,6 +10,7 @@ import 'package:gaza_go/presentations/components/default_container.dart';
 import 'package:gaza_go/presentations/styles/colors.dart';
 import 'package:gaza_go/presentations/styles/icons.dart';
 import 'package:gaza_go/presentations/styles/styled_text.dart';
+import 'package:gaza_go/theme/theme.g.dart';
 import 'package:get/get.dart';
 
 class WalletDetail extends StatelessWidget {
@@ -49,8 +50,8 @@ class WalletDetail extends StatelessWidget {
     return controller.transactionsList
         .map(
           (transaction) => Container(
-            padding: EdgeInsets.only(left: 3.sp, right: 3.sp, top: 20.sp, bottom: 20.sp),
-            decoration: const BoxDecoration(
+            padding: EdgeInsets.only(left: 16.sp, right: 16.sp, top: 12.sp, bottom: 13.sp),
+            decoration: BoxDecoration(
               border: BorderDirectional(
                 bottom: BorderSide(
                   color: popupBgColor,
@@ -62,7 +63,7 @@ class WalletDetail extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Padding(
-                  padding: const EdgeInsets.only(left: 5, right: 8),
+                  padding: EdgeInsets.only(left: 5.sp, right: 10.sp, top: 3.sp),
                   child: transaction.type == 'IN' ? iconIn : iconOut,
                 ),
                 Expanded(
@@ -72,54 +73,57 @@ class WalletDetail extends StatelessWidget {
                       Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
-                          StyledText(
+                          Text(
                             transaction.title != null
                                 ? transaction.type == 'FEE'
                                     ? '${transaction.title!} 수수료'
                                     : transaction.title!
                                 : '',
-                            fontSize: 22,
-                            lineHeight: 22,
-                            fontWeight: 500,
+                              style: AppTextStyleData.regular().koBodyMediumXl.copyWith(
+                                  color: AppColorData.regular().colorTextPrimary
+                              )
                           ),
-                          StyledText(
-                            '${transaction.type == 'IN' ? '+' : '-'} ${formatDecimalPlaces(double.parse(transaction.uiAmountString!), transaction.symbol == 'STIK' ? 4 : transaction.decimals!, isAutoDecimal: true, roundType: RoundType.floor)} ${transaction.symbol! == 'PTIK' ? 'TIK' : transaction.symbol!}',
-                            fontSize: 18,
-                            lineHeight: 20,
-                            letterSpacing: -0.5,
-                            fontWeight: 700,
+                          Text(
+                            '${transaction.type == 'IN' ? '+' : '-'}${formatDecimalPlaces(double.parse(transaction.uiAmountString!), transaction.symbol == 'STIK' ? 4 : transaction.decimals!, isAutoDecimal: true, roundType: RoundType.floor)} ${transaction.symbol! == 'PTIK' ? 'TIK' : transaction.symbol!}',
+                            style: AppTextStyleData.regular().koBodySemiboldXl.copyWith(
+                              color: AppColorData.regular().colorTextPrimary
+                            )
                           ),
                         ],
                       ),
                       Padding(
-                        padding: EdgeInsets.only(top: 14.sp),
+                        padding: EdgeInsets.only(top: 4.sp),
                         child: Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+
                           children: [
-                            StyledText(
-                              formatDate(transaction.createdDate!),
-                              fontSize: 14,
-                              lineHeight: 10,
-                              fontWeight: 500,
-                              color: deepGrayColor,
+                            Text(
+                              transaction.content ?? '',
+                                style: AppTextStyleData.regular().koBodyMediumMd.copyWith(
+                                    color: AppColorData.regular().colorTextPrimary
+                                )
                             ),
-                            const StyledText(
-                              '완료',
-                              fontSize: 12,
-                              lineHeight: 10,
-                              fontWeight: 600,
-                              color: deepGrayColor,
-                            ),
+
                           ],
                         ),
                       ),
                       Padding(
-                        padding: const EdgeInsets.only(top: 20),
-                        child: StyledText(
-                          transaction.content ?? '',
-                          fontSize: 14,
-                          lineHeight: 10,
-                          color: lightGrayColor,
+                        padding: EdgeInsets.only(top: 8.sp),
+                        child:    Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Text(
+                                formatHipenDate(transaction.createdDate!),
+                                style: AppTextStyleData.regular().koBodyMediumMd.copyWith(
+                                    color: AppColorData.regular().colorTextTertiary
+                                )
+                            ),
+                            Text(
+                              '완료',
+                                style: AppTextStyleData.regular().koBodyMediumMd.copyWith(
+                                    color: AppColorData.regular().colorTextTertiary
+                                )
+                            ),
+                          ],
                         ),
                       ),
                     ],
@@ -149,7 +153,7 @@ class WalletDetail extends StatelessWidget {
             //       )
             //     : Container(),
             Padding(
-              padding: EdgeInsets.only(top: 40.sp),
+              padding: EdgeInsets.only(top: 16.5.sp),
               child: CircleAvatar(
                 foregroundImage: controller.selectedAsset.value.logoUrl != '' && controller.selectedAsset.value.logoUrl != null
                     ? CachedNetworkImageProvider(
@@ -160,26 +164,26 @@ class WalletDetail extends StatelessWidget {
               ),
             ),
             Padding(
-              padding: EdgeInsets.only(top: 18.sp, left: 25.sp, right: 25.sp),
+              padding: EdgeInsets.only(top: 8.sp, left: 25.sp, right: 25.sp),
               child: FittedBox(
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    StyledText(
+                    Text(
                       formatDecimalPlaces(double.parse(controller.assetDetail.value.balance.uiAmountString ?? '0'),
                           controller.assetDetail.value.balance.symbol == 'STIK' ? 4 : controller.assetDetail.value.balance.decimals!,
                           isAutoDecimal: true, roundType: RoundType.floor),
-                      fontSize: 28,
-                      lineHeight: 28,
-                      fontWeight: 600,
+                      style: AppTextStyleData.regular().koHeadingSemiboldLg.copyWith(
+                        color: AppColorData.regular().colorTextPrimary,
+                      ),
                     ),
                     Padding(
                       padding: EdgeInsets.only(left: 5.sp),
-                      child: StyledText(
+                      child: Text(
                         controller.selectedAsset.value.symbol! == 'TOTAL_TIK' ? 'TIK' : controller.selectedAsset.value.symbol!,
-                        fontSize: 28,
-                        lineHeight: 28,
-                        fontWeight: 500,
+                        style: AppTextStyleData.regular().koHeadingSemiboldLg.copyWith(
+                          color: AppColorData.regular().colorTextPrimary,
+                        ),
                       ),
                     ),
                   ],
@@ -194,7 +198,7 @@ class WalletDetail extends StatelessWidget {
               color: subBg02Color,
               height: 6,
               width: double.infinity,
-              margin: EdgeInsets.only(top: 50.sp),
+              margin: EdgeInsets.only(top: 16.sp),
             ),
             Expanded(
               child: controller.transactionsList.isEmpty
@@ -226,18 +230,15 @@ class WalletDetail extends StatelessWidget {
                         SingleChildScrollView(
                           controller: controller.transactionScrollController,
                           physics: const ClampingScrollPhysics(),
-                          child: Padding(
-                            padding: EdgeInsets.symmetric(horizontal: 16.sp),
-                            child: Column(
-                              children: [
-                                ...renderTransactionList(controller),
-                                if (controller.dataGetLoading.value)
-                                  Padding(
-                                    padding: EdgeInsets.symmetric(vertical: 20.0.sp),
-                                    child: const Center(child: CircularProgressIndicator()),
-                                  )
-                              ],
-                            ),
+                          child: Column(
+                            children: [
+                              ...renderTransactionList(controller),
+                              if (controller.dataGetLoading.value)
+                                Padding(
+                                  padding: EdgeInsets.symmetric(vertical: 20.0.sp),
+                                  child: const Center(child: CircularProgressIndicator()),
+                                )
+                            ],
                           ),
                         ),
                         if (controller.transactionScrollPosition.value > 100)

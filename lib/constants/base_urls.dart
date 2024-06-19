@@ -24,4 +24,5 @@ class ServiceUrl {
   static const String admobService = '/services/gazago/api/ad-admob-rewards';
   static const String dailyBenefitsService = '/services/gazago/api/benefits';
   static const String userService = '/services/gazago/api/user-infos';
+  static const String nftService = '/services/gazago/api/nfts';
 }

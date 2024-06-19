@@ -6,6 +6,7 @@ import 'package:gaza_go/platform/controllers/wallet_master_controller.dart';
 import 'package:gaza_go/presentations/components/default_container.dart';
 import 'package:gaza_go/presentations/styles/colors.dart';
 import 'package:gaza_go/presentations/styles/styled_text.dart';
+import 'package:gaza_go/theme/theme.g.dart';
 import 'package:get/get.dart';
 
 class JoinTerms extends StatelessWidget {
@@ -29,7 +30,7 @@ class JoinTerms extends StatelessWidget {
                       padding: EdgeInsets.only(top: 6.0.sp),
                       child: Icon(
                         Icons.check_outlined,
-                        color: term.isChecked ? skyBlueColor : deepGrayColor,
+                        color: term.isChecked ? AppColorData.regular().colorIconSuccess : AppColorData.regular().colorIconTertiary,
                         size: 15.sp,
                       ),
                     ),
@@ -39,22 +40,20 @@ class JoinTerms extends StatelessWidget {
                         child: Row(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            StyledText(
+                            Text(
                               term.isRequired ? '[필수]' : '[선택]',
-                              fontWeight: 500,
-                              fontSize: 16,
-                              lineHeight: 24,
-                              color: lightGrayColor,
+                              style: AppTextStyleData.regular().koBodyMediumLg.copyWith(
+                                    color: AppColorData.regular().colorTextPrimary,
+                                  ),
                             ),
                             Expanded(
                               child: Padding(
                                 padding: EdgeInsets.only(left: 8.0.sp),
-                                child: StyledText(
+                                child: Text(
                                   term.title!,
-                                  fontWeight: 500,
-                                  fontSize: 16,
-                                  lineHeight: 24,
-                                  color: lightGrayColor,
+                                  style: AppTextStyleData.regular().koBodyMediumLg.copyWith(
+                                        color: AppColorData.regular().colorTextPrimary,
+                                      ),
                                 ),
                               ),
                             ),
@@ -70,7 +69,7 @@ class JoinTerms extends StatelessWidget {
                             onTap: () => Get.toNamed(Routes.term, arguments: {'platform': controller.platform.value, 'termType': term.boardType, 'termId': term.id}),
                             child: Icon(
                               Icons.chevron_right,
-                              color: deepGrayColor,
+                              color: AppColorData.regular().colorIconTertiary,
                               size: 20.sp,
                             ),
                           ),
@@ -113,31 +112,27 @@ class JoinTerms extends StatelessWidget {
               Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  const StyledText(
+                  Text(
                     '안녕하세요!',
-                    fontSize: 24,
-                    fontWeight: 700,
-                    lineHeight: 24,
-                    fontFamily: 'Montserrat',
+                    style: AppTextStyleData.regular().koHeadingSemiboldMd.copyWith(
+                          color: AppColorData.regular().colorTextPrimary,
+                        ),
                   ),
                   Row(
                     children: [
                       Obx(() {
-                        return StyledText(
-                          controller.platform.value == 'gazago' ? 'gazaGO' : '스타이카 월렛',
-                          fontSize: 24,
-                          fontWeight: 700,
-                          lineHeight: 32,
-                          fontFamily: 'Montserrat',
-                          color: skyBlueColor,
+                        return Text(
+                          controller.platform.value == 'gazago' ? 'gazaGO' : 'Staika wallet',
+                          style: AppTextStyleData.regular().koHeadingSemiboldMd.copyWith(
+                                color: AppColorData.regular().colorTextBrand,
+                              ),
                         );
                       }),
-                      const StyledText(
+                      Text(
                         ' 입니다.',
-                        fontSize: 24,
-                        fontWeight: 700,
-                        lineHeight: 32,
-                        fontFamily: 'Montserrat',
+                        style: AppTextStyleData.regular().koHeadingSemiboldMd.copyWith(
+                              color: AppColorData.regular().colorTextPrimary,
+                            ),
                       )
                     ],
                   )
@@ -145,10 +140,11 @@ class JoinTerms extends StatelessWidget {
               ),
               Padding(
                 padding: EdgeInsets.only(top: 30.0.sp),
-                child: const StyledText(
+                child: Text(
                   '서비스 이용을 위해 필수 약관에 동의해주세요',
-                  fontSize: 16,
-                  fontWeight: 500,
+                  style: AppTextStyleData.regular().koBodyMediumMd.copyWith(
+                        color: AppColorData.regular().colorTextPrimary,
+                      ),
                 ),
               ),
               Divider(
@@ -177,12 +173,11 @@ class JoinTerms extends StatelessWidget {
                                 ),
                           Padding(
                             padding: EdgeInsets.only(left: 12.0.sp),
-                            child: const StyledText(
+                            child: Text(
                               '모든 항목 동의하기',
-                              color: Colors.white,
-                              fontWeight: 500,
-                              fontSize: 16,
-                              lineHeight: 16,
+                              style: AppTextStyleData.regular().koBodyMediumLg.copyWith(
+                                    color: AppColorData.regular().colorTextPrimary,
+                                  ),
                             ),
                           ),
                         ],

@@ -11,6 +11,7 @@ import 'package:gaza_go/flavors.dart';
 import 'package:gaza_go/platform/controllers/activity_controller.dart';
 import 'package:gaza_go/platform/controllers/archive_controller.dart';
 import 'package:gaza_go/platform/controllers/challenges_controller.dart';
+import 'package:gaza_go/platform/controllers/collection_controller.dart';
 import 'package:gaza_go/platform/controllers/inventory_controller.dart';
 import 'package:gaza_go/platform/controllers/inventory_home_controller.dart';
 import 'package:gaza_go/platform/controllers/leaderboard_controller.dart';
@@ -153,6 +154,7 @@ class HomeMenuController extends SuperController {
           break;
         case 2:
           if (Get.isRegistered<ActivityController>()) Get.find<ActivityController>().refreshController();
+          if (Get.isRegistered<CollectionController>()) Get.find<CollectionController>().initController();
           break;
         case 3:
           if (Get.isRegistered<ShopController>()) Get.find<ShopController>().refreshController();

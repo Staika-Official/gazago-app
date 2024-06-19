@@ -4,8 +4,8 @@ import 'package:gaza_go/platform/controllers/inventory_controller.dart';
 import 'package:gaza_go/presentations//components/default_container.dart';
 import 'package:gaza_go/presentations/styles/colors.dart';
 import 'package:gaza_go/presentations/styles/icons.dart';
-import 'package:gaza_go/presentations/styles/styled_text.dart';
 import 'package:gaza_go/presentations/views/inventory/equipped_items_grid.dart';
+import 'package:gaza_go/theme/theme.g.dart';
 import 'package:get/get.dart';
 
 class EquippedItems extends StatelessWidget {
@@ -36,141 +36,130 @@ class EquippedItems extends StatelessWidget {
                 child: EquippedItemsGrid(controller: controller),
               ),
               Padding(
-                  padding: EdgeInsets.only(top: 20.0.sp, bottom: 15.sp, left: 30.0.sp, right: 30.0.sp),
-                  child: Obx(() {
-                    return Row(
-                      mainAxisSize: MainAxisSize.max,
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      mainAxisAlignment: MainAxisAlignment.spaceAround,
-                      children: [
-                        Column(
-                          children: [
-                            StyledText(
-                              '${controller.equippedRewardRate.toInt()}',
-                              fontSize: 30,
-                              color: skyBlueColor,
-                              fontWeight: 500,
-                              letterSpacing: -.1,
-                            ),
-                            Padding(
-                              padding: EdgeInsets.only(top: 12.0.sp),
-                              child: Row(
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                children: [
-                                  iconShopReward,
-                                  Padding(
-                                    padding: EdgeInsets.only(left: 4.0.sp),
-                                    child: const StyledText(
-                                      'GO 보상',
-                                      color: skyBlueColor,
-                                      fontSize: 12,
-                                      lineHeight: 14,
-                                      fontWeight: 500,
-                                      letterSpacing: -.1,
-                                    ),
+                padding: EdgeInsets.only(top: 20.0.sp, bottom: 15.sp, left: 30.0.sp, right: 30.0.sp),
+                child: Obx(() {
+                  return Row(
+                    mainAxisSize: MainAxisSize.max,
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    mainAxisAlignment: MainAxisAlignment.spaceAround,
+                    children: [
+                      Column(
+                        children: [
+                          Text(
+                            '${controller.equippedRewardRate.toInt()}',
+                            style: AppTextStyleData.regular().enBodyMediumXl.copyWith(
+                                  color: AppColorData.regular().colorPointCyan,
+                                ),
+                          ),
+                          Padding(
+                            padding: EdgeInsets.only(top: 3),
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                iconShopRewardPng,
+                                Padding(
+                                  padding: EdgeInsets.only(left: 4.0.sp),
+                                  child: Text(
+                                    'GO 적립량',
+                                    style: AppTextStyleData.regular().koCaptionMediumMd.copyWith(
+                                          color: AppColorData.regular().colorPointCyan,
+                                        ),
                                   ),
-                                ],
-                              ),
+                                ),
+                              ],
                             ),
-                          ],
-                        ),
-                        Column(
-                          children: [
-                            StyledText(
-                              '${controller.equippedAbrasionRate.toInt()}',
-                              fontSize: 30,
-                              fontWeight: 500,
-                              letterSpacing: -.1,
-                              color: const Color(0xFFB0A3FF),
-                            ),
-                            Padding(
-                              padding: EdgeInsets.only(top: 12.0.sp),
-                              child: Row(
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                crossAxisAlignment: CrossAxisAlignment.center,
-                                children: [
-                                  iconShopDurabilityLight,
-                                  Padding(
-                                    padding: EdgeInsets.only(left: 4.0.sp),
-                                    child: const StyledText(
-                                      '내구도',
-                                      color: Color(0xFFB0A3FF),
-                                      fontSize: 12,
-                                      lineHeight: 12,
-                                      letterSpacing: -.1,
-                                      fontWeight: 600,
-                                    ),
+                          ),
+                        ],
+                      ),
+                      Column(
+                        children: [
+                          Text(
+                            '${controller.equippedAbrasionRate.toInt()}',
+                            style: AppTextStyleData.regular().enBodyMediumXl.copyWith(
+                                  color: AppColorData.regular().colorPointPurple,
+                                ),
+                          ),
+                          Padding(
+                            padding: EdgeInsets.only(top: 3),
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              crossAxisAlignment: CrossAxisAlignment.center,
+                              children: [
+                                iconShopDurabilityLightPng,
+                                Padding(
+                                  padding: EdgeInsets.only(left: 4.0.sp),
+                                  child: Text(
+                                    '내구도 저항',
+                                    style: AppTextStyleData.regular().koCaptionMediumMd.copyWith(
+                                          color: AppColorData.regular().colorPointPurple,
+                                        ),
                                   ),
-                                ],
-                              ),
+                                ),
+                              ],
                             ),
-                          ],
-                        ),
-                        Column(
-                          children: [
-                            StyledText(
-                              '${controller.equippedStaminaReduceRate.toInt()}',
-                              fontSize: 30,
-                              fontWeight: 500,
-                              color: lightGreenColor,
-                              letterSpacing: -.1,
-                            ),
-                            Padding(
-                              padding: EdgeInsets.only(top: 12.0.sp),
-                              child: Row(
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                children: [
-                                  Padding(
-                                    padding: EdgeInsets.only(right: 4.0.sp),
-                                    child: iconShopStamina,
+                          ),
+                        ],
+                      ),
+                      Column(
+                        children: [
+                          Text(
+                            '${controller.equippedStaminaReduceRate.toInt()}',
+                            style: AppTextStyleData.regular().enBodyMediumXl.copyWith(
+                                  color: AppColorData.regular().colorPointYellowgreen,
+                                ),
+                          ),
+                          Padding(
+                            padding: EdgeInsets.only(top: 3),
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                iconShopStaminaPng,
+                                Padding(
+                                  padding: EdgeInsets.only(left: 4.0.sp),
+                                  child: Text(
+                                    '체력 저항',
+                                    style: AppTextStyleData.regular().koCaptionMediumMd.copyWith(
+                                          color: AppColorData.regular().colorPointYellowgreen,
+                                        ),
                                   ),
-                                  const StyledText(
-                                    '체력',
-                                    color: lightGreenColor,
-                                    fontSize: 12,
-                                    lineHeight: 12,
-                                    fontWeight: 500,
-                                    letterSpacing: -.1,
-                                  ),
-                                ],
-                              ),
+                                ),
+                              ],
                             ),
-                          ],
-                        ),
-                        Column(
-                          children: [
-                            StyledText(
-                              '${controller.equippedLuckRate.toInt()}',
-                              fontSize: 30,
-                              fontWeight: 500,
-                              color: pinkColor,
-                              letterSpacing: -.1,
+                          ),
+                        ],
+                      ),
+                      Column(
+                        children: [
+                          Text(
+                            '${controller.equippedLuckRate.toInt()}',
+                            style: AppTextStyleData.regular().enBodyMediumXl.copyWith(
+                                  color: AppColorData.regular().colorPointPink,
+                                ),
+                          ),
+                          Padding(
+                            padding: EdgeInsets.only(top: 3),
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                Padding(
+                                  padding: EdgeInsets.only(right: 4.0.sp),
+                                  child: iconShopLuckPng,
+                                ),
+                                Text(
+                                  '행운',
+                                  style: AppTextStyleData.regular().koCaptionMediumMd.copyWith(
+                                        color: AppColorData.regular().colorPointPink,
+                                      ),
+                                ),
+                              ],
                             ),
-                            Padding(
-                              padding: EdgeInsets.only(top: 12.0.sp),
-                              child: Row(
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                children: [
-                                  Padding(
-                                    padding: EdgeInsets.only(right: 4.0.sp),
-                                    child: iconShopLuck,
-                                  ),
-                                  const StyledText(
-                                    '행운',
-                                    color: pinkColor,
-                                    fontSize: 12,
-                                    lineHeight: 12,
-                                    fontWeight: 500,
-                                    letterSpacing: -.1,
-                                  ),
-                                ],
-                              ),
-                            ),
-                          ],
-                        ),
-                      ],
-                    );
-                  })),
+                          ),
+                        ],
+                      ),
+                    ],
+                  );
+                }),
+              ),
               Container(
                 decoration: BoxDecoration(
                   color: const Color(0xFF0E0E10),
@@ -180,12 +169,11 @@ class EquippedItems extends StatelessWidget {
                 ),
                 child: Padding(
                   padding: EdgeInsets.symmetric(vertical: 8.0.sp, horizontal: 15.sp),
-                  child: const StyledText(
-                    '능력치는 수치가 높을수록 좋아요!',
-                    fontWeight: 400,
-                    fontSize: 10,
-                    lineHeight: 10,
-                    color: Color(0xFF898B92),
+                  child: Text(
+                    '수치가 높을수록 좋은 아이템이에요.',
+                    style: AppTextStyleData.regular().koBodyMediumSm.copyWith(
+                          color: AppColorData.regular().colorTextPrimary,
+                        ),
                   ),
                 ),
               ),

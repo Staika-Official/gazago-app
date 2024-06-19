@@ -5,6 +5,7 @@ import 'package:gaza_go/constants/base_urls.dart';
 import 'package:gaza_go/platform/middleware/dio_middleware.dart';
 import 'package:gaza_go/platform/models/exchange_token_withdrawal_model.dart';
 import 'package:gaza_go/platform/models/pay_info_model.dart';
+import 'package:gaza_go/platform/models/transfer_nft_request_model.dart';
 
 class WalletApi {
   // - 스펜딩 월렛 api
@@ -128,5 +129,17 @@ class WalletApi {
       serviceUrl: ServiceUrl.onChainWalletService,
       // allowCustomErrorHandler: true,
     ).get('/$platform/tokens/$symbol/priority-fee?type=exchange&feePayer=true');
+  }
+
+  static Future<Response> getNftList(String? userId) async {
+    return await Api.client(serviceUrl: ServiceUrl.onChainWalletService, allowCustomErrorHandler: true).get('/solana/users/$userId/nfts?clientId=GAZAGO');
+  }
+
+  static Future<Response> getNftDetail(String mintAddress) async {
+    return await Api.client(serviceUrl: ServiceUrl.onChainWalletService, allowCustomErrorHandler: true).get('/solana/nfts/${mintAddress}?clientId=GAZAGO');
+  }
+
+  static Future<Response> transferNftToGoWallet(String userId, TransferNftRequestModel nftRequestModel) async {
+    return await Api.client(serviceUrl: ServiceUrl.onChainWalletService, allowCustomErrorHandler: true).post('/solana/users/${userId}/nfts/staika-to-go', data: nftRequestModel);
   }
 }

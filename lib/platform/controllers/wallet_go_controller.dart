@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:gaza_go/constants/enums.dart';
 import 'package:gaza_go/constants/routes.dart';
+import 'package:gaza_go/platform/controllers/collection_controller.dart';
+import 'package:gaza_go/platform/controllers/collection_detail_controller.dart';
 import 'package:gaza_go/platform/controllers/loader_controller.dart';
 import 'package:gaza_go/platform/controllers/wallet_master_controller.dart';
 import 'package:gaza_go/platform/helpers/alert_helper.dart';
@@ -22,6 +24,8 @@ import 'package:get/get.dart';
 
 class GoWalletController extends GetxController with SolanaMixin {
   WalletMasterController walletMasterController = Get.find();
+  CollectionController collectionController = Get.isRegistered<CollectionController>() ? Get.find<CollectionController>() : Get.put(CollectionController());
+  CollectionDetailController collectionDetailController = Get.isRegistered<CollectionDetailController>() ? Get.find<CollectionDetailController>() : Get.put(CollectionDetailController());
   LoaderController loaderController = Get.find();
   RxList productList = RxList.empty();
   Rx<ChargeTikModel> chargeTikData =
@@ -47,6 +51,44 @@ class GoWalletController extends GetxController with SolanaMixin {
 
     super.onInit();
   }
+
+  @override
+  void onClose() async {
+    if (Get.previousRoute == Routes.collectionDetail) {
+      collectionController.initData();
+      await collectionController.initController();
+      await collectionDetailController.refreshController();
+      print(collectionController.selectedCollection.value.id);
+    }
+
+    super.onClose();
+  }
+
+  // void testEncode() async {
+  //   int i = 0;
+  //   while (i < 1000) {
+  //     print('---------------------------------------------------------');
+  //     final wallet = Keypair.generateSync();
+  //     // String? email = HiveStore.loadString(key: HiveKey.email.name);
+  //     String email = 'zicnet004@gmail.com';
+  //     String testWalletPassword = '!!qhd0328';
+  //     // String publicKey = wallet.publicKey.toBase58();
+  //     // 암호화된 시크릿키
+  //     String encryptSecretKey = encrypt(base58.encode(wallet.seckey), email, testWalletPassword);
+
+  //     print('encryptSecretKey : $encryptSecretKey');
+  //     // 지갑 생성 완료
+  //     String testEmail = 'zicnet004@gmail.com';
+  //     // 82mt6rd86r@privaterelay.appleid.com wfNI5FyPy45L4e++c8KHxMV+fLAVB+2Id1a+MsGgZz0K3DGED1m6+5OzL1ffyo1DHWBWpsUdxQqAhdIIwHRYZyzXfl8+rWbzqxNUyai1BzVw1trWz/7RaRSWyruHdQ9i
+  //     // zicnet004@gmail.com LTYYb5Fl7tzSW+8td1FUDdd2VVhD6ZuSY8N1YEWQcRL/e/Kq+zL2Fs9uZ4LEAqsF2pa+RyCXB6GJRpoDHnzhoxrwg9IaUS7AQ2MHAz1p4mrUY0dbd67RaRx9kCMyj8KE
+  //     // String accountSecretkey = 'LTYYb5Fl7tzSW+8td1FUDdd2VVhD6ZuSY8N1YEWQcRL/e/Kq+zL2Fs9uZ4LEAqsF2pa+RyCXB6GJRpoDHnzhoxrwg9IaUS7AQ2MHAz1p4mrUY0dbd67RaRx9kCMyj8KE';
+
+  //     String? decryptPrivateKey = decrypt(encryptSecretKey, testEmail, testWalletPassword);
+  //     print('decryptPrivateKey: $decryptPrivateKey');
+  //     print('---------------------------------------------------------');
+  //     i++;
+  //   }
+  // }
 
   void checkShortBalance(ExchangeStikPriceModel item) {
     double fromAmount = walletMasterController.clickedAssetButton.value == 'STAIKA' ? double.parse(item.fromUiAmountString!) : productSumFeePrice(item.fromUiAmountString!, item.uiFeeString!);
@@ -178,7 +220,7 @@ class GoWalletController extends GetxController with SolanaMixin {
         loaderController.isLoading.value = false;
         // Future.delayed(const Duration(seconds: 3));
         if (data.errorCode == 'NOT_FOUND_WALLET') {
-          showCreateStaikaWalletAlert();
+          showStaikaStatusAlert(hasWallet: false, tabController: walletMasterController.tabController);
         } else if (data.errorCode == 'DATABASE_EXCEPTION') {
           showToastPopup('잠시 후 다시 시도해 주세요');
         }

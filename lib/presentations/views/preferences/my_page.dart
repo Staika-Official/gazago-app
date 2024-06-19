@@ -129,14 +129,14 @@ class MyPage extends StatelessWidget {
                                         children: [
                                           controller.profile.value.provider == 'APPLE'
                                               ? TextSpan(
-                                                  text: controller.profile.value.nickname!.split('@')[0].length.toString(),
+                                                  text: controller.profile.value.nickname != null ? controller.profile.value.nickname!.split('@')[0].length.toString() : '0',
                                                   style: TextStyle(
                                                     color: deepGrayColor,
                                                     fontSize: 12.sp,
                                                   ),
                                                 )
                                               : TextSpan(
-                                                  text: controller.profile.value.nickname!.length.toString(),
+                                                  text: controller.profile.value.nickname != null ? controller.profile.value.nickname!.length.toString() : '0',
                                                   style: TextStyle(
                                                     color: deepGrayColor,
                                                     fontSize: 12.sp,
@@ -185,12 +185,12 @@ class MyPage extends StatelessWidget {
                                   children: [
                                     controller.profile.value.provider == 'APPLE'
                                         ? StyledText(
-                                            controller.profile.value.nickname!.split('@')[0],
+                                      controller.profile.value.nickname != null ? controller.profile.value.nickname!.split('@')[0] : '',
                                             fontSize: 18,
                                             fontWeight: 500,
                                           )
                                         : StyledText(
-                                            controller.profile.value.nickname!,
+                                      controller.profile.value.nickname != null ? controller.profile.value.nickname! : '',
                                             fontSize: 18,
                                             fontWeight: 500,
                                           ),

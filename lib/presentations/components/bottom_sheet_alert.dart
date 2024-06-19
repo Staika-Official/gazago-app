@@ -23,8 +23,8 @@ class BottomSheetAlert extends StatelessWidget {
       decoration: BoxDecoration(
         color: popupBgColor,
         borderRadius: BorderRadius.only(
-          topLeft: Radius.circular(12.sp),
-          topRight: Radius.circular(12.sp),
+          topLeft: Radius.circular(AppDoubleData.regular().numberRadius20.sp),
+          topRight: Radius.circular(AppDoubleData.regular().numberRadius20.sp),
         ),
       ),
       child: SizedBox(
@@ -33,6 +33,7 @@ class BottomSheetAlert extends StatelessWidget {
           padding: isNonePaddingOuter! ? const EdgeInsets.all(0) : EdgeInsets.only(top: 32.0.sp, left: 16.sp, right: 16.sp, bottom: 36.sp),
           child: Column(
             mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.center,
             children: [
               if (title != null)
                 Padding(
@@ -55,6 +56,7 @@ class BottomSheetAlert extends StatelessWidget {
                         color: AppColorData.regular().colorTextPrimary,
                         height: 1.4,
                       ),
+                      textAlign: TextAlign.center,
                     ),
                   ),
               Row(

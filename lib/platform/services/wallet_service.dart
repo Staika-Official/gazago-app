@@ -12,15 +12,20 @@ import 'package:gaza_go/platform/models/asset_token_balance_model.dart';
 import 'package:gaza_go/platform/models/buy_tik_response_model.dart';
 import 'package:gaza_go/platform/models/error_response_data_model.dart';
 import 'package:gaza_go/platform/models/exchange_token_withdrawal_model.dart';
+import 'package:gaza_go/platform/models/nft_detail_model.dart';
+import 'package:gaza_go/platform/models/nft_model.dart';
 import 'package:gaza_go/platform/models/on_chain_wallet_model.dart';
 import 'package:gaza_go/platform/models/pay_info_model.dart';
 import 'package:gaza_go/platform/models/pay_response_model.dart';
 import 'package:gaza_go/platform/models/setting_environment_model.dart';
 import 'package:gaza_go/platform/models/token_priority_fee_model.dart';
+import 'package:gaza_go/platform/models/transfer_nft_request_model.dart';
 import 'package:gaza_go/platform/models/wallet_solana_model.dart';
 import 'package:gaza_go/platform/models/wallet_solana_transfer_model.dart';
 import 'package:gaza_go/platform/models/wallet_token_balance_model.dart';
 import 'package:gaza_go/platform/stores/hive_store.dart';
+import 'package:gaza_go/presentations/components/alert_ui_list.dart';
+import 'package:solana/dto.dart';
 import 'package:solana/encoder.dart';
 import 'package:solana/solana.dart' as solana;
 import 'package:solana/solana.dart';
@@ -306,14 +311,14 @@ class WalletService {
       );
     }, errorCallback: (ErrorResponseDataModel e) {
       showToastPopup(e.errorMessage!);
-      return;
+      if (errorCallback != null) errorCallback(true);
     });
 
     await WalletService.getTokenPriorityFee(platform, symbol, successCallback: (fees) {
       priorityFee = fees.priorityFee;
     }, errorCallback: () {
       showToastPopup('Failed to get fee');
-      return;
+      if (errorCallback != null) errorCallback(true);
     });
     String? email = HiveStore.loadString(key: HiveKey.email.name);
     // print(email);
@@ -335,7 +340,7 @@ class WalletService {
     // print(sender);
     final receiver = toAddress;
 
-    solana.Message message;
+    solana.Message? message;
     try {
       if (symbol == 'SOL') {
         message = getSolTransferMessage(sender.publicKey, receiver, amount, priorityFee);
@@ -344,9 +349,10 @@ class WalletService {
         message = await getSplTransferMessage(solanaClient, sender, receiver, mint, amount, priorityFee);
       }
     } catch (e) {
-      showToastPopup('메세지 안돼');
+      showToastPopup('서명 오류');
+      message = null;
       if (errorCallback != null) errorCallback(true);
-      return;
+
     }
 
     // FeePayer
@@ -359,35 +365,40 @@ class WalletService {
     );
 
     final recentBlockhash = await solanaClient.rpcClient.getLatestBlockhash(commitment: solana.Commitment.confirmed);
-    final CompiledMessage compiledMessage = message.compile(
-      recentBlockhash: recentBlockhash.value.blockhash,
-      feePayer: feePayer,
-    );
+    if(message != null){
+      final CompiledMessage compiledMessage = message.compile(
+        recentBlockhash: recentBlockhash.value.blockhash,
+        feePayer: feePayer,
+      );
+      final List<Signature> signatures = [];
+      final feePayerSign = Signature(List.filled(64, 0), publicKey: feePayer);
+      signatures.add(feePayerSign);
+      signatures.add(await sender.sign(compiledMessage.toByteArray()));
 
-    final List<Signature> signatures = [];
-    final feePayerSign = Signature(List.filled(64, 0), publicKey: feePayer);
-    signatures.add(feePayerSign);
-    signatures.add(await sender.sign(compiledMessage.toByteArray()));
-
-    SignedTx tx = SignedTx(
-      compiledMessage: compiledMessage,
-      signatures: signatures,
-    );
-    String uiAmount = getUiAmountString(amount, decimals);
-    // API Call
-    // Map<String, String> body = {'clientId': 'GAZAGO', 'encodeTransaction': tx.encode()};
-    ExchangeTokenWithdrawalModel params = ExchangeTokenWithdrawalModel(
-      type: 'withdrawal',
-      uiAmount: double.parse(uiAmount),
-      fee: 0,
-      encodedTransaction: tx.encode(),
-    );
-    Response res = await WalletApi.exchangeStikToGoWallet(userId!, symbol, params);
-    if (res.statusCode == 201) {
-      successCallback(true);
+      SignedTx tx = SignedTx(
+        compiledMessage: compiledMessage,
+        signatures: signatures,
+      );
+      String uiAmount = getUiAmountString(amount, decimals);
+      print(uiAmount);
+      // API Call
+      // Map<String, String> body = {'clientId': 'GAZAGO', 'encodeTransaction': tx.encode()};
+      ExchangeTokenWithdrawalModel params = ExchangeTokenWithdrawalModel(
+        type: 'withdrawal',
+        uiAmount: double.parse(uiAmount),
+        fee: 0,
+        encodedTransaction: tx.encode(),
+      );
+      Response res = await WalletApi.exchangeStikToGoWallet(userId!, symbol, params);
+      if (res.statusCode == 201) {
+        successCallback(true);
+      } else {
+        if (errorCallback != null) errorCallback(res.data != null ? ErrorResponseDataModel.fromJson(res.data) : null);
+      }
     } else {
-      if (errorCallback != null) errorCallback(res.data != null ? ErrorResponseDataModel.fromJson(res.data) : null);
+      if (errorCallback != null) errorCallback(true);
     }
+
   }
 
   static Future<void> fetchStikMoveToStaikaWallet({
@@ -415,6 +426,102 @@ class WalletService {
     Response res = await WalletApi.getTokenPriorityFee(platform, symbol);
     if (res.statusCode == 200) {
       successCallback(TokenPriorityFeeModel.fromJson(res.data));
+    } else {
+      if (errorCallback != null) errorCallback(ErrorResponseDataModel.fromJson(res.data));
+    }
+  }
+
+  static Future<void> getNftList({required Function successCallback, Function? errorCallback}) async {
+    Response res = await WalletApi.getNftList(userId!);
+    if (res.statusCode == 200) {
+      List<NftModel> nftListList = [];
+      if (res.data.length > 0) {
+        res.data.forEach((item) => nftListList.add(NftModel.fromJson(item)));
+      }
+      successCallback(nftListList);
+    } else {
+      if (errorCallback != null) errorCallback(ErrorResponseDataModel.fromJson(res.data));
+    }
+  }
+
+  static Future<void> getNftDetail(String mintAddress, {required Function successCallback, Function? errorCallback}) async {
+    Response res = await WalletApi.getNftDetail(mintAddress);
+    if (res.statusCode == 200) {
+      successCallback(NftDetailModel.fromJson(res.data));
+    } else {
+      if (errorCallback != null) errorCallback(ErrorResponseDataModel.fromJson(res.data));
+    }
+  }
+
+  static Future<void> transferNftToGoWallet({
+    required Function successCallback,
+    Function? errorCallback,
+    required String accountSecretkey,
+    required String walletPassword,
+    required Ed25519HDPublicKey toAddress,
+    required String mintAddress,
+  }) async {
+    late final SolanaClient solanaClient;
+    late final solana.Message message;
+    late final LatestBlockhashResult recentBlockhash;
+    late final SignedTx tx;
+    int priorityFee = 0;
+    String platform = 'solana';
+    String symbol = 'STIK';
+
+    await getProviderUrl(successCallback: (url) {
+      solanaClient = SolanaClient(
+        rpcUrl: Uri.parse(url),
+        websocketUrl: Uri.parse(url.replaceAll('https', 'wss')),
+      );
+    }, errorCallback: (ErrorResponseDataModel e) {
+      showToastPopup(e.errorMessage!);
+      return;
+    });
+
+    await WalletService.getTokenPriorityFee(platform, symbol, successCallback: (fees) {
+      priorityFee = fees.priorityFee;
+    }, errorCallback: () {
+      showToastPopup('Failed to get fee');
+      return;
+    });
+
+    String? email = HiveStore.loadString(key: HiveKey.email.name);
+    String? decryptPrivateKey = decrypt(accountSecretkey, email!, walletPassword);
+    final sender = await Ed25519HDKeyPair.fromPrivateKeyBytes(
+      privateKey: base58.decode(decryptPrivateKey!).sublist(0, 32),
+    );
+
+    final mint = solana.Ed25519HDPublicKey.fromBase58(mintAddress);
+
+    try {
+      message = await getNftTransferMessage(solanaClient, sender, toAddress, mint, priorityFee);
+    } catch (e) {
+      showBlockchainNetworkErrorAlert();
+      return;
+    }
+
+    recentBlockhash = await solanaClient.rpcClient.getLatestBlockhash(commitment: solana.Commitment.confirmed);
+    final CompiledMessage compiledMessage = message.compile(
+      recentBlockhash: recentBlockhash.value.blockhash,
+      feePayer: toAddress,
+    );
+
+    final List<solana.Signature> signatures = [];
+    final feePayerSign = Signature(List.filled(64, 0), publicKey: toAddress);
+    signatures.add(feePayerSign);
+    signatures.add(await sender.sign(compiledMessage.toByteArray()));
+
+    tx = SignedTx(
+      compiledMessage: compiledMessage,
+      signatures: signatures,
+    );
+
+    TransferNftRequestModel data = TransferNftRequestModel(tokenAddress: mintAddress, encodedTransaction: tx.encode());
+
+    Response res = await WalletApi.transferNftToGoWallet(userId!, data);
+    if (res.statusCode == 201) {
+      successCallback();
     } else {
       if (errorCallback != null) errorCallback(ErrorResponseDataModel.fromJson(res.data));
     }

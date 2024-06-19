@@ -5,6 +5,8 @@
 /.flutter-plugins-dependencies
 **/*.g.dart
 
-
 **/.history/**
 
+# FVM Version Cache
+.fvm/
+.fvmrc
